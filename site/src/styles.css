@@ -1804,12 +1804,6 @@ details.ask-how { margin-top: 0; }
 .ask-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 8px; padding-top: 10px; border-top: 1px solid var(--line); }
 .ask-ev { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; font-weight: 700; font-size: 0.95rem; color: var(--accent); text-decoration: none; margin-left: auto; }
 .ask-ev .ic { width: 16px; height: 16px; }
-.ask-next { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "k a" "q a"; align-items: center; gap: 2px 10px; width: 100%; text-align: left;
-  margin-top: 2px; padding: 10px 14px; border-radius: 12px; border: 0; background: var(--surface-2); color: var(--fg); font: inherit; cursor: pointer; }
-.ask-next > span:first-child { grid-area: k; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
-.ask-next .ask-nq { grid-area: q; font-weight: 700; font-size: 0.95rem; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.ask-next .ic { grid-area: a; width: 18px; height: 18px; color: var(--accent); }
-.ask-next:hover, .ask-next:focus-visible { box-shadow: inset 0 0 0 1.5px var(--accent); }
 .ask-seen { display: none; flex: none; width: 18px; height: 18px; color: var(--ok); }
 .ask-seen .ic { width: 18px; height: 18px; }
 details.ask.seen:not([open]) .ask-seen { display: inline-flex; }
@@ -1898,3 +1892,81 @@ table.lawtable thead .th-sub { display: block; font-weight: 400; font-size: 0.82
 .ev-src-fund { grid-column: 1 / -1; display: flex; gap: 6px; align-items: flex-start; font-size: .86rem; line-height: 1.4; color: var(--warn); margin-top: 4px; }
 .ev-src-fund svg { flex: none; width: 15px; height: 15px; margin-top: 2px; }
 .ev-src-fund > span { flex: 1 1 auto; min-width: 0; }
+
+/* ================= Redesign 2, 13 November 2026 (docs/REDESIGN-2.md): less like school, more like the sites people love ================= */
+/* Myth or fact? on the home page: one card at a time, and a tap turns it over: it turns away, shows its other side and turns
+   back (each side keeps its own height); for readers who prefer less motion the sides simply swap */
+.qz2.mf { display: block; max-width: 760px; padding: 0; border-radius: 0; background: none; box-shadow: none; }
+.mf-card { position: relative; isolation: isolate; }
+.mf-card.l1 { margin-bottom: 7px; } .mf-card.l2 { margin-bottom: 13px; }
+/* the cards still to come show their edges under this one */
+.mf-card.l1::after, .mf-card.l2::after, .mf-card.l2::before { content: ""; position: absolute; z-index: -1; left: 12px; right: 12px; bottom: -7px; height: 40px; border-radius: 0 0 16px 16px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.mf-card.l2::before { left: 26px; right: 26px; bottom: -13px; background: var(--bg); }
+.mf-face { display: grid; grid-template-rows: auto 1fr auto; gap: 14px; min-width: 0; min-height: 230px; padding: 14px 18px 18px; border-radius: 18px; border: 2px solid var(--line-strong); border-top: 6px solid var(--fam, var(--accent)); background: var(--surface); }
+.mf-back { grid-template-rows: none; align-content: start; gap: 10px; }
+.mf-card:not(.flipped) .mf-back, .mf-card.flipped .mf-front { display: none; }
+.mf .qz2-k { color: var(--fg); }
+.mf .qz2-k .ic { color: var(--fam, var(--accent)); }
+.mf-q { align-self: center; font-size: clamp(1.3rem, 5.4vw, 1.65rem); outline: none; }
+.mf-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mf-opts .qz2-o { min-height: 56px; padding: 10px 14px; text-align: center; font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; }
+.mf-v { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; outline: none; }
+.mf-v .ic { width: 30px; height: 30px; stroke-width: 2.6; }
+.mf-v b { font-family: var(--font-display); font-size: 1.9rem; font-weight: 900; line-height: 1; }
+.mf-back.myth .mf-v { color: var(--warn); }
+.mf-back.fact .mf-v { color: var(--accent); }
+.mf-fb { font-size: 1rem; font-weight: 700; color: var(--muted); }
+.mf-said { color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
+.mf-nav { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+.mf-nav:empty { display: none; }
+.mf-nav .qz2-nb { margin-left: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .mf-card { perspective: 1400px; }
+  .mf-card.out .mf-in { animation: mf-out 0.2s cubic-bezier(0.5, 0, 0.9, 0.6) forwards; }
+  .mf-card.in .mf-in { animation: mf-in 0.28s cubic-bezier(0.1, 0.5, 0.3, 1); }
+  @keyframes mf-out { to { transform: rotateY(90deg); } }
+  @keyframes mf-in { from { transform: rotateY(-90deg); } to { transform: none; } }
+}
+.home2 .mf-h + .qz2.mf { margin-top: 12px; }
+
+/* At a glance: a drug page's main answers on one screen, in up to four groups of the page's own topics */
+.glance2 { margin-top: 22px; }
+.glance2 > h2 { font-size: clamp(1.35rem, 3.2vw, 1.6rem); font-weight: 900; }
+.gl-gs { display: grid; gap: 10px; margin-top: 8px; }
+@media (min-width: 700px) { .gl-gs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; } }
+.gl-g { display: grid; gap: 5px; align-content: start; min-width: 0; }
+.gl-t { font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; line-height: 1.3; color: var(--muted); }
+.gl-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.gl-l > li { min-width: 0; }
+@media (max-width: 699px) { .gl-l > li.gl-wide { display: none; } }
+/* a tile reads as one line of thought: the question, then the start of its answer, then how sure the research is */
+.gl-a { display: block; height: 100%; box-sizing: border-box; padding: 8px 12px 9px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--fg); text-decoration: none; font-size: 0.9rem; line-height: 1.32; }
+.gl-a:hover, .gl-a:focus-visible { color: var(--fg); box-shadow: inset 0 0 0 2px var(--fam, var(--accent)); }
+.gl-q { font-family: var(--font-display); font-weight: 800; font-size: 1.05em; }
+.gl-a .meter { margin-left: 6px; vertical-align: -1px; }
+.gl-s .cue { font-weight: 700; }
+.gl-a .meter.xs .bars i { background: var(--line); }
+.gl-a .meter.m1 .bars i:nth-child(-n+1), .gl-a .meter.m2 .bars i:nth-child(-n+2), .gl-a .meter.m3 .bars i:nth-child(-n+3), .gl-a .meter.m4 .bars i { background: var(--fam, var(--accent)); }
+.glance2 .in-key { margin-top: 10px; }
+
+/* An answer card: closed, the question, the short answer and the evidence bars with their words; one tap opens the rest */
+details.ask > summary { align-items: flex-start; }
+.ask-h { flex: 1 1 auto; min-width: 0; display: grid; gap: 5px; }
+.ask-s { font-weight: 400; font-size: 1.02rem; line-height: 1.45; }
+.ask-s .cue { font-weight: 700; }
+details.ask .ask-but { font-size: 1rem; line-height: 1.5; }
+.ask-m { display: flex; margin-top: 1px; }
+details.ask > summary .ask-i { margin-top: 1px; }
+details.ask > summary .ask-seen { margin-top: 3px; }
+.ask-how { display: grid; gap: 2px; }
+.ask-howk { font-weight: 700; font-size: 0.95rem; }
+.ask-how .ask-howl { margin-top: 2px; gap: 6px; font-size: 0.95rem; line-height: 1.5; }
+/* Read next: up to three other answers, titles only */
+.rn { display: grid; gap: 6px; margin-top: 4px; }
+.rn-k { font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+.rn-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.rn-l a { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 44px; padding: 9px 14px; border-radius: 12px; background: var(--surface-2); color: var(--fg); font-weight: 700; font-size: 0.95rem; line-height: 1.3; text-decoration: none; }
+.rn-l a .ic { width: 18px; height: 18px; color: var(--accent); }
+.rn-l a:hover, .rn-l a:focus-visible { color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--accent); }
+/* a number as 100 dots, from the short answer's own words */
+.dotpic .freq-row > span { font-size: 1.05rem; }

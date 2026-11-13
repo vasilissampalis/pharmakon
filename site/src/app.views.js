@@ -76,7 +76,7 @@ function monographFor(slug) {
 
 /* ---------- Routing ---------- */
 const PAGE_VIEWS = ["home", "substances", "drug", "shared", "monograph", "numbers", "interactions", "checking", "facts", "emergency", "law", "methods", "about", "glossary", "howto", "review", "quiz", "notfound"];
-const PAGE_TITLES = { home: "", shared: "Shared answer", facts: "Facts about drug use", substances: "Find a drug", numbers: "Statistics", interactions: "Mixing drugs", emergency: "Emergency numbers", checking: "Drug checking", law: "Drug treaties by country", methods: "Methods", about: "About", glossary: "Glossary", howto: "How to read this site", review: "Review queue", quiz: "Test yourself", notfound: "Page not found" };
+const PAGE_TITLES = { home: "", shared: "Shared answer", facts: "Facts about drug use", substances: "Find a drug", numbers: "Statistics", interactions: "Mixing drugs", emergency: "Emergency numbers", checking: "Drug checking", law: "Drug treaties by country", methods: "Methods", about: "About", glossary: "Glossary", howto: "How to read this site", review: "Review queue", quiz: "Myth or fact?", notfound: "Page not found" };
 let currentSlug = MONO.slug, renderedSlug = null;
 function setTitle(t) { document.title = t ? t + " · Pharmakon" : "Pharmakon: what the research says about drugs"; }
 // after a page change, keyboard and screen-reader users start at the page heading
@@ -157,7 +157,7 @@ function route() {
   show(h); setTitle(PAGE_TITLES[h]);
   if (h === "review") renderReview();
   if (h === "quiz" && !QZ.quizpage) qzStart("quizpage");
-  if (h === "home") homeCont();
+  if (h === "home") { homeCont(); mfRefresh("tf"); }
   window.scrollTo({ top: 0 });
   if (!first) focusHeading(h);
 }
@@ -531,14 +531,15 @@ function srcChips(c) {
   return '<span class="srcs"><span class="srcs-k">Sources</span>' + ids.slice(0, 4).map(chip).join("") + (ids.length > 4 ? '<a class="srcmore" href="#' + c.id + '">+' + (ids.length - 4) + "</a>" : "") + "</span>";
 }
 function dotsHtml(n, of, cls) { let h = '<span class="dots100' + (of > 100 ? " d1000" : "") + " " + (cls || "") + '" aria-hidden="true">'; for (let i = 0; i < of; i++) h += "<i" + (i < n ? ' class="on"' : "") + "></i>"; return h + "</span>"; }
-function freqHtml(f) {
+function freqHtml(f, flat) {
   if (!f) return "";
   const num = x => Number(x).toLocaleString("en-US");
   const row = (n, label) => '<div class="freq-row' + (f.of > 100 ? " wide" : "") + '">' + dotsHtml(n, f.of) + "<span><b>" + num(n) + " in " + num(f.of) + "</b> " + esc(label) + "</span></div>";
-  // the picture and its one line first; comparisons and where the number comes from one tap away (senior author, 1 November)
+  // the picture and its one line first; comparisons and where the number comes from one tap away (senior author, 1 November);
+  // inside an open answer card they show at once, since the card is already the second level (redesign 2: no third)
   const more = (f.compare ? '<p class="freq-note">' + esc(f.compare_k || "For comparison:") + " " + f.compare.map(([k, n]) => esc(k) + " " + num(n) + " in " + num(f.of)).join(", ") + ".</p>" : "") + (f.note ? '<p class="freq-note">' + esc(f.note) + "</p>" : "");
   return '<div class="freq">' + (f.title ? '<p class="freq-k">' + esc(f.title) + "</p>" : "") + (f.pairs ? f.pairs.map(([n, l]) => row(n, l)).join("") : row(f.n, f.what)) +
-    (more ? '<details class="freq-more"><summary>' + "More about this number" + "</summary>" + more + "</details>" : "") + "</div>";
+    (more ? (flat ? more : '<details class="freq-more"><summary>' + "More about this number" + "</summary>" + more + "</details>") : "") + "</div>";
 }
 function qaHtml(c, q) {
   const sp = (SIMPLE.claims || {})[c.id];
@@ -553,7 +554,7 @@ function qaHtml(c, q) {
 function quizHtml(slug) {
   const qs = ((SIMPLE.quiz || {})[slug] || []).filter(x => claimById[x.claim] && (SIMPLE.claims || {})[x.claim]);
   if (!qs.length) return "";
-  return '<section class="quiz" aria-labelledby="quiz-h"><h2 class="qh" id="quiz-h">Test yourself</h2><p class="qsub muted">' + qs.length + ' quick questions. Trying to remember an answer helps it stick.</p><ol class="quizlist">' + qs.map((x, i) => '<li class="qz" data-answer="' + x.answer + '"><p class="qz-q">' + esc(x.q) + '</p><div class="qz-opts" role="group" aria-label="Answers">' + x.options.map((o, j) => '<button type="button" class="qz-o" data-j="' + j + '">' + esc(o) + "</button>").join("") + '</div><p class="qz-fb" hidden></p><p class="qz-ex" hidden>' + esc(SIMPLE.claims[x.claim].short) + ' <button type="button" class="qlink" data-q="' + x.claim + '">See the answer</button></p></li>').join("") + "</ol></section>";
+  return '<section class="quiz" aria-labelledby="quiz-h"><h2 class="qh" id="quiz-h">Myth or fact?</h2><p class="qsub muted">' + qs.length + ' quick questions. Trying to remember an answer helps it stick.</p><ol class="quizlist">' + qs.map((x, i) => '<li class="qz" data-answer="' + x.answer + '"><p class="qz-q">' + esc(x.q) + '</p><div class="qz-opts" role="group" aria-label="Answers">' + x.options.map((o, j) => '<button type="button" class="qz-o" data-j="' + j + '">' + esc(o) + "</button>").join("") + '</div><p class="qz-fb" hidden></p><p class="qz-ex" hidden>' + esc(SIMPLE.claims[x.claim].short) + ' <button type="button" class="qlink" data-q="' + x.claim + '">See the answer</button></p></li>').join("") + "</ol></section>";
 }
 document.addEventListener("click", e => {
   const b = e.target.closest && e.target.closest(".qz-o"); if (!b) return;
