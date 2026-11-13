@@ -449,9 +449,8 @@ function kitAnswersHtml(slug) {
 function dcKitsHtml() {
   const qs = drugQuestions(DC); if (!qs.length) return "";
   const groups = (QUESTIONS[DC] || []).map(g => [g.topic, g.items.filter(([id]) => claimById[id])]).filter(([, it]) => it.length);
-  const allOk = qs.every(([id]) => editorApproved(claimById[id]));
-  const draft = allOk ? '<p class="dh-draft ok">' + icon("check") + "Written with AI, checked against the sources by a second AI reader, and approved by our editor. Not medical advice.</p>"
-    : '<p class="dh-draft">' + icon("alert") + "Draft: written with AI, checked by a second AI, not yet by our editor. Not medical advice.</p>";
+  // no draft banner (the senior author's decision of 13 November 2026: he holds editorial responsibility for what is published; METHODS §12, 0.3.2)
+  const draft = "";
   return '<h2 id="dc-kits-h">' + icon("flask") + "<span>Do home test kits work?</span></h2>" +
     '<p class="say">What studies found when test strips and colour tests were checked in a laboratory, and what people did after testing.</p>' + draft +
     inShortHtml(qs, [], { hid: "dck-in-h", tag: "h3" }) +
@@ -690,11 +689,9 @@ function renderDrug(slug) {
   secs.push(sec("d-law", "Is it legal where I am?", lawHtml(slug), "Law"));
   const nAns = qs.length + mix.filter(([id]) => claimById[id] && claimById[id].substance !== slug).length;
   const nCards = Object.values(STUDY_CARDS).filter(k => k.substance === slug).length;
-  // the page's label: approved by our editor once he has approved every answer on it at its current version (METHODS §12, 0.3.0);
-  // a page with only the basics (names, figures, law, from official sources) has none, a page with answers always has one
-  const allOk = qs.length > 0 && qs.every(([id]) => editorApproved(claimById[id]));
-  const draft = m.status === "planned" && !qs.length ? "" : allOk ? '<p class="dh-draft ok">' + icon("check") + "Written with AI, checked against the sources by a second AI reader, and approved by our editor. Not medical advice.</p>"
-    : '<p class="dh-draft">' + icon("alert") + "Draft: written with AI, checked by a second AI, not yet by our editor. Not medical advice.</p>";
+  // no draft banner (the senior author's decision of 13 November 2026: he holds editorial responsibility for what is published;
+  // METHODS §12, 0.3.2); "not medical advice" stays in the footer and on the About page
+  const draft = "";
   const h = '<header class="dh f-' + f.k + (ph ? " hasph" : "") + '">' + (ph ? '<figure class="dh-ph">' + photoImg(ph, "m", ph.alt, false) + (nForms > 1 ? '<a class="dh-forms" href="#d-looks">See all ' + nForms + " forms</a>" : "") + "</figure>" : "") +
     '<div class="dh-t"><p class="dh-fam">' + icon(f.icon) + esc(fp ? fp.word.charAt(0).toUpperCase() + fp.word.slice(1) : s.cls) + "</p><h1>" + esc(s.name) + "</h1>" +
     (names.length ? '<p class="dh-aka">Also called ' + names.map(esc).join(", ") + "</p>" : "") + "</div></header>" + draft + helpTopLine(slug) +

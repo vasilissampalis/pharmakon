@@ -688,7 +688,7 @@ function renderMonograph(slug) {
     mp.innerHTML = hp ? photoImg(hp, "m", null, false) + "<figcaption><b>" + esc(hp.form) + "</b>" + (hp.detail ? ' <span class="muted">' + esc(hp.detail) + "</span>" : "") + '<span class="phmore">One example. ' + (photosFor(m.slug).length > 1 ? '<button type="button" class="linklike" data-phall="' + esc(m.slug) + '">All its forms</button> · ' : "") + phToggle() + "</span>" + photoCredit(hp) + "</figcaption>" : "";
   }
   document.getElementById("mono-inn").textContent = m.inn ? "INN: " + m.inn : "";
-  document.getElementById("mono-status").innerHTML = '<span class="badge ' + (planned ? "planned" : "draft") + '">' + esc(planned ? pageStateLabel(m.slug) : "Draft · v" + m.version) + "</span>";
+  document.getElementById("mono-status").innerHTML = '<span class="badge ' + (planned ? "planned" : "draft") + '">' + esc(planned ? pageStateLabel(m.slug) : "Version " + m.version) + "</span>";
   const now = [];
   if (IDENTITY.some(d => d.substance === m.slug)) now.push('<a href="' + base + 'sec-2">Names and street names</a>');
   if (figuresFor(m.slug).length) now.push('<a href="' + base + 'sec-10">Official figures</a>');
@@ -698,7 +698,7 @@ function renderMonograph(slug) {
     ? (hasQuickAnswers(m.slug)
       ? '<p class="notice"><b>Answers so far:</b> answers to questions people ask, each checked against its sources by a second AI reader, and names, official figures and legal status. The full write-up is not finished yet. Nothing here is medical advice.</p>'
       : '<p class="notice"><b>Basics only so far:</b> names and street names, official figures and legal status, each checked against official sources. The research sections are not written yet. Nothing here is medical advice.</p>')
-    : '<p class="notice"><b>Draft.</b> Written with AI help, not yet checked by our editor. It describes research; it is not medical advice. <a href="#about">How this page was made</a></p>');
+    : '<p class="notice">This page describes research; it is not medical advice. <a href="#about">How this page was made</a></p>');
   document.getElementById("quick").innerHTML = quickHtml(m);
   document.getElementById("mono-meta").innerHTML = "<span>Last systematic search: <b>" + (m.dates.last_search || "not yet run") + "</b></span><span>Last senior review: <b>" + (m.dates.last_review || "none") + "</b></span><span>Reading list: <b>" + (em ? em.papers + " papers (" + em.tierA + " priority)" : "in preparation") + "</b></span><span>Read in full: <b>" + (function () { const cs = Object.values(STUDY_CARDS).filter(k => k.substance === m.slug); const pdf = cs.filter(k => /^PDF/.test((k.verification || {}).source_read || "")).length; const web = cs.filter(k => ((k.verification || {}).source_read || "") && !/^PDF/.test(k.verification.source_read) && !/^abstract/i.test(k.verification.source_read)).length; return (pdf + web) + " papers (" + pdf + " from PDFs, " + web + " from PubMed Central or the publisher)"; })() + "</b></span><span>Authors: <b>" + m.authors.map(a => a.name).join("; ") + "</b></span><span>Conflicts of interest: <b>" + m.authors.map(a => a.name + ", " + (a.coi || "not stated").toLowerCase()).join("; ") + "</b></span><span>AI assistance: <b>first-pass extraction, appraisal and drafting by Claude (Anthropic), and for some answers in November 2026 by ChatGPT (OpenAI), checked by a second AI reader and, before publication, by the senior author (Methods)</b></span>";
   const dn = documentedNames(m.slug);
@@ -1284,7 +1284,7 @@ function readerStamp(v, c) {
   if (v === "senior-reviewed") return "Checked by our editor";
   if (v === "flagged") return "Problem reported: being corrected";
   if (c && editorApproved(c)) return v === "draft" ? "Approved by our editor; early draft" : "Approved by our editor; sources checked by a second AI reader";
-  return "Draft: not yet checked by our editor";
+  return v === "draft" ? "Early version: sources still being checked" : "Sources checked by a second AI reader";
 }
 const LADDER_WORDS = { "draft": "draft (an anchor still to be located, or resting only on narrative reviews)", "metadata-verified": "references checked against Crossref", "ai-anchored": "every evidence anchor confirmed by a second AI reader", "anchor-verified": "every anchor checked by the senior author", "appraised": "every study card read by the senior author", "senior-reviewed": "signed off by the senior author", "published": "published", "flagged": "flagged after publication" };
 // a page's state in plain words: draft monograph, or the basics only (names, figures, law)
@@ -1292,7 +1292,7 @@ const LADDER_WORDS = { "draft": "draft (an anchor still to be located, or restin
 function hasQuickAnswers(slug) { return (QUESTIONS[slug] || []).some(g => g.items.some(([id]) => claimById[id])); }
 function pageStateLabel(slug) {
   const m = monographFor(slug); if (!m) return "";
-  if (m.status !== "planned") return "Draft";
+  if (m.status !== "planned") return "Full write-up";
   if (hasQuickAnswers(slug)) return "Answers so far";
   const basics = IDENTITY.some(d => d.substance === slug) || LEGAL.some(d => d.substance === slug) || figuresFor(slug).length;
   return basics ? "Basics only" : "Not written yet";
