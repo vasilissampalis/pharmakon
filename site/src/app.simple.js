@@ -719,11 +719,11 @@ function inShortHtml(qs, skip, opt) {
    screen of at most 8 answers (6 on a phone) in groups, each group one of the page's own topics, the groups in the order of
    their best answer. The answers are the ones people ask about most (DEMAND, above), highest first, equals in the editors'
    order, and a more-asked answer is never passed over for a less-asked one: they fill the tiles in that order from at most
-   5 topics, and an answer that would open a sixth ends the tiles there (the page shows fewer). A page that runs out of such
-   answers fills the rest as before, in at most 4 groups (5 only when needed to fill): staying safer first, then what the
-   drug does or feels like, myths and facts, and the drug as a medicine, then the rest in the editors' order. A tile is the
-   question, the first clause of its short answer and the evidence bars; a tap opens that answer where it is on the page.
-   Early drafts only when the page has too few answers past the first rung, as In short did. */
+   6 topics, and an answer that would open a seventh ends the tiles there (the page shows fewer). A page that runs out of
+   such answers fills the rest as before, in at most 4 groups (up to 6 only when needed to fill): staying safer first, then
+   what the drug does or feels like, myths and facts, and the drug as a medicine, then the rest in the editors' order. A
+   tile is the question, the first clause of its short answer and the evidence bars; a tap opens that answer where it is on
+   the page. Early drafts only when the page has too few answers past the first rung, as In short did. */
 const GLANCE_PREFER = [/stay(ing)? safer|using alone|preventing overdose|difficult trips|before and during|edibles|driving|what['’]s in/i,
   /feel|what it does|what a dose does|why people|in the body/i, /myths? and facts/i, /as a (medicine|treatment)/i];
 function glanceHtml(slug, qs) {
@@ -732,7 +732,7 @@ function glanceHtml(slug, qs) {
   const tiles = [], topics = [], add = x => { tiles.push(x); if (!topics.includes(x[2])) topics.push(x[2]); };
   let ended = false;
   for (const x of byDemand(pool.filter(([id]) => demandOf(id) >= 0))) {
-    if (tiles.length === 8 || (!topics.includes(x[2]) && topics.length === 5)) { ended = true; break; }
+    if (tiles.length === 8 || (!topics.includes(x[2]) && topics.length === 6)) { ended = true; break; }
     add(x);
   }
   if (!ended) {   // every answer people ask about is in: the rest as before, one from each topic in the old order, then a second
@@ -740,7 +740,7 @@ function glanceHtml(slug, qs) {
     GLANCE_PREFER.forEach(re => { const t = all.find(x => re.test(x) && !order.includes(x)); if (t) order.push(t); });
     all.forEach(t => { if (!order.includes(t)) order.push(t); });
     const rest = roundRobin(order.flatMap(t => pool.filter(x => x[2] === t)));
-    [Math.max(4, topics.length), 5].forEach(max => rest.forEach(x => { if (tiles.length < 8 && !tiles.includes(x) && (topics.includes(x[2]) || topics.length < max)) add(x); }));
+    [Math.max(4, topics.length), 6].forEach(max => rest.forEach(x => { if (tiles.length < 8 && !tiles.includes(x) && (topics.includes(x[2]) || topics.length < max)) add(x); }));
   }
   // the topics in the order of their first (best) tile
   const groups = topics.map(t => [t, tiles.filter(x => x[2] === t)]);

@@ -108,15 +108,15 @@ function serve() {
     ok(w + ": the quiz asks nothing the deck asked, and nothing twice", asked.length >= 20 && !asked.some(q => deck.includes(q)) && new Set(asked).size === asked.length, asked.length + " quiz questions answered");
     await s.ctx.close();
 
-    // ---- At a glance on cannabis and LSD: at most 5 groups and 8 tiles (6 on a phone), each tile opens its answer in place
+    // ---- At a glance on cannabis and LSD: at most 6 groups and 8 tiles (6 on a phone), each tile opens its answer in place
     s = await session();
     for (const slug of ["cannabis", "lsd"]) {
       await s.go("s-" + slug); if (slug === "cannabis") await s.shot("cannabis-top");
       const g = await s.p.evaluate(() => { const box = document.querySelector(".view.active .glance2"); if (!box) return null; const tiles = [...box.querySelectorAll(".gl-a")];
         const help = document.querySelector(".view.active .dh-help"); return { groups: box.querySelectorAll(".gl-g").length, tiles: tiles.length, shown: tiles.filter(a => a.offsetParent).length, dead: tiles.filter(a => !document.getElementById(a.dataset.open)).length,
           afterHelp: !!(help && help.nextElementSibling === box), labels: [...box.querySelectorAll(".gl-t")].map(e => e.textContent).join(", "), long: tiles.map(a => a.querySelector(".gl-s").textContent).filter(t => t.length > 73).length }; });
-      ok(w + ": " + slug + " At a glance right under the emergency line: <= 5 groups, <= 8 tiles (" + (w < 700 ? "<= 6 shown" : "all shown") + "), clauses short",
-        g && g.afterHelp && g.groups <= 5 && g.tiles <= 8 && (w < 700 ? g.shown <= 6 : g.shown === g.tiles) && !g.dead && !g.long, g ? g.groups + " groups (" + g.labels + "), " + g.tiles + " tiles, " + g.shown + " shown" : "missing");
+      ok(w + ": " + slug + " At a glance right under the emergency line: <= 6 groups, <= 8 tiles (" + (w < 700 ? "<= 6 shown" : "all shown") + "), clauses short",
+        g && g.afterHelp && g.groups <= 6 && g.tiles <= 8 && (w < 700 ? g.shown <= 6 : g.shown === g.tiles) && !g.dead && !g.long, g ? g.groups + " groups (" + g.labels + "), " + g.tiles + " tiles, " + g.shown + " shown" : "missing");
       await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot(slug + "-at-a-glance");
       const target = await s.p.$eval(".glance2 .gl-a", a => a.dataset.open);
       await s.p.click(".glance2 .gl-a"); await s.p.waitForTimeout(1300);
@@ -127,7 +127,7 @@ function serve() {
     }
     // ---- At a glance starts with what people ask about most (DEMAND): the first tile is the page's most-asked answer (of
     // equals, the editors' first), the groups follow their best tile, each group runs from most to least asked, no answer is
-    // left out while a less-asked one is shown (heroin's answers span more than 5 topics, so it shows fewer tiles), and a
+    // left out while a less-asked one is shown, a page with 8 such answers in reach shows 8 (in up to 6 groups), and a
     // phone keeps the most-asked six. Alcohol runs out of asked-about answers: all of them, then the rest filled up the old way.
     const glanceAt = slug => s.p.evaluate(slug => {
       const box = document.querySelector(".view.active .glance2"); if (!box) return null;
@@ -145,11 +145,11 @@ function serve() {
       await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot(slug + "-at-a-glance");
     }
     ok(w + ": MDMA, psilocybin and heroin At a glance start with their most-asked answers and leave none out for a less-asked one (DEMAND" + (w < 700 ? "; the phone keeps the top 6)" : ")"),
-      dem.every(([, d]) => d && d.first && d.groups && d.within && d.scored && !d.none && d.nGroups <= 5 && d.phone && (w < 700 ? d.shown <= 6 : d.shown === d.all)), dem.map(([k, d]) => k + ": " + (d ? d.list : "missing")).join("; ") + (w < 700 ? " (* not on a phone)" : ""));
+      dem.every(([, d]) => d && d.first && d.groups && d.within && d.scored && !d.none && d.nGroups <= 6 && d.all === Math.min(8, d.asked) && d.phone && (w < 700 ? d.shown === Math.min(6, d.all) : d.shown === d.all)), dem.map(([k, d]) => k + ": " + (d ? d.list : "missing")).join("; ") + (w < 700 ? " (* not on a phone)" : ""));
     await s.go("s-alcohol"); const alc = await glanceAt("alcohol");
     await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot("alcohol-at-a-glance");
     ok(w + ": alcohol At a glance: all its asked-about answers first, then filled up the old way to 8 tiles (6 on a phone)",
-      alc && alc.first && alc.groups && alc.within && alc.all === 8 && alc.shown === (w < 700 ? 6 : 8) && alc.list.split(" ").filter(x => /^\d/.test(x)).length === alc.asked && alc.nGroups <= 5, alc ? alc.list + " (" + alc.asked + " asked about)" : "missing");
+      alc && alc.first && alc.groups && alc.within && alc.all === 8 && alc.shown === (w < 700 ? 6 : 8) && alc.list.split(" ").filter(x => /^\d/.test(x)).length === alc.asked && alc.nGroups <= 6, alc ? alc.list + " (" + alc.asked + " asked about)" : "missing");
     // ---- "Before, during and after" keeps its time order: before and during, the day after, after stopping, each in the editors' order
     const seq = [];
     for (const slug of ["psilocybin", "methamphetamine", "alcohol"]) {
