@@ -4,7 +4,8 @@
 // less-asked one, then fill up the old way (alcohol); "Before, during and after" keeps its time order; Read next links work
 // on the page and across pages; the 100-dot picture shows for "N in 100" (and not for a range);
 // the quiz page loads as "Myth or fact?"; reduced motion swaps the card without turning it; keyboard focus is visible; dark
-// theme. Every step also checks for horizontal scroll, and every page for console and page errors.
+// theme; and main's 1.13.0 carried into the redesign (first paint, Scientific detail, "Ask us" on drug pages and in search).
+// Every step also checks for horizontal scroll, and every page for console and page errors.
 // It serves site/public itself (build first: node site/build.js && python3 -I site/build_public.py).
 // Usage: node scripts/ux/redesign_check.js [--shots DIR] [--port N]   (exit code 1 if a check fails; images go to DIR only)
 const http = require("http"), fs = require("fs"), path = require("path");
@@ -216,6 +217,42 @@ function serve() {
     const f7 = await s.p.evaluate(() => !!document.activeElement.closest(".rn") && getComputedStyle(document.activeElement).outlineStyle === "solid");
     await s.shot("focus-read-next-link");
     ok(w + ": keyboard: Read next links follow The evidence, focus visible", f7);
+    await s.ctx.close();
+
+    // ---- main's 1.13.0 in the redesign: the start page at first paint (before any script runs, with the deck's place held),
+    // the answer sheet's quiet "Scientific detail" under the sources, "Ask us" at the end of a drug page and of a search
+    // (the words typed come along into the message), and the "Ask or report" labels
+    { const ctx = await browser.newContext({ viewport: { width: w, height: H }, deviceScaleFactor: 1, javaScriptEnabled: false }), p0 = await ctx.newPage();
+      await p0.goto(BASE.replace(/#$/, "")); await p0.waitForTimeout(300);
+      const fp = await p0.evaluate(() => { const v = document.getElementById("view-home"), vis = el => !!(el && el.getBoundingClientRect().height > 0);
+        return { active: v.classList.contains("active"), h1: vis(v.querySelector("h1")), mf: vis(document.getElementById("mf-h")), wait: vis(v.querySelector(".mf-wait")), doors: vis(v.querySelector(".do3")) }; });
+      ok(w + ": first paint, before the script: the start page with Myth or fact? (its place held) and the help doors", fp.active && fp.h1 && fp.mf && fp.wait && fp.doors, JSON.stringify(fp));
+      if (SHOTS) await p0.screenshot({ path: path.join(SHOTS, w + "-first-paint-home.png") }); await ctx.close(); }
+    s = await session();
+    await s.go("cl_can_dependence_how_many", 1300);
+    const sh = await s.p.evaluate(() => { const d = document.querySelector("#evsheet.open details.sf-sci"), refs = document.querySelector("#evsheet.open .ev-refs");
+      return d ? { sci: d.querySelector("summary").textContent, under: !!(refs && refs.compareDocumentPosition(d) & Node.DOCUMENT_POSITION_FOLLOWING), pieces: d.querySelectorAll(".ev-precise .pc-group, .ev-precise > p").length, report: (document.querySelector("#evsheet.open .ev-foot [data-fb]") || {}).textContent } : null; });
+    ok(w + ": answer sheet: a quiet Scientific detail fold under the sources, in short pieces; Report a mistake", sh && sh.sci === "Scientific detail" && sh.under && sh.pieces > 0 && sh.report === "Report a mistake in this answer", JSON.stringify(sh));
+    await s.p.evaluate(() => { const d = document.querySelector("#evsheet.open details.sf-sci"); d.open = true; d.scrollIntoView({ block: "start" }); }); await s.p.waitForTimeout(250); await s.shot("sheet-scientific-detail-open");
+    await s.go("home", 400); await s.go("s-cannabis");
+    const fl = await s.p.evaluate(() => { const f = document.querySelector(".view.active .fbline"); return f ? { t: f.querySelector("p").textContent, b: [...f.querySelectorAll("button")].map(x => x.textContent + "=" + x.dataset.fb).join(" | ") } : null; });
+    ok(w + ": a drug page ends with Didn't find your question? Ask us (Ask a question first)", fl && /^Didn’t find your question\? Ask us/.test(fl.t) && fl.b === "Ask a question=feedback | Report a mistake=issue", fl ? fl.b : "missing");
+    await s.p.$eval(".view.active .fbline", e => e.scrollIntoView({ block: "center" })); await s.p.waitForTimeout(200); await s.shot("drug-page-ask-us");
+    await s.go("home", 700); await s.p.fill("#search", "cannabis sleep"); await s.p.waitForTimeout(700);
+    const s1 = await s.p.evaluate(() => { const r = document.getElementById("search-results"), a = r.querySelector(".sr-ask"); return { n: r.querySelectorAll("a").length, ask: a && a.textContent, last: r.lastElementChild === a }; });
+    await s.shot("search-results-ask-us");
+    await s.p.fill("#search", "zzqx blorptang"); await s.p.waitForTimeout(700);
+    const s2 = await s.p.evaluate(() => { const r = document.getElementById("search-results"); return { none: !!r.querySelector(".none"), ask: (r.querySelector(".sr-ask") || {}).textContent }; });
+    await s.shot("search-none-ask-us");
+    await s.p.click("#search-results .sr-ask button"); await s.p.waitForTimeout(400);
+    const pn = await s.p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), title: document.getElementById("fb-title").textContent, opts: [...document.querySelectorAll(".fb-opt")].map(b => b.dataset.mode).join(","),
+      mode: (document.querySelector('.fb-opt[aria-pressed="true"]') || { dataset: {} }).dataset.mode, msg: document.getElementById("report-message").value }));
+    await s.shot("panel-ask-prefilled");
+    ok(w + ": search ends with Ask us (and with it when nothing matched); Ask us opens Ask a question with the words typed", s1.n > 0 && /^Not what you were looking for\? Ask us/.test(s1.ask || "") && s1.last && s2.none && /^Didn’t find your question\? Ask us/.test(s2.ask || "") &&
+      pn.open && pn.title === "Ask or report" && pn.opts === "feedback,issue" && pn.mode === "feedback" && pn.msg === "zzqx blorptang", s1.n + " results; " + JSON.stringify(pn));
+    await s.p.keyboard.press("Escape"); await s.p.waitForTimeout(300);
+    const lab = await s.p.evaluate(() => [document.querySelector(".fb-fab").getAttribute("aria-label"), document.querySelector("#menu .menu-fb").textContent, [...document.querySelectorAll("footer [data-fb]")].map(b => b.textContent).join(" | "), document.querySelector('footer a[href="#quiz"]').textContent]);
+    ok(w + ": Ask or report labels on the button, the menu and the footer (with Myth or fact?)", lab.join(" / ") === "Ask a question or report a mistake / Ask a question or report a mistake / Ask a question | Report a mistake / Myth or fact?", lab.join(" / "));
     await s.ctx.close();
 
     // ---- dark theme
