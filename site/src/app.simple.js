@@ -30,6 +30,12 @@ function roundRobin(items) {
   const out = []; for (let r = 0; out.length < items.length; r++) by.forEach(list => { if (list[r]) out.push(list[r]); });
   return out;
 }
+// what people ask about most first (the senior author, 13 November: put what people actually ask first, "if something is too
+// clinical and boring, people leave"). DEMAND scores an answer up to 100 by how much the most popular questions people post
+// ask about it (data/site/demand.json); the other answers have no score (-1 here). A list in this order keeps every answer:
+// the scored ones first, highest first, then the rest, each in the order it had.
+const demandOf = id => { const d = typeof DEMAND !== "undefined" && DEMAND[id]; return d && typeof d.score === "number" ? d.score : -1; };
+const byDemand = items => items.map((it, i) => [it, i]).sort((a, b) => demandOf(b[0][0]) - demandOf(a[0][0]) || a[1] - b[1]).map(([it]) => it);
 function mixQuestions(slug) {
   const own = drugQuestions(slug).filter(([, , t]) => topicZone(t) === "mix");
   const fromMix = (QUESTIONS.interactions || []).flatMap(g => g.items).filter(([id]) => claimById[id] && (MIXFOR[id] || []).includes(slug)).map(([id, q]) => [id, q, "mix"]);
@@ -710,27 +716,36 @@ function inShortHtml(qs, skip, opt) {
 }
 /* At a glance (redesign 2, 13 November: the senior author found the site "like the user gets tested in school"; the model is
    Examine.com's one-glance table of outcomes and how sure the research is, before any text). A drug page opens with one
-   screen of at most 8 answers in at most 4 groups, each group one of the page's own topics: staying safer first, then what
-   the drug does or feels like, myths and facts, and the drug as a medicine, then the rest in the editors' order. A tile is
-   the question, the first clause of its short answer and the evidence bars; a tap opens that answer where it is on the page.
+   screen of at most 8 answers (6 on a phone) in at most 4 groups, each group one of the page's own topics. The answers are
+   the ones people ask about most (DEMAND, above): highest first, equals in the editors' order, and the groups in the order of
+   their best answer. A page with fewer than 4 such answers fills the rest as before: staying safer first, then what the drug
+   does or feels like, myths and facts, and the drug as a medicine, then the rest in the editors' order. A tile is the
+   question, the first clause of its short answer and the evidence bars; a tap opens that answer where it is on the page.
    Early drafts only when the page has too few answers past the first rung, as In short did. */
 const GLANCE_PREFER = [/stay(ing)? safer|using alone|preventing overdose|difficult trips|before and during|edibles|driving|what['’]s in/i,
   /feel|what it does|what a dose does|why people|in the body/i, /myths? and facts/i, /as a (medicine|treatment)/i];
 function glanceHtml(slug, qs) {
   const can = qs.filter(([id]) => (SIMPLE.claims || {})[id]), firm = can.filter(([id]) => claimById[id].verification.status !== "draft");
   const pool = firm.length >= 2 ? firm : can; if (pool.length < 2) return "";
-  const topics = []; pool.forEach(([, , t]) => { if (!topics.includes(t)) topics.push(t); });
-  const pick = [];
-  GLANCE_PREFER.forEach(re => { const t = topics.find(x => re.test(x) && !pick.includes(x)); if (t) pick.push(t); });
-  topics.forEach(t => { if (pick.length < 4 && !pick.includes(t)) pick.push(t); });
-  const per = pick.length <= 2 ? 4 : 2;   // eight tiles at most
-  const groups = pick.map(t => [t, pool.filter(x => x[2] === t).slice(0, per)]);
-  // a phone screen holds about six: the second tile of the last groups gives way first (shown again on wider screens)
-  const narrow = new Set(); let n = groups.reduce((a, [, it]) => a + it.length, 0);
-  for (let i = groups.length - 1; i >= 0 && n > 6; i--) groups[i][1].slice(1).reverse().forEach(x => { if (n > 6) { narrow.add(x[0]); n--; } });
+  let ranked = byDemand(pool.filter(([id]) => demandOf(id) >= 0));
+  if (ranked.length < 4) {   // too few answers people ask about: the rest as before, one from each preferred topic, then a second
+    const topics = []; pool.forEach(([, , t]) => { if (!topics.includes(t)) topics.push(t); });
+    const pick = [];
+    GLANCE_PREFER.forEach(re => { const t = topics.find(x => re.test(x) && !pick.includes(x)); if (t) pick.push(t); });
+    topics.forEach(t => { if (pick.length < 4 && !pick.includes(t)) pick.push(t); });
+    const per = pick.length <= 2 ? 4 : 2;
+    ranked = ranked.concat(roundRobin(pick.flatMap(t => pool.filter(x => x[2] === t).slice(0, per))).filter(x => !ranked.includes(x)));
+  }
+  // eight tiles at most, from four topics at most, in that order; the topics in the order of their first (best) tile
+  const tiles = [], topics = [];
+  ranked.forEach(x => { if (tiles.length < 8 && (topics.includes(x[2]) || topics.length < 4)) { tiles.push(x); if (!topics.includes(x[2])) topics.push(x[2]); } });
+  const groups = topics.map(t => [t, tiles.filter(x => x[2] === t)]);
+  // a phone screen holds about six: the tiles after the sixth give way (shown again on wider screens), and a group left
+  // without a tile with them
+  const narrow = new Set(tiles.slice(6).map(x => x[0]));
   const tile = ([id, q]) => '<li' + (narrow.has(id) ? ' class="gl-wide"' : "") + '><a class="gl-a" href="#s-' + slug + "/q-" + id + '" data-open="ask-' + id + '"><span class="gl-q">' + esc(q) + '</span> <span class="gl-s">' + cueNum(esc(glanceClause(SIMPLE.claims[id].short))) + "</span>" + meterDots(claimById[id].grade.certainty) + "</a></li>";
   return '<section class="glance2" aria-labelledby="gl-h"><h2 id="gl-h">At a glance</h2><div class="gl-gs">' +
-    groups.map(([t, it]) => '<div class="gl-g"><h3 class="gl-t">' + esc(t) + '</h3><ul class="gl-l">' + it.map(tile).join("") + "</ul></div>").join("") +
+    groups.map(([t, it]) => '<div class="gl-g' + (it.every(([id]) => narrow.has(id)) ? " gl-wide" : "") + '"><h3 class="gl-t">' + esc(t) + '</h3><ul class="gl-l">' + it.map(tile).join("") + "</ul></div>").join("") +
     '</div><p class="in-key">' + meterDots("moderate") + "<span>The bars show how sure the research is. Four bars is the strongest.</span></p></section>";
 }
 // the first clause of a short answer, for its tile: cut where a clause ends, at about 60 characters, with an ellipsis, and never
@@ -769,7 +784,8 @@ function renderDrug(slug) {
   renderedDrug = slug; currentSlug = slug;
   const f = fam(s.cls), fp = famPlain(s.cls), ph = headerPhoto(slug), names = documentedNames(slug).slice(0, 3);
   const qs = drugQuestions(slug);
-  const feel = qs.filter(([, , t]) => topicZone(t) === "feel"), risk = roundRobin(qs.filter(([, , t]) => topicZone(t) === "risk")), med = qs.filter(([, , t]) => topicZone(t) === "med"), mix = mixQuestions(slug), after = qs.filter(([, , t]) => topicZone(t) === "after");
+  // in each part of the page, the questions people ask about most come first (DEMAND), then the rest in the order they had
+  const feel = byDemand(qs.filter(([, , t]) => topicZone(t) === "feel")), risk = byDemand(roundRobin(qs.filter(([, , t]) => topicZone(t) === "risk"))), med = byDemand(qs.filter(([, , t]) => topicZone(t) === "med")), mix = byDemand(mixQuestions(slug)), after = qs.filter(([, , t]) => topicZone(t) === "after");
   const nForms = (FORMS[slug] || []).length;
   const sec = (id, q, body, chip) => ({ id, q, body, chip });
   const secs = [];
@@ -789,8 +805,9 @@ function renderDrug(slug) {
   // 4. the day after: after-effects as studies describe them, and whether what people do about them works (decision p-day-after)
   if (after.length) {
     const has = re => after.some(([, , t]) => re.test(t)), bef = has(/^before/i), day = has(/day after/i), stop = has(/after stopping/i);
-    // before and during use first, then the day after, then the weeks after stopping (decision p-before-during-after)
-    const ordered = [/^before/i, /day after/i, /after stopping/i].flatMap(re => after.filter(([, , t]) => re.test(t)));
+    // the questions people ask about most first; the rest before and during use first, then the day after, then the weeks
+    // after stopping (decision p-before-during-after)
+    const ordered = byDemand([/^before/i, /day after/i, /after stopping/i].flatMap(re => after.filter(([, , t]) => re.test(t))));
     const title = bef ? (day || stop ? "Before, during and after" : "Before and during") : stop ? (day ? "The day after, and after stopping" : "After stopping") : "The day after";
     secs.push(sec("d-after", title, askList(ordered, "after", 3, null, slug), bef ? "Before & after" : day ? "Day after" : "After stopping"));
   }
@@ -1222,9 +1239,10 @@ document.addEventListener("click", e => {
    tested in school", and a visitor would use it a little and leave). The first thing under the search box on the home page:
    a deck of 10 cards from the checked true-or-false statements (data/site/simple.json tf: only the ones the quiz may ask, so
    written for the claim's current version), in a new order on every visit, short statements (20 words or fewer) first,
-   about as many myths as facts, one card per answer. Tap Myth or Fact and the card turns over where it is: the verdict, the
-   statement, its why line, the answer's "But" (the reveal always carries it, as in the quiz, unless the why line already says
-   it), the evidence bars and the way to the answer on its page. Then Next; after ten, Another 10. A plain count, no score,
+   and among them the ones on what people ask about most (DEMAND, highest first), about as many myths as facts, one card
+   per answer. Tap Myth or Fact and the card turns over where it is: the verdict, the statement, its why line, the answer's
+   "But" (the reveal always carries it, as in the quiz, unless the why line already says it), the evidence bars and the way
+   to the answer on its page. Then Next; after ten, Another 10. A plain count, no score,
    no streak, no timer. A statement answered here counts as asked in the quiz for the rest of the visit, and as seen on this
    device, so the quiz does not ask it again. ---------- */
 const MF = {};
@@ -1236,14 +1254,16 @@ function mfPool() {
     out.push({ key: "tf:" + x.claim + ":" + norm(x.statement).slice(0, 40), claim: x.claim, page: answerPageKey(x.claim, slug), q: x.statement, fact: !!x.answer, why: x.why || "", long: x.statement.split(/\s+/).length > 20 }); }));
   return (MF_POOL = out);
 }
-// n new cards: none asked this visit or dealt in this deck before; short ones first, then those never answered on this device,
-// then those missed last time; a full deck takes about as many myths as facts
+// n new cards: none asked this visit or dealt in this deck before; short ones first, and of each length those never answered
+// on this device first, then those missed last time, then the rest; within each of these, the statements whose answers people
+// ask about most first (DEMAND, highest first; equals, and the statements without a score after them, in a new order every
+// time); a full deck takes about as many myths as facts
 function mfDeal(st, n) {
   const asked = new Set(QZS.claims), seen = qzSeen(), again = qzAgain();
   let pool = mfPool().filter(x => !asked.has(x.claim) && !st.used.has(x.claim));
   if (!pool.length && n > 1) { st.used = new Set(); pool = mfPool(); }   // every statement has been dealt: all of them again, in a new order
   const tier = x => (x.long ? 3 : 0) + (!seen.has(x.key) ? 0 : again.has(x.key) ? 1 : 2), one = new Set();
-  const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t))).filter(x => !one.has(x.claim) && one.add(x.claim));
+  const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t)).sort((a, b) => demandOf(b.claim) - demandOf(a.claim))).filter(x => !one.has(x.claim) && one.add(x.claim));
   let deck = n > 1 ? order.filter(x => !x.fact).slice(0, n / 2).concat(order.filter(x => x.fact).slice(0, n / 2)) : order.slice(0, n);
   deck = deck.concat(order.filter(x => !deck.includes(x)).slice(0, n - deck.length));
   deck = qzSpread(shuffle(deck), "page");

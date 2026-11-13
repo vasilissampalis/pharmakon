@@ -1,6 +1,7 @@
 // Redesign 2 (docs/REDESIGN-2.md) checked in a real browser, at 390 x 844 and 1280 x 800: the Myth or fact? deck turns over and
 // counts, Another 10 deals new cards, the quiz does not repeat what the deck asked; At a glance tiles open their answers in
-// place; Read next links work on the page and across pages; the 100-dot picture shows for "N in 100" (and not for a range);
+// place, and on the MDMA and psilocybin pages start with the answers people ask about most (DEMAND); Read next links work
+// on the page and across pages; the 100-dot picture shows for "N in 100" (and not for a range);
 // the quiz page loads as "Myth or fact?"; reduced motion swaps the card without turning it; keyboard focus is visible; dark
 // theme. Every step also checks for horizontal scroll, and every page for console and page errors.
 // It serves site/public itself (build first: node site/build.js && python3 -I site/build_public.py).
@@ -123,6 +124,26 @@ function serve() {
       ok(w + ": " + slug + " tile opens its answer in place, clear of the sticky bars", t.open && t.hash === "#s-" + slug && t.top >= t.pad - 12 && t.top < H / 2 && t.focus, JSON.stringify(t));
       if (slug === "cannabis") await s.shot("cannabis-tile-tapped-answer-open");
     }
+    // ---- At a glance on MDMA and psilocybin starts with what people ask about most (DEMAND): the first tile is the page's
+    // most-asked answer (of equals, the editors' first), the groups follow their best tile, each group runs from most to least
+    // asked, every tile has a score, and a phone keeps the most-asked six
+    const dem = [];
+    for (const slug of ["mdma", "psilocybin"]) {
+      await s.go("s-" + slug);
+      const d = await s.p.evaluate(slug => {
+        const box = document.querySelector(".view.active .glance2"); if (!box) return null;
+        const sc = id => DEMAND[id] && typeof DEMAND[id].score === "number" ? DEMAND[id].score : -1;
+        const own = drugQuestions(slug).map(x => x[0]).filter(id => SIMPLE.claims[id] && claimById[id].verification.status !== "draft");
+        const top = Math.max(...own.map(sc)), groups = [...box.querySelectorAll(".gl-g")].map(g => [...g.querySelectorAll(".gl-a")].map(a => ({ id: a.dataset.open.slice(4), shown: !!a.offsetParent })).map(t => ({ ...t, s: sc(t.id) })));
+        const tiles = groups.flat(), best = groups.map(g => g[0].s), shown = tiles.filter(t => t.shown), hidden = tiles.filter(t => !t.shown);
+        return { first: tiles[0].id === own.find(id => sc(id) === top), groups: best.every((v, i) => !i || best[i - 1] >= v), within: groups.every(g => g.every((t, i) => !i || g[i - 1].s >= t.s)),
+          scored: tiles.every(t => t.s >= 0), phone: hidden.every(h => shown.every(t => t.s >= h.s)), shown: shown.length, all: tiles.length, list: groups.map(g => g.map(t => t.s + (t.shown ? "" : "*")).join(" ")).join(" | ") };
+      }, slug);
+      dem.push([slug, d]);
+      await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot(slug + "-at-a-glance");
+    }
+    ok(w + ": MDMA and psilocybin At a glance start with their most-asked answers (DEMAND, highest first" + (w < 700 ? "; the phone keeps the top 6)" : ")"),
+      dem.every(([, d]) => d && d.first && d.groups && d.within && d.scored && d.phone && (w < 700 ? d.shown <= 6 : d.shown === d.all)), dem.map(([k, d]) => k + ": " + (d ? d.list : "missing")).join("; ") + (w < 700 ? " (* not on a phone)" : ""));
     // ---- an open answer: the closed card's parts, the dots for "N in 100", Read next on the page and to another page
     await s.go("s-cannabis/q-cl_can_dependence_how_many", 1300);
     const card = await s.p.evaluate(() => { const d = document.getElementById("ask-cl_can_dependence_how_many"); if (!d) return null; const sm = d.querySelector("summary"), a = d.querySelector(".ask-a"), dots = a.querySelector(".freq .dots100");
