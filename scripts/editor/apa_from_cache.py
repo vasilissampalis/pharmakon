@@ -6,6 +6,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 import build_references as br
 cache = br.load_cache()
+import glob as _g
+RECORDS = {}
+for _f in _g.glob(str(ROOT / "data" / "references" / "*.json")):
+    for _r in json.load(open(_f, encoding="utf-8")):
+        if _r.get("DOI"): RECORDS[_r["DOI"].lower()] = _r
 def initials(given):
     parts = re.split(r"\s+", (given or "").replace(".", ". ").strip())
     out = []
@@ -39,6 +44,8 @@ def apa(doi):
     if num and (not pg or pg == num): tail += f", Article {num}"
     elif pg and re.fullmatch(r"[a-z]\d+", pg): tail += f", Article {pg}"
     elif pg: tail += ", " + pg.replace("-", "–")
-    return f"{authors(cr['au'])} ({yr}). {title}{'' if title.endswith(('?', '!')) else '.'} {tail}. https://doi.org/{cr['DOI']}"
+    rec = RECORDS.get(doi.lower())   # an existing reference record may carry documented author corrections
+    au = [[x.get("family") or x.get("literal"), x.get("given")] if x.get("given") else [x.get("family") or x.get("literal")] for x in rec["author"]] if rec else cr["au"]
+    return f"{authors(au)} ({yr}). {title}{'' if title.endswith(('?', '!')) else '.'} {tail}. https://doi.org/{cr['DOI']}"
 if __name__ == "__main__":
     for d in sys.argv[1:]: print(apa(d))
