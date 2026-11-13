@@ -1898,3 +1898,26 @@ table.lawtable thead .th-sub { display: block; font-weight: 400; font-size: 0.82
 .ev-src-fund { grid-column: 1 / -1; display: flex; gap: 6px; align-items: flex-start; font-size: .86rem; line-height: 1.4; color: var(--warn); margin-top: 4px; }
 .ev-src-fund svg { flex: none; width: 15px; height: 15px; margin-top: 2px; }
 .ev-src-fund > span { flex: 1 1 auto; min-width: 0; }
+
+/* Long research texts in short pieces (inPieces; 13 November): the opening summary, one short paragraph per study, and lists
+   where a sentence's parts were joined by semicolons. The words are the checked ones; only the layout changes. */
+.pc > * + *, .pc-group > * + * { margin-top: 0.55em; }
+.pc p, .pc ul { margin-bottom: 0; }
+.pc-lead { font-weight: 600; color: var(--fg); }
+.pc-list { padding-left: 1.15em; margin-top: 0.35em; }
+.pc-list li + li { margin-top: 0.35em; }
+.pc-tail { font-size: 0.85rem; color: var(--muted); }
+.ev-peco dd > p:only-child, .pecotable div > p:only-child { margin: 0; }
+.claim .text .precise .reg { display: block; margin-bottom: 4px; }
+.claim .text .precise > p:not(.precise-cites):only-of-type { margin: 0; }
+.precise-cites { margin: 8px 0 0; font-size: 0.85rem; }
+/* the researchers' detail is one quiet tap away: muted and lighter than the reader's own folds */
+details.sf-sci { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 4px; }
+details.sf-sci > summary { color: var(--muted); font-weight: 500; font-size: 0.92rem; }
+details.sf-sci[open] > summary { color: var(--fg); }
+/* "Ask us" at the end of search results and when nothing matched (13 November): the question typed comes along into the message */
+.search-results .sr-ask { margin: 0; padding: 10px 12px 12px; border-top: 1px solid var(--line); font-size: 0.9rem; color: var(--muted); }
+.search-results .sr-ask b { color: var(--fg); }
+.search-results .sr-ask .linklike { font-weight: 700; }
+.search-results .none + .sr-ask { border-top: 0; padding-top: 0; }
+.fbline p b { color: var(--fg); }
