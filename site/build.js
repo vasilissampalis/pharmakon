@@ -81,6 +81,8 @@ const data = [
   "const HARM_LINKS = " + JSON.stringify(fs.existsSync(path.join(ROOT, "data/site/harm-links.json")) ? site("harm-links.json") : { drugs: {} }) + ";",
   // what each study's funding or authors' ties were, flagged where they bear on the finding (data/site/funding-flags.json, keyed by study card)
   "const FUNDING_FLAGS = " + JSON.stringify(fs.existsSync(path.join(ROOT, "data/site/funding-flags.json")) ? site("funding-flags.json") : {}) + ";",
+  // how much people ask about each answer's question (data/site/demand.json, from real questions; used to put the most-asked answers first)
+  "const DEMAND = " + JSON.stringify(fs.existsSync(path.join(ROOT, "data/site/demand.json")) ? (() => { const q = site("demand.json"); return q.claims || {}; })() : {}) + ";",
   "const MIX_DRUGS = " + JSON.stringify((() => { const q = site("mix-drugs.json"); delete q._note; return q; })()) + ";",
   // which drug pages each answer on test kits belongs to (navigation only; data/site/kits-for.json)
   "const KITS_FOR = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/kits-for.json"); if (!fs.existsSync(f)) return {}; const q = JSON.parse(fs.readFileSync(f, "utf8")); delete q._note; return q; })()) + ";",
