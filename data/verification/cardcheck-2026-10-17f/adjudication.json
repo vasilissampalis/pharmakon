@@ -1,0 +1,481 @@
+{
+ "adjudicator": "AI reader 38 (adjudication)",
+ "date": "2026-10-17",
+ "brief": "data/verification/cardcheck-2026-10-17f/ADJUDICATION.md",
+ "sources": "PDFs in /mnt/user-data/uploads/DrugEncyclopedia/PDFs/MDMA/ (Brett & Bynum 2025, Halvorsen et al. 2021, the MAPP1 authors' reply, Nutt & de Wit 2021, Madero & Alvarez 2023, Earleywine et al. 2025, Marseille & Mitchell 2025, Mahase 2024), text extracted with pdftotext -layout into my scratch folder. Web sources read in one tab of my own in the desktop app's browser (tab-15, opened and closed by me; no other tab touched, nothing downloaded, no PDF link opened, no sign-in or check page): MAPP1 and MAPP2 on nature.com (running text with paragraphs counted by script, Tables 1 and 2, the MAPP1 CONSORT image and Fig. 3 title, the MAPP2 Fig. 2a image, author information, competing interests and references); ClinicalTrials.gov NCT03537014 and NCT04077437 through the API v2 and their histories of changes (MAPP1 versions 0, 25, 26, 56, 57; MAPP2 versions 0, 37, 38); the three retraction notes on link.springer.com; and the Crossref records of Nutt & de Wit's references 4, 8 and 10 (api.crossref.org). Every item a second reader corrected or found missing was checked at its place.",
+ "notes": [
+  "Field paths in the cards' disagreement logs are 0-based (key_findings[8]); anchor indices are 0-based, as in tasks.json.",
+  "The second readers agreed with the first readers on the overall risk-of-bias judgment of all thirteen cards, so all thirteen are written as ai-checked (METHODS §5.5); single-domain differences are listed for the senior author.",
+  "Nothing was stopped by a safety filter. Figures were read as images on the publisher's figure pages (the MAPP1 CONSORT diagram from its image URL); no supplement was read.",
+  "Validation: in a sandbox copy of the project with the thirteen cards merged, claims_patch.json applied and new_claims.json added, validate.py gives 0 hard failures (one new, expected warning: the regulatory claim is draft although every anchor is checked) and check_citations.js resolves every debate-box citation (six did not resolve before the patch)."
+ ],
+ "anchors": [
+  {
+   "n": 16,
+   "claim": "cl_mdma_ptsd_efficacy",
+   "anchor_index": 15,
+   "reference": "brett_2025",
+   "second_reader": "AI reader 34 (corrected: locator)",
+   "verdict": "correction upheld",
+   "checked": "PDF pp. 2-3 and 8: the five databases, the March 2023 search with its keywords (which include MAPS and 'breakthrough therapy', with no Boolean combination) and the May 2025 rerun are in the single Methods paragraph on p. 2; the retracted analyses and the six analysed trials are in Results › Study and participant characteristics, 1st paragraph and the 2nd paragraph running onto p. 3, where the comparator split is (three inactive placebo, three low-dose MDMA); Table 1 is on p. 3; conflicts of interest with MAPS in all six trials are in Study limitations, p. 8.",
+   "action": "No change; the applied locator stands. The keyword point is carried into the efficacy claim and the debate box."
+  },
+  {
+   "n": 46,
+   "claim": "cl_mdma_ptsd_adverse_events",
+   "anchor_index": 14,
+   "reference": "halvorsen_2021",
+   "second_reader": "AI reader 34 (corrected: extracted)",
+   "verdict": "correction upheld, refined",
+   "checked": "p. 1689, 5th paragraph: serious adverse effects reported in MAPP1 were rare; rare events are difficult to evaluate reliably in phase 3 trials, given limited samples and no long-term follow-up, and can become noticeable when a treatment is widely implemented. The applied text ('cannot assess ... reliably') is slightly stronger than the letter.",
+   "action": "Patch: extracted text refined ('hard to evaluate reliably'), with a check_note; anchor stays ai-checked."
+  },
+  {
+   "n": 84,
+   "claim": "cl_mdma_therapy_contested",
+   "anchor_index": 10,
+   "reference": "halvorsen_2021",
+   "second_reader": "AI reader 34 (corrected: extracted)",
+   "verdict": "correction upheld",
+   "checked": "p. 1689, 3rd paragraph: psychological interventions attain similar or elevated symptom reduction (SMDs 0.83 against control to 2.07 against wait-list; 0.90 to 1.26 against usual care in complex PTSD); 6th paragraph, continued on p. 1690: therapy equal to 28 sessions of 90 minutes with two therapists in all sessions, first-line treatments half or less; benchmarking called for on both pages.",
+   "action": "No change to the anchor. The debate box's 'similar effects with half or less of the therapist time' is corrected to 'similar or greater symptom reductions with half or less of the therapy time'."
+  },
+  {
+   "n": 29,
+   "claim": "cl_mdma_ptsd_blinding",
+   "anchor_index": 12,
+   "reference": "madero_2023",
+   "second_reader": "AI reader 35 (corrected: extracted)",
+   "verdict": "correction upheld",
+   "checked": "p. 19, 3rd paragraph (begins at the foot of the left column): 'as much as two thirds ... after completing treatment', with no count, week or placebo-arm figure; the safety sentence has no citation of its own, follows the sentence citing Mitchell et al. (2021) and repeats almost word for word the MAPP1 abstract (read on nature.com); nothing on blinding or expectancy.",
+   "action": "No change; the applied text stands."
+  },
+  {
+   "n": 49,
+   "claim": "cl_mdma_ptsd_adverse_events",
+   "anchor_index": 17,
+   "reference": "madero_2023",
+   "second_reader": "AI reader 35 (corrected: extracted)",
+   "verdict": "correction upheld",
+   "checked": "Same place and text as n = 29; 'did not induce adverse events of ... suicidality' means no excess over placebo (MAPP1: 3 of 46 vs 5 of 44).",
+   "action": "No change; the applied text stands."
+  },
+  {
+   "n": 89,
+   "claim": "cl_mdma_therapy_contested",
+   "anchor_index": 15,
+   "reference": "madero_2023",
+   "second_reader": "AI reader 35 (corrected: extracted and role)",
+   "verdict": "correction upheld (text); role change accepted",
+   "checked": "Same place and text as n = 29. Role: see n = 87 to 90.",
+   "action": "Text: no change (applied). Role: patch, supports → qualifies (below)."
+  },
+  {
+   "n": 54,
+   "claim": "cl_mdma_ptsd_adverse_events",
+   "anchor_index": 22,
+   "reference": "mahase_2024",
+   "second_reader": "AI reader 35 (corrected: extracted)",
+   "verdict": "correction upheld",
+   "checked": "p. 1, 3rd paragraph and references 4 to 6: 'reports suggest', citing ref 4 (Jacobs, New York Times, 12 August 2024) and ref 5 (a MAPS statement announcing an ethical violation by former MAPS-sponsored investigators, URL dated 24 May 2019); the 2018 lawsuit is cited to ref 6 (CBC, March 2022).",
+   "action": "The text is right, but the patch removes this anchor from the adverse-event claim, whose statement does not use it (AI reader 35's proposal); it stays in the contested claim and moves with n = 65 to the new retraction claim."
+  },
+  {
+   "n": 65,
+   "claim": "cl_mdma_regulatory_2024",
+   "anchor_index": 9,
+   "reference": "mahase_2024",
+   "second_reader": "AI reader 35 (corrected: extracted)",
+   "verdict": "correction upheld",
+   "checked": "Same place and text as n = 54.",
+   "action": "Anchor moved, with its checked status, to the new claim cl_mdma_retractions_2024; that claim's statement says 'citing a New York Times report and a 2019 statement by MAPS' instead of 'press reports'."
+  },
+  {
+   "n": 87,
+   "claim": "cl_mdma_therapy_contested",
+   "anchor_index": 13,
+   "reference": "earleywine_2025",
+   "second_reader": "AI reader 35 (corrected: role)",
+   "verdict": "role change accepted (supports → qualifies)",
+   "checked": "p. 1, Introduction, 2nd paragraph: d = 0.91 and 0.70 for MAPP1 and MAPP2, citing the trials; the reference list misprints both trials' volume, issue and pages.",
+   "action": "Patch: evidence_set role 'qualifies' (expect 'supports'), with a check_note."
+  },
+  {
+   "n": 88,
+   "claim": "cl_mdma_therapy_contested",
+   "anchor_index": 14,
+   "reference": "earleywine_2025",
+   "second_reader": "AI reader 35 (corrected: role)",
+   "verdict": "role change accepted (supports → qualifies)",
+   "checked": "p. 7, Discussion, 9th paragraph: MAPP2 included a more diverse group and reported significant reductions in PTSD (Mitchell et al., 2023).",
+   "action": "Patch: evidence_set role 'qualifies' (expect 'supports'), with a check_note."
+  },
+  {
+   "n": 90,
+   "claim": "cl_mdma_therapy_contested",
+   "anchor_index": 16,
+   "reference": "nutt_2021",
+   "second_reader": "AI reader 35 (corrected: role)",
+   "verdict": "role change accepted (supports → qualifies)",
+   "checked": "p. 950, standfirst and 1st paragraph: significant efficacy, an excellent safety profile and likely approval; no trial number anywhere.",
+   "action": "Patch: evidence_set role 'qualifies' (expect 'supports'), with a check_note."
+  }
+ ],
+ "anchor_roles_reason": "In cl_mdma_therapy_contested (relation insufficient evidence), 'supports' marks evidence that the question is unsettled and 'qualifies' the yes side: the trials' own results (anchors 0 and 1), the reply, the review's vote count and the commentaries' declarations already carry 'qualifies'. Second-hand restatements of the same results (anchors 13 to 16) cannot support the statement more than the trials do, so they qualify it too. Decided at the source, as the brief asked: the script had not applied these four role corrections.",
+ "cards": [
+  {
+   "card": "sc_mitchell_2021",
+   "file": "data/study-cards/_incoming/mdma/sc_mitchell_2021.json",
+   "second_reader": "AI reader 34",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (RoB 2, unchanged; both readers agree)",
+   "log_entries": 23,
+   "changes_made": [
+    "Key finding 17 (registration) corrected from the registry's history of changes: the SDS became the registered secondary outcome only on 19 July 2019 (version 26; BDI-II and vital signs before); the ecstasy-use exclusion entered the record on 28 October 2024 (version 57). Locator extended.",
+    "The ecstasy-use exclusion relabelled as the registry's current text (added in 2024) in inclusion_exclusion, selection_effects, exposure.polysubstance and cannot_establish.",
+    "'Not recorded' corrected to 'not solicited' for expected effects such as euphoria (cannot_establish, interpretation_gap.results_show), as the article says.",
+    "'Everyone randomized' made exact: the 46 and 44 are the randomized and dosed (Fig. 3's title calls them all randomized); the participant who withdrew before dosing was on placebo by the registry flow (attrition, effect_sizes, key finding 8, reporting issue 5).",
+    "preregistration_detail corrected: the SDS replaced BDI-II and vital signs in the record during enrolment, which the article does not mention.",
+    "Reporting issue 6 extended: reference 13 (Hake et al., 2019), cited for MDMA enhancing fear extinction, is titled as showing that MDMA impairs it in rats.",
+    "Reporting issue 8 extended: three enrolment figures (105, 131 and the registry's 100).",
+    "Risk of bias: one sentence on why a blinded-rater outcome is rated high (measurement domain); the selection domain's note corrected for the SDS registration change (judgment for the primary outcome stays low).",
+    "Timeline: the 2020 cost-effectiveness analysis cited as reference 11 (two authors salaried by MAPS)."
+   ],
+   "rejected": [],
+   "for_senior_author": [
+    "Selection of the reported result: low for the CAPS-5 (both readers); for SDS results some concerns (AI reader 34), because the SDS became the registered secondary outcome during enrolment."
+   ]
+  },
+  {
+   "card": "sc_mitchell_2023",
+   "file": "data/study-cards/_incoming/mdma/sc_mitchell_2023.json",
+   "second_reader": "AI reader 34",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (RoB 2, unchanged; both readers agree)",
+   "log_entries": 8,
+   "changes_made": [
+    "Key finding 8 corrected: all 17 rows of Table 2 (dry mouth 9 vs 4, chills 8 vs 1 and restlessness 8 vs 2 added), checked on the table page.",
+    "The registry's ecstasy-use exclusion dated: it entered the record on 28 October 2024 (version 38).",
+    "Recruitment methods added from the registry's participant flow.",
+    "MAPP2's loss-of-diagnosis definition (a fall of 10 points or more and no longer meeting criteria) added to key finding 4's note and to outcomes.instruments, against MAPP1's diagnostic measure alone.",
+    "New reporting issue: Table 1 gives suicidal ideation in 91 of 104, the Results 87 of 104 with a lifetime history.",
+    "Interpretation gap: for balance, the CAPS-5 means in Fig. 2a are only about 3 points apart after session 1 (editors' reading of the image), beside Fig. 3's categorical difference.",
+    "Blinding survey: 52 of 53 and 44 of 51 answered; whether the non-respondents are those who stopped is not stated."
+   ],
+   "rejected": [],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_brett_2025",
+   "file": "data/study-cards/_incoming/mdma/sc_brett_2025.json",
+   "second_reader": "AI reader 34",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "critically low (AMSTAR 2, unchanged; both readers agree)",
+   "log_entries": 14,
+   "changes_made": [
+    "Key finding 0: the search keywords added (including MAPS and 'breakthrough therapy', no stated Boolean combination).",
+    "Key finding 4 corrected: MAPP2's rows are its Table 2 rounded, except feeling cold (missing); MAPP1's rows cannot be traced to the article and differ from the registry (muscle tightness 29 vs 5 against 28 vs 6; hyperhidrosis 9 vs 1 against 10 vs 1, a difference I add).",
+    "Reporting issue 3 corrected: the review's four MAPP1 dropouts per arm match the participants without an 18-week assessment (CONSORT), not treatment discontinuation (4 vs 7); for MAPP2 it counts discontinuation, so the two figures measure different things.",
+    "Reporting issue 6 and the exposure field corrected: Table 2 itself gives Ot'alora et al.'s active placebo as 40 mg and 30 mg in two columns (Table 1: 40 mg).",
+    "Caveat added wherever the card says no trial without a MAPS link was found: the keywords included MAPS (selection_effects, where_it_stands, AMSTAR item 4 note, reasoning).",
+    "Two new reporting issues: the 'same exact search' rerun cannot have kept the 2002-2022 limits; the review's account of the retractions omits the notices' grounds and does not name the third retraction.",
+    "Timeline entry on the retractions rewritten from the notices."
+   ],
+   "rejected": [],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_halvorsen_2021",
+   "file": "data/study-cards/_incoming/mdma/sc_halvorsen_2021.json",
+   "second_reader": "AI reader 34",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (editors' narrative-review checklist, unchanged; both readers agree)",
+   "log_entries": 5,
+   "changes_made": [
+    "Reporting issue 1 corrected (and the same wording in analysis and selection_effects): the letter describes reference 8 as a meta-analysis of CBT for PTSD; only its title names adult anxiety disorders.",
+    "New reporting issue: the letter's statement that cost-effectiveness had not been formally evaluated is contradicted by MAPP1's reference 11 (2020) and by the reply.",
+    "Key finding 2: editors' arithmetic note (Resick et al.: 77.8% and 82.5% without the diagnosis; the like-for-like MAPP1 figure is loss of diagnosis, 61% of the dosed MDMA arm)."
+   ],
+   "rejected": [],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_mitchell_2021b",
+   "file": "data/study-cards/_incoming/mdma/sc_mitchell_2021b.json",
+   "second_reader": "AI reader 34",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (editors' narrative-review checklist, unchanged; both readers agree)",
+   "log_entries": 4,
+   "changes_made": [
+    "Key finding 6 corrected: the APA panel's reason is insufficient evidence from direct comparisons; the different stringency of control conditions is the implication.",
+    "Interpretation gap corrected: MAPP1's Table 1 cannot show whether most participants had had first-line trauma-focused therapy (between 34 and 65 of 90 had CBT, EMDR or prolonged exposure; CBT not specified as trauma-focused).",
+    "Key finding 4: note that the cost-effectiveness statement is uncited and that the critics' 2022 model lists an author of the same name as the reply's first author."
+   ],
+   "rejected": [
+    "The missed item on blinding figures is already on the card (selective_reporting, assessor_blinding)."
+   ],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_nutt_2021",
+   "file": "data/study-cards/_incoming/mdma/sc_nutt_2021.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (editors' narrative-review checklist, unchanged; both readers agree)",
+   "log_entries": 8,
+   "changes_made": [
+    "Key finding 7 corrected: the reactivate-then-extinguish aim belongs to current treatments; MDMA facilitates exposure therapy and, by the figure legend, extinction; the amygdala finding is from human neuroimaging.",
+    "affiliations_note and the reliance domain's note corrected with Crossref: refs 4, 8 and 10 have Nutt as last author, so 5 of the 12 references are the authors' own, and ref 4 carries a clinical statement.",
+    "Two new reporting issues: ref 4 is titled a first study of safety and tolerability (cited for remarkably reduced drinking); refs 8 and 10 carry wrong volume or year.",
+    "Unreferenced statements added (Breakthrough designation; EMA approval of the protocol design).",
+    "Reporting issue 1 made exact: the piece never names the phase 3 sponsor; the link is by sequence.",
+    "Interpretation gap: 'excellent safety profile' goes beyond the trial's abstract; ref 4's title."
+   ],
+   "rejected": [],
+   "for_senior_author": [
+    "Reliance on the authors' own studies: low (first reader) or high (AI reader 35); the note now gives the facts (5 of 12 references the authors' own; ref 4 the only support for the alcohol-use-disorder statement). The overall judgment (high) does not change either way."
+   ]
+  },
+  {
+   "card": "sc_madero_2023",
+   "file": "data/study-cards/_incoming/mdma/sc_madero_2023.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (editors' narrative-review checklist, unchanged; both readers agree)",
+   "log_entries": 12,
+   "changes_made": [
+    "Key finding 4 and reporting issue 0 corrected: the safety sentence repeats the MAPP1 abstract after the sentence citing the trial; its wording means no excess over placebo.",
+    "Key finding 3's note, reporting issue 3 and outcomes.operationalization corrected: 'after completing treatment' is a time reference pointing to completers (two thirds agrees with 28 of 42); what is missing is the count, the week and the placebo figure.",
+    "selection_effects corrected: Sessa, Higbed and Nutt (2019) is not shown to be by the sponsor's investigators.",
+    "Interpretation gap: the FDA decision cited as 'by August 2024' (the BMJ gives no date); the account of MAPP1 follows its abstract without appraisal."
+   ],
+   "rejected": [
+    "The pointer that the economic model's authors include the critique's first author is already on the card (affiliations_note)."
+   ],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_earleywine_2025",
+   "file": "data/study-cards/_incoming/mdma/sc_earleywine_2025.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "some concerns (editors' qualitative checklist, unchanged; both readers agree)",
+   "log_entries": 7,
+   "changes_made": [
+    "results_show corrected: hope came up in 20 of 30 stories, 18 with positive hopes and 2 alluding to little hope (Table 1's definition); key finding 3's note added.",
+    "Interpretation gap: the closing sentence contradicts the Discussion's p. 6 conclusion on targeted information; the uncited efficacy line in the psychoeducation paragraph (p. 7).",
+    "New reporting issue: two more unsourced background statements (2017 Breakthrough status, p. 1; p. 7).",
+    "Rigour domain note: the orthogonality criterion (no chi-square p < .001) and the absent code-code correlations (judgment unchanged)."
+   ],
+   "rejected": [
+    "The Introduction's citation of the critics' 2022 cost model (p. 1) is true but not added: no claim rests on it."
+   ],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_marseille_2025",
+   "file": "data/study-cards/_incoming/mdma/sc_marseille_2025.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (editors' narrative-review checklist, unchanged; both readers agree)",
+   "log_entries": 3,
+   "changes_made": [
+    "Exposure field corrected: 11,537 dollars is from the authors' earlier analyses (2020 and 2022; the commentary does not say which), not the 2022 model.",
+    "affiliations_note: the second author has the same name and affiliations as the first author of both phase 3 trials (UCSF Neurology and Psychiatry and Behavioral Sciences; the San Francisco VA Medical Center in MAPP2), checked on the trials' author information; the reliance domain's note says so (judgment unchanged)."
+   ],
+   "rejected": [],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_mahase_2024",
+   "file": "data/study-cards/_incoming/mdma/sc_mahase_2024.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "some concerns (editors' narrative-review checklist, unchanged; both readers agree)",
+   "log_entries": 4,
+   "changes_made": [
+    "Key finding 2 corrected: the article says 'reports suggest'; ref 4 is the New York Times, ref 5 a 2019 MAPS statement, ref 6 a CBC report of March 2022; note that ref 6 concerns a British Columbia trial and the sources do not say whether that is MP4.",
+    "Balance domain note: Amy Emerson, quoted at length, is by elimination among the authors who did not respond about the retraction of her two papers.",
+    "Timeline: MAPS's statement of 24 May 2019 (date from its URL; not read)."
+   ],
+   "rejected": [],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_feduccia_2024",
+   "file": "data/study-cards/_incoming/mdma/sc_feduccia_2024.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "some concerns (no instrument; editors' checklist read for a notice; unchanged; both readers agree)",
+   "log_entries": 3,
+   "changes_made": [
+    "Key finding 2 and funding.funder: the notice's own construction kept (MAPS 'fully funded and provided the MDMA that was used in this trial'), not the BMJ's reading.",
+    "Reporting issue added for consistency with the other two notices: the ambiguous 'by researchers associated with this project', and no dates for when the editors were informed."
+   ],
+   "rejected": [],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_jerome_2024",
+   "file": "data/study-cards/_incoming/mdma/sc_jerome_2024.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "some concerns (unchanged; both readers agree)",
+   "log_entries": 2,
+   "changes_made": [
+    "Reporting issue added: the ambiguous 'by researchers associated with this project' (noted by AI reader 35 on this card) and no dates."
+   ],
+   "rejected": [
+    "'Corporations' (plural) in the affiliation: the card's '(s)' already shows it."
+   ],
+   "for_senior_author": []
+  },
+  {
+   "card": "sc_mithoefer_2024",
+   "file": "data/study-cards/_incoming/mdma/sc_mithoefer_2024.json",
+   "second_reader": "AI reader 35",
+   "status": "ai-checked",
+   "risk_of_bias_overall": "some concerns (unchanged; both readers agree)",
+   "log_entries": 1,
+   "changes_made": [
+    "Reporting issue added: the ambiguous 'by researchers associated with this project' (who informed the editors, or whose conduct), no dates for when the editors were informed or for the violations; the sponsor's statement of 24 May 2019 given as context, with its link to MP4 left open."
+   ],
+   "rejected": [],
+   "for_senior_author": []
+  }
+ ],
+ "claims": [
+  {
+   "claim": "cl_mdma_ptsd_efficacy",
+   "version_patched": "0.1.1 -> 0.2.0",
+   "decisions": {
+    "wording": "'Reduced clinician-rated PTSD symptoms' becomes 'lowered clinician-rated PTSD symptom scores'. 'Most participants could tell their group and expectancy was not measured' becomes: in MAPP2, the only trial that asked, 94% and 75% identified their group; MAPP1 did not assess blinding; neither trial reports a measure of expectancy. Loss-of-diagnosis denominators named (completers in MAPP1; for MAPP1 'everyone randomized' is everyone dosed). 'No trial compares' limited to the sources read (the review's search keywords included MAPS); 'the trial reports give no outcome after 18 weeks' (the sponsor's cost model used 17 months of follow-up, known only second-hand). Magnitude: the printed d of 0.91 explained. Population: high suicide risk excluded in MAPP2 only. Plain text follows.",
+    "relation": "reduces, kept: the comparison is randomized, so causal language about the assigned package (MDMA against placebo within the same therapy) is supported, as for other randomized claims at low certainty on the site; the doubt concerns measurement and what the contrast isolates, which the statement says, and MDMA's own contribution is the contested claim's question.",
+    "status": "replicated by the same team, unchanged.",
+    "grade": "moderate -> low: risk of bias two levels (very serious). Unblinding documented in MAPP2 and not assessed in MAPP1, a participant-reported outcome, no reported expectancy measure and no record of assessors' guesses, a bias that runs toward a larger difference, is shared by both trials (so their agreement does not reduce it) and cannot be sized, against differences of 8.9 and 11.9 points with lower limits of 4.1 and 6.3. Both second readers and the first reader's strict reading. Other domains unchanged; the single sponsor is carried by the status, not by a further level.",
+    "verification": "ai-anchored, unchanged: two primary trial reports and their registries read in full, every anchor checked."
+   },
+   "for_senior_author": [
+    "Confirm the downgrade to low (it moves the contested claim to very low).",
+    "Not added for want of an anchor: MAPP1's SDS became its registered secondary outcome during enrolment (registry history, card key finding 17), and MAPP2's loss of diagnosis also requires a 10-point fall; an anchor for each would let the claim say so."
+   ]
+  },
+  {
+   "claim": "cl_mdma_ptsd_blinding",
+   "version_patched": "0.2.1 -> 0.3.0",
+   "decisions": {
+    "wording": "The opening no longer extends MAPP2's survey to both trials (AI reader 34). Expectancy: not measured in MAPP2, no measure reported for MAPP1 (statement, plain text, magnitude). The commentaries welcomed the first trial, one also relaying the sponsor's announcement of the second (AI reader 35).",
+    "relation": "describes, unchanged.",
+    "status": "single study, unchanged (MAPP2's survey is the only blinding measurement).",
+    "grade": "low, unchanged: a description from one end-of-study survey; nothing could reverse the finding that most respondents identified their group.",
+    "verification": "ai-anchored, unchanged."
+   },
+   "for_senior_author": []
+  },
+  {
+   "claim": "cl_mdma_ptsd_adverse_events",
+   "version_patched": "0.3.2 -> 0.4.0",
+   "decisions": {
+    "wording": "MAPP1's expected effects 'intentionally not solicited' as adverse events, not 'not recorded', with the registry's lack of a euphoria term (AI reader 34); high suicide risk excluded in MAPP2 only; severity graded by the site physician (MAPP2) added. Added from anchors already in the claim (AI reader 35): the committee's benefit-risk view as the BMJ reports it, and the 2025 study's unsourced statement that the rejection cited weak safety documentation and adverse-event reporting. Plain text: the first trial did not ask about effects such as feeling very happy as side effects.",
+    "anchors": "Removed: the BMJ's account of the phase 2 misconduct and the Mithoefer et al. retraction note (anchors 22 and 23), which the statement does not use and which concern conduct at a phase 2 site; they remain in the contested claim and in the new retraction claim. Anchor 14 (Halvorsen et al.) refined at the source.",
+    "relation": "increases, unchanged.",
+    "status": "replicated by the same team, unchanged.",
+    "grade": "moderate (for the increase in common adverse events), unchanged: one level for risk of bias. The recording limits (effects not solicited, unblinded collection, no relatedness, twofold rule) bear on completeness, severity labels and rare events, but cannot create two- to sixfold differences in pharmacologically expected events, and the main omission undercounts MDMA's effects. Serious, severe, cardiac, suicidality and misuse events stay outside the rating, described as too few.",
+    "verification": "ai-anchored, unchanged (every remaining anchor checked)."
+   },
+   "for_senior_author": [
+    "Confirm the removal of the two misconduct anchors from this claim (the alternative was to keep them with a clause saying they concern a phase 2 site's conduct)."
+   ]
+  },
+  {
+   "claim": "cl_mdma_regulatory_2024",
+   "version_patched": "0.2.0 -> 0.3.0",
+   "decisions": {
+    "split": "Split, as both second readers recommended: the retractions, documented by the journal's own notices, become cl_mdma_retractions_2024 (new_claims.json), with the three notice anchors and the BMJ's account of the violations moved with their checked status; this claim keeps the FDA decision as reported second-hand. The joined claim made the primary record inherit the weakest link (very low) and let a second-hand FDA account pass the ladder only because one source is carded as a qualitative study.",
+    "wording": "'Citing news reports' becomes 'citing news reports and an article in JAMA' (Earleywine et al. cite the rejection to Marks, 2024, JAMA, and the concerns to the New York Times and Vox); the month of the decision attributed to the 2025 commentary citing CNN, the BMJ placing it before the retractions; 'press reports' leaves this claim (it moves, corrected, to the retraction claim); plain text: the panel 'did not think the data showed that the treatment worked', not 'doubted that the treatment worked'.",
+    "relation": "describes, unchanged.",
+    "status": "single study, unchanged (one news report's reading of the minutes).",
+    "grade": "very low, unchanged: a description, start low, one level for a second-hand account with two unsourced statements.",
+    "verification": "ai-anchored -> draft: the claim now rests only on a news report, a commentary and a qualitative study's background statements citing news (METHODS §6.3; the brief). The validator's 'may move up' warning is expected."
+   },
+   "for_senior_author": [
+    "Confirm the split. The FDA's decision letter or the committee's final summary minutes (30 July 2024) would let this claim leave draft."
+   ]
+  },
+  {
+   "claim": "cl_mdma_retractions_2024 (new)",
+   "version_patched": "new, 0.1.0",
+   "decisions": {
+    "content": "The three retractions of 10 August 2024, their stated grounds (MP4 violations known at submission, neither disclosed nor removed; competing interests not fully declared), the notices' own construction on funding, the authors' positions (6 of 8, 4 of 5 and 3 of 4 respondents disagree) and what the notices do not say; the BMJ's second-hand account of the violations as a qualifier.",
+    "relation": "describes.",
+    "status": "single study (three notices from one journal, issued together on the same grounds).",
+    "grade": "low: a description from primary records read in full with matching Crossref links; start low, no domain rated down, never upgraded.",
+    "verification": "draft: held there only because the notice cards use the narrative-review design, which the validator treats as narrative-only (METHODS §6.3); every anchor is ai-checked."
+   },
+   "for_senior_author": [
+    "Give retraction notices a design of their own (both first and second readers suggest one); the claim can then move to ai-anchored."
+   ]
+  },
+  {
+   "claim": "cl_mdma_ptsd_cost",
+   "version_patched": "0.1.1 -> 0.2.0",
+   "decisions": {
+    "wording": "AI reader 35's five fixes, each checked on Marseille & Mitchell pp. 1-3 and Madero & Alvarez p. 20: 'in the sources read'; which models are second-hand and which are the critics' own runs; the earlier analyses (11,537 dollars, savings at five years) separated from the new runs (8.4 years, 160 dollars per QALY, dominant at any drug price below 10,320 dollars); access 'extended to 25% to 75% of eligible patients with chronic and severe PTSD'; the plain text attributes the argument to the critics. AI reader 34's note added: the critique's second author has the same name and the same UCSF departments as the first author of both phase 3 trials (editors' comparison), with a new anchor from MAPP2's author information (ai-located). Magnitude rewritten to match.",
+    "relation": "describes, unchanged.",
+    "status": "single study, unchanged.",
+    "grade": "very low, unchanged (risk of bias and indirectness one level each); the reasoning adds the authorship link.",
+    "verification": "draft, unchanged: rests only on two commentaries."
+   },
+   "for_senior_author": [
+    "Not adopted: AI reader 34's wording that the 2020 model was co-written by MAPS staff; true (MAPP1's reference 11 and competing interests) but it needs its own anchor, and the statement's 'co-written by an author who declares financial ties' is exact."
+   ]
+  },
+  {
+   "claim": "cl_mdma_therapy_contested",
+   "version_patched": "0.3.1 -> 0.4.0",
+   "decisions": {
+    "wording": "Statement: unblinding for MAPP2 only, expectancy as not reported, expected effects 'not solicited' (MAPP1), later follow-up known only second-hand.",
+    "relation": "insufficient evidence, unchanged.",
+    "status": "contested, unchanged.",
+    "grade": "low -> very low: risk of bias two levels, following the efficacy claim; indirectness one level, unchanged.",
+    "verification": "ai-anchored, unchanged (the four role changes do not reopen any anchor).",
+    "anchors": "Anchors 13 to 16: supports -> qualifies (n = 87 to 90).",
+    "debate": "In-text citations now match the site's labels: MAPP1 (Mitchell, Bogenschutz, et al., 2021), the reply (Mitchell, Coker, et al., 2021), Halvorsen et al. (2021); all resolve. The month of the FDA decision is cited to Marseille & Mitchell (2025), who give it (citing CNN); the BMJ gives no date. Yes side: the 17-month follow-up used in the sponsor's cost model and its documented fall in health-care use (second-hand, no figures); the phase 2 trials with a low-dose comparator in which the review judged the blind maintained or partly maintained (one significant, one not; second-hand); MAPP2's sex imbalance, which favours placebo. No side: 'a systematic review whose search keywords included MAPS' found no trial without a MAPS link; Halvorsen et al.'s 'similar or greater' reductions with half or less of the therapy time; high suicide risk excluded in MAPP2. Neither side: longer follow-up known only second-hand. Editors' reading: follows the new certainties (low for the comparison, moderate for common adverse events, very low overall); 'the two commentaries that welcomed the first trial'; the sponsor's cost analysis and MPLONG added to what is missing. Nothing else in the editors' reading goes beyond the sources."
+   },
+   "for_senior_author": [
+    "The three yes-side additions rest on the cards (Brett & Bynum Table 5 and Table 2; MAPP2 Table 1 and Results › Exploratory outcomes, 2nd paragraph; Marseille & Mitchell p. 2, already an anchor); anchors for the first two can be added at the next targeted round."
+   ]
+  }
+ ],
+ "claims_patch": {
+  "file": "data/verification/cardcheck-2026-10-17f/claims_patch.json",
+  "patches": 6,
+  "dry_run": "checked (dry run) 6 patches to 1 file(s)",
+  "applied": false,
+  "note": "Every changed field carries an expect with its current value, and each patch expects the claim's current version. Two patches rewrite 'evidence' with set (the adverse-event claim drops anchors 22 and 23; the regulatory claim keeps anchors 0 to 5 and 10), guarded by expects on the moved anchors' references. All six are minor bumps."
+ },
+ "new_claims": {
+  "file": "data/verification/cardcheck-2026-10-17f/new_claims.json",
+  "claims": [
+   "cl_mdma_retractions_2024"
+  ],
+  "note": "Schema-valid (validated in the sandbox run). Its four anchors are copies of cl_mdma_regulatory_2024 anchors 6 to 9 as they stand at version 0.2.0, with their ai-checked status; add it to data/claims/mdma.json after the regulatory claim in the same commit as the patch."
+ },
+ "simple_lines": "data/verification/cardcheck-2026-10-17f/simple_reader38.json (seven claims, with the version each was written from)",
+ "for_editor": [
+  "Merge the thirteen cards from data/study-cards/_incoming/mdma/ together with the claims patch: the claims now cite the adjudicated card content.",
+  "Apply claims_patch.json and add new_claims.json in one commit; the patch's set on 'evidence' assumes the claim versions it expects (0.3.2 and 0.2.0).",
+  "data/site/simple.json has no batch-2 MDMA entries yet; add the suggested lines with their 'v' in the same commit.",
+  "One new anchor needs a targeted check by a reader who did not write it: cl_mdma_ptsd_cost, MAPP2 author information (ai-located by me).",
+  "Anchors to consider at the next targeted round: MAPP1 registry history (SDS registration) and MAPP2 Methods › Outcomes, 2nd paragraph (loss-of-diagnosis definition) for the efficacy claim; Brett & Bynum Table 5 (p. 7) and MAPP2 Table 1 and Exploratory outcomes, 2nd paragraph, for the contested claim's new yes-side sentences.",
+  "AI reader 36 is adjudicating the batch-1 MDMA claims in the same file; no batch-1 claim is touched by this patch.",
+  "While this adjudication ran, other readers wrote cards to the same folder (sc_fda_2024a to sc_fda_2024d, sc_burke_2021). I did not read or change them, and nothing here rests on them; if they card the regulator's own documents, the regulatory claim can be re-anchored on them once they are checked, and could then leave draft."
+ ],
+ "for_senior_author": [
+  "cl_mdma_ptsd_efficacy: certainty moderate -> low (risk of bias two levels), with 'reduces' kept; cl_mdma_therapy_contested follows to very low.",
+  "cl_mdma_regulatory_2024: split into the FDA decision (draft, very low) and cl_mdma_retractions_2024 (low; draft only because of the notice cards' design). Decide whether notices get a design of their own.",
+  "cl_mdma_ptsd_adverse_events: the two misconduct anchors removed; moderate kept for the common events.",
+  "Single-domain judgments left as the first readers wrote them: Nutt & de Wit, reliance on the authors' own studies (low vs high); MAPP1, selection of the reported result for SDS results (low vs some concerns). Neither changes an overall judgment.",
+  "Still unread and needed: the FDA's decision letter and the committee's final summary minutes (30 July 2024); Burke & Blumberger (2021); the sponsor's cost-effectiveness analysis (Stanicic et al., 2024); the phase 3 long-term follow-up (MPLONG); the trials' supplements."
+ ]
+}

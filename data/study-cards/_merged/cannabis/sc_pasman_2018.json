@@ -1,0 +1,332 @@
+{
+ "id": "sc_pasman_2018",
+ "substance": "cannabis",
+ "reference": "pasman_2018",
+ "design": "cross-sectional",
+ "design_detail": "Genome-wide association meta-analysis of self-reported lifetime (ever versus never) cannabis use in 184,765 people of European ancestry: International Cannabis Consortium (ICC) summary statistics (N=35,297), UK Biobank (N=126,785) and 23andMe (N=22,683), with gene-based tests (MAGMA), a transcriptome-wide association analysis of genetically predicted expression (S-PrediXcan), SNP heritability and genetic correlations with 25 traits (LD score regression), and bidirectional two-sample Mendelian randomization between lifetime cannabis use and schizophrenia using the 2014 Psychiatric Genomics Consortium (PGC2) summary statistics: forward instruments of 5 variants (p<5×10^-8) and 69 variants (p<10^-5), a reverse instrument of 109 genome-wide significant schizophrenia variants, each analysed by inverse-variance weighting with weighted median, MR-Egger with SIMEX correction, weighted mode and GSMR with HEIDI outlier filtering. Filed as cross-sectional and appraised with ROBINS-E under the round brief's rule for genome-wide association studies: the phenotype is reported once, retrospectively, and the genetic associations are cross-sectional. A genome-wide association study locates variants associated with a trait and estimates shared genetic influences between traits; it cannot by itself show that any variant, gene or trait causes another, and only the Mendelian randomization component addresses direction, under its assumptions. Version read: the NIH author manuscript in PMC, which predates the 2019 Author Correction.",
+ "can_establish": "Which common variants are associated with having ever used cannabis in European-ancestry samples, how much of the variation all measured variants together explain, how genetic influences on lifetime use overlap with those on 25 other traits, and, by bidirectional Mendelian randomization, whether the genetic overlap with schizophrenia fits a causal effect of genetic liability in either direction.",
+ "cannot_establish": "That any variant or gene causes cannabis use or that any trait causes another (association and shared genetic influence only), an effect of cannabis use on schizophrenia with useful precision (the forward instruments explain 0.15% and 1.12% of the variance in lifetime use), whether liability to schizophrenia acts through prodromal symptoms, personality or social routes, or anything about frequency of use, dependence or potency (the phenotype is ever versus never).",
+ "sample": {
+  "n_total": 184765,
+  "n_by_group": {
+   "ICC (summary statistics)": 35297,
+   "UK Biobank": 126785,
+   "23andMe": 22683,
+   "variants meta-analysed": 11733371,
+   "forward instrument variants, p<5e-8": 5,
+   "forward instrument variants, p<1e-5": 69,
+   "reverse instrument variants (schizophrenia)": 109,
+   "traits in genetic correlation analyses": 25
+  },
+  "recruitment": "ICC summary statistics from 16 cohorts in North America, Europe and Australia; 23andMe research participants who consented and answered online surveys; UK Biobank participants who completed an online follow-up questionnaire; all of European ancestry (Online Methods › Samples).",
+  "inclusion_exclusion": "European ancestry in all three sources; sample-specific quality control (Supplementary Tables S11 and S12, not read); variants aligned to the Haplotype Reference Consortium panel and removed if their allele frequency differed by more than 0.15 from it; 11,733,371 variants passed quality control (Online Methods › Statistics › Genome-wide association analyses and meta-analysis).",
+  "demographics": "ICC: 55.5% women, aged 16 to 87 (mean 35.7), 42.8% had ever used cannabis. 23andMe: 55.3% women, aged 18 to 94 (mean 54.0), 43.2%. UK Biobank: 56.3% women, aged 39 to 72 (mean 55.0), 22.3% (Online Methods › Samples).",
+  "attrition": "Not applicable (single cross-sectional report). The sample size varies by variant because of missingness across sources; for example rs9773390, absent from UK Biobank, rests on 44,595 people (Table 1).",
+  "selection_effects": "UK Biobank volunteers who completed an online follow-up and 23andMe customers who answered research surveys are self-selected; lifetime use was about half as common in UK Biobank (22.3%) as in the other sources; the samples differ in age, national policy and question wording, which the authors name as a source of heterogeneity. The ICC part (35,297) is not the ICC discovery sample of 32,330 cited in the Introduction (see reporting issues). Sample overlap between this GWAS, which includes the ICC cohorts, and PGC2 is not addressed."
+ },
+ "exposure": {
+  "measurement": "Self-reported lifetime cannabis use, yes or no, with different questions across sources (per cohort in the ICC; a single online question in 23andMe and in UK Biobank, both quoted in the Online Methods), analysed as the GWAS phenotype; for Mendelian randomization, genetic instruments for lifetime use (5 or 69 variants) and for schizophrenia liability (109 variants).",
+  "dose_frequency_duration_route": "None: ever versus never, combining people who tried cannabis once with people who use it regularly (the authors' first limitation).",
+  "purity_known": false,
+  "polysubstance": "Not adjusted in any analysis. Lifetime use shares genetic influences with ever smoking, alcohol consumption and alcohol dependence (significant genetic correlations, Figure 4), and no multivariable Mendelian randomization was run.",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "GWAS: people who reported ever using cannabis against people who reported never using it, by logistic regression with sex, age, ancestry and genotype batch as covariates (and age squared in UK Biobank) in 23andMe and UK Biobank, and as in the original analyses for the ICC. Mendelian randomization: contrasts along genetic scores of liability, with schizophrenia associations from PGC2 cases and controls.",
+  "matching": "Not applicable; covariates as above.",
+  "unmeasured_premorbid": "Risk-taking, openness, conscientiousness, ADHD liability, education and socio-economic position, which share genetic influences with lifetime use in this paper, are not adjusted in the Mendelian randomization; within-family designs, which would remove residual population stratification and assortative mating, were not used.",
+  "controls_other_drug_use": "Not handled."
+ },
+ "outcomes": {
+  "instruments": "Self-reported lifetime cannabis use (the GWAS phenotype, and the outcome of the reverse Mendelian randomization); schizophrenia case status from the PGC2 study of 2014 (the forward outcome); 25 traits from published genome-wide studies for the genetic correlations (Supplementary Table S6, not read).",
+  "validity_norms": "Question wording differs by source and is not validated against other measures; PGC2 case definitions are not described.",
+  "operationalization": "GWAS: per-allele log odds of lifetime use, combined by fixed-effects inverse-variance meta-analysis (METAL) after genomic control, with standard errors corrected by the LD score regression intercepts (1.005 ICC, 1.004 23andMe, 1.022 UK Biobank); genome-wide significance p<5×10^-8. Mendelian randomization: B, the change in the outcome's log odds per one-unit increase in the exposure's log odds, exponentiated to odds ratios (Table 3; see reporting issues on the footnote's interpretation).",
+  "n_outcomes_tested": 27,
+  "multiplicity_correction": "Bonferroni-type thresholds for variants (5×10^-8), genes (2.74×10^-6 for 18,293 genes), S-PrediXcan (1.92×10^-7 for 259,825 gene–tissue tests) and genetic correlations (0.002 for 25 traits). None for the Mendelian randomization: three instrument–direction combinations, five methods each, judged at a nominal 0.05. The count of 27 is the 25 genetic correlations and the two Mendelian randomization directions.",
+  "assessor_blinding": "Not applicable (the authors state that randomization and blinding do not apply)."
+ },
+ "analysis": {
+  "effect_sizes": "[GWAS] Top variant rs2875907 (CADM2) β 0.070 (SE 0.009), p=9.38×10^-17; NCAM1 rs9919557 β −0.055 (SE 0.009), p=9.94×10^-11; SNP heritability 0.11 (SE 0.01). Genetic correlation with schizophrenia rg 0.24 (SE 0.03) as printed, corrected to 0.25 (SE 0.03, P=5.81×10^-15) in the 2019 Author Correction; the other genetic correlations appear only as a plot (Figure 4) and in Supplementary Table S6 (not read). [Mendelian randomization; OR per one-unit increase in the log odds of the exposure; no adjustment] Liability to lifetime use on schizophrenia, 5 genome-wide significant variants: IVW 1.04 (B 0.039, SE 0.158), p=0.806; weighted median 0.95, p=0.649; MR-Egger SIMEX 0.96, p=0.827; weighted mode 0.92, p=0.536. 69 variants at p<10^-5: IVW 1.10 (95% CI 0.99 to 1.21; B 0.091, SE 0.051), p=0.074; weighted median 1.07, p=0.156; MR-Egger SIMEX 1.11, p=0.340; weighted mode 1.02, p=0.823; GSMR after HEIDI filtering (74 variants) 1.21 (B 0.192, SE 0.080), p=0.017. Schizophrenia liability on lifetime use, 109 variants: IVW 1.16 (1.06 to 1.27; B 0.151, SE 0.046), p=0.001; weighted median 1.17, p=0.001; MR-Egger SIMEX 1.07 (B 0.071, SE 0.293), p=0.810; weighted mode 1.37, p=0.080; GSMR (102 variants) 1.27 (B 0.237, SE 0.038), p=5.36×10^-10. Editors' conversion to the per-doubling scale used by Gage et al. (2017), multiplying B by ln 2: forward (69 variants, IVW) 1.07 (0.99 to 1.14); reverse (IVW) 1.11 (1.04 to 1.18).",
+  "covariates": "GWAS: sex, age, ancestry and genotype batch (age squared in UK Biobank) in the new samples. Mendelian randomization: none (no multivariable analysis).",
+  "preregistration": "none",
+  "preregistration_detail": "No registration or analysis plan is reported; a Life Sciences Reporting Summary is mentioned (not read).",
+  "selective_reporting": "The abstract reports the reverse-direction result and none of the forward-direction results, including the one nominally significant forward estimate (GSMR 1.21, p=0.017); the text summarises the forward evidence as weak. The genetic correlations are shown only as a plot without printed values. The MR-Egger intercepts are only in Supplementary Table S10 (not read).",
+  "power": "The authors attribute the weak forward evidence to low power. Variance explained by the instruments: 0.15% (5 variants) and 1.12% (69 variants) of lifetime use, and 3.38% of schizophrenia liability (109 variants). Editors' approximate F statistics from these values and the effective sample sizes the paper gives (180,934 for cannabis use, 130,072 for schizophrenia): about 54, 30 and 42."
+ },
+ "interpretation_gap": {
+  "results_show": "Eight independent genome-wide significant variants in six regions (strongest in CADM2), a SNP heritability of 11%, and genetic correlations of lifetime use with 14 of 25 traits, including schizophrenia (rg about 0.25), ever smoking, alcohol use, ADHD, risk-taking and openness. In Mendelian randomization, genetic liability to schizophrenia was associated with lifetime use by IVW (OR 1.16 per unit of the log odds of schizophrenia), weighted median and GSMR, but not by MR-Egger SIMEX (1.07, p=0.81) or weighted mode (p=0.08); liability to lifetime use was not clearly associated with schizophrenia (IVW 1.04 with 5 variants; 1.10, p=0.074, with 69), except by GSMR (1.21, p=0.017).",
+  "claimed": "The original title and abstract speak of a causal influence of schizophrenia (risk) on cannabis use, and the discussion says that individuals with schizophrenia have a higher risk of starting to use cannabis. The 2019 Author Correction rewords this as liability to schizophrenia, explaining that few participants in the cannabis data will have had the diagnosis, which closes the main gap. Remaining gaps: (1) the abstract says 21 genes had different expression levels in people who used cannabis than in people who did not, whereas S-PrediXcan estimates genetically predicted expression associated with the trait, as the Online Methods say; (2) the non-significant MR-Egger intercept is read as showing no pleiotropy, though the method has little power here (I2 0.7 to 0.9) and the paper's own genetic correlations show shared genetic influences with risk-taking and other traits; (3) the explanation that people at risk use cannabis to cope with prodromal symptoms or negative affect is not tested; (4) the abstract does not report the forward-direction results; (5) the Table 3 footnote reads the odds ratios as comparisons of people who did and did not use cannabis, or who had and did not have a schizophrenia diagnosis, which the analysis does not estimate.",
+  "gap_assessment": "minor"
+ },
+ "replication": {
+  "status": "partially-replicated",
+  "timeline": [
+   {
+    "year": 2010,
+    "event": "Verweij et al., meta-analysis of twin studies: heritability of lifetime cannabis use about 45%, cited here as the benchmark for the SNP heritability of 11%."
+   },
+   {
+    "year": 2014,
+    "event": "Power et al.: genetic risk for schizophrenia associated with cannabis use (ref 21), cited as earlier evidence of a positive genetic overlap."
+   },
+   {
+    "year": 2016,
+    "event": "Stringer et al., ICC genome-wide study of lifetime use (32,330 people, no genome-wide significant variant; gene-based NCAM1, CADM2, SCOC and KCNT2): its data are included in this meta-analysis, and CADM2 and NCAM1 are again among the strongest findings."
+   },
+   {
+    "year": 2016,
+    "event": "Sherva et al., genome-wide study of cannabis dependence: the one of its three variants available here (rs77378271) was not associated with lifetime use (p=0.144)."
+   },
+   {
+    "year": 2017,
+    "event": "Verweij et al.: genetic correlation between schizophrenia and cannabis use (ref 20), consistent with the rg reported here."
+   },
+   {
+    "year": 2017,
+    "event": "Vaucher et al. (2018; online January 2017), read in this round: forward-only Mendelian randomization reporting an effect of cannabis use on schizophrenia risk; the authors say their own results contrast with it and note that it did not test the reverse direction."
+   },
+   {
+    "year": 2017,
+    "event": "Gage et al. (online December 2016), read in this round: bidirectional Mendelian randomization with weak forward and stronger reverse evidence, which the authors say their results agree with; on a common scale the reverse estimates are about 1.10 (Gage) and 1.11 (this study) per doubling of the odds of schizophrenia liability (editors' conversion), from overlapping data."
+   },
+   {
+    "year": 2018,
+    "event": "Demontis et al. (preprint), genome-wide study of cannabis use disorder implicating CHRNA2: neither its lead variant (p=0.55) nor the gene (p=0.52) was associated with lifetime use here; the authors suggest CHRNA2 may relate to dependence rather than to starting use."
+   },
+   {
+    "year": 2019,
+    "event": "Author Correction (Nature Neuroscience 22, 1196; doi 10.1038/s41593-019-0402-7): the title becomes a causal effect of schizophrenia liability, several mentions of schizophrenia are reworded as liability to schizophrenia or schizophrenia risk, and the genetic correlation is corrected to rg 0.25 (SE 0.03, P=5.81×10^-15)."
+   },
+   {
+    "year": 2021,
+    "event": "Gillespie and Kendler, viewpoint on genetically informed methods, cite this study among the Mendelian randomization evidence that liability to schizophrenia raises cannabis use (as recorded on card sc_gillespie_2021; not re-read for this card).",
+    "reference": "gillespie_2021"
+   }
+  ],
+  "where_it_stands": "The largest genome-wide study of lifetime cannabis use when published. Its reverse-direction Mendelian randomization agrees with Gage et al. (2017) on about the same scale, but both use PGC2 and overlapping cannabis data (this study includes the ICC cohorts), so the agreement is not independent. Its forward instruments, although now genome-wide significant, explain 0.15% of the variance in lifetime use and leave the question of an effect of cannabis on schizophrenia open rather than answered in the negative. Nothing here concerns frequent or high-potency use or cannabis use disorder."
+ },
+ "funding": {
+  "funder": "Acknowledgements: J. A. Pasman and J. M. Vink, European Research Council (Beyond the Genetics of Addiction, ERC-284167); K. J. H. Verweij, Foundation Volksbond Rotterdam; N. A. Gillespie, US National Institutes of Health, National Institute on Drug Abuse (R00DA023549); J. L. Treur, Netherlands Organization for Scientific Research (NWO Rubicon 446-16-009); S. MacGregor, Australian Research Council Fellowship; computing on the Genetic Cluster Computer, supported by NWO (480-05-003), the Dutch Brain Foundation and VU University Amsterdam, and by NWO exact sciences; M. G. Nivard, Royal Netherlands Academy of Science Professor Award to D. I. Boomsma (PAH/6635); the PGC Substance Use Disorders Working Group, NIDA and NIMH (MH109532) and previously NIAAA (U01AA008401, COGA); J. MacKillop, Peter Boris Chair in Addictions Research; S. Sanchez-Roige, Frontiers of Innovation Scholars Program (#3-P3029), Interdisciplinary Research Fellowship in NeuroAIDS (MH081482) and a pilot award (DA037844); R. Mägi, European Regional Development Fund (2014-2020.4.01.15-0012) and Horizon 2020 (692065, 692145); J. Kaprio, Academy of Finland (263278, 292782); M. Ribases, Miguel de Servet contract, Instituto de Salud Carlos III (CP09/00119, CPII15/00023). UK Biobank applications 9905, 16406 and 25331.",
+  "declared_conflicts": "Competing interests: P. Fontanillas, S. L. Elson and members of the 23andMe Research Team are employees of 23andMe Inc. J. A. Ramos-Quiroga was on the speakers' bureau of, or a consultant for, Eli-Lilly, Janssen-Cilag, Novartis, Shire, Lundbeck, Almirall, BRAINGAZE, Sincrolab and Rubió in the previous five years, received travel awards from Janssen-Cilag, Rubió, Shire and Eli-Lilly, and the department he chairs received unrestricted educational and research support from Eli-Lilly, Lundbeck, Janssen-Cilag, Actelion, Shire, Ferrer and Rubió. No other interests are declared.",
+  "affiliations_note": "Radboud University Nijmegen, Vrije Universiteit Amsterdam and University of Amsterdam, QIMR Berghofer (Brisbane), University of Bristol (MRC Integrative Epidemiology Unit), 23andMe and many cohort institutions. Several authors are ICC members and authors of the earlier ICC genome-wide study and of the 2017 genetic-correlation study, so the paper builds on and re-uses their own data; 23andMe employees are co-authors, and full summary statistics are available only with 23andMe's permission."
+ },
+ "what_would_settle_it": "Genome-wide studies of frequency of use or cannabis use disorder large enough to give instruments that explain more of the variance, used in bidirectional Mendelian randomization with multivariable adjustment for risk-taking, education and other substance use, with within-family genetic designs to remove residual stratification, and with cohort data on prodromal symptoms measured before first use to test the self-medication explanation of the reverse association.",
+ "risk_of_bias": {
+  "instrument": "ROBINS-E",
+  "domains": [
+   {
+    "domain": "Confounding",
+    "judgment": "some-concerns",
+    "note": "Judged for the genetic correlation and the reverse-direction Mendelian randomization, the paper's headline results. Independence (no confounding of the instrument): European ancestry only; LD score regression intercepts near 1 (1.005, 1.004 and 1.022 by source; 1.00, SE 0.007, for the meta-analysis) indicate little inflation from population stratification, and standard errors were corrected with them; within-family designs were not used, so residual stratification or assortative mating could still contribute to genetic correlations. Exclusion restriction (no other path from the variants to the outcome), reverse direction: schizophrenia variants could influence cannabis use through other traits; the MR-Egger intercept is reported as null (Supplementary Table S10, not read) but has little power; the weighted median and GSMR with HEIDI filtering agree with IVW; MR-Egger SIMEX does not (1.07, p=0.81). For the forward direction the editors would judge this domain high: the strongest locus, CADM2, is associated with risk-taking and other behavioural traits (the authors' own account), and no multivariable analysis was done."
+   },
+   {
+    "domain": "Measurement of the exposure",
+    "judgment": "some-concerns",
+    "note": "Strength (relevance): the reverse instrument has 109 genome-wide significant schizophrenia variants explaining 3.38% of liability (approximate F about 42, editors' calculation); its exposure is a latent liability rather than diagnosis, as the correction says, and how it relates to prodromal symptoms is unknown. The forward instruments are weak: 0.15% and 1.12% of the variance in lifetime use (approximate F 54 and 30), the 69-variant instrument being selected below genome-wide significance from the same GWAS that supplied its estimates."
+   },
+   {
+    "domain": "Selection of participants",
+    "judgment": "some-concerns",
+    "note": "Self-selected volunteers (UK Biobank online follow-up; 23andMe research participants) and cohort samples in which lifetime use ranged from 22.3% to 43.2%; participation may itself be related to genotype and to cannabis use. Sample overlap between this GWAS, which includes ICC cohorts, and PGC2 is not addressed, although Gage et al. (2017) report about 1500 participants shared by the ICC data and PGC2."
+   },
+   {
+    "domain": "Post-exposure interventions",
+    "judgment": "low",
+    "note": "Not applicable in the usual sense: genotype is fixed at conception."
+   },
+   {
+    "domain": "Missing data",
+    "judgment": "low",
+    "note": "Variant-level missingness is handled by meta-analysis with varying sample sizes; instrument variants were dropped when neither they nor a proxy were in the outcome data or when they were palindromic (Supplementary Table S7, not read)."
+   },
+   {
+    "domain": "Measurement of the outcome",
+    "judgment": "some-concerns",
+    "note": "For the reverse direction the outcome is lifetime use, self-reported once with different questions across sources and combining people who tried cannabis once with regular use; misclassification is unlikely to depend on genotype and would mainly dilute associations, but heterogeneity across sources may reduce power (the authors' point). PGC2 case definitions (forward outcome) are not described."
+   },
+   {
+    "domain": "Selection of the reported result",
+    "judgment": "some-concerns",
+    "note": "No registered plan; two forward instruments and five methods per direction; the abstract reports only the reverse direction; the genetic correlations are shown without printed values; the headline genetic correlation was misprinted (corrected in 2019)."
+   }
+  ],
+  "overall": "some-concerns",
+  "reasoning": "As a genome-wide association study, the paper shows associations of variants with self-reported lifetime use and shared genetic influences between lifetime use and other traits; neither shows cause. Its Mendelian randomization result that genetic liability to schizophrenia is associated with lifetime cannabis use is consistent across three of five methods, uses a reasonably strong instrument and matches Gage et al. (2017) on overlapping data; the remaining concerns are pleiotropy that the low-powered MR-Egger cannot exclude, self-selected samples and a heterogeneous self-reported outcome. The forward-direction analysis would be judged high (weak instruments, a behaviourally pleiotropic lead locus) and is inconclusive rather than negative. Design label and instrument follow the round brief's rule for genome-wide association studies. Cite this card for: the loci and the SNP heritability (11%) of lifetime use in European-ancestry samples; the genetic correlation with schizophrenia (rg 0.25, as corrected) and the direction of the other genetic correlations; and Mendelian randomization evidence that genetic liability to schizophrenia is associated with a higher likelihood of ever using cannabis. Do not cite it for: an effect of a schizophrenia diagnosis or of prodromal symptoms on use; the absence of an effect of cannabis on schizophrenia; odds ratios as comparisons between people who use and do not use cannabis; or measured differences in gene expression."
+ },
+ "key_findings": [
+  {
+   "finding": "Three European-ancestry sources, 184,765 people in all: ICC summary statistics (35,297; 16 cohorts in North America, Europe and Australia; 55.5% women; aged 16 to 87, mean 35.7; 42.8% had ever used cannabis), 23andMe (22,683; 55.3% women; aged 18 to 94, mean 54.0; 43.2%) and UK Biobank (126,785; 56.3% women; aged 39 to 72, mean 55.0; 22.3%). Lifetime use was self-reported as yes or no, with different wording across sources.",
+   "page": "PMC HTML",
+   "locator": "Online Methods › Samples, 1st paragraph; Online Methods › Phenotype and covariates, 1st paragraph"
+  },
+  {
+   "finding": "Eight independent genome-wide significant variants in six regions: three in CADM2 on chromosome 3 (top variant rs2875907, β 0.070, SE 0.009, p=9.38×10^-17), and others in SDK1, ZNF704, NCAM1 (rs9919557, β −0.055, p=9.94×10^-11), RABEP2/ATP2A1 and SMG6. The ZNF704 variant (rs9773390) was absent from UK Biobank (N=44,595) and may not be a robust association.",
+   "page": "PMC HTML",
+   "locator": "Results › Genome-wide association meta-analysis, 1st paragraph; Table 1 and its notes; Discussion, 9th paragraph"
+  },
+  {
+   "finding": "All measured variants together explained 11% of the variation in lifetime use (SNP heritability 0.11, SE 0.01), about a quarter of the twin-based heritability of about 45%.",
+   "page": "PMC HTML",
+   "locator": "Results › Genome-wide association meta-analysis, 1st paragraph; Discussion, 1st paragraph; Introduction (unheaded opening section), 1st paragraph",
+   "note": "The twin figure of about 45% is second-hand, from a meta-analysis of twin studies (Verweij et al., 2010)."
+  },
+  {
+   "finding": "Gene-based tests found 35 genes in 16 regions, 5 of them already identified by the variant analysis and 11 not; S-PrediXcan found 133 gene–tissue associations for 21 genes, 8 also found by the gene-based test. CADM2 was the strongest finding: variants raising liability to use are predicted to raise its expression in 8 non-brain tissues, including whole blood (Z=5.88, p=4.17×10^-9).",
+   "page": "PMC HTML",
+   "locator": "Results › Gene-based test of association and expression, 1st and 2nd paragraphs; Table 2",
+   "note": "These are associations of genetically predicted expression with the trait, not expression measured in people who use cannabis."
+  },
+  {
+   "finding": "Lifetime use was genetically correlated with 14 of 25 traits after Bonferroni correction (p<0.002): positively with ever smoking, alcohol consumption, alcohol dependence, ADHD, schizophrenia, bipolar disorder, autism, educational attainment, openness, extraversion and risk-taking, and negatively with body mass index, subjective well-being and conscientiousness. Not significant: cigarettes per day, cannabis dependence, caffeine consumption, depressive symptoms, major depressive disorder, anorexia nervosa, self-rated health, memory, agreeableness, neuroticism and loneliness.",
+   "page": "PMC HTML",
+   "locator": "Results › Genetic correlations with other traits, 1st paragraph; Figure 4",
+   "note": "Figure 4 prints no values; significance and direction were read from the full-size image, and the coefficients themselves are in Supplementary Table S6 (not read). The authors note that the cannabis dependence GWAS was small."
+  },
+  {
+   "finding": "Genetic correlation between lifetime cannabis use and schizophrenia: rg 0.24 (SE 0.03, p<0.01) as printed in the manuscript.",
+   "page": "PMC HTML",
+   "locator": "Results › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 1st paragraph; Discussion, 7th paragraph",
+   "note": "Corrected in the 2019 Author Correction to rg 0.25 (SE 0.03, P=5.81×10^-15); cite the corrected value (see the last key finding)."
+  },
+  {
+   "finding": "[Exposure: genetic liability to lifetime use; outcome: schizophrenia case status, PGC2 (2014); scale: OR per one-unit increase in the log odds of lifetime use; adjustment: none] 5 genome-wide significant variants: IVW 1.04 (B 0.039, SE 0.158), p=0.806; weighted median 0.95, p=0.649; MR-Egger SIMEX 0.96, p=0.827; weighted mode 0.92, p=0.536. 69 variants at p<10^-5: IVW 1.10 (95% CI 0.99 to 1.21), p=0.074; weighted median 1.07, p=0.156; MR-Egger SIMEX 1.11, p=0.340; weighted mode 1.02, p=0.823; GSMR after HEIDI filtering (74 variants) 1.21 (B 0.192, SE 0.080), p=0.017.",
+   "page": "PMC HTML",
+   "locator": "Results › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 1st and 2nd paragraphs; Table 3"
+  },
+  {
+   "finding": "[Exposure: genetic liability to schizophrenia, 109 genome-wide significant variants; outcome: lifetime use in this GWAS; scale: OR per one-unit increase in the log odds of schizophrenia; adjustment: none] IVW 1.16 (95% CI 1.06 to 1.27; B 0.151, SE 0.046), p=0.001; weighted median 1.17, p=0.001; MR-Egger SIMEX 1.07 (B 0.071, SE 0.293), p=0.810; weighted mode 1.37, p=0.080; GSMR (102 variants) 1.27 (B 0.237, SE 0.038), p=5.36×10^-10. The authors attribute the null MR-Egger SIMEX estimate to low power, the Egger intercept not differing from 0 (Supplementary Table S10, not read).",
+   "page": "PMC HTML",
+   "locator": "Results › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 1st and 2nd paragraphs; Table 3",
+   "note": "The Table 3 footnote reads these odds ratios as comparisons of people with and without a schizophrenia diagnosis (or who did and did not use cannabis); they are per one-unit increase in the genetically predicted log odds of the exposure (see reporting issues)."
+  },
+  {
+   "finding": "The schizophrenia instrument explained 3.38% of the variance in liability to schizophrenia; the cannabis instruments explained 1.12% (69 variants) and 0.15% (5 variants) of the variance in lifetime use. The authors attribute the weak forward evidence to the lower power of these instruments.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 7th paragraph; Online Methods › Statistics › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 6th paragraph",
+   "note": "Editors' approximate F statistics from these values and the effective sample sizes given (130,072 and 180,934): about 42 (schizophrenia), 30 (69 variants) and 54 (5 variants)."
+  },
+  {
+   "finding": "Mendelian randomization methods: instruments pruned at r2<0.001 (r2<0.05 for GSMR), with proxies at r2 of 0.8 or more where a variant was missing from the outcome data; the three instrument assumptions are stated; I2 for MR-Egger ranged from 0.7 to 0.9, so SIMEX-corrected MR-Egger estimates are reported; the sensitivity methods are chosen to rest on different assumptions about instrument validity.",
+   "page": "PMC HTML",
+   "locator": "Online Methods › Statistics › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 2nd to 5th paragraphs"
+  },
+  {
+   "finding": "The authors read the results as weak evidence for an effect of cannabis use on schizophrenia and much stronger evidence in the other direction, contrast them with Vaucher et al., who found evidence for an effect of cannabis use and did not test the other direction, align them with Gage et al., and suggest that people at risk of schizophrenia may experience prodromal symptoms or negative affect that lead them to use cannabis to cope or self-medicate.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 7th paragraph"
+  },
+  {
+   "finding": "The positive genetic correlation with educational attainment was unexpected; in UK Biobank participants described as Caucasian (N given as 438,870), household income was higher among people who had ever used cannabis (χ2 with 4 degrees of freedom = 2243) and fluid intelligence scores were higher (t with 50,856 degrees of freedom = 25.13), both unadjusted; the authors suggest that settings more common at higher socio-economic status, such as universities, may increase access to cannabis.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 6th paragraph",
+   "note": "Unadjusted cross-sectional comparisons whose analysed numbers are unclear (see reporting issues)."
+  },
+  {
+   "finding": "Variants reported for cannabis dependence were not associated with lifetime use: Sherva et al.'s rs77378271 (p=0.144; the other two variants or proxies were unavailable) and the CHRNA2 variant of Demontis et al., rs56372821 (p=0.55; gene p=0.52).",
+   "page": "PMC HTML",
+   "locator": "Discussion, 5th paragraph"
+  },
+  {
+   "finding": "Author Correction (2019): the title becomes \"a causal effect of schizophrenia liability\", and several mentions of schizophrenia are reworded as liability to schizophrenia or schizophrenia risk, because only a small proportion of participants in the cannabis data will have been diagnosed with schizophrenia; the genetic correlation is corrected to rg 0.25 (SE 0.03, P=5.81×10^-15), in line with Supplementary Table 6. The PubMed record of the correction adds that the rewording also applies to Supplementary Figures 1–10 and Supplementary Tables 7–10.",
+   "page": "publisher HTML",
+   "locator": "Author Correction, Nature Neuroscience 22, 1196 (2019), doi 10.1038/s41593-019-0402-7, 1st paragraph; PubMed record PMID 31168101"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The Table 3 footnote defines B as the change in the outcome per one-unit increase in the exposure, but reads the odds ratios as the odds of schizophrenia for people who had ever used cannabis against people who had not, and the odds of lifetime use for people with a schizophrenia diagnosis against people without; with binary exposures summarised as log odds, the exponentiated B is per one-unit increase in the genetically predicted log odds of the exposure.",
+   "page": "PMC HTML, Table 3 notes",
+   "consequence": "The odds ratios must be cited per one-unit increase in genetic liability; for example 1.16 is not the odds of lifetime use in people with schizophrenia compared with people without it. The 2019 correction rewords diagnosis language generally but does not mention this footnote, and the publisher's version of record was not checked."
+  },
+  {
+   "issue": "The genetic correlation with schizophrenia is printed as rg 0.24 (SE 0.03, p<0.01) in the Results and Discussion; the 2019 Author Correction calls this a typo and gives 0.25 (SE 0.03, P=5.81×10^-15), matching Supplementary Table 6.",
+   "page": "PMC HTML, Results › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 1st paragraph; Discussion, 7th paragraph; Author Correction (publisher HTML)",
+   "consequence": "Cite rg 0.25 (SE 0.03); the PMC author manuscript was not updated."
+  },
+  {
+   "issue": "The notes to Table 1 define independent hits first as r2<0.01 and then as r2<0.1 (window 250 kb); the Results and the Figure 1 legend say r2<0.1.",
+   "page": "PMC HTML, Table 1 notes; Results › Genome-wide association meta-analysis, 1st paragraph",
+   "consequence": "Minor; the threshold used is most probably r2<0.1, but the count of independent variants depends on it."
+  },
+  {
+   "issue": "The Figure 1 legend gives the meta-analysis as based on 184,764 individuals; the abstract, the text and the sum of the three sources give 184,765.",
+   "page": "PMC HTML, Figure 1 legend (b); Abstract; Online Methods › Samples, 1st paragraph",
+   "consequence": "Trivial."
+  },
+  {
+   "issue": "The Introduction cites the ICC study as 32,330 people in its discovery sample plus 5,627 in replication, while the ICC summary statistics used here are said to cover 35,297 people from 16 cohorts; the difference is not explained in the main text.",
+   "page": "PMC HTML, Introduction (unheaded opening section), 3rd and 5th paragraphs; Online Methods › Samples, 1st paragraph",
+   "consequence": "The ICC data used are not exactly the published discovery set (Supplementary Table S11, not read), so the overlap with the data used by Gage et al. (2017) and Vaucher et al. (2018) cannot be quantified from the paper."
+  },
+  {
+   "issue": "The phenotypic comparisons in UK Biobank are said to cover 438,870 participants described as Caucasian, although only 126,785 UK Biobank participants contributed the cannabis phenotype to the GWAS; the fluid intelligence t-test has 50,856 degrees of freedom; the analysed numbers are not given, and p=2.2e-16 is printed as an exact value although it is the usual software floor (p<2.2e-16).",
+   "page": "PMC HTML, Discussion, 6th paragraph",
+   "consequence": "The income and fluid-intelligence comparisons cannot be reproduced or weighed; cite them, if at all, as unadjusted associations of uncertain sample size."
+  },
+  {
+   "issue": "Two-sample Mendelian randomization is described as using non-overlapping sets of individuals, but overlap between this cannabis GWAS, which includes the ICC cohorts, and PGC2 is not examined; Gage et al. (2017) report about 1500 participants shared by the ICC data and PGC2.",
+   "page": "PMC HTML, Online Methods › Statistics › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 2nd paragraph",
+   "consequence": "With weak instruments, overlap biases estimates towards the observational association; this matters most for the 69-variant forward instrument and cannot be assessed from the paper."
+  },
+  {
+   "issue": "The abstract says S-PrediXcan showed that 21 genes had different expression levels in people who had used cannabis than in people who had not; the Online Methods describe the analysis as identifying genes whose genetically predicted expression is associated with cannabis use.",
+   "page": "PMC HTML, Abstract; Online Methods › Statistics › Identification of genes with differential expression levels between cannabis users and non-users, 1st paragraph",
+   "consequence": "Claims must describe these as genes whose genetically predicted expression is associated with lifetime use, not as expression differences observed in people who use cannabis."
+  },
+  {
+   "issue": "Reference 1 gives the title of the 2014 New England Journal of Medicine review of adverse health effects with volume 371, page 879 and DOI 10.1056/NEJMc1407928, while the project's cannabis DOI list holds that review under 10.1056/NEJMra1402309.",
+   "page": "PMC HTML, References, ref. 1",
+   "consequence": "Minor citation error, irrelevant to the findings; the reference should not be used to locate the review."
+  },
+  {
+   "issue": "The Figure 1 legend says the genome-wide test was linear regression, while the Online Methods describe logistic regression in 23andMe and UK Biobank and a meta-analysis of log odds ratios.",
+   "page": "PMC HTML (author manuscript), Figure 1 legend; Online Methods › Statistics › Genome-wide association analyses and meta-analysis, 1st and 2nd paragraphs",
+   "consequence": "Minor, but the per-unit-of-log-odds reading of the Mendelian randomization estimates assumes log-odds variant effects; the Methods support that reading."
+  },
+  {
+   "issue": "The effective sample sizes used to approximate the variance explained by the instruments (130,072 for schizophrenia; 180,934 for cannabis use) are said to follow 4/(1/cases + 1/controls), but the cannabis figure cannot be reproduced from the three samples' sizes and proportions who had used: about 151,500 when the counts are pooled, about 144,700 when each sample is computed separately (editors' calculation).",
+   "page": "PMC HTML (author manuscript), Online Methods › Statistics › Causal association between cannabis use and schizophrenia: Two-sample Mendelian randomization, 6th paragraph; Online Methods › Samples, 1st paragraph",
+   "consequence": "The variance-explained figures (1.12%, 0.15%, 3.38%) are approximate and may be somewhat underestimated; the cannabis instruments stay weak (about 1% or less)."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent), AI reader 185 (first reader)",
+  "first_pass_on": "2026-10-27",
+  "source_read": "PMC author manuscript PMC6386176 (NIHMS1003328, the accepted manuscript, not the publisher's version of record; title and DOI 10.1038/s41593-018-0206-1 confirmed; all sections including the Online Methods, Tables 1–3 rendered as text, acknowledgements, author contributions and competing interests read; Figure 4 viewed at full size, with no printed values; Figures 1–3 (QQ, Manhattan and regional plots) not used for values; the supplementary figures (Word file) and tables (zip archive) were not opened), and the Author Correction linked from the PMC page (Nature Neuroscience 22, 1196, 2019; doi 10.1038/s41593-019-0402-7), read in full as publisher HTML and in its PubMed record (PMID 31168101)",
+  "disagreements": [
+   {
+    "field": "key_findings.3.finding",
+    "first_pass": "Gene-based tests found 35 genes in 16 regions, 11 of them not identified by the variant analysis; S-PrediXcan found 133 gene–tissue associations for 21 genes, 8 also found by the gene-based test. CADM2 was the strongest finding: variants raising liability to use are predicted to raise its expression in 8 non-brain tissues, including whole blood (Z=5.88, p=4.17×10^-9).",
+    "reviewer": "AI reader 217 (second reader): numbers right; \"11 of them\" should refer to regions, not genes.",
+    "resolution": "Checked in the saved text (Results › Gene-based test of association and expression, 1st paragraph): 5 regions already found and 11 others. Wording corrected."
+   },
+   {
+    "field": "key_findings.4",
+    "first_pass": "Significance and direction read from the full-size Figure 4 image.",
+    "reviewer": "AI reader 217 (second reader): text-named traits confirmed; the rest from the Figure 4 image, not inspected.",
+    "resolution": "Checked by the adjudicator on the Figure 4 image (viewed in the adjudicator's own browser tab): 14 asterisked traits, positive for ever smoking, alcohol consumption, alcohol dependence, ADHD, schizophrenia, bipolar disorder, autism, educational attainment, openness, extraversion and risk-taking, negative for BMI, subjective well-being and conscientiousness; the other 11 not significant. Confirmed."
+   },
+   {
+    "field": "reporting_issues.9",
+    "first_pass": "(not recorded)",
+    "reviewer": "AI reader 217 (second reader), missed item: linear (Figure 1 legend) against logistic regression (Online Methods).",
+    "resolution": "Checked in the saved text: true. Added as a minor reporting issue."
+   },
+   {
+    "field": "reporting_issues.10",
+    "first_pass": "(not recorded)",
+    "reviewer": "AI reader 217 (second reader), missed item: effective sample sizes cannot be reproduced from the counts with the stated formula.",
+    "resolution": "Checked in the saved text (formula and 180,934) and recomputed: 151,493 from pooled counts, 144,701 summed by sample. The schizophrenia figure is not checked because the paper does not print the outcome counts. Added as a reporting issue."
+   },
+   {
+    "field": "verification.status",
+    "first_pass": "first-pass",
+    "reviewer": "AI reader 217 (second reader): every key finding and reporting issue confirmed; overall risk-of-bias judgment agreed.",
+    "resolution": "Readers agree on ROBINS-E overall some concerns (judged for the genetic correlation and the reverse estimate; the forward estimate would be high, as the card says); every key finding and reporting issue confirmed by AI reader 217, the figure-only parts of key finding 4 confirmed by the adjudicator on the image. Set to ai-checked."
+   }
+  ],
+  "checked_by": "AI reader 217 (blind second reading) and AI reader 242 (adjudication)",
+  "checked_on": "2026-10-31"
+ }
+}

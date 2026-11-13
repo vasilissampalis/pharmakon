@@ -1,0 +1,219 @@
+{
+  "id": "sc_sun_2017",
+  "substance": "interactions",
+  "reference": "sun_2017",
+  "design": "retrospective-cohort",
+  "design_detail": "Retrospective analysis of US private-insurance claims (Truven MarketScan), 1 January 2001 to 31 December 2013. Closed cohort of 315,428 people aged 18–64 continuously enrolled with medical and pharmacy benefits for all 13 years, without cancer, who filled at least one opioid prescription; the unit of analysis is the person-year with an opioid fill. Exposure: concurrent benzodiazepine use, defined as at least one day of overlap between the days' supply of an opioid and a benzodiazepine prescription in the calendar year. Outcome: an emergency-room visit or inpatient admission for opioid overdose during an opioid prescription interval or within 7 days after it. Logistic regression with standard errors clustered by person, adjusted for age, sex, year, comorbidities and prior health spending; results also given separately for intermittent and chronic opioid prescriptions, with a population attributable fraction and a residual-confounding analysis. Read in full as PMC HTML (PMC5421443): text, Table 1 and figure legends; Figs 1–3 are images whose values were not extracted beyond those in the text. The appendix (sample flow, drug code lists, sensitivity results) is a PDF and was not opened.",
+  "can_establish": "Whether, among privately insured working-age adults filling opioid prescriptions, person-years with any overlapping benzodiazepine prescription carry a higher adjusted share with a hospital-treated opioid overdose than person-years without, and how the share of opioid prescription recipients co-prescribed benzodiazepines changed from 2001 to 2013.",
+  "cannot_establish": "That benzodiazepines cause the excess (the analysis does not adjust for opioid dose or the reasons benzodiazepines were prescribed, and does not order the overdose and the overlap within the year); anything about overdose deaths, overdoses not treated in hospital, illicit drugs, or people outside private insurance.",
+  "sample": {
+    "n_total": 315428,
+    "n_by_group": {
+      "continuously enrolled 2001–2013 (initial)": 595410,
+      "excluded: cancer history or diagnosis": 28780,
+      "excluded: aged under 18 or over 64 at entry": 142789,
+      "remaining before the opioid criterion": 423841,
+      "2001: opioid prescription, no benzodiazepine": 53389,
+      "2001: opioid prescription with benzodiazepine": 5425,
+      "broader sensitivity sample (at least 2 years enrolled)": 3810747
+    },
+    "recruitment": "Registry/records: employer-sponsored private health insurance claims (MarketScan); compared with the US population, more women, more people from the South and fewer from the West (Methods › Data, 1st paragraph).",
+    "inclusion_exclusion": "Continuous enrolment with medical and pharmacy benefits for the whole 13-year period; aged 18–64 at entry; no cancer; at least one outpatient opioid prescription during the period, excluding hydrocodone cough and cold products (Methods › Sample, 1st and 2nd paragraphs; Variables, 1st paragraph).",
+    "demographics": "Described only for 2001 (Table 1): mean age 42.4 years without and 44.5 with benzodiazepines; men 43% and 35%; depression 4.4% and 17%; diagnoses coded as alcohol abuse 0.30% and 1.1% and as drug abuse 0.22% and 1.2% (ICD-9 categories as studied); every listed comorbidity except chronic kidney disease more common with benzodiazepines (Results, 1st paragraph; Table 1).",
+    "attrition": "None by design (closed cohort). The authors note that requiring 13 years of continuous enrolment excludes people who died or lost employment-based insurance, possibly after opioid-related events, and test a broader sample of 3,810,747 people enrolled for at least 2 years (Methods › Sensitivity analyses, 2nd paragraph; Discussion › Strengths and limitations, 2nd paragraph).",
+    "selection_effects": "Privately insured, employed or employer-linked, working-age people who stayed insured and alive for 13 years: a healthier and more stable population than people treated in public systems or people who use illicit opioids. The authors call it broadly representative of the privately insured US population."
+  },
+  "exposure": {
+    "measurement": "Pharmacy claims: fill date, quantity and days' supply; generic name and dose via Red Book linkage. Each opioid and benzodiazepine prescription defines an interval from the fill date for the days' supply; concurrent use in the main analysis is any overlap of at least one day between an opioid and a benzodiazepine interval in a calendar year; a stricter definition (at least 25% of opioid days overlapping) was used in a sensitivity analysis (Methods › Data, 2nd paragraph; Variables, 1st paragraph; Sensitivity analyses, 1st paragraph).",
+    "dose_frequency_duration_route": "No dose analysis: opioid and benzodiazepine doses were not used as exposures or covariates. Opioid prescriptions were classed as chronic (more than 10 prescriptions or more than 120 days' supply in a year) or intermittent (all others) (Methods › Analyses, 1st paragraph). Study conditions only.",
+    "purity_known": true,
+    "polysubstance": "Diagnoses coded as alcohol abuse and drug abuse were covariates (Table 1); heroin and prescription drugs bought illegally are not captured, as the authors state (Discussion › Strengths and limitations, 5th paragraph).",
+    "abstinence_at_testing": "Not applicable."
+  },
+  "comparison": {
+    "controls": "Person-years with an opioid prescription and no overlapping benzodiazepine prescription.",
+    "matching": "None; multivariable adjustment for age, sex, year, the comorbidities in Table 1 (congestive heart failure, peripheral vascular disease, hypertension, chronic obstructive pulmonary disease, diabetes, chronic kidney disease, cerebrovascular disease, dementia, myocardial infarction, liver disease, alcohol abuse, drug abuse, psychosis, depression) and mean daily health spending before the first opioid fill of the year (Methods › Variables, 2nd paragraph; Analyses, 2nd paragraph).",
+    "unmeasured_premorbid": "Opioid dose, anxiety diagnoses (in the veteran study, anxiety disorders other than PTSD were recorded in 20% of people with and 5% without benzodiazepines), pain conditions, and the severity of substance use are not among the covariates. A residual-confounding analysis assumed an unmeasured binary confounder present in 75% of person-years with and 0% without concurrent use.",
+    "controls_other_drug_use": "Both groups filled opioid prescriptions; illicit drug use unknown in both."
+  },
+  "outcomes": {
+    "instruments": "Claims ICD-9 diagnosis codes for an emergency-room visit or inpatient admission, following the method of Dunn et al.: codes for opioid poisoning or a potential opioid adverse event such as respiratory depression together with a code for opioid overdose; counted only if within an opioid prescription interval or 7 days after it; alternative windows (within 30 days; exactly within the interval) in sensitivity analyses (Methods › Outcomes, 1st paragraph).",
+    "validity_norms": "The algorithm is not validated in this database in the paper. Only hospital-treated events in people who survived are counted (Discussion › Strengths and limitations, 3rd paragraph).",
+    "operationalization": "At least one hospital-treated opioid overdose event in the person-year (binary).",
+    "n_outcomes_tested": 1,
+    "multiplicity_correction": "None; one outcome, three population groupings (all, intermittent, chronic) and several sensitivity analyses.",
+    "assessor_blinding": "Not applicable: routinely coded claims."
+  },
+  "analysis": {
+    "effect_sizes": "Adjusted annual incidence of a hospital-treated opioid overdose: all, 1.16% (95% CI 1.13–1.18) without against 2.42% (2.32–2.51) with concurrent benzodiazepines, odds ratio 2.14 (2.05–2.24); intermittent opioid prescriptions 1.02% (0.996–1.04) against 1.45% (1.36–1.51), OR 1.42 (1.33–1.51); chronic 3.13% (2.94–3.31) against 5.36% (5.12–5.61), OR 1.81 (1.67–1.96); all P < 0.001. Population attributable fraction 0.15 (0.14–0.16) overall, 0.043 intermittent, 0.27 chronic. Editors' calculation: the adjusted incidences are in ratios of 2.09, 1.42 and 1.71.",
+    "covariates": "See comparison.matching. Not adjusted: opioid dose, anxiety diagnoses, pain conditions.",
+    "preregistration": "none",
+    "preregistration_detail": "No protocol or registration is mentioned.",
+    "selective_reporting": "The sensitivity analyses with alternative exposure and outcome definitions are reported only as qualitatively similar, with results in an appendix not read; the broader-sample analysis reports relative risks only for the two subgroups, not for all people combined.",
+    "power": "Not discussed; the cohort is large and intervals are narrow."
+  },
+  "interpretation_gap": {
+    "results_show": "In privately insured adults filling opioid prescriptions, person-years with any overlapping benzodiazepine prescription had about twice the adjusted share with a hospital-treated opioid overdose (2.42% against 1.16%; OR 2.14), less so with intermittent (OR 1.42) than with chronic opioid prescriptions (OR 1.81). The share of opioid prescription recipients co-prescribed benzodiazepines rose from 9% in 2001 to 17% in 2013. The model did not include opioid dose, and the overlap and the overdose are not ordered in time within the year.",
+    "claimed": "The objective is framed as the impact of co-prescribing trends on overdose admissions; the abstract's results attach a condition to the attributable fraction (if the association is causal), but the abstract's conclusion says concurrent use significantly contributed to the overall population risk of overdose, the results and discussion say eliminating concurrent use could reduce the population risk by 15%, and the boxed summary repeats the 15% without the condition (Abstract; Results, 5th paragraph; Discussion › Principal findings). The discussion judges an unobserved confounder strong enough to explain the result unlikely, from a residual-confounding analysis with arbitrary extreme assumptions. Clinical and policy recommendations follow.",
+    "gap_assessment": "substantial"
+  },
+  "replication": {
+    "status": "partially-replicated",
+    "timeline": [
+      {
+        "year": 2015,
+        "event": "Park et al. (BMJ), US veterans on opioid analgesics: current benzodiazepine prescription associated with overdose death (adjusted hazard ratio 3.86), with a prescribed-dose gradient; cited here as ref. 24",
+        "reference": "park_2015"
+      },
+      {
+        "year": 2016,
+        "event": "Dasgupta et al. (Pain Med; cited as ref. 26), North Carolina: described by these authors as finding a tenfold increased risk of overdose death with any benzodiazepine and opioid use in the same year, without measuring overlap; not read."
+      },
+      {
+        "year": 2019,
+        "event": "Macleod et al. (PLOS Med), UK people in opioid agonist treatment: benzodiazepine co-prescription associated with drug-poisoning death (adjusted hazard ratio 2.96)",
+        "reference": "macleod_2019"
+      }
+    ],
+    "where_it_stands": "The direction agrees with the veteran mortality cohort and the UK treatment cohort; this is the only study read that uses non-fatal hospital events and a privately insured population, and the only one without adjustment for opioid dose."
+  },
+  "funding": {
+    "funder": "ECS: mentored research training grant from the Foundation for Anesthesia Education and Research and the Anesthesia Quality Institute; KNH: Veterans Affairs health services research and development service; sponsors not involved in design, interpretation, writing or the decision to submit (Funding).",
+    "declared_conflicts": "Support from grants from the Foundation for Anesthesia Education and Research; no financial relationships with organizations that might have an interest in the work in the previous 3 years; no other relationships (Competing interests).",
+    "affiliations_note": "Stanford University School of Medicine (anesthesiology, perioperative and pain medicine; psychiatry; health research and policy), University of California San Francisco (anesthesiology), VA Palo Alto Health Care System, and the National Bureau of Economic Research (author information block). An accompanying editorial (j1224) is noted on the page; not read."
+  },
+  "what_would_settle_it": "An analysis of the same kind of claims data in people newly starting a benzodiazepine against people newly starting a non-sedating treatment for the same indication, adjusted for daily opioid dose and diagnoses of anxiety, depression and substance use, with the overdose required to follow the overlap in time and with linkage to death records so that fatal overdoses are counted.",
+  "risk_of_bias": {
+    "instrument": "ROBINS-E",
+    "domains": [
+      {
+        "domain": "Confounding",
+        "judgment": "high",
+        "note": "No adjustment for opioid dose, a strong predictor of overdose that is higher in people co-prescribed benzodiazepines, nor for anxiety disorders, pain conditions or substance-use severity; the residual-confounding analysis uses arbitrary assumptions (a confounder present in 75% against 0%) and its methods paragraph describes a surgical sample the study does not have."
+      },
+      {
+        "domain": "Measurement of the exposure",
+        "judgment": "high",
+        "note": "A single day of overlap anywhere in the calendar year labels the whole person-year as exposed; the overdose can precede the benzodiazepine fill or fall outside any overlap, so exposure and outcome are not ordered in time; fills, not use."
+      },
+      {
+        "domain": "Selection of participants",
+        "judgment": "some-concerns",
+        "note": "Thirteen years of continuous enrolment selects people who stayed insured and alive; in the broader sample the subgroup estimates changed (intermittent 1.66 against 1.42; chronic 1.61 against 1.81)."
+      },
+      {
+        "domain": "Post-exposure interventions",
+        "judgment": "low",
+        "note": "No intervention after exposure is described that would bias the comparison."
+      },
+      {
+        "domain": "Missing data",
+        "judgment": "some-concerns",
+        "note": "Missing or unrecorded covariate information in claims is not discussed; the sample flow is only in the unread appendix."
+      },
+      {
+        "domain": "Measurement of the outcome",
+        "judgment": "some-concerns",
+        "note": "An unvalidated code algorithm that includes potential opioid adverse events such as respiratory depression; about 1 in 100 person-years without benzodiazepines met it, which suggests it captures more than overdoses; deaths outside hospital are not counted."
+      },
+      {
+        "domain": "Selection of the reported result",
+        "judgment": "some-concerns",
+        "note": "No protocol; sensitivity results only in the appendix or described qualitatively; effect measure changes between analyses (odds ratios, then relative risks)."
+      }
+    ],
+    "overall": "high",
+    "reasoning": "High because of uncontrolled confounding (above all by opioid dose and indication) and an exposure definition that does not order the overlap and the overdose in time. The study may be cited for the trend in co-prescribing among privately insured adults from 2001 to 2013 and for the adjusted association between any yearly overlap and hospital-treated opioid overdose; not for deaths, a causal effect, or the 15% attributable fraction as an estimate of what removing co-prescription would achieve."
+  },
+  "key_findings": [
+    {
+      "finding": "MarketScan claims, 1 January 2001 to 31 December 2013: 595,410 people continuously enrolled with medical and pharmacy benefits; after excluding 28,780 with cancer and 142,789 aged under 18 or over 64 at entry, 423,841 remained, of whom 315,428 filled at least one opioid prescription (the analysed sample). Compared with the US population, MarketScan includes more women, more people from the South and fewer from the West.",
+      "page": "PMC HTML",
+      "locator": "Abstract (Participants); Methods › Data, 1st paragraph; Methods › Sample, 1st and 2nd paragraphs"
+    },
+    {
+      "finding": "Outcome: an emergency-room visit or inpatient admission in the calendar year with ICD-9 codes for opioid poisoning or a potential opioid adverse event (such as respiratory depression) and a code for opioid overdose, counted only during an opioid prescription interval or within 7 days after it. Only events in people who reached hospital and survived are counted.",
+      "page": "PMC HTML",
+      "locator": "Methods › Outcomes, 1st paragraph; Discussion › Strengths and limitations of this study, 3rd paragraph"
+    },
+    {
+      "finding": "Exposure: at least one day of overlap between opioid and benzodiazepine prescription intervals (fill date plus days' supply) in a calendar year; covariates age, sex, year, comorbidities from ICD-9 codes (Table 1 list) and daily health spending before the first opioid fill of the year; person-year logistic regression with standard errors clustered by person. Chronic opioid prescription: more than 10 prescriptions or more than 120 days' supply in a year.",
+      "page": "PMC HTML",
+      "locator": "Methods › Variables, 1st and 2nd paragraphs; Methods › Analyses, 1st, 2nd and 4th paragraphs"
+    },
+    {
+      "finding": "In 2001, people filling opioid prescriptions with benzodiazepines (n = 5,425) against without (n = 53,389): mean age 44.5 against 42.4 years; men 35% against 43%; depression 17% against 4.4%; alcohol abuse diagnoses 1.1% against 0.30%; drug abuse diagnoses 1.2% against 0.22%; psychosis 0.55% against 0.13%; every comorbidity except chronic kidney disease (P = 0.16) more common with benzodiazepines (P < 0.001).",
+      "page": "PMC HTML",
+      "locator": "Results, 1st paragraph; Table 1"
+    },
+    {
+      "finding": "The share of people filling opioid prescriptions who also had overlapping benzodiazepine prescriptions rose from 9% in 2001 to 17% in 2013; for intermittent opioid prescriptions from 7% to 13%; for chronic opioid prescriptions it was 46% in 2001 and stayed fairly constant.",
+      "page": "PMC HTML",
+      "locator": "Abstract (Results); Results, 2nd paragraph",
+      "note": "The counts printed beside these shares do not reproduce them consistently: see reporting issues."
+    },
+    {
+      "finding": "Age-adjusted annual incidence of a hospital-treated opioid overdose without benzodiazepines: 1.08% (0.99–1.16) in 2001 and 1.35% (1.26–1.43) in 2013 (intermittent 1.05% to 1.15%; chronic 2.00% to 3.51%); with benzodiazepines 2.01% (1.64–2.39) in 2001 and 3.99% (3.58–4.21) in 2013.",
+      "page": "PMC HTML",
+      "locator": "Results, 3rd paragraph; Fig 2 (image)"
+    },
+    {
+      "finding": "Adjusted annual incidence of a hospital-treated opioid overdose, without against with concurrent benzodiazepines: all 1.16% (1.13–1.18) against 2.42% (2.32–2.51), odds ratio 2.14 (2.05–2.24); intermittent opioid prescriptions 1.02% (0.996–1.04) against 1.45% (1.36–1.51), OR 1.42 (1.33–1.51); chronic 3.13% (2.94–3.31) against 5.36% (5.12–5.61), OR 1.81 (1.67–1.96); all P < 0.001.",
+      "page": "PMC HTML",
+      "locator": "Abstract (Results); Results, 4th paragraph; Fig 3 (image)"
+    },
+    {
+      "finding": "Population attributable fraction of concurrent benzodiazepine use for hospital-treated opioid overdose: 0.15 (0.14–0.16) overall, 0.043 (0.034–0.051) intermittent, 0.27 (0.23–0.30) chronic; calculated from the logistic models, meaning a 15% lower population risk if concurrent use were removed and the association were causal.",
+      "page": "PMC HTML",
+      "locator": "Abstract (Results); Methods › Analyses, 3rd paragraph; Results, 5th paragraph"
+    },
+    {
+      "finding": "Sensitivity analyses: requiring 25% of opioid days to overlap a benzodiazepine prescription, and alternative outcome windows, gave results described as qualitatively similar (appendix, not read). In a broader sample enrolled for at least 2 years (n = 3,810,747), the adjusted relative risk was 1.66 (1.64–1.69) for intermittent and 1.61 (1.58–1.63) for chronic opioid prescriptions.",
+      "page": "PMC HTML",
+      "locator": "Methods › Sensitivity analyses, 1st and 2nd paragraphs; Results, 6th and 7th paragraphs"
+    },
+    {
+      "finding": "Residual-confounding analysis: assuming an unmeasured binary confounder with 75% prevalence among concurrent and 0% among non-concurrent person-years, it would need an odds ratio of at least 2.40 overall (1.45 intermittent, 1.89 chronic) to remove the association.",
+      "page": "PMC HTML",
+      "locator": "Methods › Sensitivity analyses, 3rd paragraph; Results, 8th paragraph"
+    },
+    {
+      "finding": "Stated limitations: unobservable differences between people with and without benzodiazepines; selection by continuous enrolment; only hospital-treated, survived events; behaviour changes if co-prescribing fell (for example higher opioid doses); heroin and illegally bought prescription drugs not captured.",
+      "page": "PMC HTML",
+      "locator": "Discussion › Strengths and limitations of this study, 1st–5th paragraphs"
+    }
+  ],
+  "reporting_issues": [
+    {
+      "issue": "The 2001 share is printed as 9% (5425/53 389), but 5,425 of 53,389 is 10.2%; 53,389 is the group without benzodiazepines in Table 1, and 5,425 of all 58,814 is 9.2% (editors' calculation). The 2001 subgroup counts (intermittent 4,122 of 55,960; chronic 1,596 of 3,457) sum to 5,718 of 59,417, not the 5,425 of 58,814 in Table 1; the 2013 intermittent share is printed as 13% for 9,292 of 65,114 (14.3%).",
+      "page": "PMC HTML",
+      "consequence": "Denominators are unclear (age adjustment may account for some differences, but the text gives raw counts); cite the shares as printed percentages, not the fractions."
+    },
+    {
+      "issue": "The residual-confounding method is described as assuming a confounder with 75% prevalence among the surgical sample and 0% among non-surgical patients, although the study has no surgical sample; the results restate it for concurrent and non-concurrent use, joined by or rather than and. Other wording slips: concurrent benzodiazepine/opioid overdose for concurrent use; concurrent opioid/baseline for concurrent opioid/benzodiazepine use.",
+      "page": "PMC HTML",
+      "consequence": "The sensitivity analysis is described in text apparently carried over from another study and rests on arbitrary assumptions; it cannot support the authors' judgment that confounding is unlikely to explain the result."
+    },
+    {
+      "issue": "In Table 1, the standardized differences have inconsistent signs (negative for a lower share of men and for higher shares of every comorbidity, positive for higher age), and the value for sex (−0.30) does not match the printed shares (43% against 35% gives about 0.17 with a group-size-weighted pooled SD, editors' calculation, a method that reproduces the printed depression value of 0.55). The text says all differences except depression were below 0.2 SD, which the −0.30 in the table contradicts.",
+      "page": "PMC HTML",
+      "consequence": "Minor; the standardized differences are not reliable descriptors of imbalance."
+    },
+    {
+      "issue": "The legend of Fig 2 says unadjusted incidence, while the text describes the values shown in Fig 2 as age adjusted; the 2013 interval for people with benzodiazepines, 3.99% (3.58% to 4.21%), is asymmetric around its estimate.",
+      "page": "PMC HTML",
+      "consequence": "Minor; the trend figures should be cited from the text with this caveat."
+    },
+    {
+      "issue": "The main estimates are odds ratios, but the broader-sample sensitivity analysis reports adjusted relative risks without saying how they were obtained; its intermittent estimate (1.66) is higher and its chronic estimate (1.61) lower than in the main sample (1.42 and 1.81), yet both are called qualitatively similar.",
+      "page": "PMC HTML",
+      "consequence": "The robustness to sample construction is weaker than described; the subgroup pattern (stronger with chronic prescriptions) is not stable."
+    }
+  ],
+  "verification": {
+    "status": "first-pass",
+    "first_pass_by": "AI reader 47 (first reader)",
+    "first_pass_on": "2026-10-17",
+    "source_read": "PMC full text PMC5421443 (PMC HTML, read in the app's browser; text saved once with get_page_text): abstract, all sections, Table 1, figure legends (Figs 1–3 images, values not extracted beyond the text), funding, competing interests, author information, reference list. The appendix (PDF) was not opened."
+  }
+}

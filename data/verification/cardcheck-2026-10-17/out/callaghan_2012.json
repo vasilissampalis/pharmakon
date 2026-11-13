@@ -1,0 +1,47 @@
+{
+  "reference": "callaghan_2012",
+  "reader": "AI reader 10",
+  "read_on": "2026-10-17",
+  "source_read": "PDF, Drug and Alcohol Dependence 120: 35-40 (all six pages; native text layer): full text, Tables 1-4, funding, contributors and conflict statements; race counts, standardized differences, crude proportions and the 10-year projection recomputed from the tables.",
+  "claims": [],
+  "card_check": {
+    "key_findings": [
+      {"index": 0, "verdict": "confirmed", "correction": "", "note": "The cohort sizes are printed in the abstract (p. 35), the first Results paragraph (p. 36) and Tables 1-3; sections 2.3.1-2.3.3 give the codes."},
+      {"index": 1, "verdict": "confirmed", "correction": "", "note": "The alcohol and other-drug exclusion applies 'at any time', so codes recorded after the index admission also removed people; see missed."},
+      {"index": 2, "verdict": "confirmed", "correction": ""},
+      {"index": 3, "verdict": "confirmed", "correction": "", "note": "All 24 matched standardized differences in Tables 1-3 are below 10; the largest is 8.1 (later admissions, Table 1)."},
+      {"index": 4, "verdict": "confirmed", "correction": ""},
+      {"index": 5, "verdict": "confirmed", "correction": ""},
+      {"index": 6, "verdict": "confirmed", "correction": ""},
+      {"index": 7, "verdict": "confirmed", "correction": ""},
+      {"index": 8, "verdict": "confirmed", "correction": "", "note": "Recomputed: 51/(40,358 x 6.15) and 29/(40,358 x 6.12) person-years give 20.5 and 11.7 per 10,000 over 10 years. Multiplying 11.7 by HR 1.76 gives 20.7, so that route also reproduces 21; the method cannot be pinned down, but either way deaths are not removed from person-time."},
+      {"index": 9, "verdict": "confirmed", "correction": "", "note": "The Results say about 96% received a single code for dependence or abuse at the index admission (pp. 36 and 38); 'rather than a poisoning code' is the card's inference, as the remaining 4% are not described."},
+      {"index": 10, "verdict": "confirmed", "correction": ""},
+      {"index": 11, "verdict": "confirmed", "correction": ""}
+    ],
+    "reporting_issues": [
+      {"index": 0, "verdict": "confirmed", "note": ""},
+      {"index": 1, "verdict": "confirmed", "note": "The abstract's p = 0.004 matches Table 4."},
+      {"index": 2, "verdict": "confirmed", "note": "Recomputed: 1,892 + 29,940 + 6,687 + 2,289 = 40,808; 40,358 minus the other three counts is 29,490, which is 73.07%. The appendicitis column sums correctly to 40,358."},
+      {"index": 3, "verdict": "confirmed", "note": "The Utah comparison in the consequence comes from Curtin et al. (2015), outside this PDF; not checked here."},
+      {"index": 4, "verdict": "confirmed", "note": "See key finding 8: the figures are reproduced either way."}
+    ],
+    "risk_of_bias": {"verdict": "agree", "note": "Overall high agreed: confounding and outcome measurement are high, so high follows from the worst-domain rule. The card's reasoning, including that some biases could create an excess rather than hide one, matches the paper."},
+    "risk_of_bias_domains": [
+      {"domain": "Confounding", "verdict": "agree", "proposed": "", "note": "Smoking would bias the appendicitis comparison toward the null (p. 39), but head injury and environmental exposures could bias away from it; none was measured."},
+      {"domain": "Measurement of the exposure", "verdict": "disagree", "proposed": "some-concerns", "note": "The exposure as the card frames it (can_establish) is a hospital diagnosis of a meth/amphetamine-related condition, recorded at the index admission before, and independently of, the later outcome (p. 36, 2.3.2). Misclassification then consists mainly of unrecorded use in the comparison cohorts and of other amphetamines in the exposed cohort, both non-differential with respect to Parkinson's disease and expected to bias toward the null. Under ROBINS-E, non-differential error unlikely to create the observed association gives some concerns; high needs error related to the outcome or a measure that seriously fails to capture the exposure. The missing dose and duration data limit which questions the study answers (directness), as cannot_establish already says. The overall judgment is unaffected."},
+      {"domain": "Selection of participants", "verdict": "agree", "proposed": "", "note": "A second post-index mechanism supports at least some concerns: the exclusion of anyone with an alcohol or other drug code at any time, including codes recorded during follow-up (see missed). Without the numbers excluded I would not raise it to high."},
+      {"domain": "Post-exposure interventions", "verdict": "agree", "proposed": "", "note": ""},
+      {"domain": "Missing data", "verdict": "agree", "proposed": "", "note": ""},
+      {"domain": "Measurement of the outcome", "verdict": "agree", "proposed": "", "note": ""},
+      {"domain": "Selection of the reported result", "verdict": "agree", "proposed": "", "note": "One outcome definition and all three comparisons reported; with no protocol, low rests on the absence of any sign of selection."}
+    ],
+    "interpretation_gap": {"verdict": "agree", "note": "Minor agreed. Two small widenings not recorded: the Discussion restates the HR as a 76% increased risk without the hospital qualifier, and the 10-year projection calls the appendicitis cohort 'a California population-based sample' (p. 38, 1st paragraph). Still minor, given the explicit restriction to high-dose use (p. 39) and the hedged mechanism."},
+    "missed": [
+      "Exclusion 'at any time' (p. 36, 2.3.1-2.3.3): people with an alcohol or other drug code recorded after the index admission were also removed, so cohort membership depends on what happened during follow-up. People with more later admissions had more chances to receive such a code, and the number of later admissions is also a matching variable; the direction of the resulting bias is unknown, and the numbers removed are not reported.",
+      "Appendicitis as a population proxy (p. 39, 3rd paragraph of the Discussion): its independence from socio-economic status rests on one citation (Poikolainen et al., 1985) whose title concerns children (reference list, p. 40), while the cohort is aged 30 or over.",
+      "Different populations behind the three hazard ratios (Tables 1-3): only 17,696 of the 40,472 people in the meth/amphetamine cohort (43.7%) were matched to cocaine controls, and that subset differs from the one matched to appendicitis (38.1% vs 45.7% women; 10.8% vs 4.7% Black; mean time to study end 7.68 vs 6.15 years). HR 2.41 and HR 1.76 therefore describe different subsets and cannot be chained with HR 1.04.",
+      "Type of hazard ratio (p. 36, 2.4.2): the crrSC package named there fits Fine-Gray subdistribution hazards models (editors' background knowledge; the paper does not name the model). With more competing deaths in the drug cohorts (3,391 vs 1,510 against appendicitis), these HRs describe the cumulative incidence of a coded diagnosis in the presence of higher mortality, not the rate of disease among survivors; a claim should not present them as rate ratios."
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "Identity and nomenclature for one substance (monograph section 2)",
+ "description": "Names, chemistry, forms, street names by region and date, and drug-checking findings, each with its source. Street names are reported as documented by monitoring bodies, never as advice.",
+ "type": "object",
+ "required": ["substance", "compiled_on", "names", "sources"],
+ "properties": {
+  "substance": {"type": "string"},
+  "compiled_on": {"type": "string", "format": "date"},
+  "compiled_by": {"type": "string", "description": "Who compiled the section and how the pages were read (METHODS §10.3)."},
+  "checked_by": {"type": "string", "description": "The second reader and how they checked (METHODS §10.3: ai-checked)."},
+  "checked_on": {"type": "string", "format": "date"},
+  "names": {"type": "object", "properties": {
+   "inn": {"type": "string"}, "iupac": {"type": "string"}, "cas": {"type": "array", "items": {"type": "string"}},
+   "formula": {"type": "string"}, "molar_mass": {"type": "string"}, "synonyms": {"type": "array", "items": {"type": "string"}},
+   "source_ids": {"type": "array", "items": {"type": "string"}}}},
+  "members": {"type": "array", "description": "For a page that covers a class (benzodiazepines, synthetic cathinones…): the members the page covers, each with its own identifiers and sources.", "items": {"type": "object", "required": ["name", "source_ids"], "properties": {
+    "name": {"type": "string"}, "inn": {"type": "string"}, "iupac": {"type": "string"}, "cas": {"type": "array", "items": {"type": "string"}},
+    "formula": {"type": "string"}, "molar_mass": {"type": "string"}, "synonyms": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"},
+    "source_ids": {"type": "array", "items": {"type": "string"}}}}},
+  "forms": {"type": "array", "items": {"type": "object", "required": ["form", "source_ids"], "properties": {"form": {"type": "string"}, "detail": {"type": "string"}, "source_ids": {"type": "array", "items": {"type": "string"}}}}},
+  "street_names": {"type": "array", "items": {"type": "object", "required": ["names", "region", "source_ids"], "properties": {"names": {"type": "array", "items": {"type": "string"}}, "region": {"type": "string"}, "period": {"type": "string"}, "source_ids": {"type": "array", "items": {"type": "string"}}}}},
+  "drug_checking": {"type": "array", "items": {"type": "object", "required": ["finding", "source_ids"], "properties": {"finding": {"type": "string"}, "where_when": {"type": "string"}, "source_ids": {"type": "array", "items": {"type": "string"}},
+    "hold": {"type": "string", "description": "Why the finding is not shown yet, e.g. a paper read only through WebFetch (METHODS §12.1: papers are read in full text, never through WebFetch)."}}}},
+  "sources": {"type": "array", "items": {"type": "object", "required": ["id", "title", "url", "accessed", "read_via"], "properties": {"id": {"type": "string"}, "title": {"type": "string"}, "publisher": {"type": "string"}, "url": {"type": "string"}, "date": {"type": "string"}, "accessed": {"type": "string"},
+    "read_via": {"type": "string", "enum": ["WebFetch", "browser", "PDF"], "description": "How the page was read (METHODS §10.3, §12.1): WebFetch answers through a summarizing model, so facts read that way stay draft until confirmed in a second source or by a second reader."},
+    "note": {"type": "string", "description": "How the page was read in detail (e.g. numbers re-read in a second fetch); not shown as a source title."}}}},
+  "verification": {"type": "string", "enum": ["draft", "ai-checked", "senior-verified"]}
+ }
+}

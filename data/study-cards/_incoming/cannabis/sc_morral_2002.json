@@ -1,0 +1,248 @@
+{
+ "id": "sc_morral_2002",
+ "substance": "cannabis",
+ "reference": "morral_2002",
+ "design": "modelling",
+ "design_detail": "'For Debate' article (Addiction 97(12):1493–1504; three commentaries and the authors' reply follow in the same issue and were not read). A Monte Carlo model of adolescent drug initiation: each simulated person gets a standard-normal 'drug use propensity' that brings forward the ages of the first opportunity to use marijuana and to use hard drugs (heroin, cocaine or hallucinogens) through a gamma frailty term, and raises the yearly chance of first use once an opportunity has occurred; given propensity, marijuana opportunity and use have no influence on hard drugs, so the model contains no gateway effect by construction. Parameters were set from the pooled 1982–1994-A US National Household Surveys on Drug Abuse (58,846 respondents aged 12–25, birth cohorts 1964–1982, weighted). One million simulated people were compared with survey estimates of three phenomena cited for a gateway effect (relative risk, ordering, dose–response); a further exercise adds noisy indicators of propensity as covariates to show how much association survives adjustment. Filed as modelling: the evidence is a simulation calibrated to survey margins, not a test of the gateway effect against data.",
+ "can_establish": "That a model with no causal link from marijuana to hard drugs, in which one shared propensity governs both opportunities and use, can produce a strong marijuana–hard-drug relative risk, an order of first use in which hard drugs rarely come first, and a hazard of hard-drug initiation that rises with marijuana frequency, under its stated assumptions and US parameters for 1982–94; and that adjusting for imperfect proxies of such a propensity leaves large residual associations.",
+ "cannot_establish": "That the shared propensity rather than a gateway effect explains the real associations: no model with a gateway effect was fitted for comparison, the propensity parameters were fitted to correlations in data that may themselves contain such an effect, the model overshoots the survey's relative risk more than sixfold (157 against 24), and its dose–response match depends on a correlation chosen without data.",
+ "sample": {
+  "n_total": null,
+  "n_by_group": {
+   "survey respondents used for calibration": 58846,
+   "simulated observations": 1000000,
+   "simulated cases in the dose-response model": 30000
+  },
+  "recruitment": "Not applicable (simulation). Inputs come from the National Household Survey on Drug Abuse, a probability sample of the US civilian non-institutionalized population aged 12 and over, 1982 through 1994-A (p. 1497, Parameter estimation › Data source).",
+  "inclusion_exclusion": "Survey respondents aged 12–25 from birth cohorts 1964–1982; the relative-risk comparison uses respondents aged 22 or older (p. 1497, Data source; p. 1499, Estimation of the relative risk effect).",
+  "demographics": "Not reported.",
+  "attrition": "Not applicable.",
+  "selection_effects": "The calibration data are self-reports in household surveys, which miss people without a fixed address or in institutions (not discussed). Pooling the birth cohorts rests on preliminary analyses that are not shown (p. 1497, Data source)."
+ },
+ "exposure": {
+  "measurement": "Simulated. In the survey data: self-reported ages of the first opportunity to use and of first use of marijuana, heroin, cocaine and hallucinogens, and past-year marijuana frequency (pp. 1497–1498, Data source).",
+  "dose_frequency_duration_route": "Past-year marijuana frequency in five bands (none, 1–2, 3–11, 12–51, 52 or more times), drawn for each simulated person from the survey distribution by age and years since starting, through a random effect whose correlation with propensity was set at 0 to 1 because no data exist to estimate it (p. 1497, Marijuana use frequency).",
+  "purity_known": false,
+  "polysubstance": "'Hard drugs' pool heroin, cocaine and hallucinogens (earliest reported age); alcohol and tobacco are not modelled.",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "Simulated people who had not started marijuana by 21 (relative risk) or had not used it in the past year (dose–response), compared with the corresponding survey estimates.",
+  "matching": "Not applicable.",
+  "unmeasured_premorbid": "The model's driver is assumed rather than measured: no information exists on how a drug use propensity is distributed among adolescents, so a standard normal distribution was used (p. 1496, Drug use propensity, 2nd paragraph).",
+  "controls_other_drug_use": "Not applicable."
+ },
+ "outcomes": {
+  "instruments": "Simulated survival functions; relative risk of starting a hard drug by 21 for people who had and had not started marijuana by 21; share of people starting a hard drug at least a year before marijuana; hazard ratios of hard-drug initiation by past-year marijuana frequency (complementary log-log model on 30,000 simulated cases, ages 12–21); odds ratios from a logistic model that adjusts for a propensity indicator of chosen reliability (pp. 1499–1502).",
+  "validity_norms": "Fit to the survey judged only on the marginal survival functions (within 0.009 at every age); no goodness-of-fit for the joint distribution of the four ages.",
+  "operationalization": "A phenomenon counts as 'reproduced' if the model produces it in the same direction and of similar or greater size than the survey estimate (pp. 1500–1501).",
+  "n_outcomes_tested": 4,
+  "multiplicity_correction": "Not applicable: no statistical tests; no intervals for simulated or survey quantities.",
+  "assessor_blinding": "Not applicable."
+ },
+ "analysis": {
+  "effect_sizes": "Model against survey: relative risk of starting a hard drug by 21 after starting marijuana by 21, 157 against 24; for starting marijuana by 15 against later, 3.44 against 1.60; share starting a hard drug at least a year before marijuana, 0.011 against 0.016 (11 against 16 per 1,000); hazard ratios of hard-drug initiation rising with past-year marijuana frequency at every assumed correlation, the heaviest group above 10 even at zero correlation, with the survey hazard ratios near the r=0.4 curve at low frequencies and between r=0.4 and r=0.8 at the highest (pp. 1500–1501; Fig. 3). Read from the log-scale Fig. 3 by the first reader only: survey hazard ratios about 7.5, 12, 23 and 39 for 1–2, 3–11, 12–51 and 52 or more uses against none. Adjustment exercise (Fig. 4): odds ratio of starting a hard drug by 22 after marijuana use 297 with no propensity indicator, 178 at reliability 0.6, 82 at 0.8, 32 at 0.9, 12 at about 0.95, 2 at 0.99 and 1 at 1.0. No uncertainty intervals anywhere.",
+  "covariates": "Not applicable; in the Fig. 4 exercise, a simulated indicator of propensity.",
+  "preregistration": "none",
+  "selective_reporting": "Only one specification of the model is shown; parameter values other than β1 (3.22) are not printed and no code is provided; the dose–response result is shown for four assumed correlations.",
+  "power": "Not applicable. With one million simulated people Monte Carlo error is small, but uncertainty in the survey inputs is not carried into the model outputs."
+ },
+ "interpretation_gap": {
+  "results_show": "Under its assumptions, a propensity-only model calibrated to US survey margins produces all three gateway phenomena: it overshoots the relative risk (157 against 24) and the strength of the ordering (11 against 16 per 1,000 with hard drugs first), and matches the dose–response only for some values of an unmeasured correlation. It shows that these phenomena cannot by themselves distinguish a gateway effect from a shared propensity.",
+  "claimed": "The Introduction says the primary evidence for a marijuana gateway effect can be explained completely by the order of opportunities and a non-specific liability (p. 1493), and the abstract that no gateway effect is required and that the common-factor model has policy implications that differ significantly from the gateway model (p. 1493). The Discussion concludes that marijuana policies would have little effect on hard drug use except through propensity or the availability of hard drugs (p. 1503). The same pages state that the model does not disprove a gateway effect, that something like one probably exists through contact with the black market, and that its validity must remain uncertain until compared directly with the common-factor model (pp. 1502–1503). The demonstration shows that the phenomena do not identify the cause; the policy conclusion assumes that the common-factor model is the true one, which the paper does not test. The model's sixfold overshoot of the relative risk is attributed to slight imprecision in a small denominator (p. 1500); the printed figures imply that the survey denominator was itself only about 0.013 to 0.015 (editors' calculation), so the 'slight' difference invoked is almost all of it.",
+  "gap_assessment": "substantial"
+ },
+ "replication": {
+  "status": "not-attempted",
+  "timeline": [
+   {
+    "year": 1975,
+    "event": "Kandel: stages of adolescent drug involvement, the ordering phenomenon modelled here (see that card).",
+    "reference": "kandel_1975"
+   },
+   {
+    "year": 2002,
+    "event": "Wagner & Anthony: in US household surveys of 1991–94 (overlapping this model's calibration years), earlier drug use went with earlier opportunities and with starting once offered (see that card).",
+    "reference": "wagner_2002"
+   },
+   {
+    "year": 2002,
+    "event": "This model; three commentaries (Addiction 97(12):1505–1507; PubMed 12472630–12472632) and the authors' reply (PubMed 12472633) appeared in the same issue, not read for this card.",
+    "reference": "morral_2002"
+   },
+   {
+    "year": 2003,
+    "event": "Lynskey et al.: early cannabis use went with later other drug use within same-sex twin pairs, a comparison that holds constant everything co-twins share, which this model does not address (see that card).",
+    "reference": "lynskey_2003"
+   },
+   {
+    "year": 2010,
+    "event": "Degenhardt et al., 17 WHO World Mental Health surveys, cite this model for the common-cause explanation (as recorded on that card).",
+    "reference": "degenhardt_2010a"
+   },
+   {
+    "year": 2012,
+    "event": "Vanyukov et al.: narrative review by proponents of common liability cites this model in support (as recorded on that card).",
+    "reference": "vanyukov_2012"
+   },
+   {
+    "year": 2015,
+    "event": "Irons, Iacono & McGue, Minnesota twins: drinking by 14 went with more drug classes used at 24 within identical pairs discordant for early drinking, which a liability shared by co-twins cannot by itself produce (as recorded on that card).",
+    "reference": "irons_2015"
+   }
+  ],
+  "where_it_stands": "Provisional: no re-analysis or independent replication of the model appears in the sources read for this card, and the commentaries and reply published with it were not available. The model stands as the standard demonstration that the relative-risk, ordering and dose–response phenomena do not by themselves identify a gateway effect. Designs that hold shared factors constant, such as co-twin comparisons (Lynskey et al., 2003; Irons et al., 2015, for early drinking), found within-pair associations that a liability shared by co-twins cannot produce, although a propensity that differs between co-twins remains possible. Later studies were not searched by this reader."
+ },
+ "funding": {
+  "funder": "Center for Substance Abuse Treatment of the Substance Abuse and Mental Health Services Administration, US Department of Health and Human Services (grant #TI11433, contract #270-97-7011); National Institute on Alcohol Abuse and Alcoholism (grant #R01 AA12457); Drug Policy Research Center at RAND. The authors state that the opinions are their own and not official positions of the Government (Acknowledgements, p. 1503).",
+  "declared_conflicts": "No conflict-of-interest statement in the article.",
+  "affiliations_note": "All three authors at the Drug Policy Research Center, RAND, Arlington; the article draws conclusions for marijuana control policy."
+ },
+ "what_would_settle_it": "Fit both a common-factor model and a model that adds a gateway effect (for example through access to drug markets) to the same individual-level longitudinal data with measured opportunities and propensity indicators recorded before any use, and compare how well each reproduces the joint distribution, including associations within twin pairs; or study a natural experiment that changes access to marijuana without changing propensity, such as a policy that separates cannabis from hard-drug markets, and measure later hard-drug initiation.",
+ "risk_of_bias": {
+  "instrument": "none-applicable",
+  "domains": [
+   {
+    "domain": "Model assumptions and their empirical support",
+    "judgment": "high",
+    "note": "The core assumptions (a normally distributed propensity, a gamma frailty for opportunities, one shared β2 for both drugs, no effect of marijuana given propensity) are not tested; the propensity parameters were fitted to correlations in survey data that may contain a real gateway effect, which the model would then absorb into propensity; the dose–response result needs a correlation for which, as the authors say, no data exist."
+   },
+   {
+    "domain": "Calibration and comparison with the target data",
+    "judgment": "high",
+    "note": "Only the marginal survival functions are calibrated (within 0.009); of the three phenomena, the relative risk is overshot more than sixfold (157 against 24), the early-onset relative risk about twofold (3.44 against 1.60), and the ordering is stronger than observed (0.011 against 0.016), all without intervals."
+   },
+   {
+    "domain": "Comparison with an alternative model",
+    "judgment": "high",
+    "note": "No model with a gateway effect was fitted to the same data, so the paper cannot show that the data favour either explanation."
+   },
+   {
+    "domain": "Transparency and reproducibility",
+    "judgment": "high",
+    "note": "Parameter values other than β1 are not printed, no code is given, and the printed equations contain notation errors (see reporting issues), so the model cannot be rebuilt exactly from the paper."
+   },
+   {
+    "domain": "Uncertainty",
+    "judgment": "some-concerns",
+    "note": "No intervals for survey estimates or simulated quantities, and sampling error in the survey inputs is not carried into the outputs; the authors themselves call the survey dose–response estimate inaccurate (p. 1499)."
+   },
+   {
+    "domain": "Balance (between the common-factor and gateway explanations)",
+    "judgment": "some-concerns",
+    "note": "The authors acknowledge that a gateway effect may exist, probably through black-market contact, and that the model does not disprove it; but the abstract, Introduction and policy paragraph state the common-factor reading more firmly than a non-identification result supports, and the gateway side (for example access to markets) is not modelled."
+   }
+  ],
+  "overall": "high",
+  "reasoning": "No validated instrument applies to a simulation (METHODS §5.3); the editors' checklist is used with domains adapted to a modelling study, as on card sc_rogeberg_2013, and the overall is no milder than the worst domain. The model legitimately shows that a shared propensity plus the order of opportunities could produce the phenomena usually cited for a gateway effect, and its adjustment exercise shows why controlling for imperfect proxies cannot rule a shared factor out. It does not show that a shared factor is the actual explanation: it was not compared with a gateway model, it overshoots the main phenomenon, and its parameters could absorb a real gateway effect. Citable for the argument that the gateway phenomena do not identify a causal effect and for the size of residual association left by imperfect adjustment within the model; not as evidence that the gateway effect is zero or that marijuana policy cannot affect hard-drug use."
+ },
+ "key_findings": [
+  {
+   "finding": "In the model, one standard-normal propensity per person brings forward the first opportunities to use marijuana and hard drugs and raises the yearly chance of first use once offered; given propensity, opportunity to use and use of marijuana are independent of opportunity to use and use of hard drugs, so the model excludes any causal gateway effect by design.",
+   "page": "pp. 1495–1497",
+   "locator": "Introduction, last paragraph (p. 1495); Methods › Model specification (pp. 1495–1497); Figure 1 (p. 1497)"
+  },
+  {
+   "finding": "Calibration data: all 58,846 survey respondents aged 12–25 from birth cohorts 1964–1982, pooled from the 1982 through 1994-A National Household Surveys on Drug Abuse with sample weights; 'hard drugs' means the earliest reported heroin, cocaine or hallucinogen. The questions on opportunities were dropped from later surveys.",
+   "page": "pp. 1497–1498",
+   "locator": "Parameter estimation › Data source"
+  },
+  {
+   "finding": "β1 = 3.22, the maximum-likelihood estimate from a 5% random sample of the survey data stratified by survey year and birth cohort, sets the correlation between ages of first opportunity for the two drug groups; β2 was chosen by simulation (10,000 cases per trial value) to match the survey correlation between the opportunity-to-use lags for marijuana and hard drugs among people who used both by 22; the remaining parameters make the model's marginal probabilities match the survey.",
+   "page": "pp. 1498–1499",
+   "locator": "Statistical methods › Estimation of β1; Estimation of β2; Estimation of ψ*"
+  },
+  {
+   "finding": "Survey survival curves: by age 22, about 77% had had an opportunity to use marijuana, about 46% an opportunity to use a hard drug, about 54% had used marijuana and about 23% a hard drug.",
+   "page": "p. 1498",
+   "locator": "Figure 2",
+   "note": "Read from a 300-dpi crop of Fig. 2 by the first reader (proportions surviving at 22 of about 0.23, 0.54, 0.46 and 0.77); approximate."
+  },
+  {
+   "finding": "Modelled marijuana and hard-drug initiation survival rates differed from the survey's by 0.009 or less at every age.",
+   "page": "p. 1500",
+   "locator": "Model Results › Model precision"
+  },
+  {
+   "finding": "Relative risk of starting a hard drug by 21: 157 in the model for people who had started marijuana by 21 against those who had not, against 24 in survey respondents aged 22 or older. The authors attribute the gap to imprecision in the small denominator: if the survey's probability of starting a hard drug by 22 without marijuana by 21 were lower by as little as 0.013, the relative risk could exceed 190.",
+   "page": "p. 1500",
+   "locator": "Model Results › Gateway effects › Relative risk, 1st paragraph",
+   "note": "Editors' calculation: with a survey ratio of 24, a reduction of 0.013 can raise it above 190 only if the survey denominator lay between about 0.013 and 0.015, so the 'slight' imprecision invoked would be most of the estimate."
+  },
+  {
+   "finding": "Starting marijuana by 15, against later, went with 1.60 times the risk of using a hard drug by 22 in the survey and 3.44 times in the model.",
+   "page": "p. 1500",
+   "locator": "Model Results › Gateway effects › Relative risk, 2nd paragraph"
+  },
+  {
+   "finding": "Starting a hard drug at least a year before marijuana (before 22): 0.011 of simulated people against 0.016 in the survey (11 against 16 per 1,000); the authors attribute the order to opportunities for marijuana usually coming before opportunities for hard drugs, often by many years.",
+   "page": "pp. 1500–1501",
+   "locator": "Model Results › Gateway effects › Ordering (p. 1500); Discussion › Adolescent drug use initiation, 3rd paragraph (p. 1501)"
+  },
+  {
+   "finding": "Hazard ratios of hard-drug initiation rose with past-year marijuana frequency under every assumed correlation (0, 0.4, 0.8, 1) between marijuana intensity and propensity; even at zero correlation the heaviest group had more than 10 times the hazard of people with no past-year use. The survey estimates lay close to the r=0.4 curve for the two lowest frequencies and between r=0.4 and r=0.8 at the highest.",
+   "page": "pp. 1500–1501",
+   "locator": "Model Results › Gateway effects › Dose–response, 1st and 2nd paragraphs (p. 1500); Figure 3 (p. 1501)",
+   "note": "Read from the log-scale Fig. 3 at 300 dpi by the first reader only: survey hazard ratios about 7.5, 12, 23 and 39 for 1–2, 3–11, 12–51 and 52 or more uses; model at zero correlation about 6, 8, 9 and 12. The authors call their survey dose–response estimate inaccurate, because frequency can change after hard-drug initiation in the same year and proportional hazards are assumed (p. 1499)."
+  },
+  {
+   "finding": "Adjusting a logistic model of hard-drug initiation by 22 for a simulated propensity indicator: the odds ratio for marijuana use was 297 with an indicator of reliability 0, 285 at 0.2, 245 at 0.4, 178 at 0.6, 82 at 0.8, 32 at 0.9, 12 at about 0.95, 2 at 0.99 and 1 at 1.0; the authors conclude that covariates used in earlier studies are very unlikely to be reliable enough to remove the association.",
+   "page": "pp. 1501–1502",
+   "locator": "Discussion › Exhibiting gateway effects by controlling for common factors, 1st and 2nd paragraphs; Figure 4 (p. 1502)",
+   "note": "Values printed beside the points in Fig. 4; the abscissa of the 12 is read as about 0.95."
+  },
+  {
+   "finding": "Limitations stated by the authors: untested assumptions (normal propensity, frailty model); parameters specific to US youth of the survey period, so results may not generalize to other places or times; response bias could create the phenomena, so propensity is defined as the likelihood of reporting drug use; and the model excludes a gateway effect regardless of parameter values.",
+   "page": "p. 1502",
+   "locator": "Discussion › Model limitations, 1st–4th paragraphs"
+  },
+  {
+   "finding": "The authors state that the analyses do not disprove a gateway effect, that something like one probably exists because marijuana purchases bring people into contact with a black market that also sells hard drugs, and that a real effect could be too small to matter or offset by effects in the opposite direction in other people.",
+   "page": "pp. 1502–1503",
+   "locator": "Discussion › The status of the marijuana gateway effect, 1st and 2nd paragraphs"
+  },
+  {
+   "finding": "Policy conclusion: marijuana policies would have little effect on hard drug use except insofar as they changed propensity to use any drug or made hard drugs less available or available later; the validity of the gateway effect is held to be uncertain until it is compared directly with the common-factor model.",
+   "page": "p. 1503",
+   "locator": "Discussion › The status of the marijuana gateway effect, 3rd and 4th paragraphs"
+  },
+  {
+   "finding": "Figures cited from other studies to frame the three phenomena (second-hand, not this paper's data): a relative risk of 85 in one US report; 3 of 1,265 New Zealand youths using hard drugs before marijuana against about 124 expected if the two were independent; hazards more than 140 times greater for 50 or more past-year cannabis uses.",
+   "page": "p. 1494",
+   "locator": "Introduction, 2nd–4th paragraphs"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "Equation 3 sets the survival function for marijuana initiation to 0 when the first opportunity comes after age t, which would mean everyone without an opportunity has already started; it should be 1. The same equation uses F(ψ*−θ) as the yearly probability of not starting, while the text (pp. 1496, 1499) equates its expectation with the yearly probability of starting.",
+   "page": "pp. 1496, 1499",
+   "consequence": "The model cannot be rebuilt exactly from the printed equations; whether the code shared these slips cannot be checked, as no code or full parameter list is published."
+  },
+  {
+   "issue": "The ordering statistic is defined as hard-drug initiation preceding marijuana initiation 'only if' YH < YM, which in the paper's notation are the ages of first opportunity, not of first use (ZH < ZM).",
+   "page": "p. 1500",
+   "consequence": "Probably a notation slip, but as printed the ordering result (0.011) would describe opportunities rather than initiation; it cannot be confirmed from the text."
+  },
+  {
+   "issue": "The explanation of the relative-risk gap (157 in the model against 24 in the survey) relies on an imprecision of 0.013 in the survey denominator; the printed numbers imply that denominator was about 0.013 to 0.015 (editors' calculation), and no interval is given for it.",
+   "page": "p. 1500",
+   "consequence": "The overshoot is not shown to be within sampling error; the model's propensity may produce stronger associations than the data, which would also make the adjustment exercise (starting from an odds ratio of 297) more extreme than the observed data."
+  },
+  {
+   "issue": "Parameter values other than β1 (β2, πM, πH and the yearly ψ* values) are not printed, and the preliminary analyses that justified pooling birth cohorts are not shown.",
+   "page": "pp. 1497–1499",
+   "consequence": "The calibration cannot be checked or reproduced from the paper."
+  },
+  {
+   "issue": "'Reliability' of the propensity indicator in Fig. 4 is used for the correlation between indicator and propensity: a reliability of 0.99 is said to leave 2% of the variance uncaptured, whereas reliability usually denotes the share of variance captured.",
+   "page": "pp. 1501–1502",
+   "consequence": "Minor; on the usual definition the threshold described corresponds to a reliability of about 0.98."
+  }
+ ],
+ "verification": {
+  "status": "first-pass",
+  "first_pass_by": "AI (Claude, reading agent)",
+  "first_pass_on": "2026-11-01",
+  "source_read": "PDF (version of record), Addiction 97(12), pp. 1493–1504 (all pages; equations and Figures 1–4 checked on rendered pages, Figs. 2–4 also on 300-dpi crops; the three commentaries (pp. 1505–1507) and the authors' reply in the same issue were not among the files; no supplement)"
+ }
+}

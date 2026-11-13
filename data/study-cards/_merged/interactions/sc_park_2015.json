@@ -1,0 +1,237 @@
+{
+  "id": "sc_park_2015",
+  "substance": "interactions",
+  "reference": "park_2015",
+  "design": "retrospective-cohort",
+  "design_detail": "Case-cohort study within the US Veterans Health Administration (VHA), financial years 2004–2009: all 2,400 veterans who died of a drug overdose while receiving outpatient opioid analgesics (cases) and a subcohort of 420,386 veterans drawn as 5% annual random samples of VHA patients receiving outpatient opioid analgesics; 422,786 analysed. Every person-day on an opioid prescription was classified by benzodiazepine prescription history (current, former, none) from pharmacy fill dates and days' supply; Cox models with a risk-set approach and robust variance gave hazard ratios for death from overdose (any drug, any intent; National Death Index), adjusted for demographics, area poverty, psychiatric and substance use diagnoses, comorbidity, other psychotropic drug classes and time-varying opioid dose (Model 1); Model 2 examined benzodiazepine dose, type and schedule within periods of current receipt. Rates were scaled to the whole source population by the inverse sampling fraction. The paper calls the design similar to a nested case–control study; it is filed here as a records-based cohort because the subcohort is a random sample of the source population and the analysis estimates hazard ratios and population rates. Read in full as PMC HTML (PMC4462713), including Tables 1–4; the figure (rates by opioid dose and benzodiazepine history) is an image whose values were not extracted. No supplement is listed.",
+  "can_establish": "Whether, among veterans filling opioid analgesic prescriptions, person-time with a filled benzodiazepine prescription carries a higher rate of overdose death than person-time without one, after adjustment for recorded diagnoses, other prescriptions and opioid dose, and whether that rate rises with the prescribed benzodiazepine dose.",
+  "cannot_establish": "That benzodiazepines cause the excess deaths rather than marking the conditions they are prescribed for (anxiety and other psychiatric disorders, substance use, and their severity) or unrecorded use of other drugs; how much medicine was actually taken; or whether risk differs from that of benzodiazepines taken without opioids, because everyone studied was receiving opioids.",
+  "sample": {
+    "n_total": 422786,
+    "n_by_group": {
+      "overdose-death cases": 2400,
+      "random subcohort (controls)": 420386,
+      "filled at least one benzodiazepine prescription": 112069,
+      "no benzodiazepine prescription": 310717,
+      "excluded: methadone for maintenance": 221,
+      "excluded: palliative or hospice care": 5816,
+      "overdose deaths during current benzodiazepine receipt": 1185,
+      "overdose deaths during former receipt": 421,
+      "overdose deaths with no benzodiazepine receipt": 794
+    },
+    "recruitment": "Registry/records: VHA electronic medical records (National Patient Care Database), VHA Pharmacy Benefits Management fill records and National Death Index cause of death, for veterans who received VHA medical services and outpatient opioid analgesics in financial years 2004–2009 (Methods › Study design and population, 1st and 2nd paragraphs; Data sources).",
+    "inclusion_exclusion": "Veterans receiving outpatient opioid analgesics (codeine, morphine, oxycodone, hydrocodone, oxymorphone, hydromorphone, fentanyl, propoxyphene, and methadone for pain only; buprenorphine not included). Excluded: 221 veterans prescribed methadone for maintenance and 5,816 with palliative-care consultation or hospice indicators. Observation began at the first filled opioid prescription after the first medical visit of the year, to avoid immortal time; only days of current opioid receipt were analysed (Methods › Study design and population, 2nd paragraph; Drug prescribing patterns, 1st and 2nd paragraphs).",
+    "demographics": "Mostly men (94% of those without and 91% of those with benzodiazepines); 27% filled at least one benzodiazepine prescription. Those with benzodiazepines were more often women (33% of women against 26% of men), aged 40–59, white and from wealthier areas, and had more recent mental-health or substance-use admissions (4% against 1%), post-traumatic stress disorder (22% against 9%), other anxiety disorders (20% against 5%), depression (38% against 19%), bipolar or psychotic disorders (11% against 4%), substance use disorders (13% against 10%), and more antidepressant (58% against 31%), antiepileptic (38% against 23%) and antipsychotic (25% against 11%) prescriptions (Results › Sample, 1st paragraph; Table 1).",
+    "attrition": "Not applicable in the usual sense: records-based follow-up to death from any cause or the end of financial year 2009. More than 99% of deaths had a full social security number match to the National Death Index; zip-code poverty data were missing for 4.3% and singly imputed (Methods › Data sources; Covariates).",
+    "selection_effects": "US veterans in VHA care, mostly men; the authors note that veteran status and male sex are both associated with accidental poisoning mortality, which may limit generalization (Discussion › Strengths and weaknesses of study). People prescribed methadone for maintenance, buprenorphine and people in palliative care were excluded, so the sample is people treated with opioids for pain. Prescriptions from outside the VHA are not seen. Prevalent opioid recipients were included (observation began at the first fill of each year), so people who had tolerated opioids for years are mixed with new starters."
+  },
+  "exposure": {
+    "measurement": "Pharmacy records of filled outpatient oral benzodiazepine and opioid prescriptions (fill date, days' supply, schedule). Each person-day was classified as current benzodiazepine receipt (from a fill to the end of its days' supply), former receipt (after a prescription ended, until another fill) or none (before the first fill, or never). Doses were computed 'as prescribed': all milligram equivalents in a prescription divided by days' supply, assuming the maximum amount prescribed was taken, including for as-needed prescriptions (Methods › Drug prescribing patterns, 1st–3rd paragraphs).",
+    "dose_frequency_duration_route": "Study conditions only: benzodiazepine dose as diazepam-equivalent mg per day as prescribed, in categories 0, >0–10, >10–20, >20–30, >30–40 and >40 mg/day; opioid dose as morphine-equivalent mg per day, >0–<20, 20–<50, 50–<100 and ≥100 mg/day, time-varying; oral route; benzodiazepine schedule regular, as needed or both; types alprazolam, chlordiazepoxide, clonazepam, diazepam, lorazepam, temazepam and five less used ones (Methods › Drug prescribing patterns; Tables 2–4).",
+    "purity_known": true,
+    "polysubstance": "Illicit drug and alcohol use were not measured; substance use disorder diagnoses in the year before observation were a covariate. Receipt of antidepressants, antiepileptic and anti-parkinsonism drugs, and antipsychotic and neuroleptic drugs in the year before observation was adjusted for (Methods › Covariates). The authors note that people with more severe addiction may take more than prescribed and use illicit drugs (Discussion › Findings in context, 2nd paragraph).",
+    "abstinence_at_testing": "Not applicable."
+  },
+  "comparison": {
+    "controls": "Person-time of the same source population on opioid prescriptions with no benzodiazepine prescription history (and, separately, person-time after a benzodiazepine prescription had ended).",
+    "matching": "None: the subcohort was a random sample, and confounding was handled by adjustment (Model 1 covariates: sex, age, race, ethnicity, area poverty, time-varying daily opioid dose, recent hospital admission related to substance use disorder, Charlson comorbidity index, diagnoses of substance use disorder, post-traumatic stress disorder, other anxiety disorder, depression, bipolar or psychotic disorder and cancer, and use of other drugs; Table 3 note).",
+    "unmeasured_premorbid": "Severity of the anxiety, other psychiatric disorders or substance use for which benzodiazepines were prescribed (indications are not linked to VHA pharmacy data); alcohol and illicit drug use; suicidality; diagnoses were fixed at the year before observation rather than updated. The authors use the former-receipt category to address unmeasured confounding and still find a raised risk in it (Discussion › Findings in context, 2nd and 3rd paragraphs).",
+    "controls_other_drug_use": "Both groups were receiving opioid analgesics by design; other drug classes were adjusted for as prior-year receipt; non-VHA and illicit drugs unknown."
+  },
+  "outcomes": {
+    "instruments": "National Death Index cause of death, ICD-10 codes X40–X45 (unintentional), X60–X65 (intentional) and Y10–Y15 (undetermined intent) for poisoning by any drug, with no T-code (specific drug) required; sensitivity analyses excluded intentional deaths or kept only deaths coded to opioids or benzodiazepines (Methods › Deaths from drug overdose; Statistical analysis, 5th paragraph).",
+    "validity_norms": "Death certificate coding; the authors chose a broad definition because intent is often unclear and many certificates do not name the drugs. Not validated in this sample.",
+    "operationalization": "Death from overdose of any drug and any intent while receiving opioid analgesics; this includes suicides and deaths in which neither opioids nor benzodiazepines were named.",
+    "n_outcomes_tested": 1,
+    "multiplicity_correction": "None; one outcome with several exposure contrasts (history, dose, type, schedule) and four sensitivity analyses.",
+    "assessor_blinding": "Not applicable: death certification was independent of the study; certifiers could know of prescriptions found at the death scene."
+  },
+  "analysis": {
+    "effect_sizes": "Unadjusted overdose death rates per 100,000 person-years (scaled to the source population): none 71 (95% CI 66–76), former 187 (170–205), current 316 (298–334). Adjusted hazard ratios (Model 1): former 2.33 (2.05–2.64), current 3.86 (3.49–4.26) against none. Model 2, current receipt only, against >0–10 mg/day: >10–20 mg 1.69 (1.42–2.01), >20–30 mg 2.34 (1.91–2.86), >30–40 mg 2.65 (2.10–3.33), >40 mg 3.06 (2.38–3.92); temazepam against clonazepam 0.63 (0.48–0.82); schedule not associated. Editors' calculation: the unadjusted rate difference between current and no receipt is 245 per 100,000 person-years (about 3.2 against 0.7 deaths per 1,000 person-years); the current-to-former hazard ratio ratio is 1.66.",
+    "covariates": "See comparison.matching; diagnoses and other drug receipt measured in the year before observation; opioid dose time-varying.",
+    "preregistration": "none",
+    "preregistration_detail": "No protocol or registration is cited; the transparency declaration says any discrepancies from the study as planned have been explained.",
+    "selective_reporting": "Sensitivity analyses (excluding intentional deaths, restricting to opioid- or benzodiazepine-coded deaths, excluding people with cancer, extending current periods by 10% of days' supply) are reported only as giving minor differences, without estimates (Results › Sensitivity analyses). The figure's stratified rates are shown only as an image.",
+    "power": "Not addressed formally; 2,400 deaths give precise estimates for the main contrasts (intervals within about ±10% of the hazard ratios)."
+  },
+  "interpretation_gap": {
+    "results_show": "Among veterans receiving opioid analgesics, overdose death rates were 316 per 100,000 person-years during current benzodiazepine prescription, 187 after it ended and 71 with none; adjusted hazard ratios were 3.86 and 2.33. Within current receipt, adjusted hazards rose with prescribed benzodiazepine dose (1.69 to 3.06 against the lowest category). About half of all overdose deaths (1,185 of 2,400) occurred during current benzodiazepine prescription. The relative association did not differ detectably by opioid dose (interaction P = 0.60), and opioid dose gradients were similar in all three benzodiazepine strata (Table 4).",
+    "claimed": "The abstract and the boxed summary state the results as associations and add that the association was dose-dependent. The discussion is cautious: it says the design cannot show that benzodiazepines cause the deaths, that the association may partly reflect the conditions benzodiazepines are prescribed for, and that benzodiazepines “might be better conceptualized as a marker of risk” (Discussion › Findings in context, 2nd paragraph). The results describe the non-significant interaction as relations “neither greater nor less than additive” (Results › Adjusted analyses, 1st paragraph), which misreads a product term in a multiplicative (Cox) model (see reporting issues). The clinical advice (caution in prescribing; include this group in naloxone efforts) is framed as following from the raised risk whatever its cause.",
+    "gap_assessment": "minor"
+  },
+  "replication": {
+    "status": "partially-replicated",
+    "timeline": [
+      {
+        "year": 2010,
+        "event": "Dunn et al. (Ann Intern Med; cited as ref. 13) reported an association between sedative-hypnotic receipt and combined fatal and non-fatal overdose in people prescribed opioids for chronic pain, which the authors describe as hypothesis-generating (Introduction, 2nd paragraph; Findings in context, 1st paragraph); not read."
+      },
+      {
+        "year": 2011,
+        "event": "Bohnert et al. (JAMA; cited as ref. 12) in the same VHA population linked higher opioid doses with overdose death; this paper shows that gradient within each benzodiazepine stratum (Table 4); not read."
+      },
+      {
+        "year": 2017,
+        "event": "Sun et al. (BMJ), privately insured US adults: overlapping benzodiazepine and opioid prescriptions associated with emergency visits or admissions for opioid overdose (adjusted odds ratio 2.14), a different outcome and population, without adjustment for opioid dose",
+        "reference": "sun_2017"
+      },
+      {
+        "year": 2017,
+        "event": "Gomes et al. (PLOS Med), Ontario: 77.3% of people who died an accidental opioid-related death had a benzodiazepine dispensed in the prior 120 days, against 56.4% of matched controls (Table 1; no adjusted estimate for benzodiazepines)",
+        "reference": "gomes_2017"
+      },
+      {
+        "year": 2019,
+        "event": "Macleod et al. (PLOS Med), UK people in methadone or buprenorphine treatment: benzodiazepine co-prescription associated with drug-poisoning death (adjusted hazard ratio 2.96), with a dose gradient",
+        "reference": "macleod_2019"
+      }
+    ],
+    "where_it_stands": "The direction of the association is consistent across a veteran cohort (deaths), a privately insured cohort (non-fatal hospital events) and a UK treatment cohort (drug-poisoning deaths), all records-based and all unable to separate the medicine from the reasons it was prescribed. No study read so far uses an active comparator or measures actual use."
+  },
+  "funding": {
+    "funder": "Veterans Affairs Health Services Research and Development Service Career Development Award (CDA-09-204; ASBB) and National Institutes of Health (R03 AG042899); the sponsors had no role in design, conduct, analysis, interpretation or the decision to submit (Funding statement).",
+    "declared_conflicts": "Financial support as above; RS has received consultant and annual travel fees from The BMJ as editor of the journal Evidence Based Medicine; no other relationships declared (Competing interests).",
+    "affiliations_note": "Warren Alpert Medical School of Brown University (Departments of Medicine and of Psychiatry and Human Behavior; first author); Boston University School of Public Health (Saitz); Department of Veterans Affairs HSR&D, Ann Arbor, and University of Michigan Department of Psychiatry (Ganoczy, Ilgen, Bohnert), the group whose earlier VHA study of opioid dose and overdose (Bohnert et al., 2011) the paper builds on (author information block). Ethical approval: Ann Arbor VA human studies committee, consent waived."
+  },
+  "what_would_settle_it": "An active-comparator cohort of people on stable opioid therapy who newly start a benzodiazepine against people who newly start a non-sedating treatment for the same indication (for example an SSRI for anxiety), with measured psychiatric and substance-use severity, toxicology-confirmed cause of death, and dispensing linked across all prescribers; or a randomized trial of benzodiazepine tapering against continuation in people co-prescribed both, with overdose as an outcome.",
+  "risk_of_bias": {
+    "instrument": "ROBINS-E",
+    "domains": [
+      {
+        "domain": "Confounding",
+        "judgment": "high",
+        "note": "Adjusted for many recorded diagnoses, comorbidity, prior-year psychotropic receipt and time-varying opioid dose, but not for the severity of the indication, alcohol or illicit drug use, or suicidality, all of which plausibly drive both benzodiazepine prescribing and overdose death. The raised hazard after benzodiazepine prescriptions ended (2.33, against 3.86 during them) shows that a large part of the association may not be due to the current medicine; the authors themselves call benzodiazepines possibly a marker of risk."
+      },
+      {
+        "domain": "Measurement of the exposure",
+        "judgment": "some-concerns",
+        "note": "Fills, not consumption; doses assume the maximum prescribed was taken; VHA prescriptions only, so benzodiazepines from other prescribers or illicit sources are missed (misclassifying some 'none' and 'former' time). Extending current periods by 10% changed little (no numbers given)."
+      },
+      {
+        "domain": "Selection of participants",
+        "judgment": "some-concerns",
+        "note": "Prevalent opioid recipients entered at their first fill each year; people on methadone maintenance, buprenorphine or palliative care excluded; how cases sampled into the subcohort were handled is not stated."
+      },
+      {
+        "domain": "Post-exposure interventions",
+        "judgment": "low",
+        "note": "No intervention after exposure is likely to have been driven by benzodiazepine receipt in a way that biases the comparison; opioid dose was modelled as time-varying."
+      },
+      {
+        "domain": "Missing data",
+        "judgment": "low",
+        "note": "Records-based with near-complete death linkage (over 99% full match); 4.3% missing zip-code poverty data singly imputed."
+      },
+      {
+        "domain": "Measurement of the outcome",
+        "judgment": "some-concerns",
+        "note": "Death certificate coding of any-drug, any-intent poisoning; certifiers may more readily call a death an overdose when prescription sedatives are found, and the broad outcome includes suicides, which benzodiazepine indications also predict; the restricted outcomes were said to give similar results without numbers."
+      },
+      {
+        "domain": "Selection of the reported result",
+        "judgment": "some-concerns",
+        "note": "No protocol cited; sensitivity results not quantified; several exposure contrasts (dose, type, schedule) without correction."
+      }
+    ],
+    "overall": "high",
+    "reasoning": "High because confounding by indication is not controlled and the study's own former-receipt contrast shows it may be large; the other concerns (prescription as a proxy for use, a broad outcome) are moderate. The study may be cited for the association between current benzodiazepine prescription and overdose death in veterans prescribed opioid analgesics, its absolute rates, the prescribed-dose gradient and the absence of detectable modification by opioid dose on the relative scale; not for a causal effect, for people using illicit opioids, or for an additive interaction."
+  },
+  "key_findings": [
+    {
+      "finding": "Case-cohort design: all 2,400 veterans who died of a drug overdose while receiving opioid analgesics and 420,386 controls drawn as 5% annual random samples of VHA patients receiving outpatient opioid analgesics in financial years 2004–2009; 221 veterans on methadone maintenance and 5,816 with palliative or hospice care excluded; final sample 422,786; observation from the first opioid fill after the first visit of each year; controls followed to death or end of financial year 2009.",
+      "page": "PMC HTML",
+      "locator": "Abstract (Participants); Methods › Study design and population, 1st and 2nd paragraphs"
+    },
+    {
+      "finding": "Outcome: National Death Index cause of death, any unintentional (X40–X45), intentional (X60–X65) or undetermined (Y10–Y15) poisoning by any drug, with no specific drug code required; deaths matched by social security number, sex and date of birth (over 99% full social security number match).",
+      "page": "PMC HTML",
+      "locator": "Methods › Data sources, 1st paragraph; Deaths from drug overdose, 1st paragraph"
+    },
+    {
+      "finding": "Exposure: outpatient fills of oral benzodiazepines and opioids; each person-day classified as current, former or no benzodiazepine receipt by days' supply; only days of current opioid receipt analysed; doses computed as prescribed (maximum daily amount, diazepam or morphine equivalents), time-varying; methadone counted only when prescribed for pain; buprenorphine not included.",
+      "page": "PMC HTML",
+      "locator": "Methods › Drug prescribing patterns, 1st–3rd paragraphs"
+    },
+    {
+      "finding": "Of 422,786 veterans, 112,069 (27%) filled at least one benzodiazepine prescription. Compared with those without, they were more often women (33% of women against 26% of men received benzodiazepines) and had more post-traumatic stress disorder (22% against 9%), other anxiety disorders (20% against 5%), depression (38% against 19%), bipolar or psychotic disorders (11% against 4%), substance use disorders (13% against 10%), recent mental-health or substance-use admissions (4% against 1%) and antidepressant receipt (58% against 31%); all comparisons P < 0.001.",
+      "page": "PMC HTML",
+      "locator": "Results › Sample, 1st paragraph; Table 1"
+    },
+    {
+      "finding": "Of the 2,400 overdose deaths, 1,185 (49%) occurred during current benzodiazepine prescription, 421 during former receipt and 794 with no receipt. Unadjusted overdose death rates per 100,000 person-years (scaled to the source population): none 71 (95% CI 66–76; 1,116,346 person-years), former 187 (170–205; 225,171), current 316 (298–334; 375,332).",
+      "page": "PMC HTML",
+      "locator": "Results › Unadjusted rates of death from drug overdose, 1st paragraph; Table 2, benzodiazepine prescription history rows",
+      "note": "Editors' calculation: rate difference current against none 245 per 100,000 person-years, about 3.2 against 0.7 deaths per 1,000 person-years; unadjusted rate ratio 4.45."
+    },
+    {
+      "finding": "Unadjusted rates by prescribed daily benzodiazepine dose (diazepam equivalents) per 100,000 person-years: >0–10 mg 152 (133–172), >10–20 mg 301 (271–333), >20–30 mg 518 (454–586), >30–40 mg 600 (513–694), >40 mg 805 (689–930); by type: clonazepam 379, diazepam 381, alprazolam 288, lorazepam 170, temazepam 154, other 309, multiple 625; by schedule: regular only 265, as needed only 334, both 658.",
+      "page": "PMC HTML",
+      "locator": "Table 2, daily dose, type and schedule rows",
+      "note": "The >0 mg dose rows sum to the current-receipt totals (1,185 deaths, 375,332 person-years; editors' arithmetic). The 0 mg/day row is inconsistent: see reporting issues."
+    },
+    {
+      "finding": "Adjusted hazard ratios for overdose death (Model 1), against no benzodiazepine receipt: former receipt 2.33 (95% CI 2.05–2.64); current receipt 3.86 (3.49–4.26).",
+      "page": "PMC HTML",
+      "locator": "Abstract (Results); Results › Adjusted analyses, 1st paragraph; Table 3, Model 1",
+      "note": "Editors' calculation: the current hazard ratio is 1.66 times the former."
+    },
+    {
+      "finding": "Model 2, periods of current benzodiazepine receipt only, adjusted as Model 1: against >0–10 mg/day, >10–20 mg 1.69 (1.42–2.01), >20–30 mg 2.34 (1.91–2.86), >30–40 mg 2.65 (2.10–3.33), >40 mg 3.06 (2.38–3.92). Against clonazepam: alprazolam 0.93 (0.75–1.14), diazepam 0.93 (0.77–1.13), lorazepam 0.79 (0.62–1.00), temazepam 0.63 (0.48–0.82), other 1.09 (0.67–1.77), multiple 1.05 (0.83–1.33). As-needed only 0.98 (0.86–1.13) and both schedules 1.07 (0.80–1.43) against regular.",
+      "page": "PMC HTML",
+      "locator": "Results › Adjusted analyses, 1st paragraph; Table 3, Model 2"
+    },
+    {
+      "finding": "The interaction between benzodiazepine history and opioid dose was not significant (P = 0.60). Adjusted hazard ratios by daily opioid dose (morphine equivalents) against >0–<20 mg, within each stratum: no benzodiazepine 1.57 (1.28–1.91), 2.81 (2.26–3.50) and 3.30 (2.62–4.16) for 20–<50, 50–<100 and ≥100 mg; former receipt 1.17 (0.86–1.60), 2.33 (1.69–3.21) and 3.00 (2.19–4.11); current receipt 1.54 (1.24–1.90), 2.95 (2.37–3.66) and 3.92 (3.17–4.85).",
+      "page": "PMC HTML",
+      "locator": "Results › Adjusted analyses, 1st paragraph; Table 4"
+    },
+    {
+      "finding": "In unadjusted rates stratified by opioid dose (figure), the difference between current and former benzodiazepine receipt was not significant in the lowest opioid dose category but was significant at higher categories.",
+      "page": "PMC HTML",
+      "locator": "Results › Unadjusted rates of death from drug overdose, 1st paragraph; figure (image, values not extracted)"
+    },
+    {
+      "finding": "Sensitivity analyses excluding intentional overdose deaths, keeping only deaths coded to opioids or benzodiazepines, excluding people with cancer, or extending current benzodiazepine periods by 10% of days' supply gave only minor differences in the association and no change in inferences; no estimates are shown.",
+      "page": "PMC HTML",
+      "locator": "Methods › Statistical analysis, 5th paragraph; Results › Sensitivity analyses, 1st paragraph"
+    },
+    {
+      "finding": "The authors state that benzodiazepines were more often prescribed to people with substance misuse and psychiatric disorders, that residual confounding by the severity of those conditions could remain, that half of the overdose deaths occurred without a benzodiazepine prescription, that the raised risk during former receipt could reflect the underlying conditions or continued use of illicit, non-VHA or leftover benzodiazepines, and that benzodiazepines might be better seen as a marker of risk with unknown causal links.",
+      "page": "PMC HTML",
+      "locator": "Discussion › Findings in context, 2nd and 3rd paragraphs"
+    },
+    {
+      "finding": "Stated limitations: veterans, mostly men (both linked to accidental poisoning mortality); non-VHA prescriptions and encounters not captured; doses assume drugs were taken as prescribed, and retained or additional supplies would inflate estimates if linked to benzodiazepine receipt; indications not available.",
+      "page": "PMC HTML",
+      "locator": "Discussion › Strengths and weaknesses of study, 1st paragraph"
+    }
+  ],
+  "reporting_issues": [
+    {
+      "issue": "The non-significant interaction between benzodiazepine history and opioid dose (P = 0.60) is read as showing relations “neither greater nor less than additive”. In a Cox model the product term tests departure from multiplicative hazards: no detectable interaction means the hazard ratios combine by multiplication, which on the absolute scale implies larger excess death rates at higher opioid doses, not additivity.",
+      "page": "PMC HTML",
+      "consequence": "The paper cannot be cited for an additive (or a 'no more than additive') joint effect; it can be cited for no detectable modification of the relative benzodiazepine association by opioid dose. Additive interaction was not estimated."
+    },
+    {
+      "issue": "In Table 2, the 0 mg/day benzodiazepine dose row gives 421 deaths, 376,645 person-years and a rate of 112 per 100,000; the 421 deaths equal the former-receipt deaths, but the former-receipt person-years are 225,171 (rate 187). The >0 mg rows sum exactly to the current-receipt totals (editors' arithmetic).",
+      "page": "PMC HTML",
+      "consequence": "The 0 mg/day row is mislabelled or its person-years misprinted; it should not be cited. The dose rows above 0 mg are internally consistent."
+    },
+    {
+      "issue": "The sensitivity analyses that matter most for the outcome definition (excluding intentional deaths; restricting to opioid- or benzodiazepine-coded deaths) are described only as giving minor differences, without hazard ratios.",
+      "page": "PMC HTML",
+      "consequence": "Whether the association holds for unintentional opioid-involved deaths specifically cannot be checked from the article; claims should state that the outcome includes suicides and deaths from any drug."
+    },
+    {
+      "issue": "The text describes identifying 2,400 cases and 420,386 controls and then excluding 221 methadone-maintenance and 5,816 palliative-care veterans, yet the final sample (422,786) equals 2,400 + 420,386; how cases falling into the random subcohort were counted is not stated.",
+      "page": "PMC HTML",
+      "consequence": "Minor: the order of exclusions and the handling of overlap between cases and subcohort are unclear; no effect on the main estimates is apparent."
+    }
+  ],
+  "verification": {
+    "status": "first-pass",
+    "first_pass_by": "AI reader 47 (first reader)",
+    "first_pass_on": "2026-10-17",
+    "source_read": "PMC full text PMC4462713 (PMC HTML, read in the app's browser; text saved once with get_page_text): abstract, all sections, Tables 1–4, figure legend (figure values not extracted), funding, competing interests, contributors, transparency and data-sharing statements, reference list."
+  }
+}

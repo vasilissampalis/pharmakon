@@ -1,0 +1,29 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "Legal status table for one substance (monograph section 13)",
+ "description": "Date-stamped scheduling by jurisdiction, each row tied to the primary legal text or the official consolidated list. Facts, not claims: no GRADE. Rows stay 'draft' until the senior author has checked them; legal interpretation is out of scope.",
+ "type": "object",
+ "required": ["substance", "compiled_on", "entries"],
+ "properties": {
+  "substance": {"type": "string"},
+  "compiled_on": {"type": "string", "format": "date"},
+  "compiled_by": {"type": "string"},
+  "entries": {"type": "array", "items": {
+   "type": "object",
+   "required": ["jurisdiction", "status", "instrument", "source_url", "checked_on", "verification"],
+   "properties": {
+    "jurisdiction": {"type": "string"},
+    "status": {"type": "string", "description": "The schedule/class/table as the instrument names it, in plain words."},
+    "instrument": {"type": "string", "description": "The law, regulation or list, with its number and date as officially cited."},
+    "medical_use": {"type": "string", "description": "Whether a medicinal product containing the substance is authorized there, if the source says."},
+    "source_url": {"type": "string"},
+    "source_title": {"type": "string"},
+    "source_date": {"type": "string", "description": "Date or version of the consolidated text or list consulted."},
+    "checked_on": {"type": "string", "format": "date"},
+    "checked_by": {"type": "string", "description": "For an ai-checked row: the second reader and how they checked (METHODS §10.3)."},
+    "note": {"type": "string"},
+    "verification": {"type": "string", "enum": ["draft", "ai-checked", "senior-verified"]}
+   }
+  }}
+ }
+}

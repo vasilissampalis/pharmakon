@@ -1,0 +1,504 @@
+{
+ "reader": "AI reader 244 (adjudicator)",
+ "date": "2026-10-31",
+ "items": [
+  {
+   "claim_id": "all five medical claims (cl_can_med_*)",
+   "source": "own review (editor's lead in the brief)",
+   "finding": "Whiting et al. (2015) has four JAMA correction notices; a first reader's card gives DOIs 10.1001/jama.2015.8253, 10.1001/jama.2015.9010, 10.1001/jama.2015.15929 and 10.1001/jama.2016.3470, not yet verified; every number of the medical claims to be checked against the corrected values.",
+   "verdict": "accept",
+   "reason": "All four DOIs exist in Crossref (api.crossref.org/works/<DOI>, read in my own tab): 'Incorrect Figure Label', JAMA 2015;314(5):520 (4 Aug 2015); 'Incorrect Values Reported', 314(8):837 (25 Aug 2015); 'Incorrect Nonproprietary Drug Name and Approved Use', 314(21):2308 (1 Dec 2015); 'Incorrect Effect Estimate', 315(14):1522 (12 Apr 2016); they match the four PubMed errata in the reference record. Crossref carries no update-to links, so the link to Whiting et al. rests on the notices themselves, each of which cites the article as its reference 1. Notices read on their JAMA pages (fullarticle/2422523, 2429689, 2473469, 2512765; the second showed a check page on the first attempt, which I did not touch; a plain reload several minutes later loaded it): (1) Figure 4's axis labels swapped, no number changed; (2) the abstract's Ashworth value should read WMD -0.12 (95% CI -0.24 to 0.01), 5 trials, which is the value the claims use (the notice says nothing about Table 2); (3) Table 1's ajulemic acid row: name (JBT-101, CT3), not currently in clinical use (no claim uses it); (4) the 5th sentence of the Sleep Disorder section: nabilone associated with improvements in insomnia (-3.25, -5.26 to -1.24) and greater restfulness (0.48, 0.01 to 0.95), no effect on results, which is the wording and the numbers the claims use. The saved article text carries all four corrections. Every number of the five medical claims was rechecked against the corrected article: none differs.",
+   "evidence": "Crossref works records and the four notice pages, 2026-10-31; notes in scratchpad/can-a/a244/crossref_whiting_corrections.txt; card sc_whiting_2015 replication.timeline updated",
+   "patch_ref": "1, 3, 4 (change lines cite notices 2, 4 and 1)"
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "second reader 219",
+   "finding": "'Adults' is not stated in the review's main text.",
+   "verdict": "accept",
+   "reason": "Checked the Results and Methods: no age criterion or age data in the main text. 'Adults' replaced by 'people' in the statement and population, which now says ages are not reported.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Methods › Study Eligibility Criteria; Results, 1st paragraph",
+   "patch_ref": 0
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "second reader 219",
+   "finding": "'Mostly nabiximols' holds for the pooled analyses (7 of 8; 6 of 6) but nabiximols was 13 of the 28 trials.",
+   "verdict": "accept",
+   "reason": "Results › Chronic Pain, 1st paragraph: 13 nabiximols of 28 studies; Table 2: nabiximols in 7 of 8, 6 of 6, 3 of 3, 5 of 6, 5 of 5 and 3 of 3 trials of the pools. Statement now says nabiximols was the commonest product (13 of 28) and nearly all pooled trials tested it; exposure field likewise.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Results › Chronic Pain, 1st paragraph; Table 2",
+   "patch_ref": 0
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "second reader 219",
+   "finding": "The abstract's 37% vs 31% can be derived from Figure 2 (254/685 vs 215/685, crude summed proportions), so 'derivation not described' is too strong.",
+   "verdict": "accept-modified",
+   "reason": "Viewed Figure 2 myself on screen: overall 254/685 vs 215/685 (37.1% vs 31.4%; difference 5.7 in 100, recomputed). The statement and magnitude now call them the crude totals of the 8 trials in the forest plot; anchor 1's sentence that they are 'not derived anywhere in the article' corrected. New anchor (Figure 2) added, ai-located, for a fresh reader's targeted check.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Figure 2 (viewed on screen, 2026-10-31)",
+   "patch_ref": 0
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "second reader 219",
+   "finding": "The nabiximols-only subtotal for 30% responders, OR 1.32 (0.94 to 1.86), is not in the claim.",
+   "verdict": "accept",
+   "reason": "Figure 2: 7 nabiximols trials 241/660 vs 209/660, OR 1.32 (0.94 to 1.86), I2 44.5%; my DerSimonian-Laird recomputation from the printed counts reproduces 1.41 (0.99 to 2.00), 1.32 (0.94 to 1.86) and the neuropathic 1.38 (0.93 to 2.03). Added to statement, magnitude and reasoning (the largest effect comes from one smoked-THC trial of 50 people).",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Figure 2",
+   "patch_ref": 0
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "targeted (reader 219, anchor 4)",
+   "finding": "Table 2 has no follow-up column; follow-up sits in the Outcome cells and is missing for six rows.",
+   "verdict": "already-fixed",
+   "reason": "The targeted check corrected the anchor's locator and text; the claim's 'at most 15 weeks' holds for every printed chronic-pain row (2-15, 2-14, 3-15, 3-14, 5-15, 12-15 weeks).",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 2, Outcome cells",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "targeted (reader 219, anchor 5)",
+   "finding": "The authors word harms as an association, so 'increase' overstated their wording; the trials-needed clause comes from Discussion › Unanswered Questions.",
+   "verdict": "already-fixed",
+   "reason": "Anchor 5 was corrected by the targeted check ('were associated with an increased risk'; locator extended). The claim's statement does not attribute any verb to the authors on harms.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Abstract › Conclusions and Relevance; Conclusions; Discussion › Unanswered Questions and Future Research",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "targeted (reader 219, anchor 5)",
+   "finding": "The Discussion narrows the pain conclusion to neuropathic or cancer pain (smoked THC, nabiximols).",
+   "verdict": "accept",
+   "reason": "Discussion, 2nd paragraph says so. Added to the statement; carried in the new Figure 2 anchor.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Discussion, 2nd paragraph",
+   "patch_ref": 0
+  },
+  {
+   "claim_id": "cl_can_med_chronic_pain",
+   "source": "own review",
+   "finding": "Status 'replicated' and the inconsistency rating were written without the per-trial results (forest plots not viewed).",
+   "verdict": "accept-modified",
+   "reason": "Figure 2: 5 of 8 trials favour cannabinoids (3 significantly), 3 favour placebo (none significantly); the text says continuous results were not consistent across trials. Rating kept (I2 48% and 59%, overlapping intervals, same pooled direction), but the inconsistency note now gives these counts and says a stricter reading could rate down; reasoning updated. No certainty change (low).",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Figure 2; Results › Chronic Pain, 3rd paragraph",
+   "patch_ref": 0
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219 (partly-supported); targeted note; brief",
+   "finding": "Barthel index -0.58 (-1.73 to 0.56) is not a 4-trial estimate: Table 2 prints three unlabelled values beside Nabilone (2), Dronabinol (1), THC/CBD (1), one per product; no overall Barthel estimate exists.",
+   "verdict": "accept",
+   "reason": "Table 2 (text and image): Barthel row '4 (1433)', values -0.58 (-1.73 to 0.56), 0.23 (-0.13 to 0.59), -0.03 (-0.39 to 0.33), favours placebo, I2 0, moderate. Figure 3 (viewed on screen) shows the identical layout in the Ashworth row gives one estimate per product. Arithmetic: SE of -0.58 is about 0.58; the other two have SE about 0.18; with I2 0 a pool containing them would have SE below 0.18 (editors' calculation), so -0.58 cannot be a 4-trial pool. Statement now says the review prints three product estimates and no pooled one, all including no difference; magnitude lists the three values as per-product; anchor 0 corrected; new Figure 3 anchor (ai-located).",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 2, spasticity rows; Figure 3",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219",
+   "finding": "'Table 2 still prints -0.11 (-0.23 to 0.02)' is not an uncorrected overall but the nabiximols subtotal.",
+   "verdict": "accept",
+   "reason": "Figure 3: nabiximols subtotal -0.11 (-0.23 to 0.02), 4 trials, 383 vs 337; dronabinol (Zajicek 2003) -0.94; THC/CBD (Zajicek 2003) -0.32; overall -0.12 (-0.24 to 0.01). The correction notice of 25 Aug 2015 concerns only the abstract's value. Magnitude and anchor 0 corrected.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Figure 3; correction notice doi 10.1001/jama.2015.9010",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219",
+   "finding": "The review rated three spasticity outcomes moderate (Ashworth, Barthel, walking speed), none with a clear difference, not only Ashworth.",
+   "verdict": "accept",
+   "reason": "Table 2 GRADE column confirms. Sentence rewritten.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 2",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219",
+   "finding": "'On 0 to 10 scales' is not stated for the patient-rated pool (NRS or VAS scores).",
+   "verdict": "accept",
+   "reason": "Table 2: 'NRS or VAS scores' with no range for the -0.76 pool (only the 50% row gives NRS 0-10). Statement, plain line and outcome field now say numerical rating or visual analogue scales; plain line gives 0.76 points 'on the rating scales used'.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 2; Results › Spasticity, 1st paragraph",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219",
+   "finding": "1,244 patients (Table 2) against 1,134 in Figure 3's overall row.",
+   "verdict": "accept-modified",
+   "reason": "Confirmed on Figure 3 (590 + 544). Both now in the magnitude; the statement gives the trial count only. Card reporting issue added.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Figure 3; Table 2",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219",
+   "finding": "'Mostly nabiximols' is 6 of 14 trials.",
+   "verdict": "accept",
+   "reason": "Results › Spasticity: 6 nabiximols of 14; Figure 3: 4 of the 5 Ashworth trials. Statement says 'most often nabiximols (6 of the 14 trials and 4 of the 5 in the Ashworth pool)'.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Results › Spasticity, 1st paragraph; Figure 3",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219; targeted (reader 219, anchor 3)",
+   "finding": "Follow-up is printed only for some spasticity outcomes (3 to 15 weeks).",
+   "verdict": "accept",
+   "reason": "Table 2: 6-14 weeks (50% and 30% rows), 3-15 weeks (Ashworth), none for the others. Statement now says follow-up, where printed, was 3 to 15 weeks; anchor 3 was already corrected by the targeted check; the spasticity-row follow-up is in the new anchor.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 2, Outcome cells",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "targeted (reader 219, anchor 4)",
+   "finding": "The trials-needed clause names other conditions, not spasticity; the conclusions word harms as an association.",
+   "verdict": "already-fixed",
+   "reason": "Anchor 4 corrected by the targeted check (the clause names HIV weight gain, depression, sleep, anxiety, psychosis, glaucoma and Tourette syndrome). The claim's statement claims neither.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Discussion › Unanswered Questions and Future Research",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_med_ms_spasticity",
+   "source": "second reader 219 (note)",
+   "finding": "Zajicek 2003 enters the Ashworth pool twice against one placebo group, against the stated one-data-set rule.",
+   "verdict": "accept",
+   "reason": "Figure 3: dronabinol and THC/CBD arms of Zajicek 2003 against the same 207 placebo patients (weights 0.75% and 0.95%). Negligible effect; mentioned in the reasoning and anchor 1; card reporting issue rewritten.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Figure 3",
+   "patch_ref": 1
+  },
+  {
+   "claim_id": "cl_can_med_chemo_nausea",
+   "source": "second reader 219; card check (key finding 3)",
+   "finding": "Prochlorperazine was the comparator in 13 of the 20 active-only trials; the source's 15 includes 2 three-arm THC trials that also had placebo.",
+   "verdict": "accept",
+   "reason": "Table 1: prochlorperazine with levonantradol 2, nabilone 7, THC 3 plus 2 'placebo and prochlorperazine', dronabinol 1 = 15; placebo trials with an active arm = the 2 THC trials + the dronabinol-ondansetron-placebo trial = 3, as the text says; so 13 of 20 (editors' count; the whole 28-trial table reconciles). Statement and magnitude say 13 of the 20 (15 in all); anchor 0 reworded; new anchor (Results 1st paragraph + Table 1), ai-located.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Results › Nausea and Vomiting, 1st paragraph; Table 1",
+   "patch_ref": 2
+  },
+  {
+   "claim_id": "cl_can_med_chemo_nausea",
+   "source": "second reader 219",
+   "finding": "The claim could add that the review says, without pooling, that all trials favoured cannabinoids over active comparators and placebo, not significantly in all.",
+   "verdict": "accept",
+   "reason": "Results › Nausea and Vomiting, 1st paragraph says so. Added for balance (statement, magnitude, plain line), with the limit that the comparisons are not pooled.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Results › Nausea and Vomiting, 1st paragraph",
+   "patch_ref": 2
+  },
+  {
+   "claim_id": "cl_can_med_chemo_nausea",
+   "source": "second reader 219 (note)",
+   "finding": "The 47% vs 20% cannot be traced (no forest plot); calling them crude is an inference by analogy with pain.",
+   "verdict": "accept-modified",
+   "reason": "No figure or table for this outcome. 'The abstract's crude averages' replaced by 'percentages given only in the abstract, their derivation not described'.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Abstract › Results; Table 2",
+   "patch_ref": 2
+  },
+  {
+   "claim_id": "cl_can_med_chemo_nausea",
+   "source": "second reader 218 (note)",
+   "finding": "Volkow et al.'s statement that patients often find marijuana more effective carries no citation.",
+   "verdict": "accept-modified",
+   "reason": "Checked in AI reader 188's saved full text (box, Nausea): ref 59 follows the efficacy clause; the patient-preference clause has no citation. Statement says 'without a cited source'; anchor 2 marked accordingly.",
+   "evidence": "volkow_2014, PMC HTML, box › Nausea (scratchpad/can-a/r188/volkow_2014_body.txt)",
+   "patch_ref": 2
+  },
+  {
+   "claim_id": "cl_can_med_other_conditions",
+   "source": "second reader 218",
+   "finding": "Slight understatement of the epilepsy survey (only 2 of 19 given; 8 had >80% reduction, 6 had 25-60%); the insufficiency statement concerns cannabis botanicals; animal evidence for cannabidiol also cited.",
+   "verdict": "accept",
+   "reason": "All three points confirmed in the saved Volkow text (box › Epilepsy). Statement now gives 2, 8 and 6 of 19 families, limits the insufficiency to cannabis plant products and calls the survey the only human evidence described; anchor 6 extended.",
+   "evidence": "volkow_2014, PMC HTML, box › Epilepsy",
+   "patch_ref": 3
+  },
+  {
+   "claim_id": "cl_can_med_other_conditions",
+   "source": "own review",
+   "finding": "'Epilepsy was not part of this review' (plain line) can be read as 'no evidence on epilepsy'; trials of cannabidiol medicines in epilepsy are not on the project's lists.",
+   "verdict": "accept",
+   "reason": "Statement and plain line now say that trials of cannabidiol medicines in epilepsy were not among the sources read for this claim; listed for the senior author.",
+   "evidence": "claim writer 210's report (Missing); METHODS §6.1 and Rule 0b",
+   "patch_ref": 3
+  },
+  {
+   "claim_id": "cl_can_med_other_conditions",
+   "source": "targeted (reader 219, anchor 2)",
+   "finding": "The source says generalized social anxiety disorder.",
+   "verdict": "accept",
+   "reason": "Results › Anxiety Disorder: 'generalized social anxiety disorder'. Statement corrected.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Results › Anxiety Disorder",
+   "patch_ref": 3
+  },
+  {
+   "claim_id": "cl_can_med_other_conditions",
+   "source": "targeted (reader 219, anchor 2)",
+   "finding": "'Cancer-pain' for the graded-dose nabiximols trial comes from ref 67's title, not the text.",
+   "verdict": "reject",
+   "reason": "True, but the anchor's description is accurate (ref 67, Portenoy 2012, is a cancer-pain trial) and the statement does not use the word. No change.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Results › Depression; reference 67",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_med_other_conditions",
+   "source": "own review (claim writer 210's open point)",
+   "finding": "Which side the sleep differences favour was not stated; the 'better sleep' reading rested on the authors' conclusion.",
+   "verdict": "accept",
+   "reason": "Table 2's Favors column gives the cannabis-based medicine for both sleep pools (NRS 0 to 10; I2 33% and 64%); the April 2016 correction notice gives the insomnia/restfulness wording (nabilone better than amitriptyline). Statement now gives the direction; new anchor (Table 2 sleep rows and the corrected sentence), ai-located.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 2, sleep disorder rows; Results › Sleep Disorder; notice doi 10.1001/jama.2016.3470",
+   "patch_ref": 3
+  },
+  {
+   "claim_id": "cl_can_med_side_effects",
+   "source": "second reader 219",
+   "finding": "'The review reports odds ratios only' goes too far: Figure 4 prints event counts for any adverse event (1438/1779 vs 1058/1710, crude 81% vs 62%).",
+   "verdict": "accept-modified",
+   "reason": "Viewed Figure 4 on screen: totals 1438/1779 vs 1058/1710 (80.8% vs 61.9%, recomputed; 3489 patients against 3714 in Table 3). Added to statement, magnitude and plain line as crude totals, and the reasoning now sets the crude ratio of about 1.3 against the odds ratio of 3.03 (odds ratios overstate relative risks for common events). The plain line gives about 81 and 62 in 100 with a freq picture. New anchor (Figure 4), ai-located.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Figure 4 (viewed on screen); Table 3",
+   "patch_ref": 4
+  },
+  {
+   "claim_id": "cl_can_med_side_effects",
+   "source": "second reader 219 (note)",
+   "finding": "The comparator column of the adverse-event pools includes active comparators.",
+   "verdict": "reject",
+   "reason": "True (Figure 4; Table 3's title), but the claim already says 'compared with placebo or another medicine' in statement, comparator field and plain line. No change beyond the new anchor's description.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 3 title; Figure 4",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_med_side_effects",
+   "source": "second reader 219 (note)",
+   "finding": "The review gives no GRADE rating for adverse events; 'moderate' is the editors' own.",
+   "verdict": "accept-modified",
+   "reason": "Table 2 covers benefit outcomes only. The rating stands under METHODS §6.3 (randomized, down one for risk of bias); the reasoning now says the rating and the causal verb are the editors'.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Table 2; Table 3",
+   "patch_ref": 4
+  },
+  {
+   "claim_id": "cl_can_med_side_effects",
+   "source": "targeted (reader 219, anchor 2); brief",
+   "finding": "The adverse-event pools combined parallel-group and crossover trials ('parallel-group only' does not apply).",
+   "verdict": "accept",
+   "reason": "Methods › Synthesis, 2nd paragraph (all conditions combined; design a meta-regression factor); Figure 4 includes the crossover glaucoma trial. Anchor 2 was already corrected by the targeted check; the statement now says the designs were combined.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Methods › Synthesis, 2nd paragraph; Figure 4",
+   "patch_ref": 4
+  },
+  {
+   "claim_id": "cl_can_med_side_effects",
+   "source": "targeted (reader 219, anchor 4); brief",
+   "finding": "The authors word harms as an association.",
+   "verdict": "accept-modified",
+   "reason": "Abstract › Conclusions and Conclusions: 'associated with an increased risk'. The claim keeps its own verb 'increase' (randomized comparisons, moderate certainty; METHODS §6.1) and now says that the authors word it as an association; anchor 4 already says so.",
+   "evidence": "whiting_2015 (publisher HTML, AI reader 219's saved copy of the corrected online article): Abstract › Conclusions and Relevance; Conclusions",
+   "patch_ref": 4
+  },
+  {
+   "claim_id": "cl_can_pregnancy_birth",
+   "source": "second reader 219; card check (missed)",
+   "finding": "'Pooled estimates are crude' is firmer than the source: only the mean differences are unadjusted by construction; whether any odds ratio taken from a paper was adjusted is not said.",
+   "verdict": "accept-modified",
+   "reason": "Methods › Data analysis: ORs 'extracted or calculated'; means and SDs for continuous outcomes. Statement now says the pooled estimates are not stated to be adjusted and the mean differences are unadjusted; risk-of-bias and large-effect notes reworded; card wording aligned. Whether any pooled OR was adjusted needs supplement 4 (deferred).",
+   "evidence": "gunn_2016, PMC HTML (AI reader 219's saved copy): Methods › Data analysis",
+   "patch_ref": 5
+  },
+  {
+   "claim_id": "cl_can_pregnancy_birth",
+   "source": "second reader 219",
+   "finding": "Preterm birth before 37 weeks: the Methods say 7 of the 8 PTB studies used the WHO definition; the Results count 9.",
+   "verdict": "accept",
+   "reason": "Methods › Maternal and fetal outcomes › Dichotomous variables confirms. Statement: 'before 37 weeks in most studies'; anchor 4 text and locator extended.",
+   "evidence": "gunn_2016, PMC HTML: Methods › Dichotomous variables; Results › Growth parameters",
+   "patch_ref": 5
+  },
+  {
+   "claim_id": "cl_can_pregnancy_birth",
+   "source": "second reader 219; card check (key finding 13)",
+   "finding": "The source names tobacco and heavy alcohol use as established causes (and also small for gestational age).",
+   "verdict": "accept",
+   "reason": "Discussion, 6th paragraph confirms. Statement, plain line and anchor 11 corrected.",
+   "evidence": "gunn_2016, PMC HTML: Discussion, 6th paragraph",
+   "patch_ref": 5
+  },
+  {
+   "claim_id": "cl_can_pregnancy_birth",
+   "source": "second reader 212 (Hall & Degenhardt, 2009)",
+   "finding": "Mild overstatement: the claim relays the review's causal verb for an observational meta-analysis ('reduced birth weight').",
+   "verdict": "accept",
+   "reason": "p. 1386 uses 'decreased'; p. 1389 'could reduce'. Reworded as 'linked regular cannabis smoking in pregnancy with lower birth weight, a smaller reduction than with tobacco smoking'.",
+   "evidence": "hall_2009, PDF pp. 1386, 1389",
+   "patch_ref": 5
+  },
+  {
+   "claim_id": "cl_can_pregnancy_birth",
+   "source": "second reader 212 (Hall, 2015)",
+   "finding": "The review says under-reporting probably attenuates the associations; the claim gives under-counting without its direction.",
+   "verdict": "accept",
+   "reason": "p. 4 confirms (anchor 13 already carries it). Statement adds 'which Hall says probably weakens the associations'.",
+   "evidence": "hall_2015, PDF p. 4",
+   "patch_ref": 5
+  },
+  {
+   "claim_id": "cl_can_pregnancy_birth",
+   "source": "second reader 212 (Page et al., 2020)",
+   "finding": "The claim can give the year of Crume et al. (ref 70, J Pediatr 2018).",
+   "verdict": "accept",
+   "reason": "Reference 70 on p. e22 confirms 2018. Added to statement and anchor 14 (page extended to e22 so the number check finds it).",
+   "evidence": "page_2020, PDF pp. e14, e22",
+   "patch_ref": 5
+  },
+  {
+   "claim_id": "cl_can_pregnancy_birth",
+   "source": "own review",
+   "finding": "'Not detectably with early birth' asserts an absence the evidence cannot show: the preterm interval (0.80 to 2.08) fits both no difference and about twice the odds (METHODS §6.3, 'no detectable effect' needs precision).",
+   "verdict": "accept",
+   "reason": "The claim's own imprecision note already says the absence of a link is not shown. Lead sentence now says whether it is linked to early birth is uncertain; plain line 'Whether they were more often born early is not clear'.",
+   "evidence": "gunn_2016, PMC HTML: Results › Growth parameters",
+   "patch_ref": 5
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 212 (partly-supported)",
+   "finding": "Parekh's 3.12 and 2.63 are for frequent cannabis use with combustible-cigarette or e-cigarette use, against people who did not use cannabis; the magnitude drops 'frequent' and the comparison group.",
+   "verdict": "accept",
+   "reason": "Rendered p. e17 confirms; 'frequent' is defined on p. e14 as more than 10 days a month. Magnitude corrected; anchor 6 was already right.",
+   "evidence": "page_2020, PDF pp. e14, e17 (rendered at 150 dpi)",
+   "patch_ref": 6
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 212; card check (key finding 11)",
+   "finding": "Hemachandra's 3.3 is labelled 'unadjusted'; the statement gives it only as the estimate before adjustment for stroke-related covariates.",
+   "verdict": "accept",
+   "reason": "Rendered Table 3, p. e12 confirms. Magnitude: 'before and after adjustment for stroke-related covariates'; card wording corrected in four places.",
+   "evidence": "page_2020, PDF p. e12 (Table 3, Hemachandra row), p. e10",
+   "patch_ref": 6
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 212",
+   "finding": "'In-hospital' for Johnson-Sasso's OR 0.79 is not printed; no interval or adjustment.",
+   "verdict": "accept",
+   "reason": "Rendered p. e12: 'Lower mortality rate was seen among cannabis users (OR, 0.79)'; the reference title says short-term outcomes in patients hospitalised for AMI. Magnitude and debate reworded.",
+   "evidence": "page_2020, PDF p. e12; ref 40, p. e21",
+   "patch_ref": 6
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 212",
+   "finding": "Missing for balance: the statement attributes worse all-cause and cardiovascular mortality after a heart attack to cannabis from DeFilippis et al. (2018), whose table gives adjusted HR 1.99 and 2.22 for cocaine and marijuana use together.",
+   "verdict": "accept",
+   "reason": "Rendered p. e11 (Table 3) and p. e17 confirm (2097 young adults, 2 academic hospitals, 2000-2016; 6% prevalence in the text). Added to statement, magnitude, debate (evidence_yes, evidence_no, editors' reading) with the limit that it does not isolate cannabis; new anchor, ai-located, numbers checked on the rendered pages and by check_anchor_numbers.py.",
+   "evidence": "page_2020, PDF pp. e11, e17, e21",
+   "patch_ref": 6
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 212 (Page and Hall 2009 notes)",
+   "finding": "The mortality gradient relayed by Hall & Degenhardt (2.5 and 4.2 times) should carry the statement's caution that many findings of these smaller studies did not reach significance.",
+   "verdict": "accept",
+   "reason": "Rendered p. e17: 'Smaller studies have shown a signal toward increased mortality ... although many of these findings failed to reach statistical significance' (refs 37 and 87, Frost 2013 and Mukamal 2008). Added to magnitude, debate and the dose-response note; the reasoning now says these analyses come from the same onset study as the trigger estimate.",
+   "evidence": "page_2020, PDF p. e17; refs 37 (p. e21), 87 (p. e22); hall_2009 p. 1387",
+   "patch_ref": 6
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 212",
+   "finding": "Table 3's 2019 systematic review (Richards et al.: 28 of 33 studies suggested higher risk) is missing for balance.",
+   "verdict": "reject",
+   "reason": "Already in the debate box (evidence_yes) and in anchor 8. No change.",
+   "evidence": "claim debate.evidence_yes; anchor 8",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 218 (Volkow et al., 2014)",
+   "finding": "Volkow is not named in the statement or magnitude; name it or drop the anchor.",
+   "verdict": "reject",
+   "reason": "Volkow et al. (2014) is named in the debate box (evidence_yes), which the anchor supports. No change.",
+   "evidence": "claim debate.evidence_yes; anchor 14",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "second reader 212 (Hall, 2015)",
+   "finding": "Not in the claim: risks probably highest in older adults; younger adults with undiagnosed disease may also be at risk (Toulouse case series).",
+   "verdict": "reject",
+   "reason": "The debate box already gives Hall's reading for middle-aged and older adults and the French series in young adults. No change.",
+   "evidence": "claim debate.evidence_yes; hall_2015 p. 10",
+   "patch_ref": null
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "targeted (reader 212, anchor 13)",
+   "finding": "As printed, 97% covers everyone who smokes cannabis but is cited to a cannabis-arteritis review, so may describe reported cases.",
+   "verdict": "accept-modified",
+   "reason": "Rendered p. e10 confirms the wording and ref 50. The debate now says the statement, citing a review of cannabis arteritis, gives 97% as the share of people who smoke cannabis who also smoke tobacco.",
+   "evidence": "page_2020, PDF p. e10, 6th paragraph",
+   "patch_ref": 6
+  },
+  {
+   "claim_id": "cl_can_heart_vascular",
+   "source": "card check (reader 212, key finding 7)",
+   "finding": "The statement says 9 had smoked within 1 hour of AMI presentation, not of onset; the claim said the estimate rests on 'the 9 people who had used cannabis in that hour'.",
+   "verdict": "accept",
+   "reason": "Rendered p. e17 confirms 'within 1 hour of AMI presentation'. Statement, magnitude, GRADE notes and debate now say the estimate rests on few exposed people (9 within an hour of presentation, by the statement's account).",
+   "evidence": "page_2020, PDF p. e17",
+   "patch_ref": 6
+  },
+  {
+   "card": "sc_whiting_2015",
+   "source": "second reader 219",
+   "finding": "Key finding 3 (prochlorperazine 15 attached to the 20 active-only trials), key finding 7 (Barthel, Table 2's -0.11, 1244 vs 1134), reporting issues 0, 5, 6 (partly) and 7 (footnotes) corrected; missed items: Figure 2 and 4 counts, Figure 2 P values, patient-total discrepancies, sleep pool counts, effect_sizes and validity_norms errors.",
+   "verdict": "accept",
+   "reason": "Each checked in the saved article, Table 1-3 text, the Table 2 image and Figures 2-4 viewed on screen; 18 changes logged in verification.disagreements; two key findings and three reporting issues added; key finding 9 completed (sleep direction, April 2016 notice); key finding 13 (designs combined for adverse events; Zajicek double entry); replication timeline completed with the four notices; AMSTAR 2 item 11 note given a factual exception, judgment unchanged. Overall risk of bias agreed (critically low); status ai-checked; check_card passes.",
+   "evidence": "data/study-cards/_incoming/cannabis/sc_whiting_2015.json",
+   "patch_ref": null
+  },
+  {
+   "card": "sc_gunn_2016",
+   "source": "second reader 219",
+   "finding": "Key finding 13: 'heavy' alcohol use; missed: I2 computed only when the Q-test P was 0.10 or less; 'crude' certain only for the mean-difference pools; Figure 1 counts of distinct studies across OR (12) and MD (10) pools.",
+   "verdict": "accept-modified",
+   "reason": "First three confirmed in the saved PMC text and applied (3 changes logged; 'crude' wording aligned in where_it_stands and the risk-of-bias reasoning without changing any judgment). The Figure 1 counts (12 and 10) are not in the saved text and my tab was closed; minor, not added (deferred). Overall risk of bias agreed; status ai-checked; check_card passes.",
+   "evidence": "data/study-cards/_incoming/cannabis/sc_gunn_2016.json",
+   "patch_ref": null
+  },
+  {
+   "card": "sc_page_2020",
+   "source": "second reader 212",
+   "finding": "Key finding 8 ('mostly' should be 'many' not significant), key finding 26 ('Colorado' not in the statement); notes on 3.3 'unadjusted', 'frequent' for Parekh's co-use estimates, 'presentation' not onset; missed: uncited hyperemesis sentence (p. e13), uncited advice not to stop suddenly (p. e18), withdrawal time course (already key finding 25).",
+   "verdict": "accept",
+   "reason": "All confirmed on rendered pages e10-e14, e17, e18 and in the text extraction; 6 changes logged; hyperemesis added as a new key finding; the p. e18 advice added to the advice key finding, attributed to the AHA and marked uncited (recorded, not endorsed). Overall risk of bias agreed (high); interpretation gap agreed (minor, 'upper edge' per reader 212, for the senior author); status ai-checked; check_card passes.",
+   "evidence": "data/study-cards/_incoming/cannabis/sc_page_2020.json",
+   "patch_ref": null
+  },
+  {
+   "card": "sc_hall_2015",
+   "source": "claim writer 210's report (card error)",
+   "finding": "Key finding on pregnancy cites Hayatbakhsh et al. (2012) as an example of the birth-weight effect persisting after control for other drug use; on p. 3 Hall cites refs 27 and 28 for the association and refs 25, 28 and 29 for the persistence, and Hayatbakhsh is ref 27.",
+   "verdict": "accept",
+   "reason": "Confirmed on the rendered p. 3 (Reproductive effects › Fetal development and birth defects, 2nd paragraph) and the reference list (ref 27 = Hayatbakhsh et al.): ref 27 is cited for the association and for shorter labour and more babies small for gestational age, not for persistence after control. Not my card: reader 243 changes sc_hall_2015. The pregnancy claim's wording and reasoning are consistent with the source.",
+   "evidence": "hall_2015, PDF p. 3; reference 27 (p. 13 of the PDF)",
+   "patch_ref": "other group (reader 243, card sc_hall_2015)"
+  }
+ ],
+ "anchors_changed_in_place": [
+  "Existing ai-checked anchors whose extracted text (and for two, page and locator) I corrected, each to agree with the blind second reader's own anchor or with my check at the source; the editor may wish a fresh targeted check: cl_can_med_chronic_pain evidence[1]; cl_can_med_ms_spasticity evidence[0], evidence[1]; cl_can_med_chemo_nausea evidence[0], evidence[2]; cl_can_med_other_conditions evidence[6]; cl_can_pregnancy_birth evidence[4] (text and locator), evidence[11], evidence[14] (text, page, locator); cl_can_heart_vascular evidence[6] (text, page, locator).",
+  "New anchors, ai-located, for a fresh reader's targeted check: chronic pain (Figure 2), MS spasticity (Figure 3 and Table 2 cells), chemotherapy nausea (Results 1st paragraph and Table 1), other conditions (Table 2 sleep rows and the corrected sleep sentence), side effects (Figure 4), heart (Page et al. pp. e11, e17, e21-e22: DeFilippis and the smaller mortality studies). All claims are at draft, so no ladder status changes."
+ ],
+ "for_senior_author": [
+  "Medical claims rest on one 2015 review (Whiting et al.; AMSTAR 2 critically low, provisional): later reviews on the project's lists (Stockings et al. 2018, Wang et al. 2021, McDonagh et al. 2022 on pain; Black et al. 2019 on mental-health conditions) are unread, and no trial of cannabidiol medicines in epilepsy (for example Devinsky et al. 2017) is on the lists; the other-conditions claim now says so. Decide whether to add them before these claims are shown.",
+  "Status 'replicated' for chronic pain and MS spasticity is a close call: in Figure 2, 3 of 8 responder trials point towards placebo (none significantly), and the review calls the continuous results not consistent across trials; per-trial results of the patient-rated spasticity pool are not shown. I kept 'replicated' and recorded a stricter reading in the inconsistency note; the senior author may prefer 'mixed' or a further downgrade.",
+  "cl_can_med_side_effects keeps the editors' causal verb 'increase' at moderate certainty while the authors word harms as an association; the claim now says so. Confirm the verb (METHODS §6.1) or prefer 'probably increase'.",
+  "Cross-group (reader 243, cl_can_withdrawal): the AHA statement (Page et al., 2020, p. e18, uncited) advises clinicians to tell people with long-term heavy use not to stop suddenly because of withdrawal, whereas the claim relays Connor et al. (2021) that withdrawal carries no serious risk; and the AHA's time course (onset a few days after stopping, peak about 10 days, end after about 30 days; p. e13, citing Health Canada and NASEM) differs from the claim's (peak within the first week, fading within 1 to 2 weeks). Now recorded on card sc_page_2020; decide whether the withdrawal claim should mention the disagreement (as the AHA's recommendation, not as evidence).",
+  "Cross-group (reader 243, cl_can_chs_features_course): the AHA statement's uncited sentence linking long-term, heavy, THC-predominant use with hyperemesis syndrome (p. e13) is now a key finding on sc_page_2020; it adds nothing first-hand.",
+  "cl_can_heart_vascular rests on an AHA statement filed as an evidence report and on narrative reviews; the validator's narrative-only rule counts only narrative-review, commentary and editorial designs, so the draft status depends on the claim's own wording. Confirm that a professional statement without a stated search counts as second-hand for METHODS §6.3, and decide whether to read the primary studies (Mittleman 2001; Frost 2013; Mukamal 2008; Reis 2017; Auer 2018; Hemachandra 2016; Parekh 2020; DeFilippis 2018; Jouanjus 2014; Ravi 2018; Jeffers 2024).",
+  "sc_page_2020 interpretation gap: both readers say minor; reader 212 calls it the upper edge of minor (abstract framing; worse mortality attributed to cannabis from a cocaine-and-marijuana estimate). Judgment for the senior author.",
+  "sc_whiting_2015 AMSTAR 2 item 11: both readers keep 'yes'; Figure 3 shows one three-arm trial entered twice against its placebo group (negligible weight). Recorded as a factual exception in the note; the judgment is the senior author's.",
+  "Several anchors carry 'checked_by': 'AI reader 2' (for example cl_can_med_chronic_pain evidence[0] and [1], cl_can_pregnancy_birth evidence[12] to [14]); the blind second readers were AI readers 219, 212 and 218. Probably a default of the reconciliation script; the editor may wish to correct the labels."
+ ],
+ "deferred": [
+  "Gunn et al. (2016): whether any pooled odds ratio was taken from adjusted estimates needs online supplement 4 (forest plots) and supplement 3 (study characteristics), not read ('source not yet read'); the claim says the estimates are not stated to be adjusted.",
+  "Gunn et al. (2016), card 'missed' item: Figure 1's counts of distinct studies across the odds-ratio pools (12) and mean-difference pools (10) not verified (figure not in the saved text; my tab closed); minor, not added.",
+  "Whiting et al. (2015): per-trial results of the patient-rated spasticity, pain-scale and nausea pools (eAppendices 3 to 12, Supplement 2) and the reasons for each GRADE rating are not in the article; not read."
+ ],
+ "browser_use": "One tab of my own (tab-16), 2026-10-31: four Crossref works records; four JAMA correction-notice pages (one check page met on the first attempt at fullarticle/2429689, not touched; the tab was navigated away and a plain reload several minutes later loaded the notice); the article page, used only to read the links of its own figure images; Figures 2, 3, 4 and the Table 2 image viewed on screen at their image addresses (no downloads, no PDFs, no search engines). Tab closed at the end."
+}

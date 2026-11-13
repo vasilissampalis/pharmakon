@@ -1,0 +1,574 @@
+{
+ "id": "sc_bhai_2025",
+ "substance": "drug-checking",
+ "reference": "bhai_2025",
+ "design": "retrospective-cohort",
+ "design_detail": "State-level (ecological) policy evaluation, filed as retrospective-cohort, the nearest design the schema has: the units are the 50 US states and the District of Columbia followed month by month from 2018 to 2022 through public death records (CDC WONDER) and population data (SEER), not people. Exposure: a state law legalizing fentanyl test strips, in force or not, with dates for 16 jurisdictions in Table 1 (2 in 2018, 3 in 2019, 4 in 2021, 7 in 2022, none in 2020; editors' count), coded by the authors: each statute's effective date from a legal database, except that Online Appendix A (added by the 2026 corrigendum) codes Alabama, Minnesota and New Mexico, whose laws took effect from July 2021 to June 2022, as untreated through 2022, and dates North Carolina's 2019 statute from July 2022 and the District of Columbia's April 2019 law from August 2019. Analysis: staggered difference-in-differences, two-way fixed effects (state and month-year) estimated with the Borusyak, Jaravel and Spiess (2024) imputation estimator, without and with age, rurality and income controls; event studies from 16 months before to 8 months after the law; triple differences comparing unintentional overdose deaths with overdose deaths by suicide, homicide and undetermined intent. ROBINS-I is used because the exposure is a policy intervention (METHODS §5.3; reader brief on policy and population studies). No strip distribution, access or use was measured.",
+ "can_establish": "How monthly drug-overdose death rates in the 16 US jurisdictions with a law legalizing fentanyl test strips, as dated by the authors, changed after the law, relative to a counterfactual imputed from states the authors coded as having no such law at the time, in 2018–2022, for whole populations and for White and Black residents, provided death rates would otherwise have moved in parallel, nothing else changed with the laws, and the authors' coding of the laws is right.",
+ "cannot_establish": "Whether the laws, or test strips themselves, caused any change (no measure of strip distribution, access or use; no adjustment for other policies or for changes in each state's drug supply; the law dates are the authors' coding, which departs from its legal source for five jurisdictions, with no results shown for the source's dates), whether the results hold with the source's dates, whether people who tested their drugs were less likely to die, or any change in opioid- or fentanyl-specific deaths, which were not analysed.",
+ "sample": {
+  "n_total": 51,
+  "n_by_group": {
+   "jurisdictions with a dated law in Table 1 (15 states and DC)": 16,
+   "jurisdictions without a date in Table 1 (editors' count)": 35,
+   "jurisdictions shaded legal as of 2022 in Figure 1 (editors' reading)": 22,
+   "state-months, whole-population model (Table 3)": 2613,
+   "state-month-race cells, all-races model (Table 3)": 4181,
+   "state-months, White residents (Table 3)": 2461,
+   "state-months, Black residents (Table 3)": 1469,
+   "state-month-intent cells, whole population (Table 4)": 4455,
+   "state-month-intent cells, Black residents (Table 4)": 1484,
+   "jurisdictions whose legal-source date the authors did not use (Appendix A, Table A1)": 5,
+   "of these, states with a source date in 2021–2022 coded untreated through 2022 (Alabama, Minnesota, New Mexico)": 3
+  },
+  "recruitment": "Not applicable (whole populations, records): deaths by state, month, intent and race from CDC WONDER; population from SEER; covariates from the American Community Survey; legal status from the Network for Public Health Law's 2024 50-state survey of the legality of drug-checking equipment (named in Online Appendix A as the NPHL database, cited there as Davis et al., 2022), modified by the authors as documented in Appendix A (Method › Empirical Strategy, pp. 242–244; reference list, p. 251). The number of jurisdictions analysed is not stated; Figure 1 draws 51 (50 states and DC).",
+  "inclusion_exclusion": "All states at the month level for 2018–2022 (p. 242); DC appears in Table 1 and Figure 1. American Indian or Alaska Native and Asian or Pacific Islander residents enter only the pooled all-races model because of limited data (p. 244). Which state-months were left out of each model, and why, is not stated.",
+  "demographics": "Whole state populations of all ages; race as recorded (White, Black, American Indian or Alaska Native, Asian or Native Hawaiian or Other Pacific Islander); Hispanic origin and sex are not addressed. Mean drug-overdose deaths per 100,000 residents per state-month 2.52 (SD 1.15): 3.03 in state-months with a law and 2.37 without; White 2.57, Black 3.64 (Table 2, p. 245).",
+  "attrition": "Not reported as such. Editors' calculation (51 jurisdictions × 60 months): the whole-population model uses 2,613 of a possible 3,060 state-months (85%), the White model 2,461 (80%), the Black model 1,469 (48%), and the whole-population triple differences 4,455 of a possible 12,240 state-month-intent cells (36%). The paper does not say which cells are missing or why; zero or very small monthly counts are one possible reason (editors' note), which would leave the Black and intent-specific estimates resting mainly on larger states.",
+  "selection_effects": "Jurisdictions that legalized strips had higher death rates than the others (3.03 against 2.37 per 100,000 per state-month; Table 2, p. 245), so laws may have followed rising deaths; a fall after a peak, or other measures adopted at the same time, would then look like an effect of the law. Maryland and Rhode Island changed law 5 and 6 months after the data begin, and Louisiana, Connecticut, North Carolina and West Virginia 5 to 7 months before they end (editors' count), so their counterfactuals rest on few months. Whether the six jurisdictions shaded legal in Figure 1 without a Table 1 date were dropped, treated as legal throughout or used as comparisons is not stated, in the article or in Online Appendix A, which does not mention them; if they were legal before 2018, the imputation estimator, which needs months without a law in each state, could not have used them (editors' note)."
+ },
+ "exposure": {
+  "measurement": "Records: an indicator that the state had legalized fentanyl test strips, built from the Network for Public Health Law (2024) survey with some dates modified by the authors so that each represents “the policy shock of FTS legalization” (p. 242); Table 1 gives implementation dates for 16 jurisdictions. Online Appendix A defines the indicator as whether, in each state and month, legal strips were available in a way capable of producing a meaningful policy shock; it takes the statute's effective date from the source for most jurisdictions but departs from it for five: Alabama (law effective June 1, 2022), Minnesota (July 1, 2021) and New Mexico (May 18, 2022) are coded untreated through 2022, North Carolina (2019 statute) as treated from July 22, 2022, and the District of Columbia (permanent law April 11, 2019) from August 2019; Virginia and West Virginia were reviewed and keep the source's dates (see the key findings from Online Appendix A). The reasons are the authors' legal readings and reports of slow implementation or enforcement uncertainty, partly from after the study period. The appendix does not mention the six jurisdictions shaded legal in Figure 1 without a date, and neither it nor the article says how a law taking effect within a month was coded. Strip distribution, availability, price or use was not measured, and strip use in states where strips were prohibited was not considered (Discussion, 7th paragraph, p. 248).",
+  "dose_frequency_duration_route": "Not applicable (a law). Time since the law: event studies cover 16 months before to 8 months after it (p. 245); in the data, the 2018 adopters have up to 55 months after their law and Louisiana 5 (editors' count). Whether the pooled estimates of Tables 3 and 4 average all post-law months or only the event-study window is not stated.",
+  "purity_known": false,
+  "polysubstance": "Not measured: the outcome counts deaths from any drug, with no breakdown by opioid, fentanyl, stimulant or other drug involvement and no measure of fentanyl in each state's supply. A note says methamphetamine death rates may be underestimated because some death certificates did not name the drugs involved (12%–15% in 2016–2017, as cited; Note 1, p. 249).",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "States coded as without a law in a given month (states that did not legalize in the period and those not yet legalized), through the imputation estimator with state and month-year fixed effects. Per Online Appendix A these include Alabama, Minnesota and New Mexico throughout and North Carolina until July 2022, although the legal source dates a strip law in each within the period (2019 in North Carolina, July 2021 in Minnesota, May and June 2022 in New Mexico and Alabama). In the triple differences, overdose deaths by suicide, homicide and undetermined intent in the same states and months, with state-by-intent and month-by-intent fixed effects (Method › Empirical Strategy, pp. 242–244).",
+  "matching": "None. State and month-year fixed effects, population weights and standard errors clustered by state; Panel B models add age shares, rurality and median income.",
+  "unmeasured_premorbid": "No baseline beyond the months before each law. Not measured or adjusted: other state policies changing in 2018–2022 (for example naloxone access, Good Samaritan, syringe-service or wider drug-checking and paraphernalia laws, Medicaid and treatment access; the authors name only policies relevant to hospital administration, p. 248); federal grant funding for strips from 2021 (Introduction, p. 241); strip distribution by community groups (p. 248); the spread of illicit fentanyl and other changes in each state's drug supply; and the COVID-19 pandemic years, which the paper does not mention.",
+  "controls_other_drug_use": "Not applicable."
+ },
+ "outcomes": {
+  "instruments": "Routine death records (CDC WONDER) by state and month, 2018–2022, with population from SEER. Outcome 1: natural log of drug-overdose deaths per 100,000 residents, all intents (labelled drug-induced deaths in tables and figures). Outcome 2, in triple differences: log of unintentional drug-overdose deaths per 100,000 against overdose deaths by suicide, homicide and undetermined intent.",
+  "validity_norms": "No ICD-10 codes are given, so whether the outcome is drug poisoning only or a wider drug-induced grouping cannot be told. The authors note that overdose deaths may be classified or reported inconsistently across states (p. 248); this matters most for the triple differences, whose contrast rests on how intent is coded (editors' note).",
+  "operationalization": "Harm = death by drug overdose (any drug), per 100,000 residents of all ages per state-month, log-transformed; percentage changes from 100(e^β − 1). No opioid- or fentanyl-specific outcome is analysed, although the Methods say the measures capture opioid fatalities (p. 242) and the Conclusion speaks of opioid overdose deaths (p. 248).",
+  "n_outcomes_tested": 2,
+  "multiplicity_correction": "None. Two outcomes, four population groupings and two control sets give 16 coefficients (Tables 3 and 4) and eight event-study panels, starred at p < .1, .05 and .01.",
+  "assessor_blinding": "Not applicable to routine death records. The exposure dates were modified by the authors; neither the paper nor Online Appendix A says whether this was done before the outcome data were analysed, and the appendix, published in 2026, supports the Alabama coding with evidence dated 2023 and 2025."
+ },
+ "analysis": {
+  "effect_sizes": "Coefficients are differences in log death rates with state-clustered standard errors; no intervals are printed. Table 3 (all drug-overdose deaths), without controls: whole population −0.069 (SE 0.028), all races −0.075 (0.030), White −0.077 (0.032), Black −0.127 (0.028); with controls −0.074 (0.020), −0.078 (0.021), −0.083 (0.023), −0.088 (0.026). Table 4 (unintentional deaths, triple differences), without controls −0.053 (0.032), −0.056 (0.033), −0.070 (0.037), −0.058 (0.029); with controls −0.056 (0.027), −0.061 (0.027), −0.082 (0.031), −0.002 (0.026). Editors' calculation, 100(e^β − 1) with 95% CI from β ± 1.96 SE: Table 3 whole population −6.7% (−11.7% to −1.4%) without and −7.1% (−10.7% to −3.4%) with controls; White −7.4% (−13.0% to −1.4%) and −8.0% (−12.0% to −3.7%); Black −11.9% (−16.6% to −7.0%) and −8.4% (−13.0% to −3.6%); Table 4 whole population −5.2% (−10.9% to +1.0%) and −5.4% (−10.3% to −0.3%); Black with controls −0.2% (−5.2% to +5.0%). The paper names the Kennedy correction but prints the plain conversion; adding the variance term changes these by less than 0.1 percentage point (editors' calculation). Absolute: applied to 3.03 deaths per 100,000 per state-month in state-months with a law (Table 2; whether these means are population-weighted is not stated), 7% is about 0.22 deaths per 100,000 residents per month, 2.6 to 2.8 per 100,000 a year (editors' rough calculation).",
+  "covariates": "State and month-year fixed effects in all models; Panel B adds the percentages aged 18–34, 35–64 and over 65 (omitted group: under 18), the percentage living in rural counties (USDA rural–urban continuum codes 5, 7 or 9) and median income in tens of thousands of dollars, all from the American Community Survey (Method › Empirical Strategy, 4th paragraph, p. 243). No policy, drug-supply or health-care covariates.",
+  "preregistration": "none",
+  "preregistration_detail": "No protocol or registration is mentioned. Submitted 17 September 2024, revised and accepted 12 January 2025 (p. 240).",
+  "selective_reporting": "All 16 table coefficients are shown, but event studies with controls are omitted as not qualitatively different (p. 245). Not reported: any analysis with the source's original dates, without the earliest or latest adopters, with policy controls, or of opioid- or fentanyl-specific deaths; a test of whether the Black and White estimates differ. The abstract leads with the unadjusted Black estimate (as a miscomputed 13.5%) and does not mention the null Black triple-difference estimate with controls. Online Appendix A documents the five departures from the source's dates but, like the article and the corrigendum, reports no results with the source's dates or any other coding, although the authors write that reasonable researchers may judge the coding differently.",
+  "power": "No power calculation. 16 of 51 jurisdictions changed law, two within 6 months of the start of the data and four within 7 months of its end (editors' count); five 2018–2019 adopters supply about two thirds of the post-law state-months (editors' count, 236 of 362, assuming a law counts from the month it took effect). The authors say results for Black residents are more volatile because of limited sample size (p. 246); clustered standard errors with few treated states can understate uncertainty (editors' note). By the source's dates, 19 jurisdictions would change law within the period, not 16 (editors' count from Table 1 and Online Appendix A, Table A1, assuming none of the six undated map jurisdictions has a source date in 2018–2022)."
+ },
+ "interpretation_gap": {
+  "results_show": "Relative to a counterfactual imputed from states without a law at the time, monthly drug-overdose death rates in the 16 jurisdictions with a dated law were about 7% lower after it (−6.7% unadjusted, −7.1% adjusted; editors' 95% CI about −12% to −1% and −11% to −3%), similar for White residents (−7.4%, −8.0%) and for Black residents with controls (−8.4%; −11.9% without). Unintentional overdose deaths were 5% to 8% lower relative to other intents, only at p < .1 in three of four groups without controls, and not lower for Black residents with controls (−0.2%). The event studies show no statistically significant pre-trends but wide pre-period intervals, and a drop from the month of the law. Strip distribution or use was not measured and opioid or fentanyl deaths were not analysed. The law dates are the authors' coding, which departs from the legal source for five jurisdictions (Online Appendix A).",
+  "claimed": "The abstract reports a 7% decrease and a 13.5% reduction among Black individuals and calls legalization “particularly effective in reducing unintentional drug-overdose deaths” (p. 240); New Contributions calls the Black reduction nearly twice the White one (p. 241); the Introduction states “We find evidence that FTS reduces drug-overdose deaths” (p. 241); the Conclusion claims “robust evidence that legalizing FTS is associated with significant reductions in opioid overdose deaths” (p. 248). Against the results: 13.5% is the unadjusted Black coefficient (−0.127) converted with its sign reversed, 100(e^0.127 − 1), whereas the Results text gives 11.92%, and with controls the Black and White estimates are nearly equal (−8.4%, −8.0%); the unintentional-death estimates are smaller and weaker than those for all drug deaths, and null for Black residents with controls; no opioid-specific outcome was analysed; no sensitivity analysis for legal dates or concurrent policies supports “robust”; and the causal verbs about strips go beyond a comparison of laws in which no strip use was measured. The corrigendum reports the journal editor's view that the clarifications do not alter the results or conclusions; that holds for the text changes, since the analysis always used the modified dates, but no analysis with the source's dates was reported to show that the results do not depend on them.",
+  "gap_assessment": "substantial"
+ },
+ "replication": {
+  "status": "not-attempted",
+  "timeline": [
+   {
+    "year": 2018,
+    "event": "First laws in the study window: Maryland (June) and Rhode Island (July) (Table 1)."
+   },
+   {
+    "year": 2019,
+    "event": "North Carolina enacts its strip statute and the District of Columbia's permanent law takes effect (April 11, 2019); the authors date them from July 22, 2022 and August 2019 (Online Appendix A)."
+   },
+   {
+    "year": 2021,
+    "event": "Federal SAMHSA grantees may use funds to buy fentanyl test strips (April 2021, as cited in the Introduction); Nevada, Delaware, Arizona and Maine legalize strips (Table 1)."
+   },
+   {
+    "year": 2021,
+    "event": "Minnesota amends its paraphernalia law to exclude fentanyl-testing products (July 2021); the authors code Minnesota as untreated because cities may still ban strips (Online Appendix A)."
+   },
+   {
+    "year": 2022,
+    "event": "Davis, Lieberman and O'Kelley-Bangsberg publish a systematic legal analysis of drug-checking equipment laws, cited by this paper for the legal status of strips in other states (the citing sentences were deleted by the corrigendum); Online Appendix A cites it as the NPHL database whose dates it starts from; not read.",
+    "reference": "davis_2022"
+   },
+   {
+    "year": 2022,
+    "event": "Seven states legalize strips, the last in the study window Louisiana (August) (Table 1)."
+   },
+   {
+    "year": 2022,
+    "event": "Strip laws take effect in New Mexico (May 18) and Alabama (June 1); the authors code both as untreated through 2022, New Mexico because distribution stayed an offence and its rules took effect only on November 29, Alabama because of enforcement and pharmacy uncertainty (Online Appendix A)."
+   },
+   {
+    "year": 2024,
+    "event": "Network for Public Health Law 50-state survey of the legality of drug-checking equipment (August), the starting point for the legal dates; this paper submitted on 17 September."
+   },
+   {
+    "year": 2025,
+    "event": "This study published (accepted 12 January 2025)."
+   },
+   {
+    "year": 2026,
+    "event": "Corrigendum: the legal dates are described as the authors' modified implementation dates, documented in a new Online Appendix A, read for this card: the statute's effective date from the source except for five jurisdictions, three of them coded untreated through 2022; the journal editor states that results and conclusions are unchanged."
+   }
+  ],
+  "where_it_stands": "The paper cites no other study of state test-strip laws and deaths and presents its own as better guidance than previously available (Introduction, 9th paragraph, p. 241); none was read for this card. The association rests on this one analysis, whose exposure is the authors' own coding: it departs from the legal source for five jurisdictions, is documented only in an appendix added in 2026, and has not been tested against the source's dates."
+ },
+ "funding": {
+  "funder": "None: the authors received no financial support for the research, authorship or publication (Funding, p. 249).",
+  "declared_conflicts": "The authors declared no potential conflicts of interest (p. 249). No ethical approval was required because the CDC data are public and de-identified (p. 249). Data are publicly available; NPHL data were modified (Data Availability, p. 249).",
+  "affiliations_note": "University of Arkansas at Little Rock and University of Arkansas for Medical Sciences (Bhai), The University of Alabama School of Law (McMichael, corresponding author) and Ball State University (Mitchell) (p. 240). The re-coding of legal dates is justified by a paper co-written by McMichael (McMichael and Markowitz, 2023), and McMichael (2023) is cited for the rurality definition. No funder to flag; a flag for closer reading, not a reason to discount. Online Appendix A also cites a law-review article co-written by McMichael (Boone and McMichael, 2021) for the Alabama decision."
+ },
+ "what_would_settle_it": "A pre-registered evaluation using an openly published, independently coded legal dataset with both enactment and effective dates, linking the laws to measured strip distribution and use and to fentanyl-involved and all drug deaths at county level over more years, adjusting for concurrent naloxone, Good Samaritan, syringe-service and treatment policies and for local fentanyl prevalence, with sensitivity analyses to alternative dates and comparison states (for this paper's public data, at least a re-analysis with the legal source's own dates); and, for strips themselves, studies of people who use drugs comparing overdose between those given strips and those not, ideally randomized.",
+ "risk_of_bias": {
+  "instrument": "ROBINS-I",
+  "domains": [
+   {
+    "domain": "Bias due to confounding",
+    "judgment": "serious",
+    "note": "State and month-year fixed effects remove fixed differences between states and shocks common to all, and Panel B adds age, rurality and income, but nothing time-varying that plausibly moved with the laws is adjusted: other harm-reduction and treatment policies, federal strip funding from 2021, the spread of fentanyl in each state's supply, the pandemic years. Legalizing jurisdictions had higher death rates (Table 2), so laws may have followed rising deaths. The event studies show no significant pre-trends, but the pre-period intervals are wide enough to include differences as large as the estimated effect (Figures 3–4; values not extracted), and for Black residents every pre-period coefficient lies above zero, with several 95% bands wholly above it (months −11 to −9 and −4 in both figures)."
+   },
+   {
+    "domain": "Bias in selection of participants into the study",
+    "judgment": "moderate",
+    "note": "All states were eligible, but how the six jurisdictions shaded legal in Figure 1 without a Table 1 date entered the analysis is not stated (if they were legal before 2018, their follow-up starts after the intervention); the two 2018 adopters have only 5 and 6 months before their law in the data. Online Appendix A does not mention them."
+   },
+   {
+    "domain": "Bias in classification of interventions",
+    "judgment": "serious",
+    "note": "Serious, no longer provisional: Online Appendix A has been read. The indicator is the authors' judgment of when legal strips were available in a way capable of producing a meaningful policy shock, made state by state, and they write that reasonable researchers may judge differently. For 5 of the 19 jurisdictions whose legal-source date falls in 2018–2022 (editors' count) they depart from the source: Alabama, Minnesota and New Mexico, whose laws took effect from July 2021 to June 2022, are coded as never treated and so serve as comparisons, and North Carolina's 2019 statute and the District of Columbia's April 2019 law are dated from July 2022 and August 2019; about one in six of the post-law state-months implied by the source's dates is coded as a month without a law (editors' count; see the key finding on Table A1). The reasons are the authors' legal readings, the University of North Carolina School of Government's summary, two pharmacist surveys, an Alabama drug threat assessment, a local organization's statement and a co-author's law-review article, the Alabama evidence dating from 2023 and 2025, after the study period; no strip distribution or use was measured; no comparable check of implementation is reported for the 12 other jurisdictions coded at the statute date. The original article presented the dates as the source's and the reasons were published only in 2026, so the coding cannot be shown to have been fixed before the outcome data were seen. No results with the source's dates are reported, so how much these choices move the estimates, and in which direction, is unknown. Still not stated: how the six jurisdictions shaded legal in Figure 1 without a date were coded, and how a date within a month was coded; Table 1 is still headed as reforms enacted and the event-study axes count months from enactment, while the dates are effective or implementation dates. Not critical: the departures are documented with reasons, concern a minority of jurisdictions, and the other dates follow the source's effective dates."
+   },
+   {
+    "domain": "Bias due to deviations from intended interventions",
+    "judgment": "moderate",
+    "note": "Judged for the effect of a law being in force: strips could be obtained where prohibited (authors, p. 248) and bought with federal grant funds in every state from 2021 (p. 241), which dilutes the contrast; community distribution was not measured. For the effect of using strips, which the Discussion addresses, there is no information."
+   },
+   {
+    "domain": "Bias due to missing data",
+    "judgment": "moderate",
+    "note": "Judged for the whole-population result: 2,613 of a possible 3,060 state-months are used without explanation (85%; editors' calculation). For the Black (1,469 state-months, 48%) and triple-difference results (4,455 of 12,240 cells, 36%) the risk is serious, because the missing cells may be the small or zero counts of smaller states."
+   },
+   {
+    "domain": "Bias in measurement of outcomes",
+    "judgment": "moderate",
+    "note": "Routine death records unaffected by the study, but no ICD-10 codes are given and the outcome is named three ways (drug-overdose, drug-induced, drug-related); classification and reporting differ between states (authors, p. 248), which matters most for the triple differences, whose contrast rests on the coding of intent."
+   },
+   {
+    "domain": "Bias in selection of the reported result",
+    "judgment": "moderate",
+    "note": "No protocol. All 16 table coefficients are shown, but the event studies with controls are omitted, no analysis with the source's original dates is reported, in the article or in Online Appendix A, although the dates were set by the authors, and the abstract features the unadjusted, miscomputed Black estimate over the adjusted and triple-difference ones."
+   }
+  ],
+  "overall": "serious",
+  "reasoning": "ROBINS-I is used because the exposure is a policy intervention compared across states and over time (METHODS §5.3). The design needs four things: parallel trends in death rates between legalizing and other states before the laws; no other change at the same time in legalizing states (naloxone, Good Samaritan, syringe-service or wider drug-checking reforms, treatment access, federal strip funding, the spread of fentanyl or stimulants in the supply, pandemic effects); correct law dates; and an estimator that copes with staggered adoption (16 jurisdictions, June 2018 to August 2022). Only the last is clearly met, by the Borusyak et al. (2024) imputation estimator; the pre-trend checks are weak, no concurrent policy is adjusted, and the dates are the authors' own coding, which departs from the legal source for five jurisdictions on judgments partly resting on evidence from after the study period, with no results shown for the source's dates (Online Appendix A, read in the supplement reading of 27 October 2026; the classification judgment, serious, is no longer provisional). Serious rather than critical, because the fixed effects, the staggered-robust estimator and the event studies address the most obvious biases. The authors' own appendix argues that some laws made no real difference until months or years after taking effect, which makes a fall from the first month of each law harder still to attribute to strips (editors' note). Citable for: in 2018–2022, monthly drug-overdose death rates in the 16 jurisdictions with a strip law as dated by the authors were about 7% below the model's counterfactual after the law, similar for White and, with controls, Black residents. Not citable for: an effect of strips or of strip use, opioid- or fentanyl-specific deaths, a larger benefit for Black residents (the 13.5% figure is a calculation error), or a particular benefit for unintentional deaths, or an estimate that does not depend on the authors' coding of the laws."
+ },
+ "key_findings": [
+  {
+   "finding": "State-level policy study of the United States, 2018–2022: monthly deaths by state from CDC WONDER and population from SEER give log drug-overdose deaths per 100,000 residents; the exposure is an indicator that the state had legalized fentanyl test strips; two-way fixed effects (state and month-year) are estimated with the Borusyak et al. (2024) imputation estimator because adoption was staggered, then triple differences in which suicide, homicide and undetermined-intent overdose deaths serve as comparison series for unintentional ones; all models are weighted by state population, with standard errors clustered by state (StataMP 18.5).",
+   "page": "242–244",
+   "locator": "Method › Empirical Strategy, 1st–3rd paragraphs (p. 242; the 3rd continues after Equation 1 on p. 243), 5th paragraph (staggered implementation, p. 243), 6th–8th paragraphs (Equation 2 and data sets, p. 244)"
+  },
+  {
+   "finding": "Table 1 dates these jurisdictions: Maryland 6/1/2018 and Rhode Island 7/2/2018; Colorado 5/23/2019, Virginia 7/1/2019 and DC 8/11/2019; Nevada 5/28/2021, Delaware 6/3/2021, Arizona 9/29/2021 and Maine 10/18/2021; New Jersey 1/18/2022, Wisconsin 3/18/2022, Tennessee 3/31/2022, West Virginia 6/10/2022, Connecticut 7/1/2022, North Carolina 7/22/2022 and Louisiana 8/1/2022. Its note calls them implementation dates based on the authors' modification of dates from the Network for Public Health Law (2024); the Methods say some NPHL dates were modified to represent the policy shock, with details in Online Appendix A. Editors' count: 16 jurisdictions, 15 states and DC, none dated in 2020.",
+   "page": "242–243",
+   "locator": "Method › Empirical Strategy, 2nd paragraph (p. 242); Table 1 and note (p. 243)",
+   "note": "Editors' count, assuming data from January 2018 to December 2022 and a law counted from the month it took effect: 362 of 3,060 state-months follow a law, 236 (65%) of them in the five 2018–2019 adopters; Maryland and Rhode Island have 5 and 6 months before their law in the data, and Louisiana, Connecticut, North Carolina and West Virginia 5 to 7 months after it. Online Appendix A agrees with Table 1 for every jurisdiction it discusses: North Carolina 7/22/2022, Virginia 7/1/2019 and West Virginia 6/10/2022 exactly, the District of Columbia by month (the appendix gives August 2019; Table 1's day, 11, is not explained); Alabama, Minnesota and New Mexico, coded untreated, are absent from Table 1. The other 12 dates are said to be the source's and could not be checked here (the 2024 NPHL survey is not on file)."
+  },
+  {
+   "finding": "Figure 1 (strip laws as of 2022) shades 22 jurisdictions as legal (21 states and DC; editors' reading of the map): the 16 in Table 1 plus Alaska, Massachusetts, Michigan, New York, Vermont and Wyoming, which have no date in Table 1; the other 29 states are shaded illegal.",
+   "page": "243",
+   "locator": "Figure 1 (map, read from the rendered page) and note; Table 1",
+   "note": "How the six undated jurisdictions enter the analysis is not stated, in the article or in Online Appendix A (see reporting issues). Alabama, Minnesota and New Mexico, which the appendix codes untreated through 2022, are shaded illegal, consistent with it (editors' reading of the map rendered at 200 dpi)."
+  },
+  {
+   "finding": "Mean (SD) drug-overdose deaths per 100,000 residents per state-month: whole population 2.37 (1.12) without a law, 3.03 (1.12) with, 2.52 (1.15) overall; White 2.47 (1.15), 2.93 (0.91), 2.57 (1.12); Black 3.37 (1.90), 4.45 (2.53), 3.64 (2.13). The authors note that death rates were higher in states that legalized strips and that these means do not show the counterfactual.",
+   "page": "244–245",
+   "locator": "Results › Primary Results, 1st paragraph (p. 244); Table 2 (p. 245)"
+  },
+  {
+   "finding": "Table 3 Panel A (all drug-overdose deaths, no controls): test-strip coefficient −0.069 (SE 0.028; p < .05) whole population, −0.075 (0.030; p < .05) all races pooled, −0.077 (0.032; p < .05) White, −0.127 (0.028; p < .01) Black; 2,613, 4,181, 2,461 and 1,469 observations. The text converts these to reductions of 6.67%, 7.22%, 7.41% and 11.92%. Editors' calculation (95% CI from β ± 1.96 SE, converted by 100(e^β − 1)): −6.7% (−11.7% to −1.4%), −7.2% (−12.5% to −1.6%), −7.4% (−13.0% to −1.4%) and −11.9% (−16.6% to −7.0%).",
+   "page": "244–245; 248",
+   "locator": "Results › Primary Results, 2nd paragraph (begins p. 244, figures on p. 245); Table 3 Panel A (p. 248)"
+  },
+  {
+   "finding": "Table 3 Panel B (controls for age shares, rurality and median income): −0.074 (SE 0.020), −0.078 (0.021), −0.083 (0.023) and −0.088 (0.026), all p < .01. The text calls the associations somewhat stronger for the whole population, all races and White residents and somewhat weaker for Black residents, and reports no significant association with the age profile, rurality or income. Editors' calculation: −7.1% (−10.7% to −3.4%), −7.5% (−11.2% to −3.6%), −8.0% (−12.0% to −3.7%) and −8.4% (−13.0% to −3.6%).",
+   "page": "245; 248",
+   "locator": "Results › Primary Results, 3rd paragraph (p. 245); Table 3 Panel B (p. 248)",
+   "note": "Table 3 Panel B stars the over-65 share in the Black model (62.428, SE 30.510; p < .05), against the text's statement of no significant age association."
+  },
+  {
+   "finding": "Table 4 Panel A (unintentional overdose deaths, triple differences, no controls): −0.053 (SE 0.032; p < .1) whole population, −0.056 (0.033; p < .1) all races, −0.070 (0.037; p < .1) White, −0.058 (0.029; p < .05) Black; 4,455, 5,632, 3,937 and 1,484 observations. The text calls these slightly smaller than in Table 3 and all statistically significant. Editors' calculation: −5.2% (−10.9% to +1.0%), −5.4% (−11.4% to +0.9%), −6.8% (−13.3% to +0.3%) and −5.6% (−10.8% to −0.1%).",
+   "page": "245; 249",
+   "locator": "Results › Primary Results, 4th paragraph (p. 245); Table 4 Panel A (p. 249)",
+   "note": "Three of the four intervals include no difference (editors' calculation), as their p < .1 stars imply."
+  },
+  {
+   "finding": "Table 4 Panel B (with controls): −0.056 (SE 0.027; p < .05), −0.061 (0.027; p < .05), −0.082 (0.031; p < .01) and −0.002 (0.026; not significant) for Black residents, which the text notes as the exception; the over-65 share is positively associated with unintentional deaths in all four models (31.828 to 76.236). Editors' calculation: −5.4% (−10.3% to −0.3%), −5.9% (−10.8% to −0.8%), −7.9% (−13.3% to −2.1%) and −0.2% (−5.2% to +5.0%).",
+   "page": "245; 249",
+   "locator": "Results › Primary Results, 5th paragraph (p. 245); Table 4 Panel B (p. 249)"
+  },
+  {
+   "finding": "Event studies (Figures 3 and 4) run from 16 months before to 8 months after the law, against the period just before it, without controls (models with controls are said to be not qualitatively different and are not shown). The authors report statistically insignificant pre-trends for the whole population, all races and White residents, a sharp reduction almost immediately after legalization that stays similar over the post-period, and more volatile results for Black residents because of limited sample size.",
+   "page": "245–247",
+   "locator": "Results › Robustness Tests and Sensitivity Analysis, 1st–3rd paragraphs (pp. 245–246); Figures 3 and 4 with notes (pp. 246–247)",
+   "note": "Editors' reading of the rendered figures, values not extracted: the pre-period 95% bands are much wider than the post-period bands and wide enough to include differences as large as the estimated effects; in both panels for Black residents every pre-period coefficient lies above zero; in Figure 3 Panel D the post-period estimates cross zero several times. Read again at 400 dpi in adjudication: in both Black-resident panels several pre-period 95% bands lie wholly above zero (months −11 to −9 and −4 in both figures, and −15 in Figure 4), so for Black residents the pre-trends differ from zero in several months; the text claims insignificant pre-trends only for the whole population, all races and White residents."
+  },
+  {
+   "finding": "Outcomes: all drug-overdose deaths, and unintentional drug-overdose deaths set against overdose deaths by homicide, suicide and undetermined intent; separate models for White and Black residents and a pooled model adding American Indian or Alaska Native and Asian or Native Hawaiian or Other Pacific Islander residents, not modelled separately because of limited data. The Methods say the two measures capture opioid fatalities likely to be affected by strips, but no ICD-10 codes are given, the tables and figures label the outcome drug-induced deaths, and no opioid- or fentanyl-specific outcome is analysed.",
+   "page": "242; 244; 248–249",
+   "locator": "Method › Empirical Strategy, 1st paragraph (p. 242) and 8th paragraph (p. 244); notes to Tables 3 and 4 (pp. 248–249)"
+  },
+  {
+   "finding": "Authors' limitations: state-level data may hide local variation in how strips are implemented; overdose deaths may be classified or reported inconsistently across states; the period covers only 5 years; they did not measure community groups providing strips or consider strip use in states where strips are prohibited; other state policies, including those relevant to hospital administration, may affect overdose deaths.",
+   "page": "248",
+   "locator": "Discussion, 6th and 7th paragraphs"
+  },
+  {
+   "finding": "Context from the Introduction: once legal, strips can be obtained in several ways (free ordering for all residents in New York, one dollar in California, free from other governments and non-profit organizations, online retailers), and federal SAMHSA grantees could use funds to buy strips from 2021. The Conceptual Model expects legalization to lead to broader strip use, safer use and then a measurable fall in overdose deaths; none of these intermediate steps is measured.",
+   "page": "241–242",
+   "locator": "Introduction, 7th and 8th paragraphs (p. 241); Method › Conceptual Model, 5th paragraph (p. 242)"
+  },
+  {
+   "finding": "Headline figures: the abstract reports a 7% decrease for the whole population and a 13.5% reduction among Black individuals; New Contributions says the Black reduction is nearly twice the White one; the Discussion repeats about 7% and nearly 13.5% and calls the Black reduction nearly doubled.",
+   "page": "240–241; 246–247",
+   "locator": "Abstract; New Contributions; Discussion, 1st and 4th paragraphs",
+   "note": "Editors' calculation: 13.5% equals 100(e^0.127 − 1), the Black coefficient of Table 3 Panel A with its sign reversed; the correct conversion is 11.9% (11.92% in the Results text), and with controls 8.4%, against 8.0% for White residents."
+  },
+  {
+   "finding": "Causal and opioid wording: the Introduction states “We find evidence that FTS reduces drug-overdose deaths”; the Discussion frames the study as reducing opioid overdose deaths and describes a significant reduction in drug-overdose mortality; the Conclusion speaks of reductions in opioid overdose deaths, particularly among Black populations, and calls state laws that facilitate access a key component of harm reduction.",
+   "page": "241; 246; 248",
+   "locator": "Introduction, 9th paragraph (p. 241); Discussion, 1st paragraph (p. 246); Conclusion (p. 248)"
+  },
+  {
+   "finding": "The corrigendum deletes the Introduction's statements that not all states permit strips, that as of 2024 21 states and DC had legalized them, and that the remaining states treat them as illegal drug paraphernalia (Davis et al., 2022).",
+   "page": "Corrigendum p. 299",
+   "locator": "Corrigendum p. 299, Change 1"
+  },
+  {
+   "finding": "The original Methods said legal status came from the Network for Public Health Law (2024) and that Table 1 gave the dates when state legislatures passed statutes legalizing strips, with Table 1 sourced to NPHL. The corrected text says NPHL gave preliminary information, the authors modified some dates so that each represents the policy shock (citing McMichael and Markowitz, 2023), the modifications are detailed in Online Appendix A, and Table 1 and Figure 1 show implementation dates based on those modifications.",
+   "page": "Corrigendum pp. 299–300",
+   "locator": "Corrigendum p. 299, Changes 2 and 3; pp. 299–300, Change 4"
+  },
+  {
+   "finding": "The corrigendum adds the McMichael and Markowitz (2023) reference and an Online Appendix A, “The Coding of Fentanyl Test Strip Legalization”, documenting the legal coding framework and state-specific implementation decisions; it updates the data statement to say that NPHL data were modified as described in Appendix A; and it reports that the journal editor confirmed the revisions do not alter the results or conclusions.",
+   "page": "Corrigendum p. 300",
+   "locator": "Corrigendum p. 300, Changes 5 to 7 and closing paragraph"
+  },
+  {
+   "finding": "Online Appendix A (“The Coding of Fentanyl Test Strip Legalization”, added by the 2026 corrigendum) defines the treatment indicator as whether, in each state and month, legal strips were available “in a manner capable of generating a meaningful policy shock”. For most jurisdictions the date is the statute's effective date and matches the NPHL database (cited there as Davis et al., 2022); for five the authors depart from it, for two kinds of reason: their legal reading of the statute (Minnesota, New Mexico) and evidence of implementation delay or persistent enforcement uncertainty (Alabama, North Carolina, District of Columbia). Virginia and West Virginia were examined and keep the source's dates. The authors write that they do not seek a uniquely correct coding, that reasonable researchers may reach different judgments, and that the decisions are tailored to their research question, citing McMichael and Markowitz (2023).",
+   "page": "Online Appendix A (DOCX), A.1",
+   "locator": "A.1 An Overview of the Coding Approach, 1st and 2nd paragraphs"
+  },
+  {
+   "finding": "Table A1, source (NPHL) date against date used in the analysis: Alabama June 1, 2022, untreated through 2022; Minnesota July 1, 2021, untreated; North Carolina 2019, July 22, 2022; District of Columbia April 11, 2019, August 2019; New Mexico May 18, 2022, untreated; Virginia July 1, 2019, kept; West Virginia June 10, 2022, kept. Every other state keeps the NPHL date (A.2.8).",
+   "page": "Online Appendix A (DOCX), Table A1",
+   "locator": "A.2.8 Summary of Coding Decisions and Table A1",
+   "note": "Editors' count, counting a law from the month it took effect as assumed for Table 1, and assuming none of the six undated map jurisdictions has a source date in 2018–2022: by the source's dates 19 jurisdictions would change law in the period and there would be 430 to 441 post-law state-months (North Carolina's 2019 date placed anywhere in that year), of which the authors' coding counts 68 to 79 (16% to 18%) as months without a law: North Carolina 31 to 42, Minnesota 18, New Mexico 8, Alabama 7 and the District of Columbia 4; under the authors' coding there are 362."
+  },
+  {
+   "finding": "Evidence given for the five departures, with its dates. Alabama: a 2023 drug threat assessment (Gulf Coast HIDTA) describing strip legalization as still pending; a pharmacist survey (Woods et al., 2025; Table A1 places it in 2025) in which 25.2% of community pharmacists believed strips were still illegal and most did not know where to get them; a 2021 law-review article co-written by McMichael on paraphernalia and chemical-endangerment charges; the authors note that the statute's text is unambiguous. Minnesota: the state law preserving municipal paraphernalia ordinances, with two cities (Apple Valley, Rosemount) said to keep bans on strips, without a date. New Mexico: distribution offences kept by the statute, and implementing rules effective November 29, 2022; the providers' uncertainty attributed to the regulatory record has no citation. North Carolina: a 2019 statute protecting people who test drugs they intend to consume and governmental and nongovernmental harm-reduction organizations that distribute testing equipment, described as narrow in an undated UNC School of Government summary; a March–May 2022 pharmacist survey (Marley et al., 2023) finding two pharmacies dispensing strips and about half of pharmacists knowing where to order them; the date is set three years after enactment. District of Columbia: five enactments, from an emergency act effective December 20, 2017 to the permanent law of April 11, 2019, and an August 2019 statement by Live Long DC that the framework was complete as of May 2019; August 2019 is adopted as a conservative date.",
+   "page": "Online Appendix A (DOCX), A.2.1–A.2.5",
+   "locator": "A.2.1 Alabama, A.2.2 Minnesota, A.2.3 North Carolina, A.2.4 District of Columbia and A.2.5 New Mexico, with footnotes 1–16 and References"
+  },
+  {
+   "finding": "Virginia and West Virginia keep the source's dates (July 1, 2019; June 10, 2022) after review: before them, protected access was confined to Virginia's comprehensive harm reduction sites (two authorized as of August 2018, three operational as of June 2019) and to West Virginia's licensed syringe-services programmes under a 2021 statute requiring local-government support and one-for-one exchange (one county's exchange closed in 2021).",
+   "page": "Online Appendix A (DOCX), A.2.6–A.2.7",
+   "locator": "A.2.6 Virginia and A.2.7 West Virginia, with footnotes 17–22"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The 13.5% reduction for Black individuals (abstract; New Contributions, as nearly twice the White reduction; Discussion) matches no estimate: it is 100(e^0.127 − 1), the unadjusted Black coefficient with its sign reversed (editors' calculation). Converted as the paper's own formula requires, −0.127 is an 11.9% reduction, which the Results text gives as 11.92%; with controls the Black estimate is −0.088 (8.4%), close to the White −0.083 (8.0%).",
+   "page": "240; 241; 245; 246; 248",
+   "consequence": "Cite 11.9% (unadjusted) or 8.4% (adjusted). The paper gives no basis for a nearly doubled reduction among Black residents and does not test the Black–White difference."
+  },
+  {
+   "issue": "In Table 4 Panel A three of the four coefficients are starred only at p < .1 (whole population −0.053, all races −0.056, White −0.070), yet the text calls all of them statistically significant and the abstract calls legalization particularly effective for unintentional deaths; with controls the Black estimate is −0.002 (SE 0.026).",
+   "page": "240; 245; 249",
+   "consequence": "The unintentional-death results are weaker than the all-death results, not stronger; they support neither a particular effect on unintentional deaths nor one among Black residents."
+  },
+  {
+   "issue": "Figure 1 shades 22 jurisdictions (21 states and DC) as legal as of 2022, but Table 1 dates only 16 (15 states and DC): Alaska, Massachusetts, Michigan, New York, Vermont and Wyoming are shaded legal with no date. The count of 21 states and DC matches the Introduction sentence, deleted by the corrigendum, that gave the number as of 2024.",
+   "page": "243; Corrigendum p. 299",
+   "consequence": "Either the map shows a later status than its note says, or six states' coding is undocumented in the article; whether they were dropped, coded legal throughout or used as comparison states is not stated. Online Appendix A, now read, does not settle it: it does not mention the six, and its rule that every state it does not discuss keeps the source's date implies dates for them that neither the article nor the appendix gives."
+  },
+  {
+   "issue": "Per the corrigendum, the original article described Table 1 as NPHL's dates of legislative passage, whereas the authors had modified some dates, now called implementation dates, with details only in Online Appendix A, which says the dates are the statutes' effective dates except for five jurisdictions. Table 1 is still headed as reforms enacted and the event-study axes still count months relative to enactment.",
+   "page": "243; 246–247; Corrigendum p. 299",
+   "consequence": "The timing can now be checked against the appendix for the seven jurisdictions it discusses, but not for the 12 other jurisdictions in Table 1, whose dates are only said to be the source's, and how a date within a month was coded is still not stated; enactment and effective dates can differ by months, which matters for an effect reported as appearing almost immediately after the law."
+  },
+  {
+   "issue": "The outcome is called drug-overdose deaths in the text, drug-induced deaths in the tables and figures and drug-related mortality in the title, without ICD-10 codes; the Methods say the measures capture opioid fatalities and the Conclusion reports reductions in opioid overdose deaths, but no opioid-specific outcome was analysed.",
+   "page": "240; 242; 248",
+   "consequence": "Claims must say deaths from any drug overdose; the paper cannot be cited for opioid or fentanyl deaths."
+  },
+  {
+   "issue": "Observation counts imply unexplained missing cells: 2,613 of a possible 3,060 state-months in the whole-population model, 1,469 for Black residents, and 4,455 of 12,240 state-month-intent cells in the triple differences (editors' calculation, 51 jurisdictions × 60 months × 4 intents).",
+   "page": "248; 249",
+   "consequence": "Which states and months inform each estimate is unknown; the Black and triple-difference estimates may rest mainly on larger states."
+  },
+  {
+   "issue": "The study period is given as 2018–2022 (abstract, Methods), a 4-year period (Introduction) and only 5 years (limitations); Figure 2's source line reads 2018–2002.",
+   "page": "240; 241; 242; 244; 248",
+   "consequence": "Minor; the data are monthly, 2018 to 2022."
+  },
+  {
+   "issue": "Wording errors in the Results: reductions are given per 100,000 deaths (the outcome is per 100,000 residents); the Figure 4 result for Black residents is called a reduction in intentional overdose deaths although Figure 4 shows unintentional deaths; Figure 4's note repeats Figure 3's (drug-induced deaths, state and month fixed effects), so which model it plots is unclear; and the text reports no significant age association for all drug deaths while Table 3 stars the over-65 share in the Black model.",
+   "page": "245; 246; 247; 248",
+   "consequence": "Minor, except that the specification behind Figure 4 is uncertain."
+  },
+  {
+   "issue": "The Introduction attributes to Krieger et al. (2018) a Vancouver study in which strips at a supervised injection facility reduced the amount of drugs used and overdose risk, but the only Krieger et al. (2018) in the reference list is a study of willingness to use strips among young adults; the description fits the title of a different paper (Karamouzian et al., 2018, in this project's references), which is not in the list.",
+   "page": "241; 250",
+   "consequence": "The behavioural evidence offered for the paper's mechanism is mis-cited; no bearing on the estimates."
+  },
+  {
+   "issue": "The PDF on file is the corrected online version: its Methods, Table 1 note, Figure 1 note and reference list already carry the corrigendum's wording and the deleted Introduction sentences are absent, but its Data Availability statement says the NPHL data were modified as described, without naming Appendix A (corrigendum Change 7).",
+   "page": "242; 243; 249; Corrigendum p. 300",
+   "consequence": "Other copies may show the original wording; the anchors on this card cite the corrected text, and the original wording is known only from the corrigendum."
+  },
+  {
+   "issue": "Online Appendix A names the legal source as the “National Public Health Law (NPHL) database (Davis et al., 2022)”, whereas the article cites the Network for Public Health Law's August 2024 50-state survey (Method › Empirical Strategy, p. 242; reference list, p. 251) and lists Davis et al. (2022), a journal article, as a separate reference (p. 250).",
+   "page": "Online Appendix A (DOCX), A.1; pp. 242, 250–251",
+   "consequence": "Which edition of the legal data supplied the dates the appendix calls NPHL's is unclear, so the 12 Table 1 dates the appendix does not discuss cannot be checked against a named edition."
+  },
+  {
+   "issue": "The appendix calls the evidence for its second group of departures contemporaneous, but the Alabama evidence is a 2023 assessment and a survey that Table A1 places in 2025, after the data end in December 2022. Table A1's summary that North Carolina's pharmacy access stayed extremely limited until 2022 rests on a survey from March–May 2022 that shows limited access at that time, not a change during 2022, and the North Carolina date (July 22, 2022) is set as three years after enactment, not by an event in the evidence cited.",
+   "page": "Online Appendix A (DOCX), A.1; A.2.1; A.2.3; Table A1",
+   "consequence": "Two of the five departures rest on evidence from after the study period or on a date fixed by a rule of thumb; the coding cannot be shown to have been fixed before the outcome data were seen (see risk of bias, classification of interventions)."
+  },
+  {
+   "issue": "By the appendix's own account, North Carolina's 2019 statute protected people who test drugs they intend to consume and harm-reduction organizations that distribute testing equipment, and the Introduction names free strips from governments and nonprofit organizations as one way people obtain them (p. 241); yet the delay to July 2022 is justified mainly by limited pharmacy access.",
+   "page": "Online Appendix A (DOCX), A.2.3; p. 241",
+   "consequence": "North Carolina may have served as a comparison state for about three years with a law in force for community distribution; if the law mattered, this blurs the contrast, in a direction that cannot be known without the analysis (editors' note)."
+  },
+  {
+   "issue": "Table A1 gives the District of Columbia's date used as August 2019 while saying local evidence shows a complete framework as of May 2019; Table 1 gives 8/11/2019, a day the appendix does not mention; and the first of the five District enactments it lists took effect on December 20, 2017, before the data begin.",
+   "page": "Online Appendix A (DOCX), A.2.4; Table A1; p. 243",
+   "consequence": "Minor for a monthly indicator; the District's date marks when the authors judged the framework operational, four months after the permanent law."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI reader 141 (first reader)",
+  "first_pass_on": "2026-10-26",
+  "source_read": "PDF pp. 240–251 (journal version, Medical Care Research and Review 82(3), 2025, in its corrected online form, which already carries the corrigendum's changes except the Data Availability wording), the project PDF folder DrugEncyclopedia/PDFs/_Cross-cutting/Bhai_2025_FTSDrugMortality.pdf: all text, Tables 1–4 with notes, Figures 1–4 (rendered; Figure 1 read state by state from the map; event-study values not extracted), funding, conflict, ethics and data-availability statements, Note 1, reference list. Corrigendum, Medical Care Research and Review 83(4), 299–300 (2026), doi 10.1177/10775587261457313, DrugEncyclopedia/PDFs/_Cross-cutting/Bhai_2026_Corrigendum..pdf: both pages, rendered. Online Appendix A (“The Coding of Fentanyl Test Strip Legalization”), Word file DrugEncyclopedia/PDFs/_Cross-cutting/Bhai_2025_AppendixA.docx (8 pages by its properties, which give it as created on 13 May 2026; no tracked changes or comments): all text, Table A1, 22 footnotes and the references, checked word for word against a pandoc conversion; read by AI reader 150 (supplement reader) on 27 October 2026. The article (p. 249) says supplemental material is available online; whether anything besides this appendix exists is not known, and nothing else was read.",
+  "disagreements": [
+   {
+    "field": "key_findings[8].note",
+    "first_pass": "Editors' reading of the rendered figures, values not extracted: the pre-period 95% bands are much wider than the post-period bands and wide enough to include differences as large as the estimated effects; in both panels for Black residents every pre-period coefficient lies above zero; in Figure 3 Panel D the post-period estimates cross zero several times.",
+    "reviewer": "AI reader 145, missed item: several pre-period 95% bands for Black residents lie wholly above zero (about months −11 to −9 and −4 in both figures), so their pre-trends are individually significant; this weakens the Black estimates beyond 'every pre-period coefficient lies above zero'.",
+    "resolution": "Accepted after rendering pp. 246–247 at 400 dpi: lower band edges above zero at months −11, −10, −9 and −4 in Figure 3 Panel D, and at −15, −11, −10, −9 and −4 in Figure 4 Panel D (editors' reading, values not extracted)."
+   },
+   {
+    "field": "risk_of_bias.domains[0].note",
+    "first_pass": "State and month-year fixed effects remove fixed differences between states and shocks common to all, and Panel B adds age, rurality and income, but nothing time-varying that plausibly moved with the laws is adjusted: other harm-reduction and treatment policies, federal strip funding from 2021, the spread of fentanyl in each state's supply, the pandemic years. Legalizing jurisdictions had higher death rates (Table 2), so laws may have followed rising deaths. The event studies show no significant pre-trends, but the pre-period intervals are wide enough to include differences as large as the estimated effect (Figures 3–4; values not extracted), and for Black residents every pre-period coefficient lies above zero.",
+    "reviewer": "AI reader 145, missed item (as above).",
+    "resolution": "Factual basis of the note extended; the judgment (serious) is unchanged. The second reader's suggestion of a subgroup note or 'critical' for the Black-resident estimates is a judgment, referred to the senior author."
+   },
+   {
+    "field": "design_detail",
+    "first_pass": "coded by the authors from a legal database with some dates modified (corrigendum, 2026).",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1 and Table A1: the dates are the statutes' effective dates from the NPHL database except for five jurisdictions, three of them coded untreated through 2022.",
+    "resolution": "Exposure description brought up to date from the appendix."
+   },
+   {
+    "field": "can_establish",
+    "first_pass": "in the 16 US jurisdictions with a dated law legalizing fentanyl test strips changed after the law, relative to a counterfactual imputed from states without such a law at the time,",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, Table A1: the comparison states include Alabama, Minnesota and New Mexico, whose laws took effect in 2021–2022, and North Carolina before July 2022.",
+    "resolution": "Treated and comparison groups described as the authors' coding."
+   },
+   {
+    "field": "can_establish",
+    "first_pass": "provided death rates would otherwise have moved in parallel and nothing else changed with the laws.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1: the authors write that their coding involves judgment calls on which reasonable researchers may differ.",
+    "resolution": "The coding added as a condition of what the design can establish."
+   },
+   {
+    "field": "cannot_establish",
+    "first_pass": "exposure dates coded by the authors in an appendix not read), whether people",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1–A.2 and Table A1: five departures from the source's dates; no results with the source's dates in the appendix, the article or the corrigendum.",
+    "resolution": "'Appendix not read' replaced with what the appendix shows."
+   },
+   {
+    "field": "sample.n_by_group",
+    "first_pass": "jurisdictions with a dated law in Table 1 (15 states and DC): 16; jurisdictions without a date in Table 1 (editors' count): 35; jurisdictions shaded legal as of 2022 in Figure 1 (editors' reading): 22; state-months, whole-population model (Table 3): 2613; state-month-race cells, all-races model (Table 3): 4181; state-months, White residents (Table 3): 2461; state-months, Black residents (Table 3): 1469; state-month-intent cells, whole population (Table 4): 4455; state-month-intent cells, Black residents (Table 4): 1484",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1 and Table A1: five departures (Alabama, Minnesota, New Mexico, North Carolina, District of Columbia), three of them coded untreated through 2022.",
+    "resolution": "Two counts added from Table A1."
+   },
+   {
+    "field": "sample.recruitment",
+    "first_pass": "drug-checking equipment, modified by the authors (Method › Empirical Strategy, pp. 242–244; reference list, p. 250).",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1, 1st paragraph, names the source 'National Public Health Law (NPHL) database (Davis et al., 2022)'; on re-reading, the NPHL entry of the reference list is on p. 251 (Davis et al., 2022 on p. 250).",
+    "resolution": "Source naming from the appendix added; reference-list page corrected from 250 to 251 (text extraction, page header 'Bhai et al. 251')."
+   },
+   {
+    "field": "sample.selection_effects",
+    "first_pass": "were dropped, treated as legal throughout or used as comparisons is not stated.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1–A.2.8: Alaska, Massachusetts, Michigan, New York, Vermont and Wyoming are not mentioned; the appendix's rule is that every state it does not discuss keeps the NPHL date.",
+    "resolution": "Says the appendix leaves the six undated map states undocumented."
+   },
+   {
+    "field": "exposure.measurement",
+    "first_pass": "Table 1 gives implementation dates for 16 jurisdictions; the modifications are documented only in Online Appendix A, which was not read. How a law taking effect within a month was coded is not stated.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1, A.2.1–A.2.8 and Table A1.",
+    "resolution": "'Not read' replaced with the appendix's definition of the indicator and its five departures; what it leaves out stated."
+   },
+   {
+    "field": "comparison.controls",
+    "first_pass": "States without a law in a given month (states that did not legalize in the period and those not yet legalized), through the imputation estimator with state and month-year fixed effects; in the triple differences,",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, Table A1: NPHL dates July 1, 2021 (Minnesota), May 18, 2022 (New Mexico), June 1, 2022 (Alabama), 2019 (North Carolina); dates used: untreated, untreated, untreated through 2022, July 22, 2022.",
+    "resolution": "Comparison group described as the authors' coding, including the states with a law by the source's dates."
+   },
+   {
+    "field": "outcomes.assessor_blinding",
+    "first_pass": "the paper does not say whether this was done before the outcome data were analysed.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.2.1 and Table A1 (2023 drug threat assessment; pharmacist survey Woods et al., 2025, 'in 2025' in Table A1); corrigendum 2026.",
+    "resolution": "Timing of the documentation and of its evidence added."
+   },
+   {
+    "field": "analysis.selective_reporting",
+    "first_pass": "Online Appendix A, the only record of how the exposure dates were changed, was not read.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1, 2nd paragraph; A.2 and Table A1 (no results of any kind).",
+    "resolution": "'Not read' replaced: no analysis with the source's dates is reported anywhere."
+   },
+   {
+    "field": "analysis.power",
+    "first_pass": "No power calculation. 16 of 51 jurisdictions changed law, two within 6 months of the start of the data and four within 7 months of its end (editors' count); five 2018–2019 adopters supply about two thirds of the post-law state-months (editors' count, 236 of 362, assuming a law counts from the month it took effect). The authors say results for Black residents are more volatile because of limited sample size (p. 246); clustered standard errors with few treated states can understate uncertainty (editors' note).",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, Table A1: Alabama, Minnesota and New Mexico have NPHL dates in 2021–2022 but are coded untreated.",
+    "resolution": "Count of law changes under the source's dates added."
+   },
+   {
+    "field": "interpretation_gap.results_show",
+    "first_pass": "Relative to a counterfactual imputed from states without a law at the time, monthly drug-overdose death rates in the 16 jurisdictions with a dated law were about 7% lower after it (−6.7% unadjusted, −7.1% adjusted; editors' 95% CI about −12% to −1% and −11% to −3%), similar for White residents (−7.4%, −8.0%) and for Black residents with controls (−8.4%; −11.9% without). Unintentional overdose deaths were 5% to 8% lower relative to other intents, only at p < .1 in three of four groups without controls, and not lower for Black residents with controls (−0.2%). The event studies show no statistically significant pre-trends but wide pre-period intervals, and a drop from the month of the law. Strip distribution or use was not measured and opioid or fentanyl deaths were not analysed.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1 and Table A1.",
+    "resolution": "Added."
+   },
+   {
+    "field": "interpretation_gap.claimed",
+    "first_pass": "The abstract reports a 7% decrease and a 13.5% reduction among Black individuals and calls legalization “particularly effective in reducing unintentional drug-overdose deaths” (p. 240); New Contributions calls the Black reduction nearly twice the White one (p. 241); the Introduction states “We find evidence that FTS reduces drug-overdose deaths” (p. 241); the Conclusion claims “robust evidence that legalizing FTS is associated with significant reductions in opioid overdose deaths” (p. 248). Against the results: 13.5% is the unadjusted Black coefficient (−0.127) converted with its sign reversed, 100(e^0.127 − 1), whereas the Results text gives 11.92%, and with controls the Black and White estimates are nearly equal (−8.4%, −8.0%); the unintentional-death estimates are smaller and weaker than those for all drug deaths, and null for Black residents with controls; no opioid-specific outcome was analysed; no sensitivity analysis for legal dates or concurrent policies supports “robust”; and the causal verbs about strips go beyond a comparison of laws in which no strip use was measured.",
+    "reviewer": "AI reader 150 (supplement reader): Corrigendum p. 300, closing paragraph; Online Appendix A reports no re-analysis.",
+    "resolution": "Added."
+   },
+   {
+    "field": "replication.timeline",
+    "first_pass": "2026 entry: Corrigendum: the legal dates are described as the authors' modified implementation dates, documented in a new Online Appendix A (not read); the journal editor states that results and conclusions are unchanged. No entries for North Carolina's or the District of Columbia's 2019 laws, Minnesota's 2021 amendment, or the 2022 laws of Alabama and New Mexico. Davis et al. (2022) entry: (the citing sentences were deleted by the corrigendum); not read.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.2.1–A.2.5 and Table A1 give the laws' effective dates and the dates used.",
+    "resolution": "2026 entry no longer says 'not read'; entries added for 2019, 2021 and 2022 law changes and their coding; the Davis et al. (2022) entry notes that the appendix cites it as the source database."
+   },
+   {
+    "field": "replication.where_it_stands",
+    "first_pass": "The association rests on this one analysis, whose exposure coding is documented only in a later appendix.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A; corrigendum 2026.",
+    "resolution": "Updated from the appendix."
+   },
+   {
+    "field": "what_would_settle_it",
+    "first_pass": "with sensitivity analyses to alternative dates and comparison states;",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A reports no analysis with the NPHL dates.",
+    "resolution": "Added."
+   },
+   {
+    "field": "funding.affiliations_note",
+    "first_pass": "University of Arkansas at Little Rock and University of Arkansas for Medical Sciences (Bhai), The University of Alabama School of Law (McMichael, corresponding author) and Ball State University (Mitchell) (p. 240). The re-coding of legal dates is justified by a paper co-written by McMichael (McMichael and Markowitz, 2023), and McMichael (2023) is cited for the rurality definition. No funder to flag; a flag for closer reading, not a reason to discount.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.2.1, footnote 4 and References.",
+    "resolution": "Added (authors' own work cited for a coding decision)."
+   },
+   {
+    "field": "risk_of_bias.domains[1].note",
+    "first_pass": "All states were eligible, but how the six jurisdictions shaded legal in Figure 1 without a Table 1 date entered the analysis is not stated (if they were legal before 2018, their follow-up starts after the intervention); the two 2018 adopters have only 5 and 6 months before their law in the data.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1–A.2.8: the six undated map jurisdictions are not discussed.",
+    "resolution": "Fact added; judgment (moderate) unchanged."
+   },
+   {
+    "field": "risk_of_bias.domains[2].note",
+    "first_pass": "The exposure is the authors' own coding: the corrigendum states that they modified some of the source's dates, which the original article described as dates of legislative passage, and documents the changes only in Online Appendix A, not read. Table 1 is still headed as reforms enacted and the event-study axes count months from enactment, while the dates are now called implementation dates; Figure 1 shows 22 legal jurisdictions against 16 dated; mid-month coding is not stated; and whether comparison states prohibited strips is no longer stated after the corrigendum deleted that sentence. Provisional until Appendix A is read.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1, A.2.1–A.2.8 and Table A1 (five departures; evidence partly from 2023 and 2025; no results with the source's dates; the six undated map states and part-month coding not addressed).",
+    "resolution": "Judgment kept at serious and the 'provisional' mark removed, with the reasons now drawn from the appendix: a judgment-based, retrospectively documented coding that moves three states with laws into the comparison group and two dates later, with no sensitivity analysis. Not raised to critical (ROBINS-I reserves it for extreme misclassification). Overall judgment unchanged (serious)."
+   },
+   {
+    "field": "risk_of_bias.domains[6].note",
+    "first_pass": "no analysis with the source's original dates is reported although the dates were set by the authors,",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A reports no results.",
+    "resolution": "Fact added; judgment (moderate) unchanged."
+   },
+   {
+    "field": "risk_of_bias.reasoning",
+    "first_pass": "and the dates are the authors' modifications documented in an appendix not read.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A.",
+    "resolution": "'Appendix not read' replaced; overall judgment unchanged."
+   },
+   {
+    "field": "risk_of_bias.reasoning",
+    "first_pass": "address the most obvious biases.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.2.1 (Alabama), A.2.3 (North Carolina, three years) and A.2.4 (District of Columbia).",
+    "resolution": "Added to the reasoning."
+   },
+   {
+    "field": "risk_of_bias.reasoning",
+    "first_pass": "monthly drug-overdose death rates in the 16 jurisdictions with a dated strip law were about 7% below",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, Table A1.",
+    "resolution": "Citable finding worded as the authors' coding."
+   },
+   {
+    "field": "risk_of_bias.reasoning",
+    "first_pass": "or a particular benefit for unintentional deaths.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A reports no results with the source's dates.",
+    "resolution": "Added to 'not citable for'."
+   },
+   {
+    "field": "key_findings[1].note",
+    "first_pass": "Editors' count, assuming data from January 2018 to December 2022 and a law counted from the month it took effect: 362 of 3,060 state-months follow a law, 236 (65%) of them in the five 2018–2019 adopters; Maryland and Rhode Island have 5 and 6 months before their law in the data, and Louisiana, Connecticut, North Carolina and West Virginia 5 to 7 months after it.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.2.3, A.2.4, A.2.6, A.2.7 and Table A1.",
+    "resolution": "Comparison of the appendix with Table 1 added."
+   },
+   {
+    "field": "key_findings[2].note",
+    "first_pass": "How the six undated jurisdictions enter the analysis is not stated (see reporting issues).",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, Table A1; Figure 1 re-read on the rendered p. 243.",
+    "resolution": "Note updated."
+   },
+   {
+    "field": "key_findings (four added at the end)",
+    "first_pass": "No key finding from Online Appendix A (not read).",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1, A.2.1–A.2.8 and Table A1.",
+    "resolution": "Four key findings added: the coding approach, Table A1 with an editors' count of the state-months affected, the evidence and its dates for the five departures, and the two reviewed states that keep the source's dates."
+   },
+   {
+    "field": "reporting_issues[2].consequence",
+    "first_pass": "Online Appendix A is needed to settle it.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.2.8 and Table A1: only seven jurisdictions are discussed.",
+    "resolution": "Consequence updated."
+   },
+   {
+    "field": "reporting_issues[3].issue",
+    "first_pass": "with details only in Online Appendix A.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1, 1st paragraph.",
+    "resolution": "Issue updated."
+   },
+   {
+    "field": "reporting_issues[3].consequence",
+    "first_pass": "The exposure timing cannot be checked from the article; enactment and effective dates can differ by months,",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.2.8 and Table A1.",
+    "resolution": "Consequence updated."
+   },
+   {
+    "field": "reporting_issues (four added at the end)",
+    "first_pass": "None on the appendix (not read).",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A, A.1, A.2.1, A.2.3, A.2.4, Table A1; article pp. 241–243, 250–251.",
+    "resolution": "Four reporting issues added: the naming of the legal source; 'contemporaneous' evidence that post-dates the study period and the North Carolina date; North Carolina's statute covering community distribution; the District of Columbia's dates."
+   },
+   {
+    "field": "verification.source_read",
+    "first_pass": "Online Appendix A (“The Coding of Fentanyl Test Strip Legalization”) and any other supplemental material were not read.",
+    "reviewer": "AI reader 150 (supplement reader): Online Appendix A read in full.",
+    "resolution": "Supplement added to what was read."
+   }
+  ],
+  "checked_by": "AI reader 145 (blind second reading) and AI reader 149 (adjudication); supplement read by AI reader 150 (27 October 2026); changes checked by AI reader 153 (27 October 2026)",
+  "checked_on": "2026-10-27",
+  "editorial_corrections": [
+   {
+    "date": "2026-10-27",
+    "field": "risk_of_bias (classification of interventions note)",
+    "from": "a law school's summary",
+    "to": "the University of North Carolina School of Government's summary",
+    "reason": "AI reader 153 (check of the supplement changes): Appendix A cites the UNC School of Government, which is not a law school; the checker agreed with the domain judgment (serious) and found every other fact in the note in Appendix A, the paper or the corrigendum."
+   }
+  ]
+ }
+}

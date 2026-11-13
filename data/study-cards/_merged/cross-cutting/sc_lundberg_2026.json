@@ -1,0 +1,292 @@
+{
+ "id": "sc_lundberg_2026",
+ "substance": "cross-cutting",
+ "reference": "lundberg_2026",
+ "design": "cross-sectional",
+ "design_detail": "Cross-sectional analysis of surveillance records of drug poisoning deaths with death dates in 2019–2021 in nine US states (Georgia, Illinois, Indiana, Louisiana, Maryland, Minnesota, North Carolina, Washington, Wisconsin). Suicides and deaths of undetermined intent came from the restricted-access file of the CDC's National Violent Death Reporting System (NVDRS); unintentional overdose deaths came from the State Unintentional Drug Overdose Reporting System (SUDORS), obtained through state data-sharing agreements. The authors combined the two systems because, as they state, each of the three manners is held in only one of them. Exposure: the county's death investigation system, coded 'coroner' for any 'Non-Medical Examiner Death Investigation System' in a CDC listing and otherwise medical examiner. Outcome: manner recorded as undetermined intent, against suicide or unintentional. Five logistic regressions, all with year fixed effects: (1) system only; (2) plus state fixed effects; (3) plus county population band, poverty, unemployment and rurality; (4) plus indicators that an autopsy, an opioid test and an alcohol test were recorded, a suicide note was recorded and an investigator's narrative was available; (5) plus age, sex and race. Read as the PubMed Central author manuscript (NIHMS2209286) of the article published online before final editing on 13 August 2026.",
+ "can_establish": "Whether, within the same state and year, drug poisoning deaths in counties served by coroners were recorded as of undetermined intent more often than deaths in counties served by medical examiners, in nine convenience-sampled US states in 2019–2021, and how far that association changed with adjustment for county characteristics, recorded investigation steps and the decedents' age, sex and race.",
+ "cannot_establish": "Which recorded manner was correct (no death was re-reviewed and there is no reference standard), whether the extra undetermined deaths in coroner counties are concealed suicides or concealed unintentional overdoses, whether a county that changed its system would change its classifications (a between-county cross-section, with system type taken from a later listing), or whether the association holds outside the nine states; with state fixed effects the estimate draws only on states that have both kinds of county, which the text does not name.",
+ "sample": {
+  "n_total": 55430,
+  "n_by_group": {
+   "deaths in medical-examiner counties": 37198,
+   "deaths in coroner counties": 18232,
+   "recorded undetermined intent": 3887,
+   "recorded suicide": 3080,
+   "recorded unintentional overdose": 48463,
+   "undetermined, medical-examiner counties": 3329,
+   "undetermined, coroner counties": 558
+  },
+  "recruitment": "Surveillance registries: every drug poisoning death recorded as suicide or undetermined intent in the NVDRS restricted-access file and every unintentional drug overdose death in SUDORS for the nine states, death dates 2019–2021, any age (Methods, 1st and 2nd paragraphs). The states were a convenience sample, chosen also for their variation in investigation systems, because individual-level SUDORS data are not available to researchers nationally; NVDRS data were restricted to the same states (Methods, 2nd paragraph).",
+  "inclusion_exclusion": "Included: drug poisoning deaths of any age recorded as undetermined intent, suicide or unintentional, in the nine states, 2019–2021. Not stated anywhere in the paper: the case definition or ICD-10 codes that make a death a 'drug poisoning death' in either system; whether the manner variable is the death certificate's or the investigator's report (the paper speaks of coroners and medical examiners classifying intent and of data abstractors); whether homicides and pending cases were excluded (implied by the three categories); whether any death appeared in both systems and how duplicates were handled; whether both systems covered every county of each state in every year; and whether 'county' means the county of death, of injury or of residence.",
+  "demographics": "Table 1: mean age 43.0 years (SD 13.5); 38,177 male (68.9%; the text says just over 69%); White 70.2%, Black 26.1%, American Indian 2.1%, Asian 1.1% (race counts overlap, see reporting issues; no Hispanic-ethnicity variable is shown although Methods mention race/ethnicity). Coroner-county deaths against medical-examiner-county deaths (editors' percentages from Table 1 counts): White 79.5% vs 65.6%, Black 18.0% vs 30.1%, male 66.6% vs 70.0%, in counties under 25,000 people 4.3% vs 1.4% and over 250,000 52.4% vs 75.0%; mean rurality index 2.3 vs 1.7, poverty 14.3% vs 12.8%, unemployment 5.6% vs 5.8%.",
+  "attrition": "Not applicable (all recorded deaths). Model 5 includes 55,423 deaths, 7 fewer than models 1–4, without explanation (Table 2).",
+  "selection_effects": "Nine states chosen for convenience and for their mix of systems. Indiana uses only county coroners and North Carolina only a centralized medical examiner (Results, 2nd paragraph), so once state fixed effects are included such states contribute nothing to the coroner contrast; the per-state counts that would show which states carry it are only in Figure 1, an image that was not viewable. Because the three manners come from two different surveillance systems, any difference between NVDRS and SUDORS in coverage or completeness by type of county would shift the undetermined share directly; the paper does not discuss this. The period overlaps the COVID-19 pandemic, which the authors say strained death-investigation offices (Discussion, 12th paragraph)."
+ },
+ "exposure": {
+  "measurement": "County death investigation system from a CDC listing of state medical examiner and coroner organizations (reference 22, dated 30 August 2024, accessed 22 January 2025): an indicator set to 1 (coroner) for any 'Non-Medical Examiner Death Investigation System', otherwise medical examiner (Methods, 3rd paragraph). The listing post-dates the 2019–2021 deaths; changes of system during the period, mixed county arrangements and the qualifications of individual coroners (the Background notes that some states require coroners to be physicians) are not addressed. 18,232 deaths (32.9%) occurred in coroner counties.",
+  "dose_frequency_duration_route": "Not applicable: the exposure is a county's system type. No drug-specific data are analysed; whether an opioid or an alcohol toxicology test was recorded as performed (regardless of its result) enters only as a covariate.",
+  "polysubstance": "Not addressed: the drugs involved in each death are not analysed. Opioid and alcohol testing enter only as indicators that a test was recorded, with 'no' and 'unknown' both coded 0 (Methods, 3rd paragraph).",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "Drug poisoning deaths in counties with a medical-examiner system (37,198), compared within the same state and year once state and year fixed effects are included (models 2–5).",
+  "matching": "None; regression adjustment. County: population band (under 25,000; 25,000–250,000; over 250,000, chosen to match a Bureau of Justice Statistics survey of offices), annual poverty rate, annual unemployment rate, 2023 rurality index (1–9). Investigation: autopsy (full or partial), opioid test recorded, alcohol test recorded, suicide note recorded, investigator narrative available. Decedent: age, sex, race. State and year fixed effects (Methods, 3rd, 4th and 6th paragraphs).",
+  "unmeasured_premorbid": "Office funding, staffing and caseload (the authors say they could not measure funding), certifiers' qualifications and training, the scope of toxicology panels and the drugs found, the decedents' psychiatric and substance-use history and other recorded circumstances, and pandemic strain on offices (Discussion, 11th and 12th paragraphs). Some of these (resources, qualifications) are part of what a 'system' is rather than confounders of it.",
+  "controls_other_drug_use": "Not applicable: drugs involved are not analysed in either group."
+ },
+ "outcomes": {
+  "instruments": "Manner of death as held in NVDRS (suicide, undetermined intent) or SUDORS (unintentional), as classified in the death investigation by a coroner or medical examiner and abstracted into the surveillance systems; the paper does not say which source document the manner field reflects.",
+  "validity_norms": "No reference standard: the study compares how deaths were recorded, not whether the recorded manner was correct. The data come from two systems with separate abstraction, combined by manner.",
+  "operationalization": "Binary: undetermined intent (1) against suicide or unintentional (0). Who decided: the coroner or medical examiner who certified the death; the investigator's choice is the outcome itself.",
+  "n_outcomes_tested": 1,
+  "multiplicity_correction": "Not applicable: one outcome, five nested specifications of the same model, all reported; no correction.",
+  "assessor_blinding": "Not applicable (routinely recorded classifications)."
+ },
+ "analysis": {
+  "effect_sizes": "Odds ratios with 95% CIs from logistic regression (R 4.4.1). Coroner against medical examiner: model 1 (year fixed effects only) 0.32 (0.29–0.35); model 2 (plus state fixed effects) 1.79 (1.43–2.27); model 3 (plus county controls) 1.52 (1.20–1.95); model 4 (plus investigation controls) 1.61 (1.26–2.06); model 5 (plus age, sex and race; n=55,423) 1.60 (1.25–2.05). Crude shares recorded as undetermined (editors' calculation from Table 1): 558 of 18,232 (3.1%) in coroner counties against 3,329 of 37,198 (8.9%) in medical-examiner counties, crude odds ratio 0.32 (0.29 to 0.35, Woolf interval), matching model 1. Other model 5 odds ratios: autopsy 1.27 (1.12–1.44); suicide note 0.46 (0.28–0.73); no investigator narrative 0.52 (0.30–0.92); opioid test recorded 1.14 (1.00–1.29); alcohol test recorded 1.00 (0.86–1.17); male 0.77 (0.71–0.83); age per year 0.99 (0.99–1.00); population over 250,000 against under 25,000 0.61 (0.42–0.89); unemployment per percentage point 0.94 (0.90–0.99); rurality per index step 0.96 (0.93–1.00); poverty 1.01 (1.00–1.02). No absolute differences (predicted probabilities or marginal effects) are reported.",
+  "covariates": "Year fixed effects in every model; state fixed effects from model 2; county population band, poverty, unemployment and rurality from model 3; autopsy, opioid test, alcohol test, suicide note and narrative availability from model 4; age, sex and race in model 5 (Methods, 6th paragraph; Table 2).",
+  "preregistration": "none",
+  "preregistration_detail": "No protocol or registration is mentioned; the sequence of models is set out in Methods (6th paragraph).",
+  "selective_reporting": "All five models are in Table 2, including model 1, whose reversed association the authors attribute to Maryland; the abstract reports only models 2 and 5. No sensitivity analysis excluding Maryland, by state or by year is reported, and no model with suicide or unintentional classification as the outcome.",
+  "power": "Not addressed. The paper does not say whether the standard errors allow for clustering of deaths within counties; the exposure varies only between counties, so intervals computed as if the 55,430 deaths were independent would be too narrow. The number of counties, and of coroner counties in states with both systems, is not reported."
+ },
+ "interpretation_gap": {
+  "results_show": "Within states and years, drug poisoning deaths in coroner counties had higher odds of being recorded as undetermined intent rather than suicide or unintentional (OR 1.79 with state and year fixed effects; 1.52 to 1.61 with further adjustment; lowest lower confidence limit 1.20). Pooled across the nine states without state adjustment the association ran the other way (OR 0.32; 3.1% undetermined in coroner counties against 8.9% in medical-examiner counties), which the authors attribute to Maryland. The share recorded as suicide was, crudely, higher in coroner counties (6.5% against 5.1%; editors' calculation), and suicide classification was not modelled. No classification was checked against a re-review.",
+  "claimed": "The abstract gives OR 1.79 as the association without saying that it is the within-state estimate, and omits the reversed pooled estimate. The Discussion (2nd paragraph) calls model 2 the model without control variables and states that coroner-county deaths have \"at least 52% increased odds\", treating the smallest point estimate as a floor when the lowest confidence limit is 1.20. The Discussion (9th paragraph) and Conclusions infer that suicide may be underreported in coroner counties because undetermined deaths may conceal suicides; the study did not examine suicide classification, and the possibility that undetermined deaths conceal unintentional overdoses is not discussed. The reading of the autopsy association (investigators order an autopsy when uncertain) is the authors' interpretation of a cross-sectional association. Several associations are also described with causal verbs: unemployment 'reduced the odds' (Results, 5th paragraph), an autopsy 'raised the odds' (Results, 6th paragraph), each year of age 'reduced the odds' (Results, 7th paragraph) and a suicide note 'reduced the odds' by 54% (Discussion, 5th paragraph). Against this, the abstract's conclusion is hedged (system type 'may be an important factor') and the limitations are stated plainly: convenience sample, unmeasured funding, unknown tests coded as not done, the pandemic.",
+  "gap_assessment": "minor"
+ },
+ "replication": {
+  "status": "not-attempted",
+  "timeline": [
+   {
+    "year": 2006,
+    "event": "Breiding and Wiersema: variability of undetermined manner of death classification in the US (cited as reference 6, with Warner et al. 2013, for Maryland's high undetermined rates)."
+   },
+   {
+    "year": 2013,
+    "event": "Warner et al., Academic Forensic Pathology: state variation in certifying manner of death and the drugs involved in drug intoxication deaths (reference 5)."
+   },
+   {
+    "year": 2014,
+    "event": "Rockett et al. propose a 'drug self-intoxication' death category for NVDRS (reference 16); SUDORS later added unintentional overdose deaths."
+   },
+   {
+    "year": 2019,
+    "event": "Tote et al.: coroner systems associated with higher rates of incomplete toxicology reports in overdose deaths, 2010–2016 (reference 23, as summarized in this paper)."
+   },
+   {
+    "year": 2022,
+    "event": "Denham et al.: coroner county systems associated with a higher likelihood of unclassified drug overdoses than medical-examiner systems (reference 35, title as cited)."
+   },
+   {
+    "year": 2024,
+    "event": "Zaychik: state transitions from coroner to medical-examiner systems and drug-mortality data (not cited by this paper; paired with it on the reading list, which summarizes it as finding no improvement; not read by this reader).",
+    "reference": "zaychik_2024"
+   },
+   {
+    "year": 2026,
+    "event": "This study: within-state association between coroner systems and undetermined-intent classification of drug poisoning deaths in nine states."
+   }
+  ],
+  "where_it_stands": "A single cross-sectional study of nine states with no direct replication. It sits beside studies cited in its Discussion that link coroner systems with fewer drugs named in overdose deaths (Denham et al., 2022) and with suicide reporting (Fernandez and Jayawardhana, 2025), and with Zaychik (2024) on the reading list. Cite it for the within-state association between system type and the recorded undetermined share, with the reversed pooled estimate beside it; not for misclassification of suicide or of any other manner, which it did not measure."
+ },
+ "funding": {
+  "funder": "National Institute on Drug Abuse of the National Institutes of Health, award R21DA059189; the funders had no role in design, conduct, data collection, analysis, interpretation, writing, review or the decision to submit. The acknowledgements thank nine state health agencies that shared data, and the CDC for their funding of Indiana's OD2A work.",
+  "declared_conflicts": "The authors report there are no competing interests to declare.",
+  "affiliations_note": "Emergency Medicine and the Feinberg School of Medicine, Northwestern University, Chicago; School of Social Work, University of Maryland, Baltimore. An NVDRS disclaimer states that the findings are the authors' and not the official position of the CDC or the participating states. Ethics approval: Northwestern University IRB STU00219548."
+ },
+ "what_would_settle_it": "A blinded re-review, by one panel applying one written standard, of a random sample of drug poisoning deaths recorded as undetermined, suicide and unintentional in coroner and medical-examiner counties of the same states would show whether coroner counties misclassify and in which direction; comparing counties before and after a change of system, against counties that did not change, would test whether the system itself changes classification.",
+ "risk_of_bias": {
+  "instrument": "ROBINS-E",
+  "domains": [
+   {
+    "domain": "Bias due to confounding",
+    "judgment": "some-concerns",
+    "note": "State and year fixed effects, county population band, poverty, unemployment and rurality, and age, sex and race were adjusted. The pooled estimate reverses once state is adjusted (0.32 to 1.79), which shows how strongly differences between areas drive the contrast; within states, unmeasured differences between coroner and medical-examiner counties (local drug supply, the circumstances of the deaths, local practice) remain possible, as the authors say."
+   },
+   {
+    "domain": "Bias arising from measurement of the exposure",
+    "judgment": "some-concerns",
+    "note": "System type from a CDC listing dated 2024 and accessed in January 2025, applied to deaths in 2019–2021; every non-medical-examiner arrangement is coded as one category; whether the county is that of death, injury or residence is not stated. Errors of this kind are probably unrelated to the outcome and would tend to weaken the contrast."
+   },
+   {
+    "domain": "Bias in selection of participants into the study",
+    "judgment": "some-concerns",
+    "note": "Convenience sample of states. Unintentional deaths come from SUDORS and the other two manners from NVDRS; the paper does not report whether the two covered the same counties and years or whether duplicates were removed, and any difference by type of county would change the undetermined share directly. The within-state contrast rests on states with both systems, not named in the text."
+   },
+   {
+    "domain": "Bias due to post-exposure interventions",
+    "judgment": "low",
+    "note": "Autopsy, toxicology testing and narrative availability are steps taken by the investigating office after the death and are partly consequences of the system; adjusting for them (models 4 and 5) estimates a different quantity, but the estimates with and without them are close (1.52 against 1.61 and 1.60)."
+   },
+   {
+    "domain": "Bias due to missing data",
+    "judgment": "some-concerns",
+    "note": "'No' and 'unknown' testing are coded together; race counts do not add up to the total; 7 deaths drop out of model 5 without explanation; the investigator narrative is missing for 4.2% of coroner-county and 1.4% of medical-examiner-county deaths (editors' percentages); missing manner or county is not reported."
+   },
+   {
+    "domain": "Bias arising from measurement of the outcome",
+    "judgment": "low",
+    "note": "The outcome is the manner as recorded, which is what the study sets out to compare; whether the recorded manner was correct is outside its question. Abstraction by two systems is a minor source of error."
+   },
+   {
+    "domain": "Bias in selection of the reported result",
+    "judgment": "some-concerns",
+    "note": "No protocol. All five models are reported, but the abstract omits the reversed pooled estimate, and no sensitivity analysis (excluding Maryland, by state, by year) is reported."
+   }
+  ],
+  "overall": "some-concerns",
+  "reasoning": "ROBINS-E, the tool for observational studies of exposures, with the county's system type as the exposure. Five domains raise some concerns and none is high: the within-state estimate is stable across three adjusted specifications (1.52 to 1.61), and the main weaknesses (a later system listing, two surveillance systems combined by manner, unmeasured county differences) could bias it in either direction or towards the null. Separately from bias, the precision may be overstated, because the paper does not say whether the standard errors allow for deaths being clustered within counties. Citable for: within the same state and year in nine US states in 2019–2021, drug poisoning deaths investigated in coroner counties were recorded as undetermined intent more often than those in medical-examiner counties (adjusted OR about 1.5 to 1.6), while pooled without state adjustment the direction was reversed; and for how often autopsy and opioid and alcohol testing were recorded. Not citable for: how many suicides are hidden among undetermined drug deaths, which system classifies correctly, or the effect of changing a county's system."
+ },
+ "key_findings": [
+  {
+   "finding": "How a death entered the count: drug poisoning deaths with death dates in 2019–2021, any age, in nine states, recorded as suicide or undetermined intent in the NVDRS restricted-access file or as unintentional overdose in SUDORS. No ICD-10 codes or case definition are given for either system; the manner is the classification made in the death investigation by a coroner or medical examiner and abstracted into the surveillance data. The comparison is between county system types; no death was re-reviewed.",
+   "page": "PMC HTML",
+   "locator": "Methods, 1st to 3rd paragraphs; Background, 4th paragraph",
+   "note": "The absence of a case definition is the editors' observation from the full text; the list of codes may be in the systems' own documentation, which the paper does not cite."
+  },
+  {
+   "finding": "55,430 drug poisoning deaths: 48,463 recorded as unintentional (87%), 3,887 as undetermined intent (7%) and 3,080 as suicide (6%); 18,232 (33%) occurred in coroner counties and 37,198 in medical-examiner counties.",
+   "page": "PMC HTML",
+   "locator": "Results, 1st and 3rd paragraphs; Table 1"
+  },
+  {
+   "finding": "Without state adjustment, coroner counties had lower odds of an undetermined classification: model 1 (year fixed effects only) OR 0.32 (95% CI 0.29–0.35); 558 of 18,232 coroner-county deaths (3.1%) and 3,329 of 37,198 medical-examiner-county deaths (8.9%) were recorded as undetermined (editors' percentages). The authors attribute the reversal to Maryland, a centralized medical-examiner state with unusually high undetermined rates.",
+   "page": "PMC HTML",
+   "locator": "Results, 4th paragraph; Table 1; Table 2, model (1)",
+   "note": "Per-state counts are in Figure 1, an image that was not viewable, so Maryland's share of the undetermined deaths could not be checked."
+  },
+  {
+   "finding": "Within states (state and year fixed effects), coroner counties had higher odds of an undetermined classification: model 2 OR 1.79 (1.43–2.27); with county population band, poverty, unemployment and rurality (model 3) 1.52 (1.20–1.95); adding autopsy, opioid-test, alcohol-test, suicide-note and narrative indicators (model 4) 1.61 (1.26–2.06); adding age, sex and race (model 5, n=55,423) 1.60 (1.25–2.05).",
+   "page": "PMC HTML",
+   "locator": "Results, 4th to 7th paragraphs; Table 2, models (2) to (5)"
+  },
+  {
+   "finding": "Recorded investigation steps in model 5: autopsy OR 1.27 (1.12–1.44); suicide note 0.46 (0.28–0.73); no investigator narrative available 0.52 (0.30–0.92); opioid test recorded 1.14 (1.00–1.29); alcohol test recorded 1.00 (0.86–1.17). The authors read the autopsy association as investigators ordering autopsies when uncertain, and the suicide-note association as greater certainty.",
+   "page": "PMC HTML",
+   "locator": "Table 2, model (5); Discussion, 5th and 6th paragraphs; Results, 6th paragraph (model 4 values)",
+   "note": "Results, 6th paragraph prints the model (4) values (autopsy 1.29, no investigator narrative 0.52, suicide note 0.46); the model (5) values given here are from Table 2, and the Discussion's 5th paragraph restates them (autopsy 1.27; a suicide note with 54% lower odds)."
+  },
+  {
+   "finding": "What was tested and in what share of deaths: an autopsy (full or partial) was recorded for about 67% (37,346 printed; the two system columns sum to 37,436), an opioid toxicology test for 79% and an alcohol test for 76%; a suicide note for 2.1%; no investigator narrative for 2.3%. By system (editors' percentages from Table 1): autopsy 67.1% in medical-examiner and 68.4% in coroner counties; opioid test 79.3% and 79.6%; alcohol test 84.5% and 58.6%; no narrative 1.4% and 4.2%. 'No' and 'unknown' were both coded as not tested.",
+   "page": "PMC HTML",
+   "locator": "Results, 3rd paragraph; Table 1; Methods, 3rd paragraph",
+   "note": "The indicators record whether a test was reported as done, not its result or the drugs screened."
+  },
+  {
+   "finding": "Crude shares recorded as suicide: 1,194 of 18,232 deaths (6.5%) in coroner counties and 1,886 of 37,198 (5.1%) in medical-examiner counties (editors' calculation from Table 1). Suicide classification was not modelled.",
+   "page": "PMC HTML",
+   "locator": "Table 1, suicide row"
+  },
+  {
+   "finding": "County and decedent covariates in model 5: population over 250,000 against under 25,000 OR 0.61 (0.42–0.89); unemployment per percentage point 0.94 (0.90–0.99); rurality per index step 0.96 (0.93–1.00); poverty 1.01 (1.00–1.02); male against female 0.77 (0.71–0.83), 23% lower odds; age per year 0.99 (0.99–1.00); no race category associated (for example Black 1.03, 0.95–1.12).",
+   "page": "PMC HTML",
+   "locator": "Results, 5th and 7th paragraphs; Table 2, model (5)",
+   "note": "Results, 5th paragraph prints the model (3) values (unemployment 0.93, rurality 0.96, population over 250,000 0.62); the values given here are model (5) of Table 2, and Results, 7th paragraph gives the age result and the 23% lower odds for men."
+  },
+  {
+   "finding": "Exposure coding: system type from a CDC listing (reference 22, accessed January 2025), coroner meaning any 'Non-Medical Examiner Death Investigation System'. Indiana relies only on county coroners and North Carolina has a centralized medical-examiner system.",
+   "page": "PMC HTML",
+   "locator": "Methods, 3rd paragraph; Results, 2nd paragraph; reference 22"
+  },
+  {
+   "finding": "Limitations stated by the authors: a convenience sample of states that may not generalize; 'no' and 'unknown' tests coded together although some tests may have been done; other confounders may remain, and funding of offices could not be measured; sex as recorded may not distinguish sex from gender; the 2019–2021 period overlapped the COVID-19 pandemic, which strained death-investigation offices.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 11th and 12th paragraphs"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "Table 1 gives 37,346 autopsies in the whole sample, but the medical-examiner (24,969) and coroner (12,467) columns sum to 37,436; the printed standard deviation (46.8) fits 37,436 slightly better than 37,346 (46.9).",
+   "page": "PMC HTML, Table 1, autopsy row",
+   "consequence": "Probably a transposition of digits; the autopsy share is 67.4% or 67.5%, which does not change any conclusion."
+  },
+  {
+   "issue": "The note to Table 2 assigns ***, ** and * to the 0.05, 0.01 and 0.001 levels, the reverse of the usual key, and the intervals contradict it: for example, opioid test recorded in model 4 is 1.15* with a 95% CI of 1.01–1.31, which cannot be significant at 0.001, while the coroner estimate of 1.79*** has an interval far from 1. Likewise rurality in model (5), printed 0.96* with an interval of 0.93–1.00, cannot be significant at 0.001.",
+   "page": "PMC HTML, Table 2, note",
+   "consequence": "The stars follow the usual key (*** p<0.001); read significance from the confidence intervals."
+  },
+  {
+   "issue": "The Discussion (4th paragraph) says model (3) adds the autopsy and toxicology-test indicators; Results (6th paragraph) and Table 2 add them in model (4).",
+   "page": "PMC HTML, Discussion, 4th paragraph",
+   "consequence": "Model numbers in the Discussion cannot be used as printed; take them from Table 2."
+  },
+  {
+   "issue": "The Discussion (2nd paragraph) describes the 1.79 estimate as obtained without control variables, but model 2 includes state and year fixed effects; the model without them (model 1) gives 0.32. The same paragraph reads the smallest point estimate (1.52) as a floor (at least 52% increased odds), although the lowest lower confidence limit across the models is 1.20.",
+   "page": "PMC HTML, Discussion, 2nd paragraph; Table 2",
+   "consequence": "A reader of the Discussion would not learn that the unadjusted association runs the other way, nor that the adjusted estimates are compatible with an odds ratio as low as 1.20."
+  },
+  {
+   "issue": "Race counts in Table 1 sum to 55,758 overall (37,537 in medical-examiner and 18,221 in coroner counties) against 55,430 deaths (37,198 and 18,232): categories overlap in medical-examiner counties (339 more race entries than deaths), and at least 11 coroner-county deaths have none (a net figure: more, if categories also overlap there). Methods mention race/ethnicity, but no ethnicity variable is shown.",
+   "page": "PMC HTML, Table 1, race rows; Methods, 5th paragraph",
+   "consequence": "How race was coded in model 5 is unclear (editors' sums); the null race associations cannot be interpreted precisely."
+  },
+  {
+   "issue": "Text against table: suicide notes are described as slightly under 2% of investigations (Table 1: 1,148 of 55,430, 2.07%), and decedents as just over 69% male (38,177 of 55,430, 68.9%).",
+   "page": "PMC HTML, Results, 3rd paragraph; Table 1",
+   "consequence": "Rounding slips with no effect on the analysis; cite the table counts."
+  },
+  {
+   "issue": "Methods define the unemployment rate as the percentage of the labor force who were employed, while the formula given divides the unemployed by the labor force.",
+   "page": "PMC HTML, Methods, 4th paragraph",
+   "consequence": "Wording error; the formula is the standard unemployment rate."
+  },
+  {
+   "issue": "Year fixed effects appear in all five models of Table 2 but are not described in Methods, which mention only state indicators; model 5 drops 7 deaths (55,423) without explanation.",
+   "page": "PMC HTML, Table 2; Methods, 6th paragraph",
+   "consequence": "Minor gaps in the description of the analysis."
+  },
+  {
+   "issue": "The Key Messages describe the data as a novel data linkage, but Methods describe combining records from two systems by manner; no record linkage, de-duplication or check of county coverage between NVDRS and SUDORS is described.",
+   "page": "PMC HTML, Key Messages; Methods, 1st and 2nd paragraphs",
+   "consequence": "Whether any death could appear twice, or whether a system covered fewer counties, cannot be judged from the paper."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent; AI reader 252, first reader)",
+  "first_pass_on": "2026-10-31",
+  "source_read": "PMC full text PMC13623016 (author manuscript NIHMS2209286 of Inj Prev, published online before final editing 13 August 2026; DOI 10.1136/ip-2025-046028 confirmed on the page): all sections, Tables 1 and 2 (rendered as text), key messages, funding, role of the funder, conflict of interest, ethics, disclaimer, acknowledgements, data statement, author affiliations and the reference list. Figures 1 (sample by manner, system and state) and 2 (map of systems) are images; a screenshot came back blank, so figure image not viewable and no values were taken from them. No supplementary material; no correction, comment or reply linked from the page. Second reading (AI reader 274, blind, 1 November 2026): the same PMC author manuscript in the reader's own tab (all sections, Tables 1 and 2, Key Messages, funding, conflicts, ethics, disclaimer, data statement and references; Figures 1 and 2 not viewable). Adjudication (AI reader 285, 1 November 2026): the PMC author manuscript re-read in the adjudicator's own tab (all sections, Tables 1 and 2, notes and references; no value taken from the figures).",
+  "disagreements": [
+   {
+    "field": "key_findings[4].locator and note",
+    "first_pass": "Results, 6th paragraph; Discussion, 5th and 6th paragraphs; Table 2, model (5)",
+    "reviewer": "AI reader 274 (confirmed, with a locator point): the model 5 values are in Table 2 and the Discussion's 5th paragraph; Results, 6th paragraph gives the model 4 values (autopsy 1.29, narrative 0.52, note 0.46), so cite it for model 4 only.",
+    "resolution": "Accepted. Results, 6th paragraph reports model (4); the card's values are model (5) of Table 2 (autopsy 1.27, suicide note 0.46, no narrative 0.52, opioid test 1.14, alcohol test 1.00). Locator reordered and note added."
+   },
+   {
+    "field": "key_findings[7].note",
+    "first_pass": "(no note)",
+    "reviewer": "AI reader 274 (confirmed, with a locator point): the values are Table 2 model 5; Results, 5th paragraph prints the model 3 values (0.93, 0.96, 0.62), Results, 7th paragraph the age result and the 23% figure.",
+    "resolution": "Accepted (Table 2; Results, 5th and 7th paragraphs). Note added."
+   },
+   {
+    "field": "reporting_issues[1].issue",
+    "first_pass": "(rurality not mentioned)",
+    "reviewer": "AI reader 274 (confirmed; addition): rurality in model 5, 0.96* (0.93–1.00), cannot be p<0.001.",
+    "resolution": "Accepted (Table 2, model (5) and note). Added."
+   },
+   {
+    "field": "reporting_issues[3].issue and consequence",
+    "first_pass": "(the 'at least 52%' reading was recorded only in the interpretation gap)",
+    "reviewer": "AI reader 274 (confirmed; addition): the same paragraph also turns the lowest point estimate into a floor ('at least 52%'); the lowest lower limit is 1.20; it could stand as a reporting issue.",
+    "resolution": "Accepted (Discussion, 2nd paragraph; Table 2). Added to the reporting issue; the interpretation gap keeps its sentence."
+   },
+   {
+    "field": "reporting_issues[4].issue",
+    "first_pass": "categories overlap in medical-examiner counties and 11 coroner-county deaths have none.",
+    "reviewer": "AI reader 274 (confirmed, with a correction): the 11 is a net figure; at least 11 coroner-county deaths lack a category, more if categories also overlap there.",
+    "resolution": "Accepted. Recomputed from Table 1: race entries sum to 37,537 against 37,198 deaths in medical-examiner counties and to 18,221 against 18,232 in coroner counties. Reworded."
+   },
+   {
+    "field": "interpretation_gap.claimed",
+    "first_pass": "(only the autopsy reading noted)",
+    "reviewer": "AI reader 274 (missed): causal verbs for associations in Results, 5th paragraph (unemployment), Results, 6th paragraph (autopsy) and Discussion, 5th paragraph (suicide note, by 54%); the card notes only the autopsy reading.",
+    "resolution": "Accepted; each checked at its place. The age sentence in Results, 7th paragraph uses the same verb and was added by the adjudicator. Gap rating unchanged (minor; both readers agree)."
+   }
+  ],
+  "checked_by": "AI reader 274 (blind second reading) and AI reader 285 (adjudication)",
+  "checked_on": "2026-11-01"
+ }
+}

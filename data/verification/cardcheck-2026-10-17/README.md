@@ -1,0 +1,3 @@
+# Batch 2: first reading, card check and adjudication (2026-10-16/17)
+
+First readers: AI reader 5 (Ersche 2012, Callaghan 2012, Cruickshank 2009, Anthony 1994) and AI reader 6 (Sekine 2001, Harris 2003, Mendelson 2006, Schepers 2003, Cook 1993, Hart 2001), from the PDFs the senior author saved (reports and patches here). Card check against the PDFs: AI readers 10 and 11 (out/); every reader agreed with each card's overall risk-of-bias judgment. The AI adjudicator checked every flagged item in the source and logged 71 changes on the cards (verification.disagreements); rejected findings and the judgments left to the senior author are in adjudication.json. All ten cards are ai-checked.

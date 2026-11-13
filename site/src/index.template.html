@@ -1,0 +1,506 @@
+<title>Pharmakon</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Overpass:wght@600;800;900&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+/*__CSS__*/
+</style>
+
+<button type="button" class="skip" id="skiplink">Skip to content</button>
+<header class="topbar">
+  <div class="wrap bar1">
+    <a class="brand" href="#home" aria-label="Pharmakon, home page"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="l1" d="M13.2 27.8a6.8 6.8 0 0 1-9.6-9.6L10 11.8l9.6 9.6z"/><path class="l2" d="M10 11.8l6.4-6.4a6.8 6.8 0 0 1 9.6 9.6l-6.4 6.4z"/></svg><span class="mark">Pharmakon</span></a>
+    <div class="bar-search" id="bar-search">
+      <div class="searchwrap" id="searchwrap">
+        <label class="sr" for="search">Ask a question, or search a drug or street name</label>
+        <span class="sicon" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4 11a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-5-5"/></svg></span>
+        <input id="search" type="search" placeholder="Search or ask a question" autocomplete="off">
+        <div id="search-results" class="search-results" hidden></div>
+        <p class="sr" id="search-count" aria-live="polite"></p>
+      </div>
+    </div>
+    <button type="button" class="menubtn" id="menubtn" aria-expanded="false" aria-controls="menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+  </div>
+  <nav class="main menu" id="menu" aria-label="Main" hidden>
+    <div class="wrap menu-in">
+      <div class="menu-top">
+        <a href="#substances" data-view="substances"><span class="mi" data-ic="molecule"></span>All drugs</a>
+        <a href="#interactions" data-view="interactions"><span class="mi" data-ic="mix"></span>Mixing drugs</a>
+        <a href="#checking" data-view="checking"><span class="mi" data-ic="flask"></span>Drug checking</a>
+        <a href="#emergency" data-view="emergency"><span class="mi" data-ic="phone"></span>Emergency numbers</a>
+        <a href="#quiz" data-view="quiz"><span class="mi" data-ic="bulb"></span>Test yourself</a>
+      </div>
+      <div class="menu-more">
+        <a href="#facts" data-view="facts" data-facts hidden>Facts about drug use</a>
+        <a href="#about" data-view="about">About us</a>
+        <a href="#methods" data-view="methods">How we check facts</a>
+        <a href="#howto" data-view="howto">How to read the pages</a>
+        <a href="#glossary" data-view="glossary">Words explained</a>
+        <a href="#numbers" data-view="numbers">Statistics</a>
+        <a href="#law" data-view="law">UN drug treaties</a>
+        <button type="button" class="menu-fb" data-fb="">Feedback</button>
+        <a href="#review" data-view="review" id="nav-review" hidden>Review</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="phbanner" id="phbanner" hidden><span>Drug photos are hidden on this device.</span> <button type="button" class="phtoggle">Show drug photos</button></div>
+
+<main>
+<!-- HOME -->
+<section class="view" id="view-home">
+  <div class="wrap home2">
+    <h1 class="ask-h1">What do you want to know?</h1>
+    <p class="home-sub">Straight answers about drugs, from the research. No judgement.</p>
+    <div class="home-search" id="home-search"></div>
+    <div class="home-cont" id="home-cont" hidden></div>
+    <nav class="do3" aria-label="Quick help">
+      <a class="do mix" href="#interactions"><span class="do-ic" data-ic="mix"></span><span class="do-t">Is it safe to mix?</span><span class="do-s">Two drugs together</span></a>
+      <a class="do test" href="#checking"><span class="do-ic" data-ic="flask"></span><span class="do-t">Test what you have</span><span class="do-s">Drug checking near you</span></a>
+      <a class="do sos" href="#emergency"><span class="do-ic" data-ic="phone"></span><span class="do-t">Someone is unwell</span><span class="do-s">Emergency numbers</span></a>
+    </nav>
+    <h2 class="home-h2">Test yourself</h2>
+    <section class="qz2" id="tf" aria-label="Quiz"></section>
+    <p class="qz2-more"><a href="#quiz">More questions</a></p>
+    <h2 class="home-h2">Pick a drug</h2>
+    <div class="dgrid" id="dgrid" lang="en"></div>
+    <p class="home-facts" data-facts hidden><a class="go" href="#facts">Facts about drug use: women and men, genes and family, the words we use</a></p>
+    <p class="home-foot"><a href="#about">Who we are</a><a href="#methods">How we check facts</a><span class="muted">Version {{SITE_VERSION}} · updated <span id="build-date">16 Oct 2026</span></span></p>
+  </div>
+</section>
+
+<!-- FACTS ABOUT DRUG USE -->
+<section class="view" id="view-facts">
+  <div class="wrap page drug2 f-oth">
+    <h1 class="pagetitle">Facts about drug use</h1>
+    <p class="lede">What studies say about drug use in general, not about one drug: women and men, genes and family, starting young, and the words used about people.</p>
+    <div id="facts-box"></div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="view" id="view-quiz">
+  <div class="wrap page">
+    <h1 class="pagetitle">Test yourself</h1>
+    <p class="lede muted">Quick questions from the research. Tap an answer to see if you are right, and why. A new order every time.</p>
+    <section class="qz2 big" id="quizpage" aria-label="Quiz"></section>
+  </div>
+</section>
+
+<!-- ONE SHARED ANSWER (a link someone sent: only that answer, then the way to the rest) -->
+<section class="view" id="view-shared">
+  <div class="wrap page shared" id="shared-body"></div>
+</section>
+
+<!-- DRUG (the simple page) -->
+<section class="view" id="view-drug">
+  <div class="wrap drug2" id="drug2"></div>
+</section>
+
+<!-- SUBSTANCES -->
+<section class="view" id="view-substances">
+  <div class="wrap page">
+    <div class="eyebrow">All 30 drugs, by family</div>
+    <h1 class="pagetitle">Find a drug</h1>
+    <p class="lede muted">Search any name, street names too, or pick a family. Methamphetamine is the first full page. The others have the basics for now: names, official figures and the law.</p>
+    <div class="filters" id="filters"></div>
+    <div class="subgrid" id="subgrid"></div>
+  </div>
+</section>
+
+<!-- MONOGRAPH (generic) -->
+<section class="view" id="view-monograph" data-mode="quick">
+  <div class="wrap page">
+    <div class="crumbs" id="crumbs"></div>
+    <div class="mono-layout">
+      <aside class="toc" id="toc" aria-label="Sections"></aside>
+      <div class="mono-main">
+        <div class="mono-head">
+          <div class="famrow" id="mono-eyebrow"></div>
+          <div class="titlerow"><h1 id="mono-title"></h1><span class="inn" id="mono-inn"></span><span id="mono-status"></span></div>
+          <figure class="monophoto" id="mono-photo" hidden></figure>
+          <div class="tags" id="mono-tags"></div>
+          <div id="mono-notice"></div>
+          <div class="modebar" role="group" aria-label="How much detail to show">
+            <button type="button" class="modebtn" data-mode="quick" aria-pressed="true">Quick answers</button>
+            <button type="button" class="modebtn" data-mode="full" aria-pressed="false">Full evidence</button>
+          </div>
+        </div>
+        <div id="quick"></div>
+        <div id="full">
+          <p class="detail-toggle"><button type="button" class="linklike" id="toggle-detail" hidden>Show every claim's precise statement</button></p>
+          <div id="sections"></div>
+        </div>
+        <details class="aboutpage"><summary>About this page: authors, conflicts of interest, how it was made</summary><div class="meta" id="mono-meta"></div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- NUMBERS -->
+<section class="view" id="view-numbers">
+  <div class="wrap page">
+    <div class="eyebrow">Official figures</div>
+    <h1 class="pagetitle">Statistics</h1>
+    <p class="lede muted">Official figures on drug use, treatment, seizures and deaths: from the UN (UNODC), the EU drug agency (EUDA) and national surveys. Each figure was checked against its source. Tap "checked against the source text" to see where it came from. Sources measure things in different ways, so compare like with like.</p>
+    <div class="filters" id="num-geo"></div>
+    <div class="filters subfilters" id="num-sub"></div>
+    <p class="note" id="num-count"></p>
+    <div class="figlist" id="num-list"></div>
+  </div>
+</section>
+
+<!-- INTERACTIONS -->
+<section class="view" id="view-interactions">
+  <div class="wrap page">
+    <h1 class="pagetitle">Is it safe to mix?</h1>
+    <p class="lede muted">Most drug deaths involve more than one drug. Pick a drug to see what we know about mixing it.</p>
+    <div id="mix2"></div>
+    <details class="allc" id="mix-all"><summary><span>The table of drug families, with all the evidence</span><span class="ask-i" aria-hidden="true"></span></summary>
+      <p class="note" id="matrix-status"></p>
+      <div class="tablewrap" id="matrix"></div>
+      <div id="matrix-answers"></div>
+      <div class="prose" id="matrix-topics" style="margin-top:28px"></div>
+    </details>
+  </div>
+</section>
+
+<!-- EMERGENCY -->
+<section class="view" id="view-emergency">
+  <div class="wrap page">
+    <h1 class="pagetitle">Emergency numbers</h1>
+    <div class="mine" id="em-mine" aria-live="polite"></div>
+    <details class="allc" id="em-all"><summary><span>Another country?</span><span class="ask-i" aria-hidden="true"></span></summary>
+      <p class="emfilter"><label for="em-filter" class="sr">Find a country</label><input id="em-filter" type="search" placeholder="Type a country" autocomplete="off"></p>
+      <ul class="emlist" id="em-list"></ul>
+      <p class="note" id="em-none" hidden>Not on our list yet. We add a country only after checking its number with an official source.</p>
+      <p class="muted small" id="em-note"></p>
+    </details>
+    <details class="homefold"><summary><h2>What to do while you wait</h2></summary>
+      <p>Each drug page has a part on what helps, when to get help and first aid while you wait, from official and non-profit health pages, each line checked against its source. Open a drug from <a href="#substances">all drugs</a>. This page holds only numbers we have checked with an official source.</p>
+    </details>
+  </div>
+</section>
+
+<!-- DRUG CHECKING -->
+<section class="view" id="view-checking">
+  <div class="wrap page">
+    <h1 class="pagetitle">Drug checking near you</h1>
+    <p class="lede muted">A drug checking service tests a sample of a drug and tells you what is in it. Some work from an address, some at events, some by post.</p>
+    <div class="mine" id="dc-mine" aria-live="polite"></div>
+    <details class="allc" id="dc-all"><summary><span>Another country?</span><span class="ask-i" aria-hidden="true"></span></summary>
+      <p class="emfilter"><label for="dc-filter" class="sr">Find a country or city</label><input id="dc-filter" type="search" placeholder="Type a country or city" autocomplete="off"></p>
+      <div id="dc-list"></div>
+      <p class="note" id="dc-none" hidden>Nothing listed there yet. We add a service only after reading its own page.</p>
+      <p class="muted small" id="dc-note"></p>
+    </details>
+    <section class="dck" id="dc-kits" aria-labelledby="dc-kits-h" hidden></section>
+    <div id="dc-look"></div>
+    <p class="muted small">Know a service we missed? Tell us with "Feedback / Report an issue", at the bottom right of every page.</p>
+  </div>
+</section>
+
+<!-- LAW: the UN treaty layer for every country -->
+<section class="view" id="view-law">
+  <div class="wrap page">
+    <div class="eyebrow">The law, country by country</div>
+    <h1 class="pagetitle">Drug treaties by country</h1>
+    <p class="lede muted">Almost every country has joined the three UN drug treaties. Countries that join agree to control the drugs the treaties list. Each country's own law then sets the rules, the penalties and any medical use. Each drug page shows the treaty listing for that drug, and the country's own law once we have read it.</p>
+    <p class="emfilter"><label for="law-filter" class="sr">Find a country</label><input id="law-filter" type="search" placeholder="Type a country" autocomplete="off"></p>
+    <p class="muted small law-key">The year each country joined each treaty.</p>
+    <div class="tablewrap"><table class="lawtable"><thead><tr><th scope="col">Country</th><th scope="col"><abbr title="1961 Single Convention on Narcotic Drugs">1961 treaty</abbr><span class="th-sub">Narcotic drugs</span></th><th scope="col"><abbr title="1971 Convention on Psychotropic Substances">1971 treaty</abbr><span class="th-sub">Psychotropic substances</span></th><th scope="col"><abbr title="1988 Convention against Illicit Traffic in Narcotic Drugs and Psychotropic Substances">1988 treaty</abbr><span class="th-sub">Illicit traffic</span></th></tr></thead><tbody id="law-list"></tbody></table></div>
+    <p class="note" id="law-none" hidden>No country by that name. Try its name in English.</p>
+    <p class="muted small" id="law-sum"></p>
+    <details class="lawmore"><summary>How we checked</summary><p class="muted small">Read from the UN Treaty Collection on 17 October 2026: each table read twice and compared, and every total checked against the UN's own count. A country can also have made reservations when it joined; they are not shown here yet.</p></details>
+  </div>
+</section>
+
+<!-- HOW TO READ -->
+<section class="view" id="view-howto">
+  <div class="wrap page">
+    <div class="eyebrow">Start here</div>
+    <h1 class="pagetitle">How to read this site</h1>
+    <div class="prose">
+      <h2>Every answer has five parts</h2>
+      <ol class="howsteps">
+        <li><b>The short answer.</b> What the research found, in a few plain words.</li>
+        <li><b>The catch.</b> The "But" line: the main limit of what we know.</li>
+        <li><b>How strong the evidence is.</b> One to four bars. Four bars: more research is very unlikely to change the answer. One bar: we can't be sure.</li>
+        <li><b>Who found it.</b> A label says if several teams found the same thing, or only one study.</li>
+        <li><b>The sources.</b> Put your mouse on a source, or tap it on a phone, to see the full reference. Click it to open the study.</li>
+      </ol>
+      <p>Want more? Open "How we know", or switch the page to <b>Full evidence</b>: every study, every number, and where it is in the paper.</p>
+      <p>For now, every answer is a draft: our editor has not checked it yet. Each answer says how far its checks have got.</p>
+      <h2>A real example</h2>
+      <p>Put your mouse on a source (or tap it), open a study card, or open "Why this rating".</p>
+    </div>
+    <div id="howto-example" class="howto-example"></div>
+    <div class="prose">
+      <h2>"Linked to" is not "causes"</h2>
+      <p>Two things can go together without one causing the other. People who use a drug may differ in other ways too. We say "causes" only when the studies can show it. Most of what we know about drugs in people is "linked to".</p>
+      <h2>Seven questions to ask about any drug story</h2>
+      <p>Our study cards answer them for every study. They work on headlines, leaflets and friends' stories too.</p>
+      <ol>
+        <li><b>Who was studied?</b> People in treatment, in prison or in hospital are not everyone who uses a drug.</li>
+        <li><b>Were they tested before they started?</b> If not, a difference may have been there before the drug.</li>
+        <li><b>How much, how often, and how?</b> One dose in a lab is not the same as using every day.</li>
+        <li><b>How big is the difference?</b> "Significant" means probably not chance. It does not mean big. A group can score a bit lower on average while almost everyone in it scores in the normal range.</li>
+        <li><b>Out of how many?</b> "Twice the risk" can mean 2 in 100 instead of 1 in 100, or 2 in a million instead of 1 in a million.</li>
+        <li><b>Did another team find the same?</b> One study is a lead, not a fact.</li>
+        <li><b>Does the summary say more than the data?</b> Headlines often do. Our study cards note the gap.</li>
+      </ol>
+      <h2>Found a mistake?</h2>
+      <p>Use "Feedback / Report an issue", at the bottom right of every page. For a fact, add a source: a DOI, PMID or page number. Every accepted fix is listed in public.</p>
+    </div>
+    <details class="sci"><summary>For scientists: every part of an answer, in full</summary>
+      <div class="prose">
+      <h2>The parts of a claim</h2>
+      <ol>
+        <li><b>The plain sentence.</b> What it means for a person who uses the drug, in ordinary words. It never says more than the precise sentence below it.</li>
+        <li><b>The precise sentence.</b> Population, exposure, comparator, outcome, and size of the effect, in the words a scientist would accept, with the citations attached.</li>
+        <li><b>The evidence bars.</b> How strong the evidence is, on the GRADE scale: four bars (strong evidence) is GRADE's high certainty, three moderate, two (limited evidence) low, one (very limited evidence) very low. Randomized evidence starts at four and observational evidence at two; a study that checks a test against a laboratory method starts at four, as GRADE rates tests; the reasons for every move up or down are under "Why this rating".</li>
+        <li><b>The status label.</b> <span class="badge replicated">found by several teams</span> at least two independent studies agree; <span class="badge replicated-same-team">repeated by one team only</span> agreement within one research group, which is weaker; <span class="badge single-study">one study</span> one study only; <span class="badge contested">experts disagree</span> credible evidence both ways, with a debate box; <span class="badge mixed">results point both ways</span> inconsistent findings. (In the Methods these are called replicated, replicated by the same team, single study, contested and mixed.)</li>
+        <li><b>The citation.</b> Tap (or hover) for the full reference and a link to the paper. Every journal article's details were pulled from Crossref and checked for retractions on the date shown; reports and web pages were checked against the publisher's page.</li>
+        <li><b>The study card.</b> The paper taken apart: what its design can and cannot show, who was studied, how the drug use was measured, what the comparison group lacked, what the data show versus what the abstract claimed, who paid, and what would settle the question.</li>
+        <li><b>Evidence anchors.</b> Where in the paper the claim's numbers are: page, section or table, and the data themselves in our words. We do not copy passages; you can open the paper at that page and check. Every anchor is checked against the source by a second AI reader before a claim is published; the senior author's own checks of each anchor continue after publication, and the check stamp shows how far they have gone.</li>
+        <li><b>The check stamp.</b> Under each claim: "Approved by our editor; sources checked by a second AI reader" (the senior author has read and approved the answer at this version, and every anchor was confirmed by a second AI reader), "Draft: not yet checked by our editor", "Checked by our editor", "Published" or "Problem reported: being corrected", with the version number. Hover or long-press it for the step the claim has reached on the protocol's verification ladder: DRAFT (not yet on the ladder: an anchor still to be located in a full text, or the claim rests only on narrative reviews), METADATA-VERIFIED (its references confirmed against Crossref and checked for retractions), AI-ANCHORED (every anchor confirmed by a second AI reader: re-found without seeing the first reader's work, or checked at the place the first reader gave), ANCHOR-VERIFIED (every anchor checked against the paper by the senior author), APPRAISED (every study card it rests on read against its source by the senior author), SENIOR-REVIEWED, PUBLISHED, or FLAGGED (a problem reported after publication is open and being corrected). The site shows its own state of completion on every claim.</li>
+      </ol>
+      <h2>Reading a substance page</h2>
+      <p>Every drug page opens on <b>Quick answers</b>: what we know best and what is still uncertain, the questions people ask (tap one for the short answer and its evidence bars), and the basics: what it looks like, what drug checking has found, the law and the official figures. <b>Full evidence</b> shows the same page as the seventeen sections of the protocol, with every claim's precise statement, studies and sources; the list on the left jumps to them, and every "See the evidence" link opens it at the right place. <b>Contested questions</b> is where the real arguments are laid out with the strongest case on each side, what neither side can show, and the editors' reading, labelled as such. The reference list at the bottom is generated from the claims above it, so nothing is cited that does not support something on the page.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section class="view" id="view-glossary">
+  <div class="wrap page">
+    <div class="eyebrow">Terms used on this site</div>
+    <h1 class="pagetitle">Glossary</h1>
+    <p class="lede muted">The words this site uses, explained, each with its source.</p>
+    <p class="gfilter"><label for="gloss-filter" class="sr">Filter the glossary</label><input id="gloss-filter" type="search" placeholder="Filter terms, e.g. odds, placebo, psychosis…" autocomplete="off"> <span class="muted small" id="gloss-count" aria-live="polite"></span></p>
+    <div class="glist" id="glossary-list"></div>
+  </div>
+</section>
+
+<!-- METHODS -->
+<section class="view" id="view-methods">
+  <div class="wrap page">
+    <div class="prose">
+      <div class="eyebrow">Editorial protocol · v{{PROTOCOL_VERSION}}</div>
+      <h1 class="pagetitle">Methods</h1>
+      <div class="inshort"><h2>In short</h2><ol>
+        <li>We search for the best studies on each question, reviews of many studies first, and log every search.</li>
+        <li>We read each study in full, not just its summary.</li>
+        <li>We check every study for weak spots, with the same tools whatever it found.</li>
+        <li>We rate how sure we can be of each answer, on the GRADE scale doctors use.</li>
+        <li>Three readers check every answer: an AI reader, a second AI reader who works without seeing the first one's work, and then our editor. Nothing is final before our editor has checked it.</li>
+        <li>When we get something wrong, we fix it in public.</li>
+      </ol><p class="muted small">The rest of this page is the full method, for scientists.</p></div>
+      <p class="muted">This is the condensed, public version of the editorial protocol. The full protocol is the authoritative document and is versioned alongside the content. Its first version was written before any monograph; every later change is listed in its changelog with the reason and the date, so readers can judge whether a rule was fitted to a conclusion.</p>
+
+      <h2>Principles</h2>
+      <ol>
+        <li><b>Symmetry.</b> Every study is appraised with the same instrument regardless of its conclusion, funder or authors.</li>
+        <li><b>Claims, not narratives.</b> A paragraph with no citable claim is deleted.</li>
+        <li><b>Anchored evidence.</b> Every claim carries at least one page-located evidence anchor from a source read in full. No claim from an abstract alone. Quotations only where the wording itself is the point, never more than 15 words.</li>
+        <li><b>Uncertainty is content.</b> "Not known" is a valid and often correct answer.</li>
+        <li><b>Base rates first.</b> Prevalence and absolute risks before relative risks and anecdotes.</li>
+        <li><b>The interpretation gap is reported.</b> What the data show is separated from what the abstract and the press claimed.</li>
+        <li><b>Corrections are public.</b> Every change to a published claim is versioned and visible.</li>
+        <li><b>Interests are declared</b> and never used as a trump card.</li>
+      </ol>
+
+      <h2>Search</h2>
+      <p>Per substance: PubMed/MEDLINE, Europe PMC, Cochrane Library, OpenAlex/Crossref, Google Scholar; registries (ClinicalTrials.gov, PROSPERO); monitoring bodies (EUDA, UNODC, WHO, NSDUH, ESPAD). Systematic reviews form the backbone; primary studies are retrieved where no adequate review exists, where a claim is contested, for landmark studies and for work newer than the last review. Critiques and replies on landmark studies are retrieved deliberately. Backward and forward snowballing on every included review and landmark. Every search is logged with date, string, hits and exclusions (PRISMA 2020). Retraction status is checked for every source through Crossref's Retraction Watch data.</p>
+
+      <h2>Study cards</h2>
+      <p>Every supporting study is reverse-engineered from its conclusions into its mechanism: design and what it can and cannot establish; sample and recruitment with selection effects named; exposure measurement including purity and polysubstance use; the comparison group and the premorbid variables that were never measured; outcome measures, multiplicity and blinding; effect sizes with intervals; the interpretation gap; replication timeline; funding; and what would settle the question. Risk of bias uses the instrument that matches the design:</p>
+      <div class="tablewrap"><table><tr><th>Design</th><th>Instrument</th></tr>
+        <tr><td>Randomized trials</td><td>RoB 2</td></tr>
+        <tr><td>Observational exposure studies (most drug-effect studies)</td><td>ROBINS-E</td></tr>
+        <tr><td>Non-randomized intervention studies</td><td>ROBINS-I</td></tr>
+        <tr><td>Systematic reviews and meta-analyses</td><td>AMSTAR 2</td></tr>
+        <tr><td>Animal studies</td><td>SYRCLE</td></tr>
+        <tr><td>Prevalence studies</td><td>JBI checklist</td></tr>
+        <tr><td>Narrative reviews</td><td>No validated instrument: the editors' checklist (search, appraisal, reliance on the authors' own work, evidence versus speculation, balance); never the sole support of a claim above draft</td></tr>
+        <tr><td>Qualitative studies</td><td>The editors' qualitative checklist (domains adapted from CASP)</td></tr>
+        <tr><td>Reports by public bodies (Surgeon General, IARC, National Academies, government reviews)</td><td>The editors' checklist for evidence reports (search and selection, appraisal of the studies, stated grading rules, independence and funding, external review, conclusions within the evidence); AMSTAR 2 where the report states a systematic search. Their graded wording is quoted as their judgment, not ours</td></tr>
+        <tr><td>Case series, case reports, modelling</td><td>No instrument; the study card states the design's limits</td></tr>
+      </table></div>
+      <p>Each instrument keeps its own words (ROBINS-E: low, some concerns, high, very high; RoB 2: low, some concerns, high), and for the tools that build an overall judgment from domains (RoB 2, ROBINS-E, ROBINS-I and the editors' checklists), the overall judgment is never milder than the worst domain. The validator refuses a card that mixes them, and a script checks that the instrument matches the design.</p>
+      <p>Three readers. An AI first reader writes the card and the evidence anchors from the full text. An independent AI second reader, given only the claims, finds the evidence for and against them in the paper before it sees the first reader's work, then checks the card. A script matches the two readers' anchors; anchors the blind reading did not re-find, or that were added later, are checked by a second reader at the place given and labelled 'checked at the stated place'. An adjudicating AI reader settles the second reader's findings on each card against the source and logs every change on the card; differences of judgment are left to the senior author and shown. The senior author then checks every anchor against the source, reads every study card against its source, and may overrule any judgment. Before that, AI methodologist reviewers who took no part in the drafting read every claim against its evidence and the protocol.</p>
+
+      <h2>Claims and certainty</h2>
+      <p>A claim is written in a fixed form: in <i>population</i>, <i>exposure</i> compared with <i>comparator</i> is associated with / increases / reduces / causes / does not detectably change <i>outcome</i>: <i>direction and magnitude with interval</i>. Causal verbs (increases, reduces, causes) are used only when the designs support them; descriptive claims (prevalence, trends, death rates) describe and do not explain. Certainty follows GRADE:</p>
+      <div class="gradekey">
+        <div class="g"><span class="meter m4"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mw">High (shown as strong evidence)</span></span>Further research is very unlikely to change the estimate.</div>
+        <div class="g"><span class="meter m3"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mw">Moderate</span></span>Further research may change the estimate.</div>
+        <div class="g"><span class="meter m2"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mw">Low (shown as limited evidence)</span></span>Further research is likely to change the estimate.</div>
+        <div class="g"><span class="meter m1"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mw">Very low (very limited evidence)</span></span>Any estimate is very uncertain.</div>
+      </div>
+      <p>Randomized evidence starts high; observational evidence starts low. A study that checks a test's results against a laboratory method starts high, as GRADE rates tests, and is rated down for chosen samples, laboratory conditions instead of real use, one brand or batch, and small numbers; whether testing changes what people do is graded separately, from studies of people. Downgrades for risk of bias, inconsistency, indirectness, imprecision and publication bias; for observational evidence only, upgrades for large effects, dose–response and confounding that would reduce the observed effect. A claim inherits the certainty of its weakest necessary link. "No detectable effect" requires precision, not a non-significant p-value. Relative effects are always accompanied by absolute effects where a base rate is known. A large effect counts only if it survives the most adjusted model with no bias left that could inflate it, and never for a prevalence, a count, a mortality ratio or a trend over time. When evidence already rated down for bias is also rated up, the claim says so and states the lower rating a strict reading would give. Claims that rest only on narrative reviews stay in draft and say their figures are second-hand. Status flags: <span class="badge replicated">replicated</span> <span class="badge replicated-same-team">replicated by the same team</span> <span class="badge single-study">single study</span> <span class="badge contested">contested</span> <span class="badge mixed">mixed</span>.</p>
+
+      <h2>Contested questions</h2>
+      <p>Any contested claim is presented in six fixed parts: the question; the strongest evidence for yes; the strongest evidence for no; what neither side's evidence can show, by design; the editors' reading, labeled as such, with the certainty rating; and what would settle it. Both sides are written to the standard their own best proponents would accept.</p>
+
+      <h2>Verification ladder</h2>
+      <div class="ladder">
+        <div class="r"><b>draft</b><span>Not yet on the ladder: an anchor still to be located in a full text, or the claim rests only on narrative reviews</span></div>
+        <div class="r"><b>metadata-verified</b><span>All references verified against Crossref and retraction-checked</span></div>
+        <div class="r"><b>ai-anchored</b><span>Every evidence anchor located in the full text and confirmed by a second AI reader, blind or at the stated place</span></div>
+        <div class="r"><b>anchor-verified</b><span>Every evidence anchor checked against the source by the senior author</span></div>
+        <div class="r"><b>appraised</b><span>Every study card the claim rests on read against its source by the senior author</span></div>
+        <div class="r"><b>senior-reviewed</b><span>Senior author has signed off on claims, grades and text</span></div>
+        <div class="r"><b>published</b><span>Live, with version number; previous versions retained</span></div>
+        <div class="r"><b>flagged</b><span>A post-publication issue is open and shown on the page</span></div>
+      </div>
+
+      <h2>Two registers</h2>
+      <p>Every claim is written twice. The plain sentence is for a person who uses the drug and wants the answer; the precise sentence is for anyone who wants to check it. The plain sentence may never say more than the precise one supports.</p>
+
+      <h2>Sourced facts</h2>
+      <p>Names and identifiers, legal status, official statistics and emergency numbers are not graded claims. Each names its source, the date it was read and how: in the app's browser, from a PDF, or through WebFetch, a fetch tool that answers through a summarizing model. A fact read through WebFetch is confirmed in a second source or by a second reader, and every sourced fact stays a draft until the senior author has checked it. Papers are never read through WebFetch.</p>
+
+      <h2>Language, statistics, updates</h2>
+      <p>People who use drugs; dependence and use disorder in their DSM-5/ICD-11 senses with the instrument named; no adjectives of alarm or reassurance. Every statistic carries source, edition year, data year, measure definition, population and link, and is never rounded beyond the source. A full re-search every twelve months, or sooner on a major study, retraction or credible critique; the date of the last search is printed on every page. Corrections go through a form that requires a DOI, PMID or page reference; the editors answer within 14 days, and accepted corrections are logged publicly with what was wrong, what changed and why.</p>
+
+      <h2>Interests</h2>
+      <p>All editors declare conflicts of interest: <b>Vasilis Sampalis</b> (senior author), to be declared; <b>Claude</b> (Anthropic; AI co-editor), none; <b>ChatGPT</b> (OpenAI; AI co-editor from 6 to 12 November 2026), none. The site accepts no funding from alcohol, tobacco, cannabis, pharmaceutical or drug-paraphernalia companies, or from organizations whose mission depends on a particular conclusion about drugs. Donations above a stated threshold are disclosed by name; none have been accepted yet, and the threshold will be stated here before any are. The funding of every cited study is stored on its study card.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NOT FOUND -->
+<section class="view" id="view-notfound">
+  <div class="wrap page">
+    <div class="eyebrow">Page not found</div>
+    <h1 class="pagetitle">No page at this address</h1>
+    <div class="prose" id="notfound-body"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+
+<!-- REVIEW (senior author only; decisions stored in the artifact database) -->
+<section class="view" id="view-review">
+  <div class="wrap page">
+    <div class="eyebrow">Senior review</div>
+    <h1 class="pagetitle">Review queue</h1>
+    <p class="lede muted">Check each evidence anchor against the source and tick it; read each study card against its source and mark it read; then approve or flag the claim. Only you, as the owner, can save here. Decisions are stored with the site and read back by the AI co-editor into the claim files; nothing is published until every claim on a page is approved.</p>
+    <details class="rv-decisions" id="review-decisions-box" open><summary><h2>Decisions waiting for you <span class="muted small" id="dec-count"></span></h2></summary>
+      <p class="muted small">Questions on the protocol and on single claims that only you can settle. Each shows the editor's recommendation; your choice is saved as soon as you make it, and the co-editor reads it back and applies it.</p>
+      <div id="review-decisions"></div>
+    </details>
+    <div class="rv-progress" id="review-progress"></div>
+    <div class="rv-filters">
+      <label>Section <select id="review-section"><option value="">All sections</option></select></label>
+      <label>Show <select id="review-filter"><option value="pending">Not yet decided</option><option value="all">All claims</option><option value="approved">Approved</option><option value="flagged">Flagged</option></select></label>
+      <label>Order <select id="review-order"><option value="suggested">Suggested: at-a-glance claims first, drafts last</option><option value="section">By section</option></select></label>
+    </div>
+    <p class="note" id="review-unavailable" hidden>The review queue needs the site's database, which is not available in this view. Open the published page on claude.ai while signed in as the owner.</p>
+    <div id="review-list"></div>
+  </div>
+</section>
+<section class="view" id="view-about">
+  <div class="wrap page">
+    <div class="prose">
+      <div class="eyebrow">About Pharmakon</div>
+      <h1 class="pagetitle">What this is, and what it is not</h1>
+      <div class="inshort"><h2>In short</h2><ul>
+        <li><b>For people who use drugs, and anyone interested.</b> It answers the questions people really ask. The science is how we get the answers right.</li>
+        <li><b>The whole picture, not only the crashes.</b> What a drug does that people take it for, what can go wrong, and how often, in numbers. Most harms happen to some of the people who use a drug, not to all of them, and we say how many.</li>
+        <li><b>A critical eye on every source.</b> Headlines, official statements and scientific papers get the same questions: who took part, how much they took compared with real life, whether it was repeated, who paid, and whether the study was later withdrawn.</li>
+        <li>It grows one question at a time. Every page says what is checked and what is still uncertain.</li>
+        <li>It is written with AI help (Claude, made by Anthropic; for one week in November 2026 also ChatGPT, made by OpenAI). A second AI reader checks every passage against its source, and our editor, a psychologist and clinical neuropsychologist, reads and approves every answer. Until he has, the answer says it is a draft.</li>
+        <li>It is free to read. It takes no money from alcohol, tobacco, cannabis or drug companies.</li>
+        <li>It explains what research found. It does not encourage anyone to use drugs, says nothing about where to get them, and gives no instructions on amounts, timing or ways of taking them. It is not medical or legal advice.</li>
+      </ul></div>
+      <h2>Using this information</h2>
+      <p>Pharmakon describes what published research found. It is information, not medical advice, and not encouragement to use any drug. We check every claim against its sources, but errors are possible: please check important decisions with a health professional, and in an emergency call your <a href="#emergency">local emergency number</a>.</p>
+      <h2>Privacy</h2>
+      <ul>
+        <li>Pharmakon has no accounts, no ads, no cookies and no tracking or analytics.</li>
+        <li>A few choices stay on your own device, in your browser's storage, and are never sent to us: the country you pick, whether drug photos are shown, your reading view, which answers you have read, the last drug page you opened (so the home page can take you back) and your quiz progress.</li>
+        <li>The site is a set of fixed pages served by Cloudflare Pages, which, like any web host, receives your device's internet address in order to deliver them.</li>
+        <li>The feedback button sends nothing by itself: it writes an email that you send from your own account, and emails to us are received by our email provider, Zoho Mail (EU).</li>
+        <li>Links to other sites, such as a drug-checking service, take you to pages with their own privacy rules.</li>
+      </ul>
+      <h2>Contact</h2>
+      <p>Corrections, sources, ideas and questions: <a data-email="text" href="#about">the editors</a>. Every page has a "Feedback / Report an issue" button, at the bottom right, which writes your message out for you. We read everything, and accepted corrections are logged publicly. We cannot give personal medical advice.</p>
+      <h2>Photos</h2>
+      <p>Drug pages show what each drug looks like, so you can recognise the forms you meet. Each photo is one example: the same drug can look different, and different drugs can look the same. We show no people, and no drugs being taken.</p>
+      <p>Some readers would rather not see drug photos, for example people cutting down or stopping. <button type="button" class="phtoggle">Hide drug photos</button> The choice is kept on this device only.</p>
+      <details class="srcnote"><summary>Photo credits</summary><ul class="phcredits" id="photo-credits"></ul></details>
+      <h2>Name</h2>
+      <p><i>Pharmakon</i> (φάρμακον) is the Greek word that meant remedy, poison and drug at once, which is the point of the site. The founder chose it as the final name on 25 October 2026; the site lives at pharmakon.world.</p>
+      <h2 class="fold-h">More about how we work</h2>
+      <details class="fold"><summary><h3>Honest state of the content</h3></summary>
+      <ul>
+        <li>Every journal article's metadata has been verified against Crossref and checked for retractions, on the date shown with each reference; reports and web pages were checked against the publisher's page.</li>
+        <li>On 25 October 2026 the senior author read and approved every answer then on the site; answers added since then are labelled drafts until he approves them. His own checks of each evidence anchor against the paper continue after publication. Each anchor shows how far it has got: not yet located, located by an AI reader, confirmed by a second AI reader (re-found blind, or checked at the stated place), or checked by the senior author; each claim's stamp shows the same.</li>
+        <li>Most methamphetamine study cards are written from the full text: the PDFs the senior author saved, or the free full text in PubMed Central or on the publisher's site. Four early cards written from abstracts for the first prototype are marked <span class="badge draft">draft</span> and still carry <span class="placeholder">[to be extracted]</span> placeholders until their PDFs are saved; those placeholders are not estimates.</li>
+        <li>Every located evidence anchor is checked by a second AI reader: first blind, without the first reader's anchors; anchors it does not re-find are then checked at the stated place and labelled so.</li>
+        <li>An independent methodologist review, by AI reviewers who took no part in the drafting, read every methamphetamine claim against its evidence and the protocol (review round 1). Each finding was checked against the source before it was applied: two claims fell from moderate to low certainty, upgrades the protocol does not allow were removed, claims that rest only on narrative reviews are held at <span class="badge draft">draft</span>, and the source checks the reviewers asked for are queued for the next reading round. In a second round, three reviewers checked the claims with the saved full texts open; each of their 124 findings was checked against the source before it was applied. One claim fell from low to very low certainty, several now report results in both directions where they had kept only one, and the anchors added in that round wait for a second reader's check.</li>
+        <li>The figures marked <span class="badge verified">verified</span> were checked against the cited UNODC and EUDA pages on the dates shown.</li>
+        <li>The evidence maps list, for each substance, the papers to be read. They are reading lists, not content. Their metadata has not yet all been checked against Crossref; until it is, a listed paper is a pointer, not a verified reference.</li>
+        <li>Section 7 (ways of taking a drug, and what people do themselves) appears only once the senior author has approved each answer. It gives findings only, never advice on amounts, timing or technique.</li>
+      </ul>
+      <p>The site was first built and tested on one drug, methamphetamine, so that every design decision could be checked at small scale: the monograph template, interactive APA 7 citations with hover references and DOI links, study cards, GRADE badges with their reasoning, the contested-question format, the two registers, search, and the verification ladder.</p>
+      </details>
+      <details class="fold"><summary><h3>Who does what</h3></summary>
+      <div class="tablewrap"><table><tr><th>Senior author</th><th>AI co-editor</th></tr>
+        <tr><td>Obtains the PDFs the AI cannot open (paywalled papers, and free papers on sites that refuse the AI's browser); reads and approves or flags every answer (until he has, the answer is labelled a draft); checks evidence anchors against the source in the review queue; may overrule any judgment; approves every section 7 answer; signs off before publication; owns the brand, legal and funding decisions.</td><td>Writes the searches and runs them (Crossref and OpenAlex; PubMed through its public interface); screens and snowballs; verifies metadata and retraction status; reads full texts (the PDFs, PubMed Central and free publisher pages); writes first-pass study cards, evidence anchors, GRADE ratings and drafts; runs an independent second AI reading (blind first, then checks at the stated place); builds and validates the site; never has the final word on any field.</td></tr>
+      </table></div>
+      </details>
+      <details class="fold"><summary><h3>AI assistance statement</h3></summary>
+      <p>An AI system (Claude, Anthropic) performs first-pass extraction, appraisal and drafting under this protocol. From 6 to 12 November 2026 a second system (ChatGPT, OpenAI) did the same work under the same protocol, as AI readers numbered 401 and up; each answer's record names the reader of every step, and Claude checked that work when it took over again. It can misread a source. That is why every evidence anchor is checked against its source by a second, independent AI reader, why the senior author reads and approves every answer (until he has, it is labelled a draft), and why each claim shows how far its checks have gone. The senior author's own checks of each anchor against the source continue after publication. Conflicts of interest: the senior author's declaration is to be made; the AI co-editors have none.</p>
+      </details>
+      <details class="fold"><summary><h3>Copyright and the law</h3></summary>
+      <ul>
+        <li><b>Our own words.</b> Every sentence here is written by us. We do not copy text, tables, figures or photographs from papers; numbers are restated in our words, with their source.</li>
+        <li><b>Short quotations only.</b> At most 15 words, at most one per answer, word for word, with the source named, as the quotation exception allows (EU Directive 2001/29/EC, article 5(3)(d); in Greece, Law 2121/1993, article 19).</li>
+        <li><b>Laws and official texts.</b> Legal status is reported from the official texts, which are not protected by copyright in Greek law (Law 2121/1993, article 2(5)) or in most countries; the official text is always the authority.</li>
+        <li><b>Official figures.</b> Statistics from public bodies are shown with the body, the edition and the page they come from.</li>
+        <li><b>Photos.</b> Only photos that anyone may reuse (public domain, CC0 or CC BY), each with its credit and licence.</li>
+        <li><b>Education, not encouragement.</b> What we give is findings and where they come from, so people can make safer decisions; never advice to use, or how to use.</li>
+      </ul>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div>Pharmakon · version {{SITE_VERSION}} · Editorial protocol v{{PROTOCOL_VERSION}} · {{BUILD_DATE_LONG}}</div>
+    <div>This site describes published research. It is not medical advice.</div>
+    <div class="flinks"><a href="#emergency">Emergency numbers</a><a href="#checking">Drug checking</a><a href="#substances">Find a drug</a><a href="#quiz">Test yourself</a><a href="#howto">How to read</a><a href="#glossary">Glossary</a><a href="#methods">Methods</a><a href="#about">About</a><button type="button" class="linklike" data-fb="issue">Report an issue</button><button type="button" class="linklike" data-fb="feedback">Share feedback</button><a data-email="link" href="#about">Contact</a></div>
+  </div>
+</footer>
+<button type="button" class="fb-fab" data-fb="" aria-haspopup="dialog" aria-label="Feedback or report an issue"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg><span class="fb-long">Feedback / Report an issue</span><span class="fb-short">Feedback / Report</span></button>
+
+<div class="drawer evsheet" id="evsheet"><div class="scrim"></div><div class="panel" role="dialog" aria-modal="true" aria-labelledby="ev-title"></div></div>
+<div class="drawer report" id="report"><div class="scrim"></div><div class="panel small fbpanel" role="dialog" aria-modal="true" aria-labelledby="fb-title">
+  <button class="close" type="button" id="report-close" aria-label="Close">✕</button>
+  <div class="fb-head"><h2 id="fb-title">Feedback</h2><p class="muted">Both reach the editors. We read everything.</p></div>
+  <div class="fb-choose" role="group" aria-label="What would you like to do?">
+    <button type="button" class="fb-opt" data-mode="issue" aria-pressed="false" aria-controls="report-form"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><b>Report a mistake</b></button>
+    <button type="button" class="fb-opt" data-mode="feedback" aria-pressed="false" aria-controls="report-form"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg><b>Share an idea</b></button>
+  </div>
+  <form id="report-form" class="reportform" hidden novalidate>
+    <label for="report-message" id="fb-msg-label">What is wrong?</label><textarea id="report-message" rows="5" maxlength="1500"></textarea>
+    <p class="fb-where"><label class="fb-check"><input type="checkbox" id="fb-incl" checked> <span>About: <span id="report-where"></span></span></label></p>
+    <details class="fb-src" id="fb-source-wrap"><summary>Add a source (optional)</summary><label for="report-source" class="sr">A source that shows it: DOI, PMID or link</label><input id="report-source" type="text" autocomplete="off" placeholder="DOI, PMID or link, e.g. 10.1038/npp.2011.276"></details>
+    <div class="fb-send"><a class="primary" id="fb-mailto" href="#">Send by email</a><span class="fb-count" id="fb-count" aria-live="off">0 / 1500</span></div>
+    <p class="fb-how">This opens your email with the message written out. Nothing is sent until you press Send there.</p>
+    <p class="fb-alts">No email app? <a id="fb-gmail" href="#" target="_blank" rel="noopener">Gmail</a> · <a id="fb-outlook" href="#" target="_blank" rel="noopener">Outlook.com</a> · <button type="button" class="linklike" id="fb-copy">Copy the message</button> · or write to <a data-email="text" href="#about">the editors</a></p>
+  </form>
+  <p id="report-status" class="status" role="status" aria-live="polite"></p>
+</div></div>
+<div class="drawer" id="drawer"><div class="scrim"></div><div class="panel" role="dialog" aria-label="Study card"></div></div>
+
+<script>
+/*__JS__*/
+</script>

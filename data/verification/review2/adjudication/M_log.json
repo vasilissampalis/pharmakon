@@ -1,0 +1,402 @@
+[
+ {
+  "n": 0,
+  "claim_id": "cl_meth_psychosis_course",
+  "field": "monograph.at_a_glance.largest_uncertainties",
+  "severity": "must-fix",
+  "verdict": "already-fixed",
+  "reason": "Checked the monograph: largest_uncertainties is now cl_meth_cognition_causal, cl_meth_dopamine_damage and cl_meth_cognition_abstinence; the narrative-review-only course claim was replaced (monograph changelog 0.3.1). The replacement is very low and not narrative-only, so §6.3 and §8 are met (the reviewer's alternative, cl_meth_violence, would also have met them). The course question stays visible as research-gaps priority question 2.",
+  "evidence": "data/monographs/methamphetamine.json at_a_glance.largest_uncertainties and changelog 0.3.1; validator narrative-only check passes on the current files.",
+  "patch_ref": null
+ },
+ {
+  "n": 1,
+  "claim_id": "monograph",
+  "field": "monograph.at_a_glance.mechanism_line",
+  "severity": "must-fix",
+  "verdict": "already-fixed",
+  "reason": "The line now says the mechanism is 'as described in a narrative review (section 3)'. METHODS 0.2.4 §8 settles the conflict the reviewer raised: when the only section 3 claim rests on narrative reviews, the line says the mechanism is described second-hand and the claim is not otherwise shown in the box (changelog 0.2.4, item 6). Under that rule the rating need not appear in the line. The header tags, which still lack the hedge, are handled under finding 6.",
+  "evidence": "monograph at_a_glance.mechanism_line; METHODS §8 (row 1) and changelog 0.2.4 (6).",
+  "patch_ref": null
+ },
+ {
+  "n": 2,
+  "claim_id": "monograph",
+  "field": "monograph.at_a_glance.legal_summary",
+  "severity": "must-fix",
+  "verdict": "already-fixed",
+  "reason": "The legal line now gives Greece as listed in Table Γ΄ of the national drug tables (Ministry of Health consolidated list) and only the Australian entry as unconfirmed, matching the section 13 data.",
+  "evidence": "monograph at_a_glance.legal_summary; monograph changelog 0.3.1.",
+  "patch_ref": null
+ },
+ {
+  "n": 3,
+  "claim_id": "cl_meth_psychosis_course",
+  "field": "evidence[4].study_card (sc_bramness_2012.risk_of_bias); also sc_kish_2008 and sc_cruickshank_2009",
+  "severity": "must-fix",
+  "verdict": "deferred",
+  "reason": "The finding is right: sc_bramness_2012, sc_kish_2008 and sc_cruickshank_2009 are narrative reviews still appraised with AMSTAR 2 (overall critically low), and the validator reports the design–instrument mismatch for all three. Re-appraising them with the editors' narrative-review checklist is known and queued and needs their full texts, which are not saved: deferred, full text needed. The reviewer's provisional domain judgments for Bramness et al. are for the readers' information only and are not adopted here. Group P (finding 0) and group N (finding 21) raise the same point.",
+  "evidence": "Cards' risk_of_bias.instrument 'AMSTAR 2' with design 'narrative-review'; validator warnings for the three cards; ADJUDICATION-BRIEF-R2, 'Known and queued'.",
+  "patch_ref": null
+ },
+ {
+  "n": 4,
+  "claim_id": "monograph",
+  "field": "monograph.sections[15].not_yet_covered",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: the summary omits gaps that the section notes declare (section 3: metabolism and active metabolites, bioavailability by route, pharmacogenetics, interaction mechanisms; section 6: adolescents, heart disease, psychiatric history, interactions; section 9: stroke, dental disease; section 11: drug-checking data). Modified: 'pharmacokinetics by route' replaced by what section 3 actually lacks (two pharmacokinetic claims exist); pharmacogenetics and newborn outcomes added; the methamphetamine-specific chance of a use disorder (finding 5) added; the path is sections[14] (section 15), not sections[15]. Proposed in M_monograph.json item 0.",
+  "evidence": "monograph sections[2], [5], [8], [10], [11] no_evidence_note; sections[14].not_yet_covered.",
+  "patch_ref": null
+ },
+ {
+  "n": 5,
+  "claim_id": "monograph",
+  "field": "monograph.sections[15].priority_questions",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "(a) A cognition priority question would duplicate what the research-gaps section already generates: the cognition debate box's 'what would settle it' (cohorts tested before use; retests with verified abstinence and retested controls) and the very-low abstinence claim. Neither contested question is in the curated list, which appears deliberate, so none is added (an editors' choice, §7 and §8). (b) The methamphetamine-specific conditional probability of a use disorder (§10.2) is a coverage gap until it has been searched (such estimates may exist), so it goes into not_yet_covered (M_monograph.json item 0), not into the priority questions. (c) Question 6's 'needs' at the wave 2 merge belongs to group P, whose finding 33 proposes fuller wording; left to that adjudication.",
+  "evidence": "monograph sections[14].priority_questions; cl_meth_cognition_causal debate.what_would_settle_it; cl_meth_dependence_baserate statement; group_P.json finding 33.",
+  "patch_ref": null
+ },
+ {
+  "n": 6,
+  "claim_id": "monograph",
+  "field": "monograph.mechanisms",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: the mechanisms field is rendered as header tags (site/src/app.views.js) and asserts VMAT2 and transporter substrate activity, while the only section 3 mechanism claim (one narrative review; very low; draft) says 'apparently' and 'not completely understood'. Proposed tags carry the hedge and the draft label (M_monograph.json item 1). Group P's finding 5 makes the same point (suffix '(from a narrative review; draft)' or an empty field); the wordings are compatible and the editor should apply one.",
+  "evidence": "monograph mechanisms; cl_meth_mechanism_release statement and verification; site/src/app.views.js (mono-tags).",
+  "patch_ref": null
+ },
+ {
+  "n": 7,
+  "claim_id": "cl_meth_cognition_causal",
+  "field": "monograph.sections[9].claims / sections[4].claims (placement of contested claims)",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Confirmed: cl_meth_dopamine_damage declares section 4 and is listed in sections 4 and 14, while cl_meth_cognition_causal declares section 14 and is listed only there, so section 9's Cognition subheading never shows it. Fix: the claim's section set to 9 (patch 1) and the claim inserted after cl_meth_cognition_abstinence in section 9's list (M_monograph.json item 2). Apply both together: the site renders a section-14 entry whose claim declares another section as the debate box plus a link to that section. A sandbox run with both applied adds no validator warning.",
+  "evidence": "monograph sections[3], [8], [13].claims; site/src/app.views.js (section 14 rendering); sandbox validation in adj2/M_work/sandbox.",
+  "patch_ref": 1
+ },
+ {
+  "n": 8,
+  "claim_id": "cl_meth_cognition_abstinence",
+  "field": "statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked Simon 2010 Table 3 and Iudicello 2010 Tables 3–4; every reviewer number reproduces (pooled-SD d, 21 vs 18: Selective Reminding total 1.01 to 0.23; Repeated Memory 0.30, 0.77, 0.50, 0.56 to 0.82, 0.81, 0.79, 0.73; Iudicello abstainer–control gaps: processing speed 2.8 to 0.2, motor 5.5 to 3.5, verbal 1.8 to 1.5, executive 2.5 to 3.4, working memory 3.3 to 5.0; motor HC>A,NA at baseline and HC>NA at follow-up). The 'Differences persisted' sentence was selective. Modified: learning and memory are not called unchanged, because the abstainers' follow-up Learning and Memory values are printed identically (48.1, SD 8.6) and the card flags a possible copy error (reporting issue 15); 'motor skills' used, the paper's domain name (the earlier sentence harmonized); the new numbers are carried by two new anchors from the saved texts instead of extending checked anchors 12 and 13. Card edit proposed for sc_iudicello_2010 and sc_simon_2010 (M_cards.json items 0–1). The new anchors enter as ai-located, so claim_patch moves this claim from ai-anchored back to metadata-verified until a second reader checks them at the stated place.",
+  "evidence": "Simon 2010 (PMC) Table 3; Iudicello 2010 (PMC) Tables 3–4; sc_iudicello_2010 reporting_issues[15]; recomputation in adj2/M_work/calc.py.",
+  "patch_ref": 0
+ },
+ {
+  "n": 9,
+  "claim_id": "cl_meth_cognition_abstinence",
+  "field": "plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: the plain text kept only the findings against improvement. The reviewer's text is adopted with edits: the year-long study's near-equal gains are stated (3.0 vs 2.7 T-points) instead of 'too small' (finding 10); the impaired subgroup sentence says they improved more than others on speed tests and that the group had six people, without implying that impaired controls improved on speed (their processing speed fell, 47.50 to 46.08).",
+  "evidence": "Claim statement; Iudicello 2010 Table 5 (processing speed rows) and Results › Global, 2nd–3rd paragraphs.",
+  "patch_ref": 0
+ },
+ {
+  "n": 10,
+  "claim_id": "cl_meth_cognition_abstinence",
+  "field": "statement",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: only Simon et al.'s interval is computable (t(37)=1.01 with 18 and 21 gives d 0.32, 95% CI −0.31 to 0.96, recomputed); Iudicello et al. print no SD of change, so no interval; gains of 3.0 vs 2.7 T recomputed from Tables 3–4. Statement and the imprecision reasoning reworded to say exactly this.",
+  "evidence": "Simon 2010 Results › Change between first and second assessments, 4th paragraph; Iudicello 2010 Tables 3–4.",
+  "patch_ref": 0
+ },
+ {
+  "n": 11,
+  "claim_id": "cl_meth_cognition_abstinence",
+  "field": "evidence[0].locator",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: the 25.44- and 43.50-day intervals are in the 2nd paragraph; the counts 18 and 21 are in the 1st paragraph (and Method › Participants). Locator set to the 1st–4th paragraphs and Table 3 (the proposed 2nd–4th would still omit the counts). Content unchanged, so the anchor keeps its status; the card's key findings 6–7 already locate these values this way.",
+  "evidence": "Simon 2010 Results › Change between first and second assessments, paragraphs 1–4; sc_simon_2010 key_findings[6]–[7].",
+  "patch_ref": 0
+ },
+ {
+  "n": 12,
+  "claim_id": "cl_meth_cognition_causal",
+  "field": "plain",
+  "severity": "must-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: 'scores also don't clearly improve after stopping' is contradicted by the sources (time effect F(1,118)=55.12 in Iudicello et al.; 7 tests improved in Simon et al.) and by the sister claim; 'about half a standard deviation' understated the newer meta-analysis (0.68; Potvin et al. 0.46, both anchored in the group-differences claim). The reviewer's plain text is adopted. Modified: the same range is added to the statement as a cross-referenced parenthesis, so plain and statement agree; the magnitude field still points to the group-differences claim.",
+  "evidence": "Iudicello 2010 Results › Global, 1st paragraph; Simon 2010 Results › Change, 4th paragraph; cl_meth_cognition anchors 2 and 6.",
+  "patch_ref": 1
+ },
+ {
+  "n": 13,
+  "claim_id": "cl_meth_cognition_causal",
+  "field": "debate.editors_reading",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "Confirmed: the editors' reading said 'about half a standard deviation' while the 'yes' side of the same box gives 0.46 and 0.68. Replaced as proposed.",
+  "evidence": "debate.evidence_yes; cl_meth_cognition magnitude.",
+  "patch_ref": 1
+ },
+ {
+  "n": 14,
+  "claim_id": "cl_meth_cognition_causal",
+  "field": "debate.evidence_yes (and debate.evidence_no)",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "All three points confirmed in the saved PDFs: Basterfield et al. p. 744 (fluid reasoning, duration β −0.16, 95% CI −0.26 to −0.07, p<.001, Holm-adjusted p=.002), Table 4 p. 746 (11 studies), p. 746 (fluid reasoning 'paradoxically' not impaired) and p. 747 (read as support for the duration hypothesis); education did not predict effect size in Scott et al. p. 285 (b=0.06, p=0.13), Potvin et al. p. 156 (β 0.061, p=0.1; tentative reading p. 158), Basterfield et al. p. 744 and Table 4 (p .09 to .83) and Cao et al. p. 6 (P≥.30); Dean et al. pp. 268–270 (preponderance suggests mild decline in at least some people; animal evidence weighed more heavily). Modified wording: 'longer use going with larger deficits' rather than 'dose-related' (the authors speak of duration); the education analyses described as study-level; Dean et al.'s conclusion given as their judgment. The 'no' side's duration sentence replaced as proposed. Five anchors added (Basterfield duration, Basterfield education, Scott education, Potvin education, Dean conclusion); Cao et al.'s education result is already anchor 12. The new anchors enter as ai-located, so claim_patch moves this claim from ai-anchored back to metadata-verified until a second reader checks them at the stated place.",
+  "evidence": "Basterfield 2019 pp. 744, 746–748; Scott 2007 pp. 284–285; Potvin 2018 pp. 156, 158; Dean 2013 pp. 268–270; Cao 2026 p. 6; check_anchor_numbers.py on the sandbox finds every number of the new anchors on its stated page.",
+  "patch_ref": 1
+ },
+ {
+  "n": 15,
+  "claim_id": "cl_meth_cognition_causal",
+  "field": "evidence[13].extracted",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed at Basterfield et al. p. 745 (the text says removal of high risk-of-bias studies did not change the results, then that the intervals for comprehension knowledge, fluid reasoning and visual-spatial processing overlapped zero) and Table 6 p. 747 (comprehension knowledge −0.082, −0.326 to 0.162, 5 studies; visual-spatial −0.250, −0.555 to 0.054); the card already records this (reporting issue 4). Modified: the overstating sentence is removed from anchor 13, whose remaining content was checked, and a new anchor carries the Table 6 values; the proposed 'most estimates similar in size' is not used (processing speed went from −0.28 to −0.57 and visual-spatial from −0.42 to −0.25). 'Users' in the rewritten anchor text replaced by person-first wording.",
+  "evidence": "Basterfield 2019 p. 745 (Sensitivity Analyses, 1st paragraph), Table 6 p. 747; sc_basterfield_2019 reporting_issues[4].",
+  "patch_ref": 1
+ },
+ {
+  "n": 16,
+  "claim_id": "cl_meth_cognition_causal",
+  "field": "debate.evidence_no (education gap) / evidence",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: Basterfield et al. p. 744 give 12.31 vs 13.88 years (gap 1.57), anchored nowhere; Scott et al. Table 2 p. 284 give 12.47 vs 13.87 (gap 1.40). Modified: the education data cover 28 studies (Table 1, k=28), not 31; Scott et al.'s values are re-located from the saved PDF as a new anchor rather than copying another claim's checked anchor; the 1.4–1.6 range in evidence_no labelled an editors' calculation.",
+  "evidence": "Basterfield 2019 p. 744 (Study Selection and Characteristics) and Table 1; Scott 2007 Table 2, p. 284.",
+  "patch_ref": 1
+ },
+ {
+  "n": 17,
+  "claim_id": "cl_meth_psychosis_association",
+  "field": "statement; population",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed in McKetin et al. (2019): Table 2 (adjusted use-disorder psychosis 2.4, 1.6–3.5; level E; refs 27, 30, 32, 42; n 7648; quality 88%), Table 1 (Degenhardt 2015 young offenders; Kalayasiri 2014 methamphetamine rehabilitation, 727 with 581 exposed, outcome methamphetamine-induced paranoia; McKetin 2006 monthly methamphetamine use, 309 with 173; Rognli 2015 prison and probation cohort) and 3.3, 3rd paragraph (Rognli: no significant relation with later primary psychosis; substance-induced psychosis elevated). No general-population sample is in either psychosis pool. Modified: 'people released from prison (a cohort)' as the source says; level E described as the review's lowest level; the substance-induced result kept for balance; the population names the dance-venue sample. Reasoning cites the 88% quality and the within-methamphetamine comparisons. No rating change: within-sample comparisons, if anything, bias toward the null (Discussion › 4.1, 4th paragraph). The new anchors enter as ai-located, so claim_patch moves this claim from ai-anchored back to metadata-verified until a second reader checks them at the stated place.",
+  "evidence": "McKetin 2019 (PMC) Tables 1–2; Results › 3.3, 3rd paragraph; Discussion › 4.1, 4th paragraph.",
+  "patch_ref": 2
+ },
+ {
+  "n": 18,
+  "claim_id": "cl_meth_psychosis_association",
+  "field": "plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed. The reviewer's plain text is adopted with 'often' (the statement's word) instead of 'mostly', and 'but without a use disorder'.",
+  "evidence": "McKetin 2019 paragraph after Table 1; Table 1 rows for refs 30 and 32.",
+  "patch_ref": 2
+ },
+ {
+  "n": 19,
+  "claim_id": "cl_meth_psychosis_association",
+  "field": "statement (frequency sentence); grade.reasoning",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed in Arunogiri et al. (2018): the positive frequency studies were of higher quality (Results › Dose-amount and frequency of MA use) and frequency was the only factor rated moderate (Table 2 footnote b; Results › Risk of bias across studies). Appended to the frequency sentence. In the reasoning, the dose–response sentence explains why this does not justify an upgrade here (between studies and measures), and the raw claim identifier is replaced by a readable cross-reference (clears a validator warning).",
+  "evidence": "Arunogiri 2018 (publisher HTML) Results › Dose-amount and frequency of MA use; Table 2; Results › Risk of bias across studies.",
+  "patch_ref": 2
+ },
+ {
+  "n": 20,
+  "claim_id": "cl_meth_psychosis_dose",
+  "field": "grade.reasoning",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Source not saved; checked on sc_mcketin_2013, whose analysis.effect_sizes lists 2.25 (1.29–3.90) and 3.90 (1.80–8.45) and no trend test in any model. Reasoning reworded as proposed. The dose–response upgrade is unchanged (main-model gradient 4.0 to 11.2; strict reading very low already stated); whether to keep it is flagged for the senior author.",
+  "evidence": "sc_mcketin_2013 analysis.effect_sizes, key_findings[5] and [8]; group M needs_source_check for mcketin_2013.",
+  "patch_ref": 3
+ },
+ {
+  "n": 21,
+  "claim_id": "cl_meth_psychosis_course",
+  "field": "statement; magnitude",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed in Glasner-Edwards & Mooney 3.2 ('16% and 17% of MA users'; the persistent cases had no prior episodes or family history), 3.1, 3rd paragraph (ref 47 cited for familial loading predicting onset and duration) and the reference list (refs 12 and 47, Chen et al. 2003 and 2005, first five authors shared); Arunogiri et al. Method (studies of one population combined) and Table 1 study 6 (Chen 2003, 2005, 2007; Lin 2004; N=445). Modified: the denominator is called 'not explained' rather than asserting that the persistent share 'may be higher' (the card reads it as presumably those with psychosis); 'probably on one sample'. Anchors added (Arunogiri; Glasner-Edwards 3.1). Card note proposed (M_cards.json item 2).",
+  "evidence": "Glasner-Edwards 2014 (PMC) 3.1, 3rd paragraph, 3.2 and references 12, 47; Arunogiri 2018 Method › Study design and data extraction, 2nd paragraph, Table 1 study 6; sc_glasner_edwards_2014 key_findings[7], reporting_issues[1].",
+  "patch_ref": 4
+ },
+ {
+  "n": 22,
+  "claim_id": "cl_meth_psychosis_course",
+  "field": "statement; plain",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: Wearne & Cornish, 'The relationship between METH-induced psychosis and schizophrenia', 3rd paragraph (later schizophrenia diagnoses may reflect adherence to diagnostic protocol). Modified: no threshold number, because the review gives the persistence threshold as 6 months in that section and as 1 month in its limitations (card reporting issue 1); plain text as proposed with minor wording. Anchor added.",
+  "evidence": "Wearne 2018 (PMC) relationship section, 1st and 3rd paragraphs; Methodological limitations, 2nd paragraph; sc_wearne_2018 reporting_issues[1].",
+  "patch_ref": 4
+ },
+ {
+  "n": 23,
+  "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+  "field": "statement",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "Confirmed: every supporting anchor cites a narrative review (Wearne & Cornish; Bramness et al.), the claim is held at draft, and the statement did not say its figures are second-hand (§6.3). Opening reworded as proposed; 'its text' made 'the review's text' because the subject changed.",
+  "evidence": "Claim anchors (cards of design narrative-review); METHODS §6.3, last rule.",
+  "patch_ref": 5
+ },
+ {
+  "n": 24,
+  "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+  "field": "statement (hallucination sentence)",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: Table 1 row 109 against Positive symptoms › Chronic, 3rd paragraph (opposite directions; 284 people all with methamphetamine dependence; card key finding 6 and reporting issue 0) and row 112 with Acute, 4th paragraph (voices conversing 48.5% vs 20.3%). Modified: group sizes (33 vs 69) and the same study's thought-broadcasting result (42% vs 24% in schizophrenia, significant only after adjusting for age) added for balance. Anchor added.",
+  "evidence": "Wearne 2018 Table 1 rows 109 and 112; Positive symptoms › Acute, 4th paragraph; › Chronic, 3rd paragraph.",
+  "patch_ref": 5
+ },
+ {
+  "n": 25,
+  "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+  "field": "statement (last sentence)",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "The omission is real: the Abstract and Summary and conclusions (1st and 2nd running paragraphs; the reviewer's '4th' counts the figure legend) conclude that acute methamphetamine psychosis may be clinically distinguishable while chronic psychosis resembles schizophrenia. But the proposed text misstates the source: in Srisurapanont et al. (Table 1 row 113) incoherent speech was the only differentiating item and Table 1 gives the higher scores to methamphetamine psychosis, while the text gives no direction (card key finding 3); only Wang et al. (Chronic, 1st paragraph) found a thought-disorder feature greater in schizophrenia (conceptual disorganization in the text, unusual thought content in Table 1). Rewritten accordingly; two anchors added.",
+  "evidence": "Wearne 2018 Abstract; Summary and conclusions, 1st–2nd paragraphs; Table 1 rows 113 and 115; Positive symptoms › Acute, 3rd paragraph; › Chronic, 1st paragraph; sc_wearne_2018 key_findings[3], [5].",
+  "patch_ref": 5
+ },
+ {
+  "n": 26,
+  "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+  "field": "plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Both problems confirmed (a four-against-four split stated as a property of people; one study generalized). The reviewer's plain text is adopted except 'in two studies disordered thinking was more common in schizophrenia', which repeats the direction error of finding 25: now one study (the persistent-psychosis comparison that also found more visual and tactile hallucinations); a sentence gives the authors' own view.",
+  "evidence": "As finding 25.",
+  "patch_ref": 5
+ },
+ {
+  "n": 27,
+  "claim_id": "cl_meth_depression",
+  "field": "statement; grade.reasoning",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "Confirmed: McKetin et al. (2019) Table 1 lists Briere (2012) [74] (Canadian secondary-school cohort, NANS, CES-D 16 or more) and Table 2 includes ref 74 in the adjusted any-use depression pool (refs 71, 73, 74, 76, 103, 104). The 2023 update's school cohort is Briere et al. according to sc_leung_2023 (comparison.unmeasured_premorbid; Table 3 values), with a matching description (Canadian students followed from grade 10 to 11). §6.3 (overlapping evidence) requires the claim to say so. Statement and reasoning edited as proposed; McKetin anchor added. The update's side rests on its card (source not saved).",
+  "evidence": "McKetin 2019 Table 1, Table 2, Results › 3.6, 2nd paragraph; sc_leung_2023.",
+  "patch_ref": 6
+ },
+ {
+  "n": 28,
+  "claim_id": "cl_meth_depression",
+  "field": "grade.reasoning",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: adjusted depression pool level C, quality 87%, I² 0%; adjusted suicidality (use disorder) level E, quality 62% (Table 2). Modified: the comparison is stated precisely (87% at level C against 62% at level E); the reviewer's 'the review's highest weighted quality' is not right (the adjusted use-disorder psychosis and depression cells score 88% and 100%). The stricter reading (very low) is kept as information, since §6.3 requires a strict reading only when evidence rated down is also upgraded. Rating unchanged (low); flagged for the senior author.",
+  "evidence": "McKetin 2019 Table 2.",
+  "patch_ref": 6
+ },
+ {
+  "n": 29,
+  "claim_id": "cl_meth_depression",
+  "field": "magnitude",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed on sc_leung_2023 (source not saved): a fixed-effect model was used because Q 7.35 was non-significant despite I² 59%; the card's reproduction under random effects is 1.85 (1.28–2.69). Recomputed approximately from the anchored pooled result (1.66, 1.34–2.05) and the card's study values (DerSimonian–Laird with reconstructed weights): 1.87 (1.27–2.75). Written as 'about 1.9, 1.3–2.7 ... editors' calculation', which covers both; the second reader should recompute it from the source's Table 3.",
+  "evidence": "sc_leung_2023 analysis.effect_sizes, key_findings[2], reporting_issues[1]; claim anchor 3; adj2/M_work/calc.py.",
+  "patch_ref": 6
+ },
+ {
+  "n": 30,
+  "claim_id": "cl_meth_suicidality",
+  "field": "statement; population; plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed in McKetin et al. (2019): Table 1 (Toles 2006 psychiatric emergency department; Kalechstein 2000 arrestees; Matsumoto 2012 outpatients with substance use disorders; McCullumsmith 2013 community corrections; all cross-sectional), Table 2 (use disorder: adjusted refs 38, 58, 60, 70 within the 7 unadjusted; any use: adjusted refs 59, 64, 108, 109 against unadjusted 59, 62–66, 108; level E; quality 62%) and Discussion, 4th paragraph (no longitudinal evidence on direction). The reviewer's statement text is adopted; population worded 'Mostly ...'; the plain says 'across a larger set of studies'; the suicide-mortality cross-reference marked as less certain (finding 36). Anchor added.",
+  "evidence": "McKetin 2019 (PMC) Tables 1–2; Discussion, 4th paragraph.",
+  "patch_ref": 7
+ },
+ {
+  "n": 31,
+  "claim_id": "cl_meth_suicidality",
+  "field": "grade.domains.risk_of_bias; grade.certainty; grade.reasoning",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "§6.3 requires a downgrade when the biases that remain after adjustment could plausibly change the estimate materially, and names selected samples. The adjusted 1.5 pools 4 cross-sectional studies in selected emergency, justice and treatment samples (level E; quality 62%), with covariate sets in an unread supplement and outcomes the review calls weaker (3.1, 2nd paragraph; 4.1, 1st paragraph); residual confounding by depression could plausibly account for an odds ratio of 1.5; the claim's own reasoning conceded these conditions. Risk of bias −1; certainty low → very low (low − 1 = very low; the validator's arithmetic check passes in the sandbox). Reasoning rewritten, including why the depression claim is not downgraded. No at-a-glance consequence; the claim will appear among the generated very-low claims in research gaps.",
+  "evidence": "McKetin 2019 Table 2; Results › 3.1, 2nd paragraph; Discussion › 4.1, 1st paragraph; Discussion, 4th paragraph.",
+  "patch_ref": 7
+ },
+ {
+  "n": 32,
+  "claim_id": "cl_meth_suicidality",
+  "field": "magnitude",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Confirmed at 3.5, 3rd paragraph: attempts among people who used amphetamines, OR 3.6 (2.2–5.9), I² 46%, refs 59, 61, 63–66 (six studies, all any use); subgroup analyses post hoc (Methods › 2.7, 3rd paragraph). Replaced as proposed; 'post hoc' is carried by the new anchor.",
+  "evidence": "McKetin 2019 Results › 3.5, 3rd paragraph; Methods › 2.7, 3rd paragraph.",
+  "patch_ref": 7
+ },
+ {
+  "n": 33,
+  "claim_id": "cl_meth_violence",
+  "field": "evidence[1].extracted; evidence[1].locator",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: Table 2 quality 56% and 58% for the any-use violence pools against 56% (any use) and 57% (use disorder) for unadjusted suicidality; 'poor measurement' is in 3.1, 2nd paragraph and 3.4, 2nd paragraph, and 3.4's 1st paragraph holds none of the anchor's content. The card's key finding 6 was already corrected (verification.disagreements[0]); the anchor had drifted. Modified: anchor 1 corrected to 'among the lowest' with its locator moved, adding no numbers (status kept; the suicidality comparison stays on the card); the same 'the lowest' in the reasoning corrected too.",
+  "evidence": "McKetin 2019 Table 2; Results › 3.1, 2nd paragraph; 3.4, 2nd–3rd paragraphs; sc_mcketin_2019 key_findings[6], verification.disagreements[0].",
+  "patch_ref": 8
+ },
+ {
+  "n": 34,
+  "claim_id": "cl_meth_violence",
+  "field": "statement",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: Table 1 (Watanabe 2005 [46]: offenders whose punishment was reduced or waived because of mental disorder; 1108 people, 52 with the disorder; quality 43%; violent re-offending over 7 years), Table 2 (use-disorder violence 6.2, 3.1–12.3, 1 study, level C, no adjusted estimate), 3.4, 4th paragraph, and Discussion, 3rd paragraph (large effects in two population-level and two longitudinal studies suggest an association may exist; needs confirmation). Added with minor wording; the plain text adds the authors' view; the new anchor records that the two population studies the authors call well controlled scored 63% and 38% on quality. Rating unchanged. The new anchors enter as ai-located, so claim_patch moves this claim from ai-anchored back to metadata-verified until a second reader checks them at the stated place.",
+  "evidence": "McKetin 2019 Tables 1–2; Results › 3.4, 4th paragraph; Discussion, 3rd paragraph.",
+  "patch_ref": 8
+ },
+ {
+  "n": 35,
+  "claim_id": "cl_meth_mortality",
+  "field": "plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: 'not all of this excess is due to the stimulant' implies the rest is, which age- and sex-standardized ratios cannot show (sc_stockings_2019 comparison.unmeasured_premorbid). The new sentence follows the statement's own list (other drug use, injecting, infection, poverty, imprisonment) rather than adding unquantified facts ('many lived in poverty').",
+  "evidence": "Claim statement, last sentence; sc_stockings_2019 comparison and interpretation_gap.",
+  "patch_ref": 10
+ },
+ {
+  "n": 36,
+  "claim_id": "cl_meth_mortality",
+  "field": "grade.reasoning; statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed on sc_stockings_2019 (source not saved): cause-specific crude rates from 4–7 cohorts, I² 94–98% except homicide (45.2%); cause of death often unclearly ascertained (key finding 11; anchor 4); suicide SMR 4.89–30.47. Under §6.3 (weakest necessary link) the all-cause excess, on which the rating rests, does not need the cause-specific figures, so they are labelled as less certain (taken alone very low) in statement, plain text and reasoning instead of lowering the claim, and the suicidality claim's cross-reference now marks the suicide figure as less certain. The I² values were added to anchor 5, which was located from the same card finding (key finding 3) and stays ai-located, because no saved text exists for a new anchor. Splitting the cause-specific results into a separate very-low claim remains an option for the editor.",
+  "evidence": "sc_stockings_2019 analysis.effect_sizes, key_findings[3] and [11]; claim anchors 2, 4 and 5.",
+  "patch_ref": 10
+ },
+ {
+  "n": 37,
+  "claim_id": "cl_meth_mortality",
+  "field": "plain",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: crude rates of 0.20, 0.20, 0.14 and 0.13 per 100 person-years from different subsets with overlapping intervals cannot be ranked. Rewritten as roughly 1 to 2 per 1,000 people per year each (×10 conversion), homicide less often.",
+  "evidence": "Claim magnitude; anchor 5.",
+  "patch_ref": 10
+ },
+ {
+  "n": 38,
+  "claim_id": "cl_meth_mortality",
+  "field": "statement",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Confirmed against anchor 7 and the card's AMSTAR 2 item 4 (search 2008 to February 2018; 1980–2007 cohorts from the authors' earlier review). Replaced as proposed.",
+  "evidence": "Claim anchor 7; sc_stockings_2019 risk_of_bias item 4.",
+  "patch_ref": 10
+ },
+ {
+  "n": 39,
+  "claim_id": "cl_meth_cognition_causal",
+  "field": "evidence[*].extracted (also cl_meth_cognition_abstinence, cl_meth_psychosis_association, cl_meth_psychosis_vs_schizophrenia, cl_meth_violence)",
+  "severity": "consider",
+  "verdict": "deferred",
+  "reason": "Pure wording ('users' in anchor texts) with no misstatement of the sources found in the anchors checked: deferred to the language pass, as the brief directs. Where this round rewrote an anchor text (cl_meth_cognition_causal anchor 13), person-first wording was used, which clears one validator warning.",
+  "evidence": "ADJUDICATION-BRIEF-R2 ('language pass'); validator warnings on anchor texts.",
+  "patch_ref": null
+ }
+]

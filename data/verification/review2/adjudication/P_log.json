@@ -1,0 +1,352 @@
+[
+ {
+  "n": 0,
+  "claim_id": "cl_meth_pk_halflife",
+  "field": "evidence[1].study_card (sc_kish_2008) and evidence[0].study_card (sc_cruickshank_2009): risk_of_bias.instrument",
+  "severity": "must-fix",
+  "verdict": "deferred",
+  "reason": "Checked the cards: sc_kish_2008, sc_cruickshank_2009 and sc_bramness_2012 have design 'narrative-review' but risk_of_bias.instrument 'AMSTAR 2', AMSTAR items as domains and overall 'critically-low', against METHODS §5.3. Re-appraising them with the editors' narrative-review checklist needs their full texts, which are not saved in this round (Kish 2008 and Bramness 2012 were read on the web; Cruickshank 2009 only in abstract): deferred, full text needed (already queued, per the brief; group M finding 3 asks the same). The second part of the proposal is rejected: METHODS §5.3 stores the editors' narrative-review checklist as 'none-applicable', and scripts/rob_vocab.py requires exactly that value for design 'narrative-review', so renaming the instrument on the six up-to-date cards would make them fail the check.",
+  "evidence": "data/study-cards/methamphetamine.json, risk_of_bias of the three cards; METHODS §5.3, narrative-review row ('stored as none-applicable'); scripts/rob_vocab.py, DESIGN_INSTRUMENT['narrative-review'] = {'none-applicable'}",
+  "patch_ref": null
+ },
+ {
+  "n": 1,
+  "claim_id": "cl_meth_pk_halflife",
+  "field": "grade.starting_level and grade.certainty",
+  "severity": "should-fix",
+  "verdict": "reject",
+  "reason": "METHODS §6.3 (0.2.4) rates a claim seen only through reviews from the design of the primary studies, downgraded for risk of bias (not appraisable) and indirectness (second-hand); the claim does exactly this (controlled pharmacokinetic dosing studies start high, −1, −1: low), and the arithmetic is right. The comparison with the mechanism and toxicity claims does not hold: they start low because their primary designs (laboratory and animal pharmacology, which §5.4 caps at low; case series) start low, not because a different rule was applied. The finding's valid point, that Kish (2008) cites the figure to another review so the primary design is assumed rather than seen, is now stated in the reasoning together with the strict reading (very low) for the senior author, whose confirmation of the 0.2.4 start-level rule is pending (patch 0). Rating unchanged.",
+  "evidence": "cl_meth_pk_halflife grade and evidence[1].extracted ('cited by the author to a review of smokable amphetamine-type stimulants'); cl_meth_mechanism_release and cl_meth_acute_toxicity grade.reasoning; METHODS §5.4, §6.3",
+  "patch_ref": 0
+ },
+ {
+  "n": 2,
+  "claim_id": "cl_meth_pk_halflife",
+  "field": "evidence[0] (cruickshank_2009)",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: evidence[0] is a placeholder ('[to be located]', '[to be extracted from the full text]', unchecked) with role 'supports', and sc_cruickshank_2009 (draft; source_read 'abstract only (prototype, 2026-10-14)') prints 'Reports half-life about 10 h' against the claim's 11 h from Kish (2008). Anchor removed (patch 0: evidence reset to the Kish anchor alone; the claim stays draft as narrative-only, and its statement already says the figure is second-hand). Card text changed differently from the proposal (P_cards.json #0): the card does carry a value, recorded when it was drafted from the abstract, so it is labelled as unchecked rather than described as 'not extracted'. The reasoning names the Cruickshank review as still to be read.",
+  "evidence": "claim evidence[0]; sc_cruickshank_2009 analysis.effect_sizes and verification.source_read",
+  "patch_ref": 0
+ },
+ {
+  "n": 3,
+  "claim_id": "cl_meth_pk_intranasal_timecourse",
+  "field": "evidence[5].anchor_status and .located_by",
+  "severity": "must-fix",
+  "verdict": "already-fixed",
+  "reason": "evidence[5] is already 'ai-located', with checked_by, checked_on and check_mode removed and a check_note explaining the reversion (claim v0.3.1: 'Anchor 5 set back to located ... methods audit M8'), as the brief records. Recording the figure reading on sc_kirkpatrick_2012 first is not needed: under METHODS §5.5 a check at the stated place by a reader who wrote neither the anchor nor the finding is enough to make it ai-checked.",
+  "evidence": "data/claims/methamphetamine.json, cl_meth_pk_intranasal_timecourse evidence[5] and changelog 0.3.1",
+  "patch_ref": null
+ },
+ {
+  "n": 4,
+  "claim_id": "cl_meth_pk_intranasal_timecourse",
+  "field": "evidence[5].extracted",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "sc_kirkpatrick_2012 confirms that Figures 1–4 are images whose values were not extracted (verification.source_read) and that acute cardiovascular magnitudes appear only in Figure 1 (key finding 5), so the two acute peaks in the anchor were read by eye; Kirkpatrick et al. (2012) is not saved, so the readings themselves could not be checked. Label appended (patch 1), attributing the reading to the second reader (located_by 'AI reader 2') rather than to 'the editors' as proposed. The anchor stays ai-located.",
+  "evidence": "sc_kirkpatrick_2012 key_findings[5] and verification.source_read; claim evidence[5].located_by",
+  "patch_ref": 1
+ },
+ {
+  "n": 5,
+  "claim_id": "cl_meth_mechanism_release",
+  "field": "monograph.at_a_glance.mechanism_line (and monograph.mechanisms)",
+  "severity": "must-fix",
+  "verdict": "accept-modified",
+  "reason": "The at-a-glance mechanism line already says the mechanism is described in a narrative review (monograph v0.3.1; the brief's already-done list), so that part is fixed. The header tags (monograph.mechanisms, shown as tags beside the class by site/src/app.views.js) still state 'VMAT2 and membrane-transporter substrate' without the hedge of the only section 3 claim ('apparently', 'not completely understood'; second-hand, draft), and the anchor does not say 'substrate'. The field cannot be emptied (schema minItems 1). P_monograph.json #0 marks both tags as coming from a narrative review and hedges the second, in wording identical to group M's adjudicated proposal for the same path (M_monograph.json, 'mechanisms'), so the editor applies one edit.",
+  "evidence": "data/monographs/methamphetamine.json at_a_glance.mechanism_line and mechanisms; cl_meth_mechanism_release evidence[0]; schema/monograph.schema.json (mechanisms, minItems 1)",
+  "patch_ref": null
+ },
+ {
+  "n": 6,
+  "claim_id": "cl_meth_acute_lab",
+  "field": "statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked hart_2012 in the saved PDF text: p. 592 (last paragraph of the review of acute effects) asserts that the doses tested are well within the recreational range, and p. 604 (Conclusions, 1st paragraph) that 'most of the doses tested' were within the range needed for euphoria, both without data; Table 1 (pp. 590–591) marks 6 of 16 studies as using doses lower than recreational ones. Kish (2008) is not saved; its anchor (median 190, range 15–1600 ng/mL, against about 50 ng/mL after a 30 mg smoked dose) was confirmed blind. The finding is right that the statement reports neither qualifier. Its framing is not: the six marked studies (five oral, one intravenous) are not the intranasal studies this claim rests on, and 6 of 16 fits 'most', so the review is not contradicted by its own table. The added sentence (patch 2) reports the review's assertion and the forensic comparison, and the plain text gains one matching sentence. The anchor's gloss that police samples may over-represent intoxication is not carried into the statement: it is not in the card's key finding 4 and the source is not saved.",
+  "evidence": "hart_2012 saved PDF text pp. 590–592 and 604; claim evidence[6] and evidence[7]; sc_kish_2008 key_findings[4]",
+  "patch_ref": 2
+ },
+ {
+  "n": 7,
+  "claim_id": "cl_meth_acute_lab",
+  "field": "evidence[7].extracted",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Recounted in the saved PDF text (pp. 590–591): 'Doses examined were lower than those used recreationally' appears three times and 'Dose examined was lower ...' three times, in the rows of Comer 2001, Hart 2001, Mohs 1978, Mohs 1980, Sevak 2009 and Talland and Quarton 1965: 6 of 16. Anchor 7 rewritten with the count and the six studies (patch 2). Because the count was not part of what AI reader 2 checked at the stated place, the anchor goes back to ai-located with a check_note and needs a targeted check by a reader who wrote neither; the claim was already metadata-verified, so its rung does not change. Matching card correction: P_cards.json #5.",
+  "evidence": "hart_2012 saved PDF text, Table 1 caveats column, pp. 590–591",
+  "patch_ref": 2
+ },
+ {
+  "n": 8,
+  "claim_id": "cl_meth_acute_cognition",
+  "field": "status",
+  "severity": "must-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: both studies read (Hart et al., 2008; Kirkpatrick et al., 2012) come from one laboratory with the same senior investigator, the statement says so, and the companion claim on the same two studies is replicated-same-team; Hart et al. (2012) is that group's narrative review, and 7 of its 16 Table 1 studies are from the same laboratory (checked against the reference list, p. 606). Status changed to replicated-same-team (patch 3; METHODS §6.3, §6.4). The proposed sentence ('none of this support is an independent replication') is not adopted: 9 of the 16 reviewed studies come from other laboratories (Johnson 2000, 2005, 2007; Mohs 1978, 1980; Rush 2011; Sevak 2009; Silber 2006; Talland and Quarton 1965). They are known here only through the narrative review, so independent replication is unverified rather than absent, and the statement now says exactly that.",
+  "evidence": "hart_2012 saved PDF text, Table 1 (pp. 590–591) and reference list (p. 606); cl_meth_acute_lab status",
+  "patch_ref": 3
+ },
+ {
+  "n": 9,
+  "claim_id": "cl_meth_acute_cognition",
+  "field": "statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed in the saved PDF text, p. 591: the legend under Table 1 defines only 'MA improved performance' and 'MA produced no effect on performance', and the Silber et al. (2006) row records worse-than-placebo visuospatial processing in a first session under the no-effect code. The statement is reworded more briefly than proposed ('reported no worsening on any domain, but its table has codes only for improvement and no effect'), because the Silber result follows in the next clause; the plain text adds that the review could score a task only as improved or unchanged. The legend is carried in a new anchor (patch 3, ai-located); matching card note: P_cards.json #3.",
+  "evidence": "hart_2012 saved PDF text, p. 591, Table 1 legend and Silber et al. (2006) row",
+  "patch_ref": 3
+ },
+ {
+  "n": 10,
+  "claim_id": "cl_meth_acute_cognition",
+  "field": "statement and evidence[2].extracted",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Recounted: 'Repeated-dosing effects were not investigated' appears in 14 of the 16 rows; the two without it are Comer et al. (2001), titled 'Effects of repeated oral methamphetamine administration in humans', and Hart et al. (2001), 'Methamphetamine self-administration by humans' (reference list, p. 606), both from the reviewers' laboratory. The statement says that 14 of the 16 did not investigate repeated dosing, which is what the table marks, rather than '14 of the 16 given as single doses'. The count goes into a new anchor instead of rewriting anchor 2, which was checked at the stated place and remains correct. Also corrected: 'larger or repeated (binge) doses were not tested' now reads 'larger doses given repeatedly', since repeated low oral doses were tested (Comer et al., 2001). Card corrections: P_cards.json #2 and #4.",
+  "evidence": "hart_2012 saved PDF text, Table 1 caveats column (pp. 590–591), reference list (p. 606)",
+  "patch_ref": 3
+ },
+ {
+  "n": 11,
+  "claim_id": "cl_meth_acute_toxicity",
+  "field": "statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: the only anchor is an unchecked placeholder, sc_cruickshank_2009 is draft with source_read 'abstract only (prototype, 2026-10-14)', and the statement did not say that the description comes from the abstract. Sentence added to the statement and the plain text (patch 4), naming the abstract only (the proposal's 'and summary' dropped, since the card records the abstract alone). Relation also recoded to 'describes' (brief; METHODS §6.1): the claim describes the features of presentations and, once read, their frequency and case fatality. Certainty unchanged.",
+  "evidence": "claim evidence[0]; sc_cruickshank_2009 verification",
+  "patch_ref": 4
+ },
+ {
+  "n": 12,
+  "claim_id": "cl_meth_dependence_baserate",
+  "field": "statement, magnitude and plain",
+  "severity": "must-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: the single anchor is a placeholder, sc_anthony_1994 is a draft written from the abstract with '[to be extracted from PDF]' in place of the table, and none of 11%, 32% or 15% sits in any anchor (METHODS §1.4 principle 3, §4.5, §6.2). The figures are removed from the statement, plain text and magnitude (patch 5). Modified from the proposal: the direction (stimulants below tobacco and alcohol) comes from the same abstract, so it is kept but labelled as coming from the abstract instead of being stated as if read; the survey's years, age range and instrument are kept as identifiers of the source. Relation recoded to 'describes' (brief). The figures can return, anchored to their table, once the Anthony et al. (1994) PDF is read.",
+  "evidence": "claim evidence[0]; sc_anthony_1994 analysis.effect_sizes and verification.source_read",
+  "patch_ref": 5
+ },
+ {
+  "n": 13,
+  "claim_id": "cl_meth_dependence_baserate",
+  "field": "grade.domains.risk_of_bias.levels",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "Confirmed: risk_of_bias.levels was 0 while the reasoning says 'not yet appraised', and the parallel acute-toxicity claim records one provisional level for the same state. Set to one provisional level with the proposed note (patch 5); certainty stays very low (low − 3, at the floor; arithmetic as in validate.py). The card's JBI 'low' was judged from the abstract; P_cards.json #1 labels it provisional.",
+  "evidence": "claim grade.domains; cl_meth_acute_toxicity grade; sc_anthony_1994 risk_of_bias",
+  "patch_ref": 5
+ },
+ {
+  "n": 14,
+  "claim_id": "cl_meth_withdrawal",
+  "field": "statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Zorick et al. (2010) is not saved; checked on sc_zorick_2010: design_detail ('neuroimaging studies lasting 2 or 5 weeks'), sample.attrition (weeks 3–5 come from a further unreported subset) and key finding 6's note ('5-week studies only'). The finding is right. The rewording covers every result after week 2 (depression at weeks 3–4 as well as craving), not only craving, and the plain text and reasoning say the same (patch 6). The fact is carried by extending anchor 3, already ai-located, with its provenance (study card; the full text needs a check at the stated place).",
+  "evidence": "sc_zorick_2010 design_detail, sample.attrition, key_findings[6].note; claim evidence[3]",
+  "patch_ref": 6
+ },
+ {
+  "n": 15,
+  "claim_id": "cl_meth_withdrawal",
+  "field": "evidence[1].extracted",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed on sc_zorick_2010: outcomes.instruments ('BSI (11 subscales)'), outcomes.validity_norms (the psychoticism and paranoid-ideation subscales are self-report distress scales, not diagnostic measures of psychosis) and key finding 5 (time effects P=0.003 for each; 25 vs 85 participants). Added as a new anchor from the card (patch 6, ai-located, provenance stated) rather than by rewriting anchor 1, which was confirmed by a blind second reading; the full text is not saved.",
+  "evidence": "sc_zorick_2010 outcomes and key_findings[5]; claim evidence[1]",
+  "patch_ref": 6
+ },
+ {
+  "n": 16,
+  "claim_id": "cl_meth_choice_alternatives",
+  "field": "plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed in anchor 2 (ai-checked: 10 trials for 10% portions of the dose or the money, requirement rising from 50 to 2800 presses) and on sc_kirkpatrick_2012 (outcomes: 11,550 responses for the full reinforcer, which is 50 + 100 + 200 + 400 + 800 + 1200 + 1600 + 2000 + 2400 + 2800). Added to the statement as well as the plain text, since the plain text may not say more than the statement (patch 7). Corrected in passing: the plain text's '$5 portions' and '$20 portions' and the comparator's 'per portion' misdescribe the design; the money sampled was $5 or $20, and each choice was a 10% portion of it (card design_detail and exposure; anchor 2).",
+  "evidence": "claim evidence[2]; sc_kirkpatrick_2012 design_detail, exposure.dose_frequency_duration_route, outcomes.instruments",
+  "patch_ref": 7
+ },
+ {
+  "n": 17,
+  "claim_id": "cl_meth_naltrexone_bupropion",
+  "field": "grade.reasoning",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "Recomputed: 100/15.9 = 6.29 and 100/6.3 = 15.87; the printed NNT of 9 is 100/11.1 = 9.01 rounded to the nearest whole number, whereas 'about 7 to 16' rounded only the lower end up. Replaced with 'about 6 to 16', labelled as the editors' calculation with its method (patch 8). The interval itself was rechecked: 11.1 ± 1.96 × (11.1/4.53) = 6.30 to 15.90.",
+  "evidence": "claim evidence[2] (6.3 to 15.9; NNT 9); sc_trivedi_2021 key_findings[3]",
+  "patch_ref": 8
+ },
+ {
+  "n": 18,
+  "claim_id": "cl_meth_naltrexone_bupropion",
+  "field": "evidence[3].extracted; statement; population",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Trivedi et al. (2021) is not saved; checked on sc_trivedi_2021: key finding 4 (complete-case 15/52, 9/177, 13/80, 1/75; overall 18.7, 11.6 to 25.8), sample.attrition (52 of 109 = 47.7%; 177 of 294 = 60.2%), sample.inclusion_exclusion (use on at least 18 of 30 days; opioid-free at randomization; no concurrent treatment for a substance use disorder) and key finding 10 (26.7 of 30 days; smoking 72.7%). Anchor 3 extended as proposed, with the denominators labelled an editors' calculation and 'more common on active treatment' limited to stage 1 (in stage 2 the shares were similar, 70.2% and 67.6%). New eligibility and baseline anchor from the card (patch 8), with the locator kept general ('Methods, eligibility criteria; Table 1') rather than the proposed 'Methods > Eligibility', which the card does not record. Both need a check at the stated place.",
+  "evidence": "sc_trivedi_2021 key_findings[4], key_findings[10], sample.attrition, sample.inclusion_exclusion",
+  "patch_ref": 8
+ },
+ {
+  "n": 19,
+  "claim_id": "cl_meth_psychosis_treatment",
+  "field": "statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked glasner-edwards_2014 (saved): 5.1, 1st paragraph, last sentence states that remission within 1 week of abstinence has been reported across a number of studies, so most may recover without medication, with no citation at that sentence; but 3.2 Duration, 1st paragraph, cites references 28, 30, 52 and 53 (amphetamine-psychosis studies and monographs of 1970, 1973, 1958 and 1980) for an average recovery within one week. Checked wearne_2018 (saved): Summary and conclusions, 3rd running-text paragraph (Figure 1 legend not counted): 'symptoms will resolve with abstinence from METH', the passage citing reference 139, a StatPearls entry (Mullen and Crawford, 2018). The finding is right. Modified: 'one without citing any study' corrected as above; StatPearls described neutrally as an online clinical reference entry rather than 'non-peer-reviewed'; the cross-reference given as 'section 9', since the validator warns on raw claim ids. Two anchors added from the saved texts (patch 9). Consistent with the course-of-psychosis claim (group M), which already records the 5.1 sentence as uncited.",
+  "evidence": "glasner-edwards_2014 saved text, 5.1 1st paragraph and 3.2 1st paragraph, references 28, 30, 52, 53; wearne_2018 saved text, Summary and conclusions 3rd paragraph, reference 139",
+  "patch_ref": 9
+ },
+ {
+  "n": 20,
+  "claim_id": "cl_meth_psychosis_treatment",
+  "field": "evidence[0].locator",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "Checked glasner-edwards_2014 (saved): 5.1, 1st paragraph holds everything anchor 0 extracts (no large randomized trials; the 2009 Cochrane review's one trial, N=58, olanzapine versus haloperidol; the haloperidol–quetiapine trial; case reports); the 2nd paragraph concerns children and adolescents (anchor 3) and the 3rd agitation, anxiety, insomnia and benzodiazepines. Locator narrowed to the 1st paragraph (patch 9). The anchor keeps its ai-checked status: its content, re-found blind, is unchanged, and a check_note records the narrowing.",
+  "evidence": "glasner-edwards_2014 saved text, section 5.1, paragraphs 1–3",
+  "patch_ref": 9
+ },
+ {
+  "n": 21,
+  "claim_id": "cl_meth_mirtazapine",
+  "field": "grade.reasoning",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked coffin_2020 (saved): Methods › Data Analysis, 2nd paragraph lists five sensitivity analyses; Results › Sensitivity Analyses reports significant effects with week 1 included, with missing samples imputed as positive and with baseline correlates of missing or positive samples controlled for (estimates in the supplement's eTable, not saved), says 'No significant effect was observed stratifying by methamphetamine use intensity', and does not report the late-visit analysis. So the proposed 'remained significant in each' is wrong: three of five are reported as significant, one is not and one is not reported. Retention and Adherence: no evidence of unblinding at week 24, 19 (46%) vs 23 (49%) correct guesses, P = .83. The reasoning addition (patch 10) states this accurately, with a new anchor from the saved text.",
+  "evidence": "coffin_2020 saved text: Methods › Data Analysis 2nd paragraph; Results › Sensitivity Analyses; Results › Retention and Adherence",
+  "patch_ref": 10
+ },
+ {
+  "n": 22,
+  "claim_id": "cl_meth_mirtazapine",
+  "field": "magnitude",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Checked coffin_2020 (saved): at week 12, 25 of 38 vs 32 of 41 samples positive; baseline 51 of 60 (85%) vs 45 of 60 (75%); Data Analysis, 1st paragraph: treatment effects are divergences of fitted trends after the fitted baseline difference, with week 1 omitted. Recomputed the crude risk ratio: (25/38)/(32/41) = 0.843, log SE 0.143, 95% CI 0.64 to 1.12, not the proposed 0.62 to 1.14 (the first trial's 0.71, 0.42 to 1.18 reproduces with the same method; the card's key finding 2 gives the same ratio). 'Which is why they are larger' softened to 'one reason ... (editors' reading)', since the model also omits week 1 and uses all visits. Added to magnitude with a new anchor (patch 10), which also anchors the second trial's baseline CES-D (20.2) already used in the statement.",
+  "evidence": "coffin_2020 saved text: Results › Methamphetamine Use 1st paragraph; Methods › Data Analysis 1st paragraph; Table 1",
+  "patch_ref": 10
+ },
+ {
+  "n": 23,
+  "claim_id": "cl_meth_bupropion_modafinil",
+  "field": "statement and plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked bhatt_2016 Table 1 (saved): of six methylphenidate trials, Konstenius 2014 (drug-negative urines, p = 0.047), Ling 2014 (OR 0.18 at week 14, p = 0.025), Rezaei 2015 (p = 0.03) and Tiihonen 2007 (OR 0.42, 0.24–0.72, p = 0.002) favour methylphenidate, Konstenius 2010 (p = 0.472) and Miles 2013 (p = 0.89) do not, and none is in the abstinence analysis (Results › Meta-analyses: abstinence). Modified: 'methamphetamine-positive' changed to 'positive', because Konstenius 2014 enrolled people with amphetamine dependence and counted drug-negative urines and Tiihonen 2007 enrolled people with amphetamine or methamphetamine dependence; the statement says so. Anchor 4 rewritten with the count and set back to ai-located; statement and plain text updated (patch 11).",
+  "evidence": "bhatt_2016 saved text, Table 1 and Results › Meta-analyses: abstinence, 1st paragraph",
+  "patch_ref": 11
+ },
+ {
+  "n": 24,
+  "claim_id": "cl_meth_bupropion_modafinil",
+  "field": "status and statement",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked bhatt_2016 (saved): the pooled trials are references 12, 13, 24, 30 and 35, that is Anderson 2015 and Anderson 2012 (sharing Anderson, Li and Holmes) and Heinzerling 2014, Heinzerling 2010 and Shoptaw 2008 (sharing Heinzerling and Swanson). Status kept as 'replicated' (two independent groups, both null), and the statement and reasoning now say the five trials come from two groups. Not adopted: the sentence on Elkashef et al. (2008), excluded from the retention analysis for an overlapping sample (Results › Meta-analyses: retention). That exclusion concerns retention, not the pooled abstinence trials, and sc_bhatt_2016 (reporting issue 1) questions it (Siefried et al., 2020, list the two trials separately), so it does not show reduced independence. New anchor from the saved text (patch 11).",
+  "evidence": "bhatt_2016 saved text, Results › Meta-analyses: abstinence and retention; references 12, 13, 22, 24, 30, 35; sc_bhatt_2016 reporting_issues[1]",
+  "patch_ref": 11
+ },
+ {
+  "n": 25,
+  "claim_id": "cl_meth_bupropion_modafinil",
+  "field": "magnitude",
+  "severity": "should-fix",
+  "verdict": "accept",
+  "reason": "Checked bhatt_2016 Table 3 (saved): retention OR 1.20 (0.91 to 1.58), risk with placebo 480 per 1000, 46 more per 1000 (23 fewer to 113 more). Recomputed from the OR and the placebo rate 268/558: 45.5, −23.5 and 113.2 per 1000. Added to the magnitude and the statement with a new anchor (patch 11).",
+  "evidence": "bhatt_2016 saved text, Tables 2 and 3, retention row",
+  "patch_ref": 11
+ },
+ {
+  "n": 26,
+  "claim_id": "cl_meth_bupropion_modafinil",
+  "field": "grade.reasoning",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Checked bhatt_2016 Table 2 and footnotes (saved): indirectness 'Serious' for abstinence (footnote d: different drugs at varying doses pooled) and 'Very serious' for retention (d, and f: populations varied, some trials including people who inject drugs, incarcerated people or people with ADHD). The proposed reasoning gave a different ground for abstinence (all five trials enrolled people with methamphetamine dependence), which is not the review's reason. The reasoning now gives the review's grounds and why they are not applied: the claim is worded to the pooled drugs, doses and populations, speaks for no single drug or dose, and the test between the two drugs for abstinence was not significant (p = 0.59). Certainty unaffected (very low) (patch 11).",
+  "evidence": "bhatt_2016 saved text, Table 2 and footnotes c, d, f",
+  "patch_ref": 11
+ },
+ {
+  "n": 27,
+  "claim_id": "cl_meth_withdrawal_medication",
+  "field": "statement and magnitude",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked acheson_2023 (saved): Abstract › Key Findings gives amineptine 'improve global state (MD −0.49, 95% CI −0.80, −0.17)'; Table 2: global state total −0.24 (−0.73, 0.25), 3 trials, 103 participants, I² 69, very low; amineptine −0.49 (−0.80, −0.17), 2 trials, 72, low; mirtazapine 0.30 (−0.22, 0.25), a value outside its own interval; Results 3.6 gives standardised mean differences of −0.34 (−1.06, 0.25), −0.70 (−1.18, −0.22) and 0.42 (−0.30, 1.15). The finding is right that the claim omits global state and amineptine's low-certainty improvement. Not adopted: that the text 'prints the same result again' as an SMD. The two sets differ, the total pools two scales and so cannot validly be a raw mean difference, and two printed values are internally impossible (sc_acheson_2023 reporting issues 0 and 1). The statement gives the direction and the certainty with that caveat, and the magnitude gives both versions; new anchor (patch 12). The reasoning's 'two incompatible versions' is made specific.",
+  "evidence": "acheson_2023 saved text: Abstract › Key Findings; Table 2; Results › 3.6; sc_acheson_2023 reporting_issues[0], [1]",
+  "patch_ref": 12
+ },
+ {
+  "n": 28,
+  "claim_id": "cl_meth_withdrawal_medication",
+  "field": "statement and plain",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked acheson_2023 (saved): Key Findings ('only six trials of four medications (n = 186) could be meta-analysed'); 3.2 names the unpooled ibudilast, varenicline and modafinil trials; 3.11 reports less fatigue on amantadine (p < 0.001), faster visual reaction time on varenicline (p = 0.025) without other cognitive benefit, and ibudilast improving 2 of 12 CPT-II measures, but also, unfavourably, no sleep benefit in two mirtazapine trials with more night awakenings in one (p < 0.05), and no modafinil–placebo difference after crossover. The proposal listed only the favourable results; the statement now reports both directions, without p-values (single small trials, many outcomes), and the plain text is adapted (patch 12). New anchor from the saved text.",
+  "evidence": "acheson_2023 saved text: Abstract › Key Findings; Results › 3.1, 3.2, 3.11",
+  "patch_ref": 12
+ },
+ {
+  "n": 29,
+  "claim_id": "cl_meth_withdrawal_medication",
+  "field": "magnitude",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Checked acheson_2023 (saved): Table 2, amineptine discontinuation I² 58; references 51 and 54 are Jittiwutikan, Srisurapanont and Jarusuraisin (1997) and Srisurapanont, Jarusuraisin and Jittiwutikan (1999); per-arm counts are in neither the text nor Tables 1–2 (forest plots in Figure S2 only, Results 3.4). Added to the magnitude, with 'by the same three investigators' in the statement (patch 12).",
+  "evidence": "acheson_2023 saved text: Table 2; Results › 3.4; references 51 and 54",
+  "patch_ref": 12
+ },
+ {
+  "n": 30,
+  "claim_id": "cl_meth_withdrawal_medication",
+  "field": "population",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Checked acheson_2023 Table 1 (saved): Kongsakon 2005 'Thailand: Specialised probation centre'; an adjunctive treatment given to both arms in Jittiwutikan 1997 and Srisurapanont 1999 (low-dose lorazepam, supportive treatment), Cruickshank 2008 (narrative therapy counselling) and Modarresi 2018 (symptomatic therapy); none provided or not reported in the other five. Population replaced as proposed (patch 12), with a Table 1 anchor that also identifies the two mirtazapine trials (used for finding 32).",
+  "evidence": "acheson_2023 saved text, Table 1 (setting and adjunctive-intervention columns)",
+  "patch_ref": 12
+ },
+ {
+  "n": 31,
+  "claim_id": "cl_meth_withdrawal_medication",
+  "field": "monograph.sections[12].no_evidence_note",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Confirmed: the note says only one trial has been appraised and that the reviews of mirtazapine and psychostimulants are unread, while the staged claims rest on cards written from the PMC full texts of Colfax 2011, Coffin 2020, Bhatt 2016 and Acheson 2023. The replacement note (P_monograph.json #1, to apply when the staged claims are merged) was drafted against search-logs/methamphetamine_DOI-LIST.md: it keeps the antipsychotic claim already in section 12, which the proposal left out; names the unread items exactly (75, 77, 79, 82–85, and 55 for antipsychotics); notes that item 76 (Siefried 2020) is carded but used by no claim; and drops 'bupropion alone', which is not an item on the list.",
+  "evidence": "data/monographs/methamphetamine.json sections[11] (section 12); search-logs/methamphetamine_DOI-LIST.md items 55, 61, 75–85; data/study-cards/_incoming/methamphetamine/ (cards present)",
+  "patch_ref": null
+ },
+ {
+  "n": 32,
+  "claim_id": "cl_meth_mirtazapine",
+  "field": "statement (and cl_meth_withdrawal_medication.statement)",
+  "severity": "should-fix",
+  "verdict": "accept-modified",
+  "reason": "Checked acheson_2023 Table 1 and 3.2 (saved): the two mirtazapine trials pooled for discontinuation are Cruickshank 2008 (31 participants, 14 nights) and Kongsakon 2005 (20 participants, 14 days), references 49 and 52, not the San Francisco trials (Colfax 2011; Coffin 2020). Modified: the proposed 'showed no difference from placebo' is not the whole result, since Kongsakon reported lower withdrawal scores (p = 0.03, Results 3.7), which the review could not pool; both claims now say so, with readable cross-references instead of claim ids (patches 10 and 12). In the same pass the withdrawal claim's reasoning, 'one unpooled trial', was made precise (that trial was pooled for discontinuation; only its withdrawal scores were not).",
+  "evidence": "acheson_2023 saved text: Table 1; Results › 3.2, 3.7; references 49 and 52",
+  "patch_ref": 10
+ },
+ {
+  "n": 33,
+  "claim_id": "cl_meth_mirtazapine",
+  "field": "monograph.sections[15].priority_questions",
+  "severity": "consider",
+  "verdict": "accept-modified",
+  "reason": "Confirmed in coffin_2020 Table 2 (saved): net treatment effect at 36 weeks 0.73 (0.57–0.96), P = .02, 12 weeks after the 24-week medication period. The proposed 'needs' text (P_monograph.json #2, to apply when the staged claims are merged) builds on group M's reviewer's wording for the same field (group M finding 5, whose adjudication leaves this field to group P) and adds other populations and the mirtazapine result. The proposal's 'persisted' is not used: the 36-week figure is a modelled net divergence in one team's trial.",
+  "evidence": "coffin_2020 saved text, Table 2; data/monographs/methamphetamine.json sections[14].priority_questions[5]; group M finding 5",
+  "patch_ref": null
+ },
+ {
+  "n": 34,
+  "claim_id": "cl_meth_mirtazapine",
+  "field": "evidence (all three staged claims): reference records",
+  "severity": "consider",
+  "verdict": "accept",
+  "reason": "Confirmed: data/references/*.json holds no records for colfax_2011, coffin_2020, bhatt_2016 or acheson_2023 (DOIs 10.1001/archgenpsychiatry.2011.124, 10.1001/jamapsychiatry.2019.3655, 10.1186/s13643-016-0370-x and 10.1111/dar.13511, matching DOI list items 80, 81, 78 and 61). No claim edit: the staged claims' changelogs already hold them until the references are built from Crossref (scripts/build_references.py; METHODS §4.2) and retraction-checked, and merging before then would fail validate.py ('unknown reference'). For the editor's merge checklist.",
+  "evidence": "data/references/methamphetamine.json; data/references/_incoming/methamphetamine.txt; staged claims' changelog 0.1.0",
+  "patch_ref": null
+ }
+]

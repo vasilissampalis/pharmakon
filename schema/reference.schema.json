@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schema/reference.schema.json",
+  "title": "Reference",
+  "description": "One bibliographic source. CSL-JSON fields (rendered by citeproc-js in APA 7) plus the site's verification fields (METHODS.md §4).",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "title",
+    "author",
+    "issued",
+    "verification"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Citation key: firstauthor_year[a|b] for papers (e.g. hart_2012, volkow_2001a); organisation_identifier for web pages and reports (e.g. europa_112, unodc_2025). Lowercase ASCII; stable forever once used.",
+      "pattern": "^[a-z][a-z0-9-]*_[0-9a-z]+$"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "article-journal",
+        "book",
+        "chapter",
+        "report",
+        "webpage",
+        "thesis",
+        "dataset",
+        "paper-conference",
+        "article",
+        "post"
+      ],
+      "description": "CSL item type."
+    },
+    "title": {
+      "type": "string"
+    },
+    "author": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "family": {
+            "type": "string"
+          },
+          "given": {
+            "type": "string"
+          },
+          "literal": {
+            "type": "string",
+            "description": "Institutional author, e.g. 'European Union Drugs Agency'."
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "family"
+            ]
+          },
+          {
+            "required": [
+              "literal"
+            ]
+          }
+        ]
+      }
+    },
+    "editor": {
+      "type": "array",
+      "items": {
+        "$ref": "#/properties/author/items"
+      }
+    },
+    "container-title": {
+      "type": "string",
+      "description": "Journal or book title."
+    },
+    "volume": {
+      "type": "string"
+    },
+    "issue": {
+      "type": "string"
+    },
+    "page": {
+      "type": "string",
+      "description": "Page range as 'start-end' or article number."
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "publisher-place": {
+      "type": "string"
+    },
+    "edition": {
+      "type": "string"
+    },
+    "issued": {
+      "type": "object",
+      "description": "Citation year: print-issue year when it exists (METHODS §4.2).",
+      "required": [
+        "date-parts"
+      ],
+      "properties": {
+        "date-parts": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "DOI": {
+      "type": "string",
+      "pattern": "^10\\.[0-9]{4,9}/\\S+$"
+    },
+    "PMID": {
+      "type": "string"
+    },
+    "PMCID": {
+      "type": "string"
+    },
+    "ISBN": {
+      "type": "string"
+    },
+    "URL": {
+      "type": "string",
+      "format": "uri"
+    },
+    "accessed": {
+      "$ref": "#/properties/issued"
+    },
+    "abstract": {
+      "type": "string"
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "unverified",
+            "metadata-verified",
+            "pdf-checked"
+          ],
+          "description": "unverified: typed or recalled; metadata-verified: fetched from Crossref/publisher by DOI; pdf-checked: authors, year, title compared against the PDF first page by a human."
+        },
+        "metadata_source": {
+          "type": "string",
+          "enum": [
+            "crossref",
+            "publisher",
+            "pubmed",
+            "manual"
+          ]
+        },
+        "online_first_year": {
+          "type": "integer",
+          "description": "Stored when it differs from the print-issue year."
+        },
+        "verified_by": {
+          "type": "string"
+        },
+        "verified_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "retraction_check": {
+          "type": "object",
+          "required": [
+            "status",
+            "checked_on"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "not-checked",
+                "clear",
+                "correction",
+                "expression-of-concern",
+                "retracted"
+              ]
+            },
+            "checked_on": {
+              "type": "string",
+              "format": "date"
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        },
+        "pdf_path": {
+          "type": "string",
+          "description": "Relative path under PDFs/, e.g. PDFs/Methamphetamine/Hart_2012_CognitiveFunctioning.pdf"
+        },
+        "preprint": {
+          "type": "boolean",
+          "default": false
+        },
+        "open_access": {
+          "type": "boolean"
+        },
+        "metadata_route": {
+          "type": "string",
+          "description": "How the Crossref record was read: 'browser', or 'two agreeing WebFetch transcriptions' (METHODS §4.2, §12.1)."
+        },
+        "metadata_corrections": {
+          "type": "object",
+          "description": "A documented correction of the Crossref record (data/access/metadata-overrides.json): note and source."
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

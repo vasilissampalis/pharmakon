@@ -1,0 +1,286 @@
+{
+ "id": "sc_gage_2017",
+ "substance": "cannabis",
+ "reference": "gage_2017",
+ "design": "case-control",
+ "design_detail": "Mendelian randomization, two-sample and bidirectional, using published genome-wide summary statistics. Forward direction: 21 variants associated with ever use of cannabis at p<10^-5 (none at genome-wide significance) in the International Cannabis Consortium (ICC) genome-wide study (Stringer et al., 2016; 14,388 people who had ever used cannabis and 17,942 who had not), pruned at r2>0.9 with the remaining correlations between variants modelled, tested against schizophrenia case status in the Psychiatric Genomics Consortium study (PGC2; 36,989 cases, 113,075 controls). Reverse direction: 107 of 128 independent genome-wide significant schizophrenia variants tested against ever use in the ICC data. Inverse-variance-weighted estimates (a generalized weighted regression that allows for correlated variants), MR-Egger regression, leave-one-out, a restriction to 12 variants, a positive control outcome (years of education, SSGAC, 126,599 people), a negative control outcome (height, GIANT, 253,288 people) and a rerun without the overlapping Estonian (EGCUT) sample. Every estimate is expressed per doubling of the odds of the exposure. Labelled case-control under the round brief's rule for Mendelian randomization (the forward analysis takes its outcome associations from a case-control genome-wide study; the reverse analysis takes them from cross-sectional ever-use data) and appraised with ROBINS-E, because the protocol names no instrument for this design.",
+ "can_establish": "Whether variants that predict ever trying cannabis are associated with schizophrenia case status, and whether variants that raise genetic liability to schizophrenia are associated with ever trying cannabis, in the pattern that a causal effect of liability in each direction would produce if the instrumental-variable assumptions hold.",
+ "cannot_establish": "The effect of regular, heavy, early or high-potency use (the exposure is genetic liability to having ever used cannabis, and the authors say heavier use is the more relevant exposure), whether the forward association runs through cannabis or through traits such as impulsivity or risk-taking that the variants may index, the mechanism of the reverse association, or absolute risks.",
+ "sample": {
+  "n_total": null,
+  "n_by_group": {
+   "schizophrenia cases (PGC2)": 36989,
+   "controls (PGC2)": 113075,
+   "people who had ever used cannabis (ICC)": 14388,
+   "people who had never used cannabis (ICC)": 17942,
+   "education genome-wide study participants (SSGAC)": 126599,
+   "height genome-wide study participants (GIANT)": 253288,
+   "variants, forward instrument": 21,
+   "variants, reverse instrument": 107,
+   "variants, control and restricted analyses": 12
+  },
+  "recruitment": "Consortium summary statistics, not individual recruitment: the ICC genome-wide study of ever use (Stringer et al., 2016); the PGC2 schizophrenia study (2014); SSGAC educational attainment (Rietveld et al., 2013); GIANT height (Wood et al., 2014). Proxy variants and the correlations between variants were taken from PhenoScanner, using 1000 Genomes Phase 3 reference data from people of European descent (Method, 1st and 2nd paragraphs).",
+  "inclusion_exclusion": "Forward instrument: 153 ICC variants at p<10^-5, pruned at r2>0.9 to 22, one dropped for poor quality, leaving 21 (Table 1); correlations below r2 0.9 were kept and modelled (Supplementary Table S1, not read). Reverse instrument: 128 independent genome-wide significant schizophrenia variants, of which 107 were present in the ICC data (Supplementary Table S2, not read). Control analyses: the text says 8 of the 21 variants were in the education study and 9 in the height study, and that 4 proxies (r2>0.9) made 12 available for both (Method, 2nd paragraph).",
+  "demographics": "Not reported in this paper. The ancestry of the source samples is not stated, beyond the use of European-descent reference data for proxies and correlations.",
+  "attrition": "Not applicable (summary statistics).",
+  "selection_effects": "Participants are those of the contributing cohorts, whose recruitment is outside the authors' control. Ever use was common in the ICC data (14,388 of 32,330, about 45%; editors' arithmetic). About 1500 people from the Estonian Genome Centre cohort (EGCUT) are in both the ICC data (about 10% of it) and PGC2 (2.3% of it); the authors reran both directions without them and report no change (Discussion › Strengths and limitations, 2nd paragraph). PGC2 holds no cannabis data, so its cases and controls cannot be split by exposure."
+ },
+ "exposure": {
+  "measurement": "No individual exposure data. Forward: a 21-variant genetic instrument for ever use of cannabis, a phenotype the authors describe as one question on whether the person had ever used cannabis, with no distinction between trying it once and using it daily for years (Discussion › Strengths and limitations, 3rd paragraph). Reverse: 107 genome-wide significant variants for schizophrenia liability.",
+  "dose_frequency_duration_route": "None: ever versus never. Frequency, amount, duration, age at first use and potency are not represented; the authors note that no variants indexing the strength of the cannabis used had been identified (Discussion, 1st paragraph). Estimates are per doubling of the odds of ever use.",
+  "purity_known": false,
+  "polysubstance": "Not addressed: no multivariable analysis for tobacco, alcohol or other drugs.",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "No control group in the usual sense: the estimates compare people along a continuous scale of genetic liability. The forward outcome data contrast PGC2 schizophrenia cases (36,989) with controls (113,075); the reverse outcome data contrast ICC participants who had ever used cannabis (14,388) with those who had not (17,942).",
+  "matching": "Not applicable.",
+  "unmeasured_premorbid": "Population structure is handled, if at all, inside the source studies and is not described here. Impulsivity and risk-taking, which the authors suggest the ever-use variants may capture, are not measured; nor are education, smoking or other substance use, since no multivariable analysis was run.",
+  "controls_other_drug_use": "Not available in either data set."
+ },
+ "outcomes": {
+  "instruments": "Forward: schizophrenia case status (PGC2). Reverse: ever versus never use of cannabis (ICC). Positive control: years of education (SSGAC). Negative control: height as a z-score (GIANT).",
+  "validity_norms": "Case definitions and phenotype measurement are those of the source consortia and are not described in this paper.",
+  "operationalization": "The causal estimates are log odds ratios of the outcome per unit increase in the log odds of the exposure, multiplied by 0.693 and exponentiated to give an odds ratio per doubling of the odds of the binary exposure (Method › Effect of cannabis initiation on schizophrenia risk, 2nd paragraph). The same transformation was applied to the linear coefficients for education and height (Method › Positive and negative controls, 1st paragraph), so the values printed as odds ratios for those two outcomes are not odds ratios.",
+  "n_outcomes_tested": 4,
+  "multiplicity_correction": "None. Four main analyses (forward, reverse and two control outcomes), each with an MR-Egger analysis, plus a 12-variant restriction and a leave-one-out analysis, all judged at nominal p-values.",
+  "assessor_blinding": "Not applicable (summary statistics)."
+ },
+ "analysis": {
+  "effect_sizes": "[OR per doubling of the odds of the exposure; inverse-variance weighted; no adjustment beyond the source studies] Ever use (21 variants) on schizophrenia: 1.04 (95% CI 1.01 to 1.07), p=0.019; restricted to 12 variants 1.03 (0.99 to 1.08), p=0.145; MR-Egger estimate 1.01 (0.93 to 1.10), p=0.815, intercept 0.99 (0.98 to 1.01), p=0.50; 12-variant MR-Egger 1.01 (0.88 to 1.17), p=0.854. Schizophrenia liability (107 variants) on ever use: 1.10 (1.05 to 1.14), p=2.64×10^-5; MR-Egger estimate 1.17 (0.96 to 1.43), p=0.128, intercept 1.00 (0.98 to 1.01), p=0.524. Ever use on years of education 0.99 (0.97 to 1.00), p=0.066 (MR-Egger 0.94, 0.88 to 1.00, p=0.062); on height 1.00 (0.99 to 1.01), p=0.901 (MR-Egger 0.95, 0.88 to 1.01, p=0.095) (Tables 2 and 3). Upper bound: using the upper confidence limit, a person with a 50% probability of ever using cannabis has at most a 24% higher relative risk of schizophrenia than a person with a 10% probability (Results › Sensitivity analyses, 6th paragraph); with the point estimate instead, the same contrast gives about 13% (editors' calculation). Editors' conversion to the per-unit-of-log-odds scale used by Vaucher et al. (2018), dividing ln OR by ln 2: forward 1.06 (1.01 to 1.10), reverse 1.15 (1.07 to 1.21).",
+  "covariates": "None at the Mendelian randomization stage. Correlations between variants were modelled with a matrix from PhenoScanner (Supplementary Table S1, not read).",
+  "preregistration": "none",
+  "preregistration_detail": "No registration or protocol is reported. The authors say the control analyses are presented as originally conceived.",
+  "selective_reporting": "Every analysis described in the Method appears in Tables 2 and 3, including the positive control that came out weaker than predicted. The leave-one-out result is shown only in Supplementary Fig. S3 (not read), and the rerun without EGCUT is described as unchanged without numbers.",
+  "power": "Not formally reported. The authors call the cannabis instruments weak, expect the estimates to be conservative, and cite the large samples of two-sample summary data as the design's strength. Instrument strength is not reported; selection at p<10^-5 implies a chi-square above 19.5 per variant in the discovery sample, that is an F statistic of at least about 20 per variant before any inflation from winner's curse (editors' calculation)."
+ },
+ "interpretation_gap": {
+  "results_show": "With 21 sub-genome-wide variants for ever use, genetic liability to ever using cannabis was weakly associated with schizophrenia (OR 1.04 per doubling of the odds of ever use, 1.01 to 1.07); the estimate shrank to 1.01 (0.93 to 1.10) with MR-Egger and lost significance with 12 variants. Genetic liability to schizophrenia (107 genome-wide significant variants) was more clearly associated with ever use (OR 1.10 per doubling of the odds of schizophrenia, 1.05 to 1.14), with an MR-Egger estimate in the same direction (1.17, 0.96 to 1.43). The positive control (education) was weaker than predicted (p=0.066) and the negative control (height) null.",
+  "claimed": "The abstract and conclusion say the results give some evidence that cannabis initiation increases the risk of schizophrenia, with a small causal estimate, and stronger evidence that schizophrenia risk predicts initiation. The wording is cautious and the limitations section is thorough. Gaps: (1) the title speaks of cannabis use, while the exposure is genetic liability to having ever tried cannabis; (2) the discussion's statement that a person more likely to use cannabis has at most a 24% higher relative risk bounds only the effect of liability to ever use, on a log-odds scale, not the effect of regular or heavy use, a limit the authors state in the next sentences but that the figure does not carry with it; (3) the reverse result is called strong evidence for the reverse-causation hypothesis, but it shows that genetic liability to schizophrenia is associated with ever use, not that schizophrenia or its prodrome causes use (the authors say the mechanism, biological or social, is unknown and their explanations speculative); (4) the conclusion that MR supports stronger causal inference holds only to the extent the instrument assumptions hold, which the weak instrument and the failed positive control leave uncertain for the forward direction.",
+  "gap_assessment": "minor"
+ },
+ "replication": {
+  "status": "partially-replicated",
+  "timeline": [
+   {
+    "year": 2007,
+    "event": "Moore et al., systematic review: a modest association between cannabis use and later psychotic outcomes, with estimates attenuating more in studies that adjusted for more confounders; cited in this paper's introduction as a sign that residual confounding may remain.",
+    "reference": "moore_2007"
+   },
+   {
+    "year": 2014,
+    "event": "Power et al.: a polygenic risk score for schizophrenia predicted cannabis use in 2082 healthy people; its authors read this as shared genetic aetiology, while Gage, Davey Smith and Munafò (2015, a comment posted on PubMed) proposed an effect of schizophrenia risk on cannabis use, the reading this paper's reverse analysis tests."
+   },
+   {
+    "year": 2016,
+    "event": "Gage, Hickman and Zammit, review of the epidemiological evidence, cited for the difficulty of inferring causation from observational studies of cannabis and psychosis.",
+    "reference": "gage_2016"
+   },
+   {
+    "year": 2016,
+    "event": "Stringer et al., ICC genome-wide study of ever use (32,330 people): no genome-wide significant variant; the source of this paper's 21 forward instruments."
+   },
+   {
+    "year": 2016,
+    "event": "Sherva et al., genome-wide study of cannabis dependence with three genome-wide significant variants: not used here, because its phenotype mixes initiation with dependence and the PGC2 cases and controls cannot be split by cannabis use."
+   },
+   {
+    "year": 2016,
+    "event": "Jackson et al. (twin study) and Mokrysz et al. (ALSPAC cohort): cited by the authors as suggesting that the association of cannabis with education is more confounded than assumed, which undermines education as a positive control."
+   },
+   {
+    "year": 2017,
+    "event": "Verweij et al. (in press when this paper was written): genetic correlation between lifetime cannabis use and schizophrenia by LD score regression, which the authors say fits shared genetic architecture or causation in either direction."
+   },
+   {
+    "year": 2017,
+    "event": "Vaucher et al. (2018; online January 2017), read in this round: two-sample Mendelian randomization with 10 variants from the same ICC study and PGC schizophrenia data, OR 1.08 per unit of log odds of ever use, about 1.05 per doubling (editors' conversion), close to this paper's 1.04, but presented as evidence of a causal effect; the reverse direction was not tested. Not cited by this paper."
+   },
+   {
+    "year": 2018,
+    "event": "Pasman et al., read in this round: genome-wide study of lifetime use in 184,765 people that includes the ICC data; bidirectional Mendelian randomization with weak, non-significant evidence for an effect of liability to cannabis use on schizophrenia (IVW OR 1.10, 0.99 to 1.21, per unit of log odds) and stronger evidence in the reverse direction (1.16, 1.06 to 1.27); its authors say their results agree with this paper. Exposure and outcome data overlap with this paper's, so this is not an independent replication."
+   },
+   {
+    "year": 2021,
+    "event": "Gillespie and Kendler, viewpoint on genetically informed methods, cite this study among the Mendelian randomization evidence that liability to schizophrenia raises cannabis use (as recorded on card sc_gillespie_2021; not re-read for this card).",
+    "reference": "gillespie_2021"
+   }
+  ],
+  "where_it_stands": "The three two-sample Mendelian randomization studies of cannabis and schizophrenia read in this round share data: Vaucher et al. (2018) used the same ICC exposure study and PGC schizophrenia data, and Pasman et al. (2018) built a larger exposure study that contains the ICC data and used PGC2 again. On a common scale (editors' conversions) their forward estimates are similar, about 1.04 to 1.07 per doubling of the odds of genetic liability to ever use, and the two that tested the reverse direction agree at about 1.10 to 1.11 per doubling of the odds of schizophrenia liability; they differ mainly in how they describe the forward estimate. None addresses frequent, heavy or high-potency use. The analysis the authors propose, instruments for heavier use tested in schizophrenia samples split by cannabis exposure, had not been done in the studies read here."
+ },
+ "funding": {
+  "funder": "Acknowledgements: S.H.G. and M.R.M. are members of the UK Centre for Tobacco and Alcohol Studies, a UK Clinical Research Council Public Health Research Centre of Excellence, with funding acknowledged from the British Heart Foundation, Cancer Research UK, the Economic and Social Research Council, the Medical Research Council and the National Institute for Health Research under the UK Clinical Research Collaboration; Medical Research Council support MC_UU_12013/1, MC_UU_12013/6 and MR/M006727/1; S. Burgess, Wellcome Trust fellowship 100114; J. Bowden, MRC Methodology Research Fellowship MR/N501906/1. The authors thank T. Esko (EGCUT) for help in obtaining the PGC2 data without the EGCUT sample.",
+  "declared_conflicts": "Declaration of Interest: None (as printed).",
+  "affiliations_note": "MRC Integrative Epidemiology Unit, School of Experimental Psychology and School of Social and Community Medicine, University of Bristol; Department of Public Health and Primary Care and MRC Biostatistics Unit, University of Cambridge; MRC Centre for Neuropsychiatric Genetics and Genomics, Cardiff University. Three authors (Bowden, Davey Smith and Burgess) are authors of the MR-Egger method applied here, and Burgess also of the correlated-variant and sample-overlap methods cited; two (Gage and Zammit) are authors of the 2016 review cited as background (gage_2016). No ties to industry are declared."
+ },
+ "what_would_settle_it": "What the authors themselves propose: instruments for frequency or heaviness of cannabis use, or for cannabis use disorder, from larger genome-wide studies, tested in schizophrenia samples that record cumulative cannabis exposure, so that the variant–schizophrenia associations can be compared between people who have and have not used cannabis (a causal effect should appear only in people exposed); together with a directionality test, multivariable adjustment for smoking, risk-taking and education, and a positive control whose causal status is not itself in doubt.",
+ "risk_of_bias": {
+  "instrument": "ROBINS-E",
+  "domains": [
+   {
+    "domain": "Confounding",
+    "judgment": "high",
+    "note": "Judged for the forward estimate, the paper's primary question. Independence (no confounding of the instrument): summary statistics from consortia; how population structure was handled in the source studies is not described here, and the ancestry of the samples is not stated. Exclusion restriction (no other path from the variants to schizophrenia): the authors themselves suggest that ever-use variants may index impulsivity or risk-taking, a route to schizophrenia that would not pass through cannabis; no multivariable analysis (smoking, risk-taking, education) and no directionality test were done; MR-Egger, the only pleiotropy-robust method, gave 1.01 (0.93 to 1.10) with a null intercept, too imprecise to exclude pleiotropy of the size needed to produce an odds ratio of 1.04; the positive control failed (p=0.066), and the negative control's MR-Egger estimate moved away from the null (0.95, p=0.095). For the reverse estimate (107 genome-wide significant variants; MR-Egger 1.17, 0.96 to 1.43, intercept null) the editors would judge some concerns: schizophrenia variants may influence cannabis use through other traits, which Mendelian randomization cannot separate from liability to schizophrenia itself."
+   },
+   {
+    "domain": "Measurement of the exposure",
+    "judgment": "some-concerns",
+    "note": "Strength (relevance): no forward variant reached genome-wide significance and some may be false positives (the authors' words); no F statistic or variance explained is reported; selection at p<10^-5 implies a per-variant F of at least about 20 in the discovery sample (editors' calculation), inflated by winner's curse because the same study supplied the variant–exposure estimates. With almost no sample overlap, this weakness biases towards the null and widens intervals rather than creating an association. What is instrumented is liability to ever trying cannabis, measured by one question; regular or heavy use, the exposure of interest for psychosis, is not represented. Reverse instrument: 107 genome-wide significant variants; the 18% variance figure in the Method is second-hand (see key findings)."
+   },
+   {
+    "domain": "Selection of participants",
+    "judgment": "some-concerns",
+    "note": "Recruitment into the source cohorts is outside the authors' control and is not described; about 1500 participants (EGCUT) overlapped between exposure and outcome data and were removed in a rerun without change; PGC2 records no cannabis use, so selection by exposure cannot be checked."
+   },
+   {
+    "domain": "Post-exposure interventions",
+    "judgment": "low",
+    "note": "Not applicable in the usual sense: genotype is fixed at conception."
+   },
+   {
+    "domain": "Missing data",
+    "judgment": "low",
+    "note": "All 21 forward variants were found in PGC2; 107 of 128 schizophrenia variants were found in the ICC data; for the control outcomes 12 variants (4 of them proxies) were available, and the forward analysis was repeated on the same 12."
+   },
+   {
+    "domain": "Measurement of the outcome",
+    "judgment": "low",
+    "note": "Schizophrenia case status from PGC2, defined by its contributing studies (not described here); misclassification is unlikely to depend on genotype. For the reverse estimate the outcome is a single self-reported ever-use question, which would raise some concerns."
+   },
+   {
+    "domain": "Selection of the reported result",
+    "judgment": "low",
+    "note": "Every planned analysis, including the unfavourable positive control, is reported in Tables 2 and 3; there is no registered protocol, and two checks (leave-one-out; removal of EGCUT) are reported without numbers in the main text."
+   }
+  ],
+  "overall": "high",
+  "reasoning": "Judged for the paper's primary question, the forward estimate: a weak instrument for liability to ever trying cannabis, a pleiotropic path that the authors themselves name and could not test, a null and imprecise MR-Egger estimate and a failed positive control mean that the small positive association (OR 1.04 per doubling of the odds of ever use) cannot be attributed to cannabis with confidence, and its smallness says nothing about heavier use. For the reverse estimate (OR 1.10 per doubling of the odds of schizophrenia liability) the editors' overall judgment would be some concerns. Design label and instrument follow the round brief's rule for Mendelian randomization (the protocol is silent). Cite this card for: two-sample genetic evidence that liability to ever using cannabis is at most weakly associated with schizophrenia, and that genetic liability to schizophrenia is associated with ever using cannabis, in consortium data with an overlap of about 1500 people. Do not cite it for: an upper limit on the risk from regular, heavy or high-potency use; a causal effect of schizophrenia itself, or of its prodrome, on cannabis use; or the 24% figure as a general bound on the psychosis risk of cannabis."
+ },
+ "key_findings": [
+  {
+   "finding": "No ICC variant reached genome-wide significance for ever use; 153 were associated at p<10^-5, pruned at r2>0.9 to 22, one removed for poor quality, leaving 21. Their per-allele associations with ever use ranged from β 0.09 to 0.29 (SE 0.02 to 0.06) and with schizophrenia from β −0.03 to 0.05. The ICC study as a whole captured 13–20% of the observed variation in ever use.",
+   "page": "PMC HTML",
+   "locator": "Method, 1st paragraph; Table 1",
+   "note": "The 13–20% figure is second-hand (Stringer et al., 2016) and refers to all variants across the genome, not to the 21 instruments, whose variance explained is not reported."
+  },
+  {
+   "finding": "[Exposure: genetic liability to ever use, 21 variants; outcome: schizophrenia case status, PGC2, 36,989 cases and 113,075 controls; scale: per doubling of the odds of ever use; adjustment: none] OR 1.04 (95% CI 1.01 to 1.07), p=0.019.",
+   "page": "PMC HTML",
+   "locator": "Results › Effect of cannabis initiation on schizophrenia risk, 1st paragraph; Table 2; Abstract › Results"
+  },
+  {
+   "finding": "[Exposure: genetic liability to schizophrenia, 107 genome-wide significant variants; outcome: ever versus never use in the ICC data, 14,388 and 17,942 people; scale: per doubling of the odds of schizophrenia; adjustment: none] OR 1.10 (95% CI 1.05 to 1.14), p=2.64×10^-5.",
+   "page": "PMC HTML",
+   "locator": "Results › Effect of schizophrenia risk on cannabis initiation, 1st paragraph; Table 2; Method, 3rd paragraph",
+   "note": "The Method says the 128 schizophrenia variants explain about 18% of the observed variance in schizophrenia risk, citing PGC2. This is a second-hand figure not computed in this paper; Pasman et al. (2018) estimate 3.38% of liability variance for a 109-variant instrument from the same study, so the 18% should not be quoted as the strength of this instrument."
+  },
+  {
+   "finding": "[Exposure: liability to ever use, 12 variants] Positive control, years of education (126,599 people): 0.99 (0.97 to 1.00), p=0.066, weaker than predicted; negative control, height (253,288 people): 1.00 (0.99 to 1.01), p=0.90, as predicted.",
+   "page": "PMC HTML",
+   "locator": "Results › Positive and negative controls, 1st paragraph; Table 2",
+   "note": "Printed as odds ratios, but both outcomes are continuous: the values are exponentiated linear coefficients multiplied by 0.693 (see reporting issues)."
+  },
+  {
+   "finding": "Sensitivity analyses: restricting the forward analysis to the 12 control variants gave 1.03 (0.99 to 1.08), p=0.145 (0.15 in the text). MR-Egger forward estimate 1.01 (0.93 to 1.10), p=0.815, intercept 0.99 (0.98 to 1.01), p=0.50; MR-Egger reverse estimate 1.17 (0.96 to 1.43), p=0.128, intercept 1.00 (0.98 to 1.01), p=0.524; 12-variant MR-Egger forward estimate 1.01 (0.88 to 1.17), intercept p=0.801. Removing each forward variant in turn showed no single variant driving the estimate (Supplementary Fig. S3, not read).",
+   "page": "PMC HTML",
+   "locator": "Results › Sensitivity analyses, 1st, 2nd, 4th and 5th paragraphs; Table 3"
+  },
+  {
+   "finding": "MR-Egger for the control outcomes: education estimate 0.94 (0.88 to 1.00), p=0.062, intercept p=0.182; height estimate 0.95 (0.88 to 1.01), p=0.095, intercept 0.99 (0.98 to 1.00), p=0.093.",
+   "page": "PMC HTML",
+   "locator": "Results › Sensitivity analyses, 3rd paragraph; Table 3",
+   "note": "Text and Table 3 give different intervals for the education intercept (see reporting issues)."
+  },
+  {
+   "finding": "Using the upper confidence limit of the forward estimate, a person with a 50% probability of ever using cannabis was estimated to have at most a 24% higher relative risk of schizophrenia than a person with a 10% probability.",
+   "page": "PMC HTML",
+   "locator": "Results › Sensitivity analyses, 6th paragraph; Discussion, 1st paragraph; Method › Sensitivity analyses, 5th paragraph",
+   "note": "Editors' check: the 24% follows from exp[(logit 0.5 − logit 0.1) × ln(1.07)/ln 2] = 1.24; the formula as printed, with the log of UCB/0.693, would give about 2.6. With the point estimate (1.04) the same contrast gives about 1.13 (editors' calculation). The figure is an odds ratio for a contrast in liability to ever use and says nothing about regular or heavy use."
+  },
+  {
+   "finding": "About 1500 people from the Estonian Genome Centre cohort (EGCUT) are in both the ICC data (about 10% of it) and PGC2 (2.3% of it); both directions were rerun on PGC2 data without EGCUT and the results did not change (numbers not shown).",
+   "page": "PMC HTML",
+   "locator": "Discussion › Strengths and limitations, 2nd paragraph"
+  },
+  {
+   "finding": "Limitations stated by the authors: none of the forward variants reached genome-wide significance and some may be false positives; the ever-use phenotype does not separate trying cannabis once from daily use, and its variants may index impulsivity or risk-taking rather than cannabis use as such; heavier use is the more likely relevant exposure, and observationally the association for ever use is much weaker than for heavy use; a dependence genome-wide study (Sherva et al., 2016) was not used because dependence variants can act only in people who have used cannabis and PGC2 cannot be split by use; education may be a poor positive control (Jackson et al., 2016; Mokrysz et al., 2016), and height may share genetic influences with schizophrenia (Bacanu et al., 2013).",
+   "page": "PMC HTML",
+   "locator": "Discussion › Strengths and limitations, 1st, 3rd, 4th and 6th paragraphs"
+  },
+  {
+   "finding": "The authors read the reverse result as schizophrenia risk raising the likelihood of trying cannabis, through biological or social routes they call speculative (for example more pleasurable effects of intoxication, or mixing with people who use cannabis), and propose recall-by-genotype studies to test them; they note that Power et al. (2014) had interpreted a similar finding as shared genetic aetiology.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 2nd paragraph"
+  },
+  {
+   "finding": "The conclusion asks future schizophrenia genome-wide studies to record cumulative cannabis exposure in cases and controls, so that the effect of heaviness of use can be studied in stratified samples.",
+   "page": "PMC HTML",
+   "locator": "Conclusion, 1st paragraph"
+  },
+  {
+   "finding": "Further limitations stated by the authors: the reverse analysis assumes that genetic predictors of schizophrenia also act in the general population, most of whom never develop it, which they justify by the continuum of psychotic symptoms and by schizophrenia genetic risk predicting childhood psychopathology; MR-Egger tests biological (direct) pleiotropy, of which they found only weak evidence, and not mediated pleiotropy, which does not violate the assumptions of Mendelian randomization; and the genetic correlation reported by Verweij et al. fits shared genetic architecture or a causal relation in either direction.",
+   "page": "PMC HTML",
+   "locator": "Discussion › Strengths and limitations, 5th and 7th paragraphs",
+   "note": "Relevant to reading the reverse estimate as liability to schizophrenia leading to cannabis use, and to treating a genetic correlation as evidence of confounding."
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The structured abstract's conclusion lacks a word: it says the results provide some [evidence] that cannabis initiation increases the risk of schizophrenia.",
+   "page": "PMC HTML, Abstract › Conclusions",
+   "consequence": "Typographical; the Discussion and Conclusion give the intended wording (some evidence)."
+  },
+  {
+   "issue": "The text gives the MR-Egger intercept for education as 0.99 (95% CI 0.97 to 1.00), p=0.18, while Table 3 gives 0.99 (0.99 to 1.00), p=0.182.",
+   "page": "PMC HTML, Results › Sensitivity analyses, 3rd paragraph; Table 3",
+   "consequence": "Minor; one interval is misprinted. The intercepts are in any case hard to interpret on the printed scale (see the issue on odds ratios for continuous outcomes)."
+  },
+  {
+   "issue": "The formula given for the upper-bound calculation has unbalanced parentheses and takes the log of UCB/0.693 instead of dividing log(UCB) by 0.693; as printed it would give an odds ratio of about 2.6, whereas the reported 24% matches the corrected formula (editors' calculation).",
+   "page": "PMC HTML, Method › Sensitivity analyses, 5th paragraph",
+   "consequence": "The 24% figure is right for the intended calculation; the printed formula should not be reused."
+  },
+  {
+   "issue": "Tables 2 and 3 label the estimates for years of education and height (a z-score) as odds ratios, and the footnote applying the scale per doubling of the odds of exposure covers the MR-Egger intercepts too; for continuous outcomes the values are exponentiated linear coefficients multiplied by 0.693, and an intercept has no per-doubling meaning.",
+   "page": "PMC HTML, Tables 2 and 3 and footnote a; Method › Positive and negative controls, 1st paragraph",
+   "consequence": "The control estimates cannot be read as odds ratios or converted into years of education or height units from the paper; claims should cite only their direction and p-values."
+  },
+  {
+   "issue": "Footnote b of Tables 2 and 3 says a correlated likelihood method was used for the cannabis-initiation analyses, while the Method describes inverse-variance-weighted estimation extended to a generalized weighted regression for correlated variants; the likelihood method is not described.",
+   "page": "PMC HTML, Tables 2 and 3, footnote b; Method › Effect of cannabis initiation on schizophrenia risk, 1st paragraph; Method › Sensitivity analyses, 2nd paragraph",
+   "consequence": "Which estimator produced the forward and control estimates is unclear, so the analysis cannot be reproduced exactly from the paper; the estimates themselves are not in question."
+  },
+  {
+   "issue": "The text says 8 of the 21 forward variants were in the education study and 9 in the height study, and that 4 proxies made 12 available for both; Table 1 marks 13 variants as missing from the education/height studies and gives proxies for 4 of them, which yields 12 (8 + 4, editors' count) and leaves the ninth height variant unaccounted for.",
+   "page": "PMC HTML, Method, 2nd paragraph; Table 1, footnote a",
+   "consequence": "Minor; the control and restricted analyses used the same 12 variants, but the variant counts cannot be fully reconciled."
+  },
+  {
+   "issue": "The Results give the education study as 126,599 individuals; the title of the cited study (Rietveld et al., 2013) in the reference list gives 126,559.",
+   "page": "PMC HTML, Results › Positive and negative controls, 1st paragraph; reference list",
+   "consequence": "Minor transcription error in one of the two places."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent), AI reader 185 (first reader)",
+  "first_pass_on": "2026-10-27",
+  "source_read": "PMC full text PMC5341491 (the publisher's open-access version; title and DOI 10.1017/S0033291716003172 confirmed; all sections, Tables 1–3 rendered as text, acknowledgements with funding and the declaration of interest read; the article has no figures in the main text, and the MR-Egger equations are not rendered as text; the supplementary material (Tables S1–S2, Figures S1–S3), hosted at the publisher, was not read; the PMC page links no correction)",
+  "disagreements": [
+   {
+    "field": "key_findings.11",
+    "first_pass": "(not recorded)",
+    "reviewer": "AI reader 217 (second reader), missed items: Strengths and limitations, 5th paragraph (general-population assumption of the reverse analysis) and 7th paragraph (MR-Egger and mediated pleiotropy; genetic correlation).",
+    "resolution": "Checked in the adjudicator's own browser tab (PMC5341491, Discussion › Strengths and limitations, 5th and 7th paragraphs): true and relevant to the causation claim. Added as a key finding."
+   },
+   {
+    "field": "verification.status",
+    "first_pass": "first-pass",
+    "reviewer": "AI reader 217 (second reader): every key finding and reporting issue confirmed; overall risk-of-bias judgment agreed.",
+    "resolution": "Readers agree on ROBINS-E overall high for the forward estimate (some concerns for the reverse, as the card says); every key finding and reporting issue confirmed by AI reader 217. Set to ai-checked."
+   }
+  ],
+  "checked_by": "AI reader 217 (blind second reading) and AI reader 242 (adjudication)",
+  "checked_on": "2026-10-31"
+ }
+}

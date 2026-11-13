@@ -1,0 +1,321 @@
+{
+ "id": "sc_buchanich_2018",
+ "substance": "cross-cutting",
+ "reference": "buchanich_2018",
+ "design": "registry",
+ "design_detail": "Analysis of US national death-certificate data: the Mortality Multiple Cause micro-data files of the National Vital Statistics System (National Center for Health Statistics), 1999–2015, for all 50 states and the District of Columbia. All deaths with an underlying cause of unintentional drug poisoning (ICD-10 X40–X44) were classed by their contributory T codes as opioid-related (any of T40.0–T40.4 or T40.6, with or without other drugs), non-opioid-related (other drug codes only) or unspecified (T50.9 only). For each state and year, unspecified deaths were then 'reallocated' to opioids in proportion to the opioid share among deaths with a named drug, and reported and reallocated 2015 state mortality rates and ranks were compared. Suicides (X60–X64), assaults (X85) and deaths of undetermined intent (Y10–Y14) were excluded. There was no linkage to toxicology or investigation records and no validation of the reallocation.",
+ "can_establish": "How many unintentional overdose deaths in the US in 1999–2015 were certified with no drug named, how that share differed between states (from none in Washington DC to 50.8% in Pennsylvania in 2015), and how much state opioid mortality rates and rankings would change if unspecified deaths involved opioids as often as deaths with a named drug in the same state and year.",
+ "cannot_establish": "How many unspecified deaths actually involved opioids, or were caused by them (the reallocation is an assumption the authors call rather strong, never checked against toxicology or case records); whether certified opioid-related deaths were caused by opioids (an opioid code counts a death as opioid-related whatever other drugs were coded); deaths certified as suicide or of undetermined intent; or why certificates lacked a drug (testing, certifier, resources were not measured).",
+ "sample": {
+  "n_total": 438607,
+  "n_by_group": {
+   "opioid-related (an opioid T code, with or without other drugs)": 255527,
+   "non-opioid-related": 85608,
+   "unspecified (T50.9 only)": 97159,
+   "no drug T code": 313
+  },
+  "recruitment": "Registry: every death certificate filed with the vital statistics offices of the 50 states and the District of Columbia, as coded by the National Center for Health Statistics into the multiple-cause micro-data files, 1999–2015 (Methods, 1st and 2nd paragraphs).",
+  "inclusion_exclusion": "Included: deaths with an underlying cause of unintentional drug poisoning, ICD-10 X40–X44, with all contributory T codes. Excluded: drug-poisoning deaths of other intent, namely suicide (X60–X64), assault (X85) and undetermined intent (Y10–Y14) (Methods, 2nd paragraph).",
+  "demographics": "Not reported. No age, sex or race breakdown is given; the authors list comparing the age, race, sex and geography of deaths with and without a named drug as future work (Strengths and Weaknesses, 1st and 4th paragraphs).",
+  "attrition": "Not applicable (complete registrations). 313 deaths had no drug T code at all; how they were handled in the reallocation is not stated.",
+  "selection_effects": "Restricting to unintentional deaths leaves out overdose deaths certified as undetermined intent, whose share varies by state; the authors note that states with more undetermined deaths are less affected by their reallocation (Strengths and Weaknesses, 2nd paragraph). Within the unintentional deaths, which deaths lack a named drug depends on each jurisdiction's testing and certification, which the study did not measure."
+ },
+ "exposure": {
+  "measurement": "How a death entered each count: the certifier (a coroner or medical examiner) records the drugs on the death certificate; the National Center for Health Statistics assigns the underlying cause (X40–X44 for unintentional drug poisoning) and the contributory T codes from what was recorded, under WHO rules (Introduction, 2nd paragraph). 'Opioid-related' means at least one of T40.0 (opium), T40.1 (heroin), T40.2 (other opioids, i.e. opioid pain relievers), T40.3 (methadone), T40.4 (other synthetic narcotics, e.g. fentanyl) or T40.6 (other and unspecified narcotics); 'unspecified' means T50.9 as the only drug code. T50.9 is also used for drugs with no specific code, such as bath salts, which the authors judge affects only a tiny proportion of deaths (Methods, 2nd paragraph). No toxicology data were used, and the paper does not report what was tested in what share of deaths.",
+  "polysubstance": "An opioid-related death may also carry non-opioid codes; by Table 1, 115,192 of the 255,527 opioid-related deaths (45%) also had a non-opioid drug code, and 100,650 (39%) also carried T50.9 (editors' calculation from Table 1 rows). Each death is counted once, in the opioid category if any opioid is coded. Opioid subtypes are not mutually exclusive: opioid pain relievers 41.5%, heroin 25.4%, methadone 20.3%, other and unspecified narcotics 14.4%, synthetic opioids other than methadone 14.2%, opium 0.01% (Results, 1st paragraph).",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "No external comparison: reported counts and rates are compared with the same counts after reallocation. In the Discussion, the states most affected are compared qualitatively with Ruhm's corrected state rates (different method, all intents) and with Warner et al.'s classification of state death-investigation systems.",
+  "matching": "Not applicable.",
+  "unmeasured_premorbid": "Not applicable (counts of deaths). Characteristics that could make unspecified deaths differ from specified ones (age, sex, race, place, toxicology availability, certifier type and experience, jurisdiction size) were not measured; the authors name them as reasons the key assumption may fail.",
+  "controls_other_drug_use": "Not applicable."
+ },
+ "outcomes": {
+  "instruments": "Counts and percentages of unintentional overdose deaths by state and year in each drug category; reported and reallocated 2015 opioid-related mortality rates per 100,000 population, state ranks, percentage change in rate and change in rank (Table 2). Analysis in SAS 9.4.",
+  "validity_norms": "The opioid category is only as valid as the drug information certifiers write and coders translate, which is the problem studied; reallocated deaths are model estimates, not observations, with no validation.",
+  "operationalization": "Reallocated opioid deaths = unspecified deaths in a state-year multiplied by the opioid share of specified deaths in that state-year (Methods, 4th paragraph). The paper also describes the share as opioid-related among all overdose deaths (same paragraph, Table 2 footnote, Figure 3 legend); the published numbers match the specified-death version (reporting issue 2).",
+  "n_outcomes_tested": null,
+  "multiplicity_correction": "Not applicable: descriptive counts and rates; no hypothesis tests except an unreported comparison of unspecified shares by state death-investigation system, said to be not significant.",
+  "assessor_blinding": "Not applicable."
+ },
+ "analysis": {
+  "effect_sizes": "Descriptive only, with no confidence or uncertainty intervals. 1999–2015: 438,607 unintentional overdose deaths, 58% opioid-related, 20% non-opioid, 22% unspecified. Opioid-related deaths rose from 5,868 (1999) to 29,383 (2015), +401%; non-opioid from 3,005 to 7,505, +150%; unspecified from 2,255 to 7,227, +220%, peaking at 8,145 in 2011. Unspecified share of unintentional overdose deaths about 20% in 1999 and 16% in 2015 (editors' calculation, 2,255 of 11,128 and 7,227 of 44,115, ignoring deaths with no drug code). 2015: unspecified above 35% in 5 states (Pennsylvania 50.8% highest), below 5% in 17, none in Washington DC. Reallocation: more than 70,000 deaths for 1999–2015 (9 in Vermont to 11,152 in Pennsylvania), at least 72% of the 97,159 unspecified deaths (editors' calculation); 5,662 in 2015 (sum of Table 2), raising the national 2015 count from 29,383 to about 35,045 (+19%, editors' calculation). 2015 state rates rose by less than 1% in 5 states and by over 50% in 5 (Pennsylvania 9.90 to 20.12 per 100,000, +103%).",
+  "covariates": "None.",
+  "preregistration": "none",
+  "preregistration_detail": "No protocol or registration is mentioned.",
+  "selective_reporting": "No sensitivity analysis of the reallocation assumption (for example by age, sex, place or certifier) and no uncertainty around reallocated counts. The comparison of unspecified shares by death-investigation system in 2015 is reported only as not significant, without numbers or a test.",
+  "power": "Not applicable (complete registrations); small state-year counts make some state proportions unstable, which is not discussed."
+ },
+ "interpretation_gap": {
+  "results_show": "In US death certificates, 22% of unintentional overdose deaths in 1999–2015 named no drug, with very large differences between states. If those deaths involved opioids as often as deaths with a named drug in the same state and year, about 70,000 more deaths would count as opioid-related over 17 years (5,662 in 2015, about a fifth more than reported), and the 2015 opioid death rate would double in Pennsylvania and rise by more than half in four other states, while barely changing in states that name drugs on nearly every certificate.",
+  "claimed": "The Conclusions say \"Potentially 70 000 opioid-related, unintentional overdose deaths\" from 1999 through 2015 \"have been missed\", and the abstract that states may be \"greatly underestimating\" opioid deaths. Gaps: (1) the 70,000 is the product of an assumption the authors themselves call rather strong and did not test; no unspecified death was checked against toxicology or case records, so the true number could be higher or lower; (2) the method can only add opioid deaths, and the paper does not consider the other direction, deaths counted as opioid-related because an opioid was coded among several drugs (45% of opioid-related deaths also had a non-opioid code, editors' calculation); (3) the Discussion takes agreement with Ruhm's corrections on which states are most affected as support that the states were correctly identified, but both analyses use the same certificates, so agreement shows robustness to the method, not accuracy; (4) the abstract gives the wrong end value for unspecified deaths (29,383 instead of 7,227); (5) the Discussion reads Kentucky's 1999–2015 rise of 43% in opioid-related drug codes and fall of 28% in unspecified reporting as suggesting that state-based efforts can improve drug-specific reporting, but this is a before-and-after change in one state, with no comparison state and no dates for the efforts, and the paper does not say whether the figures are percentage points or relative changes (Discussion, 4th paragraph). The body is more careful than the conclusion: it says 'could be categorized' and 'potentially', and states its assumptions in a limitations section.",
+  "gap_assessment": "minor"
+ },
+ "replication": {
+  "status": "partially-replicated",
+  "timeline": [
+   {
+    "year": 2013,
+    "event": "Warner et al. (Academic Forensic Pathology): states with centralized medical examiner systems specified drugs on 92% of drug-intoxication certificates against 62% for decentralized county coroner systems, as quoted in this paper's Discussion."
+   },
+   {
+    "year": 2015,
+    "event": "Slavova et al., 'Drug overdose deaths: let's get specific': variation in unspecified drug reporting across 11 states in 2010, which this paper's Discussion describes in the first person (ref 11)",
+    "reference": "slavova_2015"
+   },
+   {
+    "year": 2016,
+    "event": "Ruhm (Population Health Metrics): statistical adjustment of drug-poisoning deaths, 1999–2012 (ref 9)."
+   },
+   {
+    "year": 2018,
+    "event": "Ruhm (Addiction): corrected national opioid-involved deaths 1999–2015, all intents, by regression prediction; largest corrections in 2011 for any opioid and 2015 for heroin and synthetic opioids, as summarized in this paper (ref 15)",
+    "reference": "ruhm_2018"
+   },
+   {
+    "year": 2018,
+    "event": "Horon et al.: in Maryland, linking toxicology and scene investigation to certificates found 1,052 more heroin-related deaths in 2012–2015 (card sc_horon_2018); an external check by record linkage in one state",
+    "reference": "horon_2018"
+   },
+   {
+    "year": 2018,
+    "event": "Lowder et al. (American Journal of Public Health), as summarized by Gutkind et al.: 86.8% of unspecified overdose deaths in Marion County, Indiana, 2011–2016, were opioid-positive in toxicology, more than this paper's assumed share."
+   },
+   {
+    "year": 2019,
+    "event": "Slavova et al., review of methodological complexities in counting opioid overdose deaths, with Buchanich among its authors, relays this paper's estimate of about 70,000 unaccounted-for deaths (card sc_slavova_2019); not independent support.",
+    "reference": "slavova_2019"
+   },
+   {
+    "year": 2025,
+    "event": "Gutkind et al. scoping review includes this study among the national analyses of unspecified deaths (card sc_gutkind_2025)",
+    "reference": "gutkind_2025"
+   }
+  ],
+  "where_it_stands": "The direction is supported: every correction method and every state or county linkage study summarized by Gutkind et al. (2025) found more opioid-involved deaths than the certificates alone. Agreement with Ruhm's corrections on the most affected states is partial replication on the same national certificates, not an independent check, and the 2019 review by Slavova et al., which relays the 70,000 estimate, has Buchanich among its authors. The size of the national correction remains a model estimate; no national validation against toxicology exists in the papers read for this round. The share of unspecified certificates fell after 2015 (8% of overdose deaths in 2018, per Gutkind et al.), so these 1999–2015 corrections should not be carried forward to later years."
+ },
+ "funding": {
+  "funder": "The authors received no financial support for the research, authorship, and/or publication of this article (Funding, footnotes).",
+  "declared_conflicts": "The authors declared no potential conflicts of interest with respect to the research, authorship, and/or publication of this article (Declaration of Conflicting Interests, footnotes).",
+  "affiliations_note": "University of Pittsburgh Graduate School of Public Health (two authors: Buchanich in the Department of Biostatistics; Burke, the school), Northwestern University Feinberg School of Medicine (Department of Preventive Medicine; Balmert), and the Office of the Medical Examiner of Allegheny County, Pittsburgh (Williams; the article gives the office, not his role), in Pennsylvania, the state with the highest share of unspecified certificates in 2015. The Discussion refers in the first person to the 2010 eleven-state analysis published as Slavova et al. 2015 (ref 11); none of this paper's authors is among the eleven named authors of that commentary, which also lists the CSTE Overdose Subcommittee's members as a group author (checked on its PMC page), so any overlap would be through that group. Buchanich is a co-author of the 2019 review by Slavova et al. (card sc_slavova_2019)."
+ },
+ "what_would_settle_it": "A national or multi-state sample of overdose deaths certified with no named drug, linked to their post-mortem toxicology and investigation files, with the drugs found compared with the drugs in specified deaths from the same jurisdictions and years; this would test the reallocation assumption directly and show whether unspecified deaths involve opioids more often, less often or as often as specified ones, separately for coroner and medical-examiner systems.",
+ "risk_of_bias": {
+  "instrument": "JBI-prevalence",
+  "domains": [
+   {
+    "domain": "1. Sample frame appropriate to the target population",
+    "judgment": "partial-yes",
+    "note": "All US death registrations is the right frame, but restricting to deaths certified as unintentional leaves out overdose deaths of undetermined intent, whose share varies by state."
+   },
+   {
+    "domain": "2. Participants sampled appropriately",
+    "judgment": "yes",
+    "note": "A census of registered deaths, not a sample."
+   },
+   {
+    "domain": "3. Adequate sample size",
+    "judgment": "yes",
+    "note": "438,607 deaths nationally; some state-year counts are small, but the main estimates are national and state totals."
+   },
+   {
+    "domain": "4. Study subjects and setting described in detail",
+    "judgment": "partial-yes",
+    "note": "Data source, years, codes and categories are described in detail; no demographic description of the deaths and no account of each state's testing or certification practice."
+   },
+   {
+    "domain": "5. Data analysis with sufficient coverage of the identified sample",
+    "judgment": "yes",
+    "note": "All registered unintentional overdose deaths are analysed; the handling of 313 deaths with no drug code is not stated but cannot matter at this scale."
+   },
+   {
+    "domain": "6. Valid methods for identifying the condition",
+    "judgment": "no",
+    "note": "Opioid involvement is identified from certificate codes, whose completeness is the problem studied, and for unspecified deaths from an untested proportional assumption with no toxicology or case-record validation."
+   },
+   {
+    "domain": "7. Condition measured in a standard, reliable way across participants",
+    "judgment": "no",
+    "note": "Drug specification depends on each jurisdiction's testing and certifier (coroner or medical examiner, centralized or not), which varies widely by state, as the paper itself shows."
+   },
+   {
+    "domain": "8. Appropriate statistical analysis",
+    "judgment": "partial-yes",
+    "note": "Counts, percentages and rates are appropriate and Table 2's rates are internally consistent; but reallocated counts carry no uncertainty interval or sensitivity analysis, the denominator of the key proportion is described two ways, and one system comparison is reported only as not significant."
+   },
+   {
+    "domain": "9. Adequate response rate, or low rate managed",
+    "judgment": "not-applicable",
+    "note": "Death registration is complete; missing drug information is the subject of the study and is covered under items 6 and 7."
+   }
+  ],
+  "overall": "high",
+  "reasoning": "JBI-prevalence fits a count of deaths from a national register (round brief, certificate studies). The tabulated shares of certificates naming no drug, by state and year, are a census of coded data with low risk of bias for what they describe: what certificates say, not what was in the body. The headline estimate, about 70,000 missed opioid deaths, rests on an untested assumption and on certificate codes whose quality varies by jurisdiction, so its risk of bias is high, in a direction that cannot be predicted; overall high, because that estimate is what the paper is cited for. Citable for: the number and share of unintentional overdose deaths certified with no drug named, 1999–2015, by state; the state range in 2015; how far state rates and ranks depend on unspecified certificates; a proportional-reallocation estimate of the possible undercount, labelled as such. Not citable for: the number of opioid deaths actually missed, or opioids as the cause of the reallocated deaths."
+ },
+ "key_findings": [
+  {
+   "finding": "From 1999 through 2015 there were 438,607 unintentional drug-overdose deaths (ICD-10 X40–X44) in US death records: 255,527 (58%) opioid-related, 85,608 (20%) non-opioid-related, 97,159 (22%) with no drug named (T50.9 only) and 313 with no drug code.",
+   "page": "PMC HTML",
+   "locator": "Results, 1st paragraph; Table 1 and its footnote f"
+  },
+  {
+   "finding": "Opioid-related unintentional overdose deaths rose from 5,868 in 1999 to 29,383 in 2015 (+401%); non-opioid-related from 3,005 to 7,505 (+150%); deaths with no drug named from 2,255 to 7,227 (+220%), with a peak of 8,145 in 2011.",
+   "page": "PMC HTML",
+   "locator": "Results, 1st paragraph",
+   "note": "The abstract gives the 2015 value for unspecified deaths as 29,383, the opioid figure (reporting issue 1). Editors' calculation: the unspecified share of unintentional overdose deaths was about 20% in 1999 and 16% in 2015."
+  },
+  {
+   "finding": "Among opioid-related deaths, the opioid codes recorded were opioid pain relievers 41.5%, heroin 25.4%, methadone 20.3%, other and unspecified narcotics 14.4%, synthetic opioids other than methadone 14.2% and opium 0.01% (not mutually exclusive).",
+   "page": "PMC HTML",
+   "locator": "Results, 1st paragraph"
+  },
+  {
+   "finding": "An opioid-related death could also carry other drug codes: by Table 1, 115,192 of 255,527 opioid-related deaths (45%) also had a non-opioid code, and 100,650 (39%) also had T50.9 (editors' calculation from the Table 1 rows).",
+   "page": "PMC HTML",
+   "locator": "Table 1 (rows with opioid-related 'Yes'); Methods, 2nd paragraph"
+  },
+  {
+   "finding": "In 2015 the share of unintentional overdose deaths with no drug named exceeded 35% in 5 states (in descending order Pennsylvania, Louisiana, Alabama, Indiana, Mississippi), was below 5% in 17 states, was 0% in Washington DC and highest in Pennsylvania (50.8%). The opioid-related share ranged from 36.0% (Hawaii) to 97.0% (New Hampshire).",
+   "page": "PMC HTML",
+   "locator": "Results, 2nd paragraph (values from Figure 2, an image, as stated in the text)"
+  },
+  {
+   "finding": "Between 1999 and 2015 the percentage of unspecified deaths fell in 35 states (by 0.2% in Louisiana to 42.2% in North Dakota) and rose in 16 (by 0.2% in New Mexico to 12.8% in New Jersey); the paper does not say whether these are percentage points or relative changes. The opioid-related percentage fell in 9 states (by 0.1% to 16.9%).",
+   "page": "PMC HTML",
+   "locator": "Results, 3rd paragraph"
+  },
+  {
+   "finding": "Reallocating unspecified deaths in proportion to the opioid share of specified deaths in the same state and year added more than 70,000 potential opioid-related deaths for 1999–2015 (from 9 in Vermont to 11,152 in Pennsylvania); California, Florida and Pennsylvania each gained more than 5,000, reaching 30,813, 25,144 and 20,521; counts more than doubled in Alabama, Indiana, Louisiana, Mississippi and Pennsylvania.",
+   "page": "PMC HTML",
+   "locator": "Results, 4th paragraph; Methods, 4th paragraph",
+   "note": "Editors' calculation: more than 70,000 of 97,159 unspecified deaths is at least 72%."
+  },
+  {
+   "finding": "In 2015, reallocation added 5,662 deaths to the 29,383 reported (sum of Table 2; the Discussion says more than 5,600). State rates changed by less than 1% in Connecticut, Washington DC, New Hampshire, Maine and Rhode Island and rose by more than 50% in Alabama (+94%), Indiana (+85%), Mississippi (+55%), Louisiana (+99%) and Pennsylvania (9.90 to 20.12 per 100,000, +103%).",
+   "page": "PMC HTML",
+   "locator": "Results, 5th paragraph; Table 2; Discussion, 1st paragraph"
+  },
+  {
+   "finding": "Ranks: West Virginia highest before and after reallocation (31.2 and 31.6 per 100,000), South Dakota lowest; 8 states unchanged; Indiana, Louisiana, New Jersey and Pennsylvania rose at least 10 places (Indiana 34th to 15th); Oklahoma, South Carolina, Utah, Virginia and Washington fell 7 places.",
+   "page": "PMC HTML",
+   "locator": "Results, 6th paragraph; Table 2",
+   "note": "The text says 17 states rose in rank; Table 2 shows 15 (16 if Idaho's sign is corrected) (reporting issue 4)."
+  },
+  {
+   "finding": "Of the 5 states with the highest unspecified shares, 3 had hybrid coroner–medical examiner systems (Alabama, Mississippi, Pennsylvania) and 2 decentralized county coroner systems (Indiana, Louisiana); in 2015 states with centralized medical examiner systems had lower unspecified shares than the other three system types, but the differences were not significant (no figures given).",
+   "page": "PMC HTML",
+   "locator": "Discussion, 3rd paragraph"
+  },
+  {
+   "finding": "The authors' stated assumptions: unspecified deaths involve opioids in the same proportion as specified deaths in the same state and year (called rather strong), and certifiers report drug information in the same way across their jurisdiction; drug reporting may depend on the extent of toxicology testing, post-mortem redistribution, certifier experience and jurisdiction size. Only unintentional deaths were examined, so states with more undetermined-intent deaths are less affected.",
+   "page": "PMC HTML",
+   "locator": "Strengths and Weaknesses, 1st and 2nd paragraphs"
+  },
+  {
+   "finding": "Even complete reporting loses detail in coding: ICD-10 has a fixed set of drug-class codes, so new drugs such as fentanyl analogues fall under T40.4, and toxicology may not detect newly emerging synthetic opioids, which then never reach the certificate.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 5th paragraph"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The abstract says unspecified overdose deaths rose 220% 'from 2255 to 29 383'; the Results give 2,255 to 7,227 (7,227/2,255 is the stated +220%), and 29,383 is the 2015 opioid-related count.",
+   "page": "PMC HTML, Abstract › Results; Results, 1st paragraph",
+   "consequence": "The abstract's end value is wrong; cite 7,227 from the Results."
+  },
+  {
+   "issue": "The Methods define the reallocation denominator as 'specified drug overdose deaths (any death coded as T30.6-T50.9)': T30.6 is not a drug code, and a range ending at T50.9 would include the unspecified deaths. The next sentence, the Table 2 footnote, the Figure 3 legend, the Abstract › Methods and Strengths and Weaknesses (1st paragraph) instead describe the opioid share of all unintentional overdose deaths.",
+   "page": "PMC HTML, Methods, 4th paragraph; Table 2 footnote a; Figure 3 legend; Abstract › Methods; Strengths and Weaknesses, 1st paragraph",
+   "consequence": "The published numbers fit the specified-death denominator: Pennsylvania's 1,307 reallocated against 1,268 reported implies an unspecified share of 50.8%, exactly the share the Results give, whereas the all-deaths version would imply 103% (editors' check). Nationally, the opioid share of deaths with a named drug (255,527 of 341,135, 74.9%) applied to the 97,159 unspecified deaths gives about 72,800, which fits 'more than 70,000', whereas the all-deaths share (58.3%) gives about 56,600 (editors' calculation; the paper reallocated by state and year). Readers should describe the method as reallocation by the opioid share of deaths with a named drug."
+  },
+  {
+   "issue": "The Figure 2 legend assigns T36.0–T39.9 and T40.5–T50.8 to 'opioid-related' and T40.0–T40.4 to 'non–opioid-related', the reverse of the Methods (and omits T40.6).",
+   "page": "PMC HTML, Figure 2 legend; Methods, 2nd paragraph",
+   "consequence": "Labelling error in the legend; the Methods' definitions should be used."
+  },
+  {
+   "issue": "The Results say the ranks of 17 states rose after reallocation; Table 2's change-in-rank column has 15 positive values. Idaho's change is printed as −2, although its rank columns go from 45th to 43rd, a rise of 2; with that corrected, 16 states rose (editors' count).",
+   "page": "PMC HTML, Results, 6th paragraph; Table 2 (Idaho row)",
+   "consequence": "Cite the number of states whose rank rose from Table 2's rank columns (16), or avoid the count."
+  },
+  {
+   "issue": "The Discussion says the 5 states with the most reallocated deaths (California, Florida, Ohio, Pennsylvania, Texas) accounted for 46.4% (15,247 of 32,860) of reallocated deaths. This matches neither period: for 1999–2015 the total is over 70,000 and Pennsylvania alone gained 11,152 while California and Florida each gained over 5,000; for 2015 the total is 5,662 and the top five are Pennsylvania, Florida, California, Indiana and New Jersey (editors' check against Table 2).",
+   "page": "PMC HTML, Discussion, 1st paragraph; Results, 4th paragraph; Table 2",
+   "consequence": "The 46.4% concentration figure cannot be traced to the paper's own data and should not be cited; in 2015 the five states it names account for 2,674 of the 5,662 reallocated deaths (47.2%, editors' check), close to but not the printed share."
+  },
+  {
+   "issue": "Footnote c of Table 1 describes underlying cause X42 as poisoning by psychodysleptics (hallucinogens) only, yet the Results say most opioid-related deaths were coded X42.",
+   "page": "PMC HTML, Table 1 footnote c; Results, 1st paragraph",
+   "consequence": "The footnote's label is incomplete; it does not affect the counts, which are classified by T codes."
+  },
+  {
+   "issue": "The Discussion attributes corrected opioid and heroin death rates for 2014 by state to ref 9, whose title covers drug-poisoning deaths in 1999–2012.",
+   "page": "PMC HTML, Discussion, 2nd paragraph; reference 9",
+   "consequence": "The comparison is probably with another Ruhm paper; it cannot be checked from the citation as printed."
+  },
+  {
+   "issue": "The paper does not say whether the 2015 state rates in Table 2 are crude or age-adjusted, and names no population source; the column heading gives rates per 100,000 population. The populations the rates imply are of whole-state size (editors' calculation: 261 deaths at 5.37 per 100,000 gives about 4.86 million for Alabama, and 1,268 at 9.90 about 12.8 million for Pennsylvania), which fits crude rates.",
+   "page": "PMC HTML, Methods, 5th paragraph; Table 2",
+   "consequence": "Compare these rates only with each other; they should not be set beside age-adjusted state rates, such as CDC's published rates."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent)",
+  "first_pass_on": "2026-10-31",
+  "source_read": "PMC full text PMC6055296 (all sections, Tables 1 and 2 rendered as text and checked by script for sums, ranks and rate ratios, footnotes with funding and conflicts, author affiliations and reference list read; Figures 1–3 are images and their values were not extracted beyond those stated in the text; no supplementary material, correction or comment is linked on the page) Second reading (AI reader 273, blind, 1 November 2026): the same PMC text with Tables 1 and 2 (sums, ranks and changes recomputed), footnotes, affiliations and references; Figures 1 to 3 not viewed. Adjudication (AI reader 284, 1 November 2026): the PMC text read in full again in the adjudicator's own browser tab, with Tables 1 and 2 and the author affiliations; figures not viewed.",
+  "checked_by": "AI reader 273 (blind second reading) and AI reader 284 (adjudication)",
+  "checked_on": "2026-11-01",
+  "disagreements": [
+   {
+    "field": "reporting_issues[7] (new)",
+    "first_pass": "(not recorded)",
+    "reviewer": "AI reader 273 (missed): the Table 2 rates are not described as crude or age-adjusted and no population source is named; the implied populations fit 2015 state populations, so the rates appear crude",
+    "resolution": "Confirmed: neither the Methods (5th paragraph) nor Table 2 mentions age adjustment or a population source; implied populations recomputed. Added as a reporting issue, worded as what the numbers fit."
+   },
+   {
+    "field": "interpretation_gap.claimed (5)",
+    "first_pass": "(29,383 instead of 7,227).",
+    "reviewer": "AI reader 273 (missed): Discussion, 4th paragraph reads Kentucky's 43% and 28% changes over 1999–2015 as showing state-based efforts can improve reporting; a before-and-after trend in one state with no comparison",
+    "resolution": "Confirmed (Discussion, 4th paragraph). Added as gap (5); the gap rating (minor) is not changed and is listed for the senior author."
+   },
+   {
+    "field": "funding.affiliations_note",
+    "first_pass": "University of Pittsburgh Graduate School of Public Health (Department of Biostatistics; two authors), Northwestern University Feinberg School of Medicine (Department of Preventive Medicine), and the Office of the Medical Examiner of Allegheny County, Pittsburgh (one author, a death certifier in Pennsylvania, the state with the highest share of unspecified certificates in 2015). The Discussion refers in the first person to the 2010 eleven-state analysis published as Slavova et al. 2015 (ref 11), whose author list is truncated in the reference list, so the two papers may share authors.",
+    "reviewer": "AI reader 273 (missed, correction): only Buchanich is in the Department of Biostatistics (Burke's affiliation is the school); for Williams the article gives only the Office of the Medical Examiner, not that he certifies deaths",
+    "resolution": "Confirmed in the affiliations read on the PMC page (1 to 4). Corrected; the possible overlap with Slavova et al. 2015 is now stated from that commentary's author list, read on its PMC page."
+   },
+   {
+    "field": "replication.timeline (new 2019 entry); replication.where_it_stands",
+    "first_pass": "Agreement with Ruhm's corrections on the most affected states is partial replication on the same national certificates, not an independent check.",
+    "reviewer": "AI reader 273 (missed, context): Buchanich is a co-author of the Slavova et al. 2019 review that relays the 70,000 estimate, so that review is not independent support",
+    "resolution": "Confirmed in that review's author list and its Statistical Adjustment section. Entry and sentence added."
+   },
+   {
+    "field": "key_findings[5].finding",
+    "first_pass": "Between 1999 and 2015 the share of unspecified deaths fell in 35 states (by 0.2 points in Louisiana to 42.2 in North Dakota) and rose in 16 (by 0.2 in New Mexico to 12.8 in New Jersey); the opioid-related share fell in 9 states.",
+    "reviewer": "AI reader 273 (confirmed, with a note): the paper gives the changes as '%' without saying whether they are percentage points or relative changes; 'points' is an interpretation",
+    "resolution": "Confirmed (Results, 3rd paragraph). Reworded with the paper's unit and the caveat; the 9-state range added."
+   },
+   {
+    "field": "reporting_issues[1].issue, page and consequence",
+    "first_pass": "The next sentence, the Table 2 footnote and the Figure 3 legend instead describe",
+    "reviewer": "AI reader 273 (confirmed, with additions): the all-deaths wording also appears in the Abstract and in Strengths and Weaknesses; a national check gives about 72,800 with the specified-death denominator and about 56,600 with all deaths",
+    "resolution": "Confirmed at both places; national figures recomputed from Table 1. Added."
+   },
+   {
+    "field": "reporting_issues[4].consequence",
+    "first_pass": "The 46.4% concentration figure cannot be traced to the paper's own data and should not be cited.",
+    "reviewer": "AI reader 273 (confirmed, with a recomputation): in 2015 California, Florida, Ohio, Pennsylvania and Texas give 2,674 of 5,662 (47.2%)",
+    "resolution": "Recomputed from Table 2 (450 + 538 + 181 + 1,307 + 198). Added."
+   },
+   {
+    "field": "outcomes.operationalization (cross-reference)",
+    "first_pass": "(reporting issue 3)",
+    "reviewer": "AI reader 284 (own review)",
+    "resolution": "The denominator problem is the card's 2nd reporting issue (index 1), not the 3rd. Cross-reference corrected."
+   }
+  ]
+ }
+}

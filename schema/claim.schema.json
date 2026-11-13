@@ -1,0 +1,411 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schema/claim.schema.json",
+  "title": "Claim",
+  "description": "The unit of content (METHODS.md §6): a PECO-form statement tied to evidence anchors (page-located data, never reproduced passages), GRADE-rated and status-flagged.",
+  "type": "object",
+  "required": [
+    "id",
+    "substance",
+    "section",
+    "statement",
+    "population",
+    "exposure",
+    "comparator",
+    "outcome",
+    "relation",
+    "magnitude",
+    "evidence",
+    "grade",
+    "status",
+    "verification"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^cl_[a-z0-9_-]+$"
+    },
+    "substance": {
+      "type": "string",
+      "description": "Substance slug from TIER1.md folder name, lowercased."
+    },
+    "section": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 15,
+      "description": "Monograph section number (METHODS §8)."
+    },
+    "statement": {
+      "type": "string",
+      "description": "Rendered sentence in the fixed form of METHODS §6.1."
+    },
+    "population": {
+      "type": "string"
+    },
+    "exposure": {
+      "type": "string"
+    },
+    "comparator": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string"
+    },
+    "relation": {
+      "type": "string",
+      "enum": [
+        "is-associated-with",
+        "causes",
+        "does-not-detectably-change",
+        "reduces",
+        "increases",
+        "insufficient-evidence",
+        "describes"
+      ],
+      "description": "METHODS §6.1. 'increases', 'reduces' and 'causes' are causal and need a design and certainty that support them; 'describes' is for descriptive claims (prevalence, base rates, trends, standardized mortality), which are never upgraded for a large effect (§6.3)."
+    },
+    "magnitude": {
+      "type": "string",
+      "description": "Direction and size with interval; absolute alongside relative where base rate known."
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Evidence anchors (METHODS §6.2). An anchor points to where in the source the supporting data are, and states those data in the editors' own words. Passages are not reproduced.",
+      "items": {
+        "type": "object",
+        "required": [
+          "reference",
+          "study_card",
+          "page",
+          "locator",
+          "extracted",
+          "role",
+          "anchor_status"
+        ],
+        "properties": {
+          "reference": {
+            "type": "string"
+          },
+          "study_card": {
+            "type": "string"
+          },
+          "page": {
+            "type": "string",
+            "description": "For a PDF, the printed page(s), e.g. 'p. 379' or 'pp. 744–745' (online-first PDFs: the article's own page numbers); for a web full text without print pagination, 'PMC HTML' or 'publisher HTML'; for a trial registry, 'registry record'. '[to be located]' while unchecked (METHODS §6.2)."
+          },
+          "locator": {
+            "type": "string",
+            "description": "Where in the source (METHODS §6.2): the section path as printed and the running-text paragraph (headings, captions, legends and footnotes are not counted), or the table or figure with its row or column, e.g. 'Results › Sample, 2nd paragraph; Table 2'."
+          },
+          "extracted": {
+            "type": "string",
+            "description": "The data the claim rests on, in the editors' words: numbers, n, intervals, test statistics, conditions. Never a copied passage."
+          },
+          "quote": {
+            "type": "string",
+            "maxLength": 140,
+            "description": "Optional verbatim wording, 15 words or fewer, only where the wording itself is the evidence (e.g. an author conclusion being appraised). At most one per claim."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "supports",
+              "contradicts",
+              "qualifies"
+            ]
+          },
+          "anchor_status": {
+            "type": "string",
+            "enum": [
+              "unchecked",
+              "ai-located",
+              "ai-checked",
+              "senior-verified"
+            ],
+            "description": "unchecked: drafted, not yet located in the full text; ai-located: located in the full text by an AI reader (the first reader, or the editor from the full text or a study-card finding; located_by says which); ai-checked: confirmed by a second AI reader, re-found blind (check_mode blind) or checked at the stated place (check_mode targeted); senior-verified: checked against the source by the senior author (METHODS §5.5, §6.2)."
+          },
+          "located_by": {
+            "type": "string"
+          },
+          "located_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "checked_by": {
+            "type": "string"
+          },
+          "checked_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "source_read": {
+            "type": "string",
+            "description": "What was read: 'PDF' (file in PDFs/), 'PMC full text PMCxxxxx', 'publisher full text (HTML), <journal or URL>', or 'ClinicalTrials.gov record <id>' (METHODS §5.5)."
+          },
+          "senior_note": {
+            "type": "string",
+            "description": "The senior author's note on this anchor, from the review queue."
+          },
+          "check_mode": {
+            "type": "string",
+            "enum": [
+              "blind",
+              "targeted",
+              "card-check"
+            ],
+            "description": "How the second AI reader confirmed the anchor: re-found without seeing the first reader's anchors (blind), or checked at the place the first reader gave because the blind reading did not re-find it or the anchor was added later (targeted; shown as 'checked at the stated place'). card-check: the anchor was written after the second reader's card check, and its number and place match a key finding that second reader confirmed at the stated place (shown, like targeted, as 'checked at the stated place')."
+          },
+          "check_note": {
+            "type": "string",
+            "description": "Optional: what the checker confirmed or corrected at the stated place (for targeted checks especially)."
+          }
+        }
+      }
+    },
+    "grade": {
+      "type": "object",
+      "required": [
+        "starting_level",
+        "domains",
+        "certainty",
+        "reasoning"
+      ],
+      "properties": {
+        "starting_level": {
+          "type": "string",
+          "enum": [
+            "high",
+            "low"
+          ],
+          "description": "high for randomized, low for observational."
+        },
+        "domains": {
+          "type": "object",
+          "required": [
+            "risk_of_bias",
+            "inconsistency",
+            "indirectness",
+            "imprecision",
+            "publication_bias"
+          ],
+          "properties": {
+            "risk_of_bias": {
+              "$ref": "#/$defs/downgrade"
+            },
+            "inconsistency": {
+              "$ref": "#/$defs/downgrade"
+            },
+            "indirectness": {
+              "$ref": "#/$defs/downgrade"
+            },
+            "imprecision": {
+              "$ref": "#/$defs/downgrade"
+            },
+            "publication_bias": {
+              "$ref": "#/$defs/downgrade"
+            },
+            "large_effect": {
+              "$ref": "#/$defs/upgrade"
+            },
+            "dose_response": {
+              "$ref": "#/$defs/upgrade"
+            },
+            "plausible_confounding": {
+              "$ref": "#/$defs/upgrade"
+            }
+          }
+        },
+        "certainty": {
+          "type": "string",
+          "enum": [
+            "high",
+            "moderate",
+            "low",
+            "very-low"
+          ]
+        },
+        "reasoning": {
+          "type": "string"
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "replicated",
+        "replicated-same-team",
+        "single-study",
+        "contested",
+        "mixed",
+        "retraction-dependent"
+      ],
+      "description": "METHODS §6.4. replicated: at least two independent studies in the same direction; replicated-same-team: two or more studies in the same direction from one team, site or sample, which is not independent replication."
+    },
+    "debate": {
+      "type": "object",
+      "description": "Required when status is 'contested' (METHODS §7).",
+      "required": [
+        "question",
+        "evidence_yes",
+        "evidence_no",
+        "neither_can_show",
+        "editors_reading",
+        "what_would_settle_it"
+      ],
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "evidence_yes": {
+          "type": "string"
+        },
+        "evidence_no": {
+          "type": "string"
+        },
+        "neither_can_show": {
+          "type": "string"
+        },
+        "editors_reading": {
+          "type": "string"
+        },
+        "what_would_settle_it": {
+          "type": "string"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "metadata-verified",
+            "ai-anchored",
+            "anchor-verified",
+            "appraised",
+            "senior-reviewed",
+            "published",
+            "flagged"
+          ],
+          "description": "METHODS §12. ai-anchored: every anchor located in the full text and confirmed by a second AI reader, blind or at the stated place; anchor-verified: every anchor checked by the senior author; appraised: in addition, every study card the claim rests on read against its source by the senior author."
+        },
+        "drafted_by": {
+          "type": "string"
+        },
+        "drafted_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "reviewed_by": {
+          "type": "string"
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "flag_note": {
+          "type": "string"
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "version",
+          "date",
+          "change"
+        ],
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "change": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "plain": {
+      "type": "string",
+      "description": "Plain-language sentence for readers (METHODS §9); must say no more than the statement."
+    },
+    "senior_review": {
+      "type": "object",
+      "description": "Senior author's decision, recorded from the review queue.",
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "approved",
+            "approved-with-edits",
+            "flagged"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "claim_version": {
+          "type": "string",
+          "description": "The claim version the decision was made on; a decision on an earlier version does not carry over to a changed claim (METHODS §5.5)."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "downgrade": {
+      "type": "object",
+      "required": [
+        "levels"
+      ],
+      "properties": {
+        "levels": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "upgrade": {
+      "type": "object",
+      "required": [
+        "levels"
+      ],
+      "properties": {
+        "levels": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

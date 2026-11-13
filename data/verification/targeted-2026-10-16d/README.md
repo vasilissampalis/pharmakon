@@ -1,0 +1,3 @@
+# Targeted check, round d (2026-10-16): McKetin et al. 2013, from the PDF
+
+The eight anchors from McKetin et al. (2013) had been located in the publisher's HTML, which the app's browser can no longer open. An independent reader (AI reader 7) checked each at the stated place in the PDF the senior author saved: 2 corrected (the 3-year interview covered 230 of 278 people; the paper does not say who rated symptoms or whether raters knew that month's use), 6 confirmed in content with the printed page added or the locator corrected. The claim's wording was aligned (text_patch.json). All anchors of cl_meth_psychosis_dose are now checked by a second reader.

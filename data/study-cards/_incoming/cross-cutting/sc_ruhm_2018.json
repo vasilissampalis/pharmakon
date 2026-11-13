@@ -1,0 +1,264 @@
+{
+ "id": "sc_ruhm_2018",
+ "substance": "cross-cutting",
+ "reference": "ruhm_2018",
+ "design": "registry",
+ "design_detail": "Analysis of US national death-certificate data, the CDC Multiple Cause of Death files for 1999–2015 (with county of residence, which the public-use files lack), covering all drug poisoning deaths of US residents: ICD-10 underlying cause X40–X44, X60–X64, X85 or Y10–Y14 (all intents). Opioid involvement = any of T40.0–T40.4 or T40.6 among the multiple causes; heroin/synthetic opioid involvement = T40.1 or T40.4. For deaths whose only drug code was T50.9 (unspecified drugs, medicaments and biologicals), involvement was imputed: year-specific probit models were fitted to deaths with at least one drug category specified, with demographic, day-of-week, place-of-death and 2010 county covariates, and their predicted values were applied to the unspecified deaths. Reported and corrected counts, rates per 100,000 (mid-year US population) and changes since 1999 are compared by year (Tables 1 and 2). No toxicology or case records; no confidence intervals. A short 'Data Notes' article; details and Stata do-files are in the Supporting Information (not read).",
+ "can_establish": "How much national counts and rates of opioid-involved and heroin/synthetic-opioid-involved drug poisoning deaths in 1999–2015 change if deaths certified with no named drug are assumed to involve these drugs with the probability predicted from deaths with a named drug and similar recorded characteristics, and how that assumption changes the size and the percentage growth of the trend.",
+ "cannot_establish": "How many deaths with no drug named actually involved opioids (no such death was checked against toxicology or investigation records); whether opioids caused the deaths counted as opioid-involved (a T code counts involvement, whatever other drugs were present); how uncertain the corrected figures are (no intervals were computed); deaths in which other drugs were named but an opioid was missed; or deaths wrongly counted as drug-related or as opioid-involved (the method can only add involvement).",
+ "sample": {
+  "n_total": 568699,
+  "n_by_group": {
+   "deaths of US residents 1999–2015 (all causes)": 42170818,
+   "drug poisoning deaths 1999–2015": 568699
+  },
+  "recruitment": "Registry: all deaths of US residents in the CDC Multiple Cause of Death files, 1999–2015 (Methods, 1st paragraph, p. 1339); the correction needs county of residence, which the public-use mortality files do not contain (Discussion, 4th paragraph, p. 1342).",
+  "inclusion_exclusion": "Drug poisoning deaths by ICD-10 underlying cause: X40–X44 (unintentional), X60–X64 (suicide), X85 (assault) and Y10–Y14 (undetermined intent) (Methods, 2nd paragraph, p. 1340; Table 1 note). Deaths coded to other underlying causes are outside the count by definition.",
+  "demographics": "Not reported in the article: the model covariates are listed, but no distribution of the deaths is given (the Supporting Information was not read).",
+  "attrition": "Not applicable (complete registrations).",
+  "selection_effects": "Which deaths have no drug named depends on testing and certification practice, which varies by place and over time, the paper's premise: 23.1% of drug poisoning deaths had no specific drug, from 26.0% (2008) to 17.2% (2015) (p. 1340). The covariates listed in the Table 1 note do not include state or the type of death-investigation system, so differences in certification practice enter the model only through demographic, place-of-death and county variables."
+ },
+ "exposure": {
+  "measurement": "How a death entered each count, and who decided: certifiers (the Discussion refers to medical examiners and coroners) write the causes on the death certificate, and the drugs listed as immediate or contributory causes appear as ICD-10 T codes in the multiple-cause files (Methods, 2nd paragraph, p. 1340). Reported counts use only these codes and attribute no drug to deaths whose only drug code is T50.9 (Methods, 3rd paragraph). Corrected counts add imputed involvement for those deaths, using predicted values from year-specific probit models fitted to deaths with at least one drug category specified (Methods, 3rd and 4th paragraphs; Table 1 note, p. 1341); whether the predicted probabilities were summed or used to classify each death is not stated in the article. No toxicology data were used; what was tested at death, and in what share of deaths, is not reported, and the Discussion notes that budgets are likely to limit testing and autopsies (p. 1343).",
+  "polysubstance": "A death counts as opioid-involved if any opioid code is present, whatever other drugs are coded; heroin and synthetic opioids (T40.4, which includes fentanyl and other synthetic opioids) are grouped because recent increases in synthetic-opioid deaths are driven largely by non-prescription use, as the paper states. Only deaths with no drug specified are adjusted, so deaths naming other drugs while an opioid involved went unnamed remain uncorrected; the author says the corrected estimates therefore still understate (pp. 1342–1343).",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "Reported (certificate-only) counts and rates against corrected (imputed) ones for the same deaths; a simpler 'naive' correction, dividing reported rates by the share of deaths with at least one drug specified, as a check of the method (p. 1342). No external reference such as toxicology or case review.",
+  "matching": "Not applicable.",
+  "unmeasured_premorbid": "Not applicable (counts of deaths). Characteristics that might make unspecified deaths differ from specified ones beyond the covariates (toxicology availability, certifier type, jurisdiction) were not measured; the missing-at-random assumption is stated (p. 1343).",
+  "controls_other_drug_use": "Not applicable."
+ },
+ "outcomes": {
+  "instruments": "Annual counts and rates per 100,000 (mid-year US population from the World Bank via FRED, ref 12) of any-opioid-involved and heroin/synthetic-opioid-involved drug poisoning deaths, reported and corrected, with absolute and percentage change since 1999 (Tables 1 and 2). Stata version 15.",
+  "validity_norms": "Corrected counts are model predictions without validation; reported counts are only as complete as certificates and their coding.",
+  "operationalization": "'Opioid-involved' = an opioid T code on the certificate (reported) or imputed (corrected): involvement, not cause.",
+  "n_outcomes_tested": null,
+  "multiplicity_correction": "Not applicable: descriptive estimates, no hypothesis tests.",
+  "assessor_blinding": "Not applicable."
+ },
+ "analysis": {
+  "effect_sizes": "No confidence intervals (stated as a limitation, p. 1343). Any opioid: reported 8,050 (1999) and 33,091 (2015); corrected 10,232 and 39,999. Heroin/synthetic opioids: reported 2,675 and 19,884; corrected 3,421 and 23,857. Corrected/reported ratio, editors' calculation from Table 1: any opioid 1.209 (2015) to 1.357 (2008); heroin/synthetic 1.200 (2015) to 1.346 (2008). Rates per 100,000 in 2015: any opioid 10.31 reported, 12.46 corrected; heroin/synthetic 6.20 and 7.43. Change 1999–2015: any opioid +25,041 reported against +29,767 corrected (311.1% against 290.9%); heroin/synthetic +17,209 against +20,437 (643.3% against 597.4%). Deaths added by the correction, editors' calculation from Table 1: any opioid 2,182 (1999), at most 7,859 (2011), 6,908 (2015); heroin/synthetic 746 (1999) to 3,973 (2015). For 2015, the 6,908 added deaths are about 77% of the roughly 9,000 deaths with no drug specified (17.2% of the 52,404 drug poisoning deaths given in the Introduction), close to the 76% opioid share among deaths with a drug specified (33,091 of about 43,400), so the imputation was close to proportional reallocation (editors' calculation).",
+  "covariates": "In the imputation model (Table 1 note, p. 1341): sex; race (white, black, other non-white); Hispanic origin; marital status; education (four levels); seven age categories; day of week; place of death (hospital in-patient, hospital out-patient or emergency department, dead on arrival, home, other); interactions between sex and race/ethnicity; and 2010 county characteristics (poverty rate, education shares, share of households headed by females, median income, population per square mile and its square, physicians per 1,000).",
+  "preregistration": "none",
+  "preregistration_detail": "No protocol or registration is mentioned.",
+  "selective_reporting": "The yearly shares of unspecified deaths and the full adjustment procedure appear only in the Supporting Information (Table S1 and Stata do-files; not read). How predicted values were turned into counts is not stated in the article. No sensitivity analysis of the missing-at-random assumption (for example by state, intent or certifier type) is reported.",
+  "power": "Not applicable (complete registrations)."
+ },
+ "interpretation_gap": {
+  "results_show": "Imputing opioid involvement for deaths certified with no named drug raises national opioid-involved counts by 21–35% a year as printed (20.9% in 2015 to 35.7% in 2008 by editors' calculation from Table 1; 6,908 deaths in 2015: 33,091 to 39,999) and heroin/synthetic-opioid counts by 20–35% (19,884 to 23,857 in 2015); it increases absolute growth since 1999 and can lower percentage growth, because the 1999 base also rises. The estimates have no stated uncertainty and were not checked against any external source.",
+  "claimed": "The abstract calls the official 2015 figure an undercount, \"with the actual number being approximately 39 999\": a single model prediction presented as the actual number, to the last death, although the paper computed no confidence intervals (p. 1343). The conclusion that imputation is \"likely to provide more accurate estimates\" (abstract), and the Discussion's statement that the estimates would be considerably more accurate even if the missing-at-random assumption fails (p. 1343), are asserted without any check against toxicology or case records. The abstract's largest differences, 'in 2011 for any opioids (5677 deaths and 1.7 per 100 000)', are differences between corrected and reported change since 1999; the number of deaths the correction added in 2011 was 7,859 (editors' calculation from Table 1). The method only adds involvement: deaths wrongly certified as drug-related or as opioid-involved are named as a limitation (p. 1343) but play no part in the corrected figures. The paper consistently says 'involved', which does not mean caused.",
+  "gap_assessment": "minor"
+ },
+ "replication": {
+  "status": "partially-replicated",
+  "timeline": [
+   {
+    "year": 2015,
+    "event": "Slavova et al., 'Drug overdose deaths: let's get specific' (ref 6): cited among earlier recognitions that certificates often name no drug.",
+    "reference": "slavova_2015"
+   },
+   {
+    "year": 2016,
+    "event": "Ruhm (Population Health Metrics; ref 8): statistical adjustment of drug poisoning deaths, 1999–2012, an earlier correction by the same author."
+   },
+   {
+    "year": 2017,
+    "event": "Ruhm (American Journal of Preventive Medicine; ref 9): geographic variation in opioid and heroin mortality rates; the correction method here follows this earlier research."
+   },
+   {
+    "year": 2018,
+    "event": "Buchanich et al. (card sc_buchanich_2018): proportional reallocation of unintentional overdose deaths with no named drug, 1999–2015, about 70,000 potential opioid-related deaths; a different method on the same national certificates, compared with Ruhm's state corrections in its Discussion.",
+    "reference": "buchanich_2018"
+   },
+   {
+    "year": 2019,
+    "event": "Slavova et al. review of methodological complexities (card sc_slavova_2019) relays this paper's 2015 rates (12.46 corrected against 10.31 reported).",
+    "reference": "slavova_2019"
+   },
+   {
+    "year": 2025,
+    "event": "Gutkind et al. scoping review (card sc_gutkind_2025): its national figure rests on Ruhm's three analyses, which share author, data and approach; a county linkage study it summarizes (Lowder et al., 2018) found opioids in the toxicology of 86.8% of unspecified overdose deaths in Marion County, Indiana.",
+    "reference": "gutkind_2025"
+   },
+   {
+    "year": 2026,
+    "event": "Garnett et al., NCHS report for 2017–2023 (card sc_garnett_2026): the share of overdose deaths with at least one specific drug code rose from 87.7% (2017) to 96.0% (2023).",
+    "reference": "garnett_2026"
+   }
+  ],
+  "where_it_stands": "The direction is consistent across methods: proportional reallocation (Buchanich et al., 2018) and the state and county linkage studies summarized by Gutkind et al. (2025) also find more opioid involvement than certificates show, and one county's toxicology found opioids in 86.8% of unspecified deaths, more than the roughly 77% this model implies nationally for 2015 (editors' calculation), though presence in toxicology is a different measure. The size of the national correction remains a model estimate, repeated by one author on overlapping data, without validation or uncertainty. Certificates named a specific drug far more often after 2015 (NCHS: 87.7% of overdose deaths in 2017, 96.0% in 2023), so these 1999–2015 corrections should not be extended to later years."
+ },
+ "funding": {
+  "funder": "Not reported: the article has no funding statement.",
+  "declared_conflicts": "Declaration of interests: none (p. 1343).",
+  "affiliations_note": "Frank Batten School of Leadership and Public Policy, University of Virginia (sole author). The method follows the author's own earlier adjustment studies (refs 8, 9, 14); the scoping review on card sc_gutkind_2025 notes that its three national correction studies are by this author on overlapping data, so they are not independent replications."
+ },
+ "what_would_settle_it": "A national or multi-state random sample of deaths certified with T50.9 as the only drug code, linked to post-mortem toxicology and investigation records, measuring how often opioids (and heroin or fentanyl) were present and judged contributory, compared with the model's predicted probabilities for the same deaths; with uncertainty intervals for the corrected national counts and sensitivity analyses by state and death-investigation system.",
+ "risk_of_bias": {
+  "instrument": "JBI-prevalence",
+  "domains": [
+   {
+    "domain": "1. Sample frame appropriate to the target population",
+    "judgment": "yes",
+    "note": "All drug poisoning deaths of US residents, all intents, 1999–2015, from the national multiple-cause files."
+   },
+   {
+    "domain": "2. Participants sampled appropriately",
+    "judgment": "yes",
+    "note": "A census of registrations, not a sample."
+   },
+   {
+    "domain": "3. Adequate sample size",
+    "judgment": "yes",
+    "note": "568,699 drug poisoning deaths."
+   },
+   {
+    "domain": "4. Study subjects and setting described in detail",
+    "judgment": "partial-yes",
+    "note": "Codes, data source and covariates are described; the deaths themselves are not described, and the yearly shares of unspecified deaths and the procedure's details are only in the Supporting Information."
+   },
+   {
+    "domain": "5. Data analysis with sufficient coverage of the identified sample",
+    "judgment": "yes",
+    "note": "All drug poisoning deaths enter the reported and corrected counts."
+   },
+   {
+    "domain": "6. Valid methods for identifying the condition",
+    "judgment": "no",
+    "note": "For deaths with a named drug, opioid involvement is what certifiers wrote and coders translated, whose completeness varies; for the 23.1% with no named drug it is a model prediction under an untested missing-at-random assumption, without toxicology or case-record validation; involvement is not cause."
+   },
+   {
+    "domain": "7. Condition measured in a standard, reliable way across participants",
+    "judgment": "no",
+    "note": "Testing and certification vary by jurisdiction and over time, the premise of the study, and state or investigation system is not among the listed model covariates."
+   },
+   {
+    "domain": "8. Appropriate statistical analysis",
+    "judgment": "partial-yes",
+    "note": "Probit imputation is a reasonable approach and Tables 1 and 2 recompute correctly, but no confidence intervals or sensitivity analyses are given, and the only check is a simpler method on the same data."
+   },
+   {
+    "domain": "9. Adequate response rate, or low rate managed",
+    "judgment": "not-applicable",
+    "note": "Registrations, not respondents; missing drug information is the subject of the study and is covered under items 6 and 7."
+   }
+  ],
+  "overall": "high",
+  "reasoning": "JBI-prevalence fits a count of deaths from national certificates (round brief, certificate studies), as on card sc_buchanich_2018. The reported counts are a census of what certificates say, with low risk of bias for that. The corrected counts, which are what the paper is cited for, depend on the assumption that deaths with no drug named resemble deaths with a named drug and the same recorded characteristics; this was not tested against toxicology and carries no stated uncertainty, and the direction of any resulting bias is unknown. Citable for: the share of US drug poisoning deaths with no drug specified in 1999–2015 (23.1%; 26.0% in 2008, 17.2% in 2015); reported counts; model-based corrected counts, labelled as estimates (for example about 40,000 rather than 33,091 opioid-involved deaths in 2015); and the point that such corrections raise absolute growth and can lower percentage growth. Not citable for: the actual number of opioid-involved deaths, opioids as the cause of the added deaths, or years after 2015."
+ },
+ "key_findings": [
+  {
+   "finding": "Of 42,170,818 deaths of US residents in 1999–2015, 568,699 were drug poisonings; 23.1% of these had no specific drug identified (only T50.9), from a high of 26.0% in 2008 to a low of 17.2% in 2015, with a steady fall after 2008 and no clear pattern before.",
+   "page": "p. 1340",
+   "locator": "Results, 1st paragraph",
+   "note": "The yearly shares are in Supporting Information Table S1, not read; the Methods give one-sixth to one-quarter depending on the year (Methods, 2nd paragraph)."
+  },
+  {
+   "finding": "Counting rules: a drug poisoning death has an ICD-10 underlying cause of X40–X44, X60–X64, X85 or Y10–Y14 (all intents); opioid involvement means T40.0–T40.4 or T40.6 among the multiple causes; heroin/synthetic opioid involvement means T40.1 or T40.4. Synthetic opioids (most importantly fentanyl) are grouped with heroin because, while fentanyl has legal uses, recent increases in deaths are driven largely by non-prescription consumption, as the paper states citing ref 11.",
+   "page": "p. 1340",
+   "locator": "Methods, 2nd paragraph; Table 1 note (p. 1341)"
+  },
+  {
+   "finding": "Correction: year-specific probit models, estimated by maximum likelihood on overdose deaths with at least one drug category identified, predicted opioid (and, in a separate model, heroin/synthetic opioid) involvement from sex, race, Hispanic origin, marital status, education, seven age groups, day of week, place of death, sex–race/ethnicity interactions and 2010 county characteristics; the predicted values were used to impute involvement for deaths with only unspecified drugs. Reported counts attribute no drug category to those deaths.",
+   "page": "pp. 1340–1341",
+   "locator": "Methods, 3rd and 4th paragraphs; Table 1 note"
+  },
+  {
+   "finding": "Corrected counts were 21–35% higher than reported for any opioid and 20–35% higher for heroin/synthetic opioids in every year: in 1999, 8,050 and 2,675 deaths reported against 10,232 and 3,421 corrected; in 2015, 33,091 and 19,884 against 39,999 and 23,857. Rates per 100,000 in 2015: 10.3 and 6.2 reported, 12.5 and 7.4 corrected.",
+   "page": "pp. 1340–1342",
+   "locator": "Results, 2nd paragraph; Table 1 (p. 1341); Table 2 (p. 1342)",
+   "note": "Editors' calculation from Table 1: the corrected/reported ratio for any opioid ranged from 1.209 (2015) to 1.357 (2008), i.e. up to 35.7% (editors' calculation; the paper prints 21–35%), and for heroin/synthetic opioids from 1.200 (2015) to 1.346 (2008). Table 2 gives the 2015 corrected rates as 12.46 and 7.43; the Discussion rounds the first to 12.4 (reporting issue 3)."
+  },
+  {
+   "finding": "Deaths added by the correction each year (editors' calculation from Table 1): any opioid 2,182 in 1999, rising to a maximum of 7,859 in 2011 and 6,908 in 2015; heroin/synthetic opioids 746 in 1999 rising to 3,973 in 2015.",
+   "page": "p. 1341",
+   "locator": "Table 1 (# of Deaths columns)",
+   "note": "Editors' calculation. For 2015, the 6,908 added deaths are about 77% of the roughly 9,000 deaths with no drug specified (17.2% of the 52,404 drug poisoning deaths given in the Introduction, p. 1339), close to the opioid share among deaths with a drug specified (33,091 of about 43,400, 76%): the model's imputation was close to proportional reallocation."
+  },
+  {
+   "finding": "Growth 1999–2015: corrected counts rose by 29,767 (any opioid) and 20,437 (heroin/synthetic) against 25,041 and 17,209 reported; corrected rates by 8.8 and 6.2 per 100,000 against 7.4 and 5.2. The largest gap between corrected and reported growth was for 1999–2011 for any opioid (5,677 deaths and 1.7 per 100,000) and for 1999–2015 for heroin/synthetic opioids (3,228 deaths and 1.0 per 100,000); the author attributes the difference to more complete reporting after 2011 offsetting any-opioid growth, while heroin/synthetic-opioid deaths rose fast enough after 2011 to more than offset better reporting.",
+   "page": "p. 1340",
+   "locator": "Results, 3rd paragraph; Table 1 (p. 1341)",
+   "note": "5,677 and 3,228 are differences between corrected and reported change since 1999, not the number of deaths added in 2011 (7,859) or 2015 (3,973) (editors' calculation; reporting issue 2)."
+  },
+  {
+   "finding": "Percentage growth can be slower after correction because the 1999 base was 27% (any opioid) and 28% (heroin/synthetic) higher: 1999–2015, 291% corrected against 311% reported for any opioid; from 2007 to 2015 corrected counts grew 61% and 287% and corrected rates 51% and 265%, against 79% and 332% (counts) and 68% and 306% (rates) reported; such comparisons depend on the base year.",
+   "page": "pp. 1340, 1342",
+   "locator": "Results, 4th paragraph (p. 1340); Discussion, 3rd paragraph (p. 1342)",
+   "note": "Table 1 gives 23,857/6,140 = +288.6% for corrected heroin/synthetic count growth from 2007 to 2015 (editors' calculation), not 287% (reporting issue 3)."
+  },
+  {
+   "finding": "A simpler 'naive' correction gave similar, not identical, results: specific drug involvement was identified for 74.7% of overdose deaths in 2011, and dividing that year's reported rates (7.31 and 2.25 per 100,000) by 0.747 gives 9.79 and 3.01, against 9.83 and 2.99 from the full procedure, which needs county of residence, absent from the public-use files.",
+   "page": "p. 1342",
+   "locator": "Discussion, 4th paragraph"
+  },
+  {
+   "finding": "Limitations stated by the author: only deaths with no drug specified are adjusted, so with drug 'cocktails' the corrected estimates still understate drug-specific rates; drug mentions may be wrong (heroin use attributed to morphine or codeine); T40.6 (unspecified narcotics) and T40.4 (fentanyl with other synthetic opioids) lack specificity; drug deaths may be attributed to non-drug causes or the reverse; the correction assumes information is missing at random given the covariates; and no confidence intervals were computed.",
+   "page": "pp. 1342–1343",
+   "locator": "Discussion, 5th paragraph"
+  },
+  {
+   "finding": "The author argues that training and standardization of medical examiners and coroners might improve the completeness and accuracy of certificates, but that budgets are likely to limit expensive testing and autopsies, which give the most accurate information, so corrections will remain necessary for trends, which would otherwise partly reflect changes in reporting accuracy.",
+   "page": "p. 1343",
+   "locator": "Discussion, 6th paragraph"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The Results give the correction as 21–35% for any opioid, and the abstract as 20–35% for both groups, in every year; by Table 1 the any-opioid correction reached 35.7% in 2008 (26,567 against 19,582) (editors' calculation).",
+   "page": "pp. 1339–1341",
+   "consequence": "Minor: cite the printed 21–35% for any opioid, or the yearly counts; a range of 21–36% must be labelled as the editors' calculation (20.9% in 2015 to 35.7% in 2008)."
+  },
+  {
+   "issue": "The abstract places the largest differences 'in 2011 for any opioids (5677 deaths and 1.7 per 100 000)' and in 2015 for heroin/synthetic opioids (3,228 deaths). The Results show these are differences between the corrected and reported change since 1999; by Table 1 the correction added 7,859 deaths in 2011 and 3,973 heroin/synthetic deaths in 2015 (editors' calculation).",
+   "page": "pp. 1339–1341",
+   "consequence": "Readers may cite 5,677 as the 2011 undercount; it is not. Cite the yearly differences from Table 1."
+  },
+  {
+   "issue": "Corrected heroin/synthetic count growth from 2007 to 2015 is printed as 287%, but Table 1 gives 23,857/6,140 = 288.6% (editors' calculation). The Discussion gives the 2015 corrected any-opioid rate as 12.4 per 100,000, while Table 2 gives 12.46 and the Results 12.5.",
+   "page": "pp. 1340–1342",
+   "consequence": "Minor rounding or transcription slips; cite the table values."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent)",
+  "first_pass_on": "2026-11-01",
+  "source_read": "PDF (version of record), Addiction 113:1339–1344, all 6 pages; Tables 1 and 2 checked on the rendered pages and recomputed by script (the PDF's text layer drops the minus signs of the 2000–2001 heroin/synthetic rows, such as −69 and −2.6%, which the rendered pages show); Supporting Information (Table S1, adjustment details, Stata do-files) not among the files and not read.",
+  "disagreements": [
+   {
+    "field": "reporting_issues[0].consequence",
+    "first_pass": "Minor: cite 21–36% for any opioid, or the yearly counts.",
+    "reviewer": "AI reader 327 (second reader) (confirmed, with a note): 26,567/19,582 = 1.357; I would rather the claim label 36% as an editors' calculation than cite '21–36%' as the paper's range. Editor's lead for this round: the printed range is 21–35%; 36% is an editors' calculation (35.7%).",
+    "resolution": "Accepted: recomputed from the rendered Table 1 (p. 1341): 20.9% (2015) to 35.7% (2008). Consequence rewritten so that 21–36% is never cited as printed."
+   },
+   {
+    "field": "interpretation_gap.results_show",
+    "first_pass": "Imputing opioid involvement for deaths certified with no named drug raises national opioid-involved counts by 21–36% a year (6,908 deaths in 2015: 33,091 to 39,999) and heroin/synthetic-opioid counts by 20–35% (19,884 to 23,857 in 2015); it increases absolute growth since 1999 and can lower percentage growth, because the 1999 base also rises. The estimates have no stated uncertainty and were not checked against any external source.",
+    "reviewer": "AI reader 327 (second reader): see reporting issue 0 (0-based); editor's lead: 36% is an editors' calculation.",
+    "resolution": "Accepted: the printed range given, the editors' recomputation labelled."
+   },
+   {
+    "field": "key_findings[3].note",
+    "first_pass": "Editors' calculation from Table 1: the corrected/reported ratio for any opioid ranged from 1.209 (2015) to 1.357 (2008), i.e. up to 36%, and for heroin/synthetic opioids from 1.200 (2015) to 1.346 (2008). Table 2 gives the 2015 corrected rates as 12.46 and 7.43; the Discussion rounds the first to 12.4 (reporting issue 3).",
+    "reviewer": "AI reader 327 (second reader): key finding confirmed; same labelling point.",
+    "resolution": "Accepted: the note now distinguishes the printed range from the editors' recomputation."
+   },
+   {
+    "field": "interpretation_gap.gap_assessment",
+    "first_pass": "minor",
+    "reviewer": "AI reader 327 (second reader) (disagree): rate 'substantial' rather than 'minor', on the card's own evidence: the abstract presents a single model prediction as the actual number (approximately 39,999) and calls imputation likely more accurate, and the Discussion says it stays considerably more accurate even if missing-at-random fails, none of it tested against toxicology or case records and with no uncertainty given; the body is transparent, so borderline.",
+    "resolution": "Rating not changed: a difference on the interpretation-gap rating goes to the senior author (METHODS §5.5); listed in AI reader 347's log. The card's wording was checked against the rendered pp. 1339 and 1343: the abstract's 'actual number' and 'likely to provide more accurate estimates', the Discussion's 'considerably more accurate' even if the assumption is violated, and the absence of confidence intervals are all described correctly in interpretation_gap.claimed, which is unchanged."
+   },
+   {
+    "field": "risk_of_bias.overall",
+    "first_pass": "high",
+    "reviewer": "AI reader 327 (second reader): agree (JBI-prevalence, overall high, for the corrected counts).",
+    "resolution": "Readers agree on the overall judgment; card set to ai-checked."
+   }
+  ],
+  "checked_by": "AI reader 327 (blind second reading) and AI reader 347 (adjudication)",
+  "checked_on": "2026-11-01"
+ }
+}

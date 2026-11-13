@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schema/epidemiology-figure.schema.json",
+  "title": "Epidemiology figure",
+  "description": "One statistic displayed anywhere on the site, including the landing page (METHODS.md §10). No field may be empty.",
+  "type": "object",
+  "required": ["id", "value", "unit", "measure", "substance", "population", "geography", "data_year", "source", "source_edition_year", "url", "verification"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^ep_[a-z0-9_-]+$" },
+    "value": { "type": "number" },
+    "interval": { "type": "object", "properties": { "low": { "type": "number" }, "high": { "type": "number" }, "type": { "type": "string" } } },
+    "unit": { "type": "string", "description": "e.g. 'percent', 'persons', 'per 100,000'." },
+    "precision": { "type": "integer", "description": "Decimal places as given by the source; never rounded beyond." },
+    "measure": { "type": "string", "enum": ["lifetime-prevalence", "past-year-prevalence", "past-month-prevalence", "incidence", "deaths", "treatment-entries", "conditional-probability-of-dependence", "seizures", "other"] },
+    "measure_definition": { "type": "string", "description": "e.g. 'drug-induced deaths, EUDA definition (ICD-10 codes ...)'." },
+    "substance": { "type": "string" },
+    "population": { "type": "string", "description": "e.g. 'adults 15–64'." },
+    "geography": { "type": "string" },
+    "data_year": { "type": "string" },
+    "source": { "type": "string", "description": "Reference id or named report." },
+    "source_edition_year": { "type": "integer" },
+    "page_or_table": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "denominator_note": { "type": "string", "description": "For deaths: the number of users in the same population and year, if available." },
+    "verification": { "type": "object", "required": ["status"], "properties": { "status": { "type": "string", "enum": ["draft", "verified"] }, "verified_by": { "type": "string" }, "verified_on": { "type": "string", "format": "date" } } },
+    "display": { "type": "object", "properties": { "landing_page": { "type": "boolean" }, "label": { "type": "string" } } }
+  }
+}

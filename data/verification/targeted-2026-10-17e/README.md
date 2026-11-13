@@ -1,0 +1,3 @@
+# Targeted check, round e (2026-10-17): batch 2 anchors
+
+35 anchors located by the first readers (AI readers 5 and 6) from the batch 2 PDFs, checked at the stated place by an independent reader (AI reader 9): 29 confirmed, 6 corrected (volume of distribution 'not significantly different' rather than 'the same'; the authors' hedges restored; a cross-paper clause removed; peak and time course separated), every stated page right. One claim's wording aligned (text_patch.json). Every anchor on the methamphetamine page has now been checked by a second reader; the claims resting only on narrative reviews stay draft by rule.

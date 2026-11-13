@@ -1,0 +1,612 @@
+{
+ "reviewer": "AI methodologist (review round 1, group B)",
+ "reviewed_on": "2026-10-16",
+ "claims_reviewed": [
+  "cl_meth_acute_toxicity",
+  "cl_meth_psychosis_treatment",
+  "cl_meth_dependence_baserate",
+  "cl_meth_withdrawal",
+  "cl_meth_choice_alternatives",
+  "cl_meth_cognition",
+  "cl_meth_cognition_normal_range",
+  "cl_meth_cognition_abstinence",
+  "cl_meth_cognition_causal",
+  "cl_meth_parkinson",
+  "cl_meth_siblings"
+ ],
+ "findings": [
+  {
+   "claim_id": "cl_meth_acute_toxicity",
+   "field": "status",
+   "severity": "must-fix",
+   "rule": "METHODS §6.4 status flags; REVIEW-BRIEF D",
+   "issue": "The claim is flagged 'replicated', but its only support is one narrative review whose anchor is still a placeholder; no primary case series or toxicology report has been read, so not even one study is anchored.",
+   "evidence": "evidence[0] (cruickshank_2009): page, locator and extracted are placeholders, anchor_status 'unchecked'; sc_cruickshank_2009 is a first-pass narrative-review card with funder and effect sizes '[to be extracted from PDF]'.",
+   "proposed": "status: do not display a status until at least two independent primary sources (case series, poison-centre, emergency-department or post-mortem series) are anchored. If the schema needs a value meanwhile, use 'single-study' with the note 'one secondary narrative review; primary sources not yet read'. Set 'replicated' only when two independent primary sources agree."
+  },
+  {
+   "claim_id": "cl_meth_acute_toxicity",
+   "field": "grade.reasoning; evidence",
+   "severity": "must-fix",
+   "rule": "METHODS §5.3 (narrative reviews are cited for arguments and pointers, never as primary evidence); §1.4 principle 3; §6.3",
+   "issue": "Every element of the statement rests on a narrative review that §5.3 allows only as a pointer, yet the claim carries GRADE 'low' with no downgrades, a rating given to evidence nobody has read. The card also rates this narrative review with AMSTAR 2, whereas §5.3 prescribes the editors' narrative-review checklist.",
+   "evidence": "evidence[0] unchecked; grade.reasoning says the primary case series are still to be read; sc_cruickshank_2009: design 'narrative-review', risk_of_bias.instrument 'AMSTAR 2'.",
+   "proposed": "grade: mark the rating provisional until primary sources are carded, with reasoning: 'Provisional. The features listed come from a narrative review (cruickshank_2009), used only as a pointer (METHODS §5.3). The case series, poison-centre and post-mortem studies it cites must be read and carded. Descriptive features from case series start low; any statement about what predicts death needs studies that compare fatal with non-fatal cases.' Re-card sc_cruickshank_2009 with the editors' narrative-review checklist."
+  },
+  {
+   "claim_id": "cl_meth_acute_toxicity",
+   "field": "plain",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF B (plain no stronger than the statement); METHODS §9",
+   "issue": "The plain turns 'a key determinant of fatal outcome' into 'the thing most likely to kill' and adds a sentence ('it is a medical emergency') that is in neither the statement nor any anchor; 'heart attack or stroke' is also more specific than 'cardiovascular events'.",
+   "evidence": "statement versus plain; the only anchor is unchecked.",
+   "proposed": "Severe meth toxicity can look like a body in overdrive: a racing heart, high blood pressure, high body temperature and agitation. In some people it goes on to seizures, muscle breakdown, heart and blood-vessel problems, or death. How often each of these happens, and whether high body temperature predicts death, has not yet been checked in the original studies."
+  },
+  {
+   "claim_id": "cl_meth_acute_toxicity",
+   "field": "statement; magnitude",
+   "severity": "should-fix",
+   "rule": "METHODS §6.1 (causal wording only when designs support it); §1.4 principle 5 (base rates first); REVIEW-BRIEF E",
+   "issue": "'Hyperthermia is a key determinant of fatal outcome' is a prognostic, near-causal statement that case series cannot support without comparing fatal and non-fatal cases; and the claim gives no base rate (how often presentations are severe or fatal, how often other drugs such as opioids are involved), so readers cannot judge how common these outcomes are.",
+   "evidence": "magnitude: 'descriptive; case-fatality by presentation [to be extracted from primary sources]'; comparator '—'.",
+   "proposed": "statement: 'In case series and toxicology reports, severe acute methamphetamine toxicity presents with sympathomimetic features (tachycardia, hypertension, hyperthermia, agitation) and in some cases progresses to seizures, rhabdomyolysis, cardiovascular events and death. Whether higher body temperature predicts death among people who present, rather than being a feature of fatal cases, is to be established from studies that compare fatal with non-fatal cases.' magnitude: 'Proportion of presentations with each feature; case fatality among presentations; proportion of deaths with other drugs detected (from primary sources, with denominators).'"
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "field": "magnitude",
+   "severity": "must-fix",
+   "rule": "Internal consistency (REVIEW-BRIEF A, F)",
+   "issue": "The magnitude says 'one later trial', while the statement and the anchors describe two later trials (haloperidol versus quetiapine; aripiprazole versus risperidone).",
+   "evidence": "evidence[0].extracted (later haloperidol–quetiapine trial) and evidence[2].extracted (Farnia et al., 2014, aripiprazole–risperidone); changelog 0.2.1 added the second trial to the statement only.",
+   "proposed": "One trial (N=58, amphetamine psychosis) in the 2009 Cochrane review; two later randomized trials (haloperidol vs quetiapine; aripiprazole vs risperidone), sizes not given in the reviews read; no placebo-controlled trial described in these reviews."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "field": "evidence[2].anchor_status",
+   "severity": "must-fix",
+   "rule": "METHODS §6.2 and §5.5 (ai-checked = re-found by a second reader who had not seen the first)",
+   "issue": "The aripiprazole–risperidone anchor was located by AI reader 2 and 'checked' by the same reader, and the first reader's card for this review contains no mention of the trial, so no independent re-finding exists.",
+   "evidence": "evidence[2]: located_by 'AI reader 2', checked_by 'AI reader 2'; sc_wearne_2018 key_findings and reporting_issues contain no aripiprazole, risperidone or Farnia entry.",
+   "proposed": "evidence[2].anchor_status: 'ai-located' (remove checked_by, checked_on and check_mode until a reader who has not seen this anchor re-finds it); add the finding to sc_wearne_2018.key_findings so that card and claim agree."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "field": "evidence (all anchors)",
+   "severity": "must-fix",
+   "rule": "METHODS §5.3 (narrative reviews never primary evidence); §1.4 principle 3",
+   "issue": "Every trial result in the claim (58 participants, olanzapine versus haloperidol, extrapyramidal effects, the later comparisons) is taken second-hand from three narrative reviews rated critically low, whose own cards say treatment figures must come from the primary studies; neither the 2009 Cochrane review nor any trial report has been carded.",
+   "evidence": "sc_glasner_edwards_2014.cannot_establish (treatment evidence rests on case reports, two small trials and schizophrenia data); sc_bramness_2012 and sc_wearne_2018 risk_of_bias.reasoning (each primary study needs its own card).",
+   "proposed": "Hold the claim at draft until the 2009 Cochrane review (ref. 79 in Glasner-Edwards et al.) and the three trial reports (the 58-participant olanzapine–haloperidol trial; Verachai et al., 2014; Farnia et al., 2014) are read and carded with RoB 2. Then anchor each trial result to its report and keep the three reviews as 'qualifies' anchors."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "METHODS §6.3 (absence of evidence is not evidence of absence); REVIEW-BRIEF A",
+   "issue": "'Symptoms improved similarly' asserts comparable efficacy, but the anchors say only that both drugs were efficacious, and a 58-person active-comparator trial cannot show similarity without an equivalence margin. 'Has not been tested' is a universal negative drawn from narrative reviews without a systematic search.",
+   "evidence": "evidence[0].extracted ('both efficacious'); evidence[1].extracted ('both effective'); magnitude ('no placebo-controlled trial described').",
+   "proposed": "Randomized evidence on treating methamphetamine or amphetamine psychosis, as described in three narrative reviews, is limited to a few small head-to-head trials without a placebo arm: in the one trial included in a 2009 Cochrane review (58 participants, amphetamine psychosis), symptoms improved on both olanzapine and haloperidol, with fewer extrapyramidal side effects on olanzapine; the reviews do not report a difference in efficacy, and the trial was too small to show the drugs are equivalent. Later trials compared haloperidol with quetiapine, and aripiprazole with risperidone. The reviews describe no placebo-controlled trial, so whether antipsychotics speed recovery beyond what abstinence alone achieves is not known."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF B",
+   "issue": "The plain drops 'amphetamine psychosis' (the trial population), says symptoms improved 'about equally' (stronger than the anchors), calls the trial 'the main one', and states as fact that no trial used a placebo.",
+   "evidence": "statement and evidence[0]–[1].",
+   "proposed": "Very few trials have tested medicines for psychosis linked to meth or amphetamine. In the one trial in a 2009 review, 58 people with amphetamine psychosis got one of two antipsychotic medicines; both groups improved, and one medicine caused fewer movement side effects. The trial was too small to show the two work equally well. The reviews describe no trial against a placebo, so it is not known how much these medicines add to stopping use."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "field": "grade.domains.indirectness; grade.reasoning",
+   "severity": "should-fix",
+   "rule": "GRADE indirectness (population); REVIEW-BRIEF C",
+   "issue": "Indirectness is rated 0 although the Cochrane trial is described as amphetamine psychosis and the Farnia trial does not state that participants used methamphetamine; the risk-of-bias level is described as 'unappraised', which is a provisional judgment and should be labelled so.",
+   "evidence": "evidence[2].extracted (methamphetamine use not stated); statement ('58 participants, amphetamine psychosis').",
+   "proposed": "indirectness: 1. reasoning: 'Randomized evidence, seen only through narrative reviews; provisional until the trial reports are carded. Risk of bias: not yet appraised, one level provisionally. Indirectness: the Cochrane trial is described as amphetamine psychosis and one later trial does not state that participants used methamphetamine. Imprecision: one small trial per comparison and no equivalence margin.' Certainty unchanged: very low."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "field": "section",
+   "severity": "should-fix",
+   "rule": "METHODS §8, section 12 ('Treatments for the use disorder, its withdrawal and its complications', v0.2.1)",
+   "issue": "Randomized trials of antipsychotics for methamphetamine psychosis are treatment of a complication and belong in section 12; section 6 covers recognition and emergency response.",
+   "evidence": "monograph sections: claim listed under section 6; section 12 widened in METHODS v0.2.1 for exactly this kind of claim.",
+   "proposed": "section: 12 (list the claim in monograph section 12 and keep a one-line cross-reference in section 6)."
+  },
+  {
+   "claim_id": "cl_meth_dependence_baserate",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "METHODS §10.2 (conditional probabilities with the instrument and follow-up window); REVIEW-BRIEF E",
+   "issue": "The statement names DSM-III-R but not the instrument or the window, and does not say that the figure is a proportion at one interview among everyone who had ever used, including once: people who started recently could still become dependent, so it is not the probability of ever becoming dependent.",
+   "evidence": "sc_anthony_1994: exposure.measurement (structured CIDI interview), outcomes.operationalization (lifetime dependence among lifetime users); magnitude still has placeholders.",
+   "proposed": "In the US National Comorbidity Survey (1990–1992; household sample aged 15–54; structured CIDI interview), about one in nine people who had ever used stimulants non-medically (cocaine counted separately) had ever met DSM-III-R criteria for dependence, compared with about one in three for tobacco and one in six for alcohol. These are proportions at a single interview among everyone who had ever used, including once, and do not account for people who started recently; they are three decades old, grouped across stimulants and based on DSM-III-R criteria. (Confirm the source's own name for the stimulant category before using 'amphetamine-type'.)"
+  },
+  {
+   "claim_id": "cl_meth_dependence_baserate",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF B",
+   "issue": "The plain reads as the chance of becoming dependent after trying the drug; it drops that the figure is a snapshot among everyone who had ever used.",
+   "evidence": "statement; sc_anthony_1994.outcomes.operationalization.",
+   "proposed": "In a large US survey from the early 1990s, about 1 in 9 people who had ever used stimulants other than cocaine outside medical use had ever been dependent on them; for tobacco it was about 1 in 3 and for alcohol about 1 in 6. This counts everyone who had ever tried them, even once, at one point in time, so it is not the chance of ever becoming dependent. The data are old and lump stimulants together, so treat it as a rough base rate."
+  },
+  {
+   "claim_id": "cl_meth_dependence_baserate",
+   "field": "grade.domains.risk_of_bias; grade.reasoning",
+   "severity": "should-fix",
+   "rule": "GRADE; METHODS §5.5 (a card written without the full text cannot leave draft)",
+   "issue": "The reasoning calls the survey well conducted with low risk of bias, but the card's JBI judgments (including 'response rate adequate') were made before the paper was read: its funder, table and effect sizes are still '[to be extracted from PDF]'.",
+   "evidence": "sc_anthony_1994.risk_of_bias (JBI, all 'yes'); analysis.effect_sizes and funding with PDF placeholders; evidence[0] unchecked.",
+   "proposed": "reasoning: 'Provisional until the paper is read: risk of bias not yet appraised (JBI items, including response rate and the definition of stimulant use, to be checked in the full text). Indirectness, two levels: the exposure is stimulants as a class rather than methamphetamine, the criteria are DSM-III-R, and the data are from 1990–1992.'"
+  },
+  {
+   "claim_id": "cl_meth_withdrawal",
+   "field": "statement; evidence",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A (every number in an anchor's extracted text)",
+   "issue": "'8 of 30 items changed significantly' is in the statement but in no anchor's extracted text (only in the changelog). The card supports it, so it needs an anchor, which should also carry the qualifying result that the craving and depressed-mood items did not change.",
+   "evidence": "sc_zorick_2010.key_findings[2] (Table 2: 8 items with significant time effects over days 1–14; craving item P=0.79, depressed item P=0.26; 33 rows tested without correction).",
+   "proposed": "Add anchor: {reference: 'zorick_2010', study_card: 'sc_zorick_2010', page: 'PMC HTML', locator: 'Table 2', extracted: 'Over days 1–14, 8 of the 30 rater-scored MAWQ items had a significant time effect (uncorrected; 33 rows tested); the craving item (P=0.79) and the depressed-mood item (P=0.26) did not change significantly.', role: 'qualifies', anchor_status: 'ai-located'}."
+  },
+  {
+   "claim_id": "cl_meth_withdrawal",
+   "field": "plain",
+   "severity": "must-fix",
+   "rule": "METHODS §6.3 (absence of evidence is not evidence of absence); REVIEW-BRIEF B",
+   "issue": "Saying low mood took three to four weeks 'to reach the level of people who don't use' reads a non-significant week-4 difference (p=0.07, in an unreported subset) as equality, which the card says cannot be read as equivalence; the plain also drops that 'most symptoms eased' holds on self-report scales only (8 of 30 rater-scored items changed) and that participants were not seeking treatment and had no other psychiatric diagnosis.",
+   "evidence": "evidence[1].extracted (approaching control levels at week 4, p=0.07); sc_zorick_2010.analysis.power; statement ('On self-report scales ... 8 of 30 items').",
+   "proposed": "People dependent on meth who were not seeking treatment, and had no other current mental-health diagnosis, stopped using on a hospital research ward. At the start, the most common symptoms were thinking about meth, craving, hunger and tiredness. On questionnaires they filled in themselves, most symptoms eased within one to two weeks; on the checklist filled in by staff, only a few symptoms changed clearly. Low mood stayed higher than in people who don't use for about three weeks and was still slightly higher at week four. Craving lasted to week five at a lower level, measured in an unknown, probably small, number of people."
+  },
+  {
+   "claim_id": "cl_meth_withdrawal",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF E (selection; what the design cannot separate)",
+   "issue": "The statement omits that participants were paid imaging volunteers not seeking treatment, with other current psychiatric disorders excluded (which the card says biases toward fast resolution), that 'entry' could be up to 7 days after last use, and that without an inpatient comparison the decline cannot be separated from hospitalization, the end of a period of use or repeated testing; 'in shrinking numbers of participants' is an inference, since numbers at weeks 3–5 are not reported.",
+   "evidence": "sc_zorick_2010.sample.selection_effects and inclusion_exclusion (use within 7 days before admission); reporting_issues[4] (time axis ambiguous); evidence[3].extracted (numbers at weeks 3–5 not given).",
+   "proposed": "Among 56 people with methamphetamine dependence who were not seeking treatment and had no other current psychiatric disorder, followed during abstinence on a research ward (analyses used 25–32 of them), the commonest symptoms at entry on a rater-scored checklist (n=32) were preoccupation with methamphetamine (72%), craving (68%), increased appetite (63%) and tiredness (56%). On self-report scales most symptoms, including psychotic-type distress ratings, fell during the first one to two weeks, but on the rater-scored checklist only 8 of 30 items changed significantly, and its craving and depressed-mood items did not; depressive scores stayed above controls' for about three weeks and were still higher, though not significantly (p=0.07), at week 4; craving persisted at a reduced level to week 5 in an unreported number of participants. Entry could be up to 7 days after last use, and without an inpatient comparison group the decline cannot be separated from hospitalization, the end of a period of use, or repeated testing. (Anchor the 7-day inclusion criterion, Methods › Participants.)"
+  },
+  {
+   "claim_id": "cl_meth_withdrawal",
+   "field": "grade.reasoning",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF C (reasoning matches the card's domain levels)",
+   "issue": "The reasoning lists selection and missing data but not the card's 'high' confounding judgment for the time course (no comparison for hospitalization, regression from an admission peak or repeated testing), which is the main reason the timing is uncertain.",
+   "evidence": "sc_zorick_2010.risk_of_bias: confounding high, selection high, missing data high, overall high.",
+   "proposed": "reasoning: 'Observational cohort, starts low. Risk of bias (ROBINS-E overall high): no comparison for hospitalization, the end of a period of use, regression from an admission peak or repeated testing; selected non-treatment-seeking volunteers without other psychiatric disorders; analyses on 25–32 of 56, with unreported numbers after week 2. Imprecision: small numbers, especially after week 2.' Certainty unchanged: very low."
+  },
+  {
+   "claim_id": "cl_meth_choice_alternatives",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "METHODS §9 (effects in the population, dose and route observed); REVIEW-BRIEF A",
+   "issue": "The statement omits the route (intranasal), does not say that the drug choices pool methamphetamine with d-amphetamine (and possibly placebo sessions, if 'overall' averages all five sample conditions), and omits that only 3 of the 13 men met dependence criteria, which matters in a section on dependence.",
+   "evidence": "sc_kirkpatrick_2012.design_detail (intranasal; five sample conditions including placebo); evidence[4].extracted (3 met criteria for current dependence).",
+   "proposed": "In a laboratory study of 13 men who used methamphetamine about 9 days a month (3 met criteria for current dependence) and were not seeking treatment, participants who had sampled an intranasal study dose chose between 10% portions of that dose and portions of money. Drug portions (methamphetamine and d-amphetamine pooled) were chosen on 41% of opportunities overall when the alternative was $5 (7 participants; about half at the larger study dose of either drug) and on 17% when it was $20 (6 participants). The two amounts were given to different, very small groups whose assignment is not described as randomized, and they were not compared statistically, so the difference may reflect the people as much as the money."
+  },
+  {
+   "claim_id": "cl_meth_choice_alternatives",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF B",
+   "issue": "The plain presents the $5 versus $20 contrast as if the cash amount changed choices, dropping that different men received each amount and that the groups were never compared statistically; it also omits the route and that 'the drug' includes d-amphetamine.",
+   "evidence": "statement (last sentence); evidence[3].extracted.",
+   "proposed": "In a lab study, 13 men who used meth but were not seeking treatment could choose between small portions of a stimulant dose, taken through the nose, and small amounts of cash. Seven men were offered $5 portions and six were offered $20 portions. The $5 group chose the drug about 4 times in 10; the $20 group fewer than 2 times in 10. Different men got different amounts and the groups were tiny, so the study cannot show that more money caused the difference."
+  },
+  {
+   "claim_id": "cl_meth_choice_alternatives",
+   "field": "grade.domains.risk_of_bias; grade.reasoning",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF C; METHODS §6.3",
+   "issue": "Risk of bias is 0, but the money comparison is a non-randomized contrast of 7 and 6 men whose comparability was asserted without tests, and the card's RoB 2 assessment is high overall, with selection of the reported result judged high.",
+   "evidence": "sc_kirkpatrick_2012.comparison.matching; risk_of_bias (overall high); reporting_issues[6].",
+   "proposed": "risk_of_bias: 1. reasoning: 'The money comparison is between two small groups, not described as randomized and not compared on their characteristics, so it is treated as observational (starts low). Risk of bias: possible confounding by group membership; selective reporting judged high on the card. Imprecision: 7 and 6 participants, no test statistics.' Certainty unchanged: very low."
+  },
+  {
+   "claim_id": "cl_meth_choice_alternatives",
+   "field": "verification.status; evidence[0]",
+   "severity": "should-fix",
+   "rule": "METHODS §6.2, §5.5",
+   "issue": "The claim is 'ai-anchored', which needs every anchor ai-checked, but evidence[0] (41% versus 17%) was located and 'checked' by the same reader; the first reader's card has the same figures at the same locator, but the anchor record does not show that match.",
+   "evidence": "evidence[0]: located_by and checked_by both 'AI reader 2'; sc_kirkpatrick_2012.key_findings[3] (Abstract › Findings, 41% vs 17%).",
+   "proposed": "Record the independent match in evidence[0] (located_by: 'AI first reader (sc_kirkpatrick_2012 key_findings[3])'; checked_by: 'AI reader 2'; check_mode: 'blind'). If the matching script did not register it, set evidence[0].anchor_status to 'ai-located' and verification.status to 'metadata-verified'."
+  },
+  {
+   "claim_id": "cl_meth_cognition",
+   "field": "grade.reasoning",
+   "severity": "must-fix",
+   "rule": "METHODS §6.3 (overlapping evidence); factual accuracy",
+   "issue": "The reasoning says the four meta-analyses overlap heavily, so their agreement is not independent replication. Cao et al. (2026) was designed not to overlap: it covers only studies published from May 2017, after Potvin's cut-off, so it shares no primary studies with Scott or Potvin and at most a few with Basterfield; the direction has therefore been found in independent bodies of studies.",
+   "evidence": "Cao PDF p. 1 (Introduction: the review adds the eight years after Potvin's search as a separate body of evidence that does not overlap it), p. 2 (search window May 2017 to May 2025) and p. 8 (earlier primary studies not included); Potvin PDF p. 155 (studies published before May 2017); evidence[6].extracted itself gives May 2017 to May 2025; sc_cao_2026.design_detail.",
+   "proposed": "Replace the last sentence of grade.reasoning with: 'Scott et al. (2007), Potvin et al. (2018) and Basterfield et al. (2019) share many primary studies, so their agreement is not independent; Cao et al. (2026) covers only studies published from May 2017, sharing none with Scott et al. or Potvin et al. and at most a few with Basterfield et al. (searched to December 2017), so the direction of the difference has been found in independent bodies of primary studies.'"
+  },
+  {
+   "claim_id": "cl_meth_cognition",
+   "field": "statement; grade.domains.publication_bias.note",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A (no selective use of a source); factual accuracy",
+   "issue": "The statement says one of four meta-analyses found strong small-study bias and the grade note says none was detected in two, but Basterfield et al. found Egger signals for learning efficiency (p=.01) and short-term working memory (p=.05), and Cao et al. for verbal learning and memory (p=0.005) and working memory (p<0.001). Three of four show small-study effects, two of them in the learning and memory domain the claim calls the most consistent.",
+   "evidence": "Basterfield PDF p. 745 (Publication Bias: learning efficiency t=2.76, p=.01; trim-and-fill −0.40) and p. 748 (potential publication bias in two domains); Cao PDF p. 7 (Table 2 Egger 0.005 and <.001; overall P=0.32, trim-and-fill −0.65); evidence[4] and evidence[8] already contain these results.",
+   "proposed": "statement, last sentence: 'Groups were often unmatched on education; one meta-analysis found strong small-study bias in its overall estimate, and two others found small-study effects in some domains, including learning and memory (adjusted estimates −0.40 for learning efficiency and −0.65 overall where reported).' publication_bias.note: 'Strong small-study bias for global cognition in one meta-analysis (Egger p=0.00003, no adjusted estimate); Egger signals for learning efficiency (p=.01) and working memory (p=.05) in a second (trim-and-fill −0.40 for learning efficiency); domain signals for verbal learning and memory (p=0.005) and working memory (p<0.001) in a third (overall Egger p=0.32, trim-and-fill −0.65); visual funnel inspection only in the fourth.'"
+  },
+  {
+   "claim_id": "cl_meth_cognition",
+   "field": "magnitude; evidence[2].extracted; evidence[6].extracted",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A (every number in an anchor's extracted text)",
+   "issue": "Several magnitude numbers appear in no anchor: Potvin's 44 studies and 1592 versus 1820, impulsivity 0.93 on 8 studies and social cognition 1.12 on 3 studies, and the lower end of Cao's domain range (−0.42). All are correct on the PDF pages.",
+   "evidence": "Potvin PDF p. 156 (Results 3.1: 44 studies, 1592 vs 1820) and p. 157 (Table 1: 0.926, 8 studies; 1.117, 3 studies); Cao PDF p. 1 (Abstract: domain range −0.42 to −1.09) and p. 6 (social cognition −0.42).",
+   "proposed": "evidence[2] (Potvin): page 'pp. 156–157', locator 'Results 3.1; Table 1', extracted: '44 studies (1592 users, 1820 controls); global cognition d 0.46 (95% CI 0.33–0.60, 27 studies); executive functions 0.49, verbal learning 0.59, working memory 0.51, speed of processing 0.34; impulsivity/reward tasks 0.93 (8 studies) and social cognition 1.12 (3 studies, fixed effect); visual learning not significant.' evidence[6] (Cao), append: 'domain estimates from −0.42 (social cognition) to −1.09 (visuospatial, 7 studies).'"
+  },
+  {
+   "claim_id": "cl_meth_cognition",
+   "field": "statement; plain; population",
+   "severity": "must-fix",
+   "rule": "METHODS §9 (effects in the population observed); REVIEW-BRIEF A (no generalization beyond the population)",
+   "issue": "All four meta-analyses pooled people with methamphetamine abuse, dependence or use disorder, mostly from treatment or research samples, against healthy volunteers, but the statement, plain and population speak of a history of regular methamphetamine use; people who use regularly without a disorder were not studied.",
+   "evidence": "Scott PDF p. 281 (lifetime abuse or dependence, methamphetamine as primary drug); Potvin p. 155 (MUD; healthy volunteers); sc_basterfield_2019.sample.inclusion_exclusion (abuse or dependence); Cao p. 2 (DSM or ICD MUD; healthy controls without SUD).",
+   "proposed": "statement opening: 'In cross-sectional studies, people with methamphetamine dependence or use disorder score lower on average than healthy non-using comparison groups on neuropsychological tests: ...'. population: 'Adults with methamphetamine abuse, dependence or use disorder (mostly treatment or research-ward samples), tested after abstinence from days to years (study means about 4 to 10 months where reported; some samples were current users)'. plain: replace 'people who have used meth regularly' with 'people dependent on meth' and 'people who haven't' with 'healthy volunteers who don't use drugs'."
+  },
+  {
+   "claim_id": "cl_meth_cognition",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF A (statement says no more than the anchors)",
+   "issue": "'Learning and memory differences are the most consistently found' is broader than the evidence: in Potvin et al. visual learning did not differ, and Dean et al. name verbal learning and memory as the consistent weakness.",
+   "evidence": "evidence[2].extracted (visual learning not significant); Potvin PDF p. 157 (Table 1: 0.275, CI −0.107 to 0.657); Dean PDF p. 261.",
+   "proposed": "Replace with 'Verbal learning and memory differences are the most consistently found (visual learning did not differ in one meta-analysis)'. Integrated statement after this and the two findings above: 'In cross-sectional studies, people with methamphetamine dependence or use disorder score lower on average than healthy non-using comparison groups on neuropsychological tests: pooled standardized differences mostly between about 0.3 and 0.9 SD across domains. Verbal learning and memory differences are the most consistently found (visual learning did not differ in one meta-analysis); the largest estimates (impulsivity, social cognition, visuospatial and planning measures, up to about 1.1 SD) rest on fewer studies or include questionnaires. In a meta-analysis restricted to abstinent users, 6 of 9 abilities differed, but only learning efficiency (g −0.47) held consistently across studies and in sensitivity analyses; in the largest meta-analysis the prediction interval for the overall difference runs from a large deficit to a small advantage (−1.58 to 0.22). Groups were often unmatched on education; one meta-analysis found strong small-study bias in its overall estimate, and two others found small-study effects in some domains, including learning and memory (adjusted estimates −0.40 for learning efficiency and −0.65 overall where reported).'"
+  },
+  {
+   "claim_id": "cl_meth_cognition",
+   "field": "magnitude",
+   "severity": "should-fix",
+   "rule": "Clarity; internal consistency",
+   "issue": "The magnitude mixes sign conventions (Potvin's d is positive when users score worse, the others negative), so 'global d 0.46' and 'overall g −0.68' read as opposite directions, and the 44-study totals sit next to an estimate based on 27 of those studies.",
+   "evidence": "Potvin PDF p. 156 (Methods 2.3: positive = users worse); sc_potvin_2018.reporting_issues[4].",
+   "proposed": "Negative values mean users scored lower (Potvin et al.'s signs reversed). Scott et al. (2007; 17 studies, 471 vs 445): d −0.34 (language) to −0.66 (learning). Potvin et al. (2018; 44 studies, 1592 vs 1820): global d −0.46 (95% CI −0.60 to −0.33; 27 of the 44 studies, participant numbers for this estimate not reported); impulsivity/reward tasks −0.93 and social cognition −1.12 on 8 and 3 studies. Basterfield et al. (2019; 31 studies of abstinent users): learning efficiency g −0.47 (−0.58 to −0.37), prediction interval −0.60 to −0.34, −0.40 after trim-and-fill. Cao et al. (2026; 68 studies, 5244 vs 3801): overall g −0.68 (−0.77 to −0.58), prediction interval −1.58 to 0.22; domains −0.42 to −1.09."
+  },
+  {
+   "claim_id": "cl_meth_cognition",
+   "field": "plain",
+   "severity": "consider",
+   "rule": "METHODS §9; REVIEW-BRIEF B and E",
+   "issue": "'Standard deviation' is unexplained, and the plain omits that small-study bias may inflate the averages and that the group averages mostly remain in the normal range (the next claim).",
+   "evidence": "statement (small-study bias); cl_meth_cognition_normal_range.",
+   "proposed": "On average, people dependent on meth score somewhat lower on thinking and memory tests than healthy volunteers who don't use drugs. The gap is usually between a third and almost a whole 'standard deviation' (the typical spread of scores between people), and most consistent for learning and remembering words. Results vary a lot between studies, small studies with large gaps may be over-represented in what was published, the comparison groups often had more schooling, and none of this shows that meth caused the difference. Group averages still mostly fall in the normal range (see the next claim)."
+  },
+  {
+   "claim_id": "cl_meth_cognition_normal_range",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF A (no selective use of a source) and E (HIV, hepatitis, mental health)",
+   "issue": "The 34% versus 16% comparison is given without saying that only the group that kept using differed significantly (38%; abstainers 24%) and that, besides HIV in over half of users, controls were screened free of hepatitis C, ADHD and antisocial personality disorder, all common among the users.",
+   "evidence": "evidence[1] and evidence[6].extracted (only the non-abstinent group differed; HIV 56–59%, HCV 28–32%); sc_iudicello_2010.sample.selection_effects (3) and demographics (ADHD, antisocial personality disorder present in users, excluded in controls).",
+   "proposed": "Replace the Iudicello clause with: '34% of users versus 16% of controls had a global deficit score above 0.5 in another study, in which only the group that kept using differed significantly (38%; abstainers 24%), more than half of users but no controls had HIV, and controls were also screened free of hepatitis C, ADHD and antisocial personality disorder.' Extend evidence[6].extracted with the ADHD and antisocial-personality exclusions (Table 1; Method › Participants)."
+  },
+  {
+   "claim_id": "cl_meth_cognition_normal_range",
+   "field": "statement; magnitude",
+   "severity": "should-fix",
+   "rule": "METHODS §1.4 principle 3 (sources read in full); REVIEW-BRIEF A",
+   "issue": "The Kalechstein figures are second-hand and ambiguously worded in the review ('approximately 7 of the 27'), whose Table 4 lists these participants as current users with a negative urine test on the day while the text calls them abstinent; the card says figures for claims should come from Kalechstein et al. (2003) itself. The same passage reports that for working memory alone 1 user and 2 controls met the criterion.",
+   "evidence": "Hart PDF p. 602 (Comprehensive neuropsychological testing, 3rd paragraph) and p. 603 (Table 4); sc_hart_2012.key_findings[7].note; evidence[2].extracted.",
+   "proposed": "statement: 'about 7 of 27 users versus 2 of 18 controls met a 2-SD criterion in at least one domain in one study, as summarized, with ambiguous wording, in a review (for working memory alone, 1 user versus 2 controls; the primary paper is still to be read)'. Add Kalechstein et al. (2003) to the reading list and re-anchor to it."
+  },
+  {
+   "claim_id": "cl_meth_cognition_normal_range",
+   "field": "statement; population",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF Hart standard (normal range described as such, in both directions) and E",
+   "issue": "The statement gives 'low-average to average' without the threshold behind 'not impaired' (the Simon authors set impairment at the 2nd percentile or below, while the 16th percentile is one SD below the mean, where the global deficit score used in the other study starts counting deficits), omits its own Dean anchor's point that a normal-range mean does not exclude a decline from a higher starting point, and extends to 'people who use methamphetamine' a finding from dependent samples.",
+   "evidence": "sc_simon_2010.key_findings[4] (impaired range = 2nd percentile or below); sc_iudicello_2010.outcomes.operationalization (deficit score above 0.5 roughly the 16th percentile); evidence[4] (Dean pp. 268–270); evidence[5] (a group mean in the normal range does not show that individuals are).",
+   "proposed": "Integrated statement: 'In the studies that compared group means with population norms, average test scores of people with methamphetamine dependence mostly fell in the low-average to average range: between the 16th and 55th percentiles after about 6 days of verified abstinence in one study, whose authors set the impaired range at the 2nd percentile or below. A group mean in the normal range does not show that every individual is, nor does it exclude a decline from a higher starting point, which no study measured. A minority met impairment criteria, more often than controls: about 7 of 27 users versus 2 of 18 controls met a 2-SD criterion in at least one domain in one study (as summarized, with ambiguous wording, in a review; for working memory alone, 1 user versus 2 controls), and 34% of users versus 16% of controls had a global deficit score above 0.5 in another, in which only the group that kept using differed significantly (38%; abstainers 24%), more than half of users but no controls had HIV, and controls were also screened free of hepatitis C, ADHD and antisocial personality disorder.' population: 'Adults with methamphetamine dependence in neuropsychological studies'."
+  },
+  {
+   "claim_id": "cl_meth_cognition_normal_range",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF B (qualifiers, person-first language)",
+   "issue": "The plain drops the HIV confound that could explain part of the higher impairment rate, generalizes from a few studies to 'most groups', omits that a normal-range average does not exclude a personal decline, and uses 'users'.",
+   "evidence": "statement; evidence[6]; evidence[4] (Dean).",
+   "proposed": "In the studies that compared them with test norms, groups of people dependent on meth scored on average in the low-average to average range, not in the range the authors called impaired. An average in the normal range does not mean every person is, and it cannot show whether someone's scores dropped from a higher starting point, because no one was tested before. In two studies that counted individuals, about a quarter to a third of people who used meth met a definition of impairment, compared with about one in nine to one in six people who didn't. In one of them, more than half of the people who used meth had HIV and none of the comparison group did, which could explain part of that difference."
+  },
+  {
+   "claim_id": "cl_meth_cognition_normal_range",
+   "field": "status; evidence",
+   "severity": "consider",
+   "rule": "METHODS §6.4",
+   "issue": "'Replicated' is well supported for group means, but the 'more often than controls' part rests on one second-hand report and one HIV-confounded study in which only the non-abstinent group differed; the Iudicello baseline T-score means, a second normed source for the first part, are not anchored.",
+   "evidence": "sc_iudicello_2010.outcomes.validity_norms (baseline global T 46.2–47.1 in users, 50.1 in controls; normative mean 50); evidence[1]–[3], [6].",
+   "proposed": "Add an anchor for Iudicello Table 3 (baseline global T 47.1 and 46.2 in the user groups, 50.1 in controls; demographically corrected norms with mean 50), and add to grade.reasoning: 'Status replicated for group means; the higher impairment rate in users rests on two studies, one reported second-hand and one confounded by HIV.' Alternatively split the impairment-rate sentence into a single-study claim."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "statement",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A (statement matches its anchor); multiplicity",
+   "issue": "'On the global score 6 controls impaired at baseline improved almost as much' is wrong on the anchor's own numbers: they gained 3.3 T-points against 6.7 for the impaired abstainers (about half). 'Improved more on processing speed and motor tests' also overstates: motor speed was p=0.051, and processing speed (p=0.014) was one of 8 domains tested without correction.",
+   "evidence": "evidence[3].extracted (41.26 to 47.94 vs 43.70 to 47.01; three-way p=0.061; processing speed p=0.014; motor p=0.051); sc_iudicello_2010.outcomes.multiplicity_correction (Bonferroni threshold about 0.006) and key_findings[8] (time × baseline-impairment p=0.006).",
+   "proposed": "'In the second study the 6 abstainers impaired at baseline gained more than other groups on processing speed (p=0.014, one of 8 domains tested without correction; motor speed p=0.051), while on the global score the 6 controls impaired at baseline also gained, about half as much (3.3 vs 6.7 T-points; three-way interaction p=0.061), and participants impaired at baseline gained more in every group, as regression to the mean predicts.' Add 'time × baseline-impairment interaction p=0.006' to evidence[3].extracted."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "plain",
+   "severity": "must-fix",
+   "rule": "METHODS §6.3 (absence of evidence is not evidence of absence); REVIEW-BRIEF B",
+   "issue": "Saying users 'improved about as much as non-users did simply from taking the tests a second time' asserts equivalence and attributes all change to practice, although the month-long study's difference in change was d about 0.32 (95% CI −0.31 to 0.96) and both studies' point estimates slightly favoured users; it also drops the statement's main message ('not established') and the persistence of differences.",
+   "evidence": "magnitude (editors' d 0.32, CI −0.31 to 0.96); evidence[2].extracted (+3.0 vs +2.7 T).",
+   "proposed": "Does thinking get better after stopping meth? This is not known. Two studies retested both people who had stopped and people who don't use. In both, the people who had stopped did not improve clearly more than the non-users, who also improved from taking the tests a second time. The studies were small, so a moderate extra improvement cannot be ruled out, and the people who had stopped still scored below non-users at the end. Comparing different studies, people abstinent longer did not score closer to non-users. Very few studies have looked beyond a year."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "statement; magnitude; evidence[2].extracted",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A; METHODS §6.3 (editors' calculations labelled)",
+   "issue": "The group sizes in the statement (25 abstinent, 58 who kept using, 38 controls) appear in no anchor (evidence[2] gives only 121), and the magnitude's abstainer–control gap of 3.0 T at baseline and 2.7 T at follow-up is a difference of printed means that is not labelled as an editors' calculation.",
+   "evidence": "sc_iudicello_2010.key_findings[0] (25, 58, 38; Method › Participants, 1st paragraph); evidence[2].extracted (47.1 to 50.1; 50.1 to 52.8).",
+   "proposed": "evidence[2].extracted: '121 participants (25 reporting no methamphetamine use over the interval, 58 reporting any use, 38 controls) retested after a mean 13 months: ...'. magnitude: '... abstainer–control gap 3.0 T at baseline and 2.7 T at follow-up (editors' calculation from Tables 3–4) ...'. In the statement, '58 who kept using' becomes '58 who reported any use', since one reported use was enough."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "statement; evidence",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF A (selective use of a source) and E",
+   "issue": "The statement leaves out evidence in its own sources that cuts both ways: Dean et al. report that two of three cross-sectional comparisons within users found better executive performance in people abstinent longer, which practice cannot explain though selection can; and the controlled studies show differences persisting, with users still below controls on memory tests after a month and abstainers falling further behind on executive functions and working memory over a year.",
+   "evidence": "Dean PDF p. 264 (Salo et al., 2009; Kim et al., 2006) and p. 269 (hypothesis 4: mild support); sc_simon_2010.key_findings[9] (Table 3, untested by the authors; editors' d about 0.73–0.82); sc_iudicello_2010.key_findings[6] (executive 50.9 vs 54.3, working memory 48.4 vs 53.4 at follow-up).",
+   "proposed": "Add before the last sentence: 'Two of three cross-sectional comparisons within users found better executive performance in people abstinent longer (as summarized by Dean et al., 2013), but such comparisons cannot separate recovery from differences between people who stay abstinent and those who do not. In the controlled studies the differences persisted: after a month users still scored below controls on memory tests (editors' calculation, d about 0.7–0.8; not tested by the authors), and after a year abstainers remained below controls globally and fell further behind on executive functions and working memory.' Add anchors: Dean pp. 264, 269 (Hypothesis 4); Simon et al. Table 3 (time-2 memory means); Iudicello et al. Tables 3–4."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "statement",
+   "severity": "consider",
+   "rule": "Integration of the findings above",
+   "issue": "For the editor's convenience, the statement with the corrections above in one text (also stating the unequal retest intervals already in evidence[0]).",
+   "evidence": "evidence[0] (25 vs 44 days); findings above.",
+   "proposed": "Whether test performance improves with abstinence beyond practice effects is not established. In the two studies that retested a control group, users did not improve significantly more than controls over about a month (composite change 0.14 vs 0.00 SD, p=0.33; 18 users retested after a mean 25 days, 21 controls after 44 days) or about a year (group-by-time interaction p=0.13; 25 people reporting no use, 58 reporting any use, 38 controls), and both were too small to exclude a moderate extra improvement. In the second study the 6 abstainers impaired at baseline gained more than other groups on processing speed (p=0.014, one of 8 domains tested without correction; motor speed p=0.051), while on the global score the 6 controls impaired at baseline also gained, about half as much (3.3 vs 6.7 T-points; three-way interaction p=0.061), and participants impaired at baseline gained more in every group, as regression to the mean predicts. Differences persisted: after a month users still scored below controls on memory tests (not tested by the authors), and after a year abstainers remained below controls globally and fell further behind on executive functions and working memory. Two of three cross-sectional comparisons within users found better executive performance in people abstinent longer, which practice cannot explain but selection can. Across meta-analyses, length of abstinence did not moderate the size of group differences in most domains, and few studies tested people abstinent for more than a year."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_no; debate.neither_can_show; evidence[2].role",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A (no selective use of a source); METHODS §7 (each side to its best proponents' standard)",
+   "issue": "The 'no' side cites 'earlier first use went with less education than predicted from ability' as if it showed pre-existing differences, but Dean et al. present it as evidence that use cuts schooling short, so that education-matched comparisons may underestimate deficits; Basterfield et al. make the same point. The finding shows education may be a consequence as well as a confounder; it is not evidence against a drug effect.",
+   "evidence": "Dean PDF p. 267 (Education) and p. 268 (Figure 2 legend; conclusion that matching on education may underestimate the deficit); Basterfield PDF p. 748 (education may not suit as a premorbid proxy because use starts in secondary school); sc_dean_2013.comparison.unmeasured_premorbid.",
+   "proposed": "evidence_no: delete 'and earlier first use went with less education than predicted from ability' and the Dean citation attached to it. neither_can_show, add: 'Education is both a possible confounder and a possible consequence: in one study, people who started using earlier had less education than their test scores predicted, which the authors read as use cutting schooling short, so matching or adjusting for education may remove part of a real effect (Dean et al., 2013; Basterfield et al., 2019).' evidence[2].role: 'qualifies'."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_no",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A (no more than the anchor supports)",
+   "issue": "'In one study the difference disappeared after adjusting for education' overstates the anchor, which says only that the composite difference became non-significant; no adjusted estimate was reported, the study had 27 users and 28 controls (about 44% power for half an SD), and education may itself be partly a consequence of use.",
+   "evidence": "evidence[7].extracted (Simon et al., 2010: became non-significant with education as a covariate); sc_simon_2010.key_findings[2] and analysis.power.",
+   "proposed": "'in one small study (27 users, 28 controls) the composite difference was no longer statistically significant after adjusting for education, with no adjusted estimate reported (Simon et al., 2010)'"
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_yes; debate.evidence_no",
+   "severity": "must-fix",
+   "rule": "METHODS §7; REVIEW-BRIEF A (selective use) and F (consistency with cl_meth_dopamine_damage)",
+   "issue": "The animal evidence is used selectively: the 'yes' side cites only the monkeys and omits rats that developed deficits after self-administering escalating amounts, while the 'no' side calls escalating pre-exposure 'closer to human patterns of use', a label the source's conclusion applies to self-administered escalating regimens too and that cl_meth_dopamine_damage gives to the monkey regimen on the 'yes' side. The 'yes' side also omits that the monkeys' deficits improved with abstinence, which matters for 'lasting'.",
+   "evidence": "Dean PDF p. 260 (three rat studies where escalation largely prevented binge deficits; monkey deficits improved with abstinence) and p. 261 (self-administration studies; Conclusion on experimenter- and self-administered escalating regimens in rats and monkeys); evidence[3].extracted; cl_meth_dopamine_damage.debate.evidence_yes.",
+   "proposed": "evidence_yes: replace 'Monkeys given escalating doses showed selective deficits (Dean et al., 2013).' with 'In animals, chronic moderate and binge regimens produce deficits, and escalating regimens still did so in rats that self-administered the drug and in vervet monkeys, whose deficits improved with abstinence (Dean et al., 2013).' evidence_no: replace 'In a few rat studies, escalating pre-exposure, closer to human patterns of use, largely prevented the deficits that binge doses produce' with 'In three rat studies, escalating pre-exposure largely prevented the deficits that a later binge dose produces (Dean et al., 2013).'"
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_yes",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF F (same fact, different numbers)",
+   "issue": "'About 0.3–0.7 SD below non-users' conflicts with cl_meth_cognition ('mostly between about 0.3 and 0.9 SD across domains') and with Cao et al. (overall −0.68; six of 13 domains beyond −0.7), and the box does not say that two of the meta-analyses share no primary studies.",
+   "evidence": "cl_meth_cognition.statement and evidence[8] (Cao pp. 6–7); Cao PDF p. 1 (non-overlapping evidence base).",
+   "proposed": "'Four meta-analyses agree in direction, two of them with no primary studies in common: people with methamphetamine use disorder score on average about 0.5–0.7 SD below non-using controls overall (0.46 and 0.68 in the two that pooled all domains), with domain differences mostly between 0.3 and 0.9 SD, most consistently on verbal learning and memory (Scott et al., 2007; Potvin et al., 2018; Basterfield et al., 2019; Cao et al., 2026).'"
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.neither_can_show; debate.evidence_yes; debate.evidence_no; evidence[1].extracted",
+   "severity": "should-fix",
+   "rule": "METHODS §7 (item 4 is what neither side can show by design)",
+   "issue": "The one co-twin study, the design best able to separate familial factors, is parked under 'neither can show', so its results appear on neither side: twins matched on IQ (103 in both) and education, with no stimulant use in the year before testing, did worse on four timed attention and psychomotor tests, better on one and no differently on nine.",
+   "evidence": "Dean PDF p. 263 (Toomey et al., 2003: matched on education and WAIS-R IQ; no stimulant or marijuana use in the year before testing; no urinalysis; weekly use, dependence not established); evidence[1].extracted.",
+   "proposed": "evidence_yes, add: 'In the one co-twin study, twins who had used stimulants weekly (80% amphetamines), matched with their co-twins on IQ and education and without stimulant use in the year before testing, did worse on four timed attention and psychomotor tests (Dean et al., 2013).' evidence_no, add: 'In the same study the using twins did better on one sustained-attention test and no differently on nine of 14 tests (Dean et al., 2013).' neither_can_show: replace the twin sentence with 'The one co-twin study mixed amphetamine with other stimulants, did not test urine and did not establish dependence.' Extend evidence[1].extracted with the education and IQ matching and the one-year interval."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_no; evidence",
+   "severity": "should-fix",
+   "rule": "METHODS §7 (best proponents' standard); REVIEW-BRIEF E",
+   "issue": "The 'no' side omits its strongest argument: most studies found no relation between scores and how long, how often or how much people used, positive findings came from uncorrected post hoc tests, and in the twin study more days of use went with better scores on a few tests; two meta-analyses also found no moderation by duration of use. Even Dean et al., who argue for a causal effect, rate this hypothesis unsupported. The side also mentions small-study bias in only one meta-analysis.",
+   "evidence": "Dean PDF pp. 266–267 (Hypothesis 6 and its Conclusion) and p. 269 (item 6); Scott PDF p. 285 (duration of use, ps > 0.10); Cao PDF p. 6 (duration did not predict impairment, all P ≥ .30); Basterfield p. 745 and Cao p. 7 (small-study signals).",
+   "proposed": "evidence_no, add: 'Most studies found no relation between test scores and how long, how often or how much people had used; positive findings came from uncorrected post hoc analyses, and in the twin study more days of stimulant use went with better scores on a few tests (Dean et al., 2013); duration of use did not moderate the group differences in two meta-analyses (Scott et al., 2007; Cao et al., 2026).' Replace 'There is strong evidence of publication bias (Potvin et al., 2018)' with 'There is strong small-study bias in one meta-analysis and small-study signals, including for learning and memory, in two others (Potvin et al., 2018; Basterfield et al., 2019; Cao et al., 2026).' Add anchors: Dean pp. 266–267 and 269; Scott p. 285; Cao p. 6."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_no",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF E (HIV, hepatitis, mental health); METHODS §7",
+   "issue": "The 'yes' side's impairment rates (a quarter to a third versus one in nine to one in six) carry no mention, on either side, that in the study giving 34% versus 16% more than half of users had HIV, controls were screened free of HIV, hepatitis C, ADHD and antisocial personality disorder, and only the group that kept using differed significantly.",
+   "evidence": "cl_meth_cognition_normal_range.evidence[6]; sc_iudicello_2010.sample.selection_effects.",
+   "proposed": "evidence_no, add: 'In the study with the 34% versus 16% impairment rates, more than half of users had HIV and controls were screened free of HIV, hepatitis C, ADHD and antisocial personality disorder; only the group that kept using differed significantly from controls (Iudicello et al., 2010).'"
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.editors_reading",
+   "severity": "should-fix",
+   "rule": "METHODS §7 item 5 (the editors' reading gives the certainty rating and the reasoning); REVIEW-BRIEF A",
+   "issue": "'Most users score within the normal range' turns group means and two studies' impairment counts into a statement about most individual users, which the normal-range claim's own Hart anchor cautions against; the reading also gives the certainty without the reasoning §7 requires.",
+   "evidence": "cl_meth_cognition_normal_range.evidence[5] (a group mean in the normal range does not show that individuals are); METHODS §7.",
+   "proposed": "Editors' reading (certainty: very low). A modest average difference, about half a standard deviation and clearest for verbal learning and memory, is consistently found between people with methamphetamine use disorder and healthy volunteers. Whether methamphetamine caused it, how much predates use, and how much reverses with abstinence are open questions: no study in these reviews measured cognition before use, the one co-twin study is small and mixed stimulants, dose–response is mostly absent, and the animal deficits come from regimens whose equivalence to human use is uncertain. Group averages usually fall within the normal range; in the two studies that counted individuals, a minority of users met impairment criteria, more often than controls, in samples where HIV and other conditions also differed."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "statement; plain",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF A (universal negative not anchored) and B (plain weaker than the statement; person-first); METHODS §9",
+   "issue": "'No study has measured cognition before use began' is a universal negative that no anchor states (the sources say cross-sectional designs cannot separate pre-existing differences); the plain's 'a bit lower' understates a difference of about half a standard deviation and uses 'Users'; and listing 'scores don't clearly recover' as a reason reads as evidence against harm, although it fits lasting harm equally (as the debate box itself says).",
+   "evidence": "evidence[4] (Basterfield pp. 748–749); debate.neither_can_show; cl_meth_cognition (about 0.5 SD overall).",
+   "proposed": "statement: 'Whether methamphetamine use causes lasting cognitive impairment in humans has not been established: people with methamphetamine use disorder score lower than non-using volunteers on average, but none of the studies in these reviews measured cognition before use began, groups differ in education and other risk factors, scores are mostly unrelated to how much or how long people used, and the differences have not been shown to change with abstinence more than practice effects do.' plain: 'Does meth cause lasting problems with thinking and memory? Not shown. People dependent on meth score somewhat lower on average (about half a standard deviation), but none of these studies tested people before they started using, the groups differ in other ways, and scores are mostly unrelated to how much people used. Scores also don't clearly improve after stopping, which fits both lasting harm and differences that were there before. See the contested question.'"
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "evidence[0]–[6].anchor_status (also cl_meth_cognition evidence[6]–[8], cl_meth_cognition_normal_range evidence[5]–[6], cl_meth_cognition_abstinence evidence[6])",
+   "severity": "should-fix",
+   "rule": "METHODS §5.5, §6.2 (ai-checked = independent re-finding by a reader who had not seen the first)",
+   "issue": "Seven of the nine anchors here are 'ai-checked' after a 'targeted' check, a mode METHODS does not define, and the same holds for four anchors in the sibling claims; two further anchors were located and 'checked' by the same reader, where the record should name the first reader's matching card finding.",
+   "evidence": "check_mode 'targeted' on causal evidence[0]–[6], cognition evidence[6]–[7], normal_range evidence[5], abstinence evidence[6]; located_by = checked_by on cognition evidence[8] and normal_range evidence[6] (matching first-reader findings exist: sc_cao_2026 key_findings[2] and [7]; sc_iudicello_2010 key_findings[15]).",
+   "proposed": "Either define a targeted check in METHODS §5.5 (what the second reader was shown, and that it counts as ai-checked only if the numbers were re-found without being given), or set these anchors to 'ai-located' until a blind re-finding. For the same-reader anchors, record the matching first-reader finding in located_by."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "evidence[2].extracted",
+   "severity": "should-fix",
+   "rule": "METHODS §5.5 (reporting issues recorded and their consequence stated)",
+   "issue": "The anchor reports the correlation of age at first use with years of education as r=−0.48, and the paper calls it 'negatively related'; taken literally, later first use went with less education, which contradicts the authors' reading and the second correlation (earlier onset, larger shortfall, r=−0.42). The sign or the wording is probably a misprint, and neither the anchor nor the card flags it.",
+   "evidence": "Dean PDF p. 267 (Education paragraph) and p. 268 (Figure 2 legend: younger onset, larger shortfall).",
+   "proposed": "evidence[2].extracted: 'In 36 users (Dean et al., 2012), an earlier age at first use went with a larger shortfall of actual versus cognitively predicted education (r=−0.42, Figure 2). The correlation of age at first use with years of education is printed as r=−0.48 and described as negative, which as printed would mean later first use went with less education, contrary to the authors' interpretation (probable sign or wording error; check Dean et al., 2012).' Add the same as a reporting issue on sc_dean_2013."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_yes; debate.evidence_no",
+   "severity": "consider",
+   "rule": "METHODS §7 (best proponents' standard)",
+   "issue": "Both sides could use material already on the cited cards: for 'yes', that dropout of less healthy users may make differences look smaller; for 'no', that the comprehension-knowledge difference, a measure close to premorbid ability, appeared only in high-risk-of-bias studies, that in one cohort the users' premorbid reading estimate was about as far below controls as their test scores (editors' calculation), and the sibling study once read.",
+   "evidence": "Basterfield PDF p. 749 (attrition may attenuate differences) and p. 745 (comprehension knowledge −0.67 high risk vs −0.09 unclear risk); sc_iudicello_2010.comparison.unmeasured_premorbid (WRAT-3 d about 0.45–0.58); cl_meth_siblings.",
+   "proposed": "evidence_yes, add: 'Users who drop out of studies may be in poorer health, which would make the differences look smaller (Basterfield et al., 2019).' evidence_no, add: 'The comprehension-knowledge difference, a measure close to premorbid ability, was found only in studies at high risk of bias (Basterfield et al., 2019).' Add the sibling study once Ersche et al. (2012) is read."
+  },
+  {
+   "claim_id": "cl_meth_parkinson",
+   "field": "evidence[2].extracted; magnitude",
+   "severity": "must-fix",
+   "rule": "Internal consistency (anchor versus study card)",
+   "issue": "The anchor and the magnitude give the cocaine comparison as HR 0.9 (0.3–2.4) at 'Results §3.2; Table 2', but the first reader's card says this hazard ratio appears only in Figure 2, an image, with no printed interval, so its precision cannot be judged. One record is wrong, and the statement's 'no detectable increase' depends on it.",
+   "evidence": "sc_curtin_2015.analysis.effect_sizes and reporting_issues[4]; evidence[2] (ai-checked by reader 2, blind).",
+   "proposed": "Until checked at the source (see needs_source_check), magnitude for cocaine: '4 vs 22 broader-outcome events (1,867 vs 9,335 people), crude rates about 2.7 per 10,000 person-years in both (editors' calculation); hazard ratio shown only in a figure'. If the text or table does print HR 0.9 (0.3–2.4), give its exact location and add it to the card."
+  },
+  {
+   "claim_id": "cl_meth_parkinson",
+   "field": "plain",
+   "severity": "must-fix",
+   "rule": "METHODS §6.3 (absence of evidence is not evidence of absence); REVIEW-BRIEF B",
+   "issue": "'People with cocaine diagnoses had none' turns 'no detectable increase', on 4 events and an interval up to 2.4 if the anchor is right, into no increase; 'similar people' overstates matching on sex and birth year only; and the young age and lack of treatment are presented as features of the exposed cases, although control cases shared them.",
+   "evidence": "statement; evidence[2]; sc_curtin_2015.comparison.matching and key_findings[7]–[8].",
+   "proposed": "In Utah health records, people with a meth- or amphetamine-related diagnosis were later given a Parkinson's disease diagnosis about three times as often as people of the same sex and age without drug or alcohol diagnoses: about 3 in 1,000 versus 1 in 1,000 over about 7 years. A California hospital study found a smaller increase. People with cocaine diagnoses showed no clear increase, but there were too few cases to rule one out. In both groups the wider set of movement-disorder diagnoses came at unusually young ages and few people got the usual Parkinson's medicine, so the records probably include other conditions; smoking, other medicines and how often people saw doctors were not fully accounted for."
+  },
+  {
+   "claim_id": "cl_meth_parkinson",
+   "field": "statement; evidence[4].extracted",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF E (direction of misclassification); A",
+   "issue": "The statement offers the young age at diagnosis, the two-year interval and the few levodopa orders as signs that the excess may be misclassification, but control cases were diagnosed even younger (median 44), after 2.9 years, and 5 control cases also had levodopa orders: these features show low code validity in both groups, which alone would bias toward no difference. What could create a spurious excess is differential: antipsychotic-induced parkinsonism, stimulant-related tremor within the broader outcome, and more medical contact.",
+   "evidence": "sc_curtin_2015.key_findings[7] (median 49 vs 44; 2.0 vs 2.9 years) and [8] (3 of 30 exposed cases and 5 controls with a carbidopa–levodopa order); risk_of_bias.domains[0].note; evidence[4].extracted.",
+   "proposed": "Replace the last two sentences with: 'In both groups, diagnoses in the broader movement-disorder outcome came young (median age 49 in the exposed cohort, 44 in controls), 2–3 years after the index date, and few had a levodopa order (3 of 30 exposed cases; 5 control cases), so the codes capture more than Parkinson's disease in both groups. Misclassification that differs between groups could still produce an excess: antipsychotic-induced parkinsonism was not addressed, the broader outcome includes tremor, and tobacco codes went with more diagnoses, which suggests differences in medical contact. Misclassification and ascertainment therefore remain plausible explanations.' Extend evidence[4].extracted with the controls' 2.9-year interval and levodopa orders."
+  },
+  {
+   "claim_id": "cl_meth_parkinson",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "METHODS §6.3 (editors' calculations labelled; relative with absolute effects); §1.4 principle 5; REVIEW-BRIEF E",
+   "issue": "The statement gives 0.30% versus 0.11% without labelling it an editors' calculation, after the hazard ratio rather than before it; calls the controls 'matched' without saying matching was on sex and birth year only; gives the California hazard ratio without its comparator (an appendicitis cohort, known only from a review); and omits the analysis excluding same-date codes (HR 2.2, 1.2–4.0), which bears on the ascertainment argument.",
+   "evidence": "evidence[1] (editors' calculation), evidence[3] (HR 2.2), evidence[6] (Kish: versus an appendicitis group); sc_curtin_2015.comparison.matching.",
+   "proposed": "Opening: 'In a Utah health-records cohort, a later Parkinson's disease code was recorded for about 0.30% of people with a methamphetamine- or amphetamine-related diagnosis (15 of 4,935) and 0.11% of people of the same sex and birth year without drug or alcohol codes (27 of 24,675) over a mean of about 7 years (editors' calculation; HR 2.8, 95% CI 1.6–4.8; HR 2.2, 1.2–4.0, after excluding diagnoses coded on the same date as the first stimulant code). A California hospital cohort reported HR 1.76 (1.12–2.75) against people hospitalized for appendicitis (as reported in a review; the primary paper is not yet read).'"
+  },
+  {
+   "claim_id": "cl_meth_parkinson",
+   "field": "grade.reasoning; status",
+   "severity": "consider",
+   "rule": "GRADE indirectness; METHODS §6.4",
+   "issue": "The exposure codes do not distinguish methamphetamine from other amphetamines, and 'replicated' rests partly on a cohort known only from a review.",
+   "evidence": "sc_curtin_2015.sample.inclusion_exclusion (ICD-9-CM 304.4, 305.7, 969.7, E854.2); evidence[6]–[7] (California cohort via Kish; Callaghan anchor unchecked).",
+   "proposed": "Add to reasoning: 'Indirectness not downgraded because the claim is worded for methamphetamine- or amphetamine-related codes, which do not identify methamphetamine itself. Status replicated pending the reading of the California cohort (Callaghan et al., 2012).'"
+  },
+  {
+   "claim_id": "cl_meth_siblings",
+   "field": "statement; plain",
+   "severity": "must-fix",
+   "rule": "REVIEW-BRIEF A (statement says no more than the anchors)",
+   "issue": "'Poorer inhibitory control' shared by the siblings is supported by no read anchor: the Ersche anchor is unchecked, the Dean anchor says only that the sibling study measured inhibitory control, and the London anchor reports brain structure only.",
+   "evidence": "evidence[0] unchecked; evidence[1] (Dean PDF p. 263); evidence[2] (London et al., 2015).",
+   "proposed": "Remove 'and poorer inhibitory control' from the statement and 'and impulse-control weaknesses' from the plain until the Ersche et al. (2012) anchor is read; restore them only with the stop-signal results (group means, effect sizes and intervals) anchored to a page."
+  },
+  {
+   "claim_id": "cl_meth_siblings",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF A (no selective use of a source; wording matches anchors)",
+   "issue": "'Fronto-striatal brain-structure differences' does not match the read anchor (larger putamen, amygdala and hippocampus, lower fractional anisotropy), and the same anchor's finding that smaller orbitofrontal and anterior insular volumes occurred only in the dependent people, consistent with an effect of drug use or dependence, is left out; the sample is described as cocaine- or amphetamine-dependent, and whether anyone used methamphetamine is not reported.",
+   "evidence": "evidence[2].extracted (London et al., 2015); evidence[1] (Dean PDF p. 263: the vast majority used cocaine).",
+   "proposed": "In one study of 50 people with cocaine or amphetamine dependence and their siblings without dependence (as summarized in two reviews; the primary paper is not yet read), both had larger putamen, amygdala and hippocampus volumes and lower white-matter fractional anisotropy than unrelated controls, while smaller orbitofrontal and anterior insular volumes were found only in the dependent siblings. Differences shared by siblings suggest a familial vulnerability that may predate drug use; differences found only in the dependent siblings fit an effect of drug use or of dependence. The dependent participants mostly used cocaine; whether any used methamphetamine is not reported in the sources read."
+  },
+  {
+   "claim_id": "cl_meth_siblings",
+   "field": "grade.domains.risk_of_bias; grade.reasoning",
+   "severity": "should-fix",
+   "rule": "GRADE; METHODS §5.5",
+   "issue": "Risk of bias is rated 0 for a study nobody has read; the Ersche card's ROBINS-E judgments were made without the paper (recruitment, exposure, polysubstance use and effect sizes are '[to be extracted from PDF]').",
+   "evidence": "sc_ersche_2012 (first-pass, placeholders); evidence[0] unchecked.",
+   "proposed": "reasoning: 'Provisional until Ersche et al. (2012) is read: risk of bias not yet appraised. One case-control study of sibling pairs, mostly of cocaine dependence: indirectness for methamphetamine (one level); small sibling groups and many brain regions tested (imprecision, one level).'"
+  },
+  {
+   "claim_id": "cl_meth_siblings",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "REVIEW-BRIEF B",
+   "issue": "'Most people in that study used cocaine' is inaccurate (half the participants were siblings without dependence, plus controls), 'who do not use themselves' says more than 'not dependent', and the plain omits the differences found only in the dependent siblings.",
+   "evidence": "statement; evidence[2].",
+   "proposed": "Brothers and sisters of people dependent on stimulants, who were not dependent themselves, shared some of the same brain differences, while other differences were found only in the dependent person. That suggests some differences run in families and may come before drug use, and some may come from the drug use or the dependence. Most of the dependent people in that study used cocaine; it is not known whether any used meth."
+  }
+ ],
+ "needs_source_check": [
+  {
+   "claim_id": "cl_meth_acute_toxicity",
+   "reference": "cruickshank_2009 (PDF not yet provided) and the primary studies it cites",
+   "what": "The page and section for each feature listed; which primary case series, poison-centre, emergency-department or post-mortem studies each statement rests on; proportions of presentations with tachycardia, hypertension, hyperthermia and agitation; rates of seizures, rhabdomyolysis, cardiovascular events and death, with denominators; case fatality among presentations; whether 'hyperthermia determines fatal outcome' rests on a comparison of fatal and non-fatal cases or on case reports or animal data; the share of deaths with other drugs (e.g. opioids) detected."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_treatment",
+   "reference": "glasner-edwards_2014; bramness_2012; wearne_2018 (PMC), plus the 2009 Cochrane review and three trial reports to be read",
+   "what": "Whether either review reports a statistical comparison of olanzapine and haloperidol efficacy (needed for any 'similarly'); which amphetamine-type drug the 58-participant trial's population used; how Wearne & Cornish cite Farnia et al. (2014) and whether its participants used methamphetamine; sizes, designs, outcomes and RoB 2 of the Cochrane trial, Verachai et al. (2014) and Farnia et al. (2014)."
+  },
+  {
+   "claim_id": "cl_meth_dependence_baserate",
+   "reference": "anthony_1994 (PDF not yet provided)",
+   "what": "Exact conditional proportions for stimulants, tobacco and alcohol, with table and page; the source's own name and definition of the stimulant category (which drugs; cocaine separate; whether 'amphetamine-type' is the source's wording); the definition of 'ever used' (extra-medical use, any number of times); denominators and standard errors; the CIDI version and DSM-III-R algorithm; weighting, age range and response rate (needed for the card's JBI items)."
+  },
+  {
+   "claim_id": "cl_meth_withdrawal",
+   "reference": "zorick_2010 (PMC)",
+   "what": "Table 2: the 8 of 30 MAWQ items with significant time effects and the craving and depressed-mood item results; whether day 0 is admission or last use (inclusion allowed use up to 7 days before admission); the number of participants assessed at weeks 3–5."
+  },
+  {
+   "claim_id": "cl_meth_choice_alternatives",
+   "reference": "kirkpatrick_2012 (PMC)",
+   "what": "Whether the 41% and 17% 'overall' figures average all five sample conditions, including placebo; whether assignment to the $5 or $20 group was randomized; whether the 47–50% figure refers to each drug separately at the larger study dose."
+  },
+  {
+   "claim_id": "cl_meth_cognition_normal_range",
+   "reference": "simon_2010; iudicello_2010 (PMC); Kalechstein et al. (2003), not yet read",
+   "what": "Which normed test sat at the 16th percentile and the controls' percentiles (Simon et al.); whether the 34% of 83 users is the authors' figure (Discussion) or computed; Table 1 exclusions in controls (HIV, hepatitis C, ADHD, antisocial personality disorder); from Kalechstein et al. (2003): exact counts impaired in at least one domain, the criterion, and whether participants were abstinent or current users with a negative urine test."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "reference": "iudicello_2010; simon_2010 (PMC)",
+   "what": "Iudicello et al.: group sizes 25, 58 and 38 (Method › Participants); Table 5 subgroup values (41.26 to 47.94; 43.70 to 47.01) and the time × baseline-impairment p=0.006; Tables 3–4 executive and working-memory means at follow-up; the editors' recalculation that the follow-up abstainer–control difference gives p about 0.025. Simon et al.: Table 3 time-2 memory means and their n; retest intervals 25.44 and 43.50 days; the unit of the composite change score."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "reference": "simon_2010 (PMC); Dean et al. (2012), cited in dean_2013",
+   "what": "Simon et al.: that the education-adjusted composite analysis gives only a p-value and no adjusted estimate. Dean et al. (2012): the sign of the correlation between age at first use and years of education (printed as r=−0.48 and 'negative' in Dean et al., 2013, p. 267, which contradicts the authors' reading)."
+  },
+  {
+   "claim_id": "cl_meth_parkinson",
+   "reference": "curtin_2015; kish_2017 (PMC); callaghan_2012 (PDF not yet provided)",
+   "what": "Curtin et al.: whether the cocaine hazard ratio and interval (HR 0.9, 0.3–2.4 in the anchor) are printed in the text or Table 2 or only in Figure 2, as the card says; the number of control cases with a carbidopa–levodopa order and its denominator; mean follow-up by group (6.8 vs 7.1 years) for the absolute risks. Kish et al.: that the 1.76 hazard ratio is against an appendicitis cohort. Callaghan et al. (2012): comparator group(s) (appendicitis versus population controls, as the card and the review disagree), exposure definition, Parkinson's codes, follow-up, hazard ratio with interval and adjustment, absolute incidence, the cocaine comparison, and handling of early diagnoses."
+  },
+  {
+   "claim_id": "cl_meth_siblings",
+   "reference": "london_2015 (PMC); ersche_2012 (PDF not yet provided)",
+   "what": "London et al.: exact wording of the sibling summary (regions; where fractional anisotropy was lower). Ersche et al. (2012): group sizes and recruitment; numbers dependent on cocaine, amphetamine or methamphetamine; the siblings' own drug use; stop-signal reaction time by group with effect sizes and intervals, and whether siblings differed from controls; brain regions with their multiple-comparison correction and effect sizes; matching (age, sex, IQ, education), smoking and alcohol; whether proband-only differences related to duration of use."
+  }
+ ],
+ "summary": "Every PDF anchor in this group was checked against its page and the numbers are correct where they appear; the problems lie in what the statements, plains and debate text do with them. The cognition cluster carries the most consequential errors: the debate box on causation uses Dean et al.'s education finding on the wrong side, overstates a non-significant adjusted result as a vanished difference, uses the animal evidence selectively, and omits the absence of dose–response; the association claim misstates the overlap of its meta-analyses and the extent of small-study bias and generalizes from use-disorder samples to all regular use; and the abstinence claim misreads a subgroup comparison and turns imprecise null results into equivalence in its plain text. Three plains (withdrawal, abstinence, Parkinson's) read non-significant differences as no difference, contrary to METHODS §6.3. The acute-toxicity and psychosis-treatment claims rest only on narrative reviews, which §5.3 allows as pointers, not evidence, and the four drafts (acute toxicity, dependence base rate, Parkinson's, siblings) need the listed readings before their numbers, risk-of-bias levels and statuses can stand. GRADE arithmetic is correct throughout and every claim ends at very low except the acute-toxicity draft, whose 'low' has no read evidence behind it; the at-a-glance uncertainties (cognition causation, Parkinson's) match the ratings."
+}

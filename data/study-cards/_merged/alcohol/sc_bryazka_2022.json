@@ -1,0 +1,294 @@
+{
+ "id": "sc_bryazka_2022",
+ "substance": "alcohol",
+ "reference": "bryazka_2022",
+ "design": "modelling",
+ "design_detail": "Global Burden of Disease (GBD) 2020 analysis by the GBD 2020 Alcohol Collaborators (575 named collaborators; led by the Institute for Health Metrics and Evaluation, Seattle). It re-estimates the theoretical minimum risk exposure level (TMREL) of GBD 2016 and adds the non-drinker equivalence (NDE), the intake at which the weighted risk returns to that of a non-drinker, separately for 21 regions, 5-year age groups from 15 to 95 and older, sex and year, 1990–2020. Relative-risk curves for 22 outcomes: five (ischaemic heart disease, ischaemic stroke, intracerebral haemorrhage, type 2 diabetes, tuberculosis) re-fitted with 71 additional studies (update to 31 December 2019, English only) using the MR-BRT meta-regression tool with bias covariates chosen by a Lasso; lower respiratory infection dropped for insufficient evidence; the other 17 curves carried over from GBD 2016; alcohol use disorders and alcoholic cardiomyopathy left out for lack of dose–response studies. Weights: each cause's share of DALYs among the 22 causes in each region, age, sex and year, from GBD 2020 (unpublished when the paper appeared). The number and share of people whose average intake exceeds the NDE ('harmful amounts') was estimated for 204 countries and territories from GBD 2020 consumption estimates (data to 2019, forecast to 2020). Design 'modelling' as the round brief directs for attributable-burden estimates: no risk-of-bias instrument applies, so the card states the design's limits (METHODS §5.3).",
+ "can_establish": "How the intake that minimises a DALY-weighted average of 22 cause-specific relative-risk curves (TMREL), and the intake at which that average returns to a non-drinker's risk (NDE), change when the weights are each region's, age group's, sex's and year's own disease mix, under GBD 2020's inputs; and the modelled number and share of people whose average intake exceeds the NDE.",
+ "cannot_establish": "Whether low intake actually protects older people (the J-shapes come entirely from the protective dips of observational cause-specific curves, chiefly ischaemic heart disease, ischaemic stroke and diabetes, which the Mendelian-randomization studies the authors cite mostly do not support); any individual's risk (the authors put individual-level risk outside the study's scope); the effect of drinking patterns (not modelled); or that thresholds are the same for women and men (sex differences were not significant, which is not the same as shown to be absent).",
+ "sample": {
+  "n_total": null,
+  "n_by_group": {
+   "outcomes with relative-risk curves": 22,
+   "outcomes re-reviewed in the update": 6,
+   "outcomes with updated curves": 5,
+   "additional studies in the update": 71,
+   "studies in the GBD 2016 review (23 outcomes)": 592,
+   "regions with TMREL and NDE": 21,
+   "countries and territories with harmful-use estimates": 204
+  },
+  "recruitment": "Not applicable (modelling). The update searched PubMed and previously published meta-analyses for studies published up to 31 December 2019, in English only, for the six outcomes with the most alcohol-attributable DALYs (Research in context › Evidence before this study; Methods › Estimating dose–response relative risks, 2nd paragraph). Search strings, inclusion criteria and PRISMA diagrams are in appendix 1 (pp 18–47), which was not read.",
+  "inclusion_exclusion": "Outcomes: the 23 GBD 2016 outcomes without lower respiratory infection; alcohol use disorders and alcoholic cardiomyopathy left out of the weighted curves for lack of dose–response studies and tested in a sensitivity analysis (Methods › Estimating TMREL and NDE, 2nd paragraph); depression, anxiety and dementia not included because evidence was scarce and reverse causation possible (Discussion, 8th paragraph). Ages 15 to 95 and older.",
+  "demographics": "Not applicable. TMREL and NDE for 21 regions; harmful-use estimates for 204 countries and territories; both sexes; 5-year age groups from 15; 1990–2020.",
+  "attrition": "Not applicable.",
+  "selection_effects": "English-language publications only, with PubMed and earlier meta-analyses as the only sources; 17 of the 22 curves were not updated since GBD 2016. The relative risks come from observational studies of self-reported intake; between-study bias was handled with candidate covariates (study reference group, adjustment for sick-quitter bias, sex, age, population representativeness, outcome reporting method, timing of exposure measurement, geographical representativeness, incidence versus mortality, adjustment for confounders) selected by a Lasso, the selected sets being given only in appendix 1 (p 15) (Methods › Estimating dose–response relative risks, 3rd paragraph)."
+ },
+ "exposure": {
+  "measurement": "Modelled. GBD 2020 estimates (cited as unpublished) of average grams of ethanol a day among current drinkers by country, age, sex and year, combining supply-side, household-survey and administrative data with adjustments for under-reporting in surveys, unrecorded alcohol and tourists' consumption (Methods › Estimating prevalence of alcohol use and alcohol consumption). Data were collected through 2019 and forecast to 2020, so changes during the COVID-19 pandemic are not reflected (Discussion, 8th paragraph).",
+  "dose_frequency_duration_route": "Standard drink = 10 g of pure ethanol; current drinker = at least one standard drink in the past 12 months; exposure = average daily volume. Relative-risk draws were sampled at 1 g steps from 0 to 100 g a day. Drinking patterns (heavy episodic drinking) were not modelled (Discussion, 8th paragraph). 'Harmful amounts' = average intake above the NDE for the person's region, age, sex and year; Figure 4's legend specifies the mean NDE.",
+  "polysubstance": "Not modelled. Tobacco and other drug use enter only through the underlying studies' own adjustment; 'adjustment for confounders in risk estimation' is one of the candidate bias covariates.",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "Relative risks are against non-drinkers, as in GBD 2016 (Methods › Estimating dose–response relative risks, 3rd paragraph), with the study's reference group and sick-quitter adjustment among the candidate bias covariates. Whether the reference is lifetime abstainers or all current non-drinkers is not stated in the main text. TMREL and NDE are read from the weighted curve relative to zero intake.",
+  "matching": "Not applicable.",
+  "unmeasured_premorbid": "Not applicable at model level. The authors name residual confounding, selection bias, measurement bias and reverse causation in the underlying studies as possibly unadjusted (Discussion, 8th paragraph).",
+  "controls_other_drug_use": "Not reported."
+ },
+ "outcomes": {
+  "instruments": "GBD 2020 DALY rates by cause (cited as unpublished) as weights; 22 cause-specific relative-risk curves (17 from GBD 2016, five updated with MR-BRT). DALYs = years of life lost plus years lived with disability (Methods › Estimating TMREL and NDE, 1st paragraph).",
+  "validity_norms": "The paper states adherence to GATHER and production under the GBD Protocol (Introduction, 5th paragraph; Methods › Overview). The weighted curves are not checked against observed all-cause mortality.",
+  "operationalization": "TMREL = intake minimising the weighted all-attributable-cause curve; NDE = the intake above zero at which that curve again equals the risk at zero intake; weights = each cause's share of the DALYs from the 22 causes in that population (Methods › Estimating TMREL and NDE, 1st paragraph; Figure 1 legend). 'Alcohol-related DALYs' in the Results are DALYs from these 22 causes whatever their cause, not DALYs attributable to alcohol (Figure 2 legend: the proportions are the weights).",
+  "n_outcomes_tested": 22,
+  "multiplicity_correction": "Not applicable. Differences by sex, year and age are called significant or not without a stated method, apparently from the uncertainty intervals.",
+  "assessor_blinding": "Not applicable."
+ },
+ "analysis": {
+  "effect_sizes": "All intervals are 95% uncertainty intervals, in standard drinks (10 g) a day, relative to zero intake (non-drinkers). 2020 TMREL across all regions, ages and sexes: 0 (0–0) to 1.87 (0.500–3.30). Ages 15–39 across regions: TMREL 0 (0–0) to 0.603 (0.400–1.00), NDE 0.002 (0–0) to 1.75 (0.698–4.30); globally, males 0.136 (0–0.400) and 0.249 (0–1.00), females 0.273 (0–0.500) and 0.546 (0–1.30). Ages 40–64, global: TMREL 0.527 (0.400–1.00) males and 0.562 (0.400–0.800) females; NDE 1.69 (0.800–3.20) and 1.82 (1.00–3.10). Ages 65 and older: TMREL 0.636 (0.500–1.00) and 0.656 (0.500–1.00); NDE 3.19 (1.50–5.20) and 3.51 (1.70–5.50). Ages 40 and older across regions: TMREL 0.114 (0–0.403) to 1.87 (0.500–3.30); NDE 0.193 (0–0.900) to 6.94 (3.40–8.30). Global, age-standardised, both sexes (Table 2): TMREL 0.511 (0.400–0.700) and NDE 1.72 (0.80–3.30); with GBD 2016 curves and 2020 weights 0.534 (0–1.00) and 0.669 (0–1.40); GBD 2016 as published 0 (0–0.800). Above the NDE in 2020: 1.03 billion (0.851–1.19) males, 35.1% (29.1–40.7) of males aged 15 and older; 312 million (199–432) females, 10.5% (6.72–14.6); 1.34 billion (1.06–1.62) in all, against 983 million (718–1,190) in 1990; 59.1% (54.3–65.4) aged 15–39 and 76.9% (73.0–81.3) male. Sensitivity with hypothetical curves for alcohol use disorders and alcoholic cardiomyopathy: TMREL lower on average by 0.058 (0.00–0.30), 0.092 (0.00–0.50) and 0.146 (0.00–0.60), NDE by 0.188 (0.00–0.90), 0.310 (0.00–1.30) and 0.508 (0.00–2.10) drinks a day in scenarios A, B and C.",
+  "covariates": "Candidate MR-BRT bias covariates as listed under selection effects, selected by a generalised Lasso; the sets kept for each of the five updated outcomes are in appendix 1 (p 15), not read.",
+  "preregistration": "unknown",
+  "preregistration_detail": "No registration of this analysis is mentioned; the paper says it was prepared within the GBD Collaborator Network under the GBD Protocol and follows the GATHER statement.",
+  "selective_reporting": "Several inputs are cited as unpublished GBD 2020 work by the first author (the DALY rates used as weights, the consumption estimates, the 1.78 million alcohol-attributable deaths in 2020), so they cannot be checked from the article. The sensitivity analysis with risk-deleted DALY weights is said not to change the results, but its numbers are only in appendix 2 (pp 39–41), not read. No cause-specific curve is shown in the main text (Figure 1 is an illustrative weighted curve, image only); region-specific TMRELs and NDEs are only in Figure 3 (image) and appendix 2. Data for this analysis were offered, before the full GBD 2020 publication, on request to Emmanuela Gakidou (Data sharing).",
+  "power": "Not applicable. Intervals come from 1000 draws of each cause-specific curve, which include between-study heterogeneity, and 1000 draws of the DALY rates, propagated to the TMREL and NDE (Methods › Estimating dose–response relative risks, 3rd paragraph; Methods › Estimating TMREL and NDE, 1st paragraph). The main text does not say whether the uncertainty of the NDE was carried into the harmful-use prevalence, which Figure 4 defines by the mean NDE; structural choices and residual bias in the underlying studies are not stated to be included."
+ },
+ "interpretation_gap": {
+  "results_show": "With weights from each population's own disease mix, the weighted curves had their minimum at or close to zero intake for ages 15–39 (TMREL 0 to 0.603 drinks a day across regions) and above zero for ages 40 and older (0.114 to 1.87), where ischaemic heart disease and stroke make up more of the burden. The global, age-standardised minimum was 0.511 (0.400–0.700) drinks a day against GBD 2016's zero; recomputing with the 2016 curves and the 2020 weights gave 0.534 (0–1.00). Differences by sex and by year were not significant. About 1.34 billion people were estimated to drink more than their population's NDE in 2020, most of them men aged 15–39.",
+  "claimed": "The interpretation finds “strong evidence to support recommendations on alcohol consumption varying by age and location” (Summary › Interpretation); the discussion and conclusion add that guidelines should not differ by sex and that existing low-risk thresholds are too high for young people in all regions. Gaps: (1) the variation by age and region comes mainly, as the Results say, from applying the same cause-specific curves (one per outcome for all regions) to different disease mixes, not from age- or region-specific risk data, so 'strong evidence' describes a consequence of the model; (2) every non-zero TMREL comes from the protective dips of observational curves for ischaemic heart disease, ischaemic stroke and diabetes, while the discussion itself reports that most Mendelian-randomization studies of cardiovascular disease (67%) and diabetes (75%) found no association; (3) the case against sex-specific guidelines rests on non-significant differences whose point estimates were higher for women in every age group (for example NDE 0.546 against 0.249 drinks a day at 15–39); (4) 'harmful amounts' means average intake above the population's NDE, which for men aged 15–39 worldwide is 0.249 standard drinks (about 2.5 g) a day; by such thresholds 83.2% of men and 77.7% of women aged 15–39 in Australasia drink harmful amounts; (5) the discussion's 'conservative approach' of using the lower bound of the interval strengthens rather than tests the conclusion that thresholds are too high, while the upper bounds (up to 4.30 drinks a day for the NDE at 15–39) are not discussed; (6) the abstract calls the curve J-shaped in every region at 40 and older, but the lowest regional TMREL in that group, 0.114, has an interval reaching zero. Against this, the paper states openly that GBD 2016's global zero does not survive updated weights.",
+  "gap_assessment": "substantial"
+ },
+ "replication": {
+  "status": "n/a",
+  "timeline": [
+   {
+    "year": 2018,
+    "event": "GBD 2016 (Griswold et al.): one globally weighted curve, TMREL zero (0–0.8) standard drinks a day (card sc_griswold_2018)."
+   },
+   {
+    "year": 2019,
+    "event": "Letters on GBD 2016 (Shield & Rehm; Di Castelnuovo, Costanzo & de Gaetano) criticise the global DALY weighting; this paper's population-specific weights address the cause-mix part of that criticism. Simona Costanzo, a co-author of the second letter, is among the GBD 2020 collaborators."
+   },
+   {
+    "year": 2022,
+    "event": "Correction (Lancet 2022;400:358; DOI 10.1016/S0140-6736(22)01389-7): appendices 1 and 2 corrected as of 19 July 2022; the notice does not say what changed and the main text is not mentioned, so the numbers on this card, all from the main text, are unaffected as far as the notice shows."
+   },
+   {
+    "year": 2022,
+    "event": "Linked comment by Burton & Sheron (Lancet 2022;400:141–43; DOI 10.1016/S0140-6736(22)01288-0): its first paragraph says the findings seemingly contradict GBD 2016's message that any amount leads to health loss; the rest is paywalled and was not read."
+   }
+  ],
+  "where_it_stands": "The most recent GBD alcohol-threshold analysis read for this project. It reverses GBD 2016's global zero (0.511 drinks a day) while keeping minima close to zero for young adults, and it shows that GBD thresholds depend on the weights as much as on the relative risks. Its J-shapes at older ages stand or fall with the protective cardiovascular and diabetes associations, appraised separately on the cohort and Mendelian-randomization cards (Wood et al., 2018; Holmes et al., 2014; Millwood et al., 2019; Biddinger et al., 2022; Larsson et al., 2020). Later GBD rounds were not read."
+ },
+ "funding": {
+  "funder": "Bill & Melinda Gates Foundation (Summary › Funding; Acknowledgments). Individual collaborators acknowledge fellowships and institutional support, mostly from public research bodies and universities (for example the UK Medical Research Council, NHMRC Australia, Wellcome, FCT Portugal). The funder had no role in design, data collection, analysis, interpretation or writing (Methods › Role of the funding source).",
+  "declared_conflicts": "As printed in the Declaration of interests. Ties bearing alcohol-industry names: S Costanzo, a research grant from the European Foundation for Alcohol Research (ERAB) (ID EA1767; 2018–2020), payment from The Dutch Beer Institute Foundation – The Brewers of Europe for organising and speaking at the 9th European Beer and Health Symposium (Brussels, 2019), and for a lecture at FENS 2019 sponsored by the Beer and Health Initiative; A-F A Mentis, stock or stock options in a family winery. Pharmaceutical and other commercial ties: O M Adebayo (Merck Foundation, Servier Nigeria), R Ancuceanu (AbbVie, B. Braun Medical, Sandoz, Laropharm), J M Castaldelli-Maia (Pfizer independent grants; L'Oreal Mental Health Wellness board), J J Jozwiak (Teva, Amgen, Synexus, Boehringer Ingelheim, ALAB Laboratories, Zentiva), S Lorkowski (Akcea, Danone, Novartis, SOBI, Upfield and 14 further companies), A M Madureira-Carvalho (Albert Labs, Eurox Pharma), V Shivarov (ICON plc), J A Singh (many consulting firms; stock in several pharmaceutical companies and in Charlotte's Web Holdings); all stated to be outside the submitted work. Others declare grants from, or roles with, public bodies, institutes and societies. G A Roth (Gates Foundation grant), M Kivimäki (Wellcome, MRC, NIA, Academy of Finland) and P Atorkey (University of Newcastle) report support for the present manuscript. The printed declaration lists these authors and makes no statement about the others.",
+  "affiliations_note": "Led by IHME (University of Washington); several inputs are the first author's unpublished GBD 2020 work. A collaborator declaring ERAB and Brewers of Europe ties (S Costanzo) co-wrote a 2019 letter criticising GBD 2016's method. D Sleet acknowledges partial support from Veritas Management Group, Inc and The Bizzell Group, LLC (Acknowledgments). Recorded as flags for closer reading, not as reasons to discount the results."
+ },
+ "what_would_settle_it": "Age-specific, cause-specific dose–response curves at low intake from designs less exposed to confounding and abstainer bias, above all non-linear Mendelian randomization in large cohorts of several ancestries that separate lifetime abstainers from former drinkers, for ischaemic heart disease, ischaemic stroke and diabetes in people over 40; data on drinking patterns; and a weighting scheme fixed in advance with all sensitivity analyses reported in the main text.",
+ "risk_of_bias": {
+  "instrument": "none-applicable",
+  "domains": [
+   {
+    "domain": "Inputs and their sources",
+    "judgment": "some-concerns",
+    "note": "DALY weights and consumption estimates were unpublished GBD 2020 work when the paper appeared; consumption data end in 2019 and were forecast to 2020; the review update covered six outcomes, English only, PubMed and earlier meta-analyses; 17 of 22 curves are unchanged since 2016."
+   },
+   {
+    "domain": "Relative-risk curves",
+    "judgment": "high",
+    "note": "Observational studies of self-reported intake; bias covariates chosen by a Lasso with the chosen sets only in an appendix; one curve per outcome assumed for every region; the protective dips for ischaemic heart disease, ischaemic stroke and diabetes, which create every non-zero TMREL, are the contested part; alcohol use disorders and alcoholic cardiomyopathy have no curve."
+   },
+   {
+    "domain": "Theoretical minimum and non-drinker equivalence levels",
+    "judgment": "high",
+    "note": "Both depend on the weights; the reference 'non-drinkers' is not defined in the main text; the weights include DALYs caused by alcohol (a risk-deleted alternative is reported only in an appendix); harmful use is defined by the mean NDE."
+   },
+   {
+    "domain": "Uncertainty intervals: what they include and exclude",
+    "judgment": "some-concerns",
+    "note": "Draws include between-study heterogeneity and DALY uncertainty; structural choices and residual bias are not stated to be included; it is not stated whether NDE uncertainty enters the harmful-use prevalence; sex and year comparisons are judged without a stated method."
+   },
+   {
+    "domain": "Sensitivity of the headline result",
+    "judgment": "some-concerns",
+    "note": "Three sensitivity analyses are reported (risk-deleted weights, hypothetical curves for two excluded outcomes, GBD 2016 curves). Table 2 shows the global TMREL moving from 0 to 0.534 with the same 2016 curves when only the weights changed, which the paper does not explain; no sensitivity to curve form or reference group is reported."
+   },
+   {
+    "domain": "Reporting and transparency",
+    "judgment": "some-concerns",
+    "note": "Unpublished inputs; key sensitivity numbers only in appendices, which were later corrected without the notice saying what changed; the ambiguous term 'alcohol-related DALYs'; a trend statement that does not match Table 1 (see reporting issues)."
+   }
+  ],
+  "overall": "high",
+  "reasoning": "No validated risk-of-bias instrument exists for burden-of-disease modelling (METHODS §5.3; the round brief sets design 'modelling' with no instrument). The editors' checklist is used with the same design-specific domains as card sc_griswold_2018; the overall judgment is no milder than the worst domain. The analysis improves on GBD 2016 by letting the weights follow each population's disease mix and by reporting the NDE, and it states that GBD 2016's global zero does not survive updated weights. Its age and region patterns are consequences of applying common observational curves to different disease mixes, and its J-shapes at older ages are only as sound as the protective cardiovascular and diabetes associations. Citable for GBD 2020's model estimates of TMREL, NDE and the number of people above the NDE, always with the definitions (standard drink 10 g; relative to non-drinkers; harmful = above the NDE) and assumptions; not citable on its own for a protective effect of alcohol in older people, for equal thresholds for women and men, or for advice to individuals."
+ },
+ "key_findings": [
+  {
+   "finding": "Relative-risk update: the six outcomes with the most alcohol-attributable DALYs were re-reviewed with 71 additional studies; lower respiratory infection was dropped for insufficient evidence, leaving 22 curves (five re-fitted with MR-BRT, 17 carried over from GBD 2016); curves are relative to non-drinkers, with 1000 posterior draws sampled at 1 g steps from 0 to 100 g a day.",
+   "page": "PMC HTML",
+   "locator": "Methods › Estimating dose–response relative risks, 2nd and 3rd paragraphs"
+  },
+  {
+   "finding": "TMREL and NDE come from a weighted average of the cause-specific curves, weighted by each cause's share of DALYs in each region, age, sex and year (GBD 2020); uncertainty from 1000 draws of each curve and 1000 draws of the DALY rates was propagated; estimates are given to three significant figures.",
+   "page": "PMC HTML",
+   "locator": "Methods › Estimating TMREL and NDE, 1st paragraph"
+  },
+  {
+   "finding": "Across all regions, ages, sexes and years the 2020 TMREL ranged from 0 (95% UI 0–0) to 1.87 (0.500–3.30) standard drinks (10 g) a day; TMREL and NDE varied significantly by age but not by sex or year.",
+   "page": "PMC HTML",
+   "locator": "Results, 1st paragraph"
+  },
+  {
+   "finding": "Ages 15–39, 2020: TMREL from 0 (0–0) to 0.603 (0.400–1.00) and NDE from 0.002 (0–0) to 1.75 (0.698–4.30) standard drinks a day across regions; globally, TMREL 0.136 (0–0.400) in males and 0.273 (0–0.500) in females, NDE 0.249 (0–1.00) and 0.546 (0–1.30); the sex differences were not significant.",
+   "page": "PMC HTML",
+   "locator": "Results, 1st paragraph; Summary › Findings"
+  },
+  {
+   "finding": "Ages 15–39: injuries made up 66.3% (65.1–67.5) of alcohol-related DALYs in males and 47.9% (46.0–49.8) in females; transport injuries 25.9% (25.0–27.0) and 12.7% (12.0–13.4), self-harm 11.7% (10.1–13.3) and 12.3% (10.8–13.8), interpersonal violence 12.4% (11.8–13.0) and 6.70% (5.90–7.69).",
+   "page": "PMC HTML",
+   "locator": "Results, 1st paragraph; Figure 2 (image) legend",
+   "note": "'Alcohol-related DALYs' here are DALYs from the 22 alcohol-associated causes, whatever their cause (the weights), not DALYs attributable to alcohol (Figure 2 legend)."
+  },
+  {
+   "finding": "Ages 40–64, global: ischaemic heart disease made up 24.1% (23.0–25.3) of alcohol-related DALYs in males and 19.5% (18.0–21.0) in females, intracerebral haemorrhage 10.3% (9.61–10.9) and 11.7% (10.7–12.8), injuries 23.0% (21.7–24.4) and 16.7% (15.3–18.3); TMREL 0.527 (0.400–1.00) in males and 0.562 (0.400–0.800) in females; NDE 1.69 (0.800–3.20) and 1.82 (1.00–3.10) standard drinks a day.",
+   "page": "PMC HTML",
+   "locator": "Results, 2nd paragraph"
+  },
+  {
+   "finding": "Ages 65 and older, global: ischaemic heart disease 31.5% (30.3–32.7) of alcohol-related DALYs in males and 29.7% (28.2–31.2) in females, intracerebral haemorrhage 11.6% (10.9–12.4) and 10.9% (10.1–11.8), ischaemic stroke 14.2% (13.5–14.9) and 16.0% (15.2–16.7); TMREL 0.636 (0.500–1.00) and 0.656 (0.500–1.00); NDE 3.19 (1.50–5.20) and 3.51 (1.70–5.50) standard drinks a day; sex differences not significant.",
+   "page": "PMC HTML",
+   "locator": "Results, 3rd paragraph"
+  },
+  {
+   "finding": "Ages 40 and older across regions: TMREL from 0.114 (0–0.403) to 1.87 (0.500–3.30) and NDE from 0.193 (0–0.900) to 6.94 (3.40–8.30) standard drinks a day; the abstract calls the weighted curve J-shaped in every region at these ages.",
+   "page": "PMC HTML",
+   "locator": "Summary › Findings; Results, 1st paragraph"
+  },
+  {
+   "finding": "Regional example, ages 55–59: in north Africa and the Middle East cardiovascular disease made up 30.7% (27.3–34.6) of alcohol-related DALYs, cancers 12.6% (11.0–14.3) and tuberculosis 0.37% (0.27–0.55), giving TMREL 0.876 (0.500–2.00) and NDE 3.89 (1.50–5.90); in central sub-Saharan Africa 20.1% (17.2–23.8), 9.80% (8.31–11.7) and 10.1% (6.03–14.1), giving TMREL 0.596 (0.300–2.00) and NDE 1.53 (0.600–4.70) standard drinks a day.",
+   "page": "PMC HTML",
+   "locator": "Results, 4th paragraph"
+  },
+  {
+   "finding": "Mean TMRELs and NDEs were larger for females than males of the same region, age and year, because injuries make up more of the male cause mix, but the differences were not significant once uncertainty was taken into account.",
+   "page": "PMC HTML",
+   "locator": "Results, 5th paragraph"
+  },
+  {
+   "finding": "In 2020, 1.03 billion (0.851–1.19) males, 35.1% (29.1–40.7) of males aged 15 and older, and 312 million (199–432) females, 10.5% (6.72–14.6), drank more than the NDE; the number rose from 983 million (718–1,190) in 1990 to 1.34 billion (1.06–1.62) in 2020, which the authors attribute to population growth, and they state that the global proportion did not change significantly.",
+   "page": "PMC HTML",
+   "locator": "Results, 6th paragraph",
+   "note": "Table 1's global rows show significant decreases since 1990 for three of six age–sex groups (reporting issue 1)."
+  },
+  {
+   "finding": "Global rows of Table 1 (2020): males above the NDE aged 15–39 595 million (489–658 million), 39.0% (32.1–43.2); 40–64 363 million, 34.0% (25.7–41.4); 65 and older 69.9 million, 20.6% (13.8–29.0). Females 195 million, 13.2% (8.34–18.4); 98.6 million, 9.22% (5.63–12.8); 18.4 million, 4.49% (2.20–7.99).",
+   "page": "PMC HTML",
+   "locator": "Table 1, Global rows"
+  },
+  {
+   "finding": "Of the 1.34 billion above the NDE, 59.1% (54.3–65.4) were aged 15–39, and 75.5% (70.3–80.7) of these were male; the highest shares of men aged 15–39 above the NDE were in Australasia (83.2%), western Europe (79.3%) and central Europe (78.3%); of women aged 15–39 in Australasia (77.7%), western Europe (64.3%) and southern Latin America (59.0%); 6.55% (4.79–8.43) of those above the NDE were older than 65. The text reports significant increases in 14 countries, decreases in 55 and no significant change in 135.",
+   "page": "PMC HTML",
+   "locator": "Results, 7th paragraph; Table 1 (regional rows)"
+  },
+  {
+   "finding": "Adding hypothetical curves for alcohol use disorders and alcoholic cardiomyopathy lowered the TMREL on average by 0.058 (0.00–0.30), 0.092 (0.00–0.50) and 0.146 (0.00–0.60) standard drinks a day and the NDE by 0.188 (0.00–0.90), 0.310 (0.00–1.30) and 0.508 (0.00–2.10) in scenarios with maximum relative risks of 3, 5 and 10 reached at four drinks a day; the largest changes were in men in eastern Europe and at ages 30–54.",
+   "page": "PMC HTML",
+   "locator": "Results, 8th paragraph"
+  },
+  {
+   "finding": "Global, age-standardised, both-sexes estimates (Table 2): GBD 2016 as published, TMREL 0 (0–0.800); GBD 2016 curves with GBD 2020 DALY weights, TMREL 0.534 (0–1.00) and NDE 0.669 (0–1.40); GBD 2020 curves and weights, TMREL 0.511 (0.400–0.700) and NDE 1.72 (0.80–3.30) standard drinks a day.",
+   "page": "PMC HTML",
+   "locator": "Results, 9th paragraph; Table 2; Discussion, 6th paragraph"
+  },
+  {
+   "finding": "The discussion notes that existing low-risk guidelines range from 8 to 42 g a day for women and from 10 to 52 g a day for men (citing Kalinowski & Humphreys, 2016), and argues that even the lower bound of the TMREL and NDE intervals implies these are too high for younger people.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 2nd and 3rd paragraphs"
+  },
+  {
+   "finding": "Citing a systematic review of Mendelian-randomization studies (van de Luitgaarden et al., 2021), the discussion reports that 67% of Mendelian-randomization studies of cardiovascular disease and 75% of those of diabetes found no association with alcohol, and that only five of 24 studies tested a non-linear relationship.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 7th paragraph"
+  },
+  {
+   "finding": "Limitations stated by the authors: drinking patterns not modelled; alcohol use disorders excluded from the TMREL; possible residual confounding, selection and measurement bias and reverse causation in the relative risks; self-reported intake; no distinction by beverage type or quality; weights include alcohol-caused DALYs; consumption forecast to 2020 from data through 2019; depression, anxiety and dementia not included, whose inclusion would possibly lower the TMREL and NDE.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 8th paragraph"
+  },
+  {
+   "finding": "Correction notice (Lancet 2022;400:358; DOI 10.1016/S0140-6736(22)01389-7): appendices 1 and 2 were corrected as of 19 July 2022; the notice describes no change to the main text, from which every number on this card is taken.",
+   "page": "PMC HTML (PMC9350421)",
+   "locator": "Department of Error"
+  },
+  {
+   "finding": "The introduction cites unpublished GBD 2020 work by the first author for 1.78 million deaths (95% UI 1.39 to 2.27) attributable to alcohol in 2020, with alcohol the leading risk factor for death among males aged 15 to 49.",
+   "page": "PMC HTML",
+   "locator": "Introduction, 1st paragraph",
+   "note": "A model estimate cited to unpublished work, not a result of this paper. It is lower than the GBD 2016 figure of 2.8 million (2.4 to 3.3; sc_griswold_2018), and the two intervals do not overlap (editors' observation)."
+  },
+  {
+   "finding": "The authors say their estimates aim to minimise health loss across all alcohol-attributable outcomes in a population; that individual-level risk minimisation depends on individual factors such as other illnesses and medicines, which are more common in older people; that their results for older adults carry additional uncertainty; and that approaches to minimising individual-level risk are beyond the scope of the study.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 4th paragraph"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The text says the global proportion consuming more than the NDE has not changed significantly since 1990, but Table 1's global rows show significant decreases for males aged 15–39 (−4.62%, −6.27 to −2.64), females 40–64 (−4.22%, −6.54 to −0.279) and females 65 and older (−1.96%, −3.63 to −0.448); the text also speaks of the proportion of drinkers, the table of the population.",
+   "page": "PMC HTML, Results, 6th paragraph; Table 1, Global rows",
+   "consequence": "The no-change statement may hold for all ages combined, which is not shown; claims about trends should use the age- and sex-specific rows."
+  },
+  {
+   "issue": "The country counts (14 significant increases, 55 decreases, 135 no change) are given for 1990–2019 and attributed to Table 1, whose heading gives the percentage change since 1990 for 2020 and which reports only age- and sex-specific changes; the basis of a single country-level verdict is not stated, nor whether the change column is relative or in percentage points.",
+   "page": "PMC HTML, Results, 7th paragraph; Table 1 heading and columns",
+   "consequence": "The country counts cannot be reproduced from the table; cite them as the authors' statement."
+  },
+  {
+   "issue": "The lowest NDE at ages 15–39 is 0.002 (0–0) in the abstract and the results but 0 (0–0) in the discussion.",
+   "page": "PMC HTML, Summary › Findings; Results, 1st paragraph; Discussion, 3rd paragraph",
+   "consequence": "Rounding only; cite 0.002."
+  },
+  {
+   "issue": "'Alcohol-related DALYs' is used for the DALYs from the 22 alcohol-associated causes (the weights), not for DALYs attributable to alcohol; the Results do not say so, only the Figure 2 legend implies it.",
+   "page": "PMC HTML, Results, 1st to 4th paragraphs; Figure 2 legend",
+   "consequence": "Statements such as injuries making up 66.3% of alcohol-related DALYs in young men must not be read as shares of the harm caused by alcohol."
+  },
+  {
+   "issue": "This paper describes GBD 2016's curves as estimated with a Bayesian meta-regression tool (DisMod ODE), whereas the GBD 2016 paper describes mixed-effects logistic regression with non-linear splines.",
+   "page": "PMC HTML, Methods › Estimating dose–response relative risks, 1st paragraph",
+   "consequence": "The two papers disagree on how the 17 carried-over curves were fitted; the GBD 2016 appendix would settle it."
+  },
+  {
+   "issue": "Table 2 shows the global TMREL moving from 0 to 0.534 drinks a day with the same GBD 2016 curves when only the DALY weights were updated to GBD 2020, while the text says the results were not sensitive to the approach to weighting and attributes the differences to three changes without explaining this one.",
+   "page": "PMC HTML, Results, 8th and 9th paragraphs; Table 2; Discussion, 6th paragraph",
+   "consequence": "The global threshold is sensitive to which year's DALY rates are used; claims comparing GBD 2016 and GBD 2020 should say so."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent), AI reader 154 (first reader)",
+  "first_pass_on": "2026-10-27",
+  "source_read": "PMC full text PMC9289789 (all sections, Tables 1 and 2 rendered as text with the global and cited regional rows checked against the text, figure legends, data sharing, declaration of interests, acknowledgments, contributors and reference list read; Figures 1 to 4 are images and their values were not extracted; supplementary appendices 1 and 2 not read); correction notice PMC9350421; PubMed record and first paragraph (the rest paywalled) of the linked Burton & Sheron (2022) comment",
+  "disagreements": [
+   {
+    "field": "key_findings[17].finding",
+    "first_pass": "depression, anxiety and dementia not included, which would probably lower the TMREL and NDE.",
+    "reviewer": "AI reader 195 (key finding 17, corrected): the source says inclusion of depression, anxiety and dementia would possibly (not probably) reduce the TMREL and NDE.",
+    "resolution": "Accepted after checking Discussion, 8th paragraph, in the saved PMC text."
+   },
+   {
+    "field": "key_findings[19]",
+    "first_pass": "(none)",
+    "reviewer": "AI reader 195 (missed): Introduction, 1st paragraph: GBD 2020 attributed 1.78 million deaths (95% UI 1.39-2.27) to alcohol in 2020 (cited as unpublished work); bears on cl_alc_deaths_global.",
+    "resolution": "Accepted after checking the Introduction in the saved PMC text; added as a key finding, labelled as a citation of unpublished work."
+   },
+   {
+    "field": "key_findings[20]",
+    "first_pass": "(none)",
+    "reviewer": "AI reader 195 (missed): Discussion, 4th paragraph: individual-level risk is outside the study's scope and results for older adults carry additional uncertainty; the card used this in cannot_establish without a key finding and locator.",
+    "resolution": "Accepted after checking the Discussion's 4th paragraph in the saved PMC text; added as a key finding."
+   }
+  ],
+  "checked_by": "AI reader 195 (blind second reading) and AI reader 221 (adjudication)",
+  "checked_on": "2026-10-30"
+ }
+}

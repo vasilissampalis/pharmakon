@@ -1,0 +1,578 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://example.org/schema/study-card.schema.json",
+ "title": "Study card",
+ "description": "Data extraction and critical appraisal of one source (METHODS.md §5). One card per reference that supports a claim.",
+ "type": "object",
+ "required": [
+  "id",
+  "reference",
+  "design",
+  "can_establish",
+  "cannot_establish",
+  "sample",
+  "exposure",
+  "comparison",
+  "outcomes",
+  "analysis",
+  "interpretation_gap",
+  "replication",
+  "funding",
+  "what_would_settle_it",
+  "risk_of_bias",
+  "verification"
+ ],
+ "properties": {
+  "id": {
+   "type": "string",
+   "pattern": "^sc_[a-z0-9_-]+$"
+  },
+  "reference": {
+   "type": "string",
+   "description": "Reference id (citation key)."
+  },
+  "design": {
+   "type": "string",
+   "enum": [
+    "rct",
+    "crossover-rct",
+    "human-laboratory",
+    "prospective-cohort",
+    "retrospective-cohort",
+    "case-control",
+    "cross-sectional",
+    "case-series",
+    "case-report",
+    "qualitative",
+    "systematic-review",
+    "meta-analysis",
+    "narrative-review",
+    "preclinical-animal",
+    "in-vitro",
+    "test-accuracy",
+    "registry",
+    "survey",
+    "modelling",
+    "evidence-report"
+   ],
+   "description": "Study design (METHODS §5.3). 'test-accuracy': a test's results compared with a reference method or known content, for example drug-checking strips and colour tests (QUADAS-2; METHODS 0.3.1). 'in-vitro' and 'preclinical-animal' are preclinical (§5.4)."
+  },
+  "design_detail": {
+   "type": "string",
+   "description": "Free text: e.g. 'PET [11C]d-threo-methylphenidate DAT imaging, 15 users vs 18 controls'."
+  },
+  "can_establish": {
+   "type": "string",
+   "description": "One sentence: what this design can show."
+  },
+  "cannot_establish": {
+   "type": "string",
+   "description": "One sentence: what this design cannot show."
+  },
+  "sample": {
+   "type": "object",
+   "required": [
+    "n_total",
+    "recruitment",
+    "selection_effects"
+   ],
+   "properties": {
+    "n_total": {
+     "type": [
+      "integer",
+      "null"
+     ],
+     "description": "null when not applicable (reviews) or not yet extracted."
+    },
+    "n_by_group": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "integer"
+     }
+    },
+    "recruitment": {
+     "type": "string",
+     "description": "treatment-seeking / community / prison / advertisement / registry / clinic / other, with detail."
+    },
+    "inclusion_exclusion": {
+     "type": "string"
+    },
+    "demographics": {
+     "type": "string"
+    },
+    "attrition": {
+     "type": "string"
+    },
+    "selection_effects": {
+     "type": "string",
+     "description": "Named explicitly."
+    }
+   }
+  },
+  "exposure": {
+   "type": "object",
+   "required": [
+    "measurement",
+    "polysubstance"
+   ],
+   "properties": {
+    "measurement": {
+     "type": "string",
+     "description": "Instrument / biological verification / records."
+    },
+    "dose_frequency_duration_route": {
+     "type": "string"
+    },
+    "purity_known": {
+     "type": "boolean"
+    },
+    "polysubstance": {
+     "type": "string",
+     "description": "What other substances were used and how this was handled."
+    },
+    "abstinence_at_testing": {
+     "type": "string",
+     "description": "Duration and how verified."
+    }
+   }
+  },
+  "comparison": {
+   "type": "object",
+   "required": [
+    "controls",
+    "unmeasured_premorbid"
+   ],
+   "properties": {
+    "controls": {
+     "type": "string"
+    },
+    "matching": {
+     "type": "string"
+    },
+    "unmeasured_premorbid": {
+     "type": "string",
+     "description": "Pre-use variables not measured (there is almost never a pre-use baseline)."
+    },
+    "controls_other_drug_use": {
+     "type": "string"
+    }
+   }
+  },
+  "outcomes": {
+   "type": "object",
+   "required": [
+    "instruments",
+    "operationalization",
+    "n_outcomes_tested",
+    "multiplicity_correction"
+   ],
+   "properties": {
+    "instruments": {
+     "type": "string"
+    },
+    "validity_norms": {
+     "type": "string"
+    },
+    "operationalization": {
+     "type": "string",
+     "description": "How 'impairment'/'harm' was defined."
+    },
+    "n_outcomes_tested": {
+     "type": [
+      "integer",
+      "null"
+     ],
+     "description": "null until extracted."
+    },
+    "multiplicity_correction": {
+     "type": "string"
+    },
+    "assessor_blinding": {
+     "type": "string"
+    }
+   }
+  },
+  "analysis": {
+   "type": "object",
+   "required": [
+    "effect_sizes",
+    "preregistration"
+   ],
+   "properties": {
+    "effect_sizes": {
+     "type": "string",
+     "description": "With CIs; computed by editors if paper gives only p-values (say so)."
+    },
+    "covariates": {
+     "type": "string"
+    },
+    "preregistration": {
+     "type": "string",
+     "enum": [
+      "none",
+      "registered",
+      "registered-with-deviations",
+      "unknown"
+     ]
+    },
+    "preregistration_detail": {
+     "type": "string"
+    },
+    "selective_reporting": {
+     "type": "string"
+    },
+    "power": {
+     "type": "string"
+    }
+   }
+  },
+  "interpretation_gap": {
+   "type": "object",
+   "required": [
+    "results_show",
+    "claimed"
+   ],
+   "properties": {
+    "results_show": {
+     "type": "string"
+    },
+    "claimed": {
+     "type": "string",
+     "description": "What abstract/discussion/press release claimed, with page refs or URLs."
+    },
+    "gap_assessment": {
+     "type": "string",
+     "enum": [
+      "none",
+      "minor",
+      "substantial",
+      "severe"
+     ]
+    }
+   }
+  },
+  "replication": {
+   "type": "object",
+   "required": [
+    "status"
+   ],
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "not-attempted",
+      "replicated",
+      "partially-replicated",
+      "failed",
+      "mixed",
+      "n/a"
+     ]
+    },
+    "timeline": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "year",
+       "event"
+      ],
+      "properties": {
+       "year": {
+        "type": "integer"
+       },
+       "event": {
+        "type": "string"
+       },
+       "reference": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "where_it_stands": {
+     "type": "string"
+    }
+   }
+  },
+  "funding": {
+   "type": "object",
+   "required": [
+    "funder",
+    "declared_conflicts"
+   ],
+   "properties": {
+    "funder": {
+     "type": "string"
+    },
+    "declared_conflicts": {
+     "type": "string"
+    },
+    "affiliations_note": {
+     "type": "string"
+    }
+   }
+  },
+  "what_would_settle_it": {
+   "type": "string"
+  },
+  "risk_of_bias": {
+   "type": "object",
+   "required": [
+    "instrument",
+    "domains",
+    "overall",
+    "reasoning"
+   ],
+   "properties": {
+    "instrument": {
+     "type": "string",
+     "enum": [
+      "RoB 2",
+      "ROBINS-E",
+      "ROBINS-I",
+      "AMSTAR 2",
+      "SYRCLE",
+      "QUADAS-2",
+      "JBI-prevalence",
+      "none-applicable",
+      "editors-qualitative",
+      "editors-report"
+     ],
+     "description": "Each instrument has its own vocabulary, checked by scripts/rob_vocab.py (METHODS §5.3). 'none-applicable' means no validated instrument exists for the design (narrative reviews); the card then uses the editors' narrative-review checklist. 'editors-qualitative' is the editors' checklist for qualitative studies (domains adapted from CASP). 'editors-report' is the editors' checklist for evidence reports by public bodies (design 'evidence-report'; decision p-public-reports): six domains named exactly 'Search and selection', 'Appraisal of the included studies', 'Stated grading rules', 'Independence and funding', 'External review' and 'Conclusions within the evidence', each low / some-concerns / high."
+    },
+    "domains": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "domain",
+       "judgment"
+      ],
+      "properties": {
+       "domain": {
+        "type": "string"
+       },
+       "judgment": {
+        "type": "string",
+        "enum": [
+         "low",
+         "some-concerns",
+         "moderate",
+         "high",
+         "serious",
+         "critical",
+         "unclear",
+         "yes",
+         "partial-yes",
+         "no",
+         "very-high",
+         "probably-yes",
+         "probably-no",
+         "no-information",
+         "no-meta-analysis",
+         "not-applicable"
+        ]
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "overall": {
+     "type": "string",
+     "enum": [
+      "low",
+      "some-concerns",
+      "moderate",
+      "high",
+      "serious",
+      "critical",
+      "critically-low",
+      "unclear",
+      "very-high",
+      "low-confidence",
+      "moderate-confidence",
+      "high-confidence"
+     ]
+    },
+    "reasoning": {
+     "type": "string"
+    }
+   }
+  },
+  "preclinical": {
+   "type": "object",
+   "description": "Required when design is preclinical-animal or in-vitro.",
+   "properties": {
+    "species_strain_sex": {
+     "type": "string"
+    },
+    "dose_route_schedule": {
+     "type": "string"
+    },
+    "human_equivalent_dose_basis": {
+     "type": "string"
+    },
+    "resembles_human_use": {
+     "type": "string"
+    }
+   }
+  },
+  "verification": {
+   "type": "object",
+   "required": [
+    "status",
+    "first_pass_by"
+   ],
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "first-pass",
+      "ai-checked",
+      "appraised"
+     ],
+     "description": "first-pass: one AI reader from the full text; ai-checked: key numbers and anchors re-found by an independent AI reader, disagreements logged; appraised: senior author has read the card against the source (METHODS §5.5)."
+    },
+    "first_pass_by": {
+     "type": "string"
+    },
+    "first_pass_on": {
+     "type": "string",
+     "format": "date"
+    },
+    "reviewed_by": {
+     "type": "string"
+    },
+    "reviewed_on": {
+     "type": "string",
+     "format": "date"
+    },
+    "disagreements": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "field",
+       "first_pass",
+       "reviewer",
+       "resolution"
+      ],
+      "properties": {
+       "field": {
+        "type": "string"
+       },
+       "first_pass": {
+        "type": "string"
+       },
+       "reviewer": {
+        "type": "string"
+       },
+       "resolution": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "source_read": {
+     "type": "string",
+     "description": "What the card was written from: 'PDF pp. 377–382', 'PMC full text PMC3260986', 'publisher full text (HTML), <journal or URL>', a trial registry record for registration checks, or 'abstract only' (allowed only in draft)."
+    },
+    "checked_by": {
+     "type": "string"
+    },
+    "checked_on": {
+     "type": "string",
+     "format": "date"
+    },
+    "editorial_corrections": {
+     "type": "array",
+     "description": "Corrections made by the editor after the readers finished (vocabulary, arithmetic, rule-based consistency), each with its reason. Substantive changes of judgment go through the readers or the senior author instead.",
+     "items": {
+      "type": "object",
+      "required": [
+       "date",
+       "field",
+       "from",
+       "to",
+       "reason"
+      ],
+      "properties": {
+       "date": {
+        "type": "string",
+        "format": "date"
+       },
+       "field": {
+        "type": "string"
+       },
+       "from": {
+        "type": "string"
+       },
+       "to": {
+        "type": "string"
+       },
+       "reason": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "key_findings": {
+   "type": "array",
+   "description": "The card's extracted results, each with its page anchor. These are what claims cite.",
+   "items": {
+    "type": "object",
+    "required": [
+     "finding",
+     "page"
+    ],
+    "properties": {
+     "finding": {
+      "type": "string",
+      "description": "Result in the editors' words, with numbers."
+     },
+     "page": {
+      "type": "string"
+     },
+     "locator": {
+      "type": "string"
+     },
+     "note": {
+      "type": "string",
+      "description": "Editors' caveat on this specific number (e.g. reporting inconsistency)."
+     }
+    }
+   }
+  },
+  "reporting_issues": {
+   "type": "array",
+   "description": "Internal inconsistencies or reporting errors found on reading (e.g. degrees of freedom that do not match n, inclusion criteria contradicted by the sample table, text contradicting a table). Each anchored.",
+   "items": {
+    "type": "object",
+    "required": [
+     "issue",
+     "page"
+    ],
+    "properties": {
+     "issue": {
+      "type": "string"
+     },
+     "page": {
+      "type": "string"
+     },
+     "consequence": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "substance": {
+   "type": "string",
+   "description": "Substance slug the card is filed under (folder name, lowercased)."
+  }
+ }
+}

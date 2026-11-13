@@ -1,0 +1,837 @@
+{
+ "reviewer": "AI methodologist (review round 2, group M)",
+ "reviewed_on": "2026-10-16",
+ "claims_reviewed": [
+  "cl_meth_cognition_abstinence",
+  "cl_meth_cognition_causal",
+  "cl_meth_psychosis_association",
+  "cl_meth_psychosis_dose",
+  "cl_meth_psychosis_course",
+  "cl_meth_psychosis_vs_schizophrenia",
+  "cl_meth_depression",
+  "cl_meth_suicidality",
+  "cl_meth_violence",
+  "cl_meth_us_trends",
+  "cl_meth_mortality"
+ ],
+ "sources_checked": [
+  "simon_2010",
+  "iudicello_2010",
+  "cao_2026",
+  "potvin_2018",
+  "basterfield_2019",
+  "scott_2007",
+  "dean_2013",
+  "volkow_2001b",
+  "hart_2012",
+  "mcketin_2019",
+  "arunogiri_2018",
+  "glasner-edwards_2014",
+  "wearne_2018"
+ ],
+ "findings": [
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "field": "monograph.at_a_glance.largest_uncertainties",
+   "severity": "must-fix",
+   "rule": "METHODS §6.3 (claims resting only on narrative reviews are never shown in the at-a-glance box); §8 at-a-glance rule",
+   "issue": "cl_meth_psychosis_course rests only on narrative reviews and is held at draft, yet it is one of the three largest uncertainties shown in the at-a-glance box.",
+   "evidence": "Claim's own reasoning (second-hand figures from three narrative reviews) and verification.status draft; its supporting anchors cite glasner-edwards_2014, wearne_2018 and bramness_2012, whose cards are all design narrative-review; METHODS §6.3, last rule.",
+   "proposed": "Replace the entry: \"largest_uncertainties\": [\"cl_meth_cognition_causal\", \"cl_meth_dopamine_damage\", \"cl_meth_violence\"] (cl_meth_violence: very low, mixed, ai-anchored, not narrative-only; any other very-low or contested claim that does not rest only on narrative reviews also satisfies the rule). The course of methamphetamine psychosis stays visible as research-gaps priority question 2."
+  },
+  {
+   "claim_id": "monograph",
+   "field": "monograph.at_a_glance.mechanism_line",
+   "severity": "must-fix",
+   "rule": "METHODS §6.3 (narrative-review-only claims never shown in the at-a-glance box) against §8 (mechanism line resting on a section 3 claim): protocol conflict",
+   "issue": "The mechanism line restates cl_meth_mechanism_release, which rests only on one narrative review (Kish, 2008), is rated very low and is held at draft; the line shows neither the rating nor that the description is second-hand. §8 requires a mechanism line resting on a section 3 claim, and the only one available is barred by §6.3, so the senior author has to decide which rule governs.",
+   "evidence": "cl_meth_mechanism_release: evidence = kish_2008 only (card sc_kish_2008, design narrative-review); grade very-low; verification draft; its statement says the primary pharmacology has not been read.",
+   "proposed": "Strict reading of §6.3: \"mechanism_line\": \"Not yet established here from primary pharmacology; section 3 describes the release mechanism second-hand from a narrative review (draft).\" If the senior author rules that §8 governs: \"A substituted amphetamine that, according to a narrative review, raises extracellular dopamine, noradrenaline and serotonin, apparently by moving them out of storage vesicles and reversing their transporters; the primary pharmacology has not yet been read here (section 3; certainty very low, draft).\" In either case, record the §6.3/§8 conflict in the METHODS changelog."
+  },
+  {
+   "claim_id": "monograph",
+   "field": "monograph.at_a_glance.legal_summary",
+   "severity": "must-fix",
+   "rule": "internal consistency (at-a-glance against section 13 data)",
+   "issue": "The legal line says the Greek and Australian entries are not yet confirmed from the official texts, but the section 13 data now records Greece as controlled, read in the Ministry of Health's consolidated tables; only the Australian entry remains unconfirmed. The monograph's own changelog (0.3.1) says the Greece row was filled.",
+   "evidence": "data/legal/methamphetamine.json, Greece entry: status 'Controlled: listed in Table Γ΄ (Table C), item 52', history 2026-10-16 changed from 'Not confirmed' because the table was found in the Ministry of Health's consolidated list; Australia entry status 'Not confirmed'. Monograph changelog 0.3.1.",
+   "proposed": "Replace \"The Greek and Australian entries are not yet confirmed from the official texts (section 13).\" with \"Controlled in Greece (Table Γ΄ of law 3459/2006 as in force under law 4139/2013, read in the Ministry of Health's consolidated list); the Australian entry is not yet confirmed from the official text (section 13).\""
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "field": "evidence[4].study_card (sc_bramness_2012.risk_of_bias); also sc_kish_2008 and sc_cruickshank_2009",
+   "severity": "must-fix",
+   "rule": "METHODS §5.3 (the instrument must match the design; narrative reviews use the editors' narrative-review checklist)",
+   "issue": "sc_bramness_2012, cited by cl_meth_psychosis_course and cl_meth_psychosis_vs_schizophrenia (and cl_meth_psychosis_treatment), is a narrative review appraised with AMSTAR 2 (overall critically low, applied 'for consistency'); the same mismatch remains on sc_kish_2008 (behind the mechanism line and four claims) and sc_cruickshank_2009. The other narrative-review cards (Hart, Dean, Glasner-Edwards, Wearne) were converted after v0.2.2.",
+   "evidence": "Study cards: sc_bramness_2012 design narrative-review, risk_of_bias.instrument 'AMSTAR 2'; sc_kish_2008 and sc_cruickshank_2009 likewise; sc_glasner_edwards_2014 and sc_wearne_2018 carry the checklist after a recorded editorial correction (verification.disagreements).",
+   "proposed": "Re-appraise sc_bramness_2012, sc_kish_2008 and sc_cruickshank_2009 with the editors' narrative-review checklist (systematic search and explicit selection; appraisal of cited studies; reliance on the authors' own work; separation of evidence from speculation; balance), log the change in verification.editorial_corrections and rerun scripts/rob_vocab.py. Provisional judgments for sc_bramness_2012 from its own notes: search and selection high; appraisal of cited studies high; reliance on the authors' own studies some concerns (refs 41 and 51 from the authors' group); separation of evidence from speculation some concerns; balance some concerns; overall high."
+  },
+  {
+   "claim_id": "monograph",
+   "field": "monograph.sections[15].not_yet_covered",
+   "severity": "should-fix",
+   "rule": "METHODS §8 (research gaps list topics the page does not yet cover); internal consistency with section notes",
+   "issue": "The summary of uncovered topics omits gaps that the section notes themselves declare: drug interactions, metabolism and pharmacokinetics by route (section 3), acute risks in adolescents and in people with heart disease or a psychiatric history (section 6), stroke and dental disease (section 9) and drug-checking data (section 11).",
+   "evidence": "Monograph sections[2].no_evidence_note (section 3), sections[5] (section 6), sections[8] (section 9), sections[10] (section 11).",
+   "proposed": "\"not_yet_covered\": \"Cardiovascular disease, stroke, dental disease and other physical harms; pregnancy; infections such as HIV and hepatitis; acute risks for adolescents and for people with heart disease or a psychiatric history; drug interactions, metabolism and pharmacokinetics by route; drug-checking data; harm-reduction interventions; contingency management and other treatments; and European and Greek data.\""
+  },
+  {
+   "claim_id": "monograph",
+   "field": "monograph.sections[15].priority_questions",
+   "severity": "consider",
+   "rule": "METHODS §8 (editors' priority questions)",
+   "issue": "The editors' list has no question on cognition, the subject of one of the two contested claims and the one most often raised by people who use the drug, and none on the conditional probability of a use disorder, which §10.2 asks for per substance and which the page now gives only for stimulants grouped (1990-1992 data). Question 6 will also need revising when the staged section 12 claims are added (the mirtazapine trial reports a 12-week post-treatment follow-up).",
+   "evidence": "cl_meth_cognition_causal (contested), cl_meth_cognition_abstinence (very low); cl_meth_dependence_baserate (stimulants grouped, draft); data/claims/_incoming/methamphetamine_wave2.json, cl_meth_mirtazapine.",
+   "proposed": "Add: {\"question\": \"Does thinking and memory recover with sustained abstinence, and how much of the difference between people dependent on meth and others was there before use?\", \"needs\": \"Cohorts tested before regular use begins, and retest studies over one to three years with verified abstinence and retested comparison groups.\"} and {\"question\": \"What share of people who use meth develop a use disorder, and how soon?\", \"needs\": \"Recent population surveys reporting meth-specific conditional probabilities and time from first use to dependence.\"}. On integrating wave 2, revise question 6's 'needs' to: \"Independent replication of the medication trials, with follow-up after treatment ends, and comparison with contingency management.\""
+  },
+  {
+   "claim_id": "monograph",
+   "field": "monograph.mechanisms",
+   "severity": "consider",
+   "rule": "internal consistency with cl_meth_mechanism_release",
+   "issue": "The class label 'VMAT2 and membrane-transporter substrate' asserts substrate activity without the hedge of the only section 3 mechanism claim, which is second-hand, very low and draft.",
+   "evidence": "cl_meth_mechanism_release statement ('apparently', 'not completely understood'; primary pharmacology not read).",
+   "proposed": "\"mechanisms\": [\"Monoamine releaser (dopamine, noradrenaline, serotonin)\", \"Release thought to act through VMAT2 and the membrane transporters (second-hand; section 3)\"]"
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "monograph.sections[9].claims / sections[4].claims (placement of contested claims)",
+   "severity": "consider",
+   "rule": "METHODS §8 (sections); internal consistency",
+   "issue": "The two contested claims are placed inconsistently: cl_meth_dopamine_damage is listed in both its topical section (4) and section 14, while cl_meth_cognition_causal appears only in section 14, so a reader of section 9's Cognition subheading never meets the causal question.",
+   "evidence": "Monograph sections[3].claims includes cl_meth_dopamine_damage; sections[8].claims (section 9) does not include cl_meth_cognition_causal; sections[13].claims (section 14) lists both.",
+   "proposed": "Add \"cl_meth_cognition_causal\" to section 9's claims after \"cl_meth_cognition_abstinence\" (or remove cl_meth_dopamine_damage from section 4), so both contested claims are treated alike."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "check A (selective use of a source); review standard (scepticism in both directions)",
+   "issue": "The 'Differences persisted' sentence reports only gaps that stayed or widened. In the same retested subsample of Simon et al., the Selective Reminding total gap shrank from about 1.0 to 0.2 SD; in Iudicello et al., the abstainer–control gap narrowed on processing speed (2.8 to 0.2 T) and motor speed (5.5 to 3.5 T, significant at baseline and not at follow-up) and was unchanged on learning, memory and verbal fluency. Only executive functions and working memory widened. The card sc_iudicello_2010 (interpretation_gap.results_show) records both directions; the statement gives one.",
+   "evidence": "Simon 2010, Table 3: SRT total T1 120.9 (12.1) vs 108.2 (13.2), T2 117.1 (15.9) vs 113.1 (18.6) (pooled-SD d 1.01 to 0.23; RMT word recall 0.30 to 0.82). Iudicello 2010, Tables 3–4: SIP 48.7 vs 51.5 to 52.6 vs 52.8; Motor 45.8 vs 51.3 (HC>A,NA) to 48.7 vs 52.2 (HC>NA only); Learning 3.7 to 3.7; Memory 2.8 to 2.7; Verbal 1.8 to 1.5 T (editors' recalculation).",
+   "proposed": "Replace from \"Differences persisted:\" to \"...and became significant.\" with: \"At retest the picture differed by test. After a month, the methamphetamine group still scored below controls on the four Repeated Memory Test scores (editors' calculation, d about 0.7–0.8; about 0.3–0.8 at baseline in the same people), while its gap on the Selective Reminding total shrank from about 1.0 to 0.2 SD (editors' calculation; neither tested by the authors). After a year, the abstainers' global score was no longer significantly below the controls' by the authors' test (the editors' recalculation from the printed means gives p≈0.025); by domain, their gap narrowed on processing speed (from 2.8 to 0.2 T-points) and motor speed (from 5.5 to 3.5; significant at baseline, not at follow-up), was about unchanged on learning, memory and verbal fluency, and widened on executive functions (from 2.5 to 3.4) and working memory (from 3.3 to 5.0), which became significant only at follow-up (editors' calculation from Tables 3–4).\" Extend evidence[12].extracted with the time-1 values of the same subsample and evidence[13].extracted with the SIP, motor, learning, memory and verbal T-scores at both times."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "check B (plain against statement)",
+   "issue": "The plain text keeps every finding against improvement and drops both signals for it that the statement reports (the impaired abstainers' processing-speed gain, with its regression-to-the-mean caveat, and two of three within-user cross-sectional comparisons favouring longer abstinence); it also says the people who had stopped still scored below at the end, although in the year-long study the global difference was no longer significant by the authors' test and the processing-speed gap had closed.",
+   "evidence": "Statement sentences 3–5; Iudicello 2010 Table 4 and Results › Global, 1st paragraph; Dean 2013, p. 264.",
+   "proposed": "\"Does thinking get better after stopping meth? This is not known. Two studies retested both people who had stopped and people who don't use. In both, the people who had stopped did not improve clearly more than the people who don't use, who also improved from taking the tests a second time. The studies were small, so a moderate extra improvement cannot be ruled out. Over time some gaps between the groups narrowed and others widened. In one study, the six people who had stopped and scored lowest at the start improved more on speed tests, but people who score low on a first test tend to score higher the next time anyway. Two of three studies comparing people who had stopped for shorter and longer times found better scores on some tests after longer abstinence, which may reflect who manages to stay stopped. Across many studies, groups tested after longer abstinence did not score closer to people who don't use, and very few studies have looked beyond a year.\""
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "statement",
+   "severity": "consider",
+   "rule": "check A (numbers and editors' calculations)",
+   "issue": "'Both were too small to exclude a moderate extra improvement' is quantified only for Simon et al.; for Iudicello et al. no interval is computed, and the point estimate of the abstainers' extra gain over controls is about 0.3 T-points.",
+   "evidence": "Magnitude: Simon d 0.32 (−0.31 to 0.96); Iudicello Tables 3–4: abstainers +3.0 T, controls +2.7 T.",
+   "proposed": "Replace \"and both were too small to exclude a moderate extra improvement\" with \"; the first was too small to exclude a moderate extra improvement (editors' standardized difference 0.32, 95% CI −0.31 to 0.96), and in the second the abstainers' mean gain exceeded the controls' by about 0.3 T-points (3.0 vs 2.7; editors' calculation; no interval can be computed from the printed data)\"."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "field": "evidence[0].locator",
+   "severity": "consider",
+   "rule": "source check (locator)",
+   "issue": "The retest intervals (25 and 44 days) are in the 2nd running paragraph of Results › Change between first and second assessments, not the 3rd–4th.",
+   "evidence": "Simon 2010, Results › Change, 2nd paragraph (43.50 and 25.44 days); 3rd paragraph (no omnibus differences); 4th paragraph (0.14 vs −0.00, t(37)=−1.01, p=.33).",
+   "proposed": "\"locator\": \"Results › Change between first and second assessments, 2nd–4th paragraphs; Table 3\""
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "plain",
+   "severity": "must-fix",
+   "rule": "check B (plain against statement); cross-claim contradiction with cl_meth_cognition_abstinence",
+   "issue": "'Scores also don't clearly improve after stopping' is contradicted by the evidence: scores did improve on retest in every group (time effect F(1,118)=55.12; seven tests improved), and the open question is whether they improved more than practice alone, as the statement says. The sister claim's plain text says the opposite (people who don't use also improved). The plain also gives a size ('about half a standard deviation') that the statement does not, and that understates the newer independent meta-analysis (0.68).",
+   "evidence": "Iudicello 2010, Results › Global, 1st paragraph; Simon 2010, Results › Change, 4th paragraph; cl_meth_cognition_abstinence plain; cl_meth_cognition magnitude (Potvin global d −0.46; Cao overall g −0.68); debate.evidence_yes (0.5–0.7 SD).",
+   "proposed": "\"Does meth cause lasting problems with thinking and memory? Not shown. People dependent on meth score somewhat lower on average than people who don't use (about half to two-thirds of a standard deviation overall; see the claim on group differences), but none of these studies tested people before they started using, the groups differ in other ways, and scores are mostly unrelated to how much people used. After stopping, scores have not been shown to rise more than those of people who don't use, who also improve when retested; that fits both lasting harm and differences that were there before. See the contested question.\""
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.editors_reading",
+   "severity": "should-fix",
+   "rule": "internal consistency (editors' reading against debate.evidence_yes and cl_meth_cognition)",
+   "issue": "The editors' reading gives the average difference as about half a standard deviation, while the 'yes' side of the same box gives 0.5–0.7 SD (0.46 and 0.68) and the newer, independent meta-analysis is 0.68.",
+   "evidence": "debate.evidence_yes; cl_meth_cognition magnitude (Potvin −0.46; Cao −0.68).",
+   "proposed": "Replace \"A modest average difference, about half a standard deviation and clearest for verbal learning and memory,\" with \"A modest average difference, about half to two-thirds of a standard deviation overall and clearest for verbal learning and memory,\"."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_yes (and debate.evidence_no)",
+   "severity": "should-fix",
+   "rule": "METHODS §7 (each side written to the standard its best proponents would accept); check A (selective use of a cited source)",
+   "issue": "The 'yes' side omits three points from sources the claim already cites: (1) in Basterfield et al., longer duration of use predicted larger fluid-reasoning differences (11 studies; Holm-adjusted p=.002), which the authors read as support for a dose-related effect, while the 'no' side cites only the two meta-analyses where duration did not moderate; (2) in four meta-analyses the education gap, or education level, did not predict effect size, which Potvin et al. read as tentatively favouring an effect of use; (3) Dean et al.'s own overall judgment after weighing six lines of evidence (mild decline in at least some people, with animal experiments weighted most). Dean's judgment is an argument, not data, but it is the strongest proponent's case.",
+   "evidence": "Basterfield 2019, p. 744 (Metaregression, fluid reasoning, duration β −0.16, p<.001; educational discrepancy p=.29), Table 4 p. 746, Discussion p. 747; Scott 2007, p. 285 (educational discrepancy b=0.06, p=0.13); Potvin 2018, p. 156 (education β p=0.1) and p. 158; Cao 2026, p. 6 (education P≥.30); Dean 2013, pp. 268–269 (conclusion and item 1).",
+   "proposed": "Append to evidence_yes: \"In one meta-analysis, studies whose participants had used methamphetamine longer showed larger differences in fluid reasoning (11 studies; the only one of four abilities tested, and one with no average difference), which its authors read as support for a dose-related effect (Basterfield et al., 2019). In four meta-analyses, the size of the education gap between groups, or education level, did not predict how large the cognitive differences were (Scott et al., 2007; Potvin et al., 2018; Basterfield et al., 2019; Cao et al., 2026). The review that weighed animal, cross-sectional, twin, abstinence, imaging and dose evidence concluded that methamphetamine probably causes mild decline in at least some people, giving most weight to the animal experiments (Dean et al., 2013).\" In evidence_no replace \"duration of use did not moderate the group differences in two meta-analyses (Scott et al., 2007; Cao et al., 2026)\" with \"duration of use did not moderate the group differences in two meta-analyses (Scott et al., 2007; Cao et al., 2026) and moderated only fluid reasoning, an ability with no average difference, in a third (Basterfield et al., 2019)\". Add the corresponding anchors (Basterfield pp. 744, 746–747; Scott p. 285; Potvin pp. 156, 158; Dean pp. 268–269)."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "evidence[13].extracted",
+   "severity": "should-fix",
+   "rule": "source check (anchor against the stated place)",
+   "issue": "'Removing the high risk-of-bias studies left the results unchanged' repeats the authors' summary sentence but not what their sensitivity table shows: for comprehension knowledge, the domain this anchor is about, the estimate fell from −0.43 to −0.08 with an interval including zero, and the authors note the same for fluid reasoning and visual-spatial processing.",
+   "evidence": "Basterfield 2019, Sensitivity Analyses p. 745 (intervals for comprehension knowledge, fluid reasoning and visual-spatial processing overlapped zero) and Table 6 p. 747 (comprehension knowledge −0.082, 95% CI −0.326 to 0.162, k=5).",
+   "proposed": "Replace \"No other domain differed by rating, and removing the high risk-of-bias studies left the results unchanged.\" with \"No other domain differed by rating. Removing the high risk-of-bias studies left most estimates similar in size, but the intervals for comprehension knowledge (−0.08, 95% CI −0.33 to 0.16), fluid reasoning and visual-spatial processing then included zero (Sensitivity Analyses, p. 745; Table 6, p. 747).\" and add \"p. 747\" to the page field."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "debate.evidence_no (education gap) / evidence",
+   "severity": "consider",
+   "rule": "check A (every number anchored)",
+   "issue": "The 1.4–1.6-year education gap is anchored only for Scott et al. (in cl_meth_cognition); the 1.6 from Basterfield et al. has no anchor in this or any claim.",
+   "evidence": "Basterfield 2019, p. 744, Results › Study Selection and Characteristics (12.31 vs 13.88 years); Scott 2007 Table 2, p. 284 (12.47 vs 13.87).",
+   "proposed": "Add anchors to cl_meth_cognition_causal: {\"reference\": \"basterfield_2019\", \"page\": \"p. 744\", \"locator\": \"Results › Study Selection and Characteristics; Table 1\", \"extracted\": \"Weighted mean education 12.31 years in the methamphetamine groups and 13.88 in controls across 31 studies.\", \"role\": \"qualifies\"} and the Scott Table 2 education anchor from cl_meth_cognition (evidence[1])."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "field": "statement; population",
+   "severity": "should-fix",
+   "rule": "check A (selective use of a source); check E (selection, comparator)",
+   "issue": "The headline 2.4 pools four studies that the review places at evidence level E (cross-sectional associations within samples of people who use drugs): young offenders, Thai methamphetamine rehabilitation inpatients (outcome: methamphetamine-induced paranoia), a community sample using methamphetamine at least monthly, and a Swedish prison cohort. In two of the four everyone used methamphetamine, so the comparator is use without a use disorder, not 'no use disorder' in the general sense; and for the one cohort the review reports no significant relation with later primary psychosis. The statement says only that comparison groups often used other drugs, and the population field begins 'General-population'.",
+   "evidence": "McKetin 2019, Table 2 (psychosis, use disorder, adjusted: refs 27, 30, 32, 42; Level E; n 7648; quality 88%); Table 1 rows Degenhardt 2015 [27], Kalayasiri 2014 [30], McKetin 2006 [32], Rognli 2015 [42]; Results › 3.3, 3rd paragraph (Rognli).",
+   "proposed": "After \"...in studies that adjusted for some combination of demographics, other substance use and premorbid risk.\" insert: \"Those four studies, which the review classes as cross-sectional associations within drug-using samples, were of young offenders, people in methamphetamine rehabilitation, people using methamphetamine at least monthly and people leaving prison; in two of them everyone used methamphetamine, so the comparison was with use without a use disorder, and for the one cohort the review reports no significant relation with later primary psychosis.\" Population: \"Mostly treatment, psychiatric, emergency and criminal-justice samples and samples of people who use drugs; one population hospital-admissions cohort contributes to the unadjusted estimate\". Add anchors for Table 1 (refs 27, 30, 32, 42), the Table 2 adjusted row (refs, Level E) and Results › 3.3, 3rd paragraph; in the reasoning, cite the adjusted pool's weighted quality (88%) as part of the case for not downgrading risk of bias."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "check B (plain against statement; comparator)",
+   "issue": "A reader will take 'people without one' to mean people who do not use methamphetamine; in the studies behind the adjusted figure, the comparison group mostly used other drugs and, in two of four, used methamphetamine without a use disorder.",
+   "evidence": "As in the previous finding (McKetin 2019 Table 1 rows 27, 30, 32, 42; paragraph after Table 1).",
+   "proposed": "\"In studies mostly of people in drug treatment, hospitals or prisons, people with a meth or amphetamine use disorder were more likely to have psychosis (symptoms such as paranoia or hallucinations, or a diagnosed psychotic illness) than people without one: about two and a half times the odds after taking some other differences into account. The people they were compared with mostly used other drugs, and in two of the four studies behind that figure they also used meth, just without a use disorder. Studies of any use found about twice the odds, without that adjustment. The link was clearer for symptoms than for a diagnosed psychotic illness. Most studies measured use and symptoms at the same time, so they cannot show which came first, and they could not say how much use it takes for the risk to rise.\""
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "field": "statement (frequency sentence); grade.reasoning",
+   "severity": "consider",
+   "rule": "check A (qualifier in the same source); review standard (no understatement)",
+   "issue": "'More frequent use went with more psychotic symptoms in 4 of the 8 study populations' omits the source's own qualification that the positive studies were of higher quality, and that frequency was the only correlate whose evidence the review rated above low (moderate).",
+   "evidence": "Arunogiri 2018, Results › Dose-amount and frequency of MA use (positive studies of higher quality); Table 2, frequency rows and footnote b (moderate; all other factors very low to low).",
+   "proposed": "Append to the sentence: \"; the review judged the studies finding this to be of higher quality and rated the evidence on frequency moderate, the only risk factor it rated above low\". In the reasoning: \"Not upgraded for dose–response: frequency was associated in 4 of 8 populations (the review rates this moderate); the within-person gradient is rated separately in cl_meth_psychosis_dose.\""
+  },
+  {
+   "claim_id": "cl_meth_psychosis_dose",
+   "field": "grade.reasoning",
+   "severity": "consider",
+   "rule": "METHODS §6.3 (dose–response upgrade on evidence rated down; reasoning must match data)",
+   "issue": "'The gradient persisted under the most adjusted model (2.25 to 3.90)' rests on point estimates whose intervals overlap widely; the card reports no test for trend in any model.",
+   "evidence": "Card sc_mcketin_2013, analysis.effect_sizes (2.25, 1.29–3.90; 3.90, 1.80–8.45; no trend test listed); statement and magnitude.",
+   "proposed": "Replace \"and the gradient persisted under the most adjusted model (2.25 to 3.90)\" with \"and the point estimates kept the same order under the most adjusted model (2.25, 1.29–3.90; 3.90, 1.80–8.45), although those intervals overlap widely and no test for trend is reported\"."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "field": "statement; magnitude",
+   "severity": "should-fix",
+   "rule": "source check; check A (wording says more than the source)",
+   "issue": "The parenthetical '(in people without earlier episodes or a family history of schizophrenia)' reads as a restriction of the samples; the review says the people whose psychosis persisted had no earlier episodes or family history, and it cites one of the same reports elsewhere for family loading predicting duration. The review gives the 16% and 17% as shares of people who used methamphetamine, so the share of episodes that persisted is unclear. A systematic review treats these Taiwanese reports as one study population (N=445), so 'two small studies' may be one sample; the magnitude field says 'overlapping author groups' while the statement says 'one research group'.",
+   "evidence": "Glasner-Edwards 2014, 3.2 Duration (16% and 17% 'of MA users'; persisting cases without prior episodes or family history; refs 12, 47) and 3.1, 3rd paragraph (familial loading predicts onset and duration, ref 47); reference list refs 12 and 47 (Chen et al. 2003 and 2005, same first five authors); card sc_glasner_edwards_2014 key_findings[7] (denominator) and reporting_issues[1]; Arunogiri 2018, Methods (studies of one population combined) and Table 1, study 6 (Chen et al. 2003, 2005, 2007; Lin et al. 2004; N=445).",
+   "proposed": "Replace \"16% and 17% were still psychotic after 1 and 3 months of abstinence in two small studies from one research group (in people without earlier episodes or a family history of schizophrenia)\" with \"16% and 17% were still psychotic after 1 and 3 months of abstinence in two reports from one Taiwanese research group, which a systematic review treats as one study population of 445 (the review gives the denominator only as people who used methamphetamine, so the share of psychotic episodes that persisted may be higher); the review says those whose psychosis persisted had no earlier episodes and no family history of schizophrenia, but elsewhere cites one of the same reports for family loading predicting duration\". In magnitude replace \"(two small studies from overlapping author groups)\" with \"(two reports from one research group, probably one sample)\". Add a qualifying anchor: arunogiri_2018, Methods › data extraction and Table 1, study 6."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "field": "statement; plain",
+   "severity": "consider",
+   "rule": "check A (qualifier in the same source)",
+   "issue": "The list of explanations for later schizophrenia diagnoses omits one the cited review raises: diagnostic rules require a primary diagnosis once psychosis persists, so some later diagnoses may relabel a persistent methamphetamine psychosis. The plain text also drops the misattributed-primary-psychosis alternative.",
+   "evidence": "Wearne 2018, The relationship between METH-induced psychosis and schizophrenia, 3rd paragraph.",
+   "proposed": "Statement: after \"...or whether some first episodes were primary psychoses attributed to drug use\" add \"; one review also notes that diagnostic rules call for a schizophrenia-type diagnosis once psychosis persists, so some later diagnoses may relabel a persistent methamphetamine psychosis\". Plain: replace \"That does not show meth caused the later illness: some people may have been vulnerable already.\" with \"That does not show meth caused the later illness: some people may have been vulnerable already, some first episodes may not have been caused by meth, and some later diagnoses may just be a new name for psychosis that lasted.\" Add the Wearne anchor."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "field": "statement",
+   "severity": "should-fix",
+   "rule": "METHODS §6.3 (claims resting only on narrative reviews say in the statement that their figures are second-hand)",
+   "issue": "Every supporting anchor cites a narrative review (Wearne & Cornish 2018; Bramness et al. 2012) and the claim is held at draft, but the statement does not say that its figures are second-hand or that the primary studies are unread, as cl_meth_psychosis_course does.",
+   "evidence": "Evidence anchors (wearne_2018, bramness_2012; cards design narrative-review); grade.reasoning ('held at draft until ... the key primary studies are read').",
+   "proposed": "Begin the statement: \"As reported in one narrative review (figures second-hand; the primary studies have not yet been read), 12 small studies directly comparing methamphetamine psychosis with schizophrenia or another primary psychosis (1990–2017; ...) ...\" and keep the rest."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "field": "statement (hallucination sentence)",
+   "severity": "should-fix",
+   "rule": "source check; check A (selective use)",
+   "issue": "'Other support for this is indirect' overlooks a second direct comparison (McKetin et al., 2017; 284 people all with methamphetamine dependence; lifetime symptoms) whose hallucination results the review reports in opposite directions in its table and text, and a direct comparison of acute psychosis that found more voices conversing in methamphetamine psychosis.",
+   "evidence": "Wearne 2018, Table 1 row 109 vs Positive symptoms › Chronic, 3rd paragraph (opposite directions; also Figure 1 legend); Positive symptoms › Acute, 4th paragraph and Table 1 row 112 (48.5% vs 20.3%); the claim's own evidence[5] records the table–text conflict.",
+   "proposed": "Replace \"More visual and tactile hallucinations in methamphetamine psychosis were shown in one direct comparison, of persistent psychosis (about 53 people per group); other support for this is indirect.\" with \"More visual and tactile hallucinations in methamphetamine psychosis were found in one direct comparison, of persistent psychosis (about 53 people per group); a second direct comparison, of lifetime symptoms in people who all had methamphetamine dependence, is reported in opposite directions in the review's table and text, and the remaining support is indirect. One direct comparison of acute psychosis found more voices conversing in methamphetamine psychosis (48.5% vs 20.3%).\" Add an anchor for Table 1 row 112 and Positive symptoms › Acute, 4th paragraph."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "field": "statement (last sentence)",
+   "severity": "should-fix",
+   "rule": "check A (the source's own conclusion and a qualifying finding left out)",
+   "issue": "The statement ends on 'no validated way', but omits that two direct comparisons found thought-disorder features more often in schizophrenia (incoherent speech was the only item separating the groups in 168 vs 169 people; more conceptual disorganization in schizophrenia in the persistent-psychosis study) and that the review's own conclusion is that acute methamphetamine psychosis may be clinically distinguishable while persistent psychosis resembles schizophrenia.",
+   "evidence": "Wearne 2018, Abstract and Summary and conclusions, 1st and 4th paragraphs; Positive symptoms › Acute, 3rd paragraph (Srisurapanont et al.; Table 1 row 113, 168 vs 169 as printed); Positive symptoms › Chronic, 1st paragraph (Wang et al.).",
+   "proposed": "Replace the last sentence with: \"The review's authors conclude that acute methamphetamine psychosis may be distinguishable from schizophrenia (less thought disorder, milder negative symptoms, more visual and tactile hallucinations) while persistent psychosis resembles it, but no symptom has been validated as a way to tell the two apart: thought-disorder features were more common in schizophrenia in two direct comparisons (incoherent speech in 168 vs 169 people; conceptual disorganization in about 53 per group), while the authors call the wider evidence on thought disorder indirect and inconclusive.\" Add anchors for the Summary and conclusions and the two passages."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "check B (plain against statement)",
+   "issue": "'People with meth psychosis often had milder negative symptoms' turns a four-against-four split of studies into a statement about people; 'Psychosis still present a month after stopping looked more like schizophrenia' generalizes a single study.",
+   "evidence": "Statement (four studies milder, four no difference; 'In one Taiwanese study'); Wearne 2018, Negative symptoms sections and Table 1 row 105.",
+   "proposed": "\"Meth psychosis and schizophrenia can look alike. In small studies, hallucinations and paranoid beliefs were mostly not clearly different in severity, but studies this small can miss differences. In half of the studies that compared them, people with meth psychosis had milder 'negative' symptoms (flatness, withdrawal); the other half found no clear difference. One study found more seeing or feeling things that aren't there, and in two studies disordered thinking was more common in schizophrenia. In one study, psychosis still present a month after stopping looked more like schizophrenia, including on thinking tests. No way of telling them apart from symptoms alone has been validated. All of this comes from one review of small studies.\""
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "field": "statement; grade.reasoning",
+   "severity": "should-fix",
+   "rule": "METHODS §6.3 overlapping evidence ('a cohort that is also inside a pooled estimate ... the claim says so')",
+   "issue": "The secondary-school cohort (OR 1.60) is Briere et al. (2012), which is also one of the six studies in the 2019 review's adjusted estimate (1.3); the statement presents it as further support from the update, and the reasoning counts 'two separate cohorts' beside the six adjusted studies.",
+   "evidence": "McKetin 2019, Table 1 (Briere 2012 [74], Canadian school cohort, CES-D ≥16) and Table 2 (adjusted depression refs 71, 73, 74, 76, 103, 104); Results › 3.6, 2nd paragraph; card sc_leung_2023 comparison.unmeasured_premorbid (Briere 2012; Javanbakht 2020).",
+   "proposed": "Statement: after \"(secondary-school students; men who have sex with men)\" insert \"; the school cohort (Briere et al., 2012) is also one of the six studies in the 2019 estimate, so only the second cohort adds independent evidence\". Reasoning: replace \"(6 adjusted studies; two separate cohorts)\" with \"(6 adjusted studies in the 2019 review, one of which is the school cohort in the 2023 update, plus one further cohort)\"."
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "field": "grade.reasoning",
+   "severity": "consider",
+   "rule": "GRADE consistency across claims resting on McKetin et al. (2019)",
+   "issue": "Depression's adjusted estimate (1.3) is smaller than suicidality's, and the reasoning concedes residual confounding by other drug use, yet neither claim is downgraded; the difference that could justify keeping depression at low (higher quality, cohorts adjusting for earlier symptoms) is not stated, and no strict-reading certainty is given.",
+   "evidence": "McKetin 2019, Table 2 (adjusted depression: Level C, quality 87%, I² 0; adjusted suicidality: Level E, quality 62%); Results › 3.6, 3rd paragraph (no association within substance-using samples).",
+   "proposed": "Add to the reasoning: \"Not downgraded for risk of bias, unlike an estimate from selected cross-sectional samples: the adjusted pool has the review's highest weighted quality for these outcomes (87%, evidence level C, I² 0%) and two cohorts adjusted for earlier depressive symptoms. Under a stricter reading (residual confounding by other drug use could account for an odds ratio of 1.3) certainty would be very low.\""
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "field": "magnitude",
+   "severity": "consider",
+   "rule": "check A (editors' calculation; model choice)",
+   "issue": "The cross-sectional adjusted 1.66 is a fixed-effect estimate despite I² 59%; the card's editors' reproduction gives about 1.85 (1.28–2.69) under random effects, which the magnitude does not show.",
+   "evidence": "Card sc_leung_2023, analysis.effect_sizes and reporting_issues[1].",
+   "proposed": "Replace \"Cross-sectional adjusted 1.66 (1.34–2.05; fixed effect, I² 59%).\" with \"Cross-sectional adjusted 1.66 (1.34–2.05; fixed effect despite I² 59%; about 1.85, 1.28–2.69, under random effects, editors' calculation).\""
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "field": "statement; population; plain",
+   "severity": "should-fix",
+   "rule": "check A (wording beyond the design); check E (selection, direction)",
+   "issue": "The statement gives no design or samples: the adjusted use-disorder estimate comes from four cross-sectional studies of psychiatric emergency patients, arrestees, outpatients with substance use disorders (compared with people with other substance use disorders) and people under community corrections, at the review's evidence level E, and the authors say no longitudinal evidence shows whether use preceded suicidality. 'Down from' and 'adjustment reduced the estimate' compare pools of different studies (for any use the adjusted pool includes a study absent from the unadjusted seven and lacks four of them). The population field says 'General-population and clinical samples'. The plain text drops the authors' 'largely' and the demographic and premorbid factors.",
+   "evidence": "McKetin 2019, Table 1 (Toles 2006 [38], Kalechstein 2000 [58], Matsumoto 2012 [60], McCullumsmith 2013 [70]); Table 2 suicidality rows (unadjusted any use refs 59, 62–66, 108; adjusted 59, 64, 108, 109; use disorder 7 vs 4; Level E; quality 62%); Discussion, 4th paragraph (no longitudinal evidence) and 5th paragraph.",
+   "proposed": "Replace the first two sentences with: \"In mostly cross-sectional studies, amphetamine use disorder (amphetamine or methamphetamine) is associated with suicidal ideation and attempts: pooled adjusted odds ratio 1.5 (95% CI 1.3–1.8; I² 0%) in 4 cross-sectional studies of psychiatric emergency patients, arrestees, outpatients with substance use disorders and people under community corrections, against 2.3 (1.8–2.9) unadjusted in 7 studies that include those 4. For any use, the 4 studies with adjusted estimates gave 1.7 (1.0–2.9; I² 77%; the review's text gives 1.4), an interval that reaches no association, against 4.4 (2.4–8.2) unadjusted in 7 partly different studies. The review found no longitudinal evidence on whether use preceded suicidal thoughts or attempts.\" Population: \"Psychiatric, emergency, criminal-justice and substance-use-treatment samples; some school, student and general-population surveys for any use\". Plain: \"People with an amphetamine or meth use disorder, in studies mostly of people in emergency rooms, the justice system or drug treatment, were more likely to report suicidal thoughts or attempts: about 1.5 times the odds after accounting for some other factors, against about 2.3 times in raw numbers. These studies measured both at one time, so they cannot show which came first, and the authors think the excess may be largely shared with drug use in general and with people's backgrounds and earlier problems. This review had little on deaths by suicide, but studies following people with regular or problematic use found suicide deaths about 12 times as common as in people of the same age and sex (see the mortality claim).\""
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "field": "grade.domains.risk_of_bias; grade.certainty; grade.reasoning",
+   "severity": "should-fix",
+   "rule": "METHODS §6.3 (downgrade when biases remaining after adjustment could plausibly change the estimate materially, including selected samples)",
+   "issue": "The reasoning concedes the conditions for a downgrade (adjustment sets unknown; strong confounding; residual confounding by depression and other psychiatric illness cannot be excluded) and then does not downgrade. The adjusted estimate pools four cross-sectional studies in selected drug-using, emergency and justice samples (Level E, quality 62%); an odds ratio of 1.5 could plausibly be moved to the null by residual confounding by depression. The 'drop from 2.3 to 1.5' also compares a 4-study subset with all 7.",
+   "evidence": "McKetin 2019, Table 2 (Level E, quality 62%); Discussion, 4th paragraph (poor quality, no longitudinal evidence); Table 1 rows 38, 58, 60, 70; the claim's own reasoning.",
+   "proposed": "risk_of_bias levels 1; certainty very-low. Reasoning: \"Observational, cross-sectional; starts low. Risk of bias −1: the adjusted use-disorder estimate pools 4 cross-sectional studies in selected psychiatric, emergency, criminal-justice and treatment samples (review evidence level E, weighted quality 62%), with covariate sets in an unread supplement; residual confounding by depression and other psychiatric illness, strongly related to suicidality, could plausibly account for an odds ratio of 1.5, and the unadjusted 2.3 comes from a larger set of studies, so the difference is not a pure effect of adjustment. Not downgraded for inconsistency or imprecision for that estimate (I² 0%, 1.3–1.8); the any-use estimate is imprecise and inconsistent (1.0–2.9; I² 77%) and reported as such. Publication bias not assessed (AMSTAR 2 critically low).\" If the editors keep low, the reasoning must say why the §6.3 condition is not met despite these concessions. (No at-a-glance consequence: the claim is not selected.)"
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "field": "magnitude",
+   "severity": "consider",
+   "rule": "internal consistency (exposure of a subgroup estimate)",
+   "issue": "'Suicide attempts (unadjusted) OR 3.6 (2.2–5.9)' does not say that this subgroup is for any use, and omits its study count and heterogeneity, while the neighbouring figures are for use disorder.",
+   "evidence": "McKetin 2019, Results › 3.5, 3rd paragraph (people who used amphetamines; refs 59, 61, 63–66; I² 46%).",
+   "proposed": "Replace with \"suicide attempts, any use (unadjusted post hoc subgroup) OR 3.6 (2.2–5.9), 6 studies, I² 46%.\""
+  },
+  {
+   "claim_id": "cl_meth_violence",
+   "field": "evidence[1].extracted; evidence[1].locator",
+   "severity": "should-fix",
+   "rule": "source check; revision consistency (anchor not updated after a card correction)",
+   "issue": "The anchor still says the violence studies had 'the lowest' average quality, although the card's resolved disagreement corrected this to lowest or tied lowest (unadjusted suicidality 56–57%) and the statement says 'among the lowest'; the locator names 3.4's 1st and 3rd paragraphs, but quality and poor measurement are in the 2nd paragraph, 3.1 and Table 2.",
+   "evidence": "McKetin 2019, Results › 3.4, 2nd paragraph; Results › 3.1, 2nd paragraph; Table 2 quality column (violence 56 and 58; suicidality 56 and 57); card sc_mcketin_2019 verification.disagreements[0].",
+   "proposed": "extracted: \"Violent behaviour OR 3.7 (3.1–4.5), I² 34%; violent offending OR 1.0 (0.4–2.7), I² 94%; the violence pools had among the lowest weighted quality scores in the review (56% unadjusted, 58% adjusted; tied with unadjusted suicidality, 56–57%), with poor measurement of use.\" locator: \"Results › 3.4 Violence, 2nd and 3rd paragraphs; Results › 3.1, 2nd paragraph; Table 2\"."
+  },
+  {
+   "claim_id": "cl_meth_violence",
+   "field": "statement",
+   "severity": "consider",
+   "rule": "check A (qualifying findings in the same source)",
+   "issue": "The statement omits the review's only use-disorder estimate (more violent re-offending over 7 years after release among offenders with a use disorder; one study, 52 exposed, quality 43%) and the authors' reading that large effects in two population surveys and two longitudinal studies suggest an association may exist, needing confirmation.",
+   "evidence": "McKetin 2019, Table 1 (Watanabe 2005 [46]); Table 2 (use disorder, violence, 6.2, 3.1–12.3, 1 study); Results › 3.4, 4th paragraph; Discussion, 3rd paragraph.",
+   "proposed": "After the subgroup sentence insert: \"A single longitudinal study of offenders whose punishment was reduced or waived because of mental disorder found more violent re-offending over 7 years among those with an amphetamine use disorder (unadjusted OR 6.2, 3.1–12.3; 52 exposed; quality score 43%), and the review's authors judge that large effects in two population surveys and two longitudinal studies suggest an association may exist, which needs confirmation.\" Add anchors for Table 1/Table 2 (ref 46) and the Discussion, 3rd paragraph."
+  },
+  {
+   "claim_id": "cl_meth_mortality",
+   "field": "plain",
+   "severity": "should-fix",
+   "rule": "check B (plain against statement; design cannot apportion cause)",
+   "issue": "'So not all of this excess is due to the stimulant' implies that the rest is, which age- and sex-standardized ratios cannot show; the statement says only that the ratios describe these populations' excess mortality, which includes many other causes.",
+   "evidence": "Statement, last sentence; card sc_stockings_2019 comparison.unmeasured_premorbid and interpretation_gap.",
+   "proposed": "Replace the last sentence with: \"These were people in treatment, people who inject, people in hospital records or in contact with the justice system, not everyone who uses; many also used opioids or other drugs, and many lived in poverty or had been in prison, so these figures do not show how much of the excess is caused by the stimulant itself.\""
+  },
+  {
+   "claim_id": "cl_meth_mortality",
+   "field": "grade.reasoning; statement",
+   "severity": "should-fix",
+   "rule": "METHODS §6.3 (a claim inherits the certainty of its weakest necessary link); GRADE inconsistency and imprecision",
+   "issue": "The reasoning justifies 'low' for the all-cause estimate, but the statement and plain give equal weight to cause-specific figures resting on 4–7 cohorts each, with cause of death often unclearly ascertained, crude-rate I² of 94–98% except homicide, and wide intervals (suicide SMR 4.89–30.47). The suicidality claim cross-references the suicide figure as if it carried the same certainty.",
+   "evidence": "Card sc_stockings_2019, analysis.effect_sizes (cause-specific I² and intervals) and key_findings (cause-of-death ascertainment often unclear); claim reasoning ('not downgraded for the all-cause estimate').",
+   "proposed": "Statement: after \"...homicide (11.9).\" insert \"These cause-specific figures each come from 4 to 7 cohorts in which the cause of death was often unclearly ascertained, and are less certain than the all-cause estimates.\" Reasoning: add \"The cause-specific figures rest on 4–7 cohorts each, with unclear cause-of-death ascertainment, I² 94–98% for the crude rates except homicide, and wide intervals (suicide SMR 4.89–30.47); they are very low certainty, and the claim's rating of low applies to the all-cause estimates.\" Alternatively move the cause-specific results to a separate very-low claim and point the suicidality claim's cross-reference to it."
+  },
+  {
+   "claim_id": "cl_meth_mortality",
+   "field": "plain",
+   "severity": "consider",
+   "rule": "check B (ranking not supported by the data)",
+   "issue": "The plain text ranks causes ('injuries and suicide were the most common, followed by overdose and heart disease') from crude rates of 0.20, 0.20, 0.14 and 0.13 per 100 person-years drawn from different subsets of 4–7 cohorts with overlapping intervals.",
+   "evidence": "Magnitude (cause-specific crude rates and intervals).",
+   "proposed": "Replace \"Among the causes studied, injuries and suicide were the most common, followed by overdose and heart disease;\" with \"Among the causes studied, injuries, suicide, overdose and heart disease each accounted for roughly 1 to 2 deaths per 1,000 people per year (each figure from 4 to 7 of the studies), and homicide for fewer;\"."
+  },
+  {
+   "claim_id": "cl_meth_mortality",
+   "field": "statement",
+   "severity": "consider",
+   "rule": "internal consistency (statement against its own anchor)",
+   "issue": "'Found through searches covering 1980 to February 2018' compresses two searches: the review searched 2008 to February 2018 and took 1980–2007 cohorts from the authors' earlier review, as the claim's own anchor says.",
+   "evidence": "evidence[7].extracted; card sc_stockings_2019 AMSTAR 2 item 4.",
+   "proposed": "Replace \"found through searches covering 1980 to February 2018\" with \"found through a search covering 2008 to February 2018 and, for 1980–2007, the authors' earlier review\"."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "field": "evidence[*].extracted (also cl_meth_cognition_abstinence, cl_meth_psychosis_association, cl_meth_psychosis_vs_schizophrenia, cl_meth_violence)",
+   "severity": "consider",
+   "rule": "METHODS §9 language; consistency with the person-first revision (changelog 0.3.1)",
+   "issue": "Statements and plain texts were changed to person-first wording, but 13 anchor texts in these five claims still say 'users' (for example 'In 36 users', '18 users retested', '5 rescanned users'); anchors are displayed with citations (§4.4).",
+   "evidence": "Anchor extracted fields (cl_meth_cognition_abstinence 5, cl_meth_cognition_causal 5, others 1 each).",
+   "proposed": "Replace 'users' with 'people who used methamphetamine' (or 'the methamphetamine group') in those anchor texts, with no change of number or meaning, and log it as a language correction."
+  }
+ ],
+ "anchors_confirmed": [
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 0,
+   "reference": "simon_2010",
+   "note": "Checked at the stated place: Results › Change, 3rd–4th paragraphs and Table 3 (no omnibus domain differences; composite 0.14 vs −0.00, t(37)=−1.01, p=.33; n 18/21). The 25.44- and 43.50-day intervals are in the 2nd paragraph (see finding)."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 1,
+   "reference": "simon_2010",
+   "note": "Results › Change, 4th paragraph (seven tests improved at uncorrected .05, pooled across groups) and Discussion, 4th paragraph (improvement despite alternate forms): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 2,
+   "reference": "iudicello_2010",
+   "note": "Method › Participants (121; 25/58/38; mean 13 months, SD 5.6); Results › Global, 1st paragraph (F(1,118)=55.12; p=0.126); Tables 3–4 (47.1→50.1; 50.1→52.8; 46.2→47.8): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 3,
+   "reference": "iudicello_2010",
+   "note": "Table 5 and Results › Global, 2nd–3rd paragraphs: 41.26→47.94 vs 43.70→47.01; three-way p=0.061; time × NP p=0.006; SIP +8.22 vs −1.42 (p=0.014); motor +9.67 vs −0.08 (p=0.051): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 4,
+   "reference": "iudicello_2010",
+   "note": "Table 4: 50.1 (3.6), n=25 vs 52.8 (5.1), n=38 gives Student t≈2.29, df 61, p≈0.025 (recomputed); Table 4 note names independent-samples t-tests; abstinence by self-report (Discussion, last paragraph); no attrition reported: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 5,
+   "reference": "cao_2026",
+   "note": "p. 7, Abstinence Duration and Cognitive Remission: g −0.70, −0.63, −0.88 (N 15, 35, 7); F(2, 14.9)=1.20, P=0.33: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 6,
+   "reference": "potvin_2018",
+   "note": "p. 156, 3.3 (abstinence, 14 studies, β −0.004, p=0.61) and p. 158 Discussion (weighted mean 4.5 months; 3.3 without McCann): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 7,
+   "reference": "basterfield_2019",
+   "note": "p. 744 Metaregression and Table 4 p. 746: abstinence non-significant for fluid reasoning, short-term working memory, learning efficiency, processing speed; comprehension knowledge Q model 27.58, β printed −0.00 with inverted interval: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 8,
+   "reference": "scott_2007",
+   "note": "p. 285, Methamphetamine Use Variables (abstinence length and duration of use, ps>0.10): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 9,
+   "reference": "dean_2013",
+   "note": "pp. 263–264, Hypothesis 4: Volkow 2001, Wang 2004, Jaffe 2005 without retested controls; Simon 2010 and Iudicello 2010 without significant extra improvement: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 10,
+   "reference": "volkow_2001b",
+   "note": "pp. 9415–9416: n=5; timed gait 10.0 vs 8.6 (p<0.13), delayed recall 11.6 vs 12.8 (p<0.10); controls scanned once only: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 11,
+   "reference": "dean_2013",
+   "note": "p. 264 and Conclusion: Salo 2009 (Stroop, ≥1 year better) and Kim 2006 (WCST, >6 months better); the third (Simon 2004) found continuing users better on memory: matches the anchor."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 12,
+   "reference": "simon_2010",
+   "note": "Table 3 time-2 means and SDs: pooled-SD d 0.82, 0.81, 0.79, 0.73 (RMT) and 0.23 (SRT total) reproduced with n 21/18; time-2 group comparisons not reported by the authors: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_abstinence",
+   "anchor_index": 13,
+   "reference": "iudicello_2010",
+   "note": "Tables 3–4: follow-up global 50.1 vs 52.8 (authors p>0.05); EF 50.9 vs 54.3 and WM 48.4 vs 53.4 (HC>A,NA); baseline EF 47.0 vs 49.5 and WM 47.2 vs 50.5 not significant for abstainers: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 0,
+   "reference": "dean_2013",
+   "note": "p. 261 (7 matched studies, 6 worse; 8 statistically controlled, 5 worse; no matched study better; most differences within 1 SD) and Table 1 pp. 262–263: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 1,
+   "reference": "dean_2013",
+   "note": "p. 263: 50 male pairs (31 MZ, 19 DZ); 80% amphetamines; worse on Cancellation, Trails A, Finger Tapping, Grooved Pegboard; better on CPT; nine other tests no difference: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 2,
+   "reference": "dean_2013",
+   "note": "pp. 267–268 and Figure 2 (N=36): r=−0.48 (age of first use with education) and r=−0.42 (with the education shortfall); underestimation conclusion p. 268: matches, including the sign problem."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 3,
+   "reference": "dean_2013",
+   "note": "pp. 260–261, Hypothesis 1 paragraphs 2–5 and Conclusion: binge, chronic moderate, escalation prevention (Belcher 2008, Clark 2007, Simoes 2007), vervet monkeys, self-administration: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 4,
+   "reference": "basterfield_2019",
+   "note": "pp. 748–749, Summary and Conclusions: strong statements premature because cross-sectional designs cannot separate predating weaknesses from effects of use: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 5,
+   "reference": "hart_2012",
+   "note": "p. 596, paragraph before 'PET studies investigating brain metabolism': two meanings of impairment; findings support the first, discussed as the second: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 6,
+   "reference": "potvin_2018",
+   "note": "p. 156, 3.4: Egger t=5.1, p=0.00003: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 7,
+   "reference": "simon_2010",
+   "note": "Results › First assessment, 3rd paragraph and Table 2 (composite 0.01 vs −0.31; non-significant with education as covariate): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 8,
+   "reference": "iudicello_2010",
+   "note": "Results › Global, 1st paragraph (group × time p=0.126): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 9,
+   "reference": "dean_2013",
+   "note": "pp. 266–267 (Hypothesis 6 and its Conclusion) and p. 269 item (6): duration, frequency and cumulative dose mostly unrelated; positives post hoc; twin study days of use with better scores: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 10,
+   "reference": "dean_2013",
+   "note": "p. 263 (Toomey et al., 2003): no differences in education or Full Scale IQ; no stimulant or marijuana use in the year before testing; 80% amphetamines: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 11,
+   "reference": "scott_2007",
+   "note": "p. 289 (Discussion) and p. 291 (summary): neither abstinence length nor duration of use changed effect sizes: matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 12,
+   "reference": "cao_2026",
+   "note": "p. 6, Demographic Moderators: age, education and duration of use did not predict impairment (all P ≥ .30): matches."
+  },
+  {
+   "claim_id": "cl_meth_cognition_causal",
+   "anchor_index": 13,
+   "reference": "basterfield_2019",
+   "note": "p. 745 Subgroup Analyses (Qbet 7.69, p=.006; −0.67 vs −0.09 with intervals) and p. 749 (attrition may attenuate differences): numbers match; the sensitivity sentence overstates (see finding)."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 0,
+   "reference": "mcketin_2019",
+   "note": "Table 2, upper panel: any use 2.0 (1.3–3.3), 7 studies, n 3436, I² 80: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 1,
+   "reference": "mcketin_2019",
+   "note": "Table 2, lower panel: use disorder 3.0 (1.9–4.8), 13, n 81,316, I² 90; adjusted 2.4 (1.6–3.5), 4, I² 35 (n 7648 also printed): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 2,
+   "reference": "mcketin_2019",
+   "note": "Results › 3.3, 2nd paragraph: symptoms any use 2.7, use disorder 4.3 (2.9–6.5); disorder any use 1.3 (1.0–1.9), p=0.087; use disorder 2.3 (1.2–4.7): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 3,
+   "reference": "mcketin_2019",
+   "note": "Methods › 2.7, 1st paragraph (frequency and route analyses not possible) and Discussion › 4.2 (level of use conveying risk unclear): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 4,
+   "reference": "mcketin_2019",
+   "note": "Results › 3.1, 2nd paragraph (68%; confounder shortfall), paragraph after Table 1 (too few studies for funnel plots), 4.1, 1st paragraph: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 5,
+   "reference": "arunogiri_2018",
+   "note": "Results › Dose-amount and frequency of MA use and Table 2 frequency rows: 1503 (4) vs 2503 (4); odds 3 to 11 times; McKetin 2013 OR 11.2 (5.9–21.1) described against fewer than 16 days: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 6,
+   "reference": "mcketin_2019",
+   "note": "Results › 3.1, 2nd paragraph (47 cross-sectional, 11 cohort, 1 case-control) and paragraph after Table 1 (within substance-using samples; too few studies for publication bias): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 7,
+   "reference": "mcketin_2019",
+   "note": "Discussion › 4.1, 1st, 3rd and 4th paragraphs: direction hard to infer; unadjusted likely inflated (familial risk, early trauma, polysubstance use, low socio-economic background); within-sample comparisons likely underestimate: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_association",
+   "anchor_index": 8,
+   "reference": "mcketin_2019",
+   "note": "Methods › 2.7, 3rd paragraph (post hoc) and Results › 3.3, 1st paragraph (high-quality cross-sectional; settings; cohorts [29], [39], [40]): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_dose",
+   "anchor_index": 7,
+   "reference": "arunogiri_2018",
+   "note": "Table 1 study 4 rated +++ (the only one), footnote b (+++ = 11–13); Table 2 frequency rows (4 of 8): matches. Table 1 also lists '79% injecting main route' for this cohort without saying it is a share of months."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "anchor_index": 0,
+   "reference": "glasner-edwards_2014",
+   "note": "3.2 Duration: recovery on average within a week in early studies; 16% and 17% after 1 and 3 months; nearly 40% of more than 1,000 in Thailand within 6 years: matches (the review gives the 16% and 17% as shares of people who used methamphetamine)."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "anchor_index": 1,
+   "reference": "glasner-edwards_2014",
+   "note": "3.3 Recurrence: nearly 50% readmitted in Japan's second epidemic had had it before; triggers renewed use, other substances, sleep deprivation, stressors: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "anchor_index": 2,
+   "reference": "wearne_2018",
+   "note": "Chronic methamphetamine psychosis (single paragraph): most resolve within 1 month; up to 30% up to 6 months; 10–28% beyond 6 months: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "anchor_index": 3,
+   "reference": "wearne_2018",
+   "note": "The relationship between METH-induced psychosis and schizophrenia, 1st paragraph: 38.8% at 5 years (Thai, first hospitalization); 5.0% (Chinese); 19.1% to 30% (refs 92, 93: a population-based longitudinal cohort and a Finnish register study): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "anchor_index": 5,
+   "reference": "glasner-edwards_2014",
+   "note": "3.2 refs 12 and 47 (Chen et al. 2003, 2005; first five authors shared); 5.1, 1st paragraph, last sentence without citation; Thai figure reported differently from Wearne: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "anchor_index": 7,
+   "reference": "glasner-edwards_2014",
+   "note": "3.3 Recurrence: small amounts after long abstinence; heavy alcohol without methamphetamine; sleep deprivation; psychosocial stressors; refs 62 and 64 titled on spontaneous recurrence: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "anchor_index": 8,
+   "reference": "glasner-edwards_2014",
+   "note": "3.2: refs 12 and 47 share authors; persisting cases without prior episodes or family history: the anchor matches the source (the statement's paraphrase does not; see finding)."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 0,
+   "reference": "wearne_2018",
+   "note": "Overview › Inclusion criteria and Search approach; Table 1 (12 rows, refs 105–116, n 22–285, 1990–2017); Hajebi (117) in Table 2 and text only: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 1,
+   "reference": "wearne_2018",
+   "note": "Positive symptoms › Acute, 2nd paragraph and Table 1 rows 107, 110, 111: no difference (PANSS 9 vs 33 and 21 vs 14; BPRS in 198); the text attributes the BPRS to ref 111, Table 1 to ref 107, which the anchor resolves by the table: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 2,
+   "reference": "wearne_2018",
+   "note": "Table 1 row 105 and the Chronic positive and negative paragraphs: persistent (56) = schizophrenia (54) on BPRS total and positive, both above acute (50); negative schizophrenia > persistent > acute: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 3,
+   "reference": "wearne_2018",
+   "note": "Table 1 row 115 and Positive symptoms › Chronic, 1st paragraph (53 vs 53 in table, 52 in text): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 5,
+   "reference": "wearne_2018",
+   "note": "Methodological limitations, 1st and 3rd paragraphs; Table 1 row 109 against Chronic, 3rd paragraph (opposite directions for visual and tactile hallucinations); row 115 vs text group size: matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 6,
+   "reference": "wearne_2018",
+   "note": "Negative symptoms sections and Table 1: milder in 105, 114, 115, 117; no significant difference in 107, 111, 113, 116 (116 from Table 1 only): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 7,
+   "reference": "wearne_2018",
+   "note": "Positive › Chronic, 2nd paragraph (9 weeks abstinent); Cognitive › Chronic, 2nd paragraph; Table 1 row 105 (n 252): matches."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_vs_schizophrenia",
+   "anchor_index": 8,
+   "reference": "wearne_2018",
+   "note": "Positive symptoms › Acute, 3rd paragraph: absence of thought disorder proposed; evidence called indirect and inconclusive: matches."
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "anchor_index": 0,
+   "reference": "mcketin_2019",
+   "note": "Table 2, upper panel: adjusted depression 1.3 (1.2–1.4), 6 studies, n 2684, I² 0 (refs 71, 73, 74, 76, 103, 104): matches."
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "anchor_index": 1,
+   "reference": "mcketin_2019",
+   "note": "Results › 3.6, 3rd paragraph: general population 2.0 (1.6–2.4), I² 11%; substance-using 1.1 (0.7–1.7), I² 76%: matches."
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "anchor_index": 5,
+   "reference": "mcketin_2019",
+   "note": "Table 2, lower panel (1.2, 0.5–2.7; 6; n 3584; I² 87) and 3.6, 4th paragraph (major depression in all; null driven by HIV, psychiatric inpatient, women prisoner and sober-living samples): matches."
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "anchor_index": 6,
+   "reference": "mcketin_2019",
+   "note": "3.6, 1st paragraph (all but one of the supporting surveys and cohorts measured symptoms) and 2.7, 3rd paragraph (post hoc): matches."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "anchor_index": 0,
+   "reference": "mcketin_2019",
+   "note": "Table 2, lower panel: adjusted 1.5 (1.3–1.8), 4, n 21,753, I² 0; unadjusted 2.3 (1.8–2.9), 7: matches."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "anchor_index": 1,
+   "reference": "mcketin_2019",
+   "note": "Table 2, upper panel: adjusted any use 1.7 (1.0–2.9), 4, I² 77: matches."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "anchor_index": 2,
+   "reference": "mcketin_2019",
+   "note": "Results › 3.5, 3rd paragraph: attempts 3.6 (2.2–5.9), I² 46%, 6 studies; one study of completed suicide: matches."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "anchor_index": 3,
+   "reference": "mcketin_2019",
+   "note": "3.5, 1st paragraph (AORs 1.4 and 1.5) against Table 2 and the abstract (1.7 and 1.5): matches."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "anchor_index": 4,
+   "reference": "mcketin_2019",
+   "note": "3.5, 3rd paragraph (ref 69): suicide deaths higher than expected, not significantly raised relative to opioid use, most with premorbid risk: matches."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "anchor_index": 5,
+   "reference": "mcketin_2019",
+   "note": "Discussion, 5th running paragraph: risk may be largely generic to substance use and related demographic and premorbid factors: matches."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "anchor_index": 6,
+   "reference": "mcketin_2019",
+   "note": "Abstract › Findings and Table 2: any use unadjusted 4.4 (2.4–8.2), 7, I² 84; quality 56% and 57%: matches."
+  },
+  {
+   "claim_id": "cl_meth_violence",
+   "anchor_index": 0,
+   "reference": "mcketin_2019",
+   "note": "Table 2, upper panel: unadjusted 2.2 (1.2–4.1), 10, n 30,084, I² 95; adjusted 1.4 (0.8–2.4), 6, I² 25: matches."
+  },
+  {
+   "claim_id": "cl_meth_violence",
+   "anchor_index": 1,
+   "reference": "mcketin_2019",
+   "note": "3.4, 3rd paragraph: 3.7 (3.1–4.5), I² 34%; 1.0 (0.4–2.7), I² 94%; quality 56–58% from Table 2: numbers match; 'lowest' and the locator need correcting (see finding)."
+  },
+  {
+   "claim_id": "cl_meth_violence",
+   "anchor_index": 2,
+   "reference": "mcketin_2019",
+   "note": "3.4, 1st and 3rd paragraphs; Table 1 (refs 47–51: BPRS hostility, emergency department, Add Health, sexual exploitation survey, BSI hostility); 2.7, 3rd paragraph: matches."
+  },
+  {
+   "claim_id": "cl_meth_violence",
+   "anchor_index": 3,
+   "reference": "mcketin_2019",
+   "note": "3.4, 4th paragraph and Table 1, McKetin (2014) row (same MATES cohort; severe hostility, BPRS; persisted after adjustment for concurrent other substance use): matches."
+  }
+ ],
+ "needs_source_check": [
+  {
+   "claim_id": "cl_meth_psychosis_dose",
+   "reference": "mcketin_2013",
+   "what": "Anchors 5, 6 and 8 are still ai-located: hair-analysis false abstinence 6% (subsample of the wider cohort), same-interviewer unblinded rating, Comment 6th–7th paragraphs, and whether '79%' is a share of months of use (as the statement says) or of participants (as Arunogiri's Table 1 puts it). Also check whether any test for trend across 1–15 and 16+ days is reported in any model (bears on the dose–response upgrade)."
+  },
+  {
+   "claim_id": "cl_meth_psychosis_course",
+   "reference": "bramness_2012",
+   "what": "Anchors 4 and 6 are ai-located: 'up to 25%' later primary psychosis with higher figures for methamphetamine (refs 100, 67) and 1 of 18 outcome papers with 1-year follow-up; Japanese series of stress-triggered relapse (Prevalence and clinical presentation, 4th paragraph)."
+  },
+  {
+   "claim_id": "cl_meth_depression",
+   "reference": "leung_2023",
+   "what": "Table 3 prints the Javanbakht (MSM) cohort as 1.50 (1.10–2.30), the same interval as Briere's 1.60; 1.50 is not near the log-midpoint of that interval (about 1.59), so check whether this is a typesetting error in the source or an extraction error. Confirm that the school cohort is Briere et al. (2012). Anchors 7 and 8 (ai-located): 3.46 (2.04–5.89), the twin study's drug class (Lin et al., 1996), and the post-protocol exclusion of comparisons with other drug use."
+  },
+  {
+   "claim_id": "cl_meth_suicidality",
+   "reference": "stockings_2019",
+   "what": "Anchor 7 (ai-located): suicide SMR 12.20 (4.89–30.47) and crude rate 0.20 (0.07–0.55; 6 cohorts) in Table 2."
+  },
+  {
+   "claim_id": "cl_meth_mortality",
+   "reference": "stockings_2019",
+   "what": "Anchors 4–7 (ai-located): headline ratio printed as 6.83, 6.3, 6.2 and 6.08; cause-specific crude rates and intervals; regional SMRs (4.48–10.52) and the HIV-cohort sensitivity (6.47, 4.96–8.43); search years (2008 to February 2018 plus the 2009 review for 1980–2007); standardization by age and sex only."
+  },
+  {
+   "claim_id": "cl_meth_us_trends",
+   "reference": "han_2021",
+   "what": "Anchors 5–7 (ai-located): use disorder without injection 549/397/815 thousand; deaths without opioids 3,220 to 7,051 (+119%); 85–90% of T43.6 certificates mention methamphetamine and about 6% of 2019 overdose certificates name no drug; whether '+180%' for deaths is printed by the authors or is an editors' calculation (unlabelled in the statement)."
+  }
+ ],
+ "summary": "All numbers in these eleven claims that could be checked against saved texts reproduce at their stated places (68 anchors), and the editors' calculations recomputed (Simon d values, the Iudicello p≈0.025, Han's 2015-based changes, the education gaps); no number was found wrong. The remaining problems are selective presentation and revision drift rather than arithmetic: the abstinence claim reports only the gaps that persisted or widened, the cognition-causal plain text says scores do not improve after stopping (they do, in every group; the question is improvement beyond practice) and its 'yes' side omits findings and the strongest proponent's conclusion from sources it already cites, and the psychosis claims leave out who the comparison groups were (two of the four studies behind the adjusted 2.4 compared use disorder with methamphetamine use without a disorder) and misattribute a review's statement about persistent cases. GRADE arithmetic is correct throughout, but risk of bias is applied unevenly across the three claims resting on McKetin et al. (2019): suicidality concedes the conditions for a downgrade and does not take it, and the mortality rating covers only the all-cause estimate. At the monograph level the at-a-glance box breaks §6.3 twice (a narrative-review-only claim among the largest uncertainties and a mechanism line resting on a draft narrative-review claim, a conflict with §8 the senior author must settle), the legal line is stale for Greece, and three narrative-review cards still carry AMSTAR 2. The best-established list follows the stated rule given the current ratings; the five web-read sources (McKetin 2013, Leung 2023, Stockings 2019, Han 2021, Bramness 2012) are consistent with their cards but have unchecked anchors listed for source checking."
+}

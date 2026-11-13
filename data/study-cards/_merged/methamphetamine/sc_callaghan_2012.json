@@ -1,0 +1,283 @@
+{
+ "id": "sc_callaghan_2012",
+ "substance": "methamphetamine",
+ "reference": "callaghan_2012",
+ "design": "retrospective-cohort",
+ "design_detail": "Retrospective population-based cohort from linked administrative records: all California inpatient discharge records (Office of Statewide Health Planning and Development Patient Discharge Database) linked to state death records, 1 January 1990 to 31 December 2005. People aged 30 or over were assigned by their first qualifying admission to a methamphetamine/amphetamine cohort (ICD-9 304.4, 305.7, 969.7, E854.2; n = 40,472), a cocaine cohort (304.2, 305.6, 968.5; n = 35,335) or an appendicitis cohort (540–542; n = 207,831), each excluding anyone with prior or concurrent Parkinson's disease or parkinsonism, any alcohol or other drug diagnosis at any time, or HIV. Cohorts were matched 1:1 by greedy nearest-neighbour propensity scores, and the time to Parkinson's disease (a later inpatient diagnosis, ICD-9 332.0 in any position, or Parkinson's disease as the underlying cause of death) was compared by competing-risks regression, with other deaths as the competing event and a robust variance estimator. Follow-up up to 16 years.",
+ "can_establish": "Whether people hospitalized with a methamphetamine/amphetamine-related diagnosis, and with no recorded alcohol or other drug diagnosis, later received an inpatient Parkinson's disease diagnosis more often than matched people hospitalized for appendicitis or with cocaine-related diagnoses, in California hospitals between 1990 and 2005.",
+ "cannot_establish": "That methamphetamine causes Parkinson's disease (no exposure measurement beyond a hospital code, and no data on smoking, other exposures or antipsychotic treatment); whether the coded diagnoses are idiopathic Parkinson's disease (no validation); the risk at any level of use (no dose, frequency or duration data); or the risk in people who use methamphetamine without being hospitalized, or who also have alcohol or other drug diagnoses (excluded).",
+ "sample": {
+  "n_total": 283638,
+  "n_by_group": {
+   "methamphetamine/amphetamine cohort, unmatched": 40472,
+   "cocaine cohort, unmatched": 35335,
+   "appendicitis cohort, unmatched": 207831,
+   "matched pairs, methamphetamine/amphetamine vs appendicitis": 40358,
+   "matched pairs, methamphetamine/amphetamine vs cocaine": 17696,
+   "matched pairs, cocaine vs appendicitis": 23281
+  },
+  "recruitment": "Registry: all inpatient admissions to California licensed hospitals (general acute care, acute psychiatric care, chemical dependency recovery and psychiatric health facilities), 1990–2005, linked to state death records by a probabilistic algorithm with sensitivity 0.9524 and specificity 0.9998 (p. 36, 2.1.1).",
+  "inclusion_exclusion": "Age at least 30. Methamphetamine/amphetamine cohort: an ICD-9 304.4, 305.7, 969.7 or E854.2 code in any diagnostic position, the earliest such admission being the index; no prior or concurrent Parkinson's disease or parkinsonism (332.0, 332.1, 333.0, 333.1); no alcohol or other drug code at any time; no HIV code (042, V08). The cocaine and appendicitis cohorts were defined in the same way with their own codes (p. 36, 2.3.1–2.3.3).",
+  "demographics": "Matched methamphetamine/amphetamine vs appendicitis cohorts: mean age 39.5 (SD 8.1) vs 39.1 (SD 8.6) years; 45.7% vs 44.4% women; 73.1% vs 74.2% White; mean time from index admission to the end of the study 6.15 vs 6.12 years (Table 1, p. 37). Matched methamphetamine/amphetamine vs cocaine cohorts: mean age 40.2 vs 40.2; 38.1% vs 37.6% women; 58.6% vs 58.3% White and 10.8% vs 10.8% Black (Table 2, p. 37). Before matching, the cocaine cohort was 54.1% Black against 4.7% of the methamphetamine/amphetamine cohort.",
+  "attrition": "Record linkage, so no attrition in the usual sense. The numbers excluded for alcohol, other drug or HIV codes or earlier parkinsonism are not reported. Of the 40,472 people in the methamphetamine/amphetamine cohort, 40,358 were matched to appendicitis controls and 17,696 to cocaine controls. Deaths before a Parkinson's diagnosis or the end of the study: 3,391 vs 1,510 in the matched methamphetamine/amphetamine and appendicitis cohorts, handled as competing events (Table 1). Migration out of California is not discussed.",
+  "selection_effects": "Only people whose methamphetamine/amphetamine use led to a hospital diagnosis, and who never received an alcohol or other drug code, are included: a selected, probably heavy-use subgroup (about 96% had a dependence or abuse code at the index admission, pp. 36 and 38) that leaves out everyone with polysubstance codes, a number the paper does not report. The comparison groups are also hospitalized people. Matching on the number of later admissions is meant to equalize medical contact, but it conditions on a variable measured after the index admission, up to the outcome."
+ },
+ "exposure": {
+  "measurement": "ICD-9 diagnosis codes on hospital discharge records; no self-report, toxicology or exposure measurement. ICD-9 does not distinguish methamphetamine from other amphetamines; the authors argue that most codes concern methamphetamine, which accounted for 97.8% of primary amphetamine-related admissions to publicly funded treatment in California in 1992–2005 (p. 36, 2.3.2).",
+  "dose_frequency_duration_route": "Not available: the authors state that the study cannot give the age of initiation, frequency, dose or duration of use (p. 39).",
+  "purity_known": false,
+  "polysubstance": "Handled by exclusion: anyone with any alcohol or other drug code at any time was excluded from all three cohorts. Tobacco use was not measured; the authors cite a tobacco prevalence of about 90% in people who use methamphetamine against 20% in the general population (p. 39).",
+  "abstinence_at_testing": "Not applicable (registry follow-up from the index admission)."
+ },
+ "comparison": {
+  "controls": "People aged 30 or over hospitalized for appendicitis, a population proxy chosen because appendicitis is a frequent reason for admission and, by the authors' account, unrelated to socio-economic status, Parkinson's disease or drug use disorders (p. 39); and people with cocaine-related diagnoses, a drug-control group expected to share the health effects of illicit drug use and patterns of hospital use.",
+  "matching": "1:1 greedy nearest-neighbour propensity-score matching on age, race, sex, date of index admission and number of inpatient admissions after the index admission until the outcome or the end of the study; all standardized differences after matching below 10 (largest 8.1, for number of admissions; Table 1).",
+  "unmeasured_premorbid": "Smoking (associated with lower Parkinson's disease risk), head injury, pesticide and other environmental exposures, family history, antipsychotic treatment (which can cause drug-induced parkinsonism), health insurance and access to care.",
+  "controls_other_drug_use": "Appendicitis controls had no alcohol or drug code at any time; cocaine controls had no code for alcohol or for drugs other than cocaine."
+ },
+ "outcomes": {
+  "instruments": "ICD-9 332.0 (Parkinson's disease) in any diagnostic position on an inpatient admission after the index admission, or Parkinson's disease (ICD-9 332.0, ICD-10 G20) as the underlying cause of death (p. 36, 2.2). All but one incident case, which was in the methamphetamine/amphetamine cohort, came from inpatient records (p. 38, 3.1).",
+  "validity_norms": "Not validated in this study. The authors cite positive predictive values of 0.76–0.79 for ICD-9 332.0 in administrative data, and that about 70% of people with Parkinson's disease are admitted to hospital within 6 years of diagnosis (p. 39). The unmatched appendicitis cohort's age-specific incidence (468 events in 1,369,705 person-years) was similar to the figures of a systematic review (p. 38).",
+  "operationalization": "Time to the first Parkinson's disease code or death from Parkinson's disease, with other deaths as competing events. Parkinsonism codes (332.1, 333.0, 333.1) were used only for exclusion at baseline.",
+  "n_outcomes_tested": 1,
+  "multiplicity_correction": "Not applicable: one outcome and three pairwise cohort comparisons.",
+  "assessor_blinding": "Not applicable: codes were assigned in routine care, without reference to the study."
+ },
+ "analysis": {
+  "effect_sizes": "Competing-risks hazard ratios with 95% CIs (Table 4, p. 39). Methamphetamine/amphetamine vs appendicitis (40,358 pairs): 51 vs 29 cases, HR 1.76 (1.12–2.76), p = 0.014; the abstract prints 1.12–2.75 and p = 0.017. Methamphetamine/amphetamine vs cocaine (17,696 pairs): 36 vs 15 cases, HR 2.41 (1.32–4.41), p = 0.004; the abstract prints 2.44. Cocaine vs appendicitis (23,281 pairs): 20 vs 21 cases, HR 1.04 (0.56–1.93), p = 0.80. Median age at Parkinson's diagnosis 57.2 (range 33–88) vs 63.8 (35–92) years in the methamphetamine/amphetamine and appendicitis cohorts (p = 0.015). The authors project about 21 vs 12 cases per 10,000 people followed for 10 years (p. 38). Editors' calculation: crude cumulative proportions 0.126% vs 0.072% (51 and 29 of 40,358) over a mean of about 6.1 years from the index admission to the end of the study, a difference of about 5 per 10,000; against the cocaine cohort 0.203% vs 0.085% (36 and 15 of 17,696).",
+  "covariates": "Matching variables only (age, race, sex, index date, number of later admissions); no further adjustment.",
+  "preregistration": "none",
+  "selective_reporting": "Only the Parkinson's disease outcome is reported; the parkinsonism codes used for exclusion are not analysed as outcomes. Absolute risks appear only as the authors' 10-year projection. The numbers excluded at each step are not reported.",
+  "power": "Not reported. With 51, 36 and 20 events the intervals are wide; the cocaine–appendicitis interval (0.56–1.93) does not exclude a near-doubling."
+ },
+ "interpretation_gap": {
+  "results_show": "In California hospital records, people aged 30 or over with a methamphetamine/amphetamine-related admission and no recorded alcohol or other drug diagnosis received a Parkinson's disease diagnosis more often than matched appendicitis patients (51 vs 29 among 40,358 each, HR 1.76) and than matched people with cocaine-related diagnoses (HR 2.41), and at a younger median age (57.2 vs 63.8 years against appendicitis); people with cocaine-related diagnoses did not differ from appendicitis patients (HR 1.04, wide interval). Absolute risks were small: about 0.13% vs 0.07% over about 6 years (editors' calculation).",
+  "claimed": "The abstract concludes that people who use methamphetamine/amphetamine have above-normal risk of developing Parkinson's disease (p. 35), and the discussion reads the result as support for the hypothesis, drawn from animal data, that exposure might cause enduring damage to dopamine neurones (p. 38). Gaps: (1) the data concern a selected subgroup (hospitalized, with no alcohol or other drug codes), not people who use these drugs in general, as the authors acknowledge when they limit the relevance of the findings to high-dose use (p. 39); (2) damage to dopamine neurones is a mechanism that diagnosis codes cannot test; (3) misclassification that could differ between cohorts is not addressed: antipsychotic-induced parkinsonism coded as Parkinson's disease is not considered, and the diagnoses came at younger ages in the methamphetamine/amphetamine cohort; (4) the null cocaine comparison, read as consistent with the absence of cocaine toxicity to dopamine neurones in animals (p. 39), has an interval reaching 1.93; (5) the abstract gives no absolute risk. Otherwise the discussion is careful about smoking (a bias toward the null), ascertainment and the low absolute incidence.",
+  "gap_assessment": "minor"
+ },
+ "replication": {
+  "status": "replicated",
+  "timeline": [
+   {
+    "year": 2010,
+    "event": "Preliminary California study of about 1,800 hospitalized people aged 50 or over with methamphetamine-use disorders, from the same team and records system, which this cohort extends (Callaghan et al., 2010, Movement Disorders, as described on pp. 35–36 and 38; not read)."
+   },
+   {
+    "year": 2012,
+    "event": "This cohort: HR 1.76 against appendicitis and 2.41 against cocaine; no increase with cocaine-related diagnoses."
+   },
+   {
+    "year": 2015,
+    "event": "Utah population database: higher Parkinson's disease risk with methamphetamine/amphetamine-related codes and no clear increase with cocaine-related codes, from a different team and data system",
+    "reference": "curtin_2015"
+   },
+   {
+    "year": 2017,
+    "event": "Review led by this cohort's senior author cites HR 1.76 jointly to this study and the 2010 paper, as consistent with damage in a susceptible subgroup but not proof",
+    "reference": "kish_2017"
+   }
+  ],
+  "where_it_stands": "Two record-linkage cohorts from different teams and data systems (California, this study; Utah, Curtin et al., 2015) agree in direction. Both rest on unvalidated diagnosis codes, exclude people with other substance codes, and cannot measure exposure, smoking or antipsychotic treatment. The 2010 California report shares this cohort's records system and team, so it is not independent of it."
+ },
+ "funding": {
+  "funder": "Indirect support through an institutional grant from the Ontario Ministry of Health and Long-Term Care to the Centre for Addiction and Mental Health, which helps provide salary support to scientists; the Ministry had no role in design, analysis, interpretation, writing or the decision to submit. Data from the California Office of Statewide Health Planning and Development (pp. 39–40, Role of the funding source).",
+  "declared_conflicts": "The authors declare that they have no conflict of interest (p. 40).",
+  "affiliations_note": "Centre for Addiction and Mental Health and University of Toronto (Callaghan, Sykes, Kish) and University of Arizona (Cunningham). The authors cite their own post-mortem study of people who used methamphetamine in support of the methamphetamine-specificity of the codes (Wilson et al., 1996a, p. 36), and the senior author later led a review citing this cohort (Kish et al., 2017). Recorded as a flag for closer reading, not as a reason to discount the results."
+ },
+ "what_would_settle_it": "A cohort with measured methamphetamine exposure (amount, duration, route) and smoking, antipsychotic and head-injury histories, in which Parkinson's disease is confirmed clinically, ideally with dopamine-transporter imaging, and drug-induced parkinsonism is separated from idiopathic disease, with comparison groups recruited outside hospital; or, as a first step, chart validation of the coded cases in the existing California and Utah cohorts.",
+ "risk_of_bias": {
+  "instrument": "ROBINS-E",
+  "domains": [
+   {
+    "domain": "Confounding",
+    "judgment": "high",
+    "note": "Matched on age, race, sex, index date and number of later admissions only; smoking (whose omission biases toward the null), head injury, environmental exposures and family history are unmeasured."
+   },
+   {
+    "domain": "Measurement of the exposure",
+    "judgment": "high",
+    "note": "Hospital diagnosis codes only, which do not separate methamphetamine from amphetamine and carry no dose or duration; people with unrecorded use may sit in the comparison cohorts."
+   },
+   {
+    "domain": "Selection of participants",
+    "judgment": "some-concerns",
+    "note": "Hospitalized people with no other substance codes, the numbers excluded unreported; matching on admissions counted after the index admission conditions on a post-exposure variable."
+   },
+   {
+    "domain": "Post-exposure interventions",
+    "judgment": "some-concerns",
+    "note": "Antipsychotic treatment after the index admission, which can cause drug-induced parkinsonism, is not recorded or considered."
+   },
+   {
+    "domain": "Missing data",
+    "judgment": "some-concerns",
+    "note": "Outcome ascertainment is limited to California inpatient admissions and deaths; Parkinson's disease managed only as outpatients, and migration out of California, are missed."
+   },
+   {
+    "domain": "Measurement of the outcome",
+    "judgment": "high",
+    "note": "Unvalidated codes (positive predictive value 0.76–0.79 in other studies), with possible differential misclassification: drug-induced parkinsonism, more neurological assessment in the drug cohorts, younger age at diagnosis in the exposed cohort."
+   },
+   {
+    "domain": "Selection of the reported result",
+    "judgment": "low",
+    "note": "A single outcome and all three pairwise comparisons reported."
+   }
+  ],
+  "overall": "high",
+  "reasoning": "The direction of the association is consistent across both comparison cohorts and with the Utah cohort, but coded exposure and outcome, unmeasured confounders and possible differential misclassification leave the size of any true association uncertain, and some of these biases could create an excess rather than hide one. The study may be cited for the association in this selected hospitalized population, with its absolute risks; not for causation, and not for people who use methamphetamine in general."
+ },
+ "key_findings": [
+  {
+   "finding": "Linked California inpatient and death records, 1990–2005, people aged 30 or over followed for up to 16 years: 40,472 people with a methamphetamine/amphetamine-related diagnosis (ICD-9 304.4, 305.7, 969.7, E854.2), 35,335 with a cocaine-related diagnosis and 207,831 with appendicitis.",
+   "page": "pp. 35–36",
+   "locator": "Abstract (p. 35); Materials and methods › 2.1.1 and 2.3.1–2.3.3 (p. 36)"
+  },
+  {
+   "finding": "Everyone with any alcohol or other drug code at any time, an HIV code, or prior or concurrent Parkinson's disease or parkinsonism was excluded from each cohort; the numbers excluded are not reported.",
+   "page": "p. 36",
+   "locator": "Materials and methods › 2.3.1–2.3.3"
+  },
+  {
+   "finding": "Outcome: a later inpatient admission with ICD-9 332.0 in any diagnostic position, or Parkinson's disease as the underlying cause of death; all but one incident case (in the methamphetamine/amphetamine cohort) were identified from inpatient records.",
+   "page": "pp. 36, 38",
+   "locator": "Materials and methods › 2.2 (p. 36); Results › 3.1 (p. 38)"
+  },
+  {
+   "finding": "Cohorts matched 1:1 by propensity score on age, race, sex, date of index admission and number of inpatient admissions after the index admission; all standardized differences after matching were below 10.",
+   "page": "pp. 36–38",
+   "locator": "Materials and methods › 2.4.1 (p. 36); Tables 1–3, matched rows (pp. 37–38)"
+  },
+  {
+   "finding": "Methamphetamine/amphetamine vs appendicitis (40,358 matched pairs): 51 vs 29 Parkinson's disease cases, competing-risks HR 1.76 (95% CI 1.12–2.76), p = 0.014; 3,391 vs 1,510 deaths; mean time from index admission to the end of the study 6.15 vs 6.12 years.",
+   "page": "pp. 37–39",
+   "locator": "Table 1, matched rows (p. 37); Results › 3.1.1 (p. 38); Table 4 (p. 39)",
+   "note": "The abstract (p. 35) prints the interval as 1.12–2.75 and p = 0.017."
+  },
+  {
+   "finding": "Median age at Parkinson's disease diagnosis was 57.2 years (range 33–88) in the methamphetamine/amphetamine cohort and 63.8 (35–92) in the appendicitis cohort (Mann–Whitney p = 0.015); 58.1 vs 60.4 years against the cocaine cohort (p = 0.69).",
+   "page": "p. 37",
+   "locator": "Tables 1 and 2, matched rows"
+  },
+  {
+   "finding": "Methamphetamine/amphetamine vs cocaine (17,696 matched pairs): 36 vs 15 cases, HR 2.41 (95% CI 1.32–4.41), p = 0.0042 (p = 0.004 in Table 4).",
+   "page": "pp. 37–39",
+   "locator": "Table 2, matched rows (p. 37); Results › 3.1.2 (p. 38); Table 4 (p. 39)",
+   "note": "The abstract prints HR 2.44 with the same interval."
+  },
+  {
+   "finding": "Cocaine vs appendicitis (23,281 matched pairs): 20 vs 21 cases, HR 1.04 (95% CI 0.56–1.93), p = 0.80.",
+   "page": "pp. 38–39",
+   "locator": "Table 3, matched rows and Results › 3.1.3 (p. 38); Table 4 (p. 39)"
+  },
+  {
+   "finding": "The authors translate the HR into about 21 Parkinson's disease cases per 10,000 people with methamphetamine/amphetamine-related admissions followed for 10 years, against about 12 per 10,000 in the comparison population.",
+   "page": "p. 38",
+   "locator": "Discussion, 1st paragraph",
+   "note": "Editors' check: the figures are reproduced if the mean time from index admission to the end of the study (6.15 and 6.12 years) is used as follow-up for everyone, which ignores the earlier end of follow-up for the people who died."
+  },
+  {
+   "finding": "About 96% of the unmatched methamphetamine/amphetamine cohort received a single code for dependence or abuse at the index admission (the paper does not say what codes the other 4% received); the authors suggest the findings may be limited to high-dose use and may not apply to therapeutic doses of amphetamines.",
+   "page": "pp. 36, 39",
+   "locator": "Results, 1st paragraph (p. 36, continuing on p. 38); Discussion, 6th and 7th paragraphs (p. 39)"
+  },
+  {
+   "finding": "The outcome codes were not validated; the authors cite positive predictive values of 0.76–0.79 for ICD-9 332.0 in other administrative data, and acknowledge that differential ascertainment between cohorts cannot be excluded.",
+   "page": "p. 39",
+   "locator": "Discussion, 5th paragraph"
+  },
+  {
+   "finding": "Smoking was not measured; the authors argue that the higher tobacco use in people who use methamphetamine would bias the appendicitis comparison toward the null, and that the cocaine comparison addresses this.",
+   "page": "p. 39",
+   "locator": "Discussion, 4th paragraph"
+  },
+  {
+   "finding": "The three matched comparisons use different subsets of people: only 17,696 of the 40,472 people in the methamphetamine/amphetamine cohort (43.7%) were matched to cocaine controls, against 40,358 matched to appendicitis. The cocaine-matched subset has fewer women (38.1% vs 45.7%), more Black participants (10.8% vs 4.7%) and a longer mean time from index admission to the end of the study (7.68 vs 6.15 years).",
+   "page": "p. 37",
+   "locator": "Tables 1 and 2, matched rows",
+   "note": "The hazard ratios against appendicitis (1.76) and against cocaine (2.41) therefore come from different subsets of the methamphetamine/amphetamine cohort (editors' reading); the paper does not discuss this."
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The hazard ratio against appendicitis is reported with a 95% CI of 1.12–2.76 and p = 0.014 in the Results and Table 4, but 1.12–2.75 and p = 0.017 in the abstract.",
+   "page": "pp. 35, 38–39",
+   "consequence": "Minor; secondary sources that quote the abstract (for example Kish et al., 2017) carry the abstract's figures."
+  },
+  {
+   "issue": "The hazard ratio against cocaine is 2.44 in the abstract but 2.41 in the Results and Table 4, with the same interval (1.32–4.41).",
+   "page": "pp. 35, 38–39",
+   "consequence": "Minor; the Results and Table 4 figure should be cited."
+  },
+  {
+   "issue": "In Table 1 the matched methamphetamine/amphetamine cohort has 29,940 White members, more than the 29,578 in the unmatched cohort of which it is a subset, and its four race counts sum to 40,808 rather than 40,358; the printed 73.1% corresponds to 29,490.",
+   "page": "p. 37",
+   "consequence": "Probably transposed digits (29,490); the percentages are consistent, so the balance check is unaffected."
+  },
+  {
+   "issue": "The numbers of people excluded for alcohol, other drug or HIV codes, or for earlier parkinsonism, are not reported, and there is no flow diagram.",
+   "page": "p. 36",
+   "consequence": "How selected the analysed cohorts are cannot be judged; in the Utah cohort about 7 in 10 people with a methamphetamine/amphetamine code were excluded on similar grounds (Curtin et al., 2015)."
+  },
+  {
+   "issue": "The method behind the 10-year projection (about 21 vs 12 per 10,000) is not stated.",
+   "page": "p. 38",
+   "consequence": "It appears to treat the mean time from index admission to the end of the study as follow-up for everyone, ignoring deaths (3,391 vs 1,510), so the absolute figures are approximate."
+  },
+  {
+   "issue": "The alcohol and other-drug exclusion applies to codes recorded at any time, including after the index admission, so cohort membership depends in part on what happened during follow-up; the number of people removed this way is not reported.",
+   "page": "p. 36",
+   "consequence": "People with more later admissions had more chances to receive an exclusion code, and the number of later admissions is also a matching variable, so the exclusion could make the cohorts differ in ways the matching does not address; the direction of any resulting bias cannot be judged from the report (editors' reasoning)."
+  },
+  {
+   "issue": "The Discussion supports appendicitis as a comparison group unrelated to socio-economic status with a single citation (Poikolainen et al., 1985) whose title refers to children, while the cohorts are aged 30 or over.",
+   "page": "pp. 39–40",
+   "consequence": "That appendicitis in adults is unrelated to socio-economic status, and so can stand in for the general adult population, is assumed rather than shown."
+  },
+  {
+   "issue": "The paper describes a competing-risks analysis with a robust variance estimator (the crrSC R package) but does not name the model or say whether the hazard ratios are cause-specific or subdistribution hazards.",
+   "page": "p. 36",
+   "consequence": "Editors' background knowledge, not in the paper: crrSC fits subdistribution-hazard (Fine–Gray) models, so the ratios would describe the cumulative incidence of a coded Parkinson's disease diagnosis when deaths are more frequent in the drug cohorts (3,391 vs 1,510 against appendicitis), not the rate among survivors, and should not be read as plain rate ratios."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI reader 5 (first reader, PDFs)",
+  "first_pass_on": "2026-10-16",
+  "source_read": "PDF pp. 35–40 (PDFs/Methamphetamine/Callaghan_2012_ParkinsonRiskHospitalized.pdf)",
+  "checked_by": "AI readers 10 and 11 (card check against the PDF) and the AI adjudicator",
+  "checked_on": "2026-10-17",
+  "disagreements": [
+   {
+    "field": "reporting_issues[5] (added)",
+    "first_pass": "(not on the first-pass card)",
+    "reviewer": "Reader 10 (missed): the exclusion applies at any time (p. 36, 2.3.1-2.3.3) also removed people with alcohol or other-drug codes recorded after the index admission; the numbers removed are not reported and the direction of bias is unknown.",
+    "resolution": "Confirmed in 2.3.1-2.3.3 (p. 36): the alcohol and other-drug criterion is worded at any time, while the Parkinson's disease criterion is limited to prior or concurrent codes. Added as a reporting issue; the card's key finding 1 already says at any time but not the consequence."
+   },
+   {
+    "field": "reporting_issues[6] (added)",
+    "first_pass": "(not on the first-pass card)",
+    "reviewer": "Reader 10 (missed): appendicitis as a population proxy rests on one citation (Poikolainen et al., 1985) whose title concerns children (Discussion 3rd paragraph, p. 39; reference list, p. 40).",
+    "resolution": "Confirmed: the argument is in the Discussion (p. 39) and the reference list (p. 40) gives the title as acute appendicitis not associated with social class among children. Added as a reporting issue."
+   },
+   {
+    "field": "key_findings[12] (added)",
+    "first_pass": "(not on the first-pass card)",
+    "reviewer": "Reader 10 (missed): only 17,696 of 40,472 (43.7%) were matched to cocaine controls, and that subset differs from the one matched to appendicitis (38.1% vs 45.7% women; 10.8% vs 4.7% Black; 7.68 vs 6.15 years).",
+    "resolution": "Recomputed 17,696/40,472 = 43.7% and read the matched rows of Tables 1 and 2 (p. 37): the percentages and means are as stated. Added as a key finding because the hazard ratios are compared across cohorts in the paper and on the card."
+   },
+   {
+    "field": "reporting_issues[7] (added)",
+    "first_pass": "(not on the first-pass card)",
+    "reviewer": "Reader 10 (missed): type of hazard ratio, 2.4.2 (p. 36): crrSC fits Fine-Gray subdistribution hazards (editors' background knowledge; the paper does not name the model); with more competing deaths in the drug cohorts these describe cumulative incidence, not rates among survivors.",
+    "resolution": "Confirmed that 2.4.2 names only a competing-risks analysis with a robust variance estimator and the crrSC package, with no model type, and that the death counts are 3,391 vs 1,510 (Table 1). Added as a reporting issue with the model identification marked as the editors' background knowledge; left to the senior author to confirm."
+   },
+   {
+    "field": "key_findings[9].finding",
+    "first_pass": "had a dependence or abuse code, rather than a poisoning code, at the index admission",
+    "reviewer": "Reader 10 (note on a confirmed finding): the Results say about 96% received a single code for dependence or abuse at the index admission (pp. 36 and 38); rather than a poisoning code is the card's inference, as the remaining 4% are not described.",
+    "resolution": "Confirmed on p. 36 (Results, 1st paragraph, continuing on p. 38: a single ICD-9 code for meth/amphetamine dependence or abuse at the index admission) and p. 39 (Discussion: an inpatient diagnosis of abuse or dependence). Neither passage says that anyone had a poisoning code, so the contrast is removed and the other 4% are stated as not described."
+   }
+  ]
+ }
+}

@@ -1,0 +1,300 @@
+{
+ "id": "sc_ossiander_2014",
+ "substance": "cross-cutting",
+ "reference": "ossiander_2014",
+ "design": "registry",
+ "design_detail": "Descriptive analysis of the literal cause-of-death text on death certificates (SuperMICAR files of the Washington State Department of Health) for the 7,817 poisoning deaths of Washington State residents in 2003–2010: ICD-10 underlying cause X40–X49, X60–X69, X85–X90 or Y10–Y19, all intents, drugs and other substances, with 42 deaths from complications of medical care excluded. The text of Part I, Part II and the how-the-injury-occurred box was combined, parsed into words and phrases, spelling-corrected with a module built for the study and matched to a drug-word list (537 words) built by manual adjudication; each drug word was given an ICD-10 injury code and a category (prescription, illicit, either, over-the-counter, alcohol, nonspecific, common, disease, unknown). Outcomes: counts of deaths naming each substance, co-mentions, counts by underlying-cause code, by intent and by injury code, and age-specific and age-adjusted (US 2000 standard) rates by sex and year. No toxicology, no validation of the text processing, no statistical tests. A methods paper ('Practice of Epidemiology').",
+ "can_establish": "Which substances certifiers in Washington State named on poisoning death certificates in 2003–2010, how often, in which combinations and under which ICD-10 codes, and therefore how much substance detail ICD codes alone would have lost (for example, oxycodone, morphine, hydrocodone and 'opiate' all fall under T40.2).",
+ "cannot_establish": "Whether the named substances caused the deaths (a word anywhere in the cause-of-death text, Part II or the injury description counted); how complete certifiers' naming was (no toxicology); how accurate the text processing was (no error rate or second coder); whether a drug had been prescribed to the person (categories are by type of drug, so methadone and morphine count as prescription drugs whatever their source); or anything outside Washington State, whose certificates named a specific drug far more often than the national average (93% against 75% in 2008–2010, cited from ref 28).",
+ "sample": {
+  "n_total": 7817,
+  "n_by_group": {
+   "unintentional": 5850,
+   "suicide": 1461,
+   "homicide": 11,
+   "undetermined intent": 495
+  },
+  "recruitment": "Registry: all deaths of Washington State residents in 2003–2010 in the Washington State Department of Health death data, with the SuperMICAR text, which the state began using in 2003 (pp. 884–885).",
+  "inclusion_exclusion": "Included: underlying cause in the ICD-10 poisoning categories X40–X49, X60–X69, X85–X90 and Y10–Y19, all intents, poisoning by drugs and by other substances such as alcohol and carbon monoxide. Excluded: complications of medical or surgical care (Y40–Y59, 42 deaths), deaths classified as due to drug or alcohol dependence, and poisonings from adverse effects of drugs in therapeutic use (Methods, 1st paragraph, p. 885; Results, 1st paragraph, p. 886).",
+  "demographics": "Median age 46 years for deaths naming a prescription drug, 43 for an illicit drug, 43 for both and 45 for neither (p. 887). Age and sex appear only as rates in Figures 2–5. Washington State population 6,126,885 in 2003 and 6,724,540 in 2010 (p. 886).",
+  "attrition": "Not applicable (complete registrations).",
+  "selection_effects": "One state whose certificates usually name a specific drug (93% of drug poisoning certificates in 2008–2010, as cited from ref 28); the results depend on what certifiers wrote, which the author notes may not be consistent across counties or states (p. 892). Deaths whose underlying cause was coded to drug or alcohol dependence are outside the 7,817."
+ },
+ "exposure": {
+  "measurement": "How a substance entered the count, and who decided: the certifier writes the cause-of-death text; with SuperMICAR, vital statistics staff key in the text verbatim without making coding decisions, and the program generates the multiple- and underlying-cause ICD codes under WHO rules (Methods, 3rd paragraph, p. 885). For this study the author combined the text of Part I, Part II and the injury description, so a substance named anywhere in these fields counted as named, or 'involved', for that death, once per death (pp. 885–886; Table 1 footnote). The injury codes in Tables 3–5 are the author's assignment of one ICD code to each drug word (p. 886). No toxicology data were used, and what was tested at death is not reported.",
+  "polysubstance": "Many certificates named more than one substance; each was counted once per death (Table 1 footnote), and co-mentions are tabulated for the 10 most named substances (Table 2). Under ICD rules, a death with drugs of different categories in Part I is coded X44 (p. 887), and two drugs with the same code written on one line receive a single code (p. 891).",
+  "abstinence_at_testing": "Not applicable."
+ },
+ "comparison": {
+  "controls": "The certificate text compared with what the ICD-10 codes could show for the same deaths (Tables 3 and 5). No external reference.",
+  "matching": "Not applicable.",
+  "unmeasured_premorbid": "Not applicable (counts of deaths).",
+  "controls_other_drug_use": "Not applicable."
+ },
+ "outcomes": {
+  "instruments": "Counts of deaths naming each substance (Table 1), co-mention counts (Table 2), the most named substances by underlying-cause code (Table 3), by intent (Table 4) and by injury code (Table 5); age-specific and age-adjusted death rates per 100,000 by sex and year for the five most named substances and for prescription, illicit, both or neither (Figures 2–5). SAS 9.2 and R 2.12.2; word lists and code on the author's GitHub (not read).",
+  "validity_norms": "The text processing was not validated (no comparison with manual review, no error rate); misspellings were frequent, the 537 drug words appearing in 442 misspelled forms (p. 891).",
+  "operationalization": "Named or 'involved' = the word appears in the certificate text. Prescription = a drug normally obtained through a prescription or used in a clinic; illicit = normally obtained on the street and usually illegal; either = may denote both, such as 'opiate' (Appendix Table 1, p. 894). In Tables 3–5 'opiate' was counted only when no specific opiate was named.",
+  "n_outcomes_tested": null,
+  "multiplicity_correction": "Not applicable: descriptive counts and rates; no tests or intervals.",
+  "assessor_blinding": "Not applicable; unmatched words were adjudicated by hand by the study team (p. 886)."
+ },
+ "analysis": {
+  "effect_sizes": "Descriptive counts; no confidence intervals. Methadone was named for 2,149 deaths (27.5%), alcohol 1,446, opiate 1,240 (15.9%; 676 of these also named a specific opiate), cocaine 1,174, oxycodone 1,047, methamphetamine 681, morphine 648, diphenhydramine 574, hydrocodone 563, heroin 539 (Table 1). At least one prescription-category drug was named in 5,454 deaths (70%), an illicit drug in 2,162 (28%), and a term that could be either in a further 198 (3%). Age-adjusted rates for deaths naming only prescription drugs were 3–5 times those for deaths naming only illicit drugs or both (Figure 4, no values printed). Methadone was named in 894 X42 and 1,042 X44 deaths, oxycodone in 281 and 584 (Table 3). T40.2 (other opioids) covered 2,725 deaths, most often naming oxycodone, morphine, hydrocodone, opiate, hydromorphone and codeine (overlapping counts); T40.4 covered 521 (fentanyl 198, tramadol 153, propoxyphene 141) (Table 5).",
+  "covariates": "None; age-adjusted rates by the direct method, US 2000 standard population (p. 886).",
+  "preregistration": "none",
+  "preregistration_detail": "No protocol is mentioned; exempt from institutional review board review because only nonliving subjects were involved (p. 886).",
+  "selective_reporting": "Figures give rates without numbers or intervals; the category assigned to each drug word is not printed (the lists are on GitHub, not read); how negations or qualifying context in the text (for example a drug ruled out) were handled is not described.",
+  "power": "Not applicable (complete registrations)."
+ },
+ "interpretation_gap": {
+  "results_show": "In Washington State poisoning deaths in 2003–2010, the certificate text named specific substances that ICD codes merge: 21 of the 25 most named, by the author's count, share an injury code with other substances, and opioids such as oxycodone, morphine and hydrocodone can only be separated in the text. Methadone was the most named substance, and certificates named prescription-category drugs in 70% of deaths and illicit drugs in 28%.",
+  "claimed": "The conclusion that prescription drugs 'were involved in more deaths than were illicit drugs' in both sexes and at all ages (abstract, p. 884; Discussion, p. 893) depends on classifying methadone (2,149 deaths) and morphine (648) as prescription drugs whatever their source; the author concedes that morphine is also a metabolite of heroin and was counted without qualification (p. 892), and the Discussion counts diphenhydramine among the most named prescription drugs while describing it as an over-the-counter ingredient (p. 891). 'Involved' means named anywhere in the certificate text, including Part II and the injury description, not judged causal. The Results' suggestion that prescription drugs 'were not replacing illicit drugs' (p. 887) is read from aggregate rate trends. The abstract's statement that only 4 of the 25 most named substances have unique ICD codes leaves out carbon monoxide, which has its own code in Table 5. The accuracy of the text processing is assumed rather than measured.",
+  "gap_assessment": "minor"
+ },
+ "replication": {
+  "status": "n/a",
+  "timeline": [
+   {
+    "year": 2003,
+    "event": "Washington State begins using SuperMICAR, which stores the certifier's text alongside the ICD codes (p. 884)."
+   },
+   {
+    "year": 2013,
+    "event": "Warner et al. (Academic Forensic Pathology; ref 28): state variation in naming drugs on certificates, cited for Washington's 93% against 75% nationally in 2008–2010 and fewer than 50% in some states."
+   },
+   {
+    "year": 2016,
+    "event": "Trinidad et al., NCHS report on using literal text from the death certificate to characterize drug involvement (named on this project's drug-deaths list as report R4; not read)."
+   },
+   {
+    "year": 2026,
+    "event": "Garnett et al., NCHS report for 2017–2023 (card sc_garnett_2026): national drug-specific overdose counts from the same three certificate text fields searched by NCHS software, because ICD-10 codes are too broad to track specific drugs.",
+    "reference": "garnett_2026"
+   }
+  ],
+  "where_it_stands": "A methods demonstration rather than a finding to replicate. The approach later became routine at national level: NCHS counts drugs named in the same three certificate fields (card sc_garnett_2026). Like this paper, such counts are minimums of drugs written on certificates, not of drugs that caused the deaths, and they depend on testing and certification practice; where many certificates name no drug, the text shows less, as the author notes (p. 892)."
+ },
+ "funding": {
+  "funder": "Washington State Department of Health; no external funding (Acknowledgments, p. 893).",
+  "declared_conflicts": "Conflict of interest: none declared (Acknowledgments, p. 893).",
+  "affiliations_note": "Sole author at the Washington State Department of Health, Olympia, whose death records are the data; the word lists and code are public on the author's GitHub (p. 886). Recorded as context, not a reason to discount."
+ },
+ "what_would_settle_it": "Validation of text-derived drug counts against independent toxicology and investigation files for a random sample of the same deaths, reporting how often a named drug was detected and judged contributory and how often a detected drug went unnamed, with a second coder to measure text-processing errors; and classification of methadone, morphine and other opioids by source (prescribed to the person, diverted, illicit) from investigation records rather than by type of drug.",
+ "risk_of_bias": {
+  "instrument": "JBI-prevalence",
+  "domains": [
+   {
+    "domain": "1. Sample frame appropriate to the target population",
+    "judgment": "yes",
+    "note": "All poisoning deaths of Washington State residents, 2003–2010, by underlying cause."
+   },
+   {
+    "domain": "2. Participants sampled appropriately",
+    "judgment": "yes",
+    "note": "A census of registered deaths."
+   },
+   {
+    "domain": "3. Adequate sample size",
+    "judgment": "yes",
+    "note": "7,817 deaths; counts for rarely named substances are small but are not the paper's focus."
+   },
+   {
+    "domain": "4. Study subjects and setting described in detail",
+    "judgment": "partial-yes",
+    "note": "Counts by intent and the state population are given; age and sex appear only as rates in figures, and the certifier system and toxicology practice in Washington are not described."
+   },
+   {
+    "domain": "5. Data analysis with sufficient coverage of the identified sample",
+    "judgment": "yes",
+    "note": "All 7,817 records were processed; only the 42 deaths from complications of medical care were excluded, by design."
+   },
+   {
+    "domain": "6. Valid methods for identifying the condition",
+    "judgment": "partial-yes",
+    "note": "Transparent text matching with public code, but not validated against manual review or toxicology; the handling of negations is not described; any mention counts as involvement."
+   },
+   {
+    "domain": "7. Condition measured in a standard, reliable way across participants",
+    "judgment": "partial-yes",
+    "note": "The same algorithm was applied to every record, but what certifiers write varies, for example between heroin and morphine and in the use of scene evidence across counties (p. 892)."
+   },
+   {
+    "domain": "8. Appropriate statistical analysis",
+    "judgment": "partial-yes",
+    "note": "Counts and directly age-adjusted rates are appropriate, but no intervals are given, figures print no values, and a few counts disagree slightly between text and tables."
+   },
+   {
+    "domain": "9. Adequate response rate, or low rate managed",
+    "judgment": "not-applicable",
+    "note": "Records, not respondents."
+   }
+  ],
+  "overall": "moderate",
+  "reasoning": "JBI-prevalence fits a count of deaths from certificate data (round brief, certificate studies). The counts of substances named on certificates are a census of the text with low risk of bias for what certifiers wrote, given unvalidated but transparent processing. The prescription-against-illicit comparison carries more risk, because the categories are by type of drug (methadone, morphine and apparently diphenhydramine count as prescription drugs) and 'involved' means mentioned, not causal; hence moderate overall. Citable for: which substances Washington certificates named in 2003–2010 and how often; that ICD-10 injury codes group many drugs (T40.2 alone covered 2,725 deaths, most often naming oxycodone, morphine, hydrocodone, hydromorphone, codeine or unspecified 'opiate') and that deaths naming methadone or oxycodone were coded X44 more often than X42; that literal text recovers this detail. Not citable for: drugs as causes of death, how drugs were obtained, or the national picture."
+ },
+ "key_findings": [
+  {
+   "finding": "There were 7,859 poisoning deaths of Washington State residents in 2003–2010: 5,850 unintentional, 1,461 suicides, 11 homicides, 495 of undetermined intent and 42 from complications of medical or surgical care, which were excluded, leaving 7,817. The state population was 6,126,885 in 2003 and 6,724,540 in 2010.",
+   "page": "p. 886",
+   "locator": "Results, 1st paragraph"
+  },
+  {
+   "finding": "Deaths were included by underlying cause in the ICD-10 poisoning categories X40–X49, X60–X69, X85–X90 and Y10–Y19 (all intents, drugs and other substances); deaths classified as due to drug or alcohol dependence and poisonings from adverse effects of drugs in therapeutic use were not included.",
+   "page": "p. 885",
+   "locator": "Methods, 1st paragraph"
+  },
+  {
+   "finding": "Who wrote and who coded: the certifier writes the cause-of-death text; with SuperMICAR, vital statistics staff key the text in verbatim without making coding decisions, and the program produces the multiple- and underlying-cause ICD codes under WHO rules. The text is stored for each Part I line, for Part II and for the injury description, which the study combined and parsed.",
+   "page": "p. 885",
+   "locator": "Methods, 2nd to 4th paragraphs; Figure 1"
+  },
+  {
+   "finding": "Text processing: words were spelling-corrected with a module built for the study and matched against a drug-word list and a nondrug-word list built by manual adjudication (every word was adjudicated by hand for the first year of data); by the end there were 537 drug words and 4,335 nondrug words, and the drug words appeared in 442 misspelled forms; brand names were converted to generic names; each drug word was given an ICD-10 injury code and a category.",
+   "page": "pp. 885–886, 891",
+   "locator": "Methods, 4th and 5th paragraphs; Discussion, 9th paragraph (p. 891)"
+  },
+  {
+   "finding": "Substances named most often (number of deaths; each substance counted once per death): methadone 2,149 (27.5%), alcohol 1,446, opiate 1,240, cocaine 1,174, oxycodone 1,047, methamphetamine 681, morphine 648, diphenhydramine 574, hydrocodone 563, heroin 539, citalopram 533, diazepam 468, alprazolam 412, amitriptyline 397, acetaminophen 395, carbon monoxide 394, hydromorphone 269, fluoxetine 243, trazodone 227, cyclobenzaprine 220, venlafaxine 220, quetiapine 199, fentanyl 198, sertraline 192, bupropion 169.",
+   "page": "p. 886",
+   "locator": "Results, 2nd paragraph; Table 1"
+  },
+  {
+   "finding": "'Opiate' was written on 1,240 certificates (15.9%), and 676 of these also named a specific opiate; the only illicit drugs among the 25 most named substances were cocaine, methamphetamine and heroin.",
+   "page": "pp. 886–887",
+   "locator": "Results, 2nd paragraph",
+   "note": "Table 5 gives 543, not 564 (1,240 − 676), deaths naming 'opiate' without a specific opiate (reporting issue 1)."
+  },
+  {
+   "finding": "Most frequent co-mentions (Table 2): opiate with cocaine 333 deaths, methadone with cocaine 320, alcohol with opiate 299, methadone with alcohol 278, opiate with heroin 265, methadone with oxycodone 239, alcohol with oxycodone 233, alcohol with cocaine 217, opiate with morphine 206, methadone with diazepam 204; each of the 10 most frequent pairs includes methadone, alcohol, cocaine or opiate.",
+   "page": "p. 887",
+   "locator": "Table 2 (printed landscape); Results, 2nd paragraph",
+   "note": "The ranking of pairs is the editors' reading of Table 2, which lists for each of the 10 most named substances its 10 most frequent partners."
+  },
+  {
+   "finding": "At least one prescription-category drug was named in 5,454 deaths (70%), an illicit drug in 2,162 (28%), and in a further 198 (3%) a term that could be either, such as 'opiate'. Age-adjusted rates for deaths naming only prescription drugs were 3–5 times those for deaths naming only illicit drugs or both; prescription-drug death rates rose in 2003–2008 and then began to fall while illicit-drug death rates stayed constant, which the author reads as prescription drugs not replacing illicit drugs.",
+   "page": "p. 887",
+   "locator": "Results, 5th paragraph; Figure 4 (p. 889)",
+   "note": "The categories follow Appendix Table 1, by type of drug rather than by how it was obtained; methadone and morphine count as prescription drugs and diphenhydramine appears among them (reporting issue 2). Figure 4 prints no values."
+  },
+  {
+   "finding": "Women had lower rates than men for each of the five most named substances except oxycodone, where rates were similar, and lower rates for deaths naming only illicit drugs, both or neither, while prescription-drug death rates were as high among women as among men. Rates peaked at ages 40–49, except that among women the rates for oxycodone and alcohol were highest at 50–59 and the prescription-drug rate slightly higher at 50–59. Median age: 46 years (prescription), 43 (illicit), 43 (both), 45 (neither).",
+   "page": "p. 887",
+   "locator": "Results, 3rd, 5th and 6th paragraphs; Figures 2, 4 and 5 (pp. 888–889)",
+   "note": "Comparisons rest on rates drawn in figures without values, intervals or tests; in Figure 4 the men's prescription-drug line lies somewhat above the women's in most years (editors' reading of the figure)."
+  },
+  {
+   "finding": "Rates of deaths naming methadone or cocaine peaked in 2006; deaths naming oxycodone may have started to decline in 2009; the methamphetamine rate stayed fairly constant.",
+   "page": "p. 887",
+   "locator": "Results, 4th paragraph; Figure 3 (p. 888)"
+  },
+  {
+   "finding": "Underlying-cause coding: deaths naming methadone were coded X44 (unintentional, other and unspecified drugs) more often than X42 (unintentional, narcotics and psychodysleptics), 1,042 against 894, and those naming oxycodone 584 against 281, because X44 is used when drugs from different categories are named in Part I. X42 had 2,308 deaths and X44 2,708; X64 (suicide, other and unspecified drugs) had 650, most often naming diphenhydramine (141) and acetaminophen (138).",
+   "page": "pp. 887, 890",
+   "locator": "Results, 7th paragraph (p. 887); Table 3 (p. 890)"
+  },
+  {
+   "finding": "By intent (Table 4): unintentional deaths most often named methadone (1,941), alcohol (1,181), cocaine (1,085) and oxycodone (870); suicides named carbon monoxide (288), alcohol (196), acetaminophen (175) and diphenhydramine (148); deaths of undetermined intent named methadone (121), alcohol (69), cocaine (53) and oxycodone (48), and shared their top six substances with unintentional deaths while also including diphenhydramine and acetaminophen.",
+   "page": "pp. 887, 891",
+   "locator": "Results, 8th paragraph; Table 4 (p. 891)"
+  },
+  {
+   "finding": "Within injury codes (the author's assignment of codes to words; Table 5), T40.2 'other opioids' covered 2,725 deaths, of which the most commonly named substances were oxycodone (1,047), morphine (648), hydrocodone (563), opiate without a specific opiate (543), hydromorphone (269) and codeine (148), counts that overlap (they sum to 3,218, editors' sum); T40.4 covered 521 (fentanyl 198, tramadol 153, propoxyphene 141); T42.4 benzodiazepines 1,311 (diazepam 468, alprazolam 412); T43.2 other antidepressants 1,516; T45.0 680 (diphenhydramine 574, doxylamine 94). T40.1 (heroin, 539), T40.3 (methadone, 2,149), T40.5 (cocaine, 1,175 deaths, 1,174 naming cocaine) and T51.0 (ethanol, 1,446) each correspond to one substance.",
+   "page": "p. 892",
+   "locator": "Table 5; Results, 9th paragraph (p. 890)"
+  },
+  {
+   "finding": "ICD coding conventions lose detail: two drugs with the same code written on one line of the certificate receive a single code (for example fentanyl and tramadol, both T40.4), while one drug named on two lines is coded twice, so code counts cannot tell two drugs from one drug named twice.",
+   "page": "pp. 884, 891",
+   "locator": "Introduction, 2nd paragraph (p. 884); Discussion, 5th paragraph (p. 891)"
+  },
+  {
+   "finding": "Context cited from another study (ref 28), not this study's data: specific drugs were named on 93% of drug poisoning death certificates in Washington State in 2008–2010 against 75% nationally, and on fewer than 50% in some states. The author notes that heroin and morphine were counted without qualification although morphine is a heroin metabolite, and that certifiers' use of scene evidence may not be consistent across counties or states.",
+   "page": "p. 892",
+   "locator": "Discussion, 10th paragraph"
+  },
+  {
+   "finding": "The author concludes that in Washington State in 2003–2010 prescription drugs were associated with more poisoning deaths than illicit drugs, in both sexes and at all ages, and that many of the most named drugs share ICD codes with other drugs and cannot be identified from the codes alone.",
+   "page": "pp. 892–893",
+   "locator": "Discussion, 12th and 13th paragraphs"
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "'Opiate' was named on 1,240 certificates, 676 of which also named a specific opiate, leaving 564 that named only 'opiate'; Table 5 counts 'opiate' 543 times under the rule that it counted only when no specific opiate was named.",
+   "page": "pp. 887, 892",
+   "consequence": "A difference of 21 deaths that the paper does not explain; which words counted as a specific opiate is not defined in either place."
+  },
+  {
+   "issue": "The Discussion lists diphenhydramine among the most often named prescription drugs and calls its presence a surprise, while describing it as an ingredient of many over-the-counter allergy drugs and sleep aids; Appendix Table 1 has a separate over-the-counter category, and the category given to each drug word is not printed.",
+   "page": "pp. 891, 894",
+   "consequence": "The prescription total (5,454, 70%) may include drugs available without prescription; cite the prescription-against-illicit comparison with this caveat."
+  },
+  {
+   "issue": "The abstract and Discussion say only 4 of the 25 most named substances (methadone, alcohol, cocaine, heroin) have an ICD code that identifies them; carbon monoxide, 16th in Table 1 with 394 deaths, has its own code in Table 5 (T58).",
+   "page": "pp. 884, 890, 892",
+   "consequence": "Minor: the point stands (most of the top substances share codes), but 20 rather than 21 of the 25 lack a substance-specific code if carbon monoxide is counted, as Table 1 counts it."
+  },
+  {
+   "issue": "The Discussion says oxycodone's code T40.2 is shared 'with all opioids other than opium, methadone, and heroin', but the Introduction and Table 5 place fentanyl, tramadol and propoxyphene under T40.4.",
+   "page": "pp. 884, 891–892",
+   "consequence": "Minor; use Table 5 for which opioids share which code."
+  },
+  {
+   "issue": "The Results say the top drugs named among suicides were acetaminophen and diphenhydramine, but Table 4 lists carbon monoxide (288) and alcohol (196) before acetaminophen (175) and diphenhydramine (148); alcohol is counted as a drug elsewhere (Table 2).",
+   "page": "pp. 887, 891",
+   "consequence": "Minor wording: carbon monoxide was the substance most often named on suicide certificates, alcohol second."
+  },
+  {
+   "issue": "The paper never reports how many of the 7,817 certificates named no specific drug: Appendix Table 1 has a 'nonspecific' word category and Figures 4–5 show a group naming neither a prescription nor an illicit drug only as rates. The only completeness figure, specific drugs named on 93% of Washington drug-poisoning certificates in 2008–2010 against 75% nationally, is cited from another study (ref 28).",
+   "page": "pp. 889, 892, 894",
+   "consequence": "How much of Washington's certificate text could not be resolved to a drug is not measured here; cite the 93% as second-hand. The point that text cannot recover a drug that was never written rests on the author's reasoning (p. 892), not on a count."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent)",
+  "first_pass_on": "2026-11-01",
+  "source_read": "PDF (version of record), Am J Epidemiol 179(7):884–894, all 11 pages; Tables 1–5 and Appendix Table 1 checked on rendered pages (Table 2 and the text of p. 887 are printed landscape and were read from rotated 220-dpi renders); Figures 2–5 print rates without values, which were not extracted; no supplement.",
+  "disagreements": [
+   {
+    "field": "key_findings[12].finding",
+    "first_pass": "Within injury codes (the author's assignment of codes to words; Table 5), T40.2 'other opioids' covered 2,725 deaths, naming oxycodone (1,047), morphine (648), hydrocodone (563), opiate without a specific opiate (543), hydromorphone (269) and codeine (148); T40.4 covered 521 (fentanyl 198, tramadol 153, propoxyphene 141); T42.4 benzodiazepines 1,311 (diazepam 468, alprazolam 412); T43.2 other antidepressants 1,516; T45.0 680 (diphenhydramine 574, doxylamine 94). T40.1 (heroin, 539), T40.3 (methadone, 2,149), T40.5 (cocaine, 1,175 deaths, 1,174 naming cocaine) and T51.0 (ethanol, 1,446) each correspond to one substance.",
+    "reviewer": "AI reader 327 (second reader) (confirmed, with notes; and missed for the claim wording): Table 5 lists only the most commonly named substances per code, and the six T40.2 counts overlap (sum 3,218 against 2,725 deaths), so they are not exhaustive; 'the author's assignment of codes to words' is the most plausible reading but not stated for Table 5.",
+    "resolution": "Accepted (rendered p. 892, Table 5 title and column 'Most Commonly Named Substance(s)'): finding now says 'most commonly named' and that the counts overlap. 'The author's assignment of codes to words' kept: the Methods state that the author assigned an ICD injury code to each drug word (p. 886)."
+   },
+   {
+    "field": "analysis.effect_sizes",
+    "first_pass": "Descriptive counts; no confidence intervals. Methadone was named for 2,149 deaths (27.5%), alcohol 1,446, opiate 1,240 (15.9%; 676 of these also named a specific opiate), cocaine 1,174, oxycodone 1,047, methamphetamine 681, morphine 648, diphenhydramine 574, hydrocodone 563, heroin 539 (Table 1). At least one prescription-category drug was named in 5,454 deaths (70%), an illicit drug in 2,162 (28%), and a term that could be either in a further 198 (3%). Age-adjusted rates for deaths naming only prescription drugs were 3–5 times those for deaths naming only illicit drugs or both (Figure 4, no values printed). Methadone was named in 894 X42 and 1,042 X44 deaths, oxycodone in 281 and 584 (Table 3). T40.2 (other opioids) covered 2,725 deaths naming oxycodone, morphine, hydrocodone, opiate, hydromorphone and codeine; T40.4 covered 521 (fentanyl 198, tramadol 153, propoxyphene 141) (Table 5).",
+    "reviewer": "AI reader 327 (second reader) (missed): the six T40.2 terms read as exhaustive.",
+    "resolution": "Accepted: 'most often naming' and 'overlapping counts' added."
+   },
+   {
+    "field": "risk_of_bias.reasoning",
+    "first_pass": "JBI-prevalence fits a count of deaths from certificate data (round brief, certificate studies). The counts of substances named on certificates are a census of the text with low risk of bias for what certifiers wrote, given unvalidated but transparent processing. The prescription-against-illicit comparison carries more risk, because the categories are by type of drug (methadone, morphine and apparently diphenhydramine count as prescription drugs) and 'involved' means mentioned, not causal; hence moderate overall. Citable for: which substances Washington certificates named in 2003–2010 and how often; that ICD-10 injury codes group many drugs (T40.2 alone covered oxycodone, morphine, hydrocodone, hydromorphone, codeine and unspecified 'opiate', 2,725 deaths) and that deaths naming methadone or oxycodone were coded X44 more often than X42; that literal text recovers this detail. Not citable for: drugs as causes of death, how drugs were obtained, or the national picture.",
+    "reviewer": "AI reader 327 (second reader) (missed): same point.",
+    "resolution": "Accepted: same wording in the citable statement."
+   },
+   {
+    "field": "reporting_issues[5]",
+    "first_pass": "(none)",
+    "reviewer": "AI reader 327 (second reader) (missed): the paper never gives its own count of deaths whose text named no specific drug; the only completeness figure (93% against 75%) is cited from ref 28 (p. 892); this matters for the claim that text cannot recover a drug that was never written.",
+    "resolution": "Accepted (text of pp. 889 and 894 and rendered p. 892): added as reporting issue 6."
+   },
+   {
+    "field": "risk_of_bias.overall",
+    "first_pass": "moderate",
+    "reviewer": "AI reader 327 (second reader): agree (JBI-prevalence, overall moderate).",
+    "resolution": "Readers agree on the overall judgment; card set to ai-checked."
+   },
+   {
+    "field": "interpretation_gap.gap_assessment",
+    "first_pass": "minor",
+    "reviewer": "AI reader 327 (second reader): agree (minor).",
+    "resolution": "No change."
+   }
+  ],
+  "checked_by": "AI reader 327 (blind second reading) and AI reader 347 (adjudication)",
+  "checked_on": "2026-11-01"
+ }
+}

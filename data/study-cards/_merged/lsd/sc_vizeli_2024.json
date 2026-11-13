@@ -1,0 +1,296 @@
+{
+ "id": "sc_vizeli_2024",
+ "substance": "lsd",
+ "reference": "vizeli_2024",
+ "design": "prospective-cohort",
+ "design_detail": "Pooled analysis of the raw data of nine double-blind crossover laboratory studies of LSD at the University Hospital Basel (2014-2023), eight of them with a placebo session: 213 healthy volunteers, 297 LSD-alone sessions and 189 placebo sessions (sessions combining LSD with another substance excluded). Two studies gave several doses to the same people. The paper asks which characteristics measured before dosing predict the acute response. The predictors vary between people and were not randomized, so the analysis is observational; the paper does not say whether session order was randomized in the source studies. Each of 19 predictors was related to each of 29 response variables (differences between the LSD and the placebo session) in linear mixed models with a random intercept for participant, adjusted for the dose given, with standardized coefficients, semi-partial R2 and Benjamini-Hochberg correction across 551 tests; LASSO models ranked predictors; a sensitivity analysis kept one dose per study (the dose closest to 100 µg; 213 sessions). All coefficients are in Figure 1 (an image) and Supplementary Table S4; the main text gives directions and significance only.",
+ "can_establish": "Which characteristics measured before dosing were associated, at a given dose, with the size of LSD's acute subjective and autonomic effects relative to placebo in healthy volunteers mostly lying in bed in a quiet hospital room with one investigator present (some sessions with MRI scanning), and which predictors penalized regression ranked as most important.",
+ "cannot_establish": "How large any association other than dose is (the main text gives no coefficients, intervals or variance shares, and the figure holding them could not be viewed); whether mood or personality cause the differences; anything about people with psychiatric disorders or about settings other than a hospital room (setting barely varied: an MRI scan was the only setting variable); or whether sex matters (significant for several outcomes in the main analysis; women's less positive experience not significant in the sensitivity analysis, and the temperature difference not reported there).",
+ "sample": {
+  "n_total": 213,
+  "n_by_group": {
+   "women": 108,
+   "men": 105,
+   "LSD-alone sessions": 297,
+   "placebo sessions": 189,
+   "studies with a placebo session (of nine)": 8,
+   "sessions in the one-dose-per-study sensitivity analysis": 213
+  },
+  "recruitment": "Volunteers recruited from the University of Basel campus into nine studies, each registered at ClinicalTrials.gov (NCT01878942, NCT02308969, NCT03019822, NCT03321136, NCT03604744, NCT04227756, NCT04516902, NCT04558294, NCT04865653), eight previously published (Methods and materials › Study design, 1st paragraph; Subjects, 1st paragraph).",
+  "inclusion_exclusion": "Healthy participants; the exclusion criteria are given only in the supplement, which was not read.",
+  "demographics": "Age 25-64 (mean 32, SD 9); 108 women; body weight 70 (SD 12) kg, range 50-104. Previous hallucinogen experience is a predictor; its distribution is in a supplementary figure (not read).",
+  "attrition": "Not reported. Missing predictor and response data were imputed in ways described in the supplement (Table S2, not read).",
+  "selection_effects": "Healthy, screened campus volunteers, with exclusion criteria not stated in the main text; the authors note that psychedelic studies may attract people high in openness. People with mental disorders, for whom the predictors matter most in therapy, are outside the sample."
+ },
+ "exposure": {
+  "measurement": "Characteristics measured before dosing (19 predictors): sex, age, body weight, the dose given (also the covariate), CYP2D6 genetic activity score, number of previous hallucinogen experiences, whether the session included an MRI scan, mood before intake on the Adjective Mood Rating Scale (AMRS: performance-related activity, general inactivation, extraversion, introversion, general well-being, emotional excitability, anxiety) and personality on the NEO Five-Factor Inventory (neuroticism, extraversion, openness to experience, agreeableness, conscientiousness). Details are in the supplement (Methods and materials › Predictor variables, 1st paragraph).",
+  "dose_frequency_duration_route": "Study conditions only: one oral dose of LSD base per session, 25, 50, 100 or 200 µg nominal, as gelatin capsules or as a drinking solution in ethanol; analytically confirmed amounts 26-197 µg, except in the first two studies, where each person's dose was estimated from the area under their plasma LSD curve. Session conditions: participants mostly in a bed in a quiet hospital room with a single investigator present; music was mostly present but neither restricted nor recorded; some sessions included MRI scanning (Methods and materials › Study drug, 1st paragraph; Discussion, 8th paragraph).",
+  "purity_known": true,
+  "polysubstance": "Sessions combining LSD with another substance were excluded from the analysis; drug-use screening and abstinence rules are in the supplement (not read).",
+  "abstinence_at_testing": "Not described in the main text."
+ },
+ "comparison": {
+  "controls": "The placebo session of the same person in eight of nine studies; responses are LSD-minus-placebo differences (peak change from placebo for vital signs; area under the effect-time curve, 0-11.5 h, for ratings). Study #8 had no placebo session, and the main text does not say how its differences were formed. For the predictors, the comparison is between people.",
+  "matching": "Each predictor adjusted for dose only; predictors were not adjusted for one another except in the LASSO models and in supplementary full models (not read). Random intercept for participant; no term for study.",
+  "unmeasured_premorbid": "Expectations, motivation and the music played were not measured. Differences between studies (years 2014-2023, capsule or solution, co-administration designs, MRI) are not modelled except through the MRI predictor.",
+  "controls_other_drug_use": "Not applicable (within-person placebo)."
+ },
+ "outcomes": {
+  "instruments": "Visual analogue scales (including any, good and bad drug effect); the 5D-ASC total, dimensions and subscales (among them oceanic boundlessness, anxious ego dissolution, visionary restructuralization, auditory alteration, vigilance reduction, experience of unity, spiritual experience, blissful state, insightfulness, disembodiment, impaired control and cognition, changed meaning of percepts, elementary imagery, audio-visual synesthesia, anxiety); the MEQ30 total and subscales (mystical, positive mood, transcendence of time and space); peak change in mean arterial pressure, heart rate and body temperature; and plasma LSD area under the curve (0 to infinity). Ratings by the participant (Methods and materials › Response variables, 1st paragraph).",
+  "validity_norms": "Validated instruments routinely used in this laboratory; norms are not needed for within-person differences.",
+  "operationalization": "All responses are continuous LSD-minus-placebo differences. 'Bad drug effect' is a visual analogue rating that, the authors note, covers any negative state including nausea; challenging experiences are represented by 5D-ASC anxious ego dissolution, anxiety and impaired control and cognition. No thresholds are used.",
+  "n_outcomes_tested": 29,
+  "multiplicity_correction": "Benjamini-Hochberg false-discovery-rate correction across all 551 tests (19 predictors by 29 responses; Figure 1 legend); the text describes associations that were significant after correction.",
+  "assessor_blinding": "Double-blind; the authors acknowledge that blinding is a recognized problem with psychoactive substances and that expectations may influence subjective effects (Discussion, 7th paragraph)."
+ },
+ "analysis": {
+  "effect_sizes": "Not given in the main text: standardized coefficients, corrected p values and semi-partial R2 are in Figure 1 (an image; the figure image was not viewable in this reading) and Supplementary Table S4 (not read). The text reports direction and significance after correction, and for LASSO the number of predictors selected per response (12 on average, range 8-14) and the number of responses for which dose had the largest coefficient (21 of 29). No sizes can be quoted for any non-dose predictor from the main text.",
+  "covariates": "The dose given (in every model except those of dose); random intercept per participant.",
+  "preregistration": "none",
+  "preregistration_detail": "The nine source studies are registered (numbers above); the pooled analysis is not described as preregistered.",
+  "selective_reporting": "All 551 adjusted tests are said to be shown in Figure 1 and listed in Table S4; supplementary full models and restricted cubic-spline dose models are described as giving largely the same results (not read). The summary statements on sex and body weight rest on the sensitivity analysis for sex, while the other conclusions rest on the main analysis.",
+  "power": "No power calculation; 297 sessions from 213 people."
+ },
+ "interpretation_gap": {
+  "results_show": "At a given LSD dose, in healthy volunteers in a hospital room, higher general well-being rated just before dosing went with stronger subjective effects (the Discussion's summary; significant for nearly every scale, the anxiety-type scales included, with directions per scale only in Figure 1); anxiety rated just before dosing went with higher 5D-ASC anxiety and, with emotional excitability and general inactivation, with heart rate; openness went with more oceanic boundlessness, spiritual experience, insightfulness and MEQ30 mystical and positive-mood scores; extraversion with more visual and auditory alteration; previous hallucinogen experience with a smaller overall altered state and less anxious ego dissolution; lower CYP2D6 activity with higher plasma LSD and more anxious ego dissolution; older age with more bad drug effect and higher body weight with less; women with smaller increases in good drug effect, experience of unity, insightfulness, MEQ30 positive mood and body temperature. Neuroticism, agreeableness and conscientiousness showed no significant association with any effect. Dose was the strongest predictor of everything except body temperature. Sizes are not reported in the text.",
+  "claimed": "The abstract ends that sex and body weight “were not significant factors in influencing the drug experience”, which contradicts the main analysis (sex: four subjective outcomes and body temperature; body weight: bad drug effect) and rests, for sex, on the sensitivity analysis. The Discussion infers that acute effects are profoundly influenced by pre-drug disposition, and that LSD's autonomic effects stem mainly from psychological arousal rather than a direct cardiostimulant action, causal readings of between-person associations whose sizes the text does not give; it then speculates about pharmacological preparation and about the order and size of doses across sessions before psychedelic therapy, none of which this analysis tested (not reproduced here). The Results say MRI sessions went with more impaired control and cognition, while the Discussion says MRI went with more elementary imagery and no more anxiety.",
+  "gap_assessment": "substantial"
+ },
+ "replication": {
+  "status": "not-attempted",
+  "timeline": [
+   {
+    "year": 2012,
+    "event": "Studerus et al. pooled psilocybin laboratory studies to find predictors of response; this paper compares its findings (extraversion-like traits and visual effects, emotional excitability; but not well-being or anxiety before dosing, which did not predict psilocybin response there)."
+   },
+   {
+    "year": 2018,
+    "event": "Haijen et al., prospective online study: feeling prepared and ready before use predicted fewer challenging experiences, which this paper calls consistent with its pre-dose anxiety finding.",
+    "reference": "haijen_2018"
+   },
+   {
+    "year": 2021,
+    "event": "Aday et al. systematic review of pre-drug predictors, cited here.",
+    "reference": "aday_2021"
+   },
+   {
+    "year": 2021,
+    "event": "Studerus et al., the same approach for MDMA in 194 volunteers from the same laboratory, sharing one source study (NCT03019822); this paper says 'set' was far less influential for MDMA.",
+    "reference": "studerus_2021"
+   },
+   {
+    "year": 2024,
+    "event": "This analysis."
+   }
+  ],
+  "where_it_stands": "The largest pooled laboratory analysis of predictors of the LSD response found for this page. It comes from the laboratory that ran all the source studies and shares authors and one study with the MDMA analysis. The direction of its findings on pre-dose mood and openness agrees with the psilocybin analysis it cites and, for pre-dose anxiety, with Haijen (2018), but no independent laboratory has repeated it, and the sizes must be taken from Supplementary Table S4 before any claim states one."
+ },
+ "funding": {
+  "funder": "Swiss National Science Foundation (SNSF, grant No. P5R5PM_214281 to P. Vizeli), stated in the Author contributions section.",
+  "declared_conflicts": "M.E. Liechti is a consultant for Mind Medicine, Inc.; the remaining authors declare no competing interests. Knowhow and data associated with this work and owned by the University Hospital Basel were licensed by Mind Medicine, Inc. after study completion; the statement says Mind Medicine had no role in financing, planning or conducting the study or the publication. The data are not readily available because they are owned by the hospital and licensed to Mind Medicine; requests go to M.E. Liechti.",
+  "affiliations_note": "Clinical Pharmacology and Toxicology, University Hospital Basel, and the Departments of Pharmaceutical Sciences and of Psychology, University of Basel; the authors ran the source studies. P. Vizeli and E. Studerus analysed the data; P. Vizeli and M.E. Liechti obtained funding and wrote the paper."
+ },
+ "what_would_settle_it": "A preregistered multi-site study with placebo-controlled sessions in several settings (laboratory, clinic, supervised naturalistic) that measures mood, expectations and personality before dosing, reports effect sizes with intervals in the main text, and tests whether mood and personality improve prediction beyond dose in data not used to build the model; and randomized trials that change pre-dose preparation to test whether the mood association is causal.",
+ "risk_of_bias": {
+  "instrument": "ROBINS-E",
+  "domains": [
+   {
+    "domain": "Bias due to confounding",
+    "judgment": "some-concerns",
+    "note": "Each predictor was adjusted only for dose; correlated predictors (mood scales, personality traits, age and experience) were not adjusted for one another in the inferential models; study-level differences were not modelled, and the MRI predictor is entangled with the studies that used MRI. Adequate for prediction, not for the causal wording of the Discussion."
+   },
+   {
+    "domain": "Bias arising from measurement of the exposure",
+    "judgment": "some-concerns",
+    "note": "Validated questionnaires before dosing and genotype; but in the first two studies the dose was estimated from each person's plasma LSD area under the curve, which is also a response variable."
+   },
+   {
+    "domain": "Bias in selection of participants into the study (or into the analysis)",
+    "judgment": "some-concerns",
+    "note": "Healthy campus volunteers with exclusion criteria not in the main text and possibly high openness; entry did not depend on the response."
+   },
+   {
+    "domain": "Bias due to post-exposure interventions",
+    "judgment": "low",
+    "note": "Standardized sessions; sessions with co-administered substances excluded. Music was not controlled but was present in most sessions."
+   },
+   {
+    "domain": "Bias due to missing data",
+    "judgment": "some-concerns",
+    "note": "Provisional: imputation methods and amounts are in the supplement (not read), and one study had no placebo session although every response is defined as a difference from placebo."
+   },
+   {
+    "domain": "Bias arising from measurement of the outcome",
+    "judgment": "some-concerns",
+    "note": "Self-ratings in sessions where blinding is acknowledged to be a problem; expectations, which may relate to pre-dose mood, could shape both predictor and outcome ratings."
+   },
+   {
+    "domain": "Bias in selection of the reported result",
+    "judgment": "some-concerns",
+    "note": "All tests are said to be displayed, but the main text reports no magnitudes, and the summary on sex and body weight relies on the sensitivity analysis while the other conclusions rely on the main analysis."
+   }
+  ],
+  "overall": "some-concerns",
+  "reasoning": "As for the MDMA analysis by the same group (sc_studerus_2021) and the editors' card for Schmid et al. (2016), the question is answered by between-person comparisons that were not randomized, so ROBINS-E is used even though the source studies were double-blind and placebo-controlled. Measurement before dosing is good and correction for multiple tests is applied; the concerns are adjustment for dose only, no study-level term, a partly circular dose estimate in two studies, an unexplained placebo difference for one study, and the absence of effect sizes from the text. The source can be cited for the direction of associations in healthy volunteers in a hospital room: higher pre-dose well-being with stronger subjective effects, pre-dose anxiety with more acute anxiety, openness with more mystical-type and oceanic effects, previous hallucinogen experience with less anxious ego dissolution, and lower CYP2D6 activity with higher blood levels; sizes need Supplementary Table S4. It should not be cited for causal effects of mood or personality, for patients, for settings outside a laboratory, or as showing that sex and body weight do not matter."
+ },
+ "key_findings": [
+  {
+   "finding": "Design facts: nine crossover studies (2014-2023), 213 healthy volunteers (108 women; age 25-64, mean 32), 297 LSD-alone and 189 placebo sessions; one oral LSD dose per session of 25 to 200 µg nominal (26-197 µg confirmed), as study conditions; participants mostly in a bed in a quiet hospital room with one investigator present, music mostly playing but not recorded.",
+   "page": "PMC HTML",
+   "locator": "Methods and materials › Study design, Subjects and Study drug, 1st paragraphs; Discussion, 8th paragraph"
+  },
+  {
+   "finding": "Analysis: 19 predictors by 29 responses (551 tests), each response the difference between the LSD and placebo sessions; mixed models with a random intercept per participant, adjusted for dose; Benjamini-Hochberg correction; N = 297 sessions in Figure 1.",
+   "page": "PMC HTML",
+   "locator": "Methods and materials › Response variables, 1st paragraph; Statistical analyses, 1st to 3rd paragraphs; Fig. 1 legend"
+  },
+  {
+   "finding": "Dose was the strongest predictor of every LSD effect except body temperature, most strongly of plasma LSD, VAS any drug effect and the 5D-ASC total; LASSO selected dose for all 29 responses (12 predictors per response on average, range 8-14) and dose had the largest coefficient for 21. Body temperature was predicted only by sex (women had smaller changes) and by emotional excitability before dosing.",
+   "page": "PMC HTML",
+   "locator": "Results, 2nd and 7th paragraphs"
+  },
+  {
+   "finding": "General well-being rated on the AMRS before dosing was the second strongest predictor of subjective effects, significant for all of them except VAS bad drug effect, 5D-ASC changed meaning of percepts and MEQ30 positive mood; strongest for the 5D-ASC total, VAS good drug effect and oceanic boundlessness; in LASSO it ranked first for good drug effect, vigilance reduction, spiritual experience and blissful state.",
+   "page": "PMC HTML",
+   "locator": "Results, 4th and 7th paragraphs",
+   "note": "By the text, the scales significantly associated with pre-dose well-being include the 5D-ASC anxious ego dissolution and anxiety scales (every subjective scale except three), and the Discussion (1st paragraph) says subjective effects were more pronounced with higher pre-dose well-being, and also with higher pre-dose anxiety; the direction scale by scale is only in Figure 1 (not viewable). The text therefore does not show that a better mood before dosing went with a less challenging session."
+  },
+  {
+   "finding": "Anxiety rated before dosing predicted higher 5D-ASC anxiety during the session and ranked second in LASSO for 5D-ASC anxiety, heart rate and mean arterial pressure; emotional excitability, general inactivation and anxiety before dosing predicted heart rate; performance-related activity, emotional excitability and extraversion before dosing predicted several subjective effects; state introversion predicted nothing.",
+   "page": "PMC HTML",
+   "locator": "Results, 4th and 7th paragraphs"
+  },
+  {
+   "finding": "Personality: openness predicted 5D-ASC oceanic boundlessness, spiritual experience and insightfulness and the MEQ30 total, mystical and positive-mood scores (first in LASSO for mystical and positive mood); extraversion predicted the 5D-ASC total, visionary restructuralization, auditory alteration and audio-visual synesthesia; neuroticism, agreeableness and conscientiousness showed no significant association with any LSD effect.",
+   "page": "PMC HTML",
+   "locator": "Results, 5th and 7th paragraphs"
+  },
+  {
+   "finding": "More previous hallucinogen experience predicted a smaller 5D-ASC total and less anxious ego dissolution, vigilance reduction, disembodiment, impaired control and cognition, changed meaning of percepts and MEQ30 transcendence of time and space.",
+   "page": "PMC HTML",
+   "locator": "Results, 3rd paragraph; Discussion, 1st paragraph"
+  },
+  {
+   "finding": "CYP2D6 activity score was the only predictor of plasma LSD besides dose; lower activity also predicted a higher 5D-ASC total and more anxious ego dissolution, including anxiety and impaired control and cognition.",
+   "page": "PMC HTML",
+   "locator": "Results, 2nd paragraph; Discussion, 1st paragraph"
+  },
+  {
+   "finding": "Age was positively and body weight negatively associated with VAS bad drug effect; women had smaller increases in VAS good drug effect, experience of unity, insightfulness and MEQ30 positive mood. The Discussion says women's slightly less positive experience was not significant in the one-dose-per-study sensitivity analysis; it does not say whether women's smaller temperature change held there.",
+   "page": "PMC HTML",
+   "locator": "Results, 2nd and 3rd paragraphs; Discussion, 1st paragraph"
+  },
+  {
+   "finding": "Bad drug effects were generally small, smaller than good drug effects, and included any negative state such as nausea; 5D-ASC anxious ego dissolution and anxiety were not associated with age; neuroticism showed no pronounced influence.",
+   "page": "PMC HTML",
+   "locator": "Discussion, 2nd paragraph"
+  },
+  {
+   "finding": "Sessions with MRI scanning: the Results report more impaired control and cognition; the Discussion reports more elementary imagery and no more anxiety.",
+   "page": "PMC HTML",
+   "locator": "Results, 2nd paragraph; Discussion, 2nd paragraph",
+   "note": "The two sections disagree; see reporting issues."
+  }
+ ],
+ "reporting_issues": [
+  {
+   "issue": "The abstract and the closing summary say sex and body weight had no significant influence on the drug experience, but the main analysis reports significant associations of sex with VAS good drug effect, experience of unity, insightfulness, MEQ30 positive mood and body temperature, and of body weight with VAS bad drug effect; the text says only that women's slightly less positive experience lost significance in the sensitivity analysis (Discussion, 1st paragraph), and says nothing there about the temperature difference or about body weight.",
+   "page": "PMC HTML, Abstract; Results, 2nd and 3rd paragraphs; Discussion, 1st and 9th paragraphs",
+   "consequence": "Do not cite the paper as showing no sex or weight differences; the main analysis found modest ones."
+  },
+  {
+   "issue": "The abstract describes nine double-blind, placebo-controlled crossover studies, while the Methods say eight of nine were placebo-controlled (study #8 had no placebo session); yet every response is defined as a difference from the placebo session, and the main text does not say how study #8 was handled.",
+   "page": "PMC HTML, Abstract; Methods and materials › Study design, 1st paragraph; Response variables, 1st paragraph; Discussion, 7th paragraph",
+   "consequence": "Responses from study #8 rest on an unexplained substitute for placebo values (presumably imputed; supplement not read)."
+  },
+  {
+   "issue": "For the first two studies the dose was estimated from each participant's plasma LSD area under the curve, and plasma LSD area under the curve is also a response variable predicted by dose.",
+   "page": "PMC HTML, Methods and materials › Study drug, 1st paragraph; Response variables, 1st paragraph",
+   "consequence": "The dose-plasma association is partly built in for those studies; dose-response claims should rest on the analytically confirmed studies."
+  },
+  {
+   "issue": "The MRI finding differs between sections: more impaired control and cognition in the Results, more elementary imagery and no more anxiety in the Discussion.",
+   "page": "PMC HTML, Results, 2nd paragraph; Discussion, 2nd paragraph",
+   "consequence": "The effect of MRI scanning cannot be stated from the text; check Supplementary Table S4."
+  },
+  {
+   "issue": "The main text gives no coefficients, intervals, p values or semi-partial R2 for any predictor; all are in Figure 1 (an image) and Supplementary Table S4.",
+   "page": "PMC HTML, Results, 1st paragraph; Fig. 1 legend",
+   "consequence": "Claims can state directions from the text, but sizes require the supplement; 'important predictor' cannot be weighed from the article."
+  },
+  {
+   "issue": "Clustering was modelled with a random intercept per participant only, with no term for study, although dose, formulation, MRI use and era differ between studies; the same group's MDMA analysis (Studerus et al., 2021) used a random intercept for study.",
+   "page": "PMC HTML, Methods and materials › Statistical analyses, 2nd paragraph",
+   "consequence": "Study-level differences may be attributed to predictors that vary by study (MRI, dose, age mix)."
+  },
+  {
+   "issue": "The Discussion says that pre-dose well-being and pre-dose anxiety were not found as predictors with psilocybin in Studerus et al. (2012), whereas Haijen et al. (2018, Introduction) and Aday et al. (2021, Results), both read in this session, describe Studerus 2012 as finding that feeling psychologically well, or low psychological distress, before the drug predicted peak or oceanic experiences.",
+   "page": "PMC HTML, Discussion, 2nd paragraph",
+   "consequence": "Secondary accounts of the psilocybin comparison conflict (the measures compared may differ); read Studerus 2012 itself before stating that LSD and psilocybin differ in this respect."
+  }
+ ],
+ "verification": {
+  "status": "ai-checked",
+  "first_pass_by": "AI (Claude, reading agent)",
+  "first_pass_on": "2026-10-31",
+  "source_read": "PMC full text PMC11374807 (DOI 10.1038/s41398-024-03074-9 confirmed on the page): abstract, all sections, figure legends, author contributions (with the funding statement), data availability, ethics and competing-interest statements, article notes and the reference list; the article has no tables; Figures 1 and 2 (all coefficients and LASSO rankings) are images and the figure images were not viewable in this reading, so no magnitudes were extracted; the supplementary Word file (Tables S1 to S4, Figures S1 to S3) was not opened. No correction, comment or reply is linked on the page.",
+  "checked_by": "AI reader 269 (blind second reading) and AI reader 281 (adjudication)",
+  "checked_on": "2026-11-01",
+  "disagreements": [
+   {
+    "field": "key_findings.8.finding",
+    "first_pass": "The sex differences were not significant in the one-dose-per-study sensitivity analysis.",
+    "reviewer": "AI reader 269 (second reader), key finding 8 confirmed as worded, with a note: the text says only that the slightly less positive experience of women was not significant in the sensitivity analysis, and nothing about the smaller temperature change.",
+    "resolution": "Accepted after checking Discussion, 1st paragraph; the finding now says exactly what the text says."
+   },
+   {
+    "field": "reporting_issues[0].issue",
+    "first_pass": "only the sex findings are said to lose significance in the sensitivity analysis.",
+    "reviewer": "AI reader 269 (second reader), reporting issue 0 confirmed with a precision note: the card's 'only the sex findings are said to lose significance' slightly generalizes the text.",
+    "resolution": "Accepted after checking Discussion, 1st paragraph."
+   },
+   {
+    "field": "reporting_issues[1].page",
+    "first_pass": "PMC HTML, Abstract; Methods and materials › Study design, 1st paragraph; Response variables, 1st paragraph",
+    "reviewer": "AI reader 269 (second reader), missed: Discussion, 7th paragraph ('all but one of the analyzed studies included a placebo session') is a second place where the paper states the 8 of 9 fact.",
+    "resolution": "Accepted after checking Discussion, 7th paragraph (the limitations paragraph that begins 'First'); locator extended."
+   },
+   {
+    "field": "key_findings[3].note (added)",
+    "first_pass": "(not on the card)",
+    "reviewer": "AI reader 269 (second reader), missed: implication of key finding 3 not drawn: pre-drug well-being was significantly associated with every subjective scale except bad drug effect, changed meaning of percepts and MEQ30 positive mood, which includes anxious ego dissolution and anxiety, so a better mood went with stronger effects generally rather than a less challenging session; claims using Vizeli for 'better state of mind, less challenging experience' should say so.",
+    "resolution": "Accepted after checking Results, 4th paragraph (the three exceptions) and Discussion, 1st paragraph (effects more pronounced with higher well-being and with higher pre-dose anxiety); added as a note on key finding 3. The sign for the anxiety-type scales is not in the text, so the note says the text does not show a less challenging session rather than that the session was more anxious."
+   },
+   {
+    "field": "interpretation_gap.results_show",
+    "first_pass": "higher general well-being rated just before dosing went with stronger subjective effects on nearly every scale;",
+    "reviewer": "AI reader 269 (second reader), missed (as for key finding 3).",
+    "resolution": "Accepted; consequential precision in the editors' summary of the results."
+   },
+   {
+    "field": "interpretation_gap.results_show",
+    "first_pass": "Neuroticism, agreeableness and conscientiousness predicted nothing.",
+    "reviewer": "AI reader 269 (targeted check, n 11): 'predicted no LSD effect' means no significant association, not a shown absence.",
+    "resolution": "Accepted; wording only."
+   },
+   {
+    "field": "key_findings.5.finding",
+    "first_pass": "neuroticism, agreeableness and conscientiousness predicted no LSD effect.",
+    "reviewer": "AI reader 269 (targeted check, n 11), as above.",
+    "resolution": "Accepted; wording only (Results, 5th paragraph)."
+   },
+   {
+    "field": "can_establish",
+    "first_pass": "in healthy volunteers lying in a quiet hospital room with one investigator present,",
+    "reviewer": "AI reader 269 (second reader), on the claim: participants were mostly in a bed in such a room, and some sessions included MRI scanning (Discussion, 8th paragraph).",
+    "resolution": "Accepted; the card's key finding 0 already says 'mostly'; can_establish now matches it."
+   },
+   {
+    "field": "cannot_establish",
+    "first_pass": "or whether sex matters (significant for several outcomes in the main analysis, not in the sensitivity analysis).",
+    "reviewer": "AI reader 269 (second reader), key finding 8 note (as above).",
+    "resolution": "Accepted; consequential precision."
+   }
+  ]
+ }
+}

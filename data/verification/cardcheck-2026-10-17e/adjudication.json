@@ -1,0 +1,153 @@
+{
+ "adjudicator": "AI reader 37 (adjudication)",
+ "date": "2026-10-17",
+ "brief": "data/verification/cardcheck-2026-10-17e/ADJUDICATION.md",
+ "sources": "PDFs only, no browser: McKetin et al. (2020), pp. 1–6, all read (Table 1 and p. 3 rendered at 110 dpi; Fig. 1, p. 4, rendered at 110 and 300 dpi and its 15 bars measured against the gridlines); Ersche et al. (2012) Supporting Online Material, 12 pages, all read (Table S1 and Figs. S1–S2 rendered at 110 dpi); Ersche et al. (2012) main report, cover and pp. 601–604, all read (p. 603 with Fig. 2 rendered at 110 and 220 dpi). Text extracted with pdftotext -layout into my scratch folder. Table S3 distances recomputed for all 30 tobacco coordinates.",
+ "notes": [
+  "Numbering: field paths in the card logs are 0-based (key_findings[13]); the key-finding numbers in the new claim's checked_by and check_note are also 0-based, matching AI reader 33's 'index' values and the claims' existing usage ('key finding 0').",
+  "check_mode 'card-check' (asked for by the brief) is not in the check_mode enum of schema/claim.schema.json (blind, targeted). new_claim_crime.json therefore fails schema validation with exactly 5 errors, one per anchor; with 'card-check' added to the enum in a scratch copy it has 0 errors. I did not edit the schema (not a file this brief names). See for_editor.",
+  "The site counts and labels any ai-checked anchor whose check_mode is not 'targeted' as re-found blind (site/src/app.views.js, lines 189 and 271), so card-check anchors would be shown as blind re-findings until the site code gets a label for them.",
+  "No project file outside the files this brief names was changed; all simulations ran in a copy of the project in my scratch folder."
+ ],
+ "cards": [
+  {
+   "card": "sc_mcketin_2020",
+   "file": "data/study-cards/_incoming/methamphetamine/sc_mcketin_2020.json",
+   "second_reader": "AI reader 33",
+   "check_card": "ok, no warnings",
+   "changes": 18,
+   "changes_made": [
+    "Key finding 13 (corrected, as AI reader 33 found): McKetin, Boden and Foulds are three of the four authors of the birth-cohort paper; the fourth, Newton-Howes, is not an author here (reference list, p. 6). Page and locator now include the reference list.",
+    "Key finding 3: age added to the covariates (Table 1, notes a and b; abstract); 2.1.2's list omits it.",
+    "Key finding 5 and exposure.dose_frequency_duration_route: 'at every interview' changed to 'at every follow-up interview' (the paper: at all follow-ups). My precision fix, prompted by AI reader 33's note.",
+    "Reporting issue 1: the adjusted estimates are also read as 'times more likely' (Results › 3.2, 2nd paragraph); for violent crime, raw risk ratio 3.8 and raw odds ratio 4.2 (recomputed).",
+    "interpretation_gap.results_show and exposure.polysubstance: 'roughly halved' replaced by 'by a third to nearly two-thirds', with the values (falls of 35% to 63%, Model 1 to Model 2, recomputed from Table 1).",
+    "funding.affiliations_note: four authors are shared with the 2019 meta-analysis (McKetin, Foulds, Farrell, Degenhardt), not two.",
+    "New reporting issue 7: Fig. 1's caption says 'percentage of participants', but the no-use bars are Table 1's shares of months (my 300-dpi readings 18.2, 6.3, 5.1, 7.2 and 3.3%, against 17.5, 5.6, 5.4, 7.3 and 3.2% of months).",
+    "Replication timeline, 2014 entry: volume and pages added, and that the paper's title asks whether methamphetamine use increases violent behaviour (reference list, p. 6).",
+    "Eight fields (can_establish, comparison.matching, comparison.unmeasured_premorbid, sample.selection_effects, interpretation_gap.claimed, risk_of_bias domains 0 and 2, risk_of_bias.reasoning): the design is 'designed to remove' stable confounding, fully so with the fixed-effects estimator the methods name, because the abstract names a random-intercept model (the card's own reporting issue 0). No judgment changed."
+   ],
+   "not_changed": [
+    "Every other key finding and reporting issue, which AI reader 33 confirmed; I re-read them while checking the corrected items and found nothing to change.",
+    "Design, instrument, all seven ROBINS-E domain judgments and the overall (high): both readers agree."
+   ],
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (ROBINS-E; agreed by both readers)",
+   "for_senior_author": [
+    "Confounding domain: some concerns as recorded; AI reader 33 notes that a stricter reader could rate it high (treatment entry and receipt, imprisonment and within-month reverse causation unmeasured). A single-domain judgment; it would not change the overall.",
+    "Which estimator produced the printed odds ratios, and how many people contribute to each, cannot be settled from the article (reporting issue 0); the supplement (Tables S1–S3) was not available."
+   ]
+  },
+  {
+   "card": "sc_ersche_2012",
+   "file": "data/study-cards/_incoming/methamphetamine/sc_ersche_2012.json",
+   "second_reader": "AI reader 33",
+   "check_card": "ok, no warnings",
+   "changes": 16,
+   "log_entries_added": 18,
+   "log_note": "16 changes, plus one entry closing the second reading of the 67 earlier entries (62 confirmed, 5 corrected by AI reader 33) and one for the status change.",
+   "changes_made": [
+    "Key finding 8 note (corrected): the review's orbitofrontal and anterior insular reductions are not named in either document, but may be the unnamed decreased-volume clusters of Fig. 2A. Confirmed at 110 and 220 dpi: ventromedial and orbital frontal and lateral insular-level blue clusters in Fig. 2A, absent from Fig. 2B. The first-pass reading is restored in substance.",
+    "Key finding 16 note (corrected): the familiality test does not involve the controls (SOM p. 5), so it cannot guard against a chance difference in the shared control group; the earlier note drew the opposite inference.",
+    "Key finding 17 note (corrected): FA, and the amygdala less clearly, show the intermediate order; SSRT, putamen and postcentral sibling means are equal or nearly equal to the dependent siblings' (within about 0.1 SD), with the values; no sibling-to-sibling test is reported.",
+    "interpretation_gap.results_show: the same correction.",
+    "Key finding 15, exposure.polysubstance, comparison.controls_other_drug_use and reporting issue 11: the DAST-20 difference between siblings and controls is significant in Table S1 (0.5 against 0.0, F 12.6, P 0.001), although both are very low.",
+    "Key finding 21 note: the Fig. S2B legend also says amygdala; the third shared cluster's several labels belong to one cluster.",
+    "Key finding 19 note: Fig. S1 speaks of density, the report and Table S2 of volume (modulated images, SOM p. 4).",
+    "New reporting issue 12: the supplement treats the amygdala as a familial marker (SOM p. 5; Fig. S2B legend), while the report says it failed the familiality test (P = 0.144; p. 603).",
+    "interpretation_gap.claimed: gaps (8), the amygdala inconsistency, and (9), what a passed familiality test can show (family resemblance of a measure, not by itself a shared abnormality; editors' reasoning).",
+    "Replication timeline, 2015 entry: the review's dependent-only reductions may correspond to the unnamed Fig. 2A clusters.",
+    "Reporting issue 0 and sample.attrition: all 150 completers did the stop-signal task (SOM pp. 2–3), and 150 gives 146 or 147 degrees of freedom, so neither 146 nor 150 gives 141; 'with sex as a covariate' becomes 'one covariate', because the supplement names sex only for the behavioural analyses.",
+    "Reporting issue 9: the nearest tobacco coordinates to the putamen (16.8 mm) and amygdala/hippocampus (20.0 mm) peaks added (recomputed against all 30 coordinates)."
+   ],
+   "status": "ai-checked",
+   "risk_of_bias_overall": "high (ROBINS-E; agreed by both readers)",
+   "for_senior_author": [
+    "Confounding domain: some concerns as a study-level judgment; AI reader 33 finds high defensible for the FA result alone, because smoking (55% against 12%) was never checked for white matter. A single-domain matter; no effect on the overall.",
+    "Fig. 2A–B (p. 603): the dependent-only frontal and insular clusters are an editors' reading of an unlabelled figure. Worth a look against the figure, because the siblings claim now says only that the review's statement matches no named difference."
+   ]
+  }
+ ],
+ "claims": [
+  {
+   "claim": "cl_meth_violence",
+   "version_patched": "0.8.1 → 0.8.2 (patch)",
+   "decisions": {
+    "wording": "Statement: AI reader 33's edit 1 adopted. The within-person comparison is 'designed to remove' stable characteristics, and the paper names both a random-intercept and a fixed-effects estimator (abstract, p. 1; 2.1.2, p. 3); 'removes' said more than the article shows. Reasoning: AI reader 33's edit 2 adopted, reworded so that it does not assert the composition of the review's adjusted pool, which the McKetin 2019 card does not record (forest plots not extracted). The review's adjusted estimate includes no association, so it adds direction, not independent support, and the review's violence studies include the 2014 MATES analysis. I added AI reader 33's caution: the birth cohort's marginal adjusted estimates lack the adjustment for other illicit drugs that took the MATES estimate from 5.3 to 3.4. Plain text: 'money and housing problems' (AI reader 33's optional fix; the covariates are income, unemployment and unstable housing); the unread hostility study is now named as an earlier study of the same Australian people, so the plain text shows the overlap, as the statement does. Numbers: every McKetin number in the statement, magnitude and plain text matches Table 1, 2.1, 2.1.2, 3.1–3.2 and 4.1 (pp. 2–5).",
+    "relation": "is associated with (kept from AI reader 29's 0.8.0, as AI reader 33 agrees). The claim is worded and rated as an adjusted association. Two longitudinal cohorts give adjusted estimates that exclude no association: within-person 3.4 (1.5–8.0, p = 0.005) and birth-cohort perpetration 1.60 (1.01–2.54). The review's adjusted pool (1.4, 0.8–2.4) points the same way. So 'neither an effect nor its absence can be shown with precision' (METHODS §6.1) no longer describes the association; its uncertainty is carried by the very low rating, and the statement says causation is not settled.",
+    "status": "replicated by the same team (kept, as both readers propose). Two studies in the same direction that share investigators (McKetin, Boden, Foulds: three of the four birth-cohort authors), and the MATES sample is also among the review's violence studies (METHODS §6.4; overlap not counted as independent, §6.3). Not 'replicated': no independent primary study with an adjusted estimate in the same direction has been read. Not 'mixed': the adjusted findings do not conflict (review I² 25%; both cohorts above 1); the unadjusted behaviour–offending split stays in the reasoning, noted rather than rated down.",
+    "grade": "Very low, unchanged: starts low; risk of bias −1 (both cohorts ROBINS-E high; the review's violence studies among its lowest-quality); imprecision −1 (pooled interval includes 1; birth-cohort lower limits 1.00–1.04; MATES 1.5–8.0 resting on 19 violent months without use). Inconsistency 0. Large effect and dose-response correctly not applied (remaining biases can run away from the null; adjusted dose estimates only in the unread Table S3). Risk of bias −2 would also be defensible and is immaterial at the floor.",
+    "verification": "Unchanged at ai-anchored. No anchor changed; all 11 are ai-checked, the three McKetin anchors by AI reader 33's targeted check. Every reference is metadata-verified with a clear retraction check. The patch moves nothing down the ladder (dry run)."
+   },
+   "questions": {
+    "'is associated with'": "Yes (relation, above).",
+    "'replicated by the same team'": "Yes (status, above); the shared authorship and the MATES overlap are said in the statement and the reasoning.",
+    "AI reader 33's two edits": "Both adopted, the second reworded (wording, above)."
+   },
+   "for_senior_author": [
+    "AI reader 29's alternative (keep 'insufficient evidence' and add the McKetin anchors as qualifying) remains open to the senior author if the shared authorship and the review's null adjusted pool weigh more. In that case the status should still not be 'mixed', because the adjusted findings are not inconsistent; only the unadjusted behaviour–offending split would support that label.",
+    "The statement and reasoning say that the 2014 MATES hostility analysis is inside the review's pooled estimate (an earlier round's PMC reading). Whether it is inside the adjusted pool of 6 studies is not recorded on the review's card, so the new reasoning text avoids saying so.",
+    "Once the crime claim is merged, a one-line cross-reference from this claim to it would help (I did not add one, so that nothing points to a claim not yet in the file)."
+   ]
+  },
+  {
+   "claim": "cl_meth_siblings",
+   "version_patched": "0.5.1 → 0.6.0 (minor: one sentence's meaning, a number added, an anchor role)",
+   "decisions": {
+    "withdrawn sentence": "Withdrawal of 'fits an additional effect of use' confirmed. Fig. S2 shows maps only, with no statistics, sample size, threshold, correction or region names (SOM p. 7). Years of use rise almost in step with age (onset 16.5, SD 2.8; age 34.5, SD 7.4), and no adjustment for age or for the 55% opiate and 26% alcohol dependence is described, so 'fits' would add nothing the data can tell apart.",
+    "wording": "AI reader 33's fixes, each checked in the sources. (1) Adopted in part: 'cannot be traced' removed, because it overstated; the statement now says the orbitofrontal and anterior insular statement matches no difference that either document names. The Fig. 2A reading was not added to the statement, because no claim anchor covers Fig. 2A and a new one would hold the corrected claim at its last published version until a targeted check; the card keeps the reading (key finding 8, timeline). (2) Adopted: the measures, not the differences, were more alike within sibling pairs (SOM p. 5); the reasoning now says what the test can and cannot show. (3) Adopted: the share of men is 51%, 64% and 92% (Table S1). (4) Adopted: 'with no adjustment described for age', also in the reasoning. The magnitude fix is adopted and reworded: one covariate fits the FA degrees of freedom, but the supplement names sex only for the behavioural analyses. The plain-text fix is adopted: the maps show areas that measured lower with more years of use; the plain text also now says the study 'does not say that it separated' years of use from age. Not adopted: AI reader 33's optional addition of the report's reading of the white-matter map (p. 602), which no anchor's extracted data carries and which the card records (interpretation gap 7).",
+    "anchor role": "London et al. (2015), anchor 2: supports → qualifies, as AI reader 33 suggests. With the report and supplement read, the review is a second-hand account of the same study that differs from it in places (a hippocampal finding, dependent-only orbitofrontal and insular reductions, no postcentral or superior temporal reduction), which is how the statement uses it. The primary study's two supporting anchors remain.",
+    "relation": "is associated with, unchanged (cross-sectional association).",
+    "status": "single study, unchanged (the two reviews describe the same study).",
+    "grade": "Very low, unchanged: starts low; risk of bias −1, indirectness −1 (94% cocaine, 6% unnamed amphetamines, methamphetamine never mentioned), imprecision −1.",
+    "verification": "Unchanged at ai-anchored. No anchor's data or status changed (only anchor 2's role); the dry run moves nothing down the ladder."
+   },
+   "questions": {
+    "the withdrawn sentence": "Right to withdraw it (above).",
+    "AI reader 33's wording fixes": "(2), (3), (4), the magnitude and the plain text adopted; (1) adopted in part (above)."
+   },
+   "for_senior_author": [
+    "If the claim should say where the review's orbitofrontal and anterior insular reductions may come from, add an anchor on Fig. 2A–B (p. 603; editors' reading, card key finding 8) and have it checked at the stated place. Suggested words: 'but may correspond to unnamed decreased-volume clusters in ventral frontal and insular regions that Fig. 2A shows in the dependent siblings only (editors' reading of the figure)'.",
+    "AI reader 33 notes that the grey-matter threshold and the one-tailed, uncorrected familiality tests sit more naturally under risk of bias than under imprecision, where the claim lists them; they are not counted twice and the level is the same.",
+    "The London anchor's role change (supports → qualifies) is my decision on AI reader 33's suggestion; revert it if the senior author wants the review counted as support."
+   ]
+  },
+  {
+   "claim": "cl_meth_crime (new, section 9)",
+   "file": "data/verification/cardcheck-2026-10-17e/new_claim_crime.json",
+   "decisions": {
+    "justified": "Yes, as a separate single-study claim, as both readers say. The study's main results concern crime in general (any crime, dealing, property crime, fraud; abstract and Table 1), which the violence claim does not cover, and folding them into an already long claim would mix outcomes. The two claims refer to each other in words, because the any-crime estimate includes the months with violent crime.",
+    "wording": "Started from AI reader 33's replacement, which fixes AI reader 29's four inexact points (the 'mostly dealing and property crime' make-up reading, fraud listed without its null interval, 17.5% without counts, the adjustment and limits missing). My changes: (a) 'most entering treatment' becomes 'recruited mostly on entering treatment' (400 of 501 in the cohort; the share among the 469 is not reported); (b) the estimator sentence says what the methods describe (a random intercept and the fixed-effects option, key finding 3), and the unreported number of contributing people moves to the reasoning, because it rests on the card's reporting issue 0, not on a key finding; (c) 'violent crime is in the violence claim' becomes a readable cross-reference; (d) the magnitude gives absolute shares first, then the odds ratios, the 35–63% fall, the 3.2 raw ratio for any crime and the Fig. 1 readings. Every number was checked in the PDF (Table 1 and 3.1–3.2, p. 3; 2.1, p. 2; Fig. 1, p. 4; 4.1, p. 5); check_anchor_numbers.py finds all 93 numbers of two or more digits on the stated pages.",
+    "relation": "is associated with: a within-person association; use and crime were reported for the same month.",
+    "status": "single study: the same cohort's psychosis and hostility analyses concern other outcomes, and no other study of acquisitive crime or dealing has been read.",
+    "grade": "Very low: starts low; risk of bias −1 (ROBINS-E high on the card); inconsistency not assessable; indirectness 0 as worded; imprecision 0 (lower limits 2.8–3.0 for the associated outcomes). No upgrade for large effect (within-person odds ratios overstate risk ratios for common outcomes, and the remaining biases can run away from the null) or for dose-response (adjusted dose estimates only in the unread Table S3).",
+    "anchors": "Five, all located by me from the PDF and the card and all ai-checked with check_mode 'card-check', because each matches a key finding that AI reader 33 confirmed at the stated place: 0 (supports) key finding 7, Table 1 shares; 1 (supports) key finding 8, Table 1 odds ratios; 2 (qualifies) key findings 0, 1, 2 and 4, cohort, sample, crime scale and injecting; 3 (qualifies) key findings 3, 10 and 12, analysis, covariates, dose figure and the authors' limitations; 4 (qualifies) key finding 11, the authors' interpretation. No anchor is ai-located. Corrected key finding 13 is not used. Anchor 2's examples of each crime type are text from the same paragraph (2.1.1.1) with no numbers; its check_note says so.",
+    "verification": "ai-anchored: every reference is metadata-verified with a clear retraction check, every anchor is ai-checked under the brief's card-check rule, and the claim does not rest on narrative reviews. If the editor does not adopt the card-check mode, set the five anchors to ai-located and the claim to metadata-verified until a targeted check.",
+    "validation": "Against schema/claim.schema.json: 5 errors, all '/evidence/<i>/check_mode: card-check is not one of [blind, targeted]'. With 'card-check' added to the enum (scratch copy): 0 errors. A JSON list with one claim."
+   },
+   "for_senior_author": [
+    "Whether a key finding confirmed in a card check may stand in for a targeted check of an anchor written from it (the card-check mode), and whether the claim may enter at ai-anchored on that basis.",
+    "The authors read their results as showing crime beyond pre-existing risk (Discussion, p. 4) and crime as a likely consequence of use (abstract); the claim states the association only."
+   ]
+  }
+ ],
+ "simple_lines": {
+  "file": "data/verification/cardcheck-2026-10-17e/simple_reader37.json",
+  "note": "Written from the claims as patched (cl_meth_violence 0.8.2, cl_meth_siblings 0.6.0) and the new claim (0.1.0); 'v' gives that version, as in data/site/simple.json. Each line was checked against its claim: it says no more, the But carries the main limit, and 'linked' is used, not 'causes'. Reading grades use the build's formula: every short and But line is at grade 6 or below except the siblings short line (7.9, because of 'dependent', 'stimulants' and 'differences'), and every How-we-know point is at grade 8 or below. Changes from AI reader 29's lines: violence says the link held after other things were counted, and the review point is 'became unclear' instead of 'uncertain' (reading level); siblings uses the main report's 'never had drug or alcohol problems' in the short line, with the tobacco exception in the first point, drops the years-of-use point (as AI reader 29 did) and adds that the rest were dependent on amphetamines; the crime lines are new. No quiz or True-or-false item depends on these claims."
+ },
+ "claims_patch": {
+  "file": "data/verification/cardcheck-2026-10-17e/claims_patch.json",
+  "patches": 2,
+  "expect": "version, relation, status, grade.certainty and verification.status, and the full current text of every replaced field (statement, plain, magnitude, grade.reasoning) and of the changed anchor's role and reference",
+  "dry_run": "checked (dry run) 2 patches to 1 file(s)",
+  "simulation": "In a scratch copy of the project only: the two corrected cards merged with merge_cards.py, the patch applied and the crime claim added after cl_meth_violence. validate.py gives 5 hard failures, all the check_mode enum on the new claim (baseline 0); with 'card-check' added to the enum in the copy, 0 hard failures. Warnings go from 636 to 641, the 5 new anchors not yet senior-verified. Study cards: ai-checked 62 → 64, first-pass 38 → 36. Claims after patching: cl_meth_violence 0.8.2 and cl_meth_siblings 0.6.0, both ai-anchored.",
+  "applied": false
+ },
+ "for_editor": [
+  "Order: merge the two cards (merge_cards.py sc_mcketin_2020 sc_ersche_2012), apply claims_patch.json, add new_claim_crime.json after cl_meth_violence in data/claims/methamphetamine.json, then run snapshot_published.py.",
+  "Before adding the crime claim, add 'card-check' to the check_mode enum in schema/claim.schema.json and describe the mode in METHODS §5.5 and the §6.2 table; otherwise validate.py fails on its 5 anchors. If the mode is not adopted, set those anchors to ai-located (located_by stays) and the claim to metadata-verified.",
+  "site/src/app.views.js (lines 189 and 271) counts and labels every ai-checked anchor that is not 'targeted' as re-found blind; card-check anchors need their own count and label (for example 'checked at the stated place in the card check').",
+  "data/site/simple.json: replace the cl_meth_violence and cl_meth_siblings entries with those in simple_reader37.json and add cl_meth_crime. data/site/questions.json and the monograph's section 9 list need cl_meth_crime (a heading such as 'Is meth use linked to crime?').",
+  "Still open from AI reader 29's note 3: check_anchor_numbers.py reads one PDF per reference, so the four ersche_2012 supplement anchors show as misses against the main report's text (91 numbers in my run); none of these anchors changed in this round."
+ ]
+}
