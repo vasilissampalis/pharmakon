@@ -42,3 +42,5 @@ First readers write study cards; claim writers write patches (`scripts/claim_pat
 anchors and cards; the editor adjudicates and merges (`scripts/merge_cards.py`); plain lines and quiz items are
 blind-checked; `scripts/snapshot_published.py`; `python3 -I scripts/validate.py` (0 hard failures); `node site/build.js`;
 `python3 -I site/build_public.py`; the zip goes to the senior author's folder, and he deploys it on Cloudflare Pages.
+- Deliver the zip with SendUserFile, then write it to his folder by that file's id (`device_commit_files` with `fileUuid`), never
+  by an outputs path: on 13 November a path-based write put an older zip in his folder. Stage it back and compare SHA-256.

@@ -1,6 +1,6 @@
 # Writing rules: how every answer on the site is written
 
-Version 4 · 1 November 2026 · applies to every sentence and picture a reader sees.
+Version 5 · 13 November 2026 · applies to every sentence and picture a reader sees.
 
 **Who the site is for.** The senior author, 18 October 2026: "this is a site for the drug users and people interested in drugs. science and facts just back everything up. it's firstly directed for the users and the science is the means to do it right and educate users in the best way possible." Every format choice starts from that reader; the evidence is how we get it right, never the point of the page.
 
@@ -29,6 +29,17 @@ The senior author, 18 October 2026: "a drug user may google for the drug they li
 - **The same critical eye on every source.** Online claims, official statements and academic papers are all checked the same way: who took part, the amounts compared with real use, whether there was a "before" measurement, whether it was repeated, who paid, whether it was retracted, and how it was reported. A study that finds harm and a study that finds none meet the same bar. Where a well-known claim does not hold up, say so plainly (the 2002 monkey study, withdrawn a year later).
 - **Neither vilify nor sell.** No words of alarm or reassurance; person-first words; pleasure and harm in the same plain voice. Describing the effects people seek is a finding, not encouragement.
 - **On the site, in our own words.** The cars-and-crashes idea is said in our own words and not attributed until its source is found and checked.
+
+## Rule 0c: talk like a person, answer what was asked
+
+The senior author, 13 November 2026: "the way the answers are set should be closer to what people write because now i feel we are being too academic and nobody reads it"; "people like talking to humans not textbooks"; "it's not a problem to be edgy if it's evidence based"; "learning is better absorbed when it's fun"; "we want to be validated but closer to the users/readers they are just people and people like simplicity".
+
+- **The answer first, in the question's own terms.** If someone asks "Can X do Y?", the short answer starts with what the claim supports: "Yes, often", "Rarely", "Probably not", "Nobody has tested this properly", "It depends on…". Then the number, then where it comes from. Never open with the study ("In a 2018 study of…"): the study comes after the finding, or in How we know.
+- **Talk like a person explaining to a friend.** Everyday words, "you" where it fits, contractions (it's, don't, can't), one idea per sentence. No report phrases ("participants", "was associated with", "the authors found") where a plain one exists ("people", "went with", "they found").
+- **Blunt about the evidence, kind about people.** Say plainly when a popular belief doesn't hold up, when a famous study was weak, or when nobody knows. The surprise comes from the fact itself, never from jokes, mockery, alarm or glamour.
+- **The But line is one honest catch,** said the way a person would say it: "That's one study, of lab volunteers." "Everyone in it already went to these sites."
+- **Questions in people's words.** A question heading reads the way people type it (the Reddit and forum examples in `data/verification/questions-*/` show how), 12 words or fewer, and asks only what the answer answers.
+- **Still findings only:** no amounts, doses, timing or how-to, and nothing the claim does not say (§ Checks before a line goes live).
 
 ## Photos
 
