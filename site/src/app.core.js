@@ -159,8 +159,8 @@ function inPieces(text, cites) {
   const sents = pieceSentences(body);
   if (pieceWords(body) < 90 || sents.length < 2 && pieceSplit(body, "; ").length < 3) return "<p>" + cites(t) + "</p>";
   const groups = []; let cur = [];
-  // the opening summary stands alone when it cites nothing and more follows
-  let start = 0; if (sents.length > 2 && !pieceCited(sents[0]) && !/\(\D*\d{4}/.test(sents[0])) { groups.push({ lead: true, s: [sents[0]] }); start = 1; }
+  // the opening summary stands alone (in bold) when it is short, cites nothing and more follows; a long opening finding stays running text
+  let start = 0; if (sents.length > 2 && pieceWords(sents[0]) <= 32 && !pieceCited(sents[0]) && !/\(\D*\d{4}/.test(sents[0])) { groups.push({ lead: true, s: [sents[0]] }); start = 1; }
   for (let i = start; i < sents.length; i++) { cur.push(sents[i]); if (pieceCited(sents[i])) { groups.push({ s: cur }); cur = []; } }
   if (cur.length) { const prev = groups.length && !groups[groups.length - 1].lead ? groups[groups.length - 1] : null; if (prev) prev.s.push(...cur); else groups.push({ s: cur }); }
   // inside a paragraph, a long sentence made of three or more parts joined by semicolons becomes a list; the rest stays running text
