@@ -1,6 +1,7 @@
 // Redesign 2 (docs/REDESIGN-2.md) checked in a real browser, at 390 x 844 and 1280 x 800: the Myth or fact? deck turns over and
 // counts, Another 10 deals new cards, the quiz does not repeat what the deck asked; At a glance tiles open their answers in
-// place, and on the MDMA and psilocybin pages start with the answers people ask about most (DEMAND); Read next links work
+// place, and start with the answers people ask about most (DEMAND: MDMA, psilocybin, heroin), never passing one over for a
+// less-asked one, then fill up the old way (alcohol); "Before, during and after" keeps its time order; Read next links work
 // on the page and across pages; the 100-dot picture shows for "N in 100" (and not for a range);
 // the quiz page loads as "Myth or fact?"; reduced motion swaps the card without turning it; keyboard focus is visible; dark
 // theme. Every step also checks for horizontal scroll, and every page for console and page errors.
@@ -107,15 +108,15 @@ function serve() {
     ok(w + ": the quiz asks nothing the deck asked, and nothing twice", asked.length >= 20 && !asked.some(q => deck.includes(q)) && new Set(asked).size === asked.length, asked.length + " quiz questions answered");
     await s.ctx.close();
 
-    // ---- At a glance on cannabis and LSD: at most 4 groups and 8 tiles (6 on a phone), each tile opens its answer in place
+    // ---- At a glance on cannabis and LSD: at most 5 groups and 8 tiles (6 on a phone), each tile opens its answer in place
     s = await session();
     for (const slug of ["cannabis", "lsd"]) {
       await s.go("s-" + slug); if (slug === "cannabis") await s.shot("cannabis-top");
       const g = await s.p.evaluate(() => { const box = document.querySelector(".view.active .glance2"); if (!box) return null; const tiles = [...box.querySelectorAll(".gl-a")];
         const help = document.querySelector(".view.active .dh-help"); return { groups: box.querySelectorAll(".gl-g").length, tiles: tiles.length, shown: tiles.filter(a => a.offsetParent).length, dead: tiles.filter(a => !document.getElementById(a.dataset.open)).length,
           afterHelp: !!(help && help.nextElementSibling === box), labels: [...box.querySelectorAll(".gl-t")].map(e => e.textContent).join(", "), long: tiles.map(a => a.querySelector(".gl-s").textContent).filter(t => t.length > 73).length }; });
-      ok(w + ": " + slug + " At a glance right under the emergency line: <= 4 groups, <= 8 tiles (" + (w < 700 ? "<= 6 shown" : "all shown") + "), clauses short",
-        g && g.afterHelp && g.groups <= 4 && g.tiles <= 8 && (w < 700 ? g.shown <= 6 : g.shown === g.tiles) && !g.dead && !g.long, g ? g.groups + " groups (" + g.labels + "), " + g.tiles + " tiles, " + g.shown + " shown" : "missing");
+      ok(w + ": " + slug + " At a glance right under the emergency line: <= 5 groups, <= 8 tiles (" + (w < 700 ? "<= 6 shown" : "all shown") + "), clauses short",
+        g && g.afterHelp && g.groups <= 5 && g.tiles <= 8 && (w < 700 ? g.shown <= 6 : g.shown === g.tiles) && !g.dead && !g.long, g ? g.groups + " groups (" + g.labels + "), " + g.tiles + " tiles, " + g.shown + " shown" : "missing");
       await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot(slug + "-at-a-glance");
       const target = await s.p.$eval(".glance2 .gl-a", a => a.dataset.open);
       await s.p.click(".glance2 .gl-a"); await s.p.waitForTimeout(1300);
@@ -124,26 +125,39 @@ function serve() {
       ok(w + ": " + slug + " tile opens its answer in place, clear of the sticky bars", t.open && t.hash === "#s-" + slug && t.top >= t.pad - 12 && t.top < H / 2 && t.focus, JSON.stringify(t));
       if (slug === "cannabis") await s.shot("cannabis-tile-tapped-answer-open");
     }
-    // ---- At a glance on MDMA and psilocybin starts with what people ask about most (DEMAND): the first tile is the page's
-    // most-asked answer (of equals, the editors' first), the groups follow their best tile, each group runs from most to least
-    // asked, every tile has a score, and a phone keeps the most-asked six
+    // ---- At a glance starts with what people ask about most (DEMAND): the first tile is the page's most-asked answer (of
+    // equals, the editors' first), the groups follow their best tile, each group runs from most to least asked, no answer is
+    // left out while a less-asked one is shown (heroin's answers span more than 5 topics, so it shows fewer tiles), and a
+    // phone keeps the most-asked six. Alcohol runs out of asked-about answers: all of them, then the rest filled up the old way.
+    const glanceAt = slug => s.p.evaluate(slug => {
+      const box = document.querySelector(".view.active .glance2"); if (!box) return null;
+      const sc = id => DEMAND[id] && typeof DEMAND[id].score === "number" ? DEMAND[id].score : -1;
+      const own = drugQuestions(slug).map(x => x[0]).filter(id => SIMPLE.claims[id] && claimById[id].verification.status !== "draft");
+      const top = Math.max(...own.map(sc)), groups = [...box.querySelectorAll(".gl-g")].map(g => [...g.querySelectorAll(".gl-a")].map(a => ({ id: a.dataset.open.slice(4), shown: !!a.offsetParent })).map(t => ({ ...t, s: sc(t.id) })));
+      const tiles = groups.flat(), ids = tiles.map(t => t.id), best = groups.map(g => g[0].s), shown = tiles.filter(t => t.shown), hidden = tiles.filter(t => !t.shown), low = Math.min(...tiles.filter(t => t.s >= 0).map(t => t.s));
+      return { first: tiles[0].id === own.find(id => sc(id) === top), groups: best.every((v, i) => !i || best[i - 1] >= v), within: groups.every(g => g.every((t, i) => !i || g[i - 1].s >= t.s)),
+        scored: tiles.every(t => t.s >= 0), none: own.filter(id => sc(id) > low && !ids.includes(id)).length, asked: own.filter(id => sc(id) >= 0).length, nGroups: groups.length,
+        phone: hidden.every(h => shown.every(t => t.s >= h.s)), shown: shown.length, all: tiles.length, list: groups.map(g => g.map(t => (t.s >= 0 ? t.s : "-") + (t.shown ? "" : "*")).join(" ")).join(" | ") };
+    }, slug);
     const dem = [];
-    for (const slug of ["mdma", "psilocybin"]) {
-      await s.go("s-" + slug);
-      const d = await s.p.evaluate(slug => {
-        const box = document.querySelector(".view.active .glance2"); if (!box) return null;
-        const sc = id => DEMAND[id] && typeof DEMAND[id].score === "number" ? DEMAND[id].score : -1;
-        const own = drugQuestions(slug).map(x => x[0]).filter(id => SIMPLE.claims[id] && claimById[id].verification.status !== "draft");
-        const top = Math.max(...own.map(sc)), groups = [...box.querySelectorAll(".gl-g")].map(g => [...g.querySelectorAll(".gl-a")].map(a => ({ id: a.dataset.open.slice(4), shown: !!a.offsetParent })).map(t => ({ ...t, s: sc(t.id) })));
-        const tiles = groups.flat(), best = groups.map(g => g[0].s), shown = tiles.filter(t => t.shown), hidden = tiles.filter(t => !t.shown);
-        return { first: tiles[0].id === own.find(id => sc(id) === top), groups: best.every((v, i) => !i || best[i - 1] >= v), within: groups.every(g => g.every((t, i) => !i || g[i - 1].s >= t.s)),
-          scored: tiles.every(t => t.s >= 0), phone: hidden.every(h => shown.every(t => t.s >= h.s)), shown: shown.length, all: tiles.length, list: groups.map(g => g.map(t => t.s + (t.shown ? "" : "*")).join(" ")).join(" | ") };
-      }, slug);
-      dem.push([slug, d]);
+    for (const slug of ["mdma", "psilocybin", "heroin"]) {
+      await s.go("s-" + slug); dem.push([slug, await glanceAt(slug)]);
       await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot(slug + "-at-a-glance");
     }
-    ok(w + ": MDMA and psilocybin At a glance start with their most-asked answers (DEMAND, highest first" + (w < 700 ? "; the phone keeps the top 6)" : ")"),
-      dem.every(([, d]) => d && d.first && d.groups && d.within && d.scored && d.phone && (w < 700 ? d.shown <= 6 : d.shown === d.all)), dem.map(([k, d]) => k + ": " + (d ? d.list : "missing")).join("; ") + (w < 700 ? " (* not on a phone)" : ""));
+    ok(w + ": MDMA, psilocybin and heroin At a glance start with their most-asked answers and leave none out for a less-asked one (DEMAND" + (w < 700 ? "; the phone keeps the top 6)" : ")"),
+      dem.every(([, d]) => d && d.first && d.groups && d.within && d.scored && !d.none && d.nGroups <= 5 && d.phone && (w < 700 ? d.shown <= 6 : d.shown === d.all)), dem.map(([k, d]) => k + ": " + (d ? d.list : "missing")).join("; ") + (w < 700 ? " (* not on a phone)" : ""));
+    await s.go("s-alcohol"); const alc = await glanceAt("alcohol");
+    await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot("alcohol-at-a-glance");
+    ok(w + ": alcohol At a glance: all its asked-about answers first, then filled up the old way to 8 tiles (6 on a phone)",
+      alc && alc.first && alc.groups && alc.within && alc.all === 8 && alc.shown === (w < 700 ? 6 : 8) && alc.list.split(" ").filter(x => /^\d/.test(x)).length === alc.asked && alc.nGroups <= 5, alc ? alc.list + " (" + alc.asked + " asked about)" : "missing");
+    // ---- "Before, during and after" keeps its time order: before and during, the day after, after stopping, each in the editors' order
+    const seq = [];
+    for (const slug of ["psilocybin", "methamphetamine", "alcohol"]) {
+      await s.go("s-" + slug, 700);
+      seq.push([slug, await s.p.evaluate(slug => { const want = [/^before/i, /day after/i, /after stopping/i].flatMap(re => drugQuestions(slug).filter(([, , t]) => topicZone(t) === "after" && re.test(t))).map(x => "ask-" + x[0]);
+        const got = [...document.querySelectorAll("#d-after details.ask")].map(d => d.id); return want.length > 1 && got.join() === want.join() ? got.length : -1; }, slug)]);
+    }
+    ok(w + ": Before, during and after keeps its time order (psilocybin, methamphetamine, alcohol)", seq.every(([, n]) => n > 1), seq.map(([k, n]) => k + " " + n + " questions").join(", "));
     // ---- an open answer: the closed card's parts, the dots for "N in 100", Read next on the page and to another page
     await s.go("s-cannabis/q-cl_can_dependence_how_many", 1300);
     const card = await s.p.evaluate(() => { const d = document.getElementById("ask-cl_can_dependence_how_many"); if (!d) return null; const sm = d.querySelector("summary"), a = d.querySelector(".ask-a"), dots = a.querySelector(".freq .dots100");

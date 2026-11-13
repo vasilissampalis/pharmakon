@@ -716,10 +716,12 @@ function inShortHtml(qs, skip, opt) {
 }
 /* At a glance (redesign 2, 13 November: the senior author found the site "like the user gets tested in school"; the model is
    Examine.com's one-glance table of outcomes and how sure the research is, before any text). A drug page opens with one
-   screen of at most 8 answers (6 on a phone) in at most 4 groups, each group one of the page's own topics. The answers are
-   the ones people ask about most (DEMAND, above): highest first, equals in the editors' order, and the groups in the order of
-   their best answer. A page with fewer than 4 such answers fills the rest as before: staying safer first, then what the drug
-   does or feels like, myths and facts, and the drug as a medicine, then the rest in the editors' order. A tile is the
+   screen of at most 8 answers (6 on a phone) in groups, each group one of the page's own topics, the groups in the order of
+   their best answer. The answers are the ones people ask about most (DEMAND, above), highest first, equals in the editors'
+   order, and a more-asked answer is never passed over for a less-asked one: they fill the tiles in that order from at most
+   5 topics, and an answer that would open a sixth ends the tiles there (the page shows fewer). A page that runs out of such
+   answers fills the rest as before, in at most 4 groups (5 only when needed to fill): staying safer first, then what the
+   drug does or feels like, myths and facts, and the drug as a medicine, then the rest in the editors' order. A tile is the
    question, the first clause of its short answer and the evidence bars; a tap opens that answer where it is on the page.
    Early drafts only when the page has too few answers past the first rung, as In short did. */
 const GLANCE_PREFER = [/stay(ing)? safer|using alone|preventing overdose|difficult trips|before and during|edibles|driving|what['’]s in/i,
@@ -727,18 +729,20 @@ const GLANCE_PREFER = [/stay(ing)? safer|using alone|preventing overdose|difficu
 function glanceHtml(slug, qs) {
   const can = qs.filter(([id]) => (SIMPLE.claims || {})[id]), firm = can.filter(([id]) => claimById[id].verification.status !== "draft");
   const pool = firm.length >= 2 ? firm : can; if (pool.length < 2) return "";
-  let ranked = byDemand(pool.filter(([id]) => demandOf(id) >= 0));
-  if (ranked.length < 4) {   // too few answers people ask about: the rest as before, one from each preferred topic, then a second
-    const topics = []; pool.forEach(([, , t]) => { if (!topics.includes(t)) topics.push(t); });
-    const pick = [];
-    GLANCE_PREFER.forEach(re => { const t = topics.find(x => re.test(x) && !pick.includes(x)); if (t) pick.push(t); });
-    topics.forEach(t => { if (pick.length < 4 && !pick.includes(t)) pick.push(t); });
-    const per = pick.length <= 2 ? 4 : 2;
-    ranked = ranked.concat(roundRobin(pick.flatMap(t => pool.filter(x => x[2] === t).slice(0, per))).filter(x => !ranked.includes(x)));
+  const tiles = [], topics = [], add = x => { tiles.push(x); if (!topics.includes(x[2])) topics.push(x[2]); };
+  let ended = false;
+  for (const x of byDemand(pool.filter(([id]) => demandOf(id) >= 0))) {
+    if (tiles.length === 8 || (!topics.includes(x[2]) && topics.length === 5)) { ended = true; break; }
+    add(x);
   }
-  // eight tiles at most, from four topics at most, in that order; the topics in the order of their first (best) tile
-  const tiles = [], topics = [];
-  ranked.forEach(x => { if (tiles.length < 8 && (topics.includes(x[2]) || topics.length < 4)) { tiles.push(x); if (!topics.includes(x[2])) topics.push(x[2]); } });
+  if (!ended) {   // every answer people ask about is in: the rest as before, one from each topic in the old order, then a second
+    const all = [], order = []; pool.forEach(([, , t]) => { if (!all.includes(t)) all.push(t); });
+    GLANCE_PREFER.forEach(re => { const t = all.find(x => re.test(x) && !order.includes(x)); if (t) order.push(t); });
+    all.forEach(t => { if (!order.includes(t)) order.push(t); });
+    const rest = roundRobin(order.flatMap(t => pool.filter(x => x[2] === t)));
+    [Math.max(4, topics.length), 5].forEach(max => rest.forEach(x => { if (tiles.length < 8 && !tiles.includes(x) && (topics.includes(x[2]) || topics.length < max)) add(x); }));
+  }
+  // the topics in the order of their first (best) tile
   const groups = topics.map(t => [t, tiles.filter(x => x[2] === t)]);
   // a phone screen holds about six: the tiles after the sixth give way (shown again on wider screens), and a group left
   // without a tile with them
@@ -784,7 +788,8 @@ function renderDrug(slug) {
   renderedDrug = slug; currentSlug = slug;
   const f = fam(s.cls), fp = famPlain(s.cls), ph = headerPhoto(slug), names = documentedNames(slug).slice(0, 3);
   const qs = drugQuestions(slug);
-  // in each part of the page, the questions people ask about most come first (DEMAND), then the rest in the order they had
+  // in each part of the page, the questions people ask about most come first (DEMAND), then the rest in the order they had;
+  // the part that runs in time order (before, during and after) keeps it
   const feel = byDemand(qs.filter(([, , t]) => topicZone(t) === "feel")), risk = byDemand(roundRobin(qs.filter(([, , t]) => topicZone(t) === "risk"))), med = byDemand(qs.filter(([, , t]) => topicZone(t) === "med")), mix = byDemand(mixQuestions(slug)), after = qs.filter(([, , t]) => topicZone(t) === "after");
   const nForms = (FORMS[slug] || []).length;
   const sec = (id, q, body, chip) => ({ id, q, body, chip });
@@ -805,9 +810,10 @@ function renderDrug(slug) {
   // 4. the day after: after-effects as studies describe them, and whether what people do about them works (decision p-day-after)
   if (after.length) {
     const has = re => after.some(([, , t]) => re.test(t)), bef = has(/^before/i), day = has(/day after/i), stop = has(/after stopping/i);
-    // the questions people ask about most first; the rest before and during use first, then the day after, then the weeks
-    // after stopping (decision p-before-during-after)
-    const ordered = byDemand([/^before/i, /day after/i, /after stopping/i].flatMap(re => after.filter(([, , t]) => re.test(t))));
+    // before and during use first, then the day after, then the weeks after stopping (decision p-before-during-after). A time
+    // sequence keeps its order, so this part is not sorted by demand: within its steps, too, the questions run in time order
+    // (that night, then the morning after; the first days after stopping, then the long run)
+    const ordered = [/^before/i, /day after/i, /after stopping/i].flatMap(re => after.filter(([, , t]) => re.test(t)));
     const title = bef ? (day || stop ? "Before, during and after" : "Before and during") : stop ? (day ? "The day after, and after stopping" : "After stopping") : "The day after";
     secs.push(sec("d-after", title, askList(ordered, "after", 3, null, slug), bef ? "Before & after" : day ? "Day after" : "After stopping"));
   }
