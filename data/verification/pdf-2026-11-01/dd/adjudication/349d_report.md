@@ -1,0 +1,9 @@
+ChatGPT reader 405 completed five group 349 card adjudications and three guarded, unapplied claim proposals. The proposals replace the original partial 349 claim proposals; original files remain intact. Do not apply both versions.
+
+Cards: 130 findings — 115 accept, 14 accept-modified, one deferred; all five are ai-checked and pass check_card. Instrument, domain, overall risk and interpretation-gap labels remain unchanged. Borra appraisal severity and Pounder instrument applicability await senior calibration.
+
+Claims: 23 findings — 13 accept, six accept-modified, two deferred, one already-fixed and one rejected metadata lead. Coverage maps all 15 second-reader and 12 targeted records without counting duplicate observations again. Proposed versions are 0.2.0 for concentration change and concentration/cause, and 0.3.0 for cannabis attribution. Certainty stays very low; replicated/replicated/contested and draft stay unchanged. Fifteen new or reworded passages, including an inherited Claude source-provenance addition, require independent round 2. Reader 405 is the same conversation as 401–404.
+
+Main corrections: distinguish medians across drug medians from pooled cases; retain distribution in life and proper arrest/death timing; qualify second-hand ratios and non-equivalent matrices; restore the THC causal-minimum hedge and both directions of change; distinguish rounded 0% main-finding poisoning from exactly zero or any contribution, and include the omitted mortality null.
+
+Launiainen full text, cited primary epidemiology/case reports and the Borra supplement remain unavailable or unread. No primary interval, denominator or corrected concentration was invented. Five card checks, three patch dry-runs and simulated schemas pass. Global validation is byte-identical to the existing 121 failures / 3429 warnings. No actual claim, site plain line, approval or live site changed. Nothing published.

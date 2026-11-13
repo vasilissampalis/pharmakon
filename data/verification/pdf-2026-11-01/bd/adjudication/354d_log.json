@@ -1,0 +1,59 @@
+{
+  "reader": "AI reader 408 (ChatGPT, OpenAI; focused statistical follow-up; same conversation as 401)",
+  "date": "2026-11-09",
+  "scope": "Only the outstanding Gelberg Table 4 model/prediction discrepancy and its dependent wording in the unapplied 354 claim proposal. No further card or claim reviews.",
+  "disposition": "Editorial treatment settled; actual source of the discrepancy remains dependent on unavailable model/prediction output.",
+  "supersedes": "354d_patch.json supersedes the original unapplied 354_patch.json in full. Only three Gelberg statistical replacement texts, the proposed Gelberg evidence addition and the related changelog explanation differ. All other proposal content is inherited unchanged, not newly reviewed.",
+  "items": [
+    {
+      "finding": "Rounding or a corrected common odds ratio might resolve the discrepancy.",
+      "verdict": "reject",
+      "resolution": "The lower- and upper-cutpoint rounding ranges, 3.391-3.918 and 5.260-5.311, are mutually disjoint and exclude 19.918. The printed probabilities cannot identify any single replacement common proportional odds ratio under inverse-link-of-linear-LSmean prediction using the same model and covariate weights."
+    },
+    {
+      "finding": "Population-averaged GEE or marginalization necessarily explains the discrepancy.",
+      "verdict": "accept-modified",
+      "resolution": "A constructive five-stratum proportional-odds example with common OR 19.918 reproduces all six published benzodiazepine probability cells when probabilities are averaged first. This proves that the mismatch alone does not establish a wrong coefficient. The paper describes applying the inverse link to LSmeans instead; its actual implementation cannot be inferred from the counterexample."
+    },
+    {
+      "finding": "The pending 354 proposal asserts a corrected stimulant-first ordering and says the other rows roughly reconstruct their reported odds ratios.",
+      "verdict": "accept-modified",
+      "resolution": "Removed the corrected ordering from the proposed statement, magnitude, reasoning, anchor and change explanation. No upper-cutpoint ratio in the six Table 4 rows reconstructs its printed OR within conservative three-decimal rounding bounds. Retain printed coefficients and probabilities, and explain the limited reconstruction result without substituting an effect estimate."
+    }
+  ],
+  "counts_by_verdict": {
+    "reject": 1,
+    "accept-modified": 2
+  },
+  "source_check": {
+    "primary": "Supplied Gelberg 2025 PDF, Methods p. 3 checked on a 150-dpi render and Table 4 p. 8 on a 300-dpi render; relevant methods continuation p. 5 and retained full-text source record from reader 401.",
+    "supplement_check": "VickersSmith_2025_Supplement.pdf checked only for material relevant to this model/code question. It belongs to the companion paper and does not provide this cumulative-logit model or prediction code. No claim of a full second reading of that supplement.",
+    "primary_sha256": "a0b6740eee0353b40c356cb72f672546511b3f60aa2529c5459969b2cd5672db"
+  },
+  "calculations": "handoff/scratchpad/pdf1101/a408/gelberg_model_check.py and gelberg_model_check.json; standard-library reproducible mathematical audit, no study model refit.",
+  "claims_and_anchors": "No claim patch applied. No live claim, plain line, study card, grade, risk-of-bias object, verification status, reference, senior approval, build or published site changed. Original 354 proposals and 354c card adjudication records retained unchanged.",
+  "for_round2": [
+    {
+      "claim": "cl_benzo_harm_reduction_services",
+      "anchor_index_zero_based_after_application": 30,
+      "reference": "gelberg_2025",
+      "anchor_status": "ai-located",
+      "reason": "Statistical passage revised by this ChatGPT conversation; requires a fresh reader who wrote neither the anchor nor the finding. Check printed cells and Methods order of operations, reproduce the conservative bounds and synthetic example, and verify that the latter is not represented as the authors' actual method."
+    }
+  ],
+  "inherited_pending_round2": "Original 354 Park anchors 25 (reworded) and 31 (added), zero-based in cl_benzo_harm_reduction_services, retain their prior independent-check requirement. They are passed through unchanged, not reviewed here.",
+  "for_senior_author": [
+    "The source of the Table 4 discrepancy can only be resolved from the actual amount-model specification/contrast and Table 4 prediction code or fitted output, including the averaging order and weights. This is an information dependency, not a request for an arbitrary numerical choice. No author contact has been made."
+  ],
+  "deferred": [
+    "Which reported value or undocumented prediction procedure explains the mismatch. No coefficient is declared wrong and no corrected subgroup ranking is claimed."
+  ],
+  "verification": {
+    "numerical_audit": "PASS: disjoint rounding ranges; valid synthetic common-OR counterexample reproduces the six printed benzodiazepine cells; inverse-link of its linear LSmeans gives different probabilities.",
+    "proposal_scope_guard": "PASS: only the three Gelberg statistical replacement strings, proposed Gelberg anchor and explanatory changelog differ from the original 354 proposal.",
+    "patch_dry_run": "PASS: checked (dry run) 3 patches to 2 file(s). No claim files written.",
+    "completed_checks": "Completed card checks and the full project validator were not repeated. The prior 121-known-failure result is historical, not a new run.",
+    "independence": "Reader 408 is the same conversation as reader 401, not an independent check of ChatGPT-written additions."
+  },
+  "continuity": "Focused branch based on restored November 6 snapshot 19049bf. The November 7 archive is absent here. Merge the narrow delta into the latest saved project, preserving later reviews; do not replace it with this older base. No checkpoint archive created. Parked group 352 work not continued."
+}
