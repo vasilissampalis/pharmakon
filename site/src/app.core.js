@@ -1,7 +1,66 @@
 /* ---------- APA 7 rendering (prototype; production uses citeproc-js with the APA CSL style) ---------- */
 const refById = Object.fromEntries(REFS.map(r => [r.id, r]));
 const cardById = STUDY_CARDS;
+// each anchor arrives as [reference, study card, role, anchor status] (site/build.js); the rest of it comes with its substance's file
+CLAIMS.forEach(c => { if (c.ev) { c.evidence = c.ev.map(a => ({ reference: a[0], study_card: a[1] || null, role: a[2], anchor_status: a[3] })); delete c.ev; } });
 const claimById = Object.fromEntries(CLAIMS.map(c => [c.id, c]));
+
+/* ---------- What loads when (speed, 13 November 2026; the senior author: "every time I open the website… a few seconds pass").
+   The page carries what the start page, the drug pages, search and the quiz read: every answer's plain words, grading and
+   sources by name. The rest is fetched the first time a view needs it, as study cards already were: data/full-<substance>.json
+   (each answer's precise statement, who was studied, the full rating reasoning, the debate, and what each source says and where;
+   the drug's law rows; the sources of its names; its study cards' notes), data/refs.json (every reference in full, for the APA
+   lists) and data/figures.json (the official figures). Each file is fetched once; a view waits with a quiet line, and if a file
+   cannot be had it says so in one line with a way to try again. The current drug's file is fetched ahead once its page settles. */
+const LOADS = {};
+function loadJson(name, apply) {
+  if (!LOADS[name]) LOADS[name] = fetch("data/" + name).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(d => { apply(d); return true; }).catch(e => { delete LOADS[name]; throw e; });
+  return LOADS[name];
+}
+const FULL_DONE = new Set();
+let REFS_DONE = false, FIGURES_DONE = false;
+function loadFull(sub) {
+  if (!FULL_FILES.includes(sub) || FULL_DONE.has(sub)) return Promise.resolve(true);
+  return loadJson("full-" + encodeURIComponent(sub) + ".json", d => {
+    Object.entries(d.claims || {}).forEach(([id, h]) => { const c = claimById[id]; if (!c) return; const { grade, verification, evidence, rate, ...rest } = h;
+      Object.assign(c, rest); Object.assign(c.grade, grade); Object.assign(c.verification, verification);
+      if (rate && (SIMPLE.claims || {})[id]) SIMPLE.claims[id].rate = rate;   // "Why this rating" in plain words
+      (evidence || []).forEach((e, i) => { if (c.evidence[i]) Object.assign(c.evidence[i], e); }); c.full = true; });
+    if (d.legal) { const L = LEGAL.find(x => x.substance === d.legal.substance); if (L) Object.assign(L, d.legal); }
+    if (d.identity) { const I = IDENTITY.find(x => x.substance === d.identity.substance); if (I) Object.assign(I, d.identity); }
+    Object.entries(d.cards || {}).forEach(([id, x]) => { const k = cardById[id]; if (k) { k.what_would_settle_it = x.what_would_settle_it; k.verification.source_read = x.source_read; } });
+    FULL_DONE.add(sub); });
+}
+function loadRefs() { return REFS_DONE ? Promise.resolve(true) : loadJson("refs.json", d => { Object.entries(d).forEach(([id, r]) => { if (refById[id]) Object.assign(refById[id], r); }); REFS_DONE = true; }); }
+function loadFigures() { return FIGURES_DONE ? Promise.resolve(true) : loadJson("figures.json", d => { EPI_ALL.push(...d); FIGURES_DONE = true; }); }
+// what the full text of some answers needs: their substances' files (and any others named), and the references in full
+const subsOf = ids => ids.map(id => claimById[id] && claimById[id].substance).filter(Boolean);
+function needFull(ids, subs) { return Promise.all([...new Set(subsOf(ids).concat(subs || []))].map(loadFull).concat(loadRefs())); }
+const fullReady = (ids, subs) => REFS_DONE && subsOf(ids).concat(subs || []).every(s => FULL_DONE.has(s) || !FULL_FILES.includes(s));
+// a part of a page that waits for its file: a quiet line now; the part itself, or one line with a retry, when the fetch ends
+const waitHtml = what => '<p class="loading" role="status">' + esc(what) + "…</p>";
+const failHtml = (what, retryId) => '<p class="loadfail" role="alert">' + esc(what) + ' could not be loaded. Check your connection and <button type="button" class="linklike" data-retry="' + esc(retryId) + '">try again</button>.</p>';
+const RETRY = {};
+function whenReady(load, box, what, draw) {
+  if (!box) return;
+  const id = "r" + Math.random().toString(36).slice(2, 8);
+  box.innerHTML = waitHtml("Loading " + what.toLowerCase());
+  RETRY[id] = () => whenReady(load, box, what, draw);
+  load().then(() => { delete RETRY[id]; if (box.isConnected) draw(); }).catch(() => { if (box.isConnected) box.innerHTML = failHtml(what, id); });
+}
+// (scripts/check_citations.js reads this file outside a browser, for its APA labels: no page there)
+if (typeof document !== "undefined") document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("[data-retry]"); if (!b || !RETRY[b.dataset.retry]) return; const f = RETRY[b.dataset.retry]; delete RETRY[b.dataset.retry]; f(); });
+// the words a claim is listed and found by: its plain line, else its precise statement (when fetched), else its opening words
+const claimText = c => c.plain || c.statement || c.title || c.id;
+// the current drug's file (and the references) fetched ahead, once its page has settled, so its evidence opens at once
+let AHEAD = null;
+function fetchAhead(sub) {
+  if (AHEAD === sub) return; AHEAD = sub;
+  const go = () => { if (AHEAD !== sub) return; loadFull(sub).then(loadRefs).catch(() => { AHEAD = null; }); };
+  const later = () => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 3000 }) : setTimeout(go, 1200));
+  if (document.readyState === "complete") later(); else window.addEventListener("load", later, { once: true });
+}
 
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function initials(given) {

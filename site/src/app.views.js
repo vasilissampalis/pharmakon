@@ -14,7 +14,8 @@ function narrativeOnly(c) {
 // why a draft is still a draft, in the reader's words: it rests on reviews whose figures are second-hand (narrative reviews, or a
 // statement such as the AHA's that gives no search or appraisal and says so in the claim), or a source is still to be read or re-read
 function draftWhy(c) {
-  if (narrativeOnly(c) || /\b(second-hand|as summari[sz]ed|as relayed)\b/i.test(c.statement || "")) return "it rests on reviews, so its figures are second-hand";
+  // (the page carries the statement's test as a flag, set by site/build.js, until the statement itself is fetched)
+  if (narrativeOnly(c) || c.secondhand || /\b(second-hand|as summari[sz]ed|as relayed)\b/i.test(c.statement || "")) return "it rests on reviews, so its figures are second-hand";
   if (c.evidence.some(e => !/^(ai-checked|senior-verified)$/.test(e.anchor_status))) return "not every source has been checked by a second reader yet";
   return "it rests on few studies so far";
 }
@@ -110,16 +111,18 @@ function route() {
       if (sec && claimById[sec.slice(2)]) { location.replace("#" + sec.slice(2)); return; }
       window.scrollTo({ top: 0 }); if (!first) focusHeading("drug"); return;
     }
-    if (sec === "evidence") { if (renderedSlug !== slug) renderMonograph(slug); show("monograph"); setTitle((monographFor(slug) || {}).name + ": the research"); window.scrollTo({ top: 0 }); if (!first) focusHeading("monograph"); return; }
-    if (renderedSlug !== slug) renderMonograph(slug);
-    show("monograph"); setTitle((monographFor(slug) || {}).name);
-    if (sec && sec.startsWith("q-")) { const d = document.getElementById("qa-" + sec.slice(2)); if (d) { showAllTopics(d); d.open = true; setTimeout(() => scrollToEl(d), 30); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true }); } }
-    else if (sec) openSection(sec); else { window.scrollTo({ top: 0 }); if (!first) focusHeading("monograph"); }
+    // a research page waits for its files the first time (renderMonograph), then opens where the address points
+    if (sec === "evidence") { show("monograph"); setTitle((monographFor(slug) || {}).name + ": the research"); window.scrollTo({ top: 0 }); renderMonograph(slug, () => { if (!first) focusHeading("monograph"); }); return; }
+    show("monograph"); setTitle((monographFor(slug) || {}).name); window.scrollTo({ top: 0 });
+    renderMonograph(slug, () => {
+      if (sec && sec.startsWith("q-")) { const d = document.getElementById("qa-" + sec.slice(2)); if (d) { showAllTopics(d); d.open = true; setTimeout(() => scrollToEl(d), 30); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true }); } }
+      else if (sec) openSection(sec); else if (!first) focusHeading("monograph");
+    });
     return;
   }
-  if (h.startsWith("ref-")) { show("monograph"); const el = document.getElementById(h); if (el) el.scrollIntoView({ block: "center" }); return; }
+  if (h.startsWith("ref-")) { show("monograph"); renderMonograph(currentSlug, () => { const el = document.getElementById(h); if (el) el.scrollIntoView({ block: "center" }); }); return; }
   // older links without the substance (#sec-13) open that section of the page last shown
-  if (h.startsWith("sec-")) { if (renderedSlug !== currentSlug) renderMonograph(currentSlug); show("monograph"); setTitle((monographFor(currentSlug) || {}).name); openSection(h); return; }
+  if (h.startsWith("sec-")) { show("monograph"); setTitle((monographFor(currentSlug) || {}).name); renderMonograph(currentSlug, () => openSection(h)); return; }
   if (h.startsWith("mix-")) { renderInteractions(); show("interactions"); setTitle("Mixing drugs"); const el = document.getElementById(h); if (el) { openAround(el); scrollToEl(el); } return; }
   // Facts about drug use: #facts, #facts/q-<claim>, and a bare claim address of a general answer (a shared link)
   if (h === "facts" || h.startsWith("facts/q-") || (h.startsWith("cl_") && claimById[h] && claimById[h].substance === GEN)) {
@@ -148,14 +151,17 @@ function route() {
     const c = claimById[h]; if (renderedDrug !== c.substance) renderDrug(c.substance); show("drug"); setTitle(subBySlug[c.substance].name);
     openAsk(h); setTimeout(() => openEvidence(h, null, null), 60); return;
   }
-  if (h.startsWith("cl_")) { const c = claimById[h]; if (c) { if (renderedSlug !== c.substance) renderMonograph(c.substance); show("monograph"); setTitle((monographFor(c.substance) || {}).name); const el = document.getElementById(h); if (el) { const d = el.closest("details"); if (d) d.open = true; const det = el.querySelector("details.cdetail"); if (det) det.open = true; scrollToEl(el); } } return; }
+  if (h.startsWith("cl_")) { const c = claimById[h]; if (c) { show("monograph"); setTitle((monographFor(c.substance) || {}).name); renderMonograph(c.substance, () => { const el = document.getElementById(h); if (el) { const d = el.closest("details"); if (d) d.open = true; const det = el.querySelector("details.cdetail"); if (det) det.open = true; scrollToEl(el); } }); } return; }
   if (h.startsWith("g-")) { show("glossary"); setTitle(PAGE_TITLES.glossary); const el = document.getElementById(h); if (el) scrollToEl(el); return; }
   // a country chosen in the search: #checking/c-Greece, #emergency/c-Greece, #law/c-Greece
   const cm = h.match(/^(emergency|checking|law)\/c-(.+)$/);
   if (cm) { show(cm[1]); setTitle(PAGE_TITLES[cm[1]]); window.scrollTo({ top: 0 }); openCountry(cm[1], decodeURIComponent(cm[2])); return; }
   if (!PAGE_VIEWS.includes(h) || h === "notfound" || h === "monograph") h = "home";
   show(h); setTitle(PAGE_TITLES[h]);
-  if (h === "review") renderReview();
+  // pages that read files fetched when needed draw on their first visit (speed, 13 November)
+  if (h === "numbers") showNumbers();
+  if (h === "howto") showHowto();
+  if (h === "review") whenReady(() => Promise.all(FULL_FILES.map(loadFull).concat(loadRefs(), loadJson("decisions.json", d => Object.assign(DECISIONS, d)))), document.getElementById("review-list"), "The review queue", renderReview);
   if (h === "quiz" && !QZ.quizpage) qzStart("quizpage");
   if (h === "home") { homeCont(); mfRefresh("tf"); }
   window.scrollTo({ top: 0 });
@@ -270,7 +276,7 @@ function renderQotd(step) {
   box.innerHTML = '<div class="qotd-k">' + icon(x.icon) + "<span>" + (step ? "Another question" : "Question of the day") + " · " + esc(s ? s.name : x.slug) + '</span></div><h2 class="qotd-q">' + esc(x.q) + '</h2>' +
     // try to answer first: guessing before reading helps the answer stick (docs/WRITING-RULES.md)
     '<button type="button" class="qotd-show" id="qotd-show" aria-expanded="false" aria-controls="qotd-ans">Think of your answer, then tap to see ours</button>' +
-    '<div class="qotd-ans" id="qotd-ans" hidden><p class="qotd-a">' + esc(sp ? sp.short : (c.plain || c.statement)) + "</p>" + (sp ? '<p class="qotd-but"><b>But</b> ' + esc(sp.but) + "</p>" : "") + "</div>" +
+    '<div class="qotd-ans" id="qotd-ans" hidden><p class="qotd-a">' + esc(sp ? sp.short : (claimText(c))) + "</p>" + (sp ? '<p class="qotd-but"><b>But</b> ' + esc(sp.but) + "</p>" : "") + "</div>" +
     '<p class="qotd-streak" id="qotd-streak" hidden></p><div class="qotd-f"><span class="qotd-m" hidden>' + meterHtml(c.grade.certainty) + '</span><a class="see qotd-m" href="#' + c.id + '" hidden>See the evidence ' + icon("arrow") + '</a><button type="button" class="ghost" id="qotd-next">Another question</button></div>';
   document.getElementById("qotd-show").addEventListener("click", e => { e.currentTarget.hidden = true; e.currentTarget.setAttribute("aria-expanded", "true"); document.getElementById("qotd-ans").hidden = false; box.querySelectorAll(".qotd-m").forEach(el => { el.hidden = false; });
     const n = qotdStreak(true), st = document.getElementById("qotd-streak"); if (st) { st.hidden = false; st.innerHTML = icon("bolt") + (n > 1 ? "<b>" + n + " days in a row.</b> Come back tomorrow for the next one." : "Come back tomorrow for the next question."); } });
@@ -384,7 +390,7 @@ function claimHtml(c, opts) {
   const nSrc = new Set(c.evidence.map(e => e.reference)).size;
   // the plain sentence and the certainty first; the precise sentence, the study details and the evidence one tap away
   return '<article class="claim ' + c.status + '" id="' + c.id + '">' +
-    '<div class="text">' + '<p class="plain">' + glossify(esc(c.plain || c.statement), glUsed) + "</p></div>" +
+    '<div class="text">' + '<p class="plain">' + glossify(esc(claimText(c)), glUsed) + "</p></div>" +
     '<div class="cert">' + meterHtml(c.grade.certainty) + '<span class="lvl">GRADE: ' + esc(gradeLabel(c.grade.certainty)) + " certainty</span>" +
     '<div><span class="badge ' + c.status + '" title="Protocol term: ' + esc(STATUS_PROTOCOL[c.status] || c.status) + '">' + esc(statusLabel(c.status)) + "</span></div>" +
     '<details class="why"><summary>Why this rating</summary>' + (((typeof SIMPLE !== "undefined" && SIMPLE.claims) || {})[c.id] && SIMPLE.claims[c.id].rate ? '<p class="why-plain">' + esc(SIMPLE.claims[c.id].rate) + "</p>" : "") + '<p class="mono">' + esc(gradeDomains(c.grade)) + "</p>" + inPieces(c.grade.reasoning, esc) + "</details></div>" +
@@ -477,7 +483,7 @@ function legalHtml(slug) {
 
 function glanceItem(id) {
   const c = claimById[id]; if (!c) return "";
-  return '<li><p>' + esc(c.plain || c.statement) + '</p><div class="qmeta">' + meterHtml(c.grade.certainty, true) + '<span class="badge ' + c.status + '">' + esc(statusLabel(c.status)) + '</span><a class="see" href="#' + id + '">See the evidence ' + icon("arrow") + "</a></div></li>";
+  return '<li><p>' + esc(claimText(c)) + '</p><div class="qmeta">' + meterHtml(c.grade.certainty, true) + '<span class="badge ' + c.status + '">' + esc(statusLabel(c.status)) + '</span><a class="see" href="#' + id + '">See the evidence ' + icon("arrow") + "</a></div></li>";
 }
 
 /* ---------- Quick answers: the reader's first layer of a drug page ---------- */
@@ -545,10 +551,10 @@ function freqHtml(f, flat) {
 function qaHtml(c, q) {
   const sp = (SIMPLE.claims || {})[c.id];
   return '<details class="qa" id="qa-' + c.id + '"><summary><span class="qq">' + esc(q) + "</span>" + meterHtml(c.grade.certainty, true) + '</summary><div class="qbody">' +
-    (sp ? '<p class="short">' + esc(sp.short) + '</p><p class="but"><b>But</b> ' + esc(sp.but) + "</p>" + freqHtml(sp.freq) : '<p>' + esc(c.plain || c.statement) + "</p>") +
+    (sp ? '<p class="short">' + esc(sp.short) + '</p><p class="but"><b>But</b> ' + esc(sp.but) + "</p>" + freqHtml(sp.freq) : '<p>' + esc(claimText(c)) + "</p>") +
     currencyHtml(c, true) +
     '<div class="qmeta"><span class="badge ' + c.status + '">' + esc(statusLabel(c.status)) + "</span>" + (c.verification.status === "draft" ? '<span class="badge early" title="' + esc(LADDER_WORDS.draft) + '">early draft: ' + esc(draftWhy(c)) + "</span>" : "") + srcChips(c) + "</div>" +
-    (sp ? '<details class="how"><summary>How we know</summary>' + (sp.how && sp.how.length ? '<ul class="howlist">' + sp.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul>" : "<p>" + esc(c.plain || c.statement) + "</p>") + "</details>" : "") +
+    (sp ? '<details class="how"><summary>How we know</summary>' + (sp.how && sp.how.length ? '<ul class="howlist">' + sp.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul>" : "<p>" + esc(claimText(c)) + "</p>") + "</details>" : "") +
     debateLine(c) + '<a class="see" href="#' + c.id + '">Full evidence ' + icon("arrow") + "</a></div></details>";
 }
 /* Test yourself: a few questions from the short answers; recalling an answer helps it stick better than reading it again */
@@ -583,7 +589,7 @@ function deckHtml(m) {
   const card = ([kind, id], i) => { const c = claimById[id], sp = (SIMPLE.claims || {})[id], q = questionFor(m.slug, id) || "";
     return '<article class="kf ' + kind + '" data-i="' + i + '"' + (i ? " hidden" : "") + ' aria-label="Fact ' + (i + 1) + " of " + items.length + '">' +
       '<p class="kf-k">' + (kind === "known" ? icon("check") + "What studies found" : icon("alert") + "Not known yet") + '<span class="kf-n">' + (i + 1) + " / " + items.length + "</span></p>" +
-      (q ? '<p class="kf-q">' + esc(q) + "</p>" : "") + '<p class="kf-a">' + esc(sp ? sp.short : (c.plain || c.statement)) + "</p>" +
+      (q ? '<p class="kf-q">' + esc(q) + "</p>" : "") + '<p class="kf-a">' + esc(sp ? sp.short : (claimText(c))) + "</p>" +
       (sp ? '<p class="kf-but"><b>But</b> ' + esc(sp.but) + "</p>" : "") +
       '<div class="kf-f">' + meterHtml(c.grade.certainty, true) + '<button type="button" class="qlink kf-go" data-q="' + id + '">See why ' + icon("arrow") + "</button></div></article>"; };
   return '<section class="deck" aria-label="Key facts" tabindex="-1"><div class="deck-h"><h2 class="qh">' + items.length + ' key facts</h2><p class="muted small">Swipe, or use the arrows.</p></div>' +
@@ -674,9 +680,25 @@ const isPhone = () => !!(window.matchMedia && window.matchMedia("(max-width: 700
 const isWide = () => !!(window.matchMedia && window.matchMedia("(min-width: 1000px)").matches);
 function sosLine() { return '<p class="sosline">Someone unwell? Call your local emergency number. <a href="#emergency">Numbers by country</a></p>'; }
 function sectionHasContent(m, x) {
-  return !!(x.claims.filter(id => claimById[id]).length || (x.number === 10 && figuresFor(m.slug).length) || (x.number === 2 && IDENTITY.some(d => d.substance === m.slug)) || (x.number === 13 && LEGAL.some(d => d.substance === m.slug)) || (x.number === 15 && m.status !== "planned") || (x.number === 14 && m.status === "planned" && PLANNED_QUESTIONS[m.slug]));
+  return !!(x.claims.filter(id => claimById[id]).length || (x.number === 10 && figureCount(m.slug)) || (x.number === 2 && IDENTITY.some(d => d.substance === m.slug)) || (x.number === 13 && LEGAL.some(d => d.substance === m.slug)) || (x.number === 15 && m.status !== "planned") || (x.number === 14 && m.status === "planned" && PLANNED_QUESTIONS[m.slug]));
 }
-function renderMonograph(slug) {
+// A research page reads its claims' full text, the references in full and the official figures: the first visit shows the
+// drug's name and a quiet line while those files arrive (speed, 13 November), later visits draw at once. "then" runs once the
+// page is drawn (to open a section or a claim), and not at all if the reader has gone elsewhere meanwhile.
+let MONO_WANT = null;
+function renderMonograph(slug, then) {
+  const m = monographFor(slug) || MONO; MONO_WANT = m.slug; currentSlug = m.slug;
+  const ids = m.sections.flatMap(x => x.claims).filter(id => claimById[id]);
+  const done = () => { if (MONO_WANT !== m.slug) return; if (renderedSlug !== m.slug) drawMonograph(m.slug); if (then) then(); };
+  if (renderedSlug === m.slug || (fullReady(ids, [m.slug]) && FIGURES_DONE)) { done(); return; }
+  renderedSlug = null;
+  document.getElementById("mono-title").textContent = m.name;
+  ["crumbs", "mono-eyebrow", "mono-inn", "mono-status", "mono-notice", "quick", "mono-meta", "mono-tags", "toc"].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ""; });
+  const mp = document.getElementById("mono-photo"); if (mp) mp.hidden = true;
+  const tg = document.getElementById("toggle-detail"); if (tg) tg.hidden = true;
+  whenReady(() => Promise.all([needFull(ids, [m.slug]), loadFigures()]), document.getElementById("sections"), "The research on " + m.name, done);
+}
+function drawMonograph(slug) {
   const m = monographFor(slug) || MONO; currentSlug = m.slug; renderedSlug = m.slug;
   const planned = m.status === "planned", base = "#s-" + m.slug + "/";
   const s = subBySlug[m.slug]; const em = s ? EVIDENCE_MAPS[s.folder] : null;
@@ -828,6 +850,11 @@ function figureRow(r, onDrugPage) {
 function figuresFor(slug) {
   return EPI_ALL.filter(r => r.status === "verified" && (EPI_MAP[r.substance] || []).includes(slug));
 }
+// how many there are, before the figures themselves have been fetched (site/build.js counts them)
+const figureCount = slug => FIGURES_DONE ? figuresFor(slug).length : (FIGURE_COUNT[slug] || 0);
+// the statistics page draws once its figures have arrived (speed: they are fetched the first time it is opened)
+let numbersDrawn = false;
+function showNumbers() { if (numbersDrawn) return; whenReady(loadFigures, document.getElementById("num-list"), "The figures", () => { numbersDrawn = true; renderNumbers(); }); }
 let numbersGeo = "", numbersSub = "All";
 function renderNumbers() {
   const geos = GEO_ORDER.filter(g => EPI_ALL.some(r => r.file === g && r.status === "verified"));
@@ -874,14 +901,28 @@ function renderInteractions() {
   // answers first, each with its question, the short answer and the full evidence on this page
   const ans = answered.map(k => { const [a, b] = k.split("|"); const q = INTERACTION_TOPICS[k] || INTERACTION_TOPICS[b + "|" + a] || "";
     return '<section class="mixpair" id="mix-' + esc(k.replace("|", "--").replace(/ /g, "_")) + '"><h2>' + esc(a) + " × " + esc(b) + "</h2>" + (q ? '<p class="muted">' + esc(q) + "</p>" : "") +
-      byPair[k].map(c => qaHtml(c, questionFor("interactions", c.id) || (SIMPLE.claims || {})[c.id] && SIMPLE.claims[c.id].short || c.outcome) + '<details class="mixfull"><summary>Full evidence for this answer</summary>' + claimHtml(c) + "</details>").join("") + "</section>"; }).join("");
+      // the full evidence is drawn when its fold is first opened, once the answer's file has arrived (speed, 13 November)
+      byPair[k].map(c => qaHtml(c, questionFor("interactions", c.id) || (SIMPLE.claims || {})[c.id] && SIMPLE.claims[c.id].short || claimText(c)) + '<details class="mixfull" data-full="' + esc(c.id) + '"><summary>Full evidence for this answer</summary><div class="mixfull-b"></div></details>').join("") + "</section>"; }).join("");
   const keys = Object.keys(INTERACTION_TOPICS).filter(k => !byPair[k]);
   document.getElementById("matrix-answers").innerHTML = ans;
   renderMix2();
   document.getElementById("matrix-topics").innerHTML = "<h2>" + (answered.length ? "Questions still being read" : "The questions the cells will answer") + "</h2><ol>" + keys.map(k => "<li><b>" + esc(k.replace("|", " × ")) + "</b> — " + esc(INTERACTION_TOPICS[k]) + "</li>").join("") + "</ol>";
 }
+document.addEventListener("toggle", e => {
+  const d = e.target; if (!d.matches || !d.matches("details.mixfull[data-full][open]") || d.dataset.drawn) return;
+  const c = claimById[d.dataset.full], box = d.querySelector(".mixfull-b"); if (!c || !box) return;
+  whenReady(() => needFull([c.id]), box, "The full evidence", () => {
+    d.dataset.drawn = "1"; box.innerHTML = claimHtml(c);
+    box.querySelectorAll("[data-toggle]").forEach(b => b.addEventListener("click", () => { const el = document.getElementById(b.dataset.toggle); el.hidden = !el.hidden; }));
+    box.querySelectorAll("[data-card]").forEach(b => b.addEventListener("click", () => openCard(b.dataset.card)));
+    box.querySelectorAll("[data-report]").forEach(b => b.addEventListener("click", () => openReport(b.dataset.report)));
+  });
+}, true);
 
 /* ---------- How to read: live example ---------- */
+// the example is a full claim, so it draws once its file has arrived (on the page's first visit)
+let howtoDrawn = false;
+function showHowto() { if (howtoDrawn) return; whenReady(() => needFull(["cl_meth_psychosis_dose"]), document.getElementById("howto-example"), "The example", () => { howtoDrawn = true; renderHowto(); }); }
 function renderHowto() {
   document.getElementById("howto-example").innerHTML = claimHtml(claimById["cl_meth_psychosis_dose"], { open: true });
   document.querySelectorAll("#howto-example [data-toggle]").forEach(b => b.addEventListener("click", () => { const el = document.getElementById(b.dataset.toggle); el.hidden = !el.hidden; }));
@@ -900,9 +941,11 @@ const ctryName = n => CTRY_DISPLAY[n] || n;
 const WL_COUNTRIES = WORLD_LAW.countries.filter(c => c.name !== "European Union").slice().sort((a, b) => ctryName(a.name).localeCompare(ctryName(b.name)));
 const CONV = { c1961: { name: "1961 Single Convention on Narcotic Drugs", src: "VI-18" }, c1971: { name: "1971 Convention on Psychotropic Substances", src: "VI-16" }, c1988: { name: "1988 Convention against Illicit Traffic", src: "VI-19" } };
 // which of the two scheduling treaties list at least one of this page's drugs (from the UN rows of the law section)
+// a drug's law rows come with its file (speed): until then the page knows only that they exist, and how many
+const legalReady = slug => { const L = LEGAL.find(x => x.substance === slug); return !L || !!L.entries; };
 function unConvsFor(slug) {
   const L = LEGAL.find(x => x.substance === slug); if (!L) return null;
-  const t = L.entries.filter(e => /United Nations/.test(e.jurisdiction)).map(e => e.status).join(" | ");
+  const t = (L.entries || []).filter(e => /United Nations/.test(e.jurisdiction)).map(e => e.status).join(" | ");
   const out = [];
   if (/Schedules? [IVX]+(?: and [IVX]+)? of the Single Convention/.test(t)) out.push("c1961");
   if (/Schedules? [IVX]+(?: and [IVX]+)? of the Convention on Psychotropic Substances/.test(t)) out.push("c1971");
@@ -923,7 +966,7 @@ function natRows(slug, unName) {
   const want = norm(ctryName(unName)), want2 = norm(unName);
   // a "not found" from a reading that could not cover every list stays in the full table, but the picker does not show it,
   // so that a gap in our reading is never read as "not controlled"
-  return L.entries.filter(e => { const j = norm(e.jurisdiction); return (j === want || j === want2) && !(e.verification === "draft" && /^([^:]{1,60}: )?Not (found|confirmed)/.test(e.status)); });
+  return (L.entries || []).filter(e => { const j = norm(e.jurisdiction); return (j === want || j === want2) && !(e.verification === "draft" && /^([^:]{1,60}: )?Not (found|confirmed)/.test(e.status)); });
 }
 const LAW_VER = { "ai-checked": "checked by a second AI reader", draft: "one AI reading, not checked yet", verified: "checked by our editor" };
 function countryOut(slug, unName) {
@@ -1099,7 +1142,7 @@ function buildIndex() {
     INDEX.push({ type: "drug", kind: "Drug · " + s.cls, title: s.name, prime: new Set(prime), names: [...new Set(names)], text: norm(s.cls + " " + s.mech), href: "#s-" + s.slug, badge: pageStateLabel(s.slug), badgeCls: s.status });
   });
   const asked = buildAnswerIndex();
-  CLAIMS.filter(c => !asked.has(c.id)).forEach(c => INDEX.push({ type: "claim", kind: "Finding · " + (subBySlug[c.substance] ? subBySlug[c.substance].name : c.substance), title: c.plain || c.statement, t: norm(c.plain || c.statement), text: norm(c.statement + " " + c.outcome + " " + c.exposure), href: "#" + c.id, badge: editorApproved(c) ? "Approved" : readerStamp(c.verification.status).split(":")[0], badgeCls: editorApproved(c) ? "ok" : "draft" }));
+  CLAIMS.filter(c => !asked.has(c.id)).forEach(c => INDEX.push({ type: "claim", kind: "Finding · " + (subBySlug[c.substance] ? subBySlug[c.substance].name : c.substance), title: claimText(c), t: norm(claimText(c)), text: norm(c.statement + " " + c.outcome + " " + c.exposure), href: "#" + c.id, badge: editorApproved(c) ? "Approved" : readerStamp(c.verification.status).split(":")[0], badgeCls: editorApproved(c) ? "ok" : "draft" }));
   GLOSSARY.forEach((g, i) => INDEX.push({ type: "term", kind: "Term", title: g.term, t: norm(g.term), text: norm(g.def), href: "#g-" + i }));
   // countries: where to get drug checking, the emergency numbers, the treaties
   const dcBy = {}; DRUGCHECK.services.forEach(s => { dcBy[s.country] = (dcBy[s.country] || 0) + 1; });
@@ -1205,10 +1248,18 @@ document.getElementById("search-results").addEventListener("keydown", e => { con
 document.getElementById("search-results").addEventListener("click", e => { if (e.target.closest("a")) { searchInput.value = ""; closeSearch(); } });
 
 /* ---------- Popover ---------- */
-let popEl = null, popTimer = null;
+let popEl = null, popTimer = null, popWant = null;
+// a reference's full APA entry comes with data/refs.json (speed): the first time, its popover opens once that has arrived,
+// unless the reader has moved on meanwhile
+function refsFirst(a, show) {
+  if (REFS_DONE) return false;
+  popWant = a; loadRefs().then(() => { if (popWant === a && a.isConnected) { popWant = null; show(a); } }).catch(() => { popWant = null; });
+  return true;
+}
 function showPop(a) {
   if (a.dataset.refs) return showPops(a);
   const ref = refById[a.dataset.ref]; if (!ref) return;
+  if (refsFirst(a, showPop)) return;
   hidePop();
   popEl = document.createElement("div"); popEl.className = "popover"; popEl.setAttribute("role", "dialog"); popEl.dataset.for = ref.id;
   const cards = Object.keys(cardById).filter(k => cardById[k].reference === ref.id);
@@ -1224,6 +1275,7 @@ function showPop(a) {
 }
 function showPops(a) {
   const refs = a.dataset.refs.split(",").map(id => refById[id]).filter(Boolean); if (!refs.length) return;
+  if (refsFirst(a, showPops)) return;
   hidePop();
   popEl = document.createElement("div"); popEl.className = "popover"; popEl.setAttribute("role", "dialog"); popEl.dataset.for = a.dataset.refs;
   popEl.innerHTML = '<p class="pops-h">' + refs.length + " sources</p>" + refs.map(ref => { const link = ref.DOI ? "https://doi.org/" + ref.DOI : ref.URL; return '<div class="refline">' + apaReference(ref) + "</div>" + (link ? '<div class="acts"><a href="' + esc(link) + '" target="_blank" rel="noopener">Open ' + (ref.DOI ? "DOI" : "source") + " ↗</a></div>" : ""); }).join("");
@@ -1246,7 +1298,7 @@ function showGloss(btn) {
   popEl.addEventListener("mouseenter", () => clearTimeout(popTimer));
   popEl.addEventListener("mouseleave", scheduleHide);
 }
-function hidePop() { if (popEl) { popEl.remove(); popEl = null; } }
+function hidePop() { popWant = null; if (popEl) { popEl.remove(); popEl = null; } }
 function scheduleHide() { clearTimeout(popTimer); popTimer = setTimeout(hidePop, 250); }
 const NO_HOVER = window.matchMedia ? window.matchMedia("(hover: none)").matches : false;
 document.addEventListener("mouseover", e => { if (NO_HOVER) return; const a = e.target.closest("a.pop"); if (a) { clearTimeout(popTimer); showPop(a); return; } const g = e.target.closest("button.gl"); if (g) { clearTimeout(popTimer); showGloss(g); } });
@@ -1298,7 +1350,7 @@ function pageStateLabel(slug) {
   const m = monographFor(slug); if (!m) return "";
   if (m.status !== "planned") return "Full write-up";
   if (hasQuickAnswers(slug)) return "Answers so far";
-  const basics = IDENTITY.some(d => d.substance === slug) || LEGAL.some(d => d.substance === slug) || figuresFor(slug).length;
+  const basics = IDENTITY.some(d => d.substance === slug) || LEGAL.some(d => d.substance === slug) || figureCount(slug);
   return basics ? "Basics only" : "Not written yet";
 }
 /* ---------- Drawer: study card ---------- */
@@ -1319,7 +1371,8 @@ function openCard(id) {
   const shell = msg => { panel.innerHTML = '<button class="close" type="button" aria-label="Close">✕</button><p class="muted" role="status" style="margin-top:40px">' + msg + "</p>"; panel.querySelector(".close").addEventListener("click", closeCard); drawer.classList.add("open"); };
   const sub = k.substance || "other";
   shell("Opening the study card…");
-  loadCardFile(sub).then(all => { if (!all[id]) { shell("This study card could not be found."); return; } renderCard(id, all[id]); })
+  // (the card's own reference is shown in full, so the full references come too: data/refs.json, speed)
+  Promise.all([loadCardFile(sub), loadRefs()]).then(([all]) => { if (!all[id]) { shell("This study card could not be found."); return; } renderCard(id, all[id]); })
     .catch(() => shell("The study card could not be loaded. Check your connection and try again."));
 }
 function renderCard(id, c) {
@@ -1369,7 +1422,7 @@ document.querySelectorAll("[data-email]").forEach(a => { a.href = "mailto:" + FB
 // the page the reader is on, in words, and its address
 function fbPage(where) {
   const h = String(where || location.hash || "#home").replace(/^#/, "");
-  const title = h.startsWith("cl_") && claimById[h] ? (subBySlug[claimById[h].substance] ? subBySlug[claimById[h].substance].name + ": " : "") + "answer “" + (((SIMPLE.claims || {})[h] || {}).short || claimById[h].outcome || h).slice(0, 90) + "”"
+  const title = h.startsWith("cl_") && claimById[h] ? (subBySlug[claimById[h].substance] ? subBySlug[claimById[h].substance].name + ": " : "") + "answer “" + (((SIMPLE.claims || {})[h] || {}).short || claimText(claimById[h])).slice(0, 90) + "”"
     : document.title.replace(/ · Pharmakon$/, "").replace(/^Pharmakon: .*/, "Start page");
   const short = h.startsWith("cl_") && claimById[h] ? (subBySlug[claimById[h].substance] ? subBySlug[claimById[h].substance].name : "Mixing drugs") + " answer" : title;
   return { title, short: short.length > 50 ? short.slice(0, short.lastIndexOf(" ", 50)) + "…" : short, url: location.origin + location.pathname + "#" + (h || "home") };
@@ -1624,7 +1677,8 @@ document.documentElement.lang = "en";
 applyPhotoPref();
 (function () { const el = document.getElementById("photo-credits"); if (!el) return; const name = s => (subBySlug[s] ? subBySlug[s].name : s === "safety-drug-checking" ? "Drug checking" : s);
   el.innerHTML = PHOTOS.slice().sort((a, b) => name(a.drug).localeCompare(name(b.drug))).map(p => "<li><b>" + esc(name(p.drug)) + ":</b> " + esc(p.form.toLowerCase()) + ". " + photoCredit(p) + "</li>").join(""); })();
-buildIndex(); renderHome2(); factsLinks(); renderSubstances(); renderMonograph(MONO.slug); renderGlossary(); renderInteractions(); renderHowto(); renderEmergency(); renderLaw(); renderChecking(); renderNumbers();
+// (the research pages, the statistics page and the how-to example draw on their first visit, once their files have arrived)
+buildIndex(); renderHome2(); factsLinks(); renderSubstances(); renderGlossary(); renderInteractions(); renderEmergency(); renderLaw(); renderChecking();
 window.addEventListener("hashchange", route);
 document.getElementById("skiplink").addEventListener("click", () => { const v = document.querySelector(".view.active"); const h = v && v.querySelector("h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus(); } });
 route();

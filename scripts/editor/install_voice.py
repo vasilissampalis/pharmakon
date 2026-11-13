@@ -5,7 +5,8 @@ For each answer: short, but, how, how_src and rate replace the current ones (fre
 general-page question stay); v stays the claim's version, and an answer whose claim changed since the tasks were made is
 skipped. A proposed question heading (q) is not installed here: it is kept in data/verification/DIR/q_proposed.json and goes
 into the check tasks (add_q_to_check), then onto the site after the check (sync_q). Problems are listed and the answer skipped:
-How points and their source lists of different lengths, a source that is not among the claim's own references, an empty line."""
+How points and their source lists of different lengths, a source that is not among the claim's own references, an empty line
+(a How point with an empty source list is allowed, as in the build)."""
 import json, sys, glob, os, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import sj
@@ -32,7 +33,8 @@ for n in ns:
             if not all(isinstance(e.get(k), str) and e[k].strip() for k in ("short", "but", "rate")): why.append("an empty short, but or rate")
             if not isinstance(e.get("how"), list) or not 2 <= len(e["how"]) <= 4 or not all(isinstance(x, str) and x.strip() for x in e["how"]): why.append("how needs 2 to 4 points")
             elif not isinstance(e.get("how_src"), list) or len(e["how_src"]) != len(e["how"]): why.append("how_src does not match the points")
-            elif any(not isinstance(l, list) or not l or any(r not in refs for r in l) for l in e["how_src"]): why.append("a source that is not the claim's own, or a point without a source")
+            # an empty list is allowed, as in the build: a general note (the "I barely felt it" point of Rule 0) cites no study
+            elif any(not isinstance(l, list) or any(r not in refs for r in l) for l in e["how_src"]): why.append("a source that is not the claim's own")
         if why: skipped.append(cid + ": " + "; ".join(why)); continue
         new = dict(cur)
         for k in ("short", "but", "how", "rate"):
