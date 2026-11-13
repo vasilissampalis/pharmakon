@@ -52,14 +52,62 @@ const site = f => JSON.parse(fs.readFileSync(path.join(ROOT, "data/site", f), "u
 const epiAll = ["europe", "global", "greece", "us"].flatMap(n => { const p = path.join(ROOT, "data/epidemiology", n + ".json"); return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, "utf8")).map(r => Object.assign({ _file: n }, r)) : []; });
 const mapsPath = path.join(ROOT, "data/evidence-maps.json");
 const maps = fs.existsSync(mapsPath) ? JSON.parse(fs.readFileSync(mapsPath, "utf8")) : {};
+/* Speed (13 November 2026; the senior author: "every time I open the website… a few seconds pass"). The page was 12.6 MB of
+   script, most of it read only on the answer sheet and the research pages. It now carries a light index of everything the start
+   page, the drug pages, search and the quiz read; the rest is published next to it and fetched when a view needs it (see "What
+   loads when" in app.core.js): data/full-<substance>.json (each claim's full text and grading, what each source says and where,
+   the drug's law rows, the sources of its names and its study cards' notes), data/refs.json (every reference in full) and
+   data/figures.json (the official figures). */
+// the page leaves out what it never shows (each claim's changelog, and who located or checked each anchor and when); the data files keep it
+const shownClaims = claims.map(c => { const { changelog, ...rest } = c; return Object.assign(rest, { evidence: c.evidence.map(e => { const { located_by, located_on, checked_by, checked_on, check_note, ...ee } = e; return ee; }) }); });
+const SECONDHAND = /\b(second-hand|as summari[sz]ed|as relayed)\b/i;   // the test draftWhy() in app.views.js makes on the statement
+const LIGHT_CLAIM = ["id", "substance", "section", "plain", "status", "version", "relation", "pair", "documents_retraction"];
+// a claim in the page: what lists, cards, flags and search read; each anchor as [reference, study card, role, anchor status]
+const lightClaim = c => { const o = {};
+  LIGHT_CLAIM.forEach(k => { if (c[k] != null) o[k] = c[k]; });
+  o.grade = { certainty: c.grade.certainty, starting_level: c.grade.starting_level }; o.verification = { status: c.verification.status };
+  o.ev = c.evidence.map(e => [e.reference, e.study_card || 0, e.role, e.anchor_status]);
+  if (!c.plain) o.title = String(c.statement || "").split(/(?<=[.;])\s/)[0].slice(0, 200);   // search finds a claim without a plain line by its opening words
+  if (c.debate) o.debate = 1;                                      // "Researchers disagree" shows before the debate itself is fetched
+  if (SECONDHAND.test(c.statement || "")) o.secondhand = 1;        // the reason an early draft gives, before its statement is fetched
+  return o; };
+// the rest of a claim, in its substance's file: every other field, the grading's domains and reasoning, and each anchor's text and place
+const heavyClaim = c => { const o = {};
+  Object.entries(c).forEach(([k, v]) => { if (!LIGHT_CLAIM.includes(k) && !["grade", "verification", "evidence"].includes(k)) o[k] = v; });
+  const { certainty, starting_level, ...g } = c.grade, { status, ...v } = c.verification;
+  o.grade = g; o.verification = v;
+  o.evidence = c.evidence.map(e => { const { reference, study_card, role, anchor_status, ...rest } = e; return rest; });
+  return o; };
+const legalDocs = loadAll(path.join(ROOT, "data/legal")).map(d => Object.assign({}, d, { entries: d.entries.map(e => { const { source_title, history, ...ee } = e; return ee; }) }));
+const identityDocs = loadAll(path.join(ROOT, "data/identity"));
+// what search and the drug pages read of a drug's names (all names, street names and members' names); the sources and forms are in its file
+const lightIdentity = d => ({ substance: d.substance, names: d.names, street_names: d.street_names, verification: d.verification,
+  members: (d.members || []).map(m => ({ name: m.name, inn: m.inn, synonyms: m.synonyms, cas: m.cas })) });
+// a reference in the page: what in-text labels, links and source lists need (every author's surname, the year, the title); the full record is in data/refs.json
+const lightRef = r => { const o = { id: r.id, author: (r.author || []).map(a => { const x = a.literal != null ? { literal: a.literal } : { family: a.family }; if (a.short) x.short = a.short; return x; }), issued: r.issued, title: r.title };
+  ["year_suffix", "no_author", "short_title", "DOI", "_aux"].forEach(k => { if (r[k] != null) o[k] = r[k]; });
+  if (!r.DOI && r.URL) o.URL = r.URL;
+  return o; };
+const epiRows = epiAll.map(r => ({ id: r.id, value: r.value, unit: r.unit, interval: r.interval || null, measure: r.measure, def: trimQuotes(r.measure_definition, r.value), substance: r.substance, population: r.population, geography: r.geography, data_year: r.data_year, source: r.source, edition: r.source_edition_year, where: trimQuotes(r.page_or_table, r.value), url: r.url, status: r.verification.status, verified_on: r.verification.verified_on || null, label: r.display && r.display.label || null, file: r._file }));
+const epiMap = (() => { const q = site("epi-substance-map.json"); delete q._note; return q; })();
+// how many checked figures each drug page has (the drug list and the research page's contents read it before the figures are fetched)
+const figureCount = {}; epiRows.filter(r => r.status === "verified").forEach(r => (epiMap[r.substance] || []).forEach(s => { figureCount[s] = (figureCount[s] || 0) + 1; }));
+// each substance's file: its claims' full text, its law rows, its names' sources and its study cards' notes
+const full = {}, fullOf = s => (full[s] = full[s] || { claims: {} });
+shownClaims.forEach(c => { fullOf(c.substance).claims[c.id] = heavyClaim(c); });
+legalDocs.forEach(d => { fullOf(d.substance).legal = d; });
+identityDocs.forEach(d => { const { names, street_names, verification, ...rest } = d; fullOf(d.substance).identity = rest; });
+Object.entries(cards).forEach(([id, c]) => { if (!c.substance || !(c.what_would_settle_it || c.verification.source_read)) return; const f = fullOf(c.substance); (f.cards = f.cards || {})[id] = { what_would_settle_it: c.what_would_settle_it || null, source_read: c.verification.source_read || "" }; });
 const data = [
   "const EVIDENCE_MAPS = " + JSON.stringify(maps) + ";",
-  "const REFS = " + JSON.stringify(refs) + ";",
-  // Study cards are most of the page's weight and are read one at a time: the page carries a small index (what counts, labels and
-  // the research-gap lines need) and each substance's full cards are published next to it as data/cards-<substance>.json, loaded when a card is opened.
-  "const STUDY_CARDS = " + JSON.stringify(Object.fromEntries(Object.entries(cards).map(([id, c]) => [id, { reference: c.reference, substance: c.substance, design: c.design, what_would_settle_it: c.what_would_settle_it || null, verification: { status: c.verification.status, source_read: c.verification.source_read || "" } }]))) + ";",
-  // the page leaves out what it never shows (each claim's changelog, and who located or checked each anchor and when); the data files keep it
-  "const CLAIMS = " + JSON.stringify(claims.map(c => { const { changelog, ...rest } = c; return Object.assign(rest, { evidence: c.evidence.map(e => { const { located_by, located_on, checked_by, checked_on, check_note, ...ee } = e; return ee; }) }); })) + ";",
+  "const REFS = " + JSON.stringify(refs.map(lightRef)) + ";",
+  // Study cards are read one at a time: the page carries a small index (what counts and labels need) and each substance's full
+  // cards are published next to it as data/cards-<substance>.json, loaded when a card is opened; the research-gap lines come with the substance's file.
+  "const STUDY_CARDS = " + JSON.stringify(Object.fromEntries(Object.entries(cards).map(([id, c]) => [id, { reference: c.reference, substance: c.substance, design: c.design, verification: { status: c.verification.status }, full: c.verification.source_read && !/^abstract/i.test(c.verification.source_read) ? 1 : 0 }]))) + ";",
+  "const CLAIMS = " + JSON.stringify(shownClaims.map(lightClaim)) + ";",
+  // the substances that have a file of their own (data/full-<substance>.json), and each drug page's number of checked figures
+  "const FULL_FILES = " + JSON.stringify(Object.keys(full).sort()) + ";",
+  "const FIGURE_COUNT = " + JSON.stringify(figureCount) + ";",
   "const MONO = " + JSON.stringify(monos.find(m => m.slug === "methamphetamine") || monos[0]) + ";",
   "const MONOS = " + JSON.stringify(monos) + ";",
   "const SUBSTANCES = " + JSON.stringify(site("substances.json")) + ";",
@@ -89,13 +137,16 @@ const data = [
   "const ALIASES = " + JSON.stringify(site("aliases.json")) + ";",
   "const ALIASES_EL = " + JSON.stringify(site("aliases-el.json")) + ";",
   "const GLOSSARY = " + JSON.stringify(site("glossary.json")) + ";",
-  "const DECISIONS = " + JSON.stringify(site("decisions.json")) + ";",
+  // the senior author's open decisions are read only on the review page: they arrive from data/decisions.json when it opens
+  "const DECISIONS = {};",
   "const FEEL_LITTLE = " + JSON.stringify((() => { const q = site("feel-little.json"); delete q._note; return q; })()) + ";",
   "const INTERACTION_TOPICS = " + JSON.stringify((() => { const q = site("interaction-topics.json"); delete q._note; return q; })()) + ";",
-  "const EPI_ALL = " + JSON.stringify(epiAll.map(r => ({ id: r.id, value: r.value, unit: r.unit, interval: r.interval || null, measure: r.measure, def: trimQuotes(r.measure_definition, r.value), substance: r.substance, population: r.population, geography: r.geography, data_year: r.data_year, source: r.source, edition: r.source_edition_year, where: trimQuotes(r.page_or_table, r.value), url: r.url, status: r.verification.status, verified_on: r.verification.verified_on || null, label: r.display && r.display.label || null, file: r._file }))) + ";",
-  "const EPI_MAP = " + JSON.stringify((() => { const q = site("epi-substance-map.json"); delete q._note; return q; })()) + ";",
-  "const IDENTITY = " + JSON.stringify(loadAll(path.join(ROOT, "data/identity"))) + ";",
-  "const LEGAL = " + JSON.stringify(loadAll(path.join(ROOT, "data/legal")).map(d => Object.assign({}, d, { entries: d.entries.map(e => { const { source_title, history, ...ee } = e; return ee; }) }))) + ";",
+  // the official figures arrive from data/figures.json when the statistics page or a research page needs them
+  "const EPI_ALL = [];",
+  "const EPI_MAP = " + JSON.stringify(epiMap) + ";",
+  "const IDENTITY = " + JSON.stringify(identityDocs.map(lightIdentity)) + ";",
+  // which drugs have law rows, and how many; the rows come with the drug's file
+  "const LEGAL = " + JSON.stringify(legalDocs.map(d => ({ substance: d.substance, n: d.entries.length }))) + ";",
   "const QUESTIONS = " + JSON.stringify((() => { const q = site("questions.json"); delete q._note; for (const [slug, groups] of Object.entries(q)) { const m = monos.find(x => x.slug === slug); if (!m) continue; const inMono = new Set(m.sections.flatMap(x => x.claims)); const asked = groups.flatMap(g => g.items.map(i => i[0])); const missing = [...inMono].filter(id => !asked.includes(id)), extra = asked.filter(id => !inMono.has(id)), dup = asked.filter((id, i) => asked.indexOf(id) !== i); if (missing.length || extra.length || dup.length) console.error("WARNING: questions.json for " + slug + ": missing " + missing.join(", ") + "; not in the monograph " + extra.join(", ") + "; twice " + dup.join(", ")); } return q; })()) + ";",
   "const SIMPLE = " + JSON.stringify((() => { const q = site("simple.json"); delete q._note;
     // reading level of the simplest layer (Flesch-Kincaid grade, rough syllable count): warn above grade 7
@@ -121,6 +172,9 @@ const data = [
     for (const [slug, list] of Object.entries(q.tf || {})) q.tf[slug] = list.filter(x => { const ok = x.v && ver[x.claim] && x.v === ver[x.claim] && q.claims[x.claim]; if (!ok) console.error("NOTE: True-or-false statement on " + x.claim + " left out until rewritten for the claim's new version"); return ok; });
     // quick questions follow the same rule: written from one version of a claim, shown only while that version stands
     for (const [slug, list] of Object.entries(q.quiz || {})) q.quiz[slug] = list.filter(x => { const ok = x.v && ver[x.claim] && x.v === ver[x.claim] && q.claims[x.claim] && Array.isArray(x.options) && x.options.length === 3 && [0, 1, 2].includes(x.answer); if (!ok) console.error("NOTE: Quick question on " + x.claim + " left out until rewritten for the claim's new version"); return ok; });
+    // "Why this rating" in plain words is read only on the answer sheet and the research pages: it travels with the claim's file (speed)
+    const subOf = Object.fromEntries(shownClaims.map(c => [c.id, c.substance]));
+    for (const [id, c] of Object.entries(q.claims || {})) if (c.rate && subOf[id]) { fullOf(subOf[id]).claims[id].rate = c.rate; delete c.rate; }
     return q; })()) + ";",
   "const WORLD_LAW = " + JSON.stringify((() => { const q = site("world-law.json"); delete q._note; return q; })()) + ";",
   "const DRUGCHECK = " + JSON.stringify(drugCheck) + ";",
@@ -161,6 +215,14 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
   for (const f of fs.readdirSync(dataDir)) if (/^cards-.*\.json$/.test(f)) fs.unlinkSync(path.join(dataDir, f));
   const bySub = {}; for (const [id, c] of Object.entries(cards)) (bySub[c.substance || "other"] = bySub[c.substance || "other"] || {})[id] = c;
   for (const [sub, cs] of Object.entries(bySub)) fs.writeFileSync(path.join(dataDir, "cards-" + sub + ".json"), JSON.stringify(cs));
-  console.log("wrote", Object.keys(bySub).length, "card files to dist/data:", Object.entries(bySub).map(([k, v]) => k + " " + Object.keys(v).length).join(", ")); }
+  console.log("wrote", Object.keys(bySub).length, "card files to dist/data:", Object.entries(bySub).map(([k, v]) => k + " " + Object.keys(v).length).join(", "));
+  // the parts fetched when a view needs them (speed, above): each substance's file, every reference in full, the official figures
+  for (const f of fs.readdirSync(dataDir)) if (/^full-.*\.json$/.test(f)) fs.unlinkSync(path.join(dataDir, f));
+  for (const [sub, d] of Object.entries(full)) fs.writeFileSync(path.join(dataDir, "full-" + sub + ".json"), JSON.stringify(d));
+  fs.writeFileSync(path.join(dataDir, "refs.json"), JSON.stringify(Object.fromEntries(refs.map(r => [r.id, r]))));
+  fs.writeFileSync(path.join(dataDir, "figures.json"), JSON.stringify(epiRows));
+  fs.writeFileSync(path.join(dataDir, "decisions.json"), JSON.stringify(site("decisions.json")));
+  const kb = f => (fs.statSync(path.join(dataDir, f)).size / 1024).toFixed(0) + " KB";
+  console.log("wrote", Object.keys(full).length, "substance files to dist/data (largest " + Object.keys(full).map(s => "full-" + s + ".json").sort((a, b) => fs.statSync(path.join(dataDir, b)).size - fs.statSync(path.join(dataDir, a)).size).slice(0, 3).map(f => f + " " + kb(f)).join(", ") + "), refs.json " + kb("refs.json") + ", figures.json " + kb("figures.json")); }
 if (fs.existsSync(photoDir)) { fs.mkdirSync(imgDir, { recursive: true }); const n = fs.readdirSync(photoDir).filter(f => f.endsWith(".webp")).map(f => fs.copyFileSync(path.join(photoDir, f), path.join(imgDir, f))).length; console.log("copied", n, "photo files to dist/img"); }
 console.log("built dist/index.html", (html.length / 1024).toFixed(1) + " KB;", refs.length, "refs,", Object.keys(cards).length, "cards,", claims.length, "claims; evidence maps:", Object.keys(maps).length);

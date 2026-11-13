@@ -303,7 +303,7 @@ function setCountry(un, from) {
 function refreshCountryParts() {
   const page = document.getElementById("drug2");
   if (page && renderedDrug) {
-    const law = page.querySelector("#d-law .sec-b"); if (law) law.innerHTML = lawHtml(renderedDrug);
+    const law = page.querySelector("#d-law .sec-b"); if (law) { law.innerHTML = lawHtml(renderedDrug); lawWait(); }
     const h = page.querySelector("#d-help .sec-b"); if (h) h.innerHTML = helpHtml();
     const top = page.querySelector(".dh-help"); if (top) top.outerHTML = helpTopLine(renderedDrug);
     const t = page.querySelector("#sf-test .sf-b"); if (t) t.innerHTML = testHtml();
@@ -336,8 +336,14 @@ function lawPlain(slug, un) {
 function lawHtml(slug) {
   if (!LEGAL.some(d => d.substance === slug)) return '<p class="say">We have not read the law on this drug yet.</p>';
   if (!PREF_COUNTRY) return countryAsk();
+  // the law rows come with the drug's file (speed): a quiet line until they arrive, then this part is drawn again (lawWait)
+  if (!legalReady(slug)) return countryAsk() + '<div class="lawwait" data-law="' + esc(slug) + '"></div>';
   return countryAsk() + '<p class="say">' + esc(lawPlain(slug, PREF_COUNTRY)) + '</p><details class="lawmore"><summary>What the law says, with its sources</summary><div class="lawmore-b">' +
     countryOut(slug, PREF_COUNTRY) + '<p class="small"><a href="#law">Treaties, country by country</a></p></div></details>';
+}
+function lawWait() {
+  document.querySelectorAll(".lawwait[data-law]").forEach(box => { const slug = box.dataset.law; box.removeAttribute("data-law");
+    whenReady(() => loadFull(slug), box, "The law", () => { const sec = box.closest(".sec-b"); if (sec && renderedDrug === slug) sec.innerHTML = lawHtml(slug); }); });
 }
 /* Sourced lines for Staying safer (data/site/stay-safer.json): official and non-profit pages, each line checked by a
    second AI reader before it is shown; what home tests can show, where kits can be had, and first aid by drug family */
@@ -706,6 +712,8 @@ function renderDrug(slug) {
     familyHtml(m);
   const box = document.getElementById("drug2"); box.className = "wrap drug2 f-" + f.k; box.innerHTML = h;  // the family colour runs through the whole page
   applyPhotoPref(); qzStart("qz-drug", slug); pageProgress();
+  // the law part fills in when the drug's file arrives; the file is fetched ahead once the page settles, so the evidence opens at once
+  lawWait(); fetchAhead(slug);
 }
 // chips jump to their question without changing the address (so Back still leaves the page)
 document.addEventListener("click", e => {
@@ -914,8 +922,17 @@ function focusEvSource(ref) {
 function openEvidence(id, opener, focusRef) {
   if (!claimById[id]) return false;
   const sh = document.getElementById("evsheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
-  panel.innerHTML = evHtml(id); panel.scrollTop = 0;
-  panel.querySelectorAll("[data-card]").forEach(b => b.addEventListener("click", () => openCard(b.dataset.card)));
+  // the sheet reads the answer's full text and the references in full (speed, 13 November): the first time, it opens at once
+  // with its Back button, the question and a quiet line, and fills in when they arrive
+  const fill = () => {
+    panel.innerHTML = evHtml(id); panel.scrollTop = 0;
+    panel.querySelectorAll("[data-card]").forEach(b => b.addEventListener("click", () => openCard(b.dataset.card)));
+    const b = panel.querySelector(".ev-back"); if (b) b.focus({ preventScroll: true });
+    if (focusRef) setTimeout(() => focusEvSource(focusRef), 60);
+  };
+  const ready = fullReady([id]);
+  if (!ready) { panel.innerHTML = '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye">The evidence</span></div>' +
+    '<h2 id="ev-title">' + esc(anyQuestion(id) || claimText(claimById[id])) + '</h2><div class="ev-wait"></div>'; panel.scrollTop = 0; }
   if (!EV.open) {
     EV.opener = opener || document.activeElement;
     // the phone's Back button closes the sheet instead of leaving the page
@@ -923,8 +940,9 @@ function openEvidence(id, opener, focusRef) {
   }
   EV.id = id; EV.open = true; sh.classList.add("open"); document.documentElement.classList.add("sheet-open");
   hidePop(); closeSearch();
-  const b = panel.querySelector(".ev-back"); if (b) b.focus({ preventScroll: true });
-  if (focusRef) setTimeout(() => focusEvSource(focusRef), 60);
+  if (ready) fill();
+  else { const b = panel.querySelector(".ev-back"); if (b) b.focus({ preventScroll: true });
+    whenReady(() => needFull([id]), panel.querySelector(".ev-wait"), "The evidence", () => { if (EV.open && EV.id === id) fill(); }); }
   return true;
 }
 function closeEvidence(fromHistory) {
