@@ -13,6 +13,14 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   never only in temporary folders. Large scratch files (page images, PDF text dumps) may stay outside it.
 - Never commit PDFs of papers (copyright) or built output (`site/dist`, `site/public`, zips).
 
+## Demand first (senior author, 13 November 2026)
+
+- Prioritize what people actually want to learn, not what we think they want: questions come from real sources (Reddit
+  pages and forums he pastes, search questions, the site's own visitors), ranked by how much people ask them
+  (`data/verification/questions-*/`, scores in `data/site/demand.json`). Safety facts go inside the answers people ask for.
+- Write each question in people's words and lead each short answer with what they want to know. Nothing too clinical or
+  boring at the top of a page: clinical answers stay, checked, but lower down. No answer exists only because a paper does.
+
 ## Evidence rules (METHODS.md has the full protocol)
 
 - Nothing unverified. Every statement rests on anchors: a passage found by one reader and checked at the source by
