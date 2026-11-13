@@ -76,18 +76,18 @@
 
 ## The 15 most valuable new answers to write
 
-Safety first, then what people wonder about most. All are yes or reframe, and none is answered on the site yet.
+Safety first, then what people wonder about most. All are yes or reframe; none of these questions is answered on the site yet, though several build on answers that are.
 
 1. **What are the signs of an opioid overdose, and how is it different from nodding off?** (yes; theme rank 6). Safety first: 25 posts (6th theme). People ask what an overdose feels like and whether heavy nodding is dangerous. The site has naloxone answers but nothing on recognising an overdose.
 2. **How often do fake pills and other street drugs turn out to contain fentanyl?** (yes; theme rank 12). Deaths from fentanyl in fake oxycodone and fake Adderall recur in r/opiates and r/Drugs. The site covers how test strips perform, not how common fentanyl is in what people buy.
-3. **Is it dangerous to stop benzodiazepines suddenly?** (yes; theme rank 51). Withdrawal seizures are a real risk. These posts are among the most commented in r/Drugs ('Can I get addicted to alprazolam?', severe withdrawal). The site has nothing on benzo dependence or withdrawal.
+3. **Is it dangerous to stop benzodiazepines suddenly?** (yes; theme rank 51). Withdrawal seizures are a real risk. Three of these posts rank 2nd, 25th and 32nd of 251 by comments in r/Drugs ('Can I get addicted to alprazolam?', severe withdrawal). The site has nothing on benzo dependence or withdrawal.
 4. **What happens when MDMA is combined with alcohol, cannabis, LSD or ketamine?** (reframe; theme rank 34). Candyflipping and MDMA with ketamine or cannabis come up again and again. The site covers MDMA with medicines only. Answer as risk facts, with no timing.
 5. **Is quitting opioids cold turkey dangerous?** (yes; theme rank 32). Withdrawal is rarely deadly in itself, but tolerance falls fast, and methadone or buprenorphine treatment is linked to fewer deaths. Medicines for withdrawal are on the site; this safety picture is not.
 6. **Why does MDMA make it hard to pee, and when is that a danger sign?** (yes; theme rank 18). The brief's own example, asked in several posts. It links to the water-retention (vasopressin) mechanism behind the site's low-blood-salt answers.
-7. **Can a pill's logo, colour or shape tell you what is in it?** (yes; theme rank 23). 21 'what is this pill?' posts, mostly in r/MDMA. Drug-checking data answer it, building on cl_mdma_pill_content.
-8. **What happens when someone takes far too much cannabis, especially edibles?** (yes; theme rank 50). Two edible emergencies drew very large responses. The site covers edibles and children and how slowly edibles act, but not adults who take too much.
+7. **Can a pill's logo, colour or shape tell you what is in it?** (yes; theme rank 23). 21 posts about what is in pills, mostly 'what is this?' photos in r/MDMA. Drug-checking data answer it, building on cl_mdma_pill_content.
+8. **What happens when someone takes far too much cannabis, especially edibles?** (yes; theme rank 50). Two posts about very large edibles (one ending in the ER) drew big responses. The site covers edibles and children and how slowly edibles act, but not adults who take too much.
 9. **Can a new or unusual place make a drug more dangerous?** (yes; theme rank 31). People ask how tolerance works and why they 'feel high' before using. Conditioned tolerance explains both and is a known overdose risk. The site covers only tolerance falling after a break.
-10. **What helps when a family member or partner uses drugs?** (yes; theme rank 26). Parents, partners and grandchildren ask what to do (13 posts with large engagement in r/Drugs). Family-training (CRAFT) trials answer it, and better family responses keep people who use drugs safer. Nothing on the site.
+10. **What helps when a family member or partner uses drugs?** (yes; theme rank 26). Parents, partners and grandchildren ask what to do (13 posts; the most engaged are in r/Drugs). Family-training (CRAFT) trials answer it, and better family responses keep people who use drugs safer. Nothing on the site.
 11. **Where does the 'three-month rule' for MDMA come from?** (reframe; theme rank 30). r/MDMA's most frequent practical question. Answer as a myth check of the rule and what tolerance research shows, with no recommended interval.
 12. **What does MDMA do to desire, erections and orgasm?** (yes; theme rank 5). Fifth-ranked theme, with nothing on the site. It includes the safety point about mixing with erection medicines.
 13. **Does MDMA really make people more empathic, or does it only feel that way?** (yes; theme rank 3). Third-ranked theme. Lab studies of empathy and emotion recognition give a surprising answer, building on cl_mdma_feelings.
@@ -97,7 +97,7 @@ Safety first, then what people wonder about most. All are yes or reframe, and no
 ## Myth or fact? Candidates worth checking first
 
 - MDMA makes people feel more empathic, yet in lab tests they got worse at reading negative emotions in faces. (fact; basis: Hysek and colleagues (2012); Bedi, Hyman and de Wit (2010); to verify)
-- Snoring or gurgling in someone who has taken opioids can be a sign of overdose, not deep sleep. (fact; basis: WHO (2014) guidance on opioid overdose signs; to verify)
+- Snoring or gurgling in someone who has taken opioids can be a sign of overdose, not deep sleep. (fact; basis: Overdose-recognition guidance; check which guideline (for example WHO, 2014) names snoring and gurgling; to verify)
 - In rats, heroin was more often deadly when given in an unfamiliar place. (fact; basis: Siegel and colleagues (1982), Science; to verify)
 - Most people who try heroin or cocaine never become dependent. (fact; basis: Anthony, Warner and Kessler (1994), National Comorbidity Survey; to verify)
 - People experiencing homelessness who received a lump of cash did not spend more on alcohol, drugs or tobacco. (fact; basis: Dwyer and colleagues (2023), PNAS; to verify)
