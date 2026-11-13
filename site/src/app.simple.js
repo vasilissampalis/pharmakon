@@ -76,7 +76,7 @@ function ansHtml(id, q, pre, rn) {
 }
 /* One answer, in the order a reader needs it (senior author, 1 November: "so many words that I get lost"): the short answer,
    its catch and the picture first; how sure the research is and the evidence in one line; "How do we know?" one tap away,
-   with compact source labels; the sources themselves, the full references and "Report an issue" live in the evidence.
+   with compact source labels; the sources themselves, the full references and "Report a mistake" live in the evidence.
    In a card (card = true) the short answer and the bars are already on the closed card, so the open card starts with the
    catch, and "How do we know?" shows at once instead of folding a third time (redesign 2: two levels, no third). */
 function answerBody(id, c, sp, card) {
@@ -1005,8 +1005,9 @@ function evHtml(id) {
       '<p class="ev-src-acts">' + (/^https?:/.test(link) ? '<a href="' + esc(link) + '" target="_blank" rel="noopener">Open the paper ' + icon("arrow") + "</a>" : "") +
       (sc ? '<button type="button" class="ev-card" data-card="' + esc(sc) + '">How this study was done, and its limits</button>' : "") + "</p></div></details></li>";
   }).join("");
-  const peco = '<dl class="ev-peco"><dt>Who was studied</dt><dd>' + sheetCites(c.population, refs) + "</dd><dt>What they took or did</dt><dd>" + sheetCites(c.exposure, refs) + "</dd><dt>Compared with</dt><dd>" + sheetCites(c.comparator, refs) +
-    "</dd><dt>What was measured</dt><dd>" + sheetCites(c.outcome, refs) + "</dd><dt>How big</dt><dd>" + sheetCites(c.magnitude, refs) + "</dd></dl>";
+  const cites = t => sheetCites(t, refs);
+  const peco = '<dl class="ev-peco"><dt>Who was studied</dt><dd>' + inPieces(c.population, cites) + "</dd><dt>What they took or did</dt><dd>" + inPieces(c.exposure, cites) + "</dd><dt>Compared with</dt><dd>" + inPieces(c.comparator, cites) +
+    "</dd><dt>What was measured</dt><dd>" + inPieces(c.outcome, cites) + "</dd><dt>How big</dt><dd>" + inPieces(c.magnitude, cites) + "</dd></dl>";
   const home = c.substance === "interactions" ? '<a href="#interactions">Mixing drugs: every answer we have</a>' : c.substance === DC ? '<a href="#checking/kits">Test kits: every answer we have</a>' : subBySlug[c.substance] ? '<a href="#s-' + c.substance + '/evidence">All the research on ' + esc(subBySlug[c.substance].name) + "</a>" : "";
   return '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye">The evidence</span></div>' +
     '<h2 id="ev-title">' + esc(q || c.plain || c.statement) + "</h2>" +
@@ -1015,15 +1016,16 @@ function evHtml(id) {
     (sp && sp.how && sp.how.length ? '<h3 class="ev-h">How we know</h3><ul class="ev-how">' + sp.how.map((t, i) => "<li>" + esc(t) + howSrcHtml(sp, i, true, id) + "</li>").join("") + "</ul>" : "") +
     evDebateHtml(c, refs) +
     '<h3 class="ev-h">' + (refs.length === 1 ? "The source" : "The " + refs.length + " sources") + '</h3><p class="ev-sub small muted">Tap a source to see what it says for this answer, and where.</p><ul class="ev-refs">' + studies + "</ul>" +
-    '<details class="sf-more"><summary>For researchers: the full finding and who was studied</summary><p class="ev-precise">' + sheetCites(c.statement, refs) + "</p>" + peco + "</details>" +
+    // the researchers' text, one quiet tap away and in short pieces (senior author, 13 November: "too overwhelming, nobody will read it")
+    '<details class="sf-more sf-sci"><summary>Scientific detail</summary><div class="ev-precise">' + inPieces(c.statement, cites) + "</div>" + peco + "</details>" +
     currencyHtml(c) +
     '<p class="ev-stamp">' + esc(readerStamp(c.verification.status, c)) + " · version " + esc(c.version) + " · " + anchors.length + (anchors.length === 1 ? " finding" : " findings") + " from " + refs.length + (refs.length === 1 ? " source" : " sources") + "</p>" +
-    '<p class="ev-foot"><button type="button" class="linklike" data-fb="issue" data-where="' + esc(id) + '">Report an issue with this answer</button>' + (home ? "<span>" + home + "</span>" : "") + "</p>";
+    '<p class="ev-foot"><button type="button" class="linklike" data-fb="issue" data-where="' + esc(id) + '">Report a mistake in this answer</button>' + (home ? "<span>" + home + "</span>" : "") + "</p>";
 }
 // "Why this rating": the plain explanation first, in a sentence or two (senior author, 12 November: the GRADE reasoning read
 // "like a robot" and was "not easy to digest"); the editors' full reasoning stays one tap further down, for researchers
 function whyRating(c, sp, refs) {
-  const full = "<p>" + sheetCites(c.grade.reasoning, refs) + '</p><p class="small muted">GRADE: ' + esc(gradeDomains(c.grade)) + "</p>";
+  const full = inPieces(c.grade.reasoning, t => sheetCites(t, refs)) + '<p class="small muted">GRADE: ' + esc(gradeDomains(c.grade)) + "</p>";
   if (!sp || !sp.rate) return '<details class="sf-more ev-why"><summary>Why this rating</summary>' + full + "</details>";
   return '<details class="sf-more ev-why"><summary>Why this rating</summary><p class="ev-rate">' + esc(sp.rate) + '</p>' +
     '<details class="sf-more ev-why-full"><summary>The full reasoning, for researchers</summary>' + full + "</details></details>";
@@ -1032,7 +1034,7 @@ function whyRating(c, sp, refs) {
 // the editors' reading and what would settle it, each one tap away (the texts are long); citations open their source below
 function evDebateHtml(c, refs) {
   const d = c.debate; if (!d) return "";
-  const part = (t, h, cls) => t ? '<details class="sf-more evd-part' + (cls ? " " + cls : "") + '"><summary>' + h + "</summary><p>" + sheetCites(t, refs) + "</p></details>" : "";
+  const part = (t, h, cls) => t ? '<details class="sf-more evd-part' + (cls ? " " + cls : "") + '"><summary>' + h + "</summary>" + inPieces(t, x => sheetCites(x, refs)) + "</details>" : "";
   return '<section class="ev-debate" id="ev-debate" aria-labelledby="ev-debate-h"><h3 class="ev-h" id="ev-debate-h">Researchers disagree</h3><p class="evd-q">' + esc(d.question) + "</p>" +
     part(d.evidence_yes, "The strongest evidence for yes", "yes") + part(d.evidence_no, "The strongest evidence for no", "no") +
     part(d.neither_can_show, "What neither side’s evidence can show") + part(d.editors_reading, "Our reading", "reading") + part(d.what_would_settle_it, "What would settle it") + "</section>";

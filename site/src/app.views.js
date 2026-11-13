@@ -387,11 +387,12 @@ function claimHtml(c, opts) {
     '<div class="text">' + '<p class="plain">' + glossify(esc(c.plain || c.statement), glUsed) + "</p></div>" +
     '<div class="cert">' + meterHtml(c.grade.certainty) + '<span class="lvl">GRADE: ' + esc(gradeLabel(c.grade.certainty)) + " certainty</span>" +
     '<div><span class="badge ' + c.status + '" title="Protocol term: ' + esc(STATUS_PROTOCOL[c.status] || c.status) + '">' + esc(statusLabel(c.status)) + "</span></div>" +
-    '<details class="why"><summary>Why this rating</summary>' + (((typeof SIMPLE !== "undefined" && SIMPLE.claims) || {})[c.id] && SIMPLE.claims[c.id].rate ? '<p class="why-plain">' + esc(SIMPLE.claims[c.id].rate) + "</p>" : "") + '<p class="mono">' + esc(gradeDomains(c.grade)) + "</p><p>" + esc(c.grade.reasoning) + "</p></details></div>" +
+    '<details class="why"><summary>Why this rating</summary>' + (((typeof SIMPLE !== "undefined" && SIMPLE.claims) || {})[c.id] && SIMPLE.claims[c.id].rate ? '<p class="why-plain">' + esc(SIMPLE.claims[c.id].rate) + "</p>" : "") + '<p class="mono">' + esc(gradeDomains(c.grade)) + "</p>" + inPieces(c.grade.reasoning, esc) + "</details></div>" +
     '<details class="cdetail"' + (opts && opts.open ? " open" : "") + '><summary>Precise statement, study details and sources (' + nSrc + ")</summary>" +
-    '<div class="text"><p class="precise"><span class="reg">Precisely</span>' + glossify(esc(c.statement), glUsed) + " " + citeList + "</p></div>" +
-    '<div class="pecotable"><div><b>Who was studied</b>' + esc(c.population) + "</div><div><b>Exposure</b>" + esc(c.exposure) + "</div><div><b>Compared with</b>" + esc(c.comparator) + "</div><div><b>What was measured</b>" + esc(c.outcome) + "</div><div><b>How big</b>" + esc(c.magnitude) + "</div></div>" +
-    '<div class="tools">' + cardLinks + '<button type="button" data-toggle="ev-' + c.id + '">Evidence anchors (' + c.evidence.length + ")</button>" + '<a href="#' + c.id + '" class="perma" title="Link to this claim" aria-label="Link to this claim">#</a><button type="button" class="report" data-report="' + c.id + '">Report an issue</button></div>' +
+    // the precise statement in short pieces, words unchanged (senior author, 13 November: the long texts were "too overwhelming")
+    '<div class="text"><div class="precise"><span class="reg">Precisely</span>' + inPieces(c.statement, t => glossify(esc(t), glUsed)) + '<p class="precise-cites">' + citeList + "</p></div></div>" +
+    '<div class="pecotable"><div><b>Who was studied</b>' + esc(c.population) + "</div><div><b>Exposure</b>" + esc(c.exposure) + "</div><div><b>Compared with</b>" + esc(c.comparator) + "</div><div><b>What was measured</b>" + esc(c.outcome) + "</div><div><b>How big</b>" + inPieces(c.magnitude, esc) + "</div></div>" +
+    '<div class="tools">' + cardLinks + '<button type="button" data-toggle="ev-' + c.id + '">Evidence anchors (' + c.evidence.length + ")</button>" + '<a href="#' + c.id + '" class="perma" title="Link to this claim" aria-label="Link to this claim">#</a><button type="button" class="report" data-report="' + c.id + '">Report a mistake</button></div>' +
     '<div class="evid" id="ev-' + c.id + '" hidden>' + ev + "</div>" +
     "</details>" +
     currencyHtml(c) +
@@ -400,10 +401,10 @@ function claimHtml(c, opts) {
 }
 function debateHtml(d) {
   return '<section class="debate"><header><span class="badge contested">contested</span><h3>' + esc(d.question) + "</h3></header>" +
-    '<div class="cols"><div class="col yes"><h4>Strongest evidence for yes</h4>' + liveCites(d.evidence_yes) + '</div><div class="col no"><h4>Strongest evidence for no</h4>' + liveCites(d.evidence_no) + "</div></div>" +
-    '<div class="full"><h4>What neither side\'s evidence can show</h4>' + liveCites(d.neither_can_show) + "</div>" +
-    '<div class="full reading"><h4>The editors\' reading</h4>' + liveCites(d.editors_reading) + "</div>" +
-    '<div class="full"><h4>What would settle it</h4>' + liveCites(d.what_would_settle_it) + "</div></section>";
+    '<div class="cols"><div class="col yes"><h4>Strongest evidence for yes</h4>' + inPieces(d.evidence_yes, liveCites) + '</div><div class="col no"><h4>Strongest evidence for no</h4>' + inPieces(d.evidence_no, liveCites) + "</div></div>" +
+    '<div class="full"><h4>What neither side\'s evidence can show</h4>' + inPieces(d.neither_can_show, liveCites) + "</div>" +
+    '<div class="full reading"><h4>The editors\' reading</h4>' + inPieces(d.editors_reading, liveCites) + "</div>" +
+    '<div class="full"><h4>What would settle it</h4>' + inPieces(d.what_would_settle_it, liveCites) + "</div></section>";
 }
 
 
@@ -1188,8 +1189,10 @@ function runSearch(raw) {
         (sp ? '<span class="a">' + esc(sp.short) + "</span>" : "") + '<span class="m">' + meterHtml(c.grade.certainty, true) + "</span></a>"; }
     return '<a href="' + esc(it.href) + '"><span class="k">' + esc(it.kind) + (p.fz ? " · closest name" : "") + '</span><span class="t">' + esc(it.title.length > 140 ? it.title.slice(0, 137) + "…" : it.title) + "</span>" + (it.badge ? '<span class="badge ' + esc(it.badgeCls || "") + '">' + esc(it.badge) + "</span>" : "") + "</a>";
   };
-  box.innerHTML = searchHits.length ? searchHits.map(row).join("")
-    : '<p class="none">No match for “' + esc(String(raw).trim()) + '”. Try other words, a drug’s name or a street name, or see <a href="#substances">all 30 drugs</a>. Need help now? <a href="#emergency">Emergency numbers</a>.</p>';
+  const asked = String(raw).trim(), askBtn = label => '<button type="button" class="linklike" data-fb="feedback" data-fb-text="' + esc(asked) + '">' + label + "</button>";
+  box.innerHTML = searchHits.length ? searchHits.map(row).join("") + '<p class="sr-ask">Not what you were looking for? ' + askBtn("Ask us") + "</p>"
+    : '<p class="none">No match for “' + esc(asked) + '”. Try other words, a drug’s name or a street name, or see <a href="#substances">all 30 drugs</a>. Need help now? <a href="#emergency">Emergency numbers</a>.</p>' +
+      '<p class="sr-ask"><b>Didn’t find your question?</b> ' + askBtn("Ask us") + ". The questions people ask most are answered first.</p>";
   box.hidden = false;
   if (live) live.textContent = searchHits.length ? searchHits.length + " result" + (searchHits.length === 1 ? "" : "s") : "No results";
 }
@@ -1371,16 +1374,19 @@ function fbPage(where) {
   const short = h.startsWith("cl_") && claimById[h] ? (subBySlug[claimById[h].substance] ? subBySlug[claimById[h].substance].name : "Mixing drugs") + " answer" : title;
   return { title, short: short.length > 50 ? short.slice(0, short.lastIndexOf(" ", 50)) + "…" : short, url: location.origin + location.pathname + "#" + (h || "home") };
 }
-function openFeedback(mode, where) {
-  FB.where = where || location.hash || "#home"; FB.opener = document.activeElement;
+// "Ask a question or share an idea" and "Report a mistake" (senior author, 13 November: one place to ask, merged with ideas);
+// a question typed into the search box that found nothing comes along as the start of the message
+function openFeedback(mode, where, prefill) {
+  FB.where = where || location.hash || "#home"; FB.opener = document.activeElement; closeSearch();
   const m = document.getElementById("report"); m.classList.add("open");
   document.getElementById("report-status").textContent = "";
   document.getElementById("fb-incl").checked = true;   // each time, the page the reader is on is included unless they untick it
   if (FB.used) { document.getElementById("report-message").value = ""; document.getElementById("report-source").value = ""; FB.used = false; }   // a message already written out is not reused
+  if (prefill && !document.getElementById("report-message").value.trim()) document.getElementById("report-message").value = String(prefill).slice(0, FB_MAX);
   fbChoose(mode || null);
   setTimeout(() => { const f = mode ? document.getElementById("report-message") : document.querySelector(".fb-opt"); if (f) f.focus(); }, 50);
 }
-const openReport = where => openFeedback("issue", where);   // older buttons ("Report an issue" under each claim)
+const openReport = where => openFeedback("issue", where);   // older buttons ("Report a mistake" under each claim)
 function fbChoose(mode) {
   FB.mode = mode;
   document.querySelectorAll(".fb-opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === mode)));
@@ -1388,8 +1394,8 @@ function fbChoose(mode) {
   if (!mode) return;
   const issue = mode === "issue";
   // one box and one button (senior author, 26 October: too many steps and too much text)
-  document.getElementById("fb-msg-label").textContent = issue ? "What is wrong, and what should it say?" : "Your idea or comment";
-  document.getElementById("report-message").placeholder = issue ? "For example: the second answer says 12 people, but the study had 14." : "For example: a page on kratom would help me.";
+  document.getElementById("fb-msg-label").textContent = issue ? "What is wrong, and what should it say?" : "Your question or idea";
+  document.getElementById("report-message").placeholder = issue ? "For example: the second answer says 12 people, but the study had 14." : "For example: is it true that ecstasy makes holes in your brain?";
   document.getElementById("fb-source-wrap").hidden = !issue;
   const p = fbPage(FB.where); document.getElementById("report-where").textContent = p.title;
   fbUpdate();
@@ -1397,8 +1403,8 @@ function fbChoose(mode) {
 function fbText() {
   const msg = document.getElementById("report-message").value.trim(), src = document.getElementById("report-source").value.trim();
   const incl = document.getElementById("fb-incl").checked, p = fbPage(FB.where), issue = FB.mode === "issue";
-  const subject = (issue ? "Pharmakon: a mistake" : "Pharmakon: an idea") + (incl ? " (" + p.short + ")" : "");
-  const body = (issue ? "Report a mistake" : "Share an idea") + "\n" +
+  const subject = (issue ? "Pharmakon: a mistake" : "Pharmakon: a question or idea") + (incl ? " (" + p.short + ")" : "");
+  const body = (issue ? "Report a mistake" : "A question or idea") + "\n" +
     (incl ? "Page: " + p.title + "\nAddress: " + p.url + "\n" : "") + "\n" + msg + "\n" + (issue && src ? "\nSource: " + src + "\n" : "") +
     "\n(Sent from the feedback panel, Pharmakon version " + SITE_VERSION + ")";
   return { subject, body, msg };
@@ -1418,7 +1424,7 @@ function fbReady(e) {
 document.addEventListener("click", e => {
   const b = e.target.closest && e.target.closest("[data-fb]"); if (!b) return;
   e.preventDefault(); const menu = document.getElementById("menu"); if (menu && !menu.hidden && menu.contains(b)) { const mb = document.getElementById("menubtn"); if (mb) mb.click(); }
-  openFeedback(b.dataset.fb || null, b.dataset.where ? "#" + b.dataset.where : location.hash);
+  openFeedback(b.dataset.fb || null, b.dataset.where ? "#" + b.dataset.where : location.hash, b.dataset.fbText || "");
 });
 document.querySelectorAll(".fb-opt").forEach(b => b.addEventListener("click", () => { fbChoose(b.dataset.mode); document.getElementById("report-message").focus(); }));
 ["report-message", "report-source", "fb-incl"].forEach(id => { const el = document.getElementById(id); el.addEventListener("input", fbUpdate); el.addEventListener("change", fbUpdate); });
@@ -1445,9 +1451,9 @@ document.getElementById("report").addEventListener("keydown", e => {
 });
 // the line at the end of each drug page
 function fbLineHtml() {
-  return '<section class="sec fbline" aria-label="Feedback on this page"><p>Spotted a mistake, or have an idea for this page? Both help keep Pharmakon accurate.</p><div class="fb-two">' +
-    '<button type="button" data-fb="issue">' + icon("flag") + "Report an issue with this page</button>" +
-    '<button type="button" data-fb="feedback">' + icon("message") + "Share feedback or suggestions</button></div></section>";
+  return '<section class="sec fbline" aria-label="Ask or report"><p><b>Didn’t find your question?</b> Ask us. The questions people ask most are answered first.</p><div class="fb-two">' +
+    '<button type="button" data-fb="feedback">' + icon("message") + "Ask a question</button>" +
+    '<button type="button" data-fb="issue">' + icon("flag") + "Report a mistake</button></div></section>";
 }
 
 

@@ -124,6 +124,61 @@ function liveCites(text) {
     return "(" + out.join("; ") + ")";
   });
 }
+/* Long research texts in short pieces (senior author, 13 November 2026: the full findings were "too overwhelming, nobody will
+   read it"). The checked words stay exactly as they are; only the layout changes: the opening summary sentence on its own, then
+   one paragraph per study (a paragraph ends where a citation closes a sentence), and a long paragraph whose parts are joined by
+   semicolons becomes a list (the semicolons become the list's breaks). Splits never fall inside brackets. Short texts are left whole. */
+const PIECE_ABBR = /(?:^|[\s(])(?:e\.g|i\.e|et al|vs|cf|approx|ca|No|Nos|Fig|Figs|Vol|pp?|St|Dr|Mr|Mrs|Ms|Prof|Inc|Ltd|Co|Jr|Sr|U\.S|U\.K|[A-Z])$/;
+function pieceSplit(t, sep) {
+  const out = []; let depth = 0, last = 0;
+  for (let i = 0; i < t.length; i++) {
+    const ch = t[i];
+    if (ch === "(" || ch === "[") depth++;
+    else if ((ch === ")" || ch === "]") && depth > 0) depth--;
+    else if (depth === 0 && t.startsWith(sep, i)) { out.push(t.slice(last, i)); last = i + sep.length; i += sep.length - 1; }
+  }
+  out.push(t.slice(last)); return out.map(s => s.trim()).filter(Boolean);
+}
+function pieceSentences(t) {
+  const out = []; let depth = 0, last = 0;
+  for (let i = 0; i < t.length - 2; i++) {
+    const ch = t[i];
+    if (ch === "(" || ch === "[") depth++;
+    else if ((ch === ")" || ch === "]") && depth > 0) depth--;
+    else if (depth === 0 && ch === "." && t[i + 1] === " " && /[A-Z“"‘']/.test(t[i + 2]) && !PIECE_ABBR.test(t.slice(Math.max(0, i - 8), i))) { out.push(t.slice(last, i + 1)); last = i + 2; }
+  }
+  out.push(t.slice(last)); return out.map(s => s.trim()).filter(Boolean);
+}
+const pieceWords = s => s.split(/\s+/).filter(Boolean).length;
+// a sentence that ends with a citation: (Grant & Dawson, 1997). or (Irons et al., 2015; Smith, 2001).
+const pieceCited = s => /\([^()]*\b(?:1[89]|20)\d\d[a-z]?\b[^()]*\)\.$/.test(s);
+function inPieces(text, cites) {
+  const t = String(text == null ? "" : text).trim(); if (!t) return "";
+  const tailM = t.match(/\s(Certainty: [^.]{1,40}\.(?:\s+Status: [^.]{1,40}\.)?)$/);
+  const body = tailM ? t.slice(0, tailM.index).trim() : t;
+  const sents = pieceSentences(body);
+  if (pieceWords(body) < 90 || sents.length < 2 && pieceSplit(body, "; ").length < 3) return "<p>" + cites(t) + "</p>";
+  const groups = []; let cur = [];
+  // the opening summary stands alone when it cites nothing and more follows
+  let start = 0; if (sents.length > 2 && !pieceCited(sents[0]) && !/\(\D*\d{4}/.test(sents[0])) { groups.push({ lead: true, s: [sents[0]] }); start = 1; }
+  for (let i = start; i < sents.length; i++) { cur.push(sents[i]); if (pieceCited(sents[i])) { groups.push({ s: cur }); cur = []; } }
+  if (cur.length) { const prev = groups.length && !groups[groups.length - 1].lead ? groups[groups.length - 1] : null; if (prev) prev.s.push(...cur); else groups.push({ s: cur }); }
+  // inside a paragraph, a long sentence made of three or more parts joined by semicolons becomes a list; the rest stays running text
+  const listOf = sent => { const parts = pieceSplit(sent, "; "); if (pieceWords(sent) < 40 || parts.length < 3) return null;
+    const first = pieceSplit(parts[0], ": "); let lead = "", items = parts;
+    if (first.length >= 2) { const at = parts[0].indexOf(first[1], first[0].length); lead = parts[0].slice(0, at).trim(); items = [parts[0].slice(at)].concat(parts.slice(1)); }
+    return { lead, items }; };
+  const html = groups.map(g => {
+    if (g.lead) return '<p class="pc-lead">' + cites(g.s.join(" ")) + "</p>";
+    let out = "", run = [];
+    const flush = () => { if (run.length) out += '<p class="pc-p">' + cites(run.join(" ")) + "</p>"; run = []; };
+    // running text breaks between sentences once a paragraph passes about 90 words
+    for (const sent of g.s) { const l = listOf(sent); if (!l) { if (run.length && pieceWords(run.join(" ") + " " + sent) > 90) flush(); run.push(sent); continue; }
+      if (l.lead) run.push(l.lead); flush(); out += '<ul class="pc-list">' + l.items.map(x => "<li>" + cites(x) + "</li>").join("") + "</ul>"; }
+    flush(); return '<div class="pc-group">' + out + "</div>";
+  }).join("");
+  return '<div class="pc">' + html + (tailM ? '<p class="pc-tail">' + cites(tailM[1]) + "</p>" : "") + "</div>";
+}
 
 /* ---------- GRADE ---------- */
 const GRADE_LEVELS = { high: 4, moderate: 3, low: 2, "very-low": 1 };
