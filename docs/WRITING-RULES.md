@@ -72,8 +72,8 @@ A shallower depth never says more than a deeper one. The short answer is written
 
 0. **In short, first** (26 October): each drug page opens with three answers that need no tapping (the first question of each topic, in the editors' order), each with its "But" and its evidence bars. The full evidence for any answer opens over the page, so the reader never loses their place.
 1. **A question as the heading**, in the reader's words ("Does meth damage dopamine nerve cells?"). Questions are grouped by topic; a row of topic buttons shows one group at a time.
-2. **The short answer**: one or two short sentences, about 14 everyday words or fewer. Target: school grade 6 or below (the build lists every line above it).
-3. **The "But" line**: the single most important limit (one study; no "before" measurement; one lab; old survey).
+2. **The short answer**: the answer to the question first, in a few words ("Yes, often.", "Mostly not.", "Nobody knows yet."), then the key number and, briefly, where it comes from: one to three short sentences, about 30 words at most (13 November, Rule 0c; it was about 14 words, which left no room to answer first). Target: school grade 6 or below (the build lists every line above it).
+3. **The "But" line**: the single most important limit (one study; no "before" measurement; one lab; old survey), in one or two short sentences: two short sentences read more easily than one long one (the 13 November voice pass).
 4. **Numbers as counts out of 100** ("11 in 100"), with a picture of 100 dots when a share or a risk is the point; a rare risk is shown out of 1,000 so it is not made to look bigger. Comparisons use the same "out of". Absolute numbers come before relative ones.
 5. **Evidence bars** in words (Strong, Moderate, Limited, Very limited evidence) and **who found it** (several teams, one team, one study).
 6. **Sources you can see**: a chip "Author Year" with a book icon. Pointing at it shows the full APA 7 reference; clicking opens the article. Every in-text citation carries the same book mark.
