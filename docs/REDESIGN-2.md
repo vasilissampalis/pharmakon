@@ -44,7 +44,7 @@ Times (one picture makes a number obvious); "myth or fact" cards people share.
 
 ## What must not change
 
-The evidence one tap away; the emergency access; the legal box; every safety note; the draft notice; the citations. No
+The evidence one tap away; the emergency access; the legal box; every safety note; the citations. (The draft notice was removed on 13 November at the senior author's instruction; METHODS 0.3.2.) No
 dosing, administration or potentiation content anywhere. No manipulative patterns (no streaks, points, badges, timers,
 infinite feeds, notifications, guilt copy). Phone first (390 px, no horizontal scroll, 16 px gutters), keyboard
 reachable with visible focus, `prefers-reduced-motion` respected (the flip becomes a fade or nothing), colour contrast

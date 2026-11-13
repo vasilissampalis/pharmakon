@@ -1,0 +1,157 @@
+{
+  "reader": "AI reader407 (ChatGPT/OpenAI; same conversation as401–408)",
+  "date": "2026-11-10T16:45:16.403316+02:00",
+  "state": "source adjudication complete; eligible merges/placement complete; heat merge held by explicit stopped-card dependency",
+  "claims": [
+    {
+      "id": "cl_coc_heat",
+      "version": "0.4.1",
+      "verification": "ai-anchored",
+      "status": "single-study",
+      "certainty": "very-low",
+      "anchors": 16,
+      "location": "data/claims/_incoming/pdf_w321.json",
+      "grade_levels_retained": true
+    },
+    {
+      "id": "cl_inh_sudden_death",
+      "version": "0.2.2",
+      "verification": "draft",
+      "status": "single-study",
+      "certainty": "very-low",
+      "anchors": 11,
+      "location": "data/claims/alkyl-nitrites-and-inhalants.json",
+      "grade_levels_retained": true
+    },
+    {
+      "id": "cl_mdma_preloading_practices",
+      "version": "0.2.3",
+      "verification": "ai-anchored",
+      "status": "single-study",
+      "certainty": "very-low",
+      "anchors": 11,
+      "location": "data/claims/mdma.json",
+      "grade_levels_retained": true
+    },
+    {
+      "id": "cl_mdma_hyponatremia",
+      "version": "0.5.0",
+      "verification": "draft",
+      "status": "replicated",
+      "certainty": "very-low",
+      "anchors": 18,
+      "location": "data/claims/mdma.json",
+      "grade_levels_retained": true
+    },
+    {
+      "id": "cl_mdma_hyponatremia_risk",
+      "version": "0.6.1",
+      "verification": "draft",
+      "status": "single-study",
+      "certainty": "very-low",
+      "anchors": 14,
+      "location": "data/claims/mdma.json",
+      "grade_levels_retained": true
+    }
+  ],
+  "cards_merged": [
+    {
+      "id": "sc_bass_1970",
+      "substance": "alkyl-nitrites-and-inhalants",
+      "sha256": "f488a935b402317b53b82bc817e90750e6859586d996adaef4727caca85ca616"
+    },
+    {
+      "id": "sc_allott_2006",
+      "substance": "mdma",
+      "sha256": "4d2ad9dcc572a478c71ad5cc6497cbcf14705eb4d04ecd805e8ca1469df5dfe8"
+    },
+    {
+      "id": "sc_faria_2020",
+      "substance": "mdma",
+      "sha256": "cfa5daff97cf94eca60fec65005ab73786396c14517463a21d210c3c7c7ef39f"
+    }
+  ],
+  "independent_source_checks": [
+    {
+      "reader": "AI reader412 (ChatGPT/OpenAI; fresh isolated context)",
+      "file": "data/verification/pdf-2026-11-01/bd/adjudication/353-round2-bass-allott/out_reader412.json",
+      "counts": {
+        "confirmed": 6
+      }
+    },
+    {
+      "reader": "AI reader414 (ChatGPT/OpenAI; fresh isolated context)",
+      "file": "data/verification/pdf-2026-11-01/bd/adjudication/353-round2-faria-recovery/out_reader414.json",
+      "counts": {
+        "corrected": 4,
+        "confirmed": 4
+      }
+    },
+    {
+      "reader": "AI reader415 (ChatGPT/OpenAI; fresh isolated context)",
+      "file": "data/verification/pdf-2026-11-01/bd/adjudication/353-round2-heat/out_reader415.json",
+      "counts": {
+        "confirmed": 2,
+        "corrected": 1
+      }
+    }
+  ],
+  "all_claim_anchors_checked": 70,
+  "new_or_reworded_anchors_closed": 17,
+  "round2_pending": [],
+  "case_series_only_claims_remain_draft": [
+    "cl_inh_sudden_death",
+    "cl_mdma_hyponatremia",
+    "cl_mdma_hyponatremia_risk"
+  ],
+  "section7_approval_pending": {
+    "claim": "cl_mdma_preloading_practices",
+    "version": "0.2.3"
+  },
+  "heat_staged": true,
+  "stopped_cards_unchanged": true,
+  "validation": {
+    "hard_failures": 46,
+    "warnings": 3476,
+    "cleared_failure_occurrences": 9,
+    "new_hard_failures": [],
+    "new_wording_warnings": [],
+    "note": "Warnings include newly merged anchors not yet senior-verified; global checks are not release-clear."
+  },
+  "number_check": {
+    "anchors": 17,
+    "numbers_tested": 175,
+    "source_text_matches": 144,
+    "text_search_flags": 31,
+    "unexplained_flags": 0,
+    "classification": [
+      {
+        "reference": "bass_1970",
+        "flags": 1,
+        "reason": "Cross-reference page2075 within extraction is not a study measurement; original page/locator visually confirmed by independent412."
+      },
+      {
+        "reference": "faria_2020",
+        "flags": 6,
+        "reason": "Recounted female/sodium-row totals46/36 are not printed as aggregates; independent414 reproduced all52 table rows and arithmetic. Repeated across two claim anchors."
+      },
+      {
+        "reference": "marzuk_1998",
+        "flags": 16,
+        "reason": "Scanned PDF has no usable text layer; all6 original page images and relevant300dpi table/figure pages read independently by415; threshold extraction confirmed."
+      },
+      {
+        "reference": "crandall_2002",
+        "flags": 8,
+        "reason": "Approximate graph readings are not printed text. Independent415 calibrated original300dpi axes and corrected final sweat endpoint to1.05; exact corrected extraction applied."
+      }
+    ],
+    "files": [
+      "numbercheck_anchors.json",
+      "numbercheck_output.txt",
+      "numbercheck_sources.json"
+    ],
+    "note": "These are classified source-text search flags, not a claim that every number appears verbatim in extracted text. Editorial calculations and plotted values were independently checked from original sources."
+  },
+  "no_build_or_publication": true
+}

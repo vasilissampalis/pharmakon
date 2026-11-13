@@ -17,6 +17,13 @@ for (const c of claims) {
       for (const part of m[1].split(";").map(s => s.trim())) {
         if (!/^[A-Z][^,]*(, [^,]+)*, \d{4}[a-z]?$/.test(part)) continue;            // not an author–year form
         if (/as described (by|in)|as reported (by|in)|as relayed (by|in)|cited (in|by)/.test(part)) continue;  // a study named inside the citation of the review that relays it
+        // one author group with several years, APA 7 style: (Hughes & Stevens, 2010, 2012)
+        const multi = part.match(/^(.*?), ((?:\d{4}[a-z]?, )+\d{4}[a-z]?)$/);
+        if (multi && multi[2].includes(",")) {
+          const miss = multi[2].split(", ").filter(y => !labels.has(multi[1] + ", " + y));
+          if (miss.length) { console.log(`  UNRESOLVED ${c.id} ${field}: (${part})`); bad++; }
+          continue;
+        }
         if (!labels.has(part)) {
           // a study not in the reference list may be named inside a citation of the review that describes it
           if (/ as described by | as reported by | as relayed by | as cited by /.test(t.slice(m.index, m.index + m[0].length + 60))) continue;
