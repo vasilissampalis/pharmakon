@@ -50,6 +50,7 @@ NEW_THEMES = {
     "N17": "Can stimulants like meth or cocaine cause psychosis, and does it pass?",
     "N18": "How does this drug work in the brain and body?",
     "N19": "Could I have been spiked, and with what?",
+    "N20": "How many people use drugs, and is use rising or falling?",
 }
 
 
