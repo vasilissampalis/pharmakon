@@ -68,7 +68,10 @@ function serve() {
     if (w === 390) await s.shot("home-full", null, true);
     await s.p.$eval("#mf-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(200); await s.shot("deck-card1-front");
     const first = await s.p.evaluate(() => { const h = document.getElementById("mf-h"), b = [...document.querySelectorAll("#mf-h ~ *")].map(e => e.className); return { heading: h.textContent, prev: h.previousElementSibling.id, order: b.slice(0, 3).join(" | ") }; });
-    ok(w + ": home shows Myth or fact? first under the search box, doors right below", first.heading === "Myth or fact?" && first.prev === "home-search" && /qz2 mf/.test(first.order) && /do3/.test(first.order), first.prev + " | " + first.order);
+    const once = await s.p.evaluate(() => ({ home: document.querySelectorAll("#view-home a.do").length, menu: document.querySelectorAll("#menu .menu-do a.do").length,
+      each: ["#interactions", "#checking", "#emergency"].map(h => document.querySelectorAll('a.do[href="' + h + '"]').length) }));
+    ok(w + ": home shows Myth or fact? first under the search box; the three help doors appear once, in the menu", first.heading === "Myth or fact?" && first.prev === "home-search" && /qz2 mf/.test(first.order)
+      && once.home === 0 && once.menu === 3 && once.each.every(n => n === 1), first.prev + " | " + first.order + " | " + JSON.stringify(once));
     const deck = [], verdicts = [], counts = [];
     let turned = true, during = true;
     for (let k = 1; k <= 10; k++) {
@@ -191,8 +194,11 @@ function serve() {
       dem.every(([, d]) => d && d.first && d.groups && d.within && d.scored && !d.none && d.nGroups <= 6 && d.all === Math.min(8, d.asked) && d.phone && (w < 700 ? d.shown === Math.min(6, d.all) : d.shown === d.all)), dem.map(([k, d]) => k + ": " + (d ? d.list : "missing")).join("; ") + (w < 700 ? " (* not on a phone)" : ""));
     await s.go("s-alcohol"); const alc = await glanceAt("alcohol");
     await s.p.$eval("#gl-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.shot("alcohol-at-a-glance");
-    ok(w + ": alcohol At a glance: all its asked-about answers first, then filled up the old way to 8 tiles (6 on a phone)",
-      alc && alc.first && alc.groups && alc.within && alc.all === 8 && alc.shown === (w < 700 ? 6 : 8) && alc.list.split(" ").filter(x => /^\d/.test(x)).length === alc.asked && alc.nGroups <= 6, alc ? alc.list + " (" + alc.asked + " asked about)" : "missing");
+    // with the combined demand ranking (14 November) alcohol has more asked-about answers than tiles: then the check is the one
+    // above (none left out for a less-asked one); with fewer, the asked-about ones come first and the rest fill up the old way
+    ok(w + ": alcohol At a glance: its most-asked answers first (filled up the old way to 8 tiles, 6 on a phone, when fewer are asked about)",
+      alc && alc.first && alc.groups && alc.within && alc.all === 8 && alc.shown === (w < 700 ? 6 : 8) && alc.nGroups <= 6
+        && (alc.asked >= 8 ? alc.scored && !alc.none : alc.list.split(" ").filter(x => /^\d/.test(x)).length === alc.asked), alc ? alc.list + " (" + alc.asked + " asked about; left out for a less-asked one: " + alc.none + ")" : "missing");
     // ---- "Before, during and after" keeps its time order: before and during, the day after, after stopping, each in the editors' order
     const seq = [];
     for (const slug of ["psilocybin", "methamphetamine", "alcohol"]) {
@@ -267,8 +273,8 @@ function serve() {
     { const ctx = await browser.newContext({ viewport: { width: w, height: H }, deviceScaleFactor: 1, javaScriptEnabled: false }), p0 = await ctx.newPage();
       await p0.goto(BASE.replace(/#$/, "")); await p0.waitForTimeout(300);
       const fp = await p0.evaluate(() => { const v = document.getElementById("view-home"), vis = el => !!(el && el.getBoundingClientRect().height > 0);
-        return { active: v.classList.contains("active"), h1: vis(v.querySelector("h1")), mf: vis(document.getElementById("mf-h")), wait: vis(v.querySelector(".mf-wait")), doors: vis(v.querySelector(".do3")) }; });
-      ok(w + ": first paint, before the script: the start page with Myth or fact? (its place held) and the help doors", fp.active && fp.h1 && fp.mf && fp.wait && fp.doors, JSON.stringify(fp));
+        return { active: v.classList.contains("active"), h1: vis(v.querySelector("h1")), mf: vis(document.getElementById("mf-h")), wait: vis(v.querySelector(".mf-wait")), doors: v.querySelectorAll("a.do").length, emergency: !!document.querySelector('footer.site a[href="#emergency"]') }; });
+      ok(w + ": first paint, before the script: the start page with Myth or fact? (its place held); no help doors repeated there; Emergency numbers in the footer", fp.active && fp.h1 && fp.mf && fp.wait && fp.doors === 0 && fp.emergency, JSON.stringify(fp));
       if (SHOTS) await p0.screenshot({ path: path.join(SHOTS, w + "-first-paint-home.png") }); await ctx.close(); }
     s = await session();
     await s.go("cl_can_dependence_how_many", 1300);
