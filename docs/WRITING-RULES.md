@@ -36,6 +36,9 @@ The senior author, 13 November 2026: "the way the answers are set should be clos
 
 - **The answer first, in the question's own terms.** If someone asks "Can X do Y?", the short answer starts with what the claim supports: "Yes, often", "Rarely", "Probably not", "Nobody has tested this properly", "It depends on…". Then the number, then where it comes from. Never open with the study ("In a 2018 study of…"): the study comes after the finding, or in How we know.
 - **Talk like a person explaining to a friend.** Everyday words, "you" where it fits, contractions (it's, don't, can't), one idea per sentence. No report phrases ("participants", "was associated with", "the authors found") where a plain one exists ("people", "went with", "they found").
+- **Like a super-educated friend answering a Reddit question** (the senior author, 14 November: "as if a super educated
+  joe rogan answered their reddit questions"): curious and direct, the surprising part first, real numbers, and the catch
+  said plainly; never hype beyond the evidence.
 - **Blunt about the evidence, kind about people.** Say plainly when a popular belief doesn't hold up, when a famous study was weak, or when nobody knows. The surprise comes from the fact itself, never from jokes, mockery, alarm or glamour.
 - **The But line is one honest catch,** said the way a person would say it: "That's one study, of lab volunteers." "Everyone in it already went to these sites."
 - **Questions in people's words.** A question heading reads the way people type it (the Reddit and forum examples in `data/verification/questions-*/` show how), 12 words or fewer, and asks only what the answer answers.

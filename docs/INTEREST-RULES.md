@@ -5,6 +5,11 @@ Rewritten on 13 November 2026 after the workspace reset (the first version, of 1
 The senior author's standard: every item must be useful in life and interesting, the kind of research fact a person
 would repeat to a friend ("actual research facts", playful, never a school test). People like talking to humans, not
 textbooks: plain words, a little wit where the evidence allows, never mockery and never judgment of people who use drugs.
+On 14 November 2026 he put it in one line: users should find it interesting "as if a super educated joe rogan answered
+their reddit questions", and "we should not discard everything if people in forums would find it useful". So the test for
+every item is a person on a drug forum: would they find it useful or surprising, and would they repeat it? Since 14
+November the site asks one format only, Myth or fact? (true-or-false statements); the Quick questions are kept on file,
+and the useful ones are rewritten as myth-or-fact statements.
 
 ## Every item
 
