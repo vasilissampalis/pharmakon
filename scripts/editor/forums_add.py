@@ -142,7 +142,8 @@ def main():
         for k in ("site", "page", "title_short", "views", "replies", "drugs", "question", "theme", "covered_by"):
             if k not in q:
                 errors.append("missing %s (%s)" % (k, q.get("title_short")))
-        if len(q["title_short"].replace("(paraphrase)", "").split()) > 15 and "(paraphrase)" not in q["title_short"]:
+        words = [w for w in q["title_short"].split() if any(ch.isalnum() for ch in w)]
+        if len(words) > 15 and "(paraphrase)" not in q["title_short"]:
             errors.append("title over 15 words, not marked paraphrase: %s" % q["title_short"])
     if errors:
         print("\n".join(errors))
