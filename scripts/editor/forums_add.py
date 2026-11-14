@@ -47,6 +47,7 @@ NEW_THEMES = {
     "N14": "Why does a drug cause this side effect (stomach, bladder, sleep, skin, sweating), and is it a danger sign?",
     "N15": "Which medicine works better for anxiety, depression, sleep, pain or ADHD?",
     "N16": "Can stimulants help you lose weight, and is it safe?",
+    "N17": "Can stimulants like meth or cocaine cause psychosis, and does it pass?",
 }
 
 
