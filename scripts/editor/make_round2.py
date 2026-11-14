@@ -1,11 +1,13 @@
-"""make_round2.py DIR READER CLAIM1,CLAIM2 [--cards c1,c2]: round-2 tasks for every anchor of the named claims that no
-second reader has checked yet, plus the named first-pass cards. Writes data/verification/DIR/round2/tasks_reader<N>.json."""
+"""make_round2.py DIR READER CLAIM1,CLAIM2 [--cards c1,c2]: round-2 tasks for every anchor of the named claims (merged, or
+still staged in data/claims/_incoming/) that no second reader has checked yet, plus the named first-pass cards. Writes data/verification/DIR/round2/tasks_reader<N>.json."""
 import json, sys, glob, os, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]; os.chdir(ROOT)
 d, reader, cids = sys.argv[1], sys.argv[2], sys.argv[3].split(",")
 cards = sys.argv[sys.argv.index("--cards") + 1].split(",") if "--cards" in sys.argv else []
 where = {}
-for f in sorted(glob.glob("data/claims/*.json")):
+# the main claim files first (they win), then new claims still staged in _incoming/ (not the patch files): staged claims
+# can be checked before they are merged, since merge_claims.py needs their study cards merged first
+for f in sorted(glob.glob("data/claims/*.json")) + sorted(x for x in glob.glob("data/claims/_incoming/*.json") if not os.path.basename(x).startswith("patch_")):
     for c in json.load(open(f, encoding="utf-8")): where.setdefault(c["id"], (f, c))
 refs = {}
 for f in glob.glob("data/references/*.json"):
