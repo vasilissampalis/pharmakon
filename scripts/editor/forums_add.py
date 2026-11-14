@@ -124,6 +124,9 @@ def main():
     if sys.argv[1:] == ["--stats"]:
         stats(data, themes)
         return
+    if sys.argv[1:] == ["--report"]:
+        report(data, themes)
+        return
 
     batch = parse_rows(sys.argv[1]) if sys.argv[1].endswith(".txt") else load(sys.argv[1])
     errors = []
@@ -195,6 +198,58 @@ def stats(data, themes):
         tag = ("T%d" % (themes.index(t) + 1)) if t in themes else [k for k, v in NEW_THEMES.items() if v == t][0]
         print("  %-4s %3d q  %9d views  uncovered %3d  %s | %s" % (
             tag, a["n"], a["views"], a["uncovered"], t[:70], dict(a["sites"])))
+
+
+NO_THEMES = (2, 8, 9, 48)  # Reddit themes marked "no" (amounts, routes for strength, getting drugs, hiding use)
+
+
+def report(data, themes):
+    """Numbers for forums.md: theme ranks, new-theme examples, most-read unanswered questions."""
+    def tag(t):
+        return ("T%d" % (themes.index(t) + 1)) if t in themes else [k for k, v in NEW_THEMES.items() if v == t][0]
+    agg = defaultdict(lambda: {"n": 0, "views": 0, "qs": []})
+    for q in data["questions"]:
+        a = agg[q["theme"]]
+        a["n"] += 1
+        a["views"] += q["views"] or 0
+        a["qs"].append(q)
+    order_n = sorted(agg, key=lambda t: (-agg[t]["n"], -agg[t]["views"]))
+    order_v = sorted(agg, key=lambda t: -agg[t]["views"])
+    print("rank by questions | rank by views | tag | questions | views | theme")
+    for i, t in enumerate(order_n, 1):
+        print("%2d | %2d | %s | %d | %d | %s" % (i, order_v.index(t) + 1, tag(t), agg[t]["n"], agg[t]["views"], t))
+    print("\nnew themes, examples (most-read first):")
+    for k, name in NEW_THEMES.items():
+        if name not in agg:
+            continue
+        qs = sorted(agg[name]["qs"], key=lambda q: -(q["views"] or 0))
+        print("%s (%d q, %d views) %s" % (k, agg[name]["n"], agg[name]["views"], name))
+        seen = set()
+        for q in qs:
+            if q["question"] in seen:
+                continue
+            seen.add(q["question"])
+            print("    %s [%s, %s views]" % (q["question"], q["site"], q["views"]))
+            if len(seen) == 4:
+                break
+    print("\nmost-read questions with no answer on the site (themes other than the 'no' ones):")
+    no = {themes[i - 1] for i in NO_THEMES}
+    seen = set()
+    rows = [q for q in data["questions"] if not q["covered_by"] and q["theme"] not in no]
+    for q in sorted(rows, key=lambda q: -(q["views"] or 0))[:45]:
+        if q["question"] in seen:
+            continue
+        seen.add(q["question"])
+        print("  %8s  %-4s %-11s %s" % (q["views"], tag(q["theme"]), q["site"][:11], q["question"]))
+    print("\nwithout view counts (Drugs.com Answers, Ask Erowid), unanswered, by theme:")
+    c = Counter(tag(q["theme"]) for q in data["questions"] if q["views"] is None and not q["covered_by"])
+    print("  ", c.most_common(12))
+    drugs = Counter(d for q in data["questions"] for d in q["drugs"] if d.endswith("(no page yet)"))
+    print("\ndrugs with no page yet:", drugs.most_common(25))
+    covered = sum(1 for q in data["questions"] if q["covered_by"])
+    print("\nquestions with at least one claim answering them: %d of %d" % (covered, len(data["questions"])))
+    in_no = sum(1 for q in data["questions"] if q["theme"] in no)
+    print("questions in the four 'no' themes: %d" % in_no)
 
 
 if __name__ == "__main__":
