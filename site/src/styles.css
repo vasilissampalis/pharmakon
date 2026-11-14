@@ -2017,3 +2017,41 @@ nav.main.menu .menu-do .do-s { font-size: 0.88rem; font-weight: 400; }
   nav.main.menu .menu-do .do-ic { width: 38px; height: 38px; border-radius: 10px; }
   nav.main.menu .menu-do .do-ic .ic { width: 21px; height: 21px; }
 }
+
+/* Insight (site 2.2.0, 14 November 2026): the answers that fit a question, at the top of the search results, and one answer
+   at a time over the page (a guess first where the answer has a checked myth-or-fact statement). One movement only: the
+   verdict eases in after a guess, and not at all for readers who prefer less motion. */
+.search-results .sr-note { display: flex; align-items: center; gap: 6px; margin: 0; padding: 8px 12px 6px; font-size: 0.8rem; line-height: 1.3; color: var(--muted); }
+.search-results .sr-note .ic { flex: none; width: 15px; height: 15px; }
+.search-results .sr-fit { border-bottom: 2px solid var(--line-strong); }
+.search-results .sr-fit-h { margin: 0; padding: 10px 14px 6px; font-size: 0.85rem; font-weight: 700; color: var(--fg); }
+.search-results .sr-note + .sr-fit .sr-fit-h { padding-top: 4px; }
+.search-results .sr-fit a.sr-fit-a { border-top: 1px solid var(--line); }
+.search-results .sr-fit a.sr-fit-a .a { color: var(--fg); }
+.search-results .sr-fit-none { margin: 0; padding: 10px 14px 12px; font-size: 0.92rem; line-height: 1.45; border-bottom: 1px solid var(--line); }
+.search-results .sr-fit-none .linklike { font-weight: 700; }
+.ins { display: grid; gap: 14px; }
+.ins-eye { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.ins-eye .ic { flex: none; width: 18px; height: 18px; }
+.ins-eye span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ins .ins-sos { margin-top: 0; }
+.ins-guess { display: grid; gap: 14px; padding: 16px 18px 18px; border-radius: 18px; border: 2px solid var(--line-strong); border-top: 6px solid var(--accent); background: var(--surface); }
+.ins-k { font-size: 0.88rem; font-weight: 700; color: var(--muted); }
+.ins-q { font-size: clamp(1.25rem, 5vw, 1.55rem); }
+.ins-skip { justify-self: start; min-height: 44px; color: var(--muted); font-weight: 700; }
+.ins-verdict { display: grid; gap: 8px; padding: 14px 16px; border-radius: 16px; background: var(--bg); }
+.ins-verdict.fact .mf-v { color: var(--accent); }
+.ins-verdict.myth .mf-v { color: var(--warn); }
+.ins-ans { display: grid; gap: 10px; }
+.ins-ans .ask-short { margin: 0; }
+.ins-page { margin: 0; }
+.ins-next { margin-top: 2px; }
+.ins-end { display: grid; gap: 8px; justify-items: start; padding: 16px 18px; border-radius: 16px; background: var(--surface-2); }
+.ins-end-t { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; }
+.ins-end-s { color: var(--muted); line-height: 1.45; }
+.ins-end-b { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 4px; }
+.ins-end-b .linklike { min-height: 44px; font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) {
+  .ins-verdict.just { animation: ins-in 0.24s ease-out both; }
+  @keyframes ins-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}

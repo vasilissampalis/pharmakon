@@ -1128,7 +1128,7 @@ function runSearch(raw) {
   const box = document.getElementById("search-results"); const live = document.getElementById("search-count");
   const q = norm(raw);
   // an empty box with the cursor in it shows a few real questions to try (recognition, not recall); otherwise it closes
-  if (!q) { const sug = document.activeElement === document.getElementById("search") ? suggestHtml() : ""; box.innerHTML = sug; box.hidden = !sug; if (live) live.textContent = sug ? "Some questions you can ask" : ""; return; }
+  if (!q) { const sug = document.activeElement === document.getElementById("search") ? suggestHtml() : ""; box.innerHTML = sug; box.hidden = !sug; if (live) live.textContent = sug ? "Some questions you can ask" : ""; insightAfterSearch(raw); return; }
   const words = q.split(" ");
   // "help" or "breathing" inside a longer question is a question, not an emergency
   const emergency = EMERGENCY_TERMS.some(e => e === q || (q.length >= 3 && e.startsWith(q)) || (e.length >= 4 && wordStart(q, e) && (words.length <= 3 || !["help", "breathing", "crisis", "helpline"].includes(e))));
@@ -1148,7 +1148,7 @@ function runSearch(raw) {
     const it = p.it;
     if (it.type === "answer") { const c = claimById[it.id], sp = (SIMPLE.claims || {})[it.id];
       const best = i === 0 && bestOk(p);
-      return '<a class="sr-ans' + (best ? " best" : "") + '" href="' + esc(answerHref(it, ctx)) + '"><span class="k">' + esc((best ? "Best answer · " : "Answer · ") + it.where) + '</span><span class="t">' + esc(it.title) + "</span>" +
+      return '<a class="sr-ans' + (best ? " best" : "") + '" href="' + esc(answerHref(it, ctx)) + '" data-cid="' + esc(it.id) + '"><span class="k">' + esc((best ? "Best answer · " : "Answer · ") + it.where) + '</span><span class="t">' + esc(it.title) + "</span>" +
         (sp ? '<span class="a">' + esc(sp.short) + "</span>" : "") + '<span class="m">' + meterHtml(c.grade.certainty, true) + "</span></a>"; }
     return '<a href="' + esc(it.href) + '"><span class="k">' + esc(it.kind) + (p.fz ? " · closest name" : "") + '</span><span class="t">' + esc(it.title.length > 140 ? it.title.slice(0, 137) + "…" : it.title) + "</span>" + (it.badge ? '<span class="badge ' + esc(it.badgeCls || "") + '">' + esc(it.badge) + "</span>" : "") + "</a>";
   };
@@ -1158,13 +1158,14 @@ function runSearch(raw) {
       '<p class="sr-ask"><b>Didn’t find your question?</b> ' + askBtn("Ask us") + ". The questions people ask most are answered first.</p>";
   box.hidden = false;
   if (live) live.textContent = searchHits.length ? searchHits.length + " result" + (searchHits.length === 1 ? "" : "s") : "No results";
+  insightAfterSearch(raw);   // Insight (app.insight.js): the answers that fit a question, once it is ready
 }
 function closeSearch() { const box = document.getElementById("search-results"); if (box) { box.hidden = true; } }
 const searchInput = document.getElementById("search");
 searchInput.addEventListener("input", () => runSearch(searchInput.value));
 searchInput.addEventListener("focus", () => runSearch(searchInput.value));
 searchInput.addEventListener("keydown", e => { if (e.key === "ArrowDown") { const f = document.querySelector("#search-results a"); if (f) { e.preventDefault(); f.focus(); } return; } if (e.key === "Enter") { const first = norm(searchInput.value) && document.querySelector("#search-results a"); if (first) { e.preventDefault(); first.click(); } } if (e.key === "Escape") { searchInput.value = ""; closeSearch(); } });
-document.getElementById("search-results").addEventListener("keydown", e => { const a = e.target.closest && e.target.closest("a"); if (!a) return; if (e.key === "ArrowDown" && a.nextElementSibling) { e.preventDefault(); a.nextElementSibling.focus(); } if (e.key === "ArrowUp") { e.preventDefault(); (a.previousElementSibling || searchInput).focus(); } if (e.key === "Escape") { searchInput.focus(); closeSearch(); } });
+document.getElementById("search-results").addEventListener("keydown", e => { const a = e.target.closest && e.target.closest("a"); if (!a) return; const all = [...document.querySelectorAll("#search-results a")], i = all.indexOf(a); if (e.key === "ArrowDown" && all[i + 1]) { e.preventDefault(); all[i + 1].focus(); } if (e.key === "ArrowUp") { e.preventDefault(); (all[i - 1] || searchInput).focus(); } if (e.key === "Escape") { searchInput.focus(); closeSearch(); } });
 document.getElementById("search-results").addEventListener("click", e => { if (e.target.closest("a")) { searchInput.value = ""; closeSearch(); } });
 
 /* ---------- Popover ---------- */

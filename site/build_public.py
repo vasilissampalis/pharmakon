@@ -38,7 +38,8 @@ i = page.index("</style>") + len("</style>")
 style, body = page[:i], page[i:]
 style = style.replace("<style>", "<style>\n" + (ASSETS / "fonts.css").read_text(encoding="utf-8"), 1)
 
-csp = ("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+# 'wasm-unsafe-eval': Insight's runtime compiles its WebAssembly (site 2.2.0); it allows WebAssembly only, not eval
+csp = ("default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
        "font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests")
 head = f"""<!doctype html>
 <html lang="en">
@@ -73,6 +74,8 @@ OUT.mkdir(parents=True)
 (OUT / "index.html").write_text(doc, encoding="utf-8")
 for d in ("data", "img"):
     shutil.copytree(DIST / d, OUT / d)
+if (DIST / "insight").exists():   # Insight's model and runtime, fetched only when the search box is used (site 2.2.0)
+    shutil.copytree(DIST / "insight", OUT / "insight")
 shutil.copytree(ASSETS / "fonts", OUT / "fonts")
 (OUT / "favicon.svg").write_text(LOGO, encoding="utf-8")
 # security headers, read by Cloudflare Pages and Netlify (GitHub Pages ignores the file; the page carries its own policy)

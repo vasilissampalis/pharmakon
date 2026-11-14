@@ -9,7 +9,7 @@ const { chromium } = require("playwright");
 const ROOT = path.resolve(__dirname, "..", "..", "site", "public");
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 const SHOTS = arg("--shots"), PORT = +(arg("--port") || 0);
-const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".json": "application/json", ".css": "text/css", ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".mjs": "text/javascript", ".wasm": "application/wasm", ".json": "application/json", ".css": "text/css", ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2" };
 const results = [], errors = [];
 const ok = (name, pass, detail) => { results.push(!!pass); console.log((pass ? "PASS " : "FAIL ") + name + (detail ? "  (" + detail + ")" : "")); };
 const server = http.createServer((req, res) => {
@@ -29,6 +29,8 @@ const server = http.createServer((req, res) => {
     p.on("pageerror", e => errors.push(w + " page error: " + String(e).slice(0, 200)));
     p.on("console", m => { if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(w + " console error: " + m.text().slice(0, 200)); });
     const fetched = []; p.on("request", r => { const u = r.url(); if (/\/data\/(full-|refs|figures|cards-)/.test(u)) fetched.push(u.replace(/^.*\/data\//, "")); });
+    // Insight's files (site 2.2.0) are fetched only once someone uses the search box, never with a page
+    const insightFetched = []; p.on("request", r => { const u = r.url(); if (/\/data\/insight\.json|\/insight\//.test(u)) insightFetched.push(u.replace(/^.*\//, "")); });
     const shot = async (name, sel, noScroll) => { const [sw, cw] = await p.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]); if (sw > cw && !noScroll) errors.push(w + " horizontal scroll at " + name); if (!SHOTS) return;
       await p.mouse.move(2, 300); const f = path.join(SHOTS, w + "-" + name + ".png"); if (sel) await (await p.$(sel)).screenshot({ path: f }); else await p.screenshot({ path: f }); };
     const go = async (h, wait) => { await p.goto(BASE + h); await p.waitForTimeout(wait || 1000); };
@@ -36,7 +38,7 @@ const server = http.createServer((req, res) => {
 
     // the start page: drawn by the script, and nothing on-demand fetched
     await go("home", 2500); await shot("home");
-    ok(w + ": start page draws without fetching any on-demand file", (await p.$$("#dgrid a.dcard")).length > 5 && !fetched.length, fetched.join(", ") || "none fetched");
+    ok(w + ": start page draws without fetching any on-demand file", (await p.$$("#dgrid a.dcard")).length > 5 && !fetched.length && !insightFetched.length, fetched.concat(insightFetched).join(", ") || "none fetched");
     // a drug page: drawn at once; its own file fetched ahead once it settles, and the law part draws for a chosen country
     // (the country is read when the page loads, so the page is loaded afresh after it is saved)
     await p.evaluate(() => { try { localStorage.setItem("pk-country", "Greece"); } catch (e) {} }); await p.goto("about:blank");
