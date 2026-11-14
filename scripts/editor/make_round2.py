@@ -1,4 +1,4 @@
-"""make_round2.py DIR READER CLAIM1,CLAIM2 [--cards c1,c2]: round-2 tasks for every anchor of the named claims (merged, or
+"""make_round2.py DIR READER CLAIM1,CLAIM2 [--cards c1,c2] [--patches p1.json,p2.json]: round-2 tasks for every anchor of the named claims (merged, or
 still staged in data/claims/_incoming/) that no second reader has checked yet, plus the named first-pass cards. Writes data/verification/DIR/round2/tasks_reader<N>.json."""
 import json, sys, glob, os, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]; os.chdir(ROOT)
@@ -21,6 +21,16 @@ for cid in cids:
         A.append({"n": len(A) + 1, "claim_id": cid, "claim_file": f, "anchor_index": i, "reference": e["reference"], "page": e.get("page", ""),
                   "locator": e.get("locator", ""), "source_read": e.get("source_read", ""), "extracted": e["extracted"], "role": e.get("role", ""),
                   "current_status": e["anchor_status"], "located_by": e.get("located_by", ""), "what_changed": "new or reworded anchor", "pdf_path": pdfp(e["reference"])})
+# --patches f1,f2: the new anchors (evidence_add) of revision patches not yet applied, at the index each will take when the
+# patch is applied (claim_patch.py appends them in order), so they can be checked before their study cards are merged
+for pf in (sys.argv[sys.argv.index("--patches") + 1].split(",") if "--patches" in sys.argv else []):
+    for p in json.load(open(pf, encoding="utf-8")):
+        f, c = where[p["claim"]]; base = len(c["evidence"])
+        assert not p.get("evidence_set"), "patch changes existing anchors: check them separately"
+        for k, e in enumerate(p.get("evidence_add", [])):
+            A.append({"n": len(A) + 1, "claim_id": p["claim"], "claim_file": f, "anchor_index": base + k, "reference": e["reference"], "page": e.get("page", ""),
+                      "locator": e.get("locator", ""), "source_read": e.get("source_read", ""), "extracted": e["extracted"], "role": e.get("role", ""),
+                      "current_status": e.get("anchor_status", "ai-located"), "located_by": e.get("located_by", ""), "what_changed": "new anchor in revision patch " + os.path.basename(pf), "pdf_path": pdfp(e["reference"])})
 C = []
 for k in cards:
     fp = glob.glob(f"data/study-cards/_incoming/*/{k}.json")[0]; card = json.load(open(fp, encoding="utf-8"))
