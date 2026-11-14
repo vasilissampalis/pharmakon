@@ -241,7 +241,7 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
         pages: pagesOf[id] || [byId[id].substance], wordings: [...new Set((sp.q ? [sp.q] : []).concat(wordsOf[id] || []))], short: sp.short }));
       const input = path.join(__dirname, "insight", ".cache", "index-input.json");
       fs.mkdirSync(path.dirname(input), { recursive: true }); fs.writeFileSync(input, JSON.stringify({ answers }));
-      const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json")], { stdio: ["ignore", "inherit", "inherit"] });
+      const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json")], { stdio: ["ignore", "inherit", "inherit"], env: Object.assign({}, process.env, { PK_NODE: process.execPath }) });
       if (r.status !== 0) { console.error("WARNING: Insight's index was not built (scripts/insight/build_index.py failed): the search box answers by words only"); if (fs.existsSync(path.join(dataDir, "insight.json"))) fs.unlinkSync(path.join(dataDir, "insight.json")); }
     } else console.error("WARNING: site/insight/vendor is incomplete: Insight is left out and the search box answers by words only"); }
   const kb = f => (fs.statSync(path.join(dataDir, f)).size / 1024).toFixed(0) + " KB";

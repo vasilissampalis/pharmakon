@@ -5,10 +5,12 @@
    compared with every wording of every question on the site and its short answer, made into numbers with the same model when
    the site is built (data/insight.json, scripts/insight/build_index.py). Score: 0.7 x the best wording, 0.3 x the short answer,
    0.2 x the words in common; a street or brand name brings the drug's own name along (as scripts/insight/tune.py tuned it).
-   The files (about 38 MB) are fetched only when someone puts the cursor in the search box or types in it, never with the page.
-   Word search stays as it was and answers at once; when Insight is ready, the top of the results becomes "Answers that fit
-   your question" (up to three checked answers, from a question of three words or more), or, when nothing fits well enough,
-   "We haven't checked this yet" with the way to ask us. Nothing is ever written by the model: it only finds checked answers.
+   The files (about 38 MB, kept by the browser's cache for the next visit) are fetched only when someone puts the cursor in the
+   search box or types in it, never with the page; on a connection that asks to save data, or a 2G one, only when the reader
+   taps the quiet line that offers it. Word search stays as it was and answers at once; when Insight is ready, the top of the
+   results shows the "Closest checked answers" (up to three, from a question of three words or more; each with its own
+   question in full, as a match is not always right), or, when none comes close enough, "No checked answer fits this
+   closely." with the way to ask us (editor, 14 November). Nothing is ever written by the model: it only finds checked answers.
    An answer opened from there opens over the page: for an answer with a checked myth-or-fact statement, a guess first
    (skippable), then the reveal; safety answers (mixing, drug checking, section 6 Acute risks, overdose) open at once; then up
    to three next questions, and after four answers in a row a calm end. ---------- */
@@ -17,6 +19,9 @@ const INS_WAIT = 150;       // ms of no typing before a question is looked up (e
 const INS_WORDS = 3;        // a question of three words or more; a drug's name alone is for the word search
 const INS_END = 4;          // the calm end comes after four answers in a row
 const INS_BASE = () => new URL("insight/", document.baseURI).href;
+// a connection that asks to save data, or a very slow one: nothing is fetched until the reader asks for it
+const insSaver = () => { const c = navigator.connection; return !!(c && (c.saveData || /^(slow-)?2g$/.test(c.effectiveType || ""))); };
+const INS_GET = "Understand questions in your own words (downloads about 38 MB once)";
 
 /* Loading, on first use. One thread (no cross-origin isolation is needed); the WebGPU build is never fetched. */
 function insScript(src) {
@@ -70,7 +75,7 @@ function insPrepare(d, vocabText) {
     const ns = new Set([s.slug.replace(/-/g, " ")]);
     s.name.split(/[()\/,;]| and /).forEach(p => { p = p.trim().toLowerCase(); if (p.length >= 3) ns.add(p); });
     (ALIASES[s.slug] || []).forEach(a => { if (a.length >= 3) ns.add(a.toLowerCase()); });
-    const alt = [...ns].sort((a, b) => b.length - a.length).map(n => n.replace(/[.*+?^${}()|[\]\\\/-]/g, "\\$&")).join("|");
+    const alt = [...ns].sort((a, b) => b.length - a.length).map(n => n.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&")).join("|");
     return { slug: s.slug, canon: s.name.split(" (")[0], re: new RegExp("(?<![\\p{L}\\p{N}_])(?:" + alt + ")(?![\\p{L}\\p{N}_])", "u") };
   }).sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
 }
@@ -161,8 +166,8 @@ const insQ = id => anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || cla
 const insWordsIn = q => (q.match(/[\p{L}\p{N}]+/gu) || []).length;
 const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") + ". Nothing you type leaves it.";
 function insFitHtml(q, res) {
-  if (!res.top.length) return '<p class="sr-fit-none"><b>We haven’t checked this yet.</b> <button type="button" class="linklike" data-fb="feedback" data-fb-text="' + esc(q) + '">Ask us</button></p>';
-  return '<div class="sr-fit"><p class="sr-fit-h">Answers that fit your question</p>' + res.top.map(i => {
+  if (!res.top.length) return '<p class="sr-fit-none" data-q="' + esc(q) + '"><b>No checked answer fits this closely.</b> <button type="button" class="linklike" data-fb="feedback" data-fb-text="' + esc(q) + '">Ask us</button></p>';
+  return '<div class="sr-fit" data-q="' + esc(q) + '"><p class="sr-fit-h">Closest checked answers</p>' + res.top.map(i => {
     const id = INS.ids[i], c = claimById[id], sp = SIMPLE.claims[id], w = mfWhere(answerPageKey(id) || c.substance);
     return '<a class="sr-ans sr-fit-a" href="' + esc(answerAddr(id)) + '" data-insight="' + esc(id) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(insQ(id)) +
       '</span><span class="a">' + esc(glanceClause(sp.short)) + '</span><span class="m">' + meterHtml(c.grade.certainty, true) + "</span></a>";
@@ -180,12 +185,16 @@ function insInject(box, q, res) {
   if (first && first.getAttribute("href") === "#emergency" && first === box.querySelector(":scope > :not(.sr-note)")) first.insertAdjacentHTML("afterend", html);
   else if (note) note.insertAdjacentHTML("afterend", html); else box.insertAdjacentHTML("afterbegin", html);
   const live = document.getElementById("search-count");
-  if (live) live.textContent = res.top.length ? res.top.length + " answer" + (res.top.length === 1 ? "" : "s") + " that fit your question" : "We haven’t checked this yet";
+  if (live) live.textContent = res.top.length ? res.top.length + " closest checked answer" + (res.top.length === 1 ? "" : "s") : "No checked answer fits this closely";
 }
 // called by runSearch after the word search has drawn its results
 function insightAfterSearch(raw) {
-  if (INS.state !== "ready") return;
   const box = document.getElementById("search-results"); if (!box || box.hidden) return;
+  if (INS.state !== "ready") {   // saving data: one quiet line under the results offers it; once tapped, it says it is coming
+    if (INS.state === "idle" && insSaver()) box.insertAdjacentHTML("beforeend", '<p class="sr-get"><button type="button" class="linklike" data-ins-get>' + esc(INS_GET) + "</button></p>");
+    else if (INS.state === "loading" && INS.byHand) box.insertAdjacentHTML("beforeend", '<p class="sr-get" role="status">Downloading, once: about 38 MB…</p>');
+    return;
+  }
   if (!box.querySelector(":scope > .sr-note")) box.insertAdjacentHTML("afterbegin", '<p class="sr-note">' + icon("mobile") + "<span>" + esc(insNoteText()) + "</span></p>");
   const q = String(raw || "").trim().replace(/\s+/g, " "); clearTimeout(INS.timer);
   if (insWordsIn(q) < INS_WORDS) { INS.seq++; return; }
@@ -206,7 +215,12 @@ function insightReady() {
 }
 (function () {
   const s = document.getElementById("search"); if (!s) return;
-  s.addEventListener("focus", insightLoad); s.addEventListener("input", insightLoad);
+  const auto = () => { if (!insSaver()) insightLoad(); };
+  s.addEventListener("focus", auto); s.addEventListener("input", auto);
+  document.getElementById("search-results").addEventListener("click", e => {
+    if (!e.target.closest || !e.target.closest("[data-ins-get]")) return;
+    INS.byHand = true; insightLoad(); setTimeout(() => { s.focus(); runSearch(s.value); }, 0);   // after this click has run its course
+  });
 })();
 
 /* One answer at a time, over the page (the sheet the evidence opens in, with its Back button and the phone's own Back) */
@@ -234,7 +248,7 @@ function insHtml(id, st) {
   const c = claimById[id], sp = SIMPLE.claims[id], w = mfWhere(answerPageKey(id) || c.substance);
   const bar = '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye ins-eye">' + icon(w.f.icon) + "<span>" + esc(w.name) + "</span></span></div>";
   const head = '<h2 id="ev-title" tabindex="-1">' + esc(insQ(id)) + "</h2>";
-  if (st.stage === "guess") return bar + '<div class="ins">' + head + '<div class="ins-guess"><p class="ins-k" id="ins-k">First, a guess: myth or fact?</p><p class="qz2-q ins-q">' + esc(st.x.q) + "</p>" +
+  if (st.stage === "guess") return bar + '<div class="ins">' + head + '<div class="ins-guess f-' + w.f.k + '"><p class="ins-k" id="ins-k">First, a guess: myth or fact?</p><p class="qz2-q ins-q">' + esc(st.x.q) + "</p>" +
     '<div class="qz2-opts mf-opts" role="group" aria-labelledby="ins-k"><button type="button" class="qz2-o" data-ins-guess="myth">Myth</button><button type="button" class="qz2-o" data-ins-guess="fact">Fact</button></div>' +
     '<button type="button" class="linklike ins-skip" data-ins-skip>Skip to the answer</button></div></div>';
   const x = st.x, verdict = x ? '<div class="ins-verdict ' + (x.fact ? "fact" : "myth") + (st.anim ? " just" : "") + '"><p class="mf-v" tabindex="-1">' + icon(x.fact ? "check" : "x") + "<b>" + (x.fact ? "Fact" : "Myth") + "</b>" +
@@ -242,8 +256,11 @@ function insHtml(id, st) {
   const addr = answerAddr(id), pl = sharedPlace(answerPageKey(id) || "", id);
   const page = /^#cl_/.test(addr) ? '<a class="qz2-ev" href="' + esc(pl.href) + '">' + esc(pl.more) + " " + icon("arrow") + "</a>" : '<a class="qz2-ev" href="' + esc(addr) + '">See it on the ' + esc(w.name) + " page " + icon("arrow") + "</a>";
   const tail = INS.run.ids.length - INS.run.more >= INS_END ? insEndHtml() : insNextHtml(id);
-  // the answer as everywhere on the site: the short answer, its "But", the picture, an early draft's reason, How do we know?, the bars
-  return bar + '<div class="ins">' + head + insSos(id) + verdict + '<div class="ins-ans">' + answerBody(id, c, sp, false) + "</div>" + '<p class="ins-page">' + page + "</p>" + tail + "</div>";
+  // the answer as everywhere on the site: the short answer, its "But" (unless the why line above already says it, as in the
+  // decks), the picture, an early draft's reason, How do we know?, the bars and the evidence
+  let body = answerBody(id, c, sp, false);
+  if (x && x.why && sp.but && mfSame(x.why, sp.but)) body = body.replace(/<p class="ask-but">[\s\S]*?<\/p>/, "");
+  return bar + '<div class="ins">' + head + insSos(id) + verdict + '<div class="ins-ans">' + body + "</div>" + '<p class="ins-page">' + page + "</p>" + tail + "</div>";
 }
 function insDraw(id, st, opener) {
   const sh = document.getElementById("evsheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
@@ -278,7 +295,7 @@ document.addEventListener("click", e => {
     insDraw(v.id, { stage: "answer", x, pick: { ok }, anim: true }); return;
   }
   if (t.hasAttribute("data-ins-skip")) { if (!QZS.claims.includes(v.id)) { QZS.claims.push(v.id); qzSave(); } insDraw(v.id, { stage: "answer", x: v.st.x }); return; }
-  if (t.hasAttribute("data-ins-ask")) { closeEvidence(); const s = document.getElementById("search"); if (s) { s.value = ""; s.focus(); } return; }
+  if (t.hasAttribute("data-ins-ask")) { closeEvidence(); const s = document.getElementById("search"); if (s) { s.value = ""; setTimeout(() => s.focus(), 0); } return; }
   if (t.hasAttribute("data-ins-more")) { INS.run.more = INS.run.ids.length; const box = t.closest(".ins-end"); if (box) box.outerHTML = insNextHtml(v.id) || ""; const f = document.querySelector("#evsheet .ins-next a"); if (f) f.focus(); }
 });
 // before the page's own handlers (capture): a next question opens here (its address may be a mixing answer's evidence, which

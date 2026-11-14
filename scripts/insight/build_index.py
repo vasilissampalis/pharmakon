@@ -3,32 +3,37 @@ site should feel like your own thinking). Called by site/build.js, which writes 
 substance, section, pages, every wording of its question on the site and its short answer. Adds the ways people ask each
 answer (data/verification/insight/variants_reader696.json, when present), embeds every wording and short answer with
 all-MiniLM-L6-v2 (site/insight/vendor, byte-identical to the official files: scripts/insight/MODELS.md) exactly as the page
-does in the browser (BERT uncased WordPiece, [CLS] text [SEP], at most 128 tokens, mean over the attention mask, unit
-length), and writes OUT.json: the vectors (int8, one scale per row), each answer's words for the word-overlap score, and
-each answer's next questions (the nearest answers by their questions' meaning, the same page first) and which answers open
-without a guess (safety: the mixing and drug-checking pages, section 6 Acute risks, or "overdose" in the question).
-The encoder is eval_match.py's own MiniLM class, loaded without running that script's evaluation. Vectors are cached by
-text in site/insight/.cache/ (not committed), so a build embeds only new or changed texts.
+does in the browser (BERT uncased WordPiece, [CLS] text [SEP], at most 128 tokens, mean over the tokens, unit length), and
+writes OUT.json: the vectors (int8; the page scales each row back to unit length), each answer's words for the word-overlap
+score, each answer's next questions (the nearest answers by their questions' meaning, the same page first) and which answers
+open without a guess (safety: the mixing and drug-checking pages, section 6 Acute risks, or "overdose" in the question).
+The tokens are made here by the tokenizers library (BertWordPieceTokenizer, lowercase, as eval_match.py's MiniLM class);
+the model is run by the page's own runtime under Node (scripts/insight/embed.js: ONNX Runtime Web from site/insight/vendor),
+one text at a time, so the index's numbers are the very numbers the page computes for the same words (bit-identical; the
+Python onnxruntime on a PC gives cosine 0.994 to 1 against the page, as its int8 kernels round differently: parity.js).
+Vectors are cached by text in site/insight/.cache/ (not committed), so a build embeds only new or changed texts.
 --eval: also scores the forum questions of the gold set (two blind readers, data/verification/insight/) the way the page
 does (the int8 vectors it reads, the same word overlap and drug names, the same rule for what is shown), and prints the hit
 rates and, for each threshold, how many answerable questions get a right answer shown and how many unanswerable ones get a
 confident match. The page's threshold (THRESHOLD below) was chosen from that table."""
-import ast, base64, glob, hashlib, json, math, pathlib, re, sys
+import ast, base64, glob, hashlib, json, math, os, pathlib, re, shutil, subprocess, sys
 import numpy as np
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 VENDOR = ROOT / "site/insight/vendor"
-CACHE = ROOT / "site/insight/.cache/vectors.npz"
+CACHE = ROOT / "site/insight/.cache/vectors-wasm.npz"   # made by the page's runtime, one text at a time (see embed_all)
 VARIANTS = ROOT / "data/verification/insight/variants_reader696.json"
 # the score the page computes (as tuned in scripts/insight/tune.py and scored in eval_gold.py): 0.7 x the best wording, 0.3 x
 # the short answer, plus 0.2 x word overlap (TF-IDF over each answer's wordings on the site and its short answer); a best score
-# under THRESHOLD shows "We haven't checked this yet" instead of answers, and the second and third answers are shown only
+# under THRESHOLD shows "No checked answer fits this closely" instead of answers, and the second and third are shown only
 # when they score ALSO or more.
-# From --eval on the gold set (14 November 2026, with reader 696's variants; 76 answerable and 126 unanswerable questions;
-# top-1 56.6%, top-3 80.3%): at 0.65 (others from 0.60), 75.0% of answerable questions get answers, 61.8% with a right one,
-# and 19.8% of unanswerable ones get a confident match; at 0.60, 89.5%, 73.7% and 40.5%; at 0.70, 43.4% right and 7.9%.
-# Per 100 forum questions (38 of them answered on the site), going from 0.625 to 0.65 loses 2 right answers and saves 6
-# confident wrong matches; going on to 0.675 would lose 4 right answers to save 5 wrong matches. A right answer is worth more.
+# The editor's measure (scripts/insight/eval_gold.py, MiniLM tuned with the wordings, 14 November 2026): at 0.65 a match is
+# shown for 68.6% of answerable questions, with a right answer in the three for 50.4% (73% of those shown), and for 22.2% of
+# questions the site cannot answer; at 0.60, 85% and 47%; at 0.70, 41% and 7%. 0.65 kept (the best precision of those), and
+# the words on the page say only what that supports: "Closest checked answers", "No checked answer fits this closely".
+# This script's --eval (the page's own vectors and rule; answerable: a full answer named by either reader, 79 questions; 126
+# that neither reader could answer; top-1 51.9%, top-3 81.0%): at 0.65, 89.9% of answerable questions get a match, 69.6% with
+# a right answer, and 31.7% of unanswerable ones get one; at 0.60, 97.5%, 78.5% and 57.1%; at 0.70, 69.6%, 57.0% and 12.7%.
 W_Q, W_SHORT, W_WORDS = 0.7, 0.3, 0.2
 THRESHOLD, ALSO = 0.65, 0.60
 N_NEXT = 6       # the page shows three, leaving out the answers already opened in a row
@@ -36,6 +41,8 @@ SAFETY_PAGES = {"interactions", "drug-checking"}
 
 
 def encoder():
+    """eval_match.py's MiniLM class (the Python onnxruntime), loaded without running that script's evaluation: parity.js
+    compares it with the page as an independent check of the model; the index itself is made with the page's runtime."""
     src = (ROOT / "scripts/insight/eval_match.py").read_text(encoding="utf-8")
     keep = [n for n in ast.parse(src).body if isinstance(n, (ast.ClassDef, ast.FunctionDef)) and n.name in ("MiniLM", "norm")]
     ns = {}
@@ -45,8 +52,30 @@ def encoder():
     return enc
 
 
+def tokenizer():
+    from tokenizers import BertWordPieceTokenizer
+    tok = BertWordPieceTokenizer(str(VENDOR / "vocab.txt"), lowercase=True)
+    tok.enable_truncation(128)   # the page truncates at 128 tokens, [CLS] and [SEP] included; no padding
+    return tok
+
+
+def embed_ids(ids):
+    """Unit vectors for lists of token ids, made by the page's runtime under Node (scripts/insight/embed.js)."""
+    d = CACHE.parent; d.mkdir(parents=True, exist_ok=True)
+    inp, out = d / "embed-in.json", d / "embed-out.f32"
+    inp.write_text(json.dumps({"ids": ids}), encoding="utf-8")
+    node = os.environ.get("PK_NODE") or shutil.which("node") or "node"
+    r = subprocess.run([node, str(ROOT / "scripts/insight/embed.js"), str(inp), str(out)], capture_output=True, text=True)
+    if r.returncode != 0: sys.exit("insight: the page's runtime could not embed the texts: " + r.stderr.strip()[-600:])
+    V = np.fromfile(out, dtype="<f4").reshape(len(ids), -1)
+    inp.unlink(); out.unlink()
+    return V
+
+
 def embed_all(texts):
-    """Unit vectors for texts, from the cache where a text was embedded before."""
+    """Unit vectors for texts, from the cache where a text was embedded before. Each text is run alone, as the page runs a
+    question (the int8 model sets its scale from all the numbers in a batch: a text run in a padded batch comes out slightly
+    different)."""
     key = lambda t: hashlib.sha1(t.encode("utf-8")).hexdigest()
     have = {}
     if CACHE.exists():
@@ -54,9 +83,8 @@ def embed_all(texts):
         have = dict(zip(z["keys"].tolist(), z["vecs"]))
     need = sorted({t for t in texts if key(t) not in have})
     if need:
-        enc = encoder()
-        for t, v in zip(need, enc(need)): have[key(t)] = v.astype(np.float32)
-        CACHE.parent.mkdir(parents=True, exist_ok=True)
+        tok = tokenizer()
+        for t, v in zip(need, embed_ids([tok.encode(t).ids for t in need])): have[key(t)] = v.astype(np.float32)
         ks = sorted(have); np.savez(CACHE, keys=np.array(ks), vecs=np.vstack([have[k] for k in ks]))
     print(f"insight: {len(texts)} texts embedded ({len(need)} new)", file=sys.stderr)
     return np.vstack([have[key(t)] for t in texts]) if texts else np.zeros((0, 384), np.float32)
