@@ -48,6 +48,7 @@ NEW_THEMES = {
     "N15": "Which medicine works better for anxiety, depression, sleep, pain or ADHD?",
     "N16": "Can stimulants help you lose weight, and is it safe?",
     "N17": "Can stimulants like meth or cocaine cause psychosis, and does it pass?",
+    "N18": "How does this drug work in the brain and body?",
 }
 
 
