@@ -36,3 +36,36 @@ separates questions the site cannot answer: at 0.60, 85% of answerable questions
 unanswerable ones. So the site never presents a match as "the answer": it shows the checked question it matched, in
 full, beside its short answer, and always offers "Didn't find it? Ask us". Chosen for the site: all-MiniLM-L6-v2 (q8),
 tuned, with the wordings.
+
+## On the site (release 2.2.0, 14 November 2026)
+
+Pharmakon Insight runs in the reader's browser with these files, published unmodified from `site/insight/vendor/` to
+`insight/` next to the page and fetched only when someone uses the search box (never with a page; on a connection that
+saves data, only when the reader taps the line that offers it). Nothing else is fetched, and nothing from outside the site.
+
+| File | Bytes | SHA-256 | From |
+|---|---|---|---|
+| all-MiniLM-L6-v2-q8.onnx | 22,972,370 | afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1 | as above (official file) |
+| vocab.txt | 231,508 | 07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3 | as above (official file) |
+| ort.wasm.min.js | 53,796 | b8a78c408c40da65fdc8ba0846f7b2948e92a4c6d6b23cc8e4165e428ad95443 | npm onnxruntime-web 1.31.1 (MIT), dist/ |
+| ort-wasm-simd-threaded.mjs | 24,738 | 30ed0b5cd1182ede931fea448afb567d4dc705ec957af09f108a2be5f770dac3 | same |
+| ort-wasm-simd-threaded.wasm | 14,848,852 | 4b884c203b0fa48d057be3332c65513ff85aa3c5bddd6946acc0fab7ecda001d | same |
+
+Only the plain WebAssembly build of ONNX Runtime Web is used (one thread; no cross-origin isolation needed). Its WebGPU
+build (29.5 MB) is never shipped: it is over Cloudflare Pages' limit of 25 MiB a file. The package's scripts were not run;
+only these files were taken from it. The licences travel with them: `LICENSE-onnxruntime-web.txt` (MIT),
+`NOTICE-all-MiniLM-L6-v2.txt` and `LICENSE-Apache-2.0.txt`. The page's security policy adds `'wasm-unsafe-eval'` to
+`script-src` (it allows WebAssembly to compile, nothing else).
+
+The index (`data/insight.json`) is made by `scripts/insight/build_index.py` on every `node site/build.js`, from the data
+of the day: every answer with plain lines (data/site/simple.json), every wording of its question on the site
+(data/site/questions.json and the plain lines' own question), the ways people ask it (variants_reader696.json; an answer
+without them is found by its site questions and short answer alone), drug and street names (aliases.json,
+substances.json). Tokens are made in Python by the tokenizers library; the vectors by the page's own runtime under Node
+(`scripts/insight/embed.js`), one text at a time, so they are bit-identical to what the page computes. The Python
+onnxruntime agrees to cosine 0.994 to 1 (median 1.000000) on a PC, as its int8 kernels round a little differently; a
+batch padded to its longest text also shifts every vector in it slightly, so nothing is embedded in batches.
+`scripts/insight/parity.js` checks all of this; `scripts/ux/insight_check.js` checks the search box and the answers in a
+real browser. Threshold 0.65 (the editor's measure on the gold set: a match shown for 68.6% of answerable questions, a
+right one among the three for 50.4%, and a match for 22.2% of questions the site cannot answer); so the page says
+"Closest checked answers", and, under the threshold, "No checked answer fits this closely" with Ask us.
