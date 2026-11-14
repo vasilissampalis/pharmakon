@@ -98,6 +98,7 @@ shownClaims.forEach(c => { fullOf(c.substance).claims[c.id] = heavyClaim(c); });
 legalDocs.forEach(d => { fullOf(d.substance).legal = d; });
 identityDocs.forEach(d => { const { names, street_names, verification, ...rest } = d; fullOf(d.substance).identity = rest; });
 Object.entries(cards).forEach(([id, c]) => { if (!c.substance || !(c.what_would_settle_it || c.verification.source_read)) return; const f = fullOf(c.substance); (f.cards = f.cards || {})[id] = { what_would_settle_it: c.what_would_settle_it || null, source_read: c.verification.source_read || "" }; });
+let simpleShown = null;
 const data = [
   "const EVIDENCE_MAPS = " + JSON.stringify(maps) + ";",
   "const REFS = " + JSON.stringify(refs.map(lightRef)) + ";",
@@ -175,6 +176,7 @@ const data = [
     // "Why this rating" in plain words is read only on the answer sheet and the research pages: it travels with the claim's file (speed)
     const subOf = Object.fromEntries(shownClaims.map(c => [c.id, c.substance]));
     for (const [id, c] of Object.entries(q.claims || {})) if (c.rate && subOf[id]) { fullOf(subOf[id]).claims[id].rate = c.rate; delete c.rate; }
+    simpleShown = q;   // the answers Insight indexes are exactly the ones with plain lines on the page (below)
     return q; })()) + ";",
   "const WORLD_LAW = " + JSON.stringify((() => { const q = site("world-law.json"); delete q._note; return q; })()) + ";",
   "const DRUGCHECK = " + JSON.stringify(drugCheck) + ";",
@@ -194,12 +196,12 @@ const data = [
 ].join("\n");
 const VERSION = site("version.json");
 const data2 = data + "\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
-const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js")].join("\n\n");
+const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }
 // The three files share one scope, so a function declared twice silently replaces the first one everywhere: refuse it.
 { const seen = {}, dup = [];
-  [["app.core.js", src("app.core.js")], ["app.simple.js", src("app.simple.js")], ["app.views.js", src("app.views.js")]].forEach(([f, t]) => {
+  [["app.core.js", src("app.core.js")], ["app.simple.js", src("app.simple.js")], ["app.views.js", src("app.views.js")], ["app.insight.js", src("app.insight.js")]].forEach(([f, t]) => {
     for (const m of t.matchAll(/^(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(|^(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=/gm)) { const n = m[1] || m[2]; if (seen[n]) dup.push(n + " (" + seen[n] + ", " + f + ")"); else seen[n] = f; } });
   if (dup.length) { console.error("DUPLICATE top-level names in the page script: " + dup.join("; ")); process.exit(1); } }
 const BUILD_DATE = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Athens" });
@@ -222,6 +224,26 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
   fs.writeFileSync(path.join(dataDir, "refs.json"), JSON.stringify(Object.fromEntries(refs.map(r => [r.id, r]))));
   fs.writeFileSync(path.join(dataDir, "figures.json"), JSON.stringify(epiRows));
   fs.writeFileSync(path.join(dataDir, "decisions.json"), JSON.stringify(site("decisions.json")));
+  /* Insight (site 2.2.0, 14 November 2026): the search that understands a question, on the reader's own phone. The model
+     and its runtime (site/insight/vendor: all-MiniLM-L6-v2 and ONNX Runtime Web, unmodified, hashes in scripts/insight/MODELS.md)
+     are published next to the page in dist/insight/, fetched only when someone uses the search box; every answer's
+     wordings, made into vectors by the same model, are in dist/data/insight.json (scripts/insight/build_index.py). */
+  { const vend = path.join(__dirname, "insight", "vendor"), out = path.join(__dirname, "dist", "insight");
+    const files = ["ort.wasm.min.js", "ort-wasm-simd-threaded.mjs", "ort-wasm-simd-threaded.wasm", "all-MiniLM-L6-v2-q8.onnx", "vocab.txt", "LICENSE-onnxruntime-web.txt", "NOTICE-all-MiniLM-L6-v2.txt", "LICENSE-Apache-2.0.txt"];
+    if (fs.existsSync(out)) fs.rmSync(out, { recursive: true });
+    if (files.every(f => fs.existsSync(path.join(vend, f)))) {
+      fs.mkdirSync(out, { recursive: true }); files.forEach(f => fs.copyFileSync(path.join(vend, f), path.join(out, f)));
+      const QS = site("questions.json"); delete QS._note;
+      const pagesOf = {}, wordsOf = {};
+      for (const [slug, groups] of Object.entries(QS)) (groups || []).forEach(g => (g.items || []).forEach(it => { if (!it[0]) return; (pagesOf[it[0]] = pagesOf[it[0]] || []).includes(slug) || pagesOf[it[0]].push(slug); if (it[1]) (wordsOf[it[0]] = wordsOf[it[0]] || []).push(it[1]); }));
+      const byId = Object.fromEntries(shownClaims.map(c => [c.id, c]));
+      const answers = Object.entries((simpleShown || {}).claims || {}).filter(([id]) => byId[id]).map(([id, sp]) => ({ id, substance: byId[id].substance, section: byId[id].section,
+        pages: pagesOf[id] || [byId[id].substance], wordings: [...new Set((sp.q ? [sp.q] : []).concat(wordsOf[id] || []))], short: sp.short }));
+      const input = path.join(__dirname, "insight", ".cache", "index-input.json");
+      fs.mkdirSync(path.dirname(input), { recursive: true }); fs.writeFileSync(input, JSON.stringify({ answers }));
+      const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json")], { stdio: ["ignore", "inherit", "inherit"] });
+      if (r.status !== 0) { console.error("WARNING: Insight's index was not built (scripts/insight/build_index.py failed): the search box answers by words only"); if (fs.existsSync(path.join(dataDir, "insight.json"))) fs.unlinkSync(path.join(dataDir, "insight.json")); }
+    } else console.error("WARNING: site/insight/vendor is incomplete: Insight is left out and the search box answers by words only"); }
   const kb = f => (fs.statSync(path.join(dataDir, f)).size / 1024).toFixed(0) + " KB";
   console.log("wrote", Object.keys(full).length, "substance files to dist/data (largest " + Object.keys(full).map(s => "full-" + s + ".json").sort((a, b) => fs.statSync(path.join(dataDir, b)).size - fs.statSync(path.join(dataDir, a)).size).slice(0, 3).map(f => f + " " + kb(f)).join(", ") + "), refs.json " + kb("refs.json") + ", figures.json " + kb("figures.json")); }
 if (fs.existsSync(photoDir)) { fs.mkdirSync(imgDir, { recursive: true }); const n = fs.readdirSync(photoDir).filter(f => f.endsWith(".webp")).map(f => fs.copyFileSync(path.join(photoDir, f), path.join(imgDir, f))).length; console.log("copied", n, "photo files to dist/img"); }
