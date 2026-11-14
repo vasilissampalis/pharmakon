@@ -14,7 +14,7 @@ theme's demand is the mean of its two shares), so neither drowns the other.
 Themes are matched by their exact names. The four themes the site will not answer (amounts and redosing, strongest drug,
 form or route and preparation, getting drugs and legal trouble, hiding use) are ranked but give no score.
 Scores: the answerable themes in order of demand get 100 down to about 2; an answer takes the best score of the themes it
-covers (covered_by in either source)."""
+covers (covered_by in either source, or data/verification/demand-covers-extra.json for answers written later)."""
 import json, glob, ast, os, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]; os.chdir(ROOT)
 dry = "--dry" in sys.argv
@@ -52,6 +52,12 @@ for q in qs:
         name = q["theme"]; fam[k][name] = fam[k].get(name, 0) + w
         cover(name, q.get("covered_by"))
         if len(examples.setdefault(name, [])) < 3 and q.get("question"): examples[name].append(q["question"] + " (" + q.get("site", "") + ")")
+# answers written after the coding, linked by the editor to the themes they answer (exact theme names)
+_x = pathlib.Path("data/verification/demand-covers-extra.json")
+if _x.exists():
+    for name, cids in json.load(open(_x, encoding="utf-8"))["covers"].items():
+        if name not in fam["reddit"] and name not in fam["forums"]: print("!! demand-covers-extra: unknown theme", name[:80])
+        cover(name, cids)
 tot = {k: sum(v.values()) or 1 for k, v in fam.items()}
 themes = sorted(set(fam["reddit"]) | set(fam["forums"]))
 share = {t: (fam["reddit"].get(t, 0) / tot["reddit"] + fam["forums"].get(t, 0) / tot["forums"]) / 2 for t in themes}
