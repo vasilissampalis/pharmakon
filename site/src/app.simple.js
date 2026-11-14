@@ -546,8 +546,9 @@ function renderFacts() {
   box.innerHTML = (inShortHtml(qs, [], { hid: "facts-in-h" }) || "") + chips +
     topics.map((t, i) => '<section class="sec" id="facts-t' + i + '" aria-labelledby="facts-t' + i + '-h"><h2 id="facts-t' + i + '-h">' + esc(t) + '</h2><div class="sec-b">' +
       askList(qs.filter(([, , tt]) => tt === t), "facts" + i, 4, "fx-", GEN) + "</div></section>").join("") +
-    '<section class="sec quizsec" aria-labelledby="facts-quiz-h"><h2 id="facts-quiz-h">Myth or fact?</h2><div class="qz2" id="qz-facts"></div></section>';
-  qzStart("qz-facts", GEN);
+    // the page's own Myth or fact? deck, when it has at least 3 statements
+    (mfCount(mfPagePool(GEN)) >= 3 ? '<section class="sec quizsec" aria-labelledby="facts-quiz-h"><h2 id="facts-quiz-h">Myth or fact?</h2><div class="qz2 mf" id="qz-facts"></div></section>' : "");
+  mfStart("qz-facts", GEN);
 }
 function openFact(id) {
   const d = document.getElementById("fx-" + id); if (!d) return false;
@@ -834,6 +835,8 @@ function renderDrug(slug) {
   // 7. the law where you are
   secs.push(sec("d-law", "Is it legal where I am?", lawHtml(slug), "Law"));
   const nAns = qs.length + mix.filter(([id]) => claimById[id] && claimById[id].substance !== slug).length;
+  // the page's own Myth or fact? deck (its statements only) ends the page when it has at least 3 (senior author, 14 November)
+  const deckN = mfCount(mfPagePool(slug));
   const nCards = Object.values(STUDY_CARDS).filter(k => k.substance === slug).length;
   // no draft banner (the senior author's decision of 13 November 2026: he holds editorial responsibility for what is published;
   // METHODS §12, 0.3.2); "not medical advice" stays in the footer and on the About page
@@ -846,13 +849,13 @@ function renderDrug(slug) {
     '<div class="readprog pgprog" id="pgprog" hidden></div>' +
     '<nav class="chips" aria-label="On this page">' + secs.map(x => '<a href="#' + x.id + '" data-go="' + x.id + '">' + esc(x.chip) + "</a>").join("") +
     // the page's own quiz sits at the end; a chip lets people jump to it (senior author, 12 November: make the site fun to use)
-    (qs.length ? '<a href="#d-quiz" data-go="d-quiz">Myth or fact?</a>' : "") + "</nav>" +
+    (deckN >= 3 ? '<a href="#d-quiz" data-go="d-quiz">Myth or fact?</a>' : "") + "</nav>" +
     secs.map(x => '<section class="sec" id="' + x.id + '" aria-labelledby="' + x.id + '-h"><h2 id="' + x.id + '-h"><span class="sec-ic">' + icon(SEC_ICON[x.id] || "molecule") + "</span>" + esc(x.q) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("") +
     fbLineHtml() + '<section class="sec deep"><h2>Want the details?</h2><p class="say">' + (nAns ? nAns + (nAns === 1 ? " answer" : " answers") : "The plan for this page") + (nCards ? ", from " + nCards + (nCards === 1 ? " study" : " studies") + " read in full" : "") + ", with every source and how sure we are.</p><p><a class=\"go\" href=\"#s-" + slug + '/evidence">All the research on ' + esc(s.name) + "</a></p></section>" +
-    '<section class="sec quizsec" id="d-quiz" aria-labelledby="d-quiz-h"><h2 id="d-quiz-h">Myth or fact?</h2><div class="qz2" id="qz-drug"></div></section>' +
+    (deckN >= 3 ? '<section class="sec quizsec" id="d-quiz" aria-labelledby="d-quiz-h"><h2 id="d-quiz-h">Myth or fact?</h2><div class="qz2 mf" id="qz-drug"></div></section>' : "") +
     familyHtml(m);
   const box = document.getElementById("drug2"); box.className = "wrap drug2 f-" + f.k; box.innerHTML = h;  // the family colour runs through the whole page
-  applyPhotoPref(); qzStart("qz-drug", slug); pageProgress();
+  applyPhotoPref(); mfStart("qz-drug", slug); pageProgress();
   // the law part fills in when the drug's file arrives; the file is fetched ahead once the page settles, so the evidence opens at once
   lawWait(); fetchAhead(slug);
 }
@@ -1114,152 +1117,28 @@ document.addEventListener("keydown", e => {
   if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
 });
 
-/* ---------- Quiz (senior author, 26 October: the same first question every visit; "completely random", and hundreds of
-   questions). A new random order on every visit, with the questions a reader has not answered yet first (kept on this
-   device only). Every question is built from checked data, so its answer is right by construction:
-   - True or false, and Quick question: written for checked answers (data/site/simple.json, tf and quiz)
-   - Which is the answer? a question from a drug page and three short answers, two of them from other topics of that drug
-   - Which has stronger evidence? two checked answers whose research is rated differently (GRADE), at most one question in five
-   Street names and drug families are no longer asked (senior author, 31 October: "more useful drug fact questions ... rather
-   than boring questions like 'which drug is meow meow'"); the names stay on the drug pages and in search. ---------- */
-const QZ_KEY = "pk-quiz-seen", QZ = {};
+/* ---------- What the Myth or fact? decks share (from the quiz before them: senior author, 26 October and 6 November). Kept on
+   this device: the statements a reader has answered, so that new ones come first, and those missed, which come back early
+   until answered right. Kept for the visit, in this tab: the answers already asked, so that no deck on any page asks one
+   again until every statement has been dealt. One format everywhere (senior author, 14 November: Myth or fact "is more
+   interesting"): the written multiple-choice questions (data/site/simple.json, quiz) are kept but no longer shown. ---------- */
+const QZ_KEY = "pk-quiz-seen";
 function qzSeen() { try { return new Set(JSON.parse(localStorage.getItem(QZ_KEY) || "[]")); } catch (e) { return new Set(); } }
 function qzMark(key) { const s = qzSeen(); s.delete(key); s.add(key); try { localStorage.setItem(QZ_KEY, JSON.stringify([...s].slice(-800))); } catch (e) { /* this visit only */ } }
-// questions answered wrongly come back (spaced retrieval: a missed question is asked again a few questions later, and early on
-// the next visit, until it is answered right; kept on this device only)
 const QZ_AGAIN = "pk-quiz-again";
 function qzAgain() { try { return new Set(JSON.parse(localStorage.getItem(QZ_AGAIN) || "[]")); } catch (e) { return new Set(); } }
 function qzAgainSet(key, on) { const s = qzAgain(); if (on) s.add(key); else s.delete(key); try { localStorage.setItem(QZ_AGAIN, JSON.stringify([...s].slice(-200))); } catch (e) { /* this visit only */ } }
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const qzOk = id => !!(claimById[id] && (SIMPLE.claims || {})[id] && claimById[id].verification.status !== "draft");
-const CERT_N = { high: 4, moderate: 3, low: 2, "very-low": 1 };
-// options in a random order, with the right one tracked
-function qzOpts(right, wrong) { const all = shuffle([right].concat(wrong)); return { options: all, answer: all.indexOf(right) }; }
-let QZ_POOL = null;
-function qzPool() {
-  if (QZ_POOL) return QZ_POOL;
-  const out = [], tf = SIMPLE.tf || {}, mc = SIMPLE.quiz || {};
-  // the questions of each drug page, by topic, and the drug pages each answer is on
-  const byDrug = {}, pagesOf = {};
-  SUBSTANCES.forEach(s => { byDrug[s.slug] = drugQuestions(s.slug).filter(([id]) => qzOk(id)); byDrug[s.slug].forEach(([id]) => { (pagesOf[id] = pagesOf[id] || []).push(s.slug); }); });
-  // the answers on test kits are asked among themselves, and first on the pages of the drugs whose tests they cover
-  byDrug[DC] = drugQuestions(DC).filter(([id]) => qzOk(id)); byDrug[DC].forEach(([id]) => { pagesOf[id] = (KITSFOR[id] || []).length ? KITSFOR[id].slice() : [DC]; });
-  // the general answers are asked on the facts page first, and everywhere else after the page's own drug
-  byDrug[GEN] = drugQuestions(GEN).filter(([id]) => qzOk(id)); byDrug[GEN].forEach(([id]) => { pagesOf[id] = [GEN]; });
-  const on = id => pagesOf[id] || [claimById[id].substance];
-  Object.values(tf).flat().forEach(x => { if (qzOk(x.claim)) out.push({ key: "tf:" + x.claim + ":" + norm(x.statement).slice(0, 40), kind: "tf", drugs: on(x.claim), claim: x.claim, q: x.statement, why: x.why || "", options: ["True", "False"], answer: x.answer ? 0 : 1 }); });
-  Object.values(mc).flat().forEach(x => { if (qzOk(x.claim)) { const o = qzOpts(x.options[x.answer], x.options.filter((_, j) => j !== x.answer)); out.push(Object.assign({ key: "mc:" + x.claim, kind: "mc", drugs: on(x.claim), claim: x.claim, q: x.q, why: x.why || "" }, o)); } });
-  // Only written questions are asked (senior author, 12 November: every question must be one a person would find useful or
-  // repeat to a friend). The generated "Which is the answer?" and "Which has stronger evidence?" questions were retired.
-  QZ_POOL = out; return out;
-}
-// pages named for more than one drug: "Which family are benzodiazepines in?"
-const PLURAL_PAGE = ["benzodiazepines", "nicotine", "synthetic-cathinones", "dmt-ayahuasca", "2c-x", "synthetic-cannabinoids", "fentanyl-and-analogues", "prescription-opioids", "methadone-buprenorphine", "alkyl-nitrites-and-inhalants"];
-const QZ_KIND = { tf: ["bulb", "True or false?"], mc: ["bulb", "Quick question"], ans: ["search", "Which is the answer?"], sure: ["scale", "Which has stronger evidence?"], street: ["pin", "Street names"], family: ["molecule", "Drug families"] };
 const drugName = slug => ((subBySlug[slug] || {}).name || slug).replace(/\s*\(.*\)$/, "");
-// no two questions of the same kind in a row (or, for the Myth or fact? deck, from the same page), where the pool allows it
+// no two cards from the same page in a row, where the pool allows it
 function qzSpread(xs, k) { k = k || "kind"; const left = xs.slice(), out = []; while (left.length) { const last = out.length ? out[out.length - 1][k] : null; let i = left.findIndex(x => x[k] !== last); if (i < 0) i = 0; out.push(left.splice(i, 1)[0]); } return out; }
-/* One quiz across the whole visit (senior author, 6 November: a question came back in the same quiz, and "More questions"
-   set his score back to 0). The score and the questions already asked are shared by every quiz box on the site for the
-   rest of the visit (kept in this tab only); no question comes twice, and an answer asked one way is not asked again
-   another way, until every question has been asked. Then the reader is told, and can start again in a new order.
-   Questions never answered on this device come first, then the ones missed on an earlier visit, then the rest. */
 const QZ_SESSION = "pk-quiz-session";
 function qzLoad() { try { const x = JSON.parse(sessionStorage.getItem(QZ_SESSION) || "null"); if (x && Array.isArray(x.claims)) return x; } catch (e) { /* not kept */ } return { right: 0, done: 0, claims: [] }; }
 let QZS = qzLoad();
 function qzSave() { try { sessionStorage.setItem(QZ_SESSION, JSON.stringify(QZS)); } catch (e) { /* this page only */ } }
-function qzScore() { return QZS.done ? QZS.right + " of " + QZS.done + " right" : ""; }
-function qzOrder(slug) {
-  const all = qzPool(), seen = qzSeen(), again = qzAgain(), asked = new Set(QZS.claims);
-  const pool = all.filter(x => !asked.has(x.claim));
-  const tier = x => !seen.has(x.key) ? 0 : again.has(x.key) ? 1 : 2;
-  const fresh = xs => [0, 1, 2].flatMap(t => qzSpread(shuffle(xs.filter(x => tier(x) === t))));
-  // one question per answer (a comparison of evidence strength uses up both of its answers)
-  const once = xs => { const used = new Set(); return xs.filter(x => { if (used.has(x.claim) || (x.weak && used.has(x.weak))) return false; used.add(x.claim); if (x.weak) used.add(x.weak); return true; }); };
-  if (!slug) return once(fresh(pool));
-  // a drug page asks about that drug first (its own answers, then the test-kit answers shown on it), then goes on with the rest
-  const own = x => x.drugs.includes(slug) && claimById[x.claim] && claimById[x.claim].substance !== DC, kit = x => x.drugs.includes(slug) && !own(x), other = x => !x.drugs.includes(slug);
-  return once([own, kit, other].map(f => fresh(pool.filter(f))).flat());
-}
-function qzTotal() { return new Set(qzPool().map(x => x.claim)).size; }
-// each box keeps the questions answered in it, so the reader can go back and forward through them (senior author,
-// 6 November); pos is the one shown: an earlier answered question, or (pos = hist.length) the next new one
-function qzStart(boxId, slug) { const box = document.getElementById(boxId); if (!box) return; QZ[boxId] = { slug: slug || null, order: qzOrder(slug), i: 0, hist: [], pos: 0 }; qzRender(boxId); }
-function qzOptHtml(x, o) {
-  if (x.kind === "sure") return '<span class="qz2-oq">' + esc(anyQuestion(o) || "") + '</span><span class="qz2-os">' + esc(SIMPLE.claims[o].short) + "</span>";
-  if (x.kind === "street") return esc(drugName(o));
-  if (x.kind === "family") return esc(famPlain(o).word.replace(/^an? /, "").replace(/^./, c => c.toUpperCase()));
-  return esc(o);
-}
-// the next question not yet asked in this visit (another box may have asked it since this order was made)
-function qzCurrent(st) { const asked = new Set(QZS.claims), used = x => asked.has(x.claim) || (x.weak && asked.has(x.weak)); while (st.i < st.order.length && used(st.order[st.i])) st.i++; return st.order[st.i] || null; }
-function qzNav(st, answered) {
-  const back = st.pos > 0 ? '<button type="button" class="qz2-prev">' + icon("arrow") + "<span>Previous</span></button>" : "";
-  const fwd = answered ? '<button type="button" class="qz2-nb">' + (st.pos < st.hist.length - 1 ? "Next" : "Next question") + "</button>" : "";
-  return back || fwd ? '<p class="qz2-next">' + back + fwd + "</p>" : "";
-}
-function qzRender(boxId) {
-  const st = QZ[boxId], box = document.getElementById(boxId); if (!st || !box) return;
-  const past = st.pos < st.hist.length ? st.hist[st.pos] : null, x = past ? past.x : qzCurrent(st);
-  box.hidden = false;
-  if (!x) {
-    if (!st.order.length && !QZS.done) { box.hidden = true; return; }
-    box.innerHTML = '<div class="qz2-top"><span class="qz2-k">' + icon("check") + "<span>All done</span></span>" + '<span class="qz2-score" aria-live="polite">' + qzScore() + "</span></div>" +
-      '<p class="qz2-q">You have answered all ' + qzTotal() + " questions." + (QZS.done ? " You got " + QZS.right + " of " + QZS.done + " right." : "") + "</p>" +
-      '<p class="qz2-next">' + (st.hist.length ? '<button type="button" class="qz2-prev">' + icon("arrow") + "<span>Previous</span></button>" : "") + '<button type="button" class="qz2-restart">Start again in a new order</button></p>';
-    return;
-  }
-  const k = QZ_KIND[x.kind];
-  box.innerHTML = '<div class="qz2-top"><span class="qz2-k">' + icon(k[0]) + "<span>" + esc(k[1]) + "</span></span>" + '<span class="qz2-score" aria-live="polite">' + qzScore() + "</span></div>" +
-    '<p class="qz2-q" id="' + boxId + '-q">' + esc(x.q) + "</p>" +
-    '<div class="qz2-opts ' + x.kind + '" role="group" aria-labelledby="' + boxId + '-q">' + x.options.map((o, j) => '<button type="button" class="qz2-o' + (past ? (j === x.answer ? " right" : "") + (j === past.j && !past.ok ? " wrong" : "") : "") + '" data-j="' + j + '"' + (past ? " disabled" : "") + ">" + qzOptHtml(x, o) + "</button>").join("") + "</div>" +
-    '<div class="qz2-ans"' + (past ? "" : " hidden") + ">" + (past ? qzExplain(x, past.ok) + qzNav(st, true) : "") + "</div>" + (past ? "" : qzNav(st, false));
-}
-// a question's own reason that already says what the answer's 'But' says: the 'But' is not repeated
+// a statement's own reason that already says what the answer's 'But' says: the 'But' is not repeated
 function qzSame(why, but) { if (!why) return false; const w = t => new Set(norm(t).replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/).filter(x => x.length > 3)), A = w(why), B = w(but); let n = 0; A.forEach(x => { if (B.has(x)) n++; }); return A.size > 0 && n / A.size >= 0.5; }
-function qzExplain(x, ok) {
-  const sp = x.claim ? SIMPLE.claims[x.claim] : null, c = x.claim ? claimById[x.claim] : null;
-  const ev = id => '<a class="qz2-ev" href="#' + id + '">See the evidence ' + icon("arrow") + "</a>";
-  const word = ok ? "Right!" : "Not quite.";
-  if (x.kind === "tf" || x.kind === "mc") return '<p class="qz2-fb ' + (ok ? "ok" : "no") + '">' + word + (x.kind === "tf" ? " It is " + (x.answer === 0 ? "true." : "false.") : "") + "</p>" +
-    '<p class="qz2-why">' + esc(x.why || sp.short) + "</p>" + (sp.but && !qzSame(x.why, sp.but) ? '<p class="qz2-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") + '<div class="qz2-row">' + meterHtml(c.grade.certainty, true) + ev(x.claim) + "</div>";
-  if (x.kind === "ans") return '<p class="qz2-fb ' + (ok ? "ok" : "no") + '">' + word + (ok ? "" : " The answer is the one marked.") + "</p>" + (sp.but ? '<p class="qz2-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") + '<div class="qz2-row">' + meterHtml(c.grade.certainty, true) + ev(x.claim) + "</div>";
-  if (x.kind === "sure") { const w = claimById[x.weak], sw = SIMPLE.claims[x.weak];
-    return '<p class="qz2-fb ' + (ok ? "ok" : "no") + '">' + word + " The research is surer about the one marked.</p>" +
-      '<ul class="qz2-pair"><li>' + meterHtml(c.grade.certainty, true) + "<span>" + esc(anyQuestion(x.claim) || sp.short) + "</span> " + ev(x.claim) + "</li><li>" + meterHtml(w.grade.certainty, true) + "<span>" + esc(anyQuestion(x.weak) || sw.short) + "</span> " + ev(x.weak) + "</li></ul>" +
-      (sw.but ? '<p class="qz2-but"><b>Why the other is weaker:</b> ' + esc(sw.but) + "</p>" : ""); }
-  if (x.kind === "street") return '<p class="qz2-fb ' + (ok ? "ok" : "no") + '">' + word + " “" + esc(x.name) + "” is a name for " + esc(pageWord(x.slug)) + '.</p><p><a class="qz2-ev" href="#s-' + x.slug + '">' + esc(drugName(x.slug)) + ": the page " + icon("arrow") + "</a></p>";
-  if (x.kind === "family") { const fp = famPlain(subBySlug[x.slug].cls), many = PLURAL_PAGE.includes(x.slug);
-    return '<p class="qz2-fb ' + (ok ? "ok" : "no") + '">' + word + " " + esc(drugName(x.slug)) + (many ? " are " + esc(fp.word.replace(/^an? /, "") + "s") : " is " + esc(fp.word)) + ".</p>" + '<p class="qz2-why">' + esc(fp.line) + '</p><p class="small muted"><a href="' + esc(FAMPLAIN.source.url) + '" target="_blank" rel="noopener">Source: ' + esc(FAMPLAIN.source.publisher) + "</a></p>"; }
-  return "";
-}
-document.addEventListener("click", e => {
-  const b = e.target.closest && e.target.closest(".qz2-o"); if (b) {
-    const box = b.closest(".qz2"), st = QZ[box.id]; if (!st || b.disabled || st.pos < st.hist.length) return;
-    const x = qzCurrent(st); if (!x) return;
-    const j = +b.dataset.j, ok = j === x.answer;
-    QZS.done++; if (ok) QZS.right++; QZS.claims.push(x.claim); if (x.weak) QZS.claims.push(x.weak); qzSave();
-    qzMark(x.key); qzAgainSet(x.key, !ok);
-    st.hist.push({ x, j, ok }); st.pos = st.hist.length - 1; st.i++;
-    box.querySelectorAll(".qz2-o").forEach(o => { o.disabled = true; o.classList.toggle("right", +o.dataset.j === x.answer); });
-    if (!ok) b.classList.add("wrong");
-    const old = box.querySelector(":scope > .qz2-next"); if (old) old.remove();
-    const ans = box.querySelector(".qz2-ans");
-    ans.innerHTML = qzExplain(x, ok) + qzNav(st, true); ans.hidden = false;
-    box.querySelectorAll(".qz2-score").forEach(s => { s.textContent = qzScore(); });
-    const fb = ans.querySelector(".qz2-fb"); if (fb) { fb.setAttribute("tabindex", "-1"); fb.focus({ preventScroll: true }); }
-    return;
-  }
-  const nav = e.target.closest && e.target.closest(".qz2-nb, .qz2-prev, .qz2-restart"); if (!nav) return;
-  const box = nav.closest(".qz2"), st = QZ[box.id]; if (!st) return;
-  if (nav.classList.contains("qz2-restart")) { QZS = { right: 0, done: 0, claims: [] }; qzSave(); st.order = qzOrder(st.slug); st.i = 0; st.hist = []; st.pos = 0; }
-  else if (nav.classList.contains("qz2-prev")) st.pos = Math.max(0, st.pos - 1);
-  else st.pos = Math.min(st.hist.length, st.pos + 1);
-  qzRender(box.id);
-  const focus = box.querySelector(".qz2-o:not([disabled])") || box.querySelector(".qz2-nb, .qz2-restart, .qz2-prev"); if (focus) focus.focus({ preventScroll: true });
-  const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-  if (box.getBoundingClientRect().top < pad) scrollToEl(box, true);
-});
 
 /* ---------- Myth or fact? (redesign 2, 13 November; the senior author: the site "has so much info it is like the user gets
    tested in school", and a visitor would use it a little and leave). The first thing under the search box on the home page:
@@ -1269,8 +1148,10 @@ document.addEventListener("click", e => {
    per answer. Tap Myth or Fact and the card turns over where it is: the verdict, the statement, its why line, the answer's
    "But" (the reveal always carries it, as in the quiz, unless the why line already says it), the evidence bars and the way
    to the answer on its page. Then Next; after ten, Another 10. A plain count, no score,
-   no streak, no timer. A statement answered here counts as asked in the quiz for the rest of the visit, and as seen on this
-   device, so the quiz does not ask it again. ---------- */
+   no streak, no timer. The same deck is the whole Myth or fact? page (endless: Another 10 never runs out, every statement
+   comes round again in a new order) and the end of each drug page and of the facts page, there with that page's statements
+   only (a page with fewer than 3 has none). A statement answered in one deck counts as asked in every other for the rest of
+   the visit, and as seen on this device (senior author, 14 November: one format everywhere). ---------- */
 const MF = {};
 let MF_POOL = null;
 function mfPool() {
@@ -1286,8 +1167,8 @@ function mfPool() {
 // time); a full deck takes about as many myths as facts
 function mfDeal(st, n) {
   const asked = new Set(QZS.claims), seen = qzSeen(), again = qzAgain();
-  let pool = mfPool().filter(x => !asked.has(x.claim) && !st.used.has(x.claim));
-  if (!pool.length && n > 1) { st.used = new Set(); pool = mfPool(); }   // every statement has been dealt: all of them again, in a new order
+  let pool = st.pool.filter(x => !asked.has(x.claim) && !st.used.has(x.claim));
+  if (!pool.length && n > 1) { st.used = new Set(); pool = st.pool; }   // every statement has been dealt: all of them again, in a new order
   const tier = x => (x.long ? 3 : 0) + (!seen.has(x.key) ? 0 : again.has(x.key) ? 1 : 2), one = new Set();
   const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t)).sort((a, b) => demandOf(b.claim) - demandOf(a.claim))).filter(x => !one.has(x.claim) && one.add(x.claim));
   let deck = n > 1 ? order.filter(x => !x.fact).slice(0, n / 2).concat(order.filter(x => x.fact).slice(0, n / 2)) : order.slice(0, n);
@@ -1296,10 +1177,19 @@ function mfDeal(st, n) {
   deck.forEach(x => st.used.add(x.claim));
   return deck;
 }
-function mfStart(boxId) {
+// the statements of one page (a drug page: its own answers, the mixing answers and the test-kit answers it shows; the facts
+// page: the general answers), each leading to the answer on that page where it is there; or (no page) every statement
+function mfPagePool(page) {
+  if (!page) return mfPool();
+  const on = new Set(page === GEN ? drugQuestions(GEN).map(x => x[0]) : drugQuestions(page).map(x => x[0]).concat(mixQuestions(page).map(x => x[0]), KITSBY[page] || []));
+  return mfPool().filter(x => on.has(x.claim)).map(x => Object.assign({}, x, { page: answerPageKey(x.claim, page) }));
+}
+const mfCount = pool => new Set(pool.map(x => x.claim)).size;
+// a deck of 10 (fewer where a page has fewer statements); page: only that page's statements
+function mfStart(boxId, page) {
   if (!document.getElementById(boxId)) return;
-  const st = MF[boxId] = { used: new Set(), cards: [], picks: [], pos: 0 };
-  st.cards = mfDeal(st, 10); mfRender(boxId);
+  const pool = mfPagePool(page), st = MF[boxId] = { pool, n: Math.min(10, mfCount(pool)), used: new Set(), cards: [], picks: [], pos: 0 };
+  st.cards = mfDeal(st, st.n); mfRender(boxId);
 }
 // the card's "But" is left out when the why line already says it: as the quiz judges it, or when most of the shorter line's
 // words are in the other (the deck is meant to be light; the full answer always carries the "But")
@@ -1328,7 +1218,7 @@ function mfCardHtml(boxId, st) {
       '<div class="qz2-row">' + meterHtml(c.grade.certainty, true) + '<a class="qz2-ev" href="' + esc(answerAddr(x.claim, x.page)) + '">Read the answer ' + icon("arrow") + "</a></div></div></div></div>";
 }
 const mfNavHtml = st => '<div class="mf-nav">' + (st.pos > 0 ? '<button type="button" class="qz2-prev">' + icon("arrow") + "<span>Previous</span></button>" : "") +
-  (st.picks[st.pos] ? '<button type="button" class="qz2-nb">' + (st.pos === st.cards.length - 1 ? "Another 10" : "Next") + "</button>" : "") + "</div>";
+  (st.picks[st.pos] ? '<button type="button" class="qz2-nb">' + (st.pos < st.cards.length - 1 ? "Next" : st.n === 10 ? "Another 10" : "Again, in a new order") + "</button>" : "") + "</div>";
 function mfRender(boxId) {
   const st = MF[boxId], box = document.getElementById(boxId); if (!st || !box) return;
   // a card dealt earlier whose answer has since been asked in the quiz gives way to a fresh one
@@ -1364,7 +1254,7 @@ document.addEventListener("click", e => {
   }
   if (b.classList.contains("qz2-prev")) st.pos = Math.max(0, st.pos - 1);
   else if (st.pos < st.cards.length - 1) st.pos++;
-  else { st.cards = mfDeal(st, 10); st.picks = []; st.pos = 0; }   // Another 10
+  else { st.cards = mfDeal(st, st.n); st.picks = []; st.pos = 0; }   // Another 10
   mfRender(box.id);
   const f = box.querySelector(st.picks[st.pos] ? ".mf-v" : ".mf-q"); if (f) f.focus({ preventScroll: true });
   const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;

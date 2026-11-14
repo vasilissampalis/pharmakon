@@ -162,7 +162,8 @@ function route() {
   if (h === "numbers") showNumbers();
   if (h === "howto") showHowto();
   if (h === "review") whenReady(() => Promise.all(FULL_FILES.map(loadFull).concat(loadRefs(), loadJson("decisions.json", d => Object.assign(DECISIONS, d)))), document.getElementById("review-list"), "The review queue", renderReview);
-  if (h === "quiz" && !QZ.quizpage) qzStart("quizpage");
+  // the Myth or fact? page: the same deck as the start page, endless (senior author, 14 November: one format everywhere)
+  if (h === "quiz") { if (!MF.quizpage) mfStart("quizpage"); else mfRefresh("quizpage"); }
   if (h === "home") { homeCont(); mfRefresh("tf"); }
   window.scrollTo({ top: 0 });
   if (!first) focusHeading(h);
@@ -266,46 +267,6 @@ function drugTile(s) {
   return '<a class="dtile f-' + f.k + (ph ? " hasph" : "") + '" href="#s-' + s.slug + '">' + (ph ? '<span class="dt-ph">' + photoImg(ph, "t", "", true) + "</span>" : "") + '<span class="dt-top">' + icon(f.icon) + '<span class="dt-st ' + s.status + '">' + esc(pageStateLabel(s.slug)) + '</span></span><span class="dt-name">' + esc(s.name) + "</span>" + (names.length ? '<span class="dt-al">' + esc(names.join(" · ")) + "</span>" : "") + "</a>";
 }
 const POPULAR = ["cannabis", "alcohol", "mdma", "cocaine", "ketamine", "methamphetamine", "ghb-gbl", "benzodiazepines", "psilocybin", "lsd", "heroin", "fentanyl-and-analogues", "nitrous-oxide", "synthetic-cathinones"];
-/* Question of the day: one reader question with its graded answer, a different one each day */
-function qPool() { return Object.entries(QUESTIONS).flatMap(([slug, groups]) => groups.flatMap(g => g.items.map(([id, q]) => ({ slug, id, q, icon: g.icon })))).filter(x => claimById[x.id] && claimById[x.id].verification.status !== "draft"); } // only claims past the first rung (every anchor located in a full text and not resting only on narrative reviews)
-let qotdIndex = null;
-function renderQotd(step) {
-  const pool = qPool(), box = document.getElementById("qotd"); if (!box || !pool.length) { if (box) box.hidden = true; return; }
-  qotdIndex = qotdIndex == null ? Math.floor(Date.now() / 86400000) % pool.length : (qotdIndex + step + pool.length) % pool.length;
-  const x = pool[qotdIndex], c = claimById[x.id], s = subBySlug[x.slug], sp = (SIMPLE.claims || {})[x.id];
-  box.innerHTML = '<div class="qotd-k">' + icon(x.icon) + "<span>" + (step ? "Another question" : "Question of the day") + " · " + esc(s ? s.name : x.slug) + '</span></div><h2 class="qotd-q">' + esc(x.q) + '</h2>' +
-    // try to answer first: guessing before reading helps the answer stick (docs/WRITING-RULES.md)
-    '<button type="button" class="qotd-show" id="qotd-show" aria-expanded="false" aria-controls="qotd-ans">Think of your answer, then tap to see ours</button>' +
-    '<div class="qotd-ans" id="qotd-ans" hidden><p class="qotd-a">' + esc(sp ? sp.short : (claimText(c))) + "</p>" + (sp ? '<p class="qotd-but"><b>But</b> ' + esc(sp.but) + "</p>" : "") + "</div>" +
-    '<p class="qotd-streak" id="qotd-streak" hidden></p><div class="qotd-f"><span class="qotd-m" hidden>' + meterHtml(c.grade.certainty) + '</span><a class="see qotd-m" href="#' + c.id + '" hidden>See the evidence ' + icon("arrow") + '</a><button type="button" class="ghost" id="qotd-next">Another question</button></div>';
-  document.getElementById("qotd-show").addEventListener("click", e => { e.currentTarget.hidden = true; e.currentTarget.setAttribute("aria-expanded", "true"); document.getElementById("qotd-ans").hidden = false; box.querySelectorAll(".qotd-m").forEach(el => { el.hidden = false; });
-    const n = qotdStreak(true), st = document.getElementById("qotd-streak"); if (st) { st.hidden = false; st.innerHTML = icon("bolt") + (n > 1 ? "<b>" + n + " days in a row.</b> Come back tomorrow for the next one." : "Come back tomorrow for the next question."); } });
-  document.getElementById("qotd-next").addEventListener("click", () => renderQotd(1));
-}
-function renderHome() {
-  document.getElementById("popular").innerHTML = POPULAR.map(sl => subBySlug[sl]).filter(Boolean).map(s => { const f = fam(s.cls); return '<a class="pchip f-' + f.k + '" href="#s-' + s.slug + '">' + icon(f.icon) + esc(s.name.replace(/ \(.*\)$/, "")) + "</a>"; }).join("");
-  renderQotd(0); renderTF();
-  document.getElementById("stats").innerHTML = EPI.filter(e => !e.group).map(statTile).join("");
-  const byDrug = EPI.filter(e => e.group === "global-by-drug");
-  document.getElementById("stats-bydrug").innerHTML = byDrug.map(e => '<div class="mini"><b class="num">' + esc(e.value) + "</b><span>" + esc(e.label) + "</span></div>").join("");
-  document.getElementById("stats-bydrug-prov").innerHTML = byDrug.length ? 'People who used each drug in the past year, worldwide, 2023: UNODC estimates (<a href="' + esc(refById[byDrug[0].source].URL) + '" target="_blank" rel="noopener">World Drug Report 2025</a>) · <span class="badge verified">verified against the UNODC press release</span>' : "";
-  const classes = {};
-  SUBSTANCES.forEach(s => { (classes[s.cls] = classes[s.cls] || []).push(s); });
-  document.getElementById("classgrid").innerHTML = CLASSES.filter(c => classes[c.name]).map(c => { const f = fam(c.name); return '<section class="famblock f-' + f.k + '"><header><span class="fb-ic">' + icon(f.icon) + "</span><div><h3>" + esc(c.name) + "</h3><p>" + esc(c.line) + '</p></div></header><div class="dtiles">' + classes[c.name].map(drugTile).join("") + "</div></section>"; }).join("");
-  const nRefs = REFS.filter(r => !r._aux).length, nCards = Object.keys(STUDY_CARDS).length, nClaims = CLAIMS.length;
-  const maps = Object.keys(EVIDENCE_MAPS).length, papers = Object.values(EVIDENCE_MAPS).reduce((a, m) => a + m.papers, 0);
-  const nFull = Object.values(STUDY_CARDS).filter(c => c.verification.source_read && !/^abstract/i.test(c.verification.source_read)).length;
-  const allA = CLAIMS.flatMap(c => c.evidence); const nAnchors = [allA.filter(e => e.anchor_status !== "unchecked").length, allA.filter(e => e.anchor_status === "senior-verified").length, allA.length, allA.filter(e => e.anchor_status === "ai-checked" || e.anchor_status === "senior-verified").length];
-  const atPlace = e => e.check_mode === "targeted" || e.check_mode === "card-check";
-  const nBlind = allA.filter(e => e.anchor_status === "ai-checked" && !atPlace(e)).length, nTargeted = allA.filter(e => e.anchor_status === "ai-checked" && atPlace(e)).length;
-  // a substance's map is filed under its folder; every other map (the day after, drug deaths, tolerance...) is cross-cutting
-  const folders = new Set(SUBSTANCES.map(s => s.folder)), subMaps = Object.keys(EVIDENCE_MAPS).filter(k => folders.has(k)).length, crossMaps = Object.keys(EVIDENCE_MAPS).length - subMaps;
-  const nSigned = CLAIMS.filter(c => ["senior-reviewed", "published"].includes(c.verification.status)).length;
-  const nCrossref = REFS.filter(r => /^crossref/.test((r.verification || {}).metadata_source || "")).length;
-  document.getElementById("progress").innerHTML = [
-    ["0 / 30", "monographs published"], [MONOS.length, (MONOS.length === 1 ? "monograph" : "monographs") + " in draft (" + MONOS.map(x => x.name).join(", ") + ")"], [subMaps + " / 30", "substance evidence maps built, plus " + crossMaps + " cross-cutting"], [papers, "papers listed for retrieval (metadata sweep against Crossref in progress)"], [EPI_ALL.filter(r => r.status === "verified").length, "official figures verified against their source page"], [nClaims, "claims, " + (nSigned ? nSigned + " signed off by the senior author" : "none yet signed off by the senior author")], [nFull + " / " + nCards, "study cards written from the full text"], [nAnchors[0] + " / " + nAnchors[2], "evidence anchors located in the full text"], [nBlind + " / " + nAnchors[2], "anchors re-found blind by a second AI reader"], [nTargeted + " / " + nAnchors[2], "anchors checked at the stated place by a second AI reader"], [nAnchors[1], "anchors checked by the senior author"], [nCrossref + " / " + nRefs, "references with Crossref-verified metadata (the others: reports and web pages checked at the publisher)"]
-  ].map(p => '<div class="p"><b class="num">' + p[0] + "</b><span>" + p[1] + "</span></div>").join("");
-}
 
 /* ---------- Substances ---------- */
 let activeClass = "All";
@@ -557,20 +518,6 @@ function qaHtml(c, q) {
     (sp ? '<details class="how"><summary>How we know</summary>' + (sp.how && sp.how.length ? '<ul class="howlist">' + sp.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul>" : "<p>" + esc(claimText(c)) + "</p>") + "</details>" : "") +
     debateLine(c) + '<a class="see" href="#' + c.id + '">Full evidence ' + icon("arrow") + "</a></div></details>";
 }
-/* Test yourself: a few questions from the short answers; recalling an answer helps it stick better than reading it again */
-function quizHtml(slug) {
-  const qs = ((SIMPLE.quiz || {})[slug] || []).filter(x => claimById[x.claim] && (SIMPLE.claims || {})[x.claim]);
-  if (!qs.length) return "";
-  return '<section class="quiz" aria-labelledby="quiz-h"><h2 class="qh" id="quiz-h">Myth or fact?</h2><p class="qsub muted">' + qs.length + ' quick questions. Trying to remember an answer helps it stick.</p><ol class="quizlist">' + qs.map((x, i) => '<li class="qz" data-answer="' + x.answer + '"><p class="qz-q">' + esc(x.q) + '</p><div class="qz-opts" role="group" aria-label="Answers">' + x.options.map((o, j) => '<button type="button" class="qz-o" data-j="' + j + '">' + esc(o) + "</button>").join("") + '</div><p class="qz-fb" hidden></p><p class="qz-ex" hidden>' + esc(SIMPLE.claims[x.claim].short) + ' <button type="button" class="qlink" data-q="' + x.claim + '">See the answer</button></p></li>').join("") + "</ol></section>";
-}
-document.addEventListener("click", e => {
-  const b = e.target.closest && e.target.closest(".qz-o"); if (!b) return;
-  const li = b.closest(".qz"), ok = String(b.dataset.j) === li.dataset.answer;
-  li.querySelectorAll(".qz-o").forEach(x => { x.disabled = true; x.classList.toggle("right", x.dataset.j === li.dataset.answer); });
-  b.classList.add(ok ? "right" : "wrong");
-  const fb = li.querySelector(".qz-fb"); fb.hidden = false; fb.textContent = ok ? "Right." : "Not quite.";
-  li.querySelector(".qz-ex").hidden = false;
-});
 /* Other drugs in the same family, one tap away */
 function familyHtml(m) {
   const me = subBySlug[m.slug]; if (!me) return "";
@@ -631,7 +578,6 @@ function quickHtml(m) {
       '<div class="tchips" role="group" aria-label="Topics"><button type="button" class="tchip" data-t="all" aria-pressed="true">All</button>' + groups.map((gr, i) => '<button type="button" class="tchip" data-t="' + i + '" aria-pressed="false">' + icon(gr.icon) + esc(gr.topic) + "</button>").join("") + "</div>" +
       progressHtml(m.slug, total) +
       groups.map((gr, i) => '<section class="qgroup" data-t="' + i + '"><h3>' + icon(gr.icon) + esc(gr.topic) + "</h3>" + (gr.sos ? sosLine() : "") + gr.items.map(([id, q]) => { const c = claimById[id]; return c ? qaHtml(c, q) : ""; }).join("") + "</section>").join(""); }
-  h += quizHtml(m.slug);
   h += basicsHtml(m);
   if (!groups && PLANNED_QUESTIONS[m.slug]) h += '<h2 class="qh">Questions this page will answer</h2><p class="qsub muted">Not answered yet: each needs its papers read in full first.</p><ol class="plannedq">' + PLANNED_QUESTIONS[m.slug].map(q => "<li>" + esc(q) + "</li>").join("") + "</ol>";
   h += familyHtml(m);
@@ -649,32 +595,6 @@ document.addEventListener("click", e => { const b = e.target.closest && e.target
 // "All its forms" under the page photo: the gallery is in Quick answers
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("[data-phall]"); if (!b) return; setMode("quick"); const el = document.getElementById("ph-" + b.dataset.phall); if (el) scrollToEl(el, true); });
 
-/* ---------- True or false? Statements from checked answers; guess, then see the answer and its proof ---------- */
-let tfOrder = null, tfPos = 0, tfScore = { right: 0, done: 0 };
-function tfPool() { return Object.values(SIMPLE.tf || {}).flat().filter(x => claimById[x.claim] && (SIMPLE.claims || {})[x.claim] && claimById[x.claim].verification.status !== "draft"); }
-function renderTF() {
-  const box = document.getElementById("tf"); if (!box) return; const pool = tfPool(); if (!pool.length) { box.hidden = true; return; }
-  if (!tfOrder) { const day = Math.floor(Date.now() / 86400000); tfOrder = pool.map((_, i) => i).sort((a, b) => ((a * 7919 + day) % 97) - ((b * 7919 + day) % 97)); }
-  const x = pool[tfOrder[tfPos % pool.length]], c = claimById[x.claim], s = subBySlug[c.substance];
-  box.innerHTML = '<div class="tf-k">' + icon("bulb") + "<span>True or false? · " + esc(s ? s.name : c.substance) + "</span></div>" +
-    '<p class="tf-s">' + esc(x.statement) + '</p><div class="tf-btns" role="group" aria-label="Your answer"><button type="button" class="tf-b" data-v="true">True</button><button type="button" class="tf-b" data-v="false">False</button></div>' +
-    '<div class="tf-ans" hidden><p class="tf-fb"></p><p class="tf-why">' + esc(SIMPLE.claims[x.claim].short) + '</p><p class="tf-but"><b>But</b> ' + esc(SIMPLE.claims[x.claim].but) + "</p>" + meterHtml(c.grade.certainty, true) + '<p class="tf-more"><a href="#s-' + c.substance + "/q-" + c.id + '">See the proof ' + icon("arrow") + '</a><button type="button" class="ghost" id="tf-next">Next one</button><span class="tf-score"></span></p></div>';
-  box.querySelectorAll(".tf-b").forEach(b => b.addEventListener("click", () => {
-    const ok = (b.dataset.v === "true") === x.answer; tfScore.done++; if (ok) tfScore.right++;
-    box.querySelectorAll(".tf-b").forEach(bb => { bb.disabled = true; bb.classList.toggle("right", (bb.dataset.v === "true") === x.answer); }); b.classList.add(ok ? "right" : "wrong");
-    box.querySelector(".tf-fb").textContent = (ok ? "Right! " : "Not quite. ") + "It is " + (x.answer ? "true." : "false.");
-    box.querySelector(".tf-ans").hidden = false; box.querySelector(".tf-score").textContent = "Your score: " + tfScore.right + " of " + tfScore.done;
-    document.getElementById("tf-next").addEventListener("click", () => { tfPos++; renderTF(); box.querySelector(".tf-b").focus(); });
-  }));
-}
-/* ---------- A day streak for the question of the day (spacing: a little every day), kept in this browser only ---------- */
-function qotdStreak(mark) {
-  const today = Math.floor(Date.now() / 86400000); let d = [];
-  try { d = JSON.parse(localStorage.getItem("pk-qotd-days") || "[]"); } catch (e) { d = []; }
-  if (mark && !d.includes(today)) { d.push(today); d = d.slice(-60); try { localStorage.setItem("pk-qotd-days", JSON.stringify(d)); } catch (e) { /* not kept */ } }
-  let n = 0; for (let k = today; d.includes(k); k--) n++;
-  return n;
-}
 /* ---------- Monograph ---------- */
 const isPhone = () => !!(window.matchMedia && window.matchMedia("(max-width: 700px)").matches);
 const isWide = () => !!(window.matchMedia && window.matchMedia("(min-width: 1000px)").matches);

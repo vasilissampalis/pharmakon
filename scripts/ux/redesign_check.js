@@ -4,7 +4,10 @@
 // less-asked one, then fill up the old way (alcohol); "Before, during and after" keeps its time order; Read next links work
 // on the page and across pages; the 100-dot picture shows for "N in 100" (and not for a range);
 // the quiz page loads as "Myth or fact?"; reduced motion swaps the card without turning it; keyboard focus is visible; dark
-// theme; and main's 1.13.0 carried into the redesign (first paint, Scientific detail, "Ask us" on drug pages and in search).
+// theme; main's 1.13.0 carried into the redesign (first paint, Scientific detail, "Ask us" on drug pages and in search); the
+// quick-help doors first in the menu; and one quiz format everywhere: the Myth or fact? page is the same deck as the start
+// page, endless, and drug pages and the facts page end with a deck of their own statements (none under 3); no "Test
+// yourself", "True or false?" or "Quick question" left in the page.
 // Every step also checks for horizontal scroll, and every page for console and page errors.
 // It serves site/public itself (build first: node site/build.js && python3 -I site/build_public.py).
 // Usage: node scripts/ux/redesign_check.js [--shots DIR] [--port N]   (exit code 1 if a check fails; images go to DIR only)
@@ -99,14 +102,53 @@ function serve() {
     const quiz = await s.p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-quiz h1").textContent, menu: document.querySelector('#menu a[href="#quiz"]').textContent, foot: document.querySelector('footer a[href="#quiz"]').textContent, label: document.getElementById("quizpage").getAttribute("aria-label") }));
     ok(w + ": the quiz page loads under Myth or fact?", quiz.title === "Myth or fact? · Pharmakon" && quiz.h1 === "Myth or fact?" && quiz.menu === "Myth or fact?" && quiz.foot === "Myth or fact?", quiz.title + " | menu: " + quiz.menu);
     await s.shot("myth-or-fact-page");
-    const asked = [];
+    const asked = [], ends = [];
+    const isDeck = await s.p.evaluate(() => { const b = document.querySelector("#quizpage.mf .mf-card"); return !!b && [...document.querySelectorAll("#quizpage .mf-front .qz2-o")].map(x => x.textContent).join("/") === "Myth/Fact" && !document.querySelector("#quizpage .qz2-ans"); });
     for (let k = 0; k < 25; k++) {
       const q = await s.p.$eval("#quizpage .qz2-q", e => e.textContent).catch(() => null); if (!q) break; asked.push(q);
-      await s.p.click("#quizpage .qz2-o:not([disabled]) >> nth=0"); await s.p.waitForTimeout(60);
-      if (k === 0) await s.shot("myth-or-fact-page-answered");
-      const nb = await s.p.$("#quizpage .qz2-nb"); if (!nb) break; await nb.click(); await s.p.waitForTimeout(60);
+      await s.p.click("#quizpage .qz2-o:not([disabled]) >> nth=0"); await s.p.waitForTimeout(k === 0 ? T : 60);
+      if (k === 0) { ends.push(await s.p.evaluate(() => document.querySelector("#quizpage .mf-card").classList.contains("flipped") && /^(Myth|Fact)$/.test(document.querySelector("#quizpage .mf-v b").textContent))); await s.shot("myth-or-fact-page-answered"); }
+      const nb = await s.p.$("#quizpage .qz2-nb"); if (!nb) break; if (k === 9 || k === 19) ends.push((await nb.textContent()) === "Another 10"); await nb.click(); await s.p.waitForTimeout(60);
     }
-    ok(w + ": the quiz asks nothing the deck asked, and nothing twice", asked.length >= 20 && !asked.some(q => deck.includes(q)) && new Set(asked).size === asked.length, asked.length + " quiz questions answered");
+    ok(w + ": the Myth or fact? page is the same deck, endless (Another 10 after each ten), and asks nothing the start page's deck asked, nothing twice", isDeck && ends.length === 3 && ends.every(Boolean) && asked.length >= 25 && !asked.some(q => deck.includes(q)) && new Set(asked).size === asked.length, asked.length + " cards answered; turned and Another 10 twice: " + ends.join(","));
+    await s.ctx.close();
+
+    // ---- the menu: the three quick-help doors first (as on the start page), then All drugs and Myth or fact?, then the quieter links
+    s = await session();
+    await s.go("interactions"); await s.p.click("#menubtn"); await s.p.waitForTimeout(250);
+    const mn = await s.p.evaluate(() => { const top = document.querySelector("#menu .menu-top"), doors = [...top.querySelectorAll(":scope > .menu-do > a.do")];
+      const box = d => d.getBoundingClientRect(), next = [...top.querySelectorAll(":scope > a")].map(a => a.textContent.trim());
+      return { first: top.firstElementChild.classList.contains("menu-do"), doors: doors.map(d => d.querySelector(".do-t").textContent + " / " + d.querySelector(".do-s").textContent + " / " + d.getAttribute("href") + " / " + d.dataset.view),
+        icons: doors.every(d => !!d.querySelector(".do-ic svg")), grid: doors.every(d => getComputedStyle(d).display === "grid" && getComputedStyle(d.querySelector(".do-t")).fontWeight >= 800),
+        row: doors.every(d => Math.abs(box(d).top - box(doors[0]).top) < 2), stacked: doors.every((d, i) => !i || (box(d).top > box(doors[i - 1]).bottom - 1 && Math.abs(box(d).left - box(doors[0]).left) < 2)),
+        next, more: !!document.querySelector("#menu .menu-top + .menu-more"), cur: (doors.find(d => d.getAttribute("aria-current") === "page") || {}).className || "",
+        // the open page's door keeps its dark title (the top bar's rule for its own links would make it white)
+        ink: (() => { const c = doors.find(d => d.getAttribute("aria-current") === "page"), o = doors.find(d => d !== c); return !!c && getComputedStyle(c.querySelector(".do-t")).color === getComputedStyle(o.querySelector(".do-t")).color; })() }; });
+    await s.shot("menu-open");
+    const wantDoors = "Is it safe to mix? / Two drugs together / #interactions / interactions|Test what you have / Drug checking near you / #checking / checking|Someone is unwell / Emergency numbers / #emergency / emergency";
+    ok(w + ": menu: the three doors first, as on the start page (" + (w < 700 ? "stacked" : "a row of three") + "), then All drugs and Myth or fact?, then the quieter links; the open page marked",
+      mn.first && mn.doors.join("|") === wantDoors && mn.icons && mn.grid && (w < 700 ? mn.stacked : mn.row) && mn.next.join("|") === "All drugs|Myth or fact?" && mn.more && /\bmix\b/.test(mn.cur) && mn.ink, JSON.stringify(Object.assign({}, mn, { doors: mn.doors.length })));
+    await s.p.click('#menu a.do.sos'); await s.p.waitForTimeout(500);
+    const after = await s.p.evaluate(() => ({ view: (document.querySelector(".view.active") || {}).id, closed: document.getElementById("menu").hidden }));
+    ok(w + ": a door in the menu opens its page and closes the menu", after.view === "view-emergency" && after.closed, JSON.stringify(after));
+    await s.ctx.close();
+
+    // ---- a drug page and the facts page end with a deck of their own statements; a page with fewer than 3 has none
+    s = await session();
+    await s.go("s-cannabis", 1300);
+    const dk = await s.p.evaluate(() => { const st = MF["qz-drug"], mine = new Set(mfPagePool("cannabis").map(x => x.claim));
+      return { box: !!document.querySelector("#d-quiz #qz-drug.mf .mf-card"), chip: !!document.querySelector('#drug2 .chips a[data-go="d-quiz"]'), n: st ? st.cards.length : 0, own: st ? st.cards.every(x => mine.has(x.claim)) : false, pool: mine.size }; });
+    await s.p.$eval("#d-quiz", e => e.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(250); await s.p.click("#qz-drug .qz2-o >> nth=1"); await s.p.waitForTimeout(T);
+    dk.turned = await s.p.evaluate(() => document.querySelector("#qz-drug .mf-card").classList.contains("flipped"));
+    await s.p.$eval("#d-quiz", e => e.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(150); await s.shot("drug-page-myth-or-fact");
+    ok(w + ": a drug page ends with its own Myth or fact? deck (its statements only), with a chip to it", dk.box && dk.chip && dk.own && dk.n === Math.min(10, dk.pool) && dk.turned, JSON.stringify(dk));
+    const few = await s.p.evaluate(() => SUBSTANCES.map(x => x.slug).filter(x => monographFor(x) && drugQuestions(x).length && mfCount(mfPagePool(x)) < 3)[0] || null);
+    if (few) { await s.go("home", 300); await s.go("s-" + few, 1000);
+      const none = await s.p.evaluate(() => !document.querySelector("#d-quiz") && !document.querySelector('#drug2 .chips a[data-go="d-quiz"]'));
+      ok(w + ": a drug page with fewer than 3 statements has no Myth or fact? section (" + few + ")", none); }
+    await s.go("facts", 1000);
+    const fk = await s.p.evaluate(() => { const st = MF["qz-facts"], mine = new Set(mfPagePool(GEN).map(x => x.claim)); return { box: !!document.querySelector("#qz-facts.mf .mf-card"), own: st ? st.cards.every(x => mine.has(x.claim)) : false, n: st ? st.cards.length : 0 }; });
+    ok(w + ": the facts page ends with its own Myth or fact? deck", fk.box && fk.own && fk.n >= 3, JSON.stringify(fk));
     await s.ctx.close();
 
     // ---- At a glance on cannabis and LSD: at most 6 groups and 8 tiles (6 on a phone), each tile opens its answer in place
@@ -276,6 +318,8 @@ function serve() {
     await s.ctx.close();
   }
   await browser.close(); server.close();
+  const pageText = fs.readFileSync(path.join(ROOT, "index.html"), "utf8"), old = pageText.match(/test yourself|true or false\?|quick question/gi) || [];
+  ok("no \"Test yourself\", \"True or false?\" or \"Quick question\" left in the page", !old.length, old.slice(0, 4).join(", "));
   ok("no horizontal scroll, no console or page errors (both widths, light, dark, reduced motion)", !errors.length, errors.slice(0, 8).join(" | "));
   const failed = results.filter(r => !r.pass).length;
   console.log("\n" + (results.length - failed) + " of " + results.length + " checks passed" + (SHOTS ? "; screenshots in " + SHOTS : ""));

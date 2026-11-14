@@ -854,7 +854,7 @@ p.currency .ic { margin-top: 0.1em; }
 p.currency.new { color: var(--warn); font-weight: 700; }
 p.currency.new a { color: inherit; }
 
-/* ---------- v0.6: plain answers, visible sources, test yourself, a quiet emergency page ---------- */
+/* ---------- v0.6: plain answers, visible sources, the first quiz, a quiet emergency page ---------- */
 /* emergency: an ordinary menu item; no floating button, no big card */
 .sos-pill, .soscard, .sosbtn { display: none !important; }
 body { padding-bottom: 0; }
@@ -890,7 +890,7 @@ a.srcmore { font-size: 0.86rem; font-weight: 700; color: var(--muted); min-heigh
 details.how { border-top: 1px solid var(--line); padding-top: 2px; }
 details.how > summary { cursor: pointer; font-weight: 700; color: var(--accent); min-height: 40px; display: flex; align-items: center; }
 details.how p { font-size: 0.98rem; line-height: 1.55; }
-/* test yourself */
+/* the first quiz's question list (retired: one format now, Myth or fact) */
 .quizlist { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 12px; counter-reset: qz; }
 .qz { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); padding: 14px 16px; display: grid; gap: 10px; counter-increment: qz; }
 .qz-q { font-weight: 700; font-size: 1.04rem; line-height: 1.4; }
@@ -1038,7 +1038,7 @@ details.lawgrp .tablewrap { margin: 4px 0 10px; }
 .dots100.d1000 i.on { background: var(--bad); box-shadow: 0 0 0 1.5px var(--bad); }
 .freq-row.wide { grid-template-columns: minmax(0, 1fr); gap: 6px; }
 
-/* True or false? */
+/* the first myth-or-fact box (retired) */
 .tf { border: 2px solid var(--line-strong); border-radius: var(--radius); background: var(--surface); padding: 20px 24px; display: grid; gap: 12px; margin: 16px 0 4px; }
 .tf[hidden] { display: none; }
 .tf-k { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
@@ -2000,3 +2000,20 @@ details.sf-sci[open] > summary { color: var(--fg); }
    its longest country name) no longer pushes the page sideways on phones (13 November) */
 .ctrylaw { grid-template-columns: minmax(0, 1fr); }
 select.ctry { min-width: 0; }
+
+/* The quick-help doors in the menu (14 November): the start page's three doors, first in the menu; a row of three on wider
+   screens, stacked and compact on a phone. The menu's own link rules are stronger than the doors', hence the longer selectors. */
+nav.main.menu .menu-do { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 6px; }
+nav.main.menu .menu-do a.do { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 0; align-content: center; min-height: 72px; padding: 12px 14px; border-radius: var(--radius); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-strong); font-size: 1rem; font-weight: 400; }
+nav.main.menu .menu-do a.do:hover { background: var(--surface); box-shadow: inset 0 0 0 2px var(--fg); }
+nav.main.menu .menu-do a.do[aria-current="page"] { background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--fg); }
+/* the open page, marked in the menu: dark text on the light tint (the top bar's own rule for its links would make it white) */
+.topbar nav.main.menu a[aria-current="page"] { color: var(--fg); background: var(--surface-2); }
+nav.main.menu .menu-do .do-t { font-size: 1.05rem; }
+nav.main.menu .menu-do .do-s { font-size: 0.88rem; font-weight: 400; }
+@media (max-width: 560px) {
+  nav.main.menu .menu-do { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  nav.main.menu .menu-do a.do { min-height: 58px; padding: 8px 12px; }
+  nav.main.menu .menu-do .do-ic { width: 38px; height: 38px; border-radius: 10px; }
+  nav.main.menu .menu-do .do-ic .ic { width: 21px; height: 21px; }
+}
