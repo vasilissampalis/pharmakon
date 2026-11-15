@@ -60,7 +60,8 @@ MODEL_SHA256 = hashlib.sha256((VENDOR / MODEL).read_bytes()).hexdigest() if (VEN
 CACHE = ROOT / "site/insight/.cache" / ("vectors-" + MODEL_SHA256[:16] + ".npz")   # made by the page's runtime, one text at a time (see embed_all)
 VARIANTS = ROOT / "data/verification/insight/variants_reader696.json"
 NEARMISS = ROOT / "data/verification/insight"   # nearmiss_*.json: per answer, "more" (wordings it answers) and "near" (questions it does not)
-N_NEXT = 10      # next questions kept for each answer (three for each place it lives in, when that is more); the page shows three
+N_NEXT = 10      # next questions kept for each answer about its own drugs (three for each drug, when that is more); the page shows three
+N_PAGE = 5       # ... and at least this many on each page the answer is told on (three are shown; the others stand in for answers already opened)
 # Names that name a drug in a question (for the tiers, the routes and the topic score): each drug's slug, the parts of its
 # name and its street names of three letters or more (data/site/substances.json, aliases.json), without the WEAK ones:
 # everyday words that are also street names. "pills" in "sleeping pills" must not make a question about ecstasy, nor
@@ -282,22 +283,37 @@ class Ranker:
 
 
 def next_lists(A, sim):
-    """Each answer's next questions: the answers nearest by the meaning of their questions, never itself, and only answers
-    that live where it lives: about one of its drugs, or on its page (mixing, drug checking, facts about drug use). An
-    answer that lives in several places takes the nearest of each in turn, so that every page it is on has some to offer.
-    Nothing from another drug is ever offered (the senior author, 15 November: a cannabis answer offered a cocaine
-    question); an answer alone on its drug has no next questions."""
-    drugs = {s["slug"] for s in SUB}
-    at = [set(a.get("about") or []) | set(a["pages"]) for a in A]         # where an answer lives: its drugs and its pages
+    """Each answer's next questions: the answers nearest by the meaning of their questions, never itself. The same drug
+    first: the nearest answers about each of its drugs, in turn. After them come the nearest on each page the answer is
+    told on (a drug's page, mixing, drug checking, facts about drug use), so that every such page has some to offer under
+    "Read next". Nothing else is ever offered: no answer about another drug that shares no page with it (the senior
+    author, 15 November: a cannabis answer offered a cocaine question). An answer alone on its drug and its page has no
+    next questions."""
+    about = [set(a.get("about") or []) for a in A]
+    pages = [set(a["pages"]) for a in A]
     out = []
     for i, a in enumerate(A):
         order = [int(j) for j in np.argsort(-sim[i], kind="stable") if j != i]
-        homes = sorted(at[i], key=lambda h: (h != a["substance"], h not in drugs, h))
-        lists = [[j for j in order if h in at[j]] for h in homes]
-        want = max(N_NEXT, 3 * len(homes)); nx = []; k = 0
+        first = lambda h: (h != a["substance"], h)
+        nx = []
+        # 1. the same drug first
+        mine = sorted(about[i], key=first)
+        lists = [[j for j in order if h in about[j]] for h in mine]
+        want = max(N_NEXT, 3 * len(mine)); k = 0
         while len(nx) < want and any(k < len(l) for l in lists):
             for l in lists:
                 if k < len(l) and l[k] not in nx and len(nx) < want: nx.append(l[k])
+            k += 1
+        # 2. then its pages, until each has enough to offer (an answer about no drug has only these)
+        homes = sorted(pages[i], key=first)
+        need = N_PAGE if nx else N_NEXT
+        lists = [[j for j in order if p in pages[j]] for p in homes]
+        got = [sum(1 for j in nx if p in pages[j]) for p in homes]; k = 0
+        while any(got[x] < need and k < len(l) for x, l in enumerate(lists)):
+            for x, l in enumerate(lists):
+                if got[x] < need and k < len(l) and l[k] not in nx:
+                    nx.append(l[k])
+                    for y, p in enumerate(homes): got[y] += p in pages[l[k]]
             k += 1
         out.append(nx)
     return out
