@@ -228,7 +228,33 @@ const data = [
     return out; })()) + ";"
 ].join("\n");
 const VERSION = site("version.json");
-const data2 = data + "\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
+/* The machine lane (site 2.6; docs/AUTOMATION.md; scripts/auto/lane.py): answers the system wrote by itself from papers it found
+   and read, published before a person has checked them, each with its label. Only "published" records are shown, never one
+   the senior author has taken down (data/auto/held.json), and each is looked at once more here, by code: a record that lacks a
+   part or a source, or holds an amount of a drug, advice or a quotation, is left out and named. PK_AUTO_FIXTURE: the folder of
+   pretend answers that scripts/ux/auto_check.js builds with (site/build_public.py refuses to publish such a build). */
+const AUTO_DIR = process.env.PK_AUTO_FIXTURE ? path.resolve(process.env.PK_AUTO_FIXTURE) : path.join(ROOT, "data", "auto", "answers");
+const AUTO_SHOWN = (() => {
+  const heldFile = path.join(ROOT, "data", "auto", "held.json"), held = new Set(fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []).map(x => x.id || x) : []);
+  const drugSlugs = new Set(site("substances.json").map(s => s.slug)), out = [], left = [];
+  const bad = /\b\d+(?:[.,]\d+)?\s?(?:mg|milligrams?|µg|ug|mcg|micrograms?|g|grams?|ml|pills?|tablets?|tabs?|capsules?|lines?|hits?|drops?)\b|\byou\s+(?:should|must|need to)\b|["“”]|\bre-?dos\w*/i;
+  for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
+    const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
+    if (a.status !== "published" || held.has(a.id)) continue;
+    const part = k => (a.parts || []).filter(p => p.part === k || (k === "how" && /^how\d+$/.test(p.part))).map(p => String(p.text || "").trim()).filter(Boolean);
+    const short = part("short")[0], but = part("but")[0], how = part("how"), refs = (a.sources || []).map(s => s.ref).filter(r => r && r.id && r.title && r.DOI && Array.isArray(r.author));
+    const why = !/^au_[a-z0-9_]+$/.test(a.id || "") || a.id + ".json" !== f ? "its name" : !a.question || !short || !but || !how.length ? "a part is missing" : !refs.length || refs.length !== (a.sources || []).length ? "a source without its Crossref record"
+      : [short, but].concat(how).some(t => bad.test(t)) ? "an amount, advice or a quotation in its text" : (a.parts || []).some(p => !(p.rests_on || []).length) ? "a sentence that rests on nothing" : "";
+    if (why) { left.push(a.id + " (" + why + ")"); continue; }
+    const drugs = (a.drugs || []).filter(d => drugSlugs.has(d));
+    out.push({ id: a.id, q: a.question, ways: a.ways || [], short, but, how, refs, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page: drugs[0] || "general" });
+  }
+  if (left.length) console.error("WARNING: machine-lane answers left out of the site: " + left.join("; "));
+  if (out.length) console.log("machine lane: " + out.length + " answers written by the system are shown, each with its label");
+  return out;
+})();
+const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, { q: a.q, short: a.short, but: a.but, how: a.how, refs: a.refs, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }]))) +
+  ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }
@@ -284,6 +310,8 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
       const answers = Object.entries((simpleShown || {}).claims || {}).filter(([id]) => byId[id]).map(([id, sp]) => ({ id, substance: byId[id].substance, section: byId[id].section,
         pages: pagesOf[id] || [byId[id].substance], about: [...(aboutOf[id] || (drugSlugs.has(byId[id].substance) ? [byId[id].substance] : []))].sort(),
         wordings: [...new Set((sp.q ? [sp.q] : []).concat(wordsOf[id] || []))], short: sp.short }));
+      // 2.6: the machine lane's answers are found by the search box as every answer is: by their question and its other wordings
+      AUTO_SHOWN.forEach(a => answers.push({ id: a.id, substance: a.page, section: 0, pages: [a.page], about: a.drugs.slice().sort(), wordings: [...new Set([a.q].concat(a.ways))], short: a.short }));
       const input = path.join(__dirname, "insight", ".cache", "index-input.json"), nextFile = path.join(__dirname, "insight", ".cache", "next.json");
       // 2.5: the questions not answered yet (data/site/wanted.json), for the page's second look when no answer fits
       const wanted = (fileOr("wanted.json", { items: [] }).items || []).map(w => ({ id: w.id, q: w.q, ways: w.ways || [], drugs: w.drugs || [] }));
@@ -300,7 +328,9 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
         const bytes = runtime.reduce((a, f) => a + fs.statSync(path.join(vend, f)).size, fs.statSync(path.join(dataDir, "insight.json")).size);
         // 2.5: the questions on our list, as the index kept them (an item the site answers by now is left out there): [id, question]
         const wl = JSON.parse(fs.readFileSync(path.join(dataDir, "insight.json"), "utf8")).wanted, listed = wl ? wl.ids.map((id, i) => [id, wl.q[i]]) : [];
-        const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(JSON.parse(fs.readFileSync(nextFile, "utf8"))) + ";\nconst WANTED = " + JSON.stringify(listed) + ";";
+        // (2.6: a machine-lane answer is never offered as a next question of a checked answer; it keeps its own next questions)
+        const nx = JSON.parse(fs.readFileSync(nextFile, "utf8")); nx.next = nx.next.map(l => (l || []).filter(j => !/^au_/.test(nx.ids[j])));
+        const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(nx) + ";\nconst WANTED = " + JSON.stringify(listed) + ";";
         if (page.split(mark).length === 2) fs.writeFileSync(pageFile, page.replace(mark, () => told + mark));
         else console.error("WARNING: the page's script has no place for what Insight tells it (const SITE_VERSION not found once): the search box answers by words only, and Read next falls back to the next questions of the topic");
       }
