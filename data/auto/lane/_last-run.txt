@@ -4,15 +4,9 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete)
-== is everything within reach?
-probe: @cf/qwen/qwen3-30b-a3b-fp8 ok 
-probe: @cf/meta/llama-3.3-70b-instruct-fp8-fast ok 
-probe: @cf/google/gemma-4-26b-a4b-it ok 
-probe: @cf/mistralai/mistral-small-3.1-24b-instruct ok 
-probe: @cf/openai/gpt-oss-120b ok 
-probe: @cf/openai/gpt-oss-20b ok 
-probe: @cf/zai-org/glm-4.7-flash ok 
-probe: @cf/meta/llama-4-scout-17b-16e-instruct ok 
-probe: store ok {'questions': 1, 'listed_items_counted': 0}
+== a model sits the exam as the checker
+exam: @cf/meta/llama-3.3-70b-instruct-fp8-fast: caught 8 of 31 wrong cards, stopped 14 of 50 good ones; on the whole exam 10.0 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: @cf/mistralai/mistral-small-3.1-24b-instruct: caught 22 of 31 wrong cards, stopped 34 of 50 good ones; on the whole exam 8.9 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: @cf/openai/gpt-oss-120b: caught 31 of 31 wrong cards, stopped 50 of 50 good ones; on the whole exam 0.0 in 100 of what it lets through would be wrong (the bar: 2.0)
 == write
 lane: no request waiting
