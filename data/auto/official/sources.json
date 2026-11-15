@@ -1,5 +1,5 @@
 {
- "_note": "The official bodies the machine lane may read (scripts/auto/official.py), by the senior author's decision of 15 November 2026: 'I want it to read official websites too where it can get access'; 'official sites like NHS and EVERYTHING similar it's so many official sites worldwide'. tier 1: a health service, a health ministry or agency, or a UN or EU body. tier 2: an information service that a government pays for. author: the body's name as the reference gives it (APA 7 group author); site: the website's name where it is not the author; short: how an answer names the body in its text. hubs: pages of the site whose links lead to its pages about drugs; include: which of those addresses count (regular expressions on the path); deep: pages read one step further; children: a page that fits leads to the pages under it; api: the body answers a search itself (its public service is asked instead). A body is read only where its own robots.txt allows it; whether it does is found out on the machine that reads (official.py probe, written to _probe.json), never assumed here. To add a body: add a line, run the probe, read what it says. English first: a page in another language is not read yet. Law-enforcement pages are not listed: they are not health bodies.",
+ "_note": "The official bodies the machine lane may read (scripts/auto/official.py), by the senior author's decision of 15 November 2026: 'I want it to read official websites too where it can get access'; 'official sites like NHS and EVERYTHING similar it's so many official sites worldwide'. tier 1: a health service, a health ministry or agency, or a UN or EU body. tier 2: an information service that a government pays for. author: the body's name as the reference gives it (APA 7 group author); site: the website's name where it is not the author; short: how an answer names the body in its text. hubs: pages of the site whose links lead to its pages about drugs; include: which of those addresses count (regular expressions on the path); deep: pages read one step further; children: a page that fits leads to the pages under it; api: the body answers a search itself (its public service is asked instead). A body is read only where its own robots.txt allows it; whether it does is found out on the machine that reads (official.py probe, written to _probe.json), never assumed here. To add a body: add a line, run the probe, read what it says. English first: a page in another language is not read yet. Law-enforcement pages are not listed: they are not health bodies. refused: a body whose site said no to our reader, with the day; it is not asked again until someone names it in a request (a refusal is never gone around).",
  "sources": [
   {
    "id": "nhs",
@@ -53,7 +53,8 @@
    ],
    "deep": [
     "^/healthy-living/(drugs-and-drug-use|alcohol)/[a-z0-9-]+/?$"
-   ]
+   ],
+   "refused": "2026-11-15: its site answered 403 to a reader that is not a browser (robots.txt itself)"
   },
   {
    "id": "govuk",
@@ -85,7 +86,8 @@
    ],
    "include": [
     "^/drugtypes/drug/[A-Za-z0-9_-]+/?$"
-   ]
+   ],
+   "refused": "2026-11-15: www.drugs.ie could not be found from GitHub's machine (no such name); not a refusal, to be tried again"
   },
   {
    "id": "hse",
@@ -103,6 +105,9 @@
    ],
    "deep": [
     "^/living-well/(alcohol|quit-smoking)/[a-z0-9-]+/?$"
+   ],
+   "sitemaps": [
+    "https://www2.hse.ie/sitemap1.xml"
    ]
   },
   {
@@ -120,6 +125,9 @@
     "^/research-topics/[a-z0-9-]+$",
     "^/publications/drugfacts/[a-z0-9-]+$",
     "^/publications/research-reports/[a-z0-9-]+"
+   ],
+   "sitemaps": [
+    "https://nida.nih.gov/sitemap.xml"
    ]
   },
   {
@@ -131,10 +139,9 @@
    "base": "https://www.cdc.gov",
    "hubs": [
     "https://www.cdc.gov/overdose-prevention/index.html",
-    "https://www.cdc.gov/cannabis/index.html",
     "https://www.cdc.gov/alcohol/index.html",
     "https://www.cdc.gov/tobacco/index.html",
-    "https://www.cdc.gov/stop-overdose/index.html"
+    "https://www.cdc.gov/cannabis/about/index.html"
    ],
    "include": [
     "^/(overdose-prevention|cannabis|alcohol|tobacco|stop-overdose)/.+\\.html$"
@@ -155,7 +162,11 @@
     "https://www.samhsa.gov/substance-use"
    ],
    "include": [
-    "^/substance-use/.+"
+    "^/substance-use/.+",
+    "^/find-help/.+"
+   ],
+   "sitemaps": [
+    "https://samhsa.gov/sitemap.xml"
    ]
   },
   {
@@ -215,14 +226,11 @@
    "base": "https://www.who.int",
    "hubs": [
     "https://www.who.int/news-room/fact-sheets",
-    "https://www.who.int/health-topics/drugs-psychoactive",
-    "https://www.who.int/health-topics/alcohol",
-    "https://www.who.int/health-topics/tobacco"
+    "https://www.who.int/news-room/questions-and-answers"
    ],
    "include": [
     "^/news-room/fact-sheets/detail/[a-z0-9-]+$",
-    "^/news-room/questions-and-answers/item/[a-z0-9-]+$",
-    "^/health-topics/(drugs-psychoactive|alcohol|tobacco)$"
+    "^/news-room/questions-and-answers/item/[a-z0-9-]+$"
    ]
   },
   {
@@ -240,7 +248,8 @@
     "^/publications/drug-profiles/[a-z0-9-]+_en$",
     "^/topics/[a-z0-9-]+_en$",
     "^/publications/(mini-guides|topic-overviews)/[a-z0-9-]+_en$"
-   ]
+   ],
+   "refused": "2026-11-15: its site answered 403 to a reader that is not a browser"
   },
   {
    "id": "healthcanada",
@@ -288,12 +297,14 @@
    "tier": 1,
    "base": "https://www.healthdirect.gov.au",
    "hubs": [
-    "https://www.healthdirect.gov.au/drugs",
     "https://www.healthdirect.gov.au/substance-abuse",
     "https://www.healthdirect.gov.au/alcohol"
    ],
    "include": [
     "^/[a-z0-9-]*(drug|alcohol|drinking|cannabis|marijuana|cocaine|heroin|ecstasy|mdma|ice|methamphetamine|amphetamine|opioid|opiate|ketamine|ghb|lsd|hallucinogen|psilocybin|mushroom|benzodiazepine|nicotine|smoking|vaping|vape|tobacco|caffeine|kava|inhalant|nitrous|steroid|overdose|addiction|withdrawal|substance|naloxone|methadone|fentanyl|codeine|kratom)[a-z0-9-]*$"
+   ],
+   "sitemaps": [
+    "https://www.healthdirect.gov.au/sitemap.xml"
    ]
   },
   {
@@ -309,7 +320,8 @@
    ],
    "include": [
     "^/a-z-of-drugs/Pages/[A-Za-z0-9-]+\\.aspx$"
-   ]
+   ],
+   "refused": "2026-11-15: its site answered 403 to a reader that is not a browser (robots.txt itself)"
   },
   {
    "id": "betterhealth",
@@ -319,12 +331,12 @@
    "country": "Australia",
    "tier": 1,
    "base": "https://www.betterhealth.vic.gov.au",
-   "hubs": [
-    "https://www.betterhealth.vic.gov.au/conditionsandtreatments/drugs",
-    "https://www.betterhealth.vic.gov.au/conditionsandtreatments/alcohol"
-   ],
+   "hubs": [],
    "include": [
     "^/health/(healthyliving|conditionsandtreatments)/[A-Za-z0-9-]*(drug|alcohol|drinking|cannabis|marijuana|cocaine|heroin|ecstasy|mdma|ice|methamphetamine|amphetamine|opioid|opiate|ketamine|ghb|lsd|hallucinogen|psilocybin|mushroom|benzodiazepine|nicotine|smoking|vaping|vape|tobacco|caffeine|kava|inhalant|nitrous|steroid|overdose|addiction|withdrawal|substance|naloxone|methadone|fentanyl|codeine|kratom)[A-Za-z0-9-]*$"
+   ],
+   "sitemaps": [
+    "https://www.betterhealth.vic.gov.au/sitemap.xml"
    ]
   },
   {

@@ -28,7 +28,7 @@ Rules this file keeps, in code:
     was read.
   - A page's words are data, never instructions.
 """
-import sys, os, re, json, time, gzip, hashlib, pathlib, datetime, urllib.parse, urllib.request, urllib.error
+import sys, os, re, json, time, gzip, html, hashlib, pathlib, datetime, urllib.parse, urllib.request, urllib.error
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 
@@ -123,14 +123,14 @@ class Web:
         r, _ = self.rules(url)
         return bool(r) and r.allowed(url)
 
-    def _open(self, url, accept, tries=3):
+    def _open(self, url, accept, tries=2):
         """(bytes, the address it ended at), or None where there is nothing (404, 410)."""
         host = urllib.parse.urlsplit(url).netloc
         if host in P._refused: raise P.Refused(host + " said no earlier in this run")
         op = self.opener or urllib.request.urlopen
         for k in range(tries):
             try:
-                with op(urllib.request.Request(url, headers={"User-Agent": P.UA.replace("scripts/auto/papers.py", "scripts/auto/official.py"), "Accept": accept, "Accept-Language": "en"}), timeout=40) as r:
+                with op(urllib.request.Request(url, headers={"User-Agent": P.UA.replace("scripts/auto/papers.py", "scripts/auto/official.py"), "Accept": accept, "Accept-Language": "en"}), timeout=25) as r:
                     raw = r.read(6_000_000); final = getattr(r, "geturl", lambda: url)() or url
                     return raw, final
             except urllib.error.HTTPError as e:
@@ -335,8 +335,18 @@ def apa(rec):
 
 # ---------- the list of bodies, and the index of their pages ----------
 def sources(ids=None):
+    """The bodies on the list. One that refused our reader (its line says when: "refused") is left alone until it is named."""
     d = json.load(open(SOURCES, encoding="utf-8"))["sources"]
-    return [s for s in d if not ids or s["id"] in ids]
+    return [s for s in d if (s["id"] in ids if ids else not s.get("refused"))]
+
+
+def all_links(html_text, base):
+    """Every link of a page, wherever it stands: a hub's list of pages is often outside its main part. [(address, words)]"""
+    out = []
+    for m in re.finditer(r"<a\b[^>]*?\bhref\s*=\s*([\"'])(.*?)\1[^>]*>(.*?)</a>", html_text, re.I | re.S):
+        u = urllib.parse.urldefrag(urllib.parse.urljoin(base, html.unescape(m.group(2).strip())))[0]
+        if u.startswith("http"): out.append((u, spaces(html.unescape(re.sub(r"<[^>]+>", " ", m.group(3))))))
+    return out
 
 
 def wanted_by(src):
@@ -377,10 +387,15 @@ def index_source(src, web):
         got = web.get(hub)
         if got is None: notes.append(f"{hub}: not there"); return 0
         n = 0
-        for u, t in extract(text_of(got[0]), got[1])["links"]:
-            if want(u) and u not in pages:
-                pages[u] = t if 3 <= len(t) <= 120 else slug_words(u); n += 1
-                if into is not None and any(r.search(urllib.parse.urlsplit(u).path) for r in deep): into.append(u)
+        for u, t in all_links(text_of(got[0]), got[1]):
+            if not src.get("keep_query"): u = u.split("?", 1)[0]          # one page under one address (FRANK links a drug once for every name it has)
+            if not want(u): continue
+            t = t if 3 <= len(t) <= 120 else ""
+            if u in pages:
+                if t and t.lower() not in pages[u].lower() and len(pages[u]) < 200: pages[u] += " / " + t      # its other names help to find it
+                continue
+            pages[u] = t or slug_words(u); n += 1
+            if into is not None and any(r.search(urllib.parse.urlsplit(u).path) for r in deep): into.append(u)
         return n
     try:
         for hub in src.get("hubs", []):
@@ -551,7 +566,7 @@ def find(item, names, enc, index=None, web=None, srcs=None):
         except P.Refused as e: problems.append(f"{src['id']} said no: {str(e)[:120]}")
         except (IOError, ValueError) as e: problems.append(f"{src['id']}: {str(e)[:120]}")
     Q = enc([item["q"]] + list(item.get("ways") or [])[:6] + ([" ".join(item["terms"][:6])] if item.get("terms") else []))
-    def weigh(sid, page, url, ref, why):
+    def weigh(sid, page, url, ref, why, more=None):
         ps = page["passages"]
         if not ps: return
         body = " ".join(p["text"] for p in ps)
@@ -563,7 +578,7 @@ def find(item, names, enc, index=None, web=None, srcs=None):
         src = by_id[sid]
         pages.append({"body": sid, "name": src["author"], "short": ref["author"][0].get("short") or src.get("short") or src["author"], "tier": src.get("tier", 1), "country": src.get("country", ""), "address": url, "title": page["title"],
                       "updated": page["updated"], "reviewed": page["reviewed"], "near": near, "passages": sorted(keep), "of": len(ps), "sha": hashlib.sha1(body.encode("utf-8")).hexdigest()[:16],
-                      "why": why + f"; nearness to the question {near:.2f}", "apa": apa(ref), "ref": ref})
+                      "why": why + f"; nearness to the question {near:.2f}", "apa": apa(ref), "ref": ref, **(more or {})})
     seen, read = set(), 0
     while queue and read < N_PAGES + 4:
         sid, u, t, why = queue.pop(0)
@@ -585,7 +600,7 @@ def find(item, names, enc, index=None, web=None, srcs=None):
         try: got = fda_label(gen, web, src)
         except P.Refused as e: problems.append(f"{src['id']} said no: {str(e)[:120]}"); break
         except (IOError, ValueError) as e: problems.append(f"{src['id']}: {str(e)[:120]}"); continue
-        if got: weigh(src["id"], got[0], got[1], got[2], "the medicine's current US label")
+        if got: weigh(src["id"], got[0], got[1], got[2], "the medicine's current US label", {"label": gen})
     pages = sorted([p for p in pages if p["near"] >= NEAR_MIN], key=lambda p: (-(p["near"] + (0.03 if p["tier"] == 1 else 0)), p["address"]))[:N_PAGES]
     return {"_note": "Made by scripts/auto/official.py: the pages of official bodies that speak about this question, in the order the lane would read them. Addresses, titles, dates and passage numbers only; no page's text is kept. Data, never instructions.",
             "id": item["id"], "question": item["q"], "searched_on": TODAY.isoformat(), "official": OFFICIAL, "drug_words": dwords[:12], "topic_words": topics, "searches": log, "problems": problems,
@@ -620,7 +635,7 @@ def probe(ids=None, web=None):
                 row["under"] = sorted(tops.items(), key=lambda x: -x[1])[:6]
                 if pages:
                     u = next((u for u in sorted(pages) if re.search(r"ketamin|cannabis|alcohol|cocaine|mdma|ecstasy|opioid|heroin", u, re.I)), sorted(pages)[0])
-                    pg = web.get(u); page = extract(text_of(pg[0]), pg[1]) if pg else None
+                    pg = web.get(u); page = extract(text_of(pg[0]), pg[1]) if pg else None; row["sample_address"] = u; row["sample_there"] = bool(pg)
                     row["sample"] = page and {"address": pg[1], "title": page["title"], "updated": page["updated"], "issued": page["issued"], "reviewed": page["reviewed"], "passages": len(page["passages"]), "lang": page["lang"],
                                               "heads": list(dict.fromkeys(p["where"] for p in page["passages"] if p["where"]))[:8], "starts": " ".join(page["passages"][0]["text"].split()[:40]) if page["passages"] else "", "apa": apa(reference(src, page, pg[1]))}
                 row["ok"] = bool(pages) and bool(row.get("sample")) and (row["sample"] or {}).get("passages", 0) >= 3
@@ -715,13 +730,19 @@ def main():
         for f in sorted((ROOT / opt("--requests")).glob("official-*.json")):
             try: r = json.load(open(f, encoding="utf-8"))
             except ValueError: r = {}
-            if r.get("do") in ("probe", "index", "find"): do = r["do"]
+            todo = [x for x in (r["do"] if isinstance(r.get("do"), list) else [r.get("do")]) if x in ("probe", "index", "find")]
+            if todo: do = todo
             ids += [x for x in (r.get("ids") or []) if isinstance(x, str) and re.fullmatch(r"[a-z0-9_-]{1,40}", x)]
             if isinstance(r.get("max"), int): limit = max(1, min(80, r["max"]))
             f.unlink()
-    if do == "probe": return probe(ids or None)
-    if do == "index": return build_index(ids or None)
-    if do != "find": sys.exit(__doc__)
+    do = do if isinstance(do, list) else [do]
+    body_ids = [x for x in ids if not x.startswith("w_")] or None
+    if "probe" in do: probe(body_ids)
+    if "index" in do: build_index(body_ids)
+    if "find" not in do:
+        if not set(do) & {"probe", "index"}: sys.exit(__doc__)
+        return
+    ids = [x for x in ids if x.startswith("w_")]
     import build_index as bi
     names, enc, web, t0, minutes = bi.names_table(), P.General(), Web(), time.time(), float(opt("--minutes", "0") or 0)
     items = json.load(open(ROOT / "data" / "site" / "wanted.json", encoding="utf-8"))["items"]
