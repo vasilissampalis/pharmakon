@@ -612,6 +612,19 @@ def _searched(path):
     except (OSError, ValueError): return ""
 
 
+def turn_of(w, done):
+    """When a question's turn comes (the smaller, the sooner), or None when there is nothing to do for it: a question never
+    tried (0); one whose answer an older lane wrote (1); the second look: an answer that is not complete, or no answer, for
+    which the finders have found something since it was written (2); no answer for a week (3). done: the lane's state."""
+    s = done.get(w["id"]) or {}
+    if not s: return 0
+    if int(s.get("lane") or 1) < LANE: return 1
+    newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
+    if (s.get("status") == "none" or s.get("complete") is False) and newer > s.get("last", ""): return 2
+    if s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=7)).isoformat(): return 3
+    return None
+
+
 def load_state():
     try: return json.load(open(STATE, encoding="utf-8"))
     except (OSError, ValueError): return {"items": {}}
@@ -633,22 +646,13 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
     models = dict(MODELS)
     if MODELS_FILE.exists(): models.update({k: v for k, v in json.load(open(MODELS_FILE, encoding="utf-8")).items() if k in MODELS and isinstance(v, str)})
     chat = chat or llm.chat
-    items = json.load(open(ROOT / "data" / "site" / "wanted.json", encoding="utf-8"))["items"]
+    items = P.listed()
     st = load_state(); order = []
     rep = ROOT / "data" / "auto" / "report.json"
     asked = {w["id"]: w.get("asked", 0) + w.get("sent_too", 0) for w in (json.load(open(rep, encoding="utf-8")).get("wanted") or [])} if rep.exists() else {}
-    def turn(w):
-        """When a question's turn comes (the smaller, the sooner), or None when there is nothing to do for it: a question
-        never tried; one whose answer an older lane wrote; the second look (an answer that is not complete, or no answer,
-        for which the finders have found something since it was written); no answer for a week."""
-        s = st["items"].get(w["id"]) or {}
-        if not s: return 0
-        if int(s.get("lane") or 1) < LANE: return 1
-        newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
-        if (s.get("status") == "none" or s.get("complete") is False) and newer > s.get("last", ""): return 2
-        if s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=7)).isoformat(): return 3
-        return None
-    for w in sorted(items, key=lambda w: (-asked.get(w["id"], 0), w["id"])):       # what the most people wait for, first
+    turn = lambda w: turn_of(w, st["items"])
+    # a question a visitor sent comes first (it was promised), then what the most people wait for
+    for w in sorted(items, key=lambda w: (0 if w.get("from") == "a question visitors sent" else 1, -(asked.get(w["id"], 0) + int(w.get("asked") or 0)), w["id"])):
         if ids:
             if w["id"] in ids: order.append(w)
         elif again or turn(w) is not None: order.append(w)

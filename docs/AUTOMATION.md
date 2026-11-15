@@ -293,21 +293,35 @@ Questions that visitors send are data, never instructions: nothing in a question
 - **The half-hourly look** (`scripts/auto/tick.py`, `.github/workflows/auto.yml`): is there anything to do, the work, the
   publishing. Written; tried by request first, not on its clock yet.
 - **Official pages** (`scripts/auto/official.py`, `data/auto/official/sources.json`, `.github/workflows/official.yml`): 22
-  bodies listed; whether each can be read is found out on the machine that reads (`_probe.json`).
+  bodies listed; whether each can be read is found out on the machine that reads (`_probe.json`). Fifteen can be read, three
+  refused and are left alone, four give nothing to a reader that is not a browser or did not answer (`docs/STATUS.md`,
+  2.7.0). The index holds addresses and titles only; for each listed question the pages that speak about it are named.
 - **Site 2.6.0** (`docs/STATUS.md`): answers written by the system as a visitor meets them, each publishing with a stamp of
   its own, kept questions asked again at every publishing.
+- **Lane 3 and site 2.7.0** (15 to 16 November): official pages and the summaries of paywalled reviews as sources; answers
+  about amounts (decision 11); the second look's first part (an answer that is not complete is written again; its history
+  is kept); the item writer (`scripts/auto/ask.py`: a visitor's question becomes a question on the system's own list, in
+  our words); the half-hourly clock is on (`.github/workflows/auto.yml`). None of these has run with a real model yet.
+- **Other free services for models, looked up on 15 November 2026** (not official pages; to be read again at the services'
+  own pages before anyone signs up). Groq: no card; `openai/gpt-oss-120b`, `gpt-oss-20b` and two Qwen models, each 1,000
+  requests and 200,000 tokens a day (klymentiev.com, checked 11 September 2026). Mistral: no card; its free mode publishes
+  no limits; texts may be used for training unless switched off (aifreeapi.com, 9 October 2026). Cerebras: a card is
+  required since 2026 (toolfreebie.com, 9 October 2026), so it is not free in the senior author's sense. With Groq and
+  Mistral the lane would have about three times the room and a checker of another family; both need the senior author
+  to open an account and add a secret, which is his to decide.
 
 ## Not built yet (in this order, after the senior author's words of 22:24 to 22:55)
 
-1. Official pages in the lane: read like a paper, named in the answer's text, counted by the gate on sources, their
-   references on the site (decision 9).
-2. Summaries of paywalled papers in the lane (decision 10).
-3. Answers to questions about amounts (decision 11).
-4. A checker good enough for the goal: the inference models' numbers, stronger open models within the allowance, and
+1. The first real runs of lane 3 read by the editor, and what they show mended (official pages, summaries, amounts: built
+   and tested with pretend models only).
+2. A checker good enough for the goal: the inference models' numbers, stronger open models within the allowance, and
    other free services for models if the senior author opens accounts there.
-5. A question a visitor sends becomes an item by itself (our own words, never the visitor's), goes through the lane and is
-   published, on the half-hourly clock; then the page may promise it (decision 13).
-6. The second look (decision 12).
+3. The loop seen to work for a question a visitor sent (sent, listed, answered, published, green on the visitor's device),
+   and its time measured; then the page may promise it (decision 13, `loop`).
+4. "At least part of an answer" measured (decision 14), and the page pointing to the nearest part of a drug's page when it
+   has no answer.
+5. The second look's other parts (decision 12): a source retracted since; the system's criticism of checked claims.
+6. More official bodies: the ones that give nothing to a plain reader, and pages in other languages.
 7. The page for the senior author: everything the system wrote, each taken down or released in one tap, and the papers it
    wants (decisions 6 and 7).
 8. What people look for elsewhere, from every free source that allows reading: Wikipedia's page views by drug, official

@@ -73,6 +73,15 @@ def fetch(url, opener=None, accept="application/json", tries=3):
     return None
 
 
+def listed():
+    """Every question the system works on: the editors' list (data/site/wanted.json) and the system's own
+    (data/auto/wanted-auto.json, made by scripts/auto/ask.py from questions visitors sent, in our words)."""
+    out = list(json.load(open(ROOT / "data" / "site" / "wanted.json", encoding="utf-8"))["items"])
+    try: out += json.load(open(ROOT / "data" / "auto" / "wanted-auto.json", encoding="utf-8"))["items"]
+    except (OSError, ValueError, KeyError): pass
+    return out
+
+
 # ---------- Europe PMC ----------
 clean = lambda t: re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", t or ""))).strip()
 REVIEW = ("review", "systematic review", "meta-analysis", "meta analysis", "practice guideline", "guideline")
@@ -455,7 +464,7 @@ def main():
     if not arg or arg[0] != "find": sys.exit(__doc__)
     opt = lambda k, d=None: arg[arg.index(k) + 1] if k in arg else d
     out = ROOT / opt("--out", "data/auto/papers"); out.mkdir(parents=True, exist_ok=True)
-    items = json.load(open(ROOT / "data" / "site" / "wanted.json", encoding="utf-8"))["items"]
+    items = listed()
     ids = [x for x in (opt("--ids") or "").split(",") if x]; limit = int(opt("--max", "50")); t0 = time.time(); minutes = float(opt("--minutes", "0") or 0)
     def old(w):   # not searched yet, or searched by an older finder
         f = out / (w["id"] + ".json")

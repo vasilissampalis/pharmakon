@@ -4,18 +4,22 @@
 #
 #   tick    on the smallest machine, under a minute: has the question store changed? has a listed question no answer yet, and
 #           is there room in today's free model allowance? is what the site is built from different from what is published?
-#   work    only when the tick says so: the scout reads what visitors asked; the machine lane writes answers
-#           (scripts/auto/lane.py: every sentence tied to the paper's own words, checked, and held to the site's rules).
+#   work    only when the tick says so: the scout reads what visitors asked; a question a visitor sent becomes a question
+#           on the system's own list (scripts/auto/ask.py); the finders look for papers and official pages; the machine
+#           lane writes answers (scripts/auto/lane.py: every sentence tied to its source's own words, checked, and held
+#           to the site's rules).
 #   deploy  only when what the site is built from has changed (new answers by the system, or the editor's own work on main):
 #           the site is built, checked and published (deploy.yml), with every gate of a release.
 #
-# A private repository has a monthly amount of free machine time, so the tick is cheap and the work is counted: at most two
-# writing runs and three publishings a day (scripts/auto/tick.py). Nothing here can cost money: the models are used inside
+# A private repository has a monthly amount of free machine time, so the tick is cheap and the work is counted: at most six
+# writing runs and eight publishings a day (scripts/auto/tick.py). Nothing here can cost money: the models are used inside
 # Cloudflare's free daily allowance (scripts/auto/llm.py stops before it), and GitHub stops when the free minutes are used.
 # The editor's session cannot read GitHub's logs: every run keeps its notes in the repository, cleaned of both secrets.
 name: Auto
 
 on:
+  schedule:
+    - cron: "7,37 * * * *"   # every half hour, away from the full hour (GitHub starts scheduled runs late when many start at once)
   workflow_dispatch:
   push:
     branches: [main]
@@ -103,9 +107,13 @@ jobs:
             step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json"
             step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json"
             step "remember what was read" python3 -I scripts/auto/look.py --done "$RUNNER_TEMP/questions.json"
+            step "a question a visitor sent becomes a question on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run
           fi
-          if [ "$DO_LANE" = "true" ]; then
-            step "the lane writes" python3 -I scripts/auto/lane.py run --max 6
+          NEW="$(git status --porcelain data/auto/wanted-auto.json | wc -l | tr -d ' ')"   # a question was just listed: it is worked on in this same run
+          if [ "$DO_LANE" = "true" ] || [ "$NEW" != "0" ]; then
+            step "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 6
+            step "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 8
+            step "the lane writes" python3 -I scripts/auto/lane.py run --max 3
             step "count this run" python3 -I scripts/auto/tick.py did lane
           fi
       - name: Keep the records

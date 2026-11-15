@@ -745,7 +745,7 @@ def main():
     ids = [x for x in ids if x.startswith("w_")]
     import build_index as bi
     names, enc, web, t0, minutes = bi.names_table(), P.General(), Web(), time.time(), float(opt("--minutes", "0") or 0)
-    items = json.load(open(ROOT / "data" / "site" / "wanted.json", encoding="utf-8"))["items"]
+    items = P.listed()
     def old(w):
         try: return int(json.load(open(FOUND / (w["id"] + ".json"), encoding="utf-8")).get("official") or 0) < OFFICIAL
         except (OSError, ValueError): return True

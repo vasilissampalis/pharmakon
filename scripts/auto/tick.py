@@ -12,13 +12,15 @@ free ... every 30 minutes when github will be regenerated".
 
 It looks every half hour and works only when there is work, because this repository is private and GitHub gives a private
 repository 12 US dollars of machine time a month (about 2,000 minutes of the standard machine; read on 15 November 2026):
-a look on the one-core machine costs a fifth of a cent; a run that writes answers or publishes the site costs 4 to 8
-cents. So a day holds at most LANE_A_DAY runs that write and DEPLOY_A_DAY that publish (requests by the editor count too),
-which keeps a month inside what is free. On a public repository there would be no such limit.
+a look on the one-core machine costs a fifth of a cent; a run that writes answers costs 2 to 3 cents and a publishing a
+little over one cent (two minutes, measured on 15 November 2026). So a day holds at most LANE_A_DAY runs that write and
+DEPLOY_A_DAY that publish (requests by the editor count too): 48 looks, six writing runs and eight publishings come to
+about 35 cents a day, inside the 40 that a month of 12 dollars gives. On a public repository there would be no such limit.
 
   scout   the question store has changed since the scout last read it (scripts/auto/look.py)
-  lane    a listed question has no answer yet and was not tried in the last week, today's free model allowance has room
-          for at least one answer, and fewer than LANE_A_DAY such runs were made today
+  lane    a listed question's turn has come (never tried; written by an older lane; the second look: not complete and
+          the finders have found something since; no answer for a week), today's free model allowance has room for at
+          least one answer, and fewer than LANE_A_DAY such runs were made today
   deploy  what the site is built from is not what was last published (data/auto/deploy/deployed.json), and fewer than
           DEPLOY_A_DAY publishings were made today
 """
@@ -28,11 +30,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 TICK = ROOT / "data" / "auto" / "tick.json"
 DEPLOYED = ROOT / "data" / "auto" / "deploy" / "deployed.json"
-LANE_A_DAY, DEPLOY_A_DAY = 2, 3
+LANE_A_DAY, DEPLOY_A_DAY = 6, 8
 ROOM = 1200             # neurons one answer may take: the lane starts only when today's allowance has this much left
 RETRY_DAYS = 7
 # everything the site is built from (site/build.js and site/build_public.py read these); the machine lane's answers are counted apart
-BUILT_FROM = ["site/src", "site/build.js", "site/build_public.py", "site/public-assets", "site/worker", "site/insight/model.json", "site/insight/vendor", "site/photos",
+BUILT_FROM = ["site/src", "site/build.js", "site/build_public.py", "site/public-assets", "site/worker", "site/insight/model.json", "site/insight/scope.json", "site/insight/vendor", "site/photos",
+              "data/auto/lane/policy.json", "data/auto/lane/lines.json",
               "data/site", "data/claims", "data/references", "data/study-cards", "data/epidemiology", "data/legal", "data/identity", "data/monographs",
               "data/verification/senior-gate.json", "data/evidence-maps.json", "data/doi-index.json", "scripts/insight/build_index.py"]
 
@@ -55,7 +58,7 @@ def inputs():
     shown = []
     for f in sorted((ROOT / "data" / "auto" / "answers").glob("au_*.json")):
         a = load(f, {})
-        if a.get("status") == "published": shown.append([a.get("id"), [p.get("text") for p in a.get("parts") or []], [s.get("doi") for s in a.get("sources") or []], a.get("complete")])
+        if a.get("status") == "published": shown.append([a.get("id"), a.get("lane"), a.get("kind"), [[p.get("text"), p.get("quote"), p.get("who"), p.get("what")] for p in a.get("parts") or []], [(s.get("ref") or {}).get("id") for s in a.get("sources") or []], a.get("complete"), (a.get("made") or {}).get("from")])
     h.update(json.dumps(shown, sort_keys=True, ensure_ascii=False).encode()); h.update(json.dumps(load(ROOT / "data" / "auto" / "held.json", {}), sort_keys=True).encode())
     return h.hexdigest()[:24]
 
@@ -70,10 +73,9 @@ def lane_has_work(state, items, ledger_left, t):
     """(yes or no, why)"""
     if t["lane"] >= LANE_A_DAY: return False, f"{t['lane']} writing runs today already"
     if ledger_left < ROOM: return False, f"today's free model allowance has {ledger_left:.0f} neurons left: not enough for one answer"
-    old = (datetime.date.today() - datetime.timedelta(days=RETRY_DAYS)).isoformat()
     import lane as L
-    todo = [w["id"] for w in items if not (state.get("items") or {}).get(w["id"]) or int(state["items"][w["id"]].get("lane") or 1) < L.LANE or ((state["items"][w["id"]].get("status") == "none") and state["items"][w["id"]].get("last", "") < old)]
-    return (True, f"{len(todo)} listed questions have no answer yet") if todo else (False, "every listed question has been worked on")
+    todo = [w["id"] for w in items if L.turn_of(w, state.get("items") or {}) is not None]
+    return (True, f"{len(todo)} listed questions are to be worked on") if todo else (False, "every listed question has been worked on")
 
 
 def deploy_needed(t, fingerprint, deployed):
@@ -102,7 +104,8 @@ def plan():
             sig = look.signature(recs); scout = bool(ns) and sig != st.get("done"); why["scout"] = "the store has changed" if scout else "the store is as the scout last read it"
         except Exception as e: why["scout"] = "the store could not be read (" + type(e).__name__ + ")"
     else: why["scout"] = "no key"
-    items = load(ROOT / "data" / "site" / "wanted.json", {"items": []})["items"]
+    import papers
+    items = papers.listed()
     lane, why["lane"] = lane_has_work(load(ROOT / "data" / "auto" / "lane" / "state.json", {"items": {}}), items, llm.left(), t) if token and account else (False, "no key")
     dep, why["deploy"] = deploy_needed(t, inputs(), load(DEPLOYED, {}))
     t["last"] = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"); t["why"] = why
@@ -129,13 +132,14 @@ def selftest():
     old = (datetime.date.today() - datetime.timedelta(days=8)).isoformat(); new = datetime.date.today().isoformat()
     import lane as L
     st = {"items": {"w_1": {"status": "published", "last": old, "lane": L.LANE}, "w_2": {"status": "none", "last": new, "lane": L.LANE}}}
-    assert lane_has_work(st, items, 5000, t) == (True, "1 listed questions have no answer yet")                     # w_3 was never tried
+    assert lane_has_work(st, items, 5000, t) == (True, "1 listed questions are to be worked on")                    # w_3 was never tried
     st["items"]["w_3"] = {"status": "waiting", "last": new, "lane": L.LANE}; assert lane_has_work(st, items, 5000, t)[0] is False      # tried, waiting or too recent
     st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t)[0] is True                              # no answer a week ago: tried again
-    assert lane_has_work(st, items, 800, t)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=2))[0] is False  # no room in the allowance; two runs today already
-    assert deploy_needed(t, "abc", {"inputs": "abc"})[0] is False and deploy_needed(t, "abd", {"inputs": "abc"})[0] is True and deploy_needed(dict(t, deploy=3), "abd", {"inputs": "abc"})[0] is False
+    assert lane_has_work(st, items, 800, t)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=LANE_A_DAY))[0] is False  # no room in the allowance; the day's runs are used
+    st["items"]["w_2"] = {"status": "published", "last": new, "lane": L.LANE - 1}; assert lane_has_work(st, items, 5000, t)[0] is True         # written by an older lane: written again
+    assert deploy_needed(t, "abc", {"inputs": "abc"})[0] is False and deploy_needed(t, "abd", {"inputs": "abc"})[0] is True and deploy_needed(dict(t, deploy=DEPLOY_A_DAY), "abd", {"inputs": "abc"})[0] is False
     a = inputs(); assert len(a) == 24 and a == inputs()
-    print("tick selftest: ok (the lane starts for a question never tried or without an answer for a week, with room in the allowance and fewer than two runs today; the site is published when what it is built from has changed, three times a day at most)")
+    print(f"tick selftest: ok (the lane starts for a question never tried, written by an older lane or without an answer for a week, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
 
 
 if __name__ == "__main__":
