@@ -16,6 +16,8 @@ spec = importlib.util.spec_from_file_location("jd", ROOT / "scripts/insight/judg
 arg = jd.arg; M_DIR = jd.M; A = jd.A
 OUT = pathlib.Path(arg("--out")); OUT.mkdir(parents=True, exist_ok=True)
 EPOCHS = int(arg("--epochs", "6")); LR = float(arg("--lr", "2e-5")); SEED = int(arg("--seed", "7")); BATCH = 32; MAXLEN = 48; SCALE = 20.0
+MINE = int(arg("--mine", "0"))      # per anchor, this many wordings of the wrong answers that rank highest for it, found afresh each epoch
+ALL = "--all" in sys.argv          # train on every answer for exactly --epochs epochs (after the held-out run has chosen the number)
 torch.manual_seed(SEED); random.seed(SEED); np.random.seed(SEED); torch.set_num_threads(2)
 FP32 = M_DIR / "_maycombhq_embed-model/package/model.onnx"
 from transformers import BertConfig, BertModel
@@ -63,7 +65,7 @@ ex = []   # (answer row, wording that is not a site question)
 for ai, a in enumerate(A):
     for w in P[ai]:
         if w not in a["questions"]: ex.append((ai, w))
-tr_ex = [x for x in ex if not val[x[0]]]
+tr_ex = [x for x in ex if ALL or not val[x[0]]]
 print(f"{len(ex)} wordings as anchors ({len(tr_ex)} for training); near-miss questions for {sum(1 for n in N if n)} answers ({sum(len(n) for n in N)}); held-out answers {int(val.sum())}")
 Dtxt = [w for ws in P for w in ws]; Down = np.array([i for i, ws in enumerate(P) for _ in ws]); pos_of = {(int(Down[j]), w): j for j, w in enumerate(Dtxt)}
 def validate(model):
@@ -87,6 +89,12 @@ steps = EPOCHS * math.ceil(len(tr_ex) / BATCH); sched = torch.optim.lr_scheduler
 best = (acc0 + (auc0 if auc0 == auc0 else 0), 0); t0 = time.time(); step = 0
 torch.save(model.state_dict(), OUT / "best.pt")
 for ep in range(1, EPOCHS + 1):
+    hard = {}
+    if MINE:   # the wordings of other answers that the model, as it is now, puts nearest to each anchor
+        model.eval(); Dv = encode(model, [X(t) for t in Dtxt]).numpy(); Av = encode(model, [X(w) for _, w in tr_ex]).numpy()
+        S_ = Av @ Dv.T
+        for r, (ai, w) in enumerate(tr_ex):
+            S_[r, Down == ai] = -9; hard[(ai, w)] = [Dtxt[j] for j in np.argsort(-S_[r])[:max(MINE * 3, 6)]]
     model.train(); random.shuffle(tr_ex); tot = 0.0; nb = 0
     # batches with one anchor per answer, so that no other row's positive is secretly right
     pool = list(tr_ex)
@@ -101,6 +109,11 @@ for ep in range(1, EPOCHS + 1):
         positives = [X(random.choice([p for p in P[ai] if p != w] or [w])) for ai, w in batch]
         negs = [X(random.choice(N[ai])) if N[ai] else None for ai, _ in batch]
         neg_txt = [n for n in negs if n is not None]
+        if MINE:
+            own = {ai for ai, _ in batch}
+            for ai, w in batch:
+                picks = [h for h in hard.get((ai, w), []) if pos_of.get((ai, h)) is None]   # never a wording of the anchor's own answer
+                neg_txt += [X(h) for h in random.sample(picks, min(MINE, len(picks)))]
         ea = encode(model, anchors, grad=True); ep_ = encode(model, positives, grad=True)
         cand = torch.cat([ep_, encode(model, neg_txt, grad=True)]) if neg_txt else ep_
         logits = ea @ cand.T * SCALE; target = torch.arange(len(batch))
@@ -108,8 +121,8 @@ for ep in range(1, EPOCHS + 1):
         opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step(); step += 1
         tot += float(loss); nb += 1
     acc, auc = validate(model); score = acc + (auc if auc == auc else 0)
-    print(f"epoch {ep}: loss {tot/max(1,nb):.3f} | held out: finds answer {100*acc:.1f}%, AUC {auc:.3f} | {time.time()-t0:.0f}s")
-    if score > best[0]: best = (score, ep); torch.save(model.state_dict(), OUT / "best.pt")
+    print(f"epoch {ep}: loss {tot/max(1,nb):.3f} | held out{' (now trained on)' if ALL else ''}: finds answer {100*acc:.1f}%, AUC {auc:.3f} | {time.time()-t0:.0f}s", flush=True)
+    if ALL or score > best[0]: best = (score, ep); torch.save(model.state_dict(), OUT / "best.pt")
 print("kept epoch", best[1])
 model.load_state_dict(torch.load(OUT / "best.pt")); model.eval()
 
@@ -125,4 +138,4 @@ from onnxruntime.quantization import quantize_dynamic, QuantType
 q8 = OUT / "insight-q8.onnx"; quantize_dynamic(str(fp), str(q8), weight_type=QuantType.QUInt8)
 for f in (fp, q8): print(f.name, f.stat().st_size, "bytes, SHA-256", hashlib.sha256(f.read_bytes()).hexdigest())
 json.dump({"base": "all-MiniLM-L6-v2 (fp32 ONNX, npm @maycombhq/embed-model 2.0.0-beta.1)", "epochs_kept": best[1], "epochs": EPOCHS, "lr": LR, "seed": SEED, "batch": BATCH,
-           "anchors": len(tr_ex), "near_miss_answers": sum(1 for n in N if n), "before": {"acc": acc0, "auc": auc0}}, open(OUT / "train.json", "w"), indent=1)
+           "mine": MINE, "all_answers": ALL, "anchors": len(tr_ex), "near_miss_answers": sum(1 for n in N if n), "before": {"acc": acc0, "auc": auc0}}, open(OUT / "train.json", "w"), indent=1)

@@ -231,7 +231,11 @@ if __name__ == "__main__":
         from sklearn.linear_model import LogisticRegression
         from sklearn.ensemble import HistGradientBoostingClassifier
         qs, self_of, lab = [], [], []      # our own examples as questions: positives (label by their answer) and near-misses
+        # --judge-on-val: only the answers a fine-tuned encoder never trained on (the same 15% finetune.py holds out), so the
+        # judge learns from scores as they look for questions the encoder has not seen
+        only_val = "--judge-on-val" in sys.argv; held = lambda a: int(hashlib.sha1(a["id"].encode()).hexdigest(), 16) % 100 < 15
         for ai, a in enumerate(A):
+            if only_val and not held(a): continue
             for w in Puse[ai]:
                 if w in a["questions"]: continue   # site questions stay in the index always
                 qs.append(w); self_of.append(("P", ai, w)); lab.append((ai, 1))
