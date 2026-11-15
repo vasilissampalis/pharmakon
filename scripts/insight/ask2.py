@@ -25,7 +25,7 @@ for q in args[3:]:
     by = plain + R.wt["topic"] * bm; key = by + R.wt["same"] * ok
     print(f"\nQ: {q}   [drugs named: {groups or '-'}]")
     for c in [int(c) for c in np.argsort(-key, kind="stable")[:3]]:
-        lead = float(by[c] - np.delete(by, c).max())
+        el = ok.copy(); el[c] = False; lead = float(by[c] - (by[el].max() if el.any() else 0.0))
         f = np.array([bw[c], max(bw2[c], 0), sh[c], lx[c], bm[c], lead, 0.0, min(len(q.split()), 20) / 20, min(len(groups), 2)])
         f[6] = 0.5   # the kind-of-question number is not recomputed here (small weight)
         f = f[:len(mu)]

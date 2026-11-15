@@ -42,6 +42,7 @@ def qtype(t):
     return "other"
 W_type = [qtype(w) for w in W_txt]
 FEATS = ["best wording", "second wording", "short answer", "word overlap", "topic", "lead over the next answer", "same kind of question", "question length", "drugs named"]
+LEAD_ALL = "--lead-all" in sys.argv
 NF = 6 if "--six" in sys.argv else len(FEATS)   # --six: only the six numbers the page has at hand for its first candidate
 FEATS = FEATS[:NF]
 
@@ -74,7 +75,10 @@ def look(q, drug=None, drop=None):
     by = plain + R.wt["topic"] * bm; key = by + R.wt["same"] * ok
     qt = qtype(q); ql = min(len(q.split()), 20) / 20.0
     def feats(c):
-        others = np.delete(by, c); lead = float(by[c] - others.max())
+        # the next answer: among the answers about every drug the question names (the others cannot be a best match
+        # anyway); --lead-all: among all answers
+        el = np.ones(n, bool) if LEAD_ALL else ok.copy(); el[c] = False
+        lead = float(by[c] - (by[el].max() if el.any() else 0.0))
         return [float(bw[c]), float(max(bw2[c], 0.0)), float(sh[c]), float(lx[c]), float(bm[c]), lead, 1.0 if W_type[arg[c]] == qt else 0.0, ql, float(min(len(groups), 2))][:NF]
     return {"plain": plain, "topic": bm, "ok": ok, "key": key, "by": by, "feats": feats, "groups": groups}
 
