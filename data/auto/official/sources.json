@@ -1,0 +1,360 @@
+{
+ "_note": "The official bodies the machine lane may read (scripts/auto/official.py), by the senior author's decision of 15 November 2026: 'I want it to read official websites too where it can get access'; 'official sites like NHS and EVERYTHING similar it's so many official sites worldwide'. tier 1: a health service, a health ministry or agency, or a UN or EU body. tier 2: an information service that a government pays for. author: the body's name as the reference gives it (APA 7 group author); site: the website's name where it is not the author; short: how an answer names the body in its text. hubs: pages of the site whose links lead to its pages about drugs; include: which of those addresses count (regular expressions on the path); deep: pages read one step further; children: a page that fits leads to the pages under it; api: the body answers a search itself (its public service is asked instead). A body is read only where its own robots.txt allows it; whether it does is found out on the machine that reads (official.py probe, written to _probe.json), never assumed here. To add a body: add a line, run the probe, read what it says. English first: a page in another language is not read yet. Law-enforcement pages are not listed: they are not health bodies.",
+ "sources": [
+  {
+   "id": "nhs",
+   "author": "NHS",
+   "short": "the NHS",
+   "country": "United Kingdom",
+   "tier": 1,
+   "base": "https://www.nhs.uk",
+   "hubs": [
+    "https://www.nhs.uk/medicines/",
+    "https://www.nhs.uk/live-well/addiction-support/",
+    "https://www.nhs.uk/live-well/alcohol-advice/",
+    "https://www.nhs.uk/live-well/quit-smoking/",
+    "https://www.nhs.uk/conditions/"
+   ],
+   "include": [
+    "^/medicines/[a-z0-9-]+/",
+    "^/live-well/(addiction-support|alcohol-advice|quit-smoking)/[a-z0-9-]+/",
+    "^/conditions/[a-z0-9-]*(alcohol|drug|smok|nicotin|addict|overdos|poison|withdraw|hangover|psychosis|cannabis|vap)[a-z0-9-]*/"
+   ],
+   "children": true
+  },
+  {
+   "id": "frank",
+   "author": "FRANK",
+   "short": "FRANK",
+   "country": "United Kingdom",
+   "tier": 1,
+   "base": "https://www.talktofrank.com",
+   "hubs": [
+    "https://www.talktofrank.com/drugs-a-z"
+   ],
+   "include": [
+    "^/drug/[a-z0-9-]+/?$"
+   ]
+  },
+  {
+   "id": "nhsinform",
+   "author": "NHS inform",
+   "short": "NHS inform (Scotland)",
+   "country": "United Kingdom",
+   "tier": 1,
+   "base": "https://www.nhsinform.scot",
+   "hubs": [
+    "https://www.nhsinform.scot/healthy-living/drugs-and-drug-use/",
+    "https://www.nhsinform.scot/healthy-living/alcohol/",
+    "https://www.nhsinform.scot/healthy-living/stopping-smoking/"
+   ],
+   "include": [
+    "^/healthy-living/(drugs-and-drug-use|alcohol|stopping-smoking)/.+"
+   ],
+   "deep": [
+    "^/healthy-living/(drugs-and-drug-use|alcohol)/[a-z0-9-]+/?$"
+   ]
+  },
+  {
+   "id": "govuk",
+   "api": "govuk",
+   "author": "UK Government",
+   "author_from_page": true,
+   "site": "GOV.UK",
+   "short": "the UK government",
+   "country": "United Kingdom",
+   "tier": 1,
+   "base": "https://www.gov.uk",
+   "children": true,
+   "include": [
+    "^/government/publications/",
+    "^/guidance/",
+    "^/government/collections/"
+   ]
+  },
+  {
+   "id": "drugsie",
+   "author": "Health Service Executive",
+   "site": "Drugs.ie",
+   "short": "Ireland's health service (Drugs.ie)",
+   "country": "Ireland",
+   "tier": 1,
+   "base": "https://www.drugs.ie",
+   "hubs": [
+    "https://www.drugs.ie/drugtypes/"
+   ],
+   "include": [
+    "^/drugtypes/drug/[A-Za-z0-9_-]+/?$"
+   ]
+  },
+  {
+   "id": "hse",
+   "author": "Health Service Executive",
+   "short": "Ireland's health service (HSE)",
+   "country": "Ireland",
+   "tier": 1,
+   "base": "https://www2.hse.ie",
+   "hubs": [
+    "https://www2.hse.ie/living-well/alcohol/",
+    "https://www2.hse.ie/living-well/quit-smoking/"
+   ],
+   "include": [
+    "^/living-well/(alcohol|quit-smoking)/.+"
+   ],
+   "deep": [
+    "^/living-well/(alcohol|quit-smoking)/[a-z0-9-]+/?$"
+   ]
+  },
+  {
+   "id": "nida",
+   "author": "National Institute on Drug Abuse",
+   "short": "the US National Institute on Drug Abuse",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://nida.nih.gov",
+   "hubs": [
+    "https://nida.nih.gov/research-topics",
+    "https://nida.nih.gov/research-topics/commonly-used-drugs-charts"
+   ],
+   "include": [
+    "^/research-topics/[a-z0-9-]+$",
+    "^/publications/drugfacts/[a-z0-9-]+$",
+    "^/publications/research-reports/[a-z0-9-]+"
+   ]
+  },
+  {
+   "id": "cdc",
+   "author": "Centers for Disease Control and Prevention",
+   "short": "the US Centers for Disease Control and Prevention",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://www.cdc.gov",
+   "hubs": [
+    "https://www.cdc.gov/overdose-prevention/index.html",
+    "https://www.cdc.gov/cannabis/index.html",
+    "https://www.cdc.gov/alcohol/index.html",
+    "https://www.cdc.gov/tobacco/index.html",
+    "https://www.cdc.gov/stop-overdose/index.html"
+   ],
+   "include": [
+    "^/(overdose-prevention|cannabis|alcohol|tobacco|stop-overdose)/.+\\.html$"
+   ],
+   "deep": [
+    "^/(overdose-prevention|cannabis|alcohol|stop-overdose)/[a-z0-9-]+/index\\.html$"
+   ]
+  },
+  {
+   "id": "samhsa",
+   "author": "Substance Abuse and Mental Health Services Administration",
+   "short": "the US agency SAMHSA",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://www.samhsa.gov",
+   "hubs": [
+    "https://www.samhsa.gov/substance-use/learn",
+    "https://www.samhsa.gov/substance-use"
+   ],
+   "include": [
+    "^/substance-use/.+"
+   ]
+  },
+  {
+   "id": "niaaa",
+   "author": "National Institute on Alcohol Abuse and Alcoholism",
+   "short": "the US National Institute on Alcohol Abuse and Alcoholism",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://www.niaaa.nih.gov",
+   "hubs": [
+    "https://www.niaaa.nih.gov/alcohols-effects-health",
+    "https://www.niaaa.nih.gov/publications/brochures-and-fact-sheets"
+   ],
+   "include": [
+    "^/(alcohols-effects-health|publications/brochures-and-fact-sheets)/.+"
+   ]
+  },
+  {
+   "id": "nccih",
+   "author": "National Center for Complementary and Integrative Health",
+   "short": "the US National Center for Complementary and Integrative Health",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://www.nccih.nih.gov",
+   "hubs": [
+    "https://www.nccih.nih.gov/health/atoz"
+   ],
+   "include": [
+    "^/health/[a-z0-9-]+$"
+   ]
+  },
+  {
+   "id": "medlineplus",
+   "api": "medlineplus",
+   "author": "National Library of Medicine",
+   "site": "MedlinePlus",
+   "short": "MedlinePlus (US National Library of Medicine)",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://medlineplus.gov"
+  },
+  {
+   "id": "fda",
+   "api": "openfda",
+   "author": "U.S. Food and Drug Administration",
+   "short": "the US label",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://api.fda.gov"
+  },
+  {
+   "id": "who",
+   "author": "World Health Organization",
+   "short": "the World Health Organization",
+   "country": "international",
+   "tier": 1,
+   "base": "https://www.who.int",
+   "hubs": [
+    "https://www.who.int/news-room/fact-sheets",
+    "https://www.who.int/health-topics/drugs-psychoactive",
+    "https://www.who.int/health-topics/alcohol",
+    "https://www.who.int/health-topics/tobacco"
+   ],
+   "include": [
+    "^/news-room/fact-sheets/detail/[a-z0-9-]+$",
+    "^/news-room/questions-and-answers/item/[a-z0-9-]+$",
+    "^/health-topics/(drugs-psychoactive|alcohol|tobacco)$"
+   ]
+  },
+  {
+   "id": "euda",
+   "author": "European Union Drugs Agency",
+   "short": "the European Union Drugs Agency",
+   "country": "European Union",
+   "tier": 1,
+   "base": "https://www.euda.europa.eu",
+   "hubs": [
+    "https://www.euda.europa.eu/publications/drug-profiles_en",
+    "https://www.euda.europa.eu/topics_en"
+   ],
+   "include": [
+    "^/publications/drug-profiles/[a-z0-9-]+_en$",
+    "^/topics/[a-z0-9-]+_en$",
+    "^/publications/(mini-guides|topic-overviews)/[a-z0-9-]+_en$"
+   ]
+  },
+  {
+   "id": "healthcanada",
+   "author": "Health Canada",
+   "site": "Government of Canada",
+   "short": "Health Canada",
+   "country": "Canada",
+   "tier": 1,
+   "base": "https://www.canada.ca",
+   "hubs": [
+    "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs.html",
+    "https://www.canada.ca/en/health-canada/services/substance-use.html",
+    "https://www.canada.ca/en/health-canada/services/opioids.html",
+    "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/health-effects.html",
+    "https://www.canada.ca/en/health-canada/services/substance-use/alcohol.html"
+   ],
+   "include": [
+    "^/en/health-canada/services/(substance-use|opioids|drugs-medication/cannabis|smoking-tobacco)(/.+)?\\.html$"
+   ],
+   "deep": [
+    "^/en/health-canada/services/(substance-use|opioids)/[a-z0-9-]+\\.html$"
+   ]
+  },
+  {
+   "id": "healthgovau",
+   "author": "Australian Government Department of Health, Disability and Ageing",
+   "short": "Australia's health department",
+   "country": "Australia",
+   "tier": 1,
+   "base": "https://www.health.gov.au",
+   "hubs": [
+    "https://www.health.gov.au/topics/drugs",
+    "https://www.health.gov.au/topics/alcohol",
+    "https://www.health.gov.au/topics/drugs/about-drugs/types-of-drugs"
+   ],
+   "include": [
+    "^/topics/(drugs|alcohol|smoking-vaping-and-tobacco)/.+"
+   ]
+  },
+  {
+   "id": "healthdirect",
+   "author": "Healthdirect Australia",
+   "short": "Healthdirect Australia",
+   "country": "Australia",
+   "tier": 1,
+   "base": "https://www.healthdirect.gov.au",
+   "hubs": [
+    "https://www.healthdirect.gov.au/drugs",
+    "https://www.healthdirect.gov.au/substance-abuse",
+    "https://www.healthdirect.gov.au/alcohol"
+   ],
+   "include": [
+    "^/[a-z0-9-]*(drug|alcohol|drinking|cannabis|marijuana|cocaine|heroin|ecstasy|mdma|ice|methamphetamine|amphetamine|opioid|opiate|ketamine|ghb|lsd|hallucinogen|psilocybin|mushroom|benzodiazepine|nicotine|smoking|vaping|vape|tobacco|caffeine|kava|inhalant|nitrous|steroid|overdose|addiction|withdrawal|substance|naloxone|methadone|fentanyl|codeine|kratom)[a-z0-9-]*$"
+   ]
+  },
+  {
+   "id": "yourroom",
+   "author": "NSW Health",
+   "site": "Your Room",
+   "short": "NSW Health (Australia)",
+   "country": "Australia",
+   "tier": 1,
+   "base": "https://yourroom.health.nsw.gov.au",
+   "hubs": [
+    "https://yourroom.health.nsw.gov.au/a-z-of-drugs/Pages/a-z-of-drugs.aspx"
+   ],
+   "include": [
+    "^/a-z-of-drugs/Pages/[A-Za-z0-9-]+\\.aspx$"
+   ]
+  },
+  {
+   "id": "betterhealth",
+   "author": "Department of Health, State Government of Victoria",
+   "site": "Better Health Channel",
+   "short": "Victoria's health department (Australia)",
+   "country": "Australia",
+   "tier": 1,
+   "base": "https://www.betterhealth.vic.gov.au",
+   "hubs": [
+    "https://www.betterhealth.vic.gov.au/conditionsandtreatments/drugs",
+    "https://www.betterhealth.vic.gov.au/conditionsandtreatments/alcohol"
+   ],
+   "include": [
+    "^/health/(healthyliving|conditionsandtreatments)/[A-Za-z0-9-]*(drug|alcohol|drinking|cannabis|marijuana|cocaine|heroin|ecstasy|mdma|ice|methamphetamine|amphetamine|opioid|opiate|ketamine|ghb|lsd|hallucinogen|psilocybin|mushroom|benzodiazepine|nicotine|smoking|vaping|vape|tobacco|caffeine|kava|inhalant|nitrous|steroid|overdose|addiction|withdrawal|substance|naloxone|methadone|fentanyl|codeine|kratom)[A-Za-z0-9-]*$"
+   ]
+  },
+  {
+   "id": "adf",
+   "author": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "country": "Australia",
+   "tier": 2,
+   "base": "https://adf.org.au",
+   "hubs": [
+    "https://adf.org.au/drug-facts/"
+   ],
+   "include": [
+    "^/drug-facts/[a-z0-9-]+/$"
+   ]
+  },
+  {
+   "id": "thelevel",
+   "author": "NZ Drug Foundation",
+   "site": "The Level",
+   "short": "the NZ Drug Foundation",
+   "country": "New Zealand",
+   "tier": 2,
+   "base": "https://thelevel.org.nz",
+   "hubs": [
+    "https://thelevel.org.nz/drug-information"
+   ],
+   "include": [
+    "^/drug-information/[a-z0-9-]+/?$"
+   ]
+  }
+ ]
+}

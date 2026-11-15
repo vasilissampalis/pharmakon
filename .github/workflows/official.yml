@@ -1,0 +1,52 @@
+# Official pages (docs/AUTOMATION.md; scripts/auto/official.py): what health services, health ministries and agencies and the
+# UN and EU bodies say. It finds out which of them this machine may read (their own robots.txt decides), keeps the addresses
+# and titles of their pages about drugs, and for the questions on our list names the pages that speak about each. It writes
+# no answer and publishes nothing. It needs no secret. It starts when the editor puts a request in data/auto/requests
+# (official-*.json: {"do": "probe" | "index" | "find", "ids": [...]}), or by hand. A request is a file in the repository; it
+# is read as data by Python and never reaches a command line.
+name: Official
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/official-*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: official
+  cancel-in-progress: false
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main   # the newest main, not the commit that started the run
+      - name: Python packages
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q numpy tokenizers onnxruntime
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+      - name: Read what the request asks for, with notes
+        run: |
+          set +e
+          L="$RUNNER_TEMP/official.log"; : > "$L"
+          python3 -I scripts/auto/official.py --selftest >> "$L" 2>&1 || echo "!! the selftest failed ($?)" >> "$L"
+          python3 -I scripts/auto/official.py --requests data/auto/requests --minutes 25 >> "$L" 2>&1 || echo "!! failed ($?)" >> "$L"
+          git rm -q --ignore-unmatch data/auto/requests/official-*.json >> "$L" 2>&1
+          mkdir -p data/auto/official
+          tail -n 80 "$L" | cut -c1-600 > data/auto/official/_last-run.txt
+      - name: Keep what was found
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/auto/official data/auto/requests
+          git diff --cached --quiet || git commit -q -m "Official: what the official bodies' sites allowed and what was found"
+          git push -q || (git pull -q --rebase && git push -q)

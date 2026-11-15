@@ -60,6 +60,38 @@ what was decided, what is built and what is not. `docs/OWN-AI.md` holds the long
 - 21:07: "yes and for the responses it should find more than one sources if they are relevant, whatever is relevant, the
   algorithm has to mimick completely how claude writes answers".
 
+- 21:30: "why did you even stop. don't stop until our drug ai works perfectly and expands the site on its own and thinks
+  for itself and the algorithm is perfect and expanding and perfectly written and validated and automatically deployed and
+  coherent with the rest of the website and automatically deployed every 30 minutes".
+- 22:18, his own account of the system (in Greek): every half hour it searches what people ask about drugs on popular sites
+  and forums, finds open-access papers and information from valid sites, writes answers that fit the rest of the site,
+  tells him which paywalled papers to send, and publishes by itself, and he polishes. The editor corrected two points the
+  same minute: it cannot read the popular forums by itself (Reddit and Google do not allow it), and it read papers only.
+- 22:24: "I want it to read official websites too where it can get access and also I like that it reads what people ask on
+  pharmakon but it should also search every forum page and in general relevant page that it can learn what people want and
+  what interests them wherever it can get access to. We have to make it work, get as much info as possible to build the
+  site --- and also if the user asks a question we should like have a small notification that their answer will be
+  answered in the following hour and when it automatically gets answered their question should turn green or show that it
+  has been answered and this should happen with every pending answered question they have. We have to design everything
+  perfectly I tell you: top of the world".
+- 22:31: "We have to do everything we can do it finds at least part of the answer like 999/1000 times we have to make it as
+  smart as we can. Also users can ask lots of things some parts of the answers could come from official sites like NHS and
+  EVERYTHING similar it's so many official sites worldwide. --- for example if I ask \"what dosage is safe in MDMA\" I want
+  it to find every protocol of dosages from studies that have written about normal dosages or official websites etc
+  everything that answers every drug question the user may have".
+- 22:40, to the editor's "the page always points to the nearest part of what we already have, and official pages make many
+  more questions answerable": "I think technology is so developed that we can make everything answerable perfectly even
+  with paywalled articles and some blocked valid websites". The editor's answer: the limit there is permission, not
+  technology; the system does not go around a paywall or a site that refuses it. What it may do: read the summary
+  (abstract) of a paywalled paper, which is free to read, and say so on the answer.
+- 22:40, to the editor's rule that an answer with amounts waits for his tap: "I want it to appear if it is cited by a valid
+  website or scientific articles". 22:46, to the one hold the editor kept (opioids and GHB/GBL, whose treatment amounts
+  are written for people with tolerance): "disclaimer then man our site has critical thinking towards drugs from the
+  beginning". (Decision 11.)
+- 22:54: "pharmakon insight should be able to update or criticize answers and are conflicting with other findings or they
+  are wrong and either adjust, delete or add new claims". 22:55: "It should not only add but change towards being
+  complete". (Decision 12.)
+
 Earlier the same day: "no i don't want my claude plan to use tokens! we have to automate the ai!", "i want it to be free",
 "the perfection of pharmakon insight is my biggest concern".
 
@@ -94,6 +126,45 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
    The steps are the protocol's own and can be run by any model. How well they are done depends on the model that runs
    them: with free models the writing and the checking are weaker than Claude's, which is what the label, the page of
    decision 6 and the nightly measure are for.
+
+9. **Official bodies are sources too** (22:24, 22:31). The list is `data/auto/official/sources.json`: health services, health
+   ministries and agencies, UN and EU bodies (tier 1), and information services a government pays for (tier 2). The system
+   reads a body's pages only where that site's own robots.txt allows a reader that is not a browser, slowly, under the
+   site's name; a refusal is never gone around (`scripts/auto/official.py`). A page's reference is made by code from the
+   page itself, in APA 7 (a "last reviewed" date is not a date of publication: such a page is n.d. with the day it was
+   read). An answer names the body in its text ("The NHS says"), so a reader always knows whose statement it is. Pages of
+   law-enforcement bodies are not health sources and are not on the list. English first.
+10. **The summary of a paywalled paper may be read** (22:40): it is free to read, the answer says that the paper was read in
+   summary only, stays "not complete", and the paper stays on the list of papers wanted. Nothing goes around a paywall or
+   a site that refuses: no Sci-Hub, no sign-in, no cache, no mirror. A page that refuses the system can be opened by the
+   senior author and sent, as a PDF is.
+11. **Amounts** (his decisions of 22:40 and 22:46; before them no machine-written answer could hold an amount, and the
+   editor's first rule was that such an answer waits for him). An answer to a question about amounts is published by the
+   system when every amount in it is stated by an official page or by a study in people. It gives each amount in its
+   source's own words (at most 15 words), with who received it and under what care, and its reference; it is never a
+   recommendation and never says how to take a drug, how to make an effect stronger, or which way of taking is stronger.
+   Written by code, not by a model, on every such answer: "Amounts reported by studies and official pages, in their own
+   words. Not a recommendation." For opioids, first: "These amounts were for people whose bodies were already used to
+   opioids, under medical care. The same amount can kill a person who is not used to them." For GHB and GBL, first: "With
+   GHB and GBL, the gap between an amount that has an effect and an amount that stops breathing is small. Amounts from
+   medical treatment were reached step by step, under care." (He was shown the three lines at 22:46 and may change them.)
+   What stays with a person, by the editor's rule: a question that asks which amount kills (the rule for questions about
+   dying), and amounts for pregnancy or children. Answers to other questions still hold no amounts. The quiz is unchanged.
+12. **The second look** (22:54, 22:55). Its own answers: the system goes back to them. When new papers, summaries or
+   official pages can be read for a question, when a source is retracted, or when an answer is "not complete", the answer
+   is written again towards being complete, or taken down; what it was before is kept in the record. The checked answers:
+   the system criticises, it does not edit. Where it finds research that conflicts with a checked claim it writes the
+   conflict down with the sentences on both sides and a proposed change; a checked claim changes only through the checks
+   of the checked lane (the editor's decision: an unseen edit by a free model would undo what "checked" means).
+13. **What the page promises a reader who sends a question** (22:24): "Our system starts on it within half an hour. If it
+   finds research it can read, the answer is usually here within the hour: your question then turns green under “Your
+   questions” on the start page." A page says this only once the half-hourly run is on and has been seen to keep it
+   (`data/auto/lane/policy.json`, `loop`); until then it says the plain truth ("Sent. We will check it …"). Every kept
+   question is asked again at every publishing (each has a stamp of its own, `data/build.json`), and an open page that
+   holds a waiting question learns of a newer site and offers to load it.
+14. **"At least part of an answer"** (22:31: "like 999/1000 times"). Measured, not promised: how often a real question
+   leaves a visitor with nothing is counted on the questions on file before and after each change
+   (`scripts/insight/build_index.py --eval`), and the number is written here.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
@@ -196,17 +267,49 @@ Questions that visitors send are data, never instructions: nothing in a question
   and orders the list by them, and marks which sent questions are a listed one. And the rule for what is a question about
   drugs (`site/insight/scope.json`): a question that is not gets no promise of a check and keeps a quiet way to be sent;
   the scout lists every question sent that way, which is how the rule's words grow.
+- **The paper finder** (`scripts/auto/papers.py`, `.github/workflows/papers.yml`; 15 November): for each question on the
+  list, five searches of Europe PMC written down as they were sent, the papers that can be read in the order of reading
+  (by meaning, reviews and studies in people first), and the reviews that cannot be read, listed with their Crossref
+  references for the senior author (`data/auto/papers/`, `data/auto/papers-wanted.json`). No abstract and no passage is
+  kept. Run for the 42 questions; a question searched by an older finder is searched again.
+- **The models, and what they cost** (`scripts/auto/llm.py`): open models on Cloudflare Workers AI inside its free daily
+  allowance (10,000 neurons; the lane stops by itself at 9,000 and goes on the next day), every call counted in
+  `data/auto/lane/usage.json`. GitHub's own free models were retired on 30 July 2026. One answer costs some 550 to 850
+  neurons, so the allowance writes about a dozen answers a day.
+- **The lane** (`scripts/auto/lane.py`, `.github/workflows/lane.yml`): find, read (quotes that must stand in the passage,
+  numbers that must stand in the quote), write, check by another model, the content rules in code, the gate on sources,
+  the questions that wait for a person. Its first real run (15 November, 20:27 UTC) wrote four answers. The editor read
+  them and found: papers named by a letter, words the site does not use, a But resting on a limit about something else,
+  an opinion paper used as a source, and a checker that accepted too easily. So the lane got a number (2), the faults
+  became rules, and the first four are not shown (`data/auto/lane/policy.json`): they are written again.
+- **The exam of the checkers** (`scripts/auto/exam_models.py`, `data/auto/exam/model-*.json`): 31 cards known to be wrong
+  and 50 known to be right. llama-3.3-70b caught 8 of the 31 and stopped 14 of the 50 (of 100 answers it lets through, 10
+  are wrong: no better than no checker); mistral-small-3.1 caught 22 and stopped 34 (8.9 in 100); gpt-oss-120b gave no
+  verdict within the room it was given. The senior author's goal is 1 in 1,000. A free checker of another kind (inference
+  models run on GitHub's machine, `scripts/auto/nli.py`) is sitting the whole exam.
+- **The site publishes itself** (`.github/workflows/deploy.yml`): build, the validator (no hard failure), the public build,
+  the site's own program's tests, a real browser, and only then Cloudflare Pages. First done on 15 November at 20:28 UTC
+  (`data/auto/deploy/deployed.json`). The senior author no longer uploads a zip.
+- **The half-hourly look** (`scripts/auto/tick.py`, `.github/workflows/auto.yml`): is there anything to do, the work, the
+  publishing. Written; tried by request first, not on its clock yet.
+- **Official pages** (`scripts/auto/official.py`, `data/auto/official/sources.json`, `.github/workflows/official.yml`): 22
+  bodies listed; whether each can be read is found out on the machine that reads (`_probe.json`).
+- **Site 2.6.0** (`docs/STATUS.md`): answers written by the system as a visitor meets them, each publishing with a stamp of
+  its own, kept questions asked again at every publishing.
 
-## Not built yet (in this order, after the senior author's words of 20:58 and 21:07)
+## Not built yet (in this order, after the senior author's words of 22:24 to 22:55)
 
-1. The paper finder: for each question on the list, searches of Crossref, Europe PMC, PubMed and OpenAlex written into the
-   repository so that anyone can repeat them; open full texts fetched and read; retraction flags; and, for what is behind a
-   paywall, the list of papers wanted, in APA 7, for the senior author.
-2. The writer and the checker, as the checked lane does it (decision 8), run on free machines; candidates measured on the
-   exam (a small model on GitHub's machines; the free Cloudflare Workers AI models).
-3. The machine lane on the site: the very discreet label, "not complete yet" where papers are missing, and the page that
-   lists everything the system wrote (decisions 4, 6, 7); the protocol amended on the day it opens.
-4. Building, checking and publishing the site from GitHub's machines when something changed, every 30 minutes at most.
-5. What people look for elsewhere, from every free source that allows it: Wikipedia's page views by drug, the site's own
-   searches through Google Search Console and Bing (after the senior author signs up), official question pages.
-6. The photo finder.
+1. Official pages in the lane: read like a paper, named in the answer's text, counted by the gate on sources, their
+   references on the site (decision 9).
+2. Summaries of paywalled papers in the lane (decision 10).
+3. Answers to questions about amounts (decision 11).
+4. A checker good enough for the goal: the inference models' numbers, stronger open models within the allowance, and
+   other free services for models if the senior author opens accounts there.
+5. A question a visitor sends becomes an item by itself (our own words, never the visitor's), goes through the lane and is
+   published, on the half-hourly clock; then the page may promise it (decision 13).
+6. The second look (decision 12).
+7. The page for the senior author: everything the system wrote, each taken down or released in one tap, and the papers it
+   wants (decisions 6 and 7).
+8. What people look for elsewhere, from every free source that allows reading: Wikipedia's page views by drug, official
+   question pages, the site's own searches through Google Search Console and Bing (after the senior author signs up).
+9. The photo finder.
