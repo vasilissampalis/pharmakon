@@ -7,9 +7,16 @@ free". Nothing is scheduled on his Claude plan.
 
 ## What is ours already
 
-- **Insight on the site**: all-MiniLM-L6-v2 (Apache-2.0) fine-tuned on this site's own questions (the wordings of every
-  answer and the near-miss questions written for it), 23 MB, run on the reader's own device (`scripts/insight/`). It finds
-  checked answers and writes nothing. Measured on 400 real forum questions that it never trained on.
+- **Insight on the site** (from site 2.3.0): `pharmakon-insight-1`, the open model all-MiniLM-L6-v2 (Apache-2.0) trained
+  further on this site's own questions (the wordings of every answer and the near-miss questions written for it) and
+  averaged half and half with the original; 23 MB, run on the reader's own device (`scripts/insight/`, how it was made
+  and measured: `scripts/insight/MODELS.md`). It finds checked answers and writes nothing. Measured on 400 real forum
+  questions that it never trained on: with its judge, a wrong "Best match" for 1 question in 36 (2.2.0's way: 20 in 77),
+  and none for the 126 questions the site cannot answer. The judge does most of that; the model itself is ahead of the open
+  one on those questions by 2 to 6 points (too few questions to prove it) and clearly better on our own held-out wordings
+  (85.5% find their answer, against 77.4%). Training took about twenty minutes on two processor cores
+  and no graphics card; it is repeated at each release with the new answers' wordings (`finetune.py`, `export_mix.py`,
+  `judge2.py`, `sweep_related.py`), so Insight learns every answer the site gains.
 
 ## What has to be built for the rest (reading, writing, checking)
 
@@ -36,6 +43,23 @@ be an open-weights model, trained on our own checked work and run on free graphi
 Finding what is missing (`scripts/editor/gaps.py`), ranking what people ask, retraining Insight
 (`scripts/insight/finetune.py`), building, checking and deploying can run on GitHub's free build machines. Deploying
 needs the senior author to store a Cloudflare key in GitHub once.
+
+## The next three steps (proposed on 15 November 2026; they wait for the senior author's yes)
+
+What limits the site now is how many answers exist, not how they are found: of 400 real forum questions it answers 79
+in full, 195 in part and 126 not at all.
+
+1. **Hear what visitors miss.** Where Insight has no answer, a button "Send this question to Pharmakon" (the question
+   only, no name, no address, nothing else; kept in a free Cloudflare store). This changes the promise "Nothing you
+   type leaves it" for a question a person chooses to send, so it needs the senior author's decision and one honest
+   line beside the button.
+2. **A nightly scout on GitHub's free machines** (no Claude plan, no paid service): ranks the questions people sent and
+   the forum questions on file, runs `gaps.py`, searches Crossref, PubMed and OpenAlex for the papers that could answer
+   the top ones, writes the senior author's to-do list with full APA 7 references from Crossref, retrains Insight when
+   answers were added, builds, checks and deploys. It writes no answer.
+3. **Writing and double-checking** stay with the present readers, inside the hours of the senior author's plan, until
+   our own checker (steps 1 to 4 above) passes its test. Its training set exists already in the repository's records:
+   4,778 checked passages and the second readers' corrections.
 
 ## What stays true whatever runs
 

@@ -1,0 +1,19 @@
+373 answers (356 in the gold catalogue); variants for 347; near-miss for 362 answers
+PyTorch copy against the ONNX file, cosine: [1. 1. 1.]
+3088 wordings as anchors (2618 for training); near-miss questions for 362 answers (1810); held-out answers 55
+before: held-out wordings find their answer 77.4%, wording vs near-miss AUC 0.806
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+epoch 1: loss 1.216 | held out: finds answer 83.6%, AUC 0.882 | 145s
+epoch 2: loss 0.749 | held out: finds answer 84.3%, AUC 0.916 | 301s
+epoch 3: loss 0.590 | held out: finds answer 85.1%, AUC 0.923 | 451s
+epoch 4: loss 0.494 | held out: finds answer 85.1%, AUC 0.926 | 626s
+epoch 5: loss 0.465 | held out: finds answer 85.5%, AUC 0.930 | 768s
+epoch 6: loss 0.426 | held out: finds answer 85.3%, AUC 0.931 | 930s
+kept epoch 5
+WARNING:root:Please consider to run pre-processing before quantization. Refer to example: https://github.com/microsoft/onnxruntime-inference-examples/blob/main/quantization/image_classification/cpu/ReadMe.md 
+insight-fp32.onnx 90409699 bytes, SHA-256 88052a4f52b6f02f1991f45dff556893c3eeffff3161f176f493219d4684082d
+insight-q8.onnx 22911759 bytes, SHA-256 4ad35f0925d0dc47ea3c5b58bdd3b560d3337d647de5c2e41fa7f76e21a68205
+373 answers (356 in the gold catalogue); variants for 347; near-miss for 362 answers
+ft-b-q8                                      [dev] strict top1  67.4 top3  86.0 (n=43) | lenient top1  52.6 top3  74.5 (n=137) | AUC full 0.793 any 0.738
+ft-b-q8                                      [test] strict top1  52.8 top3  83.3 (n=36) | lenient top1  46.7 top3  72.3 (n=137) | AUC full 0.808 any 0.783
+ft-b-q8                                      [all] strict top1  60.8 top3  84.8 (n=79) | lenient top1  49.6 top3  73.4 (n=274) | AUC full 0.799 any 0.760

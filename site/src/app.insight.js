@@ -2,8 +2,10 @@
    15 November: "as smart as possible", "it has a high error rate", "it should be everywhere"). The search box understands a
    question asked in a reader's own words, on the reader's own phone: nothing typed leaves it. It never writes text: it only
    finds answers the editors have checked.
-   How: a small open model turns the question into numbers with ONNX Runtime Web (MIT), both published with the site (the
-   model's file is named in site/insight/model.json; where the files came from: scripts/insight/MODELS.md), and those numbers
+   How: a small model turns the question into numbers with ONNX Runtime Web (MIT), both published with the site. Since 2.3
+   the model is Pharmakon's own: the open model all-MiniLM-L6-v2 (Apache-2.0) trained further on this site's own examples
+   only (the ways people ask each checked answer), as insight/NOTICE-pharmakon-insight-1.txt states (the model's file is
+   named in site/insight/model.json; how it was made and measured: scripts/insight/MODELS.md), and those numbers
    are compared with every wording of every question on the site and its short answer, made into numbers with the same model
    when the site is built (data/insight.json, scripts/insight/build_index.py). The files (about 40 MB, kept by the browser's
    cache for the next visit) are fetched only when someone puts the cursor in the search box or types in it, never with the

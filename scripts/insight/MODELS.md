@@ -157,3 +157,140 @@ that shares neither a drug nor a page with it. They travel in the page (`INS_NEX
 **Size and speed.** `data/insight.json` 3.6 MB; with the model and the runtime about 42 MB, fetched once when the search
 box is first used. A question takes two passes of the model (with and without the drug names) and one ranking: median
 32 to 40 ms, slowest about 150 ms, in the checks' browser.
+
+## Our own model: pharmakon-insight-1 (site 2.3.0, 15 November 2026)
+
+The senior author: "our own ai"; "we have to automate the ai"; "i want it to be free". From 2.3.0 the encoder on the site
+is Pharmakon's own: all-MiniLM-L6-v2 taught this site's questions with this site's own examples, then averaged half and
+half with the original so that it keeps what the original knew about ordinary language. It has the same vocabulary,
+inputs, output, size and speed, so the page's code did not change: `site/insight/model.json` names the file, and holds
+the judge's numbers and the tiers made for it. It still writes nothing: it only finds checked answers.
+
+| File | Bytes | SHA-256 | What it is |
+|---|---|---|---|
+| pharmakon-insight-1-q8.onnx | 22,911,759 | 4f5059c16139f1d93e5b78df2a4ee7c5728452e46d93d663cca31e23d1c2c2f5 | the model on the site (`site/insight/vendor/`, published as `insight/`); int8 |
+| NOTICE-pharmakon-insight-1.txt | 1,137 | (text) | what was changed and by whom, as Apache-2.0 (section 4b) asks; published beside the model with `NOTICE-all-MiniLM-L6-v2.txt` and `LICENSE-Apache-2.0.txt` |
+| model.onnx (the float original it was trained from; not in the repository, 90 MB) | 90,387,606 | 759c3cd2b7fe7e93933ad23c4c9181b7396442a2ed746ec7c1d46192c469c46e | npm @maycombhq/embed-model 2.0.0-beta.1, whose `pins.json` names huggingface.co/Xenova/all-MiniLM-L6-v2 (commit 751bff37), `onnx/model.onnx`, with this hash |
+
+The float original: only its weights are read, as numbers; none of the package's code is run. Its hash has not yet been
+read from Hugging Face by us (the workspace cannot reach it; to do through the browser, as for the files above). Until
+then, what is checked is that it computes what the verified official int8 file computes: on 200 site questions the two
+give vectors with a cosine of 0.993 (median; lowest 0.987), the difference int8 rounding makes. `all-MiniLM-L6-v2-q8.onnx`
+stays in `site/insight/vendor/` for comparison and as the way back (change `file` in `model.json`, put the base model's
+judge numbers back from `model.json` as it was at commit 2dd1c04, build); it is no longer published.
+
+**Training** (`finetune.py`; PyTorch on two processor cores, no graphics card, about 20 minutes). Examples, all ours:
+each answer's ways of being asked (its questions on the site, the six of phrasings writer 696, the hurried ones of the
+near-miss readers 707, 708 and 725): 3,186 wordings; and 1,810 near-miss questions for 362 answers (questions that sound
+close to an answer and are not answered by it). A wording is pulled towards another wording of the same answer and pushed
+away from the other answers' wordings in its batch and from its own answer's near-miss questions (multiple-negatives
+ranking loss on cosine x 20; batches of 32; learning rate 2e-5; at most 48 tokens; seed 7). No forum question and no gold
+label is used, so the gold set stays a fair test.
+- Step 1, how long to train: with the examples of 15% of the answers held out (55 answers, chosen by a hash of their id),
+  a held-out wording found its own answer among all answers 77.4% of the time before training and 85.1%, 85.5% and 85.3%
+  after 3, 5 and 6 passes; held-out wording against held-out near-miss, area under the curve 0.806 before, 0.930 after 5.
+  The curve is flat from the third pass.
+- Step 2, the model: every answer's examples, 6 passes (`--all --epochs 6`).
+- Step 3, mixing (`export_mix.py … 0.5`): every weight is half the trained one and half the original; then ONNX (opset
+  14) and int8 (onnxruntime's dynamic quantization, QUInt8).
+
+**Why half and half.** The model trained on our examples alone (step 1's, from 85% of the answers) found full answers
+more often than the open model and partial ones less often: it had learned our wordings so well that it grew stricter
+about everything near them. Averaging its weights with the original's keeps most of what it learned and gives back what
+it lost. In the Python harness (`judge.py`, `compare.py`: 2.2.0's scoring and no judge; 400 gold questions, 79 with a
+full answer, 274 with a full or partial one; int8 files):
+
+| Encoder | Full answer first (n = 79) | within the first 3 | Full or partial first (n = 274) | within the first 3 |
+|---|---|---|---|---|
+| open model | 55.7% | 79.7% | 53.3% | 70.1% |
+| trained alone (85% of the answers) | 60.8% (+5.1; -5.1 to +15.2) | 84.8% (+5.1; -1.3 to +11.4) | 49.6% (-3.6; -8.8 to +1.5) | 73.4% (+3.3; -1.5 to +8.0) |
+| that one, half and half | 63.3% (+7.6; +1.3 to +15.2) | 79.7% (0.0; -3.8 to +3.8) | 57.7% (+4.4; +0.7 to +8.0) | 73.0% (+2.9; -0.4 to +6.2) |
+| **pharmakon-insight-1** (trained on all, half and half) | 62.0% (+6.3; -1.3 to +15.2) | 82.3% (+2.5; -2.5 to +7.6) | 56.2% (+2.9; -0.4 to +6.6) | 72.3% (+2.2; -1.1 to +5.5) |
+
+In brackets: the difference from the open model in points, question by question, and its 95% interval from 4,000
+resamples of the questions (`compare.py`; the logs of this section are in `data/verification/insight/own-model-2026-11-15/`).
+Read plainly: our model is ahead of the open one on every count, by 2 to 6 points, and for the model on the site no
+interval excludes zero. With 79 and 274 questions a gain of this size cannot be proved. What is proved is on our own
+examples (held-out wordings find their answer 85.5% of the time against 77.4%), and what the release gains on forum
+questions comes mostly from the judge (table below). The model is published because it is ours, costs nothing, learns
+every answer the site gains, and is not worse than the one it replaces on any count that matters here.
+
+On the page's own rule a quarter and a half of the trained weights did the same (35 best matches each at 0.6: 23 full,
+11 partial, 1 wrong; and 22, 12, 1); a half was kept because it tells a wording from a near-miss better on our own
+examples (area under the curve 0.856 against 0.818; open model 0.783; trained alone 0.910).
+
+**On the page's own rule** (`build_index.py --eval`; the judge made for each model by `judge2.py --six --save`; a best
+match from 0.6; the same 400 gold questions):
+
+| | Best matches | Full answer | Partial | Wrong | Unanswerable given one | Near-miss given the answer it does not get |
+|---|---|---|---|---|---|---|
+| 2.2.0's kind of rule (two thresholds), open model | 77 | 26 | 31 | 20 (26%) | 2 of 126 | 20.9% |
+| the judge, open model | 28 | 21 | 6 | 1 (4%) | 0 of 126 | 9.7% of 1,585 |
+| **the judge, pharmakon-insight-1 (site 2.3.0)** | **36** | **24** | **11** | **1 (3%)** | **0 of 126** | **8.3% of 1,810** |
+| the same, dev half (odd-numbered) | 20 | 14 | 6 | 0 | 0 of 63 | |
+| the same, test half (even-numbered) | 16 | 10 | 5 | 1 | 0 of 63 | |
+
+Candidates in the page's order: a full answer comes first for 63.3% of the 79 questions that have one (open model
+58.2%) and within the first three for 74.7% (open model 77.2%; the difference is two questions). The judge for this
+model was trained on 14,558 pairs (3,187 wordings against their own answer with that wording left out of the index,
+1,810 near-miss questions, 9,561 wordings against the other answers that rank highest for them). Weights on standardized
+numbers: lead over the next answer 1.58, best wording 0.92, second wording 0.80, word overlap 0.05, short answer 0.00,
+topic -0.04; bias -2.68. Its area under the curve on our own examples (0.876; first look alone 0.869) is not a fair
+figure for this model, because the encoder was trained on those same examples; the gold set is the fair one. The same
+holds for the near-miss column above.
+
+**Where Related begins for this model** (`sweep_related.py`). The open model's thresholds (first look 0.58, topic 0.45)
+are too strict for a model whose scores spread wider: with them the full answer was seen for only 42 of the 79
+questions that have one, and "how can you die from alcohol" showed nothing under Related. Per question, what Insight
+shows (the best match and the related rows) was counted as help (a full or partial answer is among them), junk (rows,
+none an answer), miss (nothing, although the site has a full or partial answer) or rightly empty:
+
+| First look, topic | Help | Junk | Miss | Rightly empty | Full answer seen | Related rows | of them answers | Unanswerable with rows |
+|---|---|---|---|---|---|---|---|---|
+| 0.58, 0.45 (the open model's) | 95 | 34 | 155 | 116 | 42 of 79 | 142 | 53% | 10 of 126 |
+| 0.50, 0.38 | 147 | 88 | 73 | 92 | 52 of 79 | 401 | 37% | 34 of 126 |
+| 0.48, 0.45 | 142 | 71 | 90 | 97 | 54 of 79 | 338 | 43% | 29 of 126 |
+| 0.48, 0.40 | 154 | 79 | 74 | 93 | 55 of 79 | 416 | 39% | 33 of 126 |
+| **0.48, 0.38 (model.json)** | **160** | **90** | **61** | **89** | **55 of 79** | **465** | **37%** | **37 of 126** |
+| the same, dev half | 78 | 46 | 30 | 46 | 32 of 43 | 215 | 34% | 17 of 63 |
+| the same, test half | 82 | 44 | 31 | 43 | 23 of 36 | 250 | 39% | 20 of 63 |
+| 0.46, 0.38 | 167 | 98 | 55 | 80 | 55 of 79 | 529 | 35% | 46 of 126 |
+
+No setting stands out: help and junk rise together, and the dev and test halves agree on that. Four ways of deciding
+(the two thresholds; first look + 0.5 x topic; both; a free sum) gave the same within two or three questions at equal
+numbers of rows, so the rule stayed as it was. The setting was taken by two plain reasons, and is the editor's
+judgement, not a measured optimum: (1) the first look at 0.48, because the step from 0.50 adds 13 helpful sets of rows
+and 2 unhelpful ones, and the next step, to 0.46, adds 7 and 8; (2) the topic at 0.38, one step past where the same
+count turns (0.40 to 0.38 adds 6 and 11), because the nearest answers for the senior author's two test questions have
+topic scores of 0.41 ("How many deaths does alcohol cause worldwide?") and 0.40 ("How many UK deaths were linked to
+ketamine, and what were they?"), and a reader who asks how one can die from a drug is better served by that answer under
+Related, below "We haven't checked exactly this yet", than by nothing. For comparison, the open model with its own
+thresholds showed the full answer for 53 of 79 with 400 related rows, 38% of them answers, and rows for 28 of the 126
+unanswerable questions. A "junk" set of rows is still about the drug that was asked about and is labelled Related; read
+some with `sweep_related.py IN INDEX --show 0.48 0.38`.
+
+**The questions the senior author asked** (the judge's number; a best match from 0.6): "how can you die from alcohol"
+0.11 and "give me the full evidence about how can i die from ketamine" 0.42: no best match, the line "We haven't
+checked exactly this yet" with "Ask us to check it", and the nearest answer under Related. "is ketamine bad for your
+bladder" 0.96, "does alcohol cause cancer" 0.96, "is weed addictive" 0.93, "what happens if i mix alcohol and cocaine"
+0.74, "does molly mess up your memory" 0.70: each a best match. "does ecstasy damage your brain permanently" 0.58: its
+answer is first under Related. Known weakness: where the site has no near answer, the rows under Related can be
+only loosely related ("can you overdose on lsd" shows the answers on LSD with MDMA and on chromosomes, and not the one
+on emergency treatment after LSD): the model tells "answers this" from "does not" far better than it ranks what is
+merely near. They are still better rows than the word search shows under them. To do: a second small judge for
+Related, trained on the near-miss questions as examples of "near, not the answer".
+
+**What limits Insight now is the number of answers, not the search.** Of the 400 forum questions the site answers 79 in
+full, 195 in part and 126 not at all. Every new answer needs its wordings and near-miss questions (briefs
+`data/verification/insight/BRIEF-phrasings-*.md`), and then:
+
+**At each release that adds answers** (free; about half an hour of two processor cores): `node site/build.js` (makes
+`site/insight/.cache/index-input.json`); `python3 scripts/insight/finetune.py MODELS_DIR --out DIR --all --epochs 6`;
+`python3 scripts/insight/export_mix.py MODELS_DIR DIR/best.pt 0.5 site/insight/vendor/pharmakon-insight-N-q8.onnx`
+(MODELS_DIR holds the two npm packages unpacked: `_maycombhq_embed-model/package/model.onnx`, the float original, and
+`_clay-design-system_embeddings/package/model/vocab.txt`); name the file in `model.json`, write its NOTICE with its SHA-256;
+build; `python3 -I scripts/insight/judge2.py site/insight/.cache/index-input.json site/dist/data/insight.json --six
+--save FILE` and copy its numbers into `model.json`; `python3 -I scripts/insight/sweep_related.py
+site/insight/.cache/index-input.json site/dist/data/insight.json` and check the tiers still sit where the counts turn;
+build; `build_index.py --eval`, `node scripts/insight/parity.js`, `node scripts/ux/insight_check.js`. A new model is
+published only if its best match on the gold set is wrong no more often than the one it replaces.
