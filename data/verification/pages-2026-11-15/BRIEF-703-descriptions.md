@@ -30,7 +30,11 @@ Output `data/verification/pages-2026-11-15/descriptions_703.json`:
 "gaps": "..."}}}`. Save after every drug; commit and push after every 10 drugs. Final message under 150 words: drugs
 done, publishers used, gaps.
 
-## Reader 704
+## Reader 704 (and readers 715 and 716: the 30 drugs are shared between three second readers, ten each)
+
+Your drugs and your output file's name are in your instructions; the shape of the file is the one below, with your own
+reader name. An anchor whose page cannot be opened (an approval that is not answered, an error) gets the verdict
+`not-checked` with the reason in `note`: do not retry it and do not look for the passage elsewhere.
 
 Check every anchor and line of `descriptions_703.json` as `BRIEF-common.md` says, and also:
 - is each line an identity line (no risk, warning, amount or how-to)?

@@ -43,10 +43,13 @@ if "for-you" in what:
         print(f"for you / {fam}: {len(lines)} installed" + (f"; not installed: {dropped}" if dropped else ""))
     save(ROOT / "data/site/stay-safer.json", S); print("for-you lines installed:", n)
 if "descriptions" in what:
-    a = J(P / "descriptions_703.json")["drugs"]; c = J(P / "descriptions_check_704.json")["drugs"]
-    out = {"_note": "What each drug is, in two to four plain lines, for the top of its page (senior author, 15 November 2026: 'a description for each drug that makes you understand what it is and its sources are validated'). Identity lines only (no risks, amounts or how-to), in our own words from official pages; written by AI reader 703, every anchor and line checked at its source by AI reader 704 (second reader); data/verification/pages-2026-11-15.", "read_on": "2026-11-15", "drugs": {}}
+    a = J(P / "descriptions_703.json")["drugs"]; c, who_of = {}, {}
+    for f in sorted(P.glob("descriptions_check_*.json")):      # second readers 704, 715 and 716, ten drugs each
+        x = J(f)
+        for slug, checks in x["drugs"].items(): c[slug] = checks; who_of[slug] = x["reader"]
+    out = {"_note": "What each drug is, in two to four plain lines, for the top of its page (senior author, 15 November 2026: 'a description for each drug that makes you understand what it is and its sources are validated'). Identity lines only (no risks, amounts or how-to), in our own words from official pages; written by AI reader 703, every anchor and line checked at its source by a second reader (AI readers 704, 715 and 716, ten drugs each); data/verification/pages-2026-11-15.", "read_on": "2026-11-15", "drugs": {}}
     for slug, v in a.items():
-        lines, dropped = take(v.get("lines") or [], c.get(slug), "AI reader 704 (second reader)")
+        lines, dropped = take(v.get("lines") or [], c.get(slug), who_of.get(slug, "second reader"))
         if lines: out["drugs"][slug] = {"lines": lines}
         print(f"description / {slug}: {len(lines)} lines" + (f"; not installed: {dropped}" if dropped else ""))
     save(ROOT / "data/site/descriptions.json", out); print("drugs with a description:", len(out["drugs"]))
