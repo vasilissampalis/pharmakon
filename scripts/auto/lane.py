@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""lane.py: the machine lane. Answers written by the system from papers it found and read (docs/AUTOMATION.md).
+"""lane.py: the machine lane. Answers written by the system from papers and official pages it found and read (docs/AUTOMATION.md).
 
 The senior author, 15 November 2026. 17:33: "it should be claims... written as good as possible as close to 100% correct
 as possible and ... in the language and format we write the rest of the website". 20:58: "it should be published and
@@ -16,6 +16,10 @@ The same steps as the checked lane, each done by a model that did not do the one
 is code (no model's opinion can open a gate the code has shut):
 
   1 find     scripts/auto/papers.py: the searches, the papers in the order of reading, the papers that cannot be read.
+             scripts/auto/official.py: the pages of official bodies that speak about the question (lane 3).
+             What is read: up to three papers whose full text is open; up to two official pages; and, where that is not
+             yet enough, the summaries (abstracts) of up to two reviews behind a paywall (free to read; the answer then
+             says so and stays "not complete").
   2 read     a READER model reads one paper at a time: the passages nearest the question (a paragraph each). It may only
              copy: every finding comes with the passage's number and a part of it copied word for word.
              GATE the quote is found in that passage of the paper, letter for letter (spaces and dash shapes aside);
@@ -31,11 +35,23 @@ is code (no model's opinion can open a gate the code has shut):
   5 rules    GATE the site's content rules, by code: no amounts, doses, re-dosing, ways of taking compared for strength,
              no making an effect stronger, no advice, person-first words, no quotation marks, lengths, and every number
              in the answer is in the quotes it rests on.
-  6 sources  GATE at least one review or meta-analysis, or two studies in people, each with a Crossref record made by
-             scripts/build_references.py; a retracted paper, or one under an expression of concern, is never used.
+  6 sources  GATE at least one review or meta-analysis read in full, or one page of an official body (tier 1), or two
+             of: a study in people, a review read in summary only, a page of a government-paid service (tier 2). Papers
+             carry a Crossref record made by scripts/build_references.py, pages a reference made from the page itself;
+             a retracted paper, or one under an expression of concern, is never used.
   7 stakes   A question about dying, overdose, an emergency, mixing two drugs, pregnancy, children or suicide is written
              and then WAITS FOR A PERSON: it is not published by the system (the editor's rule; emergency guidance is the
              senior author's own domain). Everything else that passed is published with the label.
+
+A question about AMOUNTS (the senior author's decisions of 15 November 2026, 22:40 and 22:46; decision 11) goes another way,
+with no writer: the reader copies each amount stated for people, with who received it and under what care; code keeps
+only quotes that stand in the source, hold a number with its unit, name no animal and no amount that harmed or killed;
+the checker reads each row beside its passage; code cuts each quote to 15 words at most and puts the fixed lines of
+data/auto/lane/lines.json on the answer. Amounts come only from an official body of tier 1, a medicine's label, or a study
+in people. Answers to other questions hold no amounts.
+
+The second look (decision 12): an answer that is not complete, or was written by an older lane, or whose sources have
+grown since, is written again; what it was before is kept in its "history".
 
 What it writes: data/auto/answers/<id>.json (the answer; every sentence with the passages it rests on, kept short, for the
 person who checks; the papers; the models; what each gate said; "published", "waiting" or "none", and why), the papers it
@@ -47,15 +63,19 @@ import sys, os, re, json, hashlib, pathlib, datetime, unicodedata
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent)); sys.path.insert(0, str(ROOT / "scripts" / "insight"))
-import papers as P, llm
+import papers as P, llm, official as O
 
 OUT = ROOT / "data" / "auto" / "answers"
 STATE = ROOT / "data" / "auto" / "lane" / "state.json"
 MODELS_FILE = ROOT / "data" / "auto" / "lane" / "models.json"
 WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/qwen/qwen3-30b-a3b-fp8", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/google/gemma-4-26b-a4b-it"}
-LANE = 2                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
-N_PAPERS = 3            # papers read for one answer
+LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
+FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
+LANE = 3                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+N_PAPERS = 3            # papers read in full for one answer
+N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
+N_SUMMARIES = 2         # reviews behind a paywall read in summary, where the rest is not enough
 N_PASSAGES = 9          # passages of a paper shown to the reader
 PASSAGE_CHARS = 1400    # a passage is shown up to this length
 TODAY = datetime.date.today().isoformat()
@@ -110,21 +130,30 @@ def pick_passages(question, ways, passages, enc, kind, k=N_PASSAGES):
     return ab + body
 
 
-READER_SYS = ("You read one research paper for Pharmakon, a drug encyclopedia for the public. You only copy what the paper itself says. "
+READER_SYS = ("You read one source for Pharmakon, a drug encyclopedia for the public: a research paper, or a page of an official health body. You only copy what the source itself says. "
               "You never add anything you know from elsewhere, and you never guess. You answer with JSON only.")
 
 
-def reader_prompt(question, paper, picked):
-    ps = "\n".join(f"[{p['n']}] ({p['where']}) {p['text'][:PASSAGE_CHARS]}" for p in picked)
-    return (f"QUESTION that people ask: {question}\n\nPAPER: {paper['title']} ({paper.get('year') or 'n.d.'}), {paper.get('journal') or ''}.\n\n"
-            f"PASSAGES of this paper (each is one paragraph, with its number and where it stands):\n{ps}\n\n"
+def source_head(src):
+    """How a source is named to a model: what it is, never more."""
+    if src["read"] == "page": return f'OFFICIAL PAGE: "{src["title"]}", a page of {src["name"]} for the public' + (f' ({src["year"]})' if src.get("year") else "") + "."
+    return f"PAPER{' (only its summary could be read)' if src['read'] == 'summary' else ''}: {src['title']} ({src.get('year') or 'n.d.'}), {src.get('journal') or ''}."
+
+
+def shown(picked): return "\n".join(f"[{p['n']}] ({p['where']}) {p['text'][:PASSAGE_CHARS]}" for p in picked)
+
+
+def reader_prompt(question, src, picked):
+    page = src["read"] == "page"; what = "page" if page else "paper"
+    return (f"QUESTION that people ask: {question}\n\n{source_head(src)}\n\n"
+            f"PASSAGES of this {what} (each is one paragraph, with its number and where it stands):\n{shown(picked)}\n\n"
             "TASK. From these passages only:\n"
-            '1. "design": what kind of paper this is and who or what was studied, in one short phrase, with "quote": a part of ONE passage copied exactly, word for word (6 to 40 words), that shows it, and "passage": that passage\'s number.\n'
-            '2. "findings": up to 5 things this paper found or concluded that help answer the question. For each: "passage" (its number), "quote" (a part of that passage copied exactly, word for word, 8 to 40 words, that states it), '
+            + ("" if page else '1. "design": what kind of paper this is and who or what was studied, in one short phrase, with "quote": a part of ONE passage copied exactly, word for word (6 to 40 words), that shows it, and "passage": that passage\'s number.\n')
+            + f'2. "findings": up to 5 things this {what} {"says" if page else "found or concluded"} that help answer the question. For each: "passage" (its number), "quote" (a part of that passage copied exactly, word for word, 8 to 40 words, that states it), '
             '"finding" (the same thing in one plain sentence: no new facts, every number exactly as in the quote, and say "in rats", "in a laboratory" or "in one survey" when the quote does).\n'
-            '3. "limits": up to 2 limits or uncertainties that the passages themselves state, each with "passage", "quote" (copied exactly) and "limit" (one plain sentence).\n'
+            f'3. "limits": up to 2 limits or uncertainties that the passages themselves state, each with "passage", "quote" (copied exactly) and "limit" (one plain sentence).\n'
             'Copy quotes exactly: do not correct, shorten in the middle or join two places. If nothing in the passages helps answer the question, return {"findings": []}.\n'
-            'JSON only, in this form: {"design": {"text": "...", "quote": "...", "passage": 3}, "findings": [{"passage": 7, "quote": "...", "finding": "..."}], "limits": [{"passage": 9, "quote": "...", "limit": "..."}]}')
+            'JSON only, in this form: {' + ("" if page else '"design": {"text": "...", "quote": "...", "passage": 3}, ') + '"findings": [{"passage": 7, "quote": "...", "finding": "..."}], "limits": [{"passage": 9, "quote": "...", "limit": "..."}]}')
 
 
 def read_gate(out, picked):
@@ -150,12 +179,89 @@ def read_gate(out, picked):
     return design, fs, ls, dropped
 
 
-def read_paper(chat, model, question, paper, picked):
+def ask_json(chat, model, system, prompt, room):
     for attempt in range(2):
-        raw = chat(model, [{"role": "system", "content": READER_SYS}, {"role": "user", "content": reader_prompt(question, paper, picked) + ("" if not attempt else "\n\nYour last answer was not valid JSON. Answer with the JSON object only.")}], 900)
-        out = llm.as_json(raw)
-        if out is not None: return read_gate(out, picked)
-    return None, [], [], 0
+        out = llm.as_json(chat(model, [{"role": "system", "content": system}, {"role": "user", "content": prompt + ("" if not attempt else "\n\nYour last answer was not valid JSON. Answer with the JSON object only.")}], room))
+        if out is not None: return out
+    return None
+
+
+def read_source(chat, model, question, src, picked):
+    out = ask_json(chat, model, READER_SYS, reader_prompt(question, src, picked), 900)
+    return read_gate(out, picked) if out is not None else (None, [], [], 0)
+
+
+# ---------- 2b read, for a question about amounts (decision 11) ----------
+AMOUNT_Q = re.compile(r"\b(?:dos(?:e|es|age|ages|ing)|milligrams?|micrograms?|mg|mcg|standard drinks?|units? of alcohol"
+                      r"|how (?:much|many)\b[^?]{0,60}\b(?:safe|too much|take|taken|takes|use|used|drink|smoke|normal|typical|usual|common|average|a day|per day|daily|a week|per week|weekly|at once|is (?:ok|okay|fine|enough|a lot))"
+                      r"|(?:safe|normal|typical|usual|common|average|recommended|standard|maximum|max|starting|low|high|threshold)\s+(?:amounts?|quantit(?:y|ies)))\b", re.I)
+AMT = re.compile(r"(?<![\w.,/])\d+(?:[.,]\d+)?(?:\s*(?:to|-|or)\s*\d+(?:[.,]\d+)?)?\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\b(?!\s*/\s*(?:m?l|dl|kg|day·kg)\b)(?!\s*per\s+(?:kilo|kg|m?l|litre|liter)\b)", re.I)
+TIMING = re.compile(r"\b(?:wait|space)\w*\s+(?:at least\s+)?\d|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+(?:\.\d+)?(?:\s*(?:to|-|or)\s*\d+(?:\.\d+)?)?\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b", re.I)   # never shown: the time between two uses
+REDOSE = re.compile(r"\bre-?dos\w*|\bsupplement\w*|\bbooster\b|\btop-?up\b|\b(?:second|third|additional|further|extra|repeat(?:ed)?|half)[\s-]dos(?:e|es|ing)\b", re.I)                                                                                # never taken: an amount added in the same session
+NOT_AN_AMOUNT_FOR_PEOPLE = re.compile(r"\b(?:rats?|mice|mouse|rodents?|monkeys?|primates?|dogs?|zebrafish|in vitro|animals?)\b|\b(?:lethal|fatal\w*|death|deaths|died|dying|kill\w*|overdos\w*|toxic\w*|poison\w*|ld50|seiz(?:ed|ure)\w*|street|tablets? (?:sold|seized|contain\w*)|pills? (?:sold|seized|contain\w*))\b", re.I)
+
+
+def is_amounts(question): return bool(AMOUNT_Q.search(question or ""))
+
+
+def amounts_prompt(question, src, picked, drug_names):
+    what = "page" if src["read"] == "page" else "paper"
+    return (f"QUESTION that people ask: {question}\n\n{source_head(src)}\n\n"
+            f"PASSAGES of this {what} (each is one paragraph, with its number and where it stands):\n{shown(picked)}\n\n"
+            f"TASK. From these passages only, list the AMOUNTS of {', '.join(drug_names[:4]) or 'the drug'} that were given to PEOPLE or are stated for people: in a study, in treatment, on a medicine's label, in official guidance. For each amount give:\n"
+            '"passage": its number; "quote": the part of that passage that states the amount, copied exactly, word for word (8 to 40 words, with the number and its unit);\n'
+            '"who": who received it or whom it is stated for, and under what care, in one plain phrase, only as the passage says (for example: adults with PTSD in a clinical trial, with medical staff present);\n'
+            '"what": what kind of amount it is, in a few words, only as the passage says (for example: the amount in one session; the starting amount on the label; a daily amount in long-term treatment).\n'
+            "Leave out: amounts given to animals; amounts that harmed or killed someone; amounts found in products that were sold or seized; amounts for each kilogram of body weight. "
+            'Do not compute, convert or add anything, and give no advice. If the passages state no such amount, return {"amounts": []}.\n'
+            'JSON only, in this form: {"amounts": [{"passage": 4, "quote": "...", "who": "...", "what": "..."}]}')
+
+
+def window15(quote):
+    """The part of a quote, 15 words at most, that holds its first amount and no time between two uses: the quotation the
+    site shows (its rule: 15 words at most). It starts and ends where a clause does, when it can. None where no such
+    part exists."""
+    ws = norm(quote).strip(' "\'').split(" "); text = " ".join(ws); m = AMT.search(text)
+    if not m: return None
+    first, last = len(text[:m.start()].split(" ")) - 1, len(text[:m.end()].split(" ")) - 1
+    if last - first + 1 > 15: return None
+    word_at = lambda i: len(text[:i].split(" ")) - 1
+    times = [(word_at(t.start()), word_at(t.end() - 1)) for t in TIMING.finditer(text)]        # the words that state a time between uses: no part of them is shown
+    best = None
+    for a in range(max(0, last - 14), first + 1):
+        for b in range(last + 1, min(len(ws), a + 15) + 1):
+            if any(a <= t1 and t0 < b for t0, t1 in times): continue
+            dangling = b < len(ws) and re.fullmatch(r"(?:every|each|to|of|and|or|with|for|at|in|on|a|an|the|by|from|as|than|per|was|were|is|are|be)", ws[b - 1].lower())
+            score = (2 if a == 0 or re.search(r"[.;:]$", ws[a - 1]) else 1 if ws[a - 1].endswith(",") else 0) + (2 if b == len(ws) or re.search(r"[.;:,]$", ws[b - 1]) else 0) + 0.05 * (b - a) - (1.5 if dangling else 0)
+            if best is None or score > best[0]: best = (score, " ".join(ws[a:b]))
+    return best[1].strip(" ,;:.") if best else None
+
+
+def amount_gate(out, picked, src, dwords):
+    """The rows of a reader's answer that may be used: (rows, how many were thrown away). A row is kept when its quote
+    stands in a passage that was shown, holds a number with its unit, is about people and not about harm, when the passage
+    or the source's title names the drug, and when a part of 15 words at most can be shown."""
+    out = out if isinstance(out, dict) else {}; by = {p["n"]: p for p in picked}; rows, dropped = [], 0
+    for item in (out.get("amounts") or [])[:8]:
+        if not isinstance(item, dict): dropped += 1; continue
+        q = re.sub(r"\s+", " ", str(item.get("quote") or "")).strip(); who = re.sub(r"\s+", " ", str(item.get("who") or "")).strip(" ."); what = re.sub(r"\s+", " ", str(item.get("what") or "")).strip(" .")
+        p = by.get(item.get("passage")) if isinstance(item.get("passage"), int) else None
+        if not p or not found_in(q, p["text"][:PASSAGE_CHARS]): p = next((x for x in picked if found_in(q, x["text"][:PASSAGE_CHARS])), None)
+        show = window15(q) if p else None
+        ok = (p and show and 5 <= words(q) <= 70 and who and what and words(who) <= 30 and words(what) <= 20 and AMT.search(q)
+              and not NOT_AN_AMOUNT_FOR_PEOPLE.search(q) and not NOT_AN_AMOUNT_FOR_PEOPLE.search(who + " " + what) and not REDOSE.search(q + " " + who + " " + what)
+              and numbers(who + " " + what) <= numbers(p["text"])
+              and (not dwords or O.has_word(O.flat(src["title"] + " " + p["text"]), dwords))
+              and not any(rx.search(who + " " + what + " " + show) for name, rx in RULES if name not in ("an amount of a drug", "a quotation or a source in brackets", "a sign instead of a word"))
+              and not any(r["show"] == show for r in rows))
+        if not ok: dropped += 1; continue
+        rows.append({"passage": p["n"], "where": p["where"], "quote": q, "show": show, "who": who, "what": what})
+    return rows, dropped
+
+
+def read_amounts(chat, model, question, src, picked, dwords):
+    out = ask_json(chat, model, READER_SYS, amounts_prompt(question, src, picked, list(dwords)), 900)
+    return amount_gate(out, picked, src, dwords) if out is not None else ([], 0)
 
 
 # ---------- 3 write ----------
@@ -170,23 +276,26 @@ WRITER_SYS = ("You write one answer for Pharmakon, a free drug encyclopedia that
               "- No quotation marks, no brackets with sources, no mention of 'findings', 'passages' or 'the paper says F1'. Never write 'Paper A': say what it is, for example 'A 2024 review of case reports' or 'A survey of 278 people'.\n"
               "- Write 'times', never the sign ×. Write 'people who microdose', 'people who smoke', 'people who drink', never 'microdosers', 'smokers', 'drinkers'. Write 'use' or 'use disorder', never 'abuse' or 'misuse'.\n"
               "- The But must be a limit of THIS answer: who was not studied, how the studies were done, or what is not known about the question itself. Never borrow a limit that the paper states about something else.\n"
+              "- An official page is a statement by that body, not a study. Say whose it is: 'The NHS says ...'. Never write 'studies show' for it.\n"
+              "- Where only a paper's summary could be read, say so: 'The summary of a 2021 review says ...'.\n"
               "- If the findings do not answer the question, say plainly what they do show, and set \"complete\" to false.")
 
 
 def writer_prompt(question, sources, examples, fix=""):
     lines = []
     for s in sources:
-        lines.append(f"PAPER {s['tag']}: {s['title']} ({s.get('year') or 'n.d.'}). {('A review or meta-analysis.' if s['kind'] == 'review' else 'A case report: one person or a few.' if s['kind'] == 'case' else 'A single study.')}")
+        if s["read"] == "page": lines.append(f"OFFICIAL PAGE {s['tag']}: \"{s['title']}\", a page of {s['name']}" + (f" ({s['year']})" if s.get("year") else "") + f". When you use it, name the body: \"{s['short'][0].upper() + s['short'][1:]} says\".")
+        else: lines.append(f"PAPER {s['tag']}{' (ONLY ITS SUMMARY COULD BE READ)' if s['read'] == 'summary' else ''}: {s['title']} ({s.get('year') or 'n.d.'}). {('A review or meta-analysis.' if s['kind'] == 'review' else 'A case report: one person or a few.' if s['kind'] == 'case' else 'A single study.')}")
         if s.get("design"): lines.append(f"  [D{s['tag']}] what it is and who was studied: {s['design']['text']} (the paper's words: {s['design']['quote']})")
         for f in s["findings"]: lines.append(f"  [{f['id']}] {f['text']} (the paper's words: {f['quote']})")
         for l in s["limits"]: lines.append(f"  [{l['id']}] a limit the paper states: {l['text']} (the paper's words: {l['quote']})")
     ex = "\n\n".join(f"Question: {e['q']}\nshort: {e['short']}\nbut: {e['but']}\nhow: " + " | ".join(e["how"][:3]) for e in examples)
-    return (f"QUESTION that people ask: {question}\n\nWHAT THE PAPERS FOUND (each item has a label in square brackets):\n" + "\n".join(lines) + "\n\n"
+    return (f"QUESTION that people ask: {question}\n\nWHAT THE SOURCES SAY (each item has a label in square brackets):\n" + "\n".join(lines) + "\n\n"
             "HOW THE SITE WRITES (three answers from the site, for the form only, not for their facts):\n" + ex + "\n\n"
             "TASK. Write the answer to the QUESTION from the labelled items only:\n"
             '- "short": the answer itself, 1 or 2 sentences, at most 45 words.\n'
             '- "but": the main limit or doubt, 1 sentence, at most 35 words. It must rest on a limit item or on what kind of study it was.\n'
-            '- "how": 2 to 4 lines, one for each paper used, each at most 35 words: what kind of study, who was studied, what it found.\n'
+            '- "how": 2 to 4 lines, one for each source used, each at most 35 words: what kind of study and who was studied, or whose page it is, and what it found or says.\n'
             'For "short", for "but" and for every line of "how", give "uses": the labels of the items that sentence rests on (at least one).\n'
             '- "complete": true if the items answer the question, false if they answer only a part or a neighbouring question; "missing": in a few words, what is not answered.\n'
             + (f"\nYOUR LAST ANSWER BROKE THESE RULES, write it again without them: {fix}\n" if fix else "") +
@@ -245,7 +354,7 @@ RULES = [
     ("advice or a promise of safety", re.compile(r"\byou\s+(?:should|must|need to|ought to|can safely|had better)\b|\b(?:it is|it's|is|are)\s+(?:completely |totally |perfectly |generally |relatively )?safe\b|\bsafe to\s+(?:take|use|mix|combine|drink|smoke)\b|\bharmless\b|\brisk-free\b|\bno risk\b|\bwe (?:recommend|advise|suggest)\b", re.I)),
     ("words that are not person-first", re.compile(r"\b(?:addicts?|junkies?|abusers?|misusers?|alcoholics?|druggies?|crackheads?|stoners?|potheads?|users?|microdosers?|smokers?|drinkers?|injectors?)\b|\babus(?:e|es|ed|ing|ive)\b|\bmisus(?:e|es|ed|ing)\b|\bclean\s+(?:from|for|since)\b", re.I)),
     ("a quotation or a source in brackets", re.compile(r'["“”]|\[[A-Z]{0,2}\d*\]|\(\s*(?:[A-Z][a-z]+ et al\.?|[A-Z][a-z]+,? \d{4})')),
-    ("words about the lane itself", re.compile(r"\b(?:passages?|the (?:provided|given) (?:text|items?|findings)|findings? [FDL]?\d|item [FDL]\d|as an ai|language model)\b|\bPapers? [A-G]\b|\b[FDL][A-G]?\d*\]", re.I)),
+    ("words about the lane itself", re.compile(r"\b(?:passages?|the (?:provided|given) (?:text|items?|findings)|findings? [FDL]?\d|item [FDL]\d|as an ai|language model)\b|\b(?:Papers?|Official pages?|Sources?) [A-H]\b|\b[FDL][A-H]?\d*\]", re.I)),
     ("a sign instead of a word", re.compile(r"[×≥≤±]|\b\d+x\b")),
 ]
 LIMITS = {"short": 50, "but": 40}
@@ -290,53 +399,141 @@ def examples():
     return [{"q": e["q"], "short": e["short"], "but": e["but"], "how": e["how"]} for e in out[:3]]
 
 
-def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
-    """One question through the lane. Returns the record (see the head of this file)."""
-    fulltext = fulltext or P.epmc_fulltext; crossref = crossref or P.crossref; ex = ex if ex is not None else examples()
+def lines():
+    """The lines the code writes itself on an answer about amounts (data/auto/lane/lines.json)."""
+    return json.load(open(LINES_FILE, encoding="utf-8"))
+
+
+_web = []
+
+
+def official_page(o):
+    """An official page as it is now, read where it stands: (page, its reference), or None. o: what official.py wrote for it."""
+    if not _web: _web.append(O.Web())
+    src = next(iter(O.sources([o["body"]])), None)
+    if not src: return None
+    if o.get("label"):
+        got = O.fda_label(o["label"], _web[0], src)
+        return (got[0], got[2]) if got else None
+    got = _web[0].get(o["address"])
+    if not got or got[0][:5] == b"%PDF-": return None
+    page = O.extract(O.text_of(got[0]), got[1])
+    return page, O.reference(src, page, got[1])
+
+
+def summary_of(doi):
+    """The summary (abstract) of a paper whose full text cannot be read, as Europe PMC holds it: (the record, passages), or None."""
+    got, _ = P.epmc_search(f'DOI:"{doi}"', 3)
+    p = next((x for x in got if (x.get("doi") or "").lower() == doi.lower()), None)
+    if not p or len(p.get("abstract") or "") < 200: return None
+    parts, acc = [], ""
+    for t in P.sentences(p["abstract"]) or [p["abstract"]]:
+        if acc and len(acc) + len(t) > 900: parts.append(acc); acc = t
+        else: acc = (acc + " " + t).strip()
+    if acc: parts.append(acc)
+    return p, [{"n": i + 1, "where": "Summary", "text": t} for i, t in enumerate(parts)]
+
+
+def weight(s):
+    """What a source counts for at the gate on sources: 2 is enough alone."""
+    if s["read"] == "full": return 2 if s["kind"] == "review" else 1 if s["kind"] != "case" and s["people"] else 0
+    if s["read"] == "page": return 2 if s.get("tier", 1) == 1 else 1
+    return 1 if s["kind"] == "review" or (s["kind"] != "case" and s["people"]) else 0       # read in summary only
+
+
+def counts(sources):
+    full = [s for s in sources if s["read"] == "full"]
+    return {"papers": len(full), "summaries": sum(s["read"] == "summary" for s in sources), "official": sum(s["read"] == "page" for s in sources),
+            "reviews": sum(s["kind"] == "review" for s in full), "studies in people": sum(s["kind"] not in ("review", "case") and s["people"] for s in full), "case reports": sum(s["kind"] == "case" for s in full)}
+
+
+def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None):
+    """One question through the lane. Returns the record (see the head of this file). official: the pages official.py found
+    for it; page, summary, fulltext, crossref: how a page, a summary, a full text and a Crossref record are fetched (the
+    selftest gives its own); before: the record this one replaces, whose state is kept in "history"."""
+    fulltext = fulltext or P.epmc_fulltext; crossref = crossref or P.crossref; page = page or official_page; summary = summary or summary_of
+    amounts = is_amounts(item["q"]) or item.get("kind") == "amounts"
     rec = {"_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
-           "id": "au_" + item["id"], "lane": LANE, "from": item["id"], "question": item["q"], "ways": list(item.get("ways") or []), "drugs": list(item.get("drugs") or []), "made": {"on": TODAY, "models": dict(models), "run": os.environ.get("GITHUB_RUN_ID", "")},
-           "status": "none", "why": "", "gates": {}, "sources": [], "parts": [], "complete": False, "missing": "", "wanted": list(found.get("wanted") or []), "person": None}
-    before = llm.ledger()["neurons"]
+           "id": "au_" + item["id"], "lane": LANE, "kind": "amounts" if amounts else "answer", "from": item["id"], "question": item["q"], "ways": list(item.get("ways") or []), "drugs": list(item.get("drugs") or []),
+           "made": {"on": TODAY, "models": dict(models), "run": os.environ.get("GITHUB_RUN_ID", "")},
+           "status": "none", "why": "", "gates": {}, "sources": [], "parts": [], "complete": False, "missing": "", "wanted": list(found.get("wanted") or []), "person": None, "history": []}
+    if before and before.get("made"):
+        was = next((p.get("text") for p in before.get("parts") or [] if p.get("part") == "short"), "")
+        rec["history"] = (list(before.get("history") or []) + [{"on": before["made"].get("on"), "lane": before.get("lane"), "status": before.get("status"), "why": before.get("why"), "short": was, "complete": before.get("complete")}])[-6:]
+    spent = llm.ledger()["neurons"]
     def done(status, why):
-        rec["status"], rec["why"] = status, why; rec["made"]["neurons"] = round(llm.ledger()["neurons"] - before, 1); return rec
-    # 2 read
-    sources, tags, thrown, ref_ids = [], "ABCDEFG", 0, set()
+        rec["status"], rec["why"] = status, why; rec["made"]["neurons"] = round(llm.ledger()["neurons"] - spent, 1); return rec
+    dwords = O.drug_words(item, names)[1] if names else [d.replace("-", " ") for d in item.get("drugs") or []]
+    # 2 read: papers in full, then official pages, then (where that is not yet enough) reviews in summary
+    sources, tags, thrown, ref_ids = [], "ABCDEFGH", 0, set()
+    def read(src, picked):
+        nonlocal thrown
+        if amounts: rows, dropped = read_amounts(chat, models["reader"], item["q"], src, picked, dwords); src["rows"] = rows; ok = bool(rows); src.update(design=None, findings=[], limits=[])
+        else: design, fs, ls, dropped = read_source(chat, models["reader"], item["q"], src, picked); src.update(design=design, findings=fs, limits=ls); ok = bool(fs)
+        thrown += dropped
+        if not ok: return False
+        ref = src["ref"]
+        while ref["id"] in ref_ids: ref["id"] = ref["id"] + "b" if not re.search(r"[b-z]$", ref["id"]) else ref["id"][:-1] + chr(ord(ref["id"][-1]) + 1)
+        ref_ids.add(ref["id"]); src["tag"] = tags[len(sources)]; src["_text"] = {p["n"]: p["text"] for p in picked}; sources.append(src)
+        return True
+    paper_ref = lambda doi, pmcid=None: (lambda cr: P.reference(doi, cr[0], pmcid) if cr[0] else None)(crossref(doi))
+    n = 0
     for c in found.get("can_read") or []:
-        if len(sources) >= N_PAPERS: break
+        if n >= N_PAPERS: break
         if not c.get("doi"): continue
         if c["kind"] not in ("review", "study", "case") and not c.get("people"): continue   # an editorial, an opinion, a paper on animals or cells alone: not a source for an answer
-        cr, err = crossref(c["doi"])
-        if not cr: continue
-        ref = P.reference(c["doi"], cr, c.get("pmcid"))
+        ref = paper_ref(c["doi"], c.get("pmcid"))
         if not ref or P.retraction(ref) in ("retracted", "concern"): continue          # GATE 6, first half: never a retracted paper
         xml = fulltext(c.get("pmcid"))
         if not xml: continue
         doc = P.jats_passages(xml)
         if len(doc["passages"]) < 4: continue
         picked = pick_passages(item["q"], item.get("ways"), doc["passages"], enc, c["kind"])
-        design, fs, ls, dropped = read_paper(chat, models["reader"], item["q"], c, picked)
-        thrown += dropped
-        if not fs: continue
-        while ref["id"] in ref_ids: ref["id"] = ref["id"] + "b" if not re.search(r"[b-z]$", ref["id"]) else ref["id"][:-1] + chr(ord(ref["id"][-1]) + 1)
-        ref_ids.add(ref["id"])
-        tag = tags[len(sources)]; by = {p["n"]: p["text"] for p in picked}
-        sources.append({"tag": tag, "ref": ref, "doi": c["doi"], "pmcid": c.get("pmcid"), "title": c["title"], "year": c.get("year"), "kind": c["kind"], "people": bool(c.get("people")), "near": c.get("near"),
-                        "design": design, "findings": fs, "limits": ls, "money": doc["money"][:3], "_text": by})
-    rec["gates"]["read"] = f"{sum(len(s['findings']) for s in sources)} findings kept from {len(sources)} papers; {thrown} thrown away (the quote was not in the passage, or a number was not in the quote)"
-    if not sources: return done("none", "no paper that can be read gave a finding for this question")
-    # GATE 6: one review or meta-analysis, or two studies in people
-    reviews = sum(s["kind"] == "review" for s in sources); people = sum(s["kind"] not in ("review", "case") and s["people"] for s in sources)
-    rec["gates"]["sources"] = f"{reviews} review(s) or meta-analyses, {people} single studies in people, {sum(s['kind'] == 'case' for s in sources)} case report(s) (which do not count)"
-    labels, n_f, n_l = {}, 0, 0
-    for s in sources:
-        paper = f"{s['title']} ({s['year']})"
-        if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper, ref=s["ref"]["id"], passage_text=s["_text"][s["design"]["passage"]])
-        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; labels[f["id"]] = dict(f, paper=paper, ref=s["ref"]["id"], passage_text=s["_text"][f["passage"]])
-        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; labels[l["id"]] = dict(l, paper=paper, ref=s["ref"]["id"], passage_text=s["_text"][l["passage"]])
+        n += read({"read": "full", "ref": ref, "doi": c["doi"], "pmcid": c.get("pmcid"), "title": c["title"], "year": c.get("year"), "journal": c.get("journal"), "kind": c["kind"], "people": bool(c.get("people")), "near": c.get("near"), "money": doc["money"][:3]}, picked)
+    n = 0
+    for o in official or []:
+        if n >= (4 if amounts else N_OFFICIAL) or len(sources) >= len(tags) - 1: break
+        if amounts and o.get("tier", 1) != 1: continue                                  # amounts only from a body of tier 1 or a medicine's label
+        try: got = page(o)
+        except (P.Refused, IOError, ValueError): continue
+        if not got or len(got[0]["passages"]) < 2: continue
+        pg, ref = got
+        picked = pick_passages(item["q"], item.get("ways"), [dict(p, n=p["n"] + 1, where=p["where"] or "Top of the page") for p in pg["passages"]], enc, "review", k=7)
+        n += read({"read": "page", "ref": ref, "title": pg["title"] or o.get("title") or "", "year": ((ref.get("issued") or {}).get("date-parts") or [[]])[0][:1] and ref["issued"]["date-parts"][0][0] or None, "kind": "official", "people": True,
+                   "near": o.get("near"), "name": o["name"], "short": o.get("short") or o["name"], "tier": o.get("tier", 1), "address": ref.get("URL"), "money": []}, picked)
+    if amounts or sum(weight(s) for s in sources) < 2 or not any(s["kind"] == "review" for s in sources):
+        n = 0
+        for w in found.get("wanted") or []:
+            if n >= N_SUMMARIES or len(sources) >= len(tags): break
+            if not w.get("doi"): continue
+            ref = paper_ref(w["doi"])
+            if not ref or P.retraction(ref) in ("retracted", "concern"): continue
+            try: got = summary(w["doi"])
+            except (P.Refused, IOError, ValueError): continue
+            if not got: continue
+            pp, passages = got
+            n += read({"read": "summary", "ref": ref, "doi": w["doi"], "title": pp["title"], "year": pp.get("year"), "journal": pp.get("journal"), "kind": pp["kind"] if pp.get("kind") in ("review", "study", "case") else "review",
+                       "people": bool(P.HUMAN.search(pp["title"] + " " + (pp.get("abstract") or ""))), "near": w.get("near"), "money": []}, passages)
+    cn = counts(sources); rec["made"]["from"] = {k: cn[k] for k in ("papers", "summaries", "official")}
+    rec["gates"]["read"] = (f"{sum(len(s.get('rows') or []) for s in sources)} amounts" if amounts else f"{sum(len(s['findings']) for s in sources)} findings") + f" kept from {len(sources)} sources ({cn['papers']} papers read in full, {cn['official']} official pages, {cn['summaries']} papers read in summary); {thrown} thrown away (the quote was not in the passage, or a number was not in the quote)"
     def keep_sources():
         rec["sources"] = [{k: v for k, v in s.items() if k != "_text"} for s in sources]
+        cn = counts(sources); rec["made"]["from"] = {k: cn[k] for k in ("papers", "summaries", "official")}
     keep_sources()
-    if not reviews and people < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis, or two studies in people")
+    if not sources: return done("none", "no source that can be read " + ("states an amount for people" if amounts else "gave a finding") + " for this question")
+    paper_name = lambda s: (f"{s['name']}: {s['title']}" if s["read"] == "page" else f"{s['title']} ({s['year']})")
+    if amounts: return make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_name)
+    # GATE 6: enough to rest on
+    said = lambda: f"{cn['reviews']} review(s) or meta-analyses, {cn['studies in people']} single studies in people, {cn['case reports']} case report(s) (which do not count), {cn['official']} official page(s), {cn['summaries']} paper(s) read in summary only"
+    rec["gates"]["sources"] = said()
+    labels, n_f, n_l = {}, 0, 0
+    for s in sources:
+        if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper_name(s), ref=s["ref"]["id"], passage_text=s["_text"][s["design"]["passage"]])
+        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; labels[f["id"]] = dict(f, paper=paper_name(s), ref=s["ref"]["id"], passage_text=s["_text"][f["passage"]])
+        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; labels[l["id"]] = dict(l, paper=paper_name(s), ref=s["ref"]["id"], passage_text=s["_text"][l["passage"]])
+    keep_sources()
+    if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service")
+    ex = ex if ex is not None else examples()
     # 3 write, 5 rules (one more try when a rule is broken), 4 check (one more try for the short answer or the But)
     fix, draft, verdicts = "", None, []
     for attempt in range(3):
@@ -347,7 +544,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
         if bad: rec["gates"]["rules"] = "broken at try " + str(attempt + 1) + ": " + "; ".join(f"{p}: {w}" for p, w in bad); fix = "; ".join(f"in {p}: {w}" for p, w in bad); draft = None; continue
         verdicts = check(chat, models["checker"], draft["parts"], labels)
         head_bad = [(p["part"], v[1]) for p, v in zip(draft["parts"], verdicts) if not v[0] and p["part"] in ("short", "but")]
-        if head_bad and attempt < 2: fix = "a second reader found that the paper's words do not support " + "; ".join(f"{p} ({w})" for p, w in head_bad) + ". Say only what the items say."; rec["gates"]["check"] = "not accepted at try " + str(attempt + 1) + ": " + fix; draft = None; continue
+        if head_bad and attempt < 2: fix = "a second reader found that the source's words do not support " + "; ".join(f"{p} ({w})" for p, w in head_bad) + ". Say only what the items say."; rec["gates"]["check"] = "not accepted at try " + str(attempt + 1) + ": " + fix; draft = None; continue
         break
     if not draft:
         return done("none", "no draft passed: " + (rec["gates"].get("check") or rec["gates"].get("rules") or fix))
@@ -364,19 +561,57 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
         p["rests_on"] = [{"label": u, "ref": labels[u]["ref"], "where": labels[u]["where"], "quote": labels[u]["quote"], "sha": hashlib.sha256(norm(labels[u]["passage_text"]).encode("utf-8")).hexdigest()[:16]} for u in p["uses"]]
         for u in p["uses"]:
             if labels[u]["ref"] not in used_refs: used_refs.append(labels[u]["ref"])
-    sources[:] = [s for s in sources if s["ref"]["id"] in used_refs]; keep_sources()
-    reviews = sum(s["kind"] == "review" for s in sources); people = sum(s["kind"] not in ("review", "case") and s["people"] for s in sources)
-    if not reviews and people < 2: return done("none", "after the second reader's check the answer rests on too few sources")
+    sources[:] = [s for s in sources if s["ref"]["id"] in used_refs]; keep_sources(); cn = counts(sources); rec["gates"]["sources"] = said() + " (the ones the answer rests on)"
+    if sum(weight(s) for s in sources) < 2: return done("none", "after the second reader's check the answer rests on too few sources")
     rec["parts"] = parts
-    best_wanted = max([w.get("near") or 0 for w in rec["wanted"]] or [0]); best_read = max([s.get("near") or 0 for s in sources] or [0])
-    rec["complete"] = bool(draft["complete"]) and not (rec["wanted"] and best_wanted > best_read)
-    rec["missing"] = draft["missing"] if not draft["complete"] else ("a paper that stands nearer the question could not be read" if not rec["complete"] else "")
+    best_wanted = max([w.get("near") or 0 for w in rec["wanted"] if w.get("doi") not in {s.get("doi") for s in sources}] or [0]); best_read = max([s.get("near") or 0 for s in sources if s["read"] != "summary"] or [0])
+    in_summary = [s for s in sources if s["read"] == "summary"]
+    rec["complete"] = bool(draft["complete"]) and not in_summary and not best_wanted > best_read
+    rec["missing"] = draft["missing"] if not draft["complete"] else (f"{len(in_summary)} paper(s) could be read in summary only" if in_summary else "a paper that stands nearer the question could not be read" if not rec["complete"] else "")
     why = stakes(item["q"], parts)
     if why: return done("waiting", "about " + why + ": written, and waiting for a person before it is published")
     return done("published", "passed every gate")
 
 
+def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_name):
+    """An answer to a question about amounts (decision 11): rows in the sources' own words, each read by the second reader
+    beside its passage, under the lines the code writes. No writer model."""
+    L = lines(); rows = [(s, r) for s in sources for r in s["rows"][:3]][:10]
+    solid = lambda s: (s["read"] == "page" and s.get("tier", 1) == 1) or (s["read"] in ("full", "summary") and s["people"] and s["kind"] in ("review", "study"))
+    rows = [(s, r) for s, r in rows if solid(s)]
+    rec["gates"]["sources"] = f"{len(rows)} amounts from {len({s['ref']['id'] for s, _ in rows})} sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)"
+    if not rows: return done("none", "no official page and no study in people states an amount for this question")
+    labels, parts = {}, []
+    for i, (s, r) in enumerate(rows, 1):
+        labels[f"R{i}"] = {"paper": paper_name(s), "where": r["where"], "passage_text": s["_text"][r["passage"]], "quote": r["quote"], "ref": s["ref"]["id"]}
+        parts.append({"part": f"row{i}", "text": f"This amount was {r['what']}, for {r['who']}: {r['show']}", "uses": [f"R{i}"]})
+    verdicts = check(chat, models["checker"], parts, labels)
+    kept = [(s, r, f"R{i}") for i, ((s, r), v) in enumerate(zip(rows, verdicts), 1) if v[0]]
+    rec["gates"]["check"] = f"{len(kept)} of {len(rows)} amounts accepted by the second reader ({models['checker']})" + "".join(f"; not accepted: {v[1]}" for v in verdicts if not v[0])[:400]
+    rec["gates"]["rules"] = "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
+    if not kept: return done("none", "the second reader did not accept any amount")
+    used = {s["ref"]["id"] for s, _, _ in kept}; sources[:] = [s for s in sources if s["ref"]["id"] in used]; keep_sources()
+    first = next((v["text"] for k, v in L["first"].items() if set(v["drugs"]) & set(item.get("drugs") or [])), "")
+    out = ([{"part": "first", "text": first, "fixed": True, "rests_on": []}] if first else []) + [{"part": "short", "text": L["amounts"], "fixed": True, "rests_on": []}, {"part": "but", "text": L["amounts_but"], "fixed": True, "rests_on": []}]
+    for n, (s, r, lab) in enumerate(kept, 1):
+        who = r["who"][0].upper() + r["who"][1:]
+        out.append({"part": f"row{n}", "text": f"{who}; {r['what']}.", "who": who, "what": r["what"], "quote": r["show"], "source": s["ref"]["id"], "read": s["read"], "uses": [lab],
+                    "rests_on": [{"label": lab, "ref": s["ref"]["id"], "where": r["where"], "quote": r["quote"], "sha": hashlib.sha256(norm(s["_text"][r["passage"]]).encode("utf-8")).hexdigest()[:16]}]})
+    rec["parts"] = out
+    rec["complete"] = len(used) >= 2 and not any(s["read"] == "summary" for s in sources)
+    rec["missing"] = "" if rec["complete"] else ("a paper could be read in summary only" if any(s["read"] == "summary" for s in sources) else "only one source states an amount")
+    why = stakes(item["q"], [{"text": p.get("who", "") + " " + p.get("what", "")} for p in out if p["part"].startswith("row")])
+    if why: return done("waiting", "about " + why + ": written, and waiting for a person before it is published")
+    return done("published", "passed every gate (an answer about amounts: decision 11)")
+
+
 # ---------- the run ----------
+def _searched(path):
+    """The day a finder last searched for a question ("" where it has not)."""
+    try: return str(json.load(open(path, encoding="utf-8")).get("searched_on") or "")
+    except (OSError, ValueError): return ""
+
+
 def load_state():
     try: return json.load(open(STATE, encoding="utf-8"))
     except (OSError, ValueError): return {"items": {}}
@@ -402,26 +637,42 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
     st = load_state(); order = []
     rep = ROOT / "data" / "auto" / "report.json"
     asked = {w["id"]: w.get("asked", 0) + w.get("sent_too", 0) for w in (json.load(open(rep, encoding="utf-8")).get("wanted") or [])} if rep.exists() else {}
-    for w in sorted(items, key=lambda w: (-asked.get(w["id"], 0), w["id"])):       # what the most people wait for, first
+    def turn(w):
+        """When a question's turn comes (the smaller, the sooner), or None when there is nothing to do for it: a question
+        never tried; one whose answer an older lane wrote; the second look (an answer that is not complete, or no answer,
+        for which the finders have found something since it was written); no answer for a week."""
         s = st["items"].get(w["id"]) or {}
+        if not s: return 0
+        if int(s.get("lane") or 1) < LANE: return 1
+        newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
+        if (s.get("status") == "none" or s.get("complete") is False) and newer > s.get("last", ""): return 2
+        if s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=7)).isoformat(): return 3
+        return None
+    for w in sorted(items, key=lambda w: (-asked.get(w["id"], 0), w["id"])):       # what the most people wait for, first
         if ids:
             if w["id"] in ids: order.append(w)
-        elif again or not s or int(s.get("lane") or 1) < LANE or (s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=7)).isoformat()): order.append(w)
+        elif again or turn(w) is not None: order.append(w)
+    if not ids and not again: order.sort(key=lambda w: turn(w))                    # (a stable sort: within one turn, the most asked first)
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     for w in order[:limit]:
-        pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")
+        pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
         try:
             found = json.load(open(pf, encoding="utf-8")) if pf.exists() and not again else P.find(w, names, enc)
             if not pf.exists() or again: pf.parent.mkdir(parents=True, exist_ok=True); json.dump(found, open(pf, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-            rec = make(w, found, chat, enc, models)
+            try: official = json.load(open(of, encoding="utf-8"))["pages"]
+            except (OSError, ValueError, KeyError): official = []               # (official.py has not searched for this question yet, or found nothing)
+            try: before = json.load(open(af, encoding="utf-8"))
+            except (OSError, ValueError): before = None
+            rec = make(w, found, chat, enc, models, official=official, names=names, before=before)
         except llm.Budget as e: print("lane: stopped for today:", e); break
         except llm.Unavailable as e: print("lane: the models cannot be used now:", e); break
         except P.Refused as e: print("lane: a source said no:", e); break
         json.dump(rec, open(OUT / (rec["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-        st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "lane": LANE, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
+        st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "lane": LANE, "kind": rec["kind"], "complete": rec["complete"], "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
         json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); made.append(rec)
-        print(f"lane: {w['id']} {w['q'][:56]!r}: {rec['status']} ({rec['why']}); {len(rec['sources'])} papers; {rec['made'].get('neurons', 0)} neurons")
+        f = rec["made"].get("from") or {}
+        print(f"lane: {w['id']} {w['q'][:56]!r}: {rec['status']} ({rec['why']}); {f.get('papers', 0)} papers, {f.get('official', 0)} official pages, {f.get('summaries', 0)} summaries; {rec['made'].get('neurons', 0)} neurons")
     json.dump({"_note": "Papers the machine lane wants and cannot read (their full text is not open), with the questions they are wanted for. References from Crossref, made by scripts/build_references.py. For the senior author's list of papers to save.",
                "made_on": TODAY, "papers": wanted_list()}, open(WANTED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"lane: {len(made)} questions worked on: " + ", ".join(f"{k} {sum(r['status'] == k for r in made)}" for k in ("published", "waiting", "none")) + f"; today {llm.ledger()['neurons']:.0f} of {llm.OUR_LIMIT} neurons used")
@@ -455,10 +706,11 @@ def selftest():
                                 {"passage": 2, "quote": "half of all people who ever try ketamine become dependent within a year", "finding": "Half of people who try ketamine become dependent."},          # not in the paper: thrown away
                                 {"passage": 3, "quote": "Tolerance developed quickly in frequent use, and many participants described cravings", "finding": "Tolerance developed in 80% of people."}],  # a number not in the quote: thrown away
                    "limits": [{"passage": 4, "quote": "Most included studies were cross-sectional surveys of volunteers recruited online, so the rates may not hold for everyone who uses ketamine", "limit": "Most studies were online surveys of volunteers, so the rates may not hold for everyone who uses ketamine."}]}
-    script = {"writer": [], "checker": []}; calls = []
+    script = {"writer": [], "checker": [], "amounts": []}; calls = []
     def chat(model, messages, max_tokens=0):
         sysm = messages[0]["content"]; role = "reader" if sysm.startswith("You read") else "writer" if sysm.startswith("You write") else "checker"; calls.append((role, model, messages[1]["content"]))
         llm.spend(model, 1000, 100, save=True)
+        if role == "reader" and "list the AMOUNTS" in messages[1]["content"]: return json.dumps(script["amounts"].pop(0))
         if role == "reader": return "<think>reading</think>" + json.dumps(good_reader)
         return json.dumps(script[role].pop(0))
     W = lambda short, but="Most studies were online surveys of volunteers, so the rates may not hold for everyone who uses ketamine.", how=None: {
@@ -497,12 +749,90 @@ def selftest():
     # 7. a wanted paper that stands nearer than the ones read: published, and not complete
     found2 = dict(found, wanted=[dict(found["wanted"][0], near=0.9)]); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found2, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex); assert r["status"] == "published" and r["complete"] is False and "could not be read" in r["missing"], r
+    # 8. an official page alone (a body of tier 1) is enough; the answer names the body; its reference is the page's own
+    page_ps = [{"n": i, "where": "The risks" if i else "", "text": t} for i, t in enumerate(passages[1:5])]
+    nhs = {"body": "nhs", "name": "NHS", "short": "the NHS", "tier": 1, "address": "https://nhs.test/ketamine", "title": "Ketamine", "near": 0.6}
+    web_ref = lambda who="NHS": {"id": "nhs_ketamine", "type": "webpage", "title": "Ketamine", "author": [{"literal": who, "short": "the NHS"}], "issued": {"date-parts": [[2025, 3, 2]]}, "URL": "https://nhs.test/ketamine", "accessed": {"date-parts": [[2026, 11, 15]]}}
+    page = lambda o: ({"title": "Ketamine", "passages": page_ps}, web_ref())
+    nhs_short = "Yes. The NHS says that between 9% and 27% of people who used ketamine regularly met criteria for dependence."
+    calls.clear(); script["writer"] = [W(nhs_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, {"can_read": [], "wanted": []}, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, official=[nhs], page=page)
+    assert r["status"] == "published" and r["made"]["from"] == {"papers": 0, "summaries": 0, "official": 1} and r["sources"][0]["ref"]["type"] == "webpage" and r["sources"][0]["read"] == "page", (r["status"], r["why"], r["gates"])
+    assert 'OFFICIAL PAGE: "Ketamine", a page of NHS for the public (2025).' in calls[0][2] and '"design"' not in calls[0][2] and 'OFFICIAL PAGE A: "Ketamine", a page of NHS (2025). When you use it, name the body: "The NHS says".' in calls[1][2], calls[1][2][:600]
+    assert "PASSAGE (NHS: Ketamine; The risks)" in calls[2][2]
+    # a page of a government-paid service (tier 2) alone is not enough; with one study in people it is
+    lvl = dict(nhs, body="thelevel", name="NZ Drug Foundation", short="the NZ Drug Foundation", tier=2)
+    r = make(item, {"can_read": [], "wanted": []}, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, official=[lvl], page=page); assert r["status"] == "none" and "not enough sources" in r["why"], r["why"]
+    two = W(ok_short, how=[{"text": "A study of 2,405 people who used ketamine regularly found that between 9% and 27% met criteria for dependence.", "uses": ["DA", "F1"]}, {"text": "The NZ Drug Foundation says tolerance comes quickly with frequent use.", "uses": ["F4"]}])
+    script["writer"] = [two]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found1, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, official=[lvl], page=page); assert r["status"] == "published" and r["made"]["from"] == {"papers": 1, "summaries": 0, "official": 1}, (r["status"], r["why"])
+    # 9. a review behind a paywall is read in summary where the rest is not enough: published, said, and never complete
+    summ = lambda doi: ({"title": "A review behind a paywall", "year": 2021, "journal": "Journal", "kind": "review", "abstract": " ".join(passages[1:4])}, [{"n": 1, "where": "Summary", "text": passages[1]}, {"n": 2, "where": "Summary", "text": passages[2] + " " + passages[3]}])
+    calls.clear(); script["writer"] = [W(ok_short, how=[{"text": "A study of 2,405 people who used ketamine regularly found that between 9% and 27% met criteria for dependence.", "uses": ["DA", "F1"]},
+                                                         {"text": "The summary of a 2021 review says that tolerance came quickly with frequent use.", "uses": ["F4"]}])]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, dict(found1, wanted=found["wanted"]), chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, summary=summ)
+    assert r["status"] == "published" and r["complete"] is False and "summary only" in r["missing"] and r["made"]["from"] == {"papers": 1, "summaries": 1, "official": 0} and [x["read"] for x in r["sources"]] == ["full", "summary"], (r["status"], r["why"], r["missing"])
+    assert "PAPER (only its summary could be read): A review behind a paywall (2021)" in calls[1][2] and "PAPER B (ONLY ITS SUMMARY COULD BE READ)" in [c for c in calls if c[0] == "writer"][0][2]
+    assert sum(c[0] == "reader" for c in calls) == 2                                              # with a review read in full, no summary is fetched (tests 1 to 7 never called summary)
+    # the answer it replaces is kept in its history
+    r2 = make(item, found, chat.__class__ and chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, before=r) if (script["writer"].append(W(ok_short)) or script["checker"].append(V(True, True, True, True)) or True) else None
+    assert r2["history"] and r2["history"][-1]["short"] == ok_short and r2["history"][-1]["complete"] is False and r2["history"][-1]["status"] == "published", r2["history"]
+    # 10. a question about amounts (decision 11): rows in the source's own words, no writer; an animal's amount, an amount that killed, an amount with its timing and a quote that is not there are thrown away
+    assert is_amounts("what dosage is safe in MDMA") and is_amounts("How much alcohol is too much?") and not is_amounts("How much does cannabis affect memory?") and not is_amounts("How long does ketamine stay in your system?") and not is_amounts("Is microdosing LSD safe?")
+    assert window15("Participants received 80 to 120 mg of MDMA in each of three sessions, with two trained therapists present throughout") == "Participants received 80 to 120 mg of MDMA in each of three sessions"
+    assert window15("Initiate treatment with 5 to 15 mg every 4 to 6 hours as needed for pain") == "Initiate treatment with 5 to 15 mg" and window15("no amount here at all, only words that go on") is None
+    assert REDOSE.search("A supplemental half-dose of 40 to 60 mg was offered") and REDOSE.search("redosing after an hour") and not REDOSE.search("a daily dose of 20 mg")
+    assert AMT.search("a dose of 0.5 mg/kg") is None and AMT.search("levels of 200 ng/mL") is None and AMT.search("14 units a week").group(0) == "14 units"
+    mp = ["MDMA-assisted therapy was tested in adults with severe PTSD in a randomized, placebo-controlled phase 3 trial at fifteen sites in three countries.",
+          "Participants received 80 to 120 mg of MDMA in each of three sessions, with two trained therapists present throughout.",
+          "In earlier work, rats were given 10 mg of MDMA twice daily to study neurotoxicity in the serotonin system of the brain.",
+          "A supplemental half-dose of 40 to 60 mg was offered 1.5 to 2 hours later in each session, according to the protocol of the trial.",
+          "One fatal case in the literature involved an estimated 500 mg taken at a party, with hyperthermia and failure of several organs."]
+    mxml = "<article><front><article-meta><abstract><p>" + mp[0] + "</p></abstract></article-meta></front><body><sec><title>Methods</title>" + "".join(f"<p>{t}</p>" for t in mp[1:]) + "</sec></body></article>"
+    mfound = {"can_read": [{"doi": "10.1000/m.1", "pmcid": "PMC2", "title": "MDMA-assisted therapy for severe PTSD", "year": 2021, "journal": "Nature Medicine", "kind": "study", "people": True, "near": 0.7}], "wanted": []}
+    mrows = {"amounts": [{"passage": 2, "quote": mp[1].rstrip("."), "who": "adults with severe PTSD in a clinical trial, with two trained therapists present", "what": "the amount in one session"},
+                         {"passage": 3, "quote": "rats were given 10 mg of MDMA twice daily", "who": "rats", "what": "a daily amount"},
+                         {"passage": 4, "quote": "A supplemental half-dose of 40 to 60 mg was offered 1.5 to 2 hours later in each session", "who": "the same adults", "what": "a second amount in the session"},
+                         {"passage": 5, "quote": "One fatal case in the literature involved an estimated 500 mg taken at a party", "who": "one person at a party", "what": "an amount that killed"},
+                         {"passage": 2, "quote": "Participants received 90 mg of MDMA in every session of the trial", "who": "adults", "what": "the amount in one session"}]}
+    nm = [["methadone", ["methadone-buprenorphine"]], ["mdma", ["mdma"]]]
+    mitem = {"id": "w_m", "q": "What dosage of MDMA is used in studies?", "ways": [], "drugs": ["mdma"]}
+    calls.clear(); script["amounts"] = [mrows]; script["writer"] = []; script["checker"] = [V(True)]
+    r = make(mitem, mfound, chat, Enc(), MODELS, fulltext=lambda pmcid: mxml, crossref=crossref, ex=ex, names=nm)
+    L = lines(); rows = [x for x in r["parts"] if x["part"].startswith("row")]
+    assert r["status"] == "published" and r["kind"] == "amounts" and [x["part"] for x in r["parts"]] == ["short", "but", "row1"] and r["parts"][0]["text"] == L["amounts"] and r["parts"][1]["text"] == L["amounts_but"], (r["status"], r["why"], r["gates"])
+    assert rows[0]["quote"] == "Participants received 80 to 120 mg of MDMA in each of three sessions" and words(rows[0]["quote"]) <= 15 and rows[0]["who"].startswith("Adults with severe PTSD") and rows[0]["rests_on"][0]["quote"] == mp[1].rstrip("."), rows
+    assert "4 thrown away" in r["gates"]["read"] and not any(c[0] == "writer" for c in calls) and r["complete"] is False and "only one source" in r["missing"], (r["gates"], r["missing"])
+    assert "This amount was the amount in one session, for adults with severe PTSD" in calls[-1][2] and "list the AMOUNTS of mdma" in calls[0][2]
+    # the second reader refuses the row: no answer. A single study in animals or a case report states no amount for people: no answer
+    script["amounts"] = [mrows]; script["checker"] = [V("the passage does not say who received it")]
+    r = make(mitem, mfound, chat, Enc(), MODELS, fulltext=lambda pmcid: mxml, crossref=crossref, ex=ex, names=nm); assert r["status"] == "none" and "did not accept any amount" in r["why"], r["why"]
+    script["amounts"] = [mrows]; script["checker"] = []
+    r = make(mitem, {"can_read": [dict(mfound["can_read"][0], kind="case")], "wanted": []}, chat, Enc(), MODELS, fulltext=lambda pmcid: mxml, crossref=crossref, ex=ex, names=nm); assert r["status"] == "none" and "no official page and no study in people" in r["why"], r["why"]
+    # an opioid: the line about tolerance stands first, written by code; amounts from a page of tier 2 are not taken
+    lab_ps = [{"n": 0, "where": "Dosage and administration", "text": "For detoxification and maintenance treatment of opioid addiction, the initial methadone dose should not exceed 30 mg, given under supervision."},
+              {"n": 1, "where": "Dosage and administration", "text": "Patients in maintenance treatment are commonly stabilized at 80 to 120 mg a day once tolerance to methadone has developed."}]
+    lab = {"body": "fda", "name": "U.S. Food and Drug Administration", "short": "the US label for methadone", "tier": 1, "address": "https://dailymed.test/x", "title": "Methadone Hydrochloride", "near": 0.7, "label": "methadone hydrochloride"}
+    lab_ref = {"id": "label_methadone-hydrochloride", "type": "webpage", "genre": "Drug label", "title": "Methadone Hydrochloride", "author": [{"literal": "A Maker", "short": "the US label for methadone"}], "issued": {"date-parts": [[2026, 9, 9]]}, "URL": "https://dailymed.test/x", "publisher": "DailyMed"}
+    orows = {"amounts": [{"passage": 1, "quote": "the initial methadone dose should not exceed 30 mg, given under supervision", "who": "people starting treatment for opioid addiction, under supervision", "what": "the first amount on the label"},
+                         {"passage": 2, "quote": "Patients in maintenance treatment are commonly stabilized at 80 to 120 mg a day once tolerance to methadone has developed", "who": "patients in maintenance treatment, once tolerance has developed", "what": "a daily amount in long-term treatment"}]}
+    oitem = {"id": "w_o", "q": "What is the usual dose of methadone?", "ways": [], "drugs": ["methadone-buprenorphine"]}
+    script["amounts"] = [orows]; script["checker"] = [V(True, True)]
+    r = make(oitem, {"can_read": [], "wanted": []}, chat, Enc(), MODELS, fulltext=lambda pmcid: None, crossref=crossref, ex=ex, names=nm, official=[dict(lab, tier=2, body="thelevel"), lab], page=lambda o: ({"title": "Methadone Hydrochloride", "passages": lab_ps}, dict(lab_ref)))
+    assert r["status"] == "published" and [x["part"] for x in r["parts"]] == ["first", "short", "but", "row1", "row2"] and r["parts"][0]["text"] == L["first"]["opioids"]["text"] and r["parts"][0]["text"].endswith("can kill a person who is not used to them."), (r["status"], r["why"], [x["part"] for x in r["parts"]])
+    assert len(r["sources"]) == 1 and r["sources"][0]["tier"] == 1 and all(words(x["quote"]) <= 15 and AMT.search(x["quote"]) for x in r["parts"] if x["part"].startswith("row")), r["parts"]
+    # a question about the amount that kills is a question about dying: whatever is written waits for a person
+    script["amounts"] = [orows]; script["checker"] = [V(True, True)]
+    r = make(dict(oitem, q="What dose of methadone is lethal?"), {"can_read": [], "wanted": []}, chat, Enc(), MODELS, fulltext=lambda pmcid: None, crossref=crossref, ex=ex, names=nm, official=[lab], page=lambda o: ({"title": "Methadone Hydrochloride", "passages": lab_ps}, dict(lab_ref)))
+    assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
     assert stakes("Is ketamine addictive?", [{"text": "Some people who use it become dependent."}]) == "" and stakes("Do psychedelics and antidepressants interact?", []) == "mixing drugs" and stakes("x", [{"text": "It can be fatal."}]) == "dying"
     assert not rules([{"part": "short", "text": "Between 9% and 27% of people met criteria for dependence.", "uses": ["F1"]}], {"F1": {"quote": "between 9% and 27% met criteria"}})
     for bad in ("Take it 2 hours after the first dose.", "It is generally safe.", "Snorting it hits faster and stronger.", "Addicts relapse.", 'The paper says "yes".', "You should wait.", "It potentiates the high.", "Passages show a link."):
         assert rules([{"part": "short", "text": bad, "uses": ["F1"]}], {"F1": {"quote": "2"}}), bad
     print("lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; "
-          "a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete)")
+          "a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; "
+          "an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, "
+          "with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)")
 
 
 if __name__ == "__main__":
