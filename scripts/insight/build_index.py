@@ -53,8 +53,7 @@ W_Q, W_SHORT, W_WORDS, W_TOPIC, W_SAME = 0.7, 0.3, 0.2, 0.5, 0.3
 # again, but "how can i die from ketamine" (topic 0.49 against the UK deaths answer) is then no longer a best match, which
 # the 2.3 brief asks for: 0.45 is the editor's to confirm.
 TIERS = {"best": 0.72, "topic": 0.45, "sure": 0.85, "tie": 0.06, "related": 0.58, "near": 0.45}
-N_NEXT = 10      # next questions kept for each answer (more for an answer on many drug pages); the page shows three
-NEXT_FLOOR = 0.5  # an answer on another drug's page is offered as a next question only when its question is this close
+N_NEXT = 10      # next questions kept for each answer (three for each place it lives in, when that is more); the page shows three
 # Names that name a drug in a question (for the tiers, the routes and the topic score): each drug's slug, the parts of its
 # name and its street names of three letters or more (data/site/substances.json, aliases.json), without the WEAK ones:
 # everyday words that are also street names. "pills" in "sleeping pills" must not make a question about ecstasy, nor
@@ -260,22 +259,23 @@ class Ranker:
 
 
 def next_lists(A, sim):
-    """Each answer's next questions: the answers nearest by the meaning of their questions, the same drug first, never
-    itself. An answer about several drugs takes the nearest of each in turn, so that each of those drugs' pages has some to
-    offer. Only when its own drugs have fewer than three does an answer about another drug come in, and only a close one."""
-    home = [set(a.get("about") or []) or set(a["pages"]) for a in A]      # where an answer lives: its drugs, else its page
-    at = [set(a.get("about") or []) | set(a["pages"]) for a in A]
+    """Each answer's next questions: the answers nearest by the meaning of their questions, never itself, and only answers
+    that live where it lives: about one of its drugs, or on its page (mixing, drug checking, facts about drug use). An
+    answer that lives in several places takes the nearest of each in turn, so that every page it is on has some to offer.
+    Nothing from another drug is ever offered (the senior author, 15 November: a cannabis answer offered a cocaine
+    question); an answer alone on its drug has no next questions."""
+    drugs = {s["slug"] for s in SUB}
+    at = [set(a.get("about") or []) | set(a["pages"]) for a in A]         # where an answer lives: its drugs and its pages
     out = []
     for i, a in enumerate(A):
         order = [int(j) for j in np.argsort(-sim[i], kind="stable") if j != i]
-        homes = sorted(home[i], key=lambda h: (h != a["substance"], h))
+        homes = sorted(at[i], key=lambda h: (h != a["substance"], h not in drugs, h))
         lists = [[j for j in order if h in at[j]] for h in homes]
         want = max(N_NEXT, 3 * len(homes)); nx = []; k = 0
         while len(nx) < want and any(k < len(l) for l in lists):
             for l in lists:
                 if k < len(l) and l[k] not in nx and len(nx) < want: nx.append(l[k])
             k += 1
-        if len(nx) < 3: nx += [j for j in order if j not in nx and sim[i, j] >= NEXT_FLOOR][:3 - len(nx)]
         out.append(nx)
     return out
 
