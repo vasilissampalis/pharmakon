@@ -286,7 +286,7 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
         wordings: [...new Set((sp.q ? [sp.q] : []).concat(wordsOf[id] || []))], short: sp.short }));
       const input = path.join(__dirname, "insight", ".cache", "index-input.json"), nextFile = path.join(__dirname, "insight", ".cache", "next.json");
       // 2.5: the questions not answered yet (data/site/wanted.json), for the page's second look when no answer fits
-      const wanted = (fileOr("wanted.json", { items: [] }).items || []).map(w => ({ id: w.id, q: w.q, ways: w.ways || [] }));
+      const wanted = (fileOr("wanted.json", { items: [] }).items || []).map(w => ({ id: w.id, q: w.q, ways: w.ways || [], drugs: w.drugs || [] }));
       fs.mkdirSync(path.dirname(input), { recursive: true }); fs.writeFileSync(input, JSON.stringify({ answers, wanted }));
       if (fs.existsSync(nextFile)) fs.unlinkSync(nextFile);
       const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json"), nextFile], { stdio: ["ignore", "inherit", "inherit"], env: Object.assign({}, process.env, { PK_NODE: process.execPath }) });

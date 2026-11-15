@@ -91,9 +91,10 @@ def paper(r):
                     else "review" if any(t in REVIEW for t in types) else "study" if any(t in TRIAL for t in types) else "other"}
 
 
-def epmc_search(query, n=N_SEARCH, opener=None):
-    """(records, how many the service says there are) for a query in Europe PMC's own syntax, most relevant first."""
-    url = EPMC + "search?" + urllib.parse.urlencode({"query": query, "format": "json", "resultType": "core", "pageSize": str(n)})
+def epmc_search(query, n=N_SEARCH, opener=None, sort=None):
+    """(records, how many the service says there are) for a query in Europe PMC's own syntax, most relevant first (or in
+    the order of sort, such as "CITED desc": the most cited first)."""
+    url = EPMC + "search?" + urllib.parse.urlencode(dict({"query": query, "format": "json", "resultType": "core", "pageSize": str(n)}, **({"sort": sort} if sort else {})))
     raw = fetch(url, opener)
     d = json.loads(raw.decode("utf-8")) if raw else {}
     return [paper(r) for r in ((d.get("resultList") or {}).get("result") or []) if isinstance(r, dict)], int(d.get("hitCount") or 0)
@@ -240,12 +241,15 @@ his her you your we our i me my not no nor do does did done have has had having 
 some such only own same so too very just also still even ever never much many one two three really actually get gets getting got make makes made take takes taking took use uses using used people person someone
 thing things like feel feels felt go goes going long time times way ways kind sort lot bit true real still does""".split())
 # what a drug is called in papers: the words searched for each drug the site covers (and a few names people use)
+# (an entry in round brackets is a search of its own: a short name that also means something else is searched only beside
+# a word that says which meaning; in papers "LSD" is also a group of storage diseases, "DMT" a kind of treatment)
+PSY = '(ABSTRACT:"psychedelic" OR ABSTRACT:"psychedelics" OR ABSTRACT:"hallucinogen" OR ABSTRACT:"hallucinogens" OR ABSTRACT:"hallucinogenic")'
 SYN = {"alcohol": ["alcohol", "ethanol", "alcohol drinking"], "cannabis": ["cannabis", "marijuana", "cannabinoids", "tetrahydrocannabinol"], "cocaine": ["cocaine"], "heroin": ["heroin", "diacetylmorphine"],
-       "ketamine": ["ketamine"], "lsd": ["LSD", "lysergic acid diethylamide"], "mdma": ["MDMA", "ecstasy", "3,4-methylenedioxymethamphetamine"], "methamphetamine": ["methamphetamine"],
+       "ketamine": ["ketamine"], "lsd": ["lysergic acid diethylamide", "lysergide", f'((TITLE:"LSD" OR ABSTRACT:"LSD") AND {PSY})'], "mdma": ["MDMA", "3,4-methylenedioxymethamphetamine", '(TITLE:"ecstasy" AND ABSTRACT:"drug")'], "methamphetamine": ["methamphetamine"],
        "amphetamine": ["amphetamine", "amphetamines", "dextroamphetamine", "Adderall"], "psilocybin": ["psilocybin", "psilocin", "magic mushrooms"], "kratom": ["kratom", "mitragynine", "Mitragyna speciosa"],
        "dxm": ["dextromethorphan"], "benzodiazepines": ["benzodiazepines", "alprazolam", "diazepam"], "caffeine": ["caffeine", "coffee"], "nicotine": ["nicotine", "tobacco", "smoking", "e-cigarettes"],
-       "nitrous-oxide": ["nitrous oxide"], "pcp": ["phencyclidine"], "ghb-gbl": ["gamma-hydroxybutyrate", "GHB", "sodium oxybate"], "mescaline": ["mescaline", "peyote"], "dmt-ayahuasca": ["DMT", "N,N-dimethyltryptamine", "ayahuasca"],
-       "5-meo-dmt": ["5-MeO-DMT", "5-methoxy-N,N-dimethyltryptamine"], "2c-x": ["2C-B", "phenethylamines"], "salvia-divinorum": ["Salvia divinorum", "salvinorin A"], "synthetic-cannabinoids": ["synthetic cannabinoids", "synthetic cannabinoid receptor agonists", "Spice"],
+       "nitrous-oxide": ["nitrous oxide"], "pcp": ["phencyclidine"], "ghb-gbl": ["gamma-hydroxybutyrate", "gamma-hydroxybutyric acid", "sodium oxybate"], "mescaline": ["mescaline", "peyote"], "dmt-ayahuasca": ["N,N-dimethyltryptamine", "dimethyltryptamine", "ayahuasca", f'((TITLE:"DMT" OR ABSTRACT:"DMT") AND {PSY})'],
+       "5-meo-dmt": ["5-MeO-DMT", "5-methoxy-N,N-dimethyltryptamine"], "2c-x": ["2C-B", "2C drugs", "psychedelic phenethylamines"], "salvia-divinorum": ["Salvia divinorum", "salvinorin A"], "synthetic-cannabinoids": ["synthetic cannabinoids", "synthetic cannabinoid receptor agonists", "JWH-018"],
        "synthetic-cathinones": ["synthetic cathinones", "mephedrone", "bath salts"], "fentanyl-and-analogues": ["fentanyl", "fentanyl analogues"], "prescription-opioids": ["opioids", "oxycodone", "opioid analgesics"],
        "methadone-buprenorphine": ["methadone", "buprenorphine", "opioid agonist treatment"], "methylphenidate": ["methylphenidate"], "alkyl-nitrites-and-inhalants": ["alkyl nitrites", "poppers", "inhalants", "volatile substance"]}
 FAMILY = {"psychedelics": ["psychedelics", "hallucinogens", "psilocybin", "LSD"], "opioids": ["opioids", "heroin", "opioid"], "stimulants": ["stimulants", "amphetamine", "cocaine"], "drugs": ["illicit drugs", "substance use", "psychoactive drugs"]}
@@ -278,15 +282,24 @@ def topic_terms(texts, used_spans_text):
     return [w for w, _ in sorted(count.items(), key=lambda x: (-x[1], x[0]))][:10]
 
 
-def field(terms): return "(" + " OR ".join(f'TITLE:"{t}" OR ABSTRACT:"{t}"' for t in terms) + ")"
+def field(terms, title_only=False):
+    """The words of one group as a search: any of them in the title or the abstract (a word in round brackets is a search
+    of its own and stands as it is)."""
+    return "(" + " OR ".join(t if t.startswith("(") else f'TITLE:"{t}"' if title_only else f'TITLE:"{t}" OR ABSTRACT:"{t}"' for t in terms) + ")"
 
 
-def searches(question, ways, names):
+def searches(question, ways, names, drugs=None, terms=None):
     """The searches for a question, in Europe PMC's syntax, each with what it is for. Reviews that can be read first; then
-    any paper that can be read; then reviews that cannot (for the list of papers wanted)."""
+    any paper that can be read; then reviews that cannot (for the list of papers wanted); then the drug's most cited
+    reviews. drugs: the drugs the question is about, by the site's names for them (also where it names none); terms: the
+    words papers use for its subject (data/site/wanted.json): without them, the question's own words are searched."""
     groups, _ = drug_terms(question, names)
+    for s in drugs or []:
+        g = list(dict.fromkeys(SYN.get(s, [s.replace("-", " ")])))
+        if g not in groups: groups.append(g)
+    if drugs and len(drugs) > 1 and len(groups) > 1 and not drug_terms(question, names)[0]: groups = [[t for g in groups for t in g]]   # several drugs the question does not name one by one: any of them
     pat = re.compile(r"(?<!\w)(" + "|".join(re.escape(n) for n, _ in names) + r")(?!\w)", re.I)
-    topics = topic_terms([question] + list(ways or []), lambda t: pat.sub(" ", t))
+    topics = list(terms)[:10] if terms else topic_terms([question] + list(ways or []), lambda t: pat.sub(" ", t))
     drug = " AND ".join(field(g) for g in groups) if groups else field(FAMILY["drugs"])
     topic = field(topics) if topics else ""
     core = drug + (" AND " + topic if topic else "")
@@ -295,8 +308,9 @@ def searches(question, ways, names):
     out = [{"for": "reviews and meta-analyses whose full text is open", "query": f"{core} AND {rev} AND OPEN_ACCESS:y AND LANG:eng {not_retr}"},
            {"for": "any paper whose full text is open", "query": f"{core} AND OPEN_ACCESS:y AND LANG:eng {not_retr}"},
            {"for": "reviews and meta-analyses, open or not (the ones that cannot be read are listed as wanted)", "query": f"{core} AND {rev} AND LANG:eng {not_retr}"}]
+    if topic: out.append({"for": "the most cited papers on it, open or not", "query": f"{core} AND LANG:eng {not_retr}", "sort": "CITED desc"})
     if groups and topic:   # a wider net: the drug in the title, any topic, reviews that can be read (the ranking by meaning then picks)
-        out.append({"for": "reviews of the drug itself, open, whatever their topic (ranked by meaning afterwards)", "query": " AND ".join("(" + " OR ".join(f'TITLE:"{t}"' for t in g) + ")" for g in groups) + f" AND {rev} AND OPEN_ACCESS:y AND LANG:eng {not_retr}"})
+        out.append({"for": "reviews of the drug itself, open, whatever their topic (ranked by meaning afterwards)", "query": " AND ".join(field(g, True) for g in groups) + f" AND {rev} AND OPEN_ACCESS:y AND LANG:eng {not_retr}"})
     return out, groups, topics
 
 
@@ -328,7 +342,8 @@ ANIMAL = re.compile(r"\b(rats?|mice|mouse|rodents?|zebrafish|in vitro|cell lines
 def rank(question, ways, cands, enc):
     """The candidates in the order of reading. near: how near in meaning the paper's title or any sentence of its abstract
     is to the question or one of its wordings (0 to 1). The order: near, a little more for a review, for people, for
-    a newer paper and for one much cited; a little less for animals or cells alone."""
+    paper much cited (a new paper nobody has cited yet stands behind an established one that is as near); a little less
+    for animals or cells alone."""
     if not cands: return []
     import numpy as np, math
     Q = enc([question] + list(ways or [])[:6])
@@ -339,24 +354,24 @@ def rank(question, ways, cands, enc):
         people = bool(HUMAN.search(text)); animal = bool(ANIMAL.search(text)) and not people
         c["people"] = people and not animal
         c["score"] = round(c["near"] + (0.06 if c["kind"] == "review" else 0.02 if c["kind"] == "study" else 0) + (0.02 if c["people"] else -0.06 if animal else 0)
-                           + (0.02 if (c["year"] or 0) >= 2015 else 0) + min(0.03, 0.01 * math.log10(1 + c["cited"])), 3)
+                           + (0.01 if (c["year"] or 0) >= 2010 else 0) + min(0.07, 0.025 * math.log10(1 + c["cited"])), 3)
     return sorted(cands, key=lambda c: (-c["score"], c["epmc"]))
 
 
 def find(item, names, enc, opener=None):
     """Everything found for one question (see the head of this file)."""
-    qs, groups, topics = searches(item["q"], item.get("ways") or [], names)
+    qs, groups, topics = searches(item["q"], item.get("ways") or [], names, item.get("drugs"), item.get("terms"))
     seen, log, problems = {}, [], []
     for s in qs:
-        try: got, hits = epmc_search(s["query"], opener=opener)
+        try: got, hits = epmc_search(s["query"], opener=opener, sort=s.get("sort"))
         except Refused as e: problems.append("Europe PMC said no: " + str(e)); break
         except (IOError, ValueError) as e: problems.append("a search failed: " + str(e)[:200]); continue
-        log.append({"for": s["for"], "query": s["query"], "found": hits, "read": len(got)})
+        log.append(dict({"for": s["for"], "query": s["query"], "found": hits, "read": len(got)}, **({"sort": s["sort"]} if s.get("sort") else {})))
         for p in got:
             if p["kind"] in ("retracted", "notice") or not p["title"]: continue
             k = p["doi"] or p["epmc"]
             if k not in seen: seen[k] = p
-    ranked = rank(item["q"], item.get("ways") or [], list(seen.values()), enc)
+    ranked = rank(item["q"], list(item.get("ways") or [])[:5] + ([" ".join(item["terms"][:6])] if item.get("terms") else []), list(seen.values()), enc)
     can = [c for c in ranked if c["oa"] and c["pmcid"]]
     cannot = [c for c in ranked if not (c["oa"] and c["pmcid"]) and c["doi"] and c["kind"] == "review"]
     keep = lambda c, why: {k: c[k] for k in ("epmc", "pmid", "pmcid", "doi", "title", "authors", "journal", "year", "kind", "people", "cited", "near", "score", "license")} | {"why": why}
@@ -393,8 +408,10 @@ def selftest():
     names = [["crystal meth", ["methamphetamine"]], ["alcohol", ["alcohol"]], ["psychedelics", ["lsd", "psilocybin", "mescaline"]], ["weed", ["cannabis"]], ["meth", ["methamphetamine"]]]
     qs, groups, topics = searches("How can you die from alcohol?", ["can alcohol kill you", "what kills you when you drink too much alcohol", "alcohol death causes"], names)
     assert groups == [["alcohol", "ethanol", "alcohol drinking"]] and topics[:2] == ["die", "kill"] or "die" in topics, (groups, topics)
-    assert len(qs) == 4 and 'TITLE:"ethanol"' in qs[0]["query"] and "OPEN_ACCESS:y" in qs[0]["query"] and "OPEN_ACCESS" not in qs[2]["query"] and 'NOT PUB_TYPE:"retracted publication"' in qs[1]["query"], qs
+    assert len(qs) == 5 and qs[3].get("sort") == "CITED desc" and 'TITLE:"ethanol"' in qs[0]["query"] and "OPEN_ACCESS:y" in qs[0]["query"] and "OPEN_ACCESS" not in qs[2]["query"] and 'NOT PUB_TYPE:"retracted publication"' in qs[1]["query"], qs
     g2, _ = drug_terms("Do psychedelics help with crystal meth problems?", names); assert g2 == [["methamphetamine"], ["psychedelics", "hallucinogens", "psilocybin", "LSD"]], g2
+    q3, g3, t3 = searches("What is a K-hole?", ["what does a k hole feel like"], names, ["ketamine"], ["k-hole", "dissociation"]); assert g3 == [["ketamine"]] and t3 == ["k-hole", "dissociation"] and 'ABSTRACT:"dissociation"' in q3[0]["query"], (g3, t3)
+    q4, g4, _ = searches("Does LSD stay in your body forever?", [], [["lsd", ["lsd"]]], None, ["half-life"]); assert 'TITLE:"lysergide"' in q4[0]["query"] and '((TITLE:"LSD" OR ABSTRACT:"LSD") AND (ABSTRACT:"psychedelic"' in q4[0]["query"] and 'TITLE:"LSD" OR ABSTRACT:"LSD" OR' not in q4[0]["query"], q4[0]["query"]
     # a pretend service: two searches answer, the full text is offered for one paper, Crossref knows the DOIs
     core = lambda i, **k: dict({"id": str(100 + i), "source": "MED", "pmid": str(100 + i), "doi": f"10.1000/j.{i}", "title": f"Causes of death from alcohol: review number {i}.", "authorString": "Smith J, Jones K.",
                                "journalInfo": {"journal": {"title": "Addiction"}}, "pubYear": "2021", "abstractText": "<p>Alcohol can cause death by acute poisoning that stops breathing. Participants were adults in ten countries.</p>",
@@ -423,7 +440,7 @@ def selftest():
     out = find({"id": "w_0027", "q": "How can you die from alcohol?", "ways": ["can alcohol kill you", "alcohol death causes"]}, names, Enc2(), opener)
     assert out["found"] == 3 and [c["pmcid"] for c in out["can_read"]] == ["PMC111", "PMC444"] and out["can_read"][0]["kind"] == "review" and not out["can_read"][1]["people"], out["can_read"]
     assert len(out["wanted"]) == 1 and out["wanted"][0]["apa"].startswith("Smith, J. (2021). Causes of death from alcohol. Addiction, 1, 1–9. https://doi.org/10.1000/j.2") and out["wanted"][0]["file"].endswith(".pdf"), out["wanted"]
-    assert all("abstract" not in c for c in out["can_read"]) and len(out["searches"]) == 4 and out["searches"][0]["found"] == 57
+    assert all("abstract" not in c for c in out["can_read"]) and len(out["searches"]) == 5 and out["searches"][0]["found"] == 57
     print("papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)")
 
 

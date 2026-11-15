@@ -494,8 +494,8 @@ def wanted_index(items, out, names, pat, at):
     wb, _ = int8(Wv); sb, _ = int8(Sv); mb, _ = int8(Mv)
     name_of = {n: xs for n, xs in names}
     about = []
-    for w in items:   # the drugs an item is about: the ones its question names (a family's name: every drug of it)
-        ab = set()
+    for w in items:   # the drugs an item is about: the ones its question names (a family's name: every drug of it), and the ones the list itself gives it ("drugs": a K-hole is about ketamine)
+        ab = set(w.get("drugs") or [])
         for m in pat.finditer(w["q"]): ab |= set(name_of.get(m.group(1).lower(), []))
         about.append(sorted(at[s] for s in ab if s in at))
     print(f"insight: {len(items)} questions on the list of those not answered yet, {len(W_txt)} wordings", file=sys.stderr)

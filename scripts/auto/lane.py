@@ -83,8 +83,9 @@ def numbers(text):
     "two reviews": those count the sources, which the gate on sources counts itself."""
     t = (text or "").lower(); t = re.sub(r"(?<=\d),(?=\d{3}\b)", "", t)
     out = set(re.findall(r"\d+(?:\.\d+)?", t)) | {NUMWORD[w] for w in re.findall(r"[a-z]+", t) if w in NUMWORD}
-    for m in re.finditer(r"\b(one|two|three|four|five|six|seven|eight|nine|ten)[\s-]+(?:in|out of|times|fold)\b", t): out.add(WORDNUM[m.group(1)])
-    for m in re.finditer(r"\b(?:in|out of)\s+(?:every\s+)?(one|two|three|four|five|six|seven|eight|nine|ten)\b", t): out.add(WORDNUM[m.group(1)])
+    n = r"(\d+|one|two|three|four|five|six|seven|eight|nine|ten)"
+    for m in re.finditer(r"\b" + n + r"\s+(?:in|out of)\s+(?:every\s+)?" + n + r"\b", t): out.update(WORDNUM.get(x, x) for x in m.groups())     # "one in five", "3 out of 10"
+    for m in re.finditer(r"\b(one|two|three|four|five|six|seven|eight|nine|ten)[\s-]+(?:times|fold)\b", t): out.add(WORDNUM[m.group(1)])               # "three times"
     return out
 
 
