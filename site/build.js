@@ -225,13 +225,17 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
   fs.writeFileSync(path.join(dataDir, "figures.json"), JSON.stringify(epiRows));
   fs.writeFileSync(path.join(dataDir, "decisions.json"), JSON.stringify(site("decisions.json")));
   /* Insight (site 2.2.0, 14 November 2026): the search that understands a question, on the reader's own phone. The model
-     and its runtime (site/insight/vendor: all-MiniLM-L6-v2 and ONNX Runtime Web, unmodified, hashes in scripts/insight/MODELS.md)
-     are published next to the page in dist/insight/, fetched only when someone uses the search box; every answer's
-     wordings, made into vectors by the same model, are in dist/data/insight.json (scripts/insight/build_index.py). */
+     and its runtime (site/insight/vendor: the model named in site/insight/model.json and ONNX Runtime Web, unmodified;
+     where they came from and their hashes: scripts/insight/MODELS.md) are published next to the page in dist/insight/,
+     fetched only when someone uses the search box; every answer's wordings, made into vectors by the same model, are in
+     dist/data/insight.json (scripts/insight/build_index.py). */
   { const vend = path.join(__dirname, "insight", "vendor"), out = path.join(__dirname, "dist", "insight");
-    const files = ["ort.wasm.min.js", "ort-wasm-simd-threaded.mjs", "ort-wasm-simd-threaded.wasm", "all-MiniLM-L6-v2-q8.onnx", "vocab.txt", "LICENSE-onnxruntime-web.txt", "NOTICE-all-MiniLM-L6-v2.txt", "LICENSE-Apache-2.0.txt"];
+    // 2.3: the model's file name is written in one place (site/insight/model.json); every licence and notice in the folder travels with the files
+    const model = JSON.parse(fs.readFileSync(path.join(__dirname, "insight", "model.json"), "utf8")).file;
+    const runtime = ["ort.wasm.min.js", "ort-wasm-simd-threaded.mjs", "ort-wasm-simd-threaded.wasm", model, "vocab.txt"];
+    const files = runtime.concat(fs.existsSync(vend) ? fs.readdirSync(vend).filter(f => /^(LICENSE|NOTICE)/.test(f)).sort() : []);
     if (fs.existsSync(out)) fs.rmSync(out, { recursive: true });
-    if (files.every(f => fs.existsSync(path.join(vend, f)))) {
+    if (runtime.every(f => fs.existsSync(path.join(vend, f)))) {
       fs.mkdirSync(out, { recursive: true }); files.forEach(f => fs.copyFileSync(path.join(vend, f), path.join(out, f)));
       const QS = site("questions.json"); delete QS._note;
       const pagesOf = {}, wordsOf = {};
@@ -252,12 +256,16 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
       if (fs.existsSync(nextFile)) fs.unlinkSync(nextFile);
       const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json"), nextFile], { stdio: ["ignore", "inherit", "inherit"], env: Object.assign({}, process.env, { PK_NODE: process.execPath }) });
       if (r.status !== 0) { console.error("WARNING: Insight's index was not built (scripts/insight/build_index.py failed): the search box answers by words only"); if (fs.existsSync(path.join(dataDir, "insight.json"))) fs.unlinkSync(path.join(dataDir, "insight.json")); }
-      // 2.3: each answer's next questions (the nearest by meaning, the same drug first) go into the page itself, at the head
-      // of its script (const INS_NEXT), so that "Read next" and the answer sheet's "People also ask" need none of Insight's files
+      // 2.3: what the page itself is told, at the head of its script: the model's file name (so its download starts at once;
+      // the index names its model too, and the page goes by the index if the two ever differ), how many MB the reader's
+      // browser fetches once, and each answer's next questions (the nearest by meaning, never from another drug), so that
+      // "Read next" and the answer sheet's "People also ask" need none of Insight's files
       else if (fs.existsSync(nextFile)) {
         const pageFile = path.join(__dirname, "dist", "index.html"), mark = "\nconst SITE_VERSION = ", page = fs.readFileSync(pageFile, "utf8");
-        if (page.split(mark).length === 2) fs.writeFileSync(pageFile, page.replace(mark, () => "\nconst INS_NEXT = " + JSON.stringify(JSON.parse(fs.readFileSync(nextFile, "utf8"))) + ";" + mark));
-        else console.error("WARNING: the page's script has no place for Insight's next questions (const SITE_VERSION not found once): Read next falls back to the next questions of the topic");
+        const bytes = runtime.reduce((a, f) => a + fs.statSync(path.join(vend, f)).size, fs.statSync(path.join(dataDir, "insight.json")).size);
+        const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(JSON.parse(fs.readFileSync(nextFile, "utf8"))) + ";";
+        if (page.split(mark).length === 2) fs.writeFileSync(pageFile, page.replace(mark, () => told + mark));
+        else console.error("WARNING: the page's script has no place for what Insight tells it (const SITE_VERSION not found once): the search box answers by words only, and Read next falls back to the next questions of the topic");
       }
     } else console.error("WARNING: site/insight/vendor is incomplete: Insight is left out and the search box answers by words only"); }
   const kb = f => (fs.statSync(path.join(dataDir, f)).size / 1024).toFixed(0) + " KB";

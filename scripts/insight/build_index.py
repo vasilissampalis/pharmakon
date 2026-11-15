@@ -1,14 +1,16 @@
 """build_index.py IN.json OUT.json [NEXT.json] [--eval]: Pharmakon Insight's index (site 2.2.0, 14 November 2026; honest
 tiers and next questions for site 2.3, 15 November 2026). Called by site/build.js, which writes IN.json: every answer on the
 page with its substance, section, pages, the drugs it is about, every wording of its question on the site and its short
-answer. Adds the ways people ask each answer (data/verification/insight/variants_reader696.json, when present), embeds every
-wording and short answer with all-MiniLM-L6-v2 (site/insight/vendor, byte-identical to the official files:
-scripts/insight/MODELS.md) exactly as the page does in the browser (BERT uncased WordPiece, [CLS] text [SEP], at most 128
-tokens, mean over the tokens, unit length), and writes OUT.json: the vectors (int8; the page scales each row back to unit
-length), each answer's words for the word-overlap score, the drugs each answer is about, the names that name a drug in a
-question, and the thresholds of the tiers (TIERS below). NEXT.json gets each answer's next questions (the nearest answers by
-the meaning of their questions, the same drug first, never itself): site/build.js puts them in the page, for "Read next"
-and "People also ask".
+answer. Adds the ways people ask each answer (data/verification/insight/variants_reader696.json and the "more" wordings
+of nearmiss_*.json, when present; the "near" questions of those files, which an answer does NOT answer, are never indexed
+and never reach the page), embeds every wording and short answer with Insight's model (site/insight/model.json names the
+file in site/insight/vendor; where the files came from: scripts/insight/MODELS.md) exactly as the page does in the browser
+(BERT uncased WordPiece, [CLS] text [SEP], at most 128 tokens, mean over the tokens, unit length), and writes OUT.json: the
+vectors (int8; the page scales each row back to unit length), each answer's words for the word-overlap score, the drugs
+each answer is about, the names that name a drug in a question, the model's file name, and the weights and tiers of
+site/insight/model.json (the page and the checks read them from OUT.json only). NEXT.json gets each answer's next questions
+(the nearest answers by the meaning of their questions, never from another drug, never itself): site/build.js puts them in
+the page, for "Read next" and "People also ask".
 
 Two looks at every question (2.3; the senior author, 15 November: "it has a high error rate"). The first is 2.2.0's score:
 the question, with the drug's own name brought along, against every wording and short answer. Its weakness, measured on
@@ -17,42 +19,44 @@ about kratom. So every wording is embedded a second time with the drug names tak
 question: that is the topic score. Which drug is meant is then settled by the names themselves, not by the model: an answer
 is a best match only when it is about every drug the question names (or the drug of the page the reader is on).
 
-The tokens are made here by the tokenizers library (BertWordPieceTokenizer, lowercase, as eval_match.py's MiniLM class);
-the model is run by the page's own runtime under Node (scripts/insight/embed.js: ONNX Runtime Web from site/insight/vendor),
-one text at a time, so the index's numbers are the very numbers the page computes for the same words (bit-identical; the
-Python onnxruntime on a PC gives cosine 0.994 to 1 against the page, as its int8 kernels round differently: parity.js).
-Vectors are cached by text in site/insight/.cache/ (not committed), so a build embeds only new or changed texts.
+The weights and the tiers (site/insight/model.json; nothing here or in the page holds a threshold):
+  weights  q, short, words: the first look, as tuned in tune.py and scored in eval_gold.py: 0.7 x the best wording, 0.3 x
+           the short answer, plus 0.2 x word overlap (TF-IDF over each answer's wordings on the site and its short answer);
+           topic: candidates are put in order by first look + topic x the topic score; same: an answer about the drugs the
+           question names goes this far ahead (in effect: first; on the gold set that puts a fitting answer first under
+           Related a little more often than no head start: 72 against 64 of 197 questions).
+  tiers    best: a best match needs a first look of this or more ... topic: ... and a topic score of this or more, and to
+           be about every drug the question names; sure: or a topic score of this or more with a first look of at least
+           `related` (the same question in other words: what "is it addictive", asked on the cannabis page, needs); tie: a
+           second best match only when it is this close to the first (first look + weights.topic x topic); related: a
+           related answer needs a first look of this or more ... near: ... and a topic score of this or more.
+Measured on the gold set with the page's own rule (--eval; 400 forum questions, 79 with a full answer by either reader,
+126 that neither reader could answer): scripts/insight/MODELS.md has the table. With all-MiniLM-L6-v2, 2.2.0's score alone
+at 0.72 gave a best match that was wrong for about one question in three; the topic score at 0.45 brings that under one in
+five, and at 0.60 to one in ten, but then "how can i die from ketamine" (topic 0.49 against the UK deaths answer) is no
+longer a best match, which the 2.3 brief asked for: the editor's to settle, with the tiers of each new model.
+
+The tokens are made here by the tokenizers library (BertWordPieceTokenizer, lowercase); the model is run by the page's own
+runtime under Node (scripts/insight/embed.js: ONNX Runtime Web from site/insight/vendor), one text at a time, so the
+index's numbers are the very numbers the page computes for the same words (bit-identical; the Python onnxruntime on a PC
+gives cosine 0.994 to 1 against the page, as its int8 kernels round differently: parity.js). Vectors are cached by text in
+site/insight/.cache/, in a file named after the model file's SHA-256 (not committed): a build embeds only new or changed
+texts, and a new model embeds everything again.
 --eval: also ranks the forum questions of the gold set (two blind readers, data/verification/insight/) with the page's own
 rule (class Ranker below, which scripts/insight/parity.js holds the page to), and prints how often a best match is a full
-answer, a partial one or wrong, how the related answers do, and the same for other thresholds."""
-import ast, base64, glob, hashlib, json, math, os, pathlib, re, shutil, subprocess, sys
+answer, a partial one or wrong, how the related answers do, the same for other thresholds, and how often an answer is
+given as best match to a question the near-miss readers wrote as one it does not answer."""
+import base64, glob, hashlib, json, math, os, pathlib, re, shutil, subprocess, sys
 import numpy as np
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 VENDOR = ROOT / "site/insight/vendor"
-CACHE = ROOT / "site/insight/.cache/vectors-wasm.npz"   # made by the page's runtime, one text at a time (see embed_all)
+CONFIG = json.load(open(ROOT / "site/insight/model.json", encoding="utf-8"))   # the model's file name, the weights, the tiers
+MODEL = CONFIG["file"]
+MODEL_SHA256 = hashlib.sha256((VENDOR / MODEL).read_bytes()).hexdigest() if (VENDOR / MODEL).exists() else "missing"
+CACHE = ROOT / "site/insight/.cache" / ("vectors-" + MODEL_SHA256[:16] + ".npz")   # made by the page's runtime, one text at a time (see embed_all)
 VARIANTS = ROOT / "data/verification/insight/variants_reader696.json"
-# The first look (as tuned in scripts/insight/tune.py and scored in eval_gold.py): 0.7 x the best wording, 0.3 x the short
-# answer, plus 0.2 x word overlap (TF-IDF over each answer's wordings on the site and its short answer). The second look,
-# "topic": the best wording with the drug names taken out. Candidates are put in order by first look + W_TOPIC x topic, and
-# an answer about the drugs the question names goes W_SAME ahead (in effect: first; on the gold set that puts a fitting
-# answer first under Related a little more often than no head start: 72 against 64 of 197 questions).
-W_Q, W_SHORT, W_WORDS, W_TOPIC, W_SAME = 0.7, 0.3, 0.2, 0.5, 0.3
-# The tiers (the page reads them from OUT.json, so the editor tunes them here and nowhere else):
-#   best     a best match needs a first look of this or more ...
-#   topic    ... and a topic score of this or more, and to be about every drug the question names;
-#   sure     or a topic score of this or more with a first look of at least `related` (the same question, in other words:
-#            what "is it addictive", asked on the cannabis page, needs);
-#   tie      a second best match only when it is this close to the first (first look + W_TOPIC x topic);
-#   related  a related answer needs a first look of this or more ...
-#   near     ... and a topic score of this or more.
-# Measured on the gold set with the page's own rule (--eval, 15 November 2026; 400 forum questions, 79 with a full answer
-# by either reader, 126 that neither reader could answer). 2.2.0's score alone at 0.72: a best match for 99 questions; a
-# full answer for 31%, a full or partial one for 68%, wrong for 32%, and 8 unanswerable questions got one. With the topic
-# score at 0.45 (below): see the table --eval prints, and scripts/insight/MODELS.md. At topic 0.60 wrong best matches halve
-# again, but "how can i die from ketamine" (topic 0.49 against the UK deaths answer) is then no longer a best match, which
-# the 2.3 brief asks for: 0.45 is the editor's to confirm.
-TIERS = {"best": 0.72, "topic": 0.45, "sure": 0.85, "tie": 0.06, "related": 0.58, "near": 0.45}
+NEARMISS = ROOT / "data/verification/insight"   # nearmiss_*.json: per answer, "more" (wordings it answers) and "near" (questions it does not)
 N_NEXT = 10      # next questions kept for each answer (three for each place it lives in, when that is more); the page shows three
 # Names that name a drug in a question (for the tiers, the routes and the topic score): each drug's slug, the parts of its
 # name and its street names of three letters or more (data/site/substances.json, aliases.json), without the WEAK ones:
@@ -76,16 +80,29 @@ SUB = json.load(open(ROOT / "data/site/substances.json", encoding="utf-8"))
 AL = json.load(open(ROOT / "data/site/aliases.json", encoding="utf-8"))
 
 
-def encoder():
-    """eval_match.py's MiniLM class (the Python onnxruntime), loaded without running that script's evaluation: parity.js
-    compares it with the page as an independent check of the model; the index itself is made with the page's runtime."""
-    src = (ROOT / "scripts/insight/eval_match.py").read_text(encoding="utf-8")
-    keep = [n for n in ast.parse(src).body if isinstance(n, (ast.ClassDef, ast.FunctionDef)) and n.name in ("MiniLM", "norm")]
-    ns = {}
-    exec("import numpy as np\nfrom tokenizers import BertWordPieceTokenizer\nimport onnxruntime as ort\n" + ast.unparse(ast.Module(body=keep, type_ignores=[])), ns)
-    enc = ns["MiniLM"](VENDOR)
-    enc.tok.enable_truncation(128)   # the page truncates at 128 tokens, [CLS] and [SEP] included
-    return enc
+class PyEncoder:
+    """The same model run by the Python onnxruntime (texts in padded batches, mean over the real tokens, unit length):
+    parity.js compares it with the page as an independent check of the model; the index itself is made with the page's
+    runtime (embed_ids)."""
+    def __init__(self):
+        import onnxruntime as ort
+        self.tok = tokenizer(); self.tok.enable_padding()
+        self.s = ort.InferenceSession(str(VENDOR / MODEL), providers=["CPUExecutionProvider"])
+        self.inputs = [i.name for i in self.s.get_inputs()]
+    def __call__(self, texts):
+        out = []
+        for i in range(0, len(texts), 64):
+            enc = self.tok.encode_batch(texts[i:i + 64])
+            ii = np.array([e.ids for e in enc], dtype=np.int64); am = np.array([e.attention_mask for e in enc], dtype=np.int64)
+            feed = {"input_ids": ii, "attention_mask": am}
+            if "token_type_ids" in self.inputs: feed["token_type_ids"] = np.zeros_like(ii)
+            h = self.s.run(None, feed)[0]; m = am[..., None].astype(np.float32)
+            v = (h * m).sum(1) / np.maximum(m.sum(1), 1e-9)
+            out.append(v / np.maximum(np.linalg.norm(v, axis=-1, keepdims=True), 1e-9))
+        return np.vstack(out)
+
+
+def encoder(): return PyEncoder()
 
 
 def tokenizer():
@@ -280,17 +297,34 @@ def next_lists(A, sim):
     return out
 
 
+def people_wordings():
+    """The ways people ask each answer: the six wordings of phrasings writer 696 (variants) and the three hurried wordings
+    of the near-miss readers ("more" in nearmiss_*.json, when those files are there; they are still growing, so a file that
+    cannot be read is left out, with a line saying so). The same readers' "near" questions are questions an answer does
+    NOT answer: they come back apart, for --eval alone; they are never indexed and never reach the page."""
+    var = dict(json.load(open(VARIANTS, encoding="utf-8")).get("variants", {})) if VARIANTS.exists() else {}
+    more, near = {}, {}
+    for f in sorted(NEARMISS.glob("nearmiss_*.json")):
+        try: items = json.load(open(f, encoding="utf-8")).get("items", {})
+        except ValueError:
+            print(f"insight: {f.name} could not be read (still being written?): left out of this build", file=sys.stderr); continue
+        for k, v in items.items():
+            more.setdefault(k, []).extend(w for w in (v.get("more") or []) if isinstance(w, str) and w.strip())
+            near.setdefault(k, []).extend(w for w in (v.get("near") or []) if isinstance(w, str) and w.strip())
+    return var, more, near
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     IN, OUT = pathlib.Path(args[0]), pathlib.Path(args[1])
     A = json.load(open(IN, encoding="utf-8"))["answers"]
-    var = json.load(open(VARIANTS, encoding="utf-8")).get("variants", {}) if VARIANTS.exists() else {}
+    var, more, near = people_wordings()
     ids = [a["id"] for a in A]
     drugs = [s["slug"] for s in SUB]
     for a in A: a["about"] = sorted(set(a.get("about") or [p for p in a["pages"] if p in drugs]))
     rows, W_txt = [], []
     for i, a in enumerate(A):
-        ws = list(dict.fromkeys([w for w in a["wordings"] if w] + [w for w in var.get(a["id"], []) if isinstance(w, str) and w.strip()]))
+        ws = list(dict.fromkeys([w for w in a["wordings"] if w] + [w for w in var.get(a["id"], []) if isinstance(w, str) and w.strip()] + more.get(a["id"], [])))
         for w in ws: rows.append(i); W_txt.append(w)
     shorts = [a["short"] for a in A]
     docs = [" ".join(a["wordings"]) + " " + a["short"] for a in A]   # word overlap: the site's own wordings and the short answer
@@ -307,23 +341,27 @@ def main():
     wb, _ = int8(Wv); sb, _ = int8(Sv); mb, _ = int8(Mv)
     slugs = sorted({s for a in A for s in a["about"]} | {s for _, xs in names for s in xs})
     at = {s: k for k, s in enumerate(slugs)}
-    out = {"_note": "Pharmakon Insight's index (scripts/insight/build_index.py): vectors of every answer's wordings (W), of the same wordings with the drug names taken out (M) and of its short answer (S) (all-MiniLM-L6-v2, int8, each row scaled to unit length by the page); its words for the overlap score; the drugs it is about; the names that name a drug in a question; and the thresholds of the tiers.",
-           "model": "all-MiniLM-L6-v2-q8", "dim": int(Wv.shape[1]), "weights": {"q": W_Q, "short": W_SHORT, "words": W_WORDS, "topic": W_TOPIC, "same": W_SAME}, "tiers": TIERS,
+    out = {"_note": "Pharmakon Insight's index (scripts/insight/build_index.py): vectors of every answer's wordings (W), of the same wordings with the drug names taken out (M) and of its short answer (S) (made with the model named here, int8, each row scaled to unit length by the page); its words for the overlap score; the drugs it is about; the names that name a drug in a question; and the weights and the tiers (from site/insight/model.json).",
+           "model": MODEL, "model_sha256": MODEL_SHA256, "dim": int(Wv.shape[1]), "weights": CONFIG["weights"], "tiers": CONFIG["tiers"],
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
-           "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var)}
+           "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
     if len(args) > 2:
         pathlib.Path(args[2]).write_text(json.dumps({"ids": ids, "next": nxt}, separators=(",", ":")), encoding="utf-8")
     changed = sum(1 for w, m in zip(W_txt, M_txt) if w != m)
-    print(f"insight: {len(ids)} answers, {len(W_txt)} wordings ({sum(len(v) for v in var.values()) if var else 0} from the readers' variants; {changed} name a drug), {len(names)} names, {OUT.stat().st_size // 1024} KB", file=sys.stderr)
+    idset = set(ids); bare = [a["id"] for a in A if not var.get(a["id"]) and not more.get(a["id"])]
+    print(f"insight: model {MODEL} (SHA-256 {MODEL_SHA256[:12]}…); {len(ids)} answers, {len(W_txt)} wordings ({sum(len(v) for k, v in var.items() if k in idset)} from the phrasings writer, "
+          f"{sum(len(v) for k, v in more.items() if k in idset)} hurried ones from the near-miss readers; {changed} name a drug), {len(names)} names, {OUT.stat().st_size // 1024} KB", file=sys.stderr)
+    if bare: print(f"insight: {len(bare)} answers have only the site's own questions to be found by (no wordings written for them yet): {', '.join(bare[:30])}{' …' if len(bare) > 30 else ''}", file=sys.stderr)
     print(f"insight: next questions for {sum(1 for x in nxt if x)} answers ({sum(len(x) for x in nxt)} in all)", file=sys.stderr)
-    if "--eval" in sys.argv: evaluate(out)
+    if "--eval" in sys.argv: evaluate(out, near)
 
 
-def evaluate(D):
+def evaluate(D, near=None):
     """The page's tiers on the gold set's forum questions (full answer: either reader names an answer that fully answers
-    it; partial: a reader names it as answering part; unanswerable: both readers say none does)."""
+    it; partial: a reader names it as answering part; unanswerable: both readers say none does), then on the near-miss
+    readers' questions (each written as a question one answer does NOT answer: is that answer given as best match?)."""
     G = json.load(open(ROOT / "data/verification/insight/gold-sample.json", encoding="utf-8"))["questions"]
     readers = [json.load(open(f, encoding="utf-8"))["labels"] for f in sorted(glob.glob(str(ROOT / "data/verification/insight/gold_reader*.json")))]
     lab = {}
@@ -343,8 +381,14 @@ def evaluate(D):
     order = [np.argsort(-(p + R.wt["topic"] * t), kind="stable") for p, t in scored]
     h1 = sum(R.ids[o[0]] in tests[i][1] for i, o in enumerate(order) if tests[i][1]) / n_full
     h3 = sum(any(R.ids[j] in tests[i][1] for j in o[:3]) for i, o in enumerate(order) if tests[i][1]) / n_full
-    print(f"gold questions: {len(tests)}; {n_full} with a full answer, {n_un} unanswerable; candidates in the page's order: a full answer first {h1 * 100:.1f}%, in the first three {h3 * 100:.1f}%")
+    print(f"model {D['model']}; gold questions: {len(tests)}; {n_full} with a full answer, {n_un} unanswerable; candidates in the page's order: a full answer first {h1 * 100:.1f}%, in the first three {h3 * 100:.1f}%")
     keep = dict(R.t)
+    # the near-miss questions: (question, the answer it must not get), for answers on the page
+    nm = [(q, a) for a, qs in sorted((near or {}).items()) if a in idset for q in qs]
+    if nm:
+        ntx = [R.texts(q) for q, _ in nm]
+        NV = embed_all([t[0] for t in ntx] + [t[1] for t in ntx])
+        nscored = [R.score(NV[i], NV[len(nm) + i], nm[i][0]) for i in range(len(nm))]
     def table(label):
         b = {"n": 0, "full": 0, "part": 0, "un": 0}; s = {"n": 0, "good": 0}; rel = {"rows": 0, "good": 0, "q": 0, "un": 0}; miss = 0
         for i, (q, full, part, un) in enumerate(tests):
@@ -357,17 +401,25 @@ def evaluate(D):
                 rel["q"] += 1; rel["rows"] += len(related); rel["un"] += un
                 rel["good"] += sum(R.ids[j] in full or R.ids[j] in part for j in related)
         wrong = b["n"] - b["full"] - b["part"]
-        print(f"  {label}: best match for {b['n']} questions: a full answer {b['full']} ({b['full'] / max(1, b['n']) * 100:.0f}%), a partial one {b['part']} ({b['part'] / max(1, b['n']) * 100:.0f}%), "
-              f"wrong {wrong} ({wrong / max(1, b['n']) * 100:.0f}%); unanswerable questions given one {b['un']} of {n_un}; a second best {s['n']} ({s['good']} full or partial); "
-              f"related: {rel['rows']} rows for {rel['q']} questions, {rel['good'] / max(1, rel['rows']) * 100:.0f}% full or partial, {rel['un']} of {n_un} unanswerable questions get some; "
-              f"no best match but a full answer under Related {miss}")
+        line = (f"  {label}: best match for {b['n']} questions: a full answer {b['full']} ({b['full'] / max(1, b['n']) * 100:.0f}%), a partial one {b['part']} ({b['part'] / max(1, b['n']) * 100:.0f}%), "
+                f"wrong {wrong} ({wrong / max(1, b['n']) * 100:.0f}%); unanswerable questions given one {b['un']} of {n_un}; a second best {s['n']} ({s['good']} full or partial); "
+                f"related: {rel['rows']} rows for {rel['q']} questions, {rel['good'] / max(1, rel['rows']) * 100:.0f}% full or partial, {rel['un']} of {n_un} unanswerable questions get some; "
+                f"no best match but a full answer under Related {miss}")
+        if nm:
+            hit = 0
+            for i, (q, a) in enumerate(nm):
+                best, _, _ = R.tiers(nscored[i][0], nscored[i][1], ntx[i][2])
+                hit += any(R.ids[j] == a for j in best)
+            line += f"; near-miss questions given the answer they do not get as best match {hit} of {len(nm)} ({hit / len(nm) * 100:.1f}%)"
+        print(line)
     table("the page's tiers " + json.dumps(keep))
-    for topic in (0.0, 0.40, 0.50, 0.55, 0.60, 0.65):
-        R.t = dict(keep, topic=topic, sure=2.0 if topic == 0.0 else keep["sure"]); table(f"topic {topic:.2f}" + (" (2.2.0's score alone, with the drug rule)" if topic == 0.0 else ""))
-    for best in (0.68, 0.70, 0.74, 0.76):
+    r2 = lambda x: round(x, 2)
+    for topic in (0.0, r2(keep["topic"] - 0.05), r2(keep["topic"] + 0.05), r2(keep["topic"] + 0.10), r2(keep["topic"] + 0.15), r2(keep["topic"] + 0.20)):
+        R.t = dict(keep, topic=topic, sure=2.0 if topic == 0.0 else keep["sure"]); table(f"topic {topic:.2f}" + (" (the first look alone, with the drug rule)" if topic == 0.0 else ""))
+    for best in (r2(keep["best"] - 0.04), r2(keep["best"] - 0.02), r2(keep["best"] + 0.02), r2(keep["best"] + 0.04)):
         R.t = dict(keep, best=best); table(f"best {best:.2f}")
-    for near in (0.0, 0.40, 0.50):
-        R.t = dict(keep, near=near); table(f"near {near:.2f}")
+    for nearv in (0.0, r2(keep["near"] - 0.05), r2(keep["near"] + 0.05)):
+        R.t = dict(keep, near=nearv); table(f"near {nearv:.2f}")
     R.t = keep
 
 
