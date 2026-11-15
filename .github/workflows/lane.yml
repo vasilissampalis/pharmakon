@@ -39,6 +39,8 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main   # the newest main, not the commit that started the run: a run that waited must see what the run before it wrote
       - name: Python packages
         run: |
           python3 -m venv .venv
