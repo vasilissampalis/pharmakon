@@ -76,6 +76,7 @@ LANE = 3                # the lane's own number: an answer written by an older l
 N_PAPERS = 3            # papers read in full for one answer
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
 N_SUMMARIES = 2         # reviews behind a paywall read in summary, where the rest is not enough
+ROOM = 1100             # neurons that must be left of today's allowance before a question is begun
 N_PASSAGES = 9          # passages of a paper shown to the reader
 PASSAGE_CHARS = 1400    # a passage is shown up to this length
 TODAY = datetime.date.today().isoformat()
@@ -691,6 +692,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     for w in order[:limit]:
+        if chat is llm.chat and llm.left() < ROOM: print(f"lane: today's free allowance has {llm.left():.0f} neurons left, not enough for one more answer: it goes on tomorrow"); break   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
         pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
         try:
             found = json.load(open(pf, encoding="utf-8")) if pf.exists() and not again else P.find(w, names, enc)

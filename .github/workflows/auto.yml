@@ -8,8 +8,8 @@
 #           on the system's own list (scripts/auto/ask.py); the finders look for papers and official pages; the machine
 #           lane writes answers (scripts/auto/lane.py: every sentence tied to its source's own words, checked, and held
 #           to the site's rules).
-#   deploy  only when what the site is built from has changed (new answers by the system, or the editor's own work on main):
-#           the site is built, checked and published (deploy.yml), with every gate of a release.
+#   publish only when what the site is built from has changed (new answers by the system, or the editor's own work on main):
+#           the publishing run is started (deploy.yml): the site is built, checked and published, with every gate of a release.
 #
 # A private repository has a monthly amount of free machine time, so the tick is cheap and the work is counted: at most six
 # writing runs and eight publishings a day (scripts/auto/tick.py). Nothing here can cost money: the models are used inside
@@ -28,6 +28,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # to start the publishing run (a push made by a run does not start another workflow; a request through the API does)
 
 concurrency:
   group: auto
@@ -107,15 +108,15 @@ jobs:
             step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json"
             step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json"
             step "remember what was read" python3 -I scripts/auto/look.py --done "$RUNNER_TEMP/questions.json"
-            step "a question a visitor sent becomes a question on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run
+            step "a question a visitor sent becomes a question on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run --marker "$RUNNER_TEMP/new-items"
           fi
-          NEW="$(git status --porcelain data/auto/wanted-auto.json | wc -l | tr -d ' ')"   # a question was just listed: it is worked on in this same run
-          if [ "$DO_LANE" = "true" ] || [ "$NEW" != "0" ]; then
+          if [ "$DO_LANE" = "true" ] || [ -f "$RUNNER_TEMP/new-items" ]; then   # (a question that was just listed is worked on in this same run)
             step "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 6
             step "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 8
             step "the lane writes" python3 -I scripts/auto/lane.py run --max 3
             step "count this run" python3 -I scripts/auto/tick.py did lane
           fi
+          step "has what the site is built from changed?" python3 -I scripts/auto/tick.py after
       - name: Keep the records
         if: always()
         run: |
@@ -141,8 +142,21 @@ jobs:
         if: always()
         run: python3 -I scripts/auto/tick.py after || echo "deploy=false" >> "$GITHUB_OUTPUT"
 
-  deploy:
+  # The publishing is a run of its own (deploy.yml: build, every gate, upload, proof), started through GitHub's API. (Calling
+  # deploy.yml as a part of this workflow did not publish on 15 November 2026 at 21:58 UTC, and left no note to say why.)
+  publish:
     needs: [tick, work]
     if: ${{ always() && (needs.tick.outputs.deploy == 'true' || needs.work.outputs.deploy == 'true') }}
-    uses: ./.github/workflows/deploy.yml
-    secrets: inherit
+    runs-on: ubuntu-slim
+    timeout-minutes: 3
+    steps:
+      - name: Start the publishing run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import os, json, urllib.request
+          req = urllib.request.Request("https://api.github.com/repos/" + os.environ["GITHUB_REPOSITORY"] + "/actions/workflows/deploy.yml/dispatches", data=json.dumps({"ref": "main"}).encode(), method="POST",
+                                       headers={"Authorization": "Bearer " + os.environ["GH_TOKEN"], "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "pharmakon-auto"})
+          print("the publishing run was asked for:", urllib.request.urlopen(req, timeout=30).status)
+          PY

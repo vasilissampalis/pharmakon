@@ -144,7 +144,7 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         st["next"] += 1; auto["items"].append(item); made += 1
         v = enc([item["q"]] + item["ways"]); L = v if L is None else __import__("numpy").vstack([L, v]); owner += [item["id"]] * len(v)
         decide("listed as " + item["id"], item)
-    if save:
+    if save and out:
         AUTO.parent.mkdir(parents=True, exist_ok=True)
         json.dump(auto, open(AUTO, "w", encoding="utf-8"), ensure_ascii=False, indent=1); json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"ask: {len(out)} groups looked at: " + (", ".join(f"{sum(1 for w, _ in out if w.startswith(k))} {k}" for k in ("listed as", "the same question", "on the editors' list", "not about drugs", "something the site does not answer", "no wording", "our wording was not near") if any(w.startswith(k) for w, _ in out)) or "nothing new"))
@@ -197,5 +197,7 @@ def selftest():
 if __name__ == "__main__":
     a = sys.argv[1:]
     if "--selftest" in a: selftest()
-    elif a[:1] == ["run"]: run(limit=int(a[a.index("--max") + 1]) if "--max" in a else A_RUN)
+    elif a[:1] == ["run"]:
+        res = run(limit=int(a[a.index("--max") + 1]) if "--max" in a else A_RUN)
+        if "--marker" in a and any(item for _, item in res): pathlib.Path(a[a.index("--marker") + 1]).write_text("new\n")   # a sign for the run that a question was listed just now
     else: sys.exit(__doc__)
