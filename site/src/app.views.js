@@ -1,10 +1,4 @@
-/* ---------- Monograph registry ---------- */
-const TEMPLATE_SECTIONS = [
-  [2, "Identity and nomenclature"], [3, "Pharmacology"], [4, "Neuroscience"], [5, "Effects"], [6, "Acute risks"],
-  [7, "Routes of administration and practical risk reduction"], [8, "Dependence and patterns of use"], [9, "Long-term effects"],
-  [10, "Epidemiology"], [11, "Harm-reduction interventions"], [12, "Treatment and therapeutic research"], [13, "Legal status"],
-  [14, "Contested questions"], [15, "Research gaps"]
-];
+/* ---------- Drugs ---------- */
 const subBySlug = Object.fromEntries(SUBSTANCES.map(s => [s.slug, s]));
 // A claim whose supporting anchors all cite narrative reviews stays draft (METHODS §6.3).
 function narrativeOnly(c) {
@@ -52,7 +46,6 @@ function icon(name, cls) { const d = ICONS[name]; return d ? '<svg class="ic' + 
 /* One colour and one icon per drug family (the families are the site's classes) */
 const FAMILY = { "Stimulants": { k: "stim", icon: "bolt" }, "Depressants": { k: "dep", icon: "moon" }, "Entactogens": { k: "ent", icon: "heart" }, "Classic psychedelics": { k: "psy", icon: "eye" }, "Atypical psychedelics": { k: "apsy", icon: "burst" }, "Dissociatives": { k: "dis", icon: "orbit" }, "Opioids": { k: "opi", icon: "poppy" }, "Cannabinoids": { k: "can", icon: "leaf" }, "Inhalants": { k: "inh", icon: "wind" } };
 function fam(cls) { return FAMILY[cls] || { k: "oth", icon: "molecule" }; }
-function famChip(cls) { const f = fam(cls); return '<span class="famchip f-' + f.k + '">' + icon(f.icon) + esc(cls) + "</span>"; }
 /* How strong the evidence is: the GRADE level as signal bars and words; the GRADE term stays in the title */
 const CERT_WORDS = { high: "Strong evidence", moderate: "Moderate evidence", low: "Limited evidence", "very-low": "Very limited evidence" };
 function meterHtml(cert, small) {
@@ -61,29 +54,15 @@ function meterHtml(cert, small) {
 }
 function meterDots(cert) { const n = { high: 4, moderate: 3, low: 2, "very-low": 1 }[cert] || 1; return '<span class="meter m' + n + ' xs" title="' + esc(CERT_WORDS[cert] || cert) + '"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sr">' + esc(CERT_WORDS[cert] || cert) + "</span></span>"; }
 const META_SOURCE = { crossref: "Crossref", publisher: "publisher's page", pubmed: "PubMed", manual: "entered by hand" };
-function monographFor(slug) {
-  if (slug === MONO.slug) return MONO;
-  const full = MONOS.find(x => x.slug === slug); if (full) return full;  // every drug with a written monograph
-  const s = subBySlug[slug]; if (!s) return null;
-  return {
-    slug: s.slug, name: s.name, inn: "", classes: [s.cls], mechanisms: [s.mech], tier: 1, version: "0.0.0", status: "planned",
-    dates: { last_search: null, last_review: null }, authors: MONO.authors,
-    at_a_glance: null,
-    sections: TEMPLATE_SECTIONS.map(t => ({ number: t[0], title: t[1], claims: [], senior_author_only: t[0] === 7,
-      no_evidence_note: t[0] === 7 ? "Not written yet. This section will be added by the senior author after a legal review, to the same citation standard as every other section." : "Not written yet. The evidence map lists the papers this section will be built from; nothing is written until they have been read in full." })),
-    changelog: []
-  };
-}
 
 /* ---------- Routing ---------- */
-const PAGE_VIEWS = ["home", "substances", "drug", "shared", "monograph", "numbers", "interactions", "checking", "facts", "emergency", "law", "methods", "about", "glossary", "howto", "review", "quiz", "notfound"];
+const PAGE_VIEWS = ["home", "substances", "drug", "shared", "numbers", "interactions", "checking", "facts", "emergency", "law", "methods", "about", "glossary", "howto", "review", "quiz", "notfound"];
 const PAGE_TITLES = { home: "", shared: "Shared answer", facts: "Facts about drug use", substances: "Find a drug", numbers: "Statistics", interactions: "Mixing drugs", emergency: "Emergency numbers", checking: "Drug checking", law: "Drug treaties by country", methods: "Methods", about: "About", glossary: "Glossary", howto: "How to read this site", review: "Review queue", quiz: "Myth or fact?", notfound: "Page not found" };
-let currentSlug = MONO.slug, renderedSlug = null;
+let currentSlug = MONO.slug;   // the drug page last shown (the review queue lists its claims)
 function setTitle(t) { document.title = t ? t + " · Pharmakon" : "Pharmakon: what the research says about drugs"; }
 // after a page change, keyboard and screen-reader users start at the page heading
 function focusHeading(view) { const h = document.querySelector("#view-" + view + " h1"); if (h) { h.setAttribute("tabindex", "-1"); try { h.focus({ preventScroll: true }); } catch (e) { h.focus(); } } }
 function openAround(el) { for (let d = el && el.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true; }
-function openSection(id) { const el = document.getElementById(id); if (!el) return; if (el.tagName === "DETAILS") el.open = true; const d = el.closest("details"); if (d) d.open = true; scrollToEl(el); }
 let routedOnce = false;
 function route() {
   let h = (location.hash || "#home").slice(1);
@@ -150,11 +129,10 @@ function route() {
   // a country chosen in the search: #checking/c-Greece, #emergency/c-Greece, #law/c-Greece
   const cm = h.match(/^(emergency|checking|law)\/c-(.+)$/);
   if (cm) { show(cm[1]); setTitle(PAGE_TITLES[cm[1]]); window.scrollTo({ top: 0 }); openCountry(cm[1], decodeURIComponent(cm[2])); return; }
-  if (!PAGE_VIEWS.includes(h) || h === "notfound" || h === "monograph") h = "home";
+  if (!PAGE_VIEWS.includes(h) || h === "notfound" || h === "drug" || h === "shared") h = "home";
   show(h); setTitle(PAGE_TITLES[h]);
   // pages that read files fetched when needed draw on their first visit (speed, 13 November)
   if (h === "numbers") showNumbers();
-  if (h === "howto") showHowto();
   if (h === "review") whenReady(() => Promise.all(FULL_FILES.map(loadFull).concat(loadRefs(), loadJson("decisions.json", d => Object.assign(DECISIONS, d)))), document.getElementById("review-list"), "The review queue", renderReview);
   // the Myth or fact? page: the same deck as the start page, endless (senior author, 14 November: one format everywhere)
   if (h === "quiz") { if (!MF.quizpage) mfStart("quizpage"); else mfRefresh("quizpage"); }
@@ -278,7 +256,7 @@ function photoFig(p, size, label, detail) {
 }
 function drugTile(s) {
   const f = fam(s.cls), names = documentedNames(s.slug).slice(0, 3), ph = headerPhoto(s.slug);
-  return '<a class="dtile f-' + f.k + (ph ? " hasph" : "") + '" href="#s-' + s.slug + '">' + (ph ? '<span class="dt-ph">' + photoImg(ph, "t", "", true) + "</span>" : "") + '<span class="dt-top">' + icon(f.icon) + '<span class="dt-st ' + s.status + '">' + esc(pageStateLabel(s.slug)) + '</span></span><span class="dt-name">' + esc(s.name) + "</span>" + (names.length ? '<span class="dt-al">' + esc(names.join(" · ")) + "</span>" : "") + "</a>";
+  return '<a class="dtile f-' + f.k + (ph ? " hasph" : "") + '" href="#s-' + s.slug + '">' + (ph ? '<span class="dt-ph">' + photoImg(ph, "t", "", true) + "</span>" : "") + '<span class="dt-top">' + icon(f.icon) + '</span><span class="dt-name">' + esc(s.name) + "</span>" + (names.length ? '<span class="dt-al">' + esc(names.join(" · ")) + "</span>" : "") + "</a>";
 }
 const POPULAR = ["cannabis", "alcohol", "mdma", "cocaine", "ketamine", "methamphetamine", "ghb-gbl", "benzodiazepines", "psilocybin", "lsd", "heroin", "fentanyl-and-analogues", "nitrous-oxide", "synthetic-cathinones"];
 
@@ -341,18 +319,24 @@ function glossify(escaped, used) {
   }
   return segs.map(x => x.t).join("");
 }
-/* The currency check: newer studies found that could change a finding (pointers, not yet read) */
+/* The currency check (data/site/currency.json): an answer says when newer research that could change it has been found and is
+   not in it yet (not read, or read and being checked). What the search found nothing for, or what has since been read and
+   added, is no longer said under every answer (site 2.3): the date of the last search is in the version line. */
 const TYPE_WORD = { "meta-analysis": "meta-analysis", "systematic review": "systematic review", "RCT": "randomized trial", "cohort": "cohort study", "other": "study" };
 function currencyHtml(c, short) {
-  const k = CURRENCY.claims && CURRENCY.claims[c.id]; if (!k) return "";
+  const k = CURRENCY.claims && CURRENCY.claims[c.id]; if (!k || !k.yes.length) return "";
   const when = new Date(CURRENCY.checked_on + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-  if (!k.yes.length) return short ? "" : '<p class="currency ok">' + icon("search") + "Searched for newer research on " + esc(when) + ": no newer study found that is likely to change this (titles and abstracts screened" + (k.maybe ? "; " + k.maybe + " related " + (k.maybe === 1 ? "study" : "studies") + " listed for reading" : "") + ").</p>";
   const unread = k.yes.filter(x => !x.read && !x.checking), checking = k.yes.filter(x => x.checking), done = k.yes.filter(x => x.read);
   const readOn = done.length ? new Date(done[0].read + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "";
   const listOf = xs => xs.map(x => '<a href="https://doi.org/' + esc(x.doi) + '" target="_blank" rel="noopener">' + esc(String(x.first_author || "").split(" ")[0]) + " et al., " + esc(x.year) + "</a> (" + esc(TYPE_WORD[x.type] || x.type) + ")").join("; ");
   if (checking.length && !unread.length) return '<p class="currency new">' + icon("alert") + (short ? "Newer research may change this answer: " + checking.length + " newer " + (checking.length === 1 ? "study has" : "studies have") + " been read and " + (checking.length === 1 ? "is" : "are") + " being checked." : "Newer research found on " + esc(when) + " has been read and is being checked by a second reader before it is added: " + listOf(checking) + "." + (done.length ? " Already added: " + listOf(done) + "." : "")) + "</p>";
-  if (!unread.length) return short ? "" : '<p class="currency ok">' + icon("search") + "Searched for newer research on " + esc(when) + ": " + (done.length === 1 ? "the newer study found was" : "the " + done.length + " newer studies found were") + " read in full on " + esc(readOn) + " and added here: " + listOf(done) + ".</p>";
+  if (!unread.length) return "";
   return '<p class="currency new">' + icon("alert") + (short ? "Newer research may change this answer: " + unread.length + " newer " + (unread.length === 1 ? "study" : "studies") + " not yet read" + (done.length ? " (" + done.length + " more already read and added)" : "") + "." : "Newer research that could change this finding was found on " + esc(when) + " and has not yet been read: " + listOf(unread) + "." + (done.length ? " Read in full on " + esc(readOn) + " and added here: " + listOf(done) + "." : "")) + "</p>";
+}
+// the one quiet line for someone who cites an answer, inside its deepest fold: its version, and when newer research was last searched for
+function versionLine(c) {
+  const k = CURRENCY.claims && CURRENCY.claims[c.id];
+  return '<p class="verline">Version ' + esc(c.version) + (k && CURRENCY.checked_on ? " · last search for newer research " + esc(new Date(CURRENCY.checked_on + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })) : "") + "</p>";
 }
 function claimHtml(c, opts) {
   const ev = c.evidence.map((e, i) => '<div class="ex" data-anchor="' + c.id + ":" + i + '"><div><span class="role ' + e.role + '">' + e.role + "</span> " + (e.extracted.startsWith("[") ? '<span class="placeholder">' + esc(e.extracted) + "</span>" : esc(e.extracted)) + (e.quote ? ' <q>' + esc(e.quote) + "</q>" : "") + '</div><div class="src">' + cite(e.reference) + "<br>" + esc(e.page) + (e.locator && !e.locator.startsWith("[") ? " · " + esc(e.locator) : "") + '<br><span class="anchor ' + e.anchor_status + '">' + esc(e.anchor_status === "ai-checked" && (e.check_mode === "targeted" || e.check_mode === "card-check") ? "checked at the stated place (second AI reader)" : (ANCHOR_LABEL[e.anchor_status] || e.anchor_status)) + "</span></div></div>").join("");
@@ -374,138 +358,12 @@ function claimHtml(c, opts) {
     '<div class="text"><div class="precise"><span class="reg">Precisely</span>' + inPieces(c.statement, t => glossify(esc(t), glUsed)) + '<p class="precise-cites">' + citeList + "</p></div></div>" +
     '<div class="pecotable"><div><b>Who was studied</b>' + esc(c.population) + "</div><div><b>Exposure</b>" + esc(c.exposure) + "</div><div><b>Compared with</b>" + esc(c.comparator) + "</div><div><b>What was measured</b>" + esc(c.outcome) + "</div><div><b>How big</b>" + inPieces(c.magnitude, esc) + "</div></div>" +
     '<div class="tools">' + cardLinks + '<button type="button" data-toggle="ev-' + c.id + '">Evidence anchors (' + c.evidence.length + ")</button>" + '<a href="#' + c.id + '" class="perma" title="Link to this claim" aria-label="Link to this claim">#</a><button type="button" class="report" data-report="' + c.id + '">Report a mistake</button></div>' +
-    '<div class="evid" id="ev-' + c.id + '" hidden>' + ev + "</div>" +
+    '<div class="evid" id="ev-' + c.id + '" hidden>' + ev + "</div>" + versionLine(c) +
     "</details>" +
     currencyHtml(c) +
-    '<div class="stampline"><span class="senior-slot" data-senior="' + c.id + '"></span><span class="verif" title="Verification step: ' + esc(LADDER_WORDS[c.verification.status] || c.verification.status) + ' (Methods, verification ladder)">' + esc(readerStamp(c.verification.status, c)) + " · v" + esc(c.version) + "</span></div>" +
     "</article>";
 }
-function debateHtml(d) {
-  return '<section class="debate"><header><span class="badge contested">contested</span><h3>' + esc(d.question) + "</h3></header>" +
-    '<div class="cols"><div class="col yes"><h4>Strongest evidence for yes</h4>' + inPieces(d.evidence_yes, liveCites) + '</div><div class="col no"><h4>Strongest evidence for no</h4>' + inPieces(d.evidence_no, liveCites) + "</div></div>" +
-    '<div class="full"><h4>What neither side\'s evidence can show</h4>' + inPieces(d.neither_can_show, liveCites) + "</div>" +
-    '<div class="full reading"><h4>The editors\' reading</h4>' + inPieces(d.editors_reading, liveCites) + "</div>" +
-    '<div class="full"><h4>What would settle it</h4>' + inPieces(d.what_would_settle_it, liveCites) + "</div></section>";
-}
-
-
-/* ---------- Sections 2 and 13: identity and legal status (sourced facts, not graded claims) ---------- */
-const READ_VIA = { WebFetch: "WebFetch", browser: "the app's browser", PDF: "the PDF on file" };
-const PUB_SHORT = { "National Institute of Standards and Technology (NIST)": "NIST Chemistry WebBook", "WHO Collaborating Centre for Drug Statistics Methodology": "WHO ATC/DDD Index", "European Union Drugs Agency (EUDA)": "EUDA", "U.S. Drug Enforcement Administration": "DEA", "Australian Institute of Health and Welfare": "AIHW", "National Center for Biotechnology Information (PubChem)": "PubChem", "U.S. Drug Enforcement Administration, Diversion Control Division (Drug & Chemical Evaluation Section)": "DEA Diversion Control Division", "U.S. National Institute on Drug Abuse": "NIDA", "International Narcotics Control Board (copy held by the HRB National Drugs Library, Ireland)": "INCB", "DailyMed, U.S. National Library of Medicine": "DailyMed", "U.S. Food and Drug Administration": "FDA", "Office of the Federal Register (eCFR)": "eCFR", "European Medicines Agency": "EMA", "European Monitoring Centre for Drugs and Drug Addiction (now EUDA)": "EMCDDA", "European Monitoring Centre for Drugs and Drug Addiction (now EUDA); Publications Office of the European Union": "EMCDDA", "U.S. Drug Enforcement Administration (Federal Register, via govinfo.gov)": "Federal Register" };
-function titleShort(t) { return String(t || "").replace(/^(ATC\/DDD Index|eCFR|Alcohol, tobacco & other drugs in Australia): /, "").split(" (CAS")[0].split(", NIST")[0].split(", PubChem")[0].split(" (")[0]; }
-function srcLinks(ids, srcs) {
-  const list = (ids || []).map(id => srcs.find(x => x.id === id) || { id: id });
-  const pub = s => PUB_SHORT[s.publisher] || s.publisher || "";
-  const pubs = list.map(pub), dup = p => p && pubs.filter(x => x === p).length > 1;
-  return list.map(s => {
-    if (!s.url) return esc(s.id);
-    const when = (String(s.date || "").match(/^(?:19|20)\d\d(?:-\d\d){0,2}\b/) || [""])[0]; // only a date the source itself carries (not "Undated (bibliography to 2006)")
-    const label = !pub(s) ? s.title : dup(pub(s)) ? pub(s) + ": " + titleShort(s.title) : pub(s);
-    const tip = (s.publisher ? s.publisher + ". " : "") + s.title + (s.date ? " (" + s.date + ")" : "") + (s.read_via ? " · read through " + (READ_VIA[s.read_via] || s.read_via) : "") + (s.accessed ? " on " + s.accessed : "");
-    return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener" title="' + esc(tip) + '">' + esc(label) + (when ? ", " + esc(when) : "") + "</a>";
-  }).join("; ");
-}
-function identityHtml(slug) {
-  const d = IDENTITY.find(x => x.substance === slug); if (!d) return "";
-  const n = d.names || {}; const S = d.sources || [];
-  const rows = [["INN", n.inn], ["IUPAC name", n.iupac], ["CAS numbers", n.cas, "<br>"], ["Formula", n.formula], ["Molar mass", n.molar_mass], ["Synonyms", n.synonyms, "; "]].filter(r => r[1] && r[1].length).map(r => [r[0], Array.isArray(r[1]) ? r[1].map(esc).join(r[2]) : esc(r[1])]);
-  const via = [...new Set(S.map(s => s.read_via).filter(Boolean))];
-  // what a reader looks for first: the names people use, what it looks like, what drug checking found; then the chemistry
-  let h = '<div class="facts">';
-  if ((d.members || []).length) h += '<p class="covers"><b>This page covers:</b> ' + d.members.map(mb => esc(mb.name)).join(", ") + ".</p>";
-  if ((d.street_names || []).length) h += "<h3>Street names, as documented by monitoring bodies</h3><ul>" + d.street_names.map(f => "<li>" + esc(f.names.join(", ")) + " — " + esc(f.region) + (f.period ? ", " + esc(f.period) : "") + ' <span class="src">(' + srcLinks(f.source_ids, S) + ")</span></li>").join("") + "</ul>";
-  if ((d.forms || []).length) h += "<h3>Forms</h3><ul>" + d.forms.map(f => "<li><b>" + esc(f.form) + "</b>" + (f.detail ? " — " + esc(f.detail) : "") + ' <span class="src">(' + srcLinks(f.source_ids, S) + ")</span></li>").join("") + "</ul>";
-  const dc = (d.drug_checking || []).filter(f => !f.hold), held = (d.drug_checking || []).length - dc.length;
-  if (dc.length) h += "<h3>What drug checking has found</h3><ul>" + dc.map(f => "<li>" + esc(f.finding) + (f.where_when ? " — " + esc(f.where_when) : "") + ' <span class="src">(' + srcLinks(f.source_ids, S) + ")</span></li>").join("") + "</ul>";
-  if (held) h += (dc.length ? "" : "<h3>What drug checking has found</h3>") + '<p class="note">' + held + " finding" + (held === 1 ? "" : "s") + " from drug-checking papers " + (held === 1 ? "is" : "are") + " held back until " + (held === 1 ? "its paper has" : "their papers have") + " been read in full text (Methods §12.1).</p>";
-  h += '<details class="chem"><summary>Chemical names and identifiers (for chemists and clinicians)</summary>';
-  if (rows.length) h += '<div class="tablewrap"><table class="kv">' + rows.map(r => "<tr><th>" + esc(r[0]) + "</th><td>" + r[1] + "</td></tr>").join("") + (n.source_ids ? '<tr><th>Source</th><td>' + srcLinks(n.source_ids, S) + "</td></tr>" : "") + "</table></div>";
-  if ((d.members || []).length) h += "<h3>Members covered on this page</h3>" + '<div class="tablewrap"><table class="members"><tr><th>Substance</th><th>CAS number</th><th>Formula</th><th>Molar mass</th><th>Source</th></tr>' + d.members.map(mb => '<tr><td data-label="Substance"><b>' + esc(mb.name) + "</b>" + (mb.inn ? '<div class="muted small">' + (/^INN\b/.test(mb.inn) ? "" : "INN: ") + esc(mb.inn) + "</div>" : "") + ((mb.synonyms || []).length ? '<div class="muted small">Also: ' + mb.synonyms.map(esc).join("; ") + "</div>" : "") + (mb.note ? '<div class="muted small">' + esc(mb.note) + "</div>" : "") + '</td><td data-label="CAS number">' + (mb.cas || []).map(esc).join("<br>") + '</td><td data-label="Formula">' + esc(mb.formula || "") + '</td><td data-label="Molar mass">' + esc(mb.molar_mass || "") + '</td><td data-label="Source"><span class="src">' + srcLinks(mb.source_ids, S) + "</span></td></tr>").join("") + "</table></div>";
-  h += "</details>";
-  h += '<details class="srcnote howchecked"><summary>How these facts were checked</summary><div class="muted small">Sourced facts, not graded claims. Each item names its source (point at a source for its title and how it was read). ' + (via.length === 1 && via[0] === "WebFetch" ? "The pages were read through WebFetch, a fetch tool that answers through a summarizing model (Methods §12.1). " : "") + (d.verification === "ai-checked" ? "A second AI reader then re-read every page without seeing this section and confirmed each item, or corrected it (checked " + esc(d.checked_on || "") + "); the senior author has not yet checked it." : "The section stays a draft until a second reader and the senior author have checked it (compiled " + esc(d.compiled_on) + ").") + "</div></details>";
-  return h + "</div>";
-}
-
-function gapsHtml(slug) {
-  const cl = CLAIMS.filter(c => c.substance === slug);
-  const deb = cl.filter(c => c.debate);
-  const cs = Object.entries(STUDY_CARDS).filter(([id, k]) => k.substance === slug && k.what_would_settle_it);
-  const m = monographFor(slug) || MONO; const s15 = (m.sections || []).find(x => x.number === 15) || {};
-  const pq = s15.priority_questions || [];
-  if (!deb.length && !cs.length && !pq.length) return "";
-  let h = '<div class="facts">';
-  if (pq.length) h += "<h3>Priority questions this page cannot yet answer</h3><ol>" + pq.map(q => "<li><b>" + esc(q.question) + "</b><br>Needs: " + esc(q.needs) + "</li>").join("") + "</ol>" + (s15.not_yet_covered ? '<p><b>Not yet covered on this page:</b> ' + esc(s15.not_yet_covered) + "</p>" : "") + (s15.no_evidence_note ? '<p class="note">' + esc(s15.no_evidence_note) + "</p>" : "");
-  h += '<p class="note">Generated from the debate boxes and the study cards: the studies that have not been done and would answer the open questions. They are also the encyclopedia\'s research agenda.</p>';
-  if (deb.length) h += "<h3>The contested questions</h3><ol>" + deb.map(c => '<li><b><a href="#' + c.id + '">' + esc(c.debate.question) + "</a></b><br>" + esc(c.debate.what_would_settle_it) + "</li>").join("") + "</ol>";
-  const weak = cl.filter(c => c.grade.certainty === "very-low" && !c.debate);
-  if (weak.length) h += "<h3>Questions where the evidence is of very low certainty</h3><ul>" + weak.map(c => '<li><a href="#' + c.id + '">' + esc(c.outcome.charAt(0).toUpperCase() + c.outcome.slice(1)) + "</a> — " + esc(c.population) + ' <span class="muted small">(section ' + c.section + (c.verification.status === "draft" ? ", draft" : "") + ")</span></li>").join("") + "</ul>";
-  if (cs.length) h += "<details><summary>What each study card says would settle its question (" + cs.length + ")</summary><ul>" + cs.map(([id, k]) => "<li>" + esc(k.what_would_settle_it) + ' <span class="src">(' + cite(k.reference) + ")</span></li>").join("") + "</ul></details>";
-  return h + "</div>";
-}
-function legalOrder(entries) { const rank = e => /United Nations/.test(e.jurisdiction) ? 0 : /European Union/.test(e.jurisdiction) ? 1 : 2; return entries.slice().sort((a, b) => rank(a) - rank(b) || a.jurisdiction.localeCompare(b.jurisdiction)); }
-function legalRow(e) {
-  return '<tr><td data-label="Status">' + esc(e.status) + (e.note ? '<details class="srcnote"><summary>How this row was read</summary><div class="muted small">' + esc(e.note) + "</div></details>" : "") + '</td><td data-label="Instrument"><a href="' + esc(e.source_url) + '" target="_blank" rel="noopener">' + esc(e.instrument) + "</a>" + (e.source_date ? '<div class="muted small">' + esc(e.source_date) + "</div>" : "") + '</td><td data-label="Medical use"' + (e.medical_use ? "" : ' class="empty"') + '>' + esc(e.medical_use || "—") + '</td><td data-label="Checked">' + esc(e.checked_on) + '<div class="muted small"' + (e.checked_by ? ' title="' + esc(e.checked_by) + '"' : "") + '>' + esc(e.verification) + "</div></td></tr>";
-}
-function legalHtml(slug) {
-  const d0 = LEGAL.find(x => x.substance === slug); if (!d0) return ""; const entries = legalOrder(d0.entries);
-  // one group per jurisdiction: the UN and the EU open, each country folded (pick your country above to see it at once)
-  const groups = []; entries.forEach(e => { const g = groups[groups.length - 1]; if (g && g.j === e.jurisdiction) g.rows.push(e); else groups.push({ j: e.jurisdiction, rows: [e] }); });
-  const head = "<tr><th>Status</th><th>Instrument</th><th>Medical use</th><th>Checked</th></tr>";
-  return '<div class="facts">' + countryLawHtml(slug, "ctry-full") + '<p class="note">What each law or official list says, on the day we checked. Not legal advice: laws change, and the official text is what counts. \u201cNot found\u201d means we could not check every list, not that the drug is legal there.</p>' +
-    '<details class="lawmore"><summary>How we checked</summary><p class="note">Each row says how far it was checked: draft (read once), ai-checked (read twice, and both readings agreed) or senior-verified (checked by the senior author). ' + groups.length + " countries and bodies, read on " + esc(d0.compiled_on) + ".</p></details>" +
-    groups.map(g => '<details class="lawgrp"' + (/United Nations|European Union/.test(g.j) ? " open" : "") + "><summary><b>" + esc(g.j) + '</b> <span class="muted small">' + g.rows.length + (g.rows.length === 1 ? " row" : " rows") + '</span></summary><div class="tablewrap"><table>' + head + g.rows.map(legalRow).join("") + "</table></div></details>").join("") + "</div>";
-}
-
-function glanceItem(id) {
-  const c = claimById[id]; if (!c) return "";
-  return '<li><p>' + esc(claimText(c)) + '</p><div class="qmeta">' + meterHtml(c.grade.certainty, true) + '<span class="badge ' + c.status + '">' + esc(statusLabel(c.status)) + '</span><a class="see" href="#' + id + '">See the evidence ' + icon("arrow") + "</a></div></li>";
-}
-
-/* ---------- Quick answers: the reader's first layer of a drug page ---------- */
-const FORM_ICON = [[/crystal/i, "crystal"], [/powder/i, "powder"], [/capsule/i, "capsule"], [/tablet|pill/i, "tablet"], [/blotter|paper/i, "blotter"], [/liquid|solution/i, "drop"], [/mushroom|fruiting/i, "mushroom"], [/cact/i, "cactus"], [/leaf|leaves|herb|plant/i, "leaf"], [/resin|hash/i, "block"], [/\bgas\b|canister|cartridge|charger/i, "canister"]];
-function formIcon(name) { for (const [re, ic] of FORM_ICON) if (re.test(name)) return ic; return null; }
-// the first statement of a sourced row (up to its first ";" or full stop); the full row is one tap away in section 13
-function firstClause(t) { return String(t || "").split(/;\s|\.\s/)[0].replace(/\.$/, ""); }
-function basicsHtml(m) {
-  const base = "#s-" + m.slug + "/", d = IDENTITY.find(x => x.substance === m.slug), L = LEGAL.find(x => x.substance === m.slug), figs = figuresFor(m.slug);
-  const more = (sec, label) => '<a class="more" href="' + base + sec + '">' + esc(label) + " " + icon("arrow") + "</a>";
-  const cards = [];
-  // What it looks like: every form people meet (data/site/forms.json), each with what it is, its sources and a photo where a free
-  // one exists; with photos hidden, each form shows its symbol
-  const FM = FORMS[m.slug] || [], phById = Object.fromEntries(PHOTOS.map(p => [p.id, p])), S = d ? d.sources || [] : [];
-  if (FM.length) {
-    const tile = f => { const p = (f.photos || []).map(id => phById[id]).find(Boolean);
-      return '<li class="ftile' + (p ? " hasph" : "") + '">' + (p ? '<span class="ft-ph">' + photoImg(p, "t", null, true) + "</span>" : "") + '<span class="ft-ic">' + icon(ICONS[f.icon] ? f.icon : "tag", "big") + "</span>" +
-        '<span class="ft-t"><b>' + esc(f.name) + "</b>" + esc(f.what) + (f.src && f.src.length && S.length ? ' <span class="src">(' + srcLinks(f.src, S) + ")</span>" : "") + "</span>" + (p ? photoCredit(p) : "") + "</li>"; };
-    const anyPh = FM.some(f => (f.photos || []).some(id => phById[id]));
-    cards.push('<section class="bcard wide phcard" id="ph-' + esc(m.slug) + '"><h3>' + icon("tag") + "What it looks like</h3>" + '<ul class="ftiles">' + FM.map(tile).join("") + "</ul>" +
-      '<p class="phnote">' + (anyPh ? '<span class="ph-only">Each photo is one example. ' + (FM.some(f => (f.photos || []).some(id => phById[id] && phById[id].medicine_example)) ? "Medicines look different from one maker and one country to another. " : "") + "</span>" : "") + 'The same drug can look different, and different drugs can look the same: <a href="#checking">looks don’t tell you what’s inside</a>.' + (anyPh ? " " + phToggle() : "") + "</p>" +
-      (d ? more("sec-2", "Names, forms and their sources") : "") + "</section>");
-  } else if (d) {
-    const forms = (d.forms || []).map(f => [f, formIcon(f.form)]).filter(p => p[1]);
-    if (forms.length) cards.push('<section class="bcard"><h3>' + icon("tag") + 'What it looks like</h3><ul class="forms">' + forms.map(([f, ic]) => "<li>" + icon(ic, "big") + "<span>" + esc(f.form) + "</span></li>").join("") + "</ul>" + more("sec-2", "Names, forms and their sources") + "</section>");
-  }
-  if (d) {
-    const dc = (d.drug_checking || []).filter(f => !f.hold);
-    if (dc.length) cards.push('<section class="bcard wide"><h3>' + icon("flask") + 'What drug checking has found</h3><ul class="dc">' + dc.map(f => "<li>" + esc(f.finding) + (f.where_when ? '<span class="where-when">' + esc(f.where_when) + "</span>" : "") + "</li>").join("") + "</ul>" + '<a class="more" href="#checking">Find a drug-checking service ' + icon("arrow") + "</a>" + more("sec-2", "Sources") + "</section>");
-  }
-  if (L && L.entries.length) cards.push('<section class="bcard"><h3>' + icon("scale") + 'The law</h3><ul class="law">' + legalOrder(L.entries).filter(e => /United Nations|European Union/.test(e.jurisdiction)).slice(0, 4).map(e => "<li><b>" + esc(e.jurisdiction) + "</b><span>" + esc(firstClause(e.status)) + "</span></li>").join("") + "</ul>" + countryLawHtml(m.slug, "ctry-quick") + more("sec-13", "Every country we have read, in full, with sources") + "</section>");
-  if (figs.length) { const top = topFigures(m.slug, 3);
-    cards.push('<section class="bcard"><h3>' + icon("chart") + 'Official figures</h3>' + (top.length ? '<ul class="figmini">' + top.map(r => { const f = figParts(r); return '<li><b class="num">' + esc(fmtValue(r)) + "</b><span>" + esc(f.what) + " · " + esc(f.place.replace(/^Worldwide$/, "worldwide")) + ", " + esc(figYear(r)) + "</span></li>"; }).join("") + "</ul>" : '<p class="note">No figures yet for ' + (PREF_COUNTRY ? esc(shortCtry(PREF_COUNTRY)) + " or " : "") + "the world as a whole.</p>") +
-      more("sec-10", top.length < figs.length ? "All " + figs.length + " figures, by place, with sources" : "Sources") + "</section>"); }
-  return cards.length ? '<h2 class="qh">The basics</h2><div class="bgrid">' + cards.join("") + "</div>" : "";
-}
 function questionFor(slug, id) { for (const g of QUESTIONS[slug] || []) for (const [cid, q] of g.items) if (cid === id) return q; return null; }
-function qlinkItem(slug, id) {
-  const c = claimById[id]; if (!c) return ""; const q = questionFor(slug, id);
-  if (!q) return glanceItem(id);
-  return '<li><button type="button" class="qlink" data-q="' + c.id + '">' + esc(q) + "</button>" + meterHtml(c.grade.certainty, true) + "</li>";
-}
-document.addEventListener("click", e => {
-  const b = e.target.closest && e.target.closest("button.qlink"); if (!b) return;
-  const d = document.getElementById("qa-" + b.dataset.q); if (!d) return;
-  showAllTopics(d); d.open = true; scrollToEl(d, true); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true });
-});
 /* The simplest layer of a finding, drawn from data/site/simple.json: the short answer, its catch, numbers as pictures */
 function srcChips(c) {
   const ids = [...new Set(c.evidence.filter(e => e.role !== "contradicts").map(e => e.reference).concat(c.evidence.map(e => e.reference)))].filter(id => refById[id]);
@@ -542,175 +400,6 @@ function familyHtml(m) {
 /* the "More" menu closes on a tap outside it or on Escape */
 document.addEventListener("click", e => { document.querySelectorAll("details.navmore[open]").forEach(d => { if (!d.contains(e.target) || e.target.closest(".navmenu a")) d.open = false; }); });
 document.addEventListener("keydown", e => { if (e.key !== "Escape") return; document.querySelectorAll("details.navmore[open]").forEach(d => { d.open = false; d.querySelector("summary").focus(); }); });
-/* ---------- Key facts: a few cards first (bottom line first; about four things at a time; swipe through) ---------- */
-function deckHtml(m) {
-  const g = m.at_a_glance; if (!g) return "";
-  const items = (g.best_established || []).map(id => ["known", id]).concat((g.largest_uncertainties || []).map(id => ["open", id])).filter(([, id]) => claimById[id]);
-  if (!items.length) return "";
-  const card = ([kind, id], i) => { const c = claimById[id], sp = (SIMPLE.claims || {})[id], q = questionFor(m.slug, id) || "";
-    return '<article class="kf ' + kind + '" data-i="' + i + '"' + (i ? " hidden" : "") + ' aria-label="Fact ' + (i + 1) + " of " + items.length + '">' +
-      '<p class="kf-k">' + (kind === "known" ? icon("check") + "What studies found" : icon("alert") + "Not known yet") + '<span class="kf-n">' + (i + 1) + " / " + items.length + "</span></p>" +
-      (q ? '<p class="kf-q">' + esc(q) + "</p>" : "") + '<p class="kf-a">' + esc(sp ? sp.short : (claimText(c))) + "</p>" +
-      (sp ? '<p class="kf-but"><b>But</b> ' + esc(sp.but) + "</p>" : "") +
-      '<div class="kf-f">' + meterHtml(c.grade.certainty, true) + '<button type="button" class="qlink kf-go" data-q="' + id + '">See why ' + icon("arrow") + "</button></div></article>"; };
-  return '<section class="deck" aria-label="Key facts" tabindex="-1"><div class="deck-h"><h2 class="qh">' + items.length + ' key facts</h2><p class="muted small">Swipe, or use the arrows.</p></div>' +
-    '<div class="deck-cards" aria-live="polite">' + items.map(card).join("") + "</div>" +
-    '<div class="deck-nav"><button type="button" class="deck-btn" data-d="-1" aria-label="Previous fact">' + icon("arrow") + '</button><span class="deck-dots" aria-hidden="true">' + items.map((_, i) => "<i" + (i ? "" : ' class="on"') + "></i>").join("") + '</span><button type="button" class="deck-btn next" data-d="1" aria-label="Next fact">' + icon("arrow") + "</button></div></section>";
-}
-function deckGo(deck, d) {
-  const cards = [...deck.querySelectorAll(".kf")], cur = cards.findIndex(c => !c.hidden), n = (cur + d + cards.length) % cards.length;
-  cards.forEach((c, i) => { c.hidden = i !== n; }); deck.querySelectorAll(".deck-dots i").forEach((dot, i) => dot.classList.toggle("on", i === n));
-}
-document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".deck-btn"); if (b) deckGo(b.closest(".deck"), +b.dataset.d); });
-document.addEventListener("keydown", e => { const deck = e.target.closest && e.target.closest(".deck"); if (!deck || (e.key !== "ArrowLeft" && e.key !== "ArrowRight")) return; e.preventDefault(); deckGo(deck, e.key === "ArrowLeft" ? -1 : 1); });
-let deckTouchX = null;
-document.addEventListener("touchstart", e => { if (e.target.closest && e.target.closest(".deck-cards")) deckTouchX = e.touches[0].clientX; }, { passive: true });
-document.addEventListener("touchend", e => { if (deckTouchX == null) return; const dx = e.changedTouches[0].clientX - deckTouchX; const deck = e.target.closest && e.target.closest(".deck"); deckTouchX = null; if (deck && Math.abs(dx) > 40) deckGo(deck, dx < 0 ? 1 : -1); }, { passive: true });
-/* ---------- Answers opened so far, kept in this browser only (a small reward for exploring) ---------- */
-function readSet(slug) { try { return new Set(JSON.parse(localStorage.getItem("pk-read-" + slug) || "[]")); } catch (e) { return new Set(); } }
-function markRead(slug, id) { const r = readSet(slug); if (r.has(id)) return r; r.add(id); try { localStorage.setItem("pk-read-" + slug, JSON.stringify([...r])); } catch (e) { /* not kept */ } return r; }
-function progressHtml(slug, total) { const n = [...readSet(slug)].filter(id => claimById[id]).length; return '<div class="readprog" data-total="' + total + '"><div class="rp-bar" aria-hidden="true"><i style="width:' + Math.round(100 * n / Math.max(1, total)) + '%"></i></div><span class="rp-t">You have opened <b>' + n + "</b> of " + total + " answers</span></div>"; }
-function updateProgress(slug) { document.querySelectorAll("#quick .readprog").forEach(el => { const total = +el.dataset.total, n = [...readSet(slug)].filter(id => claimById[id]).length; el.querySelector(".rp-bar i").style.width = Math.round(100 * n / Math.max(1, total)) + "%"; el.querySelector(".rp-t").innerHTML = "You have opened <b>" + n + "</b> of " + total + " answers" + (n === total ? " — all of them!" : ""); }); }
-document.addEventListener("toggle", e => { const d = e.target; if (!(d.matches && d.matches("details.qa")) || !d.open) return; const id = d.id.replace(/^qa-/, ""); const c = claimById[id]; if (!c) return; markRead(c.substance, id); updateProgress(c.substance); }, true);
-/* ---------- Topics: show one group of questions at a time (fewer choices on screen) ---------- */
-function showAllTopics(d) { const g = d && d.closest(".qgroup"); if (g && g.hidden) { const all = document.querySelector('#quick .tchip[data-t="all"]'); if (all) all.click(); } }
-document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".tchip"); if (!b) return; const t = b.dataset.t;
-  document.querySelectorAll(".tchip").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-  document.querySelectorAll("#quick .qgroup").forEach(g => { g.hidden = t !== "all" && g.dataset.t !== t; }); });
-/* "I barely felt it": checked answers on why some people feel little and take more, and what happens then (writing rule 0) */
-function feelLittleHtml(slug) {
-  const ids = ((typeof FEEL_LITTLE !== "undefined" && FEEL_LITTLE[slug]) || []).filter(id => claimById[id] && (SIMPLE.claims || {})[id]);
-  if (ids.length < 2) return "";
-  return '<section class="feellittle" aria-labelledby="fl-h"><h2 class="qh" id="fl-h">' + icon("pulse") + "\u201cI barely felt it\u201d</h2><p class=\"qsub muted\">" + esc(FEEL_LITTLE.intro) + '</p><ul class="fl-list">' + ids.map(id => '<li><span>' + esc(SIMPLE.claims[id].short) + '</span> <button type="button" class="qlink" data-q="' + id + '">How we know</button></li>').join("") + "</ul></section>";
-}
-function quickHtml(m) {
-  // a topic whose answers are all still waiting for a second reader is not shown yet
-  const groups = QUESTIONS[m.slug] ? QUESTIONS[m.slug].filter(g => g.items.some(([id]) => claimById[id])) : null;
-  let h = deckHtml(m) + feelLittleHtml(m.slug);
-  if (groups) { const total = groups.reduce((a, g) => a + g.items.filter(([id]) => claimById[id]).length, 0);
-    h += '<h2 class="qh">Questions people ask</h2><p class="qsub muted">Pick a topic, then tap a question.</p>' +
-      '<div class="tchips" role="group" aria-label="Topics"><button type="button" class="tchip" data-t="all" aria-pressed="true">All</button>' + groups.map((gr, i) => '<button type="button" class="tchip" data-t="' + i + '" aria-pressed="false">' + icon(gr.icon) + esc(gr.topic) + "</button>").join("") + "</div>" +
-      progressHtml(m.slug, total) +
-      groups.map((gr, i) => '<section class="qgroup" data-t="' + i + '"><h3>' + icon(gr.icon) + esc(gr.topic) + "</h3>" + (gr.sos ? sosLine() : "") + gr.items.map(([id, q]) => { const c = claimById[id]; return c ? qaHtml(c, q) : ""; }).join("") + "</section>").join(""); }
-  h += basicsHtml(m);
-  if (!groups && PLANNED_QUESTIONS[m.slug]) h += '<h2 class="qh">Questions this page will answer</h2><p class="qsub muted">Not answered yet: each needs its papers read in full first.</p><ol class="plannedq">' + PLANNED_QUESTIONS[m.slug].map(q => "<li>" + esc(q) + "</li>").join("") + "</ol>";
-  h += familyHtml(m);
-  return h;
-}
-/* Two layers on every drug page: Quick answers (default) and Full evidence; the reader's choice is remembered */
-let PREF_MODE = (() => { try { return localStorage.getItem("pk-mode") === "full" ? "full" : "quick"; } catch (e) { return "quick"; } })();
-function setMode(mode, remember) {
-  const md = mode === "full" ? "full" : "quick", v = document.getElementById("view-monograph");
-  if (v) v.dataset.mode = md;
-  document.querySelectorAll(".modebtn").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === md)));
-  if (remember) { PREF_MODE = md; try { localStorage.setItem("pk-mode", md); } catch (e) { /* no storage: the choice lasts for this visit */ } }
-}
-document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".modebtn"); if (b) setMode(b.dataset.mode, true); });
-// "All its forms" under the page photo: the gallery is in Quick answers
-document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("[data-phall]"); if (!b) return; setMode("quick"); const el = document.getElementById("ph-" + b.dataset.phall); if (el) scrollToEl(el, true); });
-
-/* ---------- Monograph ---------- */
-const isPhone = () => !!(window.matchMedia && window.matchMedia("(max-width: 700px)").matches);
-const isWide = () => !!(window.matchMedia && window.matchMedia("(min-width: 1000px)").matches);
-function sosLine() { return '<p class="sosline">Someone unwell? Call your local emergency number. <a href="#emergency">Numbers by country</a></p>'; }
-function sectionHasContent(m, x) {
-  return !!(x.claims.filter(id => claimById[id]).length || (x.number === 10 && figureCount(m.slug)) || (x.number === 2 && IDENTITY.some(d => d.substance === m.slug)) || (x.number === 13 && LEGAL.some(d => d.substance === m.slug)) || (x.number === 15 && m.status !== "planned") || (x.number === 14 && m.status === "planned" && PLANNED_QUESTIONS[m.slug]));
-}
-// A research page reads its claims' full text, the references in full and the official figures: the first visit shows the
-// drug's name and a quiet line while those files arrive (speed, 13 November), later visits draw at once. "then" runs once the
-// page is drawn (to open a section or a claim), and not at all if the reader has gone elsewhere meanwhile.
-let MONO_WANT = null;
-function renderMonograph(slug, then) {
-  const m = monographFor(slug) || MONO; MONO_WANT = m.slug; currentSlug = m.slug;
-  const ids = m.sections.flatMap(x => x.claims).filter(id => claimById[id]);
-  const done = () => { if (MONO_WANT !== m.slug) return; if (renderedSlug !== m.slug) drawMonograph(m.slug); if (then) then(); };
-  if (renderedSlug === m.slug || (fullReady(ids, [m.slug]) && FIGURES_DONE)) { done(); return; }
-  renderedSlug = null;
-  document.getElementById("mono-title").textContent = m.name;
-  ["crumbs", "mono-eyebrow", "mono-inn", "mono-status", "mono-notice", "quick", "mono-meta", "mono-tags", "toc"].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ""; });
-  const mp = document.getElementById("mono-photo"); if (mp) mp.hidden = true;
-  const tg = document.getElementById("toggle-detail"); if (tg) tg.hidden = true;
-  whenReady(() => Promise.all([needFull(ids, [m.slug]), loadFigures()]), document.getElementById("sections"), "The research on " + m.name, done);
-}
-function drawMonograph(slug) {
-  const m = monographFor(slug) || MONO; currentSlug = m.slug; renderedSlug = m.slug;
-  const planned = m.status === "planned", base = "#s-" + m.slug + "/";
-  const s = subBySlug[m.slug]; const em = s ? EVIDENCE_MAPS[s.folder] : null;
-  document.getElementById("crumbs").innerHTML = '<a href="#home">Home</a> › <a href="#substances">Find a drug</a> › <span>' + esc(m.classes[0]) + "</span> › <b>" + esc(m.name) + "</b>";
-  document.getElementById("mono-eyebrow").innerHTML = m.classes.map(famChip).join(" ");
-  document.getElementById("mono-title").textContent = m.name;
-  // the drug itself, in place of a symbol: one example of its commonest form, with its credit
-  const hp = headerPhoto(m.slug), mp = document.getElementById("mono-photo");
-  if (mp) {
-    mp.hidden = !hp; mp.closest(".mono-head").classList.toggle("hasphoto", !!hp);
-    mp.innerHTML = hp ? photoImg(hp, "m", null, false) + "<figcaption><b>" + esc(hp.form) + "</b>" + (hp.detail ? ' <span class="muted">' + esc(hp.detail) + "</span>" : "") + '<span class="phmore">One example. ' + (photosFor(m.slug).length > 1 ? '<button type="button" class="linklike" data-phall="' + esc(m.slug) + '">All its forms</button> · ' : "") + phToggle() + "</span>" + photoCredit(hp) + "</figcaption>" : "";
-  }
-  document.getElementById("mono-inn").textContent = m.inn ? "INN: " + m.inn : "";
-  document.getElementById("mono-status").innerHTML = '<span class="badge ' + (planned ? "planned" : "draft") + '">' + esc(planned ? pageStateLabel(m.slug) : "Version " + m.version) + "</span>";
-  const now = [];
-  if (IDENTITY.some(d => d.substance === m.slug)) now.push('<a href="' + base + 'sec-2">Names and street names</a>');
-  if (figuresFor(m.slug).length) now.push('<a href="' + base + 'sec-10">Official figures</a>');
-  if (LEGAL.some(d => d.substance === m.slug)) now.push('<a href="' + base + 'sec-13">Legal status</a>');
-  if (planned && PLANNED_QUESTIONS[m.slug]) now.push('<a href="' + base + 'sec-14">Open questions</a>');
-  document.getElementById("mono-notice").innerHTML = (planned
-    ? (hasQuickAnswers(m.slug)
-      ? '<p class="notice"><b>Answers so far:</b> answers to questions people ask, each checked against its sources by a second AI reader, and names, official figures and legal status. The full write-up is not finished yet. Nothing here is medical advice.</p>'
-      : '<p class="notice"><b>Basics only so far:</b> names and street names, official figures and legal status, each checked against official sources. The research sections are not written yet. Nothing here is medical advice.</p>')
-    : '<p class="notice">This page describes research; it is not medical advice. <a href="#about">How this page was made</a></p>');
-  document.getElementById("quick").innerHTML = quickHtml(m);
-  document.getElementById("mono-meta").innerHTML = "<span>Last systematic search: <b>" + (m.dates.last_search || "not yet run") + "</b></span><span>Last senior review: <b>" + (m.dates.last_review || "none") + "</b></span><span>Reading list: <b>" + (em ? em.papers + " papers (" + em.tierA + " priority)" : "in preparation") + "</b></span><span>Read in full: <b>" + (function () { const cs = Object.values(STUDY_CARDS).filter(k => k.substance === m.slug); const pdf = cs.filter(k => /^PDF/.test((k.verification || {}).source_read || "")).length; const web = cs.filter(k => ((k.verification || {}).source_read || "") && !/^PDF/.test(k.verification.source_read) && !/^abstract/i.test(k.verification.source_read)).length; return (pdf + web) + " papers (" + pdf + " from PDFs, " + web + " from PubMed Central or the publisher)"; })() + "</b></span><span>Authors: <b>" + m.authors.map(a => a.name).join("; ") + "</b></span><span>Conflicts of interest: <b>" + m.authors.map(a => a.name + ", " + (a.coi || "not stated").toLowerCase()).join("; ") + "</b></span><span>AI assistance: <b>first-pass extraction, appraisal and drafting by Claude (Anthropic), and for some answers in November 2026 by ChatGPT (OpenAI), checked by a second AI reader and, before publication, by the senior author (Methods)</b></span>";
-  const dn = documentedNames(m.slug);
-  document.getElementById("mono-tags").innerHTML = dn.length ? '<span class="also">Also called</span>' + dn.map(a => '<span class="tag street" title="Documented by at least two monitoring bodies (section 2)">' + esc(a) + "</span>").join("") : "";
-  const tg = document.getElementById("toggle-detail");
-  if (tg) { tg.hidden = planned; tg.textContent = "Show every claim's precise statement"; tg.dataset.state = "closed"; }
-  const secs = m.sections.filter(x => x.number !== 1);
-  const shown = planned ? secs.filter(x => sectionHasContent(m, x)) : secs;
-  const notYet = planned ? secs.filter(x => !sectionHasContent(m, x)) : [];
-  document.getElementById("toc").innerHTML = shown.map(x => '<a href="' + base + "sec-" + x.number + '" class="' + (sectionHasContent(m, x) ? "" : "empty") + '"><span class="n">' + x.number + "</span>" + esc(x.title) + "</a>").join("") +
-    (planned ? '<a href="' + base + 'not-yet" class="empty"><span class="n">·</span>Not written yet (' + (notYet.length + 2) + ")</a>" : '<a href="' + base + 'sec-16"><span class="n">16</span>References</a><a href="' + base + 'sec-17"><span class="n">17</span>Changelog</a>');
-  const chev = '<svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4l6 6-6 6"/></svg>';
-  // phones: every section starts closed (the page is long); wider screens open the sections a reader most often needs
-  const openByDefault = isPhone() ? [] : planned ? [2, 13] : [5, 6, 8, 14];
-  document.getElementById("sections").innerHTML = shown.map(x => {
-    const subh = Object.fromEntries((x.subheadings || []).map(h => [h.before, h.title]));
-    // a claim not shown yet (its anchors wait for a second reader) is skipped
-    let body = x.number === 14 ? x.claims.filter(id => claimById[id]).map(id => { const c = claimById[id]; return (c.debate ? debateHtml(c.debate) : "") + (c.section === 14 ? claimHtml(c) : '<p class="note">The claim behind this question, with its certainty rating and evidence anchors: <a href="#' + c.id + '">section ' + c.section + "</a>.</p>"); }).join("") : x.claims.filter(id => claimById[id]).map(id => (subh[id] ? '<h3 class="subhead">' + esc(subh[id]) + "</h3>" : "") + claimHtml(claimById[id])).join("");
-    if (x.number === 14 && planned && PLANNED_QUESTIONS[m.slug]) body += '<div class="planned-q"><h3>Questions this monograph will answer</h3><ol>' + PLANNED_QUESTIONS[m.slug].map(q => "<li>" + esc(q) + "</li>").join("") + '</ol><p class="muted">Not answered yet. Each will be answered in the six-part debate format once its sources have been read: the strongest case for yes, the strongest case for no, what neither side\'s evidence can show, the editors\' reading, and what would settle it.</p></div>';
-    if (x.number === 10) body = figuresHtml(m.slug) + body;
-    if (x.number === 2 && IDENTITY.some(d => d.substance === m.slug)) { body = identityHtml(m.slug) + body; x = Object.assign({}, x, { no_evidence_note: null }); }
-    if (x.number === 15 && !planned) { const gh = gapsHtml(m.slug); if (gh) { body = gh + body; x = Object.assign({}, x, { no_evidence_note: null }); } }
-    if (x.number === 13 && LEGAL.some(d => d.substance === m.slug)) { body = legalHtml(m.slug) + body; x = Object.assign({}, x, { no_evidence_note: null }); }
-    if (x.no_evidence_note) body += '<p class="note' + (x.senior_author_only ? " senior" : "") + '">' + esc(x.no_evidence_note) + "</p>";
-    if (x.number === 6) body = sosLine() + body;
-    if (!x.claims.filter(id => claimById[id]).length && !x.no_evidence_note && !sectionHasContent(m, x)) body += '<p class="note">Not written yet.</p>';
-    const nq = x.number === 14 && planned && PLANNED_QUESTIONS[m.slug] ? PLANNED_QUESTIONS[m.slug].length : x.claims.filter(id => claimById[id]).length;
-    const nf = x.number === 10 ? figuresFor(m.slug).length : 0;
-    const nLegal = x.number === 13 ? ((LEGAL.find(d => d.substance === m.slug) || {}).entries || []).length : 0;
-    const count = x.number === 13 && nLegal ? nLegal + " row" + (nLegal === 1 ? "" : "s") : x.number === 2 && IDENTITY.some(d => d.substance === m.slug) ? "names, forms, street names" : x.number === 15 && !planned ? "open questions" : x.number === 14 ? nq + " question" + (nq === 1 ? "" : "s") + (planned ? ", not answered yet" : "") : x.number === 10 && planned ? nf + " figure" + (nf === 1 ? "" : "s") : (x.claims.length ? x.claims.length + " claim" + (x.claims.length === 1 ? "" : "s") : "not written yet") + (nf ? " · " + nf + " figure" + (nf === 1 ? "" : "s") : "");
-    return '<details class="sec" id="sec-' + x.number + '"' + (openByDefault.includes(x.number) ? " open" : "") + '><summary><span class="n">' + x.number + "</span><h2>" + esc(x.title) + '</h2><span class="count">' + count + "</span>" + chev + '</summary><div class="sec-body">' + body + "</div></details>";
-  }).join("") +
-  (planned
-    ? '<details class="sec notyet" id="not-yet"><summary><span class="n">·</span><h2>Not written yet</h2><span class="count">' + (notYet.length + 2) + " sections</span>" + chev + '</summary><div class="sec-body"><ul class="notyet-list">' + notYet.map(x => "<li><b>" + x.number + "</b> " + esc(x.title) + (x.number === 7 ? " — to be added by the senior author after a legal review" : "") + "</li>").join("") + "<li><b>16</b> References</li><li><b>17</b> Changelog</li></ul>" +
-      '<p class="note">' + (em ? "The reading list for " + esc(m.name) + " has " + em.papers + " papers. " : "") + "Nothing is written until its papers have been read in full; every claim will then be graded and its evidence checked." + "</p>" + sosLine() + '<div class="reflist" id="reflist" hidden></div></div></details>'
-    : '<details class="sec" id="sec-16"' + (openByDefault.length ? " open" : "") + '><summary><span class="n">16</span><h2>References</h2><span class="count">generated from the claims above</span>' + chev + '</summary><div class="sec-body"><div class="reflist" id="reflist"></div></div></details>' +
-      '<details class="sec" id="sec-17"><summary><span class="n">17</span><h2>Changelog</h2><span class="count">' + m.changelog.length + "</span>" + chev + '</summary><div class="sec-body">' + (m.changelog.length ? m.changelog.map(c => '<p class="note"><span class="mono">v' + esc(c.version) + " · " + esc(c.date) + "</span> — " + esc(c.change) + "</p>").join("") : '<p class="note">No versions yet.</p>') + "</div></details>");
-  const cited = new Set();
-  m.sections.forEach(x => x.claims.forEach(id => claimById[id] && claimById[id].evidence.forEach(e => cited.add(e.reference))));
-  const refs = [...cited].map(id => refById[id]).filter(Boolean).sort((a, b) => apaAuthors(a.author).localeCompare(apaAuthors(b.author)) || byYear(a, b));
-  document.getElementById("reflist").innerHTML = refs.length ? refs.map(r => '<div class="ref" id="ref-' + r.id + '">' + apaReference(r) + '<span class="v">' + esc(r.verification.status) + " · " + esc(({crossref: "Crossref", publisher: "publisher's page", pubmed: "PubMed", manual: "entered by hand"})[String(r.verification.metadata_source || "").split(" ")[0]] || "metadata") + " " + esc(r.verification.verified_on || "") + " · retraction check: " + esc(r.verification.retraction_check ? r.verification.retraction_check.status : "—") + (r.notes ? " · note: " + esc(r.notes) : "") + "</span></div>").join("") : '<p class="note">No references yet; the list is generated from claims.</p>';
-  if (isWide()) document.querySelectorAll("#sections details.cdetail").forEach(d => { d.open = true; });
-  document.querySelectorAll("#sections [data-toggle]").forEach(b => b.addEventListener("click", () => { const el = document.getElementById(b.dataset.toggle); el.hidden = !el.hidden; }));
-  document.querySelectorAll("#sections [data-card]").forEach(b => b.addEventListener("click", () => openCard(b.dataset.card)));
-  document.querySelectorAll("#sections [data-report]").forEach(b => b.addEventListener("click", () => openReport(b.dataset.report)));
-}
-document.addEventListener("click", e => {
-  const b = e.target.closest && e.target.closest("#toggle-detail"); if (!b) return;
-  const open = b.dataset.state !== "open";
-  document.querySelectorAll("#sections details.cdetail").forEach(d => { d.open = open; });
-  b.dataset.state = open ? "open" : "closed"; b.textContent = open ? "Hide the precise statements" : "Show every claim's precise statement";
-});
-
-
 /* ---------- Figures (official statistics) ---------- */
 const GEO_LABEL = { global: "World", europe: "Europe (EUDA)", greece: "Greece", us: "United States" };
 // Whose figures a reader sees first: their own country's, then the world's, then their region's (the EU drugs agency
@@ -723,29 +412,6 @@ function figRank(file) {
   if (file === "global") return 1;
   if (file === "europe" && EUDA_AREA.includes(PREF_COUNTRY)) return 2;
   return 3;
-}
-function figuresByPlace(slug) {
-  const groups = {};
-  figuresFor(slug).forEach(r => (groups[r.file] = groups[r.file] || []).push(r));
-  return Object.keys(groups).sort((a, b) => figRank(a) - figRank(b) || GEO_ORDER.indexOf(a) - GEO_ORDER.indexOf(b)).map(f => ({ file: f, rank: figRank(f), rows: groups[f] }));
-}
-function figPlaceHead(g) { return g.rank === 0 ? "Where you are: " + GEO_LABEL[g.file] : g.file === "global" ? "Worldwide" : g.file === "europe" ? "Europe" : GEO_LABEL[g.file]; }
-// the evidence page's figures section: grouped by place, the reader's own first; "other places" says so
-function figuresHtml(slug) {
-  const groups = figuresByPlace(slug); if (!groups.length) return "";
-  const own = PREF_COUNTRY && !groups.some(g => g.rank === 0) ? '<p class="note">We have no figures for ' + esc(shortCtry(PREF_COUNTRY)) + " yet.</p>" : "";
-  let seenOther = false;
-  return '<div class="figwrap">' + own + groups.map(g => {
-    const head = g.rank === 3 && !seenOther && groups[0].rank < 3 ? '<p class="figother">Other places</p>' : ""; if (g.rank === 3) seenOther = true;
-    return head + '<h3 class="figplace">' + esc(figPlaceHead(g)) + '</h3><div class="figs">' + g.rows.map(r => figureRow(r, true)).join("") + "</div>";
-  }).join("") + '<p class="note">Official figures, each checked against its source. Sources count in different ways, so compare only like with like.</p></div>';
-}
-// the basics card: only figures for where the reader is, the world and their region, never another country's
-function topFigures(slug, n) {
-  const groups = figuresByPlace(slug).filter(g => g.rank < 3), out = [];
-  groups.forEach(g => { if (out.length < n) out.push(g.rows[0]); });
-  groups.forEach(g => g.rows.slice(1).forEach(r => { if (out.length < n) out.push(r); }));
-  return out;
 }
 function fmtValue(r) {
   const v = typeof r.value === "number" ? (r.unit === "percent" ? r.value.toLocaleString("en-GB", { maximumFractionDigits: 2 }) + "%" : r.value.toLocaleString("en-GB")) : String(r.value);
@@ -780,12 +446,6 @@ function figureRow(r, onDrugPage) {
   const iv = r.interval && r.interval.low != null ? '<div class="fr">' + (/national estimates/.test(r.interval.type || "") ? "Range across countries: " : /as reported/.test(r.interval.type || "") ? "Range as reported: " : "Range: ") + esc(r.interval.low + "–" + r.interval.high) + (r.unit === "percent" ? "%" : "") + "</div>" : "";
   return '<div class="fig"><div class="fv num">' + esc(fmtValue(r)) + iv + '</div><div class="fw"><div class="ft">' + esc(f.what) + (f.period ? ' <span class="muted small">(' + esc(f.period) + ")</span>" : "") + '</div><div class="fm">' + esc(f.place) + ", " + esc(figYear(r)) + (f.pop ? " · " + esc(f.pop) : "") + (onDrugPage ? "" : " · " + esc(r.substance)) + '</div><div class="fp">' + '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(src) + "</a>" + (r.where ? ' · <button type="button" class="where" aria-expanded="false" data-where="' + esc((r.verified_on ? "Checked " + dcDate(r.verified_on) + " against: " : "Checked against: ") + r.where) + '">checked against the source text</button>' : "") + "</div></div></div>";
 }
-// only figures checked against their source are shown (a few still wait for that check)
-function figuresFor(slug) {
-  return EPI_ALL.filter(r => r.status === "verified" && (EPI_MAP[r.substance] || []).includes(slug));
-}
-// how many there are, before the figures themselves have been fetched (site/build.js counts them)
-const figureCount = slug => FIGURES_DONE ? figuresFor(slug).length : (FIGURE_COUNT[slug] || 0);
 // the statistics page draws once its figures have arrived (speed: they are fetched the first time it is opened)
 let numbersDrawn = false;
 function showNumbers() { if (numbersDrawn) return; whenReady(loadFigures, document.getElementById("num-list"), "The figures", () => { numbersDrawn = true; renderNumbers(); }); }
@@ -829,9 +489,8 @@ function renderInteractions() {
     if (ans) return '<td class="answered" title="' + esc(t) + '"><a href="#mix-' + esc(pairKey(r, c).replace("|", "--").replace(/ /g, "_")) + '" aria-label="' + esc(r + " with " + c + ": see the answer") + '">●</a></td>';
     return '<td class="' + (t ? "planned" : "na") + '" title="' + esc(t || "Not yet assessed") + '">' + (t ? "?" : "·") + "</td>"; }).join("") + "</tr>"; });
   document.getElementById("matrix").innerHTML = h + "</tbody></table>";
-  const em = EVIDENCE_MAPS["_Interactions"];
   const answered = Object.keys(byPair);
-  document.getElementById("matrix-status").innerHTML = (answered.length ? "<b>" + answered.length + (answered.length === 1 ? " pair answered so far" : " pairs answered so far") + "</b> (marked ●; tap one to jump to its answer). " : "<b>Nothing here has been rated yet.</b> ") + esc((em ? "Reading list for mixing drugs: " + em.papers + " papers. " : "") + "A ? marks a pair whose question is set, a · one not yet planned.") + sosLine();
+  document.getElementById("matrix-status").innerHTML = (answered.length ? "<b>" + answered.length + (answered.length === 1 ? " pair answered so far" : " pairs answered so far") + "</b> (marked ●; tap one to jump to its answer). " : "<b>Nothing here has been rated yet.</b> ") + "A ? marks a pair whose question is set, a · one not yet planned.";
   // answers first, each with its question, the short answer and the full evidence on this page
   const ans = answered.map(k => { const [a, b] = k.split("|"); const q = INTERACTION_TOPICS[k] || INTERACTION_TOPICS[b + "|" + a] || "";
     return '<section class="mixpair" id="mix-' + esc(k.replace("|", "--").replace(/ /g, "_")) + '"><h2>' + esc(a) + " × " + esc(b) + "</h2>" + (q ? '<p class="muted">' + esc(q) + "</p>" : "") +
@@ -852,17 +511,6 @@ document.addEventListener("toggle", e => {
     box.querySelectorAll("[data-report]").forEach(b => b.addEventListener("click", () => openReport(b.dataset.report)));
   });
 }, true);
-
-/* ---------- How to read: live example ---------- */
-// the example is a full claim, so it draws once its file has arrived (on the page's first visit)
-let howtoDrawn = false;
-function showHowto() { if (howtoDrawn) return; whenReady(() => needFull(["cl_meth_psychosis_dose"]), document.getElementById("howto-example"), "The example", () => { howtoDrawn = true; renderHowto(); }); }
-function renderHowto() {
-  document.getElementById("howto-example").innerHTML = claimHtml(claimById["cl_meth_psychosis_dose"], { open: true });
-  document.querySelectorAll("#howto-example [data-toggle]").forEach(b => b.addEventListener("click", () => { const el = document.getElementById(b.dataset.toggle); el.hidden = !el.hidden; }));
-  document.querySelectorAll("#howto-example [data-card]").forEach(b => b.addEventListener("click", () => openCard(b.dataset.card)));
-  document.querySelectorAll("#howto-example [data-report]").forEach(b => b.addEventListener("click", () => openReport(b.dataset.report)));
-}
 
 /* ---------- The law in every country: the UN treaty layer for all, national rows where checked ---------- */
 const CTRY_DISPLAY = { "Naoero": "Nauru", "Republic of Korea": "South Korea (Republic of Korea)", "Democratic People's Republic of Korea": "North Korea (Democratic People's Republic of Korea)",
@@ -886,9 +534,6 @@ function unConvsFor(slug) {
   return out;
 }
 let PREF_COUNTRY = (() => { try { return localStorage.getItem("pk-country") || ""; } catch (e) { return ""; } })();
-function ctrySelect(id) {
-  return '<label class="ctrylabel" for="' + id + '">Your country</label><select class="ctry" id="' + id + '"><option value="">Choose a country</option>' + WL_COUNTRIES.map(c => '<option value="' + esc(c.name) + '"' + (c.name === PREF_COUNTRY ? " selected" : "") + ">" + esc(ctryName(c.name)) + "</option>").join("") + "</select>";
-}
 function treatyLine(c, k) {
   const s = c[k], cv = CONV[k], src = srcIcons([WORLD_LAW.sources[cv.src].ref]);
   if (s.status === "party") return '<li class="tl yes">' + icon("check") + "<span>Party to the " + esc(cv.name) + (k === "c1961" && s.text === "unamended only" ? " (in its original 1961 text)" : "") + " since " + esc(String(s.date).slice(0, 4)) + ". " + src + "</span></li>";
@@ -916,14 +561,6 @@ function countryOut(slug, unName) {
     : '<p class="small muted">Its own law for this drug is not on this site yet. We add a country\'s law only after reading its official text.</p>';
   return h;
 }
-function countryLawHtml(slug, id) {
-  return '<div class="ctrylaw" data-slug="' + esc(slug) + '">' + ctrySelect(id) + '<div class="ctry-out" aria-live="polite">' + (PREF_COUNTRY ? countryOut(slug, PREF_COUNTRY) : "") + '</div><p class="small"><a href="#law">Treaties, country by country</a></p></div>';
-}
-document.addEventListener("change", e => {
-  const sel = e.target.closest && e.target.closest("select.ctry"); if (!sel) return;
-  PREF_COUNTRY = sel.value; try { if (sel.value) localStorage.setItem("pk-country", sel.value); else localStorage.removeItem("pk-country"); } catch (err) { /* the choice lasts for this visit */ }
-  document.querySelectorAll(".ctrylaw").forEach(box => { const s2 = box.querySelector("select.ctry"); if (s2 !== sel) s2.value = sel.value; box.querySelector(".ctry-out").innerHTML = sel.value ? countryOut(box.dataset.slug, sel.value) : ""; });
-});
 /* ---------- Country picker: the whole list opens under a country box, and typing narrows it (drug checking, emergency
    numbers, treaties), so nobody has to guess how a country is spelled ---------- */
 function countryPicker(inputId, items, onPick) {
@@ -1073,7 +710,7 @@ function buildIndex() {
   SUBSTANCES.forEach(s => {
     const prime = [s.name].concat(ALIASES[s.slug] || [], ALIASES_EL[s.slug] || []).map(norm).filter(Boolean);
     const names = prime.concat(identityTerms(s.slug).map(norm)).filter(Boolean);
-    INDEX.push({ type: "drug", kind: "Drug · " + s.cls, title: s.name, prime: new Set(prime), names: [...new Set(names)], text: norm(s.cls + " " + s.mech), href: "#s-" + s.slug, badge: pageStateLabel(s.slug), badgeCls: s.status });
+    INDEX.push({ type: "drug", kind: "Drug · " + s.cls, title: s.name, prime: new Set(prime), names: [...new Set(names)], text: norm(s.cls + " " + s.mech), href: "#s-" + s.slug });
   });
   const asked = buildAnswerIndex();
   CLAIMS.filter(c => !asked.has(c.id)).forEach(c => INDEX.push({ type: "claim", kind: "Finding · " + (subBySlug[c.substance] ? subBySlug[c.substance].name : c.substance), title: claimText(c), t: norm(claimText(c)), text: norm(c.statement + " " + c.outcome + " " + c.exposure), href: "#" + c.id, badge: editorApproved(c) ? "Approved" : readerStamp(c.verification.status).split(":")[0], badgeCls: editorApproved(c) ? "ok" : "draft" }));
@@ -1083,7 +720,7 @@ function buildIndex() {
   EMERGENCY.countries.forEach(c => INDEX.push({ type: "country", kind: "Emergency numbers", title: c.country, names: [c.country].concat(c.aka || []).map(norm), href: "#emergency/c-" + encodeURIComponent(c.country), order: 0 }));
   Object.keys(dcBy).forEach(c => INDEX.push({ type: "country", kind: "Drug checking · " + dcBy[c] + " service" + (dcBy[c] === 1 ? "" : "s"), title: c, names: [norm(c)], href: "#checking/c-" + encodeURIComponent(c), order: 1 }));
   WL_COUNTRIES.forEach(c => INDEX.push({ type: "country", kind: "Drug treaties", title: ctryName(c.name), names: [norm(c.name), norm(ctryName(c.name))], href: "#law/c-" + encodeURIComponent(ctryName(c.name)), order: 2 }));
-  Object.keys(PLANNED_QUESTIONS).forEach(slug => PLANNED_QUESTIONS[slug].forEach(q => INDEX.push({ type: "question", kind: "Open question · " + (subBySlug[slug] ? subBySlug[slug].name : slug), title: q, t: norm(q), text: norm(slug), href: "#s-" + slug + "/sec-14", badge: "Not answered yet", badgeCls: "planned" })));
+  Object.keys(PLANNED_QUESTIONS).forEach(slug => PLANNED_QUESTIONS[slug].forEach(q => INDEX.push({ type: "question", kind: "Open question · " + (subBySlug[slug] ? subBySlug[slug].name : slug), title: q, t: norm(q), text: norm(slug), href: "#s-" + slug, badge: "Not answered yet", badgeCls: "planned" })));
   [["Emergency numbers, country by country", "emergency", "emergency numbers overdose ambulance help poison centre support lines 112 911 999 000"], ["Drug checking services, country by country", "checking", "drug checking pill testing testing service analysis what is in my drug test kit"], ["Drug treaties by country", "law", "law legal treaties conventions un country illegal legal status"], ["Statistics: official figures", "numbers", "statistics numbers prevalence figures euda unodc nsduh world europe countries deaths treatment seizures"], ["How to read this site", "howto", "claims certainty dots status evidence study card plain precise"], ["Mixing drugs: what happens when drugs are combined", "interactions", "combinations mixing interactions combos opioids benzodiazepines benzos alcohol gabapentin pregabalin methadone buprenorphine"], ["Glossary", "glossary", "terms definitions words"], ["Methods", "methods", "protocol search risk of bias grade verification corrections"], ["About", "about", "who we are ai statement name pharmakon"]].forEach(p => INDEX.push({ type: "page", kind: "Page", title: p[0], t: norm(p[0]), text: norm(p[2]), href: "#" + p[1], id: p[1] }));
 }
 function scoreItem(it, q, words, emergency, ctx) {
@@ -1302,16 +939,6 @@ function readerStamp(v, c) {
   return v === "draft" ? "Early version: sources still being checked" : "Sources checked by a second AI reader";
 }
 const LADDER_WORDS = { "draft": "draft (an anchor still to be located, or resting only on narrative reviews)", "metadata-verified": "references checked against Crossref", "ai-anchored": "every evidence anchor confirmed by a second AI reader", "anchor-verified": "every anchor checked by the senior author", "appraised": "every study card read by the senior author", "senior-reviewed": "signed off by the senior author", "published": "published", "flagged": "flagged after publication" };
-// a page's state in plain words: draft monograph, or the basics only (names, figures, law)
-// a page without a written monograph can still carry checked answers in Quick answers
-function hasQuickAnswers(slug) { return (QUESTIONS[slug] || []).some(g => g.items.some(([id]) => claimById[id])); }
-function pageStateLabel(slug) {
-  const m = monographFor(slug); if (!m) return "";
-  if (m.status !== "planned") return "Full write-up";
-  if (hasQuickAnswers(slug)) return "Answers so far";
-  const basics = IDENTITY.some(d => d.substance === slug) || LEGAL.some(d => d.substance === slug) || figureCount(slug);
-  return basics ? "Basics only" : "Not written yet";
-}
 /* ---------- Drawer: study card ---------- */
 function row(label, value) { return '<div class="card-row"><b>' + esc(label) + "</b><div>" + value + "</div></div>"; }
 function fmt(v) { if (v == null || v === "") return '<span class="placeholder">[to be extracted]</span>'; return esc(String(v)).replace(/\[to be extracted from PDF\]|\[to be extracted\]/g, m => '<span class="placeholder">' + m + "</span>"); }
@@ -1337,7 +964,7 @@ function openCard(id) {
 function renderCard(id, c) {
   const ref = refById[c.reference];
   const panel = document.querySelector("#drawer .panel");
-  panel.innerHTML = '<button class="close" type="button" aria-label="Close">✕</button><div class="cardhead"><span class="eyebrow">Study card · ' + esc(c.design.replace(/-/g, " ")) + ' · <span class="badge draft">' + esc(c.verification.status) + "</span></span><h2>" + esc(ref.title) + '</h2><div class="refline mono">' + apaReference(ref) + "</div></div>" +
+  panel.innerHTML = '<button class="close" type="button" aria-label="Close">✕</button><div class="cardhead"><span class="eyebrow">Study card · ' + esc(c.design.replace(/-/g, " ")) + "</span><h2>" + esc(ref.title) + '</h2><div class="refline mono">' + apaReference(ref) + "</div></div>" +
     row("Design", esc(c.design_detail || "")) + row("Can establish", esc(c.can_establish)) + row("Cannot establish", esc(c.cannot_establish)) +
     ((c.key_findings || []).length ? row("Key findings", '<ol class="kf">' + c.key_findings.map(k => "<li>" + fmt(k.finding) + ' <span class="loc mono">' + esc(k.page || "") + (k.locator ? " · " + esc(k.locator) : "") + "</span></li>").join("") + "</ol>") : "") +
     row("Sample & recruitment", sub(Object.assign({}, c.sample, { n_by_group: c.sample.n_by_group ? Object.entries(c.sample.n_by_group).map(kv => kv[0] + " " + kv[1]).join("; ") : null }), ["n_total", "n_by_group", "recruitment", "inclusion_exclusion", "demographics", "attrition", "selection_effects"])) +
@@ -1636,12 +1263,8 @@ document.documentElement.lang = "en";
 applyPhotoPref();
 (function () { const el = document.getElementById("photo-credits"); if (!el) return; const name = s => (subBySlug[s] ? subBySlug[s].name : s === "safety-drug-checking" ? "Drug checking" : s);
   el.innerHTML = PHOTOS.slice().sort((a, b) => name(a.drug).localeCompare(name(b.drug))).map(p => "<li><b>" + esc(name(p.drug)) + ":</b> " + esc(p.form.toLowerCase()) + ". " + photoCredit(p) + "</li>").join(""); })();
-// (the research pages, the statistics page and the how-to example draw on their first visit, once their files have arrived)
+// (the statistics page draws on its first visit, once its file has arrived)
 buildIndex(); renderHome2(); factsLinks(); renderSubstances(); renderGlossary(); renderInteractions(); renderEmergency(); renderLaw(); renderChecking();
 window.addEventListener("hashchange", route);
 document.getElementById("skiplink").addEventListener("click", () => { const v = document.querySelector(".view.active"); const h = v && v.querySelector("h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus(); } });
 route();
-
-/* printing a monograph prints every section, open or not */
-window.addEventListener("beforeprint", () => document.querySelectorAll("#view-monograph details.sec").forEach(d => { if (!d.open) { d.dataset.printOpened = "1"; d.open = true; } }));
-window.addEventListener("afterprint", () => document.querySelectorAll('#view-monograph details.sec[data-print-opened="1"]').forEach(d => { d.open = false; delete d.dataset.printOpened; }));

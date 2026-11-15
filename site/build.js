@@ -191,6 +191,19 @@ const data = [
     for (const [slug, list] of Object.entries(q.tf || {})) q.tf[slug] = list.filter(x => { const ok = x.v && ver[x.claim] && x.v === ver[x.claim] && q.claims[x.claim]; if (!ok) console.error("NOTE: True-or-false statement on " + x.claim + " left out until rewritten for the claim's new version"); return ok; });
     // quick questions follow the same rule: written from one version of a claim, shown only while that version stands
     for (const [slug, list] of Object.entries(q.quiz || {})) q.quiz[slug] = list.filter(x => { const ok = x.v && ver[x.claim] && x.v === ver[x.claim] && q.claims[x.claim] && Array.isArray(x.options) && x.options.length === 3 && [0, 1, 2].includes(x.answer); if (!ok) console.error("NOTE: Quick question on " + x.claim + " left out until rewritten for the claim's new version"); return ok; });
+    /* Myth or fact: only the interesting cards, best first (senior author, 15 November: "less than half of them are interesting
+       for most users. they feel a lot like an academic test"). data/site/tf-interest.json, when it exists, scores each statement
+       (keyed by the first 12 hex characters of the SHA-1 of its words): a card under the cut for interest or for clarity is left
+       out of every deck; the others carry their interest (i) and each deck lists them highest first (the page deals them in
+       that order; equal scores as before). A card with no entry is shown as before. Until the file exists nothing changes. */
+    { const tfi = path.join(ROOT, "data/site/tf-interest.json");
+      if (fs.existsSync(tfi)) { const T = JSON.parse(fs.readFileSync(tfi, "utf8")), cut = T.cut || {}, items = T.items || {}; let out = 0, kept = 0, plain = 0;
+        const key = t => require("crypto").createHash("sha1").update(String(t), "utf8").digest("hex").slice(0, 12), under = (v, c) => typeof c === "number" && typeof v === "number" && v < c;
+        const iOf = x => typeof x.i === "number" ? x.i : -1;
+        for (const [slug, list] of Object.entries(q.tf || {})) q.tf[slug] = list.filter(x => { const e = items[key(x.statement)]; if (!e) { plain++; return true; }
+            if (under(e.interest, cut.interest) || under(e.clear, cut.clear)) { out++; return false; } if (typeof e.interest === "number") x.i = e.interest; kept++; return true; })
+          .map((x, n) => [x, n]).sort((a, b) => iOf(b[0]) - iOf(a[0]) || a[1] - b[1]).map(p => p[0]);
+        console.log("Myth or fact: " + out + " cards left out (under the cut in data/site/tf-interest.json: interest " + cut.interest + ", clear " + cut.clear + "); " + kept + " scored cards kept, " + plain + " without a score shown as before"); } }
     // "Why this rating" in plain words is read only on the answer sheet and the research pages: it travels with the claim's file (speed)
     const subOf = Object.fromEntries(shownClaims.map(c => [c.id, c.substance]));
     for (const [id, c] of Object.entries(q.claims || {})) if (c.rate && subOf[id]) { fullOf(subOf[id]).claims[id].rate = c.rate; delete c.rate; }

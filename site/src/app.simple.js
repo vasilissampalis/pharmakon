@@ -1,6 +1,6 @@
 /* ---------- The simple layer (senior author, 23 October: "it should not overwhelm the average user; my mother must
    understand it"). Every drug page asks the same questions in the same order, one at a time, in plain words, with a photo
-   first and the evidence one tap away. The full evidence page stays at #s-<drug>/evidence. ---------- */
+   first and the evidence one tap away. Each drug has this one page (site 2.3). ---------- */
 
 const FAMPLAIN = (typeof FAMILIES_PLAIN !== "undefined" && FAMILIES_PLAIN) || { families: {} };
 const famPlain = cls => (FAMPLAIN.families || {})[cls] || null;
@@ -186,12 +186,6 @@ function renderShared(ctx, id) {
     (others.length ? '<h2 class="sh-oh">Other questions</h2><ul class="sh-others">' + others.map(([x, oq]) => '<li><a href="' + pl.q(x) + '">' + esc(oq) + "</a></li>").join("") + "</ul>" : "");
   markSeen(id);
   return q || "Shared answer";
-}
-// a single answer, shown open: the short answer, its catch, and "How do we know?"
-function openAnswer(id, rn) {
-  const c = claimById[id], sp = (SIMPLE.claims || {})[id]; if (!c) return "";
-  if (!sp) return '<div class="open-a" id="ask-' + id + '">' + REWRITING(id) + "</div>";
-  return '<div class="open-a" id="ask-' + id + '">' + answerBody(id, c, sp) + (rn || "") + "</div>";
 }
 // a short list with the rest one tap away (about four things at a time); page is the page the list is on (a drug's slug,
 // GEN, DC or "interactions"), for the addresses of the answers to read next
@@ -817,7 +811,7 @@ function secAsks(groups, key, slug) {
 const secLine = groups => groups.length > 1 ? groups.slice(0, 3).map(g => g[0]).join(" · ") + (groups.length > 3 ? " · more" : "") : groups[0] && groups[0][1][0] ? groups[0][1][0][1] : "";
 let renderedDrug = null;
 function renderDrug(slug) {
-  const s = subBySlug[slug], m = monographFor(slug); if (!s || !m) return;
+  const s = subBySlug[slug]; if (!s) return;
   renderedDrug = slug; currentSlug = slug;
   const f = fam(s.cls), fp = famPlain(s.cls), ph = headerPhoto(slug), names = documentedNames(slug).slice(0, 3);
   const qs = drugQuestions(slug), zone = z => qs.filter(([, , t]) => topicZone(t) === z);
@@ -865,7 +859,7 @@ function renderDrug(slug) {
     (names.length ? '<p class="dh-aka">Also called ' + names.map(esc).join(", ") + "</p>" : "") + "</div></header>" + descHtml(slug) +
     (secs.length ? '<nav class="secmenu" id="secmenu" aria-label="Sections of this page" data-open=""><button type="button" class="sm-up" data-sec="" aria-label="' + esc(short) + ': all sections">' + icon("arrow") + "<span>" + esc(short) + "</span></button>" + secs.map(row).join("") + "</nav>" +
       '<div class="secs">' + secs.map(x => '<section class="sec" id="' + x.id + '" aria-labelledby="' + x.id + '-h" hidden><h2 id="' + x.id + '-h" tabindex="-1"><span class="sec-ic">' + icon(SEC_ICON[x.id] || "molecule") + "</span>" + esc(x.name) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("") + "</div>" : "") +
-    fbLineHtml() + familyHtml(m);
+    fbLineHtml() + familyHtml(s);
   const box = document.getElementById("drug2"); box.className = "wrap drug2 f-" + f.k; box.innerHTML = h;  // the family colour runs through the whole page
   applyPhotoPref(); mfStart("qz-drug", slug); pageProgress();
   // the law part fills in when the drug's file arrives; the file is fetched ahead once the page settles, so the evidence opens at once
@@ -932,10 +926,6 @@ function revealEl(el) {
     const d = el.closest("details.ask[data-cid]"), want = "#s-" + renderedDrug + (d ? "/q-" + d.dataset.cid : "/part-" + sec.id);
     try { if (location.hash !== want) history.pushState(null, "", want); } catch (err) { /* the address stays as it was */ }
   }
-}
-function openAsk(id) {
-  const d = document.getElementById("ask-" + id); if (!d) return false;
-  if ("open" in d) d.open = true; setTimeout(() => scrollToEl(d), 30); return true;
 }
 
 /* ---------- Mixing: pick a drug, see what we know about mixing it ---------- */
@@ -1064,7 +1054,6 @@ function evHtml(id) {
   const refs = [...new Set(c.evidence.map(e => e.reference))].filter(r => refById[r]).sort((a, b) => apaAuthors(refById[a].author).localeCompare(apaAuthors(refById[b].author)) || byYear(refById[a], refById[b]));
   const cardFor = r => { const e = c.evidence.find(x => x.reference === r && x.study_card && cardById[x.study_card]); return e ? e.study_card : null; };
   const said = e => (e.extracted && !e.extracted.startsWith("[")) || e.quote;
-  const anchors = c.evidence.filter(said);
   // one list of sources: each opens to what it says for this answer, where, and how the study was done
   const studies = refs.map(r => {
     const ref = refById[r], sc = cardFor(r), mine = c.evidence.filter(e => e.reference === r && said(e)), link = refLink(ref);
@@ -1074,8 +1063,7 @@ function evHtml(id) {
     const ff = scId && typeof FUNDING_FLAGS !== "undefined" ? FUNDING_FLAGS[scId] : null;
     // a funder with a stake shows on the closed row, so it is seen without opening the source (senior author, 12 November)
     const fundLine = ff ? '<span class="ev-src-fund">' + icon("alert") + "<span>" + esc(fundWords(ff)) + "</span></span>" : "";
-    return '<li class="ev-src" id="ev-src-' + esc(r) + '"><details><summary><span class="ev-src-who">' + esc(lab) + '</span><span class="ev-src-t">' + esc(title) + '</span>' + fundLine + '<span class="ev-src-n">' +
-      (mine.length ? mine.length + (mine.length === 1 ? " finding used here" : " findings used here") : "Cited here") + "</span></summary>" +
+    return '<li class="ev-src" id="ev-src-' + esc(r) + '"><details><summary><span class="ev-src-who">' + esc(lab) + '</span><span class="ev-src-t">' + esc(title) + "</span>" + fundLine + "</summary>" +
       '<div class="ev-src-b">' + (mine.length ? '<ul class="ev-quotes">' + mine.map(e => '<li><span class="ev-role ' + esc(e.role) + '">' + esc(ROLE_WORDS[e.role] || e.role) + "</span>" +
         (e.extracted && !e.extracted.startsWith("[") ? "<span>" + esc(e.extracted) + "</span>" : "") + (e.quote ? "<q>" + esc(e.quote) + "</q>" : "") +
         '<span class="ev-loc">' + esc([e.page, e.locator].filter(Boolean).join(", ")) + "</span></li>").join("") + "</ul>" : "") +
@@ -1086,7 +1074,7 @@ function evHtml(id) {
   const cites = t => sheetCites(t, refs);
   const peco = '<dl class="ev-peco"><dt>Who was studied</dt><dd>' + inPieces(c.population, cites) + "</dd><dt>What they took or did</dt><dd>" + inPieces(c.exposure, cites) + "</dd><dt>Compared with</dt><dd>" + inPieces(c.comparator, cites) +
     "</dd><dt>What was measured</dt><dd>" + inPieces(c.outcome, cites) + "</dd><dt>How big</dt><dd>" + inPieces(c.magnitude, cites) + "</dd></dl>";
-  const home = c.substance === "interactions" ? '<a href="#interactions">Mixing drugs: every answer we have</a>' : c.substance === DC ? '<a href="#checking/kits">Test kits: every answer we have</a>' : subBySlug[c.substance] ? '<a href="#s-' + c.substance + '/evidence">All the research on ' + esc(subBySlug[c.substance].name) + "</a>" : "";
+  const home = c.substance === "interactions" ? '<a href="#interactions">Mixing drugs: every answer we have</a>' : c.substance === DC ? '<a href="#checking/kits">Test kits: every answer we have</a>' : "";
   return '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye">The evidence</span></div>' +
     '<h2 id="ev-title">' + esc(q || c.plain || c.statement) + "</h2>" +
     (sp ? '<p class="ask-short">' + esc(sp.short) + "</p>" + (sp.but ? '<p class="ask-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") + freqHtml(sp.freq) + helpLine(sp) : '<p class="ask-short">' + esc(c.plain || c.statement) + "</p>") +
@@ -1095,9 +1083,12 @@ function evHtml(id) {
     evDebateHtml(c, refs) +
     '<h3 class="ev-h">' + (refs.length === 1 ? "The source" : "The " + refs.length + " sources") + '</h3><p class="ev-sub small muted">Tap a source to see what it says for this answer, and where.</p><ul class="ev-refs">' + studies + "</ul>" +
     // the researchers' text, one quiet tap away and in short pieces (senior author, 13 November: "too overwhelming, nobody will read it")
-    '<details class="sf-more sf-sci"><summary>Scientific detail</summary><div class="ev-precise">' + inPieces(c.statement, cites) + "</div>" + peco + "</details>" +
+    // (site 2.3; the senior author: "if an info will not benefit a viewer it should be removed otherwise it creates visual clutter":
+    // the stamp "Approved by our editor; sources checked by a second AI reader · version … · n findings from m sources" and the line
+    // "Searched for newer research on …" are gone; how answers are checked is said once, on the Methods page. The version, which
+    // someone citing an answer needs, is one quiet line inside the deepest fold. Newer research still waiting to be read is said.)
+    '<details class="sf-more sf-sci"><summary>Scientific detail</summary><div class="ev-precise">' + inPieces(c.statement, cites) + "</div>" + peco + versionLine(c) + "</details>" +
     currencyHtml(c) +
-    '<p class="ev-stamp">' + esc(readerStamp(c.verification.status, c)) + " · version " + esc(c.version) + " · " + anchors.length + (anchors.length === 1 ? " finding" : " findings") + " from " + refs.length + (refs.length === 1 ? " source" : " sources") + "</p>" +
     '<p class="ev-foot"><button type="button" class="linklike" data-fb="issue" data-where="' + esc(id) + '">Report a mistake in this answer</button>' + (home ? "<span>" + home + "</span>" : "") + "</p>";
 }
 // "Why this rating": the plain explanation first, in a sentence or two (senior author, 12 November: the GRADE reasoning read
@@ -1167,12 +1158,11 @@ window.addEventListener("popstate", () => { if (EV.open) closeEvidence(true); })
 document.addEventListener("click", e => {
   if (!e.target.closest) return;
   if (e.target.closest("#evsheet .ev-back") || e.target.closest("#evsheet > .scrim")) { e.preventDefault(); closeEvidence(); return; }
-  // any link to an answer's evidence opens it over the page; the research page keeps its own links, and a link can still
-  // be opened in a new tab
+  // any link to an answer's evidence opens it over the page; a link can still be opened in a new tab
   const ec = e.target.closest("a.evcite[data-src]");
   if (ec && ec.closest("#evsheet")) { e.preventDefault(); focusEvSource(ec.dataset.src); return; }
   const a = e.target.closest('a[href^="#cl_"]');
-  if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.classList.contains("perma") || a.closest("#view-monograph #full")) return;
+  if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.classList.contains("perma")) return;
   const id = a.getAttribute("href").slice(1); if (!claimById[id]) return;
   e.preventDefault(); openEvidence(id, a, a.dataset.focusSrc || null);
 });
@@ -1225,22 +1215,24 @@ function mfPool() {
   if (MF_POOL) return MF_POOL;
   const out = [];
   Object.entries(SIMPLE.tf || {}).forEach(([slug, list]) => list.forEach(x => { if (!qzOk(x.claim)) return;
-    out.push({ key: "tf:" + x.claim + ":" + norm(x.statement).slice(0, 40), claim: x.claim, page: answerPageKey(x.claim, slug), q: x.statement, fact: !!x.answer, why: x.why || "", long: x.statement.split(/\s+/).length > 20 }); }));
+    out.push({ key: "tf:" + x.claim + ":" + norm(x.statement).slice(0, 40), claim: x.claim, page: answerPageKey(x.claim, slug), q: x.statement, fact: !!x.answer, why: x.why || "", long: x.statement.split(/\s+/).length > 20,
+      i: typeof x.i === "number" ? x.i : -1 }); }));   // i: how interesting readers of the cards rated it (data/site/tf-interest.json); -1 without a score
   return (MF_POOL = out);
 }
 // n new cards: none asked this visit or dealt in this deck before; short ones first, and of each length those never answered
-// on this device first, then those missed last time, then the rest; within each of these, the statements whose answers people
-// ask about most first (DEMAND, highest first; equals, and the statements without a score after them, in a new order every
-// time); a full deck takes about as many myths as facts
+// on this device first, then those missed last time, then the rest; within each of these, the most interesting cards first
+// (site 2.3: the cards' interest scores, where there are any), then the statements whose answers people ask about most
+// (DEMAND, highest first; equals, and the statements without a score after them, in a new order every time); a full deck
+// takes about as many myths as facts, and is laid out with its most interesting card first (equal cards as dealt)
 function mfDeal(st, n) {
   const asked = new Set(QZS.claims), seen = qzSeen(), again = qzAgain();
   let pool = st.pool.filter(x => !asked.has(x.claim) && !st.used.has(x.claim));
   if (!pool.length && n > 1) { st.used = new Set(); pool = st.pool; }   // every statement has been dealt: all of them again, in a new order
   const tier = x => (x.long ? 3 : 0) + (!seen.has(x.key) ? 0 : again.has(x.key) ? 1 : 2), one = new Set();
-  const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t)).sort((a, b) => demandOf(b.claim) - demandOf(a.claim))).filter(x => !one.has(x.claim) && one.add(x.claim));
+  const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t)).sort((a, b) => b.i - a.i || demandOf(b.claim) - demandOf(a.claim))).filter(x => !one.has(x.claim) && one.add(x.claim));
   let deck = n > 1 ? order.filter(x => !x.fact).slice(0, n / 2).concat(order.filter(x => x.fact).slice(0, n / 2)) : order.slice(0, n);
   deck = deck.concat(order.filter(x => !deck.includes(x)).slice(0, n - deck.length));
-  deck = qzSpread(shuffle(deck), "page");
+  deck = qzSpread(shuffle(deck), "page").map((x, k) => [x, k]).sort((a, b) => b[0].i - a[0].i || a[1] - b[1]).map(p => p[0]);
   deck.forEach(x => st.used.add(x.claim));
   return deck;
 }
