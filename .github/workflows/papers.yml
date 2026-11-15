@@ -24,7 +24,7 @@ concurrency:
 jobs:
   find:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v6
       - name: Python packages
@@ -35,9 +35,10 @@ jobs:
       - name: Search, and put the papers in the order of reading
         run: |
           python3 -I scripts/auto/papers.py --selftest
-          python3 -I scripts/auto/papers.py find --requests data/auto/requests | tee "$RUNNER_TEMP/papers.log"
+          python3 -I scripts/auto/papers.py find --requests data/auto/requests --minutes 22 2>&1 | tee "$RUNNER_TEMP/papers.log"
           tail -n 3 "$RUNNER_TEMP/papers.log" >> "$GITHUB_STEP_SUMMARY"
       - name: Keep what was found
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

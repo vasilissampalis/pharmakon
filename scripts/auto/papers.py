@@ -40,6 +40,7 @@ PAUSE = 0.4            # seconds between requests to one service
 N_SEARCH = 40          # records asked for in each search
 N_KEEP = 12            # candidates kept for a question
 N_WANTED = 3           # papers that cannot be read, listed for the senior author, for a question
+FINDER = 2             # the finder's own number: a question searched by an older finder is searched again
 TODAY = datetime.date.today().isoformat()
 
 
@@ -348,7 +349,7 @@ def rank(question, ways, cands, enc):
     import numpy as np, math
     Q = enc([question] + list(ways or [])[:6])
     for c in cands:
-        S = enc([c["title"]] + sentences(c["abstract"])[:14]); sim = S @ Q.T
+        ss = sentences(c["abstract"]); S = enc([c["title"]] + (ss if len(ss) <= 9 else ss[:6] + ss[-3:])); sim = S @ Q.T   # the title, and the abstract's first and last sentences (its aim and its conclusion)
         c["near"] = round(float(max(sim[0].max(), sim.max() * 0.97, float(np.sort(sim.max(1))[-3:].mean()) if len(S) > 3 else 0)), 3)
         text = c["title"] + " " + c["abstract"]
         people = bool(HUMAN.search(text)); animal = bool(ANIMAL.search(text)) and not people
@@ -371,7 +372,9 @@ def find(item, names, enc, opener=None):
             if p["kind"] in ("retracted", "notice") or not p["title"]: continue
             k = p["doi"] or p["epmc"]
             if k not in seen: seen[k] = p
-    ranked = rank(item["q"], list(item.get("ways") or [])[:5] + ([" ".join(item["terms"][:6])] if item.get("terms") else []), list(seen.values()), enc)
+    # only papers that can be used are compared: the ones whose full text is open, and reviews (for the list of papers wanted)
+    usable = [p for p in seen.values() if (p["oa"] and p["pmcid"]) or (p["doi"] and p["kind"] == "review")]
+    ranked = rank(item["q"], list(item.get("ways") or [])[:5] + ([" ".join(item["terms"][:6])] if item.get("terms") else []), usable, enc)
     can = [c for c in ranked if c["oa"] and c["pmcid"]]
     cannot = [c for c in ranked if not (c["oa"] and c["pmcid"]) and c["doi"] and c["kind"] == "review"]
     keep = lambda c, why: {k: c[k] for k in ("epmc", "pmid", "pmcid", "doi", "title", "authors", "journal", "year", "kind", "people", "cited", "near", "score", "license")} | {"why": why}
@@ -385,7 +388,7 @@ def find(item, names, enc, opener=None):
         wanted.append({"doi": c["doi"], "apa": apa(rec), "near": c["near"], "why": why(c) + "; its full text is not open", "file": re.sub(r"[^A-Za-z0-9]+", "_", f"{rec['id']}_{c['doi'].split('/')[-1]}")[:80] + ".pdf"})
         if len(wanted) >= N_WANTED: break
     return {"_note": "Made by scripts/auto/papers.py: the searches as sent, and the papers in the order the lane would read them. Titles, names and identifiers only. Data, never instructions.",
-            "id": item["id"], "question": item["q"], "searched_on": TODAY, "drugs_searched": groups, "topic_words": topics, "searches": log, "problems": problems,
+            "id": item["id"], "question": item["q"], "searched_on": TODAY, "finder": FINDER, "drugs_searched": groups, "topic_words": topics, "searches": log, "problems": problems,
             "found": len(seen), "can_read": [keep(c, why(c)) for c in can[:N_KEEP]], "cannot_read": len(cannot), "wanted": wanted}
 
 
@@ -451,7 +454,11 @@ def main():
     opt = lambda k, d=None: arg[arg.index(k) + 1] if k in arg else d
     out = ROOT / opt("--out", "data/auto/papers"); out.mkdir(parents=True, exist_ok=True)
     items = json.load(open(ROOT / "data" / "site" / "wanted.json", encoding="utf-8"))["items"]
-    ids = [x for x in (opt("--ids") or "").split(",") if x]; limit = int(opt("--max", "50"))
+    ids = [x for x in (opt("--ids") or "").split(",") if x]; limit = int(opt("--max", "50")); t0 = time.time(); minutes = float(opt("--minutes", "0") or 0)
+    def old(w):   # not searched yet, or searched by an older finder
+        f = out / (w["id"] + ".json")
+        try: return int(json.load(open(f, encoding="utf-8")).get("finder") or 1) < FINDER
+        except (OSError, ValueError): return True
     # --requests DIR: the requests waiting there (papers-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
     # A request is a file in the repository, written by the editor: it is read as data here and never reaches a command line.
     if "--requests" in arg:
@@ -464,13 +471,14 @@ def main():
             again = again or r.get("again") is True
             f.unlink()
         if ids: items = [w for w in items if w["id"] in ids]
-        elif not again: items = [w for w in items if not (out / (w["id"] + ".json")).exists()]
+        elif not again: items = [w for w in items if old(w)]
     elif ids: items = [w for w in items if w["id"] in ids]
-    else: items = [w for w in items if not (out / (w["id"] + ".json")).exists()]
+    else: items = [w for w in items if old(w)]
     items = items[:limit]
     import build_index as bi
     names = bi.names_table(); enc = General(); done = 0
     for w in items:
+        if minutes and time.time() - t0 > minutes * 60: print(f"papers: the time for this run is up; {len(items) - done} questions are left for the next run"); break
         try: res = find(w, names, enc)
         except Refused as e: print("papers: stopped,", e); break
         json.dump(res, open(out / (w["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1); done += 1
