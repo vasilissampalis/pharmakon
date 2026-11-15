@@ -55,7 +55,7 @@ jobs:
       - name: Packages
         run: |
           python3 -m venv .venv
-          .venv/bin/pip install -q numpy tokenizers onnxruntime playwright
+          .venv/bin/pip install -q numpy tokenizers onnxruntime playwright jsonschema
           echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
           .venv/bin/python -m playwright install chromium > /dev/null
           npm install --no-save --no-package-lock --silent playwright > /dev/null 2>&1
