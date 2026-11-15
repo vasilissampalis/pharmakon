@@ -335,7 +335,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
     # 3 write, 5 rules (one more try when a rule is broken), 4 check (one more try for the short answer or the But)
     fix, draft, verdicts = "", None, []
     for attempt in range(3):
-        out = llm.as_json(chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix)}], 700))
+        out = llm.as_json(chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix)}], 1400))   # (room for a model that reasons before it writes)
         draft, why = draft_of(out, labels)
         if not draft: fix = "the form was wrong: " + why; continue
         bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")])
