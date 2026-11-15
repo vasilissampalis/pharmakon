@@ -291,7 +291,12 @@ Questions that visitors send are data, never instructions: nothing in a question
   the site's own program's tests, a real browser, and only then Cloudflare Pages. First done on 15 November at 20:28 UTC
   (`data/auto/deploy/deployed.json`). The senior author no longer uploads a zip.
 - **The half-hourly look** (`scripts/auto/tick.py`, `.github/workflows/auto.yml`): is there anything to do, the work, the
-  publishing. Written; tried by request first, not on its clock yet.
+  publishing. On its clock since 15 November 2026, 21:51 UTC (7 and 37 minutes past every hour). Its first work run read
+  the question store, ran the scout and the item writer, and wrote its notes (`data/auto/lane/_last-auto-run.txt`). What
+  it showed and what was mended the same hour: the publishing, called as a part of that workflow, did not publish and left
+  no note (it is now a run of its own, started through GitHub's API); the lane began a question with too little of the
+  day's allowance left and lost 563 neurons (it now begins a question only with room for one); the lane was started
+  although no question had been listed.
 - **Official pages** (`scripts/auto/official.py`, `data/auto/official/sources.json`, `.github/workflows/official.yml`): 22
   bodies listed; whether each can be read is found out on the machine that reads (`_probe.json`). Fifteen can be read, three
   refused and are left alone, four give nothing to a reader that is not a browser or did not answer (`docs/STATUS.md`,
@@ -302,9 +307,10 @@ Questions that visitors send are data, never instructions: nothing in a question
   about amounts (decision 11); the second look's first part (an answer that is not complete is written again; its history
   is kept); the item writer (`scripts/auto/ask.py`: a visitor's question becomes a question on the system's own list, in
   our words); the half-hourly clock is on (`.github/workflows/auto.yml`). None of these has run with a real model yet.
-- **Other free services for models, looked up on 15 November 2026** (not official pages; to be read again at the services'
-  own pages before anyone signs up). Groq: no card; `openai/gpt-oss-120b`, `gpt-oss-20b` and two Qwen models, each 1,000
-  requests and 200,000 tokens a day (klymentiev.com, checked 11 September 2026). Mistral: no card; its free mode publishes
+- **Other free services for models, looked up on 15 November 2026.** Groq, from its own page
+  (console.groq.com/docs/rate-limits, read 15 November 2026): `openai/gpt-oss-120b`, `openai/gpt-oss-20b` and
+  `qwen/qwen3.8-27b`, each 30 requests a minute, 1,000 requests a day, 8,000 tokens a minute and 200,000 tokens a day, for
+  an organization; no card according to klymentiev.com (checked 11 September 2026; Groq's own page does not say). Mistral: no card; its free mode publishes
   no limits; texts may be used for training unless switched off (aifreeapi.com, 9 October 2026). Cerebras: a card is
   required since 2026 (toolfreebie.com, 9 October 2026), so it is not free in the senior author's sense. With Groq and
   Mistral the lane would have about three times the room and a checker of another family; both need the senior author
