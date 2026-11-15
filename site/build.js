@@ -285,7 +285,9 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
         pages: pagesOf[id] || [byId[id].substance], about: [...(aboutOf[id] || (drugSlugs.has(byId[id].substance) ? [byId[id].substance] : []))].sort(),
         wordings: [...new Set((sp.q ? [sp.q] : []).concat(wordsOf[id] || []))], short: sp.short }));
       const input = path.join(__dirname, "insight", ".cache", "index-input.json"), nextFile = path.join(__dirname, "insight", ".cache", "next.json");
-      fs.mkdirSync(path.dirname(input), { recursive: true }); fs.writeFileSync(input, JSON.stringify({ answers }));
+      // 2.5: the questions not answered yet (data/site/wanted.json), for the page's second look when no answer fits
+      const wanted = (fileOr("wanted.json", { items: [] }).items || []).map(w => ({ id: w.id, q: w.q, ways: w.ways || [] }));
+      fs.mkdirSync(path.dirname(input), { recursive: true }); fs.writeFileSync(input, JSON.stringify({ answers, wanted }));
       if (fs.existsSync(nextFile)) fs.unlinkSync(nextFile);
       const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json"), nextFile], { stdio: ["ignore", "inherit", "inherit"], env: Object.assign({}, process.env, { PK_NODE: process.execPath }) });
       if (r.status !== 0) { console.error("WARNING: Insight's index was not built (scripts/insight/build_index.py failed): the search box answers by words only"); if (fs.existsSync(path.join(dataDir, "insight.json"))) fs.unlinkSync(path.join(dataDir, "insight.json")); }

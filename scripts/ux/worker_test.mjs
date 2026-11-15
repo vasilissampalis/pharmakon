@@ -31,5 +31,23 @@ const assets = { fetch: async () => new Response("the page", { status: 200 }) };
   s.m.set("count:" + new Date().toISOString().slice(0, 10), "400"); x = await call(env, "POST", { q: "a brand new question about ketamine" }); ok("the daily cap holds for a new question", x.status === 429);
   x = await call(env, "POST", { q: "is it safe to mix alcohol and ghb" }); ok("and for one asked before", x.status === 429);
   ok("no key holds anything but questions and the day's count", [...s.m.keys()].every(k => /^(q:[0-9a-f]{20}|count:\d{4}-\d\d-\d\d)$/.test(k))); }
+// an address with a slash at its end is the same address (the senior author's first check of the live site met "not found")
+{ const s = kv(), env = { ASSETS: assets, QUESTIONS: s }; let x = await call(env, "GET", null, null, "/api/ask/"); ok("GET /api/ask/ (a slash at the end) answers as /api/ask", x.status === 200 && x.j.ok === true);
+  x = await call(env, "POST", { q: "can you overdose on lsd" }, null, "/api/ask//"); ok("POST with slashes at the end keeps the question", x.status === 200 && x.j.ok === true); }
+// the list's counts: only an item's number arrives
+{ const s = kv(), env = { ASSETS: assets, QUESTIONS: s }, day = new Date().toISOString().slice(0, 10);
+  let x = await call(env, "POST", { id: "w_0041" }, null, "/api/want"); ok("a count for a listed question is kept", x.status === 200 && x.j.ok === true);
+  const rec = JSON.parse(s.m.get("w:w_0041")); ok("what is kept: a count, the day, and nothing else", rec.n === 1 && rec.dn === 1 && rec.last === day && Object.keys(rec).sort().join() === "dn,first,last,n", JSON.stringify(rec));
+  x = await call(env, "POST", { id: "w_0041", q: "my own words about my own life" }, null, "/api/want"); const rec2 = JSON.parse(s.m.get("w:w_0041"));
+  ok("words sent along are not kept", rec2.n === 2 && !JSON.stringify([...s.m.values()]).includes("my own words"), JSON.stringify(rec2));
+  for (const bad of ["", "41", "w_", "W_0041", "w_0041; drop", "q:abc", "w_" + "a".repeat(60)]) { x = await call(env, "POST", { id: bad }, null, "/api/want"); ok("refused as a list number: " + JSON.stringify(bad), x.status === 422); }
+  x = await call(env, "GET", null, null, "/api/want"); ok("GET /api/want is 405", x.status === 405);
+  x = await call(env, "POST", { id: "w_0041" }, { origin: "https://evil.example" }, "/api/want"); ok("another site's page cannot count", x.status === 403);
+  for (let i = 0; i < 80; i++) x = await call(env, "POST", { id: "w_0002" }, null, "/api/want");
+  ok("one item is counted at most 60 times a day", JSON.parse(s.m.get("w:w_0002")).n === 60, s.m.get("w:w_0002"));
+  s.m.set("count:" + day, "300"); x = await call(env, "POST", { id: "w_0003" }, null, "/api/want"); ok("counts stop at 300 a day and write nothing more", x.status === 200 && x.j.full === true && !s.m.has("w:w_0003"));
+  x = await call(env, "POST", { q: "a question someone chose to send about ketamine" }); ok("a question someone sends is still taken after that", x.status === 200 && x.j.ok === true);
+  x = await call({ ASSETS: assets }, "POST", { id: "w_0041" }, null, "/api/want"); ok("without the store a count is 503", x.status === 503);
+  ok("the store's keys are questions, list numbers and the day's count", [...s.m.keys()].every(k => /^(q:[0-9a-f]{20}|w:w_[a-z0-9_]{1,40}|count:\d{4}-\d\d-\d\d)$/.test(k))); }
 ok("readQuestion keeps Greek", readQuestion({ q: "είναι ασφαλές το αλκοόλ με κοκαΐνη" }).q.length > 10);
 console.log(fail ? fail + " of " + (pass + fail) + " checks failed" : "All " + pass + " checks passed"); process.exit(fail ? 1 : 0);

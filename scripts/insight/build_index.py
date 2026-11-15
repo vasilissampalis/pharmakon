@@ -238,6 +238,10 @@ class Ranker:
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
         self.pat = name_pattern([n for n, _ in D["names"]])
         self.expand = drug_names(); self.canon = {s["slug"]: s["name"].split(" (")[0] for s in SUB}
+        # 2.5: the list of questions not answered yet, as a ranker of its own over the same names, weights and judge
+        Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0)
+        if Wd: self.wanted = Ranker({"dim": dim, "ids": Wd["ids"], "rows": Wd["rows"], "W": Wd["W"], "M": Wd["M"], "S": Wd["S"], "docs": Wd["docs"], "weights": D["weights"], "tiers": D["tiers"], "judge": D["judge"],
+                                     "slugs": D["slugs"], "about": Wd["about"], "names": D["names"]})
     def named(self, q):
         """The drugs a question names, each as the list of drugs its name stands for (a family's name: every drug of it)."""
         out = []
@@ -307,6 +311,14 @@ class Ranker:
         full, masked, groups = self.texts(q, drug)
         v, mv = embed_all([full, masked], quiet=True)
         return self.rank_vectors(q, v, mv, groups)
+    def want(self, q, v, mv, groups):
+        """The page's second look (insWant): the listed question a typed question is, or None. The list is ranked as the
+        answers are, by its own small index; the first candidate is taken when it is about every drug the question names
+        and the judge's number for it is the list's cut or more."""
+        if self.wanted is None: return None
+        r = self.wanted.rank_vectors(q, v, mv, groups); c = r["first"]
+        on = bool(r["ok"][self.wanted.ids.index(c["id"])])
+        return {"id": c["id"], "p": c["p"]} if on and c["p"] >= self.want_cut else None
 
 
 def next_lists(A, sim):
@@ -394,6 +406,9 @@ def main():
            "model": MODEL, "model_sha256": MODEL_SHA256, "dim": int(Wv.shape[1]), "weights": CONFIG["weights"], "tiers": CONFIG["tiers"], "judge": CONFIG["judge"],
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
            "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
+    # 2.5: the list of questions not answered yet (data/site/wanted.json), as a second, small index of the same kind
+    wl = wanted_index(json.load(open(IN, encoding="utf-8")).get("wanted") or [], out, names, pat, at)
+    if wl: out["wanted"] = wl
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
     if len(args) > 2:
@@ -405,6 +420,48 @@ def main():
     if bare: print(f"insight: {len(bare)} answers have only the site's own questions to be found by (no wordings written for them yet): {', '.join(bare[:30])}{' …' if len(bare) > 30 else ''}", file=sys.stderr)
     print(f"insight: next questions for {sum(1 for x in nxt if x)} answers ({sum(len(x) for x in nxt)} in all)", file=sys.stderr)
     if "--eval" in sys.argv: evaluate(out, near)
+
+
+WANT_CUT = 0.75   # the judge's number from which a typed question IS a listed one (see wanted_index)
+
+
+def wanted_index(items, out, names, pat, at):
+    """The list of questions the site does not answer yet (site 2.5; the senior author, 15 November 2026: "make the site
+    understand on its own what the users want added in the website in-app and not via email"). When no answer is a best
+    match, the page takes a second look, at this list, with the same ranking and the same judge: a typed question that is
+    one of the listed questions gets "Not answered yet. It is on our list", and the site counts one more person asking
+    it, by the item's number alone (the words never leave the device).
+
+    Each item is indexed as an answer is: its question and its other ways of asking as the wordings, its question again
+    as the short line. An item the site answers by now (its own question gets a best match among the answers) is left
+    out, so the list empties itself as answers are written. How well this finds a listed question was measured on
+    answered questions standing in for listed ones (42 at random, five times; hurried rewordings held out): with the
+    question alone 10 in 100 found their item; with six ways of asking and the judge at 0.75, 82 in 100, none a wrong
+    item, and 4 in 100 questions that were not on the list were taken for a listed one (at the answers' own cut, 0.60:
+    87 and 6). So every item carries six ways, and the cut for the list is 0.75 (WANT_CUT)."""
+    if not items: return None
+    R = Ranker(out); keep, gone = [], []
+    for w in items:
+        k = R.rank(w["q"])
+        (gone if k["best"] else keep).append((w, k["best"][0]["id"] if k["best"] else None))
+    if gone: print("insight: " + str(len(gone)) + " listed questions are answered by now and left off the list: " + ", ".join(w["id"] + " by " + c for w, c in gone), file=sys.stderr)
+    items = [w for w, _ in keep]
+    if not items: return None
+    rows, W_txt = [], []
+    for i, w in enumerate(items):
+        for t in list(dict.fromkeys([w["q"]] + [x for x in w.get("ways") or [] if isinstance(x, str) and x.strip()])): rows.append(i); W_txt.append(t)
+    shorts = [w["q"] for w in items]; M_txt = [pat.sub("it", t) for t in W_txt]
+    V = embed_all(W_txt + shorts + M_txt)
+    Wv, Sv, Mv = V[:len(W_txt)], V[len(W_txt):len(W_txt) + len(shorts)], V[len(W_txt) + len(shorts):]
+    wb, _ = int8(Wv); sb, _ = int8(Sv); mb, _ = int8(Mv)
+    name_of = {n: xs for n, xs in names}
+    about = []
+    for w in items:   # the drugs an item is about: the ones its question names (a family's name: every drug of it)
+        ab = set()
+        for m in pat.finditer(w["q"]): ab |= set(name_of.get(m.group(1).lower(), []))
+        about.append(sorted(at[s] for s in ab if s in at))
+    print(f"insight: {len(items)} questions on the list of those not answered yet, {len(W_txt)} wordings", file=sys.stderr)
+    return {"ids": [w["id"] for w in items], "q": shorts, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": [" ".join(dict.fromkeys([w["q"]] + (w.get("ways") or []))) for w in items], "about": about, "cut": WANT_CUT}
 
 
 def evaluate(D, near=None):
