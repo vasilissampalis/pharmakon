@@ -237,12 +237,28 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
       const pagesOf = {}, wordsOf = {};
       for (const [slug, groups] of Object.entries(QS)) (groups || []).forEach(g => (g.items || []).forEach(it => { if (!it[0]) return; (pagesOf[it[0]] = pagesOf[it[0]] || []).includes(slug) || pagesOf[it[0]].push(slug); if (it[1]) (wordsOf[it[0]] = wordsOf[it[0]] || []).push(it[1]); }));
       const byId = Object.fromEntries(shownClaims.map(c => [c.id, c]));
+      // 2.3: the drugs each answer is about (a best match must be about the drug a question names; next questions keep to the
+      // same drug): the drug pages that ask it, the drugs a mixing answer is shown for, the drugs whose tests a test-kit answer covers
+      const drugSlugs = new Set(site("substances.json").map(s => s.slug)), aboutOf = {}, isAbout = (id, slug) => { if (drugSlugs.has(slug)) (aboutOf[id] = aboutOf[id] || new Set()).add(slug); };
+      const fileOr = (f, d) => fs.existsSync(path.join(ROOT, "data/site", f)) ? site(f) : d;
+      Object.entries(pagesOf).forEach(([id, ps]) => ps.forEach(p => isAbout(id, p)));
+      Object.entries(fileOr("mix-drugs.json", {})).forEach(([id, ps]) => { if (Array.isArray(ps)) ps.forEach(p => isAbout(id, p)); });
+      Object.entries(fileOr("kits-for.json", {})).forEach(([slug, ids]) => { if (Array.isArray(ids)) ids.forEach(id => isAbout(id, slug)); });
       const answers = Object.entries((simpleShown || {}).claims || {}).filter(([id]) => byId[id]).map(([id, sp]) => ({ id, substance: byId[id].substance, section: byId[id].section,
-        pages: pagesOf[id] || [byId[id].substance], wordings: [...new Set((sp.q ? [sp.q] : []).concat(wordsOf[id] || []))], short: sp.short }));
-      const input = path.join(__dirname, "insight", ".cache", "index-input.json");
+        pages: pagesOf[id] || [byId[id].substance], about: [...(aboutOf[id] || (drugSlugs.has(byId[id].substance) ? [byId[id].substance] : []))].sort(),
+        wordings: [...new Set((sp.q ? [sp.q] : []).concat(wordsOf[id] || []))], short: sp.short }));
+      const input = path.join(__dirname, "insight", ".cache", "index-input.json"), nextFile = path.join(__dirname, "insight", ".cache", "next.json");
       fs.mkdirSync(path.dirname(input), { recursive: true }); fs.writeFileSync(input, JSON.stringify({ answers }));
-      const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json")], { stdio: ["ignore", "inherit", "inherit"], env: Object.assign({}, process.env, { PK_NODE: process.execPath }) });
+      if (fs.existsSync(nextFile)) fs.unlinkSync(nextFile);
+      const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json"), nextFile], { stdio: ["ignore", "inherit", "inherit"], env: Object.assign({}, process.env, { PK_NODE: process.execPath }) });
       if (r.status !== 0) { console.error("WARNING: Insight's index was not built (scripts/insight/build_index.py failed): the search box answers by words only"); if (fs.existsSync(path.join(dataDir, "insight.json"))) fs.unlinkSync(path.join(dataDir, "insight.json")); }
+      // 2.3: each answer's next questions (the nearest by meaning, the same drug first) go into the page itself, at the head
+      // of its script (const INS_NEXT), so that "Read next" and the answer sheet's "People also ask" need none of Insight's files
+      else if (fs.existsSync(nextFile)) {
+        const pageFile = path.join(__dirname, "dist", "index.html"), mark = "\nconst SITE_VERSION = ", page = fs.readFileSync(pageFile, "utf8");
+        if (page.split(mark).length === 2) fs.writeFileSync(pageFile, page.replace(mark, () => "\nconst INS_NEXT = " + JSON.stringify(JSON.parse(fs.readFileSync(nextFile, "utf8"))) + ";" + mark));
+        else console.error("WARNING: the page's script has no place for Insight's next questions (const SITE_VERSION not found once): Read next falls back to the next questions of the topic");
+      }
     } else console.error("WARNING: site/insight/vendor is incomplete: Insight is left out and the search box answers by words only"); }
   const kb = f => (fs.statSync(path.join(dataDir, f)).size / 1024).toFixed(0) + " KB";
   console.log("wrote", Object.keys(full).length, "substance files to dist/data (largest " + Object.keys(full).map(s => "full-" + s + ".json").sort((a, b) => fs.statSync(path.join(dataDir, b)).size - fs.statSync(path.join(dataDir, a)).size).slice(0, 3).map(f => f + " " + kb(f)).join(", ") + "), refs.json " + kb("refs.json") + ", figures.json " + kb("figures.json")); }
