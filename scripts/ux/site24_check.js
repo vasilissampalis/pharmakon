@@ -47,7 +47,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
   const box = (p, sel) => p.evaluate(s => { const e = document.querySelector(s); if (!e) return null; const r = e.getBoundingClientRect(); return { x: Math.round(r.left), r: Math.round(r.right), y: Math.round(r.top), w: Math.round(r.width) }; }, sel);
 
   /* ---- A. one top bar and one column, at 1280 and at 390 ---- */
-  const PAGES = ["#home", "#facts", "#quiz", "#numbers", "#checking", "#methods", "#about", "#howto", "#s-cannabis", "#substances", "#interactions", "#glossary", "#emergency", "#law", "#wanted"];
+  const PAGES = ["#home", "#facts", "#quiz", "#numbers", "#checking", "#methods", "#about", "#howto", "#s-cannabis", "#substances", "#interactions", "#glossary", "#emergency", "#law", "#wanted", "#auto"];
   for (const width of [1280, 390]) {
     const p = await open(ON, width), seen = [];
     for (const h of PAGES) {
@@ -266,13 +266,13 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     ok("with the store on: the button says what it sends", /We haven.t checked exactly this yet/.test(before.none) && before.note === "Sends only this question. No name, no address.", JSON.stringify(before));
     await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
     const said = await p.evaluate(() => (document.querySelector(".ask-said") || {}).textContent || "");
-    ok("one tap: the page says it was sent", /^Sent\./.test(said), said);
+    ok("one tap: the page says it was sent, and promises only what is true (no answer within the hour until the half-hourly run keeps it)", said === "Sent. We will check it. It is kept under “Your questions” on the start page, and turns green there when it is answered." && await p.evaluate(() => AUTO_LOOP === false), said);
     const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
     ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "is modafinil safe" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, rows: [...b.querySelectorAll(".aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
     ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking \| is modafinil safe/.test(list.rows[0]), JSON.stringify(list));
-    ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it."));
+    ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it. A question turns green here when it is answered."));
     await typeQ(p, "why do people take drugs"); await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(800);
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     list = await p.evaluate(() => [...document.querySelectorAll("#home-asked .aq-q")].map(e => e.textContent));

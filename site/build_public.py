@@ -91,7 +91,9 @@ for f in ("_worker.js", "_routes.json"):
     "  X-Frame-Options: DENY\n"
     "  Referrer-Policy: strict-origin-when-cross-origin\n"
     "  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()\n"
-    "  Content-Security-Policy: " + csp.replace("upgrade-insecure-requests", "frame-ancestors 'none'; upgrade-insecure-requests") + "\n", encoding="utf-8")
+    "  Content-Security-Policy: " + csp.replace("upgrade-insecure-requests", "frame-ancestors 'none'; upgrade-insecure-requests") + "\n"
+    # (site 2.6) the build's stamp is never kept by a browser or a cache: an open page asks it whether a newer site exists
+    "\n/data/build.json\n  Cache-Control: no-store\n", encoding="utf-8")
 (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {URL}sitemap.xml\n", encoding="utf-8")
 ver = json.loads((HERE.parent / "data/site/version.json").read_text(encoding="utf-8"))
 build_date = re.search(r'<span id="build-date">([^<]+)</span>', doc)

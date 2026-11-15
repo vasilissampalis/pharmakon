@@ -19,7 +19,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
 const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { env: Object.assign({}, process.env, env), encoding: "utf8", maxBuffer: 1 << 26 });
 
 (async () => {
-  const b = build({ PK_AUTO_FIXTURE: path.join(REPO, "scripts", "ux", "fixtures", "auto") });
+  const b = build({ PK_AUTO_FIXTURE: path.join(REPO, "scripts", "ux", "fixtures", "auto"), PK_AUTO_LOOP: "1" });
   if (b.status !== 0) { console.error(b.stderr.slice(-2000)); process.exit(2); }
   ok("the build shows the two pretend answers and takes the questions they answer off the list of questions not answered yet", /machine lane: 2 answers/.test(b.stdout) && /w_0024 by au_fixture_ketamine/.test(b.stderr) && /w_0007 by au_fixture_police/.test(b.stderr), (b.stdout + b.stderr).split("\n").filter(l => /machine lane|listed questions/.test(l)).join(" | "));
   const pub = spawnSync("python3", ["-I", path.join(REPO, "site", "build_public.py")], { encoding: "utf8" });
@@ -109,9 +109,28 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const s5 = await sheet(p); ok(w + "reading it opens the answer with its line", s5 && s5.line === LINE2, s5 && s5.line);
     await p.context().close();
   }
+  {
+    // ---- the build's own stamp: a question that waits is asked again once per publishing, and an open page learns of a newer site
+    const p = await open(390), stamp = JSON.parse(fs.readFileSync(path.join(ROOT, "data", "build.json"), "utf8"));
+    const pg = await p.evaluate(() => ({ build: SITE_BUILD, loop: AUTO_LOOP, sent: ASK_SENT }));
+    ok("the build has a stamp of its own, in the page and in a small file beside it", /^\d{12}$/.test(pg.build) && stamp.build === pg.build && stamp.site === (await p.evaluate(() => SITE_VERSION)), JSON.stringify(stamp) + " / " + pg.build);
+    ok("a site whose half-hourly run is on says so to a reader who sends a question (this build has the switch on)", pg.loop === true && /^Sent\. Our system starts on it within half an hour\. If it finds research it can read, the answer is usually here within the hour: your question then turns green/.test(pg.sent), pg.sent);
+    await p.evaluate(() => localStorage.setItem("pk-asked", JSON.stringify([{ k: "what is the capital of mongolia", q: "what is the capital of mongolia", d: "", t: Date.now(), cv: SITE_BUILD, st: "wait", sent: 1 }])));
+    await p.reload(); await p.waitForTimeout(900);
+    const quiet = await p.evaluate(async () => ({ rows: document.querySelectorAll("#home-asked .aq.wait").length, newer: !!document.querySelector("#home-asked .aq-new"), look: await askedLook() }));
+    ok("a question that waits: nothing is said while the site on the server is this one", quiet.rows === 1 && !quiet.newer && quiet.look === false, JSON.stringify(quiet));
+    await p.route("**/data/build.json", r => r.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ build: "209901010000", site: "9.9.9" }) }));
+    const told = await p.evaluate(async () => { const n = await askedLook(), el = document.querySelector("#home-asked .aq-new"); return { n, text: el ? el.textContent : "", btn: !!document.querySelector("#home-asked button[data-asked-reload]"), wide: document.documentElement.scrollWidth > innerWidth }; });
+    ok("when a newer site is on the server, the list says so once and offers to load it", told.n === true && told.text === "The site has new answers. Load them to see whether yours is among them." && told.btn && !told.wide, JSON.stringify(told));
+    await shot(p, "390-newer-site");
+    await p.unroute("**/data/build.json");
+    await Promise.all([p.waitForNavigation({ timeout: 20000 }).catch(() => null), p.click("#home-asked button[data-asked-reload]")]); await p.waitForTimeout(900);
+    ok("Load them loads the page again; the question still waits and the line is gone", await p.evaluate(() => document.querySelectorAll("#home-asked .aq.wait").length === 1 && !document.querySelector("#home-asked .aq-new")));
+    await p.context().close();
+  }
   ok("no error in any page's console", !errors.length, errors.slice(0, 3).join(" | "));
   await browser.close(); server.close();
-  if (!process.argv.includes("--keep")) { const r = build({ PK_AUTO_FIXTURE: "" }); ok("the site is built again without the pretend answers", r.status === 0 && !/machine lane: 2 answers/.test(r.stdout) && !fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes("au_fixture_"), (r.stdout + r.stderr).slice(-300)); }
+  if (!process.argv.includes("--keep")) { const r = build({ PK_AUTO_FIXTURE: "", PK_AUTO_LOOP: "" }); ok("the site is built again without the pretend answers", r.status === 0 && !/machine lane: 2 answers/.test(r.stdout) && !fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes("au_fixture_"), (r.stdout + r.stderr).slice(-300)); }
   console.log(fail ? fail + " checks failed, " + pass + " passed" : "All " + pass + " checks passed");
   process.exit(fail ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

@@ -228,19 +228,30 @@ const data = [
     return out; })()) + ";"
 ].join("\n");
 const VERSION = site("version.json");
+// (site 2.6) the build's own stamp: the site now publishes itself, so the version number no longer tells one publishing from the
+// next; the page asks its kept questions again once per stamp, and a small file beside the page (data/build.json) lets an open
+// page learn that a newer one exists
+const SITE_BUILD = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "");
 /* The machine lane (site 2.6; docs/AUTOMATION.md; scripts/auto/lane.py): answers the system wrote by itself from papers it found
    and read, published before a person has checked them, each with its label. Only "published" records are shown, never one
    the senior author has taken down (data/auto/held.json), and each is looked at once more here, by code: a record that lacks a
    part or a source, or holds an amount of a drug, advice or a quotation, is left out and named. PK_AUTO_FIXTURE: the folder of
    pretend answers that scripts/ux/auto_check.js builds with (site/build_public.py refuses to publish such a build). */
 const AUTO_DIR = process.env.PK_AUTO_FIXTURE ? path.resolve(process.env.PK_AUTO_FIXTURE) : path.join(ROOT, "data", "auto", "answers");
+// what of the lane the site may show and say (data/auto/lane/policy.json). loop: true only once the half-hourly run is on and has
+// been seen to answer questions visitors sent; until then the page does not promise it (PK_AUTO_LOOP=1: the checks' build)
+const AUTO_POLICY = (() => { const f = path.join(ROOT, "data", "auto", "lane", "policy.json"); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : {}; })();
+const AUTO_LOOP = process.env.PK_AUTO_LOOP ? process.env.PK_AUTO_LOOP === "1" : AUTO_POLICY.loop === true;
 const AUTO_SHOWN = (() => {
   const heldFile = path.join(ROOT, "data", "auto", "held.json"), held = new Set(fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []).map(x => x.id || x) : []);
   const drugSlugs = new Set(site("substances.json").map(s => s.slug)), out = [], left = [];
+  // an answer written by an older lane than data/auto/lane/policy.json allows is not shown (the lane writes it again)
+  const minLane = +AUTO_POLICY.show_from_lane || 1; let older = 0;
   const bad = /\b\d+(?:[.,]\d+)?\s?(?:mg|milligrams?|µg|ug|mcg|micrograms?|g|grams?|ml|pills?|tablets?|tabs?|capsules?|lines?|hits?|drops?)\b|\byou\s+(?:should|must|need to)\b|["“”]|\bre-?dos\w*/i;
   for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
     const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
     if (a.status !== "published" || held.has(a.id)) continue;
+    if ((+a.lane || 1) < minLane) { older++; continue; }
     const part = k => (a.parts || []).filter(p => p.part === k || (k === "how" && /^how\d+$/.test(p.part))).map(p => String(p.text || "").trim()).filter(Boolean);
     const short = part("short")[0], but = part("but")[0], how = part("how"), refs = (a.sources || []).map(s => s.ref).filter(r => r && r.id && r.title && r.DOI && Array.isArray(r.author));
     const why = !/^au_[a-z0-9_]+$/.test(a.id || "") || a.id + ".json" !== f ? "its name" : !a.question || !short || !but || !how.length ? "a part is missing" : !refs.length || refs.length !== (a.sources || []).length ? "a source without its Crossref record"
@@ -250,11 +261,12 @@ const AUTO_SHOWN = (() => {
     out.push({ id: a.id, q: a.question, ways: a.ways || [], short, but, how, refs, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page: drugs[0] || "general" });
   }
   if (left.length) console.error("WARNING: machine-lane answers left out of the site: " + left.join("; "));
+  if (older) console.log("machine lane: " + older + " answers written by an older lane are not shown (they will be written again)");
   if (out.length) console.log("machine lane: " + out.length + " answers written by the system are shown, each with its label");
   return out;
 })();
 const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, { q: a.q, short: a.short, but: a.but, how: a.how, refs: a.refs, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }]))) +
-  ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
+  ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }
@@ -283,6 +295,7 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
   fs.writeFileSync(path.join(dataDir, "refs.json"), JSON.stringify(Object.fromEntries(refs.map(r => [r.id, r]))));
   fs.writeFileSync(path.join(dataDir, "figures.json"), JSON.stringify(epiRows));
   fs.writeFileSync(path.join(dataDir, "decisions.json"), JSON.stringify(site("decisions.json")));
+  fs.writeFileSync(path.join(dataDir, "build.json"), JSON.stringify({ build: SITE_BUILD, site: VERSION.site }));
   /* Insight (site 2.2.0, 14 November 2026): the search that understands a question, on the reader's own phone. The model
      and its runtime (site/insight/vendor: the model named in site/insight/model.json and ONNX Runtime Web, unmodified;
      where they came from and their hashes: scripts/insight/MODELS.md) are published next to the page in dist/insight/,

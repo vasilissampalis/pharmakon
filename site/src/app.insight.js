@@ -832,6 +832,26 @@ document.addEventListener("click", e => {
      per new version, on this device). Reading an answered question, or the cross beside any, takes it off the list.
    Reading the list back is how a person without an account, an address or a cookie hears that their question was answered. ---------- */
 const ASK_KEY = "pk-asked", ASK_API = "api/ask";
+// (2.6) the site publishes itself, with new answers, without a new version number: a kept question is asked again once per
+// BUILD (the build's own stamp), and while a question waits an open page looks every few minutes whether a newer site exists
+// (a small fixed file, data/build.json: nothing about the reader is sent) and then offers to load it
+const ASK_BUILD = typeof SITE_BUILD === "string" ? SITE_BUILD : SITE_VERSION, ASK_LOOK = 5 * 60 * 1000;
+let ASK_NEWER = false;
+// what the page says once a question is sent. The promise of an answer within the hour is made only by a site whose half-hourly
+// run is on and has been seen to keep it (AUTO_LOOP, from data/auto/lane/policy.json at build time); until then: the plain truth
+const ASK_SENT = (typeof AUTO_LOOP !== "undefined" && AUTO_LOOP)
+  ? "Sent. Our system starts on it within half an hour. If it finds research it can read, the answer is usually here within the hour: your question then turns green under “Your questions” on the start page."
+  : "Sent. We will check it. It is kept under “Your questions” on the start page, and turns green there when it is answered.";
+function askedLook() {   // one look: is the site on the server newer than this page?
+  if (ASK_NEWER) return Promise.resolve(true);
+  return fetch("data/build.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => { if (j && typeof j.build === "string" && j.build !== ASK_BUILD) { ASK_NEWER = true; if (askedWatch.t) clearInterval(askedWatch.t); askedBox(); } return ASK_NEWER; }).catch(() => false);
+}
+function askedWatch() {
+  if (askedWatch.on || ASK_NEWER || !askedList().some(it => it.st === "wait")) return; askedWatch.on = true;
+  askedWatch.t = setInterval(() => { if (!document.hidden && askedList().some(it => it.st === "wait")) askedLook(); }, ASK_LOOK);
+  // and when the reader comes back to the tab after a while
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() - (askedWatch.at || 0) > ASK_LOOK && askedList().some(it => it.st === "wait")) { askedWatch.at = Date.now(); askedLook(); } });
+}
 let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
 function askProbe() {
   if (ASK_ON !== null) return Promise.resolve(ASK_ON);
@@ -844,7 +864,7 @@ function askedSave(list) { try { localStorage.setItem(ASK_KEY, JSON.stringify(li
 function askedAdd(q, drug) {
   const text = insClean(q).slice(0, 200), k = text.toLowerCase(); if (k.length < 3) return null;
   const list = askedList(); let it = list.find(x => x.k === k);
-  if (!it) { it = { k, q: text, d: drug || "", t: Date.now(), cv: SITE_VERSION, st: "wait", sent: 0 }; list.push(it); askedSave(list); }
+  if (!it) { it = { k, q: text, d: drug || "", t: Date.now(), cv: ASK_BUILD, st: "wait", sent: 0 }; list.push(it); askedSave(list); }
   return it;
 }
 function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k === k); if (!it) return; Object.assign(it, patch); askedSave(list); }
@@ -861,30 +881,32 @@ function askedBox() {
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
   // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
   // didn't send the email? ... the user should be informed": the list says where it is kept, and each row whether it was sent)
-  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it.</p><ul class="aq-l">' + list.filter(it => it.st === "ans").concat(list.filter(it => it.st !== "ans")).map(row).join("") + "</ul>";
+  const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
+  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it. A question turns green here when it is answered.</p>' + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").concat(list.filter(it => it.st !== "ans")).map(row).join("") + "</ul>";
   box.hidden = false;
-  askedCheckSoon();
+  askedCheckSoon(); askedWatch();
 }
 // a kept question is asked again once per new version of the site: a best match now means it has been answered
 async function askedCheck() {
   if (INS.state !== "ready") return;
   const list = askedList(); let changed = false;
   for (const it of list) {
-    if (it.st !== "wait" || it.cv === SITE_VERSION) continue;
+    if (it.st !== "wait" || it.cv === ASK_BUILD) continue;
     try { const res = await insRank(it.q, { drug: it.d && subBySlug[it.d] ? it.d : null });
       if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
-      it.cv = SITE_VERSION; changed = true; } catch (e) { /* asked again on the next visit */ }
+      it.cv = ASK_BUILD; changed = true; } catch (e) { /* asked again on the next visit */ }
   }
   if (changed) { askedSave(list); askedBox(); }
 }
 function askedCheckSoon() {
-  if (askedCheckSoon.done || !askedList().some(it => it.st === "wait" && it.cv !== SITE_VERSION)) return;
+  if (askedCheckSoon.done || !askedList().some(it => it.st === "wait" && it.cv !== ASK_BUILD)) return;
   askedCheckSoon.done = true;
   const go = () => { if (INS.state === "ready") askedCheck(); else if (!insSaver()) insightLoad().then(ok => { if (ok) askedCheck(); }); };
   if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 4000 }); else setTimeout(go, 1500);
 }
 document.addEventListener("click", async e => {
   if (!e.target.closest) return;
+  if (e.target.closest("button[data-asked-reload]")) { location.reload(); return; }
   const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   const op = e.target.closest("a[data-asked-open]"); if (op) { askedDrop(op.dataset.askedOpen); return; }   // read: it leaves the list (the sheet opens by its data-sheet)
   // a question in the list that was not sent: one tap sends it where the site can send; elsewhere the email form opens with it
@@ -913,7 +935,7 @@ document.addEventListener("click", async e => {
   if (on) {
     let ok = false;
     try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
-    if (ok) { askedSet(it.k, { sent: 1 }); say("Sent. We will check it. It is kept under “Your questions” on the start page."); askedBox(); return; }
+    if (ok) { askedSet(it.k, { sent: 1 }); say(ASK_SENT); askedBox(); return; }
   }
   // the page cannot send it (the store is not switched on, or the connection failed): kept on this device, and the email form opens with it
   say("Not sent yet. It is kept on this device only, under “Your questions”. To send it to us, press Send by email in the form.");
