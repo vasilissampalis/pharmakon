@@ -32,8 +32,15 @@ done, publishers used, gaps.
 
 ## Reader 704
 
-Check every anchor and line of `descriptions_703.json` as `BRIEF-common.md` says, and also: is each line an identity
-line (no risk, warning, amount or how-to)? Output `data/verification/pages-2026-11-15/descriptions_check_704.json`:
+Check every anchor and line of `descriptions_703.json` as `BRIEF-common.md` says, and also:
+- is each line an identity line (no risk, warning, amount or how-to)?
+- is each line in our own words? A line that follows one source's sentence so closely that it is that page's wording
+  (about six or more of its words in a row, or its sentence with a word or two changed) is `fix`: give a line that says
+  the same and no more in plain words of our own. The same turn of phrase must not be repeated from drug to drug
+  because one publisher uses it on every page (for example a family sentence about "messages travelling between the
+  brain and the body"): say what the family word means in our own short words, as the sources support it.
+- would someone who has only heard the drug's name understand what it is after these lines? If the first line does not
+  do that, say so in `note`. Output `data/verification/pages-2026-11-15/descriptions_check_704.json`:
 `{"reader": "AI reader 704 (second reader)", "date": "2026-11-15", "drugs": {"<slug>": [{"index": 0, "line_verdict":
 "ok", "line": "<corrected line if fix>", "anchors": [{"index": 0, "verdict": "confirmed", "quote": "", "where": ""}],
 "note": ""}]}}`. Final message under 150 words: counts by verdict and every line you fixed or dropped.
