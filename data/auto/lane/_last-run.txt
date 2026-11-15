@@ -4,9 +4,10 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete)
-== a model sits the exam as the checker
-exam: @cf/meta/llama-3.3-70b-instruct-fp8-fast: caught 8 of 31 wrong cards, stopped 14 of 50 good ones; on the whole exam 10.0 in 100 of what it lets through would be wrong (the bar: 2.0)
-exam: @cf/mistralai/mistral-small-3.1-24b-instruct: caught 22 of 31 wrong cards, stopped 34 of 50 good ones; on the whole exam 8.9 in 100 of what it lets through would be wrong (the bar: 2.0)
-exam: @cf/openai/gpt-oss-120b: caught 31 of 31 wrong cards, stopped 50 of 50 good ones; on the whole exam 0.0 in 100 of what it lets through would be wrong (the bar: 2.0)
 == write
-lane: no request waiting
+[0;93m2026-11-15 20:19:47.774657508 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+lane: w_0020 'Do psychedelics or microdosing make you more creative?': published (passed every gate); 3 papers; 840.6 neurons
+lane: w_0024 'Can you get addicted to ketamine?': published (passed every gate); 3 papers; 546.1 neurons
+lane: w_0028 'Can you get addicted to kratom, and is there withdrawal?': published (passed every gate); 3 papers; 541.0 neurons
+lane: w_0039 'Can meth cause a stroke, even in young people?': published (passed every gate); 3 papers; 525.2 neurons
+lane: 4 questions worked on: published 4, waiting 0, none 0; today 8380 of 9000 neurons used
