@@ -1,0 +1,101 @@
+# The scout (docs/AUTOMATION.md): reads the questions visitors sent with "Ask us to check it", ranks them as the site
+# ranks a question, and writes what the site does not answer yet (docs/MISSING.md, data/auto/). It writes no answer and
+# publishes nothing.
+#
+# Two jobs. "look" is short and cheap (the one-core machine): is anything new in the store? "work" starts only when
+# something is: it builds Insight's index and runs scripts/auto/scout.py. The questions are strangers' words: they are
+# read as data by Python only and never reach a command line.
+#
+# It needs two repository secrets, added by the senior author: CLOUDFLARE_API_TOKEN (may read Workers KV) and
+# CLOUDFLARE_ACCOUNT_ID. Without them "look" says so and stops.
+#
+# The half-hourly schedule is written below and switched off: it is switched on when the senior author says so.
+name: Scout
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Do the work even when nothing is new"
+        type: boolean
+        default: false
+  # schedule:
+  #   - cron: "7,37 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scout
+  cancel-in-progress: false
+
+jobs:
+  look:
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      new: ${{ steps.look.outputs.new }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/auto
+            data/auto
+      - id: look
+        name: Is anything new?
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          if [ "$FORCE" = "true" ]; then python3 -I scripts/auto/look.py --force; else python3 -I scripts/auto/look.py; fi
+      - name: Remember it
+        if: steps.look.outputs.commit == 'true'
+        env:
+          WHY: ${{ steps.look.outputs.why }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/auto/state.json
+          git diff --cached --quiet || git commit -q -m "Scout: looked ($WHY)"
+          git push -q || (git pull -q --rebase && git push -q)
+
+  work:
+    needs: look
+    if: needs.look.outputs.new == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+      - name: The vectors made before (so that only new texts are embedded)
+        uses: actions/cache@v6
+        with:
+          path: site/insight/.cache
+          key: insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-${{ github.run_id }}
+          restore-keys: |
+            insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-
+      - name: Python packages
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q numpy tokenizers onnxruntime
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+      - name: Build the page and Insight's index
+        run: node site/build.js
+      - name: Read the questions
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json"
+      - name: What people asked, and what the site lacks
+        run: |
+          python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json"
+          python3 -I scripts/auto/look.py --done "$RUNNER_TEMP/questions.json"
+          head -n 4 docs/MISSING.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/auto docs/MISSING.md
+          git diff --cached --quiet || git commit -q -m "Scout: what people asked, and what the site lacks"
+          git push -q || (git pull -q --rebase && git push -q)
