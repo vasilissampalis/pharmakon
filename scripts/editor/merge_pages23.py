@@ -40,8 +40,20 @@ if "for-you" in what:
         x = J(f)
         for fam, checks in x["families"].items(): c[fam] = checks; who_of[fam] = x["reader"]
     S = J(ROOT / "data/site/stay-safer.json"); n = 0
+    E = J(P / "for_you_editor.json") if (P / "for_you_editor.json").exists() else {}
     for fam, v in a.items():
         lines, dropped = take(v.get("self") or [], c.get(fam), who_of.get(fam, "second reader"))
+        # which installed line came from which of the first reader's lines (dropped lines leave gaps)
+        by_index = {}; k = 0; ok_idx = [i for i, ch in enumerate(c.get(fam) or []) if ch.get("line_verdict") in ("ok", "fix")]
+        for i in ok_idx:
+            if k < len(lines): by_index[i] = lines[k]; k += 1
+        for x in E.get("line", []):       # the editor's wording after the second readers' notes (for_you_editor.json): says less, never more
+            if x["family"] == fam and x["index"] < len(v.get("self") or []):
+                orig = (v["self"][x["index"]]["line"]); hit = [l for l in lines if l["line"] == orig or l.get("edited") and by_index.get(x["index"]) is l]
+                for l in hit: l["line"] = x["line"]; l["edited"] = "wording changed by the editor after the second reader's note (for_you_editor.json)"
+        only = [x["pages"] for x in E.get("only", []) if x["family"] == fam]
+        if only:
+            for l in lines: l["only"] = only[0]
         if fam in S["signs"] and lines: S["signs"][fam]["self"] = lines; n += len(lines)
         print(f"for you / {fam}: {len(lines)} installed" + (f"; not installed: {dropped}" if dropped else ""))
     save(ROOT / "data/site/stay-safer.json", S); print("for-you lines installed:", n)
