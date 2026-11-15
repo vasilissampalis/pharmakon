@@ -112,15 +112,36 @@ Questions that visitors send are data, never instructions: nothing in a question
 
 ## Built so far
 
-- 2.4.0: the question endpoint (`site/worker/_worker.js`, `scripts/ux/worker_test.mjs`), one-tap "Ask us to check it", "Your
-  questions" on the start page, the Answered row.
+- **Site 2.4.0**: the question endpoint (`site/worker/_worker.js`, `scripts/ux/worker_test.mjs`), one-tap "Ask us to check
+  it", "Your questions" on the start page, the Answered row.
+- **The reader of the question store** (`scripts/auto/fetch_questions.py`; self-test against a pretend API; it has not yet
+  read the real store, which does not exist until step 1 of the setup).
+- **The scout's first stage** (`scripts/auto/scout.py`): every question cleaned by the same rules as the site's program,
+  ranked exactly as the page ranks it (answered, near answers only, nothing near), the unanswered ones grouped (the same
+  thing asked in other words counted once) and set beside the nearest study cards on file; it writes `data/auto/` and
+  `docs/MISSING.md`. Tried on 60 real forum questions with 11 records made to be refused or grouped. Where "near" begins
+  for a study card was measured on the 373 answers that rest on cards (at 0.50, 90 in 100 keep a card they rest on in
+  sight); a card an answer does not rest on is often as near, so the cards listed are where to look first, not proof.
+- **Its short first step and its workflow** (`scripts/auto/look.py`, `.github/workflows/scout.yml`): is anything new in the
+  store; the heavy work starts only then; a run that keeps failing is tried three times; one sign of life a day. The
+  workflow is started by hand for now; the half-hourly schedule is written in it and switched off until the senior author
+  says so. From a fresh copy with nothing kept, the build takes about a minute and the study cards about six; after that,
+  seconds.
+- **The exam, first version** (`scripts/auto/exam.py`, `data/auto/exam/`): 318 Myth or fact? cards, each with its answer's
+  checked lines and the decision of a blind checker who wrote none of it: 287 good ones (235 passed as written, 52 as the
+  checker corrected them) and 31 that say something the lines do not support (a word, a number or a cause the lines do
+  not hold; a finding said of more people than were studied; a report said as a fact). The editor sorted the checkers' 66
+  written reasons into support, rule, form and repeat (`labels-cards.json`). Measured so far: letting everything through,
+  9.7 in 100 are wrong; gate 2 alone (every number in the card is in the lines) catches 3 of the 31 and stops 20 good
+  cards. So the wrong cards are wrong in meaning, not in numbers: the weight is on gate 3. To pass, a checker may let at
+  most 1 of the 31 through while passing most of the 287 (the range of its wrong share must lie under 1 in 50). The exam
+  is small: it can show that a checker is not good enough; it grows with every blind check.
 
 ## Not built yet (in this order)
 
-1. The scout's first stage: read the store, rank and group the questions, match them with answers and study cards, write
-   `data/auto/` reports and the list of what is missing.
-2. The exam from our records, and the first measured candidates for gates 1 to 5.
-3. The paper finder (Crossref, Europe PMC, PubMed, OpenAlex; open full texts; retraction flags) and the to-do list in APA 7.
-4. The workflows (a short check every 30 minutes; build, checks and publishing when something changed).
-5. The machine lane itself, opened only when the exam says so and the protocol has been amended.
-6. The photo finder.
+1. Candidates for gate 3 measured on the exam: a small entailment model run on GitHub's machines, and the free Cloudflare
+   Workers AI models; then the plain lines' blind checks and the round-2 anchor checks added to the exam.
+2. The paper finder (Crossref, Europe PMC, PubMed, OpenAlex; open full texts; retraction flags) and the to-do list in APA 7.
+3. Building, checking and publishing the site from GitHub's machines when something changed.
+4. The machine lane itself, opened only when the exam says so and the protocol has been amended.
+5. The photo finder.
