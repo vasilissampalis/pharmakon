@@ -1,4 +1,4 @@
-"""judge.py MODELS_DIR [--cache DIR] [--out FILE]: Pharmakon Insight 2.3, research harness (15 November 2026).
+"""judge.py MODELS_DIR [--model FILE --name LABEL] [--no-bge] [--no-cross] [--cache DIR] [--out FILE]: Pharmakon Insight 2.3, research harness (15 November 2026).
 
 Question: how do we make Insight tell "this answers what was asked" from "this is only near it", with models that run
 on the reader's own device and with examples that are ours? Measured on the gold set (400 real forum questions, two
@@ -201,7 +201,7 @@ def auc_of(score, y):
 
 if __name__ == "__main__":
     res = []
-    mini = Enc("minilm", M / "_clay-design-system_embeddings/package/model/all-MiniLM-L6-v2-q8.onnx", M / "_clay-design-system_embeddings/package/model/vocab.txt", "mean", vocab=True)
+    mini = Enc(arg("--name", "minilm"), arg("--model", str(M / "_clay-design-system_embeddings/package/model/all-MiniLM-L6-v2-q8.onnx")), M / "_clay-design-system_embeddings/package/model/vocab.txt", "mean", vocab=True)   # --model FILE --name LABEL: another encoder file with the same tokenizer
     P0, N0 = build(False); P1, N1 = build(True)
     F0, b0 = features(mini, gq, P0, [[] for _ in A]); res.append(gold_report("A. 2.2.0 scoring (MiniLM)", b0))
     if more:
