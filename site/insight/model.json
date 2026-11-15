@@ -1,0 +1,6 @@
+{
+ "_note": "Insight's model and its numbers, in one place. file: the encoder in site/insight/vendor/ (published unmodified as insight/<file>). scripts/insight/build_index.py and embed.js make the index with it; site/build.js copies it and tells the page its name; the checks read the name from the index. A new model must take the same vocab.txt and inputs (input_ids, attention_mask, token_type_ids) and give the same output (last_hidden_state): add its file to site/insight/vendor/, change the name here, build (everything is embedded again: the vectors' cache is kept by the model file's SHA-256). weights and tiers: how the two looks at a question are weighed and where the tiers begin (each explained in scripts/insight/build_index.py; measure a change with its --eval). build_index.py copies them into data/insight.json, the only place the page and the checks read them from: no threshold is written anywhere else.",
+ "file": "all-MiniLM-L6-v2-q8.onnx",
+ "weights": { "q": 0.7, "short": 0.3, "words": 0.2, "topic": 0.5, "same": 0.3 },
+ "tiers": { "best": 0.72, "topic": 0.45, "sure": 0.85, "tie": 0.06, "related": 0.58, "near": 0.45 }
+}
