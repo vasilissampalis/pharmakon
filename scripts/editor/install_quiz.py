@@ -29,8 +29,11 @@ for n in ns:
         if len(st.split()) > 25: why.append(f"statement of {len(st.split())} words")
         if why: skipped.append(f"{k}: {'; '.join(why)}"); continue
         item = {"claim": k, "statement": st, "answer": it["answer"], "v": C[k]["version"], "why": it["why"].strip()}
+        if it.get("alt_of"): item["alt_of"] = it["alt_of"]     # two wordings of one fact: the checker passes at most one (apply_check.py takes the mark off again)
         P["tf"] = [x for x in P["tf"] if (x["claim"], x["item"]["statement"]) != (k, st)]
-        P["tf"].append({"claim": k, "page": it.get("page") or C[k]["substance"], "item": item}); held.append(k)
+        entry = {"claim": k, "page": it.get("page") or C[k]["substance"], "item": item}
+        if it.get("old_statement"): entry["replaces"] = it["old_statement"]   # a clearer wording of a card already on the site: if it passes, the old card leaves
+        P["tf"].append(entry); held.append(k)
 print("held for the blind check:", len(held), "statements;", "dropped:", len(dropped))
 for s in skipped: print("!! skipped", s)
 if not dry:

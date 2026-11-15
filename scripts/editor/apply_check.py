@@ -19,10 +19,20 @@ PP = pathlib.Path("data/verification/quiz/pending.json"); P = json.load(open(PP,
 for r in o.get("quiz", []):
     q = Q[r["n"]]; v = r["verdict"] + ("+weak" if r.get("weak") else ""); cnt["quiz"][v] = cnt["quiz"].get(v, 0) + 1
     key = (q["item"]["claim"], q["item"].get("statement", q["item"].get("q")))
+    held = [y for y in P[q["kind"]] if (y["claim"], y["item"].get("statement", y["item"].get("q"))) == key]
     P[q["kind"]] = [y for y in P[q["kind"]] if (y["claim"], y["item"].get("statement", y["item"].get("q"))) != key]
     if r["verdict"] == "reject" or r.get("weak"): print("quiz left off:", r["n"], key[0], "|", r.get("reason", "")); continue
     item = dict(r["item"]) if r["verdict"] == "fix" and r.get("item") else dict(q["item"])
-    item["claim"] = q["item"]["claim"]; item["v"] = q["item"]["v"]
+    item["claim"] = q["item"]["claim"]; item["v"] = q["item"]["v"]; item.pop("alt_of", None)
+    for k_ in ("interest", "clear"):          # the checker's scores (myth-or-fact rounds that ask for them) go to tf-interest.json, not onto the card
+        item.pop(k_, None)
+    old = (held[0].get("replaces") if held else None)
+    if old:   # a clearer wording of a card already on the site: the old card leaves, the new one takes its place
+        for pg, items in S[q["kind"]].items():
+            for j, x in enumerate(items):
+                if x.get("claim") == key[0] and x.get("statement", x.get("q")) == old: items[j] = None; print("replaced on", pg, "|", old, "->", item.get("statement"))
+            S[q["kind"]][pg] = [x for x in items if x is not None]
+    if any(x.get("claim") == item["claim"] and x.get("statement", x.get("q")) == item.get("statement", item.get("q")) for x in S[q["kind"]].get(q["page"], [])): continue
     S[q["kind"]].setdefault(q["page"], []).append(item)
 for r in o.get("lines", []):
     v = r["verdict"]; cnt["lines"][v] = cnt["lines"].get(v, 0) + 1
