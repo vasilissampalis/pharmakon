@@ -298,7 +298,9 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
       else if (fs.existsSync(nextFile)) {
         const pageFile = path.join(__dirname, "dist", "index.html"), mark = "\nconst SITE_VERSION = ", page = fs.readFileSync(pageFile, "utf8");
         const bytes = runtime.reduce((a, f) => a + fs.statSync(path.join(vend, f)).size, fs.statSync(path.join(dataDir, "insight.json")).size);
-        const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(JSON.parse(fs.readFileSync(nextFile, "utf8"))) + ";";
+        // 2.5: the questions on our list, as the index kept them (an item the site answers by now is left out there): [id, question]
+        const wl = JSON.parse(fs.readFileSync(path.join(dataDir, "insight.json"), "utf8")).wanted, listed = wl ? wl.ids.map((id, i) => [id, wl.q[i]]) : [];
+        const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(JSON.parse(fs.readFileSync(nextFile, "utf8"))) + ";\nconst WANTED = " + JSON.stringify(listed) + ";";
         if (page.split(mark).length === 2) fs.writeFileSync(pageFile, page.replace(mark, () => told + mark));
         else console.error("WARNING: the page's script has no place for what Insight tells it (const SITE_VERSION not found once): the search box answers by words only, and Read next falls back to the next questions of the topic");
       }

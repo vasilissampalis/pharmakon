@@ -38,7 +38,11 @@ const queries = goldAll.filter((_, i) => i % 5 === 2).slice(0, 60).map(q => [q, 
   "give me the full evidence about how can i die from ketamine", "can i mix molly and alcohol", "how much mdma should i take", "what does an opioid overdose look like",
   "is it dangerous to mix molly and alcohol", "does weed make you lazy", "can lsd stay in your spine", "what is the capital of mongolia", "how addictive is meth", "is nitrous bad for you",
   "is fentanyl stronger than heroin", "do shrooms and acid feel the same", "my friend took ketamine and is not breathing what do i do", "does alcohol kill brain cells tl;dr",
-  "are psychedelics addictive", "is coke or meth worse for your heart, with sources", "what happens if you take xanax with opioids"].map(q => [q, null]),
+  "are psychedelics addictive", "is coke or meth worse for your heart, with sources", "what happens if you take xanax with opioids",
+  // 2.5: questions on our list in other words, questions that are not about drugs, and drug questions the site's names do not give away
+  "can alcohol kill you", "does weed cause cancer", "is ketamine addictive", "what is a k hole", "can you overdose on acid", "why does weed make me paranoid", "is sugar as addictive as coke", "how long is weed in your system",
+  "can i die from mosquito bites", "how do i cook mushrooms in butter", "is diet coke bad for your teeth", "can you die from a bee sting", "how do i get high scores in tetris", "do vaccines cause autism", "is stomach acid dangerous",
+  "what is 6-apb like", "is modafinil safe", "how long does the high last", "is it ok to take ibuprofen every day", "why do people take drugs", "what is the best tablet for drawing"].map(q => [q, null]),
   [["does it kill brain cells", "cannabis"], ["is it addictive", "cannabis"], ["how long does it stay in your blood", "ketamine"], ["is it addictive", "kratom"], ["can it damage my bladder", "ketamine"],
    ["what does mdma do to serotonin", "cannabis"], ["how long does it last", "lsd"], ["is it safe with alcohol", "mdma"]]);
 // the build's side, in Python: the same reading of every text, and the page's ranking rule from the same index
@@ -56,7 +60,7 @@ vec = dict(zip(uniq, bi.embed_all(uniq, quiet=True)))
 rank = []
 for (q, d), (full, masked, groups) in zip(req["queries"], read):
     r = R.rank_vectors(q, vec[full], vec[masked], groups)
-    rank.append({"full": full, "masked": masked, "groups": groups, "best": r["best"], "related": r["related"], "first": r["first"]})
+    rank.append({"full": full, "masked": masked, "groups": groups, "best": r["best"], "related": r["related"], "first": r["first"], "want": R.want(q, vec[full], vec[masked], groups), "scope": R.in_scope(q)})
 out["rank"] = rank
 print(json.dumps(out))
 `;
@@ -77,7 +81,8 @@ const server = http.createServer((req, res) => {
     const out = { ids: [], vecs: [], expand: [], mask: [], named: [], rank: [], tiers: pkInsight.tiers(), weights: pkInsight.weights(), judge: pkInsight.judge() };
     for (const t of texts) { out.ids.push(pkInsight.encode(t)); out.vecs.push(await pkInsight.embed(t)); }
     for (const t of texts.concat(queries.map(q => q[0]))) { out.expand.push(pkInsight.expand(t)); out.mask.push(pkInsight.mask(t)); out.named.push(pkInsight.named(t)); }
-    for (const [q, drug] of queries) out.rank.push(await pkInsight.rank(q, drug ? { drug } : {}));
+    for (const [q, drug] of queries) { const r = await pkInsight.rank(q, drug ? { drug } : {}); r.scope = pkInsight.scope(r.core); out.rank.push(r); }
+    out.listed = pkInsight.listed();
     return out;
   }, { texts, queries });
   await browser.close(); server.close();
@@ -123,6 +128,21 @@ const server = http.createServer((req, res) => {
     "the same first candidate, six numbers and judge's number (to 1e-4), the same best match and related answers in the same order, both scores within 0.005, for " + compared + " questions (" + queries.filter(q => q[1]).length + " asked on a drug's page)",
     rkBad.slice(0, 3).join("; ") || nBest + " best matches, " + nRel + " related answers, " + nNone + " questions with no best match; the judge's number from " + Math.min(...pj).toFixed(3) + " to " + Math.max(...pj).toFixed(3) + ", largest difference " + maxp.toExponential(1) +
       " (six numbers " + maxf.toExponential(1) + ", scores " + maxd.toFixed(5) + "); by design not compared: " + blocked + " not answered, " + whole + " a drug's name alone; related left out for " + urgent + " emergencies");
+  // 2.5: the second look and the scope rule. Where the page has no best match and no route that answers, it looks at the list:
+  // the same listed question as the build, with the same judge's number (to 1e-4), or none on both sides; and by its words the
+  // question is, or is not, a question about drugs on both sides; the line the page then says follows from the two.
+  const wBad = [], seen = { want: 0, other: 0, none: 0 }; let maxw = 0;
+  queries.forEach(([q, drug], i) => { const a = js.rank[i], b = ref.rank[i], tag = JSON.stringify(q.slice(0, 50)) + (drug ? " on " + drug : "");
+    if (a.scope !== b.scope) wBad.push(tag + " about drugs: page " + a.scope + " build " + b.scope);
+    if (!["want", "other", "none"].includes(a.note)) return;
+    const pw = a.want ? a.want.id : null, bw = b.want ? b.want.id : null;
+    if (pw !== bw) { wBad.push(tag + " on our list: page " + pw + " build " + bw); return; }
+    if (pw) { const d = Math.abs(a.want.p - b.want.p); maxw = Math.max(maxw, d); if (d > 1e-4) wBad.push(tag + " the judge's number for the listed question: page " + a.want.p + " build " + b.want.p); }
+    const should = pw ? "want" : drug || b.scope ? "none" : "other";
+    if (a.note !== should) wBad.push(tag + " says " + a.note + ", should say " + should); seen[a.note]++; });
+  say(JSON.stringify(js.listed) === JSON.stringify((D.wanted || { ids: [] }).ids) && !wBad.length && seen.want >= 6 && seen.other >= 5 && seen.none >= 8,
+    "the same listed question (or none) with the same judge's number, and the same reading of what is a question about drugs, for all " + queries.length + " questions; the page's line follows from them",
+    wBad.slice(0, 3).join("; ") || js.listed.length + " questions on the list; of the questions with no answer, " + seen.want + " are on the list, " + seen.none + " are drug questions not checked yet, " + seen.other + " are not about drugs; largest difference of the judge's number " + maxw.toExponential(1));
   say(!errors.length, "no console errors", errors.slice(0, 3).join(" | "));
   console.log(fails ? fails + " parity checks failed" : "All parity checks passed");
   process.exit(fails ? 1 : 0);

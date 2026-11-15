@@ -239,6 +239,8 @@ class Ranker:
         self.pat = name_pattern([n for n, _ in D["names"]])
         self.expand = drug_names(); self.canon = {s["slug"]: s["name"].split(" (")[0] for s in SUB}
         # 2.5: the list of questions not answered yet, as a ranker of its own over the same names, weights and judge
+        Sc = D.get("scope"); self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A) if Sc else None
+        self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A) if Sc else None
         Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0)
         if Wd: self.wanted = Ranker({"dim": dim, "ids": Wd["ids"], "rows": Wd["rows"], "W": Wd["W"], "M": Wd["M"], "S": Wd["S"], "docs": Wd["docs"], "weights": D["weights"], "tiers": D["tiers"], "judge": D["judge"],
                                      "slugs": D["slugs"], "about": Wd["about"], "names": D["names"]})
@@ -311,6 +313,13 @@ class Ranker:
         full, masked, groups = self.texts(q, drug)
         v, mv = embed_all([full, masked], quiet=True)
         return self.rank_vectors(q, v, mv, groups)
+    def in_scope(self, q):
+        """Is this a question about drugs, by its words alone (the page's insScope; site/insight/scope.json)? Yes when,
+        with the phrases that are not drug talk taken out, it names a drug the site covers or holds a drug word, the name
+        of a drug the site does not cover, or a research chemical's name by its shape."""
+        if self.scope_re is None: return True
+        t = self.scope_not.sub(" ", q)
+        return bool(self.named(t)) or bool(self.scope_re.search(t))
     def want(self, q, v, mv, groups):
         """The page's second look (insWant): the listed question a typed question is, or None. The list is ranked as the
         answers are, by its own small index; the first candidate is taken when it is about every drug the question names
@@ -406,6 +415,7 @@ def main():
            "model": MODEL, "model_sha256": MODEL_SHA256, "dim": int(Wv.shape[1]), "weights": CONFIG["weights"], "tiers": CONFIG["tiers"], "judge": CONFIG["judge"],
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
            "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
+    out["scope"] = scope_block()   # 2.5: what makes a question a question about drugs (site/insight/scope.json)
     # 2.5: the list of questions not answered yet (data/site/wanted.json), as a second, small index of the same kind
     wl = wanted_index(json.load(open(IN, encoding="utf-8")).get("wanted") or [], out, names, pat, at)
     if wl: out["wanted"] = wl
@@ -420,6 +430,19 @@ def main():
     if bare: print(f"insight: {len(bare)} answers have only the site's own questions to be found by (no wordings written for them yet): {', '.join(bare[:30])}{' …' if len(bare) > 30 else ''}", file=sys.stderr)
     print(f"insight: next questions for {sum(1 for x in nxt if x)} answers ({sum(len(x) for x in nxt)} in all)", file=sys.stderr)
     if "--eval" in sys.argv: evaluate(out, near)
+
+
+SCOPE_B, SCOPE_E = r"(?<![A-Za-z0-9_])(?:", r")(?![A-Za-z0-9_])"   # a word boundary that reads the same in JavaScript and in Python
+
+
+def scope_block():
+    """The scope rule as the index carries it: 'src', one pattern of every drug word, every name of a drug the site does
+    not cover and the shape of a research chemical's name; 'not', one pattern of the phrases taken out first. The page
+    (insPrepare) and the Ranker put the same word boundaries around them. site/insight/scope.json explains the rule."""
+    S = json.load(open(ROOT / "site" / "insight" / "scope.json", encoding="utf-8"))
+    plain = lambda n: re.sub(r"([.^$*+?()\[\]{}|\\])", r"\\\1", n)
+    src = "|".join(["(?:" + w + ")" for w in S["words"]] + [plain(n) for n in S["names"]] + ["(?:" + S["chem"] + ")"])
+    return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"])}
 
 
 WANT_CUT = 0.75   # the judge's number from which a typed question IS a listed one (see wanted_index)
@@ -515,6 +538,13 @@ def evaluate(D, near=None):
                   f"unanswerable given one {un} of {nun}; questions with a full answer that get it as best match {f} of {nf}; "
                   f"related: {rel['rows']} rows for {rel['q']} questions, {100 * rel['good'] / max(1, rel['rows']):.0f}% full or partial, {rel['un']} of {nun} unanswerable questions get some; "
                   f"no best match but a full answer under Related {miss}")
+    # 2.5, the scope rule (words only): the forum questions are all about drugs; scope-other.json holds questions that are not
+    if R.scope_re is not None:
+        other = json.load(open(ROOT / "data/verification/insight/scope-other.json", encoding="utf-8"))["questions"]
+        gq = [t[1] for t in tests]; ins = [R.in_scope(q) for q in gq]; outs = [q for q, x in zip(gq, ins) if not x]; let = [q for q in other if R.in_scope(q)]
+        print(f"scope (words only): forum questions taken as about drugs {sum(ins)} of {len(gq)}; questions that are not about drugs taken as about drugs {len(let)} of {len(other)}")
+        print("  forum questions not taken as about drugs:", outs)
+        print("  other questions taken as about drugs:", let)
     if nm:
         for th in cuts:
             R.J = dict(keep, best=th); hit = sum(any(R.ids[j] == a for j in ranked(L)[0]) for (q, a), L in zip(nm, LN))

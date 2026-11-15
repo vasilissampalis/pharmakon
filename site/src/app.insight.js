@@ -30,7 +30,7 @@
      start page, a shared answer's other questions), and Back returns to exactly where the reader was.
    - Next questions ("People also ask" here, "Read next" on the pages) are the nearest answers by meaning, never from another
      drug, without the ones already opened in this visit (const INS_NEXT, put at the head of the page by site/build.js). ---------- */
-const INS = { state: "idle", tries: 0, cache: new Map(), seq: 0, timer: 0, times: [], queue: Promise.resolve(), run: null, view: null, back: null, from: null, go: null, want: null };
+const INS = { state: "idle", tries: 0, cache: new Map(), seq: 0, timer: 0, times: [], queue: Promise.resolve(), run: null, view: null, back: null, from: null, go: null, want: null, list: null, scope: null, wantT: 0 };
 const INS_WAIT = 150;       // ms of no typing before a question is looked up (each keystroke still gets the word search at once)
 const INS_WORDS = 3;        // a question of three words or more; a drug's name alone is for the word search
 const INS_END = 4;          // the calm end comes after four answers in a row
@@ -75,6 +75,16 @@ function insRows(b64, dim) {
 }
 const insTok = s => String(s).toLowerCase().match(/[a-z0-9]+/g) || [];
 const insRx = n => n.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&");
+// word overlap (TF-IDF as scripts/insight/eval_match.py's Lexical): a word's weight is log(1 + N / documents with it);
+// post: word -> [answer, weight in its unit-length vector]
+function insWords(docs) {
+  const N = docs.length, df = new Map(), post = new Map();
+  docs.forEach(t => new Set(insTok(t)).forEach(w => df.set(w, (df.get(w) || 0) + 1)));
+  const idf = new Map([...df].map(([w, n]) => [w, Math.log(1 + N / n)]));
+  docs.forEach((t, i) => { const v = new Map(); insTok(t).forEach(w => v.set(w, (v.get(w) || 0) + idf.get(w)));
+    const n = Math.sqrt([...v.values()].reduce((a, x) => a + x * x, 0)) || 1; v.forEach((x, w) => { if (!post.has(w)) post.set(w, []); post.get(w).push([i, x / n]); }); });
+  return { idf, post };
+}
 function insPrepare(d, vocabText) {
   INS.dim = d.dim; INS.ids = d.ids; INS.rows = d.rows; INS.wt = d.weights; INS.t = d.tiers; INS.judge = d.judge;
   INS.W = insRows(d.W, d.dim); INS.M = insRows(d.M, d.dim); INS.S = insRows(d.S, d.dim);
@@ -83,13 +93,14 @@ function insPrepare(d, vocabText) {
   // the names that name a drug in a question (build_index.py's names_table: the longest first), and the drugs each stands for
   INS.nameOf = new Map(d.names.map(([n, xs]) => [n, xs.map(k => d.slugs[k])]));
   INS.nameRe = new RegExp("(?<![\\p{L}\\p{N}_])(" + d.names.map(([n]) => insRx(n)).join("|") + ")(?![\\p{L}\\p{N}_])", "giu");
-  // word overlap (TF-IDF as scripts/insight/eval_match.py's Lexical): a word's weight is log(1 + N / documents with it)
-  const N = d.docs.length, df = new Map();
-  d.docs.forEach(t => new Set(insTok(t)).forEach(w => df.set(w, (df.get(w) || 0) + 1)));
-  INS.idf = new Map([...df].map(([w, n]) => [w, Math.log(1 + N / n)]));
-  INS.post = new Map();   // word -> [answer, weight in its unit-length vector]
-  d.docs.forEach((t, i) => { const v = new Map(); insTok(t).forEach(w => v.set(w, (v.get(w) || 0) + INS.idf.get(w)));
-    const n = Math.sqrt([...v.values()].reduce((a, x) => a + x * x, 0)) || 1; v.forEach((x, w) => { if (!INS.post.has(w)) INS.post.set(w, []); INS.post.get(w).push([i, x / n]); }); });
+  Object.assign(INS, insWords(d.docs));
+  // 2.5: what makes a question a question about drugs (site/insight/scope.json, through the index: the same patterns, between
+  // the same word boundaries, as the build's Ranker.in_scope), and the list of questions not answered yet
+  // (data/site/wanted.json): a second, small index of the same kind as the answers', with the judge's cut for it
+  const wb = "(?<![A-Za-z0-9_])(?:", we = ")(?![A-Za-z0-9_])", L = d.wanted;
+  INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
+  INS.list = L && L.ids.length ? Object.assign({ ids: L.ids, q: L.q, rows: L.rows, cut: L.cut, W: insRows(L.W, d.dim), M: insRows(L.M, d.dim), S: insRows(L.S, d.dim),
+    about: L.about.map(xs => new Set(xs.map(k => d.slugs[k]))) }, insWords(L.docs)) : null;
   // vocab.txt: one token a line, its line number its id (as the tokenizers library reads it)
   const lines = vocabText.split("\n"); if (lines.length && lines[lines.length - 1] === "") lines.pop();
   INS.vocab = new Map(); lines.forEach((t, i) => INS.vocab.set(t.trimEnd(), i));
@@ -335,17 +346,18 @@ function insRoutes(q, groups, drug) {
    mv: with the drug names taken out; q: its words) against every answer's rows. Out, for every answer: the first look
    (2.2.0's score: the best wording, the short answer, the words in common) and the topic score (the best wording with the
    drug names taken out). A second scoring step, a trained judge, goes here and nowhere else. */
-function insScore(v, mv, q) {
-  const dim = INS.dim, nA = INS.ids.length, W = INS.W, M = INS.M, S = INS.S, wt = INS.wt, rows = INS.rows;
+function insScore(v, mv, q, X) {
+  X = X || INS;   // the answers' index, or the list's (2.5)
+  const dim = INS.dim, nA = X.ids.length, W = X.W, M = X.M, S = X.S, wt = INS.wt, rows = X.rows;
   const bw = new Float32Array(nA).fill(-1), bw2 = new Float32Array(nA).fill(-1), topic = new Float32Array(nA).fill(-1), sh = new Float32Array(nA), lex = new Float32Array(nA), plain = new Float32Array(nA), qv = new Map();
   for (let k = 0, o = 0; k < rows.length; k++, o += dim) {
     let s = 0, t = 0; for (let j = 0; j < dim; j++) { s += v[j] * W[o + j]; t += mv[j] * M[o + j]; }
     const a = rows[k]; if (s > bw[a]) { bw2[a] = bw[a]; bw[a] = s; } else if (s > bw2[a]) bw2[a] = s;
     if (t > topic[a]) topic[a] = t;
   }
-  insTok(q).forEach(w => { if (INS.idf.has(w)) qv.set(w, (qv.get(w) || 0) + INS.idf.get(w)); });
+  insTok(q).forEach(w => { if (X.idf.has(w)) qv.set(w, (qv.get(w) || 0) + X.idf.get(w)); });
   const qn = Math.sqrt([...qv.values()].reduce((a, x) => a + x * x, 0)) || 1;
-  qv.forEach((x, w) => INS.post.get(w).forEach(([i, y]) => { lex[i] += (x / qn) * y; }));
+  qv.forEach((x, w) => X.post.get(w).forEach(([i, y]) => { lex[i] += (x / qn) * y; }));
   for (let i = 0, o = 0; i < nA; i++, o += dim) { let s = 0; for (let j = 0; j < dim; j++) s += v[j] * S[o + j]; sh[i] = s; plain[i] = wt.q * bw[i] + wt.short * s + wt.words * lex[i]; }
   return { plain, topic, bw, bw2, sh, lex };
 }
@@ -361,10 +373,11 @@ function insJudge(f) {
   const J = INS.judge; let z = J.b; for (let i = 0; i < J.w.length; i++) z += J.w[i] * (f[i] - J.mu[i]) / J.sd[i];
   return 1 / (1 + Math.exp(-z));
 }
-function insTiers(sc, groups) {
+function insTiers(sc, groups, X) {
+  X = X || INS;
   const T = INS.t, wt = INS.wt, all = [];
-  for (let i = 0; i < INS.ids.length; i++) {
-    const has = g => g.some(s => INS.about[i].has(s)), on = groups.every(has), by = sc.plain[i] + wt.topic * sc.topic[i];
+  for (let i = 0; i < X.ids.length; i++) {
+    const has = g => g.some(s => X.about[i].has(s)), on = groups.every(has), by = sc.plain[i] + wt.topic * sc.topic[i];
     all.push({ i, on, some: !groups.length || groups.some(has), by, key: by + (on ? wt.same : 0), plain: sc.plain[i], topic: sc.topic[i] });
   }
   all.sort((a, b) => b.key - a.key || a.i - b.i);
@@ -372,6 +385,27 @@ function insTiers(sc, groups) {
   c.f = [sc.bw[c.i], Math.max(sc.bw2[c.i], 0), sc.sh[c.i], sc.lex[c.i], c.topic, c.by - (next === null ? 0 : next)]; c.p = insJudge(c.f);
   const best = c.on && c.p >= INS.judge.best ? [c] : [];
   return { first: c, best, related: all.filter(x => !best.includes(x) && x.plain >= T.related && x.topic >= T.near && x.some).slice(0, 3) };
+}
+/* 2.5 (15 November 2026; the senior author: "make the site understand on its own what the users want added in the website
+   in-app and not via email"). When no answer is a best match, a second look, at the list of questions not answered yet
+   (data/site/wanted.json): the same ranking and the same judge over the list's own small index. The typed question IS a
+   listed one when the list's first candidate is about every drug named and the judge's number for it is the list's cut or
+   more (measured in scripts/insight/build_index.py, wanted_index). Then the page says "Not answered yet. It is on our
+   list", and one more person asking is counted by the item's number alone (wantCount, below): the words stay here. */
+function insWant(v, mv, q, groups) {
+  const X = INS.list; if (!X) return null;
+  const c = insTiers(insScore(v, mv, q, X), groups, X).first;
+  return c.on && c.p >= X.cut ? { id: X.ids[c.i], q: X.q[c.i], p: +c.p.toFixed(5) } : null;
+}
+/* 2.5 (the senior author, of "can i die from mosquito bites" being offered "Ask us to check it": "pharmakon insight should
+   understand trolling ... this is a drug website there should be no mistakes"). Is this a question about drugs? By its
+   words alone, no model: with the phrases that are not drug talk taken out (stomach acid, diet coke), it names a drug the
+   site covers, or holds a drug word, the name of a drug the site does not cover, or a research chemical's name by its
+   shape (site/insight/scope.json). It decides only which line a question without an answer gets. */
+function insScope(q) {
+  if (!INS.scope) return true;
+  const t = String(q).replace(INS.scope.not, " ");
+  return insNamed(t).length > 0 || INS.scope.re.test(t);
 }
 // the page an answer is shown as being on: a drug the question names (or the page's own) when the answer is asked there
 function insPageOf(id, groups, drug) {
@@ -382,12 +416,14 @@ function insPageOf(id, groups, drug) {
    Out: q (as typed), core (without depth words: what was matched), depth ("", "full" or "short"), routes, best (0 to 2) and
    related (up to 3), each { id, page, plain, topic, off } (off: not about every drug asked about), and what the list and
    the sheet say when there is no best match: note ("none": we haven't checked exactly this yet, with the way to ask us;
-   "blocked": the same line without it; "": nothing, the route says it). insRead is the part that needs no model: the depth
+   "want": it is on our list (want: { id, q, p }); "other": not a question about drugs by its words, no promise to check it;
+   "blocked": the first line without the way to ask; "": nothing, the route says it). insRead is the part that needs no model: the depth
    words, the drugs named, the routes. */
 function insRead(query, ctx) {
   const q = insClean(query), drug = ctx && ctx.drug && subBySlug[ctx.drug] ? ctx.drug : null, d = insDepth(q), named = insNamed(d.core);
   const res = { q, core: d.core, depth: d.depth, drug: named.length ? null : drug, groups: named.length ? named : drug ? [[drug]] : [], routes: [], best: [], related: [], note: "", emergency: false };
-  if (insBlocked(d.core)) { res.note = "blocked"; return res; }
+  // (2.5: with the phrases in which a drug's name is not a drug taken out first: "how do i cook mushrooms in butter" is not a request to make a drug)
+  if (insBlocked(INS.scope ? d.core.replace(INS.scope.not, " ") : d.core)) { res.note = "blocked"; return res; }
   res.routes = insRoutes(d.core, named, drug); res.emergency = res.routes.some(r => r.kind === "help");
   return res;
 }
@@ -401,9 +437,12 @@ async function insRank(query, ctx) {
     const row = c => ({ id: INS.ids[c.i], page: insPageOf(INS.ids[c.i], tx.groups, drug), plain: +c.plain.toFixed(4), topic: +c.topic.toFixed(4), off: !c.on });
     res.best = tiers.best.map(row); res.related = res.emergency ? [] : tiers.related.map(row);   // an emergency gets its route and the answers that fit, nothing nearby
     res.judge = { id: INS.ids[tiers.first.i], p: tiers.first.p, f: tiers.first.f };              // (for the checks: the first candidate and the judge's number for it)
+    if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.want = insWant(v, mv, res.core, tx.groups);   // 2.5: is it on our list?
   }
-  // with no best match, say so, unless a route already is the answer to what was asked (help, a dose, a test, the drug's page)
-  if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.note = "none";
+  // with no best match, say so, unless a route already is the answer to what was asked (help, a dose, a test, the drug's page).
+  // 2.5: "want", it is one of the questions on our list; "other", by its words it is not a question about drugs (on a drug's
+  // page a question that names no drug is about that drug); "none", a drug question we have not checked yet
+  if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.note = res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
   res.ms = performance.now() - t0; INS.times.push(res.ms);
   return res;
 }
@@ -442,7 +481,26 @@ function insRouteHtml(r, cls) {
     '<span class="ri">' + icon(INS_ICON[r.kind] || "arrow") + '</span><span class="k">' + esc(r.k) + '</span><span class="t">' + esc(r.t) + '</span><span class="go">' + icon("arrow") + "</span></a>";
 }
 // "Ask us to check it": one tap (2.4, below: Your questions); where the page can send it, a quiet line says what is sent
-const insAskBtn = (q, cls) => '<button type="button" class="' + cls + '" data-ask="' + esc(q) + '">Ask us to check it</button>' + (ASK_ON ? '<span class="ask-note">Sends only this question. No name, no address.</span>' : "");
+const insAskBtn = (q, cls, label, after) => '<button type="button" class="' + cls + '" data-ask="' + esc(q) + '">' + (label || "Ask us to check it") + "</button>" + (after || "") + (ASK_ON ? '<span class="ask-note">Sends only this question. No name, no address.</span>' : "");
+/* 2.5: the line under a question with no best match, in the list (sheet false) and in the sheet. "none": a drug question we
+   have not checked: the way to ask us. "want": it is one of the questions on our list; the reader can ask to be told, on
+   this device, when it is answered, or send their own words if the listed question is not theirs. "other": by its words not
+   a question about drugs: a line that is true whatever it was about, no promise to check it, and a quiet way to send it all
+   the same (for the drug question whose words did not give it away). "blocked": what we do not answer. */
+function insNoneHtml(res, sheet) {
+  if (!res.note) return "";
+  if (res.note === "want") {
+    const w = res.want, note = wantOn() ? '<span class="want-n">We count how many people ask this. Your words are not sent.</span>' : "", at = ' data-want="' + esc(w.id) + '"' + (note ? " data-count" : "");
+    const keep = '<button type="button" class="' + (sheet ? "qz2-nb ins-askus" : "linklike") + '" data-want-keep="' + esc(w.id) + '">Tell me when it is answered</button>';
+    const other = '<button type="button" class="linklike want-other" data-ask="' + esc(res.q) + '">Not your question? Send yours to us</button>';
+    return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. It is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="#wanted">See the whole list ' + icon("arrow") + "</a></div>"
+      : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> It is <a href="#wanted">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
+  }
+  if (res.note === "other") return sheet ? '<div class="ins-none ins-other"><p class="ins-none-t">We have no answer to this.</p><p class="ins-none-s">Pharmakon answers questions about drugs. If yours is about one, you can send it to us.</p>' + insAskBtn(res.q, "linklike", "Send it to us") + "</div>"
+    : '<p class="sr-fit-none sr-other"><b>We have no answer to this.</b> Pharmakon answers questions about drugs. If yours is about one, ' + insAskBtn(res.q, "linklike", "send it to us", ".") + "</p>";
+  return sheet ? '<div class="ins-none"><p class="ins-none-t">We haven’t checked exactly this yet.</p>' + (res.note === "none" ? insAskBtn(res.q, "qz2-nb ins-askus") : "") + "</div>"
+    : '<p class="sr-fit-none"><b>We haven’t checked exactly this yet.</b>' + (res.note === "none" ? " " + insAskBtn(res.q, "linklike") : "") + "</p>";
+}
 function insRowHtml(x, best) {
   const c = claimById[x.id], sp = SIMPLE.claims[x.id], w = mfWhere(x.page);
   return '<a class="sr-ans sr-fit-a' + (best ? " sr-best" : "") + '" href="' + esc(answerAddr(x.id, x.page)) + '" data-insight="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(insQ(x.id, x.page)) +
@@ -451,7 +509,7 @@ function insRowHtml(x, best) {
 function insFitHtml(res) {
   const routes = res.routes.map(r => insRouteHtml(r, "sr-route")).join("") + (res.emergency ? insSosHtml("sr-sos") : "");
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
-  const none = res.note ? '<p class="sr-fit-none"><b>We haven’t checked exactly this yet.</b>' + (res.note === "none" ? " " + insAskBtn(res.q, "linklike") : "") + "</p>" : "";
+  const none = insNoneHtml(res, false);
   const related = res.related.length ? '<p class="sr-fit-h">Related</p>' + res.related.map(x => insRowHtml(x, false)).join("") : "";
   return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + routes + best + none + related + '<p class="sr-fit-h sr-words" hidden>More results</p></div>';
 }
@@ -459,6 +517,8 @@ function insFitHtml(res) {
 function insSay(res) {
   const parts = res.routes.map(r => r.t);
   if (res.best.length) parts.push("Best match: " + res.best.map(x => insQ(x.id, x.page)).join("; "));
+  else if (res.note === "want") parts.push("Not answered yet. It is on our list: " + res.want.q);
+  else if (res.note === "other") parts.push("We have no answer to this. Pharmakon answers questions about drugs");
   else if (res.note) parts.push("We haven’t checked exactly this yet");
   if (res.related.length) parts.push(res.related.length + " related answer" + (res.related.length === 1 ? "" : "s"));
   return parts.join(". ");
@@ -478,6 +538,10 @@ function insInject(box, res) {
   // the word search's own rows follow under a quiet label, so that none reads as part of the best match or the related answers
   const words = box.querySelector(".sr-fit .sr-words"); if (words) words.hidden = !box.querySelector(":scope > a") || !(res.routes.length || res.best.length || res.related.length || res.note);
   const live = document.getElementById("search-count"); if (live) live.textContent = insSay(res);
+  // 2.5: a listed question that stays on the screen is counted once (wantCount), only where its card says so
+  clearTimeout(INS.wantT);
+  if (res.note === "want") INS.wantT = setTimeout(() => { const b = document.getElementById("search-results"), s = document.getElementById("search");
+    if (b && !b.hidden && s && insClean(s.value) === res.q && b.querySelector('.sr-want[data-count][data-want="' + res.want.id + '"]')) wantCount(res.want.id); }, WANT_WAIT);
 }
 // called by runSearch after the word search has drawn its results
 function insightAfterSearch(raw) {
@@ -603,7 +667,7 @@ function insHtml(v) {
   const best = res.best.map((x, n) => { const w = mfWhere(x.page);
     return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>Checked answer · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
-  const none = res.note ? '<div class="ins-none"><p class="ins-none-t">We haven’t checked exactly this yet.</p>' + (res.note === "none" ? insAskBtn(res.q, "qz2-nb ins-askus") : "") + "</div>" : "";
+  const none = insNoneHtml(res, true);
   const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"><p class="rn-k">Related</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
     return '<li><a href="' + esc(answerAddr(x.id, x.page)) + '" data-insight-next="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span><span class="ins-rel-k">' + esc(w.name) + "</span>" + esc(insQ(x.id, x.page)) + "</span>" + icon("arrow") + "</a></li>"; }).join("") + "</ul></div>" : "";
   const from = (res.best.length ? res.best : res.related).map(x => x.id), shown = res.best.concat(res.related).map(x => x.id);
@@ -619,6 +683,7 @@ function insDraw(v, opener) {
   panel.innerHTML = insHtml(v); panel.scrollTop = 0;
   (v.kind === "one" ? [v.id] : v.res.best.map(x => x.id)).forEach(id => { markSeen(id); insOpenedNow().add(id); });
   const f = panel.querySelector("#ev-title"); if (f) f.focus({ preventScroll: true });
+  const wc = panel.querySelector(".ins-want[data-count]"); if (wc) wantCount(wc.dataset.want);   // 2.5: Enter on a listed question counts it at once
   return true;
 }
 // a new run of answers starts when the sheet opens; each answer or question read in it counts one towards the calm end
@@ -783,6 +848,7 @@ function askedBox() {
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
   const row = it => it.st === "ans"
     ? '<li class="aq ans"><a class="aq-a" href="' + esc(answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
+    : it.w ? '<li class="aq wait onlist"><span class="aq-a"><span class="aq-k">' + icon("clock") + 'On our list</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>"
     : it.sent ? '<li class="aq wait"><span class="aq-a"><span class="aq-k">' + icon("clock") + 'Sent. We are checking</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>"
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
   // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
@@ -820,6 +886,14 @@ document.addEventListener("click", async e => {
       try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
       if (ok) { askedSet(it.k, { sent: 1 }); askedBox(); return; } }
     sb.disabled = false; openFeedback("feedback", location.hash, it.q); return; }
+  // 2.5: a question on our list: "Tell me when it is answered" keeps the LISTED question (never the words typed) in the
+  // reader's own list; it turns green when a later version of the site answers it
+  const wk = e.target.closest("button[data-want-keep]");
+  if (wk) { e.preventDefault(); e.stopPropagation(); const id = wk.dataset.wantKeep, q = wantQ(id); if (!q) return;
+    const it = askedAdd(q, ""); if (it) askedSet(it.k, { w: id, sent: 1 });
+    if (wk.closest("#view-wanted, [data-count]")) wantCount(id);   // counted where the page says so (the list's own page; a card that carries the line)
+    const said = document.createElement("p"); said.className = "ask-said"; said.setAttribute("role", "status"); said.textContent = "We will tell you on this device. It is under “Your questions” on the start page."; wk.replaceWith(said);
+    askedBox(); return; }
   const b = e.target.closest("button[data-ask]"); if (!b || b.disabled) return;
   e.preventDefault(); e.stopPropagation();
   const q = b.dataset.ask, it = askedAdd(q, insCtx().drug || ""); if (!it) return;
@@ -842,11 +916,61 @@ document.addEventListener("click", async e => {
 if (typeof document !== "undefined") askedBox();
 if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdleCallback(() => askProbe(), { timeout: 3000 }); else setTimeout(askProbe, 1200); }
 
+/* ---------- On our list (site 2.5, 15 November 2026). The senior author: "there is room for growth if we don't depend on the
+   users' emails but make the site understand on its own what the users want added in the website in-app and not via email";
+   and, the same evening: "i just want the website to be perfect".
+   - The list (data/site/wanted.json; const WANTED from the build: the items the site does not answer yet) is public: its own
+     page, "On our list". A question typed in the search box that IS one of them (insWant: matched on this device) gets "Not
+     answered yet. It is on our list".
+   - Counting. For such a question the device sends one thing: the number of the list item (POST api/want { id }). Never the
+     words typed, no name, no cookie; the site's program keeps a count for each item and nothing about who asked. It is sent
+     once per item per visit (sessionStorage), only after the card has stood for a moment or Enter was pressed, only where
+     the card says "We count how many people ask this", and not at all when the reader has switched counting off (About us,
+     Privacy), when the browser asks not to be tracked (Global Privacy Control, Do Not Track) or where the site's store is
+     not switched on. The scout reads the counts (scripts/auto), so the editors see what people are waiting for.
+   - "Tell me when it is answered" puts the listed question in "Your questions" (on this device); it turns green when a later
+     version of the site answers it. ---------- */
+const WANT_API = "api/want", WANT_OFF = "pk-count", WANT_KEY = "pk-want", WANT_WAIT = 2500;
+const wantAsked = () => navigator.globalPrivacyControl === true || navigator.doNotTrack === "1" || window.doNotTrack === "1";   // the browser asks sites not to track
+function wantOff() { try { if (localStorage.getItem(WANT_OFF) === "0") return true; } catch (e) { /* no storage: the browser's own wish decides */ } return wantAsked(); }
+const wantOn = () => ASK_ON === true && !wantOff();
+function wantDone() { try { const x = JSON.parse(sessionStorage.getItem(WANT_KEY) || "[]"); return new Set(Array.isArray(x) ? x : []); } catch (e) { return wantDone.mem || (wantDone.mem = new Set()); } }
+function wantCount(id) {
+  if (!wantOn() || !/^w_[a-z0-9_]{1,40}$/.test(String(id))) return false;
+  const done = wantDone(); if (done.has(id)) return false; done.add(id);
+  try { sessionStorage.setItem(WANT_KEY, JSON.stringify([...done])); } catch (e) { wantDone.mem = done; }
+  try { fetch(WANT_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }), keepalive: true }).catch(() => {}); } catch (e) { /* not counted: nothing depends on it */ }
+  return true;
+}
+const wantItems = () => (typeof WANTED !== "undefined" && Array.isArray(WANTED) ? WANTED : INS.list ? INS.list.ids.map((id, i) => [id, INS.list.q[i]]) : []);
+const wantQ = id => (wantItems().find(x => x[0] === id) || [])[1] || "";
+// the list's own page: every question on it, each with the way to be told when it is answered
+function wantedPage() {
+  const box = document.getElementById("wanted-list"); if (!box) return;
+  const items = wantItems(), kept = new Set(askedList().filter(it => it.w).map(it => it.w));
+  box.innerHTML = items.length ? '<ul class="wl">' + items.map(([id, q]) => '<li class="wl-i"><span class="wl-q">' + esc(q) + "</span>" +
+    (kept.has(id) ? '<span class="wl-s">' + icon("check") + "We will tell you on this device</span>" : '<button type="button" class="wl-b" data-want-keep="' + esc(id) + '">Tell me when it is answered</button>') + "</li>").join("") + "</ul>"
+    : '<p class="muted">Nothing is on the list right now.</p>';
+}
+if (typeof document !== "undefined") {
+  wantedPage(); window.addEventListener("hashchange", () => { if (location.hash === "#wanted") wantedPage(); });
+  // the switch in About us > Privacy: counting on or off on this device
+  const sw = document.getElementById("count-switch"), st = document.getElementById("count-state");
+  if (sw) {
+    const draw = () => { let off = false; try { off = localStorage.getItem(WANT_OFF) === "0"; } catch (e) { /* no storage */ }
+      sw.checked = !off && !wantAsked(); sw.disabled = wantAsked();
+      if (st) st.textContent = wantAsked() ? "Off: your browser asks sites not to track you." : sw.checked ? "On." : "Off on this device."; };
+    sw.addEventListener("change", () => { try { if (sw.checked) localStorage.removeItem(WANT_OFF); else localStorage.setItem(WANT_OFF, "0"); } catch (e) { /* this page only */ } draw(); });
+    draw();
+  }
+}
+
 // for the checks (scripts/ux/insight_check.js, scripts/insight/parity.js): the same functions the search box uses
 window.pkInsight = {
   state: () => INS.state, load: insightLoad, encode: t => insEncode(t), expand: t => insExpand(t), mask: t => insMask(t), named: t => insNamed(t), times: () => INS.times.slice(),
   embed: t => insEmbed(t).then(v => Array.from(v)), tiers: () => Object.assign({}, INS.t), weights: () => Object.assign({}, INS.wt), judge: () => JSON.parse(JSON.stringify(INS.judge)),
   read: (t, ctx) => { const r = insRead(t, ctx || {}); return { core: r.core, depth: r.depth, note: r.note, routes: r.routes.map(x => x.kind), groups: r.groups }; },
   rank: (t, ctx) => insRank(t, ctx || {}).then(r => ({ q: r.q, core: r.core, depth: r.depth, note: r.note, emergency: r.emergency, routes: r.routes.map(x => ({ kind: x.kind, t: x.t, href: x.href, el: x.el || null, mix: x.mix || null })),
-    best: r.best, related: r.related, judge: r.judge || null, ms: r.ms }))
+    best: r.best, related: r.related, judge: r.judge || null, want: r.want || null, ms: r.ms })),
+  scope: t => insScope(t), listed: () => (INS.list ? INS.list.ids.slice() : [])
 };
