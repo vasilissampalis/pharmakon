@@ -81,6 +81,19 @@ jobs:
             npx --yes wrangler@4 pages deploy site/public --project-name=pharmakon --branch=main --commit-dirty=true >> "$L" 2>&1
             c=$?; if [ $c -ne 0 ]; then echo "!! publishing failed ($c)" >> "$L"; OK=0; else echo "published" >> "$L"; fi
           fi
+          if [ "$OK" = "1" ]; then
+            # the proof: does the public address serve this very publishing? (every build has a stamp of its own, data/build.json)
+            echo "== the live site (https://pharmakon.world)" >> "$L"
+            WANT="$(python3 -I -c 'import json; print(json.load(open("site/public/data/build.json"))["build"])' | tr -cd '0-9')"
+            LIVE=0; GOT=""
+            for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+              GOT="$(curl -fsS --max-time 15 "https://pharmakon.world/data/build.json?t=$i" 2>/dev/null | python3 -I -c 'import sys, json; print(json.load(sys.stdin).get("build", ""))' 2>/dev/null | tr -cd '0-9' | cut -c1-14)"
+              if [ -n "$WANT" ] && [ "$GOT" = "$WANT" ]; then LIVE=1; break; fi
+              sleep 10
+            done
+            if [ "$LIVE" = "1" ]; then echo "live: pharmakon.world serves this publishing (stamp $WANT)" >> "$L"; else echo "!! live: pharmakon.world does not serve this publishing yet (it serves stamp '$GOT'; this one is $WANT)" >> "$L"; fi
+            echo "LIVE=$LIVE" >> "$GITHUB_ENV"; echo "STAMP=$WANT" >> "$GITHUB_ENV"
+          fi
           echo "OK=$OK" >> "$GITHUB_ENV"
           tail -n 4 "$L" >> "$GITHUB_STEP_SUMMARY"
       - name: Keep the notes
@@ -100,12 +113,12 @@ jobs:
               v = (os.environ.get(k) or "").strip()
               if len(v) >= 6: t = t.replace(v, "***")
           t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)
-          keep = [l for l in t.splitlines() if l.startswith(("==", "!!", "published")) or re.search(r"hard failures|All \d+ checks passed|checks failed|FAIL |public site:|Deployment complete|https://[a-z0-9.-]*pages\.dev|error", l, re.I)]
+          keep = [l for l in t.splitlines() if l.startswith(("==", "!!", "published", "live:")) or re.search(r"hard failures|All \d+ checks passed|checks failed|FAIL |public site:|Deployment complete|https://[a-z0-9.-]*pages\.dev|error", l, re.I)]
           pathlib.Path("data/auto/deploy/_last-run.txt").write_text("\n".join(keep[-60:]) + "\n", encoding="utf-8")
           if os.environ.get("OK") == "1":
               sha = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
               ver = json.load(open("data/site/version.json", encoding="utf-8"))["site"]
-              json.dump({"_note": "The last time the site was published by itself (.github/workflows/deploy.yml).", "commit": sha, "site": ver, "on": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}, open("data/auto/deploy/deployed.json", "w", encoding="utf-8"), indent=1)
+              json.dump({"_note": "The last time the site was published by itself (.github/workflows/deploy.yml).", "commit": sha, "site": ver, "on": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), "stamp": os.environ.get("STAMP", ""), "live": os.environ.get("LIVE") == "1"}, open("data/auto/deploy/deployed.json", "w", encoding="utf-8"), indent=1)
           PY
           if [ "$OK" = "1" ]; then python3 -I scripts/auto/tick.py did deploy || true; fi
           git rm -q --ignore-unmatch data/auto/requests/deploy-*.json
