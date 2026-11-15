@@ -1,0 +1,53 @@
+# A checker that costs nothing (docs/AUTOMATION.md; scripts/auto/nli.py): open "natural language inference" models, run on
+# GitHub's own machine, sit the whole exam. No secret is needed. It starts when the editor puts a request in
+# data/auto/requests (nli-*.json), or by hand, and keeps its numbers in data/auto/exam.
+name: NLI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/nli-*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nli
+  cancel-in-progress: false
+
+jobs:
+  exam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: The models fetched before
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/huggingface
+          key: nli-models-v1
+      - name: Python packages
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          .venv/bin/pip install -q transformers sentencepiece protobuf
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+      - name: The exam, with notes
+        run: |
+          set +e
+          L="$RUNNER_TEMP/nli.log"; : > "$L"
+          python3 -I scripts/auto/nli.py exam >> "$L" 2>&1 || echo "!! failed ($?)" >> "$L"
+          git rm -q data/auto/requests/nli-*.json >> "$L" 2>&1
+          tail -n 40 "$L" | grep -v "Warning\|warn" > data/auto/exam/_nli-last-run.txt
+      - name: Keep the numbers
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/auto
+          git diff --cached --quiet || git commit -q -m "NLI: an inference model's numbers for every card of the exam"
+          git push -q || (git pull -q --rebase && git push -q)
