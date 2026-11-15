@@ -35,10 +35,13 @@ def take(lines, checks, who):
         out.append(item)
     return out, dropped
 if "for-you" in what:
-    a = J(P / "for_you_701.json")["families"]; c = J(P / "for_you_check_702.json")["families"]
+    a = J(P / "for_you_701.json")["families"]; c, who_of = {}, {}
+    for f in sorted(P.glob("for_you_check_*.json")):          # second readers 702 and 718 share the nine families
+        x = J(f)
+        for fam, checks in x["families"].items(): c[fam] = checks; who_of[fam] = x["reader"]
     S = J(ROOT / "data/site/stay-safer.json"); n = 0
     for fam, v in a.items():
-        lines, dropped = take(v.get("self") or [], c.get(fam), "AI reader 702 (second reader)")
+        lines, dropped = take(v.get("self") or [], c.get(fam), who_of.get(fam, "second reader"))
         if fam in S["signs"] and lines: S["signs"][fam]["self"] = lines; n += len(lines)
         print(f"for you / {fam}: {len(lines)} installed" + (f"; not installed: {dropped}" if dropped else ""))
     save(ROOT / "data/site/stay-safer.json", S); print("for-you lines installed:", n)
