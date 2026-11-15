@@ -99,6 +99,12 @@ legalDocs.forEach(d => { fullOf(d.substance).legal = d; });
 identityDocs.forEach(d => { const { names, street_names, verification, ...rest } = d; fullOf(d.substance).identity = rest; });
 Object.entries(cards).forEach(([id, c]) => { if (!c.substance || !(c.what_would_settle_it || c.verification.source_read)) return; const f = fullOf(c.substance); (f.cards = f.cards || {})[id] = { what_would_settle_it: c.what_would_settle_it || null, source_read: c.verification.source_read || "" }; });
 let simpleShown = null;
+/* Sourced lines (first aid, test kits, each drug's description): a line goes on the page with the anchors a second reader has
+   checked at the source ("confirmed", or "partly" / "corrected" where the line was then rewritten to what the source says).
+   A line whose anchors all still wait for that check is left out and listed here (CLAUDE.md: nothing unverified). */
+const ANCHOR_OK = new Set(["confirmed", "partly", "corrected"]);
+const slimLine = l => Object.assign({ line: l.line, anchors: (l.anchors || []).filter(a => ANCHOR_OK.has(a.check)).map(a => a.reference ? { ref: a.reference } : { publisher: a.publisher, title: a.title, url: a.url }) }, l.kind ? { kind: l.kind } : {});
+const sourcedLines = (list, what) => (list || []).map(slimLine).filter(l => { if (l.anchors.length) return true; console.error("NOTE: a line of " + what + " is left out until a second reader has checked a source for it: " + String(l.line).slice(0, 70)); return false; });
 const data = [
   "const EVIDENCE_MAPS = " + JSON.stringify(maps) + ";",
   "const REFS = " + JSON.stringify(refs.map(lightRef)) + ";",
@@ -116,17 +122,29 @@ const data = [
   "const CLASSES = " + JSON.stringify(site("classes.json")) + ";",
   "const FAMILIES_PLAIN = " + JSON.stringify(site("families-plain.json")) + ";",
   // links to harm reduction groups and official leaflets, each fetched and checked (data/site/harm-links.json; decision p-no-doses)
-  // Staying safer: home tests, where kits can be had, first aid by family; only lines a second reader checked (decision s-stay-safer)
+  // Staying safer: home tests, where kits can be had, first aid by family; only lines a second reader checked (decision s-stay-safer).
+  // (How these lines are checked is said once, on the Methods page, not under each list: site 2.3.)
   "const STAY_SAFER = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/stay-safer.json"); if (!fs.existsSync(f)) return { tests: {}, signs: {} };
-    const d = JSON.parse(fs.readFileSync(f, "utf8")), slim = l => Object.assign({ line: l.line, anchors: (l.anchors || []).map(a => a.reference ? { ref: a.reference } : { publisher: a.publisher, title: a.title, url: a.url }) }, l.kind ? { kind: l.kind } : {}); // a paper is cited by its reference id; kind: where the drug page shows a first-aid line (calm, help, aid)
-    const mapL = o => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, v.map(slim)]));
-    return { checked_note: d.checked_note, tests: { common: (d.tests.common || []).map(slim), drugs: mapL(d.tests.drugs), more: mapL(d.tests.more), where: mapL(d.tests.where), none_found: d.tests.none_found || [], none_validated: d.tests.none_validated || [] },
+    const d = JSON.parse(fs.readFileSync(f, "utf8")), slim = slimLine; // a paper is cited by its reference id; kind: where the drug page shows a first-aid line (calm, help, aid)
+    const mapL = o => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [k, sourcedLines(v, "stay-safer " + k)]));
+    return { tests: { common: (d.tests.common || []).map(slim), drugs: mapL(d.tests.drugs), more: mapL(d.tests.more), where: mapL(d.tests.where), none_found: d.tests.none_found || [], none_validated: d.tests.none_validated || [] },
       signs: Object.fromEntries(Object.entries(d.signs || {}).map(([k, v]) => [k, mapL(v)])) }; })()) + ";",
   // Where to get tests, country by country: only records a second reader confirmed (data/site/tests-world.json; decision p-kits-world)
   "const TESTS_WORLD = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/tests-world.json"); if (!fs.existsSync(f)) return { sellers: [], post: [], free: [], law: [] };
     const d = JSON.parse(fs.readFileSync(f, "utf8")), a = l => (l || []).map(x => ({ publisher: x.publisher, title: x.title, url: x.url }));
     const line = x => Object.assign({}, x, { anchors: a(x.anchors) });
     return { sellers: d.sellers.map(x => Object.assign({}, x, { anchors: a(x.anchors), pointers: a(x.pointers), warning: x.warning ? line(x.warning) : null })), post: d.post.map(line), free: d.free.map(line), law: d.law.map(line) }; })()) + ";",
+  // Each drug's description under its name: two to four short sourced lines (data/site/descriptions.json, when it exists)
+  "const DESCRIPTIONS = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/descriptions.json"); if (!fs.existsSync(f)) return {};
+    const d = JSON.parse(fs.readFileSync(f, "utf8")).drugs || {};
+    return Object.fromEntries(Object.entries(d).map(([slug, x]) => [slug, sourcedLines(x && x.lines, "the description of " + slug)]).filter(([, lines]) => lines.length)); })()) + ";",
+  // A seller's own page for one drug's test kits (data/site/kit-links.json, when it exists): only links a second reader
+  // confirmed, keyed by the seller's name as the drug page finds it (lower case, no accents)
+  "const KIT_LINKS = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/kit-links.json"); if (!fs.existsSync(f)) return {};
+    const d = JSON.parse(fs.readFileSync(f, "utf8")).sellers || {}, key = n => String(n == null ? "" : n).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’‘]/g, "'").replace(/\s+/g, " ").trim(), out = {};
+    Object.values(d).forEach(x => { const links = Object.fromEntries(Object.entries((x && x.drugs) || {}).filter(([, l]) => l && /^https:\/\//.test(l.url || "") && ANCHOR_OK.has(l.check)).map(([slug, l]) => [slug, { url: l.url, label: l.label || "" }]));
+      if (x && x.name && Object.keys(links).length) out[key(x.name)] = links; });
+    return out; })()) + ";",
   "const HARM_LINKS = " + JSON.stringify(fs.existsSync(path.join(ROOT, "data/site/harm-links.json")) ? site("harm-links.json") : { drugs: {} }) + ";",
   // what each study's funding or authors' ties were, flagged where they bear on the finding (data/site/funding-flags.json, keyed by study card)
   "const FUNDING_FLAGS = " + JSON.stringify(fs.existsSync(path.join(ROOT, "data/site/funding-flags.json")) ? site("funding-flags.json") : {}) + ";",

@@ -90,40 +90,28 @@ function route() {
   const first = !routedOnce; routedOnce = true;
   jumpStop();   // a jump still being kept in place gives way to the new address
   if (typeof EV !== "undefined" && EV.open) closeEvidence(true);
-  // a link to a section, a claim or a reference opens the full evidence; the plain page address opens the reader's choice
-  setMode(/^(cl_|sec-|ref-)/.test(h) || /^s-[a-z0-9-]+\/(sec-\d+|not-yet|evidence)$/.test(h) ? "full" : /^s-[a-z0-9-]+\/q-/.test(h) ? "quick" : PREF_MODE);
   // one shared answer: #a/<page>/<claim>, the Share button's address (only that answer, then the way to the rest)
   if (h.startsWith("a/")) {
     const m = h.match(/^a\/([a-z0-9-]+)\/(cl_[a-z0-9_]+)$/), t = m && renderShared(m[1], m[2]);
     if (t) { show("shared"); setTitle(t); window.scrollTo({ top: 0 }); focusHeading("shared"); return; }
     renderNotFound(h.slice(2)); show("notfound"); setTitle(PAGE_TITLES.notfound); window.scrollTo({ top: 0 }); focusHeading("notfound"); return;
   }
-  // substance pages, optionally with a section: #s-ketamine or #s-ketamine/sec-13 (the substance is always in the address)
+  // a drug page: #s-ketamine, with a section (#s-ketamine/part-d-law) or a question (#s-ketamine/q-cl_...) open. Each drug has
+  // one page (site 2.3; the senior author: "it is strange that in each drug page we have the Quick and Full version ... each
+  // drug page should be one"): the addresses of the research page that stood beside it (/evidence, /sec-13, /not-yet) lead to
+  // the page, its law or its looks.
   if (h.startsWith("s-")) {
     const mm = h.slice(2).match(/^([a-z0-9-]+)(?:\/(sec-\d+|not-yet|evidence|q-cl_[a-z0-9_]+|part-d-[a-z]+))?$/);
     const slug = mm ? mm[1] : h.slice(2), sec = mm && mm[2];
-    if (!mm || !monographFor(slug)) { renderNotFound(h.slice(2)); show("notfound"); setTitle(PAGE_TITLES.notfound); window.scrollTo({ top: 0 }); focusHeading("notfound"); return; }
-    // the simple page answers first (#s-mdma, #s-mdma/q-cl_...); the evidence page is one tap away (#s-mdma/evidence, sections, claims)
-    if (subBySlug[slug] && (!sec || sec.startsWith("q-") || sec.startsWith("part-"))) {
-      if (renderedDrug !== slug) renderDrug(slug);
-      show("drug"); setTitle(subBySlug[slug].name);
-      if (sec && sec.startsWith("part-")) { const el = document.getElementById(sec.slice(5)); if (el) { setTimeout(() => scrollToEl(el), 30); const hh = el.querySelector("h2"); if (hh) { hh.setAttribute("tabindex", "-1"); hh.focus({ preventScroll: true }); } return; } }
-      if (sec && sec.startsWith("q-") && openAsk(sec.slice(2))) return;
-      if (sec && claimById[sec.slice(2)]) { location.replace("#" + sec.slice(2)); return; }
-      window.scrollTo({ top: 0 }); if (!first) focusHeading("drug"); return;
-    }
-    // a research page waits for its files the first time (renderMonograph), then opens where the address points
-    if (sec === "evidence") { show("monograph"); setTitle((monographFor(slug) || {}).name + ": the research"); window.scrollTo({ top: 0 }); renderMonograph(slug, () => { if (!first) focusHeading("monograph"); }); return; }
-    show("monograph"); setTitle((monographFor(slug) || {}).name); window.scrollTo({ top: 0 });
-    renderMonograph(slug, () => {
-      if (sec && sec.startsWith("q-")) { const d = document.getElementById("qa-" + sec.slice(2)); if (d) { showAllTopics(d); d.open = true; setTimeout(() => scrollToEl(d), 30); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true }); } }
-      else if (sec) openSection(sec); else if (!first) focusHeading("monograph");
-    });
-    return;
+    if (!mm || !subBySlug[slug]) { renderNotFound(h.slice(2)); show("notfound"); setTitle(PAGE_TITLES.notfound); window.scrollTo({ top: 0 }); focusHeading("notfound"); return; }
+    if (sec && !sec.startsWith("q-") && !sec.startsWith("part-")) { location.replace("#s-" + slug + (sec === "sec-13" ? "/part-d-law" : sec === "sec-2" ? "/part-d-looks" : "")); return; }
+    const was = renderedDrug === slug && document.getElementById("view-drug").classList.contains("active") ? openSec() : "";
+    if (renderedDrug !== slug) renderDrug(slug);
+    show("drug"); setTitle(subBySlug[slug].name);
+    drugGo(sec, { first, was }); return;
   }
-  if (h.startsWith("ref-")) { show("monograph"); renderMonograph(currentSlug, () => { const el = document.getElementById(h); if (el) el.scrollIntoView({ block: "center" }); }); return; }
-  // older links without the substance (#sec-13) open that section of the page last shown
-  if (h.startsWith("sec-")) { show("monograph"); setTitle((monographFor(currentSlug) || {}).name); renderMonograph(currentSlug, () => openSection(h)); return; }
+  // a section's bare name (#d-help) is that section of the drug page last shown
+  if (/^d-[a-z]+$/.test(h) && renderedDrug) { location.replace("#s-" + renderedDrug + "/part-" + h); return; }
   if (h.startsWith("mix-")) { renderInteractions(); show("interactions"); setTitle("Mixing drugs"); const el = document.getElementById(h); if (el) { openAround(el); scrollToEl(el); } return; }
   // Facts about drug use: #facts, #facts/q-<claim>, and a bare claim address of a general answer (a shared link)
   if (h === "facts" || h.startsWith("facts/q-") || (h.startsWith("cl_") && claimById[h] && claimById[h].substance === GEN)) {
@@ -146,13 +134,18 @@ function route() {
   // a mixing answer's own address opens that answer in plain words, with its evidence over it (senior author, 6 November:
   // the full table opened instead, with a long paragraph "like reading the paper")
   if (h.startsWith("cl_") && claimById[h] && claimById[h].substance === "interactions") { renderInteractions(); const t = renderShared("mixing", h); show("shared"); setTitle(t || "Mixing drugs"); window.scrollTo({ top: 0 }); setTimeout(() => openEvidence(h, null, null), 60); return; }
-  // a drug without a written monograph lists no claims in its full layer: an answer's own address opens its drug page with
-  // the answer's evidence over it (a shared link, or one typed in)
-  if (h.startsWith("cl_") && claimById[h] && subBySlug[claimById[h].substance] && (monographFor(claimById[h].substance) || {}).status === "planned") {
-    const c = claimById[h]; if (renderedDrug !== c.substance) renderDrug(c.substance); show("drug"); setTitle(subBySlug[c.substance].name);
-    openAsk(h); setTimeout(() => openEvidence(h, null, null), 60); return;
+  // an answer's own address (a shared link, a search result, one typed in) opens the page that asks it, at the question, with
+  // the answer's evidence over it
+  if (h.startsWith("cl_") && claimById[h]) {
+    const c = claimById[h], key = answerPageKey(h), slug = subBySlug[key] ? key : subBySlug[c.substance] ? c.substance : null;
+    if (slug) {
+      if (renderedDrug !== slug) renderDrug(slug);
+      show("drug"); setTitle(subBySlug[slug].name);
+      const d = document.getElementById("ask-" + h), sec = d && d.closest(".secs > .sec");
+      if (d && sec) { showSec(sec.id); d.open = true; scrollToEl(d); } else { showSec(""); window.scrollTo({ top: 0 }); }
+    } else { show("home"); setTitle(""); window.scrollTo({ top: 0 }); }
+    setTimeout(() => openEvidence(h, null, null), 60); return;
   }
-  if (h.startsWith("cl_")) { const c = claimById[h]; if (c) { show("monograph"); setTitle((monographFor(c.substance) || {}).name); renderMonograph(c.substance, () => { const el = document.getElementById(h); if (el) { const d = el.closest("details"); if (d) d.open = true; const det = el.querySelector("details.cdetail"); if (det) det.open = true; scrollToEl(el); } }); } return; }
   if (h.startsWith("g-")) { show("glossary"); setTitle(PAGE_TITLES.glossary); const el = document.getElementById(h); if (el) scrollToEl(el); return; }
   // a country chosen in the search: #checking/c-Greece, #emergency/c-Greece, #law/c-Greece
   const cm = h.match(/^(emergency|checking|law)\/c-(.+)$/);
@@ -1240,15 +1233,39 @@ function showGloss(btn) {
   popEl.addEventListener("mouseenter", () => clearTimeout(popTimer));
   popEl.addEventListener("mouseleave", scheduleHide);
 }
+// the sources behind a line's chip (lineSrc): the publisher, the pages read and their links. Opened from the keyboard, the
+// first link takes the focus, and Escape or tabbing past the end gives it back to the chip.
+function showSrcl(btn, byKey) {
+  const gs = SRCL[+btn.dataset.srcl]; if (!gs) return;
+  hidePop();
+  popEl = document.createElement("div"); popEl.className = "popover srclpop"; popEl.setAttribute("role", "dialog"); popEl.setAttribute("aria-label", gs.length === 1 ? "Source" : "Sources"); popEl.dataset.for = "srcl-" + btn.dataset.srcl;
+  popEl.innerHTML = gs.map(g => { const r = g.ref && refById[g.ref];
+    return r ? '<p class="sp-pub">' + esc(inTextLabel(r, REFS)) + '</p><ul><li><a href="' + esc(refLink(r)) + '" target="_blank" rel="noopener">' + esc(String(r.title || "").replace(/<[^>]+>/g, "")) + "</a></li></ul>"
+      : '<p class="sp-pub">' + esc(g.pub) + "</p><ul>" + g.pages.map(x => '<li><a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.title) + "</a></li>").join("") + "</ul>"; }).join("");
+  document.body.appendChild(popEl);
+  const r = btn.getBoundingClientRect(); const pw = Math.min(360, window.innerWidth - 32);
+  let left = r.left + window.scrollX; if (left + pw > window.innerWidth + window.scrollX - 16) left = window.innerWidth + window.scrollX - 16 - pw; if (left < 16) left = 16;
+  popEl.style.left = left + "px"; popEl.style.top = (r.bottom + window.scrollY + 6) + "px"; popEl.style.width = pw + "px";
+  popEl.addEventListener("mouseenter", () => clearTimeout(popTimer));
+  popEl.addEventListener("mouseleave", scheduleHide);
+  const links = [...popEl.querySelectorAll("a")];
+  popEl.addEventListener("keydown", e => { const at = links.indexOf(document.activeElement);
+    if (e.key === "Escape" || (e.key === "Tab" && (e.shiftKey ? at === 0 : at === links.length - 1))) { e.preventDefault(); e.stopPropagation(); hidePop(); if (btn.isConnected) btn.focus(); } });
+  if (byKey && links[0]) links[0].focus({ preventScroll: true });
+}
 function hidePop() { popWant = null; if (popEl) { popEl.remove(); popEl = null; } }
 function scheduleHide() { clearTimeout(popTimer); popTimer = setTimeout(hidePop, 250); }
 const NO_HOVER = window.matchMedia ? window.matchMedia("(hover: none)").matches : false;
-document.addEventListener("mouseover", e => { if (NO_HOVER) return; const a = e.target.closest("a.pop"); if (a) { clearTimeout(popTimer); showPop(a); return; } const g = e.target.closest("button.gl"); if (g) { clearTimeout(popTimer); showGloss(g); } });
-document.addEventListener("mouseout", e => { if (NO_HOVER) return; if (e.target.closest("a.pop") || e.target.closest("button.gl")) scheduleHide(); });
+document.addEventListener("mouseover", e => { if (NO_HOVER) return; const a = e.target.closest("a.pop"); if (a) { clearTimeout(popTimer); showPop(a); return; } const g = e.target.closest("button.gl"); if (g) { clearTimeout(popTimer); showGloss(g); return; }
+  const sc = e.target.closest("button.srcl"); if (sc) { clearTimeout(popTimer); if (!(popEl && popEl.dataset.for === "srcl-" + sc.dataset.srcl)) showSrcl(sc); } });
+document.addEventListener("mouseout", e => { if (NO_HOVER) return; if (e.target.closest("a.pop") || e.target.closest("button.gl") || e.target.closest("button.srcl")) scheduleHide(); });
 document.addEventListener("focusin", e => { if (NO_HOVER) return; const a = e.target.closest("a.pop"); if (a) { showPop(a); return; } const g = e.target.closest("button.gl"); if (g) showGloss(g); });
 document.addEventListener("click", e => {
   const g = e.target.closest("button.gl");
   if (g) { e.preventDefault(); if (popEl && popEl.dataset.for === "gl-" + g.dataset.gl) hidePop(); else showGloss(g); return; }
+  // a line's source chip: a tap shows its sources and a second tap puts them away (a mouse has already shown them: the click keeps them)
+  const sc = e.target.closest("button.srcl");
+  if (sc) { e.preventDefault(); const open = popEl && popEl.dataset.for === "srcl-" + sc.dataset.srcl; if (open && (NO_HOVER || e.detail === 0)) hidePop(); else if (!open || e.detail === 0) showSrcl(sc, e.detail === 0); return; }
   const a = e.target.closest("a.pop");
   if (a) {
     // touch screens: the first tap shows the full reference (APA 7, with its link, study card and checks); hovering does this on a desktop

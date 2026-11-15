@@ -113,16 +113,12 @@ function seenSet() { if (SEEN_SET) return SEEN_SET; try { SEEN_SET = new Set(JSO
 function wasSeen(id) { return seenSet().has(id); }
 function markSeen(id) { const r = seenSet(); if (r.has(id)) return; r.add(id); try { localStorage.setItem("pk-read", JSON.stringify([...r].slice(-800))); } catch (e) {} }
 document.addEventListener("toggle", e => { const d = e.target; if (!d.matches || !d.matches("details.ask[open]") || !d.dataset.cid) return; markSeen(d.dataset.cid); d.classList.add("seen"); if (d.closest("#drug2")) pageProgress(); }, true);
-/* How many of a drug page's answers the reader has opened (WRITING-RULES, "small rewards for exploring"): a bar and a count,
-   kept on this device only. The page is also remembered, so the home page can offer to pick up where the reader left off. */
+/* The drug page a reader was on is remembered, with its answers (on this device only), so that the start page can offer to
+   pick up where they left off and say how many of its answers they have opened. (The count on the drug page itself went with
+   2.3: a section's row says how many answers it holds.) */
 function pageAskIds() { return [...new Set([...document.querySelectorAll("#drug2 details.ask[data-cid]")].map(d => d.dataset.cid))]; }
 function pageProgress() {
-  const el = document.getElementById("pgprog"); if (!el) return;
-  const ids = pageAskIds(), total = ids.length, n = ids.filter(wasSeen).length;
-  if (total < 4) { el.hidden = true; return; }
-  el.hidden = false;
-  el.innerHTML = '<div class="rp-bar" aria-hidden="true"><i style="width:' + Math.round(100 * n / total) + '%"></i></div><p class="rp-t">' +
-    (n ? "You have opened <b>" + n + "</b> of " + total + " answers on this page" + (n === total ? ". All of them!" : ".") : "<b>" + total + "</b> answers on this page. Tap a question to open it.") + "</p>";
+  const ids = pageAskIds(); if (!renderedDrug || ids.length < 4) return;
   try { localStorage.setItem("pk-last", JSON.stringify({ s: renderedDrug, ids })); } catch (e) { /* not kept */ }
 }
 function lastPage() { try { const x = JSON.parse(localStorage.getItem("pk-last") || "null"); return x && subBySlug[x.s] && Array.isArray(x.ids) && x.ids.length ? x : null; } catch (e) { return null; } }
@@ -376,8 +372,7 @@ function refreshCountryParts() {
   if (page && renderedDrug) {
     const law = page.querySelector("#d-law .sec-b"); if (law) { law.innerHTML = lawHtml(renderedDrug); lawWait(); }
     const h = page.querySelector("#d-help .sec-b"); if (h) h.innerHTML = helpHtml();
-    const top = page.querySelector(".dh-help"); if (top) top.outerHTML = helpTopLine(renderedDrug);
-    const t = page.querySelector("#sf-test .sf-b"); if (t) t.innerHTML = testHtml();
+    const t = page.querySelector("#d-kits .sec-b"); if (t) t.innerHTML = testHtml();
   }
   renderEmMine(); renderDcMine();
 }
@@ -416,64 +411,95 @@ function lawWait() {
   document.querySelectorAll(".lawwait[data-law]").forEach(box => { const slug = box.dataset.law; box.removeAttribute("data-law");
     whenReady(() => loadFull(slug), box, "The law", () => { const sec = box.closest(".sec-b"); if (sec && renderedDrug === slug) sec.innerHTML = lawHtml(slug); }); });
 }
-/* Sourced lines for Staying safer (data/site/stay-safer.json): official and non-profit pages, each line checked by a
-   second AI reader before it is shown; what home tests can show, where kits can be had, and first aid by drug family */
+/* Sourced lines for the drug page (data/site/stay-safer.json, descriptions.json): official and non-profit pages and
+   papers, each line checked at its source by a second AI reader before it is shown: what to do if it gets too much, by
+   drug family; what home tests can show; and each drug's short description. */
 const SAFE = (typeof STAY_SAFER !== "undefined" && STAY_SAFER) || { tests: {}, signs: {} };
 const NO_SIGNS = ["nicotine", "caffeine"];
-const OPEN_AID = ["Opioids", "Depressants"];  // drugs that can stop breathing: first aid shows open
-const lineList = ls => '<ul class="sf-list">' + ls.map(l => "<li>" + esc(l.line) + "</li>").join("") + "</ul>";
-function srcFold(lines) {
-  const seen = new Map();
-  lines.forEach(l => (l.anchors || []).forEach(x => { const k = x.ref ? "ref:" + x.ref : x.url; if (k && !seen.has(k) && (!x.ref || refById[x.ref])) seen.set(k, x); }));
-  if (!seen.size) return "";
-  // papers by author and year, with the full APA reference on the citation; web pages one line per publisher
-  // (senior author, 26 October: a list of 40 sources was too long to look through)
-  const all = [...seen.values()], byPub = new Map();
-  all.filter(x => !x.ref).forEach(x => { const k = x.publisher || "Other pages"; if (!byPub.has(k)) byPub.set(k, []); byPub.get(k).push(x); });
-  const items = all.filter(x => x.ref).map(x => "<li>" + cite(x.ref) + " " + esc(refById[x.ref].title) + "</li>")
-    .concat([...byPub].map(([pub, xs]) => "<li><b>" + esc(pub) + "</b>: " + xs.map(x => '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.title) + "</a>").join("; ") + "</li>"));
-  return '<details class="sf-src"><summary>Sources (' + all.length + ")</summary><ul>" + items.join("") +
-    "</ul>" + (SAFE.checked_note ? '<p class="small muted">' + esc(SAFE.checked_note) + "</p>" : "") + "</details>";
+/* The source of a line, as small chips after it (senior author, 15 November: "the sources should be apparent for each
+   respective fact without creating visual clutter"): one chip per publisher, by its short name: the acronym where the
+   publisher has one (HSE, ADF, CDC, WHO, FRANK), otherwise the first words of its name. A tap or hover shows the publisher,
+   the pages read and their links (showSrcl, with the other popovers). A paper is named by its first author and year and
+   opens its full reference, as the sources of "How do we know?" do. At most three chips; a line with more sources shows two
+   and "+n". The list of sources that closed each part ("Sources (26)") is gone: every line carries its own. */
+const PUB_ACR = /^[A-Z][A-Z0-9&]{1,8}$/;
+let PUB_AKA = null;   // a publisher's name → its acronym, learned from the names that carry one ("Alcohol and Drug Foundation (ADF)")
+function pubParts(p) {
+  let s = String(p || "").trim();
+  // a page by named authors: "Abrams, M. (Network for Public Health Law)" is cited here by the body in the brackets
+  const by = s.match(/^[A-Z][\p{L}'’-]+, [A-Z]\..*?\(([^)]+)\)\s*$/u); if (by) s = by[1].split(/[,;]/)[0].trim();
+  const m = s.match(/^(.*?)\s*\(([^)]*)\)/), lead = (m ? m[1] : s).trim(), inner = m ? m[2].split(/[,;]/)[0].trim() : "";
+  return { lead, inner };
 }
-/* If it gets too much (senior author, 26 October: the first-aid box must be calm and welcoming to a stressed person or
-   carer, and fit the drug: no CPR line first on a cannabis page). Same sourced lines, in a kinder order: what helps
-   first, then when to get help, and first aid one tap away. Where breathing can stop (opioids, alcohol, benzodiazepines,
-   GHB), getting help and first aid stay first. Each line's place is its "kind" in data/site/stay-safer.json. */
+function pubShort(p) {
+  if (!PUB_AKA) { PUB_AKA = {};
+    const learn = x => { const { lead, inner } = pubParts(x); if (PUB_ACR.test(inner) && !PUB_ACR.test(lead)) PUB_AKA[lead.toLowerCase()] = inner; else if (PUB_ACR.test(lead) && inner) PUB_AKA[inner.toLowerCase()] = lead; };
+    const walk = o => { if (Array.isArray(o)) o.forEach(walk); else if (o && typeof o === "object") { if (typeof o.publisher === "string") learn(o.publisher); Object.values(o).forEach(walk); } };
+    [SAFE, typeof TESTS_WORLD !== "undefined" ? TESTS_WORLD : null, typeof DESCRIPTIONS !== "undefined" ? DESCRIPTIONS : null, FAMPLAIN.source].forEach(walk); }
+  const { lead, inner } = pubParts(p);
+  if (PUB_ACR.test(lead)) return lead;
+  if (PUB_ACR.test(inner)) return inner;
+  if (PUB_AKA[lead.toLowerCase()]) return PUB_AKA[lead.toLowerCase()];
+  const first = lead.split(/\s[–—\/]\s|,\s/)[0].trim() || lead;
+  if (first.length <= 28) return first;
+  const words = first.split(" "), out = []; for (const w of words) { if (out.concat(w).join(" ").length > 26) break; out.push(w); }
+  return out.join(" ") + "…";
+}
+const SRCL = [], SRCL_AT = new Map();
+function lineSrc(anchors) {
+  const groups = [];   // in the order the sources are first named: a paper by its reference, web pages by their publisher
+  (anchors || []).forEach(a => {
+    if (a.ref) { if (refById[a.ref] && !groups.some(g => g.ref === a.ref)) groups.push({ ref: a.ref }); return; }
+    if (!a.url) return;
+    const pub = a.publisher || "Source", short = pubShort(pub); let g = groups.find(x => !x.ref && x.short === short);
+    if (!g) { g = { short, pub, pages: [] }; groups.push(g); }
+    if (!g.pages.some(x => x.url === a.url)) g.pages.push({ title: a.title || a.url, url: a.url });
+  });
+  if (!groups.length) return "";
+  const reg = gs => { const k = gs.map(g => g.ref ? "ref:" + g.ref : g.pub + "|" + g.pages.map(x => x.url).join("|")).join("||"); if (!SRCL_AT.has(k)) { SRCL_AT.set(k, SRCL.length); SRCL.push(gs); } return SRCL_AT.get(k); };
+  const chip = g => g.ref
+    ? '<a class="pop srcl" href="' + esc(refLink(refById[g.ref])) + '" target="_blank" rel="noopener" data-ref="' + esc(g.ref) + '" aria-label="Source: ' + esc(inTextLabel(refById[g.ref], REFS)) + '">' + esc(shortLabel(refById[g.ref])) + "</a>"
+    : '<button type="button" class="srcl" data-srcl="' + reg([g]) + '" aria-label="Source: ' + esc(g.pub) + '">' + esc(g.short) + "</button>";
+  const shown = groups.length > 3 ? groups.slice(0, 2) : groups, rest = groups.slice(shown.length);
+  return ' <span class="srcs2">' + shown.map(chip).join("") + (rest.length ? '<button type="button" class="srcl" data-srcl="' + reg(rest) + '" aria-label="' + rest.length + ' more sources">+' + rest.length + "</button>" : "") + "</span>";
+}
+// a list of sourced lines, each with its chips
+const srcList = ls => '<ul class="sf-list">' + ls.map(l => "<li>" + esc(l.line) + lineSrc(l.anchors) + "</li>").join("") + "</ul>";
+/* Each drug's description, under its name (senior author, 15 November: "each drug page should have a description for each
+   drug that makes you understand what it is and its sources are validated"): two to four short lines from
+   data/site/descriptions.json, shown as one short paragraph, each line with its sources. Until a drug has one, the line of
+   its family stands in (data/site/families-plain.json, from the Alcohol and Drug Foundation's Drug Wheel); the pages
+   that skip the family line (nicotine, caffeine) show none. */
+function descHtml(slug) {
+  const lines = ((typeof DESCRIPTIONS !== "undefined" && DESCRIPTIONS) || {})[slug];
+  if (lines && lines.length) return '<p class="dh-desc">' + lines.map(l => "<span>" + esc(l.line) + lineSrc(l.anchors) + "</span>").join(" ") + "</p>";
+  const s = subBySlug[slug], fp = s && famPlain(s.cls), own = (FAMPLAIN.drugs || {})[slug];
+  if (!fp || (FAMPLAIN.skip || []).includes(slug)) return "";
+  return '<p class="dh-desc"><span>' + esc(own ? own.line : fp.line) + lineSrc(FAMPLAIN.source ? [FAMPLAIN.source] : []) + "</span></p>";
+}
+/* If it gets too much (senior author, 15 November: "we should not just write about what to do if it is too much for another
+   person but what to do yourself if it's too much for you. going or calling the hospital should be the last on the list
+   like a last resort ... we have to begin with what users find most useful"; "we don't want to freak people out"). Top to
+   bottom: for you (the family's own lines for the reader, once they are written and checked; nothing until then); for a
+   friend, what helps (the calm and help lines, then first aid, in the order of the data: for opioids, naloxone first), what
+   not to do, and last, when to call an ambulance, with the reader's emergency number where their country is known and a
+   quiet link to the numbers by country. No box, nothing at the top of the page, nothing repeated. Every line carries its
+   sources. Each line's place is its "kind" in data/site/stay-safer.json. */
 const helpSigns = slug => { const s = subBySlug[slug]; return s && !NO_SIGNS.includes(slug) ? (SAFE.signs || {})[s.cls] || null : null; };
-function helpTitle(slug) {
-  const cls = (subBySlug[slug] || {}).cls;
-  if (slug === "alcohol") return "If someone has drunk too much";
-  return { Cannabinoids: "If it gets too much", "Classic psychedelics": "If a trip gets difficult", "Atypical psychedelics": "If a trip gets difficult",
-    Opioids: "If someone has taken too much", Depressants: "If someone has taken too much" }[cls] || "If someone feels unwell";
-}
-// the emergency number where the reader is (checked against an official source), or the way to find it
-function callLine() {
-  const em = PREF_COUNTRY ? emFor(PREF_COUNTRY) : null;
-  if (!em) return '<p class="hp-call">' + icon("phone") + '<span>Call your local emergency number. <a href="#emergency">Numbers by country</a></span></p>';
-  return '<p class="hp-call"><a class="callbtn sm" href="tel:' + esc(telOf(em.numbers[0])) + '">' + icon("phone") + "<span>Call <b>" + esc(em.numbers[0].n) + "</b></span></a>" +
-    '<span class="small muted">The emergency number in ' + esc(inCtry(PREF_COUNTRY)) + " " + srcIcons(em.numbers[0].src) + ' · <a href="#emergency">other numbers</a></span></p>';
-}
+const helpTitle = () => "If it gets too much";
 function helpHtml(slug) {
   slug = slug || renderedDrug;
-  const s = subBySlug[slug], fam = helpSigns(slug);
-  if (!fam) return callLine();
-  const kind = x => x.kind || "calm", ww = fam.while_waiting || [], dn = fam.do_not || [], cn = fam.call_now || [];
-  const helpOnes = ww.concat(dn).filter(x => kind(x) === "help");
-  const now = '<div class="hp-now"><p class="sf-k">Get help now if</p>' + lineList(cn) + callLine() + (helpOnes.length ? lineList(helpOnes) : "") + "</div>";
-  let h;
-  if (OPEN_AID.includes(s.cls)) h = now + (ww.length ? '<p class="sf-k">While you wait</p>' + lineList(ww) : "") + (dn.length ? '<p class="sf-k">Don’t</p>' + lineList(dn) : "");
-  else {
-    const calm = ww.filter(x => kind(x) === "calm"), avoid = dn.filter(x => kind(x) === "calm"), aid = ww.concat(dn).filter(x => kind(x) === "aid");
-    h = (calm.length ? '<p class="sf-k">What helps</p>' + lineList(calm) : "") + (avoid.length ? '<p class="sf-k">What not to do</p>' + lineList(avoid) : "") + now +
-      (aid.length ? '<details class="sf-more"><summary>First aid while you wait for help</summary>' + lineList(aid) + "</details>" : "");
-  }
-  return h + srcFold(cn.concat(ww, dn));
-}
-// one quiet line under the drug's name, in place of the box that was on every page (senior author, 26 October)
-function helpTopLine(slug) {
+  const fam = helpSigns(slug); if (!fam) return "";
+  const kind = x => x.kind || "calm", ww = fam.while_waiting || [], self = fam.self || [], dn = fam.do_not || [], cn = fam.call_now || [];
+  const helps = ww.filter(x => kind(x) !== "aid").concat(ww.filter(x => kind(x) === "aid"));
   const em = PREF_COUNTRY ? emFor(PREF_COUNTRY) : null;
-  return '<p class="dh-help">' + icon("phone") + "<span>Someone unwell? " + (helpSigns(slug) ? '<a href="#d-help" data-go="d-help">What to do</a> · ' : "") +
-    (em ? 'Emergency: <a href="tel:' + esc(telOf(em.numbers[0])) + '">' + esc(em.numbers[0].n) + "</a>" : '<a href="#emergency">Emergency numbers</a>') + "</span></p>";
+  return (self.length ? '<h3 class="hp-h">For you</h3>' + srcList(self) : "") +
+    '<h3 class="hp-h">For a friend</h3>' +
+    (helps.length ? '<h4 class="sf-k">What helps</h4>' + srcList(helps) : "") +
+    (dn.length ? '<h4 class="sf-k">What not to do</h4>' + srcList(dn) : "") +
+    (cn.length ? '<h4 class="sf-k">Call an ambulance if</h4>' + srcList(cn) : "") +
+    (em ? '<p class="hp-num">The emergency number in ' + esc(inCtry(PREF_COUNTRY)) + ' is <a href="tel:' + esc(telOf(em.numbers[0])) + '"><b>' + esc(em.numbers[0].n) + "</b></a>. " + srcIcons(em.numbers[0].src) + "</p>" : "") +
+    '<p class="hp-more"><a href="#emergency">Emergency numbers by country</a></p>';
 }
 /* Where to get tests, country by country (data/site/tests-world.json; decision p-kits-world): what a source says about
    the law on test kits, free tests, sellers that ship there (only those a harm reduction group, drug checking service or
@@ -488,25 +514,31 @@ function shipsTo(sel, un) {
   if (sh.kind === "list" || sh.kind === "domestic-only") return has(sh.countries);
   return false;
 }
-// one block for one country: on a drug's "Test it first" card and on the drug checking page
-function kitsWhere(un) {
+// the seller's own page for one drug's kits, where a second reader confirmed it (data/site/kit-links.json, matched to
+// the seller's row by name); otherwise the seller's shop
+const KITL = (typeof KIT_LINKS !== "undefined" && KIT_LINKS) || {};
+const kitLink = (sel, slug) => (slug && (KITL[norm(sel.name)] || {})[slug]) || null;
+// what there is for one country, each line with its sources: free tests, the sellers that say they send there (those with a
+// page for this drug's kits first), testing by post, and what the law says about kits. On a drug's Test kits section and on
+// the drug checking page.
+function kitsWhere(un, slug) {
   const nm = esc(inCtry(un)), law = KW.law.filter(x => x.country === un), free = KW.free.filter(x => x.country === un), post = KW.post.filter(x => x.country === un);
-  const sellers = KW.sellers.filter(x => shipsTo(x, un)).sort((a, b) => (b.based_in === un) - (a.based_in === un) || (b.kind === "harm reduction non-profit") - (a.kind === "harm reduction non-profit") || a.name.localeCompare(b.name));
-  const used = law.concat(free, post, sellers.flatMap(x => [{ anchors: (x.anchors || []).concat(x.pointers || []) }].concat(x.warning ? [x.warning] : [])));
+  const sellers = KW.sellers.filter(x => shipsTo(x, un)).sort((a, b) => !!kitLink(b, slug) - !!kitLink(a, slug) || (b.based_in === un) - (a.based_in === un) || (b.kind === "harm reduction non-profit") - (a.kind === "harm reduction non-profit") || a.name.localeCompare(b.name));
   const where = x => x.region && !String(x.line).includes(x.region) ? " (" + esc(x.region) + ")" : "";
-  const li = x => "<li>" + esc(x.line) + where(x) + "</li>";
-  // what people want first is where to get a kit (senior author, 26 October): free tests, then sellers, then testing by
-  // post; what the law says about kits is one tap away
-  let h = "";
-  if (free.length) h += '<p class="sf-k2">Free tests</p><ul class="sf-list">' + free.map(x => "<li>" + esc(x.line) + where(x) + "</li>").join("") + "</ul>";
-  if (sellers.length) {
-    h += '<p class="kw-lead">Sellers that say they send to ' + nm + ':</p><ul class="kw-sellers">' + sellers.map(x => '<li><a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.name) + "</a> <span class=\"muted\">" + esc(x.sells_line) + (x.based_in === un ? ", in " + nm : x.based_in_short ? ", " + esc(x.based_in_short) : "") + "</span></li>").join("") + "</ul>" +
-      '<p class="small muted">Harm reduction groups or health services point people to these sellers. We have not tested their kits.' + (sellers.some(x => x.warning) ? " Some say they do not refund parcels that customs hold or refuse." : "") + "</p>";
-  } else h += '<p class="say small">We have not found a seller that says it sends test kits to ' + nm + ".</p>";
-  if (post.length) h += '<p class="sf-k2">Testing by post</p><ul class="sf-list">' + post.map(x => "<li>" + esc(x.line) + "</li>").join("") + "</ul>";
-  h += law.length ? '<details class="sf-more"><summary>Test kits and the law in ' + nm + '</summary><ul class="sf-list">' + law.map(li).join("") + "</ul></details>"
-    : '<p class="say small">We have not found what the law in ' + nm + " says about test kits.</p>";
-  return { html: h, used };
+  const li = x => "<li>" + esc(x.line) + where(x) + lineSrc(x.anchors) + "</li>";
+  const row = x => { const k = kitLink(x, slug);
+    return '<li class="kit-row"><a class="kit-go" href="' + esc(k ? k.url : x.url) + '" target="_blank" rel="noopener"><span class="kit-n">' + esc(x.name) + "</span>" + (k && k.label ? '<span class="kit-l">' + esc(k.label) + "</span>" : "") + icon("arrow") + "</a>" +
+      '<span class="kit-s">' + esc(x.sells_line) + (x.based_in === un ? ", in " + nm : x.based_in_short ? ", " + esc(x.based_in_short) : "") + lineSrc((x.anchors || []).concat(x.pointers || [])) + "</span></li>"; };
+  const warn = sellers.filter(x => x.warning);
+  return {
+    sellers: sellers.length ? '<ul class="kit-rows">' + sellers.map(row).join("") + '</ul><p class="kit-note">Harm reduction groups or health services point people to these sellers. We have not tested their kits.' +
+      (warn.length ? " Some say they do not refund parcels that customs hold or refuse." + lineSrc(warn.flatMap(x => x.warning.anchors || [])) : "") + "</p>"
+      : '<p class="say small">We have not found a seller that says it sends test kits to ' + nm + ".</p>",
+    free: free.length ? '<h4 class="sf-k">Free tests</h4><ul class="sf-list">' + free.map(li).join("") + "</ul>" : "",
+    post: post.length ? '<h4 class="sf-k">Testing by post</h4><ul class="sf-list">' + post.map(li).join("") + "</ul>" : "",
+    law: law.length ? '<details class="sf-more"><summary>Test kits and the law in ' + nm + '</summary><ul class="sf-list">' + law.map(li).join("") + "</ul></details>"
+      : '<p class="say small">We have not found what the law in ' + nm + " says about test kits.</p>"
+  };
 }
 // the graded answers on test kits that belong to this drug's tests (at most two), each opening its evidence over the page,
 // and the way to every answer on the drug checking page
@@ -558,42 +590,43 @@ function openFact(id) {
 // the menu item and the home card appear once the page has answers
 function factsLinks() { const on = drugQuestions(GEN).length > 0; document.querySelectorAll("[data-facts]").forEach(el => { el.hidden = !on; }); }
 function renderDcKits() { const box = document.getElementById("dc-kits"); if (!box) return; const h = dcKitsHtml(); box.innerHTML = h; box.hidden = !h; }
+/* Test kits, a section of its own near the end of a drug page (senior author, 15 November: "the test kits are low priority
+   and should be very discreetly kept inside the website"; "individualized for each drug ... if a user wants to buy something
+   they should be able to buy it immediately and it should be at the top"; "each respective fact about the test kits should
+   be cited"). Buying first: one row per seller that says it sends to the reader's country, each straight to that seller's
+   page for this drug's kits where we have it; then the facts about the tests; what a home test cannot tell; the answers
+   from studies; and drug checking services. The country is the one the reader chose, or until then the one their device's
+   time zone suggests, with a way to change it. Every line carries its sources. */
 function testHtml(slug) {
   slug = slug || renderedDrug;
   const T = SAFE.tests || {}, own = (T.drugs || {})[slug] || [], none = (T.none_found || []).includes(slug), common = T.common || [];
-  const more = (T.more || {})[slug] || [], unproven = (T.none_validated || []).includes(slug);
-  // senior author, 26 October: lead with what people want (which test, and where to get one); the general points and
-  // the sources come after, one tap away
-  let h = "", used = [], folds = "";
-  const key = common[2] ? [common[2]] : [], rest = common.filter((x, i) => i !== 2);
-  const kits = !unproven && own.length;  // a kit is worth buying only where a home test works for this drug
+  const more = (T.more || {})[slug] || [], unproven = (T.none_validated || []).includes(slug), name = esc(pageWord(slug));
+  const un = PREF_COUNTRY || guessCountry() || "", nm = un ? esc(inCtry(un)) : "", kw = un ? kitsWhere(un, slug) : null;
+  let h = "";
+  // a kit is worth buying only where a home test works for this drug
+  if (!unproven && own.length) {
+    h += '<h3 class="tk-h">Test kits for ' + name + "</h3>" +
+      (un ? '<div class="cq set tk-cq"><p class="cq-where">' + icon("pin") + "<span>Sellers that say they send to <b>" + esc(shortCtry(un)) + '</b></span></p><button type="button" class="cq-change">' + (PREF_COUNTRY ? "Change country" : "Another country") + '</button><span class="cq-sel" hidden><label class="sr" for="tk-ctry">Your country</label>' + ctrySelectHtml("tk-ctry") + "</span></div>" + kw.sellers + kw.free
+        : countryAsk());
+  }
   if (own.length) {
     // tests are named, but none has been shown to work for this drug: said first, so nobody takes a colour for proof
-    h += '<p class="sf-k">' + (unproven ? "No home test has been shown to work for " + esc(pageWord(slug)) : "Home tests") + "</p>" + lineList(unproven ? own : own.slice(0, 3));
-    if (!unproven && key.length) h += '<p class="sf-key">' + icon("alert") + "<span>" + esc(key[0].line) + "</span></p>";
+    h += '<h3 class="tk-h">' + (unproven ? "No home test has been shown to work for " + name : "Home tests") + "</h3>" + srcList(unproven ? own : own.slice(0, 3));
     const extra = (unproven ? [] : own.slice(3)).concat(more);
-    if (extra.length) folds += '<details class="sf-more"><summary>More about these tests</summary>' + lineList(extra) + "</details>";
-    if (rest.length) folds += '<details class="sf-more"><summary>What home tests can’t tell you</summary>' + lineList(rest) + "</details>";
-    used = own.concat(more, common);
+    if (extra.length) h += '<details class="sf-more"><summary>More about these tests</summary>' + srcList(extra) + "</details>";
+    h += kitAnswersHtml(slug);
+    if (common.length) h += '<h3 class="tk-h">What home tests can’t tell you</h3>' + srcList(common);
   } else if (none) {
-    h += '<p class="say small">We have not found a home test for ' + esc(pageWord(slug)) + ".</p>" + (common[3] ? lineList([common[3]]) : "");
-    if (more.length) folds += '<details class="sf-more"><summary>More about these tests</summary>' + lineList(more) + "</details>";
-    used = (common[3] ? [common[3]] : []).concat(more);
+    h += '<p class="say">We have not found a home test for ' + name + ".</p>" + srcList((common[3] ? [common[3]] : []).concat(more)) + kitAnswersHtml(slug);
   }
-  if (kits) {
-    if (PREF_COUNTRY) { const kw = kitsWhere(PREF_COUNTRY); h += '<p class="sf-k">Where to get a kit in ' + esc(inCtry(PREF_COUNTRY)) + "</p>" + kw.html; used = used.concat(kw.used); }
-    else h += '<p class="sf-k">Where to get a kit</p>' + countryAsk();
-  }
-  // what studies found about these tests (senior author, 26 October: are home test kits useful?), after where to get one
-  if (own.length || none) h += kitAnswersHtml(slug);
-  // a lab check tells you more than any home test: the services where the reader is
-  let dc = '<p><a class="go" href="#checking">Drug checking by country</a></p>';
-  if (PREF_COUNTRY) {
-    const sv = dcFor(PREF_COUNTRY), nm = esc(inCtry(PREF_COUNTRY));
-    dc = sv.length ? '<p class="sf-k">Drug checking in ' + nm + '</p><p class="say small">' + sv.length + " service" + (sv.length === 1 ? "" : "s") + ' that test a sample for you. <a href="#checking">See where</a></p>'
+  // a lab check tells you more than any home test: the services where the reader is, and testing by post
+  h += '<h3 class="tk-h">Drug checking</h3>';
+  if (un) { const sv = dcFor(un);
+    h += sv.length ? '<p class="say small">' + sv.length + " service" + (sv.length === 1 ? "" : "s") + " in " + nm + ' that test a sample for you. <a href="#checking">See where</a></p>'
       : '<p class="say small">We have not found a drug checking service in ' + nm + ' yet. <a href="#checking">Drug checking by country</a></p>';
-  }
-  return h + dc + folds + srcFold(used);
+    h += kw.post + (own.length && !unproven ? kw.law : "");
+  } else h += '<p><a class="go" href="#checking">Drug checking by country</a></p>';
+  return h;
 }
 
 /* Staying safer: test it, where to read about doses, and who to call. We do not write doses or how to take a drug
@@ -633,11 +666,11 @@ function seniorDosesHtml(slug) {
 }
 function refreshDoses() {
   if (!renderedDrug) return;
-  const card = document.getElementById("sf-dose");
-  if (card) { card.querySelector(".sf-b").innerHTML = dosesBody(renderedDrug); return; }
-  // a drug with no links yet gets the card as soon as the author's text or the owner's button exists
-  const safer = document.querySelector("#d-safer .safer"); const body = dosesBody(renderedDrug);
-  if (safer && body) { const sos = document.getElementById("sf-sos"); const div = document.createElement("div"); div.className = "sf"; div.id = "sf-dose"; div.innerHTML = "<h3>" + icon("book") + "<span>Doses</span></h3><div class=\"sf-b\">" + body + "</div>"; safer.insertBefore(div, sos); }
+  const card = document.getElementById("sf-dose"), body = dosesBody(renderedDrug);
+  if (card) { card.querySelector(".sf-b").innerHTML = body; return; }
+  // a drug with no links yet gets its Doses section as soon as the author's text or the owner's button exists: the page is
+  // drawn again as it stood
+  if (body && document.querySelector("#drug2 .secmenu")) { const open = openSec(), y = window.scrollY; renderDrug(renderedDrug); if (open) showSec(open); window.scrollTo(0, y); }
 }
 document.addEventListener("click", e => {
   const ed = e.target.closest && e.target.closest("button.sa-edit");
@@ -666,16 +699,6 @@ function harmLinksHtml(slug) {
 }
 const dosesBody = slug => seniorDosesHtml(slug) + harmLinksHtml(slug);
 const NO_TEST = ["alcohol", "caffeine", "nicotine", "nitrous-oxide", "alkyl-nitrites-and-inhalants"];
-function saferHtml(slug) {
-  const card = (id, ic, h, body) => '<div class="sf" id="' + id + '"><h3>' + icon(ic) + "<span>" + esc(h) + '</span></h3><div class="sf-b">' + body + "</div></div>";
-  const doses = dosesBody(slug);
-  // drug checking is for drugs bought on the street or online, not for drinks, coffee, cigarettes or gas canisters
-  const test = !NO_TEST.includes(slug);
-  // the same test-kit photo and the emergency box were on every drug page (senior author, 26 October): the photo is gone,
-  // and what to do if someone is unwell has its own calm part further down, with one quiet line to it under the name
-  if (!test && !doses) return "";
-  return '<div class="safer">' + (test ? card("sf-test", "flask", "Test it first", testHtml(slug)) : "") + (doses ? card("sf-dose", "book", "Doses", doses) : "") + "</div>";
-}
 
 /* The emergency and drug checking pages: your country first; every other country one tap away */
 function renderEmMine() {
@@ -690,7 +713,7 @@ function renderEmMine() {
       (em.more || []).map(y => '<li><a class="em-n" href="tel:' + esc(telOf(y)) + '">' + esc(y.n) + '</a><span class="mm-t">' + esc(y.what) + " " + srcIcons(y.src) + "</span></li>").join("") + "</ul>" : "");
 }
 // the drug checking page: test kits for the reader's country, with their sources one tap away
-function kitsBox(un) { const kw = kitsWhere(un); return '<section class="kw-box"><h2 class="qh">Test kits in ' + esc(inCtry(un)) + "</h2>" + kw.html + srcFold(kw.used) + "</section>"; }
+function kitsBox(un) { const kw = kitsWhere(un); return '<section class="kw-box"><h2 class="qh">Test kits in ' + esc(inCtry(un)) + "</h2>" + kw.free + kw.sellers + kw.post + kw.law + "</section>"; }
 function renderDcMine() {
   const box = document.getElementById("dc-mine"); if (!box) return;
   if (!PREF_COUNTRY) { box.innerHTML = countryAsk(true); return; }
@@ -721,45 +744,7 @@ function inShortHtml(qs, skip, opt) {
       (sp.but ? '<span class="in-but"><b>But</b> ' + esc(butText(sp.but)) + "</span>" : "") + '<span class="in-f">' + meterHtml(c.grade.certainty, true) + '<span class="in-go">The evidence ' + icon("arrow") + "</span></span></a></li>";
   }).join("") + '</ul><p class="in-key">' + meterDots("moderate") + "<span>The bars show how sure the research is. Four bars is the strongest.</span></p></section>";
 }
-/* At a glance (redesign 2, 13 November: the senior author found the site "like the user gets tested in school"; the model is
-   Examine.com's one-glance table of outcomes and how sure the research is, before any text). A drug page opens with one
-   screen of at most 8 answers (6 on a phone) in groups, each group one of the page's own topics, the groups in the order of
-   their best answer. The answers are the ones people ask about most (DEMAND, above), highest first, equals in the editors'
-   order, and a more-asked answer is never passed over for a less-asked one: they fill the tiles in that order from at most
-   6 topics, and an answer that would open a seventh ends the tiles there (the page shows fewer). A page that runs out of
-   such answers fills the rest as before, in at most 4 groups (up to 6 only when needed to fill): staying safer first, then
-   what the drug does or feels like, myths and facts, and the drug as a medicine, then the rest in the editors' order. A
-   tile is the question, the first clause of its short answer and the evidence bars; a tap opens that answer where it is on
-   the page. Early drafts only when the page has too few answers past the first rung, as In short did. */
-const GLANCE_PREFER = [/stay(ing)? safer|using alone|preventing overdose|difficult trips|before and during|edibles|driving|what['’]s in/i,
-  /feel|what it does|what a dose does|why people|in the body/i, /myths? and facts/i, /as a (medicine|treatment)/i];
-function glanceHtml(slug, qs) {
-  const can = qs.filter(([id]) => (SIMPLE.claims || {})[id]), firm = can.filter(([id]) => claimById[id].verification.status !== "draft");
-  const pool = firm.length >= 2 ? firm : can; if (pool.length < 2) return "";
-  const tiles = [], topics = [], add = x => { tiles.push(x); if (!topics.includes(x[2])) topics.push(x[2]); };
-  let ended = false;
-  for (const x of byDemand(pool.filter(([id]) => demandOf(id) >= 0))) {
-    if (tiles.length === 8 || (!topics.includes(x[2]) && topics.length === 6)) { ended = true; break; }
-    add(x);
-  }
-  if (!ended) {   // every answer people ask about is in: the rest as before, one from each topic in the old order, then a second
-    const all = [], order = []; pool.forEach(([, , t]) => { if (!all.includes(t)) all.push(t); });
-    GLANCE_PREFER.forEach(re => { const t = all.find(x => re.test(x) && !order.includes(x)); if (t) order.push(t); });
-    all.forEach(t => { if (!order.includes(t)) order.push(t); });
-    const rest = roundRobin(order.flatMap(t => pool.filter(x => x[2] === t)));
-    [Math.max(4, topics.length), 6].forEach(max => rest.forEach(x => { if (tiles.length < 8 && !tiles.includes(x) && (topics.includes(x[2]) || topics.length < max)) add(x); }));
-  }
-  // the topics in the order of their first (best) tile
-  const groups = topics.map(t => [t, tiles.filter(x => x[2] === t)]);
-  // a phone screen holds about six: the tiles after the sixth give way (shown again on wider screens), and a group left
-  // without a tile with them
-  const narrow = new Set(tiles.slice(6).map(x => x[0]));
-  const tile = ([id, q]) => '<li' + (narrow.has(id) ? ' class="gl-wide"' : "") + '><a class="gl-a" href="#s-' + slug + "/q-" + id + '" data-open="ask-' + id + '"><span class="gl-q">' + esc(q) + '</span> <span class="gl-s">' + cueNum(esc(glanceClause(SIMPLE.claims[id].short))) + "</span>" + meterDots(claimById[id].grade.certainty) + "</a></li>";
-  return '<section class="glance2" aria-labelledby="gl-h"><h2 id="gl-h">At a glance</h2><div class="gl-gs">' +
-    groups.map(([t, it]) => '<div class="gl-g' + (it.every(([id]) => narrow.has(id)) ? " gl-wide" : "") + '"><h3 class="gl-t">' + esc(t) + '</h3><ul class="gl-l">' + it.map(tile).join("") + "</ul></div>").join("") +
-    '</div><p class="in-key">' + meterDots("moderate") + "<span>The bars show how sure the research is. Four bars is the strongest.</span></p></section>";
-}
-// the first clause of a short answer, for its tile: cut where a clause ends, at about 60 characters, with an ellipsis, and never
+// the first clause of a short answer, where there is room for one line only (Insight's results): cut where a clause ends, at about 60 characters, with an ellipsis, and never
 // inside a number ("about 1 in 6", "43 to 49 in 100"). A short opening and its colon read on ("Slightly: about half a point
 // less pain…"); a comma after an opening phrase ("In lab studies,"), or around a short aside ("most of all daily"), is not
 // where a clause ends; with no clause end in reach, the cut falls between whole words, never on a number or on a word that
@@ -787,88 +772,166 @@ function glanceClause(t) {
   return words.join(" ").replace(/[,;:]+$/, "") + "…";
 }
 
-/* The page itself */
-const SEC_ICON = { "d-safer": "check", "d-feel": "pulse", "d-mix": "mix", "d-after": "moon", "d-risk": "alert", "d-med": "plus", "d-looks": "eye", "d-law": "scale", "d-help": "heart" };
+/* The page itself (site 2.3, 15 November 2026; the senior author: "either nothing shows or only the description of the drug
+   shows ... you should be able to choose from the menu the section you want to read"; his brother, who used the site: "when
+   he clicked on a section in the menu he would like then the section to pop up and when he clicks on another section the
+   previous to close and the new to pop up so as not to get lost in all that info because then he won't want to read it").
+   A drug page is its name, its other names, a short description with its sources, and the section menu: a list of large
+   rows, each a section's name in people's words, how many answers it holds and a quiet line of what is inside. Choosing a
+   row opens that section alone, and the list becomes a row of chips stuck under the header, with the drug's name first (the
+   way back to the list); choosing another closes the first and opens the new one at its start; choosing the open one again
+   closes it and brings the list back. The open section is in the address (#s-<drug>/part-<section>), so Back and Forward
+   walk through them, and a link to a question (#s-<drug>/q-<claim>) opens its section with the question open and in view.
+   Two levels only: section, then question; a section's topics are plain headings, and one question is open at a time.
+   Gone with 2.2: "At a glance", the line "Someone unwell?" under the name, the count of answers opened, "Want the details?"
+   and the research page it led to (Quick answers / Full evidence). */
+const SEC_ICON = { "d-feel": "pulse", "d-mix": "mix", "d-after": "moon", "d-risk": "alert", "d-med": "plus", "d-looks": "eye", "d-law": "scale", "d-quiz": "bulb", "d-help": "heart", "d-kits": "flask", "d-doses": "book" };
+/* The order of the sections, the same on every drug page so that it can be learned: the kinds of section that hold answers
+   by how much people ask about them (the sum of the DEMAND scores of every drug's answers of that kind, worked out once),
+   then what the drug looks like, the law and the page's own cards, and last the three to reach for when needed: if it gets
+   too much, test kits, doses. */
+let SEC_ORDER = null;
+function secOrder() {
+  if (SEC_ORDER) return SEC_ORDER;
+  const sum = { "d-risk": 0, "d-after": 0, "d-mix": 0, "d-med": 0, "d-feel": 0 };
+  SUBSTANCES.forEach(s => {
+    drugQuestions(s.slug).forEach(([id, , t]) => { const z = topicZone(t); if (z !== "mix") sum["d-" + z] += Math.max(0, demandOf(id)); });
+    mixQuestions(s.slug).forEach(([id]) => { sum["d-mix"] += Math.max(0, demandOf(id)); }); });
+  return (SEC_ORDER = Object.keys(sum).sort((a, b) => sum[b] - sum[a]).concat(["d-looks", "d-law", "d-quiz", "d-help", "d-kits", "d-doses"]));
+}
+// a section's answers under their topics, as plain headings: the topics in the order of their most-asked answer, each topic's
+// answers by how much people ask about them (DEMAND), equals in the editors' order. A section that runs in time (before,
+// during and after) keeps its order; mixing is one list (its answers come from two pages); one topic needs no heading.
+function secTopics(items, opt) {
+  const flat = opt && opt.flat, timed = opt && opt.timed, names = [];
+  if (flat) return [["", byDemand(items)]];
+  items.forEach(x => { if (!names.includes(x[2])) names.push(x[2]); });
+  const groups = names.map(t => [t, timed ? items.filter(x => x[2] === t) : byDemand(items.filter(x => x[2] === t))]);
+  const top = g => Math.max(...g[1].map(x => demandOf(x[0])));
+  return timed ? groups : groups.map((g, i) => [g, i]).sort((a, b) => top(b[0]) - top(a[0]) || a[1] - b[1]).map(p => p[0]);
+}
+function secAsks(groups, key, slug) {
+  return groups.map(([t, it], i) => (groups.length > 1 ? '<h3 class="tp">' + esc(t) + "</h3>" : "") + askList(it, key + (groups.length > 1 ? "-" + i : ""), 999, null, slug)).join("");
+}
+// the quiet line of a row: the section's topics (the first three), or with one topic its first question
+const secLine = groups => groups.length > 1 ? groups.slice(0, 3).map(g => g[0]).join(" · ") + (groups.length > 3 ? " · more" : "") : groups[0] && groups[0][1][0] ? groups[0][1][0][1] : "";
 let renderedDrug = null;
 function renderDrug(slug) {
   const s = subBySlug[slug], m = monographFor(slug); if (!s || !m) return;
   renderedDrug = slug; currentSlug = slug;
   const f = fam(s.cls), fp = famPlain(s.cls), ph = headerPhoto(slug), names = documentedNames(slug).slice(0, 3);
-  const qs = drugQuestions(slug);
-  // in each part of the page, the questions people ask about most come first (DEMAND), then the rest in the order they had;
-  // the part that runs in time order (before, during and after) keeps it
-  const feel = byDemand(qs.filter(([, , t]) => topicZone(t) === "feel")), risk = byDemand(roundRobin(qs.filter(([, , t]) => topicZone(t) === "risk"))), med = byDemand(qs.filter(([, , t]) => topicZone(t) === "med")), mix = byDemand(mixQuestions(slug)), after = qs.filter(([, , t]) => topicZone(t) === "after");
-  const nForms = (FORMS[slug] || []).length;
-  const sec = (id, q, body, chip) => ({ id, q, body, chip });
-  const secs = [];
-  // 1. staying safer comes first (senior author, 23 October: "users have to gain practical knowledge first of all"):
-  // which test and where to get one, and doses; what to do if someone is unwell has its own part below
-  const safer = saferHtml(slug);
-  if (safer) secs.push(sec("d-safer", "Staying safer", safer, "Stay safer"));
-  // 2. what it looks like, right after staying safer: photos first, and looks do not tell you what is inside
-  if (nForms) secs.push(sec("d-looks", "What does it look like?", formsHtml(slug), "Looks"));
-  // 3. what it feels like: the drug's own checked answers, or what drugs of its family generally do
-  const ownLine = (FAMPLAIN.drugs || {})[slug] || null, famLine = fp && !(FAMPLAIN.skip || []).includes(slug);
-  secs.push(sec("d-feel", "What does it feel like?", feel.length === 1 ? openAnswer(feel[0][0], readNextHtml(feel[0][0], [], slug)) : feel.length ? askList(feel, "feel", 2, null, slug) :
-    (famLine ? '<p class="say">' + esc(ownLine ? ownLine.line : fp.line) + '</p><p class="small muted">' + (ownLine ? "In general terms. " : "What drugs like " + esc(pageWord(slug)) + " generally do, not " + esc(pageWord(slug)) + " itself. ") +
-      '<a href="' + esc(FAMPLAIN.source.url) + '" target="_blank" rel="noopener">Source: ' + esc(FAMPLAIN.source.publisher) + "</a></p>" : '<p class="say">Not written yet.</p>'), "Feels"));
-  // 3. mixing, before the other risks: most drug deaths involve more than one drug
-  secs.push(sec("d-mix", "Is it safe to mix?", (mix.length ? askList(mix, "mix", 3, null, slug) : '<p class="say">We have not checked answers about mixing ' + esc(pageWord(slug)) + " yet.</p>") + '<p><a class="go" href="#interactions">Mixing drugs: every answer we have</a></p>', "Mixing"));
-  // 4. the day after: after-effects as studies describe them, and whether what people do about them works (decision p-day-after)
+  const qs = drugQuestions(slug), zone = z => qs.filter(([, , t]) => topicZone(t) === z);
+  const forms = (FORMS[slug] || []).filter(x => x.name), nForms = (FORMS[slug] || []).length, short = s.name.replace(/\s*\(.*\)$/, "");
+  const S = {}, nAns = n => n + (n === 1 ? " answer" : " answers");
+  const add = (id, name, chip, body, n, line) => { S[id] = { id, name, chip, body, n, line }; };
+  const asks = (id, name, chip, items, key, opt, after) => { if (!items.length) return; const g = secTopics(items, opt); add(id, name, chip, secAsks(g, key, slug) + (after || ""), nAns(items.length), secLine(g)); };
+  asks("d-risk", "What can go wrong?", "Risks", zone("risk"), "risk");
+  // before and during use, then the day after, then the weeks after stopping (decisions p-day-after, p-before-during-after): a
+  // time sequence keeps its order, and within its steps the questions run in time order too
+  const after = zone("after");
   if (after.length) {
     const has = re => after.some(([, , t]) => re.test(t)), bef = has(/^before/i), day = has(/day after/i), stop = has(/after stopping/i);
-    // before and during use first, then the day after, then the weeks after stopping (decision p-before-during-after). A time
-    // sequence keeps its order, so this part is not sorted by demand: within its steps, too, the questions run in time order
-    // (that night, then the morning after; the first days after stopping, then the long run)
     const ordered = [/^before/i, /day after/i, /after stopping/i].flatMap(re => after.filter(([, , t]) => re.test(t)));
-    const title = bef ? (day || stop ? "Before, during and after" : "Before and during") : stop ? (day ? "The day after, and after stopping" : "After stopping") : "The day after";
-    secs.push(sec("d-after", title, askList(ordered, "after", 3, null, slug), bef ? "Before & after" : day ? "Day after" : "After stopping"));
+    asks("d-after", bef ? (day || stop ? "Before, during and after" : "Before and during") : stop ? (day ? "The day after, and after stopping" : "After stopping") : "The day after",
+      bef ? "Before & after" : day ? "Day after" : "After stopping", ordered, "after", { timed: true });
   }
-  // 5. what else can go wrong
-  if (risk.length) secs.push(sec("d-risk", "What can go wrong?", askList(risk, "risk", 4, null, slug), "Risks"));
-  // 6. if it gets too much: calm help first, when to get help, first aid one tap away
-  if (helpSigns(slug)) secs.push(sec("d-help", helpTitle(slug), helpHtml(slug), "If unwell"));
-  // 5. as a medicine
+  // mixing: the page's own answers and the mixing page's answers about this drug
+  asks("d-mix", "Is it safe to mix?", "Mixing", mixQuestions(slug), "mix", { flat: true }, '<p><a class="go" href="#interactions">Mixing drugs: every answer we have</a></p>');
   // the drug as a medicine, or treatment in hospital or clinic (for example after a long PCP psychosis): the heading names which
-  const medAs = med.some(([, , t]) => /as a medicine/i.test(t)), medTx = med.some(([, , t]) => /treatment/i.test(t) && !/as a medicine/i.test(t));
-  if (med.length) secs.push(sec("d-med", medAs ? (medTx ? "As a medicine, and treatment" : "Is it used as a medicine?") : "What can treatment do?", askList(med, "med", 3, null, slug), medAs ? "Medicine" : "Treatment"));
-  // 7. the law where you are
-  secs.push(sec("d-law", "Is it legal where I am?", lawHtml(slug), "Law"));
-  const nAns = qs.length + mix.filter(([id]) => claimById[id] && claimById[id].substance !== slug).length;
-  // the page's own Myth or fact? deck (its statements only) ends the page when it has at least 3 (senior author, 14 November)
+  const med = zone("med"), medAs = med.some(([, , t]) => /as a medicine/i.test(t)), medTx = med.some(([, , t]) => /treatment/i.test(t) && !/as a medicine/i.test(t));
+  asks("d-med", medAs ? (medTx ? "As a medicine, and treatment" : "Is it used as a medicine?") : "What can treatment do?", medAs ? "Medicine" : "Treatment", med, "med");
+  asks("d-feel", "What does it feel like?", "Feels", zone("feel"), "feel");
+  // what it looks like: photos first, and looks do not tell you what is inside
+  if (forms.length) add("d-looks", "What does it look like?", "Looks", formsHtml(slug), forms.length + (forms.length === 1 ? " form" : " forms"), forms.slice(0, 3).map(x => x.name).join(" · ") + (forms.length > 3 ? " · more" : ""));
+  if (LEGAL.some(d => d.substance === slug)) add("d-law", "Is it legal where I am?", "Law", lawHtml(slug), "", "What the law says in your country");
+  // the page's own Myth or fact? deck (its statements only), when it has at least 3 (senior author, 14 November)
   const deckN = mfCount(mfPagePool(slug));
-  const nCards = Object.values(STUDY_CARDS).filter(k => k.substance === slug).length;
+  if (deckN >= 3) add("d-quiz", "Myth or fact?", "Myth or fact?", '<div class="qz2 mf" id="qz-drug"></div>', deckN + " cards", "Guess first, then see what studies found");
+  if (helpSigns(slug)) add("d-help", helpTitle(), "Too much", helpHtml(slug), "", "What helps, what not to do, and when to call an ambulance");
+  // drug checking is for drugs bought on the street or online, not for drinks, coffee, cigarettes or gas canisters
+  if (!NO_TEST.includes(slug)) { const T = SAFE.tests || {}, buy = ((T.drugs || {})[slug] || []).length && !(T.none_validated || []).includes(slug);
+    add("d-kits", "Test kits", "Test kits", testHtml(slug), "", buy ? "Where to buy them, and what they can and can’t tell you" : "What home tests can and can’t tell you"); }
+  // doses: the senior author's own text, and the harm reduction groups that publish them (decision p-no-doses)
+  const doses = dosesBody(slug);
+  if (doses) add("d-doses", "Doses", "Doses", '<div class="sf" id="sf-dose"><div class="sf-b">' + doses + "</div></div>", "", "Where to read about them");
+  const secs = secOrder().map(id => S[id]).filter(Boolean);
+  const row = x => '<button type="button" class="sm-b" id="sm-' + x.id + '" data-sec="' + x.id + '" aria-expanded="false" aria-controls="' + x.id + '"><span class="sm-ic" aria-hidden="true">' + icon(SEC_ICON[x.id] || "molecule") + "</span>" +
+    '<span class="sm-t"><span class="sm-n">' + esc(x.name) + '</span><span class="sm-m">' + (x.n ? '<b class="sm-c">' + esc(x.n) + "</b>" : "") + (x.line ? '<span class="sm-l">' + esc(x.line) + "</span>" : "") + "</span></span>" +
+    '<span class="sm-s">' + esc(x.chip) + '</span><span class="sm-go" aria-hidden="true">' + icon("arrow") + "</span></button>";
   // no draft banner (the senior author's decision of 13 November 2026: he holds editorial responsibility for what is published;
   // METHODS §12, 0.3.2); "not medical advice" stays in the footer and on the About page
-  const draft = "";
-  const h = '<header class="dh f-' + f.k + (ph ? " hasph" : "") + '">' + (ph ? '<figure class="dh-ph">' + photoImg(ph, "m", ph.alt, false) + (nForms > 1 ? '<a class="dh-forms" href="#d-looks">See all ' + nForms + " forms</a>" : "") + "</figure>" : "") +
+  const h = '<header class="dh f-' + f.k + (ph ? " hasph" : "") + '">' + (ph ? '<figure class="dh-ph">' + photoImg(ph, "m", ph.alt, false) + (nForms > 1 && S["d-looks"] ? '<a class="dh-forms" href="#s-' + slug + '/part-d-looks">See all ' + nForms + " forms</a>" : "") + "</figure>" : "") +
     '<div class="dh-t"><p class="dh-fam">' + icon(f.icon) + esc(fp ? fp.word.charAt(0).toUpperCase() + fp.word.slice(1) : s.cls) + "</p><h1>" + esc(s.name) + "</h1>" +
-    (names.length ? '<p class="dh-aka">Also called ' + names.map(esc).join(", ") + "</p>" : "") + "</div></header>" + draft + helpTopLine(slug) +
-    // At a glance takes the place of In short (redesign 2): the page's main answers on one screen, each a tap from its answer
-    (glanceHtml(slug, qs) || (qs.length ? '<p class="dh-key">' + meterDots("moderate") + "<span>The bars on each question show how sure the research is. Four bars is the strongest.</span></p>" : "")) +
-    '<div class="readprog pgprog" id="pgprog" hidden></div>' +
-    '<nav class="chips" aria-label="On this page">' + secs.map(x => '<a href="#' + x.id + '" data-go="' + x.id + '">' + esc(x.chip) + "</a>").join("") +
-    // the page's own quiz sits at the end; a chip lets people jump to it (senior author, 12 November: make the site fun to use)
-    (deckN >= 3 ? '<a href="#d-quiz" data-go="d-quiz">Myth or fact?</a>' : "") + "</nav>" +
-    secs.map(x => '<section class="sec" id="' + x.id + '" aria-labelledby="' + x.id + '-h"><h2 id="' + x.id + '-h"><span class="sec-ic">' + icon(SEC_ICON[x.id] || "molecule") + "</span>" + esc(x.q) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("") +
-    fbLineHtml() + '<section class="sec deep"><h2>Want the details?</h2><p class="say">' + (nAns ? nAns + (nAns === 1 ? " answer" : " answers") : "The plan for this page") + (nCards ? ", from " + nCards + (nCards === 1 ? " study" : " studies") + " read in full" : "") + ", with every source and how sure we are.</p><p><a class=\"go\" href=\"#s-" + slug + '/evidence">All the research on ' + esc(s.name) + "</a></p></section>" +
-    (deckN >= 3 ? '<section class="sec quizsec" id="d-quiz" aria-labelledby="d-quiz-h"><h2 id="d-quiz-h">Myth or fact?</h2><div class="qz2 mf" id="qz-drug"></div></section>' : "") +
-    familyHtml(m);
+    (names.length ? '<p class="dh-aka">Also called ' + names.map(esc).join(", ") + "</p>" : "") + "</div></header>" + descHtml(slug) +
+    (secs.length ? '<nav class="secmenu" id="secmenu" aria-label="Sections of this page" data-open=""><button type="button" class="sm-up" data-sec="" aria-label="' + esc(short) + ': all sections">' + icon("arrow") + "<span>" + esc(short) + "</span></button>" + secs.map(row).join("") + "</nav>" +
+      '<div class="secs">' + secs.map(x => '<section class="sec" id="' + x.id + '" aria-labelledby="' + x.id + '-h" hidden><h2 id="' + x.id + '-h" tabindex="-1"><span class="sec-ic">' + icon(SEC_ICON[x.id] || "molecule") + "</span>" + esc(x.name) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("") + "</div>" : "") +
+    fbLineHtml() + familyHtml(m);
   const box = document.getElementById("drug2"); box.className = "wrap drug2 f-" + f.k; box.innerHTML = h;  // the family colour runs through the whole page
   applyPhotoPref(); mfStart("qz-drug", slug); pageProgress();
   // the law part fills in when the drug's file arrives; the file is fetched ahead once the page settles, so the evidence opens at once
   lawWait(); fetchAhead(slug);
 }
-// chips jump to their question without changing the address (so Back still leaves the page)
+// the section that is open on the drug page ("" while the list shows), and showing one alone, or the list again
+const openSec = () => { const nav = document.querySelector("#drug2 .secmenu"); return (nav && nav.dataset.open) || ""; };
+function showSec(id) {
+  const page = document.getElementById("drug2"), nav = page && page.querySelector(".secmenu"); if (!nav) return false;
+  const sec = id ? document.getElementById(id) : null; if (id && !(sec && sec.parentElement && sec.parentElement.classList.contains("secs") && page.contains(sec))) return false;
+  page.querySelectorAll(".secs > .sec").forEach(x => { x.hidden = x !== sec; });
+  nav.querySelectorAll(".sm-b").forEach(b => b.setAttribute("aria-expanded", String(!!id && b.dataset.sec === id)));
+  nav.dataset.open = id || ""; nav.classList.toggle("on", !!id);
+  // the chip of the open section in view in its row
+  const b = id && nav.querySelector('.sm-b[aria-expanded="true"]'); nav.scrollLeft = b ? Math.max(0, b.offsetLeft - (nav.clientWidth - b.offsetWidth) / 2) : 0;
+  updateSticky();
+  return true;
+}
+// where a drug page's address points (the router calls it once the page is drawn and shown): a question, a section, or the
+// page itself. o.was: the section that was open when the reader was already on this page.
+function drugGo(part, o) {
+  if (part && part.startsWith("q-")) {
+    const id = part.slice(2), d = document.getElementById("ask-" + id), sec = d && d.closest(".secs > .sec");
+    if (d && sec) { showSec(sec.id); d.open = true; scrollToEl(d); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true }); return; }
+    if (claimById[id]) { location.replace("#" + id); return; }   // an answer this page does not ask opens by its own address
+  }
+  if (part && part.startsWith("part-")) {
+    const id = part.slice(5) === "d-safer" ? "d-kits" : part.slice(5);   // (d-safer: the part that held the test kits before 2.3)
+    if (showSec(id)) { const sec = document.getElementById(id), hh = sec.querySelector("h2"); scrollToEl(sec); if (hh) hh.focus({ preventScroll: true }); return; }
+  }
+  showSec("");
+  // back from a section: the list where the chips were, at the row just left; a fresh visit starts at the top
+  const nav = document.querySelector("#drug2 .secmenu"), from = o && o.was && document.getElementById("sm-" + o.was);
+  if (nav && from) { scrollToEl(nav); from.focus({ preventScroll: true }); return; }
+  window.scrollTo({ top: 0 }); if (!(o && o.first)) focusHeading("drug");
+}
+// the section menu: a row or a chip opens its section; the open one, or the drug's name, brings the list back. The address
+// carries it, so each choice is a step Back can undo.
 document.addEventListener("click", e => {
-  const a = e.target.closest && e.target.closest("[data-go], a.dh-forms"); if (!a) return;
-  const id = a.dataset.go || "d-looks", el = document.getElementById(id); if (!el) return;
-  e.preventDefault(); scrollToEl(el, true); const hh = el.querySelector("h2"); if (hh) { hh.setAttribute("tabindex", "-1"); hh.focus({ preventScroll: true }); }
+  const b = e.target.closest && e.target.closest("#drug2 .secmenu [data-sec]"); if (!b || !renderedDrug) return;
+  const id = b.dataset.sec, want = "#s-" + renderedDrug + (id && id !== openSec() ? "/part-" + id : "");
+  if (location.hash === want) route(); else location.hash = want;
 });
-// a jump's target that is folded away is brought out first (scrollToEl calls this for every jump): the rest of a list of
-// questions behind its "more" button
+// One question open at a time (site 2.3): opening one closes the one open before it in the same section, and the question
+// just opened is brought to the start of the screen (the answer closing above it would push it out of view).
+document.addEventListener("toggle", e => {
+  const d = e.target; if (!d.matches || !d.matches("details.ask[open]")) return;
+  const box = d.closest(".sec") || d.closest(".view"); if (!box) return;
+  box.querySelectorAll("details.ask[open]").forEach(x => { if (x !== d) x.open = false; });
+  if (d.closest(".view.active")) scrollToEl(d, true);
+}, true);
+// chips that jump within a page without changing its address (the facts page's topics)
+document.addEventListener("click", e => {
+  const a = e.target.closest && e.target.closest("[data-go]"); if (!a) return;
+  const el = document.getElementById(a.dataset.go); if (!el) return;
+  e.preventDefault(); scrollToEl(el); const hh = el.querySelector("h2"); if (hh) { hh.setAttribute("tabindex", "-1"); hh.focus({ preventScroll: true }); }
+});
+// A jump's target that is folded away is brought out first (scrollToEl calls this for every jump): the rest of a list behind
+// its "more" button; on a drug page, the section the target is in (the address follows, as a step Back can undo).
 function revealEl(el) {
   const more = el.closest(".asks-more"); if (more && more.hidden) { more.hidden = false; const b = document.querySelector('button.morebtn[data-more="' + more.id + '"]'); if (b) b.remove(); }
+  const sec = el.closest("#drug2 .secs > .sec");
+  if (sec && sec.hidden && showSec(sec.id)) {
+    const d = el.closest("details.ask[data-cid]"), want = "#s-" + renderedDrug + (d ? "/q-" + d.dataset.cid : "/part-" + sec.id);
+    try { if (location.hash !== want) history.pushState(null, "", want); } catch (err) { /* the address stays as it was */ }
+  }
 }
 function openAsk(id) {
   const d = document.getElementById("ask-" + id); if (!d) return false;
@@ -1411,11 +1474,11 @@ function intentHits(ctx) {
   const d = ctx.drugs.length === 1 ? ctx.drugs[0] : null, nm = d ? drugName(d) : "", out = [];
   const add = (title, kind, href) => out.push({ sc: 3000, fz: false, it: { type: "intent", kind, title, href } });
   ctx.intents.forEach(k => {
-    if (k === "test") { if (d && !NO_TEST.includes(d)) add("Test it first: which kit, and where to get one", "Staying safer · " + nm, "#s-" + d + "/part-d-safer"); add("Drug checking near you", "Drug checking", "#checking");
+    if (k === "test") { if (d && !NO_TEST.includes(d)) add("Test kits: which kit, and where to get one", "Test kits · " + nm, "#s-" + d + "/part-d-kits"); add("Drug checking near you", "Drug checking", "#checking");
       if (drugQuestions(DC).length) add("Do home test kits work? What studies found", "Drug checking", "#checking/kits"); }
     if (k === "law") add(d ? "Is " + pageWord(d) + " legal where I am?" : "The law, country by country", d ? "The law · " + nm : "The law", d ? "#s-" + d + "/part-d-law" : "#law");
     if (k === "help") { if (d && helpSigns(d)) add(helpTitle(d), "What to do · " + nm, "#s-" + d + "/part-d-help"); add("Emergency numbers, country by country", "Get help", "#emergency"); }
-    if (k === "dose" && d && dosesBody(d)) add("Doses: where to read about them", "Staying safer · " + nm, "#s-" + d + "/part-d-safer");
+    if (k === "dose" && d && dosesBody(d)) add("Doses: where to read about them", "Doses · " + nm, "#s-" + d + "/part-d-doses");
   });
   const seen = new Set(); return out.filter(x => !seen.has(x.it.href) && seen.add(x.it.href));
 }
