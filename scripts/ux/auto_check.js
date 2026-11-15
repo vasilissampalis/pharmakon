@@ -109,6 +109,9 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "an answer that read a paper, a summary and an official page says so in its line; the page's reference is APA 7 for a web page, with its exact date, its title in italics and its address as a link",
       s6 && s6.line === "Written by our system from 1 paper, the summary of 1 paper and 1 official page. Not yet checked by a person. Not complete yet." && s6.srcSummary === "Sources (3)" && s6.how.length === 3 &&
         s6.refs.some(r => r.text === "Pretend Health Service. (2025, March 2). A pretend page about caffeine for the checks. https://example.org/pretend-caffeine" && r.italic === "A pretend page about caffeine for the checks" && r.link === "https://example.org/pretend-caffeine"), s6 && s6.line + " | " + JSON.stringify(s6.refs));
+    const hq = await p.evaluate(() => { const d = document.querySelector("#evsheet.open .ask-how"); if (d) d.open = true; return [...document.querySelectorAll("#evsheet.open .ask-howl li")].map(li => ({ q: (li.querySelector(".how-q q") || {}).textContent || "", src: (li.querySelector(".how-src") || {}).textContent || "" })); });
+    ok(w + "under a How-do-we-know line stand its source's own words, 15 at most, with whose they are; words that are not in the source are never shown", hq.length === 3 && hq[0].q === "pretend words of a pretend trial" && hq[0].src === "Fixture, 2023" && hq[1].q === "" && hq[2].q === "" && !(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)), JSON.stringify(hq));
+    await shot(p, width + "-auto-how-quote");
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     // ---- 2.7: an answer about amounts (decision 11): the code's own lines, then each amount in its source's own words
     await go(p, "#auto/q-au_fixture_methadone", 900);

@@ -979,7 +979,9 @@ function autoBodyHtml(id) {
     '<ul class="auto-rows">' + a.rows.map(r => { const ref = a.refs.find(x => x.id === r.ref);
       return '<li class="ar"><span class="ar-who">' + esc(r.who) + "; " + esc(r.what) + '.</span> <q class="ar-q">' + esc(r.quote) + '</q> <span class="ar-src">' + (ref ? esc(inTextLabel(ref, a.refs)) : "") + (r.read === "summary" ? ", read in summary only" : "") + "</span></li>"; }).join("") + "</ul>" + tail;
   return '<p class="ask-short">' + esc(a.short) + '</p><p class="ask-but"><b>But</b> ' + esc(a.but.replace(/^but[,:]?\s+/i, "")) + "</p>" +
-    '<details class="ask-how"><summary>How do we know?</summary><ul class="ask-howl">' + a.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul></details>" + tail;
+    '<details class="ask-how"><summary>How do we know?</summary><ul class="ask-howl">' + a.how.map((t, i) => { const hq = a.howq && a.howq[i], ref = hq && a.refs.find(x => x.id === hq.ref);
+      // (2.7.1) the source's own words under the line, 15 at most: what the system wrote can be compared with what the source says
+      return "<li>" + esc(t) + (hq && ref ? '<span class="how-q"><q>' + esc(hq.q) + '</q> <span class="how-src">' + esc(inTextLabel(ref, a.refs)) + "</span></span>" : "") + "</li>"; }).join("") + "</ul></details>" + tail;
 }
 function autoRowHtml(x, best) {
   const a = AUTO[x.id], w = mfWhere(a.page);

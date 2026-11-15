@@ -242,11 +242,13 @@ const AUTO_DIR = process.env.PK_AUTO_FIXTURE ? path.resolve(process.env.PK_AUTO_
 // been seen to answer questions visitors sent; until then the page does not promise it (PK_AUTO_LOOP=1: the checks' build)
 const AUTO_POLICY = (() => { const f = path.join(ROOT, "data", "auto", "lane", "policy.json"); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : {}; })();
 const AUTO_LOOP = process.env.PK_AUTO_LOOP ? process.env.PK_AUTO_LOOP === "1" : AUTO_POLICY.loop === true;
+// amounts: answers about amounts are shown only once the editor has read the first real ones the lane wrote (the checks' build shows its pretend ones)
+const AUTO_AMOUNTS = process.env.PK_AUTO_FIXTURE ? true : AUTO_POLICY.amounts === true;
 const AUTO_SHOWN = (() => {
   const heldFile = path.join(ROOT, "data", "auto", "held.json"), held = new Set(fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []).map(x => x.id || x) : []);
   const drugSlugs = new Set(site("substances.json").map(s => s.slug)), out = [], left = [];
   // an answer written by an older lane than data/auto/lane/policy.json allows is not shown (the lane writes it again)
-  const minLane = +AUTO_POLICY.show_from_lane || 1; let older = 0;
+  const minLane = +AUTO_POLICY.show_from_lane || 1; let older = 0, held_amounts = 0;
   const bad = /\b\d+(?:[.,]\d+)?\s?(?:mg|milligrams?|µg|ug|mcg|micrograms?|g|grams?|ml|pills?|tablets?|tabs?|capsules?|lines?|hits?|drops?)\b|\byou\s+(?:should|must|need to)\b|["“”]|\bre-?dos\w*/i;
   // (site 2.7, lane 3) an answer about amounts (docs/AUTOMATION.md, decision 11): its three lines are the code's own (data/auto/lane/lines.json),
   // and each amount stands in its source's own words, 15 at most, found in the longer quote the record keeps
@@ -258,6 +260,7 @@ const AUTO_SHOWN = (() => {
     const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
     if (a.status !== "published" || held.has(a.id)) continue;
     if ((+a.lane || 1) < minLane) { older++; continue; }
+    if (a.kind === "amounts" && !AUTO_AMOUNTS) { held_amounts++; continue; }
     const part = k => (a.parts || []).filter(p => p.part === k || (k === "how" && /^how\d+$/.test(p.part))).map(p => String(p.text || "").trim()).filter(Boolean);
     // a source's reference: a paper's Crossref record (it has a DOI), or an official page's own (a web page with its body's name and its https address)
     const short = part("short")[0], but = part("but")[0], how = part("how"), first = part("first")[0] || "", amounts = a.kind === "amounts";
@@ -271,16 +274,21 @@ const AUTO_SHOWN = (() => {
     if (!why && amounts) why = !LINES ? "the lines the code writes are missing" : short !== LINES.amounts || but !== LINES.amounts_but || first !== classLine ? "a line that is not the code's own" : !rows.length ? "no amount"
       : rows.some(r => !r.who || !r.what || !r.quote || r.quote.split(/\s+/).length > 15 || !AMT.test(r.quote) || !flat(r.on).includes(flat(r.quote)) || !refs.some(x => x.id === r.ref) || /["“”]/.test(r.who + r.what + r.quote) || AMT.test(r.who + " " + r.what) || timing.test(r.who + " " + r.what + " " + r.quote)) ? "an amount that is not in its source's own words, or too long, or with a time between uses" : "";
     if (why) { left.push(a.id + " (" + why + ")"); continue; }
+    // (2.7.1) under a How-do-we-know line: its source's own words, 15 at most, so that a reader can compare. Shown only when they stand in
+    // the longer quote the record keeps for that line and hold nothing the site never shows; otherwise the line stands without them
+    const howq = amounts ? [] : (a.parts || []).filter(p => /^how\d+$/.test(p.part) && String(p.text || "").trim()).map(p => { const q = String(p.quote || "").trim();
+      return q && q.split(/\s+/).length <= 15 && !/["“”]/.test(q) && !bad.test(q) && !timing.test(q) && (p.rests_on || []).some(r => flat(r.quote).includes(flat(q))) && refs.some(x => x.id === p.quote_ref) ? { q, ref: p.quote_ref } : null; });
     const drugs = (a.drugs || []).filter(d => drugSlugs.has(d));
-    out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page: drugs[0] || "general" },
+    out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, howq, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page: drugs[0] || "general" },
       amounts ? { kind: "amounts", first, rows: rows.map(r => ({ who: r.who, what: r.what, quote: r.quote, ref: r.ref, read: r.read })) } : {}));
   }
   if (left.length) console.error("WARNING: machine-lane answers left out of the site: " + left.join("; "));
   if (older) console.log("machine lane: " + older + " answers written by an older lane are not shown (they will be written again)");
+  if (held_amounts) console.log("machine lane: " + held_amounts + " answers about amounts are not shown yet (data/auto/lane/policy.json, amounts: the editor reads the first real ones first)");
   if (out.length) console.log("machine lane: " + out.length + " answers written by the system are shown, each with its label");
   return out;
 })();
-const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
+const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
   ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).

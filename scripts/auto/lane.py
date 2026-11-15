@@ -194,7 +194,7 @@ def read_source(chat, model, question, src, picked):
 # ---------- 2b read, for a question about amounts (decision 11) ----------
 AMOUNT_Q = re.compile(r"\b(?:dos(?:e|es|age|ages|ing)|milligrams?|micrograms?|mg|mcg|standard drinks?|units? of alcohol"
                       r"|how (?:much|many)\b[^?]{0,60}\b(?:safe|too much|take|taken|takes|use|used|drink|smoke|normal|typical|usual|common|average|a day|per day|daily|a week|per week|weekly|at once|is (?:ok|okay|fine|enough|a lot))"
-                      r"|(?:safe|normal|typical|usual|common|average|recommended|standard|maximum|max|starting|low|high|threshold)\s+(?:amounts?|quantit(?:y|ies)))\b", re.I)
+                      r"|(?:safe|normal|typical|usual|common|average|recommended|standard|maximum|max|starting|low|high|threshold)\s+(?:amounts?|quantit(?:y|ies))|(?:what|which)\s+amounts?)\b", re.I)
 AMT = re.compile(r"(?<![\w.,/])\d+(?:[.,]\d+)?(?:\s*(?:to|-|or)\s*\d+(?:[.,]\d+)?)?\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\b(?!\s*/\s*(?:m?l|dl|kg|day·kg)\b)(?!\s*per\s+(?:kilo|kg|m?l|litre|liter)\b)", re.I)
 TIMING = re.compile(r"\b(?:wait|space)\w*\s+(?:at least\s+)?\d|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+(?:\.\d+)?(?:\s*(?:to|-|or)\s*\d+(?:\.\d+)?)?\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b", re.I)   # never shown: the time between two uses
 REDOSE = re.compile(r"\bre-?dos\w*|\bsupplement\w*|\bbooster\b|\btop-?up\b|\b(?:second|third|additional|further|extra|repeat(?:ed)?|half)[\s-]dos(?:e|es|ing)\b", re.I)                                                                                # never taken: an amount added in the same session
@@ -235,6 +235,30 @@ def window15(quote):
             score = (2 if a == 0 or re.search(r"[.;:]$", ws[a - 1]) else 1 if ws[a - 1].endswith(",") else 0) + (2 if b == len(ws) or re.search(r"[.;:,]$", ws[b - 1]) else 0) + 0.05 * (b - a) - (1.5 if dangling else 0)
             if best is None or score > best[0]: best = (score, " ".join(ws[a:b]))
     return best[1].strip(" ,;:.") if best else None
+
+
+NOT_SHOWN = ("an amount of a drug", "timing between uses", "a way of taking compared for strength", "how to prepare or take a drug", "making an effect stronger", "words that are not person-first")
+
+
+def words15(quote, text=""):
+    """The part of a source's words, 15 at most, that says most of what a sentence of ours says: the quotation shown under
+    a How-do-we-know line, so that a reader can compare the two (the site's rule: 15 words at most, one for each line).
+    None where the words hold what the site never shows (an amount in an answer that is not about amounts, a time between
+    uses, a way of taking, words that are not person-first)."""
+    ws = norm(quote).strip(' "\'').split(" ")
+    if len(ws) > 15:
+        key = {w.lower() for w in re.findall(r"[A-Za-z0-9'’-]+", text or "") if len(w) > 3}; best = None
+        for a in range(len(ws)):                                       # every part of 6 to 15 words; one that starts and ends where a clause does stands first
+            for b in range(a + 6, min(len(ws), a + 15) + 1):
+                w = ws[a:b]; plain = [x.lower().strip(".,;:()%") for x in w]
+                dangling = b < len(ws) and re.fullmatch(r"(?:every|each|to|of|and|or|with|for|at|in|on|a|an|the|by|from|as|than|per|was|were|is|are|be|it|its|their|that|which|who|those|these)", plain[-1])
+                score = (sum(1 for x in plain if x in key) + sum(0.5 for x in w if re.search(r"\d", x)) + (0.5 if a == 0 or re.search(r"[.;:,]$", ws[a - 1]) else 0)
+                         + (1.0 if b == len(ws) or re.search(r"[.;:,]$", w[-1]) else 0) + 0.03 * (b - a) - (1.5 if dangling else 0))
+                if best is None or score > best[0]: best = (score, w)
+        ws = best[1]
+    show = " ".join(ws).strip(" ,;:.")
+    if words(show) >= 4 and not any(rx.search(show) for name, rx in RULES if name in NOT_SHOWN) and not re.search(r'["“”]', show): return show
+    return None
 
 
 def amount_gate(out, picked, src, dwords):
@@ -561,6 +585,10 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         p["rests_on"] = [{"label": u, "ref": labels[u]["ref"], "where": labels[u]["where"], "quote": labels[u]["quote"], "sha": hashlib.sha256(norm(labels[u]["passage_text"]).encode("utf-8")).hexdigest()[:16]} for u in p["uses"]]
         for u in p["uses"]:
             if labels[u]["ref"] not in used_refs: used_refs.append(labels[u]["ref"])
+        if p["part"].startswith("how"):                                # the source's own words under the line (the finding's, before the design's)
+            for u in sorted(p["uses"], key=lambda u: (0 if u.startswith("F") else 1 if u.startswith("L") else 2)):
+                show = words15(labels[u]["quote"], p["text"])
+                if show: p["quote"], p["quote_ref"] = show, labels[u]["ref"]; break
     sources[:] = [s for s in sources if s["ref"]["id"] in used_refs]; keep_sources(); cn = counts(sources); rec["gates"]["sources"] = said() + " (the ones the answer rests on)"
     if sum(weight(s) for s in sources) < 2: return done("none", "after the second reader's check the answer rests on too few sources")
     rec["parts"] = parts
@@ -576,6 +604,9 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
 def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_name):
     """An answer to a question about amounts (decision 11): rows in the sources' own words, each read by the second reader
     beside its passage, under the lines the code writes. No writer model."""
+    # an amount stated for pregnancy, for children or about suicide is not the system's to publish: that row is left out
+    # (a person's part); the question itself is looked at below
+    for s in sources: s["rows"] = [r for r in s["rows"] if not any(rx.search(r["who"] + " " + r["what"] + " " + r["quote"]) for what, rx in STAKES if what in ("pregnancy or children", "suicide or self-harm"))]
     L = lines(); rows = [(s, r) for s in sources for r in s["rows"][:3]][:10]
     solid = lambda s: (s["read"] == "page" and s.get("tier", 1) == 1) or (s["read"] in ("full", "summary") and s["people"] and s["kind"] in ("review", "study"))
     rows = [(s, r) for s, r in rows if solid(s)]
@@ -731,6 +762,12 @@ def selftest():
     r = mk()
     assert r["status"] == "published" and r["id"] == "au_w_0024" and len(r["sources"]) == 1 and r["sources"][0]["ref"]["id"] == "lee_2022" and r["complete"] is True, (r["status"], r["why"], r["gates"])
     assert "2 thrown away" in r["gates"]["read"] and [p["part"] for p in r["parts"]] == ["short", "but", "how1", "how2"] and r["parts"][0]["rests_on"][0]["quote"].startswith("between 9% and 27%"), r["gates"]
+    # under each How-do-we-know line: the source's own words, 15 at most, found in the quote the record keeps; none under the short answer or the But
+    hq = [(p.get("quote"), p.get("quote_ref")) for p in r["parts"]]
+    assert hq[0] == (None, None) and hq[1] == (None, None) and hq[2] == ("between 9% and 27% met criteria for dependence", "lee_2022") and words(hq[2][0]) <= 15 and hq[3][0] and hq[3][0] in good_reader["findings"][1]["quote"], hq
+    assert words15("In this cohort the participants who were daily users of the drug reported more cravings than the others did across all waves", "People who used it daily reported more cravings.") is None      # the paper's word "users": not shown
+    w15 = words15("Across the whole sample and in every wave of the survey that was run, many participants described cravings and difficulty stopping despite symptoms", "Many people described cravings and trouble stopping.")
+    assert w15 == "many participants described cravings and difficulty stopping despite symptoms", w15
     assert sum(c[0] == "reader" for c in calls) == 1 and "A retracted paper" not in " ".join(c[2] for c in calls)                       # the retracted paper was not read
     assert "[1]" in calls[0][2] and "[6]" not in calls[0][2] and "library" not in calls[0][2]                                              # the acknowledgments are not a passage
     assert calls[1][1] == MODELS["writer"] and calls[2][1] == MODELS["checker"] and MODELS["writer"] != MODELS["checker"] and "PASSAGE (Ketamine dependence: a systematic review (2022); Results)" in calls[2][2]
@@ -782,7 +819,7 @@ def selftest():
     r2 = make(item, found, chat.__class__ and chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, before=r) if (script["writer"].append(W(ok_short)) or script["checker"].append(V(True, True, True, True)) or True) else None
     assert r2["history"] and r2["history"][-1]["short"] == ok_short and r2["history"][-1]["complete"] is False and r2["history"][-1]["status"] == "published", r2["history"]
     # 10. a question about amounts (decision 11): rows in the source's own words, no writer; an animal's amount, an amount that killed, an amount with its timing and a quote that is not there are thrown away
-    assert is_amounts("what dosage is safe in MDMA") and is_amounts("How much alcohol is too much?") and not is_amounts("How much does cannabis affect memory?") and not is_amounts("How long does ketamine stay in your system?") and not is_amounts("Is microdosing LSD safe?")
+    assert is_amounts("What amounts of MDMA have studies given to people?") and is_amounts("what dosage is safe in MDMA") and is_amounts("How much alcohol is too much?") and not is_amounts("How much does cannabis affect memory?") and not is_amounts("How long does ketamine stay in your system?") and not is_amounts("Is microdosing LSD safe?")
     assert window15("Participants received 80 to 120 mg of MDMA in each of three sessions, with two trained therapists present throughout") == "Participants received 80 to 120 mg of MDMA in each of three sessions"
     assert window15("Initiate treatment with 5 to 15 mg every 4 to 6 hours as needed for pain") == "Initiate treatment with 5 to 15 mg" and window15("no amount here at all, only words that go on") is None
     assert REDOSE.search("A supplemental half-dose of 40 to 60 mg was offered") and REDOSE.search("redosing after an hour") and not REDOSE.search("a daily dose of 20 mg")
