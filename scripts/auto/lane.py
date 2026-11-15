@@ -54,6 +54,7 @@ STATE = ROOT / "data" / "auto" / "lane" / "state.json"
 MODELS_FILE = ROOT / "data" / "auto" / "lane" / "models.json"
 WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/qwen/qwen3-30b-a3b-fp8", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/google/gemma-4-26b-a4b-it"}
+LANE = 2                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 3            # papers read for one answer
 N_PASSAGES = 9          # passages of a paper shown to the reader
 PASSAGE_CHARS = 1400    # a passage is shown up to this length
@@ -166,14 +167,16 @@ WRITER_SYS = ("You write one answer for Pharmakon, a free drug encyclopedia that
               "- Keep every number exactly as the finding has it. Never claim more than the findings do: a link is not a cause; one study is not proof.\n"
               "- Never give amounts, doses, timing between uses, or ways of taking a drug. Never say how to make an effect stronger. No advice: never 'you should'. Never call anything 'safe'.\n"
               "- Person-first words: 'people who use cannabis', 'people with an alcohol use disorder'. Never 'users', 'addicts', 'abusers', 'abuse', 'alcoholics', 'clean'.\n"
-              "- No quotation marks, no brackets with sources, no mention of 'findings', 'passages' or 'the paper says F1'.\n"
+              "- No quotation marks, no brackets with sources, no mention of 'findings', 'passages' or 'the paper says F1'. Never write 'Paper A': say what it is, for example 'A 2024 review of case reports' or 'A survey of 278 people'.\n"
+              "- Write 'times', never the sign ×. Write 'people who microdose', 'people who smoke', 'people who drink', never 'microdosers', 'smokers', 'drinkers'. Write 'use' or 'use disorder', never 'abuse' or 'misuse'.\n"
+              "- The But must be a limit of THIS answer: who was not studied, how the studies were done, or what is not known about the question itself. Never borrow a limit that the paper states about something else.\n"
               "- If the findings do not answer the question, say plainly what they do show, and set \"complete\" to false.")
 
 
 def writer_prompt(question, sources, examples, fix=""):
     lines = []
     for s in sources:
-        lines.append(f"PAPER {s['tag']}: {s['title']} ({s.get('year') or 'n.d.'}). {('A review or meta-analysis.' if s['kind'] == 'review' else 'A single study.')}")
+        lines.append(f"PAPER {s['tag']}: {s['title']} ({s.get('year') or 'n.d.'}). {('A review or meta-analysis.' if s['kind'] == 'review' else 'A case report: one person or a few.' if s['kind'] == 'case' else 'A single study.')}")
         if s.get("design"): lines.append(f"  [D{s['tag']}] what it is and who was studied: {s['design']['text']} (the paper's words: {s['design']['quote']})")
         for f in s["findings"]: lines.append(f"  [{f['id']}] {f['text']} (the paper's words: {f['quote']})")
         for l in s["limits"]: lines.append(f"  [{l['id']}] a limit the paper states: {l['text']} (the paper's words: {l['quote']})")
@@ -240,9 +243,10 @@ RULES = [
     ("how to prepare or take a drug", re.compile(r"\b(?:crush(?:ed|ing)?|dissolv\w*|cook(?:ed|ing)? (?:it|the)|extract\w* (?:it|the)|filter\w* (?:it|the)|hold (?:it )?under the tongue|on an empty stomach)\b", re.I)),
     ("making an effect stronger", re.compile(r"\bpotentiat\w*|\b(?:boost|enhanc|intensif|strengthen)\w*\s+(?:the\s+)?(?:high|effects?|trip)\b|\bmak\w+\s+(?:it|the high|the effects?|the trip)\s+(?:stronger|last longer|more intense)\b", re.I)),
     ("advice or a promise of safety", re.compile(r"\byou\s+(?:should|must|need to|ought to|can safely|had better)\b|\b(?:it is|it's|is|are)\s+(?:completely |totally |perfectly |generally |relatively )?safe\b|\bsafe to\s+(?:take|use|mix|combine|drink|smoke)\b|\bharmless\b|\brisk-free\b|\bno risk\b|\bwe (?:recommend|advise|suggest)\b", re.I)),
-    ("words that are not person-first", re.compile(r"\b(?:addicts?|junkies?|abusers?|alcoholics?|druggies?|crackheads?|stoners?|potheads?|users?)\b|\b(?:drug|substance|alcohol|opioid|cannabis|stimulant)\s+abuse\b|\babus(?:e|es|ed|ing)\s+(?:drugs?|alcohol|opioids?)\b|\bclean\s+(?:from|for|since)\b", re.I)),
+    ("words that are not person-first", re.compile(r"\b(?:addicts?|junkies?|abusers?|misusers?|alcoholics?|druggies?|crackheads?|stoners?|potheads?|users?|microdosers?|smokers?|drinkers?|injectors?)\b|\babus(?:e|es|ed|ing|ive)\b|\bmisus(?:e|es|ed|ing)\b|\bclean\s+(?:from|for|since)\b", re.I)),
     ("a quotation or a source in brackets", re.compile(r'["“”]|\[[A-Z]{0,2}\d*\]|\(\s*(?:[A-Z][a-z]+ et al\.?|[A-Z][a-z]+,? \d{4})')),
-    ("words about the lane itself", re.compile(r"\b(?:passages?|the (?:provided|given) (?:text|items?|findings)|findings? [FDL]?\d|item [FDL]\d|as an ai|language model)\b", re.I)),
+    ("words about the lane itself", re.compile(r"\b(?:passages?|the (?:provided|given) (?:text|items?|findings)|findings? [FDL]?\d|item [FDL]\d|as an ai|language model)\b|\bPapers? [A-G]\b|\b[FDL][A-G]?\d*\]", re.I)),
+    ("a sign instead of a word", re.compile(r"[×≥≤±]|\b\d+x\b")),
 ]
 LIMITS = {"short": 50, "but": 40}
 
@@ -290,7 +294,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
     """One question through the lane. Returns the record (see the head of this file)."""
     fulltext = fulltext or P.epmc_fulltext; crossref = crossref or P.crossref; ex = ex if ex is not None else examples()
     rec = {"_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
-           "id": "au_" + item["id"], "from": item["id"], "question": item["q"], "ways": list(item.get("ways") or []), "drugs": list(item.get("drugs") or []), "made": {"on": TODAY, "models": dict(models), "run": os.environ.get("GITHUB_RUN_ID", "")},
+           "id": "au_" + item["id"], "lane": LANE, "from": item["id"], "question": item["q"], "ways": list(item.get("ways") or []), "drugs": list(item.get("drugs") or []), "made": {"on": TODAY, "models": dict(models), "run": os.environ.get("GITHUB_RUN_ID", "")},
            "status": "none", "why": "", "gates": {}, "sources": [], "parts": [], "complete": False, "missing": "", "wanted": list(found.get("wanted") or []), "person": None}
     before = llm.ledger()["neurons"]
     def done(status, why):
@@ -300,6 +304,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
     for c in found.get("can_read") or []:
         if len(sources) >= N_PAPERS: break
         if not c.get("doi"): continue
+        if c["kind"] not in ("review", "study", "case") and not c.get("people"): continue   # an editorial, an opinion, a paper on animals or cells alone: not a source for an answer
         cr, err = crossref(c["doi"])
         if not cr: continue
         ref = P.reference(c["doi"], cr, c.get("pmcid"))
@@ -320,8 +325,8 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
     rec["gates"]["read"] = f"{sum(len(s['findings']) for s in sources)} findings kept from {len(sources)} papers; {thrown} thrown away (the quote was not in the passage, or a number was not in the quote)"
     if not sources: return done("none", "no paper that can be read gave a finding for this question")
     # GATE 6: one review or meta-analysis, or two studies in people
-    reviews = sum(s["kind"] == "review" for s in sources); people = sum(s["kind"] != "review" and s["people"] for s in sources)
-    rec["gates"]["sources"] = f"{reviews} review(s) or meta-analyses, {people} single studies in people"
+    reviews = sum(s["kind"] == "review" for s in sources); people = sum(s["kind"] not in ("review", "case") and s["people"] for s in sources)
+    rec["gates"]["sources"] = f"{reviews} review(s) or meta-analyses, {people} single studies in people, {sum(s['kind'] == 'case' for s in sources)} case report(s) (which do not count)"
     labels, n_f, n_l = {}, 0, 0
     for s in sources:
         paper = f"{s['title']} ({s['year']})"
@@ -360,7 +365,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
         for u in p["uses"]:
             if labels[u]["ref"] not in used_refs: used_refs.append(labels[u]["ref"])
     sources[:] = [s for s in sources if s["ref"]["id"] in used_refs]; keep_sources()
-    reviews = sum(s["kind"] == "review" for s in sources); people = sum(s["kind"] != "review" and s["people"] for s in sources)
+    reviews = sum(s["kind"] == "review" for s in sources); people = sum(s["kind"] not in ("review", "case") and s["people"] for s in sources)
     if not reviews and people < 2: return done("none", "after the second reader's check the answer rests on too few sources")
     rec["parts"] = parts
     best_wanted = max([w.get("near") or 0 for w in rec["wanted"]] or [0]); best_read = max([s.get("near") or 0 for s in sources] or [0])
@@ -401,7 +406,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
         s = st["items"].get(w["id"]) or {}
         if ids:
             if w["id"] in ids: order.append(w)
-        elif again or not s or (s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=7)).isoformat()): order.append(w)
+        elif again or not s or int(s.get("lane") or 1) < LANE or (s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=7)).isoformat()): order.append(w)
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     for w in order[:limit]:
@@ -414,7 +419,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
         except llm.Unavailable as e: print("lane: the models cannot be used now:", e); break
         except P.Refused as e: print("lane: a source said no:", e); break
         json.dump(rec, open(OUT / (rec["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-        st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
+        st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "lane": LANE, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
         json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); made.append(rec)
         print(f"lane: {w['id']} {w['q'][:56]!r}: {rec['status']} ({rec['why']}); {len(rec['sources'])} papers; {rec['made'].get('neurons', 0)} neurons")
     json.dump({"_note": "Papers the machine lane wants and cannot read (their full text is not open), with the questions they are wanted for. References from Crossref, made by scripts/build_references.py. For the senior author's list of papers to save.",

@@ -71,7 +71,8 @@ def lane_has_work(state, items, ledger_left, t):
     if t["lane"] >= LANE_A_DAY: return False, f"{t['lane']} writing runs today already"
     if ledger_left < ROOM: return False, f"today's free model allowance has {ledger_left:.0f} neurons left: not enough for one answer"
     old = (datetime.date.today() - datetime.timedelta(days=RETRY_DAYS)).isoformat()
-    todo = [w["id"] for w in items if not (state.get("items") or {}).get(w["id"]) or ((state["items"][w["id"]].get("status") == "none") and state["items"][w["id"]].get("last", "") < old)]
+    import lane as L
+    todo = [w["id"] for w in items if not (state.get("items") or {}).get(w["id"]) or int(state["items"][w["id"]].get("lane") or 1) < L.LANE or ((state["items"][w["id"]].get("status") == "none") and state["items"][w["id"]].get("last", "") < old)]
     return (True, f"{len(todo)} listed questions have no answer yet") if todo else (False, "every listed question has been worked on")
 
 
@@ -126,9 +127,10 @@ def selftest():
     t = {"day": today(), "lane": 0, "deploy": 0}
     items = [{"id": "w_1"}, {"id": "w_2"}, {"id": "w_3"}]
     old = (datetime.date.today() - datetime.timedelta(days=8)).isoformat(); new = datetime.date.today().isoformat()
-    st = {"items": {"w_1": {"status": "published", "last": old}, "w_2": {"status": "none", "last": new}}}
+    import lane as L
+    st = {"items": {"w_1": {"status": "published", "last": old, "lane": L.LANE}, "w_2": {"status": "none", "last": new, "lane": L.LANE}}}
     assert lane_has_work(st, items, 5000, t) == (True, "1 listed questions have no answer yet")                     # w_3 was never tried
-    st["items"]["w_3"] = {"status": "waiting", "last": new}; assert lane_has_work(st, items, 5000, t)[0] is False      # tried, waiting or too recent
+    st["items"]["w_3"] = {"status": "waiting", "last": new, "lane": L.LANE}; assert lane_has_work(st, items, 5000, t)[0] is False      # tried, waiting or too recent
     st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t)[0] is True                              # no answer a week ago: tried again
     assert lane_has_work(st, items, 800, t)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=2))[0] is False  # no room in the allowance; two runs today already
     assert deploy_needed(t, "abc", {"inputs": "abc"})[0] is False and deploy_needed(t, "abd", {"inputs": "abc"})[0] is True and deploy_needed(dict(t, deploy=3), "abd", {"inputs": "abc"})[0] is False

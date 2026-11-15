@@ -40,7 +40,7 @@ PAUSE = 0.4            # seconds between requests to one service
 N_SEARCH = 40          # records asked for in each search
 N_KEEP = 12            # candidates kept for a question
 N_WANTED = 3           # papers that cannot be read, listed for the senior author, for a question
-FINDER = 2             # the finder's own number: a question searched by an older finder is searched again
+FINDER = 3             # the finder's own number: a question searched by an older finder is searched again
 TODAY = datetime.date.today().isoformat()
 
 
@@ -76,6 +76,7 @@ def fetch(url, opener=None, accept="application/json", tries=3):
 # ---------- Europe PMC ----------
 clean = lambda t: re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", t or ""))).strip()
 REVIEW = ("review", "systematic review", "meta-analysis", "meta analysis", "practice guideline", "guideline")
+OPINION = ("editorial", "comment", "letter", "news", "interview", "biography", "historical article", "personal narrative", "lecture", "congress")   # never a source
 TRIAL = ("randomized controlled trial", "clinical trial", "controlled clinical trial", "observational study", "comparative study", "multicenter study", "clinical study")
 
 
@@ -89,7 +90,8 @@ def paper(r):
             "abstract": clean(r.get("abstractText")), "oa": r.get("isOpenAccess") == "Y", "in_epmc": r.get("inEPMC") == "Y", "types": types, "cited": int(r.get("citedByCount") or 0),
             "license": r.get("license") or "", "lang": (r.get("language") or "").lower(),
             "kind": "retracted" if any("retracted publication" in t for t in types) else "notice" if any(t in ("retraction of publication", "published erratum", "expression of concern") for t in types)
-                    else "review" if any(t in REVIEW for t in types) else "study" if any(t in TRIAL for t in types) else "other"}
+                    else "opinion" if any(t in OPINION for t in types) else "review" if any(t in REVIEW for t in types) else "case" if any(t == "case reports" for t in types)
+                    else "study" if any(t in TRIAL for t in types) else "other"}
 
 
 def epmc_search(query, n=N_SEARCH, opener=None, sort=None):
@@ -369,7 +371,7 @@ def find(item, names, enc, opener=None):
         except (IOError, ValueError) as e: problems.append("a search failed: " + str(e)[:200]); continue
         log.append(dict({"for": s["for"], "query": s["query"], "found": hits, "read": len(got)}, **({"sort": s["sort"]} if s.get("sort") else {})))
         for p in got:
-            if p["kind"] in ("retracted", "notice") or not p["title"]: continue
+            if p["kind"] in ("retracted", "notice", "opinion") or not p["title"]: continue
             k = p["doi"] or p["epmc"]
             if k not in seen: seen[k] = p
     # only papers that can be used are compared: the ones whose full text is open, and reviews (for the list of papers wanted)
@@ -378,7 +380,7 @@ def find(item, names, enc, opener=None):
     can = [c for c in ranked if c["oa"] and c["pmcid"]]
     cannot = [c for c in ranked if not (c["oa"] and c["pmcid"]) and c["doi"] and c["kind"] == "review"]
     keep = lambda c, why: {k: c[k] for k in ("epmc", "pmid", "pmcid", "doi", "title", "authors", "journal", "year", "kind", "people", "cited", "near", "score", "license")} | {"why": why}
-    why = lambda c: ("a review or meta-analysis" if c["kind"] == "review" else "a study" if c["kind"] == "study" else "a paper") + (" in people" if c["people"] else "") + f"; nearness to the question {c['near']:.2f}; cited {c['cited']} times"
+    why = lambda c: ("a review or meta-analysis" if c["kind"] == "review" else "a study" if c["kind"] == "study" else "a case report" if c["kind"] == "case" else "a paper") + (" in people" if c["people"] else "") + f"; nearness to the question {c['near']:.2f}; cited {c['cited']} times"
     wanted = []
     for c in cannot[:N_WANTED * 2]:                              # the reference comes from Crossref, never from the search record
         cr, err = crossref(c["doi"], opener)
