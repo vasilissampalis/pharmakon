@@ -103,7 +103,7 @@ let simpleShown = null;
    checked at the source ("confirmed", or "partly" / "corrected" where the line was then rewritten to what the source says).
    A line whose anchors all still wait for that check is left out and listed here (CLAUDE.md: nothing unverified). */
 const ANCHOR_OK = new Set(["confirmed", "partly", "corrected"]);
-const slimLine = l => Object.assign({ line: l.line, anchors: (l.anchors || []).filter(a => ANCHOR_OK.has(a.check)).map(a => a.reference ? { ref: a.reference } : { publisher: a.publisher, title: a.title, url: a.url }) }, l.kind ? { kind: l.kind } : {});
+const slimLine = l => Object.assign({ line: l.line, anchors: (l.anchors || []).filter(a => ANCHOR_OK.has(a.check)).map(a => a.reference ? { ref: a.reference } : { publisher: a.publisher, title: a.title, url: a.url }) }, l.kind ? { kind: l.kind } : {}, Array.isArray(l.only) ? { only: l.only } : {});   // only: the drug pages a "For you" line is shown on (written for those)
 const sourcedLines = (list, what) => (list || []).map(slimLine).filter(l => { if (l.anchors.length) return true; console.error("NOTE: a line of " + what + " is left out until a second reader has checked a source for it: " + String(l.line).slice(0, 70)); return false; });
 const data = [
   "const EVIDENCE_MAPS = " + JSON.stringify(maps) + ";",

@@ -167,7 +167,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
         rows: rows.map(b => ({ sec: b.dataset.sec, tag: b.tagName, exp: b.getAttribute("aria-expanded"), ctl: b.getAttribute("aria-controls"), name: (b.querySelector(".sm-n") || {}).textContent, n: (b.querySelector(".sm-c") || {}).textContent || "", line: (b.querySelector(".sm-l") || {}).textContent || "", h: Math.round(b.getBoundingClientRect().height) })),
         asks: Object.fromEntries([...page.querySelectorAll(".secs > .sec")].map(x => [x.id, x.querySelectorAll("details.ask").length])), sticky: getComputedStyle(page.querySelector("#secmenu")).position }; });
     ok(w + ": a drug page is its name, its other names and a description with its sources, then the section menu and nothing else (no \"Someone unwell?\", no At a glance, no count of answers opened)",
-      /^header\.dh p\.dh-desc nav\.secmenu div\.secs section\.sec h2\.qh div\.popular$/.test(fv.kids) && /Cannabis/.test(fv.h1) && /^Also called /.test(fv.aka) && fv.desc.length > 40 && fv.chips >= 1 && !fv.unwell && !fv.glance && !fv.prog && fv.shown === 0,
+      /^header\.dh (?:p|div)\.dh-desc nav\.secmenu div\.secs section\.sec h2\.qh div\.popular$/.test(fv.kids) && /Cannabis/.test(fv.h1) && /^Also called /.test(fv.aka) && fv.desc.length > 40 && fv.chips >= 1 && !fv.unwell && !fv.glance && !fv.prog && fv.shown === 0,
       fv.kids + " | " + fv.desc.slice(0, 60) + "… | " + fv.chips + " source chips");
     const rowsOk = fv.rows.length >= 6 && fv.rows.length === fv.secs && fv.rows.every(r => r.tag === "BUTTON" && r.exp === "false" && r.ctl === r.sec && r.name && r.line && r.h >= 56)
       && fv.rows.every(r => /^d-(risk|after|mix|med|feel)$/.test(r.sec) ? r.n === fv.asks[r.sec] + (fv.asks[r.sec] === 1 ? " answer" : " answers") : true) && fv.sticky !== "sticky";
@@ -238,13 +238,14 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     s = await session();
     await s.go("s-cannabis/part-d-help", 1300); await s.shot("if-it-gets-too-much"); if (w === 390) await s.shot("if-it-gets-too-much-full", "#d-help");
     const helpAt = () => s.p.evaluate(() => { const b = document.querySelector("#d-help .sec-b"); if (!b) return null; const heads = [...b.querySelectorAll("h3, h4")].map(h => h.textContent), lis = [...b.querySelectorAll("ul.sf-list > li")];
-      return { title: document.querySelector("#d-help > h2").textContent.trim(), heads: heads.join(" > "), lines: lis.length, cited: lis.filter(li => li.querySelector(".srcs2 .srcl")).length, box: !!b.querySelector(".hp-now, .callbtn"), folds: b.querySelectorAll("details").length,
+      return { title: document.querySelector("#d-help > h2").textContent.trim(), heads: heads.join(" > "), lines: lis.length, cited: lis.filter(li => li.querySelector(".srcs2 .srcl")).length, box: !!b.querySelector(".hp-now, .callbtn"), folds: b.querySelectorAll("details").length, fold: (d => d ? { open: d.open, label: d.querySelector("summary").textContent, lines: [...d.querySelectorAll("li")].map(li => li.firstChild.textContent.trim()), after: (d.previousElementSibling || {}).className || (d.previousElementSibling || {}).tagName } : null)(b.querySelector("details.hp-aid")),
+        helps: (h => h ? [...h.nextElementSibling.querySelectorAll("li")].map(li => li.firstChild.textContent.trim()) : [])([...b.querySelectorAll("h4")].find(x => x.textContent === "What helps")),
         srcList: /Sources \(\d+\)/.test(b.textContent), note: /our editor has not checked|official and non-profit/i.test(b.textContent), first: lis[0] ? lis[0].textContent : "", num: (b.querySelector(".hp-num") || {}).textContent || "", more: (b.querySelector(".hp-more a") || {}).getAttribute ? b.querySelector(".hp-more a").getAttribute("href") : "",
         last: b.lastElementChild.className, tel: !!b.querySelector('.hp-num a[href^="tel:"]'), elsewhere: document.querySelectorAll('#drug2 a[href^="tel:"], #drug2 .callbtn').length - b.querySelectorAll('a[href^="tel:"]').length }; });
     const hp = await helpAt();
     const self = await s.p.evaluate(() => !!((STAY_SAFER.signs[subBySlug.cannabis.cls] || {}).self || []).length);
-    ok(w + ": If it gets too much: " + (self ? "for you, then " : "") + "for a friend (what helps, what not to do), and calling an ambulance last; no box, no fold, nothing for \"you\" until the data has it",
-      hp && hp.title === "If it gets too much" && hp.heads === (self ? "For you > " : "") + "For a friend > What helps > What not to do > Call an ambulance if" && !hp.box && hp.folds === 0 && hp.last === "hp-more" && hp.more === "#emergency", hp ? hp.heads + " | last: " + hp.last : "missing");
+    ok(w + ": If it gets too much: " + (self ? "for you, then " : "") + "for a friend (what helps, what not to do), calling an ambulance last, then first aid behind one closed fold; no box",
+      hp && hp.title === "If it gets too much" && hp.heads === (self ? "For you > " : "") + "For a friend > What helps > What not to do > Call an ambulance if" && !hp.box && hp.folds === 1 && hp.fold && !hp.fold.open && hp.fold.label === "If they pass out or stop breathing" && hp.fold.lines.length >= 1 && hp.last === "hp-more" && hp.more === "#emergency", hp ? hp.heads + " | fold: " + (hp.fold ? hp.fold.label + (hp.fold.open ? " (open)" : " (closed, " + hp.fold.lines.length + " lines)") : "none") + " | last: " + hp.last : "missing");
     ok(w + ": every line there carries its sources as chips; no \"Sources (n)\" list and no note on how the lines were checked", hp && hp.lines >= 8 && hp.cited === hp.lines && !hp.srcList && !hp.note, hp ? hp.cited + " of " + hp.lines + " lines cited" : "missing");
     // a chip shows the publisher, the page's title and the link; Escape or a second tap puts it away
     await s.p.click("#d-help .srcs2 button.srcl"); await s.p.waitForTimeout(300);
@@ -260,9 +261,16 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     // opioids: what helps starts with naloxone (the data's order); the calm lines come first elsewhere
     await s.go("s-heroin/part-d-help", 1000); const hh = await helpAt();
     await s.go("s-mdma/part-d-help", 1000);
-    const kinds = await s.p.evaluate(() => { const f = STAY_SAFER.signs[subBySlug.mdma.cls], want = f.while_waiting.filter(x => (x.kind || "calm") !== "aid").concat(f.while_waiting.filter(x => (x.kind || "calm") === "aid")).map(x => x.line);
-      const h = [...document.querySelectorAll("#d-help h4")].find(x => x.textContent === "What helps"), got = [...h.nextElementSibling.querySelectorAll("li")].map(li => li.firstChild.textContent.trim()); return { ok: got.join("|") === want.join("|"), n: got.length }; });
-    ok(w + ": what helps lists the calm lines first, then first aid (no separate fold); for opioids, in the data's order, naloxone first", /^Give naloxone/.test(hh.first) && hh.folds === 0 && kinds.ok, hh.first.slice(0, 40) + "… | MDMA: " + kinds.n + " lines in order");
+    const kinds = await s.p.evaluate(() => { const fold = /pass(?:ed)? out|won.t wake|not breathing|\bCPR\b|breathing is weak|has stopped/i, part = slug => { const f = STAY_SAFER.signs[subBySlug[slug].cls], k = x => x.kind || "calm", inFold = x => k(x) === "aid" && fold.test(x.line) && !/naloxone/i.test(x.line);
+        return { open: f.while_waiting.filter(x => k(x) !== "aid").concat(f.while_waiting.filter(x => k(x) === "aid" && !inFold(x))).map(x => x.line), folded: f.while_waiting.filter(inFold).map(x => x.line) }; };
+      return { heroin: part("heroin"), cannabis: part("cannabis") }; });
+    const same = (a, b) => a.join("|") === b.join("|");
+    ok(w + ": what helps holds the calm and help lines (for opioids, naloxone first, in sight without opening anything); the lines for someone who has passed out or is not breathing are inside the closed fold, on every page",
+      hh && /^Give naloxone/.test(hh.helps[0] || "") && same(hh.helps, kinds.heroin.open) && hh.fold && !hh.fold.open && same(hh.fold.lines, kinds.heroin.folded) && hh.fold.lines.some(x => /CPR/.test(x)) && same(hp.helps, kinds.cannabis.open) && same(hp.fold.lines, kinds.cannabis.folded) && !hp.helps.some(x => /CPR|pass out/.test(x)),
+      (hh.helps[0] || "").slice(0, 40) + "… | heroin: " + hh.helps.length + " open, " + (hh.fold ? hh.fold.lines.length : 0) + " in the fold | cannabis: " + hp.helps.length + " open, " + hp.fold.lines.length + " in the fold");
+    // "For you" lines written from pages about cannabis are not shown for synthetic cannabinoids
+    await s.go("s-synthetic-cannabinoids/part-d-help", 1000); const hs = await helpAt();
+    ok(w + ": the cannabis page shows its \"For you\" lines; the synthetic cannabinoids page, whose sources they are not, shows none", self && /^For you/.test(hp.heads) && hs && /^For a friend/.test(hs.heads), "cannabis: " + hp.heads.split(" > ")[0] + " | synthetic cannabinoids: " + (hs ? hs.heads.split(" > ")[0] : "missing"));
     await s.ctx.close();
     // with the reader's country known: one line with the emergency number, and the quiet link; nowhere else on the page
     s = await session({ storage: { "pk-country": "Greece" } });
@@ -273,15 +281,15 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     // ================= 4. Test kits =================
     await s.go("s-mdma/part-d-kits", 1300); await s.shot("test-kits"); if (w === 390) await s.shot("test-kits-full", "#d-kits");
     const kitsAt = () => s.p.evaluate(() => { const b = document.querySelector("#d-kits .sec-b"); if (!b) return null; const un = PREF_COUNTRY || guessCountry(), heads = [...b.querySelectorAll(":scope > h3")].map(h => h.textContent);
-      const rows = [...b.querySelectorAll(".kit-row")], lis = [...b.querySelectorAll("ul.sf-list > li")], want = TESTS_WORLD.sellers.filter(x => shipsTo(x, un));
+      const rows = [...b.querySelectorAll(".kit-row")], lis = [...b.querySelectorAll("ul.sf-list > li")], ships = TESTS_WORLD.sellers.filter(x => shipsTo(x, un)), want = ships.filter(x => ((typeof KIT_LINKS !== "undefined" && KIT_LINKS[norm(x.name)]) || {})[renderedDrug]);
       return { title: document.querySelector("#d-kits > h2").textContent.trim(), first: b.firstElementChild.textContent, heads: heads.join(" > "), rows: rows.length, want: want.length, where: (b.querySelector(".tk-cq .cq-where") || {}).textContent || "",
-        links: rows.map(r => { const a = r.querySelector("a.kit-go"); return { name: a.querySelector(".kit-n").textContent, href: a.getAttribute("href"), blank: a.target === "_blank", label: (a.querySelector(".kit-l") || {}).textContent || "", cited: !!r.querySelector(".srcs2 .srcl") }; }),
+        ships: ships.length, links: rows.map(r => { const a = r.querySelector("a.kit-go"); return { name: a.querySelector(".kit-n").textContent, href: a.getAttribute("href"), blank: a.target === "_blank", label: (a.querySelector(".kit-l") || {}).textContent || "", cited: !!r.querySelector(".srcs2 .srcl"), sub: (r.querySelector(".kit-s") || {}).textContent || "" }; }),
         shops: Object.fromEntries(want.map(x => [x.name, x.url])), direct: Object.fromEntries(want.map(x => [x.name, ((typeof KIT_LINKS !== "undefined" && KIT_LINKS[norm(x.name)]) || {})[renderedDrug] || null])),
         lines: lis.length, cited: lis.filter(li => li.querySelector(".srcs2 .srcl")).length, srcList: /Sources \(\d+\)/.test(b.textContent), note: !!b.querySelector(".kit-note"), dc: !!b.querySelector('a[href="#checking"]') }; });
     const tk = await kitsAt();
-    const linksOk = tk && tk.links.every(l => l.blank && l.cited && (tk.direct[l.name] ? l.href === tk.direct[l.name].url && l.label === (tk.direct[l.name].label || "") : l.href === tk.shops[l.name] && !l.label));
-    ok(w + ": Test kits is a section of its own and starts with buying: \"Test kits for MDMA\", one row per seller that sends to the reader's country, each straight to that seller's page for the drug where we have it, else to its shop",
-      tk && tk.title === "Test kits" && tk.first === "Test kits for MDMA" && tk.rows === tk.want && tk.rows >= 3 && /Greece/.test(tk.where) && linksOk && tk.note, tk ? tk.rows + " sellers; " + tk.links.filter(l => l.label).length + " straight to the drug's kits; " + tk.where.trim() : "missing");
+    const linksOk = tk && tk.links.every(l => l.blank && !l.cited && tk.direct[l.name] && l.href === tk.direct[l.name].url && l.label && l.label === tk.direct[l.name].label);
+    ok(w + ": Test kits is a section of its own and starts with buying: \"Test kits for MDMA\", one compact row per seller that sends to the reader's country and has a confirmed page for MDMA kits, each straight to that page, named by what is sold; no chips in the rows",
+      tk && tk.title === "Test kits" && tk.first === "Test kits for MDMA" && tk.rows === tk.want && tk.rows >= 3 && tk.rows <= tk.ships && /Greece/.test(tk.where) && linksOk && tk.note, tk ? tk.rows + " of " + tk.ships + " sellers that send there; " + tk.links.map(l => l.name + ": " + l.label).slice(0, 2).join("; ") + " | " + tk.where.trim() : "missing");
     ok(w + ": then the facts about the tests, what home tests cannot tell, and drug checking; every line with its source chips, no \"Sources (n)\" list",
       tk && tk.heads === "Test kits for MDMA > Home tests > What home tests can’t tell you > Drug checking" && tk.lines >= 6 && tk.cited === tk.lines && !tk.srcList && tk.dc, tk ? tk.heads + " | " + tk.cited + " of " + tk.lines + " lines cited" : "missing");
     // another country: its sellers; a drug no home test works for has no buying block
@@ -471,7 +479,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     await s.shot("focus-deck-next-button");
     ok(w + ": keyboard: Tab to Myth, Enter turns the card, Tab reaches Read the answer and Next, focus visible", f1[0] === "Myth" && f1[1] === "solid" && f2 === "mf-v" && /qz2-ev/.test(f3) && /qz2-nb/.test(f4[0]) && f4[2] === "solid", [f1.join(" "), f2, f3, f4.join(" ")].join(" > "));
     await s.go("s-cannabis"); await s.p.$eval("#drug2 .dh h1", h => { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); });
-    let tabs = 0; for (; tabs < 8; tabs++) { await s.p.keyboard.press("Tab"); if (await s.p.evaluate(() => document.activeElement.classList.contains("sm-b"))) break; }
+    let tabs = 0; for (; tabs < 30; tabs++) { await s.p.keyboard.press("Tab"); if (await s.p.evaluate(() => document.activeElement.classList.contains("sm-b"))) break; }
     await s.p.waitForTimeout(200);
     const f5 = await s.p.evaluate(() => [document.activeElement.id, getComputedStyle(document.activeElement).outlineStyle, document.activeElement.getAttribute("aria-expanded")]);
     await s.shot("focus-section-menu-row");

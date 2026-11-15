@@ -466,7 +466,11 @@ const srcList = ls => '<ul class="sf-list">' + ls.map(l => "<li>" + esc(l.line) 
    that skip the family line (nicotine, caffeine) show none. */
 function descHtml(slug) {
   const lines = ((typeof DESCRIPTIONS !== "undefined" && DESCRIPTIONS) || {})[slug];
-  if (lines && lines.length) return '<p class="dh-desc">' + lines.map(l => "<span>" + esc(l.line) + lineSrc(l.anchors) + "</span>").join(" ") + "</p>";
+  // what it is and what people feel first, as one clean paragraph with its sources after it (chips after every sentence broke
+  // the paragraph up); how it comes and its medical use one tap away, so the section menu stays in sight on a phone
+  if (lines && lines.length) { const head = lines.slice(0, 2), rest = lines.slice(2), txt = ls => ls.map(l => esc(l.line)).join(" "), src = ls => lineSrc(ls.flatMap(l => l.anchors || []));
+    return '<div class="dh-desc"><p><span>' + txt(head) + src(head) + "</span></p>" +
+      (rest.length ? '<details class="sf-more dh-more"><summary>More about ' + esc(pageWord(slug)) + "</summary><p><span>" + txt(rest) + src(rest) + "</span></p></details>" : "") + "</div>"; }
   const s = subBySlug[slug], fp = s && famPlain(s.cls), own = (FAMPLAIN.drugs || {})[slug];
   if (!fp || (FAMPLAIN.skip || []).includes(slug)) return "";
   return '<p class="dh-desc"><span>' + esc(own ? own.line : fp.line) + lineSrc(FAMPLAIN.source ? [FAMPLAIN.source] : []) + "</span></p>";
