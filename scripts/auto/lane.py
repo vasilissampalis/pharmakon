@@ -9,6 +9,7 @@ small discreet disclaimer". 21:07: "it should find more than one sources if they
 mimick completely how claude writes answers".
 
     python3 -I scripts/auto/lane.py run [--max N] [--ids w_0027,...] [--again]
+    python3 -I scripts/auto/lane.py requests          (the requests waiting in data/auto/requests/lane-*.json)
     python3 -I scripts/auto/lane.py --selftest
 
 The same steps as the checked lane, each done by a model that did not do the one before, and each followed by a gate that
@@ -289,7 +290,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None):
     """One question through the lane. Returns the record (see the head of this file)."""
     fulltext = fulltext or P.epmc_fulltext; crossref = crossref or P.crossref; ex = ex if ex is not None else examples()
     rec = {"_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
-           "id": "au_" + item["id"], "from": item["id"], "question": item["q"], "ways": list(item.get("ways") or []), "made": {"on": TODAY, "models": dict(models), "run": os.environ.get("GITHUB_RUN_ID", "")},
+           "id": "au_" + item["id"], "from": item["id"], "question": item["q"], "ways": list(item.get("ways") or []), "drugs": list(item.get("drugs") or []), "made": {"on": TODAY, "models": dict(models), "run": os.environ.get("GITHUB_RUN_ID", "")},
            "status": "none", "why": "", "gates": {}, "sources": [], "parts": [], "complete": False, "missing": "", "wanted": list(found.get("wanted") or []), "person": None}
     before = llm.ledger()["neurons"]
     def done(status, why):
@@ -501,6 +502,19 @@ def selftest():
 
 if __name__ == "__main__":
     if "--selftest" in sys.argv: selftest()
+    elif len(sys.argv) > 1 and sys.argv[1] == "requests":
+        # the requests waiting in data/auto/requests (lane-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
+        # A request is a file in the repository, written by the editor: read as data, never run.
+        ids, limit, again, any_req = [], 3, False, False
+        for f in sorted((ROOT / "data" / "auto" / "requests").glob("lane-*.json")):
+            try: r = json.load(open(f, encoding="utf-8"))
+            except ValueError: r = {}
+            any_req = True; ids += [x for x in (r.get("ids") or []) if isinstance(x, str) and re.fullmatch(r"w_[a-z0-9_]{1,40}", x)]
+            if isinstance(r.get("max"), int): limit = max(1, min(20, r["max"]))
+            again = again or r.get("again") is True
+            f.unlink()
+        if any_req: run(ids=ids or None, limit=max(limit, len(ids)) if ids else limit, again=again)
+        else: print("lane: no request waiting")
     elif len(sys.argv) > 1 and sys.argv[1] == "run":
         a = sys.argv[2:]; opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d
         run(ids=[x for x in (opt("--ids") or "").split(",") if x] or None, limit=int(opt("--max", "3")), again="--again" in a)
