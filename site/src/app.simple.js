@@ -865,9 +865,13 @@ document.addEventListener("click", e => {
   const id = a.dataset.go || "d-looks", el = document.getElementById(id); if (!el) return;
   e.preventDefault(); scrollToEl(el, true); const hh = el.querySelector("h2"); if (hh) { hh.setAttribute("tabindex", "-1"); hh.focus({ preventScroll: true }); }
 });
+// a jump's target that is folded away is brought out first (scrollToEl calls this for every jump): the rest of a list of
+// questions behind its "more" button
+function revealEl(el) {
+  const more = el.closest(".asks-more"); if (more && more.hidden) { more.hidden = false; const b = document.querySelector('button.morebtn[data-more="' + more.id + '"]'); if (b) b.remove(); }
+}
 function openAsk(id) {
   const d = document.getElementById("ask-" + id); if (!d) return false;
-  const more = d.closest(".asks-more"); if (more && more.hidden) { more.hidden = false; const b = document.querySelector('button.morebtn[data-more="' + more.id + '"]'); if (b) b.remove(); }
   if ("open" in d) d.open = true; setTimeout(() => scrollToEl(d), 30); return true;
 }
 
@@ -1056,11 +1060,11 @@ function debateLine(c) {
 }
 // open one source in the sheet: its place in the list, opened, briefly marked (or the debate box, for "debate")
 function focusEvSource(ref) {
-  if (ref === "debate") { const box = document.getElementById("ev-debate"); if (box) { box.scrollIntoView({ block: "start" }); const s = box.querySelector("summary"); if (s) s.focus({ preventScroll: true }); } return; }
+  if (ref === "debate") { const box = document.getElementById("ev-debate"); if (box) { scrollToEl(box); const s = box.querySelector("summary"); if (s) s.focus({ preventScroll: true }); } return; }
   const li = document.getElementById("ev-src-" + ref); if (!li) return;
   const d = li.querySelector("details"); if (d) d.open = true;
   li.classList.remove("hit"); void li.offsetWidth; li.classList.add("hit");
-  li.scrollIntoView({ block: "start", behavior: window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  scrollToEl(li);
   const sm = li.querySelector("summary"); if (sm) sm.focus({ preventScroll: true });
 }
 function openEvidence(id, opener, focusRef) {
@@ -1257,8 +1261,7 @@ document.addEventListener("click", e => {
   else { st.cards = mfDeal(st, st.n); st.picks = []; st.pos = 0; }   // Another 10
   mfRender(box.id);
   const f = box.querySelector(st.picks[st.pos] ? ".mf-v" : ".mf-q"); if (f) f.focus({ preventScroll: true });
-  const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-  if (box.getBoundingClientRect().top < pad) scrollToEl(box, true);
+  if (box.getBoundingClientRect().top < updateSticky(box)) scrollToEl(box, true);
 });
 
 // the floating feedback button steps aside while the reader scrolls down (it covered the text), and comes back

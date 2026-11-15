@@ -88,6 +88,7 @@ let routedOnce = false;
 function route() {
   let h = (location.hash || "#home").slice(1);
   const first = !routedOnce; routedOnce = true;
+  jumpStop();   // a jump still being kept in place gives way to the new address
   if (typeof EV !== "undefined" && EV.open) closeEvidence(true);
   // a link to a section, a claim or a reference opens the full evidence; the plain page address opens the reader's choice
   setMode(/^(cl_|sec-|ref-)/.test(h) || /^s-[a-z0-9-]+\/(sec-\d+|not-yet|evidence)$/.test(h) ? "full" : /^s-[a-z0-9-]+\/q-/.test(h) ? "quick" : PREF_MODE);
@@ -188,42 +189,62 @@ function show(name) {
   document.querySelectorAll("details.navmore").forEach(d => { d.open = false; d.querySelector("summary").classList.toggle("cur", !!d.querySelector('a[aria-current="page"]')); });
   closeSearch(); placeSearch(name); updateSticky();
 }
-/* Sticky bars (senior author, 6 November: a question opened from a shared link, from "Next question" or after a refresh
-   started half hidden, and he had to scroll up to read it). The top bar sticks on wide screens, a drug page's topic chips
-   stick under it, and on phones the evidence page's contents bar sticks at the top. Their heights are measured: the chips
-   sit right under the top bar (--bar-h), and the page's scroll padding (--stick-h) keeps every target clear of all of
-   them, for our own jumps and the browser's alike. */
+/* Where a jump lands (site 2.3, 15 November 2026; the senior author: "the cut you see in the picture when you click on a link
+   and can't see the question ... i want to see where the section or question starts this is a generalized bug whenever you
+   click on a link on the website"). The bars stuck to the top were measured, but a bar narrower than 60% of the window was
+   taken for a side column: on a window wider than about 1500 px a drug page's chips (892 px) were left out, and every jump
+   there ended with its first lines under them. Now one place decides it for every jump on the site (scrollToEl): the bars
+   that sit over the target are measured (the top bar; a drug page's section menu and the facts page's chips under it; in
+   an answer sheet, the sheet's own bar), their sum is kept in one variable (--stick-h, which every target also carries as
+   its scroll-margin-top, for the browser's own jumps), the target is placed just under them, and placed again while the
+   layout settles (a photo or a font arriving, a file drawn, an answer closing above it), until the reader scrolls, taps or
+   types. A target folded away is opened first (revealEl). */
 try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) { /* the browser keeps its own */ }
+const STICK_GAP = 10;
 function stickyH(el) {
   if (!el || !el.getClientRects().length) return 0;
-  const s = getComputedStyle(el); if (s.position !== "sticky" && s.position !== "fixed") return 0;
-  const r = el.getBoundingClientRect(); return r.width > 0.6 * window.innerWidth ? Math.round(r.height) : 0;  // a side column covers nothing
+  const s = getComputedStyle(el); return s.position === "sticky" || s.position === "fixed" ? Math.round(el.getBoundingClientRect().height) : 0;
 }
-function updateSticky() {
-  const bar = stickyH(document.querySelector(".topbar"));
-  const below = [".view.active .drug2 .chips", ".view.active .mono-layout > .toc"].reduce((m, q) => Math.max(m, stickyH(document.querySelector(q))), 0);
+// how much of the top of the window the stuck bars take over a target (over the widest content, with no target)
+function updateSticky(target) {
+  const bar = stickyH(document.querySelector(".topbar")); let below = 0;
+  const tr = target && target.getClientRects().length ? target.getBoundingClientRect() : null;
+  document.querySelectorAll(".view.active .secmenu, .view.active nav.chips").forEach(n => {
+    if (target && n.contains(target)) return;
+    const h = stickyH(n); if (!h) return;
+    const r = n.getBoundingClientRect(); if (tr && (r.right <= tr.left + 1 || r.left >= tr.right - 1)) return;   // beside the target, not over it
+    below = Math.max(below, h); });
   const root = document.documentElement.style;
-  root.setProperty("--bar-h", bar + "px"); root.setProperty("--stick-h", (bar + below + 10) + "px");
+  root.setProperty("--bar-h", bar + "px"); root.setProperty("--stick-h", (bar + below + STICK_GAP) + "px");
+  return bar + below + STICK_GAP;
 }
-window.addEventListener("resize", () => { clearTimeout(updateSticky._t); updateSticky._t = setTimeout(updateSticky, 120); }, { passive: true });
-// Scroll so that an element starts just below the sticky bars. A jump from a link or a refresh is kept in place for a
-// moment while photos and fonts arrive, unless the reader scrolls first.
+window.addEventListener("resize", () => { clearTimeout(updateSticky._t); updateSticky._t = setTimeout(() => updateSticky(), 120); }, { passive: true });
+let JUMP = null;   // the jump being kept in place
+function jumpStop() { if (JUMP) JUMP.stop(); }
 function scrollToEl(el, smooth) {
-  if (!el || !el.getClientRects().length) return;
-  updateSticky();
-  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ block: "start", behavior: smooth && !reduce ? "smooth" : "auto" });
-  if (smooth && !reduce) return;
-  const ac = typeof AbortController !== "undefined" ? new AbortController() : null; let n = 0, stop = false;
-  ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => window.addEventListener(t, () => { stop = true; if (ac) ac.abort(); }, ac ? { passive: true, signal: ac.signal } : { passive: true, once: true }));
-  const tick = () => {
-    if (stop || ++n > 15) { if (ac) ac.abort(); return; }
-    updateSticky();
-    const off = el.getBoundingClientRect().top - (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
-    if (Math.abs(off) > 3) window.scrollBy(0, off);
-    setTimeout(tick, 100);
-  };
-  setTimeout(tick, 100);
+  if (!el) return;
+  if (typeof revealEl === "function") revealEl(el);
+  if (!el.getClientRects().length) return;
+  jumpStop();
+  const box = el.closest(".drawer .panel");   // an answer sheet scrolls inside itself, under its own bar
+  const offset = () => box ? stickyH(box.querySelector(".ev-bar")) + STICK_GAP : updateSticky(el);
+  const delta = () => el.getBoundingClientRect().top - (box ? box.getBoundingClientRect().top : 0) - offset();
+  const place = () => { const d = delta(); if (Math.abs(d) > 1) { if (box) box.scrollTop += d; else window.scrollBy(0, d); } };
+  // a short move the eye can follow glides (an answer opening where it is); a long one, or with less motion asked for, jumps
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches, d0 = delta();
+  const glide = !!smooth && !reduce && !box && Math.abs(d0) < window.innerHeight;
+  if (glide) window.scrollBy({ top: d0, behavior: "smooth" }); else place();
+  const t0 = Date.now(), offs = []; let dead = false, raf = 0, ro = null, timers = [];
+  const stop = () => { if (dead) return; dead = true; offs.forEach(f => f()); if (ro) ro.disconnect(); timers.forEach(clearTimeout); if (raf) cancelAnimationFrame(raf); if (JUMP && JUMP.el === el) JUMP = null; };
+  const again = () => { if (dead || (glide && Date.now() - t0 < 420)) return; if (!el.isConnected || !el.getClientRects().length) { stop(); return; } place(); };
+  const soon = () => { if (dead || raf) return; raf = requestAnimationFrame(() => { raf = 0; again(); }); };
+  const on = (target, type, fn, opts) => { target.addEventListener(type, fn, opts); offs.push(() => target.removeEventListener(type, fn, opts)); };
+  ["wheel", "touchstart", "touchmove", "keydown", "pointerdown", "mousedown"].forEach(t => on(window, t, stop, { passive: true, capture: true }));
+  on(document, "load", soon, true);   // a photo arriving
+  if (typeof ResizeObserver !== "undefined") { ro = new ResizeObserver(soon); ro.observe(document.body); if (box && box.firstElementChild) ro.observe(box); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(soon, () => {});
+  timers = [glide ? 450 : 60, 160, 320, 640, 1000, 1600, 2600, 4000].map((ms, i, a) => setTimeout(i === a.length - 1 ? () => { again(); stop(); } : again, ms));
+  JUMP = { el, stop };
 }
 
 /* ---------- Home ---------- */
