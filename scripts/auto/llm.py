@@ -16,6 +16,13 @@ calls fail, they are not charged). GitHub's own free models were retired on 30 J
     on an account that would be charged.
   - A model's words are data. Nothing a model writes is ever run, and nothing it writes is published without passing the
     lane's gates (scripts/auto/lane.py).
+
+A second free service, off until its key exists (the secret GROQ_API_KEY; the senior author's to decide): Groq. A model
+named "groq:<its id>" is asked there (https://api.groq.com/openai/v1/chat/completions, the same form). Its free plan,
+read on Groq's own page on 15 November 2026 (console.groq.com/docs/rate-limits): for each of openai/gpt-oss-120b,
+openai/gpt-oss-20b and qwen/qwen3.8-27b, 30 requests and 8,000 tokens a minute, 1,000 requests and 200,000 tokens a day.
+The ledger counts tokens for each of its models and a call that today's free tokens cannot hold is not made (Budget);
+between calls it waits so that a minute never holds more than the plan allows. A free account is not charged.
 """
 import sys, os, re, json, time, pathlib, datetime, urllib.request, urllib.error
 
@@ -31,6 +38,10 @@ PRICE = {"@cf/meta/llama-3.3-70b-instruct-fp8-fast": (26668, 204805), "@cf/meta/
          "@cf/zai-org/glm-4.7-flash": (5500, 36400), "@cf/zai-org/glm-5.3-flash": (13636, 45455), "@cf/deepseek-ai/deepseek-v4.1-flash-1017": (27273, 109091),
          "@cf/ibm-granite/granite-4.0-h-micro": (1542, 10158), "@cf/nvidia/nemotron-3-120b-a12b": (45455, 136364)}
 DEAR = (130000, 450000)
+GROQ = "https://api.groq.com/openai/v1/chat/completions"
+GROQ_FREE = {"openai/gpt-oss-120b": {"tpm": 8000, "tpd": 200000, "rpd": 1000}, "openai/gpt-oss-20b": {"tpm": 8000, "tpd": 200000, "rpd": 1000}, "qwen/qwen3.8-27b": {"tpm": 8000, "tpd": 200000, "rpd": 1000}}
+GROQ_SHARE = 0.9        # of a day's free tokens, where we stop by ourselves
+_minute = {}            # model -> [(when, tokens)] of the last minute
 
 
 class Budget(Exception):
@@ -74,9 +85,60 @@ def clean(text):
     return text.strip()
 
 
+def has(model):
+    """Can this model be asked at all on this machine (is its service's key there)?"""
+    return bool((os.environ.get("GROQ_API_KEY") or "").strip()) if model.startswith("groq:") else bool((os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip())
+
+
+def groq_left(name):
+    """Tokens of today's free plan still unused for one of Groq's models, by our own count."""
+    lim = GROQ_FREE.get(name); g = (ledger().get("groq") or {}).get(name) or {}
+    return 0 if not lim or g.get("calls", 0) >= lim["rpd"] else max(0, int(lim["tpd"] * GROQ_SHARE) - int(g.get("tokens", 0)))
+
+
+def chat_groq(model, messages, max_tokens, opener=None, tries=3):
+    name = model[5:]; token = (os.environ.get("GROQ_API_KEY") or "").strip()
+    if not token: raise Unavailable("no key for Groq (the secret GROQ_API_KEY is not set)")
+    lim = GROQ_FREE.get(name)
+    if not lim: raise Unavailable(f"{name} is not on the list of Groq's free models that this file knows")
+    est = sum(rough_tokens(m["content"]) for m in messages) + max_tokens
+    if est > lim["tpm"]: raise Unavailable(f"this call is larger than Groq's free plan allows in a minute ({est} of {lim['tpm']} tokens)")
+    if est > groq_left(name): raise Budget(f"today's free tokens at Groq cannot hold this call for {name}")
+    now = time.time(); recent = [(t, n) for t, n in _minute.get(name, []) if now - t < 61]
+    while recent and sum(n for _, n in recent) + est > lim["tpm"]:                       # wait for the minute to have room
+        wait = 61 - (now - recent[0][0])
+        if opener is None and wait > 0: time.sleep(min(wait, 61))
+        recent = recent[1:]; now = time.time()
+    body = {"model": name, "messages": messages, "max_tokens": max_tokens, "temperature": 0}
+    if name.startswith("openai/gpt-oss"): body["reasoning_effort"] = "low"
+    op = opener or urllib.request.urlopen
+    for k in range(tries):
+        req = urllib.request.Request(GROQ, data=json.dumps(body).encode("utf-8"), method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json", "User-Agent": "Pharmakon (https://pharmakon.world; mailto:contact@pharmakon.world)"})
+        try:
+            with op(req, timeout=180) as r: d = json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            detail = ""
+            try: detail = e.read().decode("utf-8", "replace")[:300]
+            except Exception: pass
+            if e.code == 429 and re.search(r"per day|TPD|RPD|daily", detail, re.I): raise Budget("Groq says today's free plan is used up for " + name)
+            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 20 * (k + 1)); continue
+            raise Unavailable(f"Groq answered {e.code}" + (": " + re.sub(r"\s+", " ", detail) if detail else ""))
+        except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
+            if k + 1 < tries: time.sleep(0 if opener else 3); continue
+            raise Unavailable("Groq could not be reached: " + str(e)[:200])
+        text = ((d.get("choices") or [{}])[0].get("message") or {}).get("content") or ""; u = d.get("usage") or {}
+        used = int(u.get("total_tokens") or (int(u.get("prompt_tokens") or est - max_tokens) + int(u.get("completion_tokens") or rough_tokens(text))))
+        L = ledger(); g = L.setdefault("groq", {}).setdefault(name, {"calls": 0, "tokens": 0}); g["calls"] += 1; g["tokens"] += used
+        LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+        _minute[name] = recent + [(time.time(), used)]
+        return clean(text)
+    raise Unavailable("Groq gave no answer")
+
+
 def chat(model, messages, max_tokens=700, opener=None, tries=3):
     """The model's answer to messages ([{"role", "content"}]). Raises Budget before a call that today's allowance cannot
     hold, Unavailable when there is no key or the service refuses."""
+    if model.startswith("groq:"): return chat_groq(model, messages, max_tokens, opener, tries)
     token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     if not token or not account: raise Unavailable("no key (the repository's two secrets are not set)")
     if not re.fullmatch(r"[0-9a-fA-F]{32}", account) and account != "ACC": raise Unavailable("the account number in the secret CLOUDFLARE_ACCOUNT_ID is not a Cloudflare account ID (32 letters a-f and digits)")
@@ -146,8 +208,26 @@ def selftest():
     try: chat("m", [{"role": "user", "content": "x"}], 10, opener); raise AssertionError("no Unavailable")
     except Unavailable: pass
     assert as_json("no json here") is None and as_json('before {"a": [1, 2,], "b": "}"} after') == {"a": [1, 2], "b": "}"}
+    # the second service: off without its key; with it, the same form, tokens counted for each model, a call the day cannot hold is not sent
+    assert not has("groq:openai/gpt-oss-120b")
+    try: chat("groq:openai/gpt-oss-120b", [{"role": "user", "content": "x"}], 10, opener); raise AssertionError("no Unavailable")
+    except Unavailable: pass
+    os.environ["GROQ_API_KEY"] = "G\n"; sent = []
+    def gopener(req, timeout=0):
+        b = json.loads(req.data.decode()); sent.append(b)
+        assert req.full_url == GROQ and req.get_header("Authorization") == "Bearer G" and b["model"] == "openai/gpt-oss-120b" and b["reasoning_effort"] == "low"
+        return Resp({"choices": [{"message": {"content": "{\"ok\": 1}"}}], "usage": {"total_tokens": 1200}})
+    assert has("groq:openai/gpt-oss-120b") and chat("groq:openai/gpt-oss-120b", [{"role": "user", "content": "x" * 400}], 200, gopener) == '{"ok": 1}'
+    assert ledger()["groq"]["openai/gpt-oss-120b"] == {"calls": 1, "tokens": 1200} and groq_left("openai/gpt-oss-120b") == 180000 - 1200
+    L = ledger(); L["groq"]["openai/gpt-oss-120b"]["tokens"] = 179900; json.dump(L, open(LEDGER, "w"))
+    for m, err in (("groq:openai/gpt-oss-120b", Budget), ("groq:some/other-model", Unavailable)):
+        try: chat(m, [{"role": "user", "content": "x" * 400}], 200, gopener); raise AssertionError("no " + err.__name__)
+        except err: pass
+    try: chat("groq:qwen/qwen3.8-27b", [{"role": "user", "content": "x" * 40000}], 200, gopener); raise AssertionError("a call larger than a minute allows was sent")
+    except Unavailable: pass
+    assert len(sent) == 1; del os.environ["GROQ_API_KEY"]
     LEDGER = keep
-    print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call)")
+    print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it)")
 
 
 if __name__ == "__main__":

@@ -39,7 +39,7 @@ def sit(model, n_good):
     rnd = random.Random(20261115); draw = rnd.sample(good, min(n_good, len(good)))
     res, stopped_by = {}, None
     for it in bad + draw:
-        try: out = llm.as_json(llm.chat(model, [{"role": "system", "content": lane.CHECKER_SYS}, {"role": "user", "content": prompt(it)}], 220))
+        try: out = llm.as_json(llm.chat(model, [{"role": "system", "content": lane.CHECKER_SYS}, {"role": "user", "content": prompt(it)}], 700 if model.startswith("groq:") or "gpt-oss" in model else 220))   # (a model that reasons first needs room: on 15 November gpt-oss-120b gave no verdict in 220)
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e); break
         except llm.Unavailable as e: stopped_by = "the model service: " + str(e)[:200]; break
         v = ((out or {}).get("verdicts") or [{}])[0] if isinstance((out or {}).get("verdicts"), list) and (out or {}).get("verdicts") else {}

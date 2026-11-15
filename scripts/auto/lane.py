@@ -676,7 +676,20 @@ def wanted_list():
 
 def run(ids=None, limit=3, again=False, chat=None, enc=None):
     models = dict(MODELS)
-    if MODELS_FILE.exists(): models.update({k: v for k, v in json.load(open(MODELS_FILE, encoding="utf-8")).items() if k in MODELS and isinstance(v, str)})
+    stand_in = {}
+    if MODELS_FILE.exists():
+        mf = json.load(open(MODELS_FILE, encoding="utf-8")); models.update({k: v for k, v in mf.items() if k in MODELS and isinstance(v, str)})
+        # where a second free service's key exists (llm.has), the roles named for it are done there; when its free day is used up or it
+        # cannot be reached, the role goes back to the model named above for the rest of the call
+        for role, m in (mf.get("with_groq") or {}).items() if chat is None and isinstance(mf.get("with_groq"), dict) else []:
+            if role in MODELS and isinstance(m, str) and llm.has(m) and m != models.get(role): stand_in[m] = models[role]; models[role] = m
+    if chat is None and stand_in:
+        def chat(model, messages, room=700):
+            try: return llm.chat(model, messages, room)
+            except (llm.Budget, llm.Unavailable) as e:
+                if model not in stand_in: raise
+                print(f"lane: {model} could not be used ({str(e)[:120]}): {stand_in[model]} stands in"); return llm.chat(stand_in[model], messages, room)
+        chat.real = True
     chat = chat or llm.chat
     items = P.listed()
     st = load_state(); order = []
@@ -692,7 +705,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     for w in order[:limit]:
-        if chat is llm.chat and llm.left() < ROOM: print(f"lane: today's free allowance has {llm.left():.0f} neurons left, not enough for one more answer: it goes on tomorrow"); break   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
+        if (chat is llm.chat or getattr(chat, "real", False)) and llm.left() < ROOM: print(f"lane: today's free allowance has {llm.left():.0f} neurons left, not enough for one more answer: it goes on tomorrow"); break   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
         pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
         try:
             found = json.load(open(pf, encoding="utf-8")) if pf.exists() and not again else P.find(w, names, enc)
