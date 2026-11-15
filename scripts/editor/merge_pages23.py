@@ -35,18 +35,24 @@ def take(lines, checks, who):
         out.append(item)
     return out, dropped
 if "for-you" in what:
-    a = J(P / "for_you_701.json")["families"]; c = J(P / "for_you_check_702.json")["families"]
+    a = J(P / "for_you_701.json")["families"]; c, who_of = {}, {}
+    for f in sorted(P.glob("for_you_check_*.json")):          # second readers 702 and 718 share the nine families
+        x = J(f)
+        for fam, checks in x["families"].items(): c[fam] = checks; who_of[fam] = x["reader"]
     S = J(ROOT / "data/site/stay-safer.json"); n = 0
     for fam, v in a.items():
-        lines, dropped = take(v.get("self") or [], c.get(fam), "AI reader 702 (second reader)")
+        lines, dropped = take(v.get("self") or [], c.get(fam), who_of.get(fam, "second reader"))
         if fam in S["signs"] and lines: S["signs"][fam]["self"] = lines; n += len(lines)
         print(f"for you / {fam}: {len(lines)} installed" + (f"; not installed: {dropped}" if dropped else ""))
     save(ROOT / "data/site/stay-safer.json", S); print("for-you lines installed:", n)
 if "descriptions" in what:
-    a = J(P / "descriptions_703.json")["drugs"]; c = J(P / "descriptions_check_704.json")["drugs"]
-    out = {"_note": "What each drug is, in two to four plain lines, for the top of its page (senior author, 15 November 2026: 'a description for each drug that makes you understand what it is and its sources are validated'). Identity lines only (no risks, amounts or how-to), in our own words from official pages; written by AI reader 703, every anchor and line checked at its source by AI reader 704 (second reader); data/verification/pages-2026-11-15.", "read_on": "2026-11-15", "drugs": {}}
+    a = J(P / "descriptions_703.json")["drugs"]; c, who_of = {}, {}
+    for f in sorted(P.glob("descriptions_check_*.json")):      # second readers 704, 715 and 716, ten drugs each
+        x = J(f)
+        for slug, checks in x["drugs"].items(): c[slug] = checks; who_of[slug] = x["reader"]
+    out = {"_note": "What each drug is, in two to four plain lines, for the top of its page (senior author, 15 November 2026: 'a description for each drug that makes you understand what it is and its sources are validated'). Identity lines only (no risks, amounts or how-to), in our own words from official pages; written by AI reader 703, every anchor and line checked at its source by a second reader (AI readers 704, 715 and 716, ten drugs each); data/verification/pages-2026-11-15.", "read_on": "2026-11-15", "drugs": {}}
     for slug, v in a.items():
-        lines, dropped = take(v.get("lines") or [], c.get(slug), "AI reader 704 (second reader)")
+        lines, dropped = take(v.get("lines") or [], c.get(slug), who_of.get(slug, "second reader"))
         if lines: out["drugs"][slug] = {"lines": lines}
         print(f"description / {slug}: {len(lines)} lines" + (f"; not installed: {dropped}" if dropped else ""))
     save(ROOT / "data/site/descriptions.json", out); print("drugs with a description:", len(out["drugs"]))
@@ -54,10 +60,20 @@ if "kits" in what:
     a = J(P / "kit_links_705.json")["sellers"]; c = {(x["seller"], x["slug"]): x for x in J(P / "kit_links_check_706.json")["checks"]}
     out = {"_note": "Each seller's own page for each drug's test kit (senior author, 15 November 2026: 'the links should be individualized for each drug page'). Found by AI reader 705, each page opened and confirmed by AI reader 706; data/verification/pages-2026-11-15. A link, not an endorsement: we have not tested their kits.", "read_on": "2026-11-15", "sellers": {}}
     n = 0
+    # the editor's decisions after the verifier's notes (kit_links_editor.json): entries not to show, with the reason; plain
+    # labels that say what is sold (the seller's own label stays as label_seen); a seller's page language
+    E = J(P / "kit_links_editor.json") if (P / "kit_links_editor.json").exists() else {}
+    dropped = {(x["seller"], x["slug"]) for x in E.get("drop", [])}; relabel = {(x["seller"], x["slug"]): x["label"] for x in E.get("label", [])}
+    out["_note"] += " The editor's decisions (entries left out, with reasons, and plain labels): kit_links_editor.json in the same folder."
     for seller, v in a.items():
-        drugs = {s: {"url": d["url"], "label": d["label"], "read_on": d.get("read_on", "2026-11-15"), "check": "confirmed", "checked_by": "AI reader 706"} for s, d in (v.get("drugs") or {}).items() if c.get((seller, s), {}).get("verdict") == "confirmed"}
-        if drugs: out["sellers"][seller] = {"name": seller, "home": v.get("home"), "drugs": drugs}; n += len(drugs)
-        print(f"kit links / {seller}: {len(drugs)} of {len(v.get('drugs') or {})} confirmed")
+        drugs = {}
+        for s, d in (v.get("drugs") or {}).items():
+            if c.get((seller, s), {}).get("verdict") != "confirmed" or (seller, s) in dropped: continue
+            e = {"url": d["url"], "label": relabel.get((seller, s), d["label"]), "read_on": d.get("read_on", "2026-11-15"), "check": "confirmed", "checked_by": "AI reader 706"}
+            if e["label"] != d["label"]: e["label_seen"] = d["label"]
+            drugs[s] = e
+        if drugs: out["sellers"][seller] = {"name": seller, "home": v.get("home"), **(E.get("seller", {}).get(seller) or {}), "drugs": drugs}; n += len(drugs)
+        print(f"kit links / {seller}: {len(drugs)} of {len(v.get('drugs') or {})} shown" + (f" ({sum(1 for s in (v.get('drugs') or {}) if (seller, s) in dropped)} left out by the editor)" if any((seller, s) in dropped for s in (v.get('drugs') or {})) else ""))
     save(ROOT / "data/site/kit-links.json", out); print("kit links installed:", n)
 if "interest" in what:
     R = ROOT / "data/verification/quiz/interest-2026-11-15"; ra, rb = J(R / "ratings_699.json")["ratings"], J(R / "ratings_700.json")["ratings"]

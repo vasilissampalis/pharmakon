@@ -31,10 +31,9 @@ ids = [a["id"] for a in A]; ix = {a: i for i, a in enumerate(ids)}
 OLD = {a["id"] for a in json.load(open(V / "answers.json", encoding="utf-8"))["answers"]}
 var = json.load(open(V / "variants_reader696.json", encoding="utf-8"))["variants"]
 near, more = {}, {}
-for r in ("707", "708"):
-    f = V / f"nearmiss_{r}.json"
-    if f.exists():
-        for k, v in json.load(open(f, encoding="utf-8"))["items"].items(): near[k] = v.get("near") or []; more[k] = v.get("more") or []
+for f in sorted(V.glob("nearmiss_*.json")):     # readers 707 and 708; reader 725 (ways of asking for the newest answers)
+    for k, v in json.load(open(f, encoding="utf-8"))["items"].items():
+        near.setdefault(k, []).extend(v.get("near") or []); more.setdefault(k, []).extend(v.get("more") or [])
 print(f"{len(A)} answers ({len(OLD & set(ids))} in the gold catalogue); variants for {len(var)}; near-miss for {len(near)} answers")
 G = json.load(open(V / "gold-sample.json", encoding="utf-8"))["questions"]
 La = {x["n"]: x for x in json.load(open(V / "gold_reader693.json", encoding="utf-8"))["labels"]}
@@ -174,25 +173,28 @@ FN = ["best wording", "2nd wording", "short answer", "word overlap", "drug named
 
 # ---------- measures on the gold set ----------
 gq = [qtext[n] for n in ns]; oldmask = np.array([a in OLD for a in ids])
-def gold_report(name, score, verdict=None, cuts=(0.5, 0.6, 0.7, 0.8, 0.9)):
+SPLIT = {"dev": lambda n: n % 2 == 1, "test": lambda n: n % 2 == 0, "all": lambda n: True}   # odd-numbered gold questions choose a setting, even-numbered ones report it
+def gold_report(name, score, verdict=None, cuts=(0.5, 0.6, 0.7, 0.8, 0.9), split="all", quiet=False):
     """score: [gold question, answer] for ordering; verdict: [gold question, answer] confidence that it answers (default: score)."""
     s = np.where(oldmask[None, :], score, -9.0); v = s if verdict is None else np.where(oldmask[None, :], verdict, -9.0)
-    top = np.argsort(-s, 1)[:, :3]; first = top[:, 0]
-    S_ = [k for k, n in enumerate(ns) if strict[n]]; L_ = [k for k, n in enumerate(ns) if lenient[n]]; NB = [k for k, n in enumerate(ns) if n in none_both]
+    top = np.argsort(-s, 1)[:, :3]; first = top[:, 0]; use = SPLIT[split]
+    S_ = [k for k, n in enumerate(ns) if strict[n] and use(n)]; L_ = [k for k, n in enumerate(ns) if lenient[n] and use(n)]; NB = [k for k, n in enumerate(ns) if n in none_both and use(n)]
+    ALLK = np.array([k for k, n in enumerate(ns) if use(n)])
     s1 = np.mean([ids[first[k]] in strict[ns[k]] for k in S_]); s3 = np.mean([any(ids[j] in strict[ns[k]] for j in top[k]) for k in S_])
     l1 = np.mean([ids[first[k]] in lenient[ns[k]] for k in L_]); l3 = np.mean([any(ids[j] in lenient[ns[k]] for j in top[k]) for k in L_])
     conf = v[np.arange(len(ns)), first]
     # does the first answer's confidence separate "the first answer fully answers" from everything else?
-    y = np.array([ids[first[k]] in strict[ns[k]] for k in range(len(ns))]); auc = auc_of(conf, y)
-    y2 = np.array([ids[first[k]] in lenient[ns[k]] for k in range(len(ns))]); auc2 = auc_of(conf, y2)
-    line = f"{name:<44} strict top1 {100*s1:5.1f} top3 {100*s3:5.1f} | lenient top1 {100*l1:5.1f} top3 {100*l3:5.1f} | AUC full {auc:.3f} any {auc2:.3f}"
+    y = np.array([ids[first[k]] in strict[ns[k]] for k in range(len(ns))]); auc = auc_of(conf[ALLK], y[ALLK])
+    y2 = np.array([ids[first[k]] in lenient[ns[k]] for k in range(len(ns))]); auc2 = auc_of(conf[ALLK], y2[ALLK])
+    line = f"{name:<44} [{split}] strict top1 {100*s1:5.1f} top3 {100*s3:5.1f} (n={len(S_)}) | lenient top1 {100*l1:5.1f} top3 {100*l3:5.1f} (n={len(L_)}) | AUC full {auc:.3f} any {auc2:.3f}"
     print(line); rows = []
-    for q in (0.2, 0.3, 0.4, 0.5):   # cut-offs set by the share of all 400 questions that get a "best match"
-        t = np.quantile(conf, 1 - q); shown = conf >= t
-        rows.append((q, t, y[shown].mean(), y2[shown].mean(), np.mean([shown[k] for k in NB]), np.mean([shown[k] and y[k] for k in S_])))
-    print("    best match shown for | cut | first answer answers in full | in full or part | shown on unanswerable | strict questions answered as best")
-    for q, t, a_, b_, c_, d_ in rows: print(f"      {100*q:3.0f}% of questions | {t:6.3f} | {100*a_:5.1f}% | {100*b_:5.1f}% | {100*c_:5.1f}% | {100*d_:5.1f}%")
-    return {"name": name, "s1": s1, "s3": s3, "l1": l1, "l3": l3, "auc": auc, "auc_any": auc2}
+    if not quiet:
+        for q in (0.2, 0.3, 0.4, 0.5):   # cut-offs set by the share of the questions that get a "best match"
+            t = np.quantile(conf[ALLK], 1 - q); shown = conf >= t
+            rows.append((q, t, y[ALLK][shown[ALLK]].mean(), y2[ALLK][shown[ALLK]].mean(), np.mean([shown[k] for k in NB]), np.mean([shown[k] and y[k] for k in S_])))
+        print("    best match shown for | cut | first answer answers in full | in full or part | shown on unanswerable | strict questions answered as best")
+        for q, t, a_, b_, c_, d_ in rows: print(f"      {100*q:3.0f}% of questions | {t:6.3f} | {100*a_:5.1f}% | {100*b_:5.1f}% | {100*c_:5.1f}% | {100*d_:5.1f}%")
+    return {"name": name, "split": split, "s1": s1, "s3": s3, "l1": l1, "l3": l3, "auc": auc, "auc_any": auc2}
 def auc_of(score, y):
     y = np.asarray(y, bool); pos, neg = score[y], score[~y]
     if not len(pos) or not len(neg): return float("nan")

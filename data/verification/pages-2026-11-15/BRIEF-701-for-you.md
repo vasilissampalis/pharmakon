@@ -28,7 +28,11 @@ Output `data/verification/pages-2026-11-15/for_you_701.json`:
 `{"reader": "AI reader 701", "date": "2026-11-15", "families": {"<family>": {"self": [{"line": "...", "anchors":
 [...]}], "gaps": "..."}}}`. Final message under 150 words: lines per family, publishers used, gaps.
 
-## Reader 702
+## Reader 702 (and reader 718: the nine families are shared between two second readers)
+
+Your families and your output file's name are in your instructions; the shape of the file is the one below, with your
+own reader name. An anchor whose page cannot be opened gets the verdict `not-checked` with the reason in `note`: do not
+retry it and do not look for the passage on another address.
 
 Check every anchor and line of `for_you_701.json` as `BRIEF-common.md` says. Output
 `data/verification/pages-2026-11-15/for_you_check_702.json`: `{"reader": "AI reader 702 (second reader)", "date":
