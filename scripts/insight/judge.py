@@ -31,10 +31,9 @@ ids = [a["id"] for a in A]; ix = {a: i for i, a in enumerate(ids)}
 OLD = {a["id"] for a in json.load(open(V / "answers.json", encoding="utf-8"))["answers"]}
 var = json.load(open(V / "variants_reader696.json", encoding="utf-8"))["variants"]
 near, more = {}, {}
-for r in ("707", "708"):
-    f = V / f"nearmiss_{r}.json"
-    if f.exists():
-        for k, v in json.load(open(f, encoding="utf-8"))["items"].items(): near[k] = v.get("near") or []; more[k] = v.get("more") or []
+for f in sorted(V.glob("nearmiss_*.json")):     # readers 707 and 708; reader 725 (ways of asking for the newest answers)
+    for k, v in json.load(open(f, encoding="utf-8"))["items"].items():
+        near.setdefault(k, []).extend(v.get("near") or []); more.setdefault(k, []).extend(v.get("more") or [])
 print(f"{len(A)} answers ({len(OLD & set(ids))} in the gold catalogue); variants for {len(var)}; near-miss for {len(near)} answers")
 G = json.load(open(V / "gold-sample.json", encoding="utf-8"))["questions"]
 La = {x["n"]: x for x in json.load(open(V / "gold_reader693.json", encoding="utf-8"))["labels"]}
