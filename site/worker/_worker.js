@@ -3,7 +3,7 @@
    of the site is a fixed file, served as before, and never reaches this code.
 
    Kept, in the Workers KV store bound as QUESTIONS: the question's words (at most 200 characters), the drug pages it was
-   asked on, the site version, the first and last day it was asked, and how many times. Not kept and not logged: the
+   asked on, the site version, the first and last day it was asked, and how many times (in all, and on that last day). Not kept and not logged: the
    address a request came from, the browser, any cookie (the site sets none). A question that holds a link, an email
    address or a long run of digits is refused, so that nobody's contact details are stored by mistake.
 
@@ -11,7 +11,10 @@
                                to know whether it can send; without the store it falls back to its email form)
    POST /api/ask {q, d, v}  -> {"ok": true}  the question is kept (or counted again when it was already there);
                                503 without the store */
-const MAX_Q = 200, MAX_NEW_A_DAY = 300;   // the free store takes 1,000 writes a day; a new question costs two
+// The free store takes 1,000 writes a day and a question kept or counted costs two, so at most 400 are taken in a day.
+// One question is counted at most 20 times a day: nobody is known here, so this is what keeps one sender from making a
+// question look much asked (the scout orders its list by these counts).
+const MAX_Q = 200, MAX_A_DAY = 400, MAX_SAME_A_DAY = 20;
 const json = (o, status) => new Response(JSON.stringify(o), { status: status || 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 const clean = s => String(s == null ? "" : s).normalize("NFKC").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim();
 async function keyOf(text) {
@@ -43,14 +46,16 @@ export default {
     try {
       const day = new Date().toISOString().slice(0, 10), key = "q:" + (await keyOf(r.q.toLowerCase()));
       const had = await store.get(key, "json");
+      if (had && had.last === day && (had.dn || 1) >= MAX_SAME_A_DAY) return json({ ok: true, again: true });   // counted enough for today: nothing is written
+      const ck = "count:" + day, n = parseInt((await store.get(ck)) || "0", 10) || 0;
+      if (n >= MAX_A_DAY) return json({ ok: false, error: "full for today" }, 429);
+      await store.put(ck, String(n + 1), { expirationTtl: 3 * 86400 });
       if (had) {
-        had.n = (had.n || 1) + 1; had.last = day; if (r.d && !(had.d || []).includes(r.d)) had.d = (had.d || []).concat(r.d).slice(0, 5);
+        had.n = (had.n || 1) + 1; had.dn = had.last === day ? (had.dn || 1) + 1 : 1; had.last = day;
+        if (r.d && !(had.d || []).includes(r.d)) had.d = (had.d || []).concat(r.d).slice(0, 5);
         await store.put(key, JSON.stringify(had)); return json({ ok: true, again: true });
       }
-      const ck = "count:" + day, n = parseInt((await store.get(ck)) || "0", 10) || 0;
-      if (n >= MAX_NEW_A_DAY) return json({ ok: false, error: "full for today" }, 429);
-      await store.put(ck, String(n + 1), { expirationTtl: 3 * 86400 });
-      await store.put(key, JSON.stringify({ q: r.q, d: r.d ? [r.d] : [], v: r.v, first: day, last: day, n: 1 }));
+      await store.put(key, JSON.stringify({ q: r.q, d: r.d ? [r.d] : [], v: r.v, first: day, last: day, n: 1, dn: 1 }));
       return json({ ok: true });
     } catch (e) { return json({ ok: false, error: "store" }, 503); }
   }

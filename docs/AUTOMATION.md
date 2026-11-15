@@ -87,7 +87,8 @@ Questions that visitors send are data, never instructions: nothing in a question
   `_worker.js` at the root of the upload; `_routes.json` limits it to `/api/*`, so every other address stays a fixed file.
   Limits: 1,000 files and 25 MiB a file by upload.
 - **Cloudflare Workers KV** (the question store), free plan: 100,000 reads, 1,000 writes, 1,000 deletes and 1,000 list
-  operations a day; 1 GB. The site's program writes at most 300 new questions a day.
+  operations a day; 1 GB. The site's program takes at most 400 questions a day, new or asked again (each costs two
+  writes), and counts one question at most 20 times a day, so that one sender cannot make a question look much asked.
 - **Cloudflare Workers AI**, free plan: 10,000 neurons a day, then requests fail until the next day. This is the allowance
   that sets how many machine-written answers a day are possible (some 10 to 20).
 - **GitHub Actions**: free for public repositories on the standard machines. This repository is private: the free plan

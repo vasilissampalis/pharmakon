@@ -44,7 +44,13 @@ Finding what is missing (`scripts/editor/gaps.py`), ranking what people ask, ret
 (`scripts/insight/finetune.py`), building, checking and deploying can run on GitHub's free build machines. Deploying
 needs the senior author to store a Cloudflare key in GitHub once.
 
-## The next three steps (proposed on 15 November 2026; they wait for the senior author's yes)
+## The next three steps (proposed on 15 November 2026)
+
+The senior author answered the same evening ("whatever you think is objectively optimal"; then, on what the machine may
+publish: "it should be claims"). Step 1 is built in site 2.4.0. Step 2 is wanted more often than nightly. Step 3 was
+changed by his decision: machine-written claims are to be published with a small label once they pass five hard-coded
+gates and an exam on our own records. The plan, his words and what is built are in `docs/AUTOMATION.md`; the three steps
+below are kept as they were proposed.
 
 What limits the site now is how many answers exist, not how they are found: of 400 real forum questions it answers 79
 in full, 195 in part and 126 not at all.
@@ -65,3 +71,8 @@ in full, 195 in part and 126 not at all.
 
 Nothing unverified: a line is shown only after a reader who did not write it has checked it at its source. No AI is
 perfect, ours included; the checks are what keep the site right.
+
+One exception has been decided and is not yet in force: the machine lane of `docs/AUTOMATION.md` (decision 4, the senior
+author, 15 November 2026), whose answers will be shown with the line "Written by our system from N papers. Not yet checked
+by a person." until a reader has checked them. Until the day that lane opens, and the protocol and `CLAUDE.md` are amended
+in his words, the rule above holds without exception.

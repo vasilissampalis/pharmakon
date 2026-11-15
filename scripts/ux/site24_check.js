@@ -268,7 +268,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const said = await p.evaluate(() => (document.querySelector(".ask-said") || {}).textContent || "");
     ok("one tap: the page says it was sent", /^Sent\./.test(said), said);
     const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
-    ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "how can you die from alcohol" && Object.keys(kept[0]).sort().join() === "d,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
+    ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "how can you die from alcohol" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, rows: [...b.querySelectorAll(".aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
     ok("start page: Your questions lists it as being checked", !list.hidden && list.rows.length === 1 && /wait \| We are checking \| how can you die from alcohol/.test(list.rows[0]), JSON.stringify(list));
@@ -344,6 +344,9 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click('#filters .chip[data-cls="Opioids"]'); await p.waitForTimeout(300);
     ok("Find a drug: a family can be chosen", await p.evaluate(() => { const c = [...document.querySelectorAll("#subgrid a.dcard")]; return c.length >= 3 && c.length < 12 && c.every(x => /Opioids/.test(x.textContent)); }));
     await shot(p, "390-find-a-drug-opioids");
+    const names = await p.evaluate(() => { const out = [], seen = new Set(); document.querySelectorAll("#menu a[data-view], footer.site a[href^='#']").forEach(a => { const v = a.dataset.view || a.getAttribute("href").slice(1); if (v === "review" || !document.getElementById("view-" + v) || a.dataset.email) return;
+      const h1 = document.querySelector("#view-" + v + " h1"); out.push({ v, where: a.closest("#menu") ? "menu" : "footer", link: a.textContent.trim(), h1: h1 ? h1.textContent.trim() : "", title: PAGE_TITLES[v] }); seen.add(v); }); return out; });
+    ok("every page has one name: the same in the menu, in the footer, on the page and in the tab's title", names.length >= 16 && names.every(x => x.link === x.h1 && x.h1 === x.title), names.filter(x => !(x.link === x.h1 && x.h1 === x.title)).map(x => x.where + " “" + x.link + "” / page “" + x.h1 + "” / title “" + x.title + "”").join(" | "));
     const eyebrows = await p.evaluate(() => [...document.querySelectorAll("main .view > .wrap .eyebrow, main .view .prose > .eyebrow")].filter(e => !e.closest("#view-review, #view-notfound")).map(e => e.textContent));
     ok("no page of the site starts with a small label above its title any more (one look for every page)", eyebrows.length === 0, eyebrows.join(" | "));
     await p.context().close();
