@@ -64,7 +64,7 @@ if "interest" in what:
     acc = {}
     for r in ra + rb: acc.setdefault(r["key"], []).append(r)
     items = {k: {"interest": round(sum(x["interest"] for x in v) / len(v), 2), "clear": round(sum(x["clear"] for x in v) / len(v), 2), "test_feel": sum(bool(x.get("test_feel")) for x in v), "n": len(v)} for k, v in acc.items()}
-    cut = {"interest": 3.5, "clear": 4.0}
+    cut = {"interest": 4.0, "clear": 4.0}
     keep = sum(1 for v in items.values() if v["interest"] >= cut["interest"] and v["clear"] >= cut["clear"])
     out = {"_note": "How much a common person would care about each Myth or fact? card, and how clear it is on first read (1 to 5; mean of AI raters 699 and 700, each blind to the other; data/verification/quiz/interest-2026-11-15). Senior author, 15 November 2026: 'less than half of them are interesting for most users. they feel a lot like an academic test'. Decks show the cards at or above the cut, most interesting first. key = first 12 hex of SHA-1 of the statement.", "cut": cut, "items": items}
     save(ROOT / "data/site/tf-interest.json", out); print(f"cards rated: {len(items)}; kept at the cut: {keep}")
