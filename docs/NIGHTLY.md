@@ -10,7 +10,7 @@ autonomous ai".
 Insight has two halves. The half on the reader's own device finds checked answers and writes nothing, which is why it
 cannot make things up. The half that reads, writes and checks is the editorial pipeline of `CLAUDE.md` (first readers,
 writers, second readers who wrote none of it, blind checkers, the editor). The nightly run is that pipeline started by a
-schedule instead of by a message. It is **not switched on until the senior author says so**.
+schedule instead of by a message. It is **not switched on**: on 15 November the senior author decided that nothing runs on his Claude plan at night (see `docs/OWN-AI.md` for the route he chose instead).
 
 ## What one night does, in order (each step only with the tools and rules already in this repository)
 
