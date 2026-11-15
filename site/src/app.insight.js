@@ -783,8 +783,11 @@ function askedBox() {
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
   const row = it => it.st === "ans"
     ? '<li class="aq ans"><a class="aq-a" href="' + esc(answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
-    : '<li class="aq wait"><span class="aq-a"><span class="aq-k">' + icon("clock") + (it.sent ? "We are checking" : "Kept on this device") + '</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>";
-  box.innerHTML = '<h2 class="aq-h">Your questions</h2><ul class="aq-l">' + list.filter(it => it.st === "ans").concat(list.filter(it => it.st !== "ans")).map(row).join("") + "</ul>";
+    : it.sent ? '<li class="aq wait"><span class="aq-a"><span class="aq-k">' + icon("clock") + 'Sent. We are checking</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>"
+    : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
+  // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
+  // didn't send the email? ... the user should be informed": the list says where it is kept, and each row whether it was sent)
+  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it.</p><ul class="aq-l">' + list.filter(it => it.st === "ans").concat(list.filter(it => it.st !== "ans")).map(row).join("") + "</ul>";
   box.hidden = false;
   askedCheckSoon();
 }
@@ -810,6 +813,13 @@ document.addEventListener("click", async e => {
   if (!e.target.closest) return;
   const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   const op = e.target.closest("a[data-asked-open]"); if (op) { askedDrop(op.dataset.askedOpen); return; }   // read: it leaves the list (the sheet opens by its data-sheet)
+  // a question in the list that was not sent: one tap sends it where the site can send; elsewhere the email form opens with it
+  const sb = e.target.closest("button[data-asked-send]");
+  if (sb) { e.preventDefault(); const it = askedList().find(x => x.k === sb.dataset.askedSend); if (!it) return; sb.disabled = true;
+    if (await askProbe()) { let ok = false;
+      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
+      if (ok) { askedSet(it.k, { sent: 1 }); askedBox(); return; } }
+    sb.disabled = false; openFeedback("feedback", location.hash, it.q); return; }
   const b = e.target.closest("button[data-ask]"); if (!b || b.disabled) return;
   e.preventDefault(); e.stopPropagation();
   const q = b.dataset.ask, it = askedAdd(q, insCtx().drug || ""); if (!it) return;
@@ -824,7 +834,7 @@ document.addEventListener("click", async e => {
     if (ok) { askedSet(it.k, { sent: 1 }); say("Sent. We will check it. It is kept under “Your questions” on the start page."); askedBox(); return; }
   }
   // the page cannot send it (the store is not switched on, or the connection failed): kept on this device, and the email form opens with it
-  say("Kept under “Your questions” on this device. To send it to us, use the email form.");
+  say("Not sent yet. It is kept on this device only, under “Your questions”. To send it to us, press Send by email in the form.");
   askedBox(); if (EV.open) closeEvidence(); openFeedback("feedback", location.hash, q);
 }, true);
 // The start page is drawn before this part of the script has run (the list's own names do not exist yet at that moment),

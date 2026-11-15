@@ -1017,7 +1017,7 @@ function runSearch(raw) {
   const asked = String(raw).trim(), askBtn = label => '<button type="button" class="linklike" data-ask="' + esc(asked) + '">' + label + "</button>";
   box.innerHTML = searchHits.length ? searchHits.map(row).join("") + '<p class="sr-ask">Not what you were looking for? ' + askBtn("Ask us") + "</p>"
     : '<p class="none">No match for “' + esc(asked) + '”. Try other words, a drug’s name or a street name, or see <a href="#substances">all 30 drugs</a>. Need help now? <a href="#emergency">Emergency numbers</a>.</p>' +
-      '<p class="sr-ask"><b>Didn’t find your question?</b> ' + askBtn("Ask us") + ". The questions people ask most are answered first.</p>";
+      '<p class="sr-ask"><b>Didn’t find your question?</b> ' + askBtn("Ask us") + ".</p>";
   box.hidden = false;
   if (live) live.textContent = searchHits.length ? searchHits.length + " result" + (searchHits.length === 1 ? "" : "s") : "No results";
   insightAfterSearch(raw);   // Insight (app.insight.js): the answers that fit a question, once it is ready
@@ -1309,7 +1309,7 @@ document.getElementById("report").addEventListener("keydown", e => {
 });
 // the line at the end of each drug page
 function fbLineHtml() {
-  return '<section class="sec fbline" aria-label="Ask or report"><p><b>Didn’t find your question?</b> Ask us. The questions people ask most are answered first.</p><div class="fb-two">' +
+  return '<section class="sec fbline" aria-label="Ask or report"><p><b>Didn’t find your question?</b> Ask us.</p><div class="fb-two">' +
     '<button type="button" data-fb="feedback">' + icon("message") + "Ask a question</button>" +
     '<button type="button" data-fb="issue">' + icon("flag") + "Report a mistake</button></div></section>";
 }

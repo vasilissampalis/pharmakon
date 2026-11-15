@@ -271,7 +271,8 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "how can you die from alcohol" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, rows: [...b.querySelectorAll(".aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
-    ok("start page: Your questions lists it as being checked", !list.hidden && list.rows.length === 1 && /wait \| We are checking \| how can you die from alcohol/.test(list.rows[0]), JSON.stringify(list));
+    ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking \| how can you die from alcohol/.test(list.rows[0]), JSON.stringify(list));
+    ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it."));
     await typeQ(p, "can you overdose on lsd"); await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(800);
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     list = await p.evaluate(() => [...document.querySelectorAll("#home-asked .aq-q")].map(e => e.textContent));
@@ -302,8 +303,24 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const fb = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), text: document.getElementById("report-message").value, kept: JSON.parse(localStorage.getItem("pk-asked") || "[]").map(x => x.q + "|" + x.sent) }));
     ok("with the store off: the email form opens with the question, and it is kept on the device", fb.open && fb.text === "how can you die from alcohol" && fb.kept.join() === "how can you die from alcohol|0", JSON.stringify(fb));
     await p.click("#report-close"); await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
-    const row = await p.evaluate(() => (document.querySelector("#home-asked .aq-k") || {}).textContent || "");
-    ok("with the store off: the list says it is kept on this device, not that we are checking", row === "Kept on this device", row);
+    const row = await p.evaluate(() => { const r = document.querySelector("#home-asked .aq"); return r ? { cls: r.className, k: r.querySelector(".aq-k").textContent, send: (r.querySelector("button.aq-send") || {}).textContent || "", note: (document.querySelector("#home-asked .aq-note") || {}).textContent || "" } : null; });
+    ok("with the store off: the list says Not sent, where the list is kept, and offers to send it", row && /unsent/.test(row.cls) && row.k === "Not sent" && row.send === "Send it to us" && /kept on this device only/.test(row.note), JSON.stringify(row));
+    await p.click("#home-asked button.aq-send"); await p.waitForTimeout(700);
+    const again = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), text: document.getElementById("report-message").value, how: (document.querySelector("#report .fb-how") || {}).textContent || "", head: document.querySelector("#report .fb-head p").textContent, k: document.querySelector("#home-asked .aq-k").textContent }));
+    ok("with the store off: Send it to us opens the email form with the question; the form says nothing is sent until Send is pressed there; the row stays Not sent", again.open && again.text === "how can you die from alcohol" && /Nothing is sent until you press Send there/.test(again.how) && again.k === "Not sent", JSON.stringify(again));
+    ok("the form's head no longer says that the most asked questions are answered first (nor does any page)", again.head === "Both reach the editors. We read everything." && await p.evaluate(() => { location.hash = "#s-cannabis"; return new Promise(r => setTimeout(() => r(!/ask most are answered first/.test([...document.querySelectorAll("main, #report, #menu, footer.site")].map(e => e.textContent).join(" "))), 500)); }), again.head);   // (the page's text, not its script)
+    await p.context().close();
+  }
+  {
+    // a question kept while sending was off can be sent from the list once sending is on
+    const p = await open(ON, 390);
+    await p.evaluate(() => localStorage.setItem("pk-asked", JSON.stringify([{ k: "does cannabis cause cancer", q: "does cannabis cause cancer", d: "", t: Date.now(), cv: SITE_VERSION, st: "wait", sent: 0 }])));
+    await p.reload(); await p.waitForTimeout(1600);
+    const before = await p.evaluate(() => (document.querySelector("#home-asked .aq-k") || {}).textContent || "");
+    await p.click("#home-asked button.aq-send"); await p.waitForTimeout(900);
+    const after = await p.evaluate(() => ({ k: (document.querySelector("#home-asked .aq-k") || {}).textContent || "", form: document.getElementById("report").classList.contains("open"), send: !!document.querySelector("#home-asked button.aq-send") }));
+    const stored = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v).q);
+    ok("with the store on: a question that was not sent is sent from the list in one tap, and the row says so", before === "Not sent" && after.k === "Sent. We are checking" && !after.form && !after.send && stored.includes("does cannabis cause cancer"), JSON.stringify({ before, after, stored }));
     await p.context().close();
   }
 

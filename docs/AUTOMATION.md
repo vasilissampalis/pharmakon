@@ -28,6 +28,14 @@ what was decided, what is built and what is not. `docs/OWN-AI.md` holds the long
   which has very few users) and update the website? awesome!" The editor corrected this the same hour: the system reads
   only sources that allow it (below). Reddit is closed to it.
 
+- 19:38, to the offer of an application to Reddit's programme for researchers: "okay" (the draft:
+  `docs/reddit-for-researchers-application.md`).
+- 19:46: "i also wonder if we can make the site understand what the user wants without sending the email and make an
+  algorithm to track user usage so as to understand what to update"; 19:48: "i just want the website to be perfect". The
+  editor's advice, waiting for his yes: count, never read (which answers are opened; for a search without an answer, the
+  drug named and the nearest answers, never the words); say it openly on the site, with an off switch; About's "no
+  tracking or analytics" would change to say exactly what is counted.
+
 Earlier the same day: "no i don't want my claude plan to use tokens! we have to automate the ai!", "i want it to be free",
 "the perfection of pharmakon insight is my biggest concern".
 
