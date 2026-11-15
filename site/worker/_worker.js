@@ -7,9 +7,10 @@
    address a request came from, the browser, any cookie (the site sets none). A question that holds a link, an email
    address or a long run of digits is refused, so that nobody's contact details are stored by mistake.
 
-   GET  /api/ask            -> {"ok": true}  when the store is bound (the page asks once, to know whether it can send)
-   POST /api/ask {q, d, v}  -> {"ok": true}  the question is kept (or counted again when it was already there)
-   Without the store (before it is set up in the Pages project) both answer 503 and the page falls back to its email form. */
+   GET  /api/ask            -> {"ok": true}  when the store is bound; {"ok": false} when it is not (the page asks once,
+                               to know whether it can send; without the store it falls back to its email form)
+   POST /api/ask {q, d, v}  -> {"ok": true}  the question is kept (or counted again when it was already there);
+                               503 without the store */
 const MAX_Q = 200, MAX_NEW_A_DAY = 300;   // the free store takes 1,000 writes a day; a new question costs two
 const json = (o, status) => new Response(JSON.stringify(o), { status: status || 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 const clean = s => String(s == null ? "" : s).normalize("NFKC").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim();
@@ -30,7 +31,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname !== "/api/ask") return url.pathname.startsWith("/api/") ? json({ ok: false, error: "not found" }, 404) : env.ASSETS.fetch(request);
     const store = env.QUESTIONS;
-    if (request.method === "GET") return json({ ok: !!store }, store ? 200 : 503);
+    if (request.method === "GET") return json({ ok: !!store });   // 200 either way: a missing store is a state, not an error in the reader's console
     if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
     if (!store) return json({ ok: false, error: "no store" }, 503);
     // only this site's own pages may send

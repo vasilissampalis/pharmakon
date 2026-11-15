@@ -16,6 +16,7 @@ const results = [], errors = [];
 const ok = (name, pass, detail) => { results.push(!!pass); console.log((pass ? "PASS " : "FAIL ") + name + (detail ? "  (" + detail + ")" : "")); };
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split("?")[0]); if (p.endsWith("/")) p += "index.html";
+  if (p === "/api/ask") { res.writeHead(200, { "Content-Type": "application/json" }); res.end('{"ok":false}'); return; }   // as the site's worker answers before its store is set up
   const f = path.join(ROOT, path.normalize(p)); if (!f.startsWith(ROOT)) { res.writeHead(403); res.end(); return; }
   fs.readFile(f, (err, buf) => { if (err) { res.writeHead(404); res.end("not found"); return; } res.writeHead(200, { "Content-Type": TYPES[path.extname(f)] || "application/octet-stream" }); res.end(buf); });
 });
@@ -76,7 +77,9 @@ const server = http.createServer((req, res) => {
     await go("facts", 800); ok(w + ": facts page draws", (await p.$$("#view-facts details.ask")).length > 5); await shot("facts");
     await go("quiz", 800); ok(w + ": quiz page draws", !!(await p.$("#quizpage .qz2-o, #quizpage .qz2-q"))); await shot("quiz");
     await go("numbers", 600); await idle(); await p.waitForTimeout(200);
-    ok(w + ": statistics page draws its figures", (await p.$$("#num-list > *")).length > 3 && !!(await p.$("#num-geo .chip"))); await shot("statistics");
+    // (site 2.4) a menu of places; a place's figures are drawn when it is opened
+    const places = (await p.$$("#num-page .secmenu .sm-b")).length; await p.click('#num-page .sm-b[data-sec="n-global"]'); await p.waitForTimeout(500);
+    ok(w + ": statistics page draws its places, and a place draws its figures when opened", places >= 3 && (await p.$$("#n-global .fig2")).length > 3, places + " places"); await shot("statistics");
     fetched.length = 0; await go("howto", 600);
     ok(w + ": how-to page draws at once: no example, and no file fetched for it", (await p.$$("#view-howto .howsteps li")).length === 4 && !(await p.$("#howto-example")) && !fetched.length, "fetched " + (fetched.join(", ") || "nothing")); await shot("howto");
     // the senior author's review page reads every file and the open decisions

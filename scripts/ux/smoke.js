@@ -12,6 +12,7 @@ const results = [], errors = [];
 const ok = (name, pass, detail) => { results.push(!!pass); console.log((pass ? "PASS " : "FAIL ") + name + (detail ? "  (" + detail + ")" : "")); };
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split("?")[0]); if (p.endsWith("/")) p += "index.html";
+  if (p === "/api/ask") { res.writeHead(200, { "Content-Type": "application/json" }); res.end('{"ok":false}'); return; }   // as the site's worker answers before its store is set up
   const f = path.join(ROOT, path.normalize(p)); if (!f.startsWith(ROOT)) { res.writeHead(403); res.end(); return; }
   fs.readFile(f, (err, buf) => { if (err) { res.writeHead(404); res.end(); return; } res.writeHead(200, { "Content-Type": TYPES[path.extname(f)] || "application/octet-stream" }); res.end(buf); });
 });
@@ -46,7 +47,7 @@ const server = http.createServer((req, res) => {
     // the quiz answers a tap
     await p.evaluate(() => { location.hash = "#quiz"; }); await p.waitForTimeout(700);
     const before = await p.evaluate(() => document.querySelector("#view-quiz").innerText.length);
-    const btn = await p.$("#view-quiz button:not([disabled])");
+    const btn = await p.$("#quizpage .qz2-o:not([disabled])");   // (site 2.4: the page's first buttons choose a drug)
     if (btn) { await btn.click(); await p.waitForTimeout(500); }
     const after = await p.evaluate(() => document.querySelector("#view-quiz").innerText.length);
     await hs("quiz"); ok(w + ": the quiz answers a tap", !!btn && after !== before, before + " -> " + after);

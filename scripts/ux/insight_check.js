@@ -70,6 +70,7 @@ const CONFIG = JSON.parse(fs.readFileSync(path.join(REPO, "site", "insight", "mo
 const served = [];
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split("?")[0]); if (p.endsWith("/")) p += "index.html";
+  if (p === "/api/ask") { res.writeHead(200, { "Content-Type": "application/json" }); res.end('{"ok":false}'); return; }   // as the site's worker answers before its store is set up (the question endpoint itself: scripts/ux/site24_check.js)
   const f = path.join(ROOT, path.normalize(p)); if (!f.startsWith(ROOT)) { res.writeHead(403); res.end(); return; }
   fs.stat(f, (err, st) => { if (err || !st.isFile()) { res.writeHead(404); res.end("not found"); return; }
     const tag = '"' + st.size.toString(36) + "-" + Math.floor(st.mtimeMs).toString(36) + '"';
@@ -356,6 +357,9 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     // ---- Myth or fact: Read the answer opens over the deck, and the way back returns to the same card, scrolled as it was
     for (const [where, hash, box] of [["the Myth or fact? page", "quiz", "#quizpage"], ["the start page's deck", "home", "#tf"], ["a drug page's own deck", "s-cannabis/part-d-quiz", "#qz-drug"]]) {
       await p.goto(BASE + "about"); await p.waitForTimeout(200); await p.goto(BASE + hash); await p.waitForTimeout(1100);
+      // (site 2.4) the start page and the Myth or fact? page share one deck, kept on the device: the card answered on one
+      // is answered on the other, so the next turn starts on the next card
+      if (await p.$(box + " .mf-card.flipped")) { await p.click(box + " .qz2-nb"); await p.waitForTimeout(350); }
       await p.click(box + " .qz2-o >> nth=0"); await p.waitForTimeout(800);
       await p.$eval(box + " .qz2-ev", e => e.scrollIntoView({ block: "center" })); await p.waitForTimeout(200);
       const card = () => p.evaluate(box => ({ q: document.querySelector(box + " .mf-q").textContent, flipped: document.querySelector(box + " .mf-card").classList.contains("flipped"), n: document.querySelector(box + " .qz2-score").textContent, y: Math.round(window.scrollY), hash: location.hash, sheet: !!document.querySelector("#evsheet.open") }), box);
@@ -377,11 +381,14 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
 
     ok(w + ": no “AI” words in what Insight shows", ui.trim().length > 200 && !AI_WORDS.test(ui), (ui.match(AI_WORDS) || ["none"])[0]);
-    // the promise under the box: nothing typed is sent anywhere, or kept (Ask us sends nothing either: it opens a form)
+    // the promise under the box: nothing typed is sent anywhere, or kept. One exception, by the reader's own press (site 2.4):
+    // the question they pressed "Ask us to check it" for is kept in the list of their questions (here the store is off, so it
+    // is not sent: the email form opens). The sending itself is checked in scripts/ux/site24_check.js.
     const forms = q => [q, encodeURIComponent(q), q.replace(/ /g, "+"), q.replace(/ /g, "%20")];
     const leaked = sent.filter(x => typed.some(q => forms(q).some(f => x.includes(f))));
-    const kept = await p.evaluate(qs => { const all = [JSON.stringify(history.state || "")]; for (const st of [localStorage, sessionStorage]) for (let i = 0; i < st.length; i++) all.push(st.getItem(st.key(i)) || ""); return qs.filter(q => all.some(v => v.includes(q))); }, typed);
-    ok(w + ": nothing typed leaves the page or is kept on the device (" + new Set(typed).size + " questions, " + sent.length + " requests)", typed.length >= 15 && !leaked.length && !kept.length, (leaked.concat(kept).join(" | ") || "none").slice(0, 200));
+    const kept = await p.evaluate(qs => { const all = [JSON.stringify(history.state || "")]; for (const st of [localStorage, sessionStorage]) for (let i = 0; i < st.length; i++) { if (st === localStorage && st.key(i) === "pk-asked") continue; all.push(st.getItem(st.key(i)) || ""); } return qs.filter(q => all.some(v => v.includes(q))); }, typed);
+    const askedQ = await p.evaluate(() => { try { return JSON.parse(localStorage.getItem("pk-asked") || "[]").map(x => x.q); } catch (e) { return ["unreadable"]; } });
+    ok(w + ": nothing typed leaves the page or is kept on the device, except the one question “Ask us to check it” was pressed for, kept in the reader's own list (" + new Set(typed).size + " questions, " + sent.length + " requests)", typed.length >= 15 && !leaked.length && !kept.length && askedQ.join("|") === NONE, ((leaked.concat(kept).join(" | ") || "none") + "; in the reader's list: " + askedQ.join(" | ")).slice(0, 260));
     times.push(...await p.evaluate(() => pkInsight.times()));
     await ctx.close();
   }

@@ -31,6 +31,7 @@ function serve() {
   if (!fs.existsSync(path.join(ROOT, "index.html"))) { console.error("No site/public/index.html: build first."); process.exit(2); }
   const server = http.createServer((req, res) => {
     let p = decodeURIComponent(req.url.split("?")[0]); if (p.endsWith("/")) p += "index.html";
+    if (p === "/api/ask") { res.writeHead(200, { "Content-Type": "application/json" }); res.end('{"ok":false}'); return; }   // as the site's worker answers before its store is set up
     const f = path.join(ROOT, path.normalize(p));
     if (!f.startsWith(ROOT)) { res.writeHead(403); res.end(); return; }
     fs.readFile(f, (err, buf) => { if (err) { res.writeHead(404); res.end("not found"); return; } res.writeHead(200, { "Content-Type": TYPES[path.extname(f)] || "application/octet-stream" }); res.end(buf); });
@@ -127,7 +128,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     await s.go("g-3", 300); jump("a glossary term", await s.land("#g-3"));
     const fq = await s.p.evaluate(() => { const q = drugQuestions(GEN); return q.length ? q[Math.min(6, q.length - 1)][0] : null; });
     if (fq) { await s.go("facts/q-" + fq, 300); jump("a question on the facts page", await s.land("#fx-" + fq)); }
-    await s.go("checking/kits", 300); jump("the answers on test kits", await s.land("#dc-kits"));
+    await s.go("checking/kits", 300); jump("the answers on test kits", await s.land("#c-work"));
     // (i) inside the answer sheet: the source named after a "How do we know?" point
     await s.go("s-cannabis/q-cl_can_dependence_how_many", 1200); await s.p.click("#ask-cl_can_dependence_how_many .howsrc a"); await s.p.waitForTimeout(1600);
     jump("a source inside the answer sheet", await s.p.evaluate(landedAt, "#evsheet.open .ev-src.hit"));
@@ -242,6 +243,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     const helpAt = () => s.p.evaluate(() => { const b = document.querySelector("#d-help .sec-b"); if (!b) return null; const heads = [...b.querySelectorAll("h3, h4")].map(h => h.textContent), lis = [...b.querySelectorAll("ul.sf-list > li")];
       return { title: document.querySelector("#d-help > h2").textContent.trim(), heads: heads.join(" > "), lines: lis.length, cited: lis.filter(li => li.querySelector(".srcs2 .srcl")).length, box: !!b.querySelector(".hp-now, .callbtn"), folds: b.querySelectorAll("details").length, fold: (d => d ? { open: d.open, label: d.querySelector("summary").textContent, lines: [...d.querySelectorAll("li")].map(li => li.firstChild.textContent.trim()), after: (d.previousElementSibling || {}).className || (d.previousElementSibling || {}).tagName } : null)(b.querySelector("details.hp-aid")),
         helps: (h => h ? [...h.nextElementSibling.querySelectorAll("li")].map(li => li.firstChild.textContent.trim()) : [])([...b.querySelectorAll("h4")].find(x => x.textContent === "What helps")),
+        aidOpen: (h => h ? [...h.nextElementSibling.querySelectorAll("li")].map(li => li.firstChild.textContent.trim()) : [])([...b.querySelectorAll("h4")].find(x => x.textContent === "If they pass out or stop breathing")),
         srcList: /Sources \(\d+\)/.test(b.textContent), note: /our editor has not checked|official and non-profit/i.test(b.textContent), first: lis[0] ? lis[0].textContent : "", num: (b.querySelector(".hp-num") || {}).textContent || "", more: (b.querySelector(".hp-more a") || {}).getAttribute ? b.querySelector(".hp-more a").getAttribute("href") : "",
         last: b.lastElementChild.className, tel: !!b.querySelector('.hp-num a[href^="tel:"]'), elsewhere: document.querySelectorAll('#drug2 a[href^="tel:"], #drug2 .callbtn').length - b.querySelectorAll('a[href^="tel:"]').length }; });
     const hp = await helpAt();
@@ -260,16 +262,20 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     const kb = await s.p.evaluate(() => !!document.activeElement.closest(".popover.srclpop")); await s.p.keyboard.press("Escape"); await s.p.waitForTimeout(150);
     const kb2 = await s.p.evaluate(() => !document.querySelector(".popover.srclpop") && document.activeElement.classList.contains("srcl"));
     ok(w + ": with the keyboard, Enter on a chip opens its sources with the focus on the link, and Escape gives the focus back to the chip", kb && kb2, kb + ", " + kb2);
-    // opioids: what helps starts with naloxone (the data's order); the calm lines come first elsewhere
+    // opioids (site 2.4): the page speaks to a friend first: when to call, then what helps with naloxone first, then the lines
+    // for someone who has passed out or is not breathing, in sight; on every other page the calm lines come first and
+    // those lines stay inside the closed fold
     await s.go("s-heroin/part-d-help", 1000); const hh = await helpAt();
     await s.go("s-mdma/part-d-help", 1000);
     const kinds = await s.p.evaluate(() => { const fold = /pass(?:ed)? out|won.t wake|not breathing|\bCPR\b|breathing is weak|has stopped/i, part = slug => { const f = STAY_SAFER.signs[subBySlug[slug].cls], k = x => x.kind || "calm", inFold = x => k(x) === "aid" && fold.test(x.line) && !/naloxone/i.test(x.line);
         return { open: f.while_waiting.filter(x => k(x) !== "aid").concat(f.while_waiting.filter(x => k(x) === "aid" && !inFold(x))).map(x => x.line), folded: f.while_waiting.filter(inFold).map(x => x.line) }; };
       return { heroin: part("heroin"), cannabis: part("cannabis") }; });
     const same = (a, b) => a.join("|") === b.join("|");
-    ok(w + ": what helps holds the calm and help lines (for opioids, naloxone first, in sight without opening anything); the lines for someone who has passed out or is not breathing are inside the closed fold, on every page",
-      hh && /^Give naloxone/.test(hh.helps[0] || "") && same(hh.helps, kinds.heroin.open) && hh.fold && !hh.fold.open && same(hh.fold.lines, kinds.heroin.folded) && hh.fold.lines.some(x => /CPR/.test(x)) && same(hp.helps, kinds.cannabis.open) && same(hp.fold.lines, kinds.cannabis.folded) && !hp.helps.some(x => /CPR|pass out/.test(x)),
-      (hh.helps[0] || "").slice(0, 40) + "… | heroin: " + hh.helps.length + " open, " + (hh.fold ? hh.fold.lines.length : 0) + " in the fold | cannabis: " + hp.helps.length + " open, " + hp.fold.lines.length + " in the fold");
+    const nalFirst = a => a.filter(x => /naloxone/i.test(x)).concat(a.filter(x => !/naloxone/i.test(x)));
+    ok(w + ": what helps holds the calm and help lines; the lines for someone who has passed out or is not breathing are inside the closed fold, except on the opioid pages, which speak to a friend first: when to call an ambulance, what helps with naloxone first, then those lines in sight without opening anything, then what not to do",
+      hh && /^For a friend > Call an ambulance if > What helps > If they pass out or stop breathing > What not to do/.test(hh.heads) && /^Give naloxone/.test(hh.helps[0] || "") && same(hh.helps, nalFirst(kinds.heroin.open)) && !hh.fold && hh.folds === 0 && same(hh.aidOpen, kinds.heroin.folded) && hh.aidOpen.some(x => /CPR/.test(x)) &&
+      same(hp.helps, kinds.cannabis.open) && same(hp.fold.lines, kinds.cannabis.folded) && !hp.helps.some(x => /CPR|pass out/.test(x)),
+      hh.heads + " | " + (hh.helps[0] || "").slice(0, 40) + "… | heroin: " + hh.helps.length + " lines of help, " + hh.aidOpen.length + " in sight for someone passed out, " + hh.folds + " folds | cannabis: " + hp.helps.length + " open, " + hp.fold.lines.length + " in the fold");
     // "For you" lines written from pages about cannabis are not shown for synthetic cannabinoids
     await s.go("s-synthetic-cannabinoids/part-d-help", 1000); const hs = await helpAt();
     ok(w + ": the cannabis page shows its \"For you\" lines; the synthetic cannabinoids page, whose sources they are not, shows none", self && /^For you/.test(hp.heads) && hs && /^For a friend/.test(hs.heads), "cannabis: " + hp.heads.split(" > ")[0] + " | synthetic cannabinoids: " + (hs ? hs.heads.split(" > ")[0] : "missing"));
@@ -304,9 +310,9 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     await s.ctx.close();
     // the drug checking page: the same lines for the reader's country, each with its sources, no list of sources
     s = await session({ storage: { "pk-country": "United Kingdom of Great Britain and Northern Ireland" } });
-    await s.go("checking", 1200);
-    const dck = await s.p.evaluate(() => { const b = document.querySelector("#dc-mine .kw-box"); if (!b) return null; const lis = [...b.querySelectorAll("ul.sf-list > li, .kit-row")]; return { rows: b.querySelectorAll(".kit-row").length, lines: lis.length, cited: lis.filter(li => li.querySelector(".srcs2 .srcl")).length, srcList: /Sources \(\d+\)/.test(b.textContent) }; });
-    ok(w + ": the drug checking page cites its test-kit lines the same way", dck && dck.rows >= 2 && dck.cited === dck.lines && !dck.srcList, JSON.stringify(dck));
+    await s.go("checking/part-c-kits", 1200);
+    const dck = await s.p.evaluate(() => { const b = document.querySelector("#c-kits:not([hidden]) #dc-kitsbox .kw-box"); if (!b) return null; const lis = [...b.querySelectorAll("ul.sf-list > li, .kit-row")]; return { rows: b.querySelectorAll(".kit-row").length, lines: lis.length, cited: lis.filter(li => li.querySelector(".srcs2 .srcl")).length, srcList: /Sources \(\d+\)/.test(b.textContent) }; });
+    ok(w + ": the drug checking page cites its test-kit lines the same way (in its section on test kits to use at home)", dck && dck.rows >= 2 && dck.cited === dck.lines && !dck.srcList, JSON.stringify(dck));
     await s.ctx.close();
 
     // ================= 5. The evidence and the answers: only what helps a reader =================
@@ -354,10 +360,10 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     await s.go("home"); await s.shot("home");
     if (w === 390) await s.shot("home-full", null, true);
     await s.p.$eval("#mf-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(200); await s.shot("deck-card1-front");
-    const first = await s.p.evaluate(() => { const h = document.getElementById("mf-h"), b = [...document.querySelectorAll("#mf-h ~ *")].map(e => e.className); return { heading: h.textContent, prev: h.previousElementSibling.id, order: b.slice(0, 3).join(" | ") }; });
+    const first = await s.p.evaluate(() => { const h = document.getElementById("mf-h"), b = [...document.querySelectorAll("#mf-h ~ *")].map(e => e.className); let pv = h.previousElementSibling; while (pv && pv.hidden) pv = pv.previousElementSibling; return { heading: h.textContent, prev: pv ? pv.id : "", order: b.slice(0, 3).join(" | ") }; });
     const doors = await s.p.evaluate(() => ({ home: document.querySelectorAll("#view-home a.do, #view-home a[href='#checking'], #view-home a[href='#emergency']").length, menu: document.querySelectorAll("#menu a.do, #menu a[href='#checking'], #menu a[href='#emergency']").length,
       foot: ["#emergency", "#checking"].map(h => document.querySelectorAll('footer.site a[href="' + h + '"]').length).join() }));
-    ok(w + ": home shows Myth or fact? first under the search box; no door to drug checking or the emergency numbers on the start page or in the menu; both pages are in the footer",
+    ok(w + ": home shows Myth or fact? first under the search box (the reader's own questions, when there are any, stand between them); no door to drug checking or the emergency numbers on the start page or in the menu; both pages are in the footer",
       first.heading === "Myth or fact?" && first.prev === "home-search" && /qz2 mf/.test(first.order) && doors.home === 0 && doors.menu === 0 && doors.foot === "1,1", first.prev + " | " + first.order + " | " + JSON.stringify(doors));
     // ---- the deck: turns over, counts, Previous, Another 10; the most interesting cards first, none under the cut
     const deck = [], verdicts = [], counts = [];

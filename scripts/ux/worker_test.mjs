@@ -4,7 +4,7 @@ const kv = () => { const m = new Map(); return { m, get: async (k, how) => { con
 let pass = 0, fail = 0; const ok = (name, cond, extra) => { if (cond) pass++; else { fail++; console.log("FAIL", name, extra || ""); } };
 const call = async (env, method, body, headers, path) => { const r = await worker.fetch(new Request("https://pharmakon.world" + (path || "/api/ask"), { method, headers: Object.assign({ "content-type": "application/json" }, headers || {}), body: body == null ? undefined : typeof body === "string" ? body : JSON.stringify(body) }), env); let j = null; try { j = await r.clone().json(); } catch (e) {} return { status: r.status, j, r }; };
 const assets = { fetch: async () => new Response("the page", { status: 200 }) };
-{ const env = { ASSETS: assets }; let x = await call(env, "GET"); ok("GET without the store is 503", x.status === 503 && x.j.ok === false);
+{ const env = { ASSETS: assets }; let x = await call(env, "GET"); ok("GET without the store answers 200 with ok false (a state, not an error)", x.status === 200 && x.j.ok === false);
   x = await call(env, "POST", { q: "can you overdose on lsd" }); ok("POST without the store is 503", x.status === 503); }
 { const s = kv(), env = { ASSETS: assets, QUESTIONS: s };
   let x = await call(env, "GET"); ok("GET with the store says ok", x.status === 200 && x.j.ok === true);
