@@ -142,7 +142,7 @@ const data = [
   // confirmed, keyed by the seller's name as the drug page finds it (lower case, no accents)
   "const KIT_LINKS = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/kit-links.json"); if (!fs.existsSync(f)) return {};
     const d = JSON.parse(fs.readFileSync(f, "utf8")).sellers || {}, key = n => String(n == null ? "" : n).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’‘]/g, "'").replace(/\s+/g, " ").trim(), out = {};
-    Object.values(d).forEach(x => { const links = Object.fromEntries(Object.entries((x && x.drugs) || {}).filter(([, l]) => l && /^https:\/\//.test(l.url || "") && ANCHOR_OK.has(l.check)).map(([slug, l]) => [slug, { url: l.url, label: l.label || "" }]));
+    Object.values(d).forEach(x => { const links = Object.fromEntries(Object.entries((x && x.drugs) || {}).filter(([, l]) => l && /^https:\/\//.test(l.url || "") && ANCHOR_OK.has(l.check)).map(([slug, l]) => [slug, Object.assign({ url: l.url, label: l.label || "" }, x.lang ? { lang: x.lang } : {}, x.note ? { note: x.note } : {})]));
       if (x && x.name && Object.keys(links).length) out[key(x.name)] = links; });
     return out; })()) + ";",
   "const HARM_LINKS = " + JSON.stringify(fs.existsSync(path.join(ROOT, "data/site/harm-links.json")) ? site("harm-links.json") : { drugs: {} }) + ";",

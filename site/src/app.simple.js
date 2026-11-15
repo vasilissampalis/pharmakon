@@ -475,17 +475,22 @@ function descHtml(slug) {
    person but what to do yourself if it's too much for you. going or calling the hospital should be the last on the list
    like a last resort ... we have to begin with what users find most useful"; "we don't want to freak people out"). Top to
    bottom: for you (the family's own lines for the reader, once they are written and checked; nothing until then); for a
-   friend, what helps (the calm and help lines, then first aid, in the order of the data: for opioids, naloxone first), what
-   not to do, and last, when to call an ambulance, with the reader's emergency number where their country is known and a
+   friend, what helps (the calm and help lines; for opioids, naloxone first), what not to do, and last, when to call an
+   ambulance, with the reader's emergency number where their country is known, then, closed until someone opens it, what to
+   do if the person passes out or stops breathing (the senior author: "first aid is ... ridiculous nobody does it and we don't
+   want to freak people out": the lines stay, checked, one tap away, in the place a person looks when it is serious), and a
    quiet link to the numbers by country. No box, nothing at the top of the page, nothing repeated. Every line carries its
-   sources. Each line's place is its "kind" in data/site/stay-safer.json. */
+   sources. Each line's place is its "kind" in data/site/stay-safer.json; a "For you" line marked `only` is shown on those
+   drug pages alone (the cannabis lines are not shown for synthetic cannabinoids: their sources speak of cannabis). */
+const AID_FOLD = /pass(?:ed)? out|won.t wake|not breathing|\bCPR\b|breathing is weak|has stopped/i;
 const helpSigns = slug => { const s = subBySlug[slug]; return s && !NO_SIGNS.includes(slug) ? (SAFE.signs || {})[s.cls] || null : null; };
 const helpTitle = () => "If it gets too much";
 function helpHtml(slug) {
   slug = slug || renderedDrug;
   const fam = helpSigns(slug); if (!fam) return "";
-  const kind = x => x.kind || "calm", ww = fam.while_waiting || [], self = fam.self || [], dn = fam.do_not || [], cn = fam.call_now || [];
-  const helps = ww.filter(x => kind(x) !== "aid").concat(ww.filter(x => kind(x) === "aid"));
+  const kind = x => x.kind || "calm", ww = fam.while_waiting || [], self = (fam.self || []).filter(x => !x.only || x.only.includes(slug)), dn = fam.do_not || [], cn = fam.call_now || [];
+  const folded = x => kind(x) === "aid" && AID_FOLD.test(x.line) && !/naloxone/i.test(x.line), aid = ww.filter(folded);
+  const helps = ww.filter(x => kind(x) !== "aid").concat(ww.filter(x => kind(x) === "aid" && !folded(x)));
   const em = PREF_COUNTRY ? emFor(PREF_COUNTRY) : null;
   return (self.length ? '<h3 class="hp-h">For you</h3>' + srcList(self) : "") +
     '<h3 class="hp-h">For a friend</h3>' +
@@ -493,6 +498,7 @@ function helpHtml(slug) {
     (dn.length ? '<h4 class="sf-k">What not to do</h4>' + srcList(dn) : "") +
     (cn.length ? '<h4 class="sf-k">Call an ambulance if</h4>' + srcList(cn) : "") +
     (em ? '<p class="hp-num">The emergency number in ' + esc(inCtry(PREF_COUNTRY)) + ' is <a href="tel:' + esc(telOf(em.numbers[0])) + '"><b>' + esc(em.numbers[0].n) + "</b></a>. " + srcIcons(em.numbers[0].src) + "</p>" : "") +
+    (aid.length ? '<details class="sf-more hp-aid"><summary>If they pass out or stop breathing</summary>' + srcList(aid) + "</details>" : "") +
     '<p class="hp-more"><a href="#emergency">Emergency numbers by country</a></p>';
 }
 /* Where to get tests, country by country (data/site/tests-world.json; decision p-kits-world): what a source says about
@@ -517,17 +523,22 @@ const kitLink = (sel, slug) => (slug && (KITL[norm(sel.name)] || {})[slug]) || n
 // the drug checking page.
 function kitsWhere(un, slug) {
   const nm = esc(inCtry(un)), law = KW.law.filter(x => x.country === un), free = KW.free.filter(x => x.country === un), post = KW.post.filter(x => x.country === un);
-  const sellers = KW.sellers.filter(x => shipsTo(x, un)).sort((a, b) => !!kitLink(b, slug) - !!kitLink(a, slug) || (b.based_in === un) - (a.based_in === un) || (b.kind === "harm reduction non-profit") - (a.kind === "harm reduction non-profit") || a.name.localeCompare(b.name));
+  // on a drug's page: only the sellers with a confirmed page for this drug's kits (no page, no row: nothing is promised that
+  // a reader would not find); on the drug checking page: every seller that says it sends there
+  const sellers = KW.sellers.filter(x => shipsTo(x, un) && (!slug || kitLink(x, slug))).sort((a, b) => (b.based_in === un) - (a.based_in === un) || (b.kind === "harm reduction non-profit") - (a.kind === "harm reduction non-profit") || a.name.localeCompare(b.name));
   const where = x => x.region && !String(x.line).includes(x.region) ? " (" + esc(x.region) + ")" : "";
   const li = x => "<li>" + esc(x.line) + where(x) + lineSrc(x.anchors) + "</li>";
   const row = x => { const k = kitLink(x, slug);
     return '<li class="kit-row"><a class="kit-go" href="' + esc(k ? k.url : x.url) + '" target="_blank" rel="noopener"><span class="kit-n">' + esc(x.name) + "</span>" + (k && k.label ? '<span class="kit-l">' + esc(k.label) + "</span>" : "") + icon("arrow") + "</a>" +
-      '<span class="kit-s">' + esc(x.sells_line) + (x.based_in === un ? ", in " + nm : x.based_in_short ? ", " + esc(x.based_in_short) : "") + lineSrc((x.anchors || []).concat(x.pointers || [])) + "</span></li>"; };
+      // a drug's page: where the seller is, and what a reader should know before the tap (the page's language; how to order);
+      // who points people to the seller stays on the drug checking page, where the sellers are listed as such
+      '<span class="kit-s">' + (slug ? [x.based_in === un ? "In " + nm : esc(x.based_in_short || ""), k.lang ? "page in " + esc(k.lang) : ""].filter(Boolean).join(", ") + (k.note ? (x.based_in_short || k.lang ? ". " : "") + esc(k.note) : "")
+        : esc(x.sells_line) + (x.based_in === un ? ", in " + nm : x.based_in_short ? ", " + esc(x.based_in_short) : "") + lineSrc((x.anchors || []).concat(x.pointers || []))) + "</span></li>"; };
   const warn = sellers.filter(x => x.warning);
   return {
     sellers: sellers.length ? '<ul class="kit-rows">' + sellers.map(row).join("") + '</ul><p class="kit-note">Harm reduction groups or health services point people to these sellers. We have not tested their kits.' +
       (warn.length ? " Some say they do not refund parcels that customs hold or refuse." + lineSrc(warn.flatMap(x => x.warning.anchors || [])) : "") + "</p>"
-      : '<p class="say small">We have not found a seller that says it sends test kits to ' + nm + ".</p>",
+      : '<p class="say small">We have not found a seller that says it sends ' + (slug ? "test kits for " + esc(pageWord(slug)) : "test kits") + " to " + nm + ".</p>",
     free: free.length ? '<h4 class="sf-k">Free tests</h4><ul class="sf-list">' + free.map(li).join("") + "</ul>" : "",
     post: post.length ? '<h4 class="sf-k">Testing by post</h4><ul class="sf-list">' + post.map(li).join("") + "</ul>" : "",
     law: law.length ? '<details class="sf-more"><summary>Test kits and the law in ' + nm + '</summary><ul class="sf-list">' + law.map(li).join("") + "</ul></details>"
