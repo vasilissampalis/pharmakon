@@ -1,7 +1,8 @@
 """ask.py [--drug SLUG] [--index FILE] QUESTION...: how Insight reads each question (site 2.3), with the page's own rule
 (class Ranker in build_index.py) on the index of the last build: the drugs it names, what is embedded for each of the two
-looks, and the candidates with their first-look and topic scores and the tier each falls in. For the editor, when tuning
-TIERS in build_index.py. --drug: as if asked on that drug's page. Build first (node site/build.js).
+looks, the judge's number for the first candidate with its six numbers, and the candidates with their first-look and
+topic scores and the tier each falls in. For the editor, when setting the numbers of site/insight/model.json. --drug: as if
+asked on that drug's page. Build first (node site/build.js).
 Usage: python3 -I scripts/insight/ask.py "how can i die from ketamine" "is it addictive" --drug cannabis"""
 import importlib.util, json, pathlib, sys
 import numpy as np
@@ -20,6 +21,7 @@ for q in args:
     v, mv = bi.embed_all([full, masked], quiet=True)
     r = R.rank_vectors(q, v, mv, groups)
     print(f"\n{q}\n  first look: {full}\n  topic:      {masked}\n  about:      {[g if len(g) < 4 else g[:3] + ['…'] for g in groups] or 'no drug named'}")
+    print(f"  judge:      {r['first']['p']:.3f} for {r['first']['id']} (a best match from {R.J['best']}); " + ", ".join(f"{k} {x:.3f}" for k, x in zip(R.J["features"], r["first"]["f"])))
     tier = {x["id"]: "BEST   " for x in r["best"]}; tier.update({x["id"]: "related" for x in r["related"]})
     key = r["plain"] + R.wt["topic"] * r["topic"] + R.wt["same"] * r["ok"]
     for i in np.argsort(-key, kind="stable")[:7]:

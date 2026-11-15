@@ -7,8 +7,8 @@ and never reach the page), embeds every wording and short answer with Insight's 
 file in site/insight/vendor; where the files came from: scripts/insight/MODELS.md) exactly as the page does in the browser
 (BERT uncased WordPiece, [CLS] text [SEP], at most 128 tokens, mean over the tokens, unit length), and writes OUT.json: the
 vectors (int8; the page scales each row back to unit length), each answer's words for the word-overlap score, the drugs
-each answer is about, the names that name a drug in a question, the model's file name, and the weights and tiers of
-site/insight/model.json (the page and the checks read them from OUT.json only). NEXT.json gets each answer's next questions
+each answer is about, the names that name a drug in a question, the model's file name, and the weights, the tiers and
+the judge of site/insight/model.json (the page and the checks read them from OUT.json only). NEXT.json gets each answer's next questions
 (the nearest answers by the meaning of their questions, never from another drug, never itself): site/build.js puts them in
 the page, for "Read next" and "People also ask".
 
@@ -19,25 +19,22 @@ about kratom. So every wording is embedded a second time with the drug names tak
 question: that is the topic score. Which drug is meant is then settled by the names themselves, not by the model: an answer
 is a best match only when it is about every drug the question names (or the drug of the page the reader is on).
 
-The weights and the tiers (site/insight/model.json; nothing here or in the page holds a threshold):
+The weights, the tiers and the judge (site/insight/model.json; nothing here or in the page holds a number of its own):
   weights  q, short, words: the first look, as tuned in tune.py and scored in eval_gold.py: 0.7 x the best wording, 0.3 x
            the short answer, plus 0.2 x word overlap (TF-IDF over each answer's wordings on the site and its short answer);
-           topic: candidates are put in order by first look + topic x the topic score; same: an answer about the drugs the
-           question names goes this far ahead (in effect: first; on the gold set that puts a fitting answer first under
-           Related a little more often than no head start: 72 against 64 of 197 questions).
-  tiers    best: a best match needs a first look of this or more ... topic: ... and a topic score of this or more, and to
-           be about every drug the question names; sure: or a topic score of this or more with a first look of at least
-           `related` (the same question in other words: what "is it addictive", asked on the cannabis page, needs); tie: a
-           second best match only when it is this close to the first (first look + weights.topic x topic); related: a
-           related answer needs a first look of this or more ... near: ... and a topic score of this or more, and to be
-           about at least one of the drugs named (an answer about none of them only when its topic is `sure`: the same
-           question about another drug; on the gold set that takes away 58 of 437 related rows, most of them beside the
-           point, and leaves 21 of the 22 full answers that were under Related).
+           topic: answers are put in order by first look + topic x the topic score; same: an answer about the drugs the
+           question names goes this far ahead (in effect: first).
+  judge    what makes a best match (the editor, 15 November; scripts/insight/judge2.py trains and measures it). Two
+           thresholds on the two looks gave a best match that was wrong for 20 of 77 gold questions. The judge is a small
+           logistic regression on six numbers the page has at hand for its first candidate (features, in order: its best
+           wording, its second-best wording, its short answer, word overlap, topic, its lead over the next answer about
+           the drugs named), each standardized (mu, sd), weighed (w) and summed with b; trained on our own wordings and
+           near-miss questions only, never on a gold question. The first candidate is the best match when it is about
+           every drug the question names and the judge's number is `best` or more; there is never a second best match.
+  tiers    related: a related answer needs a first look of this or more ... near: ... and a topic score of this or more,
+           and to be about at least one of the drugs named (or the drug of the page the reader is on).
 Measured on the gold set with the page's own rule (--eval; 400 forum questions, 79 with a full answer by either reader,
-126 that neither reader could answer): scripts/insight/MODELS.md has the table. With all-MiniLM-L6-v2, 2.2.0's score alone
-at 0.72 gave a best match that was wrong for about one question in three; the topic score at 0.45 brings that under one in
-five, and at 0.60 to one in ten, but then "how can i die from ketamine" (topic 0.49 against the UK deaths answer) is no
-longer a best match, which the 2.3 brief asked for: the editor's to settle, with the tiers of each new model.
+126 that neither reader could answer): scripts/insight/MODELS.md has the table.
 
 The tokens are made here by the tokenizers library (BertWordPieceTokenizer, lowercase); the model is run by the page's own
 runtime under Node (scripts/insight/embed.js: ONNX Runtime Web from site/insight/vendor), one text at a time, so the
@@ -47,8 +44,8 @@ site/insight/.cache/, in a file named after the model file's SHA-256 (not commit
 texts, and a new model embeds everything again.
 --eval: also ranks the forum questions of the gold set (two blind readers, data/verification/insight/) with the page's own
 rule (class Ranker below, which scripts/insight/parity.js holds the page to), and prints how often a best match is a full
-answer, a partial one or wrong, how the related answers do, the same for other thresholds, and how often an answer is
-given as best match to a question the near-miss readers wrote as one it does not answer."""
+answer, a partial one or wrong, how the related answers do, the same for other cuts of the judge's number, and how often
+an answer is given as best match to a question the near-miss readers wrote as one it does not answer."""
 import base64, glob, hashlib, json, math, os, pathlib, re, shutil, subprocess, sys
 import numpy as np
 
@@ -231,11 +228,12 @@ def name_pattern(names):
 
 class Ranker:
     """The page's ranking (insRank in site/src/app.insight.js) in Python, from the index the page reads: for --eval, and
-    for scripts/insight/parity.js, which requires the page to give the same tiers and scores."""
+    for scripts/insight/parity.js, which requires the page to give the same best match, the same related answers and the
+    same judge's number."""
     def __init__(self, D):
         dim = D["dim"]; self.ids = D["ids"]; self.n = len(self.ids); self.rows = np.array(D["rows"])
         self.W, self.M, self.S = unit_rows(D["W"], dim), unit_rows(D["M"], dim), unit_rows(D["S"], dim)
-        self.lex = Words(D["docs"]); self.wt = D["weights"]; self.t = D["tiers"]
+        self.lex = Words(D["docs"]); self.wt = D["weights"]; self.t = D["tiers"]; self.J = D["judge"]
         self.about = [set(D["slugs"][k] for k in xs) for xs in D["about"]]
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
         self.pat = name_pattern([n for n, _ in D["names"]])
@@ -254,28 +252,57 @@ class Ranker:
         groups = self.named(q); full = self.expand(q)
         if not groups and drug: groups = [[drug]]; full += " (" + self.canon[drug] + ")"
         return full, self.mask(q), groups
-    def score(self, v, mv, q):
-        """The two looks for every answer: first look (plain) and topic."""
+    def look(self, v, mv, q, groups):
+        """Everything the page computes for a question, for every answer: bw and bw2, the best and the second-best wording
+        of the answer in the first look (-1 where it has no second wording); sh, its short answer; lx, word overlap; plain,
+        the first look (the three weighed); topic, its best wording with the drug names taken out; ok, it is about every
+        drug the question names; some, about at least one of them; by, plain + weights.topic x topic; key, the page's
+        order: by, the answers about the drugs named weights.same ahead. (The reference for these numbers is look() in
+        scripts/insight/judge2.py, which trains the judge on them.)"""
         sw, sm = self.W @ v, self.M @ mv
-        bw = np.full(self.n, -1.0, np.float32); bm = np.full(self.n, -1.0, np.float32)
+        bw = np.full(self.n, -1.0, np.float32); bw2 = np.full(self.n, -1.0, np.float32); bm = np.full(self.n, -1.0, np.float32)
         np.maximum.at(bw, self.rows, sw); np.maximum.at(bm, self.rows, sm)
-        return self.wt["q"] * bw + self.wt["short"] * (self.S @ v) + self.wt["words"] * self.lex.sims(q), bm
-    def tiers(self, plain, topic, groups):
+        order = np.argsort(-sw, kind="stable")
+        rest = sw.copy(); rest[order[np.unique(self.rows[order], return_index=True)[1]]] = -1.0   # without each answer's best wording
+        np.maximum.at(bw2, self.rows, rest)
+        sh = self.S @ v; lx = self.lex.sims(q)
+        plain = self.wt["q"] * bw + self.wt["short"] * sh + self.wt["words"] * lx
+        has = lambda i, g: any(s in self.about[i] for s in g)
+        ok = np.array([all(has(i, g) for g in groups) for i in range(self.n)])
+        some = np.array([not groups or any(has(i, g) for g in groups) for i in range(self.n)])
+        by = plain + self.wt["topic"] * bm
+        return {"bw": bw, "bw2": bw2, "sh": sh, "lx": lx, "plain": plain, "topic": bm, "ok": ok, "some": some, "by": by, "key": by + self.wt["same"] * ok, "groups": groups}
+    def six(self, L, c):
+        """The judge's six numbers for answer c (judge.features, in that order): its best wording, its second-best wording
+        (0 if it has one wording), its short answer, word overlap, topic, and its lead over the next answer: by[c] less the
+        highest by among the other answers about every drug the question names (less 0 if there is no other)."""
+        el = L["ok"].copy(); el[c] = False
+        lead = float(L["by"][c] - (L["by"][el].max() if el.any() else 0.0))
+        return [float(L["bw"][c]), float(max(L["bw2"][c], 0.0)), float(L["sh"][c]), float(L["lx"][c]), float(L["topic"][c]), lead]
+    def judge(self, f):
+        """The judge's number for six numbers f: how sure it is that the first candidate answers what was asked."""
+        J = self.J; z = sum(w * (x - m) / d for w, x, m, d in zip(J["w"], f, J["mu"], J["sd"])) + J["b"]
+        return 1.0 / (1.0 + math.exp(-z))
+    def tiers(self, plain, topic, groups, feats):
+        """The page's rule. c, the first candidate in the page's order, is the best match if it is about every drug the
+        question names and the judge's number for it (feats(c): its six numbers) is judge.best or more; there is never a
+        second best match. Related: the next answers in that order, up to three, with a first look of tiers.related or
+        more and a topic of tiers.near or more, about at least one of the drugs named (c first among them when it is not
+        the best match). Returns the best match (a list of none or one), the related answers and the judge's number."""
         t = self.t; has = lambda i, g: any(s in self.about[i] for s in g)
-        ok = np.array([all(has(i, g) for g in groups) for i in range(self.n)])            # about every drug the question names
-        some = np.array([not groups or any(has(i, g) for g in groups) for i in range(self.n)])   # about at least one of them
-        order_by = plain + self.wt["topic"] * topic
-        key = order_by + self.wt["same"] * ok
-        cand = [int(i) for i in np.argsort(-key, kind="stable") if plain[i] >= t["related"]]
-        fits = [i for i in cand if ok[i] and ((plain[i] >= t["best"] and topic[i] >= t["topic"]) or topic[i] >= t["sure"])]
-        best = fits[:1] + [i for i in fits[1:2] if order_by[i] >= order_by[fits[0]] - t["tie"]]
-        # related: near in topic; an answer about none of the drugs named only when it is the same question about another drug
-        related = [i for i in cand if i not in best and topic[i] >= t["near"] and (some[i] or topic[i] >= t["sure"])][:3]
-        return best, related, ok
+        ok = np.array([all(has(i, g) for g in groups) for i in range(self.n)])
+        some = np.array([not groups or any(has(i, g) for g in groups) for i in range(self.n)])
+        order = np.argsort(-(plain + self.wt["topic"] * topic + self.wt["same"] * ok), kind="stable")
+        c = int(order[0]); p = self.judge(feats(c))
+        best = [c] if ok[c] and p >= self.J["best"] else []
+        related = [int(i) for i in order if int(i) not in best and plain[i] >= t["related"] and topic[i] >= t["near"] and some[i]][:3]
+        return best, related, p
     def rank_vectors(self, q, v, mv, groups):
-        plain, topic = self.score(v, mv, q); best, related, ok = self.tiers(plain, topic, groups)
-        row = lambda i: {"id": self.ids[i], "plain": round(float(plain[i]), 4), "topic": round(float(topic[i]), 4), "off": not bool(ok[i])}
-        return {"best": [row(i) for i in best], "related": [row(i) for i in related], "plain": plain, "topic": topic, "ok": ok}
+        L = self.look(v, mv, q, groups); best, related, p = self.tiers(L["plain"], L["topic"], groups, lambda c: self.six(L, c))
+        c = int(np.argsort(-L["key"], kind="stable")[0])
+        row = lambda i: {"id": self.ids[i], "plain": round(float(L["plain"][i]), 4), "topic": round(float(L["topic"][i]), 4), "off": not bool(L["ok"][i])}
+        return {"best": [row(i) for i in best], "related": [row(i) for i in related], "first": {"id": self.ids[c], "p": p, "f": self.six(L, c)},
+                "plain": L["plain"], "topic": L["topic"], "ok": L["ok"], "look": L}
     def rank(self, q, drug=None):
         full, masked, groups = self.texts(q, drug)
         v, mv = embed_all([full, masked], quiet=True)
@@ -363,8 +390,8 @@ def main():
     wb, _ = int8(Wv); sb, _ = int8(Sv); mb, _ = int8(Mv)
     slugs = sorted({s for a in A for s in a["about"]} | {s for _, xs in names for s in xs})
     at = {s: k for k, s in enumerate(slugs)}
-    out = {"_note": "Pharmakon Insight's index (scripts/insight/build_index.py): vectors of every answer's wordings (W), of the same wordings with the drug names taken out (M) and of its short answer (S) (made with the model named here, int8, each row scaled to unit length by the page); its words for the overlap score; the drugs it is about; the names that name a drug in a question; and the weights and the tiers (from site/insight/model.json).",
-           "model": MODEL, "model_sha256": MODEL_SHA256, "dim": int(Wv.shape[1]), "weights": CONFIG["weights"], "tiers": CONFIG["tiers"],
+    out = {"_note": "Pharmakon Insight's index (scripts/insight/build_index.py): vectors of every answer's wordings (W), of the same wordings with the drug names taken out (M) and of its short answer (S) (made with the model named here, int8, each row scaled to unit length by the page); its words for the overlap score; the drugs it is about; the names that name a drug in a question; and the weights, the tiers and the judge (from site/insight/model.json).",
+           "model": MODEL, "model_sha256": MODEL_SHA256, "dim": int(Wv.shape[1]), "weights": CONFIG["weights"], "tiers": CONFIG["tiers"], "judge": CONFIG["judge"],
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
            "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -381,9 +408,12 @@ def main():
 
 
 def evaluate(D, near=None):
-    """The page's tiers on the gold set's forum questions (full answer: either reader names an answer that fully answers
-    it; partial: a reader names it as answering part; unanswerable: both readers say none does), then on the near-miss
-    readers' questions (each written as a question one answer does NOT answer: is that answer given as best match?)."""
+    """The page's rule on the gold set's forum questions (full answer: either reader names an answer that fully answers
+    it; partial: a reader names it as answering part; unanswerable: both readers say none does), printed as
+    scripts/insight/judge2.py prints it: the best matches at the judge's cut of model.json and at other cuts, on the
+    odd-numbered questions (dev: where a cut is chosen), the even-numbered ones (test: where it is reported) and all; the
+    related answers at each cut; and the near-miss readers' questions (each written as a question one answer does NOT
+    answer: is that answer given as its best match?)."""
     G = json.load(open(ROOT / "data/verification/insight/gold-sample.json", encoding="utf-8"))["questions"]
     readers = [json.load(open(f, encoding="utf-8"))["labels"] for f in sorted(glob.glob(str(ROOT / "data/verification/insight/gold_reader*.json")))]
     lab = {}
@@ -395,54 +425,44 @@ def evaluate(D, near=None):
         if len(ls) < len(readers): continue
         full = {a for x in ls for a in x.get("answers", []) if a in idset}
         part = {a for x in ls for a in x.get("partly", []) if a in idset} - full
-        tests.append((g["question"], full, part, all(x.get("none") for x in ls)))
-    tx = [R.texts(q) for q, _, _, _ in tests]
-    V = embed_all([t[0] for t in tx] + [t[1] for t in tx])
-    scored = [R.score(V[i], V[len(tests) + i], tests[i][0]) for i in range(len(tests))]
-    n_full = sum(bool(f) for _, f, _, _ in tests); n_un = sum(u for _, _, _, u in tests)
-    order = [np.argsort(-(p + R.wt["topic"] * t), kind="stable") for p, t in scored]
-    h1 = sum(R.ids[o[0]] in tests[i][1] for i, o in enumerate(order) if tests[i][1]) / n_full
-    h3 = sum(any(R.ids[j] in tests[i][1] for j in o[:3]) for i, o in enumerate(order) if tests[i][1]) / n_full
-    print(f"model {D['model']}; gold questions: {len(tests)}; {n_full} with a full answer, {n_un} unanswerable; candidates in the page's order: a full answer first {h1 * 100:.1f}%, in the first three {h3 * 100:.1f}%")
-    keep = dict(R.t)
+        tests.append((g["n"], g["question"], full, part, all(x.get("none") for x in ls)))
+    def looks(questions):
+        tx = [R.texts(q) for q in questions]; V = embed_all([t[0] for t in tx] + [t[1] for t in tx])
+        return [R.look(V[i], V[len(tx) + i], questions[i], tx[i][2]) for i in range(len(tx))]
+    LG = looks([t[1] for t in tests])
+    n_full = sum(bool(t[2]) for t in tests); n_un = sum(t[4] for t in tests)
+    order = [np.argsort(-L["by"], kind="stable") for L in LG]
+    h1 = sum(R.ids[o[0]] in tests[i][2] for i, o in enumerate(order) if tests[i][2]) / n_full
+    h3 = sum(any(R.ids[j] in tests[i][2] for j in o[:3]) for i, o in enumerate(order) if tests[i][2]) / n_full
+    print(f"model {D['model']}; gold questions: {len(tests)}; {n_full} with a full answer, {n_un} unanswerable; candidates in order of first look + weights.topic x topic: a full answer first {h1 * 100:.1f}%, in the first three {h3 * 100:.1f}%")
+    print("judge weights (on standardized numbers):", {f: round(float(w), 2) for f, w in zip(R.J["features"], R.J["w"])}, "bias", round(float(R.J["b"]), 2), "; a best match from", R.J["best"])
+    keep = R.J; cuts = sorted({0.5, 0.6, 0.7, 0.8, float(keep["best"])})
     # the near-miss questions: (question, the answer it must not get), for answers on the page
     nm = [(q, a) for a, qs in sorted((near or {}).items()) if a in idset for q in qs]
+    LN = looks([q for q, _ in nm]) if nm else []
+    def ranked(L): return R.tiers(L["plain"], L["topic"], L["groups"], lambda c: R.six(L, c))
+    for split, use in (("dev (odd-numbered)", lambda n: n % 2 == 1), ("test (even-numbered)", lambda n: n % 2 == 0), ("all", lambda n: True)):
+        rs = [(t, L) for t, L in zip(tests, LG) if use(t[0])]
+        nun = sum(t[4] for t, _ in rs); nf = sum(bool(t[2]) for t, _ in rs)
+        print(f"gold, {split}: {len(rs)} questions")
+        for th in cuts:
+            R.J = dict(keep, best=th); b = f = p = un = 0; rel = {"rows": 0, "good": 0, "q": 0, "un": 0}; miss = 0
+            for (nq, q, full, part, u), L in rs:
+                best, related, _ = ranked(L)
+                if best: a = R.ids[best[0]]; b += 1; f += a in full; p += a in part; un += u
+                elif full and any(R.ids[j] in full for j in related): miss += 1
+                if related:
+                    rel["q"] += 1; rel["rows"] += len(related); rel["un"] += u; rel["good"] += sum(R.ids[j] in full or R.ids[j] in part for j in related)
+            w = b - f - p; label = f"judge >= {th:g} (and about the drugs named)" + (" <- model.json" if th == float(keep["best"]) else "")
+            print(f"  {label:<46} best match for {b:3d} of {len(rs)}: full {f:3d} ({100 * f / max(1, b):3.0f}%), partial {p:3d} ({100 * p / max(1, b):3.0f}%), wrong {w:3d} ({100 * w / max(1, b):3.0f}%); "
+                  f"unanswerable given one {un} of {nun}; questions with a full answer that get it as best match {f} of {nf}; "
+                  f"related: {rel['rows']} rows for {rel['q']} questions, {100 * rel['good'] / max(1, rel['rows']):.0f}% full or partial, {rel['un']} of {nun} unanswerable questions get some; "
+                  f"no best match but a full answer under Related {miss}")
     if nm:
-        ntx = [R.texts(q) for q, _ in nm]
-        NV = embed_all([t[0] for t in ntx] + [t[1] for t in ntx])
-        nscored = [R.score(NV[i], NV[len(nm) + i], nm[i][0]) for i in range(len(nm))]
-    def table(label):
-        b = {"n": 0, "full": 0, "part": 0, "un": 0}; s = {"n": 0, "good": 0}; rel = {"rows": 0, "good": 0, "q": 0, "un": 0}; miss = 0
-        for i, (q, full, part, un) in enumerate(tests):
-            best, related, _ = R.tiers(scored[i][0], scored[i][1], tx[i][2])
-            if best:
-                a = R.ids[best[0]]; b["n"] += 1; b["full"] += a in full; b["part"] += a in part; b["un"] += un
-                if len(best) > 1: s["n"] += 1; s["good"] += R.ids[best[1]] in full or R.ids[best[1]] in part
-            elif full and any(R.ids[j] in full for j in related): miss += 1
-            if related:
-                rel["q"] += 1; rel["rows"] += len(related); rel["un"] += un
-                rel["good"] += sum(R.ids[j] in full or R.ids[j] in part for j in related)
-        wrong = b["n"] - b["full"] - b["part"]
-        line = (f"  {label}: best match for {b['n']} questions: a full answer {b['full']} ({b['full'] / max(1, b['n']) * 100:.0f}%), a partial one {b['part']} ({b['part'] / max(1, b['n']) * 100:.0f}%), "
-                f"wrong {wrong} ({wrong / max(1, b['n']) * 100:.0f}%); unanswerable questions given one {b['un']} of {n_un}; a second best {s['n']} ({s['good']} full or partial); "
-                f"related: {rel['rows']} rows for {rel['q']} questions, {rel['good'] / max(1, rel['rows']) * 100:.0f}% full or partial, {rel['un']} of {n_un} unanswerable questions get some; "
-                f"no best match but a full answer under Related {miss}")
-        if nm:
-            hit = 0
-            for i, (q, a) in enumerate(nm):
-                best, _, _ = R.tiers(nscored[i][0], nscored[i][1], ntx[i][2])
-                hit += any(R.ids[j] == a for j in best)
-            line += f"; near-miss questions given the answer they do not get as best match {hit} of {len(nm)} ({hit / len(nm) * 100:.1f}%)"
-        print(line)
-    table("the page's tiers " + json.dumps(keep))
-    r2 = lambda x: round(x, 2)
-    for topic in (0.0, r2(keep["topic"] - 0.05), r2(keep["topic"] + 0.05), r2(keep["topic"] + 0.10), r2(keep["topic"] + 0.15), r2(keep["topic"] + 0.20)):
-        R.t = dict(keep, topic=topic, sure=2.0 if topic == 0.0 else keep["sure"]); table(f"topic {topic:.2f}" + (" (the first look alone, with the drug rule)" if topic == 0.0 else ""))
-    for best in (r2(keep["best"] - 0.04), r2(keep["best"] - 0.02), r2(keep["best"] + 0.02), r2(keep["best"] + 0.04)):
-        R.t = dict(keep, best=best); table(f"best {best:.2f}")
-    for nearv in (0.0, r2(keep["near"] - 0.05), r2(keep["near"] + 0.05)):
-        R.t = dict(keep, near=nearv); table(f"near {nearv:.2f}")
-    R.t = keep
+        for th in cuts:
+            R.J = dict(keep, best=th); hit = sum(any(R.ids[j] == a for j in ranked(L)[0]) for (q, a), L in zip(nm, LN))
+            print(f"near-miss questions given the answer they do not get as best match, judge >= {th:g}: {hit} of {len(nm)} ({100 * hit / len(nm):.1f}%)")
+    R.J = keep
 
 
 if __name__ == "__main__":
