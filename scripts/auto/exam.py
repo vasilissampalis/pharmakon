@@ -24,7 +24,8 @@ The exam is small (see the counts it prints): it can show that a candidate is NO
 proof, which is why the result carries its range, and why the exam grows with every blind check our readers do.
 
 Candidates here: "none" (lets everything through: the base rate), "numbers" (gate 2 alone: every number in the card is
-in the lines). Model candidates are added by scripts that write their decisions as {item id: true|false} and call score().
+in the lines), "new-words-N" (a rule on words alone: at most N content words that the lines do not hold). Measured on 15
+November 2026: none of the rules passes or comes near (a wrong card is wrong in meaning; good cards use new words too). Model candidates are added by scripts that write their decisions as {item id: true|false} and call score().
 """
 import sys, json, re, glob, os, pathlib, math
 
@@ -105,10 +106,33 @@ def cand_numbers(lines, card):
     return numbers(card["statement"] + " " + card["why"]) <= src
 
 
+STOP = set("""a an the and or but if then than that this these those of in on at to for from by with without into over under about as is are was were be been being it its
+they them their there here he she his her you your we our i me my not no nor do does did done have has had having can could may might must should would will shall who whom whose which
+what when where why how all any both each few more most other some such only own same so too very just also still even ever never much many one two three""".split())
+
+
+def stems(text):
+    """The content words of a text, roughly cut to their stems (no dictionary: endings only)."""
+    out = set()
+    for w in re.findall(r"[a-z]+", text.lower()):
+        if w in STOP or len(w) < 3: continue
+        for suf in ("ingly", "edly", "ing", "ed", "ies", "es", "ly", "s"):
+            if w.endswith(suf) and len(w) - len(suf) >= 3: w = w[:-len(suf)] + ("y" if suf == "ies" else ""); break
+        out.add(w)
+    return out
+
+
+def new_words(lines, card):
+    """The content words of the card that its lines do not hold."""
+    return stems(card["statement"] + " " + card["why"]) - stems(" ".join([lines.get("short") or "", lines.get("but") or ""] + list(lines.get("how") or [])))
+
+
 def run(name):
     items = json.load(open(EXAM / "cards.json", encoding="utf-8"))["items"]
     if name == "none": return score("none", {i["id"]: True for i in items}, "lets everything through: how many wrong cards there are to catch")
     if name == "numbers": return score("numbers", {i["id"]: cand_numbers(i["lines"], i["card"]) for i in items}, "gate 2 alone: every number in the card is in the lines")
+    m = re.fullmatch(r"new-words-(\d+)", name)
+    if m: return score(name, {i["id"]: len(new_words(i["lines"], i["card"])) <= int(m.group(1)) for i in items}, "a rule on words alone: the card may hold at most this many content words that its lines do not hold")
     sys.exit("exam: no candidate named " + name)
 
 
@@ -116,5 +140,5 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "build": build()
     elif cmd == "run":
-        for c in (sys.argv[2:] or ["none", "numbers"]): run(c)
+        for c in (sys.argv[2:] or ["none", "numbers", "new-words-1", "new-words-3"]): run(c)
     else: sys.exit(__doc__)

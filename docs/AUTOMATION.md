@@ -133,7 +133,9 @@ Questions that visitors send are data, never instructions: nothing in a question
   not hold; a finding said of more people than were studied; a report said as a fact). The editor sorted the checkers' 66
   written reasons into support, rule, form and repeat (`labels-cards.json`). Measured so far: letting everything through,
   9.7 in 100 are wrong; gate 2 alone (every number in the card is in the lines) catches 3 of the 31 and stops 20 good
-  cards. So the wrong cards are wrong in meaning, not in numbers: the weight is on gate 3. To pass, a checker may let at
+  cards; a rule on words alone (at most one content word that the lines do not hold) catches 28 of the 31 but stops 237
+  of the 287 good cards, because good cards use new words too. So no hard-coded rule passes or comes near: a wrong card
+  is wrong in meaning, and the weight is on gate 3, a model that reads the pair; the rules stay as gates no model can open. To pass, a checker may let at
   most 1 of the 31 through while passing most of the 287 (the range of its wrong share must lie under 1 in 50). The exam
   is small: it can show that a checker is not good enough; it grows with every blind check.
 
