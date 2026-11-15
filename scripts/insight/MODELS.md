@@ -69,3 +69,91 @@ batch padded to its longest text also shifts every vector in it slightly, so not
 real browser. Threshold 0.65 (the editor's measure on the gold set: a match shown for 68.6% of answerable questions, a
 right one among the three for 50.4%, and a match for 22.2% of questions the site cannot answer); so the page says
 "Closest checked answers", and, under the threshold, "No checked answer fits this closely" with Ask us.
+(That threshold and those two lines were release 2.2.0's; 2.3 replaced them: next section.)
+
+## Release 2.3 (15 November 2026): two looks, and a judge for the best match
+
+**One place for the numbers.** `site/insight/model.json` holds the model's file name, `weights`, `tiers` and `judge`;
+`build_index.py` copies them into `data/insight.json`, the only place the page and the checks read them from (no number
+is written in the page or in a check). A new model must take the same `vocab.txt` and inputs and give
+`last_hidden_state`: add its file to `site/insight/vendor/`, change `file`, build. The vectors' cache
+(`site/insight/.cache/vectors-<first 16 characters of the model file's SHA-256>.npz`, not committed) is kept by model, so
+a new model embeds everything again. Then make the judge's numbers for it (below), put them in `model.json`, build again.
+
+**Two looks at a question.** First look: 2.2.0's tuned score (0.7 x best wording + 0.3 x short answer + 0.2 x word
+overlap, the drug's own name brought along). Topic: every wording is embedded a second time with the drug names
+replaced by "it", and so is the question, because the drug's name carried so much of the meaning that any question about
+kratom scored high against any answer about kratom. Which drug is meant is settled by the names themselves
+(`data/insight.json`, `names`), not by the model: an answer can be the best match only when it is about every drug the
+question names, or, when it names none, about the drug of the page the reader is on. Wordings indexed (3,339 for 372
+answers on 15 November): the site's own questions, the six of phrasings writer 696, and the three hurried ones (`more`)
+of the near-miss readers 707 and 708; those readers' `near` questions (which an answer does NOT answer) are never indexed.
+
+**The judge** (the editor's rule; research and training in `judge2.py`). Two thresholds on the two looks (first look
+>= 0.72 and topic >= 0.45) gave a best match that was wrong for 20 of 77 gold questions (26%). The judge replaced them.
+The answers are put in order of `by` = first look + `weights.topic` x topic, those about the drugs named `weights.same`
+ahead; c is the first. Six numbers of c (`judge.features`, in this order):
+
+1. best wording: the similarity of its closest wording in the first look, before the weights;
+2. second wording: its second-closest wording (0 if it has one wording);
+3. short answer: the similarity of its short answer;
+4. word overlap (TF-IDF);
+5. topic: its closest wording with the drug names taken out;
+6. lead over the next answer: `by` of c less the highest `by` among the other answers about every drug the question names
+   (less 0 if there is no other).
+
+p = 1 / (1 + exp(-(sum of w_i x (f_i - mu_i) / sd_i, + b))). c is the best match when it is about every drug named and
+p >= `judge.best`; there is never a second best match. Related: the next answers in the same order, up to three, with a
+first look of `tiers.related` or more and a topic of `tiers.near` or more, about at least one of the drugs named.
+
+Trained only on our own examples, never on a gold question (`judge2.py --six`; scikit-learn logistic regression, C = 1,
+on standardized numbers). Yes: a way of asking (writer 696; the near-miss readers' hurried wordings) against its own
+answer, with that wording left out of the index first (2,957 pairs). No: a near-miss question against the answer it does
+not get (1,585), and each way of asking against the three other answers that rank highest for it (8,871). On answers not
+seen in training (5 folds by answer), wording against near-miss, area under the curve: judge 0.783, first look alone
+0.772, topic alone 0.698. Weights on standardized numbers: lead over the next answer 1.36, best wording 0.54, word
+overlap 0.41, second wording 0.38, short answer -0.28, topic 0.12; bias -2.14. So what makes a best match is mostly how
+far the first answer stands from the next one about the same drug.
+
+Measured on the gold set (400 real forum questions, two blind readers: 79 have a full answer, 126 none), base model
+all-MiniLM-L6-v2 (q8), `judge2.py --six`; `build_index.py --eval` prints the same numbers from the page's own rule
+(class Ranker), and `parity.js` holds the page to that rule (the judge's number to 1e-4; measured difference 3e-7).
+Odd-numbered questions are for choosing the cut (dev), even-numbered ones for reporting it (test):
+
+| Best match when | Questions | Best matches | Full answer | Partial | Wrong | Unanswerable given one | Full answers found |
+|---|---|---|---|---|---|---|---|
+| two thresholds (before) | all 400 | 77 | 26 | 31 | 20 (26%) | 2 of 126 | 26 of 79 |
+| p >= 0.5 | dev 200 | 30 | 15 | 13 | 2 | 0 of 63 | 15 of 43 |
+| p >= 0.5 | test 200 | 29 | 11 | 17 | 1 | 0 of 63 | 11 of 36 |
+| p >= 0.5 | all 400 | 59 | 26 | 30 | 3 (5%) | 0 of 126 | 26 of 79 |
+| **p >= 0.6 (model.json)** | dev 200 | 14 | 13 | 1 | 0 | 0 of 63 | 13 of 43 |
+| **p >= 0.6 (model.json)** | test 200 | 14 | 8 | 5 | 1 | 0 of 63 | 8 of 36 |
+| **p >= 0.6 (model.json)** | all 400 | 28 | 21 | 6 | 1 (4%) | 0 of 126 | 21 of 79 |
+| p >= 0.7 | dev 200 | 10 | 10 | 0 | 0 | 0 of 63 | 10 of 43 |
+| p >= 0.7 | test 200 | 10 | 6 | 3 | 1 | 0 of 63 | 6 of 36 |
+| p >= 0.7 | all 400 | 20 | 16 | 3 | 1 (5%) | 0 of 126 | 16 of 79 |
+| p >= 0.8 | dev 200 | 10 | 10 | 0 | 0 | 0 of 63 | 10 of 43 |
+| p >= 0.8 | test 200 | 6 | 3 | 2 | 1 | 0 of 63 | 3 of 36 |
+| p >= 0.8 | all 400 | 16 | 13 | 2 | 1 (6%) | 0 of 126 | 13 of 79 |
+
+What the cut costs: at 0.6, 32 of the 79 questions with a full answer have it under Related instead (23 at 0.5), after
+the line "We haven't checked exactly this yet"; related answers are shown for 209 of 400 questions (400 rows, 38% of
+them a full or partial answer; 28 of the 126 unanswerable questions get some). For example "does ecstasy damage your
+brain permanently" (the 2.3 brief's own example of a match) gets p 0.53: its answer is first under Related at 0.6, and
+the best match at 0.5. Near-miss questions given the answer they do not get as best match: 13.9% at 0.5, 9.7% at 0.6,
+6.9% at 0.7, 3.8% at 0.8 (of 1,585; these questions were training examples, so the true rate is higher).
+
+For a new model: build; `python3 -I scripts/insight/judge2.py site/insight/.cache/index-input.json
+site/dist/data/insight.json --six --save FILE`; copy `features`, `mu`, `sd`, `w`, `b` into `judge` in `model.json`, choose
+`best`; build again; then `python3 -I scripts/insight/build_index.py site/insight/.cache/index-input.json OUT.json --eval`,
+`node scripts/insight/parity.js`, `node scripts/ux/insight_check.js`. Probes for single questions: `ask.py` (the page's
+rule, with the judge's number and its six numbers) and `ask2.py`. `sweep.py` belongs to the two thresholds the judge
+replaced: it runs against `build_index.py` as it was before the judge (commit aba0173).
+
+**Next questions** ("People also ask", "Read next"): at build, each answer's nearest answers by the meaning of their
+site questions, never itself; the same drug first, then the nearest on each page the answer is told on; never an answer
+that shares neither a drug nor a page with it. They travel in the page (`INS_NEXT`, about 24 KB), not in a fetched file.
+
+**Size and speed.** `data/insight.json` 3.6 MB; with the model and the runtime about 42 MB, fetched once when the search
+box is first used. A question takes two passes of the model (with and without the drug names) and one ranking: median
+32 to 40 ms, slowest about 150 ms, in the checks' browser.

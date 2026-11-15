@@ -7,10 +7,11 @@
 // punctuation, Chinese and Greek, emoji, special tokens, control characters, a word over 100 letters, text past 128 tokens)
 // and requires: the same tokens; cosine >= 0.999 between the two vectors of every text; the same drug names added, the
 // same drugs named and the same text with the names taken out; and, for real questions (forum questions, the 2.3 brief's
-// own, and questions asked on a drug's page), the same best matches and the same related answers, in the same order, with
-// both scores of each within 0.005. As an independent check of the model itself it also compares the page with the Python
-// onnxruntime (PyEncoder), whose int8 kernels round a little differently on a PC: cosine >= 0.99 for every text.
-// The model's file name, the weights and the tiers are read from the built data/insight.json by both sides.
+// own, and questions asked on a drug's page), the same first candidate with the same six numbers and the same judge's
+// number (to 1e-4), the same best match and the same related answers, in the same order, with both scores of each within
+// 0.005. As an independent check of the model itself it also compares the page with the Python onnxruntime (PyEncoder),
+// whose int8 kernels round a little differently on a PC: cosine >= 0.99 for every text.
+// The model's file name, the weights, the tiers and the judge are read from the built data/insight.json by both sides.
 // Usage: node scripts/insight/parity.js [--port N]   (build first: node site/build.js && python3 -I site/build_public.py)
 const http = require("http"), fs = require("fs"), path = require("path"), { spawnSync } = require("child_process");
 const { chromium } = require("playwright");
@@ -55,7 +56,7 @@ vec = dict(zip(uniq, bi.embed_all(uniq, quiet=True)))
 rank = []
 for (q, d), (full, masked, groups) in zip(req["queries"], read):
     r = R.rank_vectors(q, vec[full], vec[masked], groups)
-    rank.append({"full": full, "masked": masked, "groups": groups, "best": r["best"], "related": r["related"]})
+    rank.append({"full": full, "masked": masked, "groups": groups, "best": r["best"], "related": r["related"], "first": r["first"]})
 out["rank"] = rank
 print(json.dumps(out))
 `;
@@ -72,7 +73,7 @@ const server = http.createServer((req, res) => {
   const loaded = await p.evaluate(() => pkInsight.load());
   if (!loaded) { console.error("Insight did not load in the page", errors); process.exit(1); }
   const js = await p.evaluate(async ({ texts, queries }) => {
-    const out = { ids: [], vecs: [], expand: [], mask: [], named: [], rank: [], tiers: pkInsight.tiers(), weights: pkInsight.weights() };
+    const out = { ids: [], vecs: [], expand: [], mask: [], named: [], rank: [], tiers: pkInsight.tiers(), weights: pkInsight.weights(), judge: pkInsight.judge() };
     for (const t of texts) { out.ids.push(pkInsight.encode(t)); out.vecs.push(await pkInsight.embed(t)); }
     for (const t of texts.concat(queries.map(q => q[0]))) { out.expand.push(pkInsight.expand(t)); out.mask.push(pkInsight.mask(t)); out.named.push(pkInsight.named(t)); }
     for (const [q, drug] of queries) out.rank.push(await pkInsight.rank(q, drug ? { drug } : {}));
@@ -85,7 +86,8 @@ const server = http.createServer((req, res) => {
   if (r.status !== 0) { console.error(r.stderr); process.exit(2); }
   const ref = JSON.parse(r.stdout), D = JSON.parse(fs.readFileSync(path.join(ROOT, "data", "insight.json"), "utf8"));
   let fails = 0; const say = (pass, name, detail) => { if (!pass) fails++; console.log((pass ? "PASS " : "FAIL ") + name + (detail ? "  (" + detail + ")" : "")); };
-  say(ref.model === D.model && JSON.stringify(js.tiers) === JSON.stringify(D.tiers) && JSON.stringify(js.weights) === JSON.stringify(D.weights), "the page and the build read the same model, weights and tiers (data/insight.json)", D.model + "; tiers " + JSON.stringify(D.tiers) + "; weights " + JSON.stringify(D.weights));
+  say(ref.model === D.model && JSON.stringify(js.tiers) === JSON.stringify(D.tiers) && JSON.stringify(js.weights) === JSON.stringify(D.weights) && JSON.stringify(js.judge) === JSON.stringify(D.judge), "the page and the build read the same model, weights, tiers and judge (data/insight.json)",
+    D.model + "; tiers " + JSON.stringify(D.tiers) + "; weights " + JSON.stringify(D.weights) + "; a best match from " + D.judge.best);
   const tokBad = texts.map((t, i) => JSON.stringify(js.ids[i]) === JSON.stringify(ref.ids[i]) ? null : JSON.stringify(t.slice(0, 40)) + ": page " + js.ids[i].slice(0, 12) + " / build " + ref.ids[i].slice(0, 12)).filter(Boolean);
   say(!tokBad.length, "the same tokens for all " + texts.length + " texts", tokBad.slice(0, 3).join("; ") || (Math.max(...ref.ids.map(x => x.length)) + " tokens at most"));
   const cosOf = (A, B) => texts.map((_, i) => { const a = A[i], b = B[i]; let d = 0, na = 0, nb = 0; for (let j = 0; j < a.length; j++) { d += a[j] * b[j]; na += a[j] * a[j]; nb += b[j] * b[j]; } return d / Math.sqrt(na * nb); });
@@ -99,21 +101,27 @@ const server = http.createServer((req, res) => {
   say(!exBad.length, "the same drug names added to " + all.length + " texts", exBad.slice(0, 3).join("; ") || js.expand.filter((x, i) => x !== all[i]).length + " of them get names");
   const nmBad = differ(js.named, ref.named), mkBad = differ(js.mask, ref.mask);
   say(!nmBad.length && !mkBad.length, "the same drugs named in them, and the same text with the names taken out", nmBad.concat(mkBad).slice(0, 3).join("; ") || js.named.filter(g => g.length).length + " name a drug, " + js.named.filter(g => g.length > 1).length + " more than one, " + js.named.filter(g => g.some(x => x.length > 1)).length + " a family of drugs");
-  // the ranking: the same best matches and related answers, in order, with both scores within 0.005. (What the page adds on top
-  // of the rule: a question we do not answer gets nothing, and an emergency gets no related answers: by design, counted apart.)
-  let maxd = 0, nBest = 0, nRel = 0, nNone = 0, blocked = 0, urgent = 0, whole = 0; const rkBad = [];
+  // the ranking: the same first candidate with the same six numbers and the same judge's number (to 1e-4), the same best match and
+  // related answers, in order, with both scores within 0.005. (What the page adds on top of the rule: a question we do not answer
+  // gets nothing, and an emergency gets no related answers: by design, counted apart.)
+  let maxd = 0, maxp = 0, maxf = 0, nBest = 0, nRel = 0, nNone = 0, blocked = 0, urgent = 0, whole = 0; const rkBad = [], pj = [];
   queries.forEach(([q, drug], i) => { const a = js.rank[i], b = ref.rank[i], tag = JSON.stringify(q.slice(0, 50)) + (drug ? " on " + drug : "");
     if (a.note === "blocked") { blocked++; return; }
-    if (!a.best.length && !a.related.length && a.routes.some(x => x.kind === "page") && a.core.split(/\s+/).length < 3) { whole++; return; }
+    if (!a.judge) { whole++; return; }
+    const dp = Math.abs(a.judge.p - b.first.p), df = Math.max(...a.judge.f.map((x, j) => Math.abs(x - b.first.f[j]))); maxp = Math.max(maxp, dp); maxf = Math.max(maxf, df); pj.push(a.judge.p);
+    if (a.judge.id !== b.first.id || dp > 1e-4 || df > 1e-4) rkBad.push(tag + " the judge: page " + a.judge.id + " " + a.judge.p.toFixed(5) + " [" + a.judge.f.map(x => x.toFixed(4)) + "] build " + b.first.id + " " + b.first.p.toFixed(5) + " [" + b.first.f.map(x => x.toFixed(4)) + "]");
     const pairs = [["best", a.best, b.best]]; if (a.emergency) urgent++; else pairs.push(["related", a.related, b.related]);
     for (const [k, x, y] of pairs) {
       if (x.map(r => r.id).join() !== y.map(r => r.id).join()) { rkBad.push(tag + " " + k + ": page [" + x.map(r => r.id + " " + r.plain + "/" + r.topic) + "] build [" + y.map(r => r.id + " " + r.plain + "/" + r.topic) + "]"); continue; }
       x.forEach((r, j) => { const d = Math.max(Math.abs(r.plain - y[j].plain), Math.abs(r.topic - y[j].topic)); maxd = Math.max(maxd, d); if (d > 0.005 || r.off !== y[j].off) rkBad.push(tag + " " + k + " " + r.id + ": page " + r.plain + "/" + r.topic + (r.off ? " off" : "") + " build " + y[j].plain + "/" + y[j].topic + (y[j].off ? " off" : "")); });
     }
+    if (a.best.length > 1) rkBad.push(tag + ": more than one best match");
     nBest += a.best.length; if (!a.emergency) nRel += a.related.length; if (!a.best.length) nNone++; });
   const compared = queries.length - blocked - whole;
-  say(!rkBad.length && compared >= queries.length - 6 && nBest >= 15 && nRel >= 40 && nNone >= 15, "the same best matches and related answers, in the same order, both scores within 0.005, for " + compared + " questions (" + queries.filter(q => q[1]).length + " asked on a drug's page)",
-    rkBad.slice(0, 3).join("; ") || nBest + " best matches, " + nRel + " related answers, " + nNone + " questions with no best match; largest score difference " + maxd.toFixed(5) + "; by design not compared: " + blocked + " not answered, " + whole + " a drug's name alone; related left out for " + urgent + " emergencies");
+  say(!rkBad.length && compared >= queries.length - 6 && nBest >= 5 && nRel >= 40 && nNone >= 15 && pj.some(x => x >= D.judge.best) && pj.some(x => x < D.judge.best),
+    "the same first candidate, six numbers and judge's number (to 1e-4), the same best match and related answers in the same order, both scores within 0.005, for " + compared + " questions (" + queries.filter(q => q[1]).length + " asked on a drug's page)",
+    rkBad.slice(0, 3).join("; ") || nBest + " best matches, " + nRel + " related answers, " + nNone + " questions with no best match; the judge's number from " + Math.min(...pj).toFixed(3) + " to " + Math.max(...pj).toFixed(3) + ", largest difference " + maxp.toExponential(1) +
+      " (six numbers " + maxf.toExponential(1) + ", scores " + maxd.toFixed(5) + "); by design not compared: " + blocked + " not answered, " + whole + " a drug's name alone; related left out for " + urgent + " emergencies");
   say(!errors.length, "no console errors", errors.slice(0, 3).join(" | "));
   console.log(fails ? fails + " parity checks failed" : "All parity checks passed");
   process.exit(fails ? 1 : 0);
