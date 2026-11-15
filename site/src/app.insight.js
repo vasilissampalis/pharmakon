@@ -222,8 +222,8 @@ function insDepth(q) {
    no route of its own that lands on them: the drug's page opens, then the block is brought into view. */
 const INS_PLACE = {
   help: slug => ({ href: "#s-" + slug + "/part-d-help" }),              // "If it gets too much" (#d-help)
-  doses: slug => ({ href: "#s-" + slug, el: "sf-dose" }),               // the Doses block
-  test: slug => ({ href: "#s-" + slug, el: "sf-test" }),                // the test kits block
+  doses: slug => ({ href: "#s-" + slug + "/part-d-doses" }),            // the Doses section (#d-doses; 2.3 pages: every part is a section with its own address)
+  test: slug => ({ href: "#s-" + slug + "/part-d-kits" }),              // the Test kits section (#d-kits)
   page: slug => ({ href: "#s-" + slug }),                               // the drug's page
   mix: () => ({ href: "#interactions", el: "mix2" }),                   // the mixing tool (insMixPick chooses both drugs)
   numbers: () => ({ href: "#emergency" }),                              // emergency numbers by country

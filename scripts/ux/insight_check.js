@@ -189,7 +189,7 @@ ok("the index carries the model's name, the weights and the tiers of site/insigh
     await p.press("#search", "Enter"); await p.waitForTimeout(1500);
     const dose = await p.evaluate(() => { const el = document.getElementById("sf-dose"), r = el ? el.getBoundingClientRect() : null; return { hash: location.hash, sheet: !!document.querySelector("#evsheet.open"), top: r ? Math.round(r.top) : null, text: el ? el.innerText.replace(/\s+/g, " ").slice(0, 120) : "", search: document.getElementById("search").value }; });
     await shot("doses-block");
-    ok(w + ": Enter on a dose question goes to that drug's Doses block (which lists no dose of ours)", dose.hash === "#s-mdma" && !dose.sheet && dose.top !== null && dose.top >= 0 && dose.top < H * 0.6 && /We don’t list doses/.test(dose.text) && !AMOUNT.test(dose.text) && dose.search === "", JSON.stringify(dose));
+    ok(w + ": Enter on a dose question goes to that drug's Doses block (which lists no dose of ours)", dose.hash === "#s-mdma/part-d-doses" && !dose.sheet && dose.top !== null && dose.top >= 0 && dose.top < H * 0.6 && /We don’t list doses/.test(dose.text) && !AMOUNT.test(dose.text) && dose.search === "", JSON.stringify(dose));
     // an emergency in progress: the help row and the emergency number line; no nearby answers
     await p.goto(BASE + "home"); await p.waitForTimeout(500); await p.focus("#search"); await whenReady();
     const hp = await ask(HELP); ui += " " + await uiText(); await shot("list-emergency");
@@ -202,8 +202,8 @@ ok("the index carries the model's name, the weights and the tiers of site/insigh
     await p.goto(BASE + "home"); await p.waitForTimeout(500); await p.focus("#search"); await whenReady();
     const ts = await ask(TEST); ui += " " + await uiText();
     await p.click("#search-results a.sr-route"); await p.waitForTimeout(1500);
-    const kit = await p.evaluate(() => { const el = document.getElementById("sf-test"), r = el ? el.getBoundingClientRect() : null; return { hash: location.hash, top: r ? Math.round(r.top) : null }; });
-    ok(w + ": “" + TEST + "” shows the test kits row first, and it opens that drug's test kits", ts.kids[0] === "route:test" && ts.routes[0].t === "Test kits for MDMA" && kit.hash === "#s-mdma" && kit.top !== null && kit.top >= 0 && kit.top < H * 0.6, ts.kids.join(" > ") + "; " + JSON.stringify(kit));
+    const kit = await p.evaluate(() => { const el = document.querySelector("#d-kits:not([hidden])"), r = el ? el.getBoundingClientRect() : null; return { hash: location.hash, top: r ? Math.round(r.top) : null }; });
+    ok(w + ": “" + TEST + "” shows the test kits row first, and it opens that drug's test kits", ts.kids[0] === "route:test" && ts.routes[0].t === "Test kits for MDMA" && kit.hash === "#s-mdma/part-d-kits" && kit.top !== null && kit.top >= 0 && kit.top < H * 0.6, ts.kids.join(" > ") + "; " + JSON.stringify(kit));
     await p.goto(BASE + "home"); await p.waitForTimeout(500); await p.focus("#search"); await whenReady();
     const wk = await ask("what is ketamine"); await p.press("#search", "Enter"); await p.waitForTimeout(900);
     const wkAt = await p.evaluate(() => ({ hash: location.hash, sheet: !!document.querySelector("#evsheet.open") }));
@@ -320,7 +320,7 @@ ok("the index carries the model's name, the weights and the tiers of site/insigh
       rn1.map(x => x.id).join(", ") + " | after opening the first: " + rn2.map(x => x.id).join(", ") + " | " + everyPage.n + " links on all drug pages, off the page: " + (everyPage.bad.join("; ") || "none"));
 
     // ---- Myth or fact: Read the answer opens over the deck, and the way back returns to the same card, scrolled as it was
-    for (const [where, hash, box] of [["the Myth or fact? page", "quiz", "#quizpage"], ["the start page's deck", "home", "#tf"], ["a drug page's own deck", "s-cannabis", "#qz-drug"]]) {
+    for (const [where, hash, box] of [["the Myth or fact? page", "quiz", "#quizpage"], ["the start page's deck", "home", "#tf"], ["a drug page's own deck", "s-cannabis/part-d-quiz", "#qz-drug"]]) {
       await p.goto(BASE + "about"); await p.waitForTimeout(200); await p.goto(BASE + hash); await p.waitForTimeout(1100);
       await p.click(box + " .qz2-o >> nth=0"); await p.waitForTimeout(800);
       await p.$eval(box + " .qz2-ev", e => e.scrollIntoView({ block: "center" })); await p.waitForTimeout(200);

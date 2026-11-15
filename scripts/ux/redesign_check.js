@@ -91,7 +91,9 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     let read = null; await s.go("home", 900);
     for (let k = 0; k < 10 && !read; k++) { await s.p.click("#tf .qz2-o:not([disabled])"); await s.p.waitForTimeout(T);
       const h = await s.p.$eval("#tf .qz2-ev", a => a.getAttribute("href")); if (/^#s-[a-z0-9-]+\/q-/.test(h)) read = h; else { await s.p.click("#tf .qz2-nb"); await s.p.waitForTimeout(200); } }
-    if (read) { await s.p.click("#tf .qz2-ev"); const m = await s.land(".view.active .secs > .sec:not([hidden]) details.ask[open]");
+    if (read) { await s.p.click("#tf .qz2-ev"); await s.p.waitForTimeout(700);
+      const onPage = await s.p.$("#evsheet.open a[href^=\"#s-\"]"); if (onPage) await onPage.click();   // with Insight the answer opens over the deck first; its "See it on the … page" is the jump
+      const m = await s.land(".view.active .secs > .sec:not([hidden]) details.ask[open]");
       m.addr = (await s.p.evaluate(() => location.hash)) === read; jump("Read the answer (" + read + ")", m.addr ? m : Object.assign(m, { missing: "address" })); }
     else jump("Read the answer", { missing: "no card of a drug page among the first ten" });
     // (c) a section link: "See all n forms" on the photo, and a section's bare name (#d-help)
