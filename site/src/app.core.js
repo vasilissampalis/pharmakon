@@ -104,8 +104,13 @@ function yearKey(ref) {
   return m ? [+m[1], m[2] || ""] : [-1, (n && n[1]) || ""];
 }
 function byYear(a, b) { const ka = yearKey(a), kb = yearKey(b); return (ka[0] - kb[0]) || ka[1].localeCompare(kb[1]); }
+// APA 7: a web page takes the most exact date it gives ("2026, June 30"); every other work its year
+function dateOf(ref) {
+  const dp = ref.issued && ref.issued["date-parts"] && ref.issued["date-parts"][0];
+  return ref.type === "webpage" && dp && dp.length >= 2 && dp[1] >= 1 && dp[1] <= 12 ? year(ref) + ", " + MONTHS[dp[1] - 1] + (dp.length > 2 ? " " + dp[2] : "") : year(ref);
+}
 function apaReference(ref) {
-  const y = year(ref);
+  const y = dateOf(ref);
   const link = ref.DOI ? "https://doi.org/" + ref.DOI : (ref.URL || "");
   const au = apaAuthors(ref.author);
   const endP = t => /[.?!]$/.test(String(t || "").trim()) ? "" : ".";

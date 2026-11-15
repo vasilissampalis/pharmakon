@@ -248,24 +248,39 @@ const AUTO_SHOWN = (() => {
   // an answer written by an older lane than data/auto/lane/policy.json allows is not shown (the lane writes it again)
   const minLane = +AUTO_POLICY.show_from_lane || 1; let older = 0;
   const bad = /\b\d+(?:[.,]\d+)?\s?(?:mg|milligrams?|µg|ug|mcg|micrograms?|g|grams?|ml|pills?|tablets?|tabs?|capsules?|lines?|hits?|drops?)\b|\byou\s+(?:should|must|need to)\b|["“”]|\bre-?dos\w*/i;
+  // (site 2.7, lane 3) an answer about amounts (docs/AUTOMATION.md, decision 11): its three lines are the code's own (data/auto/lane/lines.json),
+  // and each amount stands in its source's own words, 15 at most, found in the longer quote the record keeps
+  const LINES = (() => { const f = path.join(ROOT, "data", "auto", "lane", "lines.json"); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null; })();
+  const AMT = /(?<![\w.,\/])\d+(?:[.,]\d+)?(?:\s*(?:to|-|or)\s*\d+(?:[.,]\d+)?)?\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\b/i;
+  const flat = t => String(t || "").normalize("NFKC").replace(/[‘’‚′`]/g, "'").replace(/[“”„″]/g, '"').replace(/[‐‑‒–—−]/g, "-").replace(/\s+/g, " ").trim();
+  const timing = /\bre-?dos\w*|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\bsupplement\w*|\byou\s+(?:should|must|need to)\b/i;
   for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
     const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
     if (a.status !== "published" || held.has(a.id)) continue;
     if ((+a.lane || 1) < minLane) { older++; continue; }
     const part = k => (a.parts || []).filter(p => p.part === k || (k === "how" && /^how\d+$/.test(p.part))).map(p => String(p.text || "").trim()).filter(Boolean);
-    const short = part("short")[0], but = part("but")[0], how = part("how"), refs = (a.sources || []).map(s => s.ref).filter(r => r && r.id && r.title && r.DOI && Array.isArray(r.author));
-    const why = !/^au_[a-z0-9_]+$/.test(a.id || "") || a.id + ".json" !== f ? "its name" : !a.question || !short || !but || !how.length ? "a part is missing" : !refs.length || refs.length !== (a.sources || []).length ? "a source without its Crossref record"
-      : [short, but].concat(how).some(t => bad.test(t)) ? "an amount, advice or a quotation in its text" : (a.parts || []).some(p => !(p.rests_on || []).length) ? "a sentence that rests on nothing" : "";
+    // a source's reference: a paper's Crossref record (it has a DOI), or an official page's own (a web page with its body's name and its https address)
+    const short = part("short")[0], but = part("but")[0], how = part("how"), first = part("first")[0] || "", amounts = a.kind === "amounts";
+    const refs = (a.sources || []).map(s => s.ref).filter(r => r && r.id && r.title && Array.isArray(r.author) && r.author.length && (r.DOI || (r.type === "webpage" && /^https:\/\/[^\s"<>]+$/.test(r.URL || "") && r.author[0].literal)));
+    const mf = (a.made || {}).from, from = mf && typeof mf === "object" ? { papers: +mf.papers || 0, summaries: +mf.summaries || 0, official: +mf.official || 0 } : { papers: refs.length, summaries: 0, official: 0 };
+    const rows = amounts ? (a.parts || []).filter(p => /^row\d+$/.test(p.part)).map(p => ({ who: String(p.who || "").trim(), what: String(p.what || "").trim(), quote: String(p.quote || "").trim(), ref: p.source, read: p.read === "summary" ? "summary" : p.read === "page" ? "page" : "full", on: ((p.rests_on || [])[0] || {}).quote || "" })) : [];
+    const classLine = LINES ? ((Object.values(LINES.first).find(v => v.drugs.some(d => (a.drugs || []).includes(d))) || {}).text || "") : "";
+    let why = !/^au_[a-z0-9_]+$/.test(a.id || "") || a.id + ".json" !== f ? "its name" : !a.question || !short || !but ? "a part is missing" : !refs.length || refs.length !== (a.sources || []).length ? "a source without its reference"
+      : from.papers + from.summaries + from.official !== refs.length ? "its count of sources" : "";
+    if (!why && !amounts) why = !how.length ? "a part is missing" : first ? "a line only an answer about amounts may carry" : [short, but].concat(how).some(t => bad.test(t)) ? "an amount, advice or a quotation in its text" : (a.parts || []).some(p => !(p.rests_on || []).length) ? "a sentence that rests on nothing" : "";
+    if (!why && amounts) why = !LINES ? "the lines the code writes are missing" : short !== LINES.amounts || but !== LINES.amounts_but || first !== classLine ? "a line that is not the code's own" : !rows.length ? "no amount"
+      : rows.some(r => !r.who || !r.what || !r.quote || r.quote.split(/\s+/).length > 15 || !AMT.test(r.quote) || !flat(r.on).includes(flat(r.quote)) || !refs.some(x => x.id === r.ref) || /["“”]/.test(r.who + r.what + r.quote) || AMT.test(r.who + " " + r.what) || timing.test(r.who + " " + r.what + " " + r.quote)) ? "an amount that is not in its source's own words, or too long, or with a time between uses" : "";
     if (why) { left.push(a.id + " (" + why + ")"); continue; }
     const drugs = (a.drugs || []).filter(d => drugSlugs.has(d));
-    out.push({ id: a.id, q: a.question, ways: a.ways || [], short, but, how, refs, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page: drugs[0] || "general" });
+    out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page: drugs[0] || "general" },
+      amounts ? { kind: "amounts", first, rows: rows.map(r => ({ who: r.who, what: r.what, quote: r.quote, ref: r.ref, read: r.read })) } : {}));
   }
   if (left.length) console.error("WARNING: machine-lane answers left out of the site: " + left.join("; "));
   if (older) console.log("machine lane: " + older + " answers written by an older lane are not shown (they will be written again)");
   if (out.length) console.log("machine lane: " + out.length + " answers written by the system are shown, each with its label");
   return out;
 })();
-const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, { q: a.q, short: a.short, but: a.but, how: a.how, refs: a.refs, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }]))) +
+const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
   ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).

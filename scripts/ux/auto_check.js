@@ -19,9 +19,15 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
 const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { env: Object.assign({}, process.env, env), encoding: "utf8", maxBuffer: 1 << 26 });
 
 (async () => {
-  const b = build({ PK_AUTO_FIXTURE: path.join(REPO, "scripts", "ux", "fixtures", "auto"), PK_AUTO_LOOP: "1" });
+  // the pretend answers, in a folder of their own for this run: the three written out, and two about amounts made from their
+  // templates with the lines the code writes itself (data/auto/lane/lines.json), so that the check always holds today's lines
+  const LINES = JSON.parse(fs.readFileSync(path.join(REPO, "data", "auto", "lane", "lines.json"), "utf8")), FIX = fs.mkdtempSync(path.join(require("os").tmpdir(), "pk-auto-"));
+  for (const f of fs.readdirSync(path.join(REPO, "scripts", "ux", "fixtures", "auto"))) fs.copyFileSync(path.join(REPO, "scripts", "ux", "fixtures", "auto", f), path.join(FIX, f));
+  for (const f of fs.readdirSync(path.join(REPO, "scripts", "ux", "fixtures", "auto-amounts"))) fs.writeFileSync(path.join(FIX, f),
+    fs.readFileSync(path.join(REPO, "scripts", "ux", "fixtures", "auto-amounts", f), "utf8").replace('"LINE_FIRST"', JSON.stringify(LINES.first.opioids.text)).replace('"LINE_SHORT"', JSON.stringify(LINES.amounts)).replace('"LINE_BUT"', JSON.stringify(LINES.amounts_but)));
+  const b = build({ PK_AUTO_FIXTURE: FIX, PK_AUTO_LOOP: "1" });
   if (b.status !== 0) { console.error(b.stderr.slice(-2000)); process.exit(2); }
-  ok("the build shows the two pretend answers and takes the questions they answer off the list of questions not answered yet", /machine lane: 2 answers/.test(b.stdout) && /w_0024 by au_fixture_ketamine/.test(b.stderr) && /w_0007 by au_fixture_police/.test(b.stderr), (b.stdout + b.stderr).split("\n").filter(l => /machine lane|listed questions/.test(l)).join(" | "));
+  ok("the build shows the two pretend answers and takes the questions they answer off the list of questions not answered yet", /machine lane: 4 answers written by the system are shown/.test(b.stdout) && /w_0024 by au_fixture_ketamine/.test(b.stderr) && /w_0007 by au_fixture_police/.test(b.stderr), (b.stdout + b.stderr).split("\n").filter(l => /machine lane|listed questions/.test(l)).join(" | "));
   const pub = spawnSync("python3", ["-I", path.join(REPO, "site", "build_public.py")], { encoding: "utf8" });
   ok("the publishing step refuses a build that holds the pretend answers", pub.status !== 0 && /pretend answers/.test(pub.stderr + pub.stdout), (pub.stderr + pub.stdout).slice(-200));
   const server = http.createServer((req, res) => {
@@ -52,7 +58,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const pg = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-auto h1").textContent, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", rows: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent),
       how: !!document.querySelector("#view-auto details.auto-how"), foot: [...document.querySelectorAll('footer.site a[href="#auto"]')].map(a => a.textContent).join(), wide: document.documentElement.scrollWidth > innerWidth + 1 }));
     ok(w + "the page “Written by our system” lists every such answer with its page, its number of papers, its day and “not complete yet” where that is so; one name in the tab, on the page and in the footer",
-      pg.title === "Written by our system · Pharmakon" && pg.h1 === "Written by our system" && pg.foot === "Written by our system" && pg.n === "2 answers, the newest first." && pg.rows.length === 2 && pg.how && !pg.wide &&
+      pg.title === "Written by our system · Pharmakon" && pg.h1 === "Written by our system" && pg.foot === "Written by our system" && pg.n === "4 answers, the newest first." && pg.rows.length === 4 && pg.how && !pg.wide &&
         pg.rows.includes("Can you get addicted to ketamine? | Ketamine · 2 papers · 15 November 2026 · not complete yet") && pg.rows.some(r => /^Do police crackdowns cut drug use, or just move it somewhere else\? \| .+ · 1 paper · 15 November 2026$/.test(r)), JSON.stringify(pg));
     await shot(p, width + "-auto-page");
     await p.click('#auto-list a[data-sheet="au_fixture_ketamine"]'); await p.waitForTimeout(600);
@@ -97,6 +103,27 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const s4 = await sheet(p);
     ok(w + "an address of its own opens the answer over the list; a complete answer from one paper says so in its line", s4 && s4.title === "Do police crackdowns cut drug use, or just move it somewhere else?" && s4.line === LINE1 && s4.srcSummary === "Sources (1)" && (await p.evaluate(() => document.getElementById("view-auto").classList.contains("active"))), s4 && s4.title + " | " + s4.line);
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
+    // ---- 2.7: an answer that read a paper in full, a paper in summary and an official body's page
+    await go(p, "#auto/q-au_fixture_caffeine", 900);
+    const s6 = await sheet(p);
+    ok(w + "an answer that read a paper, a summary and an official page says so in its line; the page's reference is APA 7 for a web page, with its exact date, its title in italics and its address as a link",
+      s6 && s6.line === "Written by our system from 1 paper, the summary of 1 paper and 1 official page. Not yet checked by a person. Not complete yet." && s6.srcSummary === "Sources (3)" && s6.how.length === 3 &&
+        s6.refs.some(r => r.text === "Pretend Health Service. (2025, March 2). A pretend page about caffeine for the checks. https://example.org/pretend-caffeine" && r.italic === "A pretend page about caffeine for the checks" && r.link === "https://example.org/pretend-caffeine"), s6 && s6.line + " | " + JSON.stringify(s6.refs));
+    await p.keyboard.press("Escape"); await p.waitForTimeout(300);
+    // ---- 2.7: an answer about amounts (decision 11): the code's own lines, then each amount in its source's own words
+    await go(p, "#auto/q-au_fixture_methadone", 900);
+    const am = await p.evaluate(() => { const s = document.querySelector("#evsheet.open .panel .ins"); if (!s) return null; const a = s.querySelector(".ins-ans") || s, first = a.querySelector(".auto-first"), short = a.querySelector(".ask-short");
+      return { first: first ? first.textContent : "", firstFirst: !!(first && short && (first.compareDocumentPosition(short) & Node.DOCUMENT_POSITION_FOLLOWING)), short: short ? short.textContent : "", but: (a.querySelector(".ask-but") || {}).textContent || "",
+        rows: [...a.querySelectorAll(".auto-rows .ar")].map(li => ({ who: li.querySelector(".ar-who").textContent, q: li.querySelector(".ar-q").textContent, src: li.querySelector(".ar-src").textContent })), how: !!a.querySelector(".ask-how"),
+        line: (a.querySelector(".auto-l") || {}).textContent || "", refs: [...a.querySelectorAll(".auto-refs li")].map(li => li.textContent), bars: a.querySelectorAll(".meter").length, wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
+    ok(w + "an answer about amounts opens with the line about tolerance (an opioid), then the two lines the code writes: none of them a model's", am && am.first === LINES.first.opioids.text && am.firstFirst && am.short === LINES.amounts && am.but === LINES.amounts_but, JSON.stringify(am).slice(0, 400));
+    ok(w + "each amount stands in its source's own words, 15 at most, with who received it, under what care, and whose words they are; a paper read in summary says so", am && am.rows.length === 2 && am.rows.every(r => r.q.split(/\s+/).length <= 15 && /\d/.test(r.q)) &&
+      am.rows[0].who === "FIXTURE. People starting pretend treatment, under supervision; the first amount on a pretend label." && am.rows[0].q === "the pretend first amount should not exceed 30 mg" && am.rows[0].src === "Pretend Maker, n.d." && am.rows[1].src === "Fixture, 2021, read in summary only", am && JSON.stringify(am.rows));
+    ok(w + "it has no “How do we know?” of a writer, no bars, its quiet line, and its label's reference with the day it was read (a page without a date)", am && !am.how && am.bars === 0 && !am.wide && am.line === "Written by our system from the summary of 1 paper and 1 official page. Not yet checked by a person. Not complete yet." &&
+      am.refs.includes("Pretend Maker. (n.d.). A pretend label for the checks [Drug label]. DailyMed. Retrieved November 15, 2026, from https://example.org/pretend-label"), am && am.line + " | " + JSON.stringify(am.refs));
+    await shot(p, width + "-auto-amounts");
+    ok(w + "an amount that is not in its source's own words never reaches the page: the build leaves that answer out and names it", /au_fixture_badamount \(an amount that is not in its source's own words/.test(b.stderr) && await p.evaluate(() => !AUTO.au_fixture_badamount));
+    await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     // ---- the list of questions not answered yet, and a kept question
     await go(p, "#wanted", 500);
     const wl = await p.evaluate(() => ({ ids: WANTED.map(x => x[0]), text: document.getElementById("wanted-list").textContent }));
@@ -130,7 +157,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
   }
   ok("no error in any page's console", !errors.length, errors.slice(0, 3).join(" | "));
   await browser.close(); server.close();
-  if (!process.argv.includes("--keep")) { const r = build({ PK_AUTO_FIXTURE: "", PK_AUTO_LOOP: "" }); ok("the site is built again without the pretend answers", r.status === 0 && !/machine lane: 2 answers/.test(r.stdout) && !fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes("au_fixture_"), (r.stdout + r.stderr).slice(-300)); }
+  if (!process.argv.includes("--keep")) { const r = build({ PK_AUTO_FIXTURE: "", PK_AUTO_LOOP: "" }); ok("the site is built again without the pretend answers", r.status === 0 && !/machine lane: \d+ answers written by the system are shown/.test(r.stdout) && !fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes("au_fixture_"), (r.stdout + r.stderr).slice(-300)); }
   console.log(fail ? fail + " checks failed, " + pass + " passed" : "All " + pass + " checks passed");
   process.exit(fail ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

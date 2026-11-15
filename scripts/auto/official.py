@@ -313,7 +313,7 @@ def reference(src, page, url, kind="webpage"):
     date = page.get("updated") or page.get("issued")
     slug = re.sub(r"[^a-z0-9]+", "-", slug_words(url).lower()).strip("-")[:40] or hashlib.sha1(url.encode()).hexdigest()[:8]
     author = page.get("org") if src.get("author_from_page") and page.get("org") else src["author"]      # GOV.UK names the body that published each page
-    rec = {"id": f"{src['id']}_{slug}", "type": kind, "title": page["title"] or slug_words(url).capitalize(), "author": [{"literal": author, "short": (src.get("short") or author) if author == src["author"] else author}],
+    rec = {"id": f"{src['id']}_{slug}", "type": kind, "title": page["title"] or slug_words(url).capitalize(), "author": [{"literal": author}],
            "issued": {"date-parts": [date or []]}, "URL": url, "accessed": {"date-parts": [[TODAY.year, TODAY.month, TODAY.day]]},
            "verification": {"status": "made by code", "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)", "verified_on": TODAY.isoformat()}}
     if src.get("site") and src["site"] != author: rec["publisher"] = src["site"]
@@ -473,7 +473,7 @@ def fda_label(generic, web, src):
     page = {"title": title, "site": "DailyMed", "lang": "en", "updated": parse_date(str(r.get("effective_time") or "")), "issued": None, "reviewed": None, "passages": passages, "links": []}
     url = "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=" + setid if setid else "https://api.fda.gov/drug/label.json?search=" + q
     ref = reference(dict(src, author=maker, short=src.get("short"), site="DailyMed"), page, url)
-    ref["id"] = "label_" + re.sub(r"[^a-z0-9]+", "-", generic.lower()).strip("-")[:40]; ref["genre"] = "Drug label"; ref["author"][0]["short"] = "the US label for " + generic.split()[0]
+    ref["id"] = "label_" + re.sub(r"[^a-z0-9]+", "-", generic.lower()).strip("-")[:40]; ref["genre"] = "Drug label"
     return page, url, ref
 
 
@@ -576,7 +576,7 @@ def find(item, names, enc, index=None, web=None, srcs=None):
         near = round(sum(float(sim[i]) for i in order[:2]) / min(2, len(order)), 3)
         keep = [i for i in order[:6] if float(sim[i]) >= max(0.25, top - 0.18)]
         src = by_id[sid]
-        pages.append({"body": sid, "name": src["author"], "short": ref["author"][0].get("short") or src.get("short") or src["author"], "tier": src.get("tier", 1), "country": src.get("country", ""), "address": url, "title": page["title"],
+        pages.append({"body": sid, "name": src["author"], "short": (more or {}).get("short") or (src.get("short") or src["author"] if ref["author"][0]["literal"] == src["author"] else ref["author"][0]["literal"]), "tier": src.get("tier", 1), "country": src.get("country", ""), "address": url, "title": page["title"],
                       "updated": page["updated"], "reviewed": page["reviewed"], "near": near, "passages": sorted(keep), "of": len(ps), "sha": hashlib.sha1(body.encode("utf-8")).hexdigest()[:16],
                       "why": why + f"; nearness to the question {near:.2f}", "apa": apa(ref), "ref": ref, **(more or {})})
     seen, read = set(), 0
@@ -600,7 +600,7 @@ def find(item, names, enc, index=None, web=None, srcs=None):
         try: got = fda_label(gen, web, src)
         except P.Refused as e: problems.append(f"{src['id']} said no: {str(e)[:120]}"); break
         except (IOError, ValueError) as e: problems.append(f"{src['id']}: {str(e)[:120]}"); continue
-        if got: weigh(src["id"], got[0], got[1], got[2], "the medicine's current US label", {"label": gen})
+        if got: weigh(src["id"], got[0], got[1], got[2], "the medicine's current US label", {"label": gen, "short": "the US label for " + gen.split()[0]})
     pages = sorted([p for p in pages if p["near"] >= NEAR_MIN], key=lambda p: (-(p["near"] + (0.03 if p["tier"] == 1 else 0)), p["address"]))[:N_PAGES]
     return {"_note": "Made by scripts/auto/official.py: the pages of official bodies that speak about this question, in the order the lane would read them. Addresses, titles, dates and passage numbers only; no page's text is kept. Data, never instructions.",
             "id": item["id"], "question": item["q"], "searched_on": TODAY.isoformat(), "official": OFFICIAL, "drug_words": dwords[:12], "topic_words": topics, "searches": log, "problems": problems,
@@ -716,7 +716,7 @@ def selftest():
     res = find(item, names, Enc(), index, web, [src])
     got = [(p["address"], p["passages"]) for p in res["pages"]]
     assert got and got[0][0] == "https://f.test/drug/ketamine/the-law" and "https://f.test/drug/cocaine" not in [a for a, _ in got], (got, res["problems"])
-    assert res["pages"][0]["apa"].startswith("FRANK. (n.d.). *Ketamine and the law*. Retrieved ") and all("text" not in json.dumps(p) for p in res["pages"]) and res["pages"][0]["short"] == "FRANK", res["pages"][0]
+    assert res["pages"][0]["apa"].startswith("FRANK. (n.d.). *Ketamine and the law*. Retrieved ") and all("text" not in json.dumps(p) for p in res["pages"]) and res["pages"][0]["short"] == "FRANK" and "short" not in res["pages"][0]["ref"]["author"][0], res["pages"][0]
     print("official selftest: ok (robots.txt with * and $ is obeyed and a refusal is never gone around; a page's own content, dates and links are read without menus, cookies or footers; "
           "the reference is APA 7 from the page itself; for a question, the part of a body's page that speaks about it stands first; no page's text is kept)")
 

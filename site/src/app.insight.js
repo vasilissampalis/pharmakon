@@ -958,15 +958,28 @@ if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdle
    (These functions are also called while the pages draw, before the rest of this file has run: they read nothing of it.) ---------- */
 function isAuto(id) { return typeof AUTO === "object" && AUTO !== null && typeof id === "string" && Object.prototype.hasOwnProperty.call(AUTO, id); }
 function autoFor(page) { return typeof AUTO === "object" && AUTO ? Object.keys(AUTO).filter(id => AUTO[id].page === page).sort((a, b) => (AUTO[b].made || "").localeCompare(AUTO[a].made || "") || a.localeCompare(b)) : []; }
+// what it read (2.7): papers in full, the summaries of papers behind a paywall, the pages of official bodies
+function autoFrom(a) {
+  const f = a.from || { papers: a.refs.length, summaries: 0, official: 0 }, bits = [];
+  if (f.papers) bits.push(f.papers + (f.papers === 1 ? " paper" : " papers"));
+  if (f.summaries) bits.push(f.summaries === 1 ? "the summary of 1 paper" : "the summaries of " + f.summaries + " papers");
+  if (f.official) bits.push(f.official + (f.official === 1 ? " official page" : " official pages"));
+  return bits.length > 1 ? bits.slice(0, -1).join(", ") + " and " + bits[bits.length - 1] : bits[0] || "0 papers";
+}
 function autoLabel(a) {
-  return '<p class="auto-l">Written by our system from ' + a.refs.length + (a.refs.length === 1 ? " paper" : " papers") + ". Not yet checked by a person." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
+  return '<p class="auto-l">Written by our system from ' + autoFrom(a) + ". Not yet checked by a person." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
 }
 function autoBodyHtml(id) {
   const a = AUTO[id];
-  return '<p class="ask-short">' + esc(a.short) + '</p><p class="ask-but"><b>But</b> ' + esc(a.but.replace(/^but[,:]?\s+/i, "")) + "</p>" +
-    '<details class="ask-how"><summary>How do we know?</summary><ul class="ask-howl">' + a.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul></details>" + autoLabel(a) +
-    '<details class="auto-src"><summary>Sources (' + a.refs.length + ')</summary><ol class="auto-refs">' + a.refs.map(r => "<li>" + apaReference(r) + "</li>").join("") + "</ol></details>" +
+  const tail = autoLabel(a) + '<details class="auto-src"><summary>Sources (' + a.refs.length + ')</summary><ol class="auto-refs">' + a.refs.map(r => "<li>" + apaReference(r) + "</li>").join("") + "</ol></details>" +
     '<p class="auto-acts"><button type="button" class="linklike" data-auto-report="' + esc(id) + '">Report a mistake in this answer</button></p>';
+  // an answer about amounts (2.7; the senior author's decisions of 15 November 2026): the lines the code wrote, then each amount in
+  // its source's own words (15 at most), with who received it, under what care, and whose words they are
+  if (a.kind === "amounts") return (a.first ? '<p class="auto-first" role="note">' + esc(a.first) + "</p>" : "") + '<p class="ask-short">' + esc(a.short) + '</p><p class="ask-but">' + esc(a.but) + "</p>" +
+    '<ul class="auto-rows">' + a.rows.map(r => { const ref = a.refs.find(x => x.id === r.ref);
+      return '<li class="ar"><span class="ar-who">' + esc(r.who) + "; " + esc(r.what) + '.</span> <q class="ar-q">' + esc(r.quote) + '</q> <span class="ar-src">' + (ref ? esc(inTextLabel(ref, a.refs)) : "") + (r.read === "summary" ? ", read in summary only" : "") + "</span></li>"; }).join("") + "</ul>" + tail;
+  return '<p class="ask-short">' + esc(a.short) + '</p><p class="ask-but"><b>But</b> ' + esc(a.but.replace(/^but[,:]?\s+/i, "")) + "</p>" +
+    '<details class="ask-how"><summary>How do we know?</summary><ul class="ask-howl">' + a.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul></details>" + tail;
 }
 function autoRowHtml(x, best) {
   const a = AUTO[x.id], w = mfWhere(a.page);
@@ -977,7 +990,7 @@ function autoRowHtml(x, best) {
 function autoListHtml(ids, withPage) {
   const day = d => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ""); return m ? +m[3] + " " + ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][+m[2] - 1] + " " + m[1] : ""; };
   return '<ul class="wl auto-list">' + ids.map(id => { const a = AUTO[id], w = withPage ? mfWhere(a.page) : null;
-    return '<li class="wl-i auto-i"><a class="auto-a" href="#auto/q-' + esc(id) + '" data-sheet="' + esc(id) + '"><span class="wl-q">' + esc(a.q) + '</span><span class="auto-meta">' + (w ? esc(w.name) + " · " : "") + a.refs.length + (a.refs.length === 1 ? " paper" : " papers") +
+    return '<li class="wl-i auto-i"><a class="auto-a" href="#auto/q-' + esc(id) + '" data-sheet="' + esc(id) + '"><span class="wl-q">' + esc(a.q) + '</span><span class="auto-meta">' + (w ? esc(w.name) + " · " : "") + esc(autoFrom(a)) +
       (day(a.made) ? " · " + day(a.made) : "") + (a.complete ? "" : " · not complete yet") + "</span></a></li>"; }).join("") + "</ul>";
 }
 function autoPage() {
