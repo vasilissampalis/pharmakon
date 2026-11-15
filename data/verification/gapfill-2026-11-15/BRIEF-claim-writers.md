@@ -122,6 +122,12 @@ numbers to start from, `answers_instead` (the narrower question the cards do ans
 
 ### Reader 720: how overdoses and alcohol kill
 
+**Editor's note, 15 November 2026:** reader 720 was stopped by an automatic filter while reading the text of White and
+Irvine (1999) and wrote nothing. By the project's rule that step is not retried or reworded: the answer that rests on
+that review alone (`cl_opi_overdose_how_it_kills`) is not written in this round and is left for the senior author to
+decide. The four answers that rest on other papers go to **reader 724** (next section), without that review. The text
+below is kept as reader 720 received it.
+
 PDFs: `PDFs/_Cross-cutting/White_1999_MechanismsFatalOpioidOverdose.pdf` (card `sc_white_1999`, folder `interactions`,
 **first-pass**: check every point you use), `PDFs/Heroin/Darke_1996_FatalHeroinOverdoseReview.pdf` (`sc_darke_1996`, `heroin`),
 `PDFs/Heroin/McDonald_2016_TakeHomeNaloxoneSR.pdf` (`sc_mcdonald_2016`, `heroin`), `PDFs/Alcohol/Rehm_2009_GlobalBurdenEconomicCost.pdf`
@@ -160,6 +166,24 @@ PDFs: `PDFs/_Cross-cutting/White_1999_MechanismsFatalOpioidOverdose.pdf` (card `
    description of reported cases and not of how often such reactions happen. Research findings only, never a list of
    signs to act on or what to do. Read `cl_mdma_overheating`, `cl_mdma_hyponatremia`, `cl_mdma_kidney`,
    `cl_mdma_deaths_fatal_level` and `cl_mdma_acute_body` first; one sentence may point to each.
+
+### Reader 724: how fast an overdose happens, after naloxone, alcohol, and MDMA reactions
+
+You take four of reader 720's five answers. **Do not open `PDFs/_Cross-cutting/White_1999_MechanismsFatalOpioidOverdose.pdf`
+or its card `sc_white_1999`, and do not write `cl_opi_overdose_how_it_kills`.** PDFs and cards as listed under reader 720
+(without White 1999). Your claims file is `data/claims/_incoming/gap1115_w724.json`, your lines `724_simple.json`, your
+report `724_report.md`.
+
+- **`cl_opi_overdose_how_fast`**: as item 2 under reader 720 (Darke and Zador, 1996).
+- **`cl_opi_after_naloxone`**: as item 3 under reader 720, from McDonald and Strang (2016) only: how often withdrawal
+  reactions, vomiting, agitation and seizures were reported after naloxone given by bystanders, out of how many uses, and
+  how many of the studies reported reactions at all. The question's second half (can the overdose come back?) has no
+  paper on file here: say so plainly in `but`, and word `q` for what the answer does answer.
+- **`cl_alc_how_it_kills`**: as item 4 under reader 720.
+- **`cl_mdma_bad_reaction`**: as item 5 under reader 720.
+
+These are answers people look for when they are worried about someone. Describe what the studies found, in plain and
+calm words; no list of signs to act on, no instructions, no amounts.
 
 ### Reader 721: getting hooked
 
