@@ -123,6 +123,7 @@ for ep in range(1, EPOCHS + 1):
     acc, auc = validate(model); score = acc + (auc if auc == auc else 0)
     print(f"epoch {ep}: loss {tot/max(1,nb):.3f} | held out{' (now trained on)' if ALL else ''}: finds answer {100*acc:.1f}%, AUC {auc:.3f} | {time.time()-t0:.0f}s", flush=True)
     if ALL or score > best[0]: best = (score, ep); torch.save(model.state_dict(), OUT / "best.pt")
+    if "--save-each" in sys.argv: torch.save(model.state_dict(), OUT / f"ep{ep}.pt")
 print("kept epoch", best[1])
 model.load_state_dict(torch.load(OUT / "best.pt")); model.eval()
 
