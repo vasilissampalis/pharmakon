@@ -1,8 +1,10 @@
 // The parts fetched when needed (speed, 13 November 2026), checked in a real browser at 390 x 844 and 1280 x 800: every page
-// type draws (start page, a drug page and its law part, an answer sheet with Scientific detail open, a research page, the law
-// page, mixing with its full evidence, facts, the quiz, search, statistics, how to read, a study card, a citation's popover),
-// the start page fetches none of the on-demand files, a drug page fetches its own file ahead once it settles, and a file that
-// cannot be had shows one line with a retry that works. Every page is also checked for console errors and horizontal scroll.
+// type draws (start page, a drug page and its law section, an answer sheet with Scientific detail open, the law page, mixing
+// with its full evidence, facts, the quiz, search, statistics, how to read, a study card, a citation's popover), the start
+// page fetches none of the on-demand files, a drug page fetches its own file ahead once it settles, and a file that cannot be
+// had shows one line with a retry that works. Every page is also checked for console errors and horizontal scroll.
+// (Site 2.3: each drug has one page. The research page, with its claims in full, its reference list and the figures it
+// fetched, is gone; its addresses open the drug page, and the how-to page has no example to fetch a file for.)
 // Usage: node scripts/ux/speed_check.js [--shots DIR] [--port N]   (build first; exit code 1 if a check fails)
 const http = require("http"), fs = require("fs"), path = require("path");
 const { chromium } = require("playwright");
@@ -45,22 +47,22 @@ const server = http.createServer((req, res) => {
     fetched.length = 0; await go("s-cannabis", 3500);
     const law = await p.evaluate(() => { const s = document.querySelector("#d-law .sec-b"); return s ? { say: (s.querySelector(".say") || {}).textContent || "", wait: !!s.querySelector(".loading, .lawwait") } : null; });
     ok(w + ": drug page draws, fetches its own file ahead, and its law part draws for the chosen country", (await p.$$("#drug2 details.ask")).length > 10 && fetched.includes("full-cannabis.json") && law && !law.wait && /Greece/.test(law.say), "fetched " + fetched.join(", ") + "; law: " + (law ? law.say.slice(0, 60) : "missing"));
-    await p.$eval("#d-law", e => e.scrollIntoView({ block: "start" })); await p.waitForTimeout(200); await shot("drug-page-law");
+    await p.evaluate(() => { location.hash = "#s-cannabis/part-d-law"; }); await p.waitForTimeout(700);
+    const lawSec = await p.evaluate(() => { const s = document.getElementById("d-law"); return { shown: !s.hidden && s.getBoundingClientRect().height > 0, src: !!s.querySelector("details.lawmore") }; });
+    ok(w + ": the law section by its address opens alone, with the sources of the law one tap away", lawSec.shown && lawSec.src, JSON.stringify(lawSec));
+    await shot("drug-page-law");
     // the answer sheet, with Scientific detail open
     await go("home", 300); fetched.length = 0; await go("cl_can_dependence_how_many", 600); const sheetOk = await idle();
     const sh = await p.evaluate(() => { const s = document.querySelector("#evsheet.open"); if (!s) return null; const d = s.querySelector("details.sf-sci"); if (d) { d.open = true; d.scrollIntoView({ block: "start" }); }
       return { refs: s.querySelectorAll(".ev-refs li").length, apa: !!s.querySelector(".ev-apa"), sci: !!(d && d.querySelector(".ev-precise").textContent.length > 200), peco: !!s.querySelector(".ev-peco dd") }; });
     ok(w + ": answer sheet draws in full (sources with APA references, Scientific detail, who was studied)", sheetOk && sh && sh.refs > 0 && sh.apa && sh.sci && sh.peco, JSON.stringify(sh) + "; fetched " + fetched.join(", "));
     await p.waitForTimeout(250); await shot("sheet-scientific-detail-open");
-    // a research page (a drug with a full write-up), and a section by address
-    await go("home", 300); await go("s-methamphetamine/evidence", 600); const monoOk = await idle();
-    const mono = await p.evaluate(() => ({ claims: document.querySelectorAll("#sections .claim").length, refs: document.querySelectorAll("#reflist .ref").length, toc: document.querySelectorAll("#toc a").length, title: document.getElementById("mono-title").textContent }));
-    ok(w + ": research page draws with its claims, references and contents", monoOk && mono.claims > 20 && mono.refs > 20 && mono.toc > 5, JSON.stringify(mono));
-    await shot("research-page");
-    await go("s-cannabis/sec-13", 600); await idle(); await p.waitForTimeout(300);
-    const sec13 = await p.evaluate(() => { const d = document.getElementById("sec-13"); return d ? { open: d.open, rows: d.querySelectorAll(".lawgrp").length } : null; });
-    ok(w + ": a research section by address opens with the law rows", sec13 && sec13.open && sec13.rows > 3, JSON.stringify(sec13));
-    await shot("research-section-law", null, true);   // (a long link in the law rows scrolls sideways on a phone; so it does on main, before this change)
+    // the research page's old addresses open the drug page at once: nothing more is fetched for them than the drug's own file
+    await go("home", 300); fetched.length = 0; await go("s-methamphetamine/evidence", 900);
+    const oldAddr = await p.evaluate(() => ({ view: (document.querySelector(".view.active") || {}).id, hash: location.hash, rows: document.querySelectorAll("#secmenu .sm-b").length, mono: !!document.getElementById("view-monograph") }));
+    ok(w + ": a research page's old address opens the drug page (its menu of sections), fetching neither the figures nor every reference at once",
+      oldAddr.view === "view-drug" && oldAddr.hash === "#s-methamphetamine" && oldAddr.rows > 5 && !oldAddr.mono && !fetched.includes("figures.json"), JSON.stringify(oldAddr) + "; fetched " + (fetched.join(", ") || "nothing"));
+    await shot("old-research-address");
     // the law page (treaties, country by country)
     await go("law", 800); ok(w + ": law page draws", (await p.$$("#law-list tr")).length > 150); await shot("law-page");
     // mixing, with a full evidence fold opened
@@ -75,7 +77,8 @@ const server = http.createServer((req, res) => {
     await go("quiz", 800); ok(w + ": quiz page draws", !!(await p.$("#quizpage .qz2-o, #quizpage .qz2-q"))); await shot("quiz");
     await go("numbers", 600); await idle(); await p.waitForTimeout(200);
     ok(w + ": statistics page draws its figures", (await p.$$("#num-list > *")).length > 3 && !!(await p.$("#num-geo .chip"))); await shot("statistics");
-    await go("howto", 600); await idle(); ok(w + ": how-to page draws its example claim", !!(await p.$("#howto-example .claim"))); await shot("howto");
+    fetched.length = 0; await go("howto", 600);
+    ok(w + ": how-to page draws at once: no example, and no file fetched for it", (await p.$$("#view-howto .howsteps li")).length === 4 && !(await p.$("#howto-example")) && !fetched.length, "fetched " + (fetched.join(", ") || "nothing")); await shot("howto");
     // the senior author's review page reads every file and the open decisions
     await go("review", 600); await p.waitForFunction(() => !document.querySelector("#review-list .loading"), null, { timeout: 30000 }).catch(() => {});
     const rv = await p.evaluate(() => ({ claims: document.querySelectorAll("#review-list .rv").length, decisions: (document.getElementById("dec-count") || {}).textContent || "" }));
@@ -84,9 +87,9 @@ const server = http.createServer((req, res) => {
     await go("home", 800); await p.fill("#search", "ecstasy memory"); await p.waitForTimeout(700);
     ok(w + ": search finds answers", (await p.$$("#search-results a")).length > 2); await shot("search");
     await p.fill("#search", ""); await p.keyboard.press("Escape");
-    // a study card, and a citation's popover on a drug page (both read the references in full)
-    await go("s-methamphetamine/evidence", 600); await idle();
-    await p.evaluate(() => { const b = document.querySelector("#sections [data-card]"); if (b) b.click(); }); await p.waitForTimeout(1200);
+    // a study card, opened from a source in an answer's evidence (both read the references in full)
+    await go("cl_meth_psychosis_dose", 600); await idle();
+    await p.evaluate(() => { const b = document.querySelector("#evsheet.open .ev-refs [data-card]"); if (b) { b.closest("details").open = true; b.click(); } }); await p.waitForTimeout(1200);
     const card = await p.evaluate(() => { const d = document.querySelector("#drawer.open .panel"); return d ? { head: !!d.querySelector(".cardhead h2"), apa: !!d.querySelector(".refline") } : null; });
     ok(w + ": a study card opens with its reference in full", card && card.head && card.apa, JSON.stringify(card)); await shot("study-card");
     await p.evaluate(() => { const c = document.querySelector("#drawer .close"); if (c) c.click(); });
@@ -99,16 +102,18 @@ const server = http.createServer((req, res) => {
       ok(w + ": a citation's popover waits for the references, then shows the full APA reference", pop && pop.apa, pop ? pop.text : "no popover");
       if (SHOTS) await p3.screenshot({ path: path.join(SHOTS, w + "-popover-glossary.png") });
       await c3.close(); }
-    // a file that cannot be had: one line with a retry, and the retry works once the file can be had again
+    // a file that cannot be had: one line with a retry, and the retry works once the file can be had again (the law section
+    // of a drug page, for a reader whose country is known)
     const ctx2 = await browser.newContext({ viewport: { width: w, height: H }, deviceScaleFactor: 1 }), p2 = await ctx2.newPage();
+    await ctx2.addInitScript(() => { try { localStorage.setItem("pk-country", "Greece"); } catch (e) { /* no storage */ } });
     let block = true; await p2.route(/\/data\/full-ketamine\.json/, r => block ? r.fulfill({ status: 503, body: "" }) : r.continue());
     p2.on("pageerror", e => errors.push(w + " page error (offline test): " + String(e).slice(0, 200)));
-    await p2.goto(BASE + "s-ketamine/evidence"); await p2.waitForTimeout(1500);
-    const fail = await p2.evaluate(() => { const f = document.querySelector("#sections .loadfail"); return f ? f.textContent : null; });
+    await p2.goto(BASE + "s-ketamine/part-d-law"); await p2.waitForTimeout(1500);
+    const fail = await p2.evaluate(() => { const f = document.querySelector("#d-law .loadfail"); return f ? f.textContent : null; });
     if (SHOTS) await p2.screenshot({ path: path.join(SHOTS, w + "-file-failed-retry.png") });
-    block = false; await p2.click("#sections .loadfail [data-retry]"); await p2.waitForTimeout(1500);
-    const after = await p2.evaluate(() => document.querySelector("#sections .loadfail, #sections .loading") ? 0 : document.querySelectorAll("#sections details.sec").length);
-    ok(w + ": a file that cannot be had says so in one line with a retry, and the retry draws the page", !!fail && /could not be loaded/.test(fail) && after >= 3, (fail || "no failure line").slice(0, 70) + "; after retry " + after + " sections");
+    block = false; await p2.click("#d-law .loadfail [data-retry]"); await p2.waitForTimeout(1500);
+    const after = await p2.evaluate(() => document.querySelector("#d-law .loadfail, #d-law .loading") ? "" : (document.querySelector("#d-law .say") || {}).textContent || "");
+    ok(w + ": a file that cannot be had says so in one line with a retry, and the retry draws the part", !!fail && /could not be loaded/.test(fail) && /Greece/.test(after), (fail || "no failure line").slice(0, 70) + "; after retry: " + after.slice(0, 60));
     await ctx2.close();
     await ctx.close();
   }

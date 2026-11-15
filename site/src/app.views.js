@@ -890,7 +890,7 @@ function showSrcl(btn, byKey) {
     if (e.key === "Escape" || (e.key === "Tab" && (e.shiftKey ? at === 0 : at === links.length - 1))) { e.preventDefault(); e.stopPropagation(); hidePop(); if (btn.isConnected) btn.focus(); } });
   if (byKey && links[0]) links[0].focus({ preventScroll: true });
 }
-function hidePop() { popWant = null; if (popEl) { popEl.remove(); popEl = null; } }
+function hidePop() { clearTimeout(popTimer); popWant = null; if (popEl) { popEl.remove(); popEl = null; } }   // (a hide still waiting must not take the next popover with it)
 function scheduleHide() { clearTimeout(popTimer); popTimer = setTimeout(hidePop, 250); }
 const NO_HOVER = window.matchMedia ? window.matchMedia("(hover: none)").matches : false;
 document.addEventListener("mouseover", e => { if (NO_HOVER) return; const a = e.target.closest("a.pop"); if (a) { clearTimeout(popTimer); showPop(a); return; } const g = e.target.closest("button.gl"); if (g) { clearTimeout(popTimer); showGloss(g); return; }

@@ -1219,17 +1219,19 @@ function mfPool() {
       i: typeof x.i === "number" ? x.i : -1 }); }));   // i: how interesting readers of the cards rated it (data/site/tf-interest.json); -1 without a score
   return (MF_POOL = out);
 }
-// n new cards: none asked this visit or dealt in this deck before; short ones first, and of each length those never answered
-// on this device first, then those missed last time, then the rest; within each of these, the most interesting cards first
-// (site 2.3: the cards' interest scores, where there are any), then the statements whose answers people ask about most
-// (DEMAND, highest first; equals, and the statements without a score after them, in a new order every time); a full deck
-// takes about as many myths as facts, and is laid out with its most interesting card first (equal cards as dealt)
+// n new cards: none asked this visit or dealt in this deck before. With interest scores (site 2.3, data/site/tf-interest.json):
+// the cards never answered on this device first, then those missed last time, then the rest; within each of these the most
+// interesting first, then the short ones (20 words or fewer), then the statements whose answers people ask about most
+// (DEMAND), equals in a new order every time. Without scores, as before: short ones first, and of each length those never
+// answered first, then those missed, then the rest, each by DEMAND. A full deck takes about as many myths as facts, and is
+// laid out with its most interesting card first (equal cards as dealt).
 function mfDeal(st, n) {
   const asked = new Set(QZS.claims), seen = qzSeen(), again = qzAgain();
   let pool = st.pool.filter(x => !asked.has(x.claim) && !st.used.has(x.claim));
   if (!pool.length && n > 1) { st.used = new Set(); pool = st.pool; }   // every statement has been dealt: all of them again, in a new order
-  const tier = x => (x.long ? 3 : 0) + (!seen.has(x.key) ? 0 : again.has(x.key) ? 1 : 2), one = new Set();
-  const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t)).sort((a, b) => b.i - a.i || demandOf(b.claim) - demandOf(a.claim))).filter(x => !one.has(x.claim) && one.add(x.claim));
+  const scored = st.pool.some(x => x.i >= 0), state = x => !seen.has(x.key) ? 0 : again.has(x.key) ? 1 : 2;
+  const tier = x => scored ? state(x) : (x.long ? 3 : 0) + state(x), one = new Set();
+  const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t)).sort((a, b) => b.i - a.i || (scored ? a.long - b.long : 0) || demandOf(b.claim) - demandOf(a.claim))).filter(x => !one.has(x.claim) && one.add(x.claim));
   let deck = n > 1 ? order.filter(x => !x.fact).slice(0, n / 2).concat(order.filter(x => x.fact).slice(0, n / 2)) : order.slice(0, n);
   deck = deck.concat(order.filter(x => !deck.includes(x)).slice(0, n - deck.length));
   deck = qzSpread(shuffle(deck), "page").map((x, k) => [x, k]).sort((a, b) => b[0].i - a[0].i || a[1] - b[1]).map(p => p[0]);
