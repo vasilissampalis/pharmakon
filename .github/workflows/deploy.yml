@@ -1,0 +1,113 @@
+# The site, published by itself (docs/AUTOMATION.md). The senior author, 15 November 2026: "it should be published and
+# automatically deployed"; "automatically deployed every 30 minutes".
+#
+# It builds the site from the newest main exactly as the editor builds a release (node site/build.js, then
+# python3 -I site/build_public.py), and publishes site/public to the Cloudflare Pages project "pharmakon" ONLY when every
+# gate below passes: the validator finds no hard failure; the site's own program passes its tests; the built site opens
+# in a real browser and passes the smoke checks. If a gate fails nothing is published and the notes say why.
+#
+# It needs the repository's two secrets (CLOUDFLARE_API_TOKEN with Cloudflare Pages: Edit; CLOUDFLARE_ACCOUNT_ID). The
+# editor's session cannot read GitHub's logs, so the run keeps its notes in the repository (data/auto/deploy), cleaned of
+# both secrets. It starts when the editor puts a request in data/auto/requests (deploy-*.json), by hand, or when the
+# half-hourly run (auto.yml) finds that the site has changed.
+name: Deploy
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/deploy-*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: The vectors made before (so that only new texts are embedded)
+        uses: actions/cache@v6
+        with:
+          path: site/insight/.cache
+          key: insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-${{ github.run_id }}
+          restore-keys: |
+            insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-
+      - name: The browser fetched before
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browser-v1
+      - name: Packages
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q numpy tokenizers onnxruntime playwright
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+          .venv/bin/python -m playwright install chromium > /dev/null
+          npm install --no-save --no-package-lock --silent playwright > /dev/null 2>&1
+          npx --yes playwright install chromium > /dev/null 2>&1
+      - name: Build, check, publish, with notes
+        env:
+          CF_TOKEN_RAW: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_RAW: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set +e
+          L="$RUNNER_TEMP/deploy.log"; : > "$L"; OK=1
+          gate() { echo "== $1" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this gate failed ($c): nothing will be published" >> "$L"; OK=0; fi; }
+          gate "build the page and Insight's index" node site/build.js
+          gate "the validator (no hard failure)" python3 -I scripts/validate.py
+          gate "build the public site" python3 -I site/build_public.py
+          gate "the site's own program" node scripts/ux/worker_test.mjs
+          gate "the built site in a real browser (smoke checks)" node scripts/ux/smoke.js
+          grep -q "au_fixture_" site/public/index.html && { echo "!! the build holds the checks' pretend answers: nothing will be published" >> "$L"; OK=0; }
+          if [ "$OK" = "1" ]; then
+            export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CF_TOKEN_RAW" | tr -d '[:space:]')"
+            export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CF_ACCOUNT_RAW" | tr -d '[:space:]')"
+            echo "== publish to Cloudflare Pages (project pharmakon)" >> "$L"
+            npx --yes wrangler@4 pages deploy site/public --project-name=pharmakon --branch=main --commit-dirty=true >> "$L" 2>&1
+            c=$?; if [ $c -ne 0 ]; then echo "!! publishing failed ($c)" >> "$L"; OK=0; else echo "published" >> "$L"; fi
+          fi
+          echo "OK=$OK" >> "$GITHUB_ENV"
+          tail -n 4 "$L" >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the notes
+        if: always()
+        env:
+          CF_TOKEN_RAW: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_RAW: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p data/auto/deploy
+          python3 -I - <<'PY'
+          import os, re, json, pathlib, datetime, subprocess
+          src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "deploy.log"
+          t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
+          for k in ("CF_TOKEN_RAW", "CF_ACCOUNT_RAW"):
+              v = (os.environ.get(k) or "").strip()
+              if len(v) >= 6: t = t.replace(v, "***")
+          t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)
+          keep = [l for l in t.splitlines() if l.startswith(("==", "!!", "published")) or re.search(r"hard failures|All \d+ checks passed|checks failed|FAIL |public site:|Deployment complete|https://[a-z0-9.-]*pages\.dev|error", l, re.I)]
+          pathlib.Path("data/auto/deploy/_last-run.txt").write_text("\n".join(keep[-60:]) + "\n", encoding="utf-8")
+          if os.environ.get("OK") == "1":
+              sha = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+              ver = json.load(open("data/site/version.json", encoding="utf-8"))["site"]
+              json.dump({"_note": "The last time the site was published by itself (.github/workflows/deploy.yml).", "commit": sha, "site": ver, "on": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}, open("data/auto/deploy/deployed.json", "w", encoding="utf-8"), indent=1)
+          PY
+          git rm -q --ignore-unmatch data/auto/requests/deploy-*.json
+          git add -A data/auto/deploy data/auto/requests
+          git diff --cached --quiet || git commit -q -m "Deploy: what happened"
+          git push -q || (git pull -q --rebase && git push -q)
