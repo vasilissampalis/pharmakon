@@ -412,6 +412,7 @@ function insScope(q) {
 }
 // the page an answer is shown as being on: a drug the question names (or the page's own) when the answer is asked there
 function insPageOf(id, groups, drug) {
+  if (isAuto(id)) return AUTO[id].page;   // (2.6) an answer written by the system lives on its drug's page, or among the big questions
   const want = groups.flat().concat(drug ? [drug] : []).find(s => (QUESTIONS[s] || []).some(g => g.items.some(([x]) => x === id)));
   return answerPageKey(id, want) || claimById[id].substance;
 }
@@ -470,7 +471,7 @@ function insPlaceholder() {
 }
 
 /* ---------- In the search results ---------- */
-const insQ = (id, page) => (page && sharedQuestion(page, id)) || anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || claimText(claimById[id]);
+const insQ = (id, page) => isAuto(id) ? AUTO[id].q : (page && sharedQuestion(page, id)) || anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || claimText(claimById[id]);
 const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") + (ASK_ON ? ". What you type stays on it, unless you ask us to check a question." : ". Nothing you type leaves it.");
 const INS_ICON = { help: "heart", mix: "mix", dose: "book", test: "flask", page: "molecule" };
 // the emergency number where the reader is, or the way to the numbers: shown with an emergency route, and nowhere else
@@ -505,6 +506,7 @@ function insNoneHtml(res, sheet) {
     : '<p class="sr-fit-none"><b>We haven’t checked exactly this yet.</b>' + (res.note === "none" ? " " + insAskBtn(res.q, "linklike") : "") + "</p>";
 }
 function insRowHtml(x, best) {
+  if (isAuto(x.id)) return autoRowHtml(x, best);
   const c = claimById[x.id], sp = SIMPLE.claims[x.id], w = mfWhere(x.page);
   return '<a class="sr-ans sr-fit-a' + (best ? " sr-best" : "") + '" href="' + esc(answerAddr(x.id, x.page)) + '" data-insight="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(insQ(x.id, x.page)) +
     '</span><span class="a">' + (best ? cueNum(esc(sp.short)) : esc(glanceClause(sp.short))) + '</span><span class="m">' + meterHtml(c.grade.certainty, true) + "</span></a>";
@@ -649,13 +651,15 @@ function insEndHtml() {
 // early draft's reason, How do we know?, the bars and the evidence. depth "full": How do we know? open and the evidence as
 // a button; "short": the short answer and its But, the bars and the way to the evidence, nothing else.
 function insBodyHtml(id, depth) {
+  if (isAuto(id)) return autoBodyHtml(id);
   const c = claimById[id], sp = SIMPLE.claims[id];
   if (depth === "short") return '<p class="ask-short">' + cueNum(esc(sp.short)) + "</p>" + (sp.but ? '<p class="ask-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") +
     '<div class="ask-foot">' + meterHtml(c.grade.certainty, true) + '<span class="ask-acts"><a class="ask-ev" href="#' + esc(id) + '">The evidence ' + icon("arrow") + "</a></span></div>";
   const body = answerBody(id, c, sp, false);
   return depth === "full" ? body.replace('<details class="ask-how">', '<details class="ask-how" open>') : body;
 }
-const insPageLink = (id, page) => { const addr = answerAddr(id, page), w = mfWhere(page), pl = sharedPlace(page || "", id);
+const insPageLink = (id, page) => { if (isAuto(id)) return '<p class="ins-page"><a class="qz2-ev" href="#auto">Everything written by our system ' + icon("arrow") + "</a></p>";
+  const addr = answerAddr(id, page), w = mfWhere(page), pl = sharedPlace(page || "", id);
   return '<p class="ins-page">' + (/^#cl_/.test(addr) ? '<a class="qz2-ev" href="' + esc(pl.href) + '">' + esc(pl.more) + " " + icon("arrow") + "</a>" : '<a class="qz2-ev" href="' + esc(addr) + '">See it on the ' + esc(w.name) + " page " + icon("arrow") + "</a>") + "</p>"; };
 const insBar = eye => '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye ins-eye">' + eye + "</span></div>";
 function insTailHtml(ids, shown, groups) { return INS.run.n - INS.run.more >= INS_END ? insEndHtml() : insPeopleAsk(ids, shown, groups); }
@@ -669,7 +673,7 @@ function insHtml(v) {
   }
   const res = v.res, routes = res.routes.map(r => insRouteHtml(r, "ins-route")).join("") + (res.emergency ? insSosHtml("dh-help ins-sos") : "");
   const best = res.best.map((x, n) => { const w = mfWhere(x.page);
-    return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>Checked answer · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
+    return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written by our system" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
   const none = insNoneHtml(res, true);
   const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"><p class="rn-k">Related</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
@@ -694,10 +698,10 @@ function insDraw(v, opener) {
 function insCount(fresh) { if (fresh || !INS.run || !EV.open) INS.run = { n: 0, more: 0 }; INS.run.n++; }
 // one answer (opt: page, depth, sos, opener, fresh, from)
 function openInsight(id, opener, fresh, opt) {
-  if (!claimById[id] || !(SIMPLE.claims || {})[id]) return false;
+  if (!isAuto(id) && (!claimById[id] || !(SIMPLE.claims || {})[id])) return false;
   opt = opt || {}; insCount(fresh);
   if (!EV.open) INS.from = opt.from || null;
-  return insDraw({ kind: "one", id, page: opt.page || answerPageKey(id) || claimById[id].substance, depth: opt.depth || "", sos: !!opt.sos }, opener);
+  return insDraw({ kind: "one", id, page: isAuto(id) ? AUTO[id].page : opt.page || answerPageKey(id) || claimById[id].substance, depth: opt.depth || "", sos: !!opt.sos }, opener);
 }
 // what the search box and its results were when the sheet opened over them: Back puts them back as they were
 function insFromSearch(id) { const s = document.getElementById("search"); return { value: s ? s.value : "", hash: location.hash, id: id || null }; }
@@ -847,11 +851,11 @@ function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k 
 function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
 function askedBox() {
   const box = document.getElementById("home-asked"); if (!box) return;
-  const list = askedList().filter(it => it.st !== "ans" || claimById[it.id]);
+  const list = askedList().filter(it => it.st !== "ans" || claimById[it.id] || isAuto(it.id));
   if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
   const row = it => it.st === "ans"
-    ? '<li class="aq ans"><a class="aq-a" href="' + esc(answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
+    ? '<li class="aq ans"><a class="aq-a" href="' + esc(isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
     : it.w ? '<li class="aq wait onlist"><span class="aq-a"><span class="aq-k">' + icon("clock") + 'On our list</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>"
     : it.sent ? '<li class="aq wait"><span class="aq-a"><span class="aq-k">' + icon("clock") + 'Sent. We are checking</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>"
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
@@ -919,6 +923,52 @@ document.addEventListener("click", async e => {
 // so the list of kept questions is drawn here, once: without this line it was missing after every reload.
 if (typeof document !== "undefined") askedBox();
 if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdleCallback(() => askProbe(), { timeout: 3000 }); else setTimeout(askProbe, 1200); }
+
+/* ---------- Written by our system (site 2.6, 15 November 2026). The senior author: machine-written answers "should be published
+   and automatically deployed with a very discreet disclaimer and we should just be able to access everything that was
+   automatically written and deployed to check whenever we want"; "if the automatic answer is not complete it should have a
+   small discreet disclaimer"; in "the language and format we write the rest of the website".
+   AUTO (from the build: data/auto/answers, the published ones) holds each such answer: its question, short answer, But, How
+   do we know? and its sources as reference records. It is shown in the site's own form with two differences that are
+   always there: a quiet line, "Written by our system from N papers. Not yet checked by a person." (and "Not complete yet"
+   where papers could not be read), and no evidence bars, because nobody has rated it. The search box finds it as it finds
+   every answer; its drug's page lists it in a section of its own; the page "Written by our system" lists every one.
+   (These functions are also called while the pages draw, before the rest of this file has run: they read nothing of it.) ---------- */
+function isAuto(id) { return typeof AUTO === "object" && AUTO !== null && typeof id === "string" && Object.prototype.hasOwnProperty.call(AUTO, id); }
+function autoFor(page) { return typeof AUTO === "object" && AUTO ? Object.keys(AUTO).filter(id => AUTO[id].page === page).sort((a, b) => (AUTO[b].made || "").localeCompare(AUTO[a].made || "") || a.localeCompare(b)) : []; }
+function autoLabel(a) {
+  return '<p class="auto-l">Written by our system from ' + a.refs.length + (a.refs.length === 1 ? " paper" : " papers") + ". Not yet checked by a person." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
+}
+function autoBodyHtml(id) {
+  const a = AUTO[id];
+  return '<p class="ask-short">' + esc(a.short) + '</p><p class="ask-but"><b>But</b> ' + esc(a.but.replace(/^but[,:]?\s+/i, "")) + "</p>" +
+    '<details class="ask-how"><summary>How do we know?</summary><ul class="ask-howl">' + a.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul></details>" + autoLabel(a) +
+    '<details class="auto-src"><summary>Sources (' + a.refs.length + ')</summary><ol class="auto-refs">' + a.refs.map(r => "<li>" + apaReference(r) + "</li>").join("") + "</ol></details>" +
+    '<p class="auto-acts"><button type="button" class="linklike" data-auto-report="' + esc(id) + '">Report a mistake in this answer</button></p>';
+}
+function autoRowHtml(x, best) {
+  const a = AUTO[x.id], w = mfWhere(a.page);
+  return '<a class="sr-ans sr-fit-a sr-auto' + (best ? " sr-best" : "") + '" href="#auto/q-' + esc(x.id) + '" data-insight="' + esc(x.id) + '" data-page="' + esc(a.page) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(a.q) +
+    '</span><span class="a">' + esc(best ? a.short : glanceClause(a.short)) + '</span><span class="m auto-m">Written by our system · not yet checked by a person</span></a>';
+}
+// a list of such answers as links that open each over the page (a drug's page, and the page that lists them all)
+function autoListHtml(ids, withPage) {
+  const day = d => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ""); return m ? +m[3] + " " + ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][+m[2] - 1] + " " + m[1] : ""; };
+  return '<ul class="wl auto-list">' + ids.map(id => { const a = AUTO[id], w = withPage ? mfWhere(a.page) : null;
+    return '<li class="wl-i auto-i"><a class="auto-a" href="#auto/q-' + esc(id) + '" data-sheet="' + esc(id) + '"><span class="wl-q">' + esc(a.q) + '</span><span class="auto-meta">' + (w ? esc(w.name) + " · " : "") + a.refs.length + (a.refs.length === 1 ? " paper" : " papers") +
+      (day(a.made) ? " · " + day(a.made) : "") + (a.complete ? "" : " · not complete yet") + "</span></a></li>"; }).join("") + "</ul>";
+}
+function autoPage() {
+  const box = document.getElementById("auto-list"); if (!box) return;
+  const ids = typeof AUTO === "object" && AUTO ? Object.keys(AUTO).sort((a, b) => (AUTO[b].made || "").localeCompare(AUTO[a].made || "") || a.localeCompare(b)) : [];
+  box.innerHTML = ids.length ? '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + ", the newest first.</p>" + autoListHtml(ids, true)
+    : '<p class="muted">Nothing yet. The first answers appear here as soon as the system has written them.</p>';
+}
+if (typeof document !== "undefined") {
+  autoPage();
+  document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button[data-auto-report]"); if (!b) return;
+    e.preventDefault(); const id = b.dataset.autoReport; if (EV.open) closeEvidence(); openFeedback("issue", "#auto/q-" + id, ""); });
+}
 
 /* ---------- On our list (site 2.5, 15 November 2026). The senior author: "there is room for growth if we don't depend on the
    users' emails but make the site understand on its own what the users want added in the website in-app and not via email";

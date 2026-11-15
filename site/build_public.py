@@ -28,6 +28,8 @@ LOGO = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
         '<path fill="#ffffff" stroke="%s" stroke-width="2" d="M10 11.8l6.4-6.4a6.8 6.8 0 0 1 9.6 9.6l-6.4 6.4z"/></svg>') % (ACCENT, INK)
 
 page = (DIST / "index.html").read_text(encoding="utf-8")
+# (site 2.6) a build made with the checks' pretend machine-lane answers (PK_AUTO_FIXTURE, scripts/ux/auto_check.js) is never published
+if "au_fixture_" in page: sys.exit("build_public: site/dist was built with the checks' pretend answers (PK_AUTO_FIXTURE). Run node site/build.js again, then this.")
 # the claude.ai viewer's own tags and the Google Fonts links go; the fonts come from this site
 page = page.replace('<meta name="claude:viewport-fit-sides" content="cover">\n', "")
 page = re.sub(r'<link rel="preconnect" href="https://fonts\.googleapis\.com">\n?', "", page)

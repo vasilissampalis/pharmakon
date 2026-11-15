@@ -801,7 +801,7 @@ function glanceClause(t) {
    Two levels only: section, then question; a section's topics are plain headings, and one question is open at a time.
    Gone with 2.2: "At a glance", the line "Someone unwell?" under the name, the count of answers opened, "Want the details?"
    and the research page it led to (Quick answers / Full evidence). */
-const SEC_ICON = { "d-feel": "pulse", "d-mix": "mix", "d-after": "moon", "d-risk": "alert", "d-med": "plus", "d-looks": "eye", "d-law": "scale", "d-quiz": "bulb", "d-help": "heart", "d-kits": "flask", "d-doses": "book" };
+const SEC_ICON = { "d-feel": "pulse", "d-mix": "mix", "d-after": "moon", "d-risk": "alert", "d-med": "plus", "d-looks": "eye", "d-law": "scale", "d-quiz": "bulb", "d-help": "heart", "d-kits": "flask", "d-doses": "book", "d-auto": "book" };
 /* The order of the sections, the same on every drug page so that it can be learned: the kinds of section that hold answers
    by how much people ask about them (the sum of the DEMAND scores of every drug's answers of that kind, worked out once),
    then what the drug looks like, the law and the page's own cards, and last the three to reach for when needed: if it gets
@@ -813,7 +813,7 @@ function secOrder() {
   SUBSTANCES.forEach(s => {
     drugQuestions(s.slug).forEach(([id, , t]) => { const z = topicZone(t); if (z !== "mix") sum["d-" + z] += Math.max(0, demandOf(id)); });
     mixQuestions(s.slug).forEach(([id]) => { sum["d-mix"] += Math.max(0, demandOf(id)); }); });
-  return (SEC_ORDER = Object.keys(sum).sort((a, b) => sum[b] - sum[a]).concat(["d-looks", "d-law", "d-quiz", "d-help", "d-kits", "d-doses"]));
+  return (SEC_ORDER = Object.keys(sum).sort((a, b) => sum[b] - sum[a]).concat(["d-auto", "d-looks", "d-law", "d-quiz", "d-help", "d-kits", "d-doses"]));
 }
 // a section's answers under their topics, as plain headings: the topics in the order of their most-asked answer, each topic's
 // answers by how much people ask about them (DEMAND), equals in the editors' order. A section that runs in time (before,
@@ -857,6 +857,8 @@ function renderDrug(slug) {
   const med = zone("med"), medAs = med.some(([, , t]) => /as a medicine/i.test(t)), medTx = med.some(([, , t]) => /treatment/i.test(t) && !/as a medicine/i.test(t));
   asks("d-med", medAs ? (medTx ? "As a medicine, and treatment" : "Is it used as a medicine?") : "What can treatment do?", medAs ? "Medicine" : "Treatment", med, "med");
   asks("d-feel", "What does it feel like?", "Feels", zone("feel"), "feel");
+  // (2.6) the answers the system wrote about this drug, in a section of their own: never among the checked ones
+  { const au = autoFor(slug); if (au.length) add("d-auto", "Written by our system", "By our system", '<p class="auto-sec">Our system wrote these by itself from research papers it found and read. A person has not checked them yet.</p>' + autoListHtml(au, false), nAns(au.length), "Not yet checked by a person"); }
   // what it looks like: photos first, and looks do not tell you what is inside
   if (forms.length) add("d-looks", "What does it look like?", "Looks", formsHtml(slug), forms.length + (forms.length === 1 ? " form" : " forms"), forms.slice(0, 3).map(x => x.name).join(" · ") + (forms.length > 3 ? " · more" : ""));
   if (LEGAL.some(d => d.substance === slug)) add("d-law", "Is it legal where I am?", "Law", lawHtml(slug), "", "What the law says in your country");
