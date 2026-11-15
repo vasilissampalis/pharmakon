@@ -1,0 +1,140 @@
+# Every half hour: is there work? (docs/AUTOMATION.md; scripts/auto/tick.py)
+#
+# The senior author, 15 November 2026: "automatically deployed every 30 minutes"; "WE HAVE TO MAKE THE SITE EXPAND ON ITS OWN".
+#
+#   tick    on the smallest machine, under a minute: has the question store changed? has a listed question no answer yet, and
+#           is there room in today's free model allowance? is what the site is built from different from what is published?
+#   work    only when the tick says so: the scout reads what visitors asked; the machine lane writes answers
+#           (scripts/auto/lane.py: every sentence tied to the paper's own words, checked, and held to the site's rules).
+#   deploy  only when what the site is built from has changed (new answers by the system, or the editor's own work on main):
+#           the site is built, checked and published (deploy.yml), with every gate of a release.
+#
+# A private repository has a monthly amount of free machine time, so the tick is cheap and the work is counted: at most two
+# writing runs and three publishings a day (scripts/auto/tick.py). Nothing here can cost money: the models are used inside
+# Cloudflare's free daily allowance (scripts/auto/llm.py stops before it), and GitHub stops when the free minutes are used.
+# The editor's session cannot read GitHub's logs: every run keeps its notes in the repository, cleaned of both secrets.
+name: Auto
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/tick-*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      work: ${{ steps.plan.outputs.work }}
+      scout: ${{ steps.plan.outputs.scout }}
+      lane: ${{ steps.plan.outputs.lane }}
+      deploy: ${{ steps.plan.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/auto
+            data/auto
+            data/site/wanted.json
+            data/site/version.json
+      - id: plan
+        name: What is there to do?
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          git rm -q --ignore-unmatch data/auto/requests/tick-*.json || true
+          python3 -I scripts/auto/tick.py plan || { echo "work=false" >> "$GITHUB_OUTPUT"; echo "deploy=false" >> "$GITHUB_OUTPUT"; echo "keep=true" >> "$GITHUB_OUTPUT"; echo "the look itself failed" > data/auto/tick-failed.txt; }
+      - name: Remember the look
+        if: steps.plan.outputs.keep == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/auto/tick.json data/auto/requests data/auto/tick-failed.txt 2>/dev/null || git add -A data/auto
+          git diff --cached --quiet || git commit -q -m "Tick: looked"
+          git push -q || (git pull -q --rebase && git push -q)
+
+  work:
+    needs: tick
+    if: needs.tick.outputs.work == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    outputs:
+      deploy: ${{ steps.after.outputs.deploy }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      DO_SCOUT: ${{ needs.tick.outputs.scout }}
+      DO_LANE: ${{ needs.tick.outputs.lane }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: The vectors made before (so that only new texts are embedded)
+        uses: actions/cache@v6
+        with:
+          path: site/insight/.cache
+          key: insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-${{ github.run_id }}
+          restore-keys: |
+            insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-
+      - name: Python packages
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q numpy tokenizers onnxruntime
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+      - name: Work, with notes
+        run: |
+          set +e
+          L="$RUNNER_TEMP/auto.log"; : > "$L"
+          step() { echo "== $1" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
+          if [ "$DO_SCOUT" = "true" ]; then
+            step "build the page and Insight's index (the scout ranks a question as the page does)" node site/build.js
+            step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json"
+            step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json"
+            step "remember what was read" python3 -I scripts/auto/look.py --done "$RUNNER_TEMP/questions.json"
+          fi
+          if [ "$DO_LANE" = "true" ]; then
+            step "the lane writes" python3 -I scripts/auto/lane.py run --max 6
+            step "count this run" python3 -I scripts/auto/tick.py did lane
+          fi
+      - name: Keep the records
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p data/auto/lane
+          python3 -I - <<'PY'
+          import os, re, pathlib
+          src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "auto.log"
+          t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
+          for k in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"):
+              v = (os.environ.get(k) or "").strip()
+              if len(v) >= 6: t = t.replace(v, "***")
+          t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)
+          keep = [l for l in t.splitlines() if not re.match(r"\s*(wrote|copied|insight:|Myth or fact|built dist)", l)]
+          pathlib.Path("data/auto/lane/_last-auto-run.txt").write_text("\n".join(keep)[-12000:] + "\n", encoding="utf-8")
+          PY
+          git add -A data/auto docs/MISSING.md
+          git diff --cached --quiet || git commit -q -m "Auto: what the scout read and what the lane wrote"
+          git push -q || (git pull -q --rebase && git push -q)
+      - id: after
+        name: Has what the site is built from changed?
+        if: always()
+        run: python3 -I scripts/auto/tick.py after || echo "deploy=false" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: [tick, work]
+    if: ${{ always() && (needs.tick.outputs.deploy == 'true' || needs.work.outputs.deploy == 'true') }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

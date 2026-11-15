@@ -107,7 +107,8 @@ jobs:
               ver = json.load(open("data/site/version.json", encoding="utf-8"))["site"]
               json.dump({"_note": "The last time the site was published by itself (.github/workflows/deploy.yml).", "commit": sha, "site": ver, "on": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}, open("data/auto/deploy/deployed.json", "w", encoding="utf-8"), indent=1)
           PY
+          if [ "$OK" = "1" ]; then python3 -I scripts/auto/tick.py did deploy || true; fi
           git rm -q --ignore-unmatch data/auto/requests/deploy-*.json
-          git add -A data/auto/deploy data/auto/requests
+          git add -A data/auto/deploy data/auto/requests data/auto/tick.json
           git diff --cached --quiet || git commit -q -m "Deploy: what happened"
           git push -q || (git pull -q --rebase && git push -q)
