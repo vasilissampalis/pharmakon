@@ -4,14 +4,17 @@
 // - every published file is under 25 MiB; the start page fetches none of Insight's files; the cursor in the search box fetches
 //   them, from the site itself only, the model being the one the index names; a second visit downloads nothing again; on a
 //   connection that saves data nothing is fetched until the reader taps the line that offers it;
-// - honest tiers: a question the site answers has its answer as "Best match", the short answer in full in the list; a question
-//   it does not answer ("how can you die from alcohol") says "We haven't checked exactly this yet" with "Ask us to check it",
-//   and a near answer shows under "Related" at most; the thresholds and weights the page uses are those of data/insight.json;
+// - honest tiers: a question the site answers in so many words ("is weed addictive") has its answer as "Best match", the short
+//   answer in full in the list; a question it does not answer exactly (the senior author's two: "how can you die from alcohol",
+//   "give me the full evidence about how can i die from ketamine") says "We haven't checked exactly this yet" with "Ask us to
+//   check it", and a near answer shows under "Related" at most. What is a best match is decided by the judge whose numbers,
+//   like the weights and the tiers, the page reads from data/insight.json (set in site/insight/model.json): no number here;
 // - routes, each with its test: two drugs (the mixing row first, opening the mixing tool with both chosen), a dose (the
 //   Doses row, no amount), an emergency (the help row and the emergency number line, which shows nowhere else), testing a
 //   sample, "what is X", and no route and no answer for getting drugs, hiding use or beating a drug test;
 // - Enter opens the sheet for the question as asked, headed with the person's own words, depth words understood ("full
-//   evidence": How do we know? open; "tl;dr": the short answer and its But), with no guess step anywhere;
+//   evidence": How do we know? open, also in a related answer opened from there; "tl;dr": the short answer and its But), with
+//   no guess step anywhere;
 // - on a drug's page the box reads "Ask about <drug>" and a question that names no drug is about that drug;
 // - an answer linked from outside its own page opens over the page: Myth or fact's "Read the answer" (Back, Escape and the
 //   browser's Back return to the same card, scrolled as it was), the questions to try, a shared answer's other questions;
@@ -27,8 +30,10 @@ const SHOTS = arg("--shots"), PORT = +(arg("--port") || 0);
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".mjs": "text/javascript", ".wasm": "application/wasm", ".json": "application/json", ".css": "text/css",
   ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml" };
 // questions the site answers, as people type them, and the answer each should get as its best match
-const REAL = [["does ecstasy damage your brain permanently", "cl_mdma_neurotoxicity_contested"], ["can you fail a drug test from secondhand weed smoke", "cl_can_secondhand_test"],
+const REAL = [["is weed addictive", "cl_can_dependence_how_many"], ["can you fail a drug test from secondhand weed smoke", "cl_can_secondhand_test"],
   ["how long does ketamine stay in your blood", "cl_ket_halflife_norketamine"]];
+// a question whose answer is on the site in other words: its answer must come first, as best match or, when the judge is not sure, first under Related
+const ECSTASY = ["does ecstasy damage your brain permanently", "cl_mdma_neurotoxicity_contested"];
 const ALCOHOL = "how can you die from alcohol", KETAMINE = "give me the full evidence about how can i die from ketamine", NONE = "what is the capital of mongolia";
 const MIX = "can i mix molly and alcohol", DOSE = "how much mdma should i take", HELP = "my friend took ketamine and is not breathing what do i do", TEST = "how do i test my mdma", BUY = "where can i buy mdma online";
 // Each route has its test: questions that must take it, and questions close to it that must not ("" = no route). A third
@@ -77,8 +82,13 @@ const server = http.createServer((req, res) => {
   const files = walk(ROOT).sort((a, b) => b[1] - a[1]);
   ok("every published file is under 25 MiB", files[0][1] < 25 * 1024 * 1024, files.slice(0, 2).map(([f, n]) => path.relative(ROOT, f) + " " + (n / 1048576).toFixed(1) + " MiB").join(", ")); }
 // the model's name, the weights and the tiers are written in one place (site/insight/model.json) and reach the page through the index
-ok("the index carries the model's name, the weights and the tiers of site/insight/model.json", MODEL === CONFIG.file && JSON.stringify(INDEX.tiers) === JSON.stringify(CONFIG.tiers) && JSON.stringify(INDEX.weights) === JSON.stringify(CONFIG.weights) && fs.existsSync(path.join(ROOT, "insight", MODEL)),
-  MODEL + "; tiers " + JSON.stringify(INDEX.tiers));
+const JUDGE = INDEX.judge || {};
+ok("the index carries the model's name, the weights, the tiers and the judge of site/insight/model.json (the judge: six numbers, a best match from judge.best; the tiers: related and near only)", MODEL === CONFIG.file && JSON.stringify(INDEX.tiers) === JSON.stringify(CONFIG.tiers) &&
+  JSON.stringify(INDEX.weights) === JSON.stringify(CONFIG.weights) && JSON.stringify(INDEX.judge) === JSON.stringify(CONFIG.judge) && fs.existsSync(path.join(ROOT, "insight", MODEL)) && Object.keys(INDEX.tiers).sort().join() === "near,related" &&
+  ["features", "mu", "sd", "w"].every(k => Array.isArray(JUDGE[k]) && JUDGE[k].length === 6) && typeof JUDGE.b === "number" && JUDGE.best > 0 && JUDGE.best < 1,
+  MODEL + "; tiers " + JSON.stringify(INDEX.tiers) + "; a best match from " + JUDGE.best + "; the judge weighs " + (JUDGE.features || []).map((f, i) => f + " " + JUDGE.w[i].toFixed(2)).join(", "));
+// the judge's number, worked out here from the six numbers the page reports and the index's numbers
+const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (x - JUDGE.mu[i]) / JUDGE.sd[i], JUDGE.b))));
 // each answer's next questions travel in the page itself (no fetch): every answer but one alone on its drug has some, none offers itself
 { const page = fs.readFileSync(path.join(ROOT, "index.html"), "utf8"), m = page.match(/\nconst INS_NEXT = (\{.*?\});\n/), NX = m ? JSON.parse(m[1]) : null;
   const withNext = NX ? NX.next.filter(l => l.length).length : 0, self = NX ? NX.next.filter((l, i) => l.includes(i) || new Set(l).size !== l.length).length : 0;
@@ -143,17 +153,29 @@ ok("the index carries the model's name, the weights and the tiers of site/insigh
       "ready in " + loadMs + " ms; fetched " + got.join(", ") + (outside.length ? "; OUTSIDE: " + outside.join(", ") : ""));
     const sug = await p.evaluate(() => { const b = document.getElementById("search-results"); return { note: (b.querySelector(":scope > .sr-note") || {}).textContent || "", sug: b.querySelectorAll("a.sr-sug").length }; });
     ok(w + ": once ready, one quiet line under the box says it runs on the device", /^Runs on your (phone|computer)\. Nothing you type leaves it\.$/.test(sug.note.trim()) && sug.sug > 0, JSON.stringify(sug));
-    const set = await p.evaluate(() => ({ tiers: pkInsight.tiers(), weights: pkInsight.weights() }));
-    ok(w + ": the page's thresholds and weights are those of data/insight.json", JSON.stringify(set.tiers) === JSON.stringify(INDEX.tiers) && JSON.stringify(set.weights) === JSON.stringify(INDEX.weights), JSON.stringify(set.tiers));
+    const set = await p.evaluate(() => ({ tiers: pkInsight.tiers(), weights: pkInsight.weights(), judge: pkInsight.judge() }));
+    ok(w + ": the page's weights, tiers and judge are those of data/insight.json", JSON.stringify(set.tiers) === JSON.stringify(INDEX.tiers) && JSON.stringify(set.weights) === JSON.stringify(INDEX.weights) && JSON.stringify(set.judge) === JSON.stringify(INDEX.judge), JSON.stringify(set.tiers) + ", best match from " + set.judge.best);
+    // the judge decides, with the index's numbers: its number is the formula on the six numbers of the first answer, and that answer is the best match exactly when it is about the drugs named and the number is judge.best or more
+    const jq = REAL.map(x => [x[0], null]).concat([[ECSTASY[0], null], [ALCOHOL, null], [KETAMINE, null], [MIX, null], ["is it addictive", "cannabis"], ["does it kill brain cells", "cannabis"], ["is lsd addictive", null], ["does weed make you lazy", null]]);
+    const jr = await p.evaluate(async qs => { const out = []; for (const [q, drug] of qs) { const r = await pkInsight.rank(q, drug ? { drug } : {}); out.push({ judge: r.judge, best: r.best.map(x => x.id), off: r.best.concat(r.related).filter(x => x.id === r.judge.id).map(x => x.off)[0] }); } return out; }, jq);
+    const jbad = jq.map(([q, drug], i) => { const r = jr[i], pj = judged(r.judge.f), is = r.best.length === 1 && r.best[0] === r.judge.id;
+      return Math.abs(pj - r.judge.p) < 1e-9 && r.best.length <= 1 && (is ? r.judge.p >= JUDGE.best : (r.judge.p < JUDGE.best || r.off !== false)) ? null : "“" + q + "”" + (drug ? " on " + drug : "") + ": page " + r.judge.p + ", here " + pj + ", best " + r.best; }).filter(Boolean);
+    ok(w + ": the judge's number in the page is the index's formula on the six numbers of the first answer, and it alone decides the best match (" + jq.length + " questions)", !jbad.length && jr.some(r => r.best.length) && jr.some(r => !r.best.length),
+      jbad.slice(0, 2).join("; ") || jq.map(([q], i) => "“" + q + "” " + jr[i].judge.p.toFixed(2) + (jr[i].best.length ? " best" : "")).join("; "));
 
     // ---- honest tiers
+    let Q0 = "", K0 = "";   // the first question's answer as the list shows it: its checked question and its page
     for (const [q, want] of REAL) {
       const r = await ask(q); ui += " " + await uiText();
       if (q === REAL[0][0]) await shot("list-matched");
-      const b = r.best[0] || {};
-      ok(w + ": “" + q + "” has its answer as best match, the short answer in full in the list, with its rating", r.open && r.first === "sr-note" && r.kids[0] === "h:Best match" && b.id === want && b.whole && b.bars && r.best.length <= 2 && r.related.length <= 3 && !r.none && !r.wordBest && /^Best match: /.test(r.live),
+      const b = r.best[0] || {}; if (q === REAL[0][0]) { Q0 = b.q || ""; K0 = b.k || ""; }
+      ok(w + ": “" + q + "” has its answer as best match, the short answer in full in the list, with its rating", r.open && r.first === "sr-note" && r.kids[0] === "h:Best match" && b.id === want && b.whole && b.bars && r.best.length === 1 && r.related.length <= 3 && !r.none && !r.wordBest && /^Best match: /.test(r.live),
         (b.id ? b.k + ": " + b.q + " / " + b.a : "no best match") + "; related " + r.related.length + "; heard: " + r.live);
     }
+    { const r = await ask(ECSTASY[0]), b = r.best[0], first = b || r.related[0] || {};
+      ok(w + ": “" + ECSTASY[0] + "” puts its answer first: as the best match with the short answer in full, or, when the judge is not sure, first under Related after the honest line", first.id === ECSTASY[1] && first.k === "MDMA" && r.best.length <= 1 &&
+        (b ? b.whole && r.kids[0] === "h:Best match" && !r.none : r.none === "We haven’t checked exactly this yet." && r.kids[0] === "none" && r.kids[1] === "h:Related"),
+        (b ? "BEST MATCH" : "NOT a best match (first under Related; the judge is not sure)") + ": " + first.k + ": " + first.q + "; " + r.kids.join(" > ")); }
     const al = await ask(ALCOHOL); ui += " " + await uiText(); await shot("list-unmatched");
     ok(w + ": “" + ALCOHOL + "” says “We haven’t checked exactly this yet” with “Ask us to check it”, no best match; a near answer shows under Related at most", al.kids[0] === "none" && !al.best.length && al.none === "We haven’t checked exactly this yet." && al.askBtn === "Ask us to check it" && al.kids.indexOf("h:Related") === 1 &&
       al.related.length >= 1 && al.related.length <= 3 && !al.kids.includes("h:Best match") && !al.wordBest && /^We haven’t checked exactly this yet/.test(al.live), al.kids.join(" > ") + "; related: " + al.related.map(x => x.k + ": " + x.q).join("; ") + "; heard: " + al.live);
@@ -216,24 +238,34 @@ ok("the index carries the model's name, the weights and the tiers of site/insigh
       byRows.ans === 0 && byRows.all <= 2 && byRows.pages === byRows.all, by.kids.join(" > ") + " | " + by.text.replace(/\s+/g, " ") + " | rows under it: " + JSON.stringify(byRows));
 
     // ---- Enter: the sheet for the question as asked
-    const kl = await ask(KETAMINE); const ks = await enter(); ui += " " + await uiText(); await shot("sheet-after-enter-full-evidence");
-    const kOnes = ks ? ks.ones : [];
-    ok(w + ": “" + KETAMINE + "” + Enter opens a sheet headed with those words, with no guess step, and “How do we know?” open under the checked question it answers",
-      ks && ks.title === "Give me the full evidence about how can i die from ketamine" && !ks.guess && /ins-full/.test(ks.cls) && /Your question/.test(ks.eye) && !ks.searchOpen && !ks.sos &&
-        (kOnes.length ? kOnes.length === kl.best.length && kOnes.every(o => o.how === true && o.short && o.bars && o.ev && /^Checked answer · /.test(o.label) && o.q.length > 10 && /^See it on the /.test(o.page)) : ks.none === "We haven’t checked exactly this yet."),
-      ks ? ks.title + " | " + (kOnes.length ? kOnes.map(o => o.label + ": " + o.q + " (How do we know? " + (o.how ? "open" : "closed") + ")").join("; ") : "no best match: “" + ks.none + "”") + " | people also ask " + ks.next.length : "no sheet");
+    const kl = await ask(KETAMINE); ui += " " + await uiText(); await shot("list-full-evidence-ketamine");
+    ok(w + ": “" + KETAMINE + "” gets no best match: “We haven’t checked exactly this yet” with “Ask us to check it”, related answers at most", kl.kids[0] === "none" && !kl.best.length && kl.none === "We haven’t checked exactly this yet." && kl.askBtn === "Ask us to check it" &&
+      kl.related.length <= 3 && !kl.kids.includes("h:Best match") && !kl.wordBest && /^We haven’t checked exactly this yet/.test(kl.live), kl.kids.join(" > ") + "; related: " + (kl.related.map(x => x.k + ": " + x.q).join("; ") || "none"));
+    const ks = await enter(); ui += " " + await uiText(); await shot("sheet-after-enter-full-evidence");
+    ok(w + ": “" + KETAMINE + "” + Enter opens a sheet headed with those words (depth words understood), with no guess step: the honest line, “Ask us to check it”, the related questions as links",
+      ks && ks.title === "Give me the full evidence about how can i die from ketamine" && !ks.guess && /ins-full/.test(ks.cls) && /Your question/.test(ks.eye) && !ks.searchOpen && !ks.sos && !ks.ones.length &&
+        ks.none === "We haven’t checked exactly this yet." && ks.askBtn === "Ask us to check it" && ks.related.length === kl.related.length && ks.related.every((id, i) => id === kl.related[i].id),
+      ks ? ks.title + " | " + (ks.ones.length ? "BEST MATCH: " + ks.ones.map(o => o.q).join("; ") : "“" + ks.none + "”") + " | related " + (ks.related.join(", ") || "none") + " | people also ask " + ks.next.length : "no sheet");
     // Back puts the search back as it was
     await p.click("#evsheet .ev-back"); await p.waitForTimeout(350); const b1 = await closed();
     await enter(); await p.keyboard.press("Escape"); await p.waitForTimeout(350); const b2 = await closed();
     await enter(); await p.goBack(); await p.waitForTimeout(350); const b3 = await closed();
     ok(w + ": Back, Escape and the browser's Back close the sheet and put the search back as it was: the question in the box, its answers under it", [b1, b2, b3].every(b => !b.sheet && b.value === KETAMINE && b.open && b.fit === KETAMINE && b.hash === "#home"), [b1, b2, b3].map(b => JSON.stringify(b)).join(" / "));
+    // the full evidence was asked for: a related answer opened from that sheet opens with "How do we know?" open
+    const closeSheet = async () => { for (let i = 0; i < 3 && await p.$("#evsheet.open"); i++) { await p.keyboard.press("Escape"); await p.waitForTimeout(300); } };
+    if (kl.related.length) { await enter(); await p.click("#evsheet .ins-rel a >> nth=0"); await p.waitForTimeout(350); const kr = await sheet(); await shot("sheet-related-answer-full-evidence");
+      ok(w + ": a related answer opened from that sheet opens with “How do we know?” open (the full evidence was asked for), with no guess step", kr && kr.single && kr.single.how === true && kr.single.short && kr.single.ev && !kr.guess && !kr.sos,
+        kr ? kr.title + " | How do we know? " + (kr.single && kr.single.how ? "open" : "closed") : "no sheet");
+      await closeSheet(); }
     // depth on a question that has a best match; and the short of it
-    await ask(REAL[0][0] + ", with sources"); const fs1 = await enter();
-    ok(w + ": “…, with sources” opens the best match with “How do we know?” open and the way to the evidence", fs1 && fs1.ones.length >= 1 && fs1.ones[0].q === "Does ecstasy harm the brain for good?" && fs1.ones.every(o => o.how === true && o.ev) && /ins-full/.test(fs1.cls) && !fs1.guess && fs1.nextLabel === "People also ask" && fs1.next.length >= 1 && fs1.next.length <= 3,
-      fs1 ? fs1.title + " | " + fs1.ones.map(o => o.q).join("; ") + " | people also ask " + fs1.next.length : "no sheet");
+    const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+    await ask(REAL[0][0] + ", with sources"); const fs1 = await enter(); await shot("sheet-after-enter-with-sources");
+    ok(w + ": “" + REAL[0][0] + ", with sources” opens the best match with “How do we know?” open and the way to the evidence", fs1 && fs1.ones.length === 1 && fs1.ones[0].q === Q0 && Q0.length > 10 && fs1.ones.every(o => o.how === true && o.ev && o.short && /^Checked answer · /.test(o.label) && /^See it on the /.test(o.page)) &&
+      /ins-full/.test(fs1.cls) && !fs1.guess && fs1.title === cap(REAL[0][0]) + ", with sources" && fs1.nextLabel === "People also ask" && fs1.next.length >= 1 && fs1.next.length <= 3,
+      fs1 ? fs1.title + " | " + fs1.ones.map(o => o.label + ": " + o.q).join("; ") + " | people also ask " + fs1.next.length : "no sheet");
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await ask(REAL[0][0] + " tl;dr"); const sh1 = await enter(); await shot("sheet-after-enter-short");
-    ok(w + ": “… tl;dr” shows the short answer and its But, nothing more", sh1 && sh1.ones.length >= 1 && sh1.ones.every(o => o.short && o.but && o.how === null && o.bars && o.ev) && /ins-short/.test(sh1.cls) && sh1.title === "Does ecstasy damage your brain permanently tl;dr", sh1 ? sh1.title + " | " + JSON.stringify(sh1.ones[0]) : "no sheet");
+    ok(w + ": “" + REAL[0][0] + " tl;dr” shows the short answer and its But, nothing more", sh1 && sh1.ones.length === 1 && sh1.ones.every(o => o.short && o.but && o.how === null && o.bars && o.ev) && /ins-short/.test(sh1.cls) && sh1.title === cap(REAL[0][0]) + " tl;dr", sh1 ? sh1.title + " | " + JSON.stringify(sh1.ones[0]) : "no sheet");
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await ask(ALCOHOL); const as = await enter(); await shot("sheet-not-checked");
     ok(w + ": Enter on a question with no best match says so in the sheet, with “Ask us to check it” and the related questions as links", as && as.title === "How can you die from alcohol" && !as.ones.length && as.none === "We haven’t checked exactly this yet." && as.askBtn === "Ask us to check it" && as.related.length >= 1 && as.related.length <= 3 && !as.guess && !as.sos,
@@ -251,12 +283,12 @@ ok("the index carries the model's name, the weights and the tiers of site/insigh
     await ask(REAL[0][0]);
     await p.click('#search-results a[data-insight="' + REAL[0][1] + '"]'); await p.waitForSelector("#evsheet.open .ins"); await p.waitForTimeout(200);
     const o1 = await sheet(); ui += " " + await uiText(); await shot("sheet-one-answer");
-    ok(w + ": a row tapped opens that one answer at once: no guess, no emergency line; the short answer, its rating, the evidence, the way to its page, and up to 3 next questions", o1 && o1.title === "Does ecstasy harm the brain for good?" && !o1.guess && !o1.sos && o1.single && o1.single.short && o1.single.bars && o1.single.ev && o1.single.how === false &&
-      /^See it on the MDMA page/.test(o1.single.page) && o1.nextLabel === "People also ask" && o1.next.length >= 1 && o1.next.length <= 3 && !o1.searchOpen && !o1.moving.length, o1 ? JSON.stringify({ title: o1.title, single: o1.single, next: o1.next, moving: o1.moving }) : "no sheet");
+    ok(w + ": a row tapped opens that one answer at once: no guess, no emergency line; the short answer, its rating, the evidence, the way to its page, and up to 3 next questions", o1 && o1.title === Q0 && !o1.guess && !o1.sos && o1.single && o1.single.short && o1.single.bars && o1.single.ev && o1.single.how === false &&
+      o1.single.page.toLowerCase().startsWith("see it on the " + K0.toLowerCase() + " page") && o1.nextLabel === "People also ask" && o1.next.length >= 1 && o1.next.length <= 3 && !o1.searchOpen && !o1.moving.length, o1 ? JSON.stringify({ title: o1.title, single: o1.single, next: o1.next, moving: o1.moving }) : "no sheet");
     await p.click("#evsheet .ins-ans a.ask-ev"); await p.waitForFunction(() => document.querySelector("#evsheet.open") && !document.querySelector("#evsheet .ins") && !document.querySelector("#evsheet .loading"), null, { timeout: 15000 }).catch(() => {});
     await p.click("#evsheet .ev-back"); await p.waitForTimeout(300);
     const back = await p.evaluate(() => ({ open: !!document.querySelector("#evsheet.open"), ins: !!document.querySelector("#evsheet .ins .ins-ans"), title: (document.getElementById("ev-title") || {}).textContent }));
-    ok(w + ": the evidence opened from the answer comes back to it with Back", back.open && back.ins && back.title === "Does ecstasy harm the brain for good?", JSON.stringify(back));
+    ok(w + ": the evidence opened from the answer comes back to it with Back", back.open && back.ins && back.title === Q0, JSON.stringify(back));
     const run = [REAL[0][1]];
     for (let i = 0; i < 3; i++) {
       const nx = await p.evaluate(() => { const a = document.querySelector("#evsheet .ins-next a[data-insight-next]"); return a ? a.dataset.insightNext : null; }); if (!nx) break;
@@ -286,7 +318,9 @@ ok("the index carries the model's name, the weights and the tiers of site/insigh
       !bc.best.some(x => x.id === "cl_alc_brain_cells") && bc.best.every(x => x.k === "Cannabis") && (!alc || alc.k === "Alcohol") && (bc.best.length > 0 || bc.none === "We haven’t checked exactly this yet."),
       "placeholder “" + ph1 + "”; " + bc.kids.join(" > ") + "; related: " + bc.related.map(x => x.k + ": " + x.q).join("; "));
     const ad = await ask("is it addictive");
-    ok(w + ": on the cannabis page “is it addictive” is about cannabis: a cannabis answer is its best match", (ad.best[0] || {}).id === "cl_can_dependence_how_many" && ad.best[0].k === "Cannabis" && ad.best[0].whole, ad.best.map(x => x.k + ": " + x.q).join("; ") || "no best match");
+    const ad1 = ad.best[0] || ad.related[0] || {};
+    ok(w + ": on the cannabis page “is it addictive” is about cannabis: the cannabis answer comes first (best match, or first under Related), and no answer about another drug is shown", ad1.id === "cl_can_dependence_how_many" && ad1.k === "Cannabis" &&
+      ad.best.concat(ad.related).every(x => x.k === "Cannabis") && (ad.best.length ? ad.best[0].whole : ad.none === "We haven’t checked exactly this yet."), (ad.best.length ? "best match: " : "first under Related: ") + ad1.k + ": " + ad1.q + "; " + ad.kids.join(" > "));
     // next questions of a cannabis answer are about cannabis: in the sheet ...
     await p.click('#search-results a[data-insight="cl_can_dependence_how_many"]'); await p.waitForSelector("#evsheet.open .ins"); await p.waitForTimeout(200);
     const cn = await sheet(), cnAbout = await p.evaluate(ids => ids.map(id => insOnPage("cannabis").has(id) || (KITSFOR[id] || []).includes("cannabis")), cn ? cn.next : []);

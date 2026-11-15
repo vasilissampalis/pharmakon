@@ -12,8 +12,9 @@
    2.3, what changed:
    - One function ranks: insRank(question, { drug }) gives { routes, best, related }. Every question gets two looks (insScore):
      the first with the drug's own name brought along (2.2.0's score), the second with the drug names taken out (the topic).
-     "best" (0 to 2) needs both looks to fit and the answer to be about every drug the question names; "related" (up to 3) are
-     near answers. Every threshold and weight comes from data/insight.json (tiers, weights): none is written here.
+     "best" (none or one) is the first answer when it is about every drug the question names and a small judge, fed six
+     numbers of that answer, says it answers what was asked (insTiers); "related" (up to 3) are near answers. Every number
+     comes from data/insight.json (weights, tiers, judge): none is written here.
    - On a drug's page a question that names no drug is about that drug; the box there reads "Ask about cannabis".
    - Routes: a question that is really a request for something else (two drugs: the mixing tool; a dose: the Doses block;
      an emergency in progress: "If it gets too much"; testing a sample: the test kits; "what is X": the drug's page) gets
@@ -73,7 +74,7 @@ function insRows(b64, dim) {
 const insTok = s => String(s).toLowerCase().match(/[a-z0-9]+/g) || [];
 const insRx = n => n.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&");
 function insPrepare(d, vocabText) {
-  INS.dim = d.dim; INS.ids = d.ids; INS.rows = d.rows; INS.wt = d.weights; INS.t = d.tiers;
+  INS.dim = d.dim; INS.ids = d.ids; INS.rows = d.rows; INS.wt = d.weights; INS.t = d.tiers; INS.judge = d.judge;
   INS.W = insRows(d.W, d.dim); INS.M = insRows(d.M, d.dim); INS.S = insRows(d.S, d.dim);
   INS.idx = new Map(d.ids.map((id, i) => [id, i]));
   INS.about = d.about.map(xs => new Set(xs.map(k => d.slugs[k])));   // the drugs each answer is about
@@ -334,34 +335,41 @@ function insRoutes(q, groups, drug) {
    drug names taken out). A second scoring step, a trained judge, goes here and nowhere else. */
 function insScore(v, mv, q) {
   const dim = INS.dim, nA = INS.ids.length, W = INS.W, M = INS.M, S = INS.S, wt = INS.wt, rows = INS.rows;
-  const plain = new Float32Array(nA).fill(-1), topic = new Float32Array(nA).fill(-1), lex = new Float32Array(nA), qv = new Map();
+  const bw = new Float32Array(nA).fill(-1), bw2 = new Float32Array(nA).fill(-1), topic = new Float32Array(nA).fill(-1), sh = new Float32Array(nA), lex = new Float32Array(nA), plain = new Float32Array(nA), qv = new Map();
   for (let k = 0, o = 0; k < rows.length; k++, o += dim) {
     let s = 0, t = 0; for (let j = 0; j < dim; j++) { s += v[j] * W[o + j]; t += mv[j] * M[o + j]; }
-    const a = rows[k]; if (s > plain[a]) plain[a] = s; if (t > topic[a]) topic[a] = t;
+    const a = rows[k]; if (s > bw[a]) { bw2[a] = bw[a]; bw[a] = s; } else if (s > bw2[a]) bw2[a] = s;
+    if (t > topic[a]) topic[a] = t;
   }
   insTok(q).forEach(w => { if (INS.idf.has(w)) qv.set(w, (qv.get(w) || 0) + INS.idf.get(w)); });
   const qn = Math.sqrt([...qv.values()].reduce((a, x) => a + x * x, 0)) || 1;
   qv.forEach((x, w) => INS.post.get(w).forEach(([i, y]) => { lex[i] += (x / qn) * y; }));
-  for (let i = 0, o = 0; i < nA; i++, o += dim) { let s = 0; for (let j = 0; j < dim; j++) s += v[j] * S[o + j]; plain[i] = wt.q * plain[i] + wt.short * s + wt.words * lex[i]; }
-  return { plain, topic };
+  for (let i = 0, o = 0; i < nA; i++, o += dim) { let s = 0; for (let j = 0; j < dim; j++) s += v[j] * S[o + j]; sh[i] = s; plain[i] = wt.q * bw[i] + wt.short * s + wt.words * lex[i]; }
+  return { plain, topic, bw, bw2, sh, lex };
 }
-/* The tiers, from the thresholds of data/insight.json (set in site/insight/model.json; build_index.py explains each and
-   measures them on the gold set). Candidates: a first look of `related` or more, in order of first look + weights.topic x
-   topic, the answers about the drugs the question names weights.same ahead. best: about every drug named, and both looks
-   fit (first look >= best and topic >= topic), or the topic alone is as good as the same question (>= sure); a second one
-   only within `tie` of the first. related: the next ones whose topic is at least `near`, up to three; an answer about none
-   of the drugs named is related only when it is the same question about another drug (topic >= sure). */
+/* What is a best match, and what is related (the numbers: data/insight.json, set in site/insight/model.json; build_index.py
+   explains each and measures them on the gold set; scripts/insight/parity.js holds this to the build's own copy of the rule).
+   The answers in order of first look + weights.topic x topic, those about the drugs the question names weights.same ahead.
+   best: the first of them, when it is about every drug named and the judge says so: a small logistic regression
+   (scripts/insight/judge2.py, trained on our own wordings and near-miss questions) on six numbers of that answer: its best
+   wording, its second-best wording, its short answer, word overlap, topic, and its lead over the next answer about the drugs
+   named. Its number must be judge.best or more. There is never a second best match. related: the next ones, up to three,
+   with a first look of tiers.related or more and a topic of tiers.near or more, about at least one of the drugs named. */
+function insJudge(f) {
+  const J = INS.judge; let z = J.b; for (let i = 0; i < J.w.length; i++) z += J.w[i] * (f[i] - J.mu[i]) / J.sd[i];
+  return 1 / (1 + Math.exp(-z));
+}
 function insTiers(sc, groups) {
-  const T = INS.t, wt = INS.wt, cand = [];
+  const T = INS.t, wt = INS.wt, all = [];
   for (let i = 0; i < INS.ids.length; i++) {
-    if (sc.plain[i] < T.related) continue;
     const has = g => g.some(s => INS.about[i].has(s)), on = groups.every(has), by = sc.plain[i] + wt.topic * sc.topic[i];
-    cand.push({ i, on, some: !groups.length || groups.some(has), by, key: by + (on ? wt.same : 0), plain: sc.plain[i], topic: sc.topic[i] });
+    all.push({ i, on, some: !groups.length || groups.some(has), by, key: by + (on ? wt.same : 0), plain: sc.plain[i], topic: sc.topic[i] });
   }
-  cand.sort((a, b) => b.key - a.key || a.i - b.i);
-  const fits = cand.filter(c => c.on && ((c.plain >= T.best && c.topic >= T.topic) || c.topic >= T.sure));
-  const best = fits.slice(0, 1).concat(fits.slice(1, 2).filter(c => c.by >= fits[0].by - T.tie));
-  return { best, related: cand.filter(c => !best.includes(c) && c.topic >= T.near && (c.some || c.topic >= T.sure)).slice(0, 3) };
+  all.sort((a, b) => b.key - a.key || a.i - b.i);
+  const c = all[0]; let next = null; for (const x of all) if (x !== c && x.on && (next === null || x.by > next)) next = x.by;
+  c.f = [sc.bw[c.i], Math.max(sc.bw2[c.i], 0), sc.sh[c.i], sc.lex[c.i], c.topic, c.by - (next === null ? 0 : next)]; c.p = insJudge(c.f);
+  const best = c.on && c.p >= INS.judge.best ? [c] : [];
+  return { first: c, best, related: all.filter(x => !best.includes(x) && x.plain >= T.related && x.topic >= T.near && x.some).slice(0, 3) };
 }
 // the page an answer is shown as being on: a drug the question names (or the page's own) when the answer is asked there
 function insPageOf(id, groups, drug) {
@@ -390,6 +398,7 @@ async function insRank(query, ctx) {
     const tiers = insTiers(insScore(v, mv, res.core), tx.groups);
     const row = c => ({ id: INS.ids[c.i], page: insPageOf(INS.ids[c.i], tx.groups, drug), plain: +c.plain.toFixed(4), topic: +c.topic.toFixed(4), off: !c.on });
     res.best = tiers.best.map(row); res.related = res.emergency ? [] : tiers.related.map(row);   // an emergency gets its route and the answers that fit, nothing nearby
+    res.judge = { id: INS.ids[tiers.first.i], p: tiers.first.p, f: tiers.first.f };              // (for the checks: the first candidate and the judge's number for it)
   }
   // with no best match, say so, unless a route already is the answer to what was asked (help, a dose, a test, the drug's page)
   if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.note = "none";
@@ -700,7 +709,8 @@ document.addEventListener("click", e => {
   // in the sheet: a next question opens here; the evidence opened from an answer comes back to it with Back
   if (inSheet) {
     const ins = document.querySelector("#evsheet .panel .ins");
-    if (ins && a.dataset.insightNext) { e.preventDefault(); e.stopPropagation(); openInsight(a.dataset.insightNext, null, false, { page: a.dataset.page, sos: !!(INS.view && INS.view.kind === "asked" && INS.view.res.emergency) }); return; }
+    if (ins && a.dataset.insightNext) { e.preventDefault(); e.stopPropagation(); openInsight(a.dataset.insightNext, null, false, { page: a.dataset.page, sos: !!(INS.view && INS.view.kind === "asked" && INS.view.res.emergency),
+      depth: INS.view && INS.view.kind === "asked" && a.closest(".ins-rel") ? INS.view.res.depth : "" }); return; }   // (asked for the full evidence, or the short of it: a related answer opens that way)
     if (ins && /^#cl_/.test(a.getAttribute("href") || "")) INS.back = INS.view;
     return;
   }
@@ -735,8 +745,8 @@ document.addEventListener("click", e => {
 // for the checks (scripts/ux/insight_check.js, scripts/insight/parity.js): the same functions the search box uses
 window.pkInsight = {
   state: () => INS.state, load: insightLoad, encode: t => insEncode(t), expand: t => insExpand(t), mask: t => insMask(t), named: t => insNamed(t), times: () => INS.times.slice(),
-  embed: t => insEmbed(t).then(v => Array.from(v)), tiers: () => Object.assign({}, INS.t), weights: () => Object.assign({}, INS.wt),
+  embed: t => insEmbed(t).then(v => Array.from(v)), tiers: () => Object.assign({}, INS.t), weights: () => Object.assign({}, INS.wt), judge: () => JSON.parse(JSON.stringify(INS.judge)),
   read: (t, ctx) => { const r = insRead(t, ctx || {}); return { core: r.core, depth: r.depth, note: r.note, routes: r.routes.map(x => x.kind), groups: r.groups }; },
   rank: (t, ctx) => insRank(t, ctx || {}).then(r => ({ q: r.q, core: r.core, depth: r.depth, note: r.note, emergency: r.emergency, routes: r.routes.map(x => ({ kind: x.kind, t: x.t, href: x.href, el: x.el || null, mix: x.mix || null })),
-    best: r.best, related: r.related, ms: r.ms }))
+    best: r.best, related: r.related, judge: r.judge || null, ms: r.ms }))
 };
