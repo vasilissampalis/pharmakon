@@ -116,7 +116,7 @@ def selftest():
 def main():
     if "--selftest" in sys.argv: return selftest()
     if len(sys.argv) < 2: sys.exit(__doc__)
-    token, account = os.environ.get("CLOUDFLARE_API_TOKEN"), os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+    token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     if not token or not account: sys.exit("fetch_questions: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are not set (docs/AUTOMATION.md, the setup)")
     name = os.environ.get("KV_NAMESPACE") or "pharmakon-questions"
     try:

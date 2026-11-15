@@ -64,9 +64,11 @@ jobs:
           import os, pathlib
           src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "lane.log"
           t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
+          import re
           for k in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"):
-              v = os.environ.get(k) or ""
+              v = (os.environ.get(k) or "").strip()
               if len(v) >= 6: t = t.replace(v, "***")
+          t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)
           pathlib.Path("data/auto/lane/_last-run.txt").write_text(t[-12000:], encoding="utf-8")
           PY
           git add -A data/auto

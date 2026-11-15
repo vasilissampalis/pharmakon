@@ -81,7 +81,7 @@ def main():
     today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
     state = json.load(open(STATE, encoding="utf-8")) if STATE.exists() else {}
     forced = "--force" in sys.argv
-    token, account = os.environ.get("CLOUDFLARE_API_TOKEN"), os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+    token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     sig, n, problem = None, 0, None
     if "--done" in sys.argv:   # the heavy work ended well: remember the signature it worked on
         recs = json.load(open(sys.argv[sys.argv.index("--done") + 1], encoding="utf-8"))["questions"]

@@ -77,8 +77,9 @@ def clean(text):
 def chat(model, messages, max_tokens=700, opener=None, tries=3):
     """The model's answer to messages ([{"role", "content"}]). Raises Budget before a call that today's allowance cannot
     hold, Unavailable when there is no key or the service refuses."""
-    token, account = os.environ.get("CLOUDFLARE_API_TOKEN"), os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+    token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     if not token or not account: raise Unavailable("no key (the repository's two secrets are not set)")
+    if not re.fullmatch(r"[0-9a-fA-F]{32}", account) and account != "ACC": raise Unavailable("the account number in the secret CLOUDFLARE_ACCOUNT_ID is not a Cloudflare account ID (32 letters a-f and digits)")
     pi, po = PRICE.get(model, DEAR); est_in = sum(rough_tokens(m["content"]) for m in messages)
     if est_in * pi / 1e6 + max_tokens * po / 1e6 > left(): raise Budget(f"today's free allowance cannot hold this call ({ledger()['neurons']:.0f} of {OUR_LIMIT} neurons used)")
     body = json.dumps({"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": 0}).encode("utf-8")
@@ -124,7 +125,7 @@ def selftest():
     import tempfile
     global LEDGER
     keep = LEDGER; LEDGER = pathlib.Path(tempfile.mkdtemp()) / "usage.json"
-    os.environ["CLOUDFLARE_API_TOKEN"] = "T"; os.environ["CLOUDFLARE_ACCOUNT_ID"] = "ACC"; seen = []
+    os.environ["CLOUDFLARE_API_TOKEN"] = "T\n"; os.environ["CLOUDFLARE_ACCOUNT_ID"] = "ACC\n\n"; seen = []   # pasted with line breaks after them, as it happened
     class Resp:
         def __init__(self, d): self.d = d
         def __enter__(self): return self

@@ -25,7 +25,7 @@ def main():
             r = {"ok": True, "word": a[:40], "json": j == {"quote": "between 9% and 27% met criteria", "n": 2}, "json_raw": b[:120], "seconds": round(time.time() - t0, 1)}
         except (llm.Budget, llm.Unavailable) as e: r = {"ok": False, "why": str(e)[:300]}
         out["models"][m] = r; print("probe:", m, "ok" if r.get("ok") else "NOT ok", r.get("why", ""))
-    token, account = os.environ.get("CLOUDFLARE_API_TOKEN"), os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+    token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     try:
         ns = fq.find_namespace(urllib.request.urlopen, token, account, os.environ.get("KV_NAMESPACE") or "pharmakon-questions")
         if not ns: out["store"] = {"ok": False, "why": "no store named pharmakon-questions"}
