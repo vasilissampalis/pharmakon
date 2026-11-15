@@ -1,4 +1,5 @@
-"""finetune.py MODELS_DIR --out DIR [--epochs N] [--lr X] [--seed S]: Pharmakon Insight 2.3, our own encoder (15 November 2026).
+"""finetune.py MODELS_DIR --out DIR [--epochs N] [--lr X] [--seed S] [--mine K] [--masked SHARE [--index-script FILE]] [--all]
+[--save-each]: Pharmakon Insight 2.3, our own encoder (15 November 2026).
 
 Takes the open encoder all-MiniLM-L6-v2 (Apache-2.0; float weights, byte-identical to the official ONNX file) and teaches
 it this site's questions with this site's own examples:
@@ -6,7 +7,13 @@ it this site's questions with this site's own examples:
   - a near-miss question (sounds close, is not answered by that answer; readers 707 and 708) is pushed away from the
     ways of asking that answer.
 Nothing else is used: no forum question, no gold label. The examples of 15% of the answers are held out to choose the
-epoch. Then the model is written as ONNX and as int8 ONNX with the same inputs and output as the file the site loads
+epoch.
+--masked SHARE: Insight looks at a question twice (scripts/insight/build_index.py): as asked, with the drug's name brought
+along, and with the drug names taken out ("is it addictive"), which tells what is asked apart from which drug it is asked
+about. With SHARE > 0 that share of the batches is trained the second way: every text with the drug names replaced by
+"it" exactly as the page does it, an answer's own near-miss questions (same drug, another question) as its negatives,
+and no other answer counted as wrong when it asks the same thing about another drug (answers whose masked wordings are
+nearer than 0.8 for the untrained model are left out of each other's comparison). Then the model is written as ONNX and as int8 ONNX with the same inputs and output as the file the site loads
 today, so the page code does not change. Evaluate the int8 file on the gold set with judge.py / eval below."""
 import sys, json, pathlib, importlib.util, hashlib, math, time, random
 import numpy as np, torch, onnx
@@ -16,6 +23,7 @@ spec = importlib.util.spec_from_file_location("jd", ROOT / "scripts/insight/judg
 arg = jd.arg; M_DIR = jd.M; A = jd.A
 OUT = pathlib.Path(arg("--out")); OUT.mkdir(parents=True, exist_ok=True)
 EPOCHS = int(arg("--epochs", "6")); LR = float(arg("--lr", "2e-5")); SEED = int(arg("--seed", "7")); BATCH = 32; MAXLEN = 48; SCALE = 20.0
+MASKED = float(arg("--masked", "0"))   # share of batches trained on texts with the drug names taken out, as Insight's second look reads them
 MINE = int(arg("--mine", "0"))      # per anchor, this many wordings of the wrong answers that rank highest for it, found afresh each epoch
 ALL = "--all" in sys.argv          # train on every answer for exactly --epochs epochs (after the held-out run has chosen the number)
 torch.manual_seed(SEED); random.seed(SEED); np.random.seed(SEED); torch.set_num_threads(2)
@@ -81,12 +89,42 @@ def validate(model):
         else: own_neg.append(own)
     auc = jd.auc_of(np.r_[own_pos, own_neg], np.r_[np.ones(len(own_pos), bool), np.zeros(len(own_neg), bool)]) if own_neg else float("nan")
     return float(np.mean(hit)), auc
-acc0, auc0 = validate(model); print(f"before: held-out wordings find their answer {100*acc0:.1f}%, wording vs near-miss AUC {auc0:.3f}")
+# the second look: drug names taken out, with the page's own pattern
+bi_file = pathlib.Path(arg("--index-script", str(ROOT / "scripts/insight/build_index.py")))
+mask = None
+try:
+    spec2 = importlib.util.spec_from_file_location("bi", bi_file); bi = importlib.util.module_from_spec(spec2); spec2.loader.exec_module(bi)
+    _pat = bi.name_pattern([n for n, _ in bi.names_table()]); mask = lambda t: _pat.sub("it", t)
+except Exception as e_:
+    assert not MASKED, f"--masked needs the index script with name_pattern and names_table ({bi_file}): {e_}"
+def validate_masked(model):
+    """Held-out answers, drug names taken out: is a wording nearer to the other wordings of its answer than that answer's
+    near-miss questions are? (area under the curve)"""
+    if mask is None: return float("nan")
+    model.eval(); pos, neg = [], []
+    for ai in range(len(A)):
+        if not val[ai] or len(P[ai]) < 2: continue
+        W = encode(model, [mask(w) for w in P[ai]]).numpy(); S = W @ W.T; np.fill_diagonal(S, -9)
+        pos += [float(S[k].max()) for k, w in enumerate(P[ai]) if w not in A[ai]["questions"]]
+        if N[ai]: neg += [float(x) for x in (encode(model, [mask(w) for w in N[ai]]).numpy() @ W.T).max(1)]
+    return jd.auc_of(np.r_[pos, neg], np.r_[np.ones(len(pos), bool), np.zeros(len(neg), bool)]) if pos and neg else float("nan")
+acc0, auc0 = validate(model); aucm0 = validate_masked(model)
+print(f"before: held-out wordings find their answer {100*acc0:.1f}%, wording vs near-miss AUC {auc0:.3f}; with the drug names taken out {aucm0:.3f}")
+SAME = None
+if MASKED:   # answers that ask the same thing about another drug, as the untrained model sees their masked wordings
+    Wm = encode(model, [mask(t) for t in Dtxt]).numpy(); SAME = np.zeros((len(A), len(A)), bool)
+    for ai in range(len(A)):
+        rows = np.flatnonzero(Down == ai)
+        if not len(rows): continue
+        s = (Wm[rows] @ Wm.T).max(0); best = np.full(len(A), -1.0); np.maximum.at(best, Down, s); SAME[ai] = best >= 0.8
+    np.fill_diagonal(SAME, False); SAME |= SAME.T
+    print(f"masked batches: share {MASKED}; pairs of answers that ask the same thing about another drug (left out of each other's comparison): {int(SAME.sum() // 2)}")
 
 # ---------- training ----------
 opt = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=0.01)
 steps = EPOCHS * math.ceil(len(tr_ex) / BATCH); sched = torch.optim.lr_scheduler.LambdaLR(opt, lambda s: min((s + 1) / max(1, int(0.1 * steps)), max(0.0, (steps - s) / max(1, steps - int(0.1 * steps)))))
-best = (acc0 + (auc0 if auc0 == auc0 else 0), 0); t0 = time.time(); step = 0
+fin = lambda x: x if x == x else 0.0
+best = (acc0 + fin(auc0) + (fin(aucm0) if MASKED else 0), 0); t0 = time.time(); step = 0
 torch.save(model.state_dict(), OUT / "best.pt")
 for ep in range(1, EPOCHS + 1):
     hard = {}
@@ -105,10 +143,28 @@ for ep in range(1, EPOCHS + 1):
             else: rest.append(x)
         pool = rest
         if len(batch) < 4: break
-        anchors = [X(w) for _, w in batch]
-        positives = [X(random.choice([p for p in P[ai] if p != w] or [w])) for ai, w in batch]
-        negs = [X(random.choice(N[ai])) if N[ai] else None for ai, _ in batch]
+        masked = MASKED > 0 and random.random() < MASKED
+        T_ = mask if masked else X
+        anchors = [T_(w) for _, w in batch]
+        positives = [T_(random.choice([p for p in P[ai] if p != w] or [w])) for ai, w in batch]
+        negs = [T_(random.choice(N[ai])) if N[ai] else None for ai, _ in batch]
         neg_txt = [n for n in negs if n is not None]
+        if masked:
+            # each row is compared with its own positive, its own near-miss question, and the positives of the answers
+            # in the batch that do not ask the same thing about another drug
+            rows_ai = np.array([ai for ai, _ in batch]); neg_row = [r for r, n in enumerate(negs) if n is not None]
+            allow = np.zeros((len(batch), len(batch) + len(neg_txt)), bool)
+            allow[:, :len(batch)] = ~SAME[np.ix_(rows_ai, rows_ai)]; allow[np.arange(len(batch)), np.arange(len(batch))] = True
+            for c, r in enumerate(neg_row): allow[r, len(batch) + c] = True
+            ea = encode(model, anchors, grad=True); ep_ = encode(model, positives, grad=True)
+            cand = torch.cat([ep_, encode(model, neg_txt, grad=True)]) if neg_txt else ep_
+            am_ = torch.tensor(allow); target = torch.arange(len(batch))
+            logits = (ea @ cand.T * SCALE).masked_fill(~am_, -1e4)
+            back = ((ep_ @ ea.T) * SCALE).masked_fill(~am_[:, :len(batch)].T, -1e4)
+            loss = torch.nn.functional.cross_entropy(logits, target) + 0.5 * torch.nn.functional.cross_entropy(back, target)
+            opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step(); step += 1
+            tot += float(loss.detach()); nb += 1
+            continue
         if MINE:
             own = {ai for ai, _ in batch}
             for ai, w in batch:
@@ -119,9 +175,9 @@ for ep in range(1, EPOCHS + 1):
         logits = ea @ cand.T * SCALE; target = torch.arange(len(batch))
         loss = torch.nn.functional.cross_entropy(logits, target) + 0.5 * torch.nn.functional.cross_entropy((ep_ @ ea.T) * SCALE, target)
         opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step(); step += 1
-        tot += float(loss); nb += 1
-    acc, auc = validate(model); score = acc + (auc if auc == auc else 0)
-    print(f"epoch {ep}: loss {tot/max(1,nb):.3f} | held out{' (now trained on)' if ALL else ''}: finds answer {100*acc:.1f}%, AUC {auc:.3f} | {time.time()-t0:.0f}s", flush=True)
+        tot += float(loss.detach()); nb += 1
+    acc, auc = validate(model); aucm = validate_masked(model); score = acc + fin(auc) + (fin(aucm) if MASKED else 0)
+    print(f"epoch {ep}: loss {tot/max(1,nb):.3f} | held out{' (now trained on)' if ALL else ''}: finds answer {100*acc:.1f}%, AUC {auc:.3f}, names out {aucm:.3f} | {time.time()-t0:.0f}s", flush=True)
     if ALL or score > best[0]: best = (score, ep); torch.save(model.state_dict(), OUT / "best.pt")
     if "--save-each" in sys.argv: torch.save(model.state_dict(), OUT / f"ep{ep}.pt")
 print("kept epoch", best[1])
@@ -139,4 +195,4 @@ from onnxruntime.quantization import quantize_dynamic, QuantType
 q8 = OUT / "insight-q8.onnx"; quantize_dynamic(str(fp), str(q8), weight_type=QuantType.QUInt8)
 for f in (fp, q8): print(f.name, f.stat().st_size, "bytes, SHA-256", hashlib.sha256(f.read_bytes()).hexdigest())
 json.dump({"base": "all-MiniLM-L6-v2 (fp32 ONNX, npm @maycombhq/embed-model 2.0.0-beta.1)", "epochs_kept": best[1], "epochs": EPOCHS, "lr": LR, "seed": SEED, "batch": BATCH,
-           "mine": MINE, "all_answers": ALL, "anchors": len(tr_ex), "near_miss_answers": sum(1 for n in N if n), "before": {"acc": acc0, "auc": auc0}}, open(OUT / "train.json", "w"), indent=1)
+           "mine": MINE, "masked": MASKED, "all_answers": ALL, "anchors": len(tr_ex), "near_miss_answers": sum(1 for n in N if n), "before": {"acc": acc0, "auc": auc0}}, open(OUT / "train.json", "w"), indent=1)

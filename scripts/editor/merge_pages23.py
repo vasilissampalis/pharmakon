@@ -54,10 +54,20 @@ if "kits" in what:
     a = J(P / "kit_links_705.json")["sellers"]; c = {(x["seller"], x["slug"]): x for x in J(P / "kit_links_check_706.json")["checks"]}
     out = {"_note": "Each seller's own page for each drug's test kit (senior author, 15 November 2026: 'the links should be individualized for each drug page'). Found by AI reader 705, each page opened and confirmed by AI reader 706; data/verification/pages-2026-11-15. A link, not an endorsement: we have not tested their kits.", "read_on": "2026-11-15", "sellers": {}}
     n = 0
+    # the editor's decisions after the verifier's notes (kit_links_editor.json): entries not to show, with the reason; plain
+    # labels that say what is sold (the seller's own label stays as label_seen); a seller's page language
+    E = J(P / "kit_links_editor.json") if (P / "kit_links_editor.json").exists() else {}
+    dropped = {(x["seller"], x["slug"]) for x in E.get("drop", [])}; relabel = {(x["seller"], x["slug"]): x["label"] for x in E.get("label", [])}
+    out["_note"] += " The editor's decisions (entries left out, with reasons, and plain labels): kit_links_editor.json in the same folder."
     for seller, v in a.items():
-        drugs = {s: {"url": d["url"], "label": d["label"], "read_on": d.get("read_on", "2026-11-15"), "check": "confirmed", "checked_by": "AI reader 706"} for s, d in (v.get("drugs") or {}).items() if c.get((seller, s), {}).get("verdict") == "confirmed"}
-        if drugs: out["sellers"][seller] = {"name": seller, "home": v.get("home"), "drugs": drugs}; n += len(drugs)
-        print(f"kit links / {seller}: {len(drugs)} of {len(v.get('drugs') or {})} confirmed")
+        drugs = {}
+        for s, d in (v.get("drugs") or {}).items():
+            if c.get((seller, s), {}).get("verdict") != "confirmed" or (seller, s) in dropped: continue
+            e = {"url": d["url"], "label": relabel.get((seller, s), d["label"]), "read_on": d.get("read_on", "2026-11-15"), "check": "confirmed", "checked_by": "AI reader 706"}
+            if e["label"] != d["label"]: e["label_seen"] = d["label"]
+            drugs[s] = e
+        if drugs: out["sellers"][seller] = {"name": seller, "home": v.get("home"), **(E.get("seller", {}).get(seller) or {}), "drugs": drugs}; n += len(drugs)
+        print(f"kit links / {seller}: {len(drugs)} of {len(v.get('drugs') or {})} shown" + (f" ({sum(1 for s in (v.get('drugs') or {}) if (seller, s) in dropped)} left out by the editor)" if any((seller, s) in dropped for s in (v.get('drugs') or {})) else ""))
     save(ROOT / "data/site/kit-links.json", out); print("kit links installed:", n)
 if "interest" in what:
     R = ROOT / "data/verification/quiz/interest-2026-11-15"; ra, rb = J(R / "ratings_699.json")["ratings"], J(R / "ratings_700.json")["ratings"]
