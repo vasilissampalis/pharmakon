@@ -77,4 +77,4 @@ jobs:
           PY
           git add -A data/auto
           git diff --cached --quiet || git commit -q -m "Lane: what the system wrote, and what each gate said"
-          git push -q || (git pull -q --rebase && git push -q)
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file

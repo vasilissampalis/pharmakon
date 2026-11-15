@@ -37,18 +37,31 @@ class NLI:
         return out
 
 
-def exam(names):
-    items = json.load(open(EXAM / "cards.json", encoding="utf-8"))["items"]
+def exam(names, minutes=0):
+    """Every card of the exam through each model. The numbers are written as it goes and a run takes up where the last one
+    stopped (the first try, on 15 November 2026, ran out of its 45 minutes with the large model and kept nothing)."""
+    import time
+    items = json.load(open(EXAM / "cards.json", encoding="utf-8"))["items"]; t0 = time.time()
     for name in names:
-        nli = NLI(name); rows = []
-        for it in items:
+        out = EXAM / ("nli-" + re.sub(r"[^a-z0-9.-]+", "-", name.lower()).strip("-") + ".json")
+        try: rows = json.load(open(out, encoding="utf-8"))["items"]
+        except (OSError, ValueError, KeyError): rows = []
+        have = {r["id"] for r in rows}; todo = [it for it in items if it["id"] not in have]
+        if not todo: print(f"nli: {name}: all {len(rows)} cards were done before"); continue
+        def keep(done):
+            json.dump({"_note": "An NLI model's numbers for every card of the exam (scripts/auto/nli.py): the card's statement, and each sentence of its why, against the answer's checked lines.",
+                       "model": name, "complete": done, "items": rows}, open(out, "w", encoding="utf-8"), ensure_ascii=False)
+        nli = NLI(name); t1 = time.time(); pairs = 0; stopped = False
+        for k, it in enumerate(todo):
+            if minutes and time.time() - t0 > minutes * 60: stopped = True; break
             L = it["lines"]; premise = " ".join(t for t in [L.get("short") or "", L.get("but") or ""] + list(L.get("how") or []) if t)
             c = it["card"]; why = split(c.get("why") or "")
-            pr = nli([(premise, c["statement"])] + [(premise, w) for w in why])
+            pr = nli([(premise, c["statement"])] + [(premise, w) for w in why]); pairs += len(pr)
             rows.append({"id": it["id"], "good": it["good"], "answer": c["answer"], "statement": pr[0], "why": pr[1:]})
-        json.dump({"_note": "An NLI model's numbers for every card of the exam (scripts/auto/nli.py): the card's statement, and each sentence of its why, against the answer's checked lines.", "model": name, "items": rows},
-                  open(EXAM / ("nli-" + re.sub(r"[^a-z0-9.-]+", "-", name.lower()).strip("-") + ".json"), "w", encoding="utf-8"), ensure_ascii=False)
-        print(f"nli: {name}: {len(rows)} cards")
+            if k % 25 == 24: keep(False)
+        keep(not stopped)
+        print(f"nli: {name}: {len(rows)} of {len(items)} cards" + ("; the time for this run was up, the next run goes on" if stopped else "") + (f"; {(time.time() - t1) / max(pairs, 1):.2f} seconds a pair" if pairs else ""))
+        if stopped: break
 
 
 def rule(path):
@@ -66,6 +79,8 @@ def rule(path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "exam": exam(sys.argv[2:] or MODELS)
+    if len(sys.argv) > 1 and sys.argv[1] == "exam":
+        a = sys.argv[2:]; m = float(a[a.index("--minutes") + 1]) if "--minutes" in a else 0
+        exam([x for i, x in enumerate(a) if not x.startswith("--") and (i == 0 or a[i - 1] != "--minutes")] or MODELS, m)
     elif len(sys.argv) > 2 and sys.argv[1] == "rule": rule(sys.argv[2])
     else: sys.exit(__doc__)

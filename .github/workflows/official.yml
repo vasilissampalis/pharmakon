@@ -49,4 +49,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/auto/official data/auto/requests
           git diff --cached --quiet || git commit -q -m "Official: what the official bodies' sites allowed and what was found"
-          git push -q || (git pull -q --rebase && git push -q)
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file

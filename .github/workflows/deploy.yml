@@ -124,4 +124,4 @@ jobs:
           git rm -q --ignore-unmatch data/auto/requests/deploy-*.json
           git add -A data/auto/deploy data/auto/requests data/auto/tick.json
           git diff --cached --quiet || git commit -q -m "Deploy: what happened"
-          git push -q || (git pull -q --rebase && git push -q)
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file

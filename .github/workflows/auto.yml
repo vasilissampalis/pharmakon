@@ -63,7 +63,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/auto/tick.json data/auto/requests data/auto/tick-failed.txt 2>/dev/null || git add -A data/auto
           git diff --cached --quiet || git commit -q -m "Tick: looked"
-          git push -q || (git pull -q --rebase && git push -q)
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file
 
   work:
     needs: tick
@@ -127,7 +127,7 @@ jobs:
           PY
           git add -A data/auto docs/MISSING.md
           git diff --cached --quiet || git commit -q -m "Auto: what the scout read and what the lane wrote"
-          git push -q || (git pull -q --rebase && git push -q)
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file
       - id: after
         name: Has what the site is built from changed?
         if: always()

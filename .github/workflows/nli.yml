@@ -40,7 +40,7 @@ jobs:
         run: |
           set +e
           L="$RUNNER_TEMP/nli.log"; : > "$L"
-          python3 -I scripts/auto/nli.py exam >> "$L" 2>&1 || echo "!! failed ($?)" >> "$L"
+          python3 -I scripts/auto/nli.py exam --minutes 30 >> "$L" 2>&1 || echo "!! failed ($?)" >> "$L"
           git rm -q data/auto/requests/nli-*.json >> "$L" 2>&1
           tail -n 40 "$L" | grep -v "Warning\|warn" > data/auto/exam/_nli-last-run.txt
       - name: Keep the numbers
@@ -50,4 +50,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/auto
           git diff --cached --quiet || git commit -q -m "NLI: an inference model's numbers for every card of the exam"
-          git push -q || (git pull -q --rebase && git push -q)
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file
