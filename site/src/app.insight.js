@@ -827,6 +827,9 @@ document.addEventListener("click", async e => {
   say("Kept under “Your questions” on this device. To send it to us, use the email form.");
   askedBox(); if (EV.open) closeEvidence(); openFeedback("feedback", location.hash, q);
 }, true);
+// The start page is drawn before this part of the script has run (the list's own names do not exist yet at that moment),
+// so the list of kept questions is drawn here, once: without this line it was missing after every reload.
+if (typeof document !== "undefined") askedBox();
 if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdleCallback(() => askProbe(), { timeout: 3000 }); else setTimeout(askProbe, 1200); }
 
 // for the checks (scripts/ux/insight_check.js, scripts/insight/parity.js): the same functions the search box uses

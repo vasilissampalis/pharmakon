@@ -111,6 +111,10 @@ function navCrumb() {
   const bar = document.getElementById("crumb"); if (!bar) return;
   const home = !!document.querySelector("#view-home.active"), prev = NAV.idx > 0 ? NAV.list[NAV.idx - 1] : null;
   if (home) { bar.hidden = true; bar.innerHTML = ""; return; }
+  // inside a section opened from its own page's list, the first chip of the section menu already leads back to that list
+  // ("← Statistics"): a second line saying the same thing just above it would be noise, so the line rests there
+  const page = document.querySelector(".view.active .secpage"), sec = page ? openSec(page) : "";
+  if (sec && prev && page.dataset.base && prev.h === "#" + page.dataset.base) { bar.hidden = true; bar.innerHTML = ""; return; }
   bar.innerHTML = prev && prev.h != null && prev.t
     ? '<a class="crumb-a" href="' + esc(prev.h || "#home") + '" data-nav-back>' + icon("arrow") + "<span>Back to " + esc(prev.t) + "</span></a>"
     : '<a class="crumb-a" href="#home">' + icon("arrow") + "<span>Start page</span></a>";
@@ -205,7 +209,7 @@ function routeTo() {
     } else { show("home"); setTitle(""); window.scrollTo({ top: 0 }); }
     setTimeout(() => openEvidence(h, null, null), 60); return;
   }
-  if (h.startsWith("g-")) { show("glossary"); setTitle(PAGE_TITLES.glossary); const el = document.getElementById(h); if (el) scrollToEl(el); return; }
+  if (h.startsWith("g-")) { show("glossary"); setTitle(PAGE_TITLES.glossary); const el = document.getElementById(h); if (el) { if ("open" in el) el.open = true; scrollToEl(el); } return; }
   // a country chosen in the search: #checking/c-Greece, #emergency/c-Greece, #law/c-Greece
   const cm = h.match(/^(emergency|checking|law)\/c-(.+)$/);
   if (cm) { show(cm[1]); setTitle(PAGE_TITLES[cm[1]]); window.scrollTo({ top: 0 }); if (cm[1] === "checking") showSec("c-near", document.getElementById("dc-page")); openCountry(cm[1], decodeURIComponent(cm[2])); return; }
@@ -308,12 +312,6 @@ function scrollToEl(el, smooth) {
 }
 
 /* ---------- Home ---------- */
-function statTile(e) {
-  const ref = refById[e.source];
-  const link = ref ? (ref.DOI ? "https://doi.org/" + ref.DOI : ref.URL) : "#";
-  const srcLabel = ref ? (ref.author[0].short || ref.author[0].literal || (ref.author[0].family + (ref.author.length > 1 ? " et al." : ""))) + ", " + year(ref) : e.source;
-  return '<div class="stat"><div class="value num">' + esc(e.value) + '</div><div class="label">' + esc(e.label) + '</div><div class="prov">' + esc(e.measure) + '<br>Source: <a href="' + esc(link) + '" target="_blank" rel="noopener">' + esc(srcLabel) + '</a> · <span class="badge ' + (e.status === "verified" ? "verified" : "draft") + '">' + (e.status === "verified" ? "verified" : "draft · awaiting PDF check") + "</span></div></div>";
-}
 /* A drug as a tile: its family's colour and icon, its name, the street names documented by two or more sources */
 /* ---------- Photos of what each drug looks like (data/site/photos.json): free licences, each with its credit.
    Several forms of one drug help people recognise it; no people and no drugs being used; one switch hides them all,
@@ -502,14 +500,17 @@ function figRank(file) {
   if (file === "europe" && EUDA_AREA.includes(PREF_COUNTRY)) return 2;
   return 3;
 }
-function fmtValue(r) {
-  const v = typeof r.value === "number" ? (r.unit === "percent" ? r.value.toLocaleString("en-GB", { maximumFractionDigits: 2 }) + "%" : r.value.toLocaleString("en-GB")) : String(r.value);
-  const unit = r.unit === "percent" ? "" : " " + r.unit;
-  return v + unit;
-}
 // the place is shown beside each figure, so a survey's name ("..., Greek general population survey") is not repeated
 function figYear(r) { const y = String(r.data_year).split(" (")[0]; return /^not stated/.test(y) ? "year not stated" : y; }
-function figLabel(r) { return (r.label || String(r.def).split(/ \(|; /)[0]).replace(/, (Greek|EU|European) general population survey$/, ""); }
+// what a figure counts: its own label, or its definition without the notes in brackets and after the first semicolon
+const figNoPar = t => { let x = String(t || ""); for (let i = 0; i < 3; i++) x = x.replace(/\s*\([^()]*\)/g, ""); return x; };
+function figLabel(r) {
+  let t = (r.label || figNoPar(r.def).split(/; /)[0]).replace(/, (Greek|EU|European) general population survey$/, "").replace(/\b(lsd|mdma|ghb|gbl|thc|hhc|dmt|pcp|cbd)\b/g, x => x.toUpperCase());
+  // a survey's name for a diagnosis, said plainly; the instrument stays named (glossary: "Dependence and use disorder")
+  const m = !r.label && t.match(/^Past-year substance use disorder for (.+)$/i);
+  if (m) t = "Had a use disorder for " + m[1] + " in the past year" + (/DSM-5/.test(String(r.def)) ? " (DSM-5)" : "");
+  return t;
+}
 // one figure, each fact said once (senior author, 6 November: a web-survey figure named its survey, its period and its
 // population twice over): the survey's name is dropped from the label when the place says it, the period note when the
 // label says it, and the population when it repeats the label; "not applicable" populations and empty ones are not shown
@@ -527,18 +528,10 @@ function figParts(r) {
     r.measure === "past-month-prevalence" ? (said("last 30 days") || said("last month") ? "" : "use in the last 30 days") : r.measure === "lifetime-prevalence" ? (said("ever") || said("lifetime") ? "" : "ever used") : "";
   return { what, place, pop, period };
 }
-function figureRow(r, onDrugPage) {
-  const ref = refById[r.source];
-  const src = ref ? (ref.author[0].short || ref.author[0].literal || ref.author[0].family) + ", " + year(ref) : r.source;
-  const f = figParts(r);
-  // say what a range is (glossary: prevalence)
-  const iv = r.interval && r.interval.low != null ? '<div class="fr">' + (/national estimates/.test(r.interval.type || "") ? "Range across countries: " : /as reported/.test(r.interval.type || "") ? "Range as reported: " : "Range: ") + esc(r.interval.low + "–" + r.interval.high) + (r.unit === "percent" ? "%" : "") + "</div>" : "";
-  return '<div class="fig"><div class="fv num">' + esc(fmtValue(r)) + iv + '</div><div class="fw"><div class="ft">' + esc(f.what) + (f.period ? ' <span class="muted small">(' + esc(f.period) + ")</span>" : "") + '</div><div class="fm">' + esc(f.place) + ", " + esc(figYear(r)) + (f.pop ? " · " + esc(f.pop) : "") + (onDrugPage ? "" : " · " + esc(r.substance)) + '</div><div class="fp">' + '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(src) + "</a>" + (r.where ? ' · <button type="button" class="where" aria-expanded="false" data-where="' + esc((r.verified_on ? "Checked " + dcDate(r.verified_on) + " against: " : "Checked against: ") + r.where) + '">checked against the source text</button>' : "") + "</div></div></div>";
-}
 /* ---------- Statistics (site 2.4, 15 November 2026; the senior author: the page "is heavy for the eye", "could be more
    understandable clear and simple at first glance"). The page is a menu of places (the reader's own country first); one
-   opens at a time. Inside a place the figures stand under plain headings by what they count (people who use, treatment,
-   deaths, seizures and the market, other), a drug can be chosen, and where three or more drugs were counted the same way
+   opens at a time. Inside a place the figures stand under plain headings by what they count (people who use, people with a use disorder,
+   hospital emergencies, treatment, deaths, seizures and the market, other), a drug can be chosen, and where three or more drugs were counted the same way
    (the same measure, year, people and place) they are drawn side by side as bars: like with like, at a glance. Each figure
    says its number in everyday words ("316 million people", "1 in 12"), then what it counts, then a quiet line of where,
    when and who; its source and the place in the source it was checked against are one tap away. No number is rounded:
@@ -550,7 +543,7 @@ function showNumbers(part, o) {
   if (numbersDrawn) { go(); return; }
   whenReady(loadFigures, document.getElementById("num-list") || page, "The figures", () => { numbersDrawn = true; renderNumbers(); go(); });
 }
-const FIG_KINDS = [["use", "How many people use it"], ["treat", "Treatment"], ["death", "Deaths"], ["supply", "Seizures and the drug market"], ["other", "Other figures"]];
+const FIG_KINDS = [["use", "How many people use it"], ["disorder", "How many people have a use disorder"], ["harm", "Hospital emergencies"], ["treat", "Treatment"], ["death", "Deaths"], ["supply", "Seizures and the drug market"], ["other", "Other figures"]];
 function figKind(r) {
   if (/prevalence$/.test(r.measure)) return "use";
   if (r.measure === "treatment-entries") return "treat";
@@ -558,42 +551,71 @@ function figKind(r) {
   if (r.measure === "seizures") return "supply";
   const d = String(r.def || "").toLowerCase(), u = String(r.unit || "").toLowerCase();
   if (/death|mortalit|years of life lost/.test(d + " " + u)) return "death";
+  if (/drug-toxicity presentations|emergency (department|room|visit)|hospital (emergenc|presentation)/.test(d)) return "harm";
   if (/treatment|clients|agonist/.test(d)) return "treat";
   if (/purity|potency|price|tablet|production|laborator|seiz|offence|new psychoactive|substances (first )?(reported|detected|monitored)|\bthc\b|market/.test(d + " " + u)) return "supply";
-  if (/\b(use|used|users|using|drinking|smok|disorder|dependen)/.test(d)) return "use";
+  if (/^substances\b/.test(u)) return "supply";   // how many new drugs the warning systems have named
+  if (/syringe/.test(d)) return "other";   // what was found in used syringes: not a count of people
+  if (/use disorder|dependen/.test(d)) return "disorder";   // a diagnosis, not use: counted apart
+  if (/\b(use|used|users|using|drinking|smok|inject)/.test(d)) return "use";
   return "other";
 }
-// a figure's number in everyday words, never rounded: { v: "316 million", u: "people" }
+// A figure's number in everyday words, never rounded: { v: "316 million", u: "people" }. The data's units are the sources'
+// own ("million persons", "one in N", "per 1 000 population", "persons (approximate: 'around 1 000')"); here they are said
+// plainly. What the source's words add to a number is kept in front of it ("About 1,000", "More than 100", "Less than 1%",
+// "Almost 4,100", "Half"); thousands become millions, or whole numbers, only by moving the point.
 function figVal(r) {
-  const f = (x, d) => x.toLocaleString("en-GB", { maximumFractionDigits: d == null ? 6 : d }), u = String(r.unit || "");
+  const f = x => x.toLocaleString("en-GB", { maximumFractionDigits: 6 });
+  let u = String(r.unit || "");
   if (typeof r.value !== "number") return { v: String(r.value), u: u === "percent" ? "" : u };
-  if (u === "percent") return { v: f(r.value) + "%", u: "" };
-  let m = u.match(/^(thousand|million|billion) persons$/);
-  if (m) return m[1] === "thousand" && r.value >= 1000 ? { v: f(r.value / 1000) + " million", u: "people" } : { v: f(r.value) + " " + m[1], u: "people" };
-  if (u === "persons") return { v: f(r.value), u: "people" };
+  let pre = "";
+  const q = u.match(/\s*\((?:(approximate|lower bound|upper bound): )?'([^']*)'\)\s*$/);
+  if (q) { u = u.slice(0, q.index); const w = q[2].toLowerCase();
+    if (/^half\b/.test(w) && r.value === 50) return { v: "Half", u: "" };
+    pre = /^(almost|nearly)\b/.test(w) ? "Almost " : /^(over|more than)\b/.test(w) || q[1] === "lower bound" ? "More than " : /^(less than|under|fewer than)\b/.test(w) || q[1] === "upper bound" ? "Less than " : q[1] === "approximate" || /^(around|about|approximately|roughly)\b/.test(w) ? "About " : ""; }
+  u = u.replace(/\s*\(unit word[^)]*\)/, "").replace(/\bpersons\b/g, "people").replace(/\bpopulation\b/g, "people").replace(/(\d) (\d{3})\b/g, "$1,$2").trim();
+  if (u === "percent") return { v: pre + f(r.value) + "%", u: "" };
+  if (/^percent change\b/.test(u)) return { v: (r.value > 0 ? "+" : r.value < 0 ? "\u2212" : "") + f(Math.abs(r.value)) + "%", u: "" };   // a rise or a fall: the line under it says of what, and between which years
+  let m = u.match(/^percent (.+)$/); if (m) return { v: pre + f(r.value) + "%", u: m[1] };   // "24.6% THC"
   if (u === "one in N") return { v: "1 in " + f(r.value), u: "" };
-  m = u.match(/^(thousand|million|billion) (.+)$/); if (m) return { v: f(r.value) + " " + m[1], u: m[2] };
-  return { v: f(r.value), u };
+  m = u.match(/^(thousand|million|billion) (.+)$/);
+  if (m && m[1] === "thousand") return r.value >= 1000 ? { v: pre + f(r.value / 1000) + " million", u: m[2] } : { v: pre + f(Math.round(r.value * 1000)), u: m[2] };
+  if (m) return { v: pre + f(r.value) + " " + m[1], u: m[2] };
+  return { v: pre + f(r.value), u };
 }
-const figPop = t => String(t || "").replace(/^persons aged /, "ages ").replace(/^people aged /, "ages ").replace(/^adults /, "adults, ages ").replace(/^young adults /, "young adults, ages ");
+// who was counted, in a few words (the source's full wording is one tap away, with the source)
+const figPop = t => { const x = figNoPar(t).replace(/^persons aged /, "ages ").replace(/^people aged /, "ages ").replace(/^population aged /, "ages ").replace(/^adults /, "adults, ages ").replace(/^young adults /, "young adults, ages ").trim(); return /^(general )?population$/.test(x) ? "" : x; };
 const figSrc = r => { const ref = refById[r.source]; return ref ? (ref.author[0].short || ref.author[0].literal || ref.author[0].family) + ", " + year(ref) : r.source; };
-function figRow2(r) {
-  const f = figParts(r), v = figVal(r);
+/* One figure. Top to bottom: the drug (when the list holds several), the number in everyday words, what it counts, a quiet
+   line of where, when and who, and the source, which opens to its link, the place in it the number was checked against
+   and the source's full wording of who was counted. A caption written to follow its number ("of EU adults used cannabis
+   in the last year") keeps its small first letter and reads on from the number. */
+function figRow2(r, oneDrug) {
+  const f = figParts(r), v = figVal(r), cont = /^[a-z]/.test(f.what);
+  let unit = v.u;
+  if (unit === "people" && r.measure === "deaths") unit = "deaths";
+  if ((unit === "people" && (cont || /^(people|persons|americans)\b/i.test(f.what))) || (unit === "deaths" && cont && /death/.test(f.what))) unit = "";   // the caption says what is counted
+  const what = cont ? f.what : f.what.charAt(0).toUpperCase() + f.what.slice(1), pop = f.pop ? figPop(f.pop) : "";
   const iv = r.interval && r.interval.low != null ? '<span class="f2-r">' + (/national estimates/.test(r.interval.type || "") ? "Range across countries: " : /as reported/.test(r.interval.type || "") ? "Range as reported: " : "Range: ") + esc(r.interval.low + "–" + r.interval.high) + (r.unit === "percent" ? "%" : "") + "</span>" : "";
-  return '<div class="fig2"><p class="f2-v num">' + esc(v.v) + (v.u ? ' <span class="f2-u">' + esc(v.u) + "</span>" : "") + iv + '</p><div class="f2-w"><p class="f2-t">' + esc(f.what.charAt(0).toUpperCase() + f.what.slice(1)) + (f.period ? ' <span class="muted">(' + esc(f.period) + ")</span>" : "") + "</p>" +
-    '<p class="f2-m">' + esc(f.place) + " · " + esc(figYear(r)) + (f.pop ? " · " + esc(figPop(f.pop)) : "") + " · " + esc(r.substance) + "</p>" +
-    '<details class="f2-src"><summary>' + esc(figSrc(r)) + '</summary><p><a href="' + esc(r.url) + '" target="_blank" rel="noopener">Open the source</a>' + (r.where ? ". " + esc((r.verified_on ? "Checked " + dcDate(r.verified_on) + " against: " : "Checked against: ") + r.where) : "") + "</p></details></div></div>";
+  return '<div class="fig2"><div class="f2-n">' + (oneDrug ? "" : '<p class="f2-d">' + esc(r.substance.charAt(0).toUpperCase() + r.substance.slice(1)) + "</p>") + '<p class="f2-v num">' + esc(v.v) + (unit ? ' <span class="f2-u">' + esc(unit) + "</span>" : "") + iv + '</p></div><div class="f2-w"><p class="f2-t">' + esc(what) + (f.period ? ' <span class="muted">(' + esc(f.period) + ")</span>" : "") + "</p>" +
+    '<p class="f2-m">' + esc(f.place) + " · " + esc(figYear(r)) + (pop ? " · " + esc(pop) : "") + "</p>" +
+    '<details class="f2-src"><summary>' + esc(figSrc(r)) + '</summary><p><a href="' + esc(r.url) + '" target="_blank" rel="noopener">Open the source</a>' + (r.where ? ". " + esc((r.verified_on ? "Checked " + dcDate(r.verified_on) + " against: " : "Checked against: ") + r.where) : "") +
+    (f.pop && (!pop || figNoPar(f.pop).trim() !== f.pop.trim()) ? (r.where && !/[.!?]["”']?$/.test(r.where) ? "." : "") + " Counted among: " + esc(f.pop) + "." : "") + "</p></details></div></div>";
 }
-// three or more drugs counted the same way, side by side (like with like): one block per such set, the largest sets first
-function figBars(rows) {
-  const sets = {};
-  rows.forEach(r => { if (typeof r.value !== "number" || /^any /.test(r.substance) || !/prevalence$/.test(r.measure)) return;
-    const k = [r.measure, r.unit, figYear(r), r.population, r.geography].join("|"); (sets[k] = sets[k] || []).push(r); });
-  return Object.values(sets).map(xs => { const seen = new Set(); return xs.slice().sort((a, b) => b.value - a.value).filter(r => !seen.has(r.substance) && seen.add(r.substance)); }).filter(xs => xs.length >= 3)
-    .sort((a, b) => b.length - a.length).slice(0, 3).map(xs => {
+// Three or more drugs counted the same way, side by side (like with like): one block per such set, the largest sets first.
+// Where the same people were counted once as a share and once as a number, the share is drawn (it can be compared between
+// places); totals ("any drug") stay out, so that no bar holds the others.
+function figBars(rows, kind) {
+  const sets = {}, base = r => [r.measure, figYear(r), r.population, r.geography].join("|");
+  rows.forEach(r => { if (typeof r.value !== "number" || /^any /.test(r.substance) || (kind === "use" && !/prevalence$/.test(r.measure))) return;
+    const k = base(r) + "|" + r.unit; (sets[k] = sets[k] || []).push(r); });
+  let list = Object.values(sets).map(xs => { const seen = new Set(); return xs.slice().sort((a, b) => b.value - a.value).filter(r => !seen.has(r.substance) && seen.add(r.substance)); }).filter(xs => xs.length >= 3);
+  list = list.filter(xs => xs[0].unit === "percent" || !list.some(ys => ys !== xs && ys[0].unit === "percent" && base(ys[0]) === base(xs[0])));
+  return list.sort((a, b) => b.length - a.length).slice(0, 3).map(xs => {
       const r0 = xs[0], f = figParts(r0), max = xs[0].value || 1;
-      const what = r0.measure === "past-year-prevalence" ? "Used in the last 12 months" : r0.measure === "past-month-prevalence" ? "Used in the last 30 days" : "Ever used";
-      return '<figure class="fbars"><figcaption><b>' + what + "</b> · " + esc(f.place) + ", " + esc(figYear(r0)) + (f.pop ? " · " + esc(figPop(f.pop)) : "") + '</figcaption><ul class="fb-l">' +
+      const what = kind === "disorder" ? "Had a use disorder" + (xs.every(r => /^past-year/i.test(String(r.def || ""))) ? " in the last 12 months" : "")
+        : r0.measure === "past-year-prevalence" ? "Used in the last 12 months" : r0.measure === "past-month-prevalence" ? "Used in the last 30 days" : "Ever used";
+      return '<figure class="fbars"><figcaption><b>' + what + "</b> · " + esc(f.place) + ", " + esc(figYear(r0)) + (f.pop && figPop(f.pop) ? " · " + esc(figPop(f.pop)) : "") + '</figcaption><ul class="fb-l">' +
         xs.map(r => { const v = figVal(r); return '<li><span class="fb-n">' + esc(r.substance.charAt(0).toUpperCase() + r.substance.slice(1)) + '</span><span class="fb-b"><i style="width:' + Math.max(1.5, 100 * r.value / max).toFixed(1) + '%"></i></span><span class="fb-v num">' + esc(v.v) + "</span></li>"; }).join("") +
         '</ul><p class="fb-s">' + esc(figSrc(r0)) + (r0.unit === "percent" ? " · share of people" : " · numbers of " + esc(figVal(r0).u || r0.unit)) + "</p></figure>"; }).join("");
 }
@@ -606,8 +628,8 @@ function numPlaceHtml(g) {
     subs.map(x => '<option value="' + esc(x) + '"' + (x === sub ? " selected" : "") + ">" + esc(x.charAt(0).toUpperCase() + x.slice(1)) + " (" + counts[x] + ")</option>").join("") + "</select></p>" : "";
   const body = FIG_KINDS.map(([k, name]) => { const xs = rows.filter(r => figKind(r) === k); if (!xs.length) return "";
     const first = xs.slice(0, 8), rest = xs.slice(8), id = "num-more-" + g + "-" + k;
-    return '<h3 class="tp">' + name + ' <span class="tp-n">' + xs.length + (xs.length === 1 ? " figure" : " figures") + "</span></h3>" + (k === "use" ? figBars(xs) : "") + '<div class="figs2">' + first.map(figRow2).join("") + "</div>" +
-      (rest.length ? '<div class="figs2" id="' + id + '" hidden>' + rest.map(figRow2).join("") + '</div><button type="button" class="morebtn" data-more="' + id + '">' + rest.length + " more figure" + (rest.length === 1 ? "" : "s") + "</button>" : ""); }).join("");
+    return '<h3 class="tp">' + name + ' <span class="tp-n">' + xs.length + (xs.length === 1 ? " figure" : " figures") + "</span></h3>" + (k === "use" || k === "disorder" ? figBars(xs, k) : "") + '<div class="figs2">' + first.map(r => figRow2(r, !!sub)).join("") + "</div>" +
+      (rest.length ? '<div class="figs2" id="' + id + '" hidden>' + rest.map(r => figRow2(r, !!sub)).join("") + '</div><button type="button" class="morebtn" data-more="' + id + '">' + rest.length + " more figure" + (rest.length === 1 ? "" : "s") + "</button>" : ""); }).join("");
   return pick + (body || '<p class="note">No figures for this choice.</p>');
 }
 function renderNumbers() {
@@ -624,8 +646,15 @@ document.addEventListener("change", e => { const sel = e.target.closest && e.tar
   const g = sel.dataset.numGeo, sec = document.getElementById("n-" + g); NUM_SUB[g] = sel.value; if (sec) { sec.querySelector(".sec-b").innerHTML = numPlaceHtml(g); const s2 = document.getElementById("num-sub-" + g); if (s2) s2.focus(); } });
 
 /* ---------- Glossary ---------- */
+/* The glossary (site 2.4; the senior author: "ALL pages should have an easy display ... click the clear titles ... the content
+   should appear and if they click on another title the previous one closes"). It was every term's full text one under the
+   other, some 16,000 pixels on a phone. Now each term is a row with its one-line meaning, from A to Z; a tap opens the full
+   definition and its source, and the one open before it closes: the question cards of the drug pages, used here too. A
+   term keeps its address (#g-<number in the data>), whatever its place in the list. */
 function renderGlossary() {
-  document.getElementById("glossary-list").innerHTML = GLOSSARY.map((g, i) => '<div class="gterm" id="g-' + i + '" data-text="' + esc(norm(g.term + " " + (g.short || "") + " " + g.def)) + '"><h2>' + esc(g.term) + "</h2>" + (g.short ? '<p class="gshort">' + esc(g.short) + "</p>" : "") + "<p>" + esc(g.def) + '</p><p class="gsrc">Source: ' + esc(g.source) + (g.ref ? " " + cite(g.ref) : "") + "</p></div>").join("");
+  const order = GLOSSARY.map((g, i) => i).sort((a, b) => GLOSSARY[a].term.localeCompare(GLOSSARY[b].term, "en", { sensitivity: "base" }));
+  document.getElementById("glossary-list").innerHTML = order.map(i => { const g = GLOSSARY[i];
+    return '<details class="ask gterm" id="g-' + i + '" data-text="' + esc(norm(g.term + " " + (g.short || "") + " " + g.def)) + '"><summary><span class="ask-h"><span class="ask-q">' + esc(g.term) + "</span>" + (g.short ? '<span class="ask-s">' + esc(g.short) + "</span>" : "") + '</span><span class="ask-i" aria-hidden="true"></span></summary><div class="ask-a"><p>' + esc(g.def) + '</p><p class="gsrc">Source: ' + esc(g.source) + (g.ref ? " " + cite(g.ref) : "") + "</p></div></details>"; }).join("");
   const f = document.getElementById("gloss-filter");
   if (f && !f.dataset.wired) { f.dataset.wired = "1"; f.addEventListener("input", () => { const q = norm(f.value); let n = 0; document.querySelectorAll("#glossary-list .gterm").forEach(el => { const show = !q || q.split(" ").every(w => wordStart(el.dataset.text, w)); el.hidden = !show; if (show) n++; }); document.getElementById("gloss-count").textContent = q ? n + " of " + GLOSSARY.length + " terms" : ""; }); }
 }

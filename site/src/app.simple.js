@@ -499,11 +499,11 @@ function helpHtml(slug) {
     const nal = x => /naloxone/i.test(x.line), helps2 = helps.filter(nal).concat(helps.filter(x => !nal(x)));
     return '<h3 class="hp-h">For a friend</h3>' +
       (cn.length ? '<h4 class="sf-k">Call an ambulance if</h4>' + srcList(cn) : "") + num +
+      '<p class="hp-more"><a href="#emergency">Emergency numbers by country</a></p>' +   // beside the signs: the number is needed here, not at the end of the page
       (helps2.length ? '<h4 class="sf-k">What helps</h4>' + srcList(helps2) : "") +
       (aid.length ? '<h4 class="sf-k">If they pass out or stop breathing</h4>' + srcList(aid) : "") +
       (dn.length ? '<h4 class="sf-k">What not to do</h4>' + srcList(dn) : "") +
-      (self.length ? '<h3 class="hp-h">For you</h3>' + srcList(self) : "") +
-      '<p class="hp-more"><a href="#emergency">Emergency numbers by country</a></p>';
+      (self.length ? '<h3 class="hp-h">For you</h3>' + srcList(self) : "");
   }
   return (self.length ? '<h3 class="hp-h">For you</h3>' + srcList(self) : "") +
     '<h3 class="hp-h">For a friend</h3>' +
@@ -1019,7 +1019,7 @@ function homeCont() {
       cont.hidden = false;
     } else cont.hidden = true;
   }
-  if (typeof askedBox === "function") askedBox();
+  try { askedBox(); } catch (e) { /* at the first drawing the list's own code has not run yet: it draws itself at its end (app.insight.js) */ }
 }
 /* ---------- Menu: everything else, one tap away ---------- */
 document.addEventListener("click", e => {

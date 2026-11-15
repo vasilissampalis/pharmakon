@@ -85,8 +85,8 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const qid = await p.evaluate(() => { const d = [...document.querySelectorAll("#d-risk details.ask")][2]; d.open = true; return d.id; });
     await p.waitForTimeout(700); await p.mouse.wheel(0, 420); await p.waitForTimeout(600);
     const before = await p.evaluate(() => ({ y: Math.round(window.scrollY), hash: location.hash }));
-    c = await p.evaluate(() => document.getElementById("crumb").textContent.trim());
-    ok("in a section of a drug page the Back line names the page's list", c === "Back to MDMA", c);
+    const inSec = await p.evaluate(() => ({ hidden: document.getElementById("crumb").hidden, up: ((document.querySelector("#drug2 .secmenu .sm-up") || {}).textContent || "").trim(), shown: !!(document.querySelector("#drug2 .secmenu .sm-up") || { getClientRects: () => [] }).getClientRects().length }));
+    ok("in a section opened from its page's list, the section menu's first chip leads back to the list and the Back line rests (one way back, not two)", inSec.hidden && inSec.up === "MDMA" && inSec.shown, JSON.stringify(inSec));
     await go(p, "#about", 600);
     c = await p.evaluate(() => document.getElementById("crumb").textContent.trim());
     ok("on the next page the Back line names the section left", /^Back to MDMA: /.test(c), c);
@@ -181,7 +181,11 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
       ok(view + ": a row opens its section alone, with its text", s1.open.length === 1 && s1.hash === "#" + view + "/part-" + s1.open[0] && await p.evaluate(id => document.getElementById(id).textContent.trim().length > 80, s1.open[0]), JSON.stringify(s1));
       if (view === "methods") await shot(p, "390-methods-section");
     }
-    ok("methods: no row's quiet line runs two words together", await p.evaluate(() => [...document.querySelectorAll("#view-methods .sm-l")].every(e => !/[a-z][A-Z][a-z]/.test(e.textContent))), await p.evaluate(() => [...document.querySelectorAll("#view-methods .sm-l")].map(e => e.textContent).filter(t => /[a-z][A-Z][a-z]/.test(t)).join(" | ")));
+    // (a row's quiet line is cut from its section's text; the words of neighbouring elements must not run together: "draftNot yet")
+    const glued = await p.evaluate(() => [...document.querySelectorAll("#view-methods .secpage .secs > .sec")].map(sec => { const b = sec.querySelector(".sec-b") || sec, tmp = document.createElement("div"); tmp.innerHTML = b.innerHTML.replace(/<[^>]+>/g, " ");
+      const t = tmp.textContent.replace(/\s+/g, " ").replace(/ ([,.;:])/g, "$1").trim(), l = document.querySelector('#view-methods .secmenu .sm-b[data-sec="' + sec.id + '"] .sm-l'), line = l ? l.textContent.replace(/…$/, "") : "";
+      return !line || !t.startsWith(line) ? sec.id + ": " + line : null; }).filter(Boolean));
+    ok("methods: every row's quiet line is the start of its section's text, word for word", glued.length === 0, glued.join(" | "));
     await p.context().close();
   }
 
@@ -189,22 +193,36 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
   {
     const p = await open(ON, 390);
     await go(p, "#numbers", 1500);
-    const rows = await p.evaluate(() => [...document.querySelectorAll("#num-page .secmenu .sm-b .sm-n")].map(e => e.textContent));
-    ok("Statistics: a menu of places", rows.length >= 3 && rows.includes("The world"), rows.join(" | "));
+    const rows = await p.evaluate(() => [...document.querySelectorAll("#num-page .secmenu .sm-b")].map(b => b.querySelector(".sm-n").textContent + " | " + (b.querySelector(".sm-l") || { textContent: "" }).textContent));
+    ok("Statistics: a menu of places, each naming where its figures come from (a name, never a record's id)", rows.length >= 3 && rows.some(r => r.startsWith("The world |")) && rows.every(r => /\| From [A-Z]/.test(r) && !/_/.test(r)), rows.join(" || "));
     await p.click('#num-page .sm-b[data-sec="n-global"]'); await p.waitForTimeout(600);
-    const w = await p.evaluate(() => { const s = document.getElementById("n-global"), t = s.textContent; return { bars: s.querySelectorAll(".fbars .fb-l li").length, rows: s.querySelectorAll(".fig2").length, hasIn: /1 in 12/.test(t), people: /316 million\s*people/.test(t), bad: (t.match(/one in N| persons|million persons/g) || []).join(","), kinds: [...s.querySelectorAll("h3.tp")].map(h => h.textContent), src: s.querySelectorAll(".f2-src").length }; });
+    const w = await p.evaluate(() => { const s = document.getElementById("n-global"), t = s.textContent, card = [...s.querySelectorAll(".fig2")].map(c => ({ d: (c.querySelector(".f2-d") || {}).textContent || "", v: c.querySelector(".f2-v").textContent.trim(), t: c.querySelector(".f2-t").textContent }));
+      return { bars: s.querySelectorAll(".fbars .fb-l li").length, rows: card.length, first: card[0], inTwelve: card.some(c => c.v === "1 in 12"), labels: card.filter(c => c.d).length, kinds: [...s.querySelectorAll("h3.tp")].map(h => h.textContent), src: s.querySelectorAll(".f2-src").length }; });
     ok("Statistics, the world: drugs counted the same way are bars side by side", w.bars >= 3, JSON.stringify(w));
-    ok("Statistics: numbers in everyday words (316 million people, 1 in 12), none in the sources' shorthand", w.hasIn && w.people && !w.bad, JSON.stringify(w));
-    ok("Statistics: figures under plain headings, each with its source one tap away", w.kinds.length >= 3 && /How many people use it/.test(w.kinds[0]) && w.src === w.rows && w.rows >= 8, JSON.stringify(w));
+    ok("Statistics: a figure is its drug, its number in everyday words (316 million, 1 in 12) and what it counts", w.first && w.first.d === "Any drug" && w.first.v === "316 million" && /^People who used a drug/.test(w.first.t) && w.inTwelve && w.labels === w.rows, JSON.stringify(w));
+    ok("Statistics: figures under plain headings, each with its source one tap away", w.kinds.length >= 3 && /How many people use it/.test(w.kinds[0]) && w.kinds.some(k => /use disorder/.test(k)) && w.src === w.rows && w.rows >= 8, JSON.stringify(w));
+    // every figure of every place: no number is said in a source's shorthand, and none is left without words
+    const words = await p.evaluate(() => { const bad = [], all = EPI_ALL.filter(r => r.status === "verified"); all.forEach(r => { const tmp = document.createElement("div"); tmp.innerHTML = figRow2(r, false); const v = tmp.querySelector(".f2-v").textContent, t = tmp.querySelector(".f2-t").textContent, m = tmp.querySelector(".f2-m").textContent;
+      if (/persons|one in N|\((approximate|lower bound|upper bound)|unit word|\d \d{3}\b|population|NaN|undefined|^\s*$/.test(v) || /NaN|undefined|^\s*$/.test(t) || /\(civilian|\bpopulation aged\b|undefined/.test(m) || !tmp.querySelector(".f2-d").textContent) bad.push(r.id + ": " + v + " / " + t.slice(0, 40) + " / " + m); });
+      const val = id => { const r = all.find(x => x.id === id), x = r && figVal(r); return x ? (x.v + " " + x.u).trim() : "missing"; }, find = re => { const r = all.find(x => re.test(x.unit)), x = r && figVal(r); return x ? x.v : "missing"; };
+      return { n: all.length, bad: bad.slice(0, 5), approx: find(/^persons \(approximate/), lower: find(/^persons \(lower bound/), upper: find(/^percent \(upper bound/), half: find(/^percent \('Half/), change: [...new Set(all.filter(r => /^percent change/.test(r.unit)).map(r => figVal(r).v[0]))].sort().join(""), thc: (r => r ? figVal(r) : null)(all.find(r => r.unit === "percent THC")) }; });
+    ok("Statistics: all " + words.n + " figures say their number plainly (about, more than, less than, half, a rise or a fall with its sign), none in a source's shorthand", words.n > 250 && !words.bad.length && /^About /.test(words.approx) && /^More than /.test(words.lower) && /^Less than /.test(words.upper) && words.half === "Half" && words.change === "+−" && words.thc && /%$/.test(words.thc.v) && words.thc.u === "THC", JSON.stringify(words));
     await p.click("#n-global .f2-src summary"); await p.waitForTimeout(200);
     ok("Statistics: a figure's source opens with its link and where it was checked", await p.evaluate(() => { const d = document.querySelector("#n-global .f2-src[open]"); return !!d && !!d.querySelector('a[href^="http"]') && /Checked/.test(d.textContent); }));
-    await p.selectOption("#num-sub-global", { index: 1 }); await p.waitForTimeout(300);
-    const w2 = await p.evaluate(() => document.querySelectorAll("#n-global .fig2").length);
-    ok("Statistics: a drug can be chosen", w2 > 0 && w2 < w.rows + 4 && w2 !== 16, String(w2));
-    await shot(p, "390-numbers-world");
+    await p.selectOption("#num-sub-global", "cocaine"); await p.waitForTimeout(300);
+    const w2 = await p.evaluate(() => ({ rows: document.querySelectorAll("#n-global .fig2").length, labels: document.querySelectorAll("#n-global .fig2 .f2-d").length, all: [...document.querySelectorAll("#n-global .fig2 .f2-t")].every(e => /cocaine/i.test(e.textContent)) }));
+    ok("Statistics: a drug can be chosen; its figures alone are listed, without repeating its name on each", w2.rows >= 2 && w2.rows < w.rows && w2.labels === 0 && w2.all, JSON.stringify(w2));
+    await shot(p, "390-numbers-world-cocaine");
+    await p.selectOption("#num-sub-global", ""); await p.waitForTimeout(300); await shot(p, "390-numbers-world");
     await p.click('#num-page .sm-b[data-sec="n-europe"]'); await p.waitForTimeout(700);
-    const e = await p.evaluate(() => { const s = document.getElementById("n-europe"); return { shown: s.querySelectorAll(".figs2:not([hidden]) .fig2").length, more: s.querySelectorAll(".morebtn").length, world: document.getElementById("n-global").hidden }; });
-    ok("Statistics, Europe: a long list shows its first figures and keeps the rest one tap away; the world has closed", e.shown > 5 && e.shown <= 40 && e.more >= 1 && e.world, JSON.stringify(e));
+    const e = await p.evaluate(() => { const s = document.getElementById("n-europe"); return { shown: s.querySelectorAll(".figs2:not([hidden]) .fig2").length, more: s.querySelectorAll(".morebtn").length, world: document.getElementById("n-global").hidden, kinds: [...s.querySelectorAll("h3.tp")].map(h => h.firstChild.textContent.trim()) }; });
+    ok("Statistics, Europe: a long list shows its first figures and keeps the rest one tap away; the world has closed", e.shown > 5 && e.shown <= 60 && e.more >= 1 && e.world && e.kinds.includes("Hospital emergencies") && e.kinds.includes("Deaths"), JSON.stringify(e));
+    await p.click('#num-page .sm-b[data-sec="n-us"]'); await p.waitForTimeout(700);
+    const us = await p.evaluate(() => { const s = document.getElementById("n-us"), caps = [...s.querySelectorAll(".fbars figcaption")].map(c => c.textContent), src = [...new Set([...s.querySelectorAll(".f2-src > summary")].map(x => x.textContent))];
+      return { caps, src, who: [...new Set([...s.querySelectorAll(".f2-m")].map(m => m.textContent))].slice(0, 3), counted: /Counted among: people aged 12 or older \(civilian, non-institutionalized\)\./.test(s.textContent) }; });
+    ok("Statistics, United States: use and use disorders are drawn apart, as shares; the source is named; who was counted is short, with the source's wording one tap away",
+      us.caps.length >= 2 && us.caps.some(c => /^Used in the last 12 months/.test(c)) && us.caps.some(c => /^Had a use disorder in the last 12 months/.test(c)) && us.src.join() === "SAMHSA, 2025" && us.who.every(m => /ages 12 or older$/.test(m)) && us.counted, JSON.stringify(us));
+    await shot(p, "390-numbers-us");
     await p.context().close();
   }
 
@@ -215,6 +233,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await go(p, "#s-heroin/part-d-help", 800); let o = await order();
     ok("heroin: a friend first, the ambulance signs first, the breathing steps in view, then For you", o.heads[0] === "H:For a friend" && o.heads[1] === "H:Call an ambulance if" && o.heads.indexOf("H:What helps") === 2 && o.heads.includes("H:If they pass out or stop breathing") && !o.fold && o.heads.indexOf("H:For you") > o.heads.indexOf("H:What not to do"), JSON.stringify(o));
     ok("heroin: naloxone leads what helps", await p.evaluate(() => { const hs = [...document.querySelectorAll("#d-help h4")].find(h => h.textContent === "What helps"); return /naloxone/i.test(hs.nextElementSibling.querySelector("li").textContent); }));
+    ok("heroin: the way to the emergency numbers stands with the ambulance signs, before what helps", await p.evaluate(() => { const m = document.querySelector("#d-help .hp-more"), hs = [...document.querySelectorAll("#d-help h4")].find(h => h.textContent === "What helps"); return !!m && !!m.querySelector('a[href="#emergency"]') && !!(m.compareDocumentPosition(hs) & Node.DOCUMENT_POSITION_FOLLOWING) && document.querySelectorAll("#d-help .hp-more").length === 1; }));
     await shot(p, "390-heroin-help");
     await go(p, "#s-cannabis/part-d-help", 800); o = await order();
     ok("cannabis: as in 2.3 (yourself first, the ambulance last, first aid one tap away)", o.heads[0] === "H:For you" && o.fold && o.heads.indexOf("H:Call an ambulance if") > o.heads.indexOf("H:What helps"), JSON.stringify(o));

@@ -100,7 +100,8 @@ const server = http.createServer((req, res) => {
     { const c3 = await browser.newContext({ viewport: { width: w, height: H }, deviceScaleFactor: 1 }), p3 = await c3.newPage();
       p3.on("pageerror", e => errors.push(w + " page error (popover test): " + String(e).slice(0, 200)));
       await p3.goto(BASE + "glossary"); await p3.waitForTimeout(1200);
-      await p3.hover("#glossary-list a.pop"); await p3.waitForTimeout(1500);
+      await p3.evaluate(() => { const a = document.querySelector("#glossary-list a.pop"); a.closest("details").open = true; a.scrollIntoView({ block: "center" }); }); await p3.waitForTimeout(600);   // (site 2.4: a term's source is inside its row)
+      await p3.hover("#glossary-list details[open] a.pop"); await p3.waitForTimeout(1500);
       const pop = await p3.evaluate(() => { const el = document.querySelector(".popover"); return el ? { apa: !!el.querySelector(".refline"), text: el.textContent.slice(0, 60) } : null; });
       ok(w + ": a citation's popover waits for the references, then shows the full APA reference", pop && pop.apa, pop ? pop.text : "no popover");
       if (SHOTS) await p3.screenshot({ path: path.join(SHOTS, w + "-popover-glossary.png") });
