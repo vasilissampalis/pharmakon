@@ -40,7 +40,9 @@ const ICONS = {
   cactus: "M12 21V5a2 2 0 0 1 4 0v8M12 13H9a2 2 0 0 1-2-2V8M16 10h1a2 2 0 0 0 2-2V7M8 21h8", block: "M12 2 3 7v10l9 5 9-5V7l-9-5zM3 7l9 5 9-5M12 12v10",
   canister: "M8 6h8v14a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V6zM10 2h4v4h-4z",
   pin: "M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" + circ(12, 9, 2.5),
-  mix: circ(9, 12, 6) + circ(15, 12, 6)
+  mix: circ(9, 12, 6) + circ(15, 12, 6),
+  people: circ(8, 8, 3) + circ(16.5, 9, 2.5) + "M2.5 20c0-3.3 2.4-5.5 5.5-5.5s5.5 2.2 5.5 5.5M15 14.6c3.4-.6 6.5 1.4 6.5 5.4", globe: circ(12, 12, 9) + "M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18",
+  search: "M4 11a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-5-5", clock: circ(12, 12, 9) + "M12 7v5l3 2"
 };
 function icon(name, cls) { const d = ICONS[name]; return d ? '<svg class="ic' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="' + d + '"/></svg>' : ""; }
 /* One colour and one icon per drug family (the families are the site's classes) */
@@ -57,14 +59,92 @@ const META_SOURCE = { crossref: "Crossref", publisher: "publisher's page", pubme
 
 /* ---------- Routing ---------- */
 const PAGE_VIEWS = ["home", "substances", "drug", "shared", "numbers", "interactions", "checking", "facts", "emergency", "law", "methods", "about", "glossary", "howto", "review", "quiz", "notfound"];
-const PAGE_TITLES = { home: "", shared: "Shared answer", facts: "Facts about drug use", substances: "Find a drug", numbers: "Statistics", interactions: "Mixing drugs", emergency: "Emergency numbers", checking: "Drug checking", law: "Drug treaties by country", methods: "Methods", about: "About", glossary: "Glossary", howto: "How to read this site", review: "Review queue", quiz: "Myth or fact?", notfound: "Page not found" };
+const PAGE_TITLES = { home: "", shared: "Shared answer", facts: "Big questions about drugs", substances: "Find a drug", numbers: "Statistics", interactions: "Mixing drugs", emergency: "Emergency numbers", checking: "Drug checking", law: "Drug treaties by country", methods: "Methods", about: "About", glossary: "Glossary", howto: "How to read this site", review: "Review queue", quiz: "Myth or fact?", notfound: "Page not found" };
 let currentSlug = MONO.slug;   // the drug page last shown (the review queue lists its claims)
 function setTitle(t) { document.title = t ? t + " · Pharmakon" : "Pharmakon: what the research says about drugs"; }
 // after a page change, keyboard and screen-reader users start at the page heading
 function focusHeading(view) { const h = document.querySelector("#view-" + view + " h1"); if (h) { h.setAttribute("tabindex", "-1"); try { h.focus({ preventScroll: true }); } catch (e) { h.focus(); } } }
 function openAround(el) { for (let d = el && el.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true; }
 let routedOnce = false;
-function route() {
+/* ---------- Where you were (site 2.4, 15 November 2026; the senior author: "we want the user never to feel like they are lost
+   and try to get to where they were before in relevance to where they are now"; "there should be a button so as to be able
+   to go back to the landing page and in general where i was before"). Every step a reader takes on the site (a page, a
+   section of a page) is kept in a short list for this tab only (sessionStorage; nothing is sent anywhere): its address, its
+   name, how far down the reader was and which question was open. Two things use it. A line under the top bar of every page
+   but the start page says where Back leads ("Back to Cannabis"), and going Back or Forward, by that line or by the
+   browser's own buttons, puts the page as it was: the same place, the same question open. A reload does the same. ---------- */
+const NAV_KEY = "pk-nav";
+const NAV = (() => { try { const x = JSON.parse(sessionStorage.getItem(NAV_KEY) || "null"); if (x && Array.isArray(x.list) && typeof x.idx === "number") return x; } catch (e) { /* this visit only */ } return { idx: -1, list: [] }; })();
+let NAV_CUR = null, NAV_REPLACING = false, NAV_TRAVERSE = false, NAV_HOLD = 0, NAV_MOVED = false;
+function navStore() { try { sessionStorage.setItem(NAV_KEY, JSON.stringify(NAV)); } catch (e) { /* this page only */ } }
+// what the page being left looked like: how far down, and the question that was open
+function navLeave() {
+  const e = NAV.list[NAV.idx]; if (!e || e.id !== NAV_CUR) return;
+  e.y = Math.round(window.scrollY);
+  const d = document.querySelector(".view.active details.ask[open]"); e.q = d ? d.id : "";
+  navStore();
+}
+// the step just arrived at: one already in the list (Back, Forward, a reload), or a new one after the step left
+function navEnter() {
+  let st = null; try { st = history.state; } catch (e) { /* none */ }
+  const at = st && st.pk ? NAV.list.findIndex(x => x.id === st.pk) : -1;
+  if (at >= 0) { NAV.idx = at; NAV_CUR = st.pk; NAV_TRAVERSE = true; }
+  else {
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    if (NAV_REPLACING && NAV.idx >= 0) NAV.list[NAV.idx] = { id };
+    else { NAV.list = NAV.list.slice(0, NAV.idx + 1); NAV.list.push({ id }); while (NAV.list.length > 60) NAV.list.shift(); NAV.idx = NAV.list.length - 1; }
+    try { history.replaceState(Object.assign({}, st || {}, { pk: id }), ""); } catch (e) { /* the list still works for this page */ }
+    NAV_CUR = id; NAV_TRAVERSE = false;
+  }
+  NAV_REPLACING = false;
+}
+// an address that takes the place of the one just asked for (an older address, a section's bare name)
+function navReplace(url) { NAV_REPLACING = true; location.replace(url); }
+// the name a step is known by: the page's title, with the open section's name
+function navTitle() {
+  const v = document.querySelector(".view.active"), name = v ? v.id.replace("view-", "") : "home";
+  if (name === "home") return "Start page";
+  const t = document.title.replace(/ · Pharmakon$/, ""), b = v.querySelector('.secpage .sm-b[aria-expanded="true"] .sm-s');
+  return (t || PAGE_TITLES[name] || "the page before") + (b && b.textContent ? ": " + b.textContent : "");
+}
+function navCrumb() {
+  const bar = document.getElementById("crumb"); if (!bar) return;
+  const home = !!document.querySelector("#view-home.active"), prev = NAV.idx > 0 ? NAV.list[NAV.idx - 1] : null;
+  if (home) { bar.hidden = true; bar.innerHTML = ""; return; }
+  bar.innerHTML = prev && prev.h != null && prev.t
+    ? '<a class="crumb-a" href="' + esc(prev.h || "#home") + '" data-nav-back>' + icon("arrow") + "<span>Back to " + esc(prev.t) + "</span></a>"
+    : '<a class="crumb-a" href="#home">' + icon("arrow") + "<span>Start page</span></a>";
+  bar.hidden = false;
+}
+// the page as it was: the question that was open, and the same place; kept there while the page settles, until the reader moves
+function navRestore(e) {
+  jumpStop(); NAV_HOLD = Date.now() + 500; NAV_MOVED = false;
+  const d = e.q ? document.getElementById(e.q) : null;
+  if (d && d.closest(".view.active") && "open" in d && !d.open) {
+    const more = d.closest(".asks-more"); if (more && more.hidden) { more.hidden = false; const b = document.querySelector('button.morebtn[data-more="' + more.id + '"]'); if (b) b.remove(); }
+    d.open = true;
+  }
+  const put = () => { if (Math.abs(window.scrollY - e.y) > 2) window.scrollTo(0, e.y); };
+  put(); [80, 250, 600, 1200].forEach(ms => setTimeout(() => { if (NAV_CUR === e.id && !NAV_MOVED) put(); }, ms));
+}
+function navAfter() {
+  const e = NAV.list[NAV.idx]; if (!e) return;
+  e.h = location.hash || "#home"; e.t = navTitle();
+  navCrumb();
+  if (NAV_TRAVERSE && typeof e.y === "number") navRestore(e);
+  NAV_TRAVERSE = false; navStore();
+}
+if (typeof window !== "undefined") {
+  window.addEventListener("scroll", () => { clearTimeout(navLeave._t); navLeave._t = setTimeout(navLeave, 250); }, { passive: true });
+  window.addEventListener("pagehide", navLeave);
+  ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => window.addEventListener(t, () => { NAV_MOVED = true; }, { passive: true, capture: true }));
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest && ev.target.closest("a[data-nav-back]"); if (!a || ev.button || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    ev.preventDefault(); history.back();
+  });
+}
+function route() { navLeave(); navEnter(); routeTo(); navAfter(); }
+function routeTo() {
   let h = (location.hash || "#home").slice(1);
   const first = !routedOnce; routedOnce = true;
   jumpStop();   // a jump still being kept in place gives way to the new address
@@ -83,31 +163,31 @@ function route() {
     const mm = h.slice(2).match(/^([a-z0-9-]+)(?:\/(sec-\d+|not-yet|evidence|q-cl_[a-z0-9_]+|part-d-[a-z]+))?$/);
     const slug = mm ? mm[1] : h.slice(2), sec = mm && mm[2];
     if (!mm || !subBySlug[slug]) { renderNotFound(h.slice(2)); show("notfound"); setTitle(PAGE_TITLES.notfound); window.scrollTo({ top: 0 }); focusHeading("notfound"); return; }
-    if (sec && !sec.startsWith("q-") && !sec.startsWith("part-")) { location.replace("#s-" + slug + (sec === "sec-13" ? "/part-d-law" : sec === "sec-2" ? "/part-d-looks" : "")); return; }
+    if (sec && !sec.startsWith("q-") && !sec.startsWith("part-")) { navReplace("#s-" + slug + (sec === "sec-13" ? "/part-d-law" : sec === "sec-2" ? "/part-d-looks" : "")); return; }
     const was = renderedDrug === slug && document.getElementById("view-drug").classList.contains("active") ? openSec() : "";
     if (renderedDrug !== slug) renderDrug(slug);
     show("drug"); setTitle(subBySlug[slug].name);
     drugGo(sec, { first, was }); return;
   }
   // a section's bare name (#d-help) is that section of the drug page last shown
-  if (/^d-[a-z]+$/.test(h) && renderedDrug) { location.replace("#s-" + renderedDrug + "/part-" + h); return; }
+  if (/^d-[a-z]+$/.test(h) && renderedDrug) { navReplace("#s-" + renderedDrug + "/part-" + h); return; }
   if (h.startsWith("mix-")) { renderInteractions(); show("interactions"); setTitle("Mixing drugs"); const el = document.getElementById(h); if (el) { openAround(el); scrollToEl(el); } return; }
-  // Facts about drug use: #facts, #facts/q-<claim>, and a bare claim address of a general answer (a shared link)
-  if (h === "facts" || h.startsWith("facts/q-") || (h.startsWith("cl_") && claimById[h] && claimById[h].substance === GEN)) {
+  // Big questions about drugs (the general answers): #facts, a section (#facts/part-f-laws), a question (#facts/q-<claim>),
+  // and a bare claim address of a general answer (a shared link), which opens the question with its evidence over it
+  if (h === "facts" || h.startsWith("facts/") || (h.startsWith("cl_") && claimById[h] && claimById[h].substance === GEN)) {
+    const page = document.getElementById("facts-box"), was = document.getElementById("view-facts").classList.contains("active") ? openSec(page) : "";
     renderFacts(); show("facts"); setTitle(PAGE_TITLES.facts);
-    const id = h.startsWith("cl_") ? h : h.startsWith("facts/q-") ? h.slice(8) : null;
-    if (id && openFact(id)) { if (h.startsWith("cl_")) setTimeout(() => openEvidence(h, null, null), 60); return; }
-    window.scrollTo({ top: 0 }); if (!first) focusHeading("facts"); return;
+    secGo(page, "facts", h.startsWith("cl_") ? "q-" + h : h.slice(6), { first, was });
+    if (h.startsWith("cl_")) setTimeout(() => openEvidence(h, null, null), 60);
+    return;
   }
-  // the answers on test kits: on the drug checking page (#checking/kits, #checking/q-<claim>); a bare claim address opens there too
-  if (h === "checking/kits" || h.startsWith("checking/q-") || (h.startsWith("cl_") && claimById[h] && claimById[h].substance === "drug-checking")) {
-    renderDcKits(); show("checking"); setTitle("Do home test kits work?");
-    const id = h.startsWith("cl_") ? h : h.startsWith("checking/q-") ? h.slice(11) : null;
-    const box = document.getElementById("dc-kits"), d = id ? document.getElementById("ask-" + id) : null;
-    if (d) { const more = d.closest(".asks-more"); if (more && more.hidden) { more.hidden = false; const b = document.querySelector('button.morebtn[data-more="' + more.id + '"]'); if (b) b.remove(); }
-      d.open = true; setTimeout(() => scrollToEl(d), 30); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true }); }
-    else if (box && !box.hidden) { setTimeout(() => scrollToEl(box), 30); const hh = box.querySelector("h2"); if (hh) { hh.setAttribute("tabindex", "-1"); hh.focus({ preventScroll: true }); } }
-    else window.scrollTo({ top: 0 });
+  // Drug checking: #checking, a section (#checking/part-c-work), a question on test kits (#checking/q-<claim>; a bare claim
+  // address opens there too, with its evidence over it), and the address the answers had before 2.4 (#checking/kits)
+  if (h === "checking" || (h.startsWith("checking/") && !h.startsWith("checking/c-")) || (h.startsWith("cl_") && claimById[h] && claimById[h].substance === "drug-checking")) {
+    const page = document.getElementById("dc-page"), was = document.getElementById("view-checking").classList.contains("active") ? openSec(page) : "";
+    show("checking"); setTitle(PAGE_TITLES.checking);
+    secGo(page, "checking", h.startsWith("cl_") ? "q-" + h : h === "checking/kits" ? "part-c-work" : h.slice(9), { first, was });
+    if (h.startsWith("cl_")) setTimeout(() => openEvidence(h, null, null), 60);
     return;
   }
   // a mixing answer's own address opens that answer in plain words, with its evidence over it (senior author, 6 November:
@@ -128,14 +208,22 @@ function route() {
   if (h.startsWith("g-")) { show("glossary"); setTitle(PAGE_TITLES.glossary); const el = document.getElementById(h); if (el) scrollToEl(el); return; }
   // a country chosen in the search: #checking/c-Greece, #emergency/c-Greece, #law/c-Greece
   const cm = h.match(/^(emergency|checking|law)\/c-(.+)$/);
-  if (cm) { show(cm[1]); setTitle(PAGE_TITLES[cm[1]]); window.scrollTo({ top: 0 }); openCountry(cm[1], decodeURIComponent(cm[2])); return; }
+  if (cm) { show(cm[1]); setTitle(PAGE_TITLES[cm[1]]); window.scrollTo({ top: 0 }); if (cm[1] === "checking") showSec("c-near", document.getElementById("dc-page")); openCountry(cm[1], decodeURIComponent(cm[2])); return; }
+  // a page of sections: #methods, #methods/part-m-search (the text pages), #numbers/part-n-europe (the statistics)
+  const sp = h.match(/^(howto|methods|about|numbers)(?:\/(part-[a-z0-9-]+))?$/);
+  if (sp) {
+    const view = sp[1], page = document.querySelector("#view-" + view + " .secpage"), was = page && document.getElementById("view-" + view).classList.contains("active") ? openSec(page) : "";
+    show(view); setTitle(PAGE_TITLES[view]);
+    if (view === "numbers") { showNumbers(sp[2] || "", { first, was }); return; }
+    if (page) secGo(page, view, sp[2] || "", { first, was }); else { window.scrollTo({ top: 0 }); if (!first) focusHeading(view); }
+    return;
+  }
   if (!PAGE_VIEWS.includes(h) || h === "notfound" || h === "drug" || h === "shared") h = "home";
   show(h); setTitle(PAGE_TITLES[h]);
   // pages that read files fetched when needed draw on their first visit (speed, 13 November)
-  if (h === "numbers") showNumbers();
   if (h === "review") whenReady(() => Promise.all(FULL_FILES.map(loadFull).concat(loadRefs(), loadJson("decisions.json", d => Object.assign(DECISIONS, d)))), document.getElementById("review-list"), "The review queue", renderReview);
   // the Myth or fact? page: the same deck as the start page, endless (senior author, 14 November: one format everywhere)
-  if (h === "quiz") { if (!MF.quizpage) mfStart("quizpage"); else mfRefresh("quizpage"); }
+  if (h === "quiz") mfQuizPage();
   if (h === "home") { homeCont(); mfRefresh("tf"); }
   window.scrollTo({ top: 0 });
   if (!first) focusHeading(h);
@@ -194,6 +282,7 @@ let JUMP = null;   // the jump being kept in place
 function jumpStop() { if (JUMP) JUMP.stop(); }
 function scrollToEl(el, smooth) {
   if (!el) return;
+  if (NAV_HOLD > Date.now()) return;   // the page is being put back as it was (Back, Forward, a reload): nothing else moves it
   if (typeof revealEl === "function") revealEl(el);
   if (!el.getClientRects().length) return;
   jumpStop();
@@ -434,7 +523,7 @@ function figParts(r) {
   const said = t => what.toLowerCase().includes(t);
   if (said("average")) place = place.replace(/ \(average\)$/, "");
   if (said("espad")) place = place.replace(/^ESPAD participating countries/, "ESPAD countries");
-  const period = r.measure === "past-year-prevalence" ? (said("last 12 months") || said("last year") || said("last-year") ? "" : "use in the last 12 months") :
+  const period = r.measure === "past-year-prevalence" ? (said("last 12 months") || said("last year") || said("last-year") || said("past year") || said("past-year") ? "" : "use in the last 12 months") :
     r.measure === "past-month-prevalence" ? (said("last 30 days") || said("last month") ? "" : "use in the last 30 days") : r.measure === "lifetime-prevalence" ? (said("ever") || said("lifetime") ? "" : "ever used") : "";
   return { what, place, pop, period };
 }
@@ -446,25 +535,93 @@ function figureRow(r, onDrugPage) {
   const iv = r.interval && r.interval.low != null ? '<div class="fr">' + (/national estimates/.test(r.interval.type || "") ? "Range across countries: " : /as reported/.test(r.interval.type || "") ? "Range as reported: " : "Range: ") + esc(r.interval.low + "–" + r.interval.high) + (r.unit === "percent" ? "%" : "") + "</div>" : "";
   return '<div class="fig"><div class="fv num">' + esc(fmtValue(r)) + iv + '</div><div class="fw"><div class="ft">' + esc(f.what) + (f.period ? ' <span class="muted small">(' + esc(f.period) + ")</span>" : "") + '</div><div class="fm">' + esc(f.place) + ", " + esc(figYear(r)) + (f.pop ? " · " + esc(f.pop) : "") + (onDrugPage ? "" : " · " + esc(r.substance)) + '</div><div class="fp">' + '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(src) + "</a>" + (r.where ? ' · <button type="button" class="where" aria-expanded="false" data-where="' + esc((r.verified_on ? "Checked " + dcDate(r.verified_on) + " against: " : "Checked against: ") + r.where) + '">checked against the source text</button>' : "") + "</div></div></div>";
 }
-// the statistics page draws once its figures have arrived (speed: they are fetched the first time it is opened)
+/* ---------- Statistics (site 2.4, 15 November 2026; the senior author: the page "is heavy for the eye", "could be more
+   understandable clear and simple at first glance"). The page is a menu of places (the reader's own country first); one
+   opens at a time. Inside a place the figures stand under plain headings by what they count (people who use, treatment,
+   deaths, seizures and the market, other), a drug can be chosen, and where three or more drugs were counted the same way
+   (the same measure, year, people and place) they are drawn side by side as bars: like with like, at a glance. Each figure
+   says its number in everyday words ("316 million people", "1 in 12"), then what it counts, then a quiet line of where,
+   when and who; its source and the place in the source it was checked against are one tap away. No number is rounded:
+   thousands become millions only by moving the point. ---------- */
 let numbersDrawn = false;
-function showNumbers() { if (numbersDrawn) return; whenReady(loadFigures, document.getElementById("num-list"), "The figures", () => { numbersDrawn = true; renderNumbers(); }); }
-let numbersGeo = "", numbersSub = "All";
-function renderNumbers() {
-  const geos = GEO_ORDER.filter(g => EPI_ALL.some(r => r.file === g && r.status === "verified"));
-  if (!geos.includes(numbersGeo)) numbersGeo = geos.slice().sort((a, b) => figRank(a) - figRank(b))[0]; // opens on the reader's own country, else the world
-  document.getElementById("num-geo").innerHTML = geos.map(g => '<button class="chip" data-geo="' + g + '" aria-pressed="' + (g === numbersGeo) + '">' + esc(GEO_LABEL[g]) + "</button>").join("");
-  const inGeo = EPI_ALL.filter(r => r.file === numbersGeo && r.status === "verified");
-  const subs = ["All"].concat([...new Set(inGeo.map(r => r.substance))].sort());
-  if (!subs.includes(numbersSub)) numbersSub = "All";
-  // one menu instead of a row of buttons: the sources' own categories, as they name them
-  document.getElementById("num-sub").innerHTML = '<label class="selectlabel">Drug or category, as the source names it <select id="num-sub-sel">' + subs.map(sb => '<option value="' + esc(sb) + '"' + (sb === numbersSub ? " selected" : "") + ">" + esc(sb === "All" ? "All (" + inGeo.length + " figures)" : sb) + "</option>").join("") + "</select></label>";
-  document.querySelectorAll("#num-geo .chip").forEach(b => b.addEventListener("click", () => { numbersGeo = b.dataset.geo; numbersSub = "All"; renderNumbers(); }));
-  document.getElementById("num-sub-sel").addEventListener("change", e => { numbersSub = e.target.value; renderNumbers(); });
-  const rows = inGeo.filter(r => numbersSub === "All" || r.substance === numbersSub);
-  document.getElementById("num-count").textContent = rows.length + " figure" + (rows.length === 1 ? "" : "s") + ", each checked against its source";
-  document.getElementById("num-list").innerHTML = rows.map(r => figureRow(r)).join("") || '<p class="note">No figures for this selection.</p>';
+function showNumbers(part, o) {
+  const page = document.getElementById("num-page"); if (!page) return;
+  const go = () => secGo(page, "numbers", part || "", o);
+  if (numbersDrawn) { go(); return; }
+  whenReady(loadFigures, document.getElementById("num-list") || page, "The figures", () => { numbersDrawn = true; renderNumbers(); go(); });
 }
+const FIG_KINDS = [["use", "How many people use it"], ["treat", "Treatment"], ["death", "Deaths"], ["supply", "Seizures and the drug market"], ["other", "Other figures"]];
+function figKind(r) {
+  if (/prevalence$/.test(r.measure)) return "use";
+  if (r.measure === "treatment-entries") return "treat";
+  if (r.measure === "deaths") return "death";
+  if (r.measure === "seizures") return "supply";
+  const d = String(r.def || "").toLowerCase(), u = String(r.unit || "").toLowerCase();
+  if (/death|mortalit|years of life lost/.test(d + " " + u)) return "death";
+  if (/treatment|clients|agonist/.test(d)) return "treat";
+  if (/purity|potency|price|tablet|production|laborator|seiz|offence|new psychoactive|substances (first )?(reported|detected|monitored)|\bthc\b|market/.test(d + " " + u)) return "supply";
+  if (/\b(use|used|users|using|drinking|smok|disorder|dependen)/.test(d)) return "use";
+  return "other";
+}
+// a figure's number in everyday words, never rounded: { v: "316 million", u: "people" }
+function figVal(r) {
+  const f = (x, d) => x.toLocaleString("en-GB", { maximumFractionDigits: d == null ? 6 : d }), u = String(r.unit || "");
+  if (typeof r.value !== "number") return { v: String(r.value), u: u === "percent" ? "" : u };
+  if (u === "percent") return { v: f(r.value) + "%", u: "" };
+  let m = u.match(/^(thousand|million|billion) persons$/);
+  if (m) return m[1] === "thousand" && r.value >= 1000 ? { v: f(r.value / 1000) + " million", u: "people" } : { v: f(r.value) + " " + m[1], u: "people" };
+  if (u === "persons") return { v: f(r.value), u: "people" };
+  if (u === "one in N") return { v: "1 in " + f(r.value), u: "" };
+  m = u.match(/^(thousand|million|billion) (.+)$/); if (m) return { v: f(r.value) + " " + m[1], u: m[2] };
+  return { v: f(r.value), u };
+}
+const figPop = t => String(t || "").replace(/^persons aged /, "ages ").replace(/^people aged /, "ages ").replace(/^adults /, "adults, ages ").replace(/^young adults /, "young adults, ages ");
+const figSrc = r => { const ref = refById[r.source]; return ref ? (ref.author[0].short || ref.author[0].literal || ref.author[0].family) + ", " + year(ref) : r.source; };
+function figRow2(r) {
+  const f = figParts(r), v = figVal(r);
+  const iv = r.interval && r.interval.low != null ? '<span class="f2-r">' + (/national estimates/.test(r.interval.type || "") ? "Range across countries: " : /as reported/.test(r.interval.type || "") ? "Range as reported: " : "Range: ") + esc(r.interval.low + "–" + r.interval.high) + (r.unit === "percent" ? "%" : "") + "</span>" : "";
+  return '<div class="fig2"><p class="f2-v num">' + esc(v.v) + (v.u ? ' <span class="f2-u">' + esc(v.u) + "</span>" : "") + iv + '</p><div class="f2-w"><p class="f2-t">' + esc(f.what.charAt(0).toUpperCase() + f.what.slice(1)) + (f.period ? ' <span class="muted">(' + esc(f.period) + ")</span>" : "") + "</p>" +
+    '<p class="f2-m">' + esc(f.place) + " · " + esc(figYear(r)) + (f.pop ? " · " + esc(figPop(f.pop)) : "") + " · " + esc(r.substance) + "</p>" +
+    '<details class="f2-src"><summary>' + esc(figSrc(r)) + '</summary><p><a href="' + esc(r.url) + '" target="_blank" rel="noopener">Open the source</a>' + (r.where ? ". " + esc((r.verified_on ? "Checked " + dcDate(r.verified_on) + " against: " : "Checked against: ") + r.where) : "") + "</p></details></div></div>";
+}
+// three or more drugs counted the same way, side by side (like with like): one block per such set, the largest sets first
+function figBars(rows) {
+  const sets = {};
+  rows.forEach(r => { if (typeof r.value !== "number" || /^any /.test(r.substance) || !/prevalence$/.test(r.measure)) return;
+    const k = [r.measure, r.unit, figYear(r), r.population, r.geography].join("|"); (sets[k] = sets[k] || []).push(r); });
+  return Object.values(sets).map(xs => { const seen = new Set(); return xs.slice().sort((a, b) => b.value - a.value).filter(r => !seen.has(r.substance) && seen.add(r.substance)); }).filter(xs => xs.length >= 3)
+    .sort((a, b) => b.length - a.length).slice(0, 3).map(xs => {
+      const r0 = xs[0], f = figParts(r0), max = xs[0].value || 1;
+      const what = r0.measure === "past-year-prevalence" ? "Used in the last 12 months" : r0.measure === "past-month-prevalence" ? "Used in the last 30 days" : "Ever used";
+      return '<figure class="fbars"><figcaption><b>' + what + "</b> · " + esc(f.place) + ", " + esc(figYear(r0)) + (f.pop ? " · " + esc(figPop(f.pop)) : "") + '</figcaption><ul class="fb-l">' +
+        xs.map(r => { const v = figVal(r); return '<li><span class="fb-n">' + esc(r.substance.charAt(0).toUpperCase() + r.substance.slice(1)) + '</span><span class="fb-b"><i style="width:' + Math.max(1.5, 100 * r.value / max).toFixed(1) + '%"></i></span><span class="fb-v num">' + esc(v.v) + "</span></li>"; }).join("") +
+        '</ul><p class="fb-s">' + esc(figSrc(r0)) + (r0.unit === "percent" ? " · share of people" : " · numbers of " + esc(figVal(r0).u || r0.unit)) + "</p></figure>"; }).join("");
+}
+const NUM_SUB = {};   // the drug chosen in each place
+function numPlaceHtml(g) {
+  const all = EPI_ALL.filter(r => r.file === g && r.status === "verified"), sub = NUM_SUB[g] || "", rows = all.filter(r => !sub || r.substance === sub);
+  const counts = {}; all.forEach(r => { counts[r.substance] = (counts[r.substance] || 0) + 1; });
+  const subs = Object.keys(counts).sort((a, b) => a.localeCompare(b));
+  const pick = subs.length > 3 ? '<p class="num-pick"><label for="num-sub-' + g + '">Show</label> <select id="num-sub-' + g + '" data-num-geo="' + g + '"><option value="">All drugs (' + all.length + " figures)</option>" +
+    subs.map(x => '<option value="' + esc(x) + '"' + (x === sub ? " selected" : "") + ">" + esc(x.charAt(0).toUpperCase() + x.slice(1)) + " (" + counts[x] + ")</option>").join("") + "</select></p>" : "";
+  const body = FIG_KINDS.map(([k, name]) => { const xs = rows.filter(r => figKind(r) === k); if (!xs.length) return "";
+    const first = xs.slice(0, 8), rest = xs.slice(8), id = "num-more-" + g + "-" + k;
+    return '<h3 class="tp">' + name + ' <span class="tp-n">' + xs.length + (xs.length === 1 ? " figure" : " figures") + "</span></h3>" + (k === "use" ? figBars(xs) : "") + '<div class="figs2">' + first.map(figRow2).join("") + "</div>" +
+      (rest.length ? '<div class="figs2" id="' + id + '" hidden>' + rest.map(figRow2).join("") + '</div><button type="button" class="morebtn" data-more="' + id + '">' + rest.length + " more figure" + (rest.length === 1 ? "" : "s") + "</button>" : ""); }).join("");
+  return pick + (body || '<p class="note">No figures for this choice.</p>');
+}
+function renderNumbers() {
+  const page = document.getElementById("num-page"); if (!page) return;
+  const geos = GEO_ORDER.filter(g => EPI_ALL.some(r => r.file === g && r.status === "verified")).sort((a, b) => figRank(a) - figRank(b) || GEO_ORDER.indexOf(a) - GEO_ORDER.indexOf(b));
+  const NAME = { global: "The world", europe: "Europe", greece: "Greece", us: "United States" };
+  const secs = geos.map(g => { const rows = EPI_ALL.filter(r => r.file === g && r.status === "verified"), who = [...new Set(rows.map(r => figSrc(r).replace(/, [^,]*$/, "")))];
+    return { id: "n-" + g, name: NAME[g] || GEO_LABEL[g], chip: NAME[g] || GEO_LABEL[g], icon: g === "global" ? "globe" : "pin", n: rows.length + " figures", line: "From " + who.slice(0, 3).join(", ") + (who.length > 3 ? " and others" : ""), body: "" }; });
+  page.innerHTML = secPageHtml("Statistics", secs, "secmenu-num");
+  // a place is drawn the first time it is opened (Europe alone has close to 200 figures)
+  geos.forEach(g => { const sec = document.getElementById("n-" + g); if (!sec) return; sec.dataset.lazy = "num-" + g; SEC_LAZY["num-" + g] = el => { el.querySelector(".sec-b").innerHTML = numPlaceHtml(g); }; });
+}
+document.addEventListener("change", e => { const sel = e.target.closest && e.target.closest("select[data-num-geo]"); if (!sel) return;
+  const g = sel.dataset.numGeo, sec = document.getElementById("n-" + g); NUM_SUB[g] = sel.value; if (sec) { sec.querySelector(".sec-b").innerHTML = numPlaceHtml(g); const s2 = document.getElementById("num-sub-" + g); if (s2) s2.focus(); } });
 
 /* ---------- Glossary ---------- */
 function renderGlossary() {
@@ -632,12 +789,26 @@ function lookalikeHtml() {
   const rows = LOOKALIKES.map(([k, xs]) => [k, xs.filter(x => byId[x[0]])]).filter(r => r[1].length >= 2);
   if (!rows.length) return "";
   const kit = byId["reagent-test-kit"];
-  return '<section class="lookalike" aria-labelledby="la-h"><h2 class="qh" id="la-h">Different drugs can look the same</h2>' +
+  return '<section class="lookalike" aria-label="Different drugs can look the same">' +
     rows.map(([k, xs]) => '<p class="forms-k">' + esc(k) + '</p><div class="phgal">' + xs.map(([id, label, detail]) => photoFig(byId[id], "t", label, detail || null)).join("") + "</div>").join("") +
     '<p class="phnote">Looks don’t tell you what’s inside. Drug checking tests a sample. ' + phToggle() + "</p>" +
     (kit ? '<p class="forms-k">Tests named below</p><div class="phgal">' + photoFig(kit, "t") + (byId["test-strip-pouches"] ? photoFig(byId["test-strip-pouches"], "t") : "") + "</div>" : "") + "</section>";
 }
 function renderChecking() {
+  // the page as sections (site 2.4): the template holds each part's fixed markup (#dc-parts), moved into its section here
+  const page = document.getElementById("dc-page"), parts = document.getElementById("dc-parts");
+  if (page && parts) {
+    const nC = new Set(DRUGCHECK.services.map(x => x.country)).size, nQ = drugQuestions(DC).length, lookH = lookalikeHtml();
+    const secs = [
+      { id: "c-near", name: "Where can I get a drug tested?", chip: "Services", icon: "pin", n: DRUGCHECK.services.length + " services", line: "In " + nC + " countries: at an address, at events or by post" },
+      { id: "c-kits", name: "Test kits to use at home", chip: "Test kits", icon: "flask", n: "", line: "Who sells them where you are, and what the law says" },
+      nQ ? { id: "c-work", name: "Do home test kits work?", chip: "Do they work?", icon: "search", n: nQ + (nQ === 1 ? " answer" : " answers"), line: "What studies found when strips and colour tests were checked" } : null,
+      lookH ? { id: "c-look", name: "Different drugs can look the same", chip: "Look-alikes", icon: "eye", n: "", line: "White powders and pills, side by side" } : null
+    ].filter(Boolean).map(x => Object.assign(x, { body: '<div data-slot="' + x.id + '"></div>' }));
+    page.innerHTML = secPageHtml("Drug checking", secs, "secmenu-dc");
+    secs.forEach(x => { const slot = page.querySelector('[data-slot="' + x.id + '"]'), part = parts.querySelector('[data-part="' + x.id + '"]'); if (slot && part) slot.replaceWith(...[...part.childNodes]); });
+    parts.remove();
+  }
   const list = document.getElementById("dc-list"); if (!list) return;
   const look = document.getElementById("dc-look"); if (look) look.innerHTML = lookalikeHtml();
   renderDcKits();
@@ -803,7 +974,7 @@ function runSearch(raw) {
         (sp ? '<span class="a">' + esc(sp.short) + "</span>" : "") + '<span class="m">' + meterHtml(c.grade.certainty, true) + "</span></a>"; }
     return '<a href="' + esc(it.href) + '"><span class="k">' + esc(it.kind) + (p.fz ? " · closest name" : "") + '</span><span class="t">' + esc(it.title.length > 140 ? it.title.slice(0, 137) + "…" : it.title) + "</span>" + (it.badge ? '<span class="badge ' + esc(it.badgeCls || "") + '">' + esc(it.badge) + "</span>" : "") + "</a>";
   };
-  const asked = String(raw).trim(), askBtn = label => '<button type="button" class="linklike" data-fb="feedback" data-fb-text="' + esc(asked) + '">' + label + "</button>";
+  const asked = String(raw).trim(), askBtn = label => '<button type="button" class="linklike" data-ask="' + esc(asked) + '">' + label + "</button>";
   box.innerHTML = searchHits.length ? searchHits.map(row).join("") + '<p class="sr-ask">Not what you were looking for? ' + askBtn("Ask us") + "</p>"
     : '<p class="none">No match for “' + esc(asked) + '”. Try other words, a drug’s name or a street name, or see <a href="#substances">all 30 drugs</a>. Need help now? <a href="#emergency">Emergency numbers</a>.</p>' +
       '<p class="sr-ask"><b>Didn’t find your question?</b> ' + askBtn("Ask us") + ". The questions people ask most are answered first.</p>";
@@ -1039,13 +1210,21 @@ function fbChoose(mode) {
   const p = fbPage(FB.where); document.getElementById("report-where").textContent = p.title;
   fbUpdate();
 }
+/* The email (site 2.4, 15 November 2026; the senior author sent himself one and asked whether its form "is as good as possible").
+   Before: every email was called "Pharmakon: a question or idea (Start page)", so a mail program put different people's
+   messages into one thread, and the message itself came after three lines about the page. Now the subject is a tag a filter
+   can catch and the person's own first words ("[Pharmakon question] can i have hallucinations from alcohol?"); the body
+   starts with the message; what the page adds stands under a line at the end, the last line in a fixed form a program can
+   read (kind | page | site version). */
 function fbText() {
   const msg = document.getElementById("report-message").value.trim(), src = document.getElementById("report-source").value.trim();
   const incl = document.getElementById("fb-incl").checked, p = fbPage(FB.where), issue = FB.mode === "issue";
-  const subject = (issue ? "Pharmakon: a mistake" : "Pharmakon: a question or idea") + (incl ? " (" + p.short + ")" : "");
-  const body = (issue ? "Report a mistake" : "A question or idea") + "\n" +
-    (incl ? "Page: " + p.title + "\nAddress: " + p.url + "\n" : "") + "\n" + msg + "\n" + (issue && src ? "\nSource: " + src + "\n" : "") +
-    "\n(Sent from the feedback panel, Pharmakon version " + SITE_VERSION + ")";
+  const one = msg.replace(/\s+/g, " "), head = one.length > 72 ? one.slice(0, one.lastIndexOf(" ", 70) > 30 ? one.lastIndexOf(" ", 70) : 70) + "…" : one;
+  const subject = (issue ? "[Pharmakon mistake] " : "[Pharmakon question] ") + (head || (incl ? p.short : ""));
+  const where = String(FB.where || "#home").replace(/^#/, "") || "home";
+  const body = msg + "\n" + (issue && src ? "\nSource: " + src + "\n" : "") + "\n--\n" +
+    (incl ? "About: " + p.title + "\n" + p.url + "\n" : "") +
+    "pharmakon | " + (issue ? "mistake" : "question") + " | " + (incl ? where : "-") + " | " + SITE_VERSION;
   return { subject, body, msg };
 }
 function fbUpdate() {
@@ -1258,13 +1437,33 @@ document.addEventListener("click", async ev => {
   } catch (e) { if (st) st.textContent = "Could not save (" + (e && e.code ? e.code : "unavailable") + ")."; }
 });
 
+/* ---------- The pages of running text as sections (site 2.4): How to read, Methods, About. Each block marked data-sections
+   in the template is cut where its h2 headings are: what stands before the first heading stays as the page's opening, and
+   every heading becomes a row of the page's menu with its text as the section (the same mechanism as a drug page). The row's
+   quiet line is the start of the section's own text. ---------- */
+function sectionize() {
+  document.querySelectorAll(".prose[data-sections]").forEach(box => {
+    const pre = box.dataset.sections, kids = [...box.children], first = kids.findIndex(k => k.tagName === "H2" && !k.closest(".inshort"));
+    if (first < 0) return;
+    const secs = []; let cur = null;
+    kids.slice(first).forEach(k => { if (k.tagName === "H2") { cur = { name: k.textContent.trim(), nodes: [] }; secs.push(cur); } else cur.nodes.push(k); });
+    const slug = t => norm(t).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").split("-").slice(0, 4).join("-");
+    secs.forEach(x => { x.id = pre + "-" + slug(x.name); const tmp = document.createElement("div"); tmp.innerHTML = x.nodes.map(n => n.outerHTML).join(" ").replace(/<[^>]+>/g, " "); const t = tmp.textContent.replace(/\s+/g, " ").replace(/ ([,.;:])/g, "$1").trim(); x.line = t.length > 96 ? t.slice(0, t.lastIndexOf(" ", 92)).replace(/[,;:.]$/, "") + "…" : t;
+      x.chip = x.name.length > 26 ? x.name.split(/[,:]/)[0] : x.name; x.icon = "book"; x.body = '<div data-slot="' + x.id + '"></div>'; });
+    const wrap = document.createElement("div"); wrap.className = "secpage"; wrap.dataset.base = box.dataset.base; wrap.innerHTML = secPageHtml(box.dataset.up || "All sections", secs);
+    secs.forEach(x => { const slot = wrap.querySelector('[data-slot="' + x.id + '"]'); const holder = document.createElement("div"); holder.className = "prose"; x.nodes.forEach(n => holder.appendChild(n)); slot.replaceWith(holder); });
+    kids.slice(first).forEach(k => { if (k.tagName === "H2") k.remove(); });
+    box.after(wrap);
+  });
+}
+
 /* ---------- Boot ---------- */
 document.documentElement.lang = "en";
 applyPhotoPref();
 (function () { const el = document.getElementById("photo-credits"); if (!el) return; const name = s => (subBySlug[s] ? subBySlug[s].name : s === "safety-drug-checking" ? "Drug checking" : s);
   el.innerHTML = PHOTOS.slice().sort((a, b) => name(a.drug).localeCompare(name(b.drug))).map(p => "<li><b>" + esc(name(p.drug)) + ":</b> " + esc(p.form.toLowerCase()) + ". " + photoCredit(p) + "</li>").join(""); })();
 // (the statistics page draws on its first visit, once its file has arrived)
-buildIndex(); renderHome2(); factsLinks(); renderSubstances(); renderGlossary(); renderInteractions(); renderEmergency(); renderLaw(); renderChecking();
+buildIndex(); renderHome2(); factsLinks(); renderSubstances(); renderGlossary(); renderInteractions(); renderEmergency(); renderLaw(); renderChecking(); sectionize();
 window.addEventListener("hashchange", route);
 document.getElementById("skiplink").addEventListener("click", () => { const v = document.querySelector(".view.active"); const h = v && v.querySelector("h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus(); } });
 route();

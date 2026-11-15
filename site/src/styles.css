@@ -2203,3 +2203,95 @@ main :where(h1, h2, h3, h4, section, details, summary, a, button, input, select,
 .ins-full .ask-ev { min-height: 44px; padding: 0 16px; border-radius: 999px; box-shadow: inset 0 0 0 2px var(--accent); }
 .ins-full .ask-ev:hover, .ins-full .ask-ev:focus-visible { background: var(--accent-soft); }
 .ins-short .ask-foot { border-top: 0; padding-top: 0; }
+
+/* ===================== Site 2.4 (15 November 2026): one column, one top bar, one way to read a page =====================
+   The senior author: "our website should be completely coherent"; "the menu should always be in the right of pharmakon as it
+   is in the landing page"; "ALL pages should have an easy display"; "we want the user never to feel like they are lost".
+   Every page, the top bar and the footer share one column (--col), so nothing starts at a different place on a different
+   page; the top bar is the brand, then the menu, then the search; the line under it says where Back leads. */
+:root { --col: 960px; }
+.wrap, .home2, .drug2 { max-width: var(--col); }
+.bar-search { margin-left: auto; flex: 0 1 460px; }
+@media (max-width: 700px) { .bar-search { margin-left: 0; flex: 1 0 100%; } }
+/* where Back leads */
+.crumbbar { padding-block: 10px 0; }
+.crumbbar[hidden] { display: none; }
+.crumb-a { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding-right: 10px; font-weight: 700; font-size: 0.95rem; color: var(--muted); text-decoration: none; }
+.crumb-a .ic { width: 18px; height: 18px; transform: rotate(180deg); color: var(--accent); }
+.crumb-a:hover { color: var(--fg); }
+.crumb-a:hover span { text-decoration: underline; }
+.crumbbar:not([hidden]) ~ .view .page { padding-top: 10px; }
+.crumbbar:not([hidden]) ~ .view .drug2 { padding-top: 6px; }
+/* a page of sections, wherever it is (the drug page's rules, for every .secpage) */
+.page .secpage { font-size: 1.06rem; }
+.secpage .secs > .sec { margin-top: 20px; min-height: calc(100vh - var(--stick-h, 0px) - 20px); }
+@supports (height: 100dvh) { .secpage .secs > .sec { min-height: calc(100dvh - var(--stick-h, 0px) - 20px); } }
+.secpage .sec > h2 { display: flex; align-items: center; gap: 12px; padding-left: 0; border-left: 0; font-size: clamp(1.45rem, 3.4vw, 1.85rem); font-weight: 900; letter-spacing: -0.01em; }
+.secpage .sec > h2:focus { outline: 0; }
+.secpage .sec-b { margin-top: 14px; }
+.secpage .sec .tp { margin: 22px 0 8px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; line-height: 1.3; color: var(--muted); }
+.secpage .sec .sec-b > .tp:first-child { margin-top: 4px; }
+.secpage .sec-b > .prose > :first-child { margin-top: 0; }
+.page > .secpage > .secmenu, .page .prose + .secpage > .secmenu { margin-top: 18px; }
+/* the start page: what is not about one drug, as rows; the reader's own questions */
+.home-more { display: grid; gap: 8px; margin-top: 12px; }
+a.sm-b { text-decoration: none; color: var(--fg); }
+.asked { margin-top: 18px; }
+.asked[hidden] { display: none; }
+.aq-h { margin: 0 0 8px; font-size: 1.05rem; font-weight: 800; }
+.aq-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.aq { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px; padding: 2px 4px 2px 14px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.aq.ans { background: var(--ok-soft); box-shadow: inset 0 0 0 2px var(--ok); }
+.aq-a { display: grid; gap: 2px; min-width: 0; padding: 9px 0; color: var(--fg); text-decoration: none; }
+.aq-k { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+.aq.ans .aq-k { color: var(--ok); }
+.aq-k .ic { width: 16px; height: 16px; }
+.aq-q { font-weight: 700; overflow-wrap: anywhere; }
+.aq-go { display: inline-flex; align-items: center; gap: 4px; font-size: 0.92rem; font-weight: 700; color: var(--ok); }
+.aq-go .ic { width: 16px; height: 16px; }
+a.aq-a:hover .aq-q { text-decoration: underline; }
+.aq-x { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; color: var(--muted); }
+.aq-x .ic { width: 18px; height: 18px; }
+.aq-x:hover { background: var(--surface-2); color: var(--fg); }
+.ask-note { display: block; margin-top: 4px; font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.ask-said { margin: 6px 0 0; font-weight: 700; }
+/* Myth or fact?: the drug chooser, the result of ten, the count kept on the device */
+.mf-pick { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; margin: 14px -16px 16px; padding: 2px 16px 6px; overflow-x: auto; scrollbar-width: none; }
+.mf-pick::-webkit-scrollbar { display: none; }
+.mf-pick > * { flex: none; }
+.mf-pick-k { font-weight: 700; color: var(--muted); margin-right: 2px; }
+.mf-res { font-weight: 800; }
+.mf-nav .mf-res + .qz2-nb { margin-left: auto; }
+.mf-score { margin-top: 14px; color: var(--muted); font-size: 0.95rem; min-height: 1.4em; }
+/* Statistics: a number in everyday words, what it counts, then a quiet line; like with like as bars */
+.num-pick { margin: 0 0 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 700; }
+.num-pick select { min-height: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); font: inherit; font-weight: 400; max-width: 100%; }
+.figs2 { display: grid; gap: 0; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.figs2 + .figs2 { margin-top: 8px; }
+.fig2 { display: grid; grid-template-columns: minmax(8.5rem, 0.36fr) minmax(0, 1fr); gap: 4px 18px; padding: 14px 16px; border-top: 1px solid var(--line); }
+.fig2:first-child { border-top: 0; }
+.f2-v { margin: 0; font-family: var(--font-display); font-weight: 900; font-size: 1.5rem; line-height: 1.1; letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.f2-u { display: block; font-family: var(--font-body); font-weight: 700; font-size: 0.9rem; letter-spacing: 0; color: var(--muted); margin-top: 2px; }
+.f2-r { display: block; font-family: var(--font-body); font-weight: 400; font-size: 0.85rem; letter-spacing: 0; color: var(--muted); margin-top: 4px; }
+.f2-w { min-width: 0; }
+.f2-t { margin: 0; font-size: 1.02rem; line-height: 1.4; }
+.f2-m { margin: 3px 0 0; font-size: 0.88rem; color: var(--muted); }
+.f2-src { margin-top: 4px; font-size: 0.85rem; color: var(--muted); }
+.f2-src > summary { display: inline-block; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; list-style: none; }
+.f2-src > summary::-webkit-details-marker { display: none; }
+.f2-src > p { margin: 4px 0 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .fig2 { grid-template-columns: minmax(0, 1fr); } .f2-u { display: inline; margin-left: 4px; } }
+.fbars { margin: 6px 0 14px; padding: 14px 16px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.fbars figcaption { font-size: 0.95rem; color: var(--muted); }
+.fbars figcaption b { color: var(--fg); }
+.fb-l { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.fb-l li { display: grid; grid-template-columns: minmax(6.5rem, 0.32fr) minmax(0, 1fr) auto; align-items: center; gap: 10px; font-size: 0.95rem; }
+.fb-n { overflow-wrap: anywhere; }
+.fb-b { display: block; height: 14px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+.fb-b i { display: block; height: 100%; border-radius: 4px; background: var(--accent); }
+.fb-v { font-weight: 700; white-space: nowrap; }
+.fb-s { margin: 8px 0 0; font-size: 0.82rem; color: var(--muted); }
+@media (max-width: 480px) { .fb-l li { grid-template-columns: minmax(0, 1fr) auto; } .fb-b { grid-column: 1 / -1; order: 3; } }
+.home-all { margin-top: 12px; }
+.tp-n { font-weight: 400; }
+.tp-n::before { content: "· "; }

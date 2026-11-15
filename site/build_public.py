@@ -77,6 +77,10 @@ for d in ("data", "img"):
 if (DIST / "insight").exists():   # Insight's model and runtime, fetched only when the search box is used (site 2.2.0)
     shutil.copytree(DIST / "insight", OUT / "insight")
 shutil.copytree(ASSETS / "fonts", OUT / "fonts")
+# the site's one piece of server (site 2.4): the question a reader chooses to send. Cloudflare Pages runs _worker.js for
+# /api/* only (_routes.json); every other address stays a fixed file. Without its store bound, the page uses its email form.
+for f in ("_worker.js", "_routes.json"):
+    shutil.copy(HERE / "worker" / f, OUT / f)
 (OUT / "favicon.svg").write_text(LOGO, encoding="utf-8")
 # security headers, read by Cloudflare Pages and Netlify (GitHub Pages ignores the file; the page carries its own policy)
 (OUT / "_headers").write_text("/*\n"

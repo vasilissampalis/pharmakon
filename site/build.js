@@ -153,6 +153,8 @@ const data = [
   "const MIX_DRUGS = " + JSON.stringify((() => { const q = site("mix-drugs.json"); delete q._note; return q; })()) + ";",
   // which drug pages each answer on test kits belongs to (navigation only; data/site/kits-for.json)
   "const KITS_FOR = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/kits-for.json"); if (!fs.existsSync(f)) return {}; const q = JSON.parse(fs.readFileSync(f, "utf8")); delete q._note; return q; })()) + ";",
+  // how the pages that are not one drug's page are cut into sections (data/site/pages.json; site 2.4)
+  "const PAGES = " + JSON.stringify((() => { const f = path.join(ROOT, "data/site/pages.json"); if (!fs.existsSync(f)) return {}; const q = JSON.parse(fs.readFileSync(f, "utf8")); delete q._note; return q; })()) + ";",
   "const ALIASES = " + JSON.stringify(site("aliases.json")) + ";",
   "const ALIASES_EL = " + JSON.stringify(site("aliases-el.json")) + ";",
   "const GLOSSARY = " + JSON.stringify(site("glossary.json")) + ";",

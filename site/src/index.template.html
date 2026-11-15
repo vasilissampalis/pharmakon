@@ -10,6 +10,7 @@
 <header class="topbar">
   <div class="wrap bar1">
     <a class="brand" href="#home" aria-label="Pharmakon, home page"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="l1" d="M13.2 27.8a6.8 6.8 0 0 1-9.6-9.6L10 11.8l9.6 9.6z"/><path class="l2" d="M10 11.8l6.4-6.4a6.8 6.8 0 0 1 9.6 9.6l-6.4 6.4z"/></svg><span class="mark">Pharmakon</span></a>
+    <button type="button" class="menubtn" id="menubtn" aria-expanded="false" aria-controls="menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
     <div class="bar-search" id="bar-search">
       <div class="searchwrap" id="searchwrap">
         <label class="sr" for="search">Ask a question, or search a drug or street name</label>
@@ -19,7 +20,6 @@
         <p class="sr" id="search-count" aria-live="polite"></p>
       </div>
     </div>
-    <button type="button" class="menubtn" id="menubtn" aria-expanded="false" aria-controls="menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
   </div>
   <nav class="main menu" id="menu" aria-label="Main" hidden>
     <div class="wrap menu-in">
@@ -32,7 +32,7 @@
         <a href="#quiz" data-view="quiz"><span class="mi" data-ic="bulb"></span>Myth or fact?</a>
       </div>
       <div class="menu-more">
-        <a href="#facts" data-view="facts" data-facts hidden>Facts about drug use</a>
+        <a href="#facts" data-view="facts" data-facts hidden>Big questions about drugs</a>
         <a href="#about" data-view="about">About us</a>
         <a href="#methods" data-view="methods">How we check facts</a>
         <a href="#howto" data-view="howto">How to read the pages</a>
@@ -48,29 +48,33 @@
 <div class="phbanner" id="phbanner" hidden><span>Drug photos are hidden on this device.</span> <button type="button" class="phtoggle">Show drug photos</button></div>
 
 <main>
+<div class="wrap crumbbar" id="crumb" hidden></div>
 <!-- HOME -->
 <section class="view active" id="view-home">
   <div class="wrap home2">
     <h1 class="ask-h1">What do you want to know?</h1>
     <p class="home-sub">Straight answers about drugs, from the research. No judgement.</p>
     <div class="home-search" id="home-search"></div>
+    <section class="asked" id="home-asked" aria-label="Your questions" hidden></section>
     <h2 class="home-h2 mf-h" id="mf-h">Myth or fact?</h2>
     <section class="qz2 mf" id="tf" aria-labelledby="mf-h"><div class="mf-wait" aria-hidden="true"></div></section>
-    <p class="qz2-more"><a href="#quiz">More questions</a></p>
+    <p class="qz2-more"><a href="#quiz">All cards, by drug, and your score</a></p>
     <div class="home-cont" id="home-cont" hidden></div>
     <h2 class="home-h2">Pick a drug</h2>
     <div class="dgrid" id="dgrid" lang="en"></div>
-    <p class="home-facts" data-facts hidden><a class="go" href="#facts">Facts about drug use: women and men, genes and family, the words we use</a></p>
+    <div class="home-more home-all" id="home-all"></div>
+    <h2 class="home-h2">Not about one drug</h2>
+    <div class="home-more" id="home-more"></div>
     <p class="home-foot"><a href="#about">Who we are</a><a href="#methods">How we check facts</a><span class="muted">Version {{SITE_VERSION}} · updated <span id="build-date">16 Oct 2026</span></span></p>
   </div>
 </section>
 
-<!-- FACTS ABOUT DRUG USE -->
+<!-- BIG QUESTIONS ABOUT DRUGS (the answers about no single drug; "Facts about drug use" before 2.4) -->
 <section class="view" id="view-facts">
-  <div class="wrap page drug2 f-oth">
-    <h1 class="pagetitle">Facts about drug use</h1>
-    <p class="lede">What studies say about drug use in general, not about one drug: women and men, genes and family, starting young, and the words used about people.</p>
-    <div id="facts-box"></div>
+  <div class="wrap page f-oth">
+    <h1 class="pagetitle">Big questions about drugs</h1>
+    <p class="lede">Questions that are not about one drug: why some people get hooked, whether people recover, what drug laws change. What studies found.</p>
+    <div class="secpage" id="facts-box" data-base="facts"></div>
   </div>
 </section>
 
@@ -78,8 +82,10 @@
 <section class="view" id="view-quiz">
   <div class="wrap page">
     <h1 class="pagetitle">Myth or fact?</h1>
-    <p class="lede muted">Is it a myth or a fact? Every card is checked against the research. Tap to turn it over and see why. A new order every time.</p>
+    <p class="lede muted">Guess, then turn the card to see what studies found. Every card is checked against the research. Your place and your score are kept on this device.</p>
+    <div class="mf-pick" id="mf-pick" role="group" aria-label="Cards about"></div>
     <section class="qz2 mf big" id="quizpage" aria-label="Myth or fact?"></section>
+    <p class="mf-score" id="mf-score" aria-live="polite"></p>
   </div>
 </section>
 
@@ -107,13 +113,9 @@
 <!-- NUMBERS -->
 <section class="view" id="view-numbers">
   <div class="wrap page">
-    <div class="eyebrow">Official figures</div>
     <h1 class="pagetitle">Statistics</h1>
-    <p class="lede muted">Official figures on drug use, treatment, seizures and deaths: from the UN (UNODC), the EU drug agency (EUDA) and national surveys. Each figure was checked against its source. Tap "checked against the source text" to see where it came from. Sources measure things in different ways, so compare like with like.</p>
-    <div class="filters" id="num-geo"></div>
-    <div class="filters subfilters" id="num-sub"></div>
-    <p class="note" id="num-count"></p>
-    <div class="figlist" id="num-list"></div>
+    <p class="lede muted">Official counts of drug use, treatment, deaths and seizures. Every figure was checked against its source. Sources count in different ways, so compare like with like.</p>
+    <div class="secpage" id="num-page" data-base="numbers"><p class="loading" role="status" id="num-list">Loading the figures…</p></div>
   </div>
 </section>
 
@@ -152,18 +154,25 @@
 <!-- DRUG CHECKING -->
 <section class="view" id="view-checking">
   <div class="wrap page">
-    <h1 class="pagetitle">Drug checking near you</h1>
-    <p class="lede muted">A drug checking service tests a sample of a drug and tells you what is in it. Some work from an address, some at events, some by post.</p>
-    <div class="mine" id="dc-mine" aria-live="polite"></div>
-    <details class="allc" id="dc-all"><summary><span>Another country?</span><span class="ask-i" aria-hidden="true"></span></summary>
-      <p class="emfilter"><label for="dc-filter" class="sr">Find a country or city</label><input id="dc-filter" type="search" placeholder="Type a country or city" autocomplete="off"></p>
-      <div id="dc-list"></div>
-      <p class="note" id="dc-none" hidden>Nothing listed there yet. We add a service only after reading its own page.</p>
-      <p class="muted small" id="dc-note"></p>
-    </details>
-    <section class="dck" id="dc-kits" aria-labelledby="dc-kits-h" hidden></section>
-    <div id="dc-look"></div>
-    <p class="muted small">Know a service we missed? Tell us with the "Ask or report" button, at the bottom right of every page.</p>
+    <h1 class="pagetitle">Drug checking</h1>
+    <p class="lede muted">A drug checking service tests a sample of a drug and tells you what is in it. A home test kit tells you less.</p>
+    <div class="secpage" id="dc-page" data-base="checking"></div>
+    <!-- the parts the page is put together from (app.views.js, renderChecking) -->
+    <div id="dc-parts" hidden>
+      <div data-part="c-near">
+        <div class="mine" id="dc-mine" aria-live="polite"></div>
+        <details class="allc" id="dc-all"><summary><span>Another country?</span><span class="ask-i" aria-hidden="true"></span></summary>
+          <p class="emfilter"><label for="dc-filter" class="sr">Find a country or city</label><input id="dc-filter" type="search" placeholder="Type a country or city" autocomplete="off"></p>
+          <div id="dc-list"></div>
+          <p class="note" id="dc-none" hidden>Nothing listed there yet. We add a service only after reading its own page.</p>
+          <p class="muted small" id="dc-note"></p>
+        </details>
+        <p class="muted small">Know a service we missed? Tell us with the "Ask or report" button, at the bottom right of every page.</p>
+      </div>
+      <div data-part="c-kits"><div id="dc-kitsbox" aria-live="polite"></div></div>
+      <div data-part="c-work"><div class="dck" id="dc-kits"></div></div>
+      <div data-part="c-look"><div id="dc-look"></div></div>
+    </div>
   </div>
 </section>
 
@@ -187,7 +196,7 @@
 <section class="view" id="view-howto">
   <div class="wrap page">
     <h1 class="pagetitle">How to read this site</h1>
-    <div class="prose">
+    <div class="prose" data-sections="h" data-base="howto" data-up="How to read">
       <ul class="howsteps">
         <li><b>Pick a section.</b> A drug page lists its sections. One opens at a time.</li>
         <li><b>Tap a question.</b> The short answer opens, with its catch: the "But" line is the main limit of what we know.</li>
@@ -225,7 +234,7 @@
 <!-- METHODS -->
 <section class="view" id="view-methods">
   <div class="wrap page">
-    <div class="prose">
+    <div class="prose" data-sections="m" data-base="methods" data-up="Methods">
       <div class="eyebrow">Editorial protocol · v{{PROTOCOL_VERSION}}</div>
       <h1 class="pagetitle">Methods</h1>
       <div class="inshort"><h2>In short</h2><ol>
@@ -343,7 +352,7 @@
 </section>
 <section class="view" id="view-about">
   <div class="wrap page">
-    <div class="prose">
+    <div class="prose" data-sections="a" data-base="about" data-up="About">
       <div class="eyebrow">About Pharmakon</div>
       <h1 class="pagetitle">What this is, and what it is not</h1>
       <div class="inshort"><h2>In short</h2><ul>
@@ -373,8 +382,7 @@
       <details class="srcnote"><summary>Photo credits</summary><ul class="phcredits" id="photo-credits"></ul></details>
       <h2>Name</h2>
       <p><i>Pharmakon</i> (φάρμακον) is the Greek word that meant remedy, poison and drug at once, which is the point of the site. The founder chose it as the final name on 25 October 2026; the site lives at pharmakon.world.</p>
-      <h2 class="fold-h">More about how we work</h2>
-      <details class="fold"><summary><h3>Honest state of the content</h3></summary>
+      <h2>Honest state of the content</h2>
       <ul>
         <li>Every journal article's metadata has been verified against Crossref and checked for retractions, on the date shown with each reference; reports and web pages were checked against the publisher's page.</li>
         <li>On 25 October 2026 the senior author read and approved every answer then on the site; answers added since then are labelled drafts until he approves them. His own checks of each evidence anchor against the paper continue after publication. Each anchor shows how far it has got: not yet located, located by an AI reader, confirmed by a second AI reader (re-found blind, or checked at the stated place), or checked by the senior author; each claim's stamp shows the same.</li>
@@ -386,16 +394,13 @@
         <li>Section 7 (ways of taking a drug, and what people do themselves) appears only once the senior author has approved each answer. It gives findings only, never advice on amounts, timing or technique.</li>
       </ul>
       <p>The site was first built and tested on one drug, methamphetamine, so that every design decision could be checked at small scale: the monograph template, interactive APA 7 citations with hover references and DOI links, study cards, GRADE badges with their reasoning, the contested-question format, the two registers, search, and the verification ladder.</p>
-      </details>
-      <details class="fold"><summary><h3>Who does what</h3></summary>
+      <h2>Who does what</h2>
       <div class="tablewrap"><table><tr><th>Senior author</th><th>AI co-editor</th></tr>
         <tr><td>Obtains the PDFs the AI cannot open (paywalled papers, and free papers on sites that refuse the AI's browser); reads and approves or flags every answer (until he has, the answer is labelled a draft); checks evidence anchors against the source in the review queue; may overrule any judgment; approves every section 7 answer; signs off before publication; owns the brand, legal and funding decisions.</td><td>Writes the searches and runs them (Crossref and OpenAlex; PubMed through its public interface); screens and snowballs; verifies metadata and retraction status; reads full texts (the PDFs, PubMed Central and free publisher pages); writes first-pass study cards, evidence anchors, GRADE ratings and drafts; runs an independent second AI reading (blind first, then checks at the stated place); builds and validates the site; never has the final word on any field.</td></tr>
       </table></div>
-      </details>
-      <details class="fold"><summary><h3>AI assistance statement</h3></summary>
+      <h2>AI assistance statement</h2>
       <p>An AI system (Claude, Anthropic) performs first-pass extraction, appraisal and drafting under this protocol. From 6 to 12 November 2026 a second system (ChatGPT, OpenAI) did the same work under the same protocol, as AI readers numbered 401 and up; each answer's record names the reader of every step, and Claude checked that work when it took over again. It can misread a source. That is why every evidence anchor is checked against its source by a second, independent AI reader, why the senior author reads and approves every answer (until he has, it is labelled a draft), and why each claim shows how far its checks have gone. The senior author's own checks of each anchor against the source continue after publication. Conflicts of interest: the senior author's declaration is to be made; the AI co-editors have none.</p>
-      </details>
-      <details class="fold"><summary><h3>Copyright and the law</h3></summary>
+      <h2>Copyright and the law</h2>
       <ul>
         <li><b>Our own words.</b> Every sentence here is written by us. We do not copy text, tables, figures or photographs from papers; numbers are restated in our words, with their source.</li>
         <li><b>Short quotations only.</b> At most 15 words, at most one per answer, word for word, with the source named, as the quotation exception allows (EU Directive 2001/29/EC, article 5(3)(d); in Greece, Law 2121/1993, article 19).</li>
@@ -404,7 +409,6 @@
         <li><b>Photos.</b> Only photos that anyone may reuse (public domain, CC0 or CC BY), each with its credit and licence.</li>
         <li><b>Education, not encouragement.</b> What we give is findings and where they come from, so people can make safer decisions; never advice to use, or how to use.</li>
       </ul>
-      </details>
     </div>
   </div>
 </section>

@@ -165,7 +165,7 @@ function helpLine(sp) {
 const SHARE_CTX = { facts: GEN, checking: DC, mixing: "interactions" };
 function sharedPlace(ctx, id) {
   const c = claimById[id], key = SHARE_CTX[ctx] || ctx;
-  if (key === GEN) return { key, href: "#facts", more: "More facts about drug use", q: x => "#facts/q-" + x };
+  if (key === GEN) return { key, href: "#facts", more: "More big questions about drugs", q: x => "#facts/q-" + x };
   if (key === DC) return { key, href: "#checking", more: "More about drug checking", q: x => "#checking/q-" + x };
   if (key === "interactions") return { key, href: "#interactions", more: "More about mixing drugs", q: x => "#" + x };
   const slug = subBySlug[key] ? key : c && subBySlug[c.substance] ? c.substance : null;
@@ -347,7 +347,7 @@ document.addEventListener("change", e => { const s = e.target.closest && e.targe
 function setCountry(un, from) {
   PREF_COUNTRY = un || "";
   try { if (un) localStorage.setItem("pk-country", un); else localStorage.removeItem("pk-country"); } catch (err) { /* lasts for this visit */ }
-  const host = from && from.closest("[id]"), hostId = host && (host.closest(".sf, .sec, #em-mine, #dc-mine") || host).id;
+  const host = from && from.closest("[id]"), hostId = host && (host.closest(".sf, #em-mine, #dc-mine, #dc-kitsbox, .sec") || host).id;
   refreshCountryParts();
   // keep the reader where they were: on the answer that just appeared
   const where = hostId && document.querySelector("#" + CSS.escape(hostId) + " .cq-where, #" + CSS.escape(hostId) + " .say");
@@ -489,12 +489,27 @@ function helpHtml(slug) {
   const folded = x => kind(x) === "aid" && AID_FOLD.test(x.line) && !/naloxone/i.test(x.line), aid = ww.filter(folded);
   const helps = ww.filter(x => kind(x) !== "aid").concat(ww.filter(x => kind(x) === "aid" && !folded(x)));
   const em = PREF_COUNTRY ? emFor(PREF_COUNTRY) : null;
+  const num = em ? '<p class="hp-num">The emergency number in ' + esc(inCtry(PREF_COUNTRY)) + ' is <a href="tel:' + esc(telOf(em.numbers[0])) + '"><b>' + esc(em.numbers[0].n) + "</b></a>. " + srcIcons(em.numbers[0].src) + "</p>" : "";
+  /* The opioid pages (site 2.4; the editor's recommendation, left to him by the senior author on 15 November: "whatever you
+     think is objectively optimal"): a person who has taken too much of an opioid cannot read, so the page speaks first to
+     whoever is with them: when to call an ambulance and the number, then what helps (naloxone first), then what to do if
+     they pass out or stop breathing, in view and not folded, then what not to do. "For you" follows. Every other family
+     keeps the order he set for 2.3: yourself first, the ambulance last, the first-aid steps one tap away. */
+  if ((subBySlug[slug] || {}).cls === "Opioids") {
+    const nal = x => /naloxone/i.test(x.line), helps2 = helps.filter(nal).concat(helps.filter(x => !nal(x)));
+    return '<h3 class="hp-h">For a friend</h3>' +
+      (cn.length ? '<h4 class="sf-k">Call an ambulance if</h4>' + srcList(cn) : "") + num +
+      (helps2.length ? '<h4 class="sf-k">What helps</h4>' + srcList(helps2) : "") +
+      (aid.length ? '<h4 class="sf-k">If they pass out or stop breathing</h4>' + srcList(aid) : "") +
+      (dn.length ? '<h4 class="sf-k">What not to do</h4>' + srcList(dn) : "") +
+      (self.length ? '<h3 class="hp-h">For you</h3>' + srcList(self) : "") +
+      '<p class="hp-more"><a href="#emergency">Emergency numbers by country</a></p>';
+  }
   return (self.length ? '<h3 class="hp-h">For you</h3>' + srcList(self) : "") +
     '<h3 class="hp-h">For a friend</h3>' +
     (helps.length ? '<h4 class="sf-k">What helps</h4>' + srcList(helps) : "") +
     (dn.length ? '<h4 class="sf-k">What not to do</h4>' + srcList(dn) : "") +
-    (cn.length ? '<h4 class="sf-k">Call an ambulance if</h4>' + srcList(cn) : "") +
-    (em ? '<p class="hp-num">The emergency number in ' + esc(inCtry(PREF_COUNTRY)) + ' is <a href="tel:' + esc(telOf(em.numbers[0])) + '"><b>' + esc(em.numbers[0].n) + "</b></a>. " + srcIcons(em.numbers[0].src) + "</p>" : "") +
+    (cn.length ? '<h4 class="sf-k">Call an ambulance if</h4>' + srcList(cn) : "") + num +
     (aid.length ? '<details class="sf-more hp-aid"><summary>If they pass out or stop breathing</summary>' + srcList(aid) + "</details>" : "") +
     '<p class="hp-more"><a href="#emergency">Emergency numbers by country</a></p>';
 }
@@ -560,34 +575,31 @@ function kitAnswersHtml(slug) {
 function dcKitsHtml() {
   const qs = drugQuestions(DC); if (!qs.length) return "";
   const groups = (QUESTIONS[DC] || []).map(g => [g.topic, g.items.filter(([id]) => claimById[id])]).filter(([, it]) => it.length);
-  // no draft banner (the senior author's decision of 13 November 2026: he holds editorial responsibility for what is published; METHODS §12, 0.3.2)
-  const draft = "";
-  return '<h2 id="dc-kits-h">' + icon("flask") + "<span>Do home test kits work?</span></h2>" +
-    '<p class="say">What studies found when test strips and colour tests were checked in a laboratory, and what people did after testing.</p>' + draft +
-    inShortHtml(qs, [], { hid: "dck-in-h", tag: "h3" }) +
-    groups.map(([t, it], i) => '<h3 class="qh">' + esc(t) + "</h3>" + askList(it, "dck-" + i, 4, null, DC)).join("");
+  // (site 2.4: a section of the drug checking page; its heading is the section's, and the menu took the place of "In short")
+  return '<p class="say">What studies found when test strips and colour tests were checked in a laboratory, and what people did after testing.</p>' +
+    groups.map(([t, it], i) => '<h3 class="tp">' + esc(t) + "</h3>" + askList(it, "dck-" + i, 999, null, DC)).join("");
 }
 /* ---------- Facts about drug use: the answers about no single drug (women and men, genes and family, the words used about
    people, starting young), with their own In short and quiz (the senior author, 31 October: general facts such as men and
    women and telescoping, with a critical eye). Claims of substance "general"; questions in data/site/questions.json. ---------- */
+let FACTS_DRAWN = false;
 function renderFacts() {
-  const box = document.getElementById("facts-box"); if (!box) return;
+  const box = document.getElementById("facts-box"); if (!box || FACTS_DRAWN) return;
+  FACTS_DRAWN = true;
   const qs = drugQuestions(GEN);
   if (!qs.length) { box.innerHTML = '<p class="say">The first answers are being checked. They will appear here soon.</p>'; return; }
-  const topics = []; qs.forEach(([, , t]) => { if (!topics.includes(t)) topics.push(t); });
-  // with many topics, the same "On this page" chips as a drug page (they jump without changing the address)
-  const chips = topics.length >= 4 ? '<nav class="chips" aria-label="On this page">' + topics.map((t, i) => '<a href="#facts-t' + i + '" data-go="facts-t' + i + '">' + esc(t) + "</a>").join("") + "</nav>" : "";
-  box.innerHTML = (inShortHtml(qs, [], { hid: "facts-in-h" }) || "") + chips +
-    topics.map((t, i) => '<section class="sec" id="facts-t' + i + '" aria-labelledby="facts-t' + i + '-h"><h2 id="facts-t' + i + '-h">' + esc(t) + '</h2><div class="sec-b">' +
-      askList(qs.filter(([, , tt]) => tt === t), "facts" + i, 4, "fx-", GEN) + "</div></section>").join("") +
-    // the page's own Myth or fact? deck, when it has at least 3 statements
-    (mfCount(mfPagePool(GEN)) >= 3 ? '<section class="sec quizsec" aria-labelledby="facts-quiz-h"><h2 id="facts-quiz-h">Myth or fact?</h2><div class="qz2 mf" id="qz-facts"></div></section>' : "");
+  // the sections (data/site/pages.json), each with its topics as plain headings; a topic no section names goes last
+  const defs = ((typeof PAGES !== "undefined" && PAGES.facts) || {}).sections || [], used = new Set(), nAns = n => n + (n === 1 ? " answer" : " answers");
+  const mk = (d, items) => { const g = secTopics(items); items.forEach(x => used.add(x[0]));
+    return { id: d.id, name: d.name, chip: d.chip, icon: d.icon || "book", n: nAns(items.length), line: secLine(g), body: secAsks(g, d.id, GEN, "fx-"), dem: items.reduce((a, x) => a + Math.max(0, demandOf(x[0])), 0) }; };
+  let secs = defs.map(d => [d, qs.filter(x => (d.topics || []).includes(x[2]))]).filter(p => p[1].length).map(p => mk(p[0], p[1]));
+  secs = secs.map((x, i) => [x, i]).sort((a, b) => b[0].dem - a[0].dem || a[1] - b[1]).map(p => p[0]);
+  const rest = qs.filter(x => !used.has(x[0])); if (rest.length) secs.push(mk({ id: "f-more", name: "More questions", chip: "More", icon: "book" }, rest));
+  // the page's own Myth or fact? deck, when it has at least 3 statements
+  const deckN = mfCount(mfPagePool(GEN));
+  if (deckN >= 3) secs.push({ id: "f-quiz", name: "Myth or fact?", chip: "Myth or fact?", icon: "bulb", n: deckN + " cards", line: "Guess first, then see what studies found", body: '<div class="qz2 mf" id="qz-facts"></div>' });
+  box.innerHTML = secPageHtml("Big questions", secs, "secmenu-facts");
   mfStart("qz-facts", GEN);
-}
-function openFact(id) {
-  const d = document.getElementById("fx-" + id); if (!d) return false;
-  const more = d.closest(".asks-more"); if (more && more.hidden) { more.hidden = false; const b = document.querySelector('button.morebtn[data-more="' + more.id + '"]'); if (b) b.remove(); }
-  d.open = true; setTimeout(() => scrollToEl(d), 30); return true;
 }
 // the menu item and the home card appear once the page has answers
 function factsLinks() { const on = drugQuestions(GEN).length > 0; document.querySelectorAll("[data-facts]").forEach(el => { el.hidden = !on; }); }
@@ -715,18 +727,20 @@ function renderEmMine() {
       (em.more || []).map(y => '<li><a class="em-n" href="tel:' + esc(telOf(y)) + '">' + esc(y.n) + '</a><span class="mm-t">' + esc(y.what) + " " + srcIcons(y.src) + "</span></li>").join("") + "</ul>" : "");
 }
 // the drug checking page: test kits for the reader's country, with their sources one tap away
-function kitsBox(un) { const kw = kitsWhere(un); return '<section class="kw-box"><h2 class="qh">Test kits in ' + esc(inCtry(un)) + "</h2>" + kw.free + kw.sellers + kw.post + kw.law + "</section>"; }
+function kitsBox(un) { const kw = kitsWhere(un); return '<section class="kw-box" aria-label="Test kits in ' + esc(inCtry(un)) + '">' + kw.free + kw.sellers + kw.post + kw.law + "</section>"; }
 function renderDcMine() {
   const box = document.getElementById("dc-mine"); if (!box) return;
+  // (site 2.4) the test kits for the reader's country are a section of their own on the drug checking page
+  const kb = document.getElementById("dc-kitsbox"); if (kb) kb.innerHTML = PREF_COUNTRY ? countryAsk(false) + kitsBox(PREF_COUNTRY) : countryAsk(false);
   if (!PREF_COUNTRY) { box.innerHTML = countryAsk(true); return; }
   const s = dcFor(PREF_COUNTRY), nm = esc(inCtry(PREF_COUNTRY));
   const rep = dcReported(PREF_COUNTRY);
   if (!s.length) { box.innerHTML = countryAsk(true) + '<p class="say">' + (rep ? "We have not found a drug checking service in " + nm + " yet." : dcSearchedNone(PREF_COUNTRY) ? "We searched and have not found a drug checking service in " + nm + " yet. One may still exist." : "We have not searched for drug checking in " + nm + " yet.") + "</p>" +
-    (rep ? '<p class="dc-rep">' + esc(rep.line) + " " + srcIcons(rep.sources.map(x => x.ref)) + "</p>" : "") + kitsBox(PREF_COUNTRY); return; }
+    (rep ? '<p class="dc-rep">' + esc(rep.line) + " " + srcIcons(rep.sources.map(x => x.ref)) + "</p>" : ""); return; }
   const order = x => (x.active === "yes" ? 0 : x.active === "closed" ? 2 : 1), open = s.filter(x => x.active !== "closed").length;
   const all = s.slice().sort((a, b) => order(a) - order(b) || a.name.localeCompare(b.name)), first = all.slice(0, 4), rest = all.slice(4);
   box.innerHTML = countryAsk(true) + '<p class="say">' + (open ? open + " service" + (open === 1 ? "" : "s") + " in " + nm : "We found no drug checking service running in " + nm + ". This one has closed:") + '</p><div class="mine-list">' + first.map(dcCard).join("") + "</div>" +
-    (rest.length ? '<div class="mine-list" id="dc-mine-more" hidden>' + rest.map(dcCard).join("") + '</div><button type="button" class="morebtn" data-more="dc-mine-more">' + rest.length + " more in " + nm + "</button>" : "") + kitsBox(PREF_COUNTRY);
+    (rest.length ? '<div class="mine-list" id="dc-mine-more" hidden>' + rest.map(dcCard).join("") + '</div><button type="button" class="morebtn" data-more="dc-mine-more">' + rest.length + " more in " + nm + "</button>" : "");
 }
 
 /* In short: three answers on the first screen, no tapping needed (senior author, 26 October: people want something useful
@@ -812,8 +826,8 @@ function secTopics(items, opt) {
   const top = g => Math.max(...g[1].map(x => demandOf(x[0])));
   return timed ? groups : groups.map((g, i) => [g, i]).sort((a, b) => top(b[0]) - top(a[0]) || a[1] - b[1]).map(p => p[0]);
 }
-function secAsks(groups, key, slug) {
-  return groups.map(([t, it], i) => (groups.length > 1 ? '<h3 class="tp">' + esc(t) + "</h3>" : "") + askList(it, key + (groups.length > 1 ? "-" + i : ""), 999, null, slug)).join("");
+function secAsks(groups, key, slug, pre) {
+  return groups.map(([t, it], i) => (groups.length > 1 ? '<h3 class="tp">' + esc(t) + "</h3>" : "") + askList(it, key + (groups.length > 1 ? "-" + i : ""), 999, pre || null, slug)).join("");
 }
 // the quiet line of a row: the section's topics (the first three), or with one topic its first question
 const secLine = groups => groups.length > 1 ? groups.slice(0, 3).map(g => g[0]).join(" · ") + (groups.length > 3 ? " · more" : "") : groups[0] && groups[0][1][0] ? groups[0][1][0][1] : "";
@@ -856,59 +870,77 @@ function renderDrug(slug) {
   // doses: the senior author's own text, and the harm reduction groups that publish them (decision p-no-doses)
   const doses = dosesBody(slug);
   if (doses) add("d-doses", "Doses", "Doses", '<div class="sf" id="sf-dose"><div class="sf-b">' + doses + "</div></div>", "", "Where to read about them");
-  const secs = secOrder().map(id => S[id]).filter(Boolean);
-  const row = x => '<button type="button" class="sm-b" id="sm-' + x.id + '" data-sec="' + x.id + '" aria-expanded="false" aria-controls="' + x.id + '"><span class="sm-ic" aria-hidden="true">' + icon(SEC_ICON[x.id] || "molecule") + "</span>" +
-    '<span class="sm-t"><span class="sm-n">' + esc(x.name) + '</span><span class="sm-m">' + (x.n ? '<b class="sm-c">' + esc(x.n) + "</b>" : "") + (x.line ? '<span class="sm-l">' + esc(x.line) + "</span>" : "") + "</span></span>" +
-    '<span class="sm-s">' + esc(x.chip) + '</span><span class="sm-go" aria-hidden="true">' + icon("arrow") + "</span></button>";
+  const secs = secOrder().map(id => S[id]).filter(Boolean).map(x => Object.assign(x, { icon: SEC_ICON[x.id] || "molecule" }));
   // no draft banner (the senior author's decision of 13 November 2026: he holds editorial responsibility for what is published;
   // METHODS §12, 0.3.2); "not medical advice" stays in the footer and on the About page
   const h = '<header class="dh f-' + f.k + (ph ? " hasph" : "") + '">' + (ph ? '<figure class="dh-ph">' + photoImg(ph, "m", ph.alt, false) + (nForms > 1 && S["d-looks"] ? '<a class="dh-forms" href="#s-' + slug + '/part-d-looks">See all ' + nForms + " forms</a>" : "") + "</figure>" : "") +
     '<div class="dh-t"><p class="dh-fam">' + icon(f.icon) + esc(fp ? fp.word.charAt(0).toUpperCase() + fp.word.slice(1) : s.cls) + "</p><h1>" + esc(s.name) + "</h1>" +
     (names.length ? '<p class="dh-aka">Also called ' + names.map(esc).join(", ") + "</p>" : "") + "</div></header>" + descHtml(slug) +
-    (secs.length ? '<nav class="secmenu" id="secmenu" aria-label="Sections of this page" data-open=""><button type="button" class="sm-up" data-sec="" aria-label="' + esc(short) + ': all sections">' + icon("arrow") + "<span>" + esc(short) + "</span></button>" + secs.map(row).join("") + "</nav>" +
-      '<div class="secs">' + secs.map(x => '<section class="sec" id="' + x.id + '" aria-labelledby="' + x.id + '-h" hidden><h2 id="' + x.id + '-h" tabindex="-1"><span class="sec-ic">' + icon(SEC_ICON[x.id] || "molecule") + "</span>" + esc(x.name) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("") + "</div>" : "") +
+    (secs.length ? secPageHtml(short, secs, "secmenu") : "") +
     fbLineHtml() + familyHtml(s);
-  const box = document.getElementById("drug2"); box.className = "wrap drug2 f-" + f.k; box.innerHTML = h;  // the family colour runs through the whole page
+  const box = document.getElementById("drug2"); box.className = "wrap drug2 secpage f-" + f.k; box.dataset.base = "s-" + slug; box.innerHTML = h;  // the family colour runs through the whole page
   applyPhotoPref(); mfStart("qz-drug", slug); pageProgress();
   // the law part fills in when the drug's file arrives; the file is fetched ahead once the page settles, so the evidence opens at once
   lawWait(); fetchAhead(slug);
 }
-// the section that is open on the drug page ("" while the list shows), and showing one alone, or the list again
-const openSec = () => { const nav = document.querySelector("#drug2 .secmenu"); return (nav && nav.dataset.open) || ""; };
-function showSec(id) {
-  const page = document.getElementById("drug2"), nav = page && page.querySelector(".secmenu"); if (!nav) return false;
+/* A page of sections (site 2.4, 15 November 2026; the senior author, after 2.3: "ALL pages should have an easy display ...
+   the user should have a menu and click the clear titles of the subjects they want to see and the content should appear and
+   if they click on another title the previous one closes and the new one opens"; of the facts page: "we should implement the
+   principals we have implemented on the drug pages"). What the drug page does is now one mechanism that every long page
+   uses: a container (.secpage, with its address in data-base: "s-<drug>", "facts", "checking", ...) holds the menu
+   (.secmenu) and the sections (.secs > .sec); the open section is in the address (#<base>/part-<section>), so Back and
+   Forward walk through them; a question's address (#<base>/q-<claim>) opens its section with the question open. */
+const secPageOf = el => (el && el.closest && el.closest(".secpage")) || null;
+// one row of a menu, and a whole page of sections: x = { id, name, chip, n (a count in words), line (what is inside), icon, body }
+const secRowHtml = (x, ic) => '<button type="button" class="sm-b" id="sm-' + x.id + '" data-sec="' + x.id + '" aria-expanded="false" aria-controls="' + x.id + '"><span class="sm-ic" aria-hidden="true">' + icon(x.icon || ic || "molecule") + "</span>" +
+  '<span class="sm-t"><span class="sm-n">' + esc(x.name) + '</span><span class="sm-m">' + (x.n ? '<b class="sm-c">' + esc(x.n) + "</b>" : "") + (x.line ? '<span class="sm-l">' + esc(x.line) + "</span>" : "") + "</span></span>" +
+  '<span class="sm-s">' + esc(x.chip || x.name) + '</span><span class="sm-go" aria-hidden="true">' + icon("arrow") + "</span></button>";
+function secPageHtml(up, secs, navId) {
+  return '<nav class="secmenu"' + (navId ? ' id="' + navId + '"' : "") + ' aria-label="Sections of this page" data-open=""><button type="button" class="sm-up" data-sec="" aria-label="' + esc(up) + ': all sections">' + icon("arrow") + "<span>" + esc(up) + "</span></button>" + secs.map(x => secRowHtml(x)).join("") + "</nav>" +
+    '<div class="secs">' + secs.map(x => '<section class="sec" id="' + x.id + '" aria-labelledby="' + x.id + '-h" hidden><h2 id="' + x.id + '-h" tabindex="-1"><span class="sec-ic">' + icon(x.icon || "molecule") + "</span>" + esc(x.name) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("") + "</div>";
+}
+// the section that is open on a page ("" while the list shows; the drug page when none is named), and showing one alone, or the list again
+const openSec = page => { const nav = (page || document.getElementById("drug2") || document).querySelector(".secmenu"); return (nav && nav.dataset.open) || ""; };
+function showSec(id, page) {
+  page = page || document.getElementById("drug2");
+  const nav = page && page.querySelector(".secmenu"); if (!nav) return false;
   const sec = id ? document.getElementById(id) : null; if (id && !(sec && sec.parentElement && sec.parentElement.classList.contains("secs") && page.contains(sec))) return false;
   page.querySelectorAll(".secs > .sec").forEach(x => { x.hidden = x !== sec; });
   nav.querySelectorAll(".sm-b").forEach(b => b.setAttribute("aria-expanded", String(!!id && b.dataset.sec === id)));
-  nav.dataset.open = id || ""; nav.classList.toggle("on", !!id);
+  nav.dataset.open = id || ""; nav.classList.toggle("on", !!id); page.classList.toggle("sec-on", !!id);
   // the chip of the open section in view in its row
   const b = id && nav.querySelector('.sm-b[aria-expanded="true"]'); nav.scrollLeft = b ? Math.max(0, b.offsetLeft - (nav.clientWidth - b.offsetWidth) / 2) : 0;
+  // a section drawn only when it is first opened (the statistics of one place, a deck of cards)
+  if (sec && sec.dataset.lazy && typeof SEC_LAZY[sec.dataset.lazy] === "function") { const f = SEC_LAZY[sec.dataset.lazy]; delete sec.dataset.lazy; f(sec); }
   updateSticky();
   return true;
 }
-// where a drug page's address points (the router calls it once the page is drawn and shown): a question, a section, or the
-// page itself. o.was: the section that was open when the reader was already on this page.
-function drugGo(part, o) {
+const SEC_LAZY = {};
+// where a page's address points (the router calls it once the page is drawn and shown): a question, a section, or the page
+// itself. view: the view's name (for its heading); o.was: the section that was open when the reader was already on this page.
+function secGo(page, view, part, o) {
   if (part && part.startsWith("q-")) {
-    const id = part.slice(2), d = document.getElementById("ask-" + id), sec = d && d.closest(".secs > .sec");
-    if (d && sec) { showSec(sec.id); d.open = true; scrollToEl(d); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true }); return; }
-    if (claimById[id]) { location.replace("#" + id); return; }   // an answer this page does not ask opens by its own address
+    const id = part.slice(2), d = page.querySelector('details.ask[data-cid="' + id + '"]'), sec = d && d.closest(".secs > .sec");
+    if (d && sec) { showSec(sec.id, page); d.open = true; scrollToEl(d); const sm = d.querySelector("summary"); if (sm) sm.focus({ preventScroll: true }); return; }
+    if (claimById[id] && view === "drug") { navReplace("#" + id); return; }   // an answer this page does not ask opens by its own address
   }
   if (part && part.startsWith("part-")) {
     const id = part.slice(5) === "d-safer" ? "d-kits" : part.slice(5);   // (d-safer: the part that held the test kits before 2.3)
-    if (showSec(id)) { const sec = document.getElementById(id), hh = sec.querySelector("h2"); scrollToEl(sec); if (hh) hh.focus({ preventScroll: true }); return; }
+    if (showSec(id, page)) { const sec = document.getElementById(id), hh = sec.querySelector("h2"); scrollToEl(sec); if (hh) hh.focus({ preventScroll: true }); return; }
   }
-  showSec("");
+  showSec("", page);
   // back from a section: the list where the chips were, at the row just left; a fresh visit starts at the top
-  const nav = document.querySelector("#drug2 .secmenu"), from = o && o.was && document.getElementById("sm-" + o.was);
-  if (nav && from) { scrollToEl(nav); from.focus({ preventScroll: true }); return; }
-  window.scrollTo({ top: 0 }); if (!(o && o.first)) focusHeading("drug");
+  const nav = page.querySelector(".secmenu"), from = o && o.was && document.getElementById("sm-" + o.was);
+  if (nav && from && page.contains(from)) { scrollToEl(nav); from.focus({ preventScroll: true }); return; }
+  window.scrollTo({ top: 0 }); if (!(o && o.first)) focusHeading(view);
 }
-// the section menu: a row or a chip opens its section; the open one, or the drug's name, brings the list back. The address
+const drugGo = (part, o) => secGo(document.getElementById("drug2"), "drug", part, o);
+// the section menu: a row or a chip opens its section; the open one, or the page's name, brings the list back. The address
 // carries it, so each choice is a step Back can undo.
 document.addEventListener("click", e => {
-  const b = e.target.closest && e.target.closest("#drug2 .secmenu [data-sec]"); if (!b || !renderedDrug) return;
-  const id = b.dataset.sec, want = "#s-" + renderedDrug + (id && id !== openSec() ? "/part-" + id : "");
+  const b = e.target.closest && e.target.closest(".secpage .secmenu [data-sec]"); if (!b) return;
+  const page = secPageOf(b), base = page && page.dataset.base; if (!base) return;
+  const id = b.dataset.sec, want = "#" + base + (id && id !== openSec(page) ? "/part-" + id : "");
   if (location.hash === want) route(); else location.hash = want;
 });
 // One question open at a time (site 2.3): opening one closes the one open before it in the same section, and the question
@@ -929,10 +961,10 @@ document.addEventListener("click", e => {
 // its "more" button; on a drug page, the section the target is in (the address follows, as a step Back can undo).
 function revealEl(el) {
   const more = el.closest(".asks-more"); if (more && more.hidden) { more.hidden = false; const b = document.querySelector('button.morebtn[data-more="' + more.id + '"]'); if (b) b.remove(); }
-  const sec = el.closest("#drug2 .secs > .sec");
-  if (sec && sec.hidden && showSec(sec.id)) {
-    const d = el.closest("details.ask[data-cid]"), want = "#s-" + renderedDrug + (d ? "/q-" + d.dataset.cid : "/part-" + sec.id);
-    try { if (location.hash !== want) history.pushState(null, "", want); } catch (err) { /* the address stays as it was */ }
+  const sec = el.closest(".secpage .secs > .sec"), page = sec && secPageOf(sec);
+  if (sec && sec.hidden && page && page.dataset.base && showSec(sec.id, page)) {
+    const d = el.closest("details.ask[data-cid]"), want = "#" + page.dataset.base + (d ? "/q-" + d.dataset.cid : "/part-" + sec.id);
+    try { if (location.hash !== want) { navLeave(); history.pushState(null, "", want); navEnter(); navAfter(); } } catch (err) { /* the address stays as it was */ }
   }
 }
 
@@ -959,10 +991,18 @@ function renderHome2() {
     const nm = s.name.replace(/ \(.*\)$/, ""), longest = Math.max(...nm.split(/[\s/]+/).map(w => w.length));
     return '<a class="dcard f-' + f.k + (ph ? " hasph" : " noph") + '" href="#s-' + s.slug + '" style="--i:' + i + '">' + (ph ? '<span class="dc-ph">' + photoImg(ph, "m", "", true) + "</span>" : "") + '<span class="dc-ic">' + icon(f.icon) + "</span>" +
       '<span class="dc-t"><span class="dc-f">' + esc(s.cls) + '</span><span class="dc-n' + (longest > 10 ? " long" : "") + '">' + esc(nm) + "</span>" + (names.length ? '<span class="dc-a">' + esc(names.join(", ")) + "</span>" : "") + "</span></a>";
-  }).join("") + (() => { const more = order.slice(12).map(sl => headerPhoto(sl)).filter(Boolean).slice(0, 4);
-    return '<a class="dcard all' + (more.length === 4 ? " hasph" : "") + '" href="#substances" style="--i:12">' + (more.length === 4 ? '<span class="dc-mos">' + more.map(p => photoImg(p, "t", "", true)).join("") + "</span>" : "") +
-      '<span class="dc-t"><span class="dc-n">All ' + SUBSTANCES.length + ' drugs</span><span class="dc-a">Search or browse by family</span></span></a>'; })();
+  }).join("");
   document.querySelectorAll(".do-ic[data-ic], .mi[data-ic]").forEach(el => { el.innerHTML = icon(el.dataset.ic); });
+  // what is not about one drug, under the drugs (site 2.4; the senior author asked where the page of general questions
+  // belongs: on the start page as well as in the menu, because its questions are among the ones people ask)
+  const more = document.getElementById("home-more");
+  const all = document.getElementById("home-all");
+  if (all) all.innerHTML = '<a class="sm-b hm-b" href="#substances"><span class="sm-ic" aria-hidden="true">' + icon("molecule") + '</span><span class="sm-t"><span class="sm-n">All ' + SUBSTANCES.length + ' drugs</span><span class="sm-m"><span class="sm-l">Search any name, or browse by family</span></span></span><span class="sm-go" aria-hidden="true">' + icon("arrow") + "</span></a>";
+  if (more) more.innerHTML = [
+    { href: "#interactions", ic: "mix", n: "Is it safe to mix?", l: "Pick a drug and see what studies found about mixing it" },
+    drugQuestions(GEN).length ? { href: "#facts", ic: "bulb", n: "Big questions about drugs", l: "Why do some people get hooked? Do people recover? Do drug laws work?" } : null,
+    { href: "#numbers", ic: "chart", n: "Statistics", l: "How many people use each drug, in the world and where you are" }
+  ].filter(Boolean).map(x => '<a class="sm-b hm-b" href="' + x.href + '"><span class="sm-ic" aria-hidden="true">' + icon(x.ic) + '</span><span class="sm-t"><span class="sm-n">' + esc(x.n) + '</span><span class="sm-m"><span class="sm-l">' + esc(x.l) + '</span></span></span><span class="sm-go" aria-hidden="true">' + icon("arrow") + "</span></a>").join("");
   homeCont();
   mfStart("tf");
 }
@@ -979,6 +1019,7 @@ function homeCont() {
       cont.hidden = false;
     } else cont.hidden = true;
   }
+  if (typeof askedBox === "function") askedBox();
 }
 /* ---------- Menu: everything else, one tap away ---------- */
 document.addEventListener("click", e => {
@@ -1146,7 +1187,7 @@ function openEvidence(id, opener, focusRef) {
   if (!EV.open) {
     EV.opener = opener || document.activeElement;
     // the phone's Back button closes the sheet instead of leaving the page
-    try { history.pushState({ pkEvidence: id }, ""); EV.pushed = true; } catch (e) { EV.pushed = false; }
+    try { history.pushState({ pkEvidence: id, pk: NAV_CUR }, ""); EV.pushed = true; } catch (e) { EV.pushed = false; }
   }
   EV.id = id; EV.open = true; sh.classList.add("open"); document.documentElement.classList.add("sheet-open");
   hidePop(); closeSearch();
@@ -1254,12 +1295,62 @@ function mfPagePool(page) {
   return mfPool().filter(x => on.has(x.claim)).map(x => Object.assign({}, x, { page: answerPageKey(x.claim, page) }));
 }
 const mfCount = pool => new Set(pool.map(x => x.claim)).size;
-// a deck of 10 (fewer where a page has fewer statements); page: only that page's statements
+/* One deck, kept (site 2.4, 15 November 2026; the senior author: "if i am at 2 of 10 at the home page and click on More
+   questions i am at 1 of 10 ... my score should be the same either at the landing page or when i click on More questions
+   back and forth ... the site should remember the questions already answered and the scores this creates the sense of
+   continuation"). The deck of the start page and the deck of the Myth or fact? page are the same deck: the same cards, the
+   same card in view, the same answers given, and it is kept on this device (localStorage), so a reload or a visit next week
+   goes on where the reader stopped. After the tenth card the deck says how many were right, and the Myth or fact? page shows
+   the count of all cards answered on this device. On that page a drug can be chosen: its own deck then, for this visit. */
+const MF_MAIN_KEY = "pk-mf-main", MF_SCORE_KEY = "pk-mf-score";
+let MF_MAIN = null, MF_PICK = "";
+const MF_BY = {};
+function mfScore() { try { const x = JSON.parse(localStorage.getItem(MF_SCORE_KEY) || "null"); if (x && typeof x.done === "number" && typeof x.right === "number") return x; } catch (e) { /* none kept */ } return { done: 0, right: 0 }; }
+function mfScoreAdd(ok) { const x = mfScore(); x.done++; if (ok) x.right++; try { localStorage.setItem(MF_SCORE_KEY, JSON.stringify(x)); } catch (e) { /* this visit only */ } }
+function mfMainSave() {
+  const st = MF_MAIN; if (!st) return;
+  try { localStorage.setItem(MF_MAIN_KEY, JSON.stringify({ keys: st.cards.map(x => x.key), picks: st.cards.map((x, i) => st.picks[i] ? (st.picks[i].ok ? 1 : 0) : null), pos: st.pos })); } catch (e) { /* this visit only */ }
+}
+function mfMain() {
+  if (MF_MAIN) return MF_MAIN;
+  const pool = mfPagePool(""), st = { pool, n: Math.min(10, mfCount(pool)), used: new Set(), cards: [], picks: [], pos: 0, main: true };
+  let saved = null; try { saved = JSON.parse(localStorage.getItem(MF_MAIN_KEY) || "null"); } catch (e) { saved = null; }
+  if (saved && Array.isArray(saved.keys) && Array.isArray(saved.picks)) {
+    // the cards as they were dealt; one whose statement has since been rewritten or withdrawn drops out
+    const byKey = new Map(pool.map(x => [x.key, x])); let pos = -1;
+    saved.keys.forEach((k, i) => { const x = byKey.get(k); if (!x) return; if (i === saved.pos) pos = st.cards.length; st.cards.push(x); st.picks.push(saved.picks[i] == null ? undefined : { ok: !!saved.picks[i] }); st.used.add(x.claim); });
+    st.pos = pos >= 0 ? pos : Math.max(0, Math.min(st.cards.length - 1, st.picks.findIndex(p => !p) < 0 ? st.cards.length - 1 : st.picks.findIndex(p => !p)));
+  }
+  if (!st.cards.length) { st.cards = mfDeal(st, st.n); st.picks = []; st.pos = 0; }
+  return (MF_MAIN = st);
+}
+// a deck of 10 (fewer where a page has fewer statements); page: only that page's statements. The start page's deck ("tf")
+// and the Myth or fact? page's ("quizpage", unless a drug is chosen there) are the main deck.
 function mfStart(boxId, page) {
   if (!document.getElementById(boxId)) return;
+  if (!page && (boxId === "tf" || boxId === "quizpage")) { MF[boxId] = mfMain(); mfRender(boxId); return; }
   const pool = mfPagePool(page), st = MF[boxId] = { pool, n: Math.min(10, mfCount(pool)), used: new Set(), cards: [], picks: [], pos: 0 };
   st.cards = mfDeal(st, st.n); mfRender(boxId);
 }
+// the Myth or fact? page: the main deck, or the deck of the drug chosen there; the chooser and the count of cards answered
+function mfQuizPage() {
+  const pick = document.getElementById("mf-pick");
+  if (pick && !pick.dataset.done) {
+    const order = POPULAR.concat(SUBSTANCES.map(x => x.slug)).filter((x, i, a) => a.indexOf(x) === i && subBySlug[x] && mfCount(mfPagePool(x)) >= 3);
+    pick.innerHTML = '<span class="mf-pick-k">Cards about</span><button type="button" class="mixchip" data-mfp="" aria-pressed="true">All drugs</button>' + order.map(x => '<button type="button" class="mixchip" data-mfp="' + x + '" aria-pressed="false">' + esc(drugName(x)) + "</button>").join("");
+    pick.dataset.done = "1";
+  }
+  if (pick) pick.querySelectorAll("[data-mfp]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mfp === MF_PICK)));
+  if (!MF_PICK) { MF.quizpage = mfMain(); mfRender("quizpage"); }
+  else if (MF_BY[MF_PICK]) { MF.quizpage = MF_BY[MF_PICK]; mfRender("quizpage"); }
+  else { mfStart("quizpage", MF_PICK); MF_BY[MF_PICK] = MF.quizpage; }
+  mfScoreLine();
+}
+function mfScoreLine() {
+  const el = document.getElementById("mf-score"); if (!el) return;
+  const x = mfScore(); el.textContent = x.done ? "On this device you have answered " + x.done + (x.done === 1 ? " card" : " cards") + ": " + x.right + " right." : "";
+}
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("#mf-pick [data-mfp]"); if (!b) return; MF_PICK = b.dataset.mfp; mfQuizPage(); const nb = document.querySelector('#mf-pick [data-mfp="' + MF_PICK + '"]'); if (nb) nb.focus(); });
 // the card's "But" is left out when the why line already says it: as the quiz judges it, or when most of the shorter line's
 // words are in the other (the deck is meant to be light; the full answer always carries the "But")
 function mfSame(why, but) {
@@ -1287,17 +1378,20 @@ function mfCardHtml(boxId, st) {
       // 2.3 insight: data-sheet: the answer opens over the deck (app.insight.js), and Back returns to this card
       '<div class="qz2-row">' + meterHtml(c.grade.certainty, true) + '<a class="qz2-ev" href="' + esc(answerAddr(x.claim, x.page)) + '" data-sheet="' + esc(x.claim) + '">Read the answer ' + icon("arrow") + "</a></div></div></div></div>";
 }
-const mfNavHtml = st => '<div class="mf-nav">' + (st.pos > 0 ? '<button type="button" class="qz2-prev">' + icon("arrow") + "<span>Previous</span></button>" : "") +
-  (st.picks[st.pos] ? '<button type="button" class="qz2-nb">' + (st.pos < st.cards.length - 1 ? "Next" : st.n === 10 ? "Another 10" : "Again, in a new order") + "</button>" : "") + "</div>";
+const mfNavHtml = st => { const last = st.pos === st.cards.length - 1 && st.picks[st.pos], right = st.picks.filter(p => p && p.ok).length;
+  return '<div class="mf-nav">' + (st.pos > 0 ? '<button type="button" class="qz2-prev">' + icon("arrow") + "<span>Previous</span></button>" : "") +
+    (last && st.cards.length > 2 ? '<span class="mf-res">' + right + " of " + st.cards.length + " right</span>" : "") +
+    (st.picks[st.pos] ? '<button type="button" class="qz2-nb">' + (st.pos < st.cards.length - 1 ? "Next" : st.n === 10 ? "Another 10" : "Again, in a new order") + "</button>" : "") + "</div>"; };
 function mfRender(boxId) {
   const st = MF[boxId], box = document.getElementById(boxId); if (!st || !box) return;
   // a card dealt earlier whose answer has since been asked in the quiz gives way to a fresh one
-  if (!st.picks[st.pos] && st.cards[st.pos] && QZS.claims.includes(st.cards[st.pos].claim)) { const y = mfDeal(st, 1)[0]; if (y) st.cards[st.pos] = y; }
+  if (!st.picks[st.pos] && st.cards[st.pos] && QZS.claims.includes(st.cards[st.pos].claim)) { const y = mfDeal(st, 1)[0]; if (y) { st.cards[st.pos] = y; if (st.main) mfMainSave(); } }
   box.hidden = !st.cards.length; if (!st.cards.length) return;
   box.innerHTML = mfCardHtml(boxId, st) + mfNavHtml(st);
 }
-// back on the home page after the quiz: the card waiting to be answered may have been asked there meanwhile
-function mfRefresh(boxId) { const st = MF[boxId]; if (st && !st.picks[st.pos] && st.cards[st.pos] && QZS.claims.includes(st.cards[st.pos].claim)) mfRender(boxId); }
+// back on a page whose deck is the main deck: it is drawn again as it stands now (it may have moved on on the other page);
+// any other deck: only when the card waiting to be answered has meanwhile been asked elsewhere
+function mfRefresh(boxId) { const st = MF[boxId]; if (!st) return; if (st.main || (!st.picks[st.pos] && st.cards[st.pos] && QZS.claims.includes(st.cards[st.pos].claim))) mfRender(boxId); }
 document.addEventListener("click", e => {
   const b = e.target.closest && e.target.closest(".mf .qz2-o, .mf .qz2-nb, .mf .qz2-prev"); if (!b) return;
   const box = b.closest(".mf"), st = MF[box.id]; if (!st) return;
@@ -1306,7 +1400,7 @@ document.addEventListener("click", e => {
     const x = st.cards[st.pos], ok = (b.dataset.v === "fact") === x.fact;
     st.picks[st.pos] = { ok };
     if (!QZS.claims.includes(x.claim)) { QZS.claims.push(x.claim); qzSave(); }
-    qzMark(x.key); qzAgainSet(x.key, !ok);
+    qzMark(x.key); qzAgainSet(x.key, !ok); mfScoreAdd(ok); mfScoreLine(); if (st.main) mfMainSave();
     const card = box.querySelector(".mf-card"), back = card.querySelector(".mf-back");
     card.querySelectorAll(".mf-front .qz2-o").forEach(o => { o.disabled = true; });
     back.querySelector(".mf-fb").textContent = ok ? "Right!" : "Not quite.";
@@ -1325,6 +1419,7 @@ document.addEventListener("click", e => {
   if (b.classList.contains("qz2-prev")) st.pos = Math.max(0, st.pos - 1);
   else if (st.pos < st.cards.length - 1) st.pos++;
   else { st.cards = mfDeal(st, st.n); st.picks = []; st.pos = 0; }   // Another 10
+  if (st.main) mfMainSave();
   mfRender(box.id);
   const f = box.querySelector(st.picks[st.pos] ? ".mf-v" : ".mf-q"); if (f) f.focus({ preventScroll: true });
   if (box.getBoundingClientRect().top < updateSticky(box)) scrollToEl(box, true);
@@ -1391,7 +1486,7 @@ function buildAnswerIndex() {
   (QUESTIONS[GEN] || []).forEach(g => g.items.forEach(([id, q]) => { if (claimById[id] && (SIMPLE.claims || {})[id] && !items[id]) items[id] = { id, q, topic: g.topic, gen: true }; }));
   Object.values(items).forEach(x => {
     const sp = SIMPLE.claims[x.id], about = [...new Set((pages[x.id] || []).concat(MIXFOR[x.id] || [], KITSFOR[x.id] || []))];
-    const where = x.gen ? "Facts about drug use" : x.dc ? "Drug checking" : (MIXFOR[x.id] || []).length ? "Mixing" : about.length === 1 && subBySlug[about[0]] ? drugName(about[0]) : about.length > 1 ? "Several drugs" : "Mixing";
+    const where = x.gen ? "Big questions" : x.dc ? "Drug checking" : (MIXFOR[x.id] || []).length ? "Mixing" : about.length === 1 && subBySlug[about[0]] ? drugName(about[0]) : about.length > 1 ? "Several drugs" : "Mixing";
     const it = { type: "answer", id: x.id, title: x.q, where, pages: pages[x.id] || [], about, mix: !!(MIXFOR[x.id] || []).length || topicZone(x.topic || "") === "mix",
       tq: norm(x.q), ts: norm(sp.short), tt: norm(x.topic || ""), tx: norm([sp.but].concat(sp.how || []).join(" ")) };
     INDEX.push(it);
@@ -1467,7 +1562,7 @@ function scoreAnswer(it, ctx) {
 // an answer opens on the drug page the search was about, at its question; mixing answers not on a drug page open over the page
 function answerHref(it, ctx) {
   if (it.where === "Drug checking") return "#checking/q-" + it.id;
-  if (it.where === "Facts about drug use") return "#facts/q-" + it.id;
+  if (it.where === "Big questions") return "#facts/q-" + it.id;
   const slug = ctx.drugs.find(d => it.pages.includes(d)) || it.pages[0];
   return slug ? "#s-" + slug + "/q-" + it.id : "#" + it.id;
 }

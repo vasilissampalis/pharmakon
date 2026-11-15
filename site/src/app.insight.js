@@ -429,7 +429,7 @@ function insPlaceholder() {
 
 /* ---------- In the search results ---------- */
 const insQ = (id, page) => (page && sharedQuestion(page, id)) || anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || claimText(claimById[id]);
-const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") + ". Nothing you type leaves it.";
+const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") + (ASK_ON ? ". What you type stays on it, unless you ask us to check a question." : ". Nothing you type leaves it.");
 const INS_ICON = { help: "heart", mix: "mix", dose: "book", test: "flask", page: "molecule" };
 // the emergency number where the reader is, or the way to the numbers: shown with an emergency route, and nowhere else
 function insSosHtml(cls) {
@@ -441,7 +441,8 @@ function insRouteHtml(r, cls) {
   return '<a class="' + cls + " r-" + r.kind + '" href="' + esc(r.href) + '" data-ins-route="' + r.kind + '"' + (r.el ? ' data-el="' + esc(r.el) + '"' : "") + (r.mix ? ' data-mix="' + esc(r.mix) + '"' : "") + ">" +
     '<span class="ri">' + icon(INS_ICON[r.kind] || "arrow") + '</span><span class="k">' + esc(r.k) + '</span><span class="t">' + esc(r.t) + '</span><span class="go">' + icon("arrow") + "</span></a>";
 }
-const insAskBtn = (q, cls) => '<button type="button" class="' + cls + '" data-fb="feedback" data-fb-text="' + esc(q) + '">Ask us to check it</button>';
+// "Ask us to check it": one tap (2.4, below: Your questions); where the page can send it, a quiet line says what is sent
+const insAskBtn = (q, cls) => '<button type="button" class="' + cls + '" data-ask="' + esc(q) + '">Ask us to check it</button>' + (ASK_ON ? '<span class="ask-note">Sends only this question. No name, no address.</span>' : "");
 function insRowHtml(x, best) {
   const c = claimById[x.id], sp = SIMPLE.claims[x.id], w = mfWhere(x.page);
   return '<a class="sr-ans sr-fit-a' + (best ? " sr-best" : "") + '" href="' + esc(answerAddr(x.id, x.page)) + '" data-insight="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(insQ(x.id, x.page)) +
@@ -500,6 +501,7 @@ function insightAfterSearch(raw) {
 }
 // once ready, the results already open take their answers; a question sent with Enter meanwhile opens now
 function insightReady() {
+  askedCheck();   // (2.4) the reader's kept questions, asked again once per new version
   const s = document.getElementById("search"), box = document.getElementById("search-results");
   if (s && INS.want && insClean(s.value) === INS.want && !EV.open) { INS.want = null; insAsk(s.value); return; }
   INS.want = null;
@@ -610,7 +612,7 @@ function insHtml(v) {
 }
 function insDraw(v, opener) {
   const sh = document.getElementById("evsheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
-  if (!EV.open) { EV.opener = opener === undefined ? document.activeElement : opener; try { history.pushState({ pkEvidence: "insight" }, ""); EV.pushed = true; } catch (e) { EV.pushed = false; } }
+  if (!EV.open) { EV.opener = opener === undefined ? document.activeElement : opener; try { history.pushState({ pkEvidence: "insight", pk: NAV_CUR }, ""); EV.pushed = true; } catch (e) { EV.pushed = false; } }
   // (an evidence still on its way for this sheet is not drawn over the answer: openEvidence draws only for its own EV.id)
   EV.id = "ins:" + (v.kind === "one" ? v.id : "asked"); EV.open = true; sh.classList.add("open"); document.documentElement.classList.add("sheet-open"); hidePop(); closeSearch();
   INS.view = v; INS.back = null;
@@ -744,6 +746,89 @@ document.addEventListener("click", e => {
   if (box) box.outerHTML = insPeopleAsk(ids, v.kind === "one" ? [v.id] : v.res.best.concat(v.res.related).map(x => x.id), v.kind === "one" ? null : v.res.groups);
   const f = document.querySelector("#evsheet .ins-next a"); if (f) f.focus();
 }, true);
+/* ---------- Your questions (site 2.4, 15 November 2026). The senior author: "Ask us to check it" opened an email form, "a very
+   slow and non flexible way"; and, of a site where requests are answered by other people: it shows "requests solved" at the
+   top of the page, "the same should happen for the questions the user raised ... the site should be able to remember 2 or
+   more questions".
+   - One tap. The question is put on a short list kept on this device (localStorage, at most 20), and, where the site has
+     its small store switched on (GET api/ask answers ok: site/worker/_worker.js on Cloudflare Pages), it is sent there:
+     the question's words, the drug page it was asked on and the site version. No name, no address, no cookie; nothing else
+     that was typed is ever sent. Where the store is not switched on, the email form opens with the question, as before.
+   - The start page shows the list under the search box: "We are checking" for each question still open, and, in green,
+     "Answered" as soon as a later version of the site has a best match for it (Insight asks itself the kept questions once
+     per new version, on this device). Reading an answered question, or the cross beside any, takes it off the list.
+   Reading the list back is how a person without an account, an address or a cookie hears that their question was answered. ---------- */
+const ASK_KEY = "pk-asked", ASK_API = "api/ask";
+let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
+function askProbe() {
+  if (ASK_ON !== null) return Promise.resolve(ASK_ON);
+  if (askProbe.p) return askProbe.p;
+  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => !!(j && j.ok === true), () => false)
+    .then(on => { ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); } catch (e) { /* this page only */ } return on; }));
+}
+function askedList() { try { const x = JSON.parse(localStorage.getItem(ASK_KEY) || "[]"); return Array.isArray(x) ? x.filter(it => it && typeof it.q === "string" && it.k) : []; } catch (e) { return []; } }
+function askedSave(list) { try { localStorage.setItem(ASK_KEY, JSON.stringify(list.slice(-20))); } catch (e) { /* this visit only */ } }
+function askedAdd(q, drug) {
+  const text = insClean(q).slice(0, 200), k = text.toLowerCase(); if (k.length < 3) return null;
+  const list = askedList(); let it = list.find(x => x.k === k);
+  if (!it) { it = { k, q: text, d: drug || "", t: Date.now(), cv: SITE_VERSION, st: "wait", sent: 0 }; list.push(it); askedSave(list); }
+  return it;
+}
+function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k === k); if (!it) return; Object.assign(it, patch); askedSave(list); }
+function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
+function askedBox() {
+  const box = document.getElementById("home-asked"); if (!box) return;
+  const list = askedList().filter(it => it.st !== "ans" || claimById[it.id]);
+  if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
+  const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
+  const row = it => it.st === "ans"
+    ? '<li class="aq ans"><a class="aq-a" href="' + esc(answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
+    : '<li class="aq wait"><span class="aq-a"><span class="aq-k">' + icon("clock") + (it.sent ? "We are checking" : "Kept on this device") + '</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>";
+  box.innerHTML = '<h2 class="aq-h">Your questions</h2><ul class="aq-l">' + list.filter(it => it.st === "ans").concat(list.filter(it => it.st !== "ans")).map(row).join("") + "</ul>";
+  box.hidden = false;
+  askedCheckSoon();
+}
+// a kept question is asked again once per new version of the site: a best match now means it has been answered
+async function askedCheck() {
+  if (INS.state !== "ready") return;
+  const list = askedList(); let changed = false;
+  for (const it of list) {
+    if (it.st !== "wait" || it.cv === SITE_VERSION) continue;
+    try { const res = await insRank(it.q, { drug: it.d && subBySlug[it.d] ? it.d : null });
+      if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
+      it.cv = SITE_VERSION; changed = true; } catch (e) { /* asked again on the next visit */ }
+  }
+  if (changed) { askedSave(list); askedBox(); }
+}
+function askedCheckSoon() {
+  if (askedCheckSoon.done || !askedList().some(it => it.st === "wait" && it.cv !== SITE_VERSION)) return;
+  askedCheckSoon.done = true;
+  const go = () => { if (INS.state === "ready") askedCheck(); else if (!insSaver()) insightLoad().then(ok => { if (ok) askedCheck(); }); };
+  if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 4000 }); else setTimeout(go, 1500);
+}
+document.addEventListener("click", async e => {
+  if (!e.target.closest) return;
+  const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
+  const op = e.target.closest("a[data-asked-open]"); if (op) { askedDrop(op.dataset.askedOpen); return; }   // read: it leaves the list (the sheet opens by its data-sheet)
+  const b = e.target.closest("button[data-ask]"); if (!b || b.disabled) return;
+  e.preventDefault(); e.stopPropagation();
+  const q = b.dataset.ask, it = askedAdd(q, insCtx().drug || ""); if (!it) return;
+  const note = b.parentElement && b.parentElement.querySelector(".ask-note");
+  const say = t => { const p = document.createElement("p"); p.className = "ask-said"; p.setAttribute("role", "status"); p.textContent = t; if (note) note.remove(); b.replaceWith(p); };
+  b.disabled = true;
+  const on = await askProbe();
+  if (it.sent) { say("Already sent. It is under “Your questions” on the start page."); return; }
+  if (on) {
+    let ok = false;
+    try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
+    if (ok) { askedSet(it.k, { sent: 1 }); say("Sent. We will check it. It is kept under “Your questions” on the start page."); askedBox(); return; }
+  }
+  // the page cannot send it (the store is not switched on, or the connection failed): kept on this device, and the email form opens with it
+  say("Kept under “Your questions” on this device. To send it to us, use the email form.");
+  askedBox(); if (EV.open) closeEvidence(); openFeedback("feedback", location.hash, q);
+}, true);
+if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdleCallback(() => askProbe(), { timeout: 3000 }); else setTimeout(askProbe, 1200); }
+
 // for the checks (scripts/ux/insight_check.js, scripts/insight/parity.js): the same functions the search box uses
 window.pkInsight = {
   state: () => INS.state, load: insightLoad, encode: t => insEncode(t), expand: t => insExpand(t), mask: t => insMask(t), named: t => insNamed(t), times: () => INS.times.slice(),
