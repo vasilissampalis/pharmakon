@@ -54,20 +54,23 @@ jobs:
           key: playwright-browser-v1
       - name: Packages
         run: |
+          # each fetch has its time, and what fails is written into the notes (a registry that does not answer must not hold a run for half an hour without a word)
+          L="$RUNNER_TEMP/deploy.log"; echo "== packages ($(date -u +%H:%M:%S))" > "$L"
           python3 -m venv .venv
-          .venv/bin/pip install -q numpy tokenizers onnxruntime playwright jsonschema
+          timeout 420 .venv/bin/pip install -q numpy tokenizers onnxruntime playwright jsonschema || echo "!! the python packages were not fetched ($?)" >> "$L"
           echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
-          .venv/bin/python -m playwright install chromium > /dev/null
-          npm install --no-save --no-package-lock --silent playwright > /dev/null 2>&1
-          npx --yes playwright install chromium > /dev/null 2>&1
+          timeout 300 .venv/bin/python -m playwright install chromium > /dev/null || echo "!! the browser for python was not fetched ($?)" >> "$L"
+          timeout 300 npm install --no-save --no-package-lock --silent playwright > /dev/null 2>&1 || echo "!! the node package was not fetched ($?)" >> "$L"
+          timeout 300 npx --yes playwright install chromium > /dev/null 2>&1 || echo "!! the browser for node was not fetched ($?)" >> "$L"
       - name: Build, check, publish, with notes
         env:
           CF_TOKEN_RAW: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_RAW: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set +e
-          L="$RUNNER_TEMP/deploy.log"; : > "$L"; OK=1
-          gate() { echo "== $1" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this gate failed ($c): nothing will be published" >> "$L"; OK=0; fi; }
+          L="$RUNNER_TEMP/deploy.log"; touch "$L"; OK=1
+          # every gate has its time: one that hangs is a gate that failed (124), and the notes say which (on 16 November 2026 publishings stopped arriving and left no note)
+          gate() { echo "== $1 ($(date -u +%H:%M:%S))" >> "$L"; shift; timeout 600 "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this gate failed ($c): nothing will be published" >> "$L"; OK=0; fi; }
           gate "build the page and Insight's index" node site/build.js
           gate "the validator (no hard failure)" python3 -I scripts/validate.py
           gate "build the public site" python3 -I site/build_public.py
@@ -77,13 +80,13 @@ jobs:
           if [ "$OK" = "1" ]; then
             export CLOUDFLARE_API_TOKEN="$(printf '%s' "$CF_TOKEN_RAW" | tr -d '[:space:]')"
             export CLOUDFLARE_ACCOUNT_ID="$(printf '%s' "$CF_ACCOUNT_RAW" | tr -d '[:space:]')"
-            echo "== publish to Cloudflare Pages (project pharmakon)" >> "$L"
-            npx --yes wrangler@4 pages deploy site/public --project-name=pharmakon --branch=main --commit-dirty=true >> "$L" 2>&1
+            echo "== publish to Cloudflare Pages (project pharmakon) ($(date -u +%H:%M:%S))" >> "$L"
+            timeout 600 npx --yes wrangler@4 pages deploy site/public --project-name=pharmakon --branch=main --commit-dirty=true >> "$L" 2>&1 < /dev/null
             c=$?; if [ $c -ne 0 ]; then echo "!! publishing failed ($c)" >> "$L"; OK=0; else echo "published" >> "$L"; fi
           fi
           if [ "$OK" = "1" ]; then
             # the proof: does the public address serve this very publishing? (every build has a stamp of its own, data/build.json)
-            echo "== the live site (https://pharmakon.world)" >> "$L"
+            echo "== the live site (https://pharmakon.world) ($(date -u +%H:%M:%S))" >> "$L"
             WANT="$(python3 -I -c 'import json; print(json.load(open("site/public/data/build.json"))["build"])' | tr -cd '0-9')"
             LIVE=0; GOT=""
             for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
