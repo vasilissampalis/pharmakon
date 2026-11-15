@@ -347,7 +347,7 @@ document.addEventListener("change", e => { const s = e.target.closest && e.targe
 function setCountry(un, from) {
   PREF_COUNTRY = un || "";
   try { if (un) localStorage.setItem("pk-country", un); else localStorage.removeItem("pk-country"); } catch (err) { /* lasts for this visit */ }
-  const host = from && from.closest("[id]"), hostId = host && (host.closest(".sf, #em-mine, #dc-mine, #dc-kitsbox, .sec") || host).id;
+  const host = from && from.closest("[id]"), hostId = host && (host.closest(".sf, #em-mine, #dc-mine, #dc-kitsbox, #law-mine, .sec") || host).id;
   refreshCountryParts();
   // keep the reader where they were: on the answer that just appeared
   const where = hostId && document.querySelector("#" + CSS.escape(hostId) + " .cq-where, #" + CSS.escape(hostId) + " .say");
@@ -361,7 +361,7 @@ function refreshCountryParts() {
     const h = page.querySelector("#d-help .sec-b"); if (h) h.innerHTML = helpHtml();
     const t = page.querySelector("#d-kits .sec-b"); if (t) t.innerHTML = testHtml();
   }
-  renderEmMine(); renderDcMine();
+  renderEmMine(); renderDcMine(); if (typeof renderLawMine === "function") renderLawMine();
 }
 
 /* What the law says where you are, in one plain line; the treaty and the law text with their sources are one tap away */
@@ -982,16 +982,18 @@ function renderMix2() {
 }
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button.mixchip"); if (!b) return; mixPick = b.dataset.mix; renderMix2(); const nb = document.querySelector('button.mixchip[data-mix="' + mixPick + '"]'); if (nb) nb.focus(); });
 
+// a drug as a picture card: its photo, its family, its name and up to two street names (the start page and Find a drug)
+function drugCardHtml(s, i) {
+  const f = fam(s.cls), ph = headerPhoto(s.slug), names = documentedNames(s.slug).slice(0, 2);
+  const nm = s.name.replace(/ \(.*\)$/, ""), longest = Math.max(...nm.split(/[\s/]+/).map(w => w.length));
+  return '<a class="dcard f-' + f.k + (ph ? " hasph" : " noph") + '" href="#s-' + s.slug + '" style="--i:' + (i || 0) + '">' + (ph ? '<span class="dc-ph">' + photoImg(ph, "m", "", true) + "</span>" : "") + '<span class="dc-ic">' + icon(f.icon) + "</span>" +
+    '<span class="dc-t"><span class="dc-f">' + esc(s.cls) + '</span><span class="dc-n' + (longest > 10 ? " long" : "") + '">' + esc(nm) + "</span>" + (names.length ? '<span class="dc-a">' + esc(names.join(", ")) + "</span>" : "") + "</span></a>";
+}
 /* ---------- Home: one question, a deck of myths and facts, three ways to get help, the drugs as pictures ---------- */
 function renderHome2() {
   const grid = document.getElementById("dgrid"); if (!grid) return;
   const order = POPULAR.concat(SUBSTANCES.map(s => s.slug).filter(x => !POPULAR.includes(x)));
-  grid.innerHTML = order.map(sl => subBySlug[sl]).filter(Boolean).slice(0, 12).map((s, i) => {
-    const f = fam(s.cls), ph = headerPhoto(s.slug), names = documentedNames(s.slug).slice(0, 2);
-    const nm = s.name.replace(/ \(.*\)$/, ""), longest = Math.max(...nm.split(/[\s/]+/).map(w => w.length));
-    return '<a class="dcard f-' + f.k + (ph ? " hasph" : " noph") + '" href="#s-' + s.slug + '" style="--i:' + i + '">' + (ph ? '<span class="dc-ph">' + photoImg(ph, "m", "", true) + "</span>" : "") + '<span class="dc-ic">' + icon(f.icon) + "</span>" +
-      '<span class="dc-t"><span class="dc-f">' + esc(s.cls) + '</span><span class="dc-n' + (longest > 10 ? " long" : "") + '">' + esc(nm) + "</span>" + (names.length ? '<span class="dc-a">' + esc(names.join(", ")) + "</span>" : "") + "</span></a>";
-  }).join("");
+  grid.innerHTML = order.map(sl => subBySlug[sl]).filter(Boolean).slice(0, 12).map(drugCardHtml).join("");
   document.querySelectorAll(".do-ic[data-ic], .mi[data-ic]").forEach(el => { el.innerHTML = icon(el.dataset.ic); });
   // what is not about one drug, under the drugs (site 2.4; the senior author asked where the page of general questions
   // belongs: on the start page as well as in the menu, because its questions are among the ones people ask)

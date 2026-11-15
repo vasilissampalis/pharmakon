@@ -341,10 +341,6 @@ function photoCredit(p) {
 function photoFig(p, size, label, detail) {
   return '<figure class="phfig">' + photoImg(p, size, null, true) + "<figcaption><b>" + esc(label || p.form) + "</b>" + ((detail !== undefined ? detail : p.detail) ? ' <span class="muted">' + esc(detail !== undefined ? detail : p.detail) + "</span>" : "") + photoCredit(p) + "</figcaption></figure>";
 }
-function drugTile(s) {
-  const f = fam(s.cls), names = documentedNames(s.slug).slice(0, 3), ph = headerPhoto(s.slug);
-  return '<a class="dtile f-' + f.k + (ph ? " hasph" : "") + '" href="#s-' + s.slug + '">' + (ph ? '<span class="dt-ph">' + photoImg(ph, "t", "", true) + "</span>" : "") + '<span class="dt-top">' + icon(f.icon) + '</span><span class="dt-name">' + esc(s.name) + "</span>" + (names.length ? '<span class="dt-al">' + esc(names.join(" · ")) + "</span>" : "") + "</a>";
-}
 const POPULAR = ["cannabis", "alcohol", "mdma", "cocaine", "ketamine", "methamphetamine", "ghb-gbl", "benzodiazepines", "psilocybin", "lsd", "heroin", "fentanyl-and-analogues", "nitrous-oxide", "synthetic-cathinones"];
 
 /* ---------- Substances ---------- */
@@ -354,7 +350,8 @@ function renderSubstances() {
   document.getElementById("filters").innerHTML = classes.map(c => '<button class="chip' + (c === "All" ? "" : " famchip f-" + fam(c).k) + '" data-cls="' + esc(c) + '" aria-pressed="' + (c === activeClass) + '">' + (c === "All" ? "" : icon(fam(c).icon)) + esc(c === "All" ? "All 30" : c) + "</button>").join("");
   document.querySelectorAll("#filters .chip").forEach(b => b.addEventListener("click", () => { activeClass = b.dataset.cls; renderSubstances(); }));
   const list = SUBSTANCES.filter(s => activeClass === "All" || s.cls === activeClass);
-  document.getElementById("subgrid").innerHTML = list.map(drugTile).join("");
+  // (site 2.4) the same picture cards as the start page, two across on a phone: the page was one large tile per row, some 12,000 pixels of it
+  document.getElementById("subgrid").innerHTML = list.map(s => drugCardHtml(s, 0)).join("");
 }
 
 /* ---------- Claims ---------- */
@@ -794,6 +791,20 @@ function renderLaw() {
   const f = document.getElementById("law-filter"), none = document.getElementById("law-none");
   f.addEventListener("input", () => { const q = norm(f.value); let shown = 0; tb.querySelectorAll("tr").forEach(tr => { const on = !q || tr.dataset.k.split(" ").some(w => w.startsWith(q)) || tr.dataset.k.includes(q); tr.hidden = !on; if (on) shown++; }); none.hidden = shown > 0; });
   countryPicker("law-filter", all.map(c => ({ name: ctryName(c.name), k: norm(c.name + " " + ctryName(c.name)) })).sort((a, b) => a.name.localeCompare(b.name)), name => openCountry("law", name));
+  renderLawMine();
+}
+/* The treaties page starts with the reader's own country (site 2.4): three plain lines, one for each treaty, in place of a
+   table of some 200 rows; the table of all countries is one tap away, with its filter. */
+const LAW_TREATIES = [["c1961", "1961 treaty", "Narcotic drugs"], ["c1971", "1971 treaty", "Psychotropic substances"], ["c1988", "1988 treaty", "Drug trafficking"]];
+function renderLawMine() {
+  const box = document.getElementById("law-mine"); if (!box) return;
+  if (!PREF_COUNTRY) { box.innerHTML = countryAsk(true); return; }
+  const c = WORLD_LAW.countries.find(x => x.name === PREF_COUNTRY), nm = esc(inCtry(PREF_COUNTRY));
+  if (!c) { box.innerHTML = countryAsk(true) + '<p class="say">We have no treaty record for ' + nm + ". The United Nations lists its member states and a few others.</p>"; return; }
+  const line = ([k, name, what]) => { const s = c[k], y = s && s.date ? esc(String(s.date).slice(0, 4)) : "";
+    const st = !s ? ["no", "No record"] : s.status === "party" ? ["yes", "Joined in " + y + (k === "c1961" && s.text === "unamended only" ? " (the 1961 text only)" : "")] : s.status === "signatory" ? ["part", "Signed in " + y + ", not ratified"] : ["no", "Not a party"];
+    return '<li class="lm ' + st[0] + '"><span class="lm-t"><b>' + name + '</b><span class="lm-w">' + what + '</span></span><span class="lm-s">' + (st[0] === "yes" ? icon("check") : "") + st[1] + "</span></li>"; };
+  box.innerHTML = countryAsk(true) + '<ul class="lawmine">' + LAW_TREATIES.map(line).join("") + '</ul><p class="mine-note">What the law of ' + nm + " says about a drug is on that drug's page, under The law. " + srcIcons(["un-mtdsg_vi18", "un-mtdsg_vi15", "un-mtdsg_vi16", "un-mtdsg_vi19"]) + "</p>";
 }
 
 /* ---------- Drug checking: services that test a sample and tell you what is in it ---------- */
@@ -1477,7 +1488,7 @@ function sectionize() {
     const secs = []; let cur = null;
     kids.slice(first).forEach(k => { if (k.tagName === "H2") { cur = { name: k.textContent.trim(), nodes: [] }; secs.push(cur); } else cur.nodes.push(k); });
     const slug = t => norm(t).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").split("-").slice(0, 4).join("-");
-    secs.forEach(x => { x.id = pre + "-" + slug(x.name); const tmp = document.createElement("div"); tmp.innerHTML = x.nodes.map(n => n.outerHTML).join(" ").replace(/<[^>]+>/g, " "); const t = tmp.textContent.replace(/\s+/g, " ").replace(/ ([,.;:])/g, "$1").trim(); x.line = t.length > 96 ? t.slice(0, t.lastIndexOf(" ", 92)).replace(/[,;:.]$/, "") + "…" : t;
+    secs.forEach(x => { x.id = pre + "-" + slug(x.name); const tmp = document.createElement("div"); tmp.innerHTML = x.nodes.map(n => n.outerHTML).join(" ").replace(/<thead[\s\S]*?<\/thead>/g, " ").replace(/<[^>]+>/g, " "); /* (a table's column names are not the section's first words) */ const t = tmp.textContent.replace(/\s+/g, " ").replace(/ ([,.;:])/g, "$1").trim(); x.line = t.length > 96 ? t.slice(0, t.lastIndexOf(" ", 92)).replace(/[,;:.]$/, "") + "…" : t;
       x.chip = x.name.length > 26 ? x.name.split(/[,:]/)[0] : x.name; x.icon = "book"; x.body = '<div data-slot="' + x.id + '"></div>'; });
     const wrap = document.createElement("div"); wrap.className = "secpage"; wrap.dataset.base = box.dataset.base; wrap.innerHTML = secPageHtml(box.dataset.up || "All sections", secs);
     secs.forEach(x => { const slot = wrap.querySelector('[data-slot="' + x.id + '"]'); const holder = document.createElement("div"); holder.className = "prose"; x.nodes.forEach(n => holder.appendChild(n)); slot.replaceWith(holder); });

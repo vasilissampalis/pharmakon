@@ -177,6 +177,8 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     for (const [view, min] of [["methods", 8], ["about", 8], ["howto", 2]]) {
       await go(p, "#" + view); st = await state("#view-" + view + " .secpage");
       ok(view + ": its text is a menu of sections, none open", st && st.rows >= min && st.open.length === 0, JSON.stringify(st));
+      const lines = await p.evaluate(v => [...document.querySelectorAll("#view-" + v + " .secmenu .sm-b")].map(b => (b.querySelector(".sm-l") || { textContent: "" }).textContent), view);
+      ok(view + ": every row says in a few words what its section holds", lines.length >= min && lines.every(t => t.length > 12 && t.length < 110), lines.join(" | ").slice(0, 300));
       await p.click("#view-" + view + " .secpage .sm-b"); await p.waitForTimeout(450); const s1 = await state("#view-" + view + " .secpage");
       ok(view + ": a row opens its section alone, with its text", s1.open.length === 1 && s1.hash === "#" + view + "/part-" + s1.open[0] && await p.evaluate(id => document.getElementById(id).textContent.trim().length > 80, s1.open[0]), JSON.stringify(s1));
       if (view === "methods") await shot(p, "390-methods-section");
@@ -302,6 +304,48 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click("#report-close"); await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     const row = await p.evaluate(() => (document.querySelector("#home-asked .aq-k") || {}).textContent || "");
     ok("with the store off: the list says it is kept on this device, not that we are checking", row === "Kept on this device", row);
+    await p.context().close();
+  }
+
+  /* ---- J. the other long pages: the glossary, the treaties, Find a drug, the emergency numbers ---- */
+  {
+    const p = await open(ON, 390);
+    await go(p, "#glossary", 600);
+    let g = await p.evaluate(() => { const rows = [...document.querySelectorAll("#glossary-list details.gterm")], names = rows.map(r => r.querySelector(".ask-q").textContent);
+      return { n: rows.length, open: rows.filter(r => r.open).length, sorted: names.every((t, i) => !i || names[i - 1].localeCompare(t, "en", { sensitivity: "base" }) <= 0), shorts: rows.filter(r => r.querySelector(".ask-s")).length, first: names[0], h: Math.round(document.getElementById("glossary-list").getBoundingClientRect().height) }; });
+    ok("Glossary: every term is a row with its one-line meaning, from A to Z, none open", g.n >= 40 && g.open === 0 && g.sorted && g.shorts === g.n, JSON.stringify(g));
+    await p.click("#glossary-list details.gterm >> nth=2 >> summary"); await p.waitForTimeout(500);
+    await p.click("#glossary-list details.gterm >> nth=6 >> summary"); await p.waitForTimeout(700);
+    g = await p.evaluate(() => { const rows = [...document.querySelectorAll("#glossary-list details.gterm")], open = rows.filter(r => r.open); return { open: open.map(r => rows.indexOf(r)), text: open.length ? open[0].querySelector(".ask-a").textContent.length : 0, src: open.length ? /Source: /.test(open[0].textContent) : false, top: open.length ? Math.round(open[0].getBoundingClientRect().top) : -1 }; });
+    ok("Glossary: a tap opens a term's full meaning and its source; the one open before closes; the term stays in view", g.open.join() === "6" && g.text > 60 && g.src && g.top >= 0 && g.top < 400, JSON.stringify(g));
+    await go(p, "#home"); await go(p, "#g-21", 900);
+    g = await p.evaluate(() => { const d = document.getElementById("g-21"); return { view: document.querySelector(".view.active").id, open: !!d && d.open, name: d ? d.querySelector(".ask-q").textContent : "", top: d ? Math.round(d.getBoundingClientRect().top) : -1, others: document.querySelectorAll("#glossary-list details.gterm[open]").length }; });
+    ok("Glossary: a term's own address opens that term", g.view === "view-glossary" && g.open && g.others === 1 && g.top >= 0 && g.top < 400, JSON.stringify(g));
+    await p.fill("#gloss-filter", "odds"); await p.waitForTimeout(300);
+    const f = await p.evaluate(() => ({ shown: [...document.querySelectorAll("#glossary-list details.gterm")].filter(r => !r.hidden && r.getClientRects().length).length, count: document.getElementById("gloss-count").textContent }));
+    ok("Glossary: the filter still narrows the list", f.shown >= 1 && f.shown < 10 && /of \d+ terms/.test(f.count), JSON.stringify(f));
+    await shot(p, "390-glossary-filter");
+    // the treaties: the reader's country first
+    await go(p, "#law", 700);
+    let l = await p.evaluate(() => ({ ask: !!document.querySelector("#law-mine .cq"), lines: document.querySelectorAll("#law-mine .lm").length, fold: document.getElementById("law-all").open, rows: document.querySelectorAll("#law-list tr").length, shown: (tr => !!tr && (tr.checkVisibility ? tr.checkVisibility() : !!tr.offsetParent))(document.querySelector("#law-list tr")) }));   // (a closed fold keeps its boxes in Chromium: ask whether the row is drawn)
+    ok("Treaties: the page asks the country first; the table of all countries is one tap away, not spread over the page", l.ask && l.lines === 0 && !l.fold && l.rows > 150 && !l.shown, JSON.stringify(l));
+    await p.evaluate(() => localStorage.setItem("pk-country", "Greece")); await p.reload(); await p.waitForTimeout(900);
+    l = await p.evaluate(() => ({ where: (document.querySelector("#law-mine .cq-where") || {}).textContent || "", lines: [...document.querySelectorAll("#law-mine .lm")].map(x => x.querySelector(".lm-t b").textContent + ": " + x.querySelector(".lm-s").textContent), wide: document.documentElement.scrollWidth > document.documentElement.clientWidth }));
+    ok("Treaties: with the country known, three plain lines say when it joined each treaty", /Greece/.test(l.where) && l.lines.length === 3 && l.lines.every(x => /^19(61|71|88) treaty: Joined in \d{4}/.test(x)) && !l.wide, JSON.stringify(l));
+    await shot(p, "390-law-greece");
+    await p.click("#law-all > summary"); await p.fill("#law-filter", "Portu"); await p.waitForTimeout(300);
+    ok("Treaties: all countries, with the filter", await p.evaluate(() => { const on = [...document.querySelectorAll("#law-list tr")].filter(tr => !tr.hidden); return on.length === 1 && /Portugal/.test(on[0].textContent); }));
+    // the emergency numbers: both folds look alike; Find a drug: the start page's cards, two across on a phone
+    await go(p, "#emergency", 600);
+    ok("Emergency numbers: the two folds under the country look alike", await p.evaluate(() => { const d = [...document.querySelectorAll("#view-emergency details")]; return d.length === 2 && d.every(x => x.classList.contains("allc") && x.querySelector("summary .ask-i")); }));
+    await go(p, "#substances", 700);
+    const sub = await p.evaluate(() => { const c = [...document.querySelectorAll("#subgrid a.dcard")], r = c.slice(0, 3).map(x => x.getBoundingClientRect()); return { n: c.length, two: Math.abs(r[0].top - r[1].top) < 2 && r[2].top > r[0].top + 50, h: Math.round(document.getElementById("subgrid").getBoundingClientRect().height), old: document.querySelectorAll("#subgrid .dtile").length }; });
+    ok("Find a drug: the start page's picture cards, two across on a phone", sub.n === 30 && sub.two && sub.h < 5200 && !sub.old, JSON.stringify(sub));
+    await p.click('#filters .chip[data-cls="Opioids"]'); await p.waitForTimeout(300);
+    ok("Find a drug: a family can be chosen", await p.evaluate(() => { const c = [...document.querySelectorAll("#subgrid a.dcard")]; return c.length >= 3 && c.length < 12 && c.every(x => /Opioids/.test(x.textContent)); }));
+    await shot(p, "390-find-a-drug-opioids");
+    const eyebrows = await p.evaluate(() => [...document.querySelectorAll("main .view > .wrap .eyebrow, main .view .prose > .eyebrow")].filter(e => !e.closest("#view-review, #view-notfound")).map(e => e.textContent));
+    ok("no page of the site starts with a small label above its title any more (one look for every page)", eyebrows.length === 0, eyebrows.join(" | "));
     await p.context().close();
   }
 

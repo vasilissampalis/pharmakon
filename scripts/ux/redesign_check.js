@@ -351,7 +351,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     const me = await s.p.evaluate(() => /what to do if it gets too much, the lines on test kits and each drug's short description are sourced facts too:[^.]*checked at its source by a second AI reader/.test(document.getElementById("view-methods").textContent));
     ok(w + ": How we check facts says, once, how the lines on first aid, test kits and the descriptions are checked", me);
     await s.go("substances", 700);
-    const fd = await s.p.evaluate(() => ({ labels: document.querySelectorAll("#subgrid .dt-st").length, tiles: document.querySelectorAll("#subgrid a.dtile").length, lede: document.querySelector("#view-substances .lede").textContent }));
+    const fd = await s.p.evaluate(() => ({ labels: document.querySelectorAll("#subgrid .dt-st").length, tiles: document.querySelectorAll("#subgrid a.dcard").length, lede: document.querySelector("#view-substances .lede").textContent }));
     ok(w + ": Find a drug: no page-state labels on the tiles, no outdated note", fd.tiles === 30 && !fd.labels && !/first full page|basics for now/i.test(fd.lede), fd.tiles + " tiles; " + fd.lede);
     await s.ctx.close();
 
