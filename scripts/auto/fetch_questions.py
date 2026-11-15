@@ -11,6 +11,7 @@ reads it, through Cloudflare's API, where these are set in the environment (GitH
 The API, as read on developers.cloudflare.com on 15 November 2026:
     GET  /accounts/{account}/storage/kv/namespaces                         the stores, to find ours by name
     GET  /accounts/{account}/storage/kv/namespaces/{id}/keys?prefix=q:     key names, 1000 a page, result_info.cursor for the next
+                                                                         (and prefix=w: for the counts of the questions on our list)
     POST /accounts/{account}/storage/kv/namespaces/{id}/bulk/get           {"keys": [at most 100], "type": "json"} -> result.values
 
 Writes OUT.json: {"read_on": day, "questions": [the stored records, as they are]}. What a record holds is checked and
@@ -44,13 +45,14 @@ def find_namespace(opener, token, account, name):
         page += 1
 
 
-def read_all(opener, token, account, ns):
+def read_prefix(opener, token, account, ns, prefix):
+    """Every record whose key starts with prefix, as (key, record)."""
     keys, cursor = [], None
     while True:
-        q = {"prefix": "q:", "limit": "1000"}
+        q = {"prefix": prefix, "limit": "1000"}
         if cursor: q["cursor"] = cursor
         d = call(opener, token, "GET", f"/accounts/{account}/storage/kv/namespaces/{ns}/keys?" + urllib.parse.urlencode(q))
-        keys += [k["name"] for k in d.get("result") or [] if isinstance(k.get("name"), str) and k["name"].startswith("q:")]
+        keys += [k["name"] for k in d.get("result") or [] if isinstance(k.get("name"), str) and k["name"].startswith(prefix)]
         cursor = (d.get("result_info") or {}).get("cursor")
         if not cursor: break
     out = []
@@ -61,14 +63,29 @@ def read_all(opener, token, account, ns):
             if isinstance(v, str):
                 try: v = json.loads(v)
                 except ValueError: v = None
-            if isinstance(v, dict): out.append(v)
+            if isinstance(v, dict): out.append((k, v))
     return out
+
+
+def read_all(opener, token, account, ns):
+    """The questions visitors sent (keys q:...)."""
+    return [v for _, v in read_prefix(opener, token, account, ns, "q:")]
+
+
+def read_wanted(opener, token, account, ns):
+    """The counts for the questions on our list (keys w:<item>; site 2.5): how many times a visitor's device met each
+    listed question. A count holds the item's number, a number and two days: nothing a visitor typed."""
+    out = []
+    for k, v in read_prefix(opener, token, account, ns, "w:"):
+        if isinstance(v.get("n"), int) and v["n"] > 0: out.append({"id": k[2:], "n": v["n"], "first": str(v.get("first") or ""), "last": str(v.get("last") or "")})
+    return sorted(out, key=lambda x: (-x["n"], x["id"]))
 
 
 def selftest():
     """A pretend API with 1,250 questions on two pages of keys: the reader pages, batches by 100 and keeps what is a record."""
     store = {f"q:{i:05d}": {"q": f"question number {i} about a drug", "d": ["mdma"], "v": "2.4.0", "first": "2026-11-15", "last": "2026-11-15", "n": 1 + i % 3, "dn": 1} for i in range(1250)}
     store["q:bad"] = "not a record"; store["count:2026-11-15"] = "1250"; calls = []
+    store["w:w_0027"] = {"n": 7, "dn": 2, "first": "2026-11-15", "last": "2026-11-16"}; store["w:w_0001"] = {"n": 2, "dn": 2, "first": "2026-11-16", "last": "2026-11-16"}; store["w:bad"] = {"n": "many"}
     class Resp:
         def __init__(self, d): self.d = d
         def __enter__(self): return self
@@ -91,7 +108,9 @@ def selftest():
     got = read_all(opener, "T", "ACC", ns)
     assert len(got) == 1250 and got[0]["q"] == "question number 0 about a drug", (len(got), got[:1])
     assert sum(1 for m, p in calls if p.endswith("/keys")) == 2 and sum(1 for m, p in calls if p.endswith("/bulk/get")) == 13, calls[-3:]
-    print("fetch_questions selftest: ok (1,250 records over 2 pages of keys and 13 batches; a value that is not a record was left out)")
+    w = read_wanted(opener, "T", "ACC", ns)
+    assert w == [{"id": "w_0027", "n": 7, "first": "2026-11-15", "last": "2026-11-16"}, {"id": "w_0001", "n": 2, "first": "2026-11-16", "last": "2026-11-16"}], w
+    print("fetch_questions selftest: ok (1,250 records over 2 pages of keys and 13 batches; a value that is not a record was left out; the list's counts read, the most asked first)")
 
 
 def main():
@@ -103,11 +122,11 @@ def main():
     try:
         ns = find_namespace(urllib.request.urlopen, token, account, name)
         if not ns: sys.exit(f"fetch_questions: no store named {name!r} in this account")
-        qs = read_all(urllib.request.urlopen, token, account, ns)
+        qs = read_all(urllib.request.urlopen, token, account, ns); wanted = read_wanted(urllib.request.urlopen, token, account, ns)
     except (urllib.error.URLError, RuntimeError, ValueError) as e:
         sys.exit("fetch_questions: the store could not be read: " + str(e)[:300])
-    json.dump({"read_on": datetime.date.today().isoformat(), "questions": qs}, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"fetch_questions: {len(qs)} questions read")
+    json.dump({"read_on": datetime.date.today().isoformat(), "questions": qs, "wanted": wanted}, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print(f"fetch_questions: {len(qs)} questions read, and counts for {len(wanted)} questions on our list")
 
 
 if __name__ == "__main__":

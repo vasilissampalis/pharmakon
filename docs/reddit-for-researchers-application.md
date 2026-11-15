@@ -1,5 +1,9 @@
 # Application to Reddit for Researchers (draft)
 
+**Cannot be used (15 November 2026, 20:13).** The senior author pasted the programme's own rules: an applicant must be affiliated with a
+university, apply from an institutional email address, and show ethical review and institutional sponsorship. He is an independent
+researcher, so the programme is closed to him. The draft is kept as it was written, for the record.
+
 Drafted on 15 November 2026 by the AI co-editor for the senior author, who sends it himself. Reddit's own page for the
 programme could not be opened from the editor's session (Reddit refuses automatic readers, and that is not gone around), so
 the answers below are written for the questions such forms usually ask. When the senior author pastes the form's own

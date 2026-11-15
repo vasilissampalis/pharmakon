@@ -99,7 +99,7 @@ function insPrepare(d, vocabText) {
   // (data/site/wanted.json): a second, small index of the same kind as the answers', with the judge's cut for it
   const wb = "(?<![A-Za-z0-9_])(?:", we = ")(?![A-Za-z0-9_])", L = d.wanted;
   INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
-  INS.list = L && L.ids.length ? Object.assign({ ids: L.ids, q: L.q, rows: L.rows, cut: L.cut, W: insRows(L.W, d.dim), M: insRows(L.M, d.dim), S: insRows(L.S, d.dim),
+  INS.list = L && L.ids.length ? Object.assign({ ids: L.ids, q: L.q, rows: L.rows, cut: L.cut, near: L.near || [0, 0], W: insRows(L.W, d.dim), M: insRows(L.M, d.dim), S: insRows(L.S, d.dim),
     about: L.about.map(xs => new Set(xs.map(k => d.slugs[k]))) }, insWords(L.docs)) : null;
   // vocab.txt: one token a line, its line number its id (as the tokenizers library reads it)
   const lines = vocabText.split("\n"); if (lines.length && lines[lines.length - 1] === "") lines.pop();
@@ -388,14 +388,17 @@ function insTiers(sc, groups, X) {
 }
 /* 2.5 (15 November 2026; the senior author: "make the site understand on its own what the users want added in the website
    in-app and not via email"). When no answer is a best match, a second look, at the list of questions not answered yet
-   (data/site/wanted.json): the same ranking and the same judge over the list's own small index. The typed question IS a
-   listed one when the list's first candidate is about every drug named and the judge's number for it is the list's cut or
-   more (measured in scripts/insight/build_index.py, wanted_index). Then the page says "Not answered yet. It is on our
-   list", and one more person asking is counted by the item's number alone (wantCount, below): the words stay here. */
+   (data/site/wanted.json): the same ranking and the same judge over the list's own small index. The typed question is
+   taken for a listed one when the list's first candidate is about every drug named, the judge's number for it is the
+   list's cut or more, and its best wording is near enough in both looks, with the drug's name and with the drug names
+   taken out (the list's "near"; scripts/insight/build_index.py, wanted_index, measures all three and says why the judge
+   alone is not enough on a small list). Then the page says "Not answered yet. A question like yours is on our list" (a
+   neighbouring question can be taken too, so it does not say "yours"), and one more person asking is counted by the
+   item's number alone (wantCount, below): the words stay here. */
 function insWant(v, mv, q, groups) {
   const X = INS.list; if (!X) return null;
   const c = insTiers(insScore(v, mv, q, X), groups, X).first;
-  return c.on && c.p >= X.cut ? { id: X.ids[c.i], q: X.q[c.i], p: +c.p.toFixed(5) } : null;
+  return c.on && c.p >= X.cut && c.f[0] >= X.near[0] && c.f[4] >= X.near[1] ? { id: X.ids[c.i], q: X.q[c.i], p: +c.p.toFixed(5) } : null;
 }
 /* 2.5 (the senior author, of "can i die from mosquito bites" being offered "Ask us to check it": "pharmakon insight should
    understand trolling ... this is a drug website there should be no mistakes"). Is this a question about drugs? By its
@@ -416,7 +419,7 @@ function insPageOf(id, groups, drug) {
    Out: q (as typed), core (without depth words: what was matched), depth ("", "full" or "short"), routes, best (0 to 2) and
    related (up to 3), each { id, page, plain, topic, off } (off: not about every drug asked about), and what the list and
    the sheet say when there is no best match: note ("none": we haven't checked exactly this yet, with the way to ask us;
-   "want": it is on our list (want: { id, q, p }); "other": not a question about drugs by its words, no promise to check it;
+   "want": a question like it is on our list (want: { id, q, p }); "other": not a question about drugs by its words, no promise to check it;
    "blocked": the first line without the way to ask; "": nothing, the route says it). insRead is the part that needs no model: the depth
    words, the drugs named, the routes. */
 function insRead(query, ctx) {
@@ -440,7 +443,7 @@ async function insRank(query, ctx) {
     if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.want = insWant(v, mv, res.core, tx.groups);   // 2.5: is it on our list?
   }
   // with no best match, say so, unless a route already is the answer to what was asked (help, a dose, a test, the drug's page).
-  // 2.5: "want", it is one of the questions on our list; "other", by its words it is not a question about drugs (on a drug's
+  // 2.5: "want", a question like it is on our list; "other", by its words it is not a question about drugs (on a drug's
   // page a question that names no drug is about that drug); "none", a drug question we have not checked yet
   if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.note = res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
   res.ms = performance.now() - t0; INS.times.push(res.ms);
@@ -483,8 +486,8 @@ function insRouteHtml(r, cls) {
 // "Ask us to check it": one tap (2.4, below: Your questions); where the page can send it, a quiet line says what is sent
 const insAskBtn = (q, cls, label, after) => '<button type="button" class="' + cls + '" data-ask="' + esc(q) + '">' + (label || "Ask us to check it") + "</button>" + (after || "") + (ASK_ON ? '<span class="ask-note">Sends only this question. No name, no address.</span>' : "");
 /* 2.5: the line under a question with no best match, in the list (sheet false) and in the sheet. "none": a drug question we
-   have not checked: the way to ask us. "want": it is one of the questions on our list; the reader can ask to be told, on
-   this device, when it is answered, or send their own words if the listed question is not theirs. "other": by its words not
+   have not checked: the way to ask us. "want": a question like it is on our list; the reader can ask to be told, on this
+   device, when it is answered, or send their own words if the listed question is not the same. "other": by its words not
    a question about drugs: a line that is true whatever it was about, no promise to check it, and a quiet way to send it all
    the same (for the drug question whose words did not give it away). "blocked": what we do not answer. */
 function insNoneHtml(res, sheet) {
@@ -492,9 +495,9 @@ function insNoneHtml(res, sheet) {
   if (res.note === "want") {
     const w = res.want, note = wantOn() ? '<span class="want-n">We count how many people ask this. Your words are not sent.</span>' : "", at = ' data-want="' + esc(w.id) + '"' + (note ? " data-count" : "");
     const keep = '<button type="button" class="' + (sheet ? "qz2-nb ins-askus" : "linklike") + '" data-want-keep="' + esc(w.id) + '">Tell me when it is answered</button>';
-    const other = '<button type="button" class="linklike want-other" data-ask="' + esc(res.q) + '">Not your question? Send yours to us</button>';
-    return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. It is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="#wanted">See the whole list ' + icon("arrow") + "</a></div>"
-      : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> It is <a href="#wanted">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
+    const other = '<button type="button" class="linklike want-other" data-ask="' + esc(res.q) + '">Not the same? Send yours to us</button>';
+    return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="#wanted">See the whole list ' + icon("arrow") + "</a></div>"
+      : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> A question like yours is <a href="#wanted">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
   }
   if (res.note === "other") return sheet ? '<div class="ins-none ins-other"><p class="ins-none-t">We have no answer to this.</p><p class="ins-none-s">Pharmakon answers questions about drugs. If yours is about one, you can send it to us.</p>' + insAskBtn(res.q, "linklike", "Send it to us") + "</div>"
     : '<p class="sr-fit-none sr-other"><b>We have no answer to this.</b> Pharmakon answers questions about drugs. If yours is about one, ' + insAskBtn(res.q, "linklike", "send it to us", ".") + "</p>";
@@ -517,7 +520,7 @@ function insFitHtml(res) {
 function insSay(res) {
   const parts = res.routes.map(r => r.t);
   if (res.best.length) parts.push("Best match: " + res.best.map(x => insQ(x.id, x.page)).join("; "));
-  else if (res.note === "want") parts.push("Not answered yet. It is on our list: " + res.want.q);
+  else if (res.note === "want") parts.push("Not answered yet. A question like yours is on our list: " + res.want.q);
   else if (res.note === "other") parts.push("We have no answer to this. Pharmakon answers questions about drugs");
   else if (res.note) parts.push("We haven’t checked exactly this yet");
   if (res.related.length) parts.push(res.related.length + " related answer" + (res.related.length === 1 ? "" : "s"));
@@ -533,6 +536,7 @@ function insInject(box, res) {
   if (none) none.remove();                                     // Insight has its own line for a question with no checked answer
   if (ask && (res.note || !box.querySelector(":scope > a"))) ask.remove();   // one way to ask us, not two (and none for what we do not answer)
   if (res.note === "blocked") box.querySelectorAll(":scope > a").forEach(a => { if (!/^#s-[a-z0-9-]+$/.test(a.getAttribute("href") || "")) a.remove(); });
+  if (res.note === "other") box.querySelectorAll(":scope > a").forEach(a => a.remove());   // 2.5: not about drugs by its words: one calm line, no rows found by a stray word
   const note = box.querySelector(":scope > .sr-note");
   if (note) note.insertAdjacentHTML("afterend", insFitHtml(res)); else box.insertAdjacentHTML("afterbegin", insFitHtml(res));
   // the word search's own rows follow under a quiet label, so that none reads as part of the best match or the related answers
@@ -920,8 +924,8 @@ if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdle
    users' emails but make the site understand on its own what the users want added in the website in-app and not via email";
    and, the same evening: "i just want the website to be perfect".
    - The list (data/site/wanted.json; const WANTED from the build: the items the site does not answer yet) is public: its own
-     page, "On our list". A question typed in the search box that IS one of them (insWant: matched on this device) gets "Not
-     answered yet. It is on our list".
+     page, "On our list". A question typed in the search box that is like one of them (insWant: matched on this device) gets
+     "Not answered yet. A question like yours is on our list".
    - Counting. For such a question the device sends one thing: the number of the list item (POST api/want { id }). Never the
      words typed, no name, no cookie; the site's program keeps a count for each item and nothing about who asked. It is sent
      once per item per visit (sessionStorage), only after the card has stood for a moment or Enter was pressed, only where

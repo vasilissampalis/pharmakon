@@ -241,7 +241,7 @@ class Ranker:
         # 2.5: the list of questions not answered yet, as a ranker of its own over the same names, weights and judge
         Sc = D.get("scope"); self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A) if Sc else None
         self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A) if Sc else None
-        Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0)
+        Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0); self.want_near = (Wd or {}).get("near", [0.0, 0.0])
         if Wd: self.wanted = Ranker({"dim": dim, "ids": Wd["ids"], "rows": Wd["rows"], "W": Wd["W"], "M": Wd["M"], "S": Wd["S"], "docs": Wd["docs"], "weights": D["weights"], "tiers": D["tiers"], "judge": D["judge"],
                                      "slugs": D["slugs"], "about": Wd["about"], "names": D["names"]})
     def named(self, q):
@@ -321,13 +321,15 @@ class Ranker:
         t = self.scope_not.sub(" ", q)
         return bool(self.named(t)) or bool(self.scope_re.search(t))
     def want(self, q, v, mv, groups):
-        """The page's second look (insWant): the listed question a typed question is, or None. The list is ranked as the
-        answers are, by its own small index; the first candidate is taken when it is about every drug the question names
-        and the judge's number for it is the list's cut or more."""
+        """The page's second look (insWant): the listed question a typed question is like, or None. The list is ranked as
+        the answers are, by its own small index; the first candidate is taken when it is about every drug the question
+        names, the judge's number for it is the list's cut or more, and its best wording is near enough in both looks:
+        with the drug's name (the judge's first number) and with the drug names taken out (its fifth), each at least
+        the list's 'near' (wanted_index says why the judge alone is not enough on a small list)."""
         if self.wanted is None: return None
         r = self.wanted.rank_vectors(q, v, mv, groups); c = r["first"]
         on = bool(r["ok"][self.wanted.ids.index(c["id"])])
-        return {"id": c["id"], "p": c["p"]} if on and c["p"] >= self.want_cut else None
+        return {"id": c["id"], "p": c["p"]} if on and c["p"] >= self.want_cut and c["f"][0] >= self.want_near[0] and c["f"][4] >= self.want_near[1] else None
 
 
 def next_lists(A, sim):
@@ -445,7 +447,8 @@ def scope_block():
     return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"])}
 
 
-WANT_CUT = 0.75   # the judge's number from which a typed question IS a listed one (see wanted_index)
+WANT_CUT = 0.75            # the judge's number from which a typed question can be a listed one (see wanted_index)
+WANT_NEAR = [0.70, 0.70]   # and how near its best wording must be: with the drug's name, and with the drug names taken out
 
 
 def wanted_index(items, out, names, pat, at):
@@ -461,7 +464,19 @@ def wanted_index(items, out, names, pat, at):
     answered questions standing in for listed ones (42 at random, five times; hurried rewordings held out): with the
     question alone 10 in 100 found their item; with six ways of asking and the judge at 0.75, 82 in 100, none a wrong
     item, and 4 in 100 questions that were not on the list were taken for a listed one (at the answers' own cut, 0.60:
-    87 and 6). So every item carries six ways, and the cut for the list is 0.75 (WANT_CUT)."""
+    87 and 6). So every item carries six ways, and the cut for the list is 0.75 (WANT_CUT).
+
+    The judge alone is not enough, and real questions showed it (15 November 2026, the 1,021 forum questions of the
+    harvest, 845 of them without a best match). On a small list an item often stands alone for its drug, so the judge's
+    sixth number (the lead over the next candidate) is always large: the judge took 52 forum questions for a listed
+    one and 26 of them wrongly, most of them any question about Adderall for the one listed question that names it.
+    What tells them apart is how near the best wording is in both looks, with the drug's name and with the drug names
+    taken out: asking 0.70 of each (WANT_NEAR) leaves 20 taken, 18 of them the listed question and 2 a neighbouring
+    one, and of held-out rewordings 74 in 100 still find their item (a wrong item 0.2; a question not on the list 1.9).
+    Stricter (0.80 of each): 8 taken, none wrong, 53 in 100. A typed question that is missed loses nothing (it gets
+    "We haven't checked exactly this yet" and the one tap that sends it); one taken wrongly would be shown another
+    question as its own. So the page says "A question like yours is on our list", which is true of a neighbouring
+    question too, and keeps "Not the same? Send yours to us"."""
     if not items: return None
     R = Ranker(out); keep, gone = [], []
     for w in items:
@@ -484,7 +499,7 @@ def wanted_index(items, out, names, pat, at):
         for m in pat.finditer(w["q"]): ab |= set(name_of.get(m.group(1).lower(), []))
         about.append(sorted(at[s] for s in ab if s in at))
     print(f"insight: {len(items)} questions on the list of those not answered yet, {len(W_txt)} wordings", file=sys.stderr)
-    return {"ids": [w["id"] for w in items], "q": shorts, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": [" ".join(dict.fromkeys([w["q"]] + (w.get("ways") or []))) for w in items], "about": about, "cut": WANT_CUT}
+    return {"ids": [w["id"] for w in items], "q": shorts, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": [" ".join(dict.fromkeys([w["q"]] + (w.get("ways") or []))) for w in items], "about": about, "cut": WANT_CUT, "near": WANT_NEAR}
 
 
 def evaluate(D, near=None):

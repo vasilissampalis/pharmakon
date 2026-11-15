@@ -16,8 +16,9 @@ checker's task was the checker's task we want a machine to do: does the card say
   left out     cards changed for form only (length, clarity, a trick) and second wordings of one card: they are neither
                right nor wrong sentences; cards refused for a content rule (timing, amounts) go to the rules' own test
 
-A candidate is a function (the lines, the card) -> pass or stop. The bar (the senior author's rule for the machine lane,
-15 November 2026): of everything a candidate lets through, at most 1 item in 50 may be a bad one. The exam also says how
+A candidate is a function (the lines, the card) -> pass or stop. The bar (the editor's, 15 November 2026): of everything
+a candidate lets through, at most 1 item in 50 may be a bad one. (The senior author, the same evening: the machine lane
+does not wait for a candidate to pass; the exam is the measure, and his goal is 1 in 1,000. docs/AUTOMATION.md.) The exam also says how
 many good items it stops, because a checker that stops everything is perfectly safe and useless.
 
 The exam is small (see the counts it prints): it can show that a candidate is NOT good enough; passing it once is not

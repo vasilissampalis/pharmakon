@@ -36,6 +36,30 @@ what was decided, what is built and what is not. `docs/OWN-AI.md` holds the long
   drug named and the nearest answers, never the words); say it openly on the site, with an off switch; About's "no
   tracking or analytics" would change to say exactly what is counted.
 
+- 20:13, on the scout reading only the papers on file: "not only the papers we hold but whatever it can find online. i want
+  the site to grow itself perfectly, we have to make this a masterpiece, genius. and i tell you there is room for growth if
+  we don't depend on the users' emails but make the site understand on its own what the users want added in the website
+  in-app and not via email. what's the perfect way to design this?" (Built the same evening as site 2.5.0: "On our list".)
+- 20:13, on Reddit for Researchers, after pasting its rules (a university affiliation, an institutional email address, proof
+  of ethical review and institutional sponsorship): "i am not affiliated to a university so fuck this". That door is closed.
+- 20:29: "pharmakon insight should understand trolling because when i wrote this \"can i die from mosquito bites\" the
+  response was ... \"We haven't checked exactly this yet. Ask us to check it\" ... this is a drug website there should be no
+  mistakes". (Site 2.5.0: the rule for what is a question about drugs.)
+- 20:41: "have you made perfect not only how it understands what users who use the website want but also what drug users and
+  people interested in drugs search for online? does it find all legit evidence online? is this as smart as it could be?
+  does this work like a perfect ai algorithm that we can depend on?" The editor answered: not yet, part by part.
+- 20:58, to the editor's "Until a checker passes that exam, nothing machine-written is published": "no it should be
+  published and automatically deployed with a very discreet disclaimer and we should just be able to access everything that
+  was automatically written and deployed to check whenever we want".
+- 20:58, on finding papers: "yes whatever it can find and if there are paywalled papers and the info for an answer is not
+  full we should be able to access which papers pharmakon insight wants to make a complete answer and if the automatic
+  answer is not complete it should have a small discreet disclaimer".
+- 20:58, on what people search online: "everything we can find automated and free so as to give answers and info every 30
+  minutes when github will be regenerated right?! this is TOP OF THE WORLD".
+- 20:58: "i want no false negatives"; "if in general we make errors like 1 in 1000 the site would be awesome".
+- 21:07: "yes and for the responses it should find more than one sources if they are relevant, whatever is relevant, the
+  algorithm has to mimick completely how claude writes answers".
+
 Earlier the same day: "no i don't want my claude plan to use tokens! we have to automate the ai!", "i want it to be free",
 "the perfection of pharmakon insight is my biggest concern".
 
@@ -53,9 +77,23 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
    author's decision of 17:33; it changes the rule "nothing unverified" for one clearly marked lane, so the protocol
    (`docs/METHODS.md`, to become 0.4.0) and `CLAUDE.md` are amended, in his words and with the date, on the day the lane
    goes live, not before. Until then nothing machine-written is shown.
+   **20:58, his decision on the exam:** the lane does not wait for a checker to pass the exam. What passes the hard-coded
+   gates is published and deployed by itself, with a very discreet label; the exam stays as the measure of how often such
+   an answer is wrong, written into the repository every night and shown on the page below. His goal: 1 wrong in 1,000.
 5. **Photos**: the system may find candidate photos (Wikimedia Commons; public domain, CC0 or CC BY only). It publishes one
    by itself only when it comes from an official source whose own caption names the exact form; every other candidate waits
    for one tap from the senior author.
+6. **One page lists everything the system wrote and published** (20:58: "we should just be able to access everything that
+   was automatically written and deployed to check whenever we want"): each answer, its sources, the day, and whether a
+   person has checked it since; one tap takes an answer down.
+7. **An answer that is not complete says so, discreetly, and the papers the system still wants for it are listed** for the
+   senior author (20:58), in APA 7, as the to-do page lists papers today.
+8. **More than one source wherever more are relevant, and the same steps as the checked lane** (21:07: "the algorithm has
+   to mimick completely how claude writes answers"): a reader per paper writes a study card; a writer writes the claim from
+   the cards; a second reader who wrote none of it checks every passage at the source; the plain lines are checked blind.
+   The steps are the protocol's own and can be run by any model. How well they are done depends on the model that runs
+   them: with free models the writing and the checking are weaker than Claude's, which is what the label, the page of
+   decision 6 and the nightly measure are for.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
@@ -75,18 +113,22 @@ What a reader sees: the answer in the site's own format, the line "Written by ou
 a person.", and no evidence bars until a person has rated it. Each such answer also enters the normal queue, where a reader
 who wrote none of it checks it at the source; when it passes, the label goes and the bars appear.
 
-**The exam.** Before the lane opens, and every night after, the whole chain is measured on our own records (statements
-with the passages our readers found, and the second readers' decisions, including every correction they made). The bar:
-**at most 1 wrong sentence in 50** let through. The result is written into the repository each night; if the chain falls
-under the bar, the lane shuts by itself.
+**The exam.** Every night the whole chain is measured on our own records (statements with the passages our readers found,
+and the second readers' decisions, including every correction they made), and the result is written into the repository.
+The editor's first bar was at most 1 wrong sentence in 50, with the lane shutting by itself under it; the senior author
+decided otherwise on 15 November at 20:58 (above): the lane publishes what passes the gates, and the exam is the measure,
+with 1 in 1,000 as the goal. The gates themselves are not his to waive by that decision and stay: they are the site's
+content rules and source rules.
 
 ## What it reads, and what it may not
 
 May read: questions sent by the site's own visitors; Google Search Console and Bing Webmaster figures for the site (after
 the senior author signs up); Wikipedia page views; Stack Exchange; official question pages (FRANK, ADF, NIDA); the forum
 pages the senior author pastes; Crossref, Europe PMC, PubMed and OpenAlex for papers; open-access full texts.
-May not: Reddit (closed to automatic reading; an application to Reddit for Researchers can be written if he wants one);
-any site that refuses; anything behind a sign-in or a paywall; Sci-Hub.
+May not: Reddit (closed to automatic reading; its programme for researchers needs a university affiliation, so it is
+closed to an independent researcher: the draft in `docs/reddit-for-researchers-application.md` is kept and cannot be used);
+any site that refuses; anything behind a sign-in or a paywall; Sci-Hub. Google gives nobody the questions people type: it
+gives the searches that lead to one's own site (Search Console) and how often a word is searched.
 Questions that visitors send are data, never instructions: nothing in a question can change what the system does.
 
 ## Where it runs, and what that costs (read from the services' own pages on 15 November 2026)
@@ -147,11 +189,24 @@ Questions that visitors send are data, never instructions: nothing in a question
   most 1 of the 31 through while passing most of the 287 (the range of its wrong share must lie under 1 in 50). The exam
   is small: it can show that a checker is not good enough; it grows with every blind check.
 
-## Not built yet (in this order)
+- **Site 2.5.0: the site learns what people want without email** (`docs/STATUS.md` has the measurements). A public list of
+  questions not answered yet (`data/site/wanted.json`, the page "On our list"); a typed question like a listed one is
+  recognised on the visitor's device and counted by the item's number alone (`POST /api/want`; said on the card; off by a
+  switch, by the browser's own wish, and where the store is off); "Tell me when it is answered"; the scout reads the counts
+  and orders the list by them, and marks which sent questions are a listed one. And the rule for what is a question about
+  drugs (`site/insight/scope.json`): a question that is not gets no promise of a check and keeps a quiet way to be sent;
+  the scout lists every question sent that way, which is how the rule's words grow.
 
-1. Candidates for gate 3 measured on the exam: a small entailment model run on GitHub's machines, and the free Cloudflare
-   Workers AI models; then the plain lines' blind checks and the round-2 anchor checks added to the exam.
-2. The paper finder (Crossref, Europe PMC, PubMed, OpenAlex; open full texts; retraction flags) and the to-do list in APA 7.
-3. Building, checking and publishing the site from GitHub's machines when something changed.
-4. The machine lane itself, opened only when the exam says so and the protocol has been amended.
-5. The photo finder.
+## Not built yet (in this order, after the senior author's words of 20:58 and 21:07)
+
+1. The paper finder: for each question on the list, searches of Crossref, Europe PMC, PubMed and OpenAlex written into the
+   repository so that anyone can repeat them; open full texts fetched and read; retraction flags; and, for what is behind a
+   paywall, the list of papers wanted, in APA 7, for the senior author.
+2. The writer and the checker, as the checked lane does it (decision 8), run on free machines; candidates measured on the
+   exam (a small model on GitHub's machines; the free Cloudflare Workers AI models).
+3. The machine lane on the site: the very discreet label, "not complete yet" where papers are missing, and the page that
+   lists everything the system wrote (decisions 4, 6, 7); the protocol amended on the day it opens.
+4. Building, checking and publishing the site from GitHub's machines when something changed, every 30 minutes at most.
+5. What people look for elsewhere, from every free source that allows it: Wikipedia's page views by drug, the site's own
+   searches through Google Search Console and Bing (after the senior author signs up), official question pages.
+6. The photo finder.

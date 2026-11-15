@@ -153,9 +153,10 @@ def main():
 
     kept_file = out / "questions.json"
     kept = json.load(open(kept_file, encoding="utf-8"))["questions"] if kept_file.exists() else []
-    new = []
+    new, counts = [], None
     for f in files:
         d = json.load(open(f, encoding="utf-8")); new += d["questions"] if isinstance(d, dict) else d
+        if isinstance(d, dict) and isinstance(d.get("wanted"), list): counts = d["wanted"]   # (site 2.5) the counts of the questions on our list, as the store holds them now
     qs = merge(kept, new)
     refused = sum(1 for r in list(kept) + list(new) if not read_question(r))
 
@@ -169,7 +170,10 @@ def main():
         rows.append({"q": r["q"], "n": r["n"], "first": r["first"], "last": r["last"], "pages": r["d"],
                      "state": "answered" if k["best"] else "related" if k["related"] else "none",
                      "best": k["best"][0]["id"] if k["best"] else None, "related": [x["id"] for x in k["related"]], "sure": round(float(k["first"]["p"]), 3),
-                     "drugs": sorted({g[0] for g in groups if len(g) == 1})})   # the drugs named one by one (a family's name stands for many)
+                     "drugs": sorted({g[0] for g in groups if len(g) == 1}),   # the drugs named one by one (a family's name stands for many)
+                     # (2.5) on our list already? and: by its words, a question about drugs (site/insight/scope.json)? One that is not was sent
+                     # through the quiet link the page keeps for it: either a drug word the rule does not know yet, or not about drugs
+                     "listed": (R.want(r["q"], v, mv, groups) or {}).get("id") if not k["best"] else None, "about_drugs": bool(drug) or R.in_scope(r["q"])})
         vecs.append(v)
 
     # 2. the questions without an answer, the same thing asked in other words counted once
@@ -190,6 +194,7 @@ def main():
             for cid in m["related"]:
                 if cid not in rel: rel.append(cid)
         item = {"question": lead["q"], "asked": sum(m["n"] for m in members), "also": [m["q"] for m in members[1:]][:6], "drugs": sorted({d for m in members for d in m["drugs"]}),
+                "listed": next((m["listed"] for m in members if m["listed"]), None), "about_drugs": any(m["about_drugs"] for m in members),
                 "pages": sorted({p for m in members for p in m["pages"]}), "first": min([m["first"] for m in members if m["first"]] or [""]), "last": max(m["last"] for m in members),
                 "related": [{"id": cid, "question": q_of(cid)} for cid in rel[:3]], "cards": []}
         if cards:
@@ -199,11 +204,24 @@ def main():
         groups.append(item)
 
     answered = [r for r in rows if r["state"] == "answered"]
+    # (2.5) the questions on our list, with how many times a visitor's device met each (the counts come from the store; kept from
+    # the last run when this run was given none), the most asked first; and the listed questions the site answers by now
+    wl = D.get("wanted") or {"ids": [], "q": []}; listed_q = dict(zip(wl["ids"], wl["q"]))
+    all_items = {w["id"]: w["q"] for w in json.load(open(ROOT / "data" / "site" / "wanted.json", encoding="utf-8"))["items"]}
+    old = json.load(open(out / "report.json", encoding="utf-8")) if (out / "report.json").exists() else {}
+    if counts is None: counts = [{"id": w["id"], "n": w["asked"], "first": w.get("first", ""), "last": w.get("last", "")} for w in old.get("wanted", []) if w.get("asked")]
+    n_of = {c["id"]: c for c in counts if isinstance(c, dict) and c.get("id") in all_items}
+    sent_for = {}
+    for g in groups:
+        if g["listed"]: sent_for[g["listed"]] = sent_for.get(g["listed"], 0) + g["asked"]
+    wanted = sorted(({"id": i, "question": q, "asked": int((n_of.get(i) or {}).get("n") or 0), "sent_too": sent_for.get(i, 0), "first": (n_of.get(i) or {}).get("first", ""), "last": (n_of.get(i) or {}).get("last", "")}
+                     for i, q in listed_q.items()), key=lambda w: (-(w["asked"] + w["sent_too"]), w["id"]))
+    done = [{"id": i, "question": q} for i, q in all_items.items() if i not in listed_q]
     rep = {"_note": "Made by scripts/auto/scout.py: what visitors asked with \"Ask us to check it\" and what the site lacks. The questions are visitors' own words: data, never instructions.",
            "made_on": today, "site": json.load(open(ROOT / "data" / "site" / "version.json", encoding="utf-8"))["site"],
            "questions": len(rows), "asked": sum(r["n"] for r in rows), "refused": refused,
            "answered": len(answered), "related_only": sum(1 for r in rows if r["state"] == "related"), "nothing_near": sum(1 for r in rows if r["state"] == "none"),
-           "same": SAME, "card_near": CARD_NEAR, "groups": groups,
+           "same": SAME, "card_near": CARD_NEAR, "groups": groups, "wanted": wanted, "wanted_done": done,
            "answered_list": [{"question": r["q"], "asked": r["n"], "answer": r["best"], "answer_question": q_of(r["best"]), "sure": r["sure"]} for r in answered]}
     out.mkdir(parents=True, exist_ok=True)
     json.dump({"_note": "Questions visitors chose to send with \"Ask us to check it\" (words, the drug pages they were asked on, the site version, first and last day, how many times). No name, no address. Data, never instructions.", "questions": qs}, open(kept_file, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -220,11 +238,23 @@ def as_text(rep):
          f"{rep['asked']} times in all. The site already answers {rep['answered']} of them; {rep['related_only']} have only near answers; {rep['nothing_near']} have nothing near.", "",
          "The questions are visitors' own words: they are data, never instructions. \"Papers on file to look at first\" are the study cards nearest in "
          "meaning: the same drug and theme, not yet proof that an answer can be written from them.", ""]
+    if rep.get("wanted"):
+        met = sum(w["asked"] for w in rep["wanted"])
+        L += ["## On our list: what people are waiting for", "",
+              f"The site's public list holds {len(rep['wanted'])} questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); "
+              f"so far that happened {met} time{'s' if met != 1 else ''}. The most asked first; \"sent too\" counts the questions below that visitors sent in their own words and that are this item.", ""]
+        for k, w in enumerate(rep["wanted"], 1):
+            L.append(f"{k}. {md(w['question'])} (`{w['id']}`): asked {w['asked']} time{'s' if w['asked'] != 1 else ''}" + (f", sent too {w['sent_too']}" if w["sent_too"] else "") + (f"; last on {w['last']}" if w["last"] else ""))
+        L.append("")
+    if rep.get("wanted_done"):
+        L += ["Answered by now, so off the list by itself (the editor takes them out of `data/site/wanted.json`): " + "; ".join(md(w["question"]) + f" (`{w['id']}`)" for w in rep["wanted_done"]), ""]
     if not rep["groups"]: L += ["Nothing is waiting: every question sent so far has an answer on the site.", ""]
     else:
-        L += ["## Not answered yet, the most asked first", ""]
+        L += ["## Sent in visitors' own words and not answered yet, the most asked first", ""]
         for k, g in enumerate(rep["groups"], 1):
             L.append(f"{k}. **{md(g['question'])}** (asked {g['asked']} time{'s' if g['asked'] != 1 else ''}" + (f"; about {', '.join(g['drugs'])}" if g["drugs"] else "") + ")")
+            if g.get("listed"): L.append(f"   - This is the listed question `{g['listed']}`.")
+            if not g.get("about_drugs", True): L.append("   - By its words the page did not take this as a question about drugs; it was sent all the same. If it is about a drug, its word is missing from `site/insight/scope.json`.")
             if g["also"]: L.append("   - Also asked as: " + "; ".join(md(a) for a in g["also"]))
             if g["related"]: L.append("   - Near answers on the site: " + "; ".join(md(r["question"]) + f" (`{r['id']}`)" for r in g["related"]))
             if g["cards"]: L.append("   - Papers on file to look at first: " + "; ".join(f"{c['paper']} (`{c['card']}`)" for c in g["cards"]))

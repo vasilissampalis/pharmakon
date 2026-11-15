@@ -47,7 +47,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
   const box = (p, sel) => p.evaluate(s => { const e = document.querySelector(s); if (!e) return null; const r = e.getBoundingClientRect(); return { x: Math.round(r.left), r: Math.round(r.right), y: Math.round(r.top), w: Math.round(r.width) }; }, sel);
 
   /* ---- A. one top bar and one column, at 1280 and at 390 ---- */
-  const PAGES = ["#home", "#facts", "#quiz", "#numbers", "#checking", "#methods", "#about", "#howto", "#s-cannabis", "#substances", "#interactions", "#glossary", "#emergency", "#law"];
+  const PAGES = ["#home", "#facts", "#quiz", "#numbers", "#checking", "#methods", "#about", "#howto", "#s-cannabis", "#substances", "#interactions", "#glossary", "#emergency", "#law", "#wanted"];
   for (const width of [1280, 390]) {
     const p = await open(ON, width), seen = [];
     for (const h of PAGES) {
@@ -261,29 +261,30 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
   {
     const p = await open(ON, 390);
     await p.waitForTimeout(1500);   // the page asks once whether it can send
-    await typeQ(p, "how can you die from alcohol");
+    await typeQ(p, "is modafinil safe");
     const before = await p.evaluate(() => ({ none: (document.querySelector(".sr-fit-none") || {}).textContent || "", note: (document.querySelector(".sr-fit .ask-note") || {}).textContent || "", insNote: (document.querySelector(".sr-note") || {}).textContent || "" }));
     ok("with the store on: the button says what it sends", /We haven.t checked exactly this yet/.test(before.none) && before.note === "Sends only this question. No name, no address.", JSON.stringify(before));
     await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
     const said = await p.evaluate(() => (document.querySelector(".ask-said") || {}).textContent || "");
     ok("one tap: the page says it was sent", /^Sent\./.test(said), said);
     const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
-    ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "how can you die from alcohol" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
+    ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "is modafinil safe" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, rows: [...b.querySelectorAll(".aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
-    ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking \| how can you die from alcohol/.test(list.rows[0]), JSON.stringify(list));
+    ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking \| is modafinil safe/.test(list.rows[0]), JSON.stringify(list));
     ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it."));
-    await typeQ(p, "can you overdose on lsd"); await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(800);
+    await typeQ(p, "why do people take drugs"); await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(800);
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     list = await p.evaluate(() => [...document.querySelectorAll("#home-asked .aq-q")].map(e => e.textContent));
-    ok("a second question is kept beside the first", list.length === 2 && list.includes("can you overdose on lsd"), JSON.stringify(list));
+    ok("a second question is kept beside the first", list.length === 2 && list.includes("why do people take drugs"), JSON.stringify(list));
     await shot(p, "390-home-asked");
     await p.reload(); await p.waitForTimeout(900);
     ok("the list is still there after a reload", (await p.evaluate(() => document.querySelectorAll("#home-asked .aq").length)) === 2);
     await p.click("#home-asked .aq-x"); await p.waitForTimeout(300);
     ok("the cross takes a question off the list", (await p.evaluate(() => document.querySelectorAll("#home-asked .aq").length)) === 1);
     // answered: a question kept under an older version of the site, which the site can answer now
-    await p.evaluate(() => { localStorage.setItem("pk-asked", JSON.stringify([{ k: "is weed addictive", q: "is weed addictive", d: "", t: Date.now() - 864e5, cv: "0.0.1", st: "wait", sent: 1 }, { k: "what is the capital of mongolia", q: "what is the capital of mongolia", d: "", t: Date.now(), cv: "0.0.1", st: "wait", sent: 1 }])); });
+    // (2.5: the first one is a question the reader asked to be told about from our list; it turns green the same way)
+    await p.evaluate(() => { localStorage.setItem("pk-asked", JSON.stringify([{ k: "is weed addictive", q: "is weed addictive", d: "", t: Date.now() - 864e5, cv: "0.0.1", st: "wait", sent: 1, w: "w_0000" }, { k: "what is the capital of mongolia", q: "what is the capital of mongolia", d: "", t: Date.now(), cv: "0.0.1", st: "wait", sent: 1 }])); });
     await p.reload(); await p.waitForSelector("#home-asked .aq.ans", { timeout: 90000 });
     const ans = await p.evaluate(() => [...document.querySelectorAll("#home-asked .aq")].map(r => ({ cls: r.className, k: r.querySelector(".aq-k").textContent, q: r.querySelector(".aq-q").textContent, href: (r.querySelector("a.aq-a") || {}).getAttribute ? r.querySelector("a.aq-a").getAttribute("href") : null })));
     ok("a kept question that the site can answer now shows first, in green, as Answered; the other is still being checked", ans.length === 2 && /ans/.test(ans[0].cls) && ans[0].k === "Answered" && ans[0].q === "is weed addictive" && /^#/.test(ans[0].href || "") && /wait/.test(ans[1].cls), JSON.stringify(ans));
@@ -296,18 +297,18 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
   {
     const p = await open(OFF, 390);
     await p.waitForTimeout(1500);
-    await typeQ(p, "how can you die from alcohol");
+    await typeQ(p, "is modafinil safe");
     const note = await p.evaluate(() => ({ note: !!document.querySelector(".sr-fit .ask-note"), ins: (document.querySelector(".sr-note") || {}).textContent || "" }));
     ok("with the store off: no promise of sending, and Insight still says nothing typed leaves the device", !note.note && /Nothing you type leaves it/.test(note.ins), JSON.stringify(note));
     await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
     const fb = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), text: document.getElementById("report-message").value, kept: JSON.parse(localStorage.getItem("pk-asked") || "[]").map(x => x.q + "|" + x.sent) }));
-    ok("with the store off: the email form opens with the question, and it is kept on the device", fb.open && fb.text === "how can you die from alcohol" && fb.kept.join() === "how can you die from alcohol|0", JSON.stringify(fb));
+    ok("with the store off: the email form opens with the question, and it is kept on the device", fb.open && fb.text === "is modafinil safe" && fb.kept.join() === "is modafinil safe|0", JSON.stringify(fb));
     await p.click("#report-close"); await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     const row = await p.evaluate(() => { const r = document.querySelector("#home-asked .aq"); return r ? { cls: r.className, k: r.querySelector(".aq-k").textContent, send: (r.querySelector("button.aq-send") || {}).textContent || "", note: (document.querySelector("#home-asked .aq-note") || {}).textContent || "" } : null; });
     ok("with the store off: the list says Not sent, where the list is kept, and offers to send it", row && /unsent/.test(row.cls) && row.k === "Not sent" && row.send === "Send it to us" && /kept on this device only/.test(row.note), JSON.stringify(row));
     await p.click("#home-asked button.aq-send"); await p.waitForTimeout(700);
     const again = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), text: document.getElementById("report-message").value, how: (document.querySelector("#report .fb-how") || {}).textContent || "", head: document.querySelector("#report .fb-head p").textContent, k: document.querySelector("#home-asked .aq-k").textContent }));
-    ok("with the store off: Send it to us opens the email form with the question; the form says nothing is sent until Send is pressed there; the row stays Not sent", again.open && again.text === "how can you die from alcohol" && /Nothing is sent until you press Send there/.test(again.how) && again.k === "Not sent", JSON.stringify(again));
+    ok("with the store off: Send it to us opens the email form with the question; the form says nothing is sent until Send is pressed there; the row stays Not sent", again.open && again.text === "is modafinil safe" && /Nothing is sent until you press Send there/.test(again.how) && again.k === "Not sent", JSON.stringify(again));
     ok("the form's head no longer says that the most asked questions are answered first (nor does any page)", again.head === "Both reach the editors. We read everything." && await p.evaluate(() => { location.hash = "#s-cannabis"; return new Promise(r => setTimeout(() => r(!/ask most are answered first/.test([...document.querySelectorAll("main, #report, #menu, footer.site")].map(e => e.textContent).join(" "))), 500)); }), again.head);   // (the page's text, not its script)
     await p.context().close();
   }
@@ -322,6 +323,80 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const stored = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v).q);
     ok("with the store on: a question that was not sent is sent from the list in one tap, and the row says so", before === "Not sent" && after.k === "Sent. We are checking" && !after.form && !after.send && stored.includes("does cannabis cause cancer"), JSON.stringify({ before, after, stored }));
     await p.context().close();
+  }
+
+  /* ---- I2 (site 2.5). On our list: a listed question is recognised on the device and counted by its number only; the off
+     switch; the browser's own wish; the list's page; a question that is not about drugs ---- */
+  {
+    const wkeys = S => [...S.kv.entries()].filter(([k]) => k.startsWith("w:")).map(([k, v]) => [k, JSON.parse(v)]);
+    const typeW = async (p, text) => { await p.click("#search"); await p.fill("#search", text); await p.waitForFunction(() => window.pkInsight && window.pkInsight.state() === "ready", null, { timeout: 90000 }); await p.waitForFunction(q => { const b = document.querySelector("#search-results > .sr-fit"); return b && b.dataset.q === q; }, text, { timeout: 20000 }); await p.waitForTimeout(200); };
+    const card = p => p.evaluate(() => { const c = document.querySelector("#search-results .sr-want"); return c ? { id: c.dataset.want, count: c.hasAttribute("data-count"), note: (c.querySelector(".want-n") || {}).textContent || "", q: c.querySelector(".want-q").textContent, t: c.querySelector(".want-t").textContent } : null; });
+    const p = await open(ON, 390), reqs = []; p.on("request", r => { if (/\/api\//.test(r.url())) reqs.push(r.method() + " " + r.url().replace(/^.*\/api\//, "api/") + " " + (r.postData() || "")); });
+    await p.waitForTimeout(1500);
+    await typeW(p, "how can you die from alcohol");
+    const c1 = await card(p);
+    ok("a listed question: the card names the listed question and says what is counted", c1 && /^w_\d+$/.test(c1.id) && c1.count && c1.q === "How can you die from alcohol?" && c1.t === "Not answered yet. A question like yours is on our list:" && c1.note === "We count how many people ask this. Your words are not sent.", JSON.stringify(c1));
+    ok("nothing is counted at once (the card must stand for a moment)", !reqs.some(x => /api\/want/.test(x)) && !wkeys(ON).length, reqs.join(" | ") || "no request yet");
+    await p.waitForTimeout(3000);
+    let w = wkeys(ON);
+    ok("after a moment the device sends the item's number, and only that", reqs.filter(x => /api\/want/.test(x)).join() === 'POST api/want {"id":"' + c1.id + '"}' && w.length === 1 && w[0][0] === "w:" + c1.id && w[0][1].n === 1 && Object.keys(w[0][1]).sort().join() === "dn,first,last,n", reqs.join(" | ") + " || " + JSON.stringify(w));
+    ok("the words typed are nowhere in the store, and no question was sent", ![...ON.kv.entries()].some(([k, v]) => /die from alcohol/i.test(k + v)) && !reqs.some(x => /POST api\/ask/.test(x)), [...ON.kv.keys()].join(", "));
+    await typeW(p, "can alcohol kill you"); await p.waitForTimeout(3000); w = wkeys(ON);
+    ok("the same item asked again in other words is not counted twice in one visit", w.length === 1 && w[0][1].n === 1 && reqs.filter(x => /api\/want/.test(x)).length === 1, JSON.stringify(w));
+    await p.click("#search-results button[data-want-keep]"); await p.waitForTimeout(300);
+    await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
+    const row = await p.evaluate(() => { const r = document.querySelector("#home-asked .aq"); return r ? r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent : ""; });
+    ok("Tell me when it is answered: Your questions keeps the LISTED question, as On our list", /onlist \| On our list \| How can you die from alcohol\?$/.test(row), row);
+    await shot(p, "390-home-onlist");
+    // its own words instead
+    await typeW(p, "does weed cause cancer"); await p.click("#search-results .sr-want .want-other"); await p.waitForTimeout(900);
+    const sentOwn = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v).q);
+    ok("Not the same? Send yours to us: the reader's own words are sent, by their press", sentOwn.includes("does weed cause cancer") && /^Sent\./.test(await p.evaluate(() => (document.querySelector("#search-results .sr-want .ask-said") || {}).textContent || "")), sentOwn.join(" | "));
+    // Enter counts at once
+    await typeW(p, "is ketamine addictive"); await p.keyboard.press("Enter"); await p.waitForTimeout(700);
+    const sh = await p.evaluate(() => { const c = document.querySelector("#evsheet .ins-want"); return c ? { t: c.querySelector(".ins-none-t").textContent, q: c.querySelector(".want-q").textContent, note: (c.querySelector(".want-n") || {}).textContent || "", id: c.dataset.want } : null; });
+    w = wkeys(ON);
+    ok("Enter on a listed question: the sheet says so and the item is counted at once", sh && sh.t === "Not answered yet. A question like yours is on our list." && sh.q === "Can you get addicted to ketamine?" && /We count how many people ask this/.test(sh.note) && w.some(([k, v]) => k === "w:" + sh.id && v.n === 1), JSON.stringify(sh) + " || " + JSON.stringify(w));
+    await shot(p, "390-sheet-onlist");
+    await p.keyboard.press("Escape"); await p.waitForTimeout(300);
+    // a question that is not about drugs, with the store on: no promise, a quiet way to send
+    await typeW(p, "can i die from mosquito bites");
+    const oth = await p.evaluate(() => { const e = document.querySelector("#search-results .sr-other"); return e ? { text: e.textContent.replace(/\s+/g, " "), btn: e.querySelector("button[data-ask]").textContent, askUs: /Ask us to check it/.test(document.getElementById("search-results").textContent) } : null; });
+    ok("the senior author's question, “can i die from mosquito bites”: no “Ask us to check it”; “We have no answer to this. Pharmakon answers questions about drugs”, with a quiet way to send it", oth && /^We have no answer to this\. Pharmakon answers questions about drugs\. If yours is about one, send it to us\.Sends only this question\. No name, no address\.$/.test(oth.text) && oth.btn === "send it to us" && !oth.askUs, JSON.stringify(oth));
+    await shot(p, "390-not-about-drugs");
+    // the list's own page
+    await p.fill("#search", ""); await p.keyboard.press("Escape"); await go(p, "#wanted", 600);
+    const pg = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-wanted h1").textContent, rows: document.querySelectorAll("#wanted-list .wl-i").length, listed: WANTED.length, kept: [...document.querySelectorAll("#wanted-list .wl-s")].map(e => e.closest(".wl-i").querySelector(".wl-q").textContent), first: document.querySelector("#wanted-list .wl-b").dataset.wantKeep, wide: document.documentElement.scrollWidth > innerWidth + 1 }));
+    ok("the list has its own page: every listed question, the one already kept marked so, nothing wider than the phone", pg.title === "On our list · Pharmakon" && pg.h1 === "On our list" && pg.rows === pg.listed && pg.rows >= 30 && pg.kept.join() === "How can you die from alcohol?" && !pg.wide, JSON.stringify(pg));
+    await shot(p, "390-wanted");
+    await p.click("#wanted-list .wl-b"); await p.waitForTimeout(500); w = wkeys(ON);
+    ok("on that page, Tell me when it is answered counts the item and keeps it in Your questions", w.some(([k, v]) => k === "w:" + pg.first && v.n === 1) && (await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked")).filter(x => x.w).length)) === 2 && /^We will tell you on this device/.test(await p.evaluate(() => (document.querySelector("#wanted-list .ask-said") || {}).textContent || "")), JSON.stringify(w));
+    // the switch in Privacy
+    await go(p, "#about/part-a-privacy", 700);
+    const sw = await p.evaluate(() => { const s = document.getElementById("count-switch"); return { there: !!(s && s.offsetParent), checked: s.checked, disabled: s.disabled, state: document.getElementById("count-state").textContent, text: s.closest("li").textContent.replace(/\s+/g, " ").slice(0, 160), old: /no tracking or analytics/.test(document.getElementById("view-about").textContent) }; });
+    ok("Privacy says what is counted, with a switch that is on, and no longer says “no tracking or analytics”", sw.there && sw.checked && !sw.disabled && sw.state === "On." && /^One thing is counted\./.test(sw.text) && !sw.old, JSON.stringify(sw));
+    await shot(p, "390-privacy");
+    await p.click("#count-switch"); await p.waitForTimeout(200);
+    const off = await p.evaluate(() => ({ stored: localStorage.getItem("pk-count"), state: document.getElementById("count-state").textContent, checked: document.getElementById("count-switch").checked }));
+    ok("switching it off is kept on the device", off.stored === "0" && off.state === "Off on this device." && !off.checked, JSON.stringify(off));
+    const nBefore = reqs.filter(x => /api\/want/.test(x)).length;
+    await go(p, "#home", 400); await typeW(p, "what is a k hole"); const c2 = await card(p); await p.waitForTimeout(3000);
+    ok("with counting switched off: the card still helps, says nothing about counting, and nothing is sent", c2 && !c2.count && !c2.note && c2.q === "What is a K-hole?" && reqs.filter(x => /api\/want/.test(x)).length === nBefore, JSON.stringify(c2));
+    await p.context().close();
+    // a browser that asks sites not to track (Global Privacy Control): nothing is counted, and the switch says why
+    const g = await browser.newContext({ viewport: { width: 390, height: 844 } }); await g.addInitScript(() => { Object.defineProperty(Navigator.prototype, "globalPrivacyControl", { get: () => true, configurable: true }); });
+    const gp = await g.newPage(), greqs = []; gp.on("request", r => { if (/\/api\/want/.test(r.url())) greqs.push(r.url()); });
+    await gp.goto(ON.base + "#home"); await gp.waitForTimeout(1500);
+    await typeW(gp, "what is ego death"); const c3 = await card(gp); await gp.waitForTimeout(3000);
+    await gp.evaluate(() => { document.getElementById("search").value = ""; location.hash = "#about/part-a-privacy"; }); await gp.waitForTimeout(700);
+    const gsw = await gp.evaluate(() => { const s = document.getElementById("count-switch"); return { checked: s.checked, disabled: s.disabled, state: document.getElementById("count-state").textContent }; });
+    ok("a browser that asks not to be tracked is not counted, and the switch says so", c3 && !c3.count && !c3.note && !greqs.length && !gsw.checked && gsw.disabled && gsw.state === "Off: your browser asks sites not to track you.", JSON.stringify(c3) + " " + JSON.stringify(gsw));
+    await g.close();
+    // with the store off: the card helps, counts nothing, asks nothing of the site
+    const q = await open(OFF, 390), oreqs = []; q.on("request", r => { if (/\/api\/want/.test(r.url())) oreqs.push(r.url()); });
+    await q.waitForTimeout(1500); await typeW(q, "how can you die from alcohol"); const c4 = await card(q); await q.waitForTimeout(3000);
+    ok("with the store off: a listed question still gets its card, nothing is counted and nothing says it is", c4 && !c4.count && !c4.note && !oreqs.length, JSON.stringify(c4));
+    await q.context().close();
   }
 
   /* ---- J. the other long pages: the glossary, the treaties, Find a drug, the emergency numbers ---- */

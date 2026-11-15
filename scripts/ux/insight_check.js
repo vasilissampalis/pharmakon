@@ -8,7 +8,7 @@
 //   answer in full in the list; a drug question it does not answer exactly ("is modafinil safe", "give me the full evidence
 //   about how can i die from ketamine") says "We haven't checked exactly this yet" with "Ask us to check it", and a near
 //   answer shows under "Related" at most; (2.5) a question on our list ("how can you die from alcohol") says "Not answered
-//   yet. It is on our list"; a question that is not about drugs gets no promise ("We have no answer to this"). What is a best match is decided by the judge whose numbers,
+//   yet. A question like yours is on our list"; a question that is not about drugs gets no promise ("We have no answer to this"). What is a best match is decided by the judge whose numbers,
 //   like the weights and the tiers, the page reads from data/insight.json (set in site/insight/model.json): no number here;
 // - routes, each with its test: two drugs (the mixing row first, opening the mixing tool with both chosen), a dose (the
 //   Doses row, no amount), an emergency (the help row and the emergency number line, which shows nowhere else), testing a
@@ -183,13 +183,13 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     const al = await ask(UNCHECKED); ui += " " + await uiText(); await shot("list-unmatched");
     ok(w + ": “" + UNCHECKED + "” says “We haven’t checked exactly this yet” with “Ask us to check it”, no best match; a near answer shows under Related at most", al.kids[0] === "none" && !al.best.length && al.none === "We haven’t checked exactly this yet." && al.askBtn === "Ask us to check it" && al.kids.indexOf("h:Related") === 1 &&
       al.related.length >= 1 && al.related.length <= 3 && !al.kids.includes("h:Best match") && !al.wordBest && /^We haven’t checked exactly this yet/.test(al.live), al.kids.join(" > ") + "; related: " + al.related.map(x => x.k + ": " + x.q).join("; ") + "; heard: " + al.live);
-    // (2.5) a question on our list: "Not answered yet. It is on our list", with the listed question in our words; here the site's
+    // (2.5) a question on our list: "Not answered yet. A question like yours is on our list", with the listed question in our words; here the site's
     // store is off, so nothing is counted and the card does not say that it is
     const li = await ask(LISTED); ui += " " + await uiText(); await shot("list-on-our-list");
     const liMore = await p.evaluate(() => { const c = document.querySelector("#search-results .sr-want"); return c ? { q: (c.querySelector(".want-q") || {}).textContent || "", id: c.dataset.want, count: c.hasAttribute("data-count"), note: !!c.querySelector(".want-n"), other: (c.querySelector(".want-other") || {}).textContent || "", link: (c.querySelector('a[href="#wanted"]') || {}).textContent || "" } : null; });
-    ok(w + ": a question on our list (“" + LISTED + "”) says “Not answered yet. It is on our list” with the listed question, “Tell me when it is answered” and the way to send one's own words; nothing says it is counted while the store is off",
+    ok(w + ": a question on our list (“" + LISTED + "”) says “Not answered yet. A question like yours is on our list” with the listed question, “Tell me when it is answered” and the way to send one's own words; nothing says it is counted while the store is off",
       li.kids[0] === "none" && !li.best.length && li.none === "Not answered yet." && li.askBtn === "Tell me when it is answered" && liMore && liMore.q === "How can you die from alcohol?" && /^w_\d+$/.test(liMore.id) && !liMore.count && !liMore.note &&
-        liMore.other === "Not your question? Send yours to us" && liMore.link === "on our list" && !li.wordAsk && /^Not answered yet\. It is on our list: How can you die from alcohol\?/.test(li.live), li.kids.join(" > ") + " | " + JSON.stringify(liMore) + " | heard: " + li.live);
+        liMore.other === "Not the same? Send yours to us" && liMore.link === "on our list" && !li.wordAsk && /^Not answered yet\. A question like yours is on our list: How can you die from alcohol\?/.test(li.live), li.kids.join(" > ") + " | " + JSON.stringify(liMore) + " | heard: " + li.live);
     await p.waitForTimeout(3000);
     ok(w + ": with the store off, a listed question is not counted (no request to api/want)", !sent.some(x => /api\/want/.test(x)), sent.filter(x => /api\/want/.test(x)).join(" | ") || "none");
     const no = await ask(NONE); ui += " " + await uiText(); await shot("list-not-about-drugs");
@@ -284,8 +284,8 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await ask(LISTED); const ws = await enter(); await shot("sheet-on-our-list");
     const wsMore = await p.evaluate(() => { const c = document.querySelector("#evsheet .ins-want"); return c ? { q: (c.querySelector(".want-q") || {}).textContent || "", other: (c.querySelector(".want-other") || {}).textContent || "", all: (c.querySelector('a.want-all[href="#wanted"]') || {}).textContent || "", count: c.hasAttribute("data-count") } : null; });
-    ok(w + ": Enter on a question on our list says so in the sheet, with the listed question, “Tell me when it is answered”, the way to send one's own words and the way to the whole list", ws && ws.title === "How can you die from alcohol" && !ws.ones.length && ws.none === "Not answered yet. It is on our list." &&
-      ws.askBtn === "Tell me when it is answered" && wsMore && wsMore.q === "How can you die from alcohol?" && wsMore.other === "Not your question? Send yours to us" && /^See the whole list/.test(wsMore.all) && !wsMore.count && !ws.guess && !ws.sos, ws ? ws.none + " | " + JSON.stringify(wsMore) : "no sheet");
+    ok(w + ": Enter on a question on our list says so in the sheet, with the listed question, “Tell me when it is answered”, the way to send one's own words and the way to the whole list", ws && ws.title === "How can you die from alcohol" && !ws.ones.length && ws.none === "Not answered yet. A question like yours is on our list." &&
+      ws.askBtn === "Tell me when it is answered" && wsMore && wsMore.q === "How can you die from alcohol?" && wsMore.other === "Not the same? Send yours to us" && /^See the whole list/.test(wsMore.all) && !wsMore.count && !ws.guess && !ws.sos, ws ? ws.none + " | " + JSON.stringify(wsMore) : "no sheet");
     await p.click("#evsheet button[data-want-keep]"); await p.waitForTimeout(300);
     const kept1 = await p.evaluate(() => ({ said: (document.querySelector("#evsheet .ins-want .ask-said") || {}).textContent || "", list: JSON.parse(localStorage.getItem("pk-asked") || "[]").filter(x => x.w).map(x => x.q + " / " + x.w + " / " + x.st) }));
     ok(w + ": “Tell me when it is answered” keeps the LISTED question (not the words typed) in the reader's own list, as waiting", /^We will tell you on this device/.test(kept1.said) && kept1.list.length === 1 && /^How can you die from alcohol\? \/ w_\d+ \/ wait$/.test(kept1.list[0]), JSON.stringify(kept1));
