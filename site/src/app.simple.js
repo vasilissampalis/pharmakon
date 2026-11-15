@@ -841,7 +841,7 @@ function renderDrug(slug) {
   // the page's own Myth or fact? deck (its statements only), when it has at least 3 (senior author, 14 November)
   const deckN = mfCount(mfPagePool(slug));
   if (deckN >= 3) add("d-quiz", "Myth or fact?", "Myth or fact?", '<div class="qz2 mf" id="qz-drug"></div>', deckN + " cards", "Guess first, then see what studies found");
-  if (helpSigns(slug)) add("d-help", helpTitle(), "Too much", helpHtml(slug), "", "What helps, what not to do, and when to call an ambulance");
+  if (helpSigns(slug)) add("d-help", helpTitle(), "If too much", helpHtml(slug), "", "What helps, what not to do, and when to call an ambulance");
   // drug checking is for drugs bought on the street or online, not for drinks, coffee, cigarettes or gas canisters
   if (!NO_TEST.includes(slug)) { const T = SAFE.tests || {}, buy = ((T.drugs || {})[slug] || []).length && !(T.none_validated || []).includes(slug);
     add("d-kits", "Test kits", "Test kits", testHtml(slug), "", buy ? "Where to buy them, and what they can and can’t tell you" : "What home tests can and can’t tell you"); }

@@ -151,7 +151,7 @@ function editDistance(a, b) {
 function renderNotFound(asked) {
   const q = String(asked || "").toLowerCase().replace(/\/.*$/, "");
   const near = SUBSTANCES.map(s => [Math.min(editDistance(q, s.slug), editDistance(q, s.name.toLowerCase())), s]).filter(p => p[0] <= 3).sort((a, b) => a[0] - b[0]).slice(0, 3).map(p => p[1]);
-  document.getElementById("notfound-body").innerHTML = '<p>There is no page at this address' + (q ? ' (<span class="mono">' + esc(q) + "</span>)" : "") + ". " + (near.length ? "Did you mean " + near.map(s => '<a href="#s-' + s.slug + '">' + esc(s.name) + "</a>").join(" or ") + "?" : "") + '</p><p><a href="#substances">All 30 drugs</a> · use the search box above · <a href="#emergency">Emergency numbers</a></p>';
+  document.getElementById("notfound-body").innerHTML = '<p>There is no page at this address' + (q ? ' (<span class="mono">' + esc(q) + "</span>)" : "") + ". " + (near.length ? "Did you mean " + near.map(s => '<a href="#s-' + s.slug + '">' + esc(s.name) + "</a>").join(" or ") + "?" : "") + '</p><p><a href="#substances">All 30 drugs</a> · use the search box above</p>';
 }
 function show(name) {
   PAGE_VIEWS.forEach(v => { const el = document.getElementById("view-" + v); if (el) el.classList.toggle("active", v === name); });
