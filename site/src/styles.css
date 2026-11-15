@@ -2059,3 +2059,53 @@ nav.main.menu .menu-do .do-s { font-size: 0.88rem; font-weight: 400; }
   .ins-verdict.just { animation: ins-in 0.24s ease-out both; }
   @keyframes ins-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 }
+
+/* 2.3 insight (15 November 2026): honest tiers in the search results (a route first, "Best match" with the short answer in
+   full, "Related", or one calm line that says we haven't checked exactly this yet) and the sheet for a question as asked
+   (the person's own words as the heading, each best answer under a quiet label that names the checked question). Nothing
+   here moves. */
+.search-results a.sr-route { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "i k g" "i t g"; column-gap: 12px; row-gap: 1px; align-items: center; padding: 11px 14px; border-top: 0; border-bottom: 1px solid var(--line); background: var(--accent-soft); color: var(--fg); }
+.search-results a.sr-route:hover { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+.search-results a.sr-route .ri { grid-area: i; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--surface); color: var(--accent); }
+.search-results a.sr-route .ri .ic { width: 20px; height: 20px; }
+.search-results a.sr-route .k { grid-area: k; grid-column: auto; color: var(--accent-soft-ink); }
+.search-results a.sr-route .t { grid-area: t; font-weight: 700; font-size: 1rem; line-height: 1.35; }
+.search-results a.sr-route .go { grid-area: g; display: flex; color: var(--accent); }
+.search-results a.sr-route .go .ic { width: 18px; height: 18px; }
+.search-results .sr-sos { display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 9px 14px 10px; border-bottom: 1px solid var(--line); font-size: 0.95rem; line-height: 1.4; }
+.search-results .sr-sos .ic { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--accent); }
+.search-results .sr-sos a { font-weight: 700; }
+.search-results .sr-fit .sr-fit-h { padding: 10px 14px 4px; font-size: 0.8rem; letter-spacing: 0.01em; color: var(--muted); }
+.search-results .sr-fit a.sr-best { padding-top: 6px; padding-bottom: 14px; border-top: 0; }
+.search-results .sr-fit a.sr-best .t { font-size: 1.08rem; line-height: 1.3; }
+.search-results .sr-fit a.sr-best .a { font-size: 1rem; line-height: 1.5; color: var(--fg); }
+.search-results .sr-fit a.sr-best .a .cue { font-weight: 700; }
+.search-results .sr-fit a.sr-best + .sr-fit-h, .search-results .sr-fit .sr-fit-none + .sr-fit-h { border-top: 1px solid var(--line); }
+.search-results .sr-fit-h + a.sr-fit-a { border-top: 0; }
+.search-results .sr-fit-none { padding: 12px 14px; font-size: 1rem; border-bottom: 0; }
+.search-results .sr-fit-none .linklike { font-size: 0.95rem; white-space: nowrap; }
+.search-results .sr-fit-none:last-child { border-bottom: 0; }
+.search-results .sr-fit { border-bottom: 0; }
+.search-results .sr-fit .sr-words { padding-bottom: 8px; border-top: 2px solid var(--line-strong); }
+.ins-yours { overflow-wrap: anywhere; }
+.ins #ev-title:focus, .ins #ev-title:focus-visible { outline: none; }
+.ins a.ins-route { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "i k g" "i t g"; column-gap: 12px; row-gap: 1px; align-items: center; min-height: 60px; padding: 10px 14px; border-radius: 14px; background: var(--accent-soft); color: var(--fg); text-decoration: none; }
+.ins a.ins-route:hover, .ins a.ins-route:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.ins a.ins-route .ri { grid-area: i; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--surface); color: var(--accent); }
+.ins a.ins-route .ri .ic { width: 21px; height: 21px; }
+.ins a.ins-route .k { grid-area: k; font-size: 0.8rem; font-weight: 700; color: var(--accent-soft-ink); }
+.ins a.ins-route .t { grid-area: t; font-weight: 700; line-height: 1.35; }
+.ins a.ins-route .go { grid-area: g; display: flex; color: var(--accent); }
+.ins a.ins-route .go .ic { width: 18px; height: 18px; }
+.ins-one { display: grid; gap: 10px; }
+.ins-one + .ins-one { padding-top: 16px; border-top: 2px solid var(--line-strong); }
+.ins-l { display: grid; gap: 3px; margin: 0; padding: 10px 14px; border-radius: 12px; background: var(--surface-2); }
+.ins-l-k { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.ins-l-k .ic { flex: none; width: 16px; height: 16px; }
+.ins-l-q { font-weight: 700; line-height: 1.35; }
+.ins-none { display: grid; gap: 12px; justify-items: start; padding: 16px 18px; border-radius: 16px; background: var(--surface-2); }
+.ins-none-t { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; line-height: 1.3; }
+.ins-rel-k { display: block; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.ins-full .ask-ev { min-height: 44px; padding: 0 16px; border-radius: 999px; box-shadow: inset 0 0 0 2px var(--accent); }
+.ins-full .ask-ev:hover, .ins-full .ask-ev:focus-visible { background: var(--accent-soft); }
+.ins-short .ask-foot { border-top: 0; padding-top: 0; }

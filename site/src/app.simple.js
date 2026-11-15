@@ -228,17 +228,10 @@ function mythList() {
     .flatMap(g => g.items.filter(([id]) => claimById[id] && (SIMPLE.claims || {})[id]).map(([id, q]) => ({ k, id, q }))));
   return MYTHS;
 }
-function readNextHtml(id, nexts, page, pre) {
-  const out = nexts.map(([x, q]) => ({ q, href: answerAddr(x, page), dom: (pre || "ask-") + x, id: x }));
-  const myths = mythList().filter(m => m.id !== id && !out.some(o => o.id === m.id));
-  if (myths.length) {
-    const rank = m => (m.k === page ? 0 : 2) + (wasSeen(m.id) ? 1 : 0), best = Math.min(...myths.map(rank)), cands = myths.filter(m => rank(m) === best);
-    const m = cands[[...id].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % cands.length];   // the same answer always suggests the same one
-    out.push({ q: m.q, href: sharedPlace(m.k, m.id).q(m.id), dom: (m.k === page ? pre || "ask-" : askPre(m.k)) + m.id, id: m.id });
-  }
-  if (!out.length) return "";
-  return '<div class="rn"><p class="rn-k">Read next</p><ul class="rn-l">' + out.map(o => '<li><a href="' + esc(o.href) + '" data-open="' + esc(o.dom) + '"><span>' + esc(o.q) + "</span>" + icon("arrow") + "</a></li>").join("") + "</ul></div>";
-}
+// 2.3 insight: the block now offers the answers nearest in meaning that are on this page, never another drug's (a cannabis
+// answer offered a question about cocaine on dollar bills), without the ones opened in this visit: insReadNext in
+// app.insight.js (the topic's next answers, passed in here, are used only when Insight's index was not built)
+function readNextHtml(id, nexts, page, pre) { return insReadNext(id, nexts, page, pre); }
 document.addEventListener("click", e => {
   const b = e.target.closest && e.target.closest("button.morebtn"); if (!b) return;
   const box = document.getElementById(b.dataset.more); if (!box) return;
@@ -1215,7 +1208,8 @@ function mfCardHtml(boxId, st) {
     '<div class="mf-face mf-back ' + (x.fact ? "fact" : "myth") + '">' + top +
       '<p class="mf-v" tabindex="-1">' + icon(x.fact ? "check" : "x") + "<b>" + (x.fact ? "Fact" : "Myth") + '</b> <span class="mf-fb">' + (p ? (p.ok ? "Right!" : "Not quite.") : "") + "</span></p>" +
       '<p class="mf-said">“' + esc(x.q) + "”</p>" + '<p class="qz2-why">' + esc(x.why || sp.short) + "</p>" + (sp.but && !mfSame(x.why, sp.but) ? '<p class="qz2-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") +
-      '<div class="qz2-row">' + meterHtml(c.grade.certainty, true) + '<a class="qz2-ev" href="' + esc(answerAddr(x.claim, x.page)) + '">Read the answer ' + icon("arrow") + "</a></div></div></div></div>";
+      // 2.3 insight: data-sheet: the answer opens over the deck (app.insight.js), and Back returns to this card
+      '<div class="qz2-row">' + meterHtml(c.grade.certainty, true) + '<a class="qz2-ev" href="' + esc(answerAddr(x.claim, x.page)) + '" data-sheet="' + esc(x.claim) + '">Read the answer ' + icon("arrow") + "</a></div></div></div></div>";
 }
 const mfNavHtml = st => '<div class="mf-nav">' + (st.pos > 0 ? '<button type="button" class="qz2-prev">' + icon("arrow") + "<span>Previous</span></button>" : "") +
   (st.picks[st.pos] ? '<button type="button" class="qz2-nb">' + (st.pos < st.cards.length - 1 ? "Next" : st.n === 10 ? "Another 10" : "Again, in a new order") + "</button>" : "") + "</div>";

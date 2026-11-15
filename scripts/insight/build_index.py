@@ -29,7 +29,10 @@ The weights and the tiers (site/insight/model.json; nothing here or in the page 
            be about every drug the question names; sure: or a topic score of this or more with a first look of at least
            `related` (the same question in other words: what "is it addictive", asked on the cannabis page, needs); tie: a
            second best match only when it is this close to the first (first look + weights.topic x topic); related: a
-           related answer needs a first look of this or more ... near: ... and a topic score of this or more.
+           related answer needs a first look of this or more ... near: ... and a topic score of this or more, and to be
+           about at least one of the drugs named (an answer about none of them only when its topic is `sure`: the same
+           question about another drug; on the gold set that takes away 58 of 437 related rows, most of them beside the
+           point, and leaves 21 of the 22 full answers that were under Related).
 Measured on the gold set with the page's own rule (--eval; 400 forum questions, 79 with a full answer by either reader,
 126 that neither reader could answer): scripts/insight/MODELS.md has the table. With all-MiniLM-L6-v2, 2.2.0's score alone
 at 0.72 gave a best match that was wrong for about one question in three; the topic score at 0.45 brings that under one in
@@ -240,8 +243,8 @@ class Ranker:
         """The drugs a question names, each as the list of drugs its name stands for (a family's name: every drug of it)."""
         out = []
         for m in self.pat.finditer(q):
-            g = self.name_of[m.group(1).lower()]
-            if g not in out: out.append(g)
+            g = self.name_of.get(m.group(1).lower())
+            if g and g not in out: out.append(g)
         return out
     def mask(self, q): return self.pat.sub("it", q)
     def texts(self, q, drug=None):
@@ -257,13 +260,16 @@ class Ranker:
         np.maximum.at(bw, self.rows, sw); np.maximum.at(bm, self.rows, sm)
         return self.wt["q"] * bw + self.wt["short"] * (self.S @ v) + self.wt["words"] * self.lex.sims(q), bm
     def tiers(self, plain, topic, groups):
-        t = self.t; ok = np.array([all(any(s in self.about[i] for s in g) for g in groups) for i in range(self.n)])
+        t = self.t; has = lambda i, g: any(s in self.about[i] for s in g)
+        ok = np.array([all(has(i, g) for g in groups) for i in range(self.n)])            # about every drug the question names
+        some = np.array([not groups or any(has(i, g) for g in groups) for i in range(self.n)])   # about at least one of them
         order_by = plain + self.wt["topic"] * topic
         key = order_by + self.wt["same"] * ok
         cand = [int(i) for i in np.argsort(-key, kind="stable") if plain[i] >= t["related"]]
         fits = [i for i in cand if ok[i] and ((plain[i] >= t["best"] and topic[i] >= t["topic"]) or topic[i] >= t["sure"])]
         best = fits[:1] + [i for i in fits[1:2] if order_by[i] >= order_by[fits[0]] - t["tie"]]
-        related = [i for i in cand if i not in best and topic[i] >= t["near"]][:3]
+        # related: near in topic; an answer about none of the drugs named only when it is the same question about another drug
+        related = [i for i in cand if i not in best and topic[i] >= t["near"] and (some[i] or topic[i] >= t["sure"])][:3]
         return best, related, ok
     def rank_vectors(self, q, v, mv, groups):
         plain, topic = self.score(v, mv, q); best, related, ok = self.tiers(plain, topic, groups)
