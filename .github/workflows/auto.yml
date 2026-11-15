@@ -67,7 +67,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data/auto/tick.json data/auto/requests data/auto/tick-failed.txt 2>/dev/null || git add -A data/auto
+          git add -A data/auto
           git diff --cached --quiet || git commit -q -m "Tick: looked"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file
 
@@ -136,7 +136,7 @@ jobs:
           keep = [l for l in t.splitlines() if not re.match(r"\s*(wrote|copied|insight:|Myth or fact|built dist)", l)]
           pathlib.Path("data/auto/lane/_last-auto-run.txt").write_text("\n".join(keep)[-12000:] + "\n", encoding="utf-8")
           PY
-          git add -A data/auto docs/MISSING.md
+          git add -A data/auto; git add -A docs/MISSING.md 2>/dev/null || true
           git diff --cached --quiet || git commit -q -m "Auto: what the scout read and what the lane wrote"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file
       - id: after

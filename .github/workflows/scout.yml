@@ -96,6 +96,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/auto docs/MISSING.md
+          git add -A data/auto; git add -A docs/MISSING.md 2>/dev/null || true
           git diff --cached --quiet || git commit -q -m "Scout: what people asked, and what the site lacks"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file

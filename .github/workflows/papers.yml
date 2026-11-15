@@ -45,6 +45,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           tail -n 60 "$RUNNER_TEMP/papers.log" > data/auto/papers/_last-run.txt || true
-          git add -A data/auto/papers data/auto/requests
+          git add -A data/auto   # (the whole folder, never the requests folder by name: when its last request is taken off, that folder is gone, and naming it made the step fail and the run's record was lost; found on 16 November 2026)
           git diff --cached --quiet || git commit -q -m "Papers: searches and the order of reading for the questions on our list"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file

@@ -125,6 +125,6 @@ jobs:
           PY
           if [ "$OK" = "1" ]; then python3 -I scripts/auto/tick.py did deploy || true; fi
           git rm -q --ignore-unmatch data/auto/requests/deploy-*.json
-          git add -A data/auto/deploy data/auto/requests data/auto/tick.json
+          git add -A data/auto   # (the whole folder, never the requests folder by name: when its last request is taken off, that folder is gone, and naming it made the step fail and the run's record was lost; found on 16 November 2026)
           git diff --cached --quiet || git commit -q -m "Deploy: what happened"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file
