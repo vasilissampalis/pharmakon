@@ -31,6 +31,11 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
 - Nothing unverified. Every statement rests on anchors: a passage found by one reader and checked at the source by
   another who wrote none of it. Second readers do not open `data/claims` or first readers' files, except the claim
   named for context.
+- One marked exception, the senior author's decision of 15 November 2026 (METHODS §12.2, `docs/AUTOMATION.md`): the machine
+  lane. Answers written by the system (`scripts/auto/lane.py`, on GitHub's machines with free models) are published before
+  a person has checked them, always with their label, never in `data/claims`, never with certainty bars. Its gates are
+  code and are not loosened to let more through; questions about dying, overdose, emergencies, mixing, pregnancy,
+  children or suicide wait for a person. Never copy a machine-lane answer into the checked lane without the full checks.
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY.
