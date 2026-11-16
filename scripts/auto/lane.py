@@ -609,6 +609,51 @@ def checker_prompt(parts, labels, question=None, each=None):
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}]}'))
 
 
+# ---------- the second reader, piece by piece (tried on the exam first: scripts/auto/exam_models.py, "how": "pieces") ----------
+# On 16 November 2026 the second reader (gpt-oss-120b at Groq) sat the exam with the question above, "do the passages support
+# the sentence?", and caught 5 of 31 wrong cards while it stopped 5 of 30 good ones: no better than chance. The faults it let
+# through are small ones: a describing word the lines do not hold, what is counted changed (deaths, not pills), a proposed
+# mechanism said as the cause, emergency patients said as everyone. A model asked for one verdict on a whole sentence reads it
+# as a whole and says yes. So the same reader is asked something it cannot answer with a yes: to take the sentence apart and
+# to copy, for every piece, the passage's own words that say it. The verdict is the code's: a piece with no words, or with
+# words that are not in the passages, stops the sentence; so does a list of pieces that leaves words of the sentence out.
+PIECES_SYS = ("You compare a sentence with the passages it was written from, piece by piece. You never judge the sentence as a whole, and what you know yourself does not count: "
+              "only the words of the passages do. You answer with JSON only.")
+
+
+def pieces_prompt(sentence, passages, denies=False):
+    ps = "\n".join("   PASSAGE: " + t for t in passages if t)
+    return ("Take the SENTENCE below apart into its pieces and look for each piece in the PASSAGES.\n"
+            "A piece is one thing the sentence says: who or what it is about (which people, animals, place, year, study or body); each thing it names; each number; what is counted or measured; "
+            "each describing or grading word (well-known, most, often, only, first, usually, strong, rare); each comparison; each cause; and how sure it sounds (is, may, was linked to, causes). "
+            "List EVERY piece, also the small words that change the meaning. Do not skip a piece because it seems harmless.\n"
+            "For each piece give \"passage_words\": the exact words of a passage that say the same thing, copied letter for letter. Write NONE when the passages do not say it, or say it only of other people or "
+            "another setting, of another thing counted, with another number, less surely, or as a link and not as a cause."
+            + (" The sentence says that something is NOT true. For the piece that the passages deny, copy the passage words that deny it and give \"denied\": true.\n" if denies else "\n")
+            + f"\nSENTENCE: {sentence}\n{ps}\n\n"
+            'JSON only, in this form: {"pieces": [{"says": "one piece, in the sentence\'s own words", "passage_words": "exact words of a passage, or NONE"' + (', "denied": false' if denies else "") + "}]}")
+
+
+def pieces_verdict(out, sentence, passages, denies=False):
+    """The code's verdict on what the second reader copied: {"through", "clear", "pieces", "missing": [...], "not_there": [...], "left_out": [...]}.
+    through: every piece has passage words, those words stand in the passages, and the pieces leave out no more than one
+    in five of the sentence's content words. clear: the reader gave a list of pieces at all."""
+    ps = out.get("pieces") if isinstance(out, dict) else None
+    if not isinstance(ps, list) or not ps or not all(isinstance(p, dict) for p in ps): return {"through": False, "clear": False, "pieces": 0, "missing": [], "not_there": [], "left_out": []}
+    flatten = lambda t: " " + " ".join(re.findall(r"[a-z0-9]+", norm(str(t or "")).lower())) + " "
+    whole = flatten(" ".join(passages)); missing, not_there, said, denied = [], [], "", 0
+    for p in ps[:40]:
+        says = re.sub(r"\s+", " ", str(p.get("says") or ""))[:120]; w = str(p.get("passage_words") or "").strip(); said += " " + says
+        if p.get("denied") is True: denied += 1
+        if not w or re.fullmatch(r"(?i)\W*none\W*", w): missing.append(says); continue
+        bits = [b for b in (flatten(x).strip() for x in re.split(r"\.{3,}|…|\s/\s|\s\|\s", w)) if b]
+        if not bits or not all(" " + b + " " in whole for b in bits): not_there.append(says)
+    stems = lambda t: [x[:5] for x in re.findall(r"[a-z]+", norm(t).lower()) if len(x) >= 4 and x not in STOP]
+    tw, have = stems(sentence), set(stems(said)); left_out = sorted({x for x in tw if x not in have})
+    ok = not missing and not not_there and len(ps) >= 2 and (not tw or len(left_out) / len(set(tw)) <= 0.2) and (denied <= 1 if denies else denied == 0)
+    return {"through": ok, "clear": True, "pieces": len(ps), "missing": missing[:6], "not_there": not_there[:6], "left_out": left_out[:8]}
+
+
 def room_for(model, plain):
     """How many tokens a model may answer with. One that reasons before it writes needs room for both: on 16 November 2026
     gpt-oss-120b used all of 1,400 tokens reasoning and wrote nothing, three times for each of two questions; with 3,000 it
@@ -1102,17 +1147,19 @@ def team(file=None):
     try: mf = json.load(open(file or MODELS_FILE, encoding="utf-8"))
     except (OSError, ValueError): mf = {}
     for t in mf.get("teams") or [{k: mf.get(k) or MODELS[k] for k in MODELS}]:
+        planners = [p for p in dict.fromkeys([t.get("planner"), t.get("planner_else")]) if isinstance(p, str) and p and base(p) != base(t.get("writer") or "")] or [None]
         for reader in dict.fromkeys([t.get("reader"), t.get("reader_else")]):
             for checker in dict.fromkeys([t.get("checker"), t.get("checker_else")]):
-                m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
-                if isinstance(t.get("planner"), str) and t["planner"] and base(t["planner"]) != base(t.get("writer") or ""): m["planner"] = t["planner"]
-                if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
-                if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
-                need = {}
-                for role, v in m.items(): need[v] = need.get(v, 0) + NEED[role][1 if v.startswith("groq:") else 0]
-                if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
-                if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
-                return dict(m, team=t.get("name") or "")
+                for planner in planners:                                   # (lane 10: "planner_else", as for the reader and the second reader: the plan is made where there is room)
+                    m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
+                    if planner: m["planner"] = planner
+                    if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
+                    if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
+                    need = {}
+                    for role, v in m.items(): need[v] = need.get(v, 0) + NEED[role][1 if v.startswith("groq:") else 0]
+                    if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
+                    if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
+                    return dict(m, team=t.get("name") or "")
     return None
 
 
@@ -1144,7 +1191,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             if w["id"] in ids: order.append(w)
         elif again or turn(w) is not None: order.append(w)
     if not ids and not again: order.sort(key=lambda w: turn(w))                    # (a stable sort: within one turn, the most asked first)
-    enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []
+    enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []; out_of_room = 0
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     for w in order[:limit]:
         if real:
@@ -1160,7 +1207,12 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             try: before = json.load(open(af, encoding="utf-8"))
             except (OSError, ValueError): before = None
             rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims)
-        except llm.Budget as e: print("lane: stopped for today:", e); break
+        except llm.Budget as e:
+            # an allowance ran out in the middle of an answer (our count was too low, or Groq said so itself and llm wrote that down): the next
+            # question is begun with whichever team still has room; the question that was cut short keeps its turn for the next run
+            out_of_room += 1; print("lane: an allowance ran out in the middle of an answer:", e)
+            if out_of_room >= 2: print("lane: stopped for today"); break
+            continue
         except llm.Unavailable as e:
             print("lane: the models cannot be used now:", e)
             if "larger than Groq's free plan allows" in str(e): continue        # (this question's call was too large; the next question's may not be)
@@ -1303,6 +1355,13 @@ def selftest():
         keys["groq"] = False; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/openai/gpt-oss-120b", "team": "B"}   # no second service: every model at Cloudflare, as before
         cf[0] = 900; assert team(tf) is None
         assert base("groq:openai/gpt-oss-120b") == base("@cf/openai/gpt-oss-120b") == "gpt-oss-120b"
+        # the planner has a second choice too: with little left of it at Groq, the plan is made at Cloudflare and the answer still gets one
+        tf.write_text(json.dumps({"teams": [{"name": "C", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "checker_else": "@cf/openai/gpt-oss-120b",
+                                             "planner": "groq:openai/gpt-oss-120b", "planner_else": "@cf/openai/gpt-oss-120b"}]}), encoding="utf-8")
+        keys["groq"] = True; cf[0] = 9000; gq.update({"qwen/qwen3.8-27b": 180000, "openai/gpt-oss-120b": 180000})
+        assert team(tf) == {"reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "planner": "groq:openai/gpt-oss-120b", "team": "C"}
+        gq["openai/gpt-oss-120b"] = 20000; t = team(tf); assert t["checker"] == "groq:openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t      # room for the check (16,000) but not for the plan as well (7,000 more)
+        gq["openai/gpt-oss-120b"] = 5000; t = team(tf); assert t["checker"] == "@cf/openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t
     finally: llm.has, llm.left, llm.groq_left = keep
     # (lane 10) the checked claims of the same page: an answer that cannot be true together with one waits for a person; one that says the same is noted; a far claim is not asked about
     cl = lambda drugs: [{"id": "cl_ket_dependence", "drug": "ketamine", "plain": "People who use ketamine often can become dependent on it.", "statement": "Regular ketamine use is associated with dependence."},

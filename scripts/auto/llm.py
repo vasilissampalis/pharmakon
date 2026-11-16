@@ -24,7 +24,7 @@ openai/gpt-oss-20b and qwen/qwen3.8-27b, 30 requests and 8,000 tokens a minute, 
 The ledger counts tokens for each of its models and a call that today's free tokens cannot hold is not made (Budget);
 between calls it waits so that a minute never holds more than the plan allows. A free account is not charged.
 """
-import sys, os, re, json, time, pathlib, datetime, urllib.request, urllib.error
+import sys, os, io, re, json, time, pathlib, datetime, urllib.request, urllib.error
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LEDGER = ROOT / "data" / "auto" / "lane" / "usage.json"
@@ -58,7 +58,7 @@ def today(): return datetime.datetime.now(datetime.timezone.utc).date().isoforma
 def ledger():
     try: d = json.load(open(LEDGER, encoding="utf-8"))
     except (OSError, ValueError): d = {}
-    if d.get("day") != today(): d = {"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}
+    if d.get("day") != today(): d = dict({"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}, **({"groq_rolling": d["groq_rolling"]} if isinstance(d.get("groq_rolling"), dict) else {}))   # (Groq's day does not begin at midnight: see groq_level)
     return d
 
 
@@ -90,10 +90,33 @@ def has(model):
     return bool((os.environ.get("GROQ_API_KEY") or "").strip()) if model.startswith("groq:") else bool((os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip())
 
 
-def groq_left(name):
-    """Tokens of today's free plan still unused for one of Groq's models, by our own count."""
-    lim = GROQ_FREE.get(name); g = (ledger().get("groq") or {}).get(name) or {}
-    return 0 if not lim or g.get("calls", 0) >= lim["rpd"] else max(0, int(lim["tpd"] * GROQ_SHARE) - int(g.get("tokens", 0)))
+def groq_level(name, d=None, now=None):
+    """(tokens, calls) of one of Groq's models that count against its free plan right now, by our own count. Groq's day is
+    not a calendar day: what was used comes back bit by bit over the next 24 hours (its refusals say "try again in 8m"),
+    so the count drains at one day's allowance in 24 hours. (Until 16 November 2026 this file began every model anew at
+    00:00 UTC; a batch just after midnight would have been promised tokens that Groq had not given back yet.)"""
+    lim = GROQ_FREE.get(name); r = ((d if d is not None else ledger()).get("groq_rolling") or {}).get(name) or {}
+    if not lim: return 0.0, 0.0
+    dt = max(0.0, (now or time.time()) - float(r.get("at") or 0))
+    return max(0.0, float(r.get("tokens") or 0) - lim["tpd"] * dt / 86400), max(0.0, float(r.get("calls") or 0) - lim["rpd"] * dt / 86400)
+
+
+def groq_left(name, now=None):
+    """Tokens of Groq's free plan that one of its models can still take now, by our own count (we stop at GROQ_SHARE of it)."""
+    lim = GROQ_FREE.get(name)
+    if not lim: return 0
+    tokens, calls = groq_level(name, now=now)
+    return 0 if calls >= lim["rpd"] * GROQ_SHARE else max(0, int(lim["tpd"] * GROQ_SHARE - tokens))
+
+
+def groq_count(name, used, calls=1, full=False):
+    """Write a call at Groq into the ledger: the day's count (for the record) and the draining count (for what is left).
+    full: Groq itself said the day's plan is used up, so the draining count is set to the whole allowance."""
+    L = ledger(); now = time.time(); lim = GROQ_FREE[name]
+    g = L.setdefault("groq", {}).setdefault(name, {"calls": 0, "tokens": 0}); g["calls"] += calls; g["tokens"] += used
+    tokens, n = groq_level(name, L, now)
+    L.setdefault("groq_rolling", {})[name] = {"at": round(now), "tokens": lim["tpd"] if full else round(tokens + used), "calls": round(n + calls, 2)}
+    LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
 
 
 def chat_groq(model, messages, max_tokens, opener=None, tries=3):
@@ -113,7 +136,9 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     # how each model reasons at Groq (console.groq.com/docs/reasoning, read 16 November 2026): gpt-oss takes reasoning_effort low, medium or high and
     # returns its reasoning apart from its answer (reasoning_format is not for it); qwen3.8-27b does not reason unless an effort is set, and with
     # reasoning_format "hidden" its answer comes without its reasoning. The larger gpt-oss writes and checks (medium); the smaller only reads (low).
-    if name.startswith("openai/gpt-oss"): body["reasoning_effort"] = "low" if "20b" in name else "medium"
+    # (Until 16 November 2026, 19:40 this line asked "20b" in name, which "gpt-oss-120b" also holds: the larger model wrote plans and checked with LOW
+    # effort in lanes 7 to 9 and in its first exam. EFFORT: an exam's or a trial's own choice for a model.)
+    if name.startswith("openai/gpt-oss"): body["reasoning_effort"] = EFFORT.get(name) or ("low" if name.endswith("gpt-oss-20b") else "medium")
     elif name.startswith("qwen/qwen3"):                                # Groq's free plan gives it 1,000 output tokens a minute (its refusal of 16 November 2026: "output tokens per minute (OTPM): Limit 1000"): it answers without reasoning first, and never more than 900 tokens
         body["reasoning_effort"] = "none"; body["max_completion_tokens"] = min(max_tokens, 900)
     op = opener or urllib.request.urlopen
@@ -125,7 +150,9 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
             detail = ""
             try: detail = e.read().decode("utf-8", "replace")[:300]
             except Exception: pass
-            if e.code == 429 and re.search(r"per day|TPD|RPD|daily", detail, re.I): raise Budget("Groq says today's free plan is used up for " + name)
+            if e.code == 429 and re.search(r"per day|TPD|RPD|daily", detail, re.I):
+                groq_count(name, 0, 0, full=True)                        # our count was too low: Groq's own word is taken, and the next team is chosen without this model
+                raise Budget("Groq says today's free plan is used up for " + name)
             if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 20 * (k + 1)); continue
             raise Unavailable(f"Groq answered {e.code}" + (": " + re.sub(r"\s+", " ", detail) if detail else ""))
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
@@ -133,13 +160,13 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
             raise Unavailable("Groq could not be reached: " + str(e)[:200])
         text = ((d.get("choices") or [{}])[0].get("message") or {}).get("content") or ""; u = d.get("usage") or {}
         used = int(u.get("total_tokens") or (int(u.get("prompt_tokens") or est - max_tokens) + int(u.get("completion_tokens") or rough_tokens(text))))
-        L = ledger(); g = L.setdefault("groq", {}).setdefault(name, {"calls": 0, "tokens": 0}); g["calls"] += 1; g["tokens"] += used
-        LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+        groq_count(name, used)
         _minute[name] = recent + [(time.time(), used)]
         return clean(text)
     raise Unavailable("Groq gave no answer")
 
 
+EFFORT = {}   # {"openai/gpt-oss-120b": "high"}: how hard one of Groq's reasoning models is asked to think, where a run sets it (an exam, a trial); otherwise as chat_groq says
 LAST = {}   # about the last answer: why it ended, the service's token counts, how long the model reasoned before it wrote (for the trials; never an answer's words)
 
 
@@ -226,17 +253,31 @@ def selftest():
     os.environ["GROQ_API_KEY"] = "G\n"; sent = []
     def gopener(req, timeout=0):
         b = json.loads(req.data.decode()); sent.append(b)
-        assert req.full_url == GROQ and req.get_header("Authorization") == "Bearer G" and b["model"] == "openai/gpt-oss-120b" and b["reasoning_effort"] == "low"
+        assert req.full_url == GROQ and req.get_header("Authorization") == "Bearer G" and b["model"] in ("openai/gpt-oss-120b", "openai/gpt-oss-20b") and b["reasoning_effort"] == ("low" if b["model"].endswith("-20b") else EFFORT.get(b["model"], "medium"))
         return Resp({"choices": [{"message": {"content": "{\"ok\": 1}"}}], "usage": {"total_tokens": 1200}})
     assert has("groq:openai/gpt-oss-120b") and chat("groq:openai/gpt-oss-120b", [{"role": "user", "content": "x" * 400}], 200, gopener) == '{"ok": 1}'
-    assert ledger()["groq"]["openai/gpt-oss-120b"] == {"calls": 1, "tokens": 1200} and groq_left("openai/gpt-oss-120b") == 180000 - 1200
-    L = ledger(); L["groq"]["openai/gpt-oss-120b"]["tokens"] = 179900; json.dump(L, open(LEDGER, "w"))
+    assert ledger()["groq"]["openai/gpt-oss-120b"] == {"calls": 1, "tokens": 1200} and 180000 - 1200 <= groq_left("openai/gpt-oss-120b") <= 180000 - 1195
+    # Groq's day drains: half a day later half a day's allowance has come back, and midnight changes nothing
+    later = time.time() + 43200
+    assert groq_left("openai/gpt-oss-120b", now=later) == 180000 and groq_level("openai/gpt-oss-120b", now=later) == (0.0, 0.0)
+    L = ledger(); L["groq_rolling"]["openai/gpt-oss-120b"] = {"at": round(time.time()), "tokens": 150000, "calls": 100}; L["day"] = "2001-01-01"; json.dump(L, open(LEDGER, "w"))
+    assert "groq" not in ledger() and 29990 <= groq_left("openai/gpt-oss-120b") <= 30010 and 129000 <= groq_left("openai/gpt-oss-120b", now=later) <= 131000
+    L = ledger(); L["groq_rolling"]["openai/gpt-oss-120b"]["tokens"] = 179900; json.dump(L, open(LEDGER, "w"))
     for m, err in (("groq:openai/gpt-oss-120b", Budget), ("groq:some/other-model", Unavailable)):
         try: chat(m, [{"role": "user", "content": "x" * 400}], 200, gopener); raise AssertionError("no " + err.__name__)
         except err: pass
     try: chat("groq:qwen/qwen3.8-27b", [{"role": "user", "content": "x" * 40000}], 200, gopener); raise AssertionError("a call larger than a minute allows was sent")
     except Unavailable: pass
-    assert len(sent) == 1; del os.environ["GROQ_API_KEY"]
+    assert len(sent) == 1
+    # the smaller model reads with little effort, the larger with medium unless a run says otherwise; Groq's own "used up for the day" is believed
+    chat("groq:openai/gpt-oss-20b", [{"role": "user", "content": "x"}], 50, gopener); EFFORT["openai/gpt-oss-120b"] = "high"
+    L = ledger(); L["groq_rolling"]["openai/gpt-oss-120b"]["tokens"] = 1000; json.dump(L, open(LEDGER, "w"))
+    chat("groq:openai/gpt-oss-120b", [{"role": "user", "content": "x"}], 50, gopener); assert sent[-1]["reasoning_effort"] == "high" and sent[-2]["reasoning_effort"] == "low"; EFFORT.clear()
+    def full(req, timeout=0): raise urllib.error.HTTPError(GROQ, 429, "Too Many Requests", {}, io.BytesIO(b'{"error": {"message": "Rate limit reached on tokens per day (TPD): Limit 200000, Used 199000. Please try again in 8m"}}'))
+    try: chat("groq:openai/gpt-oss-120b", [{"role": "user", "content": "x"}], 50, full); raise AssertionError("no Budget")
+    except Budget: pass
+    assert groq_left("openai/gpt-oss-120b") == 0 and groq_left("openai/gpt-oss-120b", now=time.time() + 6 * 3600) > 29000
+    del os.environ["GROQ_API_KEY"]
     if had: os.environ["GROQ_API_KEY"] = had
     LEDGER = keep
     print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it)")
