@@ -72,7 +72,7 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 6                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 7                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -244,7 +244,7 @@ def amounts_prompt(question, src, picked, drug_names):
             '"passage": its number; "quote": the whole sentence or clause of that passage that states the amount, copied exactly, word for word (8 to 40 words, with the number, its unit, and the words that say whom it is for when they stand there);\n'
             '"who": the PEOPLE who received it or whom it is stated for, and under what care, in one plain phrase, using the passage\'s own words (for example: adults with PTSD in a clinical trial, with two therapists present; men; women; healthy adults). Never add care or a setting that the passage does not state;\n'
             '"what": what kind of amount it is, in a few words, using the passage\'s own words (for example: the amount in one session; the starting amount on the label; a daily amount in long-term treatment; the weekly low-risk guideline).\n'
-            "If one sentence states amounts for several groups (for men and for women), give ONE item and quote the sentence whole. "
+            "If one sentence states amounts for several groups (for men and for women), give ONE item and quote the sentence whole. If the groups stand in separate sentences or separate lists, give one item for each group, with that group as who, and quote no more than 40 words. "
             "Leave out: amounts given to animals; amounts that harmed or killed someone; amounts of a plant or a product (dried mushrooms, cannabis flower, what a tablet contains) and amounts found in products that were sold or seized; "
             "an amount worked out from another (\"equivalent to\", \"corresponding to\"); levels in blood, breath or urine; what a standard drink or a unit contains; amounts for each kilogram of body weight; an amount added later in the same session. "
             'Do not compute, convert or add anything, and give no advice. If the passages state no such amount, return {"amounts": []}.\n'
@@ -488,7 +488,9 @@ WRITER_SYS = ("You write one answer for Pharmakon, a free drug encyclopedia that
               "- Person-first words: 'people who use cannabis', 'people with an alcohol use disorder'. Never 'users', 'addicts', 'abusers', 'abuse', 'alcoholics', 'clean'.\n"
               "- No quotation marks, no brackets with sources, no mention of 'findings', 'passages' or 'the paper says F1'. Never write 'Paper A': say what it is, for example 'A 2024 review of case reports' or 'A survey of 278 people'.\n"
               "- Write 'times', never the sign ×. Write 'people who microdose', 'people who smoke', 'people who drink', never 'microdosers', 'smokers', 'drinkers'. Write 'use' or 'use disorder', never 'abuse' or 'misuse'.\n"
-              "- The But must be a limit of THIS answer: who was not studied, how the studies were done, or what is not known about the question itself. Never borrow a limit that the paper states about something else.\n"
+              "- The But must be a limit of THIS answer. The best But is a finding that says for whom, or under what conditions, the answer holds (for example: it was reported after frequent use over a long time; mostly in people who also used other drugs). "
+              "Otherwise: who was not studied, how the studies were done, or what a source itself says is not known about the question. Never borrow a limit that a source states about something else, "
+              "and never say what the sources do not say or do not tell: you have not read all of them.\n"
               "- The short answer answers every part of the question, in the order it was asked.\n"
               "- An official page is a statement by that body, not a study. Say whose it is: 'The NHS says ...'. Never write 'studies show' for it.\n"
               "- Where only a paper's summary could be read, say so: 'The summary of a 2021 review says ...'.\n"
@@ -592,6 +594,7 @@ RULES = [
     ("words about the lane itself", re.compile(r"\b(?:passages?|the (?:provided|given) (?:text|items?|findings)|findings? [FDL]?\d|item [FDL]\d|as an ai|language model)\b|\b(?:Papers?|Official pages?|Sources?) [A-H]\b|\b[FDL][A-H]?\d*\]", re.I)),
     ("a sign instead of a word", re.compile(r"[×≥≤±]|\b\d+x\b")),
 ]
+ABOUT_SOURCES = re.compile(r"\b(?:the|these|our|both|all|most)?\s*(?:sources?|studies|papers|pages|reviews?|research)\s+(?:do(?:es)? not|don'?t|doesn'?t|did not|didn'?t|never)\s+(?:say|state|tell|report|give|show|mention|address|specify|explain|cover)\b|\bnone of the (?:sources|studies|papers|pages)\b|\bno (?:source|study|paper|page) (?:says|states|tells|reports|gives|shows|mentions)\b|\bis not (?:stated|reported|given|mentioned|covered) in the sources\b", re.I)   # a sentence about what was NOT found: the system has not read every source in full, so it cannot say so
 LIMITS = {"short": 50, "but": 40}
 CLINICAL = re.compile(r"\b(?:pharmacolog\w+|pharmacokinetic\w*|pharmacodynamic\w*|abstinence symptoms?|withdrawal syndrome|cessation|efficacy|tolerability|(?:a)?etiolog\w+|comorbid\w+|prevalence|cardiovascular|gastrointestinal|neurocognitive|psychopatholog\w+|sequelae|morbidity|contraindicat\w+|intoxication|symptomatolog\w+|adverse events?)\b", re.I)   # words the lead of an answer does not use: a plain word exists
 YES_NO = re.compile(r"^(?:can|could|is|are|was|were|do|does|did|will|would|should|has|have|may|might)\b", re.I)
@@ -606,6 +609,7 @@ def lead(question, parts):
         if p["part"] not in ("short", "but"): continue
         m = CLINICAL.search(p["text"])
         if m: bad.append((p["part"], f"a clinical word where an everyday one exists (“{m.group(0)}”): say it plainly"))
+        if ABOUT_SOURCES.search(p["text"]): bad.append((p["part"], "it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"))
         if p["part"] == "short" and YES_NO.search(question.strip()) and not DIRECT.search(p["text"].strip()):
             bad.append(("short", "the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"))
     return bad
@@ -1104,6 +1108,7 @@ def selftest():
     assert len(lead(item["q"], [{"part": "short", "text": "People with ketamine use disorder experience abstinence symptoms."}])) == 2 and not lead("What is synthetic weed like?", [{"part": "short", "text": "Synthetic weed is riskier."}]) and not lead(item["q"], [{"part": "short", "text": ok_short}])
     calls.clear(); script["writer"] = [W("People who use ketamine regularly can become dependent on it."), W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk(); assert r["status"] == "published" and "yes or no" in r["gates"]["rules"] and "begin the short answer with Yes" in [c for c in calls if c[0] == "writer"][1][2], r["gates"]
+    assert lead(item["q"], [{"part": "but", "text": "The sources do not say how many people who use ketamine actually become addicted."}]) and not lead(item["q"], [{"part": "but", "text": "It has been reported mainly after frequent use over a long time."}])
     # the second reader also judges the answer as a whole. A But about something else, three times: the code writes the But from what the answer rests on, and the answer stands
     off = dict(V(True, True, True, True), answers_question=True, but_fits=False, why="it is about a treatment")
     calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [off] * 3

@@ -30,7 +30,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 TICK = ROOT / "data" / "auto" / "tick.json"
 DEPLOYED = ROOT / "data" / "auto" / "deploy" / "deployed.json"
-LANE_A_DAY, DEPLOY_A_DAY = 6, 8
+LANE_A_DAY, DEPLOY_A_DAY = 4, 8      # (16 November 2026: four writing runs a day, three questions each. With the second free service the models are no longer what limits a day; the free machine time of a private repository is: about 40 minutes of writing a day)
 ROOM = 1200             # neurons one answer may take: the lane starts only when today's allowance has this much left
 RETRY_DAYS = 7
 # everything the site is built from (site/build.js and site/build_public.py read these); the machine lane's answers are counted apart
