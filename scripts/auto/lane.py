@@ -72,7 +72,7 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 8                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 9                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -230,7 +230,7 @@ NUM = r"(?:\d+(?:[.,]\d+)?|(?:one|two|three|four|five|six|seven|eight|nine|ten|e
 AMT = re.compile(r"(?<![\w.,/])" + NUM + r"(?:\s*(?:to|-|or)\s*" + NUM + r")?(?:\s+or\s+(?:more|less|fewer))?\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\b(?!\s*/\s*(?:m?l|dl|kg|day·kg)\b)(?!\s*(?:of\s+[\w-]+\s+)?per\s+(?:kilo|kg|m?l|dl|litre|liter|decilit(?:er|re)|100\s?m?l)\b)", re.I)
 TIMING = re.compile(r"\b(?:wait|space)\w*\s+(?:at least\s+)?\d|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+(?:\.\d+)?(?:\s*(?:to|-|or)\s*\d+(?:\.\d+)?)?\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\b(?:\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight)(?:\s*(?:to|-|or)\s*\d+(?:\.\d+)?)?\s+(?:days?|weeks?|months?)\s+(?:apart|later)\b", re.I)   # never shown: the time between two uses
 REDOSE = re.compile(r"\bre-?dos\w*|\bsupplement\w*|\bbooster\b|\btop-?up\b|\b(?:second|third|additional|further|extra|repeat(?:ed)?|half)[\s-]dos(?:e|es|ing)\b", re.I)                                                                                # never taken: an amount added in the same session
-NOT_AN_AMOUNT_FOR_PEOPLE = re.compile(r"\b(?:rats?|mice|mouse|rodents?|monkeys?|primates?|dogs?|zebrafish|in vitro|animals?)\b|\b(?:lethal|fatal\w*|death|deaths|died|dying|kill\w*|overdos\w*|toxic\w*|poison\w*|ld50|seiz(?:ed|ure)\w*|street|tablets? (?:sold|seized|contain\w*)|pills? (?:sold|seized|contain\w*))\b|\b(?:dried|mushrooms?|truffles?|cubensis|fruiting|flowers?|buds?|joints?|herbal|plant material|leaves|blotters?|crystals?|powder|edibles?|brownies?|gumm\w+|equivalent\w*|corresponding to|equal to|estimated weight|converted|convert\w*|blood|plasma|serum|urine|breath|concentration\w*|bac|per decilit(?:er|re)|g/dl|mg/dl|abv|pints?|glass(?:es)?|cans?|bottles?|measures? of|shots?|cups?|servings?|optimal|optimum|predict\w*|estimat\w*|model(?:l)?ed|simulat\w*|extrapolat\w*|dose-response|meta-regression|hypothetical\w*)\b", re.I)
+NOT_AN_AMOUNT_FOR_PEOPLE = re.compile(r"\b(?:rats?|mice|mouse|rodents?|monkeys?|primates?|dogs?|zebrafish|in vitro|animals?)\b|\b(?:lethal\w*|fatal\w*|deadly|mortal\w*|death|deaths|died|dying|kill\w*|overdos\w*|toxic\w*|poison\w*|ld50|seiz(?:ed|ure)\w*|street|tablets? (?:sold|seized|contain\w*)|pills? (?:sold|seized|contain\w*))\b|\b(?:dried|mushrooms?|truffles?|cubensis|fruiting|flowers?|buds?|joints?|herbal|plant material|leaves|blotters?|crystals?|powder|edibles?|brownies?|gumm\w+|equivalent\w*|corresponding to|equal to|estimated weight|converted|convert\w*|blood|plasma|serum|urine|breath|concentration\w*|bac|per decilit(?:er|re)|g/dl|mg/dl|abv|pints?|glass(?:es)?|cans?|bottles?|measures? of|shots?|cups?|servings?|optimal|optimum|predict\w*|estimat\w*|model(?:l)?ed|simulat\w*|extrapolat\w*|dose-response|meta-regression|hypothetical\w*)\b", re.I)
 
 
 def is_amounts(question): return bool(AMOUNT_Q.search(question or ""))
@@ -393,7 +393,7 @@ def words15(quote, text=""):
             for b in range(a + 6, min(len(ws), a + 15) + 1):
                 w = ws[a:b]; plain = [bare(x) for x in w]
                 ends = b == len(ws) or bool(re.search(r"[.;:]$", w[-1])); comma = w[-1].endswith(",")
-                if not ends and not comma and HANGS.fullmatch(plain[-1]): continue      # never ending on a word that hangs ("... was not")
+                if not ends and not comma and (HANGS.fullmatch(plain[-1]) or re.fullmatch(r"[a-z]{3,}ing", plain[-1])): continue      # never ending on a word that hangs ("... was not", "... over the past decade highlighting")
                 if " ".join(w).count("(") != " ".join(w).count(")"): continue
                 if not ends and not any(SAYS.fullmatch(x) for x in plain): continue       # a part that says nothing (a subject cut from its verb) is not a quotation
                 nxt = bare(ws[b]) if b < len(ws) else ""
@@ -502,8 +502,49 @@ WRITER_SYS = ("You write one answer for Pharmakon, a free drug encyclopedia that
               "- If the findings do not answer the question, say plainly what they do show, and set \"complete\" to false.")
 
 
-def writer_prompt(question, sources, examples, fix=""):
+PLANNER_SYS = ("You plan an answer for Pharmakon, a drug encyclopedia in plain words for everyone. You do not write the answer. You choose which labelled ITEMS it will be written from, "
+               "as a careful editor does before writing: what answers the question itself, and what honestly limits that answer. JSON only.")
+
+
+def plan_prompt(question, sources):
     lines = []
+    for s in sources:
+        lines.append(f"SOURCE {s['tag']}: " + (f"a page of {s['name']}, an official body" if s["read"] == "page" else ("the summary of " if s["read"] == "summary" else "") + ("a review" if s["kind"] == "review" else "a case report" if s["kind"] == "case" else "a single study") + f" ({s.get('year') or 'n.d.'})") + f": {s['title'][:120]}")
+        if s.get("design"): lines.append(f"  [D{s['tag']}] what it is: {s['design']['text']}")
+        for f in s["findings"]: lines.append(f"  [{f['id']}] {f['text']}")
+        for l in s["limits"]: lines.append(f"  [{l['id']}] a limit it states: {l['text']}")
+    return (f"QUESTION that people ask: {question}\n\nITEMS (each has a label in square brackets):\n" + "\n".join(lines) + "\n\nChoose, by label:\n"
+            '"short": the 1 to 4 items that together answer the QUESTION itself, the most direct first. A plain statement of an official body and a review\'s finding are the best. Leave out items about a neighbouring question.\n'
+            '"direct": if the QUESTION can be answered with yes or no, the words the answer should begin with, as those items show: "Yes", "No", "It can", "Sometimes", "It depends" or "Not known". Otherwise "".\n'
+            '"but": the ONE item that best limits that answer: a finding or a limit that says for whom, how often or under what conditions it holds (for example: reported after frequent use over a long time), '
+            'or what a source says is not known about the very same thing. Never an item about another subject (a review of treatments saying its treatment studies were weak does not limit an answer about whether something happens). [] if no item limits the answer.\n'
+            '"how": for each source worth naming (2 to 4 sources, the strongest first; official bodies and reviews before single studies), the items of THAT source that support the answer, the D item first where it has one.\n'
+            '"unanswered": the part of the QUESTION that no item answers, in a few plain words, or "".\n'
+            'JSON only, in this form: {"short": ["F5", "F1"], "direct": "Yes", "but": ["F8"], "how": [["F5", "F6"], ["DA", "F1"]], "unanswered": ""}')
+
+
+def make_plan(chat, model, question, sources, labels):
+    """The plan of an answer, or None where the planner gave none that can be used: {"short": [labels], "direct": words or
+    "", "but": [one label] or [], "how": [[labels of one source], ...], "unanswered": words}. Only labels that exist; a
+    How group holds the items of one source."""
+    out = ask_json(chat, model, PLANNER_SYS, plan_prompt(question, sources), room_for(model, 500))
+    if not isinstance(out, dict): return None
+    known = lambda xs: [x for x in (xs if isinstance(xs, list) else []) if isinstance(x, str) and x in labels]
+    short = known(out.get("short"))[:4]; but = known(out.get("but"))[:1]; how = []
+    for g in out.get("how") if isinstance(out.get("how"), list) else []:
+        g = known(g)
+        if g:
+            g = [x for x in g if labels[x]["ref"] == labels[g[0]]["ref"]][:4]
+            if not any(labels[h[0]]["ref"] == labels[g[0]]["ref"] for h in how): how.append(g)
+    if not short or not how: return None
+    direct = str(out.get("direct") or "").strip()[:20]
+    return {"short": short, "direct": direct if DIRECT.search(direct) else "", "but": but, "how": how[:4], "unanswered": re.sub(r"\s+", " ", str(out.get("unanswered") or ""))[:160]}
+
+
+def writer_prompt(question, sources, examples, fix="", plan=None):
+    lines = []; chosen = set(plan["short"] + plan["but"] + [x for g in plan["how"] for x in g]) if plan else None
+    if plan: sources = [dict(s, design=s.get("design") if "D" + s["tag"] in chosen else None, findings=[f for f in s["findings"] if f["id"] in chosen], limits=[l for l in s["limits"] if l["id"] in chosen]) for s in sources]
+    if plan: sources = [s for s in sources if s.get("design") or s["findings"] or s["limits"]]
     for s in sources:
         if s["read"] == "page": lines.append(f"OFFICIAL PAGE {s['tag']}: \"{s['title']}\", a page of {s['name']}" + (f" ({s['year']})" if s.get("year") else "") + f". When you use it, name the body: \"{s['short'][0].upper() + s['short'][1:]} says\".")
         else: lines.append(f"PAPER {s['tag']}{' (ONLY ITS SUMMARY COULD BE READ)' if s['read'] == 'summary' else ''}: {s['title']} ({s.get('year') or 'n.d.'}). {('A review or meta-analysis.' if s['kind'] == 'review' else 'A case report: one person or a few.' if s['kind'] == 'case' else 'A single study.')}")
@@ -513,6 +554,10 @@ def writer_prompt(question, sources, examples, fix=""):
     ex = "\n\n".join(f"Question: {e['q']}\nshort: {e['short']}\nbut: {e['but']}\nhow: " + " | ".join(e["how"][:3]) for e in examples)
     return (f"QUESTION that people ask: {question}\n\nWHAT THE SOURCES SAY (each item has a label in square brackets):\n" + "\n".join(lines) + "\n\n"
             "HOW THE SITE WRITES (three answers from the site, for the form only, not for their facts):\n" + ex + "\n\n"
+            + ("THE PLAN (an editor chose the items; follow it exactly):\n"
+               f'- "short": write it from {", ".join(plan["short"])}' + (f', and begin it with "{plan["direct"]}"' if plan["direct"] else "") + ".\n"
+               + (f'- "but": write it from {plan["but"][0]} and nothing else: say for whom, how often or under what conditions the answer holds, as that item says.\n' if plan["but"] else '- "but": no item limits the answer: write "but" from the D item of the first source (what kind of source it is).\n')
+               + "".join(f'- a line of "how" from {", ".join(g)}.\n' for g in plan["how"]) + "\n" if plan else "") +
             "TASK. Write the answer to the QUESTION from the labelled items only:\n"
             '- "short": the answer itself, 1 or 2 sentences, at most 45 words.\n'
             '- "but": the main limit or doubt, 1 sentence, at most 35 words. It must rest on a limit item or on what kind of study it was.\n'
@@ -599,7 +644,7 @@ RULES = [
     ("words about the lane itself", re.compile(r"\b(?:passages?|the (?:provided|given) (?:text|items?|findings)|findings? [FDL]?\d|item [FDL]\d|as an ai|language model)\b|\b(?:Papers?|Official pages?|Sources?) [A-H]\b|\b[FDL][A-H]?\d*\]", re.I)),
     ("a sign instead of a word", re.compile(r"[×≥≤±]|\b\d+x\b")),
 ]
-ABOUT_SOURCES = re.compile(r"\b(?:the|these|our|both|all|most)?\s*(?:sources?|studies|papers|pages|reviews?|research)\s+(?:do(?:es)? not|don'?t|doesn'?t|did not|didn'?t|never)\s+(?:say|state|tell|report|give|show|mention|address|specify|explain|cover)\b|\bnone of the (?:sources|studies|papers|pages)\b|\bno (?:source|study|paper|page) (?:says|states|tells|reports|gives|shows|mentions)\b|\bis not (?:stated|reported|given|mentioned|covered) in the sources\b", re.I)   # a sentence about what was NOT found: the system has not read every source in full, so it cannot say so
+ABOUT_SOURCES = re.compile(r"\b(?:the|these|our|both|all|most)?\s*(?:sources?|studies|papers|pages|reviews?|research)\s+(?:do(?:es)? not|don'?t|doesn'?t|did not|didn'?t|never)\s+(?:say|state|tell|report|give|show|mention|address|specify|explain|cover)\b|\b(?:the|these|our)\s+sources\s+(?:lack|are missing|have no|contain no|give no|offer no|are silent)\b|\bnone of the (?:sources|studies|papers|pages)\b|\bno (?:source|study|paper|page) (?:says|states|tells|reports|gives|shows|mentions)\b|\bis not (?:stated|reported|given|mentioned|covered) in the sources\b", re.I)   # a sentence about what was NOT found: the system has not read every source in full, so it cannot say so
 LIMITS = {"short": 50, "but": 40}
 CLINICAL = re.compile(r"\b(?:pharmacolog\w+|pharmacokinetic\w*|pharmacodynamic\w*|abstinence symptoms?|withdrawal syndrome|cessation|efficacy|tolerability|(?:a)?etiolog\w+|comorbid\w+|prevalence|cardiovascular|gastrointestinal|neurocognitive|psychopatholog\w+|sequelae|morbidity|contraindicat\w+|intoxication|symptomatolog\w+|adverse events?)\b", re.I)   # words the lead of an answer does not use: a plain word exists
 YES_NO = re.compile(r"^(?:can|could|is|are|was|were|do|does|did|will|would|should|has|have|may|might)\b", re.I)
@@ -845,10 +890,16 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     keep_sources()
     if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service")
     ex = ex if ex is not None else examples()
+    # 2b the plan (lane 9): where a team names a planner, the model that reasons best chooses the items before a sentence is written
+    plan = None
+    if models.get("planner"):
+        plan = make_plan(chat, models["planner"], item["q"], sources, labels)
+        rec["plan"] = plan or "the planner gave no plan that could be used: the writer chose the items itself"
+        if plan and plan["unanswered"]: rec["missing"] = rec.get("missing") or plan["unanswered"]
     # 3 write, 5 rules (one more try when a rule is broken), 4 check (one more try for the short answer or the But)
     fix, draft, verdicts = "", None, []
     for attempt in range(3):
-        out = llm.as_json(chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix)}], room_for(models["writer"], 900)))
+        out = llm.as_json(chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix, plan)}], room_for(models["writer"], 900)))
         draft, why = draft_of(out, labels)
         if not draft:
             rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" try {attempt + 1}: {why}" + (f" (how the reply ended: {llm.LAST.get('finish')}; reasoned {llm.LAST.get('reasoned')} characters, wrote {llm.LAST.get('wrote')})" if llm.LAST else "")).strip()
@@ -988,7 +1039,7 @@ def wanted_list():
     return sorted(by.values(), key=lambda w: (-len(w["for"]), -(w.get("near") or 0), w["doi"]))
 
 
-NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
+NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000), "planner": (250, 7000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
 
 
 def base(model): return re.sub(r"^(?:groq:|@cf/)", "", model or "").split("/")[-1]       # the model itself, whichever service runs it
@@ -1006,6 +1057,7 @@ def team(file=None):
         for reader in dict.fromkeys([t.get("reader"), t.get("reader_else")]):
             for checker in dict.fromkeys([t.get("checker"), t.get("checker_else")]):
                 m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
+                if isinstance(t.get("planner"), str) and t["planner"] and base(t["planner"]) != base(t.get("writer") or ""): m["planner"] = t["planner"]
                 if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
                 if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
                 need = {}
@@ -1157,6 +1209,17 @@ def selftest():
     calls.clear(); script["writer"] = [W("People who use ketamine regularly can become dependent on it."), W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk(); assert r["status"] == "published" and "yes or no" in r["gates"]["rules"] and "begin the short answer with Yes" in [c for c in calls if c[0] == "writer"][1][2], r["gates"]
     assert lead(item["q"], [{"part": "but", "text": "The sources do not say how many people who use ketamine actually become addicted."}]) and not lead(item["q"], [{"part": "but", "text": "It has been reported mainly after frequent use over a long time."}])
+    # (lane 9) the plan: the planner chooses the items; only they reach the writer, with the plan; a plan with unknown labels or no How group is not used
+    lbl = {"F1": {"ref": "a"}, "F2": {"ref": "a"}, "L1": {"ref": "a"}, "F3": {"ref": "b"}, "DA": {"ref": "a"}}
+    fake = lambda reply: (lambda model, messages, room: json.dumps(reply))
+    pl = make_plan(fake({"short": ["F3", "F1", "F99"], "direct": "Yes", "but": ["F2", "L1"], "how": [["DA", "F1", "F3"], ["F3"], ["F2"]], "unanswered": ""}), "m", "Can you?", [], lbl)
+    assert pl == {"short": ["F3", "F1"], "direct": "Yes", "but": ["F2"], "how": [["DA", "F1"], ["F3"]], "unanswered": ""}, pl
+    assert make_plan(fake({"short": ["F99"], "how": [["F1"]]}), "m", "q", [], lbl) is None and make_plan(fake({"short": ["F1"], "how": []}), "m", "q", [], lbl) is None
+    srcs = [{"tag": "A", "read": "full", "kind": "review", "title": "T", "year": 2022, "design": {"text": "a review", "quote": "q"}, "findings": [{"id": "F1", "text": "one", "quote": "q1"}, {"id": "F2", "text": "two", "quote": "q2"}], "limits": [{"id": "L1", "text": "lim", "quote": "q3"}]}]
+    wp = writer_prompt("Can you?", srcs, [], "", {"short": ["F1"], "direct": "Yes", "but": ["F2"], "how": [["DA", "F1"]], "unanswered": ""})
+    assert "[F1] one" in wp and "[F2] two" in wp and "[L1]" not in wp and 'begin it with "Yes"' in wp and '"but": write it from F2 and nothing else' in wp and "a line of \"how\" from DA, F1" in wp
+    assert lead(item["q"], [{"part": "but", "text": "The sources lack a full framework to judge how likely addiction is."}])
+    assert not NOT_AN_AMOUNT_FOR_PEOPLE.search("400 mg a day for adults") and NOT_AN_AMOUNT_FOR_PEOPLE.search("400 mg/day for adults [10 g for lethality]")
     # a word of how often or how sure must be the source's own
     lb = {"F1": {"quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant."}, "F2": {"quote": "synthetic cannabinoids are often more potent than natural cannabis"}}
     assert hedges([{"part": "short", "text": "It is often stronger and more unpleasant.", "uses": ["F1"]}], lb) and not hedges([{"part": "short", "text": "It is often stronger than cannabis.", "uses": ["F1", "F2"]}], lb) and not hedges([{"part": "short", "text": "It can be stronger and more unpleasant.", "uses": ["F1"]}], lb)
