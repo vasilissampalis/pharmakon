@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """exam_models.py: a model sits the exam as the lane's checker (docs/AUTOMATION.md; scripts/auto/exam.py).
 
-    python3 -I scripts/auto/exam_models.py requests      (data/auto/requests/exam-*.json: {"models": [...], "good": 62})
+    python3 -I scripts/auto/exam_models.py requests      (data/auto/requests/exam-*.json: {"models": [...], "good": 62, "exam": "cards" | "lane" | "both"})
 
 The exam's items are our own blind checks: a Myth or fact? card beside the checked lines it was written from, and whether a
 blind checker who wrote none of it found that the card says only what the lines say. The model is asked the lane's own
@@ -12,6 +12,10 @@ ones a checker must catch) and a fixed draw of the good ones (seed 20261115; "go
 the two shares the result gives what the whole exam would give: of everything the model would let through, how much is
 wrong (exam.py's bar: 1 in 50; the senior author's goal: 1 in 1,000), and how many good cards it would stop.
 Writes data/auto/exam/model-<name>.json. The exam is small: it can show that a checker is not good enough, never that it is.
+
+A second exam (16 November 2026), "lane": the sentences the system itself wrote, each beside the words it rests on, with the
+editor's verdict (data/auto/exam/lane-sentences.json; scripts/editor/label_auto.py). This is the lane's real task, asked in
+the same words. It is sat first, whole (it is small), and written to model-<name>-lane.json.
 """
 import sys, time, re, json, random, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -25,12 +29,22 @@ def prompt(item):
     L = item["lines"]; lines = [L.get("short") or "", ("But " + L["but"]) if L.get("but") else ""] + list(L.get("how") or [])
     ps = "\n".join("   PASSAGE: " + t for t in lines if t)
     c = item["card"]
-    sent = ("It is a fact that: " if c["answer"] else "It is a myth (it is not true) that: ") + c["statement"] + (" Because: " + c["why"] if c.get("why") else "")
+    sent = c["statement"] if item.get("plain") else ("It is a fact that: " if c["answer"] else "It is a myth (it is not true) that: ") + c["statement"] + (" Because: " + c["why"] if c.get("why") else "")
     return ("For the SENTENCE below, decide whether its PASSAGES support it. Supported means ALL of this: everything the sentence says is stated in its passages; "
             "it is about the same people, animals or setting; every number is the same; it is not stronger or more certain than the passages; it does not say one thing causes another "
             "where the passages only report a link; it does not turn what one study found into a general fact. If any part of the sentence is not in the passages, it is not supported.\n\n"
             f"1. SENTENCE: {sent}\n{ps}\n\n"
             'JSON only, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}]}')
+
+
+def lane_cards(file=None):
+    """The lane's own sentences in the shape of the exam's cards: the sentence as it stands, the words it rests on as its passages."""
+    try: items = json.load(open(file or EXAM / "lane-sentences.json", encoding="utf-8"))["items"]
+    except (OSError, ValueError): return []
+    return [{"id": i["id"], "good": i["good"], "what": i.get("what"), "plain": True, "lines": {"short": "", "but": "", "how": list(i["rests_on"])}, "card": {"answer": True, "statement": i["sentence"], "why": ""}} for i in items]
+
+
+def slug(model): return re.sub(r"[^a-z0-9.-]+", "-", model.lower()).strip("-")
 
 
 KEEP = 700            # neurons of the day's allowance the exam leaves for the site's own work (a visitor's question must still be listed)
@@ -137,6 +151,15 @@ def selftest():
     def chat3(model, messages, room): efforts.append(dict(llm.EFFORT)); return json.dumps({"verdicts": [{"n": 1, "supported": True, "problem": ""}]})
     r = sit("groq:openai/gpt-oss-120b", 3, cards=cards[:6], chat=chat3, left=lambda: 90000, file=f3, keep=3000, most=4, effort="high")
     assert len(efforts) == 4 and efforts[0] == {"openai/gpt-oss-120b": "high"} and r["effort"] == "high" and "asked for 4 cards" in r["stopped_early"] and r["wrong_cards_seen"] == 2 and r["good_cards_seen"] == 2 and not llm.EFFORT, r
+    # the lane's own sentences sit the same question: the sentence as it stands (no "It is a fact that"), the words it rests on as its passages
+    lf = pathlib.Path(tempfile.mkdtemp()) / "lane.json"
+    json.dump({"items": [{"id": "au_x#short~1", "good": False, "what": "'often'", "sentence": "It often is so.", "rests_on": ["It can be so.", "Some said so."]}, {"id": "au_x#how1~2", "good": True, "what": "", "sentence": "Some said so.", "rests_on": ["Some said so."]}]}, open(lf, "w"))
+    lc = lane_cards(lf); pr = prompt(lc[0])
+    assert "1. SENTENCE: It often is so.\n   PASSAGE: It can be so.\n   PASSAGE: Some said so." in pr and "It is a fact" not in pr and slug("gemini:gemma-4-31b-it") == "gemini-gemma-4-31b-it"
+    asked = []
+    def chat4(model, messages, room): asked.append(messages[1]["content"]); return json.dumps({"verdicts": [{"n": 1, "supported": "SENTENCE: It often" not in messages[1]["content"], "problem": ""}]})
+    r = sit("gemini:gemma-4-31b-it", 10 ** 6, cards=lc, chat=chat4, left=lambda: 1000, file=lf.parent / "out.json")
+    assert r["wrong_caught"] == 1 and r["good_stopped"] == 0 and r["wrong_cards_seen"] == 1 and r["good_cards_seen"] == 1 and len(asked) == 2, r
     print("exam_models selftest: ok (the lane's own question about a card; a sitting that stops at the day's reserve keeps its cards and the next goes on from there; "
           "asked piece by piece, the code gives the verdict from the words the reader copied)")
 
@@ -144,15 +167,21 @@ def selftest():
 if __name__ == "__main__":
     if "--selftest" in sys.argv: selftest()
     elif len(sys.argv) > 1 and sys.argv[1] == "requests":
+        until = time.time() + 27 * 60                                     # (the job has 40 minutes for ALL its requests; a sitting goes on at the next request where it stopped)
         for f in sorted((ROOT / "data" / "auto" / "requests").glob("exam-*.json")):
+            if time.time() > until - 60: print(f"exam: {f.name}: no time left in this run: it stays for the next"); continue
             try: r = json.load(open(f, encoding="utf-8"))
             except ValueError: r = {}
             f.unlink()
-            until = time.time() + 27 * 60                                 # (the job has 40 minutes; a sitting goes on at the next request where it stopped)
             # "how": "pieces", "one verdict", or a list of both (the same cards each way, so that the two can be compared); "most": cards in this sitting; "effort": low, medium or high
             hows = r.get("how") if isinstance(r.get("how"), list) else [r.get("how")]
             for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:|mistral:|gemini:|openrouter:)[A-Za-z0-9._/:-]{3,90}", m)][:4]:
-                if not llm.has(m): print(f"exam: {m}: no key for its service on this machine: not sat"); continue
+                if not llm.has(m): print(f"exam: {m}: no key for its service on this machine (or it is not a free model): not sat"); continue
+                which = r.get("exam") if r.get("exam") in ("cards", "lane", "both") else "cards"
+                if which in ("lane", "both") and lane_cards():           # the lane's own sentences first, all of them: the real task, and small
+                    sit(m, 10 ** 6, cards=lane_cards(), file=EXAM / ("model-" + slug(m) + "-lane.json"), until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
+                        most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)
+                if which == "lane": continue
                 for h in hows[:2]:
                     sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until, how="pieces" if h == "pieces" else None, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
                         most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)

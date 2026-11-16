@@ -106,6 +106,7 @@ FREE = ROOT / "data" / "auto" / "lane" / "free-limits.json"   # what each free p
 OF_A_DAY = 0.9                                                 # where we stop by ourselves: nine tenths of the calls a free plan allows a model in a day
 _last_call = {}
 _minute = {}                                                   # model -> [(when, tokens)] of this run's calls in the last minute (for a plan that counts tokens a minute)
+_quirks = {}                                                   # model -> {"no_system", "no_json"}: what a model refused once in this run, so that it is not asked that way again
 
 
 def service_of(model):
@@ -147,7 +148,7 @@ def limits_of(model):
     svc, name = service_of(model); S = SERVICES[svc]; f = free_limits().get(svc) or {}
     row = next((r for r in f.get("models") or [] if isinstance(r, dict) and re.search(str(r.get("match") or "$^"), name)), None) or (f.get("else") if isinstance(f.get("else"), dict) else None)
     if not row: return {"gap": S["gap"], "calls": S["calls"], "tpm": None}
-    rpm, rpd = float(row.get("rpm") or 60.0 / S["gap"]), float(row.get("rpd") or S["calls"] / OF_A_DAY)
+    rpm, rpd = float(row.get("rpm") or 60.0 / S["gap"]), float(row["rpd"] if isinstance(row.get("rpd"), (int, float)) else S["calls"] / OF_A_DAY)
     return {"gap": round(60.0 / max(rpm, 0.1) * 1.1, 2), "calls": int(rpd * OF_A_DAY), "tpm": (int(row["tpm"]) if row.get("tpm") else None)}
 
 
@@ -199,6 +200,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
     if not key: raise Unavailable(f"no key for {svc} (the repository secret {S['key']} is not set)")
     if never_paid(model): raise Unavailable(never_paid(model))
     lim = limits_of(model)
+    if lim["calls"] <= 0: raise Unavailable(f"{name}: what {svc}'s free plan allows this model is not written in data/auto/lane/free-limits.json: not asked")
     if calls_left(model) <= 0: raise Budget(f"{svc}: today's calls for {name} are used ({lim['calls']} is where we stop)")
     est_in = sum(rough_tokens(m["content"]) for m in messages)
     if S.get("paid"):
@@ -214,13 +216,21 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
             budget = {"low": 1500, "medium": 4000, "high": 10000}[eff]; body.update(max_tokens=max_tokens + budget, thinking={"type": "enabled", "budget_tokens": budget}); body.pop("temperature")
         headers = {"x-api-key": key, "anthropic-version": "2023-06-01", "Content-Type": "application/json", "User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"}
     else:
-        body = {"model": name, "messages": messages, "max_tokens": max_tokens, "temperature": 0}
-        if S.get("json") and any("json" in m["content"].lower() for m in messages): body["response_format"] = {"type": "json_object"}
-        if EFFORT.get(name) in ("low", "medium", "high") and svc == "gemini": body["reasoning_effort"] = EFFORT[name]
+        def common():
+            q = _quirks.get(model, set()); ms = messages
+            if "no_system" in q:                                             # the system text goes in front of the first thing the user says
+                system = "\n\n".join(m["content"] for m in messages if m["role"] == "system"); ms = [dict(m) for m in messages if m["role"] != "system"]
+                if system and ms and ms[0]["role"] == "user": ms[0]["content"] = system + "\n\n" + ms[0]["content"]
+            b = {"model": name, "messages": ms, "max_tokens": max_tokens, "temperature": 0}
+            if S.get("json") and "no_json" not in q and any("json" in m["content"].lower() for m in messages): b["response_format"] = {"type": "json_object"}
+            if EFFORT.get(name) in ("low", "medium", "high") and svc == "gemini": b["reasoning_effort"] = EFFORT[name]
+            return b
+        body = common()
         headers = {"Authorization": "Bearer " + key, "Content-Type": "application/json", "User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"}
         if svc == "openrouter": headers.update({"HTTP-Referer": "https://pharmakon.world", "X-Title": "Pharmakon"})
-    op = opener or urllib.request.urlopen; last = None
-    for k in range(tries):
+    op = opener or urllib.request.urlopen; last = None; k = -1; again = 0
+    while k + 1 < tries:
+        k += 1
         wait = lim["gap"] - (time.time() - _last_call.get(model, 0))                 # (each model has its own calls a minute)
         if lim["tpm"]:                                                              # a plan that counts tokens a minute: this run's own calls of the last minute are counted before the next is sent
             now = time.time(); mine = _minute[model] = [(w, n) for w, n in _minute.get(model, []) if now - w < 60]
@@ -241,6 +251,11 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                 secs = min(65, int(float(ra)) + 1) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else min(65, int(float(rd.group(1))) + 1) if rd else 25
                 if k + 1 < tries: time.sleep(0 if opener else secs); continue
             if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 4 * (k + 1)); continue
+            if e.code in (400, 404, 422) and svc != "claude" and again < 2:      # some open models take no system text, or no JSON mode: asked once more without, and remembered for this run
+                q = _quirks.setdefault(model, set()); new_q = None
+                if "no_system" not in q and re.search(r"developer instruction|system (?:instruction|prompt|role|message)s?\b[^.]{0,60}\bnot (?:enabled|supported|allowed)|does not support system", whole, re.I): new_q = "no_system"
+                elif "no_json" not in q and "response_format" in body and re.search(r"json mode|response_format|response[_ ]mime|json_object|structured output", whole, re.I): new_q = "no_json"
+                if new_q: q.add(new_q); body = common(); again += 1; k -= 1; continue
             if e.code in (400, 401, 402, 403, 404, 413, 422): raise Unavailable(last)
             continue
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
@@ -534,6 +549,20 @@ def selftest():
     try: chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, day); raise AssertionError("no Budget")
     except Budget: pass
     assert calls_left("gemini:gemma-4-31b-it") == 0 and calls_left("gemini:gemini-3.5-flash-lite") == 450
+    # a model whose free allowance was not read is not asked; a model that takes no system text or no JSON mode is asked once more without, and not asked that way again
+    json.dump({"gemini": {"models": [{"match": "^gemma-4-", "rpm": 30, "rpd": 14400}], "else": {"rpm": 1, "rpd": 0}}}, open(FREE, "w"))
+    try: chat("gemini:gemini-2.5-pro", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a model with no allowance written was asked")
+    except Unavailable as e: assert "free-limits.json" in str(e)
+    L = ledger(); L["svc"]["gemini"]["models"] = {}; json.dump(L, open(LEDGER, "w")); bodies = []
+    def picky(req, timeout=0):
+        b = json.loads(req.data.decode("utf-8")); bodies.append(b)
+        if any(m["role"] == "system" for m in b["messages"]): raise urllib.error.HTTPError(req.full_url, 400, "Bad Request", {}, io.BytesIO(b'{"error": {"code": 400, "message": "Developer instruction is not enabled for models/gemma-4-26b-a4b-it"}}'))
+        if "response_format" in b: raise urllib.error.HTTPError(req.full_url, 400, "Bad Request", {}, io.BytesIO(b'{"error": {"code": 400, "message": "JSON mode is not enabled for models/gemma-4-26b-a4b-it"}}'))
+        return sopener(req)
+    ms = [{"role": "system", "content": "JSON only"}, {"role": "user", "content": "the question"}]
+    assert as_json(chat("gemini:gemma-4-26b-a4b-it", ms, 50, picky)) == {"ok": True} and len(bodies) == 3 and bodies[-1]["messages"] == [{"role": "user", "content": "JSON only\n\nthe question"}] and "response_format" not in bodies[-1]
+    chat("gemini:gemma-4-26b-a4b-it", ms, 50, picky); assert len(bodies) == 4 and ms[0]["role"] == "system"          # the second call is asked the way that worked, at once; the caller's own messages are untouched
+    _quirks.clear()
     FREE = keep_free; del os.environ["GEMINI_API_KEY"]
     for k in ("MISTRAL_API_KEY", "OPENROUTER_API_KEY", "ANTHROPIC_API_KEY"): del os.environ[k]
     if had: os.environ["GROQ_API_KEY"] = had

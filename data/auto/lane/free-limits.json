@@ -1,0 +1,36 @@
+{
+ "_note": "What each free plan allows each model, as read on the service's own page (scripts/auto/llm.py: limits_of). 'models': the first pattern that matches a model's name gives its limits (rpm: calls a minute; rpd: calls a day; tpm: tokens a minute). We stop by ourselves at nine tenths of a day's calls. 'else': a model no pattern names (rpd 0: never asked, because what its free plan allows was not read). A service that is not here counts all its models together, by the cautious numbers in llm.py (OpenRouter's free models: 45 calls a day in all, and never a model whose name does not end in ':free': that rule is code, not this file).",
+ "gemini": {
+  "read": "Google AI Studio's own table for the free tier, read by the senior author on 16 November 2026, 22:34 Athens (calls a minute / calls a day): Gemini 3.1 Flash Lite 15 / 500; Gemini 3.5 Flash Lite 15 / 500; Gemini 2.5 Flash Lite 10 / 20; Gemini 2.5 Flash, 3 Flash, 3.6 Flash, 3.8 Flash and Gemini 4 Hydrogen 5 / 20 each; Gemma 4 26B and 31B 30 / 14,400 each; the Flash models 250,000 tokens a minute. Tokens a minute for the Gemma models were not on what he read: 15,000 is assumed, which is what Google gave its Gemma models before; if it is less, Google's refusal is waited out.",
+  "models": [
+   {
+    "match": "^gemma-4-(?:26b-a4b|31b)-it$",
+    "rpm": 30,
+    "rpd": 14400,
+    "tpm": 15000
+   },
+   {
+    "match": "^gemini-3\\.[15]-flash-lite$",
+    "rpm": 15,
+    "rpd": 500,
+    "tpm": 250000
+   },
+   {
+    "match": "^gemini-2\\.5-flash-lite$",
+    "rpm": 10,
+    "rpd": 20,
+    "tpm": 250000
+   },
+   {
+    "match": "^gemini-(?:2\\.5-flash|3-flash-preview|3\\.6-flash|3\\.8-flash|4-hydrogen)$",
+    "rpm": 5,
+    "rpd": 20,
+    "tpm": 250000
+   }
+  ],
+  "else": {
+   "rpm": 1,
+   "rpd": 0
+  }
+ }
+}
