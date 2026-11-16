@@ -72,7 +72,7 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 7                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 8                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -381,9 +381,13 @@ def words15(quote, text=""):
     a How-do-we-know line, so that a reader can compare the two (the site's rule: 15 words at most, one for each line).
     None where the words hold what the site never shows (an amount in an answer that is not about amounts, a time between
     uses, a way of taking, words that are not person-first)."""
+    key = {w.lower() for w in re.findall(r"[A-Za-z0-9'’-]+", text or "") if len(w) > 3}
+    sents = [x for x in re.split(r"(?<=[.!?])\s+(?=[A-Z0-9“\"(])", norm(quote).strip(' "\'')) if x.strip()]
+    if len(sents) > 1:                                                  # one sentence of the source, the one that shares most words with our line: never the end of one and the start of the next
+        quote = max(sents, key=lambda x: (sum(1 for w in re.findall(r"[A-Za-z0-9'’-]+", x.lower()) if w in key), -sents.index(x)))
     ws = norm(quote).strip(' "\'').split(" ")
     if len(ws) > 15:
-        key = {w.lower() for w in re.findall(r"[A-Za-z0-9'’-]+", text or "") if len(w) > 3}; best = None
+        best = None
         for a in range(len(ws)):                                       # every part of 6 to 15 words; one that starts and ends where a clause does stands first
             if a and neg_before(ws, a): continue                         # never a part that starts just after "not", "no", "without": it would say the opposite
             for b in range(a + 6, min(len(ws), a + 15) + 1):
@@ -480,6 +484,7 @@ WRITER_SYS = ("You write one answer for Pharmakon, a free drug encyclopedia that
               "You write ONLY from the findings you are given: nothing from memory. You answer with JSON only.\n"
               "The rules of the site:\n"
               "- Plain words a 14-year-old can read. Short sentences. Lead the short answer with what people want to know.\n"
+              "- Never surer than the item: where it says 'can' or 'may', you say 'can' or 'may', not 'often' or 'usually'; where it says 'usually in people who ...' or 'in some people', keep those words.\n"
               "- If the question can be answered with yes or no, the short answer begins with 'Yes', 'No', 'It can', 'Sometimes', 'It depends' or 'Not known', and then says why.\n"
               "- Everyday words: 'addicted' or 'dependent', 'withdrawal symptoms', 'the heart', 'the gut', 'works', 'stopping'. Not 'abstinence symptoms', 'withdrawal syndrome', 'pharmacological', 'cardiovascular', 'efficacy', 'cessation'.\n"
               "- Say who was studied when the findings say it (how many people, where, or that it was animals or a laboratory).\n"
@@ -545,7 +550,7 @@ def checker_prompt(parts, labels, question=None, each=None):
         blocks.append(f"{n}. SENTENCE: {p['text']}\n{ps}")
     return ("For each numbered SENTENCE below, decide whether its PASSAGES support it. Supported means ALL of this: everything the sentence says is stated in its passages; "
             "it is about the same people, animals or setting; every number is the same; it is not stronger or more certain than the passages; it does not say one thing causes another "
-            "where the passages only report a link; it does not turn what one study found into a general fact. If any part of the sentence is not in the passages, it is not supported. "
+            "where the passages only report a link; it does not turn what one study found into a general fact; where the passages say \"can\" or \"may\" it does not say \"often\" or \"usually\", and it does not leave out words that narrow the passage (\"usually in those already susceptible\", \"in some people\", \"after long use\"). If any part of the sentence is not in the passages, it is not supported. "
             "Each passage is named with its source's title: when a passage speaks of \"the studies\", \"the evidence\" or \"the articles\", it means the ones that source looked at (see its title), "
             "so a sentence that makes it about something else is not supported.\n\n"
             + "\n\n".join(blocks)
@@ -599,6 +604,32 @@ LIMITS = {"short": 50, "but": 40}
 CLINICAL = re.compile(r"\b(?:pharmacolog\w+|pharmacokinetic\w*|pharmacodynamic\w*|abstinence symptoms?|withdrawal syndrome|cessation|efficacy|tolerability|(?:a)?etiolog\w+|comorbid\w+|prevalence|cardiovascular|gastrointestinal|neurocognitive|psychopatholog\w+|sequelae|morbidity|contraindicat\w+|intoxication|symptomatolog\w+|adverse events?)\b", re.I)   # words the lead of an answer does not use: a plain word exists
 YES_NO = re.compile(r"^(?:can|could|is|are|was|were|do|does|did|will|would|should|has|have|may|might)\b", re.I)
 DIRECT = re.compile(r"^(?:yes|no|not|sometimes|probably|possibly|rarely|usually|often|it can|it may|it might|it could|it depends|it does|it is not known|it is possible|nobody knows|we do not know|for some|in some|only|partly|mostly|likely|unlikely|the sources)\b", re.I)
+
+
+HOW_OFTEN = [   # (the word in our sentence, the words of a source that carry it). "can", "may", "sometimes", "has been reported" need no leave: they claim less.
+    ("often", r"often|frequent\w*|common\w*|regular\w*|many|a lot|widespread|typical\w*|usual\w*|most\w*|majority|general\w*|main\w*|large\w*|normal\w*|always|consistent\w*|repeated\w*"),
+    ("usually", r"usual\w*|typical\w*|general\w*|most\w*|majority|main\w*|large\w*|normal\w*|always|nearly all|almost all|predominant\w*|primar\w*"),
+    ("always", r"always|every\w*|all|invariab\w*|inevitab\w*|without exception"),
+    ("never", r"never|no one|nobody|none|not .{0,20}\bany\b|cannot|impossib\w*|no (?:known|reported|evidence|cases?)"),
+    ("certainly", r"certain\w*|definite\w*|clear\w*|prove[sdn]?|proof|established|confirmed|undoubted\w*|well[- ]known|strong evidence"),
+]
+SAYS_OFTEN = {"often": r"\b(?:often|frequently|commonly|regularly|a lot of the time)\b", "usually": r"\b(?:usually|typically|generally|mostly|normally|in most cases|most of the time|the majority)\b", "always": r"\b(?:always|invariably|inevitably|every time|in all cases)\b",
+              "never": r"\b(?:never|no one|nobody|impossible)\b", "certainly": r"\b(?:certainly|definitely|clearly|proves?|proven|undoubtedly|without doubt|is known to)\b"}
+
+
+def hedges(parts, labels):
+    """What a draft says more surely or more often than its sources: [(part, what)]. A sentence may say "often",
+    "usually", "always", "never" or "certainly" only where the words it rests on say as much; "can", "may", "sometimes"
+    and "has been reported" are always open to it. (The second reader is asked the same; this is the part of it that code
+    can see, after a real answer said "often stronger" where its source said "can also be stronger".)"""
+    bad = []
+    for p in parts:
+        if p.get("fixed"): continue
+        src = " ".join(labels[u]["quote"] + " " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS] for u in p["uses"]).lower()      # (the passage a quote stands in counts: "people who used it regularly" may stand just before the quoted words)
+        for word, carried_by in HOW_OFTEN:
+            m = re.search(SAYS_OFTEN[word], p["text"], re.I)
+            if m and not re.search(r"\b(?:" + carried_by + r")\b", src): bad.append((p["part"], f"it says “{m.group(0)}”, and the words it rests on do not: say it as the source does (“can”, “may”, “has been reported”), or rest it on the item that says so")); break
+    return bad
 
 
 def lead(question, parts):
@@ -823,7 +854,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" try {attempt + 1}: {why}" + (f" (how the reply ended: {llm.LAST.get('finish')}; reasoned {llm.LAST.get('reasoned')} characters, wrote {llm.LAST.get('wrote')})" if llm.LAST else "")).strip()
             if fix.startswith("the form was wrong") and why == "no JSON": break       # the same call would fail the same way: not paid for a third time
             fix = "the form was wrong: " + why; continue
-        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")] + sorted(numbers(item["q"]))) + lead(item["q"], draft["parts"])   # (a year a source was published in, or a number of the question itself, may be named)
+        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")] + sorted(numbers(item["q"]))) + lead(item["q"], draft["parts"]) + hedges(draft["parts"], labels)   # (a year a source was published in, or a number of the question itself, may be named)
         lines_bad = {p for p, _ in bad if p.startswith("how")}
         if bad and all(p.startswith("how") for p, _ in bad) and sum(p["part"].startswith("how") for p in draft["parts"]) > len(lines_bad):
             draft["parts"] = [p for p in draft["parts"] if p["part"] not in lines_bad]          # (lane 4) the line goes, the answer stays
@@ -985,9 +1016,23 @@ def team(file=None):
     return None
 
 
+def fitting(chat):
+    """chat, with a call that Groq's free plan cannot take in one minute asked again with less room for the answer (never
+    less than 700 tokens): the prompt cannot be cut here, but a model seldom needs all the room it is given."""
+    def ask(model, messages, room=700):
+        try: return chat(model, messages, room)
+        except llm.Unavailable as e:
+            m = re.search(r"\((\d+) of (\d+) tokens\)", str(e))
+            if not (m and model.startswith("groq:")): raise
+            less = room - (int(m.group(1)) - int(m.group(2))) - 60
+            if less < 700: raise
+            return chat(model, messages, less)
+    return ask
+
+
 def run(ids=None, limit=3, again=False, chat=None, enc=None):
     models = dict(MODELS); real = chat is None
-    chat = chat or llm.chat
+    chat = fitting(chat or llm.chat)
     items = P.listed()
     st = load_state(); order = []
     rep = ROOT / "data" / "auto" / "report.json"
@@ -1016,7 +1061,10 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             except (OSError, ValueError): before = None
             rec = make(w, found, chat, enc, models, official=official, names=names, before=before)
         except llm.Budget as e: print("lane: stopped for today:", e); break
-        except llm.Unavailable as e: print("lane: the models cannot be used now:", e); break
+        except llm.Unavailable as e:
+            print("lane: the models cannot be used now:", e)
+            if "larger than Groq's free plan allows" in str(e): continue        # (this question's call was too large; the next question's may not be)
+            break
         except P.Refused as e: print("lane: a source said no:", e); break
         except Exception as e:                                           # a fault of the lane itself on this question: written down, and the question is not tried again by this lane (it would fail the same way and spend the day's allowance)
             import traceback
@@ -1109,6 +1157,12 @@ def selftest():
     calls.clear(); script["writer"] = [W("People who use ketamine regularly can become dependent on it."), W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk(); assert r["status"] == "published" and "yes or no" in r["gates"]["rules"] and "begin the short answer with Yes" in [c for c in calls if c[0] == "writer"][1][2], r["gates"]
     assert lead(item["q"], [{"part": "but", "text": "The sources do not say how many people who use ketamine actually become addicted."}]) and not lead(item["q"], [{"part": "but", "text": "It has been reported mainly after frequent use over a long time."}])
+    # a word of how often or how sure must be the source's own
+    lb = {"F1": {"quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant."}, "F2": {"quote": "synthetic cannabinoids are often more potent than natural cannabis"}}
+    assert hedges([{"part": "short", "text": "It is often stronger and more unpleasant.", "uses": ["F1"]}], lb) and not hedges([{"part": "short", "text": "It is often stronger than cannabis.", "uses": ["F1", "F2"]}], lb) and not hedges([{"part": "short", "text": "It can be stronger and more unpleasant.", "uses": ["F1"]}], lb)
+    assert words15("Easy to want more and take larger doses. Mental health can get worse. Psychotic episodes can be triggered, usually in those already susceptible, and last for weeks.", "FRANK says psychotic episodes can be triggered.") == "Psychotic episodes can be triggered, usually in those already susceptible, and last for weeks"
+    f = fitting(lambda model, messages, room: (_ for _ in ()).throw(llm.Unavailable("this call is larger than Groq's free plan allows in a minute (8012 of 8000 tokens)")) if room > 2850 else f"room {room}")
+    assert f("groq:openai/gpt-oss-120b", [], 2900) == "room 2828" and f("groq:x", [], 800) == "room 800"
     # the second reader also judges the answer as a whole. A But about something else, three times: the code writes the But from what the answer rests on, and the answer stands
     off = dict(V(True, True, True, True), answers_question=True, but_fits=False, why="it is about a treatment")
     calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [off] * 3
