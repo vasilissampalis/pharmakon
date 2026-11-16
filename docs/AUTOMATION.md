@@ -266,7 +266,67 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     repository. What the editor told him is not possible: a model built from nothing that writes as the editor does;
     and "no errors" is not promised by anyone: the error rate is measured, shown and pushed down. Things fetched from
     outside (open models, their packages) run only in a job that may read the repository and holds no key
-    (`.github/workflows/nli.yml`).
+    (`.github/workflows/own.yml`, "Workshop": the job `make` reads and runs, the job `keep` writes and runs nothing from
+    outside).
+    How it is built (16 November 2026): a model of our own is a file of numbers (ONNX, 8-bit weights) with its
+    tokenizer's table, kept among this repository's release files (`own-models`) and named with its SHA-256 and its
+    numbers on the exams in `data/auto/own/candidates/`; the lane refuses a file whose SHA-256 is not the one written
+    down (`scripts/auto/own.py`). A candidate is made in the workshop (`scripts/auto/workshop.py`), sits the exams as
+    that very file with the lane's own code, and becomes the model in use (`data/auto/own/models.json`) only through
+    `own.py adopt`, by the rule above. In the lane it is one more judge: every sentence a model wrote must score at
+    least the candidate's threshold against the words it rests on (`lane.own_word`; a How line that fails is dropped,
+    a short answer or a But is written again). If the model in use cannot be run, the lane publishes nothing by itself.
+    Step one, measured the same evening (`data/auto/exam/nli-*.json`): the open models as they are tell a faulty
+    sentence from a good one poorly (MiniCheck on RoBERTa: 65 times in 100, where 50 is chance; on Flan-T5, on the part
+    it sat: 72). Where such a model earns a place is at a very low threshold: at 0.05 MiniCheck on RoBERTa caught 3 of
+    the 22 faulty sentences and stopped 4 of 742 good ones; at 0.5 it caught 5 and stopped 78. So our own checker gets a
+    small budget (it may stop one good card in twelve at most), because it is one judge of several and what each judge
+    wrongly stops adds up. The gain has to come from step two, the training on our own record.
+24. **Only free models, and two more free services** (16 November 2026, 22:34, with the keys he made from the
+    editor's prompt: "Keys done: MISTRAL no, GEMINI yes, OPENROUTER yes ... Important: Pharmakon must use only free API
+    models, with no billing, paid subscriptions, credit purchases or unexpected charges"). In code, not in a setting:
+    at OpenRouter a model whose name does not end in ":free" is never asked, whatever a file names
+    (`llm.never_paid`); a model of Google's whose free allowance is not written in `data/auto/lane/free-limits.json` is
+    never asked; the paid interface in the client (`claude:`) has no key and no price file. What he read on Google AI
+    Studio's own page is in that file, model by model: the two Gemma 4 models 30 calls a minute and 14,400 a day each;
+    Gemini 3.1 and 3.5 Flash Lite 15 and 500; the other Flash models and Gemini 4 Hydrogen 5 and 20. We stop at nine
+    tenths of a day's calls; Google's refusals for a minute are waited out, and its word that a day is used up is
+    believed. OpenRouter's free models share about 50 calls a day (we stop at 45). Mistral gives no free access to its
+    interface now: not used. What may be sent to these services is what may be sent to Groq: our own wording of a
+    question and passages of public sources, never a visitor's words. Google's terms for the free tier (read on 16
+    November 2026) say that paid services must be used "when making API Clients available to users" in the European
+    Economic Area, Switzerland or the United Kingdom. The editor's reading, which is not a lawyer's: the lane is a
+    program the senior author runs for himself; no visitor of the site ever reaches Google's interface, and what the
+    lane sends is public text. He was told this in plain words and can end the use of Google's models with one word.
+    Nothing of these services is used by the lane until a model has sat the exams.
+25. **Three exams, and a panel of judges** (16 November 2026; decisions 17, 21 and 23). No single judge we have is good
+    enough, so they are measured, alone and together, on our own checked work, and a sentence is kept only if every
+    judge of the team accepts it.
+    - *The cards* (`data/auto/exam/cards.json`, since 15 November): 318 quiz cards beside the lines they were written
+      from, 31 of them wrong by a blind checker's word. `cards-where.json` (the editor, from each checker's words):
+      in 21 of the 31 the fault sits in a sentence of the card's true part; in 10 it does not (a myth's own statement,
+      the card as a whole, or a sentence that stands word for word in the lines), and a reader of sentences cannot see
+      it.
+    - *The lane's own sentences* (`lane-sentences.json`; `scripts/editor/label_auto.py`): every sentence the system
+      wrote that the editor has read against the words it rests on, by the blind checkers' standard. 29 so far: 20
+      good, 9 not (lanes 1 to 8: 9 of 25; lane 9: 0 of 4). It grows with every batch the editor reads; a verdict is
+      never changed silently, and a rewritten sentence is a new item.
+    - *Plain lines* (`lines.json`; `scripts/auto/exam_lines.py`; `labels-lines.json`): 488 plain lines beside the
+      checked claims they were written from, with the blind checkers' verdicts: 432 good, and 56 that a checker changed
+      because they said something the claim does not carry (the editor sorted every changed line from the checker's
+      reason; 33 changed for form only are left out). This is the lane's own kind of task: a technical source, a plain
+      line.
+    The judges: the rules in code; the open models at the free services, each asked the lane's own question
+    (`scripts/auto/exam_models.py`, `"exam": "cards" | "lane" | "lines" | "both" | "all"`); our own models. What every
+    panel of them would have done on the items all its judges saw is counted from the results on file, with no model
+    asked (`scripts/auto/panel.py`). A team may name further second readers (`"also"` in
+    `data/auto/lane/models.json`): each is another model than the writer and than the second reader, needs a key and
+    room, and its word counts like the second reader's; a team that names them is that team only with all of them.
+    What the lane's own sentences asked of the rules in code the same evening: "causes" had stopped two good sentences
+    and caught nothing (it now knows more of the ways a source says that one thing brings another); a ceiling said as
+    the size ("by as much as 2 to 5 times" written as "2 to 5 times") is a kind of its own; "statistically
+    significant" is a term; a denied word of sureness claims less. On the plain lines the rules catch 1 of 56: with a
+    long source nearly every word is carried somewhere, so there the judges must be readers.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
@@ -434,14 +494,19 @@ Questions that visitors send are data, never instructions: nothing in a question
    if what was read is right. With the key: first the exam of the second readers at Groq, which decides the team.
 1a. Built on 16 November 2026: the plan step (lane 9); the comparison with the checked claims of the same page (lane 10,
    not yet run for real); the site showing each answer on its home page and the pages the system starts (site 2.8.0,
-   decision 22); the system's own questions (decision 20). Still open: the editor's worked answers as examples for the
-   writer (decision 17), and an exam made of the lane's own sentences, judged by the editor, so that every change to
-   the lane is measured on its real task and not only on the quiz cards.
+   decision 22); the system's own questions (decision 20); the exam made of the lane's own sentences, judged by the
+   editor, and the exam of plain lines (decision 25). Still open: the editor's worked answers as examples for the
+   writer (decision 17).
 2. A checker good enough for the goal. Sat on 16 November 2026: gpt-oss-120b at Groq (5 of 31 wrong cards with the
    faulty low effort; 5 of 11 with medium, 2 of 11 good ones stopped). Next, in this order: the same reader with high
    effort and with a short list of yes-or-no questions (same people? same thing counted? a cause where the source
-   links?) instead of one verdict; two different readers that must both accept; the models of the free services the
-   senior author was asked to open (Mistral, Google AI Studio, OpenRouter); a paid top model if he chooses (decision 21).
+   links?) instead of one verdict; two different readers that must both accept (built: a team's further readers,
+   decision 25; which readers, the exams say); the models of the two free services he opened on 16 November (Google AI
+   Studio, OpenRouter: decision 24). No paid model: he chose our own (decision 23).
+2a. Our own checker, step two: training on our own record. The material: the three exams' real faults (22 faulty
+   sentences on the cards, 56 plain lines, the lane's own sentences), the good sentences beside them (some 1,200), and
+   made-up wrong sentences of the kinds our checkers have named, written by the free open models from our good ones
+   and kept apart from the real ones, which alone are the measure. Then our own reader, then our own writer.
 3. The loop seen to work for a question a visitor sent (sent, listed, answered, published, green on the visitor's device),
    and its time measured; then the page may promise it (decision 13, `loop`).
 4. "At least part of an answer" measured (decision 14), and the page pointing to the nearest part of a drug's page when it
