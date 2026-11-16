@@ -14,10 +14,14 @@ whole exam, sat AS THAT FILE with the same code the lane runs (scripts/auto/own.
 runs nothing from outside, puts the files among this repository's release files and the record into
 data/auto/own/candidates/. Adopting a candidate is a separate step with its own rule (own.py adopt).
 
-The exam here: every card's true part (a fact's statement and each sentence of its explanation; for a myth only the
+Two exams. The cards: every card's true part (a fact's statement and each sentence of its explanation; for a myth only the
 explanation, because a myth's statement is false on purpose) against the lines the card was written from. A card is let
 through when every such sentence scores at least the threshold. The threshold a candidate carries is the one that lets
 the fewest wrong cards through among those that stop no more than one good card in four.
+The lane's own sentences (data/auto/exam/lane-sentences.json): every sentence the system wrote that the editor has judged,
+against the words it rests on. This is the lane's real task; it is small still and grows with every batch the editor reads,
+so a candidate's numbers on it are written down beside the cards' and count in the rule once the exam is large enough
+(own.py). The two exams can ask for different thresholds: both tables are kept.
 """
 import sys, re, json, time, pathlib, datetime
 
@@ -48,10 +52,24 @@ def table(rows):
     return out, min(ok, key=lambda x: (x["wrong_through"], x["good_stopped"]))
 
 
-def sit(name, folder, entry, minutes=0):
+def sit_lane(chk, exam=None):
+    """The exam of the lane's own sentences: (rows, the table). A row is one sentence, so its "scores" hold one number."""
+    try: items = json.load(open(exam or EXAM / "lane-sentences.json", encoding="utf-8"))["items"]
+    except (OSError, ValueError): return [], []
+    scores = chk.score([(" ".join(i["rests_on"]), i["sentence"]) for i in items]) if items else []
+    rows = [{"id": i["id"], "good": i["good"], "scores": [s]} for i, s in zip(items, scores)]
+    return rows, (table(rows)[0] if rows else [])
+
+
+def at_threshold(tb, threshold):
+    """A table's row for one threshold (the numbers a candidate has on the lane's sentences at the threshold it carries)."""
+    return next((dict(x) for x in tb if x["threshold"] == threshold), None)
+
+
+def sit(name, folder, entry, minutes=0, chk=None):
     """The whole exam for the files in folder, with the lane's own code. Returns (rows, the table, the row it carries)."""
     items = json.load(open(EXAM / "cards.json", encoding="utf-8"))["items"]; t0 = time.time()
-    chk = own.Check(entry=entry, files={"model": folder / (name + ".onnx"), "tokenizer": folder / (name + ".tokenizer.json")})
+    chk = chk or own.Check(entry=entry, files={"model": folder / (name + ".onnx"), "tokenizer": folder / (name + ".tokenizer.json")})
     rows = []
     for it in items:
         if minutes and time.time() - t0 > minutes * 60: break
@@ -92,12 +110,17 @@ def finish(entry, name, minutes=0):
     files = {}
     for kind, fn in (("model", name + ".onnx"), ("tokenizer", name + ".tokenizer.json")):
         p = OUT / fn; files[kind] = {"url": own.RELEASES + "own-models/" + fn, "sha256": own.sha256(p), "bytes": p.stat().st_size}
-    rows, tb, pick, whole, secs = sit(name, OUT, dict(entry, files=files), minutes)
+    chk = own.Check(entry=dict(entry, files=files), files={"model": OUT / (name + ".onnx"), "tokenizer": OUT / (name + ".tokenizer.json")})
+    rows, tb, pick, whole, secs = sit(name, OUT, dict(entry, files=files), minutes, chk)
+    lrows, ltb = sit_lane(chk); lane_at = at_threshold(ltb, pick["threshold"])
     entry = dict(entry, files=files, threshold=pick["threshold"], exam=dict(pick, whole=whole, seconds_a_sentence=round(secs, 2)), exam_table=tb)
+    if lane_at: entry.update(exam_lane=lane_at, exam_lane_table=ltb)
     json.dump(entry, open(OUT / (name + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    json.dump({"_note": "The scores of " + name + " for the true part of every card of the exam (scripts/auto/workshop.py).", "items": rows}, open(OUT / (name + ".scores.json"), "w", encoding="utf-8"), ensure_ascii=False)
+    json.dump({"_note": "The scores of " + name + " for the true part of every card of the exam, and for every sentence of the lane's own that the editor has judged (scripts/auto/workshop.py).", "items": rows, "lane": lrows},
+              open(OUT / (name + ".scores.json"), "w", encoding="utf-8"), ensure_ascii=False)
     print(f"workshop: {name} (from {entry['from']}, {files['model']['bytes'] / 1e6:.0f} MB): at {pick['threshold']}: lets {pick['wrong_through']} of {pick['wrong']} wrong cards through, stops {pick['good_stopped']} of {pick['good']} good ones"
-          + ("" if whole else "; NOT the whole exam (time was up)") + f"; {secs:.2f} seconds a sentence")
+          + ("" if whole else "; NOT the whole exam (time was up)") + f"; {secs:.2f} seconds a sentence"
+          + (f"; of the lane's own sentences it lets {lane_at['wrong_through']} of {lane_at['wrong']} that are not good through and stops {lane_at['good_stopped']} of {lane_at['good']} good ones" if lane_at else ""))
     return entry
 
 
@@ -110,7 +133,19 @@ def selftest():
     at = {x["threshold"]: x for x in tb}
     assert at[0.3]["wrong_through"] == 4 and at[0.4]["wrong_through"] == 1 and at[0.4]["good_stopped"] == 2 and at[0.95]["good_stopped"] == 8
     assert pick["threshold"] == 0.4 and pick["wrong_through"] == 1 and pick["good_stopped"] == 2, pick          # the fewest wrong cards through among thresholds that stop no more than one good card in four
-    print("workshop selftest: ok (a card's true part: a myth's statement is left out; the threshold a candidate carries lets the fewest wrong cards through while it stops no more than one good card in four)")
+    # the lane's own sentences: one score a sentence, against the words it rests on, and the numbers at the threshold the candidate carries
+    import tempfile
+    class Chk:
+        def score(self, pairs): self.seen = pairs; return [0.9 if "can be" in s else 0.2 for _, s in pairs]
+    f = pathlib.Path(tempfile.mkdtemp()) / "lane.json"
+    json.dump({"items": [{"id": "a", "good": True, "sentence": "It can be so.", "rests_on": ["It can", "be so."]}, {"id": "b", "good": False, "sentence": "It often is so.", "rests_on": ["It can be so."]},
+                         {"id": "c", "good": False, "sentence": "It can be so, experts say.", "rests_on": ["It can be so."]}]}, open(f, "w"))
+    c = Chk(); lrows, ltb = sit_lane(c, f)
+    assert c.seen[0] == ("It can be so.", "It can be so.") and [r["scores"] for r in lrows] == [[0.9], [0.2], [0.9]]
+    assert at_threshold(ltb, 0.4) == {"threshold": 0.4, "wrong": 2, "good": 1, "wrong_through": 1, "good_stopped": 0} and at_threshold(ltb, 0.95)["good_stopped"] == 1 and at_threshold(ltb, 0.33) is None
+    assert sit_lane(c, f.parent / "none.json") == ([], [])
+    print("workshop selftest: ok (a card's true part: a myth's statement is left out; the threshold a candidate carries lets the fewest wrong cards through while it stops no more than one good card in four; "
+          "the lane's own sentences are sat against the words they rest on, and counted at that threshold)")
 
 
 if __name__ == "__main__":

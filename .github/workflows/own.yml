@@ -54,6 +54,7 @@ jobs:
         run: |
           set +e
           L="$RUNNER_TEMP/workshop.log"; : > "$L"; mkdir -p out
+          ls data/auto/requests/nli-*.json data/auto/requests/own-*.json 2>/dev/null > out/_handled.txt
           if ls data/auto/requests/nli-*.json >/dev/null 2>&1; then
             python3 -I scripts/auto/nli.py exam --requests --minutes 38 >> "$L" 2>&1 || echo "!! the exam of open models failed ($?)" >> "$L"
           fi
@@ -107,7 +108,8 @@ jobs:
           done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm -q --ignore-unmatch data/auto/requests/nli-*.json data/auto/requests/own-*.json
+          # only the requests the first job saw are taken off (one that arrived meanwhile starts its own run); the names are checked, because the list comes from that job
+          grep -E '^data/auto/requests/(nli|own)-[0-9A-Za-z._-]+\.json$' out/_handled.txt 2>/dev/null | while read -r f; do git rm -q --ignore-unmatch "$f"; done
           git add -A data/auto/exam data/auto/own data/auto/requests
           git diff --cached --quiet || git commit -q -m "Workshop: what the models said of every card, and the candidates made"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)

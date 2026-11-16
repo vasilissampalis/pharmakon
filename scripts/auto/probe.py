@@ -36,6 +36,7 @@ def main():
     for svc in llm.SERVICES:
         if not (os.environ.get(llm.SERVICES[svc]["key"]) or "").strip(): out["services"][svc] = {"key": False}; continue
         names, why = llm.models_of(svc)
+        if names is not None and svc == "openrouter": names = [n for n in names if n.endswith(":free")]          # the only ones Pharmakon may ask there: the models that cost nothing
         out["services"][svc] = {"key": True, "models": names[:400]} if names is not None else {"key": True, "why": why}
         print("probe:", svc, (str(len(names)) + " models offered") if names is not None else "NOT ok: " + why)
     out["groq_key"] = bool((os.environ.get("GROQ_API_KEY") or "").strip())
