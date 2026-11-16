@@ -32,6 +32,7 @@ import sys, json, re, glob, os, pathlib, math
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EXAM = ROOT / "data" / "auto" / "exam"
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 BAR = 1 / 50
 
 
@@ -134,6 +135,12 @@ def run(name):
     if name == "numbers": return score("numbers", {i["id"]: cand_numbers(i["lines"], i["card"]) for i in items}, "gate 2 alone: every number in the card is in the lines")
     m = re.fullmatch(r"new-words-(\d+)", name)
     if m: return score(name, {i["id"]: len(new_words(i["lines"], i["card"])) <= int(m.group(1)) for i in items}, "a rule on words alone: the card may hold at most this many content words that its lines do not hold")
+    if name == "says-more":                                               # (16 November 2026) the lane's rules about words that say more than their source (lane.says_more_text), on the TRUE part of each card:
+        import lane                                                        # a myth's statement is false on purpose, so for a myth only its explanation is held against the lines
+        true_part = lambda c: (c["statement"] + " " if c["answer"] else "") + re.sub(r"^(?:true|false|myth|fact)[.!:]?\s+", "", c.get("why") or "", flags=re.I)
+        src = lambda L: " ".join([L.get("short") or "", L.get("but") or ""] + list(L.get("how") or []))
+        return score(name, {i["id"]: not lane.says_more_text(true_part(i["card"]), src(i["lines"])) for i in items},
+                     "the lane's rules in code about words that say more than their source (a praising word, a rank, 'most', 'all', 'both', a word that makes it bigger or smaller, 'causes', a result for one sex said of people), on the true part of each card")
     sys.exit("exam: no candidate named " + name)
 
 

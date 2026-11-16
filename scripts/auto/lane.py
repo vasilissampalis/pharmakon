@@ -722,6 +722,78 @@ def hedges(parts, labels):
     return bad
 
 
+# ---------- words that say more than their source (lane 10) ----------
+# The second reader sat the exam (data/auto/exam) and let through small faults that a blind human reader caught: a praising word
+# the lines do not hold ("famous"), "the most common" and "riskiest" where no rank was given, "most" where the lines give no
+# share, "slightly" where they give two numbers, "had" where they say "reported", "people" where the result was for men,
+# "causes" where the lines link. These are the faults code can see. Each kind below names the words of OUR sentence and what
+# the words it rests on must hold to carry them; a sentence that fails is written again with the reason. Measured on the same
+# exam (scripts/auto/exam.py run says-more), kind by kind, before it was put here: on the true part of the 318 cards these
+# kinds catch 3 of the 31 wrong cards and stop 5 of the 287 good ones. Small, and honest: most of the exam's faults are in the
+# meaning, where only a reader can see them. They are kept because each is a thing a sentence must never do.
+def over_half(src):
+    """Does a source give a share above half (so that "most" is its own word)? "55 in 100", "62%", "62 of 64", "two thirds"."""
+    t = src.lower().replace(",", "")
+    if re.search(r"\b(?:two[- ]thirds|three[- ]quarters|four[- ]fifths|nine in ten|four in five|three in four|two in three|more than half|over half|majority)\b", t): return True
+    for m in re.finditer(r"(\d+(?:\.\d+)?)\s*(?:%|percent|per cent|in 100|out of 100|of 100|in every 100)", t):
+        if 50 < float(m.group(1)) <= 100: return True
+    for m in re.finditer(r"\b(\d+)\s+(?:of|out of|in)\s+(?:the\s+)?(\d+)\b", t):
+        a, b = float(m.group(1)), float(m.group(2))
+        if b > 0 and a <= b and a / b > 0.5: return True
+    return False
+
+
+MORE = [  # (kind, the words in our sentence, what the source's words must hold: a pattern, None for "the same word", or a function of the source's text)
+    ("a praising word", r"\b(?:famous\w*|well[- ]known|renowned|landmark|notorious|prestigious|respected|pioneering|ground-?breaking|seminal|influential|celebrated|world[- ]leading|leading (?:expert|scientist|researcher|journal|authorit\w+)s?|trained)\b", None),
+    ("a rank", r"\b(?:the|its|their|one of the)\s+(?:single\s+|very\s+)?(?:most|least)\s+[a-z]+|\b(?:best|worst)\b|\bthe\s+(?:top|biggest|largest|greatest|highest|lowest|strongest|safest|main|leading)\b|\b(?:riskiest|deadliest|commonest|safest)\b",
+     r"most|least|best|worst|top|main\w*|primar\w*|chief\w*|leading|predominant\w*|highest|lowest|greatest|largest|biggest|strongest|safest|riskiest|deadliest|commonest|first|above all|more than any|number one|rank\w*"),
+    ("“most”", r"\bmost(?:\s+of)?\s+(?!common|likely|often|important|dangerous|harmful|frequent|recent|used|studied|reported|widely|commonly|frequently|people who|of all)[a-z]+|\bthe majority\b|\bmostly\b|\bmainly\b|\blargely\b",
+     lambda src: bool(re.search(r"\b(?:most\w*|majority|main\w*|large\w*|predominant\w*|primar\w*|nearly all|almost all|usual\w*|typical\w*|general\w*|common\w*|chief\w*|principal\w*)\b", src, re.I)) or over_half(src)),
+    ("“all” or “every”", r"(?<!at )(?<!after )(?<!not )(?<!in )\b(?:all|every|everyone|everybody)\b(?!\s+(?:in all|the same|other|year|day|week|month|night|time|\d))|\beach\b(?!\s+(?:other|year|day|week|month|night|time))",
+     r"all|every\w*|each|both|entire\w*|whole|universal\w*|without exception|any|100\s*(?:%|per ?cent|in 100)|consistent\w*|always"),
+    ("“both”", r"\bboth\b", r"both|two|2|each|either|neither|as well as|and also|respectively"),
+    ("a word that makes it bigger", r"\b(?:severe(?:ly)?|serious(?:ly)?|heav(?:y|ily)|huge(?:ly)?|massive(?:ly)?|major|great(?:ly)?|sharp(?:ly)?|dramatic(?:ally)?|extreme(?:ly)?|highly|substantial(?:ly)?|significant(?:ly)?|rapid(?:ly)?|quick(?:ly)?|easily|intense(?:ly)?|powerful(?:ly)?|big|far (?:more|less|higher|lower|greater|stronger|worse)|much (?:more|less|higher|lower|greater|stronger|worse))\b",
+     r"sever\w*|serious\w*|heav\w*|huge\w*|massiv\w*|major\w*|great\w*|sharp\w*|dramatic\w*|extrem\w*|high\w*|substantial\w*|significan\w*|rapid\w*|quick\w*|eas(?:y|ily)|intens\w*|powerful\w*|big\w*|large\w*|strong\w*|marked\w*|considerabl\w*|profound\w*|pronounced|robust\w*|potent\w*|acute\w*|notabl\w*|striking\w*|importan\w*|danger\w*|life-threatening|critical\w*|fast\w*|sudden\w*|steep\w*|"
+     r"far (?:more|less|higher|lower|greater)|much (?:more|less|higher|lower|greater)|\d+(?:\.\d+)?[- ]?(?:fold|times)|double\w*|triple\w*|twice|times (?:the|as|more|higher)"),
+    ("a word that makes it smaller", r"\b(?:slight(?:ly)?|mild(?:ly)?|minor|weak(?:ly)?|modest(?:ly)?|barely|marginal(?:ly)?|a little|a bit|hardly)\b",
+     r"slight\w*|mild\w*|minor\w*|weak\w*|modest\w*|small\w*|little|low\w*|marginal\w*|limited|minimal\w*|negligib\w*|subtle|few|rare\w*|transient|moderate\w*|barely|hardly|not (?:clearly|significantly|statistically)|no (?:clear|significant)"),
+    ("“causes”", r"\bcaus(?:e|es|ed|ing)\b|\bleads? to\b|\bled to\b|\bresults? in\b|\bresulted in\b|\btriggers?\b|\btriggered\b|\bbrings? on\b|\bbrought on\b",
+     r"caus\w+|lead\w* to|led to|result\w* (?:in|from)|induc\w*|produc\w*|trigger\w*|due to|because|responsible|mediat\w*|attribut\w*|precipitat\w*|provok\w*|elicit\w*|evok\w*|bring\w* (?:on|about)|brought (?:on|about)|by (?:blocking|activating|binding|increasing|reducing|inhibiting|releasing|stimulating|acting)|effects? of|consequence\w*|"
+     r"(?:increas|decreas|reduc|rais|lower|impair|damag|depress|suppress|slow|worsen|improv)\w*"),
+]
+ONE_SEX = [(re.compile(r"\b(?:men|males?)\b", re.I), re.compile(r"\b(?:women|females?|both sexes|men and women|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:men|males?)\b", re.I), "men"),
+           (re.compile(r"\b(?:women|females?)\b", re.I), re.compile(r"\b(?:\bmen\b|\bmales?\b|both sexes|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:women|females?)\b", re.I), "women")]
+ANYBODY = re.compile(r"\b(?:people|everyone|anyone|adults|persons|those who|the public)\b", re.I)
+
+
+def says_more_text(ours, src):
+    """What one sentence says that the words it rests on do not carry: [(kind, the words, how to mend it)]."""
+    out = []
+    for kind, mine, carried in MORE:
+        m = re.search(mine, ours, re.I)
+        if not m: continue
+        w = m.group(0)
+        ok = (carried(src) if callable(carried) else bool(re.search(r"\b(?:" + carried + r")\b", src, re.I)) if carried else bool(re.search(r"\b" + re.escape(w.split()[0][:6]), src, re.I)))
+        if not ok: out.append((kind, w, f"it says “{w}”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"))
+    # (tried and not put to work: "the source gives what people reported; our sentence says it was so". On the exam it stopped 12 good cards
+    # for 2 wrong ones: "reported" stands near too many things. The second reader is asked about it instead.)
+    for only, others, in_ours, name in ONE_SEX:
+        if only.search(src) and not others.search(src) and ANYBODY.search(ours) and not in_ours.search(ours):
+            out.append((f"a result for {name}, said of people", "", f"the source gives this for {name}: say “{name}”, not people in general")); break
+    return out
+
+
+def says_more(parts, labels):
+    """What a draft says that its sources do not carry (the kinds in MORE, a self-report said as a finding, a result for one sex said of people): [(part, what)]."""
+    bad = []
+    for p in parts:
+        if p.get("fixed"): continue
+        src = " ".join(labels[u]["quote"] + " " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS] for u in p["uses"])
+        found = says_more_text(p["text"], src)
+        if found: bad.append((p["part"], found[0][2]))
+    return bad
+
+
 def lead(question, parts):
     """What the site's way of answering has against a draft's first two sentences: [(part, what)]. A question that can be
     answered with yes or no is answered so, first; the short answer and the But use everyday words."""
@@ -990,7 +1062,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" try {attempt + 1}: {why}" + (f" (how the reply ended: {llm.LAST.get('finish')}; reasoned {llm.LAST.get('reasoned')} characters, wrote {llm.LAST.get('wrote')})" if llm.LAST else "")).strip()
             if fix.startswith("the form was wrong") and why == "no JSON": break       # the same call would fail the same way: not paid for a third time
             fix = "the form was wrong: " + why; continue
-        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")] + sorted(numbers(item["q"]))) + lead(item["q"], draft["parts"]) + hedges(draft["parts"], labels)   # (a year a source was published in, or a number of the question itself, may be named)
+        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")] + sorted(numbers(item["q"]))) + lead(item["q"], draft["parts"]) + hedges(draft["parts"], labels) + says_more(draft["parts"], labels)   # (a year a source was published in, or a number of the question itself, may be named)
         lines_bad = {p for p, _ in bad if p.startswith("how")}
         if bad and all(p.startswith("how") for p, _ in bad) and sum(p["part"].startswith("how") for p in draft["parts"]) > len(lines_bad):
             draft["parts"] = [p for p in draft["parts"] if p["part"] not in lines_bad]          # (lane 4) the line goes, the answer stays
@@ -1328,6 +1400,19 @@ def selftest():
     assert not NOT_AN_AMOUNT_FOR_PEOPLE.search("400 mg a day for adults") and NOT_AN_AMOUNT_FOR_PEOPLE.search("400 mg/day for adults [10 g for lethality]")
     # a word of how often or how sure must be the source's own
     lb = {"F1": {"quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant."}, "F2": {"quote": "synthetic cannabinoids are often more potent than natural cannabis"}}
+    # (lane 10) words that say more than their source: a praising word, a rank, "most", "both", a word that makes it bigger or smaller, "causes", a result for men said of people
+    sm = lambda ours, src: [k for k, _, _ in says_more_text(ours, src)]
+    assert sm("In a famous UK ranking, alcohol came top.", "A UK panel ranked alcohol most harmful overall.") == ["a praising word"] and not sm("In a well-known UK ranking, alcohol came top.", "In this well-known ranking by a UK panel, alcohol came top.")
+    assert sm("Numbness was the most common problem.", "Of 100 people in published reports, 80 had numbness and 58 had trouble walking.") == ["a rank"] and not sm("Numbness was the most common problem.", "Numbness was the most frequently reported complaint.")
+    assert sm("Most people handed their drugs over.", "Some people handed their drugs over; 15 of 164 did.") == ["“most”"] and not sm("Most people handed their drugs over.", "30 of 45 people handed drugs over.") and not sm("Most people got better.", "62 in 100 improved.")
+    assert over_half("55 in 100 of these deaths") and over_half("62 of 64 people") and over_half("about two thirds") and not over_half("15 of 164 people") and not over_half("26 to 27 in 100")
+    assert sm("Both reviews say withdrawal can resemble the first problem.", "The review says withdrawal symptoms can resemble the original problem.") == ["“both”"]
+    assert sm("Drug use rose slightly.", "Use went from about 8 to 12 in 100 adults.") == ["a word that makes it smaller"] and not sm("Drug use rose slightly.", "There was a small rise in use.")
+    assert sm("It severely damages memory.", "Scores on memory tests were lower.") == ["a word that makes it bigger"] and not sm("It severely damages memory.", "Marked impairment of memory was seen.")
+    assert sm("Cannabis causes psychosis.", "Cannabis use was associated with psychosis.") == ["“causes”"] and not sm("Ketamine causes bladder damage.", "Frequent ketamine use damages the bladder lining.") and not sm("It can lead to dependence.", "Repeated use may result in dependence.")
+    assert sm("People who believed their drink was alcoholic drank more.", "Men told their drink had vodka drank about twice as much.") == ["a result for men, said of people"] and not sm("Men who believed their drink was alcoholic drank more.", "Men told their drink had vodka drank about twice as much.")
+    assert says_more([{"part": "short", "text": "In a famous UK ranking, alcohol came top.", "uses": ["F1"]}], {"F1": {"quote": "A UK panel ranked alcohol most harmful overall.", "passage_text": ""}})[0][0] == "short"
+    assert not says_more([{"part": "but", "text": "It has not read every famous study on this question.", "uses": [], "fixed": True}], {})
     assert hedges([{"part": "short", "text": "It is often stronger and more unpleasant.", "uses": ["F1"]}], lb) and not hedges([{"part": "short", "text": "It is often stronger than cannabis.", "uses": ["F1", "F2"]}], lb) and not hedges([{"part": "short", "text": "It can be stronger and more unpleasant.", "uses": ["F1"]}], lb)
     assert words15("Easy to want more and take larger doses. Mental health can get worse. Psychotic episodes can be triggered, usually in those already susceptible, and last for weeks.", "FRANK says psychotic episodes can be triggered.") == "Psychotic episodes can be triggered, usually in those already susceptible, and last for weeks"
     f = fitting(lambda model, messages, room: (_ for _ in ()).throw(llm.Unavailable("this call is larger than Groq's free plan allows in a minute (8012 of 8000 tokens)")) if room > 2850 else f"room {room}")
