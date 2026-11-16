@@ -458,6 +458,7 @@ def amount_gate(out, picked, src, dwords):
                "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood" if NOT_AN_AMOUNT_FOR_PEOPLE.search(q) or NOT_AN_AMOUNT_FOR_PEOPLE.search(ours) else
                "an amount added in the same session" if REDOSE.search(q + " " + ours) else
                "who names no people" if not PEOPLE.search(who) else
+               "an amount in our own words for who or what" if AMT.search(ours) else
                "a number in who or what that is not in the passage" if not numbers(ours) <= numbers(p["text"]) else
                "who received it, or under what care, is not in the source's words" if not row_carried(who, what, p["text"], " ".join([src.get("title") or "", p.get("where") or ""] + ([x["text"] for x in picked] if src.get("read") != "page" and src.get("kind") == "study" else [])), src) else
                "the passage and the title do not name the drug" if dwords and not O.has_word(O.flat(src["title"] + " " + p["text"]), dwords) else
@@ -897,7 +898,8 @@ def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_nam
     if not kept: return done("none", "the second reader did not accept any amount")
     used = {s["ref"]["id"] for s, _, _ in kept}; sources[:] = [s for s in sources if s["ref"]["id"] in used]; keep_sources()
     first = next((v["text"] for k, v in L["first"].items() if set(v["drugs"]) & set(item.get("drugs") or [])), "")
-    out = ([{"part": "first", "text": first, "fixed": True, "rests_on": []}] if first else []) + [{"part": "short", "text": L["amounts"], "fixed": True, "rests_on": []}, {"part": "but", "text": L["amounts_but"], "fixed": True, "rests_on": []}]
+    guidance = bool(L.get("amounts_but_guidance")) and all(s["read"] == "page" and not s.get("label") for s in sources)     # every amount is an official body's guidance (no medicine's label, no study): the But that is true of that
+    out = ([{"part": "first", "text": first, "fixed": True, "rests_on": []}] if first else []) + [{"part": "short", "text": L["amounts"], "fixed": True, "rests_on": []}, {"part": "but", "text": L["amounts_but_guidance" if guidance else "amounts_but"], "fixed": True, "rests_on": []}]
     for n, (s, r, lab) in enumerate(kept, 1):
         who = r["who"][0].upper() + r["who"][1:]
         out.append({"part": f"row{n}", "text": f"{who}; {r['what']}.", "who": who, "what": r["what"], "quote": r["show"], "source": s["ref"]["id"], "read": s["read"], "uses": [lab],

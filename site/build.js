@@ -253,7 +253,9 @@ const AUTO_SHOWN = (() => {
   // (site 2.7, lane 3) an answer about amounts (docs/AUTOMATION.md, decision 11): its three lines are the code's own (data/auto/lane/lines.json),
   // and each amount stands in its source's own words, 15 at most, found in the longer quote the record keeps
   const LINES = (() => { const f = path.join(ROOT, "data", "auto", "lane", "lines.json"); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null; })();
-  const AMT = /(?<![\w.,\/])\d+(?:[.,]\d+)?(?:\s*(?:to|-|or)\s*\d+(?:[.,]\d+)?)?\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\b/i;
+  // (2.7.2) a count of drinks or units may be written as a word ("two drinks or less in a day"): the same pattern as scripts/auto/lane.py (AMT)
+  const NUM = "(?:\\d+(?:[.,]\\d+)?|(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|twenty-one)(?=(?:\\s*(?:to|-|or)\\s*[\\w-]+)?\\s+(?:or\\s+(?:more|less|fewer)\\s+)?(?:standard\\s+)?(?:drinks?|units?)\\b))";
+  const AMT = new RegExp("(?<![\\w.,\\/])" + NUM + "(?:\\s*(?:to|-|or)\\s*" + NUM + ")?(?:\\s+or\\s+(?:more|less|fewer))?\\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\\b", "i");
   const flat = t => String(t || "").normalize("NFKC").replace(/[‘’‚′`]/g, "'").replace(/[“”„″]/g, '"').replace(/[‐‑‒–—−]/g, "-").replace(/\s+/g, " ").trim();
   const timing = /\bre-?dos\w*|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\bsupplement\w*|\byou\s+(?:should|must|need to)\b/i;
   for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
@@ -267,11 +269,13 @@ const AUTO_SHOWN = (() => {
     const refs = (a.sources || []).map(s => s.ref).filter(r => r && r.id && r.title && Array.isArray(r.author) && r.author.length && (r.DOI || (r.type === "webpage" && /^https:\/\/[^\s"<>]+$/.test(r.URL || "") && r.author[0].literal)));
     const mf = (a.made || {}).from, from = mf && typeof mf === "object" ? { papers: +mf.papers || 0, summaries: +mf.summaries || 0, official: +mf.official || 0 } : { papers: refs.length, summaries: 0, official: 0 };
     const rows = amounts ? (a.parts || []).filter(p => /^row\d+$/.test(p.part)).map(p => ({ who: String(p.who || "").trim(), what: String(p.what || "").trim(), quote: String(p.quote || "").trim(), ref: p.source, read: p.read === "summary" ? "summary" : p.read === "page" ? "page" : "full", on: ((p.rests_on || [])[0] || {}).quote || "" })) : [];
+    // (2.7.2) every amount an official body's guidance (a web page that is not a medicine's label): the answer may carry the But written for that
+    const guidance = rows.length > 0 && !!(LINES && LINES.amounts_but_guidance) && rows.every(r => { const x = refs.find(y => y.id === r.ref); return !!x && x.type === "webpage" && x.genre !== "Drug label"; });
     const classLine = LINES ? ((Object.values(LINES.first).find(v => v.drugs.some(d => (a.drugs || []).includes(d))) || {}).text || "") : "";
     let why = !/^au_[a-z0-9_]+$/.test(a.id || "") || a.id + ".json" !== f ? "its name" : !a.question || !short || !but ? "a part is missing" : !refs.length || refs.length !== (a.sources || []).length ? "a source without its reference"
       : from.papers + from.summaries + from.official !== refs.length ? "its count of sources" : "";
     if (!why && !amounts) why = !how.length ? "a part is missing" : first ? "a line only an answer about amounts may carry" : [short, but].concat(how).some(t => bad.test(t)) ? "an amount, advice or a quotation in its text" : (a.parts || []).some(p => !(p.rests_on || []).length) ? "a sentence that rests on nothing" : "";
-    if (!why && amounts) why = !LINES ? "the lines the code writes are missing" : short !== LINES.amounts || but !== LINES.amounts_but || first !== classLine ? "a line that is not the code's own" : !rows.length ? "no amount"
+    if (!why && amounts) why = !LINES ? "the lines the code writes are missing" : short !== LINES.amounts || !(but === LINES.amounts_but || (guidance && but === LINES.amounts_but_guidance)) || first !== classLine ? "a line that is not the code's own" : !rows.length ? "no amount"
       : rows.some(r => !r.who || !r.what || !r.quote || r.quote.split(/\s+/).length > 15 || !AMT.test(r.quote) || !flat(r.on).includes(flat(r.quote)) || !refs.some(x => x.id === r.ref) || /["“”]/.test(r.who + r.what + r.quote) || AMT.test(r.who + " " + r.what) || timing.test(r.who + " " + r.what + " " + r.quote)) ? "an amount that is not in its source's own words, or too long, or with a time between uses" : "";
     if (why) { left.push(a.id + " (" + why + ")"); continue; }
     // (2.7.1) under a How-do-we-know line: its source's own words, 15 at most, so that a reader can compare. Shown only when they stand in

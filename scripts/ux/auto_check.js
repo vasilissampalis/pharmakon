@@ -24,10 +24,10 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
   const LINES = JSON.parse(fs.readFileSync(path.join(REPO, "data", "auto", "lane", "lines.json"), "utf8")), FIX = fs.mkdtempSync(path.join(require("os").tmpdir(), "pk-auto-"));
   for (const f of fs.readdirSync(path.join(REPO, "scripts", "ux", "fixtures", "auto"))) fs.copyFileSync(path.join(REPO, "scripts", "ux", "fixtures", "auto", f), path.join(FIX, f));
   for (const f of fs.readdirSync(path.join(REPO, "scripts", "ux", "fixtures", "auto-amounts"))) fs.writeFileSync(path.join(FIX, f),
-    fs.readFileSync(path.join(REPO, "scripts", "ux", "fixtures", "auto-amounts", f), "utf8").replace('"LINE_FIRST"', JSON.stringify(LINES.first.opioids.text)).replace('"LINE_SHORT"', JSON.stringify(LINES.amounts)).replace('"LINE_BUT"', JSON.stringify(LINES.amounts_but)));
+    fs.readFileSync(path.join(REPO, "scripts", "ux", "fixtures", "auto-amounts", f), "utf8").replace('"LINE_FIRST"', JSON.stringify(LINES.first.opioids.text)).replace('"LINE_SHORT"', JSON.stringify(LINES.amounts)).replace('"LINE_BUT_GUIDANCE"', JSON.stringify(LINES.amounts_but_guidance)).replace('"LINE_BUT"', JSON.stringify(LINES.amounts_but)));
   const b = build({ PK_AUTO_FIXTURE: FIX, PK_AUTO_LOOP: "1" });
   if (b.status !== 0) { console.error(b.stderr.slice(-2000)); process.exit(2); }
-  ok("the build shows the two pretend answers and takes the questions they answer off the list of questions not answered yet", /machine lane: 4 answers written by the system are shown/.test(b.stdout) && /w_0024 by au_fixture_ketamine/.test(b.stderr) && /w_0007 by au_fixture_police/.test(b.stderr), (b.stdout + b.stderr).split("\n").filter(l => /machine lane|listed questions/.test(l)).join(" | "));
+  ok("the build shows the two pretend answers and takes the questions they answer off the list of questions not answered yet", /machine lane: 5 answers written by the system are shown/.test(b.stdout) && /w_0024 by au_fixture_ketamine/.test(b.stderr) && /w_0007 by au_fixture_police/.test(b.stderr), (b.stdout + b.stderr).split("\n").filter(l => /machine lane|listed questions/.test(l)).join(" | "));
   const pub = spawnSync("python3", ["-I", path.join(REPO, "site", "build_public.py")], { encoding: "utf8" });
   ok("the publishing step refuses a build that holds the pretend answers", pub.status !== 0 && /pretend answers/.test(pub.stderr + pub.stdout), (pub.stderr + pub.stdout).slice(-200));
   const server = http.createServer((req, res) => {
@@ -58,7 +58,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const pg = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-auto h1").textContent, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", rows: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent),
       how: !!document.querySelector("#view-auto details.auto-how"), foot: [...document.querySelectorAll('footer.site a[href="#auto"]')].map(a => a.textContent).join(), wide: document.documentElement.scrollWidth > innerWidth + 1 }));
     ok(w + "the page “Written by our system” lists every such answer with its page, its number of papers, its day and “not complete yet” where that is so; one name in the tab, on the page and in the footer",
-      pg.title === "Written by our system · Pharmakon" && pg.h1 === "Written by our system" && pg.foot === "Written by our system" && pg.n === "4 answers, the newest first." && pg.rows.length === 4 && pg.how && !pg.wide &&
+      pg.title === "Written by our system · Pharmakon" && pg.h1 === "Written by our system" && pg.foot === "Written by our system" && pg.n === "5 answers, the newest first." && pg.rows.length === 5 && pg.how && !pg.wide && pg.rows[0] === "How much pretend drinking do pretend bodies call low-risk in the checks? | Alcohol · 1 official page · 16 November 2026 · not complete yet" &&
         pg.rows.includes("Can you get addicted to ketamine? | Ketamine · 2 papers · 15 November 2026 · not complete yet") && pg.rows.some(r => /^Do police crackdowns cut drug use, or just move it somewhere else\? \| .+ · 1 paper · 15 November 2026$/.test(r)), JSON.stringify(pg));
     await shot(p, width + "-auto-page");
     await p.click('#auto-list a[data-sheet="au_fixture_ketamine"]'); await p.waitForTimeout(600);
@@ -125,6 +125,13 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "it has no “How do we know?” of a writer, no bars, its quiet line, and its label's reference with the day it was read (a page without a date)", am && !am.how && am.bars === 0 && !am.wide && am.line === "Written by our system from the summary of 1 paper and 1 official page. Not yet checked by a person. Not complete yet." &&
       am.refs.includes("Pretend Maker. (n.d.). A pretend label for the checks [Drug label]. DailyMed. Retrieved November 15, 2026, from https://example.org/pretend-label"), am && am.line + " | " + JSON.stringify(am.refs));
     await shot(p, width + "-auto-amounts");
+    // ---- 2.7.2: amounts that are an official body's guidance: the But written for that, and a count of drinks written as a word
+    await go(p, "#auto/q-au_fixture_drinks", 900);
+    const dr = await p.evaluate(() => { const s = document.querySelector("#evsheet.open .panel .ins"); if (!s) return null; const a = s.querySelector(".ins-ans") || s;
+      return { first: !!a.querySelector(".auto-first"), short: (a.querySelector(".ask-short") || {}).textContent || "", but: (a.querySelector(".ask-but") || {}).textContent || "", rows: [...a.querySelectorAll(".auto-rows .ar")].map(li => ({ who: li.querySelector(".ar-who").textContent, q: li.querySelector(".ar-q").textContent, src: li.querySelector(".ar-src").textContent })) }; });
+    ok(w + "an answer whose amounts are all an official body's guidance carries the But written for guidance, and no line about tolerance", dr && !dr.first && dr.short === LINES.amounts && dr.but === LINES.amounts_but_guidance && dr.but !== LINES.amounts_but, JSON.stringify(dr).slice(0, 300));
+    ok(w + "a count of drinks written as a word is an amount: one row for men and one for women, each in the body's own words", dr && dr.rows.length === 2 && dr.rows[0].q === "For pretend men-two drinks or less in a day" && dr.rows[1].q === "For pretend women-one drink or less in a day" && dr.rows.every(r => r.src === "Pretend Health Body, 2026"), dr && JSON.stringify(dr.rows));
+    await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     ok(w + "an amount that is not in its source's own words never reaches the page: the build leaves that answer out and names it", /au_fixture_badamount \(an amount that is not in its source's own words/.test(b.stderr) && await p.evaluate(() => !AUTO.au_fixture_badamount));
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     // ---- the list of questions not answered yet, and a kept question
