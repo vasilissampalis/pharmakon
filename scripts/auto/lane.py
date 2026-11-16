@@ -218,7 +218,7 @@ def ask_json(chat, model, system, prompt, room):
 
 
 def read_source(chat, model, question, src, picked):
-    out = ask_json(chat, model, READER_SYS, reader_prompt(question, src, picked), 900)
+    out = ask_json(chat, model, READER_SYS, reader_prompt(question, src, picked), room_for(model, 900))
     return read_gate(out, picked, amounts_ok=False) if out is not None else (None, [], [], [{"why": "the reader gave no JSON"}])
 
 
@@ -471,7 +471,7 @@ def amount_gate(out, picked, src, dwords):
 
 
 def read_amounts(chat, model, question, src, picked, dwords):
-    out = ask_json(chat, model, READER_SYS, amounts_prompt(question, src, picked, list(dwords)), 900)
+    out = ask_json(chat, model, READER_SYS, amounts_prompt(question, src, picked, list(dwords)), room_for(model, 900))
     return amount_gate(out, picked, src, dwords) if out is not None else ([], [{"why": "the reader gave no JSON"}])
 
 
@@ -558,7 +558,7 @@ def room_for(model, plain):
     """How many tokens a model may answer with. One that reasons before it writes needs room for both: on 16 November 2026
     gpt-oss-120b used all of 1,400 tokens reasoning and wrote nothing, three times for each of two questions; with 3,000 it
     reasoned for some 1,300 and then wrote its answer (data/auto/exam/writer-trial.json)."""
-    return plain + 2200 if "gpt-oss" in model else plain
+    return plain + (1200 if "gpt-oss-20b" in model else 2200 if "gpt-oss" in model else 1800 if "qwen3" in model else 0)      # (the small gpt-oss only reads, with little reasoning; qwen3 reasons where it is asked to)
 
 
 def check(chat, model, parts, labels, question=None, whole=None, each=None):
@@ -891,7 +891,8 @@ def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_nam
     for i, (s, r) in enumerate(rows, 1):
         labels[f"R{i}"] = {"paper": paper_name(s), "where": r["where"], "passage_text": s["_text"][r["passage"]], "quote": r["quote"], "ref": s["ref"]["id"]}
         parts.append({"part": f"row{i}", "text": f"This amount was {r['what']}, for {r['who']}: {r['show']}", "uses": [f"R{i}"]})
-    verdicts = check(chat, models["checker"], parts, labels, each=item["q"])
+    step = 6 if models["checker"].startswith("groq:") else len(parts)      # (Groq's free plan takes 8,000 tokens a minute in one call: many amounts are checked six at a time)
+    verdicts = [v for i in range(0, len(parts), step) for v in check(chat, models["checker"], parts[i:i + step], labels, each=item["q"])]
     kept = [(s, r, f"R{i}") for i, ((s, r), v) in enumerate(zip(rows, verdicts), 1) if v[0]]
     rec["gates"]["check"] = f"{len(kept)} of {len(rows)} amounts accepted by the second reader ({models['checker']})" + "".join(f"; not accepted: {v[1]}" for v in verdicts if not v[0])[:400]
     rec["gates"]["rules"] = "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
@@ -949,7 +950,7 @@ def wanted_list():
     return sorted(by.values(), key=lambda w: (-len(w["for"]), -(w.get("near") or 0), w["doi"]))
 
 
-NEED = {"reader": (450, 22000), "writer": (350, 16000), "checker": (500, 16000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
+NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
 
 
 def base(model): return re.sub(r"^(?:groq:|@cf/)", "", model or "").split("/")[-1]       # the model itself, whichever service runs it
@@ -1150,7 +1151,7 @@ def selftest():
                                          {"text": "In one study people were given 50 mg of it.", "uses": ["F2"]}])]; script["checker"] = [V(True, True, True)]
     r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
     assert r["status"] == "published" and [x["part"] for x in r["parts"]] == ["short", "but", "how1"] and r["gates"]["rules"].startswith("1 How-do-we-know line(s) left out for a rule"), (r["status"], r["why"], r["gates"])
-    assert room_for("@cf/openai/gpt-oss-120b", 900) == 3100 and room_for("@cf/meta/llama-3.3-70b-instruct-fp8-fast", 900) == 900
+    assert room_for("@cf/openai/gpt-oss-120b", 900) == 3100 and room_for("@cf/meta/llama-3.3-70b-instruct-fp8-fast", 900) == 900 and room_for("groq:openai/gpt-oss-20b", 900) == 2100 and room_for("groq:qwen/qwen3.8-27b", 120) == 1920
     # 8. an official page alone (a body of tier 1) is enough; the answer names the body; its reference is the page's own
     page_ps = [{"n": i, "where": "The risks" if i else "", "text": t} for i, t in enumerate(passages[1:5])]
     nhs = {"body": "nhs", "name": "NHS", "short": "the NHS", "tier": 1, "address": "https://nhs.test/ketamine", "title": "Ketamine", "near": 0.6}

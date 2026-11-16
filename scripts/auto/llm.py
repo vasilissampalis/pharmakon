@@ -109,8 +109,12 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
         wait = 61 - (now - recent[0][0])
         if opener is None and wait > 0: time.sleep(min(wait, 61))
         recent = recent[1:]; now = time.time()
-    body = {"model": name, "messages": messages, "max_tokens": max_tokens, "temperature": 0}
-    if name.startswith("openai/gpt-oss"): body["reasoning_effort"] = "low"
+    body = {"model": name, "messages": messages, "max_completion_tokens": max_tokens, "temperature": 0}
+    # how each model reasons at Groq (console.groq.com/docs/reasoning, read 16 November 2026): gpt-oss takes reasoning_effort low, medium or high and
+    # returns its reasoning apart from its answer (reasoning_format is not for it); qwen3.8-27b does not reason unless an effort is set, and with
+    # reasoning_format "hidden" its answer comes without its reasoning. The larger gpt-oss writes and checks (medium); the smaller only reads (low).
+    if name.startswith("openai/gpt-oss"): body["reasoning_effort"] = "low" if "20b" in name else "medium"
+    elif name.startswith("qwen/qwen3"): body["reasoning_effort"] = "medium"; body["reasoning_format"] = "hidden"
     op = opener or urllib.request.urlopen
     for k in range(tries):
         req = urllib.request.Request(GROQ, data=json.dumps(body).encode("utf-8"), method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json", "User-Agent": "Pharmakon (https://pharmakon.world; mailto:contact@pharmakon.world)"})
