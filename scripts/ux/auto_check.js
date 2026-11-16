@@ -27,7 +27,10 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     fs.readFileSync(path.join(REPO, "scripts", "ux", "fixtures", "auto-amounts", f), "utf8").replace('"LINE_FIRST"', JSON.stringify(LINES.first.opioids.text)).replace('"LINE_SHORT"', JSON.stringify(LINES.amounts)).replace('"LINE_BUT_GUIDANCE"', JSON.stringify(LINES.amounts_but_guidance)).replace('"LINE_BUT"', JSON.stringify(LINES.amounts_but)));
   const b = build({ PK_AUTO_FIXTURE: FIX, PK_AUTO_LOOP: "1" });
   if (b.status !== 0) { console.error(b.stderr.slice(-2000)); process.exit(2); }
-  ok("the build shows the two pretend answers and takes the questions they answer off the list of questions not answered yet", /machine lane: 5 answers written by the system are shown/.test(b.stdout) && /w_0024 by au_fixture_ketamine/.test(b.stderr) && /w_0007 by au_fixture_police/.test(b.stderr), (b.stdout + b.stderr).split("\n").filter(l => /machine lane|listed questions/.test(l)).join(" | "));
+  ok("the build shows the two pretend answers and takes the questions they answer off the list of questions not answered yet", /machine lane: 6 answers written by the system are shown/.test(b.stdout) && /w_0024 by au_fixture_ketamine/.test(b.stderr) && /w_0007 by au_fixture_police/.test(b.stderr), (b.stdout + b.stderr).split("\n").filter(l => /machine lane|listed questions/.test(l)).join(" | "));
+  // (2.8) an answer for a drug that has no page stands on a page the system starts, by a name the filing knows; another name never reaches the site
+  ok("the build starts a page for a drug that has none (by a name the filing knows) and leaves out an answer whose page the filing does not know", /machine lane: 1 pages started by the system are shown: Kava/.test(b.stdout) && /au_fixture_nopage \(a page to start that the filing does not know\)/.test(b.stderr),
+    (b.stdout + b.stderr).split("\n").filter(l => /pages started|left out/.test(l)).join(" | ").slice(0, 400));
   const pub = spawnSync("python3", ["-I", path.join(REPO, "site", "build_public.py")], { encoding: "utf8" });
   ok("the publishing step refuses a build that holds the pretend answers", pub.status !== 0 && /pretend answers/.test(pub.stderr + pub.stdout), (pub.stderr + pub.stdout).slice(-200));
   const server = http.createServer((req, res) => {
@@ -58,9 +61,36 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const pg = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-auto h1").textContent, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", rows: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent),
       how: !!document.querySelector("#view-auto details.auto-how"), foot: [...document.querySelectorAll('footer.site a[href="#auto"]')].map(a => a.textContent).join(), wide: document.documentElement.scrollWidth > innerWidth + 1 }));
     ok(w + "the page “Written by our system” lists every such answer with its page, its number of papers, its day and “not complete yet” where that is so; one name in the tab, on the page and in the footer",
-      pg.title === "Written by our system · Pharmakon" && pg.h1 === "Written by our system" && pg.foot === "Written by our system" && pg.n === "5 answers, the newest first." && pg.rows.length === 5 && pg.how && !pg.wide && pg.rows[0] === "How much pretend drinking do pretend bodies call low-risk in the checks? | Alcohol · 1 official page · 16 November 2026 · not complete yet" &&
+      pg.title === "Written by our system · Pharmakon" && pg.h1 === "Written by our system" && pg.foot === "Written by our system" && pg.n === "6 answers, the newest first." && pg.rows.length === 6 && pg.how && !pg.wide && pg.rows[0] === "How much pretend drinking do pretend bodies call low-risk in the checks? | Alcohol · 1 official page · 16 November 2026 · not complete yet" &&
         pg.rows.includes("Can you get addicted to ketamine? | Ketamine · 2 papers · 15 November 2026 · not complete yet") && pg.rows.some(r => /^Do police crackdowns cut drug use, or just move it somewhere else\? \| .+ · 1 paper · 15 November 2026$/.test(r)), JSON.stringify(pg));
     await shot(p, width + "-auto-page");
+    // ---- (2.8) a page the system started: listed on this page and under the drugs, with an address of its own and its label
+    const st = await p.evaluate(() => ({ h: [...document.querySelectorAll("#auto-list .auto-h")].map(e => e.textContent), pages: [...document.querySelectorAll("#auto-list .auto-pages a")].map(a => a.getAttribute("href") + " | " + a.textContent),
+      row: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.textContent).find(t => /^Is kava addictive\?/.test(t)) || "" }));
+    ok(w + "the list page names the pages our system started, each with its number of answers and its label, before every answer; an answer on such a page names the page",
+      st.h.join("|") === "Pages our system started|Every answer" && st.pages.length === 1 && st.pages[0] === "#auto/p-kava | Kava1 answer · not yet checked by a person" && /^Is kava addictive\?Kava · 1 paper/.test(st.row), JSON.stringify(st));
+    await go(p, "#auto/p-kava", 600);
+    const kp = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-auto h1").textContent, lede: document.querySelector("#view-auto .lede").textContent, how: document.querySelector("#view-auto .auto-how").hidden,
+      rows: [...document.querySelectorAll("#auto-list .auto-i .wl-q")].map(e => e.textContent), back: (document.querySelector('#auto-list .auto-back a[href="#auto"]') || {}).textContent || "", active: document.getElementById("view-auto").classList.contains("active"), wide: document.documentElement.scrollWidth > innerWidth + 1 }));
+    ok(w + "a started page has an address of its own: its name as the heading and in the tab, a first line that says our system started it and that nobody has checked it, its answers, and the way back",
+      kp.active && kp.title === "Kava · Pharmakon" && kp.h1 === "Kava" && /^Our system started this page by itself, because people ask about Kava and the site had no page for it\..+A person has not checked it yet\.$/.test(kp.lede) && kp.how && kp.rows.join() === "Is kava addictive?" && kp.back === "Everything written by our system" && !kp.wide, JSON.stringify(kp));
+    await shot(p, width + "-started-page");
+    await p.click('#auto-list a[data-sheet="au_fixture_kava"]'); await p.waitForTimeout(600);
+    const sk = await p.evaluate(() => { const s = document.querySelector("#evsheet.open .panel .ins"); return s ? { title: document.getElementById("ev-title").textContent, line: (s.querySelector(".auto-l") || {}).textContent || "", link: (s.querySelector(".ins-page a") || {}).getAttribute("href") || "", linkText: (s.querySelector(".ins-page a") || {}).textContent || "" } : null; });
+    ok(w + "its answer opens over the page with its line, and leads back to the page our system started", sk && sk.title === "Is kava addictive?" && sk.line === LINE1 && sk.link === "#auto/p-kava" && /^Kava: the page our system started/.test(sk.linkText), JSON.stringify(sk));
+    await p.keyboard.press("Escape"); await p.waitForTimeout(300);
+    await go(p, "#auto", 400);
+    const back = await p.evaluate(() => ({ h1: document.querySelector("#view-auto h1").textContent, how: document.querySelector("#view-auto .auto-how").hidden, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "" }));
+    ok(w + "back on the list page, its own heading and lines are there again", back.h1 === "Written by our system" && back.how === false && back.n === "6 answers, the newest first.", JSON.stringify(back));
+    await go(p, "#substances", 600);
+    const sub = await p.evaluate(() => ({ h: (document.querySelector("#sub-started .auto-h") || {}).textContent || "", a: [...document.querySelectorAll("#sub-started .auto-pages a")].map(a => a.getAttribute("href") + " | " + a.querySelector(".wl-q").textContent), cards: document.querySelectorAll("#subgrid > *").length, wide: document.documentElement.scrollWidth > innerWidth + 1 }));
+    ok(w + "under the drugs, “All drugs” lists the pages our system started, apart from the 30 checked pages", sub.h === "Pages our system started" && sub.a.join() === "#auto/p-kava | Kava" && sub.cards === 30 && !sub.wide, JSON.stringify(sub));
+    await p.click('#filters .chip:nth-child(2)'); await p.waitForTimeout(300);
+    ok(w + "a family chosen shows that family's checked pages only", await p.evaluate(() => !document.querySelector("#sub-started .auto-pages") && document.querySelectorAll("#subgrid > *").length < 30));
+    await p.click('#filters .chip:nth-child(1)'); await p.waitForTimeout(200);
+    await go(p, "#auto/p-no-such-page", 500);
+    ok(w + "an address of a page nobody started is the page for unknown addresses, never another page", await p.evaluate(() => !document.getElementById("view-auto").classList.contains("active")));
+    await go(p, "#auto", 500);
     await p.click('#auto-list a[data-sheet="au_fixture_ketamine"]'); await p.waitForTimeout(600);
     const s1 = await sheet(p);
     ok(w + "an answer opens over the page in the site's own form: its question, the short answer, But, How do we know?", s1 && s1.title === "Can you get addicted to ketamine?" && /^FIXTURE\. Yes, some people do\./.test(s1.short) && /^But Most of the pretend studies/.test(s1.but) && s1.how.length === 2 && /Ketamine/.test(s1.eye), JSON.stringify(s1).slice(0, 400));
@@ -167,7 +197,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
   }
   ok("no error in any page's console", !errors.length, errors.slice(0, 3).join(" | "));
   await browser.close(); server.close();
-  if (!process.argv.includes("--keep")) { const r = build({ PK_AUTO_FIXTURE: "", PK_AUTO_LOOP: "" }); ok("the site is built again without the pretend answers", r.status === 0 && !/machine lane: \d+ answers written by the system are shown/.test(r.stdout) && !fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes("au_fixture_"), (r.stdout + r.stderr).slice(-300)); }
+  if (!process.argv.includes("--keep")) { const r = build({ PK_AUTO_FIXTURE: "", PK_AUTO_LOOP: "" }); ok("the site is built again without the pretend answers", r.status === 0 && !fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes("au_fixture_") /* (since 16 November 2026 the site shows real answers of the system: their count is no longer a sign of a pretend one) */, (r.stdout + r.stderr).slice(-300)); }
   console.log(fail ? fail + " checks failed, " + pass + " passed" : "All " + pass + " checks passed");
   process.exit(fail ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

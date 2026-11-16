@@ -244,6 +244,7 @@ const AUTO_POLICY = (() => { const f = path.join(ROOT, "data", "auto", "lane", "
 const AUTO_LOOP = process.env.PK_AUTO_LOOP ? process.env.PK_AUTO_LOOP === "1" : AUTO_POLICY.loop === true;
 // amounts: answers about amounts are shown only once the editor has read the first real ones the lane wrote (the checks' build shows its pretend ones)
 const AUTO_AMOUNTS = process.env.PK_AUTO_FIXTURE ? true : AUTO_POLICY.amounts === true;
+const startedPages = {};   // (2.8) {slug: name} of the pages the system started that have an answer to show
 const AUTO_SHOWN = (() => {
   const heldFile = path.join(ROOT, "data", "auto", "held.json"), held = new Set(fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []).map(x => x.id || x) : []);
   const drugSlugs = new Set(site("substances.json").map(s => s.slug)), out = [], left = [];
@@ -253,6 +254,11 @@ const AUTO_SHOWN = (() => {
   // (site 2.7, lane 3) an answer about amounts (docs/AUTOMATION.md, decision 11): its three lines are the code's own (data/auto/lane/lines.json),
   // and each amount stands in its source's own words, 15 at most, found in the longer quote the record keeps
   const LINES = (() => { const f = path.join(ROOT, "data", "auto", "lane", "lines.json"); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null; })();
+  // (2.8) the pages the system may start, by name, and the general pages an answer can belong to (the page's own keys for them)
+  const readJson = (...p) => { const f = path.join(ROOT, ...p); try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null; } catch (e) { return null; } };
+  const START_PAGES = new Set([].concat(((readJson("data", "auto", "filing.json") || {}).pages) || [], Object.keys(((readJson("data", "auto", "pages.json") || {}).pages) || {})));
+  const GEN_HOMES = { facts: "general", numbers: "numbers", checking: "drug-checking", law: "law", interactions: "interactions" };
+  const pageSlug = n => String(n).toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
   // (2.7.2) a count of drinks or units may be written as a word ("two drinks or less in a day"): the same pattern as scripts/auto/lane.py (AMT)
   const NUM = "(?:\\d+(?:[.,]\\d+)?|(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|twenty-one)(?=(?:\\s*(?:to|-|or)\\s*[\\w-]+)?\\s+(?:or\\s+(?:more|less|fewer)\\s+)?(?:standard\\s+)?(?:drinks?|units?)\\b))";
   const AMT = new RegExp("(?<![\\w.,\\/])" + NUM + "(?:\\s*(?:to|-|or)\\s*" + NUM + ")?(?:\\s+or\\s+(?:more|less|fewer))?\\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\\b", "i");
@@ -283,17 +289,29 @@ const AUTO_SHOWN = (() => {
     const howq = amounts ? [] : (a.parts || []).filter(p => /^how\d+$/.test(p.part) && String(p.text || "").trim()).map(p => { const q = String(p.quote || "").trim();
       return q && q.split(/\s+/).length <= 15 && !/["“”]/.test(q) && !bad.test(q) && !timing.test(q) && (p.rests_on || []).some(r => flat(r.quote).includes(flat(q))) && refs.some(x => x.id === p.quote_ref) ? { q, ref: p.quote_ref } : null; });
     const drugs = (a.drugs || []).filter(d => drugSlugs.has(d));
-    out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, howq, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page: drugs[0] || "general" },
+    // (2.8) where the answer belongs (scripts/auto/place.py wrote it into the record; no model had a say): a drug's page; a page the system
+    // starts for a drug that has none (its name must be one the filing knows: data/auto/filing.json, data/auto/pages.json); or one of the
+    // general pages. Nothing the system writes belongs on the emergency page: that page is the senior author's.
+    const home = String((a.place || {}).home || "");
+    if (home === "emergency") { left.push(a.id + " (the emergency page is not written by the system)"); continue; }
+    let page = drugs[0] || "general";
+    if (!drugs.length && /^new:/.test(home)) { const name = home.slice(4);
+      if (!START_PAGES.has(name)) { left.push(a.id + " (a page to start that the filing does not know)"); continue; }
+      page = "new:" + pageSlug(name); startedPages[pageSlug(name)] = name; }
+    else if (!drugs.length && drugSlugs.has(home)) page = home;
+    else if (!drugs.length && GEN_HOMES[home]) page = GEN_HOMES[home];
+    out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, howq, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page },
       amounts ? { kind: "amounts", first, rows: rows.map(r => ({ who: r.who, what: r.what, quote: r.quote, ref: r.ref, read: r.read })) } : {}));
   }
   if (left.length) console.error("WARNING: machine-lane answers left out of the site: " + left.join("; "));
   if (older) console.log("machine lane: " + older + " answers written by an older lane are not shown (they will be written again)");
   if (held_amounts) console.log("machine lane: " + held_amounts + " answers about amounts are not shown yet (data/auto/lane/policy.json, amounts: the editor reads the first real ones first)");
   if (out.length) console.log("machine lane: " + out.length + " answers written by the system are shown, each with its label");
+  if (Object.keys(startedPages).length) console.log("machine lane: " + Object.keys(startedPages).length + " pages started by the system are shown: " + Object.values(startedPages).join("; "));
   return out;
 })();
 const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
-  ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
+  ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }

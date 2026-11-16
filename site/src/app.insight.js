@@ -658,7 +658,9 @@ function insBodyHtml(id, depth) {
   const body = answerBody(id, c, sp, false);
   return depth === "full" ? body.replace('<details class="ask-how">', '<details class="ask-how" open>') : body;
 }
-const insPageLink = (id, page) => { if (isAuto(id)) return '<p class="ins-page"><a class="qz2-ev" href="#auto">Everything written by our system ' + icon("arrow") + "</a></p>";
+const insPageLink = (id, page) => { if (isAuto(id)) { const p = AUTO[id].page, k = typeof p === "string" && p.slice(0, 4) === "new:" ? p.slice(4) : "";      // (2.8) an answer on a page the system started links to that page
+    return k && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[k] ? '<p class="ins-page"><a class="qz2-ev" href="#auto/p-' + esc(k) + '">' + esc(AUTO_PAGES[k]) + ": the page our system started " + icon("arrow") + "</a></p>"
+      : '<p class="ins-page"><a class="qz2-ev" href="#auto">Everything written by our system ' + icon("arrow") + "</a></p>"; }
   const addr = answerAddr(id, page), w = mfWhere(page), pl = sharedPlace(page || "", id);
   return '<p class="ins-page">' + (/^#cl_/.test(addr) ? '<a class="qz2-ev" href="' + esc(pl.href) + '">' + esc(pl.more) + " " + icon("arrow") + "</a>" : '<a class="qz2-ev" href="' + esc(addr) + '">See it on the ' + esc(w.name) + " page " + icon("arrow") + "</a>") + "</p>"; };
 const insBar = eye => '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye ins-eye">' + eye + "</span></div>";
@@ -995,10 +997,31 @@ function autoListHtml(ids, withPage) {
     return '<li class="wl-i auto-i"><a class="auto-a" href="#auto/q-' + esc(id) + '" data-sheet="' + esc(id) + '"><span class="wl-q">' + esc(a.q) + '</span><span class="auto-meta">' + (w ? esc(w.name) + " · " : "") + esc(autoFrom(a)) +
       (day(a.made) ? " · " + day(a.made) : "") + (a.complete ? "" : " · not complete yet") + "</span></a></li>"; }).join("") + "</ul>";
 }
-function autoPage() {
+// (2.8) the pages the system started: drugs people ask about that had no page. Each has an address of its own (#auto/p-kava), is
+// listed with the drugs, and says at its top that the system started it and that nobody has checked it yet.
+function autoStarted() { return typeof AUTO_PAGES === "object" && AUTO_PAGES ? Object.keys(AUTO_PAGES).filter(k => autoFor("new:" + k).length).sort((a, b) => AUTO_PAGES[a].localeCompare(AUTO_PAGES[b])) : []; }
+function autoStartedListHtml() {
+  const ks = autoStarted(); if (!ks.length) return "";
+  return '<h2 class="auto-h">Pages our system started</h2><p class="auto-sec">Drugs and medicines people ask about that had no page here. Our system started these by itself. A person has not checked them yet.</p><ul class="wl auto-pages">' +
+    ks.map(k => { const n = autoFor("new:" + k).length; return '<li class="wl-i"><a class="auto-a" href="#auto/p-' + esc(k) + '"><span class="wl-q">' + esc(AUTO_PAGES[k]) + '</span><span class="auto-meta">' + n + (n === 1 ? " answer" : " answers") + " · not yet checked by a person</span></a></li>"; }).join("") + "</ul>";
+}
+function autoPage(started) {
   const box = document.getElementById("auto-list"); if (!box) return;
+  const head = document.querySelector("#view-auto .pagetitle"), lede = document.querySelector("#view-auto .lede"), how = document.querySelector("#view-auto .auto-how");
+  if (started && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[started]) {            // one started page
+    const ids = autoFor("new:" + started), name = AUTO_PAGES[started];
+    if (head) head.textContent = name;
+    if (lede) lede.textContent = "Our system started this page by itself, because people ask about " + name + " and the site had no page for it. Everything here was written by our system from research papers and official health pages. A person has not checked it yet.";
+    if (how) how.hidden = true;
+    box.innerHTML = (ids.length ? '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + " so far, the newest first.</p>" + autoListHtml(ids, false) : '<p class="muted">Nothing yet.</p>') +
+      '<p class="auto-back"><a class="go" href="#auto">Everything written by our system</a></p>';
+    return;
+  }
+  if (head) head.textContent = "Written by our system";
+  if (lede) lede.textContent = "Answers our system wrote by itself, from research papers and official health pages it found and read. A person has not checked them yet. Each one says so and shows its sources.";
+  if (how) how.hidden = false;
   const ids = typeof AUTO === "object" && AUTO ? Object.keys(AUTO).sort((a, b) => (AUTO[b].made || "").localeCompare(AUTO[a].made || "") || a.localeCompare(b)) : [];
-  box.innerHTML = ids.length ? '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + ", the newest first.</p>" + autoListHtml(ids, true)
+  box.innerHTML = ids.length ? autoStartedListHtml() + (autoStarted().length ? '<h2 class="auto-h">Every answer</h2>' : "") + '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + ", the newest first.</p>" + autoListHtml(ids, true)
     : '<p class="muted">Nothing yet. The first answers appear here as soon as the system has written them.</p>';
 }
 if (typeof document !== "undefined") {

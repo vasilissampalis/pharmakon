@@ -215,7 +215,10 @@ function routeTo() {
   if (cm) { show(cm[1]); setTitle(PAGE_TITLES[cm[1]]); window.scrollTo({ top: 0 }); if (cm[1] === "checking") showSec("c-near", document.getElementById("dc-page")); openCountry(cm[1], decodeURIComponent(cm[2])); return; }
   // (2.6) the answers the system wrote: the page that lists them, and one of them opened over it (#auto/q-au_...)
   const am = h.match(/^auto(?:\/q-(au_[a-z0-9_]+))?$/);
-  if (am) { show("auto"); setTitle(PAGE_TITLES.auto); if (!am[1]) { window.scrollTo({ top: 0 }); if (!first) focusHeading("auto"); } else if (isAuto(am[1])) setTimeout(() => { if (!EV.open) openInsight(am[1], null, true); }, 80); return; }
+  if (am) { autoPage(); show("auto"); setTitle(PAGE_TITLES.auto); if (!am[1]) { window.scrollTo({ top: 0 }); if (!first) focusHeading("auto"); } else if (isAuto(am[1])) setTimeout(() => { if (!EV.open) openInsight(am[1], null, true); }, 80); return; }
+  // (2.8) a page the system started: #auto/p-kava
+  const ap = h.match(/^auto\/p-([a-z0-9-]{1,60})$/);
+  if (ap && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[ap[1]]) { autoPage(ap[1]); show("auto"); setTitle(AUTO_PAGES[ap[1]]); window.scrollTo({ top: 0 }); if (!first) focusHeading("auto"); return; }
   // a page of sections: #methods, #methods/part-m-search (the text pages), #numbers/part-n-europe (the statistics)
   const sp = h.match(/^(howto|methods|about|numbers)(?:\/(part-[a-z0-9-]+))?$/);
   if (sp) {
@@ -355,6 +358,9 @@ function renderSubstances() {
   const list = SUBSTANCES.filter(s => activeClass === "All" || s.cls === activeClass);
   // (site 2.4) the same picture cards as the start page, two across on a phone: the page was one large tile per row, some 12,000 pixels of it
   document.getElementById("subgrid").innerHTML = list.map(s => drugCardHtml(s, 0)).join("");
+  // (2.8) under the drugs: the pages our system started, with their label (only under "All": they have no family a person gave them)
+  const more = document.getElementById("sub-started");
+  if (more) more.innerHTML = activeClass === "All" ? autoStartedListHtml() : "";
 }
 
 /* ---------- Claims ---------- */

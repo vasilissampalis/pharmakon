@@ -1366,6 +1366,9 @@ function mfSame(why, but) {
 // the page a card is about: its family's colour and icon, and its name
 function mfWhere(page) {
   const s = subBySlug[page]; if (s) return { f: fam(s.cls), name: drugName(page) };
+  // (2.8) a page the system started for a drug that has none, and the general pages an answer of the system can belong to
+  if (typeof page === "string" && page.slice(0, 4) === "new:") return { f: { k: "oth", icon: "molecule" }, name: (typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[page.slice(4)]) || "" };
+  if (page === "numbers" || page === "law") return { f: { k: "oth", icon: page === "law" ? "scale" : "book" }, name: PAGE_TITLES[page] || "" };
   return { f: { k: "oth", icon: page === GEN ? "book" : page === DC ? "flask" : page === "interactions" ? "mix" : "molecule" }, name: PAGE_TITLES[page === GEN ? "facts" : page === DC ? "checking" : "interactions"] || "" };
 }
 function mfCardHtml(boxId, st) {

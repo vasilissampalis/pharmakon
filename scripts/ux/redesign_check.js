@@ -180,7 +180,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     // law and the cards, and last "If it gets too much", "Test kits", "Doses"; the same on every page
     const order = await s.p.evaluate(() => { const sum = { "d-risk": 0, "d-after": 0, "d-mix": 0, "d-med": 0, "d-feel": 0 }, sc = id => DEMAND[id] && typeof DEMAND[id].score === "number" ? DEMAND[id].score : 0;
       SUBSTANCES.forEach(x => { drugQuestions(x.slug).forEach(([id, , t]) => { const z = topicZone(t); if (z !== "mix") sum["d-" + z] += sc(id); }); mixQuestions(x.slug).forEach(([id]) => { sum["d-mix"] += sc(id); }); });
-      return { sum, want: Object.keys(sum).sort((a, b) => sum[b] - sum[a]).concat(["d-looks", "d-law", "d-quiz", "d-help", "d-kits", "d-doses"]) }; });
+      return { sum, want: Object.keys(sum).sort((a, b) => sum[b] - sum[a]).concat(["d-auto", "d-looks", "d-law", "d-quiz", "d-help", "d-kits", "d-doses"]) }; });      // ("d-auto": what our system wrote about the drug, after the checked answers and before the rest; a page has it since 16 November 2026)
     const pages = [];
     for (const slug of ["cannabis", "mdma", "heroin", "lsd", "alcohol", "ketamine", "2c-x"]) { await s.hash("s-" + slug, 350); pages.push([slug, await s.p.evaluate(() => [...document.querySelectorAll("#secmenu .sm-b")].map(b => b.dataset.sec))]); }
     const inOrder = pages.every(([, got]) => got.join() === order.want.filter(id => got.includes(id)).join());

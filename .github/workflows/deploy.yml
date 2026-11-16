@@ -98,7 +98,7 @@ jobs:
             echo "LIVE=$LIVE" >> "$GITHUB_ENV"; echo "STAMP=$WANT" >> "$GITHUB_ENV"
           fi
           echo "OK=$OK" >> "$GITHUB_ENV"
-          tail -n 4 "$L" >> "$GITHUB_STEP_SUMMARY"
+          echo "What this run did is in data/auto/deploy/_last-run.txt (cleaned of anything secret before it is kept)." >> "$GITHUB_STEP_SUMMARY"   # (16 November 2026) never the raw end of the notes: a failing call can print an account number, and a run's summary can be read by anyone who can see the repository
       - name: Keep the notes
         if: always()
         env:

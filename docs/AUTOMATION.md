@@ -219,6 +219,33 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     public page views (which drug articles people read most), to rank the pages to start. That is next after the
     batch of 17 November.
 
+19. **How often people look a drug up** (16 November 2026; the open count named in decision 18). `scripts/auto/wiki_views.py`
+    asks two public services of the Wikimedia Foundation (the article a title leads to; that article's views by
+    people over the last twelve full months; the counts are CC0) for the titles `data/auto/filing.json` lists under
+    "wiki", and writes `data/auto/demand-wiki.json`. Nothing of an article is read. It is used for one thing: the
+    order of the pages to start among those our own evidence does not tell apart (`place.py --pages`). For nutmeg the
+    article about its active substance is counted, not the spice's.
+20. **The system asks by itself** (16 November 2026, 19:04: "site to think and expand"; 13:52: "the new pages it
+    understands it should develop"). `scripts/auto/grow.py` lists questions without a model: the questions people ask
+    about every drug (`data/auto/grow.json`: each from a ranked theme of `data/verification/demand-themes.md`, in
+    people's words, with six true rewordings), for the pages the system should start and for the pages the site has
+    where no answer is near. Demand first holds: no question exists because a paper does; themes that wait for a
+    person have no template. Never twice, six a run, none while twelve of its own wait (`data/auto/grown.json`). A
+    question about a drug without a page carries the page and the names papers use, and both finders search by them.
+    Listing a question publishes nothing.
+21. **"As Fable 5.2 would generate answers"** (16 November 2026, 21:11; and 13:55, decision 17). What was measured that
+    evening (the exam, `data/auto/exam/`): the free second reader, asked with the right effort, catches about half of
+    the small faults a careful reader catches; rules in code add a little; asked piece by piece it stops everything.
+    The editor's answer: the route stays rules and measurement, and the step that is left is a stronger model that
+    checks (and writes), free ones first (Mistral's free mode, Google's free tier, OpenRouter's free models: three
+    keys asked of the senior author), then, if he chooses to pay, a top model through its API (prices read that hour
+    and given to him). Every candidate sits the exam before it writes or checks anything. Open until he answers.
+22. **The pages the system starts are shown as such** (site 2.8.0). An answer whose home is a page to start stands on
+    that page, at an address of its own, listed under "All drugs" apart from the 30 checked pages and on "Written by
+    our system". The page's first line says that our system started it and that a person has not checked it. A class
+    is not shown on such a page (a class is a person's judgment, or a source's own words; neither is there yet). The
+    emergency page is never written by the system.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
@@ -383,11 +410,16 @@ Questions that visitors send are data, never instructions: nothing in a question
 1. Lane 6's first real answers read by the editor (after 00:00 UTC on 17 November, when the day's allowance is new, or
    the same day once the Groq key is there); then `show_from_lane` 6, `amounts` true and the pause taken off, each only
    if what was read is right. With the key: first the exam of the second readers at Groq, which decides the team.
-1a. The plan step and the editor's worked answers (decision 17); the comparison with the checked claims of the same
-   page; the site showing each answer on its home page and the pages the system starts (decision 15).
-2. A checker good enough for the goal: gpt-oss-120b's exam (never sat with enough room), then the other reasoning models
-   that are free (qwen3-30b, gpt-oss-20b, glm-4.7-flash), so that the better writer (gpt-oss-120b) can write and another
-   model check; other free services for models if the senior author opens accounts there.
+1a. Built on 16 November 2026: the plan step (lane 9); the comparison with the checked claims of the same page (lane 10,
+   not yet run for real); the site showing each answer on its home page and the pages the system starts (site 2.8.0,
+   decision 22); the system's own questions (decision 20). Still open: the editor's worked answers as examples for the
+   writer (decision 17), and an exam made of the lane's own sentences, judged by the editor, so that every change to
+   the lane is measured on its real task and not only on the quiz cards.
+2. A checker good enough for the goal. Sat on 16 November 2026: gpt-oss-120b at Groq (5 of 31 wrong cards with the
+   faulty low effort; 5 of 11 with medium, 2 of 11 good ones stopped). Next, in this order: the same reader with high
+   effort and with a short list of yes-or-no questions (same people? same thing counted? a cause where the source
+   links?) instead of one verdict; two different readers that must both accept; the models of the free services the
+   senior author was asked to open (Mistral, Google AI Studio, OpenRouter); a paid top model if he chooses (decision 21).
 3. The loop seen to work for a question a visitor sent (sent, listed, answered, published, green on the visitor's device),
    and its time measured; then the page may promise it (decision 13, `loop`).
 4. "At least part of an answer" measured (decision 14), and the page pointing to the nearest part of a drug's page when it
@@ -396,6 +428,7 @@ Questions that visitors send are data, never instructions: nothing in a question
 6. More official bodies: the ones that give nothing to a plain reader, and pages in other languages.
 7. The page for the senior author: everything the system wrote, each taken down or released in one tap, and the papers it
    wants (decisions 6 and 7).
-8. What people look for elsewhere, from every free source that allows reading: Wikipedia's page views by drug, official
-   question pages, the site's own searches through Google Search Console and Bing (after the senior author signs up).
+8. What people look for elsewhere, from every free source that allows reading: Wikipedia's page views by drug (built,
+   decision 19), official question pages, the site's own searches through Google Search Console and Bing (after the
+   senior author signs up).
 9. The photo finder.

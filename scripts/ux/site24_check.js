@@ -353,10 +353,13 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const sentOwn = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v).q);
     ok("Not the same? Send yours to us: the reader's own words are sent, by their press", sentOwn.includes("does weed cause cancer") && /^Sent\./.test(await p.evaluate(() => (document.querySelector("#search-results .sr-want .ask-said") || {}).textContent || "")), sentOwn.join(" | "));
     // Enter counts at once
-    await typeW(p, "is ketamine addictive"); await p.keyboard.press("Enter"); await p.waitForTimeout(700);
+    // (16 November 2026: the question this check used, "Can you get addicted to ketamine?", has been answered by the system and left the list.
+    // The check now takes a question that IS on the page's list, another one than the item counted above, whatever the list holds that day.)
+    const other = await p.evaluate(first => { const x = WANTED.find(([id, q]) => id !== first && /^(?:Can|Is|Does|Do|What|How|Why)\b/.test(q) && !/alcohol/i.test(q)); return x ? { id: x[0], q: x[1] } : null; }, c1.id);
+    await typeW(p, other.q.replace(/\?$/, "").toLowerCase()); await p.keyboard.press("Enter"); await p.waitForTimeout(700);
     const sh = await p.evaluate(() => { const c = document.querySelector("#evsheet .ins-want"); return c ? { t: c.querySelector(".ins-none-t").textContent, q: c.querySelector(".want-q").textContent, note: (c.querySelector(".want-n") || {}).textContent || "", id: c.dataset.want } : null; });
     w = wkeys(ON);
-    ok("Enter on a listed question: the sheet says so and the item is counted at once", sh && sh.t === "Not answered yet. A question like yours is on our list." && sh.q === "Can you get addicted to ketamine?" && /We count how many people ask this/.test(sh.note) && w.some(([k, v]) => k === "w:" + sh.id && v.n === 1), JSON.stringify(sh) + " || " + JSON.stringify(w));
+    ok("Enter on a listed question: the sheet says so and the item is counted at once", sh && sh.t === "Not answered yet. A question like yours is on our list." && sh.q === other.q && sh.id === other.id && /We count how many people ask this/.test(sh.note) && w.some(([k, v]) => k === "w:" + sh.id && v.n === 1), JSON.stringify(other) + " || " + JSON.stringify(sh) + " || " + JSON.stringify(w));
     await shot(p, "390-sheet-onlist");
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     // a question that is not about drugs, with the store on: no promise, a quiet way to send
