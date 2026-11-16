@@ -248,7 +248,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
         if wait > 0 and not opener: time.sleep(wait)
         _last_call[model] = time.time(); _minute.setdefault(model, []).append((time.time(), est_in + max_tokens))
         try:
-            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=180) as r: d = json.loads(r.read().decode("utf-8"))
+            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=180 if S.get("paid") else 80) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it)
         except urllib.error.HTTPError as e:
             whole = e.read().decode("utf-8", "replace")[:6000] if hasattr(e, "read") else ""; detail = whole[:400]; last = f"{svc} answered {e.code}: {detail}"
             if e.code == 429 or (e.code == 529 and svc == "claude"):
@@ -260,8 +260,8 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                 ra = str((e.headers or {}).get("Retry-After") or "").strip(); rd = re.search(r'"retryDelay":\s*"(\d+(?:\.\d+)?)s?"', whole)
                 secs = min(65, int(float(ra)) + 1) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else min(65, int(float(rd.group(1))) + 1) if rd else 25
                 if k + 1 < tries: time.sleep(0 if opener else secs); continue
-            if e.code == 503 and not S.get("paid") and busy < 4 and re.search(r"high demand|overloaded|UNAVAILABLE|try again later", whole, re.I):     # a free model that many people are asking at once: waited out, up to about two minutes in all
-                busy += 1; time.sleep(0 if opener else (8, 20, 40, 60)[busy - 1]); k -= 1; continue
+            if e.code == 503 and not S.get("paid") and busy < 4 and re.search(r"high demand|overloaded|UNAVAILABLE|try again later", whole, re.I):     # a free model that many people are asking at once: waited out, up to about a minute in all
+                busy += 1; time.sleep(0 if opener else (6, 12, 20, 30)[busy - 1]); k -= 1; continue
             if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 4 * (k + 1)); continue
             if e.code in (400, 404, 422) and svc != "claude" and again < 2:      # some open models take no system text, or no JSON mode: asked once more without, and remembered for this run
                 q = _quirks.setdefault(model, set()); new_q = None

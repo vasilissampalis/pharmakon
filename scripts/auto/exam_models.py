@@ -221,7 +221,7 @@ def selftest():
 if __name__ == "__main__":
     if "--selftest" in sys.argv: selftest()
     elif len(sys.argv) > 1 and sys.argv[1] == "requests":
-        until = time.time() + 27 * 60                                     # (the job has 40 minutes for ALL its requests; a sitting goes on at the next request where it stopped)
+        until = time.time() + 22 * 60                                     # (the job has 45 minutes for ALL its requests, and one call to a busy free service can take four minutes: on 16 November a run that waited on Gemma ran into the job's limit; a sitting goes on at the next request where it stopped)
         for f in sorted((ROOT / "data" / "auto" / "requests").glob("exam-*.json")):
             if time.time() > until - 60: print(f"exam: {f.name}: no time left in this run: it stays for the next"); continue
             try: r = json.load(open(f, encoding="utf-8"))
