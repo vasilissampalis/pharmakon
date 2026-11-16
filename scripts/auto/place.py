@@ -66,6 +66,11 @@ class Placer:
         self.filing = [(n, v, re.compile(r"(?<![\w-])" + re.escape(n) + r"(?![\w-])", re.I)) for n, v in sorted((filing if filing is not None else _filing()).items(), key=lambda kv: -len(kv[0]))]
         self.chem = chem if chem is not None else _chem()
 
+    def pages_to_start(self):
+        """Every page the filing names for drugs that have none (data/auto/filing.json, "pages")."""
+        try: return list(json.load(open(ROOT / "data" / "auto" / "filing.json", encoding="utf-8")).get("pages") or [])
+        except (OSError, ValueError): return []
+
     def read(self, text):
         """(the pages of the drugs named, in the order they are named; the names of drugs without a page, with where each belongs)."""
         found, taken, fresh = [], [], []
@@ -167,11 +172,19 @@ def pages():
         except (OSError, ValueError): items = []
         for w in items: add(w["q"], w["id"], "listed")
     for g in json.load(open(ROOT / "data" / "verification" / "insight" / "gold-sample.json", encoding="utf-8"))["questions"]: add(g.get("q") or g.get("question") or g.get("text") or "", None, "forum")
+    # (16 November 2026) every page the filing names is in the list, also one nobody has asked us about yet; among pages our own evidence does not
+    # tell apart, the one more people look up on Wikipedia comes first (data/auto/demand-wiki.json, scripts/auto/wiki_views.py)
+    try: wiki = json.load(open(ROOT / "data" / "auto" / "demand-wiki.json", encoding="utf-8")).get("pages") or {}
+    except (OSError, ValueError): wiki = {}
+    for name in P.pages_to_start():
+        e = out.setdefault(name, {"cls": next((v.get("cls") for n, v, rx in P.filing if v.get("new") == name), None) or next((x.get("cls") for rx, x in P.shapes if x.get("new") == name), None), "listed": [], "forum": 0})
+    for name, e in out.items(): e["looked_up"] = int((wiki.get(name) or {}).get("views") or 0)
     doc = {"_note": "The pages the system should start: drugs and medicines people ask about that have no page (scripts/auto/place.py --pages; data/auto/filing.json says which names belong to which page). 'listed': the listed questions that belong there (the editors' and those visitors sent); "
-                    "'forum': how many of the 400 forum questions of the gold set ask about it. Ranked by both. A page is started because people ask.",
-           "pages": dict(sorted(out.items(), key=lambda kv: (-len(kv[1]["listed"]), -kv[1]["forum"], kv[0])))}
+                    "'forum': how many of the 400 forum questions of the gold set ask about it; 'looked_up': how often people opened its articles on the English Wikipedia in twelve months (data/auto/demand-wiki.json). "
+                    "Ranked by what people asked us first (listed, then forum); pages that this does not tell apart, by how often they are looked up. A page is started because people ask.",
+           "pages": dict(sorted(out.items(), key=lambda kv: (-len(kv[1]["listed"]), -kv[1]["forum"], -kv[1]["looked_up"], kv[0])))}
     (ROOT / "data" / "auto" / "pages.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"pages to start: {len(out)}; asked most:", "; ".join(f"{k} ({len(v['listed'])} listed, {v['forum']} forum)" for k, v in list(doc["pages"].items())[:6]))
+    print(f"pages to start: {len(out)}; first in line:", "; ".join(f"{k} ({len(v['listed'])} listed, {v['forum']} forum, {v['looked_up']:,} looked up)" for k, v in list(doc["pages"].items())[:8]))
 
 
 if __name__ == "__main__":

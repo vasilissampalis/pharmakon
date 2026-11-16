@@ -12,6 +12,7 @@ on:
     branches: [main]
     paths:
       - "data/auto/requests/official-*.json"
+      - "data/auto/requests/views-*.json"   # (16 November 2026) how often people look a drug up on Wikipedia: scripts/auto/wiki_views.py, for the order of the pages to start
 
 permissions:
   contents: write
@@ -40,6 +41,12 @@ jobs:
           python3 -I scripts/auto/official.py --selftest >> "$L" 2>&1 || echo "!! the selftest failed ($?)" >> "$L"
           python3 -I scripts/auto/official.py --requests data/auto/requests --minutes 25 >> "$L" 2>&1 || echo "!! failed ($?)" >> "$L"
           git rm -q --ignore-unmatch data/auto/requests/official-*.json >> "$L" 2>&1
+          if ls data/auto/requests/views-*.json >/dev/null 2>&1; then
+            python3 -I scripts/auto/wiki_views.py --selftest >> "$L" 2>&1 || echo "!! the page-view selftest failed ($?)" >> "$L"
+            python3 -I scripts/auto/wiki_views.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the page views failed ($?)" >> "$L"
+            python3 -I scripts/auto/place.py --pages >> "$L" 2>&1 || echo "!! the list of pages to start failed ($?)" >> "$L"
+            git rm -q --ignore-unmatch data/auto/requests/views-*.json >> "$L" 2>&1
+          fi
           mkdir -p data/auto/official
           tail -n 80 "$L" | cut -c1-600 > data/auto/official/_last-run.txt
       - name: Keep what was found
