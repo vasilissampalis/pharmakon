@@ -107,7 +107,8 @@ def sit_lane(chk, exam=None):
     """The exam of the lane's own sentences: (rows, the table). A row is one sentence, so its "scores" hold one number."""
     try: items = json.load(open(exam or EXAM / "lane-sentences.json", encoding="utf-8"))["items"]
     except (OSError, ValueError): return [], []
-    scores = chk.score([(" ".join(i["rests_on"]), i["sentence"]) for i in items]) if items else []
+    premise = lambda i: " ".join((x["source"] + ". " if x.get("source") else "") + x["quote"] for x in i["passages"]) if i.get("passages") else " ".join(i["rests_on"])     # (the source's name stands with its words, as in the lane: lane.own_word)
+    scores = chk.score([(premise(i), i["sentence"]) for i in items]) if items else []
     rows = [{"id": i["id"], "good": i["good"], "scores": [s]} for i, s in zip(items, scores)]
     return rows, (table(rows)[0] if rows else [])
 

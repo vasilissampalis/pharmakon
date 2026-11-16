@@ -45,7 +45,8 @@ def lane_cards(file=None):
     """The lane's own sentences in the shape of the exam's cards: the sentence as it stands, the words it rests on as its passages."""
     try: items = json.load(open(file or EXAM / "lane-sentences.json", encoding="utf-8"))["items"]
     except (OSError, ValueError): return []
-    return [{"id": i["id"], "good": i["good"], "what": i.get("what"), "plain": True, "lines": {"short": "", "but": "", "how": list(i["rests_on"])}, "card": {"answer": True, "statement": i["sentence"], "why": ""}} for i in items]
+    named = lambda i: [f"({x['source']}; {x['where']}) {x['quote']}" if x.get("source") else x["quote"] for x in i["passages"]] if i.get("passages") else list(i["rests_on"])     # (as in the lane's own question: each passage with its source's name and its place)
+    return [{"id": i["id"], "good": i["good"], "what": i.get("what"), "plain": True, "lines": {"short": "", "but": "", "how": named(i)}, "card": {"answer": True, "statement": i["sentence"], "why": ""}} for i in items]
 
 
 def lines_cards(file=None):
@@ -109,6 +110,7 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
         return out
 
     mixed = [x for pair in zip(bad, draw) for x in pair] + bad[len(draw):] + draw[len(bad):]             # a wrong card, a good one, in turn: a sitting cut short still says something about both
+    failed, last_failed = 0, -9
     todo = [it for it in mixed if it["id"] not in res]
     if isinstance(most, int) and most > 0 and len(todo) > most: todo = todo[:most]; stopped_by = f"the request asked for {most} cards in this sitting"
     for n, it in enumerate(todo, 1):
@@ -121,6 +123,10 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e); break
         except llm.Unavailable as e:
             if "too large" in str(e).lower() or "request_too_large" in str(e).lower(): res[it["id"]] = {"through": False, "clear": False, "problem": "the card and its lines are too long for one call"}; continue
+            failed = failed + 1 if n == last_failed + 1 else 1; last_failed = n
+            if failed < 3 and re.search(r"answered 50\d|high demand|could not be reached|timed out|gave no answer", str(e), re.I):        # a service that is busy for a moment: this card waits for the next sitting, the exam goes on
+                if chat is llm.chat: time.sleep(30)
+                continue
             stopped_by = "the model service: " + str(e)[:200]; break
         if pieces:
             v = lane.pieces_verdict(out, plain, lines, denies=not it["card"]["answer"])
@@ -174,6 +180,8 @@ def selftest():
     lf = pathlib.Path(tempfile.mkdtemp()) / "lane.json"
     json.dump({"items": [{"id": "au_x#short~1", "good": False, "what": "'often'", "sentence": "It often is so.", "rests_on": ["It can be so.", "Some said so."]}, {"id": "au_x#how1~2", "good": True, "what": "", "sentence": "Some said so.", "rests_on": ["Some said so."]}]}, open(lf, "w"))
     lc = lane_cards(lf); pr = prompt(lc[0])
+    json.dump({"items": [{"id": "n", "good": True, "sentence": "Health Canada says it can be so.", "rests_on": ["It can be so."], "passages": [{"source": "Health Canada: Ketamine", "where": "Risks", "quote": "It can be so."}]}]}, open(lf.parent / "named.json", "w"))
+    assert "   PASSAGE: (Health Canada: Ketamine; Risks) It can be so." in prompt(lane_cards(lf.parent / "named.json")[0])                       # a passage carries its source's name, as in the lane
     assert "1. SENTENCE: It often is so.\n   PASSAGE: It can be so.\n   PASSAGE: Some said so." in pr and "It is a fact" not in pr and slug("gemini:gemma-4-31b-it") == "gemini-gemma-4-31b-it"
     asked = []
     def chat4(model, messages, room): asked.append(messages[1]["content"]); return json.dumps({"verdicts": [{"n": 1, "supported": "SENTENCE: It often" not in messages[1]["content"], "problem": ""}]})

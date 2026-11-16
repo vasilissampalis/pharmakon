@@ -704,7 +704,7 @@ def marks_verdict(out, passages):
 def own_word(parts, labels, chk):
     """Our own checker's score for every sentence a model wrote, against the words it rests on (the quotes and the passages they
     stand in): {part: score from 0 to 1}. A sentence the code wrote ("fixed") is not asked about."""
-    ask = [(p["part"], " ".join((labels[u]["quote"] + " " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS]).strip() for u in p["uses"]), p["text"]) for p in parts if not p.get("fixed") and p.get("uses")]
+    ask = [(p["part"], " ".join(((labels[u].get("paper") + ". " if labels[u].get("paper") else "") + labels[u]["quote"] + " " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS]).strip() for u in p["uses"]), p["text"]) for p in parts if not p.get("fixed") and p.get("uses")]      # (the source's name stands with its words: a sentence may say "Health Canada says" only because of it)
     return dict(zip([a[0] for a in ask], chk.score([(src, text) for _, src, text in ask]))) if ask else {}
 
 

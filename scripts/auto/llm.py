@@ -115,10 +115,20 @@ def service_of(model):
     return (svc, name) if svc in SERVICES and name else (None, model)
 
 
+def day_of(svc, now=None):
+    """The day a service counts its free calls by. Google counts a day from midnight Pacific time (its own page says so), the others by UTC."""
+    if svc == "gemini":
+        n = now or datetime.datetime.now(datetime.timezone.utc)
+        try:
+            import zoneinfo; return n.astimezone(zoneinfo.ZoneInfo("America/Los_Angeles")).date().isoformat()
+        except Exception: return (n - datetime.timedelta(hours=8)).date().isoformat()
+    return today() if now is None else now.date().isoformat()
+
+
 def svc_used(svc, d=None):
-    """What was used of a service: {"day", "calls", "in", "out", "usd", "month", "usd_month"} (a day and a month by UTC)."""
+    """What was used of a service: {"day", "calls", "in", "out", "usd", "month", "usd_month"} (a day as the service counts it: day_of; a month by UTC)."""
     u = dict(((d if d is not None else ledger()).get("svc") or {}).get(svc) or {})
-    if u.get("day") != today(): u.update(day=today(), calls=0, usd=0.0, models={}, **{"in": 0, "out": 0})
+    if u.get("day") != day_of(svc): u.update(day=day_of(svc), calls=0, usd=0.0, models={}, **{"in": 0, "out": 0})
     if u.get("month") != today()[:7]: u.update(month=today()[:7], usd_month=0.0)
     return u
 
@@ -228,7 +238,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
         body = common()
         headers = {"Authorization": "Bearer " + key, "Content-Type": "application/json", "User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"}
         if svc == "openrouter": headers.update({"HTTP-Referer": "https://pharmakon.world", "X-Title": "Pharmakon"})
-    op = opener or urllib.request.urlopen; last = None; k = -1; again = 0
+    op = opener or urllib.request.urlopen; last = None; k = -1; again = 0; busy = 0
     while k + 1 < tries:
         k += 1
         wait = lim["gap"] - (time.time() - _last_call.get(model, 0))                 # (each model has its own calls a minute)
@@ -250,6 +260,8 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                 ra = str((e.headers or {}).get("Retry-After") or "").strip(); rd = re.search(r'"retryDelay":\s*"(\d+(?:\.\d+)?)s?"', whole)
                 secs = min(65, int(float(ra)) + 1) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else min(65, int(float(rd.group(1))) + 1) if rd else 25
                 if k + 1 < tries: time.sleep(0 if opener else secs); continue
+            if e.code == 503 and not S.get("paid") and busy < 4 and re.search(r"high demand|overloaded|UNAVAILABLE|try again later", whole, re.I):     # a free model that many people are asking at once: waited out, up to about two minutes in all
+                busy += 1; time.sleep(0 if opener else (8, 20, 40, 60)[busy - 1]); k -= 1; continue
             if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 4 * (k + 1)); continue
             if e.code in (400, 404, 422) and svc != "claude" and again < 2:      # some open models take no system text, or no JSON mode: asked once more without, and remembered for this run
                 q = _quirks.setdefault(model, set()); new_q = None
@@ -549,6 +561,14 @@ def selftest():
     try: chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, day); raise AssertionError("no Budget")
     except Budget: pass
     assert calls_left("gemini:gemma-4-31b-it") == 0 and calls_left("gemini:gemini-3.5-flash-lite") == 450
+    # Google's day begins at midnight Pacific time: at 03:00 UTC it is still yesterday there; a model in high demand is waited for, four times, before the usual tries
+    assert day_of("gemini", datetime.datetime(2026, 11, 17, 3, 0, tzinfo=datetime.timezone.utc)) == "2026-11-16" and day_of("gemini", datetime.datetime(2026, 11, 17, 9, 0, tzinfo=datetime.timezone.utc)) == "2026-11-17" and day_of("mistral", datetime.datetime(2026, 11, 17, 3, 0, tzinfo=datetime.timezone.utc)) == "2026-11-17"
+    L = ledger(); L["svc"]["gemini"]["models"] = {}; json.dump(L, open(LEDGER, "w")); hits = {"n": 0}
+    def crowded(req, timeout=0):
+        hits["n"] += 1
+        if hits["n"] <= 5: raise urllib.error.HTTPError(req.full_url, 503, "Service Unavailable", {}, io.BytesIO(b'{"error": {"code": 503, "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.", "status": "UNAVAILABLE"}}'))
+        return sopener(req)
+    assert as_json(chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, crowded)) == {"ok": True} and hits["n"] == 6
     # a model whose free allowance was not read is not asked; a model that takes no system text or no JSON mode is asked once more without, and not asked that way again
     json.dump({"gemini": {"models": [{"match": "^gemma-4-", "rpm": 30, "rpd": 14400}], "else": {"rpm": 1, "rpd": 0}}}, open(FREE, "w"))
     try: chat("gemini:gemini-2.5-pro", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a model with no allowance written was asked")
