@@ -36,6 +36,10 @@ for f in sorted(glob.glob(str(ROOT / "data" / "auto" / "answers" / "au_*.json"))
         print(wrap(p.get("text", ""), f"  {p['part']:>6}: "))
         if p.get("quote"): print(wrap("“" + p["quote"] + "”  (" + str(p.get("quote_ref") or p.get("source")) + ")", "          shown: "))
         for r in p.get("rests_on") or []: print(wrap(f"{r.get('label')} {r.get('ref')} ({r.get('where')}): {r.get('quote')}", "          rests on: "))
+    if "--all" in arg:                                                 # every source the reader was given, with what its gate threw away and why
+        for l in a.get("looked") or []:
+            print(wrap(f"{l.get('read')}/{l.get('kind')}: {str(l.get('title'))[:90]} | kept {l.get('kept')}, thrown {len(l.get('thrown') or [])}", "  looked at: "))
+            for t in l.get("thrown") or []: print(wrap(f"{t.get('why')}  <<{t.get('quote') or ''}>>" + (f"  who={t.get('who')} | what={t.get('what')}" if t.get("who") or t.get("what") else f"  {t.get('text') or ''}"), "      thrown: "))
     if a.get("history"): print(wrap(json.dumps(a["history"][-1], ensure_ascii=False), "  before: "))
     print(wrap(f"complete: {a.get('complete')}; missing: {a.get('missing')}; wanted: {len(a.get('wanted') or [])}; person: {a.get('person')}", "  "))
 print("=" * 150); print("in all:", n or "nothing")
