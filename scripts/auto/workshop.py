@@ -96,7 +96,7 @@ def pick(name, folder=None):
     return e
 
 
-def more(name, what, minutes=0, folder=None):
+def more(name, what, minutes=0, folder=None, again=False):
     """A candidate that is on file sits a further exam on THIS machine, as the file whose SHA-256 its record names (fetched from
     the repository's release files by own.fetch, which refuses any other file). what: "lines" or "lane". The scores are added
     to the candidate's scores and its record is counted again."""
@@ -104,9 +104,13 @@ def more(name, what, minutes=0, folder=None):
     e = json.load(open(folder / (name + ".json"), encoding="utf-8")); sf = folder / (name + ".scores.json"); sc = json.load(open(sf, encoding="utf-8"))
     chk = own.Check(entry=e)
     def keep(rows): sc["lines"] = rows; json.dump(sc, open(sf, "w", encoding="utf-8"), ensure_ascii=False)
-    if what == "lines": sc["lines"] = sit_lines(chk, minutes=minutes, have=[r for r in sc.get("lines") or [] if r.get("half")], keep=keep)[0]
+    if what == "lines": sc["lines"] = sit_lines(chk, minutes=minutes, have=[] if again else [r for r in sc.get("lines") or [] if r.get("half")], keep=keep)[0]
     elif what == "lane": sc["lane"] = sit_lane(chk)[0]
-    else: sys.exit("workshop: a further exam is 'lines' or 'lane'")
+    elif what == "cards":
+        rows, tb, _, whole, secs = sit(name, folder, e, minutes, chk); sc["items"] = rows; e["exam"] = dict(e.get("exam") or {}, whole=whole, seconds_a_sentence=round(secs, 2))
+        json.dump(e, open(folder / (name + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    else: sys.exit("workshop: a further exam is 'cards', 'lines' or 'lane'")
+    sc["read_long_passages"] = "the sentences nearest the sentence to check (own.focus)" if own.FOCUS else "in parts, the best part counts"
     json.dump(sc, open(sf, "w", encoding="utf-8"), ensure_ascii=False)
     return pick(name, folder)
 
@@ -283,7 +287,7 @@ if __name__ == "__main__":
             except SystemExit: raise
             except Exception as e: print(f"workshop: {name} from {model}: not made ({type(e).__name__}: {str(e)[:300]})")
     elif len(a) >= 2 and a[0] in ("pick", "more") and re.fullmatch(r"pharmakon-[a-z]+-[0-9a-z.-]{1,20}", a[1]):
-        e = pick(a[1]) if a[0] == "pick" else more(a[1], a[2] if len(a) > 2 else "lines", minutes=float(a[a.index("--minutes") + 1]) if "--minutes" in a else 0); x = e["exam"]; s = next((r for r in e.get("exam_sentences") or [] if r["threshold"] == e["threshold"]), None); l = e.get("exam_lane")
+        e = pick(a[1]) if a[0] == "pick" else more(a[1], a[2] if len(a) > 2 else "lines", minutes=float(a[a.index("--minutes") + 1]) if "--minutes" in a else 0, again="--again" in a); x = e["exam"]; s = next((r for r in e.get("exam_sentences") or [] if r["threshold"] == e["threshold"]), None); l = e.get("exam_lane")
         print(f"workshop: {a[1]}: at {e['threshold']} ({e['threshold_rule']}); on {x.get('on')}: lets {x['wrong_through']} of {x['wrong']} wrong ones through, stops {x['good_stopped']} of {x['good']} good ones"
               + (f"; sentence by sentence: catches {s['faulty_caught']} of {s['faulty']} faulty ones, stops {s['good_stopped']} of {s['good']} good ones" if s else "")
               + (f"; of the lane's own sentences: lets {l['wrong_through']} of {l['wrong']} that are not good through, stops {l['good_stopped']} of {l['good']} good ones" if l else "")

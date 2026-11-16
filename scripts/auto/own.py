@@ -21,9 +21,17 @@ What a model of our own is, here:
     numbers stay in the repository whether it was adopted or not.
 
 The first job is the checker ("does this passage support this sentence?", kind "seq": the passage and the sentence joined
-by the tokenizer's end sign, two numbers out, the second is "supported"; a passage too long for the model is cut into
-parts at sentence ends and the best part counts, as MiniCheck does). The lane asks it about every sentence after the
+by the tokenizer's end sign, two numbers out, the second is "supported"). The lane asks it about every sentence after the
 second reader (scripts/auto/lane.py, the step "our own checker").
+
+A passage too long for the model. The model reads some 500 word-pieces at once; a checked claim, or the passages of three
+sources, are longer. MiniCheck's own way is to cut the passage into parts and let the best part count. A second way is
+written here (focus): the sentences of the passage that share most words and numbers with the sentence to check are taken,
+in their own order, until the model's room is full, and the model reads those; which are taken is decided by counting
+shared words, with no model. Measured on the plain lines with the open model as it is (17 November 2026, pharmakon-check-0):
+neither way tells a wrong line from a good one there (a good line scores above a wrong one 55 times in 100 either way), and
+the second way stopped more good lines at every threshold. So FOCUS is off, the model's own way stands, and the second way
+waits for a model that has learned from our lessons, to be measured again then.
 """
 import sys, os, re, json, math, hashlib, pathlib, urllib.request
 
@@ -75,6 +83,50 @@ def fetch(entry, opener=None):
 
 
 SENT = re.compile(r"(?<=[.!?])\s+(?=[A-Z0-9“\"'(\[])")
+FOCUS = False         # how a passage too long for the model is read: True, its sentences nearest the sentence to check; False, in parts (the best part counts)
+STOP = set("""a an the and or but if then than that this these those of in on at to for from by with without into over under about as is are was were be been being it its they them their there here he she his her
+you your we our i me my not no nor do does did done have has had having can could may might must should would will shall who whom whose which what when where why how all any both each few more most other some such only own
+same so too very just also still even ever never much many""".split())
+
+
+def stems(text):
+    """The content words of a text cut roughly to their stems, and its numbers (no dictionary: endings only)."""
+    out = set()
+    for w in re.findall(r"[a-z]+|\d+(?:[.,]\d+)*", (text or "").lower()):
+        if w[0].isdigit(): out.add(w.replace(",", "")); continue
+        if w in STOP or len(w) < 3: continue
+        for suf in ("ingly", "edly", "ing", "ed", "ies", "es", "ly", "s"):
+            if w.endswith(suf) and len(w) - len(suf) >= 3: w = w[:-len(suf)] + ("y" if suf == "ies" else ""); break
+        out.add(w)
+    return out
+
+
+def bits(passage, most, count):
+    """A passage as sentences; a sentence longer than `most` word-pieces is cut further, at semicolons and then at commas."""
+    out = []
+    for sn in [x.strip() for x in SENT.split(passage or "") if x.strip()]:
+        if count(sn) <= most: out.append(sn); continue
+        for part in re.split(r"(?<=;)\s+", sn):
+            if count(part) <= most: out.append(part); continue
+            cur = ""
+            for piece in re.split(r"(?<=,)\s+", part):
+                if cur and count(cur + " " + piece) > most: out.append(cur); cur = piece
+                else: cur = (cur + " " + piece).strip()
+            if cur: out.append(cur)
+    return out
+
+
+def focus(passage, sentence, room, count):
+    """The sentences of a long passage that share most words and numbers with the sentence to check, in the passage's own order,
+    as many as fit in `room` word-pieces."""
+    bs = bits(passage, max(24, room // 3), count); key = stems(sentence)
+    near = sorted(range(len(bs)), key=lambda i: (-len(key & stems(bs[i])) / (1 + 0.02 * len(stems(bs[i]))), i))
+    take, used = [], 0
+    for i in near:
+        c = count(bs[i]) + 1
+        if used + c > room: continue                                  # this one does not fit any more; a shorter one further down may
+        take.append(i); used += c
+    return " ".join(bs[i] for i in sorted(take))
 
 
 def parts_of(passage, room, count):
@@ -116,7 +168,9 @@ class Check:
         out = []
         for passage, sentence in pairs:
             room = max(64, self.max - count(sentence) - 6)
-            out.append(round(max(self._run(part + eos + sentence) for part in parts_of(passage, room, count)), 4))
+            if FOCUS and not self.e.get("parts"): parts = [passage if count(passage) <= room else focus(passage, sentence, room, count)]
+            else: parts = parts_of(passage, room, count)
+            out.append(round(max(self._run(part + eos + sentence) for part in parts), 4))
         return out
 
 
@@ -173,10 +227,21 @@ def selftest():
         def run(self, _, feed):
             seen.append(sorted(feed)); n = feed["input_ids"].shape[1]
             return [[[0.0, 3.0] if n == 8 else [2.0, 0.0]]]                 # the part of 5 words with the sentence of 3 supports; the long part does not
-    c = Check(entry={"name": "t", "kind": "seq", "max_len": 80, "files": {}}, session=Sess(), tokenizer=Tok())
+    c = Check(entry={"name": "t", "kind": "seq", "max_len": 80, "files": {}, "parts": True}, session=Sess(), tokenizer=Tok())
     c.tok.encode = lambda t: Enc(list(range(len(t.replace("</s>", " ").split()))))
     s = c.score([(" ".join(["word"] * 69) + " end. Two words here now ok.", "it is so")])
     assert s == [round(math.exp(3) / (1 + math.exp(3)), 4)] and seen[0] == ["attention_mask", "input_ids"] and len(seen) == 2, (s, seen)
+    # a passage too long for the model: its sentences nearest the sentence to check are read, in their own order, as many as fit
+    assert stems("Deaths fell by 33, about a third, in 2003.") == {"death", "fell", "33", "third", "2003"} and "the" not in stems("The pills")
+    long = "Alpha beta gamma delta one. " * 6 + "In Vancouver 56 deaths were recorded before the site opened. " + "Epsilon zeta eta theta two. " * 6 + "After it opened 33 deaths were recorded. " + "Iota kappa lambda mu three. " * 6
+    f = focus(long, "Deaths went from 56 before the site opened to 33 after.", 30, words)
+    assert "In Vancouver 56 deaths were recorded before the site opened." in f and "After it opened 33 deaths were recorded." in f and words(f) <= 30 and f.index("56") < f.index("33"), f     # both facts, though they stand far apart; what room is left is filled in the passage's order
+    assert bits("One, two, three, four, five, six; seven eight nine ten eleven twelve thirteen.", 6, words) == ["One, two, three, four, five, six;", "seven eight nine ten eleven twelve thirteen."]
+    assert bits("One two, three four, five six, seven eight, nine ten.", 4, words) == ["One two, three four,", "five six, seven eight,", "nine ten."]
+    global FOCUS
+    seen.clear(); c2 = Check(entry={"name": "t", "kind": "seq", "max_len": 46, "files": {}}, session=Sess(), tokenizer=Tok()); c2.tok.encode = lambda t: Enc(list(range(len(t.replace("</s>", " ").split()))))
+    FOCUS = True; c2.score([(long, "Deaths went from 56 before the site opened to 33 after.")]); n_focus = len(seen)
+    FOCUS = False; c2.score([(long, "Deaths went from 56 before the site opened to 33 after.")]); assert n_focus == 1 and len(seen) >= n_focus + 2      # the second way reads once; the model's own way reads every part
     # a file that is not the one written down is refused; an address outside this repository's releases is refused
     global CACHE, OWN, REG
     keep = (CACHE, OWN, REG); tmp = pathlib.Path(tempfile.mkdtemp()); CACHE, OWN, REG = tmp / "cache", tmp / "own", tmp / "own" / "models.json"

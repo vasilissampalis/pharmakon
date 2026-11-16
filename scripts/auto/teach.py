@@ -35,6 +35,7 @@ EXAM = ROOT / "data" / "auto" / "exam"
 OUT = ROOT / "data" / "auto" / "own" / "teach"
 MADE = OUT / "made.jsonl"
 MODELS = ["gemini:gemma-4-31b-it", "gemini:gemma-4-26b-a4b-it"]          # two writers, in turn: lessons in more than one hand
+ROOM = 1200                                                                # room for a reply: some open models think aloud before they write (the first run, with 400, got no lesson out of Gemma)
 
 KINDS = {   # kind: (what to do, an invented example: passage, good sentence, the wrong one)
     "measure": ("Add or strengthen ONE word of measure that the PASSAGES do not carry: how often (often, usually, always), how many (most, all, both), how sure (clearly, proven), how big (severe, far more, slightly) or how good (famous, leading, trained).",
@@ -119,23 +120,31 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
     except (OSError, ValueError): pass
     src = sources(exam); rnd = random.Random(20261116); rnd.shuffle(src)                 # the same order every run: a run goes on where the last one stopped
     todo = [(s, k) for s in src for k in KINDS if (s["id"], k) not in have and (s["id"], k) not in skipped]
-    t0 = time.time(); n = asked = 0; why_not = {}
+    t0 = time.time(); n = asked = 0; why_not = {}; samples = []; wrote = {m: 0 for m in models}; misses = {m: 0 for m in models}
     with open(path, "a", encoding="utf-8") as f:
         for s, kind in todo:
-            if n >= limit or time.time() - t0 > minutes * 60: break
-            model = models[asked % len(models)]; asked += 1
-            try: out = llm.as_json((chat or llm.chat)(model, [{"role": "system", "content": SYS}, {"role": "user", "content": prompt(kind, s["passages"], s["sentence"])}], 400))
-            except llm.Budget as e: print("teach: the day's allowance:", str(e)[:160]); break
-            except llm.Unavailable as e:
-                why_not["the service: " + str(e)[:60]] = why_not.get("the service: " + str(e)[:60], 0) + 1
-                if sum(v for k, v in why_not.items() if k.startswith("the service")) >= 8: print("teach: the service refused eight times: stopped"); break
+            if n >= limit or time.time() - t0 > minutes * 60 or not models: break
+            model = models[asked % len(models)]; asked += 1; raw = ""
+            def miss(why):                                                # a writer that gives nothing usable twelve times running is left out of this run (it may be busy, or not write in the form asked)
+                why_not[why] = why_not.get(why, 0) + 1; misses[model] += 1
+                if len(samples) < 6 and raw: samples.append(f"{model} ({why}; the reply ended: {llm.LAST.get('finish')}, thought {llm.LAST.get('reasoned')} characters): " + re.sub(r"\s+", " ", raw)[:260])
+                if misses[model] >= 12 and model in models: models.remove(model); print(f"teach: {model} gave nothing usable twelve times running: left out of this run")
+            try: raw = (chat or llm.chat)(model, [{"role": "system", "content": SYS}, {"role": "user", "content": prompt(kind, s["passages"], s["sentence"])}], ROOM); out = llm.as_json(raw)
+            except llm.Budget as e:
+                print(f"teach: {model}: the day's allowance:", str(e)[:160])
+                if model in models: models.remove(model)
                 continue
+            except llm.Unavailable as e: miss("the service: " + str(e)[:60]); continue
             new, ch = accept(kind, s["sentence"], out)
             if new is None:
-                why_not[ch] = why_not.get(ch, 0) + 1; skipped.add((s["id"], kind)); continue
+                if ch == "skip": why_not[ch] = why_not.get(ch, 0) + 1; skipped.add((s["id"], kind)); misses[model] = 0        # the writer's own word that the task cannot be done for this sentence: not asked again
+                else: miss(ch)
+                continue
+            misses[model] = 0; wrote[model] += 1
             f.write(json.dumps({"from": s["id"], "group": s["group"], "kind": kind, "good": kind == "same", "sentence": new, "changed": ch, "by": model, "on": today or datetime.date.today().isoformat()}, ensure_ascii=False) + "\n"); f.flush(); n += 1
     json.dump(sorted(skipped), open(path.with_name("skipped.json"), "w", encoding="utf-8"))
-    print(f"teach: {n} lessons written ({asked} asked; not usable: {why_not or 'none'}); {len(todo) - asked} still to make; {len(src)} good sentences to make them from")
+    print(f"teach: {n} lessons written ({asked} asked; by writer: {wrote}; not usable: {why_not or 'none'}); {len(todo) - asked} still to make; {len(src)} good sentences to make them from")
+    for x in samples: print("teach: a reply that could not be used:", x)
     return n
 
 
@@ -173,6 +182,13 @@ def selftest():
     n2 = run(limit=100, minutes=5, chat=chat, exam=d / "exam", path=p, today="2026-11-16")
     rows = made(p); assert len(rows) == 4 * 6 and n2 == 24 - 5 and len({(r["from"], r["kind"]) for r in rows}) == 24 and not any(r["kind"] == "hedge" for r in rows)      # it goes on where it stopped, never twice; what cannot be done is not asked again
     k = len(asked); assert run(limit=100, minutes=5, chat=chat, exam=d / "exam", path=p) == 0 and len(asked) == k
+    # a writer that gives nothing usable twelve times running is left out of the run; what it failed on is asked again another time (only its own "skip" is remembered)
+    p2 = d / "teach2" / "made.jsonl"; seen2 = []
+    def chat2(model, messages, room): seen2.append(model); return "I think about it..." if model == MODELS[0] else json.dumps({"sentence": "Indeed " + messages[1]["content"].split("\nSENTENCE: ")[-1].split("\n")[0], "changed": "indeed"})
+    n3 = run(limit=100, minutes=5, chat=chat2, exam=d / "exam", path=p2, today="2026-11-16")
+    assert seen2.count(MODELS[0]) == 12 and n3 == 28 - 12 and not json.load(open(p2.with_name("skipped.json"))), (seen2.count(MODELS[0]), n3)
+    n4 = run(limit=100, minutes=5, chat=chat, exam=d / "exam", path=p2); sk = json.load(open(p2.with_name("skipped.json")))
+    assert n4 + len(sk) == 12 and len(made(p2)) + len(sk) == 28 and all(k == "hedge" for _, k in sk)          # the twelve it failed on are asked again: each becomes a lesson, or the writer's own "skip"
     print("teach selftest: ok (lessons come only from sentences a checker passed or the editor judged good, never from a plain line of the third exam; one made-up fault of each kind and one faithful rewording; "
           "a result that is the same sentence, far from its length or silent on what it changed is not a lesson; a run goes on where the last stopped)")
 
