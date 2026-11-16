@@ -1,0 +1,66 @@
+# Lessons for our own checker (docs/AUTOMATION.md, decision 23, step two; scripts/auto/teach.py).
+# The senior author, 16 November 2026: "if we can make our own ai we should ... our own autonomous self expanding ai".
+#
+# A free open model (Google's Gemma, through the free tier of the key the senior author added on 16 November 2026) is given
+# our own good sentences, one at a time, and told to write one wrong version of each kind our blind checkers have named, and
+# one faithful rewording. What is sent: our own sentences and our own plain lines. Never a visitor's words, never a key.
+#
+# It starts when the editor puts a request in data/auto/requests (teach-*.json: {"max": 600, "minutes": 40}), or by hand.
+# A request is a file in the repository; it is read as data by Python and never reaches a command line.
+# It runs nothing fetched from outside (plain Python), holds only the two free services' keys, and writes
+# data/auto/own/teach/. The notes it keeps are cleaned of both keys first.
+name: Lessons
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/teach-*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: teach
+  cancel-in-progress: false
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Make lessons, with notes
+        run: |
+          set +e
+          L="$RUNNER_TEMP/teach.log"; : > "$L"
+          python3 -I scripts/auto/llm.py --selftest >> "$L" 2>&1 || echo "!! the model client's own check failed ($?)" >> "$L"
+          python3 -I scripts/auto/teach.py --selftest >> "$L" 2>&1 || echo "!! the lesson maker's own check failed ($?)" >> "$L"
+          python3 -I scripts/auto/teach.py requests >> "$L" 2>&1 || echo "!! the lesson maker failed ($?)" >> "$L"
+          echo "What this run did is in data/auto/own/teach/_last-run.txt (cleaned of anything secret before it is kept)." >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the lessons
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p data/auto/own/teach
+          python3 -I - <<'PY'
+          import os, re, pathlib
+          src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "teach.log"
+          t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
+          for k in ("GEMINI_API_KEY", "OPENROUTER_API_KEY"):
+              v = (os.environ.get(k) or "").strip()
+              if len(v) >= 6: t = t.replace(v, "***")
+          t = re.sub(r"(key=)[A-Za-z0-9_\-]{12,}", r"\1***", t)
+          pathlib.Path("data/auto/own/teach/_last-run.txt").write_text(t[-8000:], encoding="utf-8")
+          PY
+          git rm -q --ignore-unmatch data/auto/requests/teach-*.json
+          git add -A data/auto/own/teach data/auto/requests
+          git diff --cached --quiet || git commit -q -m "Lessons: made-up wrong sentences and faithful rewordings for our own checker to learn from"
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)
