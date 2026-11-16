@@ -109,8 +109,11 @@ class Web:
     """Reading a site's pages the way the head of this file says. opener: for the selftest (no waiting, no network)."""
     def __init__(self, opener=None):
         self.opener, self.robots, self.said, self.last, self.count = opener, {}, {}, {}, {}
-        try: self.pace = {bare(urllib.parse.urlsplit(b["base"]).netloc): float(b["slow"]) for b in json.load(open(SOURCES, encoding="utf-8"))["sources"] if b.get("slow")}   # a body that asked us to slow down: seconds between two requests
-        except (OSError, ValueError, KeyError, TypeError): self.pace = {}
+        self.kept = {}                                                    # the last pages read in this run: one asked for twice (a hub that is also a page) is read once
+        try: srcs = json.load(open(SOURCES, encoding="utf-8"))["sources"]
+        except (OSError, ValueError, KeyError, TypeError): srcs = []
+        self.pace = {bare(urllib.parse.urlsplit(b["base"]).netloc): float(b["slow"]) for b in srcs if b.get("slow")}      # a body that asked us to slow down: seconds between two requests
+        self.most = {bare(urllib.parse.urlsplit(b["base"]).netloc): int(b["most"]) for b in srcs if b.get("most")}        # a body that answers "too many requests" after a page or two: pages read in one run
 
     def rules(self, url):
         p = urllib.parse.urlsplit(url); host = p.scheme + "://" + p.netloc
@@ -153,12 +156,17 @@ class Web:
         r, host = self.rules(url)
         if r is None: raise P.Refused(urllib.parse.urlsplit(url).netloc + ": " + self.said[host])
         if not r.allowed(url): raise P.Refused("robots.txt does not allow " + urllib.parse.urlsplit(url).path)
+        if url in self.kept: return self.kept[url]
         if r.delay > MAX_DELAY and self.count.get(host, 0) >= LITTLE: raise P.Refused(f"{urllib.parse.urlsplit(url).netloc} asks for {r.delay:.0f} seconds between requests: only {LITTLE} pages are read in a run")
+        if self.count.get(host, 0) >= self.most.get(bare(urllib.parse.urlsplit(url).netloc), 10 ** 9): raise P.Refused(f"{urllib.parse.urlsplit(url).netloc}: only {self.most[bare(urllib.parse.urlsplit(url).netloc)]} of its pages are read in a run (it answers 'too many requests' to more)")
         wait = max(SLOW, self.pace.get(bare(urllib.parse.urlsplit(url).netloc), 0), min(r.delay, MAX_DELAY)) - (time.time() - self.last.get(host, 0))
         if wait > 0 and not self.opener: time.sleep(wait)
         self.last[host] = time.time(); self.count[host] = self.count.get(host, 0) + 1
         got = self._open(url, accept)
         if got and not same_site(got[1], url) and not self.may(got[1]): raise P.Refused("it led to " + urllib.parse.urlsplit(got[1]).netloc + ", whose robots.txt does not allow the page")
+        if got and len(got[0]) < 1_500_000:
+            if len(self.kept) >= 8: self.kept.pop(next(iter(self.kept)))
+            self.kept[url] = got
         return got
 
 
@@ -178,7 +186,7 @@ class _Page(HTMLParser):
     def __init__(self, base, let=()):
         super().__init__(convert_charrefs=True)
         self.base, self.stack, self.drop, self.main, self.has_main = base, [], 0, 0, False
-        self.let, self.left, self.cur_left = set(let), [], None         # layout classes let through on a second look; what was left out: [why, what, characters]
+        self.let, self.left, self.cur_left, self.in_left_a = set(let), [], None, False         # what is let through on a second look; what was left out
         self.buf, self.blocks, self.heads, self.links, self.meta, self.title, self.h1, self.lang = [], [], {}, [], {}, "", "", ""
         self.in_title, self.a, self.cur_h = False, None, None
 
@@ -208,15 +216,17 @@ class _Page(HTMLParser):
         is_main = tag == "main" or a.get("role") == "main" or (tag == "article" and not self.main)
         noise = None if is_main else NOISE.search(ident)
         if noise and spaces(ident) in self.let: noise = None
+        whole_form = tag == "form" and ("form " + spaces(ident)) in self.let          # a form that holds the page itself (second look)
         # (16 November 2026) a part that is only folded shut (an answer under its question, a tab) is the page's own content: it is read
         # where its class or its role says that it is such a panel; a hidden menu, pop-up or banner still is not
         folded = ("hidden" in a or a.get("aria-hidden") == "true") and not ((PANEL.search(ident) or a.get("role") in ("region", "tabpanel")) and not noise and (self.main or not self.has_main))
-        why = ("tag" if tag in DROP else "header" if tag == "header" and not self.main else "hidden" if folded
+        why = ("" if whole_form else "form" if tag == "form" else "tag" if tag in DROP else "header" if tag == "header" and not self.main else "hidden" if folded
                else "role" if a.get("role") in ("navigation", "banner", "contentinfo", "search", "complementary") else "class" if noise else "")
         gone = bool(why)
         if tag in BLOCK and not self.drop: self._flush()
         self.stack.append((tag, gone, is_main))
-        if gone and not self.drop: self.cur_left = [why, (tag + " " + spaces(ident))[:90], 0, spaces(ident), False]; self.left.append(self.cur_left)
+        if gone and not self.drop: self.cur_left = [why, (tag + " " + spaces(ident))[:90], 0, ("form " if why == "form" else "") + spaces(ident), False, 0]; self.left.append(self.cur_left)   # [why, what, characters, key, holds the heading, characters inside links]
+        if self.drop and tag == "a": self.in_left_a = True
         if self.drop and tag == "h1" and self.cur_left is not None: self.cur_left[4] = True     # it holds the page's own heading
         if gone: self.drop += 1
         if is_main: self.main += 1; self.has_main = True
@@ -226,6 +236,7 @@ class _Page(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == "title": self.in_title = False
+        if tag == "a": self.in_left_a = False
         if tag in VOID: return
         i = next((j for j in range(len(self.stack) - 1, -1, -1) if self.stack[j][0] == tag), None)
         if i is None: return
@@ -243,7 +254,9 @@ class _Page(HTMLParser):
     def handle_data(self, data):
         if self.in_title: self.title += data
         if self.drop:
-            if self.cur_left is not None and not any(t in ("script", "style", "noscript", "template", "svg") for t, _, _ in self.stack): self.cur_left[2] += len(data.strip())
+            if self.cur_left is not None and not any(t in ("script", "style", "noscript", "template", "svg") for t, _, _ in self.stack):
+                self.cur_left[2] += len(data.strip())
+                if self.in_left_a: self.cur_left[5] += len(data.strip())
             return
         self.buf.append(data)
         if self.a: self.a[1].append(data)
@@ -288,10 +301,13 @@ def extract(html_text, url, size=1000):
         except Exception: pass
         p._flush(); return p
     p = look(); kept = sum(len(b["text"]) for b in p.blocks)
-    # a layout whose class only SAYS it has a sidebar or a table of contents ("layout--with-sidebar") is not one: where nearly
-    # nothing was kept and an element left out for its class alone holds the page (its heading is inside it, or its class is
-    # written the way layouts are), the page is read once more with it let through. A real sidebar never is.
-    big = [x for x in p.left if x[0] == "class" and x[2] >= 1500 and x[2] > 4 * kept and (x[4] or LAYOUT_SAYS.search(x[3]))]
+    # a layout whose class only SAYS it has a sidebar or a table of contents ("layout--with-sidebar") is not one; nor is a form
+    # that wraps the whole page (ASP.NET), nor a block of text whose class names a feature ("share-selection"). Where nearly
+    # nothing was kept, nothing of the page's main part, and an element left out for its class or as a form holds the page
+    # (its heading is inside it, or its class is written the way layouts are, or it is text and not a list of links: a
+    # sidebar is made of links), the page is read once more with it let through.
+    big = [x for x in p.left if x[0] in ("class", "form") and x[2] >= 1500 and x[2] > 4 * kept and not any(b["main"] for b in p.blocks)
+           and (x[4] or LAYOUT_SAYS.search(x[3]) or x[5] < 0.25 * x[2])]
     if big:
         q = look({x[3] for x in big})
         if sum(len(b["text"]) for b in q.blocks) > 2 * kept: p = q
@@ -678,7 +694,7 @@ def probe(ids=None, web=None):
                     k = "/".join(urllib.parse.urlsplit(u).path.split("/")[:3]); tops[k] = tops.get(k, 0) + 1
                 row["under"] = sorted(tops.items(), key=lambda x: -x[1])[:6]
                 if pages:
-                    u = next((u for u in sorted(pages) if re.search(r"ketamin|cannabis|alcohol|cocaine|mdma|ecstasy|opioid|heroin", u, re.I)), sorted(pages)[0])
+                    u = next((u for u in sorted(pages) if u in web.kept), None) or next((u for u in sorted(pages) if re.search(r"ketamin|cannabis|alcohol|cocaine|mdma|ecstasy|opioid|heroin", u, re.I)), sorted(pages)[0])
                     pg = web.get(u); page = extract(text_of(pg[0]), pg[1]) if pg else None; row["sample_address"] = u; row["sample_there"] = bool(pg)
                     row["sample"] = page and {"address": pg[1], "title": page["title"], "updated": page["updated"], "issued": page["issued"], "reviewed": page["reviewed"], "passages": len(page["passages"]), "lang": page["lang"],
                                               "heads": list(dict.fromkeys(p["where"] for p in page["passages"] if p["where"]))[:8], "starts": " ".join(page["passages"][0]["text"].split()[:40]) if page["passages"] else "", "apa": apa(reference(src, page, pg[1])),
@@ -785,6 +801,19 @@ def selftest():
             if busy["n"] == 1: raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", {"Retry-After": "5"}, None)
         return opener(req, timeout)
     w2 = Web(opener2); assert w2.get("https://slow.test/a")[0].startswith(b"<main>") and busy["n"] == 2 and w2.pace.get("slow.test") == 10.0
+    # a form that wraps the whole page, and a block of text with a feature's class, are read on the second look; a block of links is not
+    para = " ".join(f"Ashwagandha is a plant whose root is sold as a supplement for stress and sleep, as sentence {i} of its fact sheet says." for i in range(20))
+    wrapped = extract(f'<html><body><form id="aspnetForm"><h1>Ashwagandha</h1><p>{para}</p></form></body></html>', "https://e.test/a")
+    assert wrapped["title"] == "Ashwagandha" and len(wrapped["passages"]) >= 2, wrapped
+    feat = extract(f'<html><body><header><h1>Alcohol</h1></header><section class="content-block share-selection"><p>{para}</p></section><div class="related"><ul>'
+                   + "".join(f'<li><a href="/p{i}">Another page about another thing with a long enough name number {i}</a></li>' for i in range(40)) + "</ul></div></body></html>", "https://e.test/b")
+    assert len(feat["passages"]) >= 2 and not any("Another page" in p["text"] for p in feat["passages"]), feat
+    # a page asked for twice in one run is read once; a body that allows one page a run is asked for one
+    n0 = len(asked); web.get("https://f.test/drug/cocaine"); web.get("https://f.test/drug/cocaine"); assert len(asked) - n0 <= 1
+    w3 = Web(opener); w3.most["f.test"] = 1; w3.get("https://f.test/drug/ketamine")
+    try: w3.get("https://f.test/drug/cocaine"); raise AssertionError("a second page of a body that allows one")
+    except P.Refused as e: assert "only 1 of its pages" in str(e)
+    assert w3.get("https://f.test/drug/ketamine")                                                # the page it already has is not a new request
     # a hub that leads nowhere says what it looked like, and the list of pages the site itself names in its robots.txt is read
     served.update({"https://m.test/robots.txt": "User-agent: *\nDisallow:\nSitemap: https://m.test/sitemap.xml\nSitemap: https://elsewhere.test/sitemap.xml\n",
                    "https://m.test/drugs": '<html><head><title>Drugs | M</title></head><body><a href="/about/us">About</a> <a href="/about/team">Team</a></body></html>',
