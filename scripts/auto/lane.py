@@ -69,15 +69,16 @@ OUT = ROOT / "data" / "auto" / "answers"
 STATE = ROOT / "data" / "auto" / "lane" / "state.json"
 MODELS_FILE = ROOT / "data" / "auto" / "lane" / "models.json"
 WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
-MODELS = {"reader": "@cf/qwen/qwen3-30b-a3b-fp8", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/google/gemma-4-26b-a4b-it"}
+MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 3                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
-N_PAPERS = 3            # papers read in full for one answer
+LANE = 4                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
+N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
 N_SUMMARIES = 2         # reviews behind a paywall read in summary, where the rest is not enough
 ROOM = 1100             # neurons that must be left of today's allowance before a question is begun
-N_PASSAGES = 9          # passages of a paper shown to the reader
+N_PASSAGES = 7          # passages of a paper shown to the reader
 PASSAGE_CHARS = 1400    # a passage is shown up to this length
 TODAY = datetime.date.today().isoformat()
 
@@ -100,11 +101,15 @@ NUMWORD = {"half": "half", "twice": "twice", "double": "double", "doubled": "dou
 WORDNUM = dict(zip("one two three four five six seven eight nine ten".split(), "1 2 3 4 5 6 7 8 9 10".split()))
 
 
+NAMES_WITH_FIGURES = re.compile(r"\b(?:k2|cb[12]|5-?ht\w*|2c-[a-z]\w*|5-meo\w*|4-(?:aco|ho|meo|mmc|fa)\w*|3-(?:mmc|meo|ho|fpm)\w*|25[a-z]-nbo\w*|mk-801|1c?p-lsd|al-lad|delta-?[89]|d[89]-thc|thc-?[oph]|a-pvp|u-47700|w-18|covid-19)\b")
+
+
 def numbers(text):
     """The numbers a sentence states: every figure ("2,405" and "2405" are one number), the words for a share (half, twice,
     a third), and a number word where it counts something measured ("one in five", "three times"). Not "one study" or
     "two reviews": those count the sources, which the gate on sources counts itself."""
     t = (text or "").lower(); t = re.sub(r"(?<=\d),(?=\d{3}\b)", "", t)
+    t = NAMES_WITH_FIGURES.sub(" ", t)                                  # K2, 2C-B, CB1: names, not numbers (on 16 November 2026 a draft was refused for the 2 of "K2")
     out = set(re.findall(r"\d+(?:\.\d+)?", t)) | {NUMWORD[w] for w in re.findall(r"[a-z]+", t) if w in NUMWORD}
     n = r"(\d+|one|two|three|four|five|six|seven|eight|nine|ten)"
     for m in re.finditer(r"\b" + n + r"\s+(?:in|out of)\s+(?:every\s+)?" + n + r"\b", t): out.update(WORDNUM.get(x, x) for x in m.groups())     # "one in five", "3 out of 10"
@@ -150,7 +155,7 @@ def reader_prompt(question, src, picked):
             f"PASSAGES of this {what} (each is one paragraph, with its number and where it stands):\n{shown(picked)}\n\n"
             "TASK. From these passages only:\n"
             + ("" if page else '1. "design": what kind of paper this is and who or what was studied, in one short phrase, with "quote": a part of ONE passage copied exactly, word for word (6 to 40 words), that shows it, and "passage": that passage\'s number.\n')
-            + f'2. "findings": up to 5 things this {what} {"says" if page else "found or concluded"} that help answer the question. For each: "passage" (its number), "quote" (a part of that passage copied exactly, word for word, 8 to 40 words, that states it), '
+            + f'2. "findings": up to 4 things this {what} {"says" if page else "found or concluded"} that help answer the question. For each: "passage" (its number), "quote" (a part of that passage copied exactly, word for word, 8 to 40 words, that states it), '
             '"finding" (the same thing in one plain sentence: no new facts, every number exactly as in the quote, and say "in rats", "in a laboratory" or "in one survey" when the quote does).\n'
             f'3. "limits": up to 2 limits or uncertainties that the passages themselves state, each with "passage", "quote" (copied exactly) and "limit" (one plain sentence).\n'
             'Copy quotes exactly: do not correct, shorten in the middle or join two places. If nothing in the passages helps answer the question, return {"findings": []}.\n'
@@ -217,7 +222,7 @@ AMOUNT_Q = re.compile(r"\b(?:dos(?:e|es|age|ages|ing)|milligrams?|micrograms?|mg
                       r"|how (?:much|many)\b[^?]{0,60}\b(?:safe|too much|take|taken|takes|use|used|drink|smoke|normal|typical|usual|common|average|a day|per day|daily|a week|per week|weekly|at once|is (?:ok|okay|fine|enough|a lot))"
                       r"|(?:safe|normal|typical|usual|common|average|recommended|standard|maximum|max|starting|low|high|threshold)\s+(?:amounts?|quantit(?:y|ies))|(?:what|which)\s+amounts?)\b", re.I)
 AMT = re.compile(r"(?<![\w.,/])\d+(?:[.,]\d+)?(?:\s*(?:to|-|or)\s*\d+(?:[.,]\d+)?)?\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\b(?!\s*/\s*(?:m?l|dl|kg|day·kg)\b)(?!\s*per\s+(?:kilo|kg|m?l|litre|liter)\b)", re.I)
-TIMING = re.compile(r"\b(?:wait|space)\w*\s+(?:at least\s+)?\d|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+(?:\.\d+)?(?:\s*(?:to|-|or)\s*\d+(?:\.\d+)?)?\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b", re.I)   # never shown: the time between two uses
+TIMING = re.compile(r"\b(?:wait|space)\w*\s+(?:at least\s+)?\d|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+(?:\.\d+)?(?:\s*(?:to|-|or)\s*\d+(?:\.\d+)?)?\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\b(?:\d+(?:\.\d+)?|one|two|three|four|five|six|seven|eight)(?:\s*(?:to|-|or)\s*\d+(?:\.\d+)?)?\s+(?:days?|weeks?|months?)\s+apart\b", re.I)   # never shown: the time between two uses
 REDOSE = re.compile(r"\bre-?dos\w*|\bsupplement\w*|\bbooster\b|\btop-?up\b|\b(?:second|third|additional|further|extra|repeat(?:ed)?|half)[\s-]dos(?:e|es|ing)\b", re.I)                                                                                # never taken: an amount added in the same session
 NOT_AN_AMOUNT_FOR_PEOPLE = re.compile(r"\b(?:rats?|mice|mouse|rodents?|monkeys?|primates?|dogs?|zebrafish|in vitro|animals?)\b|\b(?:lethal|fatal\w*|death|deaths|died|dying|kill\w*|overdos\w*|toxic\w*|poison\w*|ld50|seiz(?:ed|ure)\w*|street|tablets? (?:sold|seized|contain\w*)|pills? (?:sold|seized|contain\w*))\b", re.I)
 
@@ -238,27 +243,96 @@ def amounts_prompt(question, src, picked, drug_names):
             'JSON only, in this form: {"amounts": [{"passage": 4, "quote": "...", "who": "...", "what": "..."}]}')
 
 
+HANGS = re.compile(r"(?:every|each|to|of|and|or|with|for|at|in|on|a|an|the|by|from|as|than|per|was|were|is|are|be|been|being|it|its|their|that|which|who|whose|those|these|this|not|no|never|more|less|fewer|if|when|while|but|because|although|though"
+                   r"|can|may|might|should|must|will|would|could|has|have|had|also|about|around|approximately|roughly|over|under|after|before|during|between|into|up|such|any|some|only|then|so|they|we|he|she|his|her|our|your|you|do|does|did"
+                   r"|other|another|both|either|neither|nor|yet|via|within|without|against|among|plus|versus|vs|e\.g|i\.e|once|until|since|where|whereas|whether|upon|like|unlike|including|despite|towards?|across|through|throughout|along|onto|off|out|above|below|near|very|most|many|much|several|few|all"
+                   r"|\d+(?:[.,]\d+)?)", re.I)   # a word a quotation must not end on (when words follow it in the source)
+LIMITS_IT = re.compile(r"(?:not|no|never|less|fewer|more|up|least|most|max\w*|minim\w*|exceed\w*|under|over|below|above|within|between|only|than|rather|limit\w*|from|beyond|approximately|about|around|roughly|nearly|almost|average|mean|median)", re.I)   # a word that says what an amount is a limit, a range or an average OF: never cut away from it
+NEG = re.compile(r"(?:not|no|never|without|neither|nor|cannot|unless|except|rarely|seldom|hardly|few|little|lack\w*|absence|fail\w*|non|un\w*ly|\w+n't)", re.I)                          # a word that turns a meaning round
+UNIT = r"(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)"
+AFTER_AMOUNT = re.compile(r"^(?:\s+(?:or|to|and)\s+\d+(?:[.,]\d+)?\s?" + UNIT + r"\b)*(?:\s+of\s+[\w-]+)?(?:\s+(?:or\s+(?:less|more|fewer|under|over)|at\s+(?:most|least)|and\s+(?:above|over|under|below)))?"
+                          r"(?:\s+(?:(?:once|twice|thrice|(?:two|three|four|\d+)\s+times)\s+)?(?:(?:a|per|each|every)\s+(?:day|week|month|night|session|occasion|sitting)|daily|weekly|monthly|(?:in|on)\s+(?:a|any|one|each|any\s+one|any\s+single|a\s+single)\s+(?:day|week|session|occasion|sitting)))?", re.I)   # "or 84 mg", "of caffeine", "or less", "a day", "twice weekly": words that belong to the amount
+RESTRICTS = ("for", "in", "among", "if", "when", "unless", "except", "provided", "only", "aged", "under", "during", "after", "before")   # a word after which the source says whom or when the amount is for
+
+
+def bare(w): return w.lower().strip(".,;:()[]%\"'")
+
+
+BETWEEN = frozenset("once and or but while whereas although though because which who whose that when where if unless among in on at for with without by from to of as than after before during since until through throughout across between into over under including such however according compared despite via per versus so yet nor".split())   # a word that begins a new phrase: a cut just before it stops between two phrases
+
+
+def neg_before(ws, a, reach=None):
+    """Is there a word that turns the meaning round before a cut's start, in the same sentence (or, with reach, within
+    that many words)? Then the cut would say the opposite of its source ("were not | associated with ...", "Neither the
+    seller nor the buyer | can predict ...")."""
+    for j in range(a - 1, -1 if reach is None else max(-1, a - reach - 1), -1):
+        if re.search(r"[.;:]$", ws[j]): return False
+        if NEG.fullmatch(bare(ws[j])): return True
+    return False
+
+
+FRAME_NOUN = re.compile(r"(?:dose|doses|dosage|dosages|amount|amounts|limit|limits|total|intake|maximum|minimum)", re.I)
+FRAME_WORD = re.compile(r"(?:a|an|the|one|two|three|four|five|six|single|separate|daily|weekly|oral|total|initial|starting|maximum|minimum|maintenance|recommended|fixed|flexible|mean|median|average|usual|typical|low|lower|high|higher|moderate|first|second|third|each)", re.I)
+
+
 def window15(quote):
     """The part of a quote, 15 words at most, that holds its first amount and no time between two uses: the quotation the
-    site shows (its rule: 15 words at most). It starts and ends where a clause does, when it can. None where no such
-    part exists."""
+    site shows (its rule: 15 words at most). Hard rules, so that a cut never changes what the source says: the words that
+    limit the amount stay with it ("not more than", "up to", "between", "about": within five words before it, in the same
+    clause), and so do a word that turns the meaning round within eight words before it ("were not given ...") and the
+    words that belong to the amount after it ("or 84 mg", "of caffeine", "or less", "a day"); a cut never starts just
+    after a word that turns the meaning round, never ends on a word that hangs ("... as an amount not"), never goes
+    through another amount. Among the parts that keep these rules: one that starts and ends where a clause does, or with
+    the amount's own words ("two separate doses of 25 mg of psilocybin"), and the longer. None where no such part exists."""
     ws = norm(quote).strip(' "\'').split(" "); text = " ".join(ws); m = AMT.search(text)
     if not m: return None
-    first, last = len(text[:m.start()].split(" ")) - 1, len(text[:m.end()].split(" ")) - 1
-    if last - first + 1 > 15: return None
     word_at = lambda i: len(text[:i].split(" ")) - 1
+    first, last = word_at(m.start()), word_at(m.end() - 1)
+    more = AFTER_AMOUNT.match(text[m.end():]); least = word_at(m.end() + more.end() - 1) if more and more.end() else last
     times = [(word_at(t.start()), word_at(t.end() - 1)) for t in TIMING.finditer(text)]        # the words that state a time between uses: no part of them is shown
+    if any(t0 <= least and first <= t1 for t0, t1 in times): least = last
+    others = [o for o in ((word_at(x.start()), word_at(x.end() - 1)) for x in AMT.finditer(text)) if o[0] > least]   # further amounts in the same words
+    must, far = first, False
+    for j in range(first - 1, max(-1, first - 9), -1):                 # the words that limit the amount, or turn it round, stay with it
+        if re.search(r"[.;:]$", ws[j]): break
+        if first - j <= 5 and LIMITS_IT.fullmatch(bare(ws[j])): must = j
+        elif NEG.fullmatch(bare(ws[j])): must = j; far = True
+    frame = must                                                       # "two separate doses of" 25 mg: the amount's own words
+    if not far:
+        j = must - 1
+        if j >= 0 and re.fullmatch(r"(?:of|at|is|was|were|are|to|be)", bare(ws[j])) and not re.search(r"[.;:,]$", ws[j]): j -= 1
+        if j >= 0 and FRAME_NOUN.fullmatch(bare(ws[j])) and not re.search(r"[.;:,]$", ws[j]):
+            frame = j
+            while frame > 0 and FRAME_WORD.fullmatch(bare(ws[frame - 1])) and not re.search(r"[.;:,]$", ws[frame - 1]): frame -= 1
+        elif must > 0 and re.fullmatch(r"(?:a|an|the)", bare(ws[must - 1])): frame = must - 1
+        if neg_before(ws, frame, 8): frame = must
+    if least - must + 1 > 15: return None
     best = None
-    for a in range(max(0, last - 14), first + 1):
-        for b in range(last + 1, min(len(ws), a + 15) + 1):
+    for a in range(max(0, least - 14), must + 1):
+        if a and a not in (must, frame) and neg_before(ws, a, 8): continue
+        for b in range(least + 1, min(len(ws), a + 15) + 1):
             if any(a <= t1 and t0 < b for t0, t1 in times): continue
-            dangling = b < len(ws) and re.fullmatch(r"(?:every|each|to|of|and|or|with|for|at|in|on|a|an|the|by|from|as|than|per|was|were|is|are|be)", ws[b - 1].lower())
-            score = (2 if a == 0 or re.search(r"[.;:]$", ws[a - 1]) else 1 if ws[a - 1].endswith(",") else 0) + (2 if b == len(ws) or re.search(r"[.;:,]$", ws[b - 1]) else 0) + 0.05 * (b - a) - (1.5 if dangling else 0)
-            if best is None or score > best[0]: best = (score, " ".join(ws[a:b]))
+            part = " ".join(ws[a:b])
+            if part.count("(") != part.count(")"): continue
+            ends = b == len(ws) or bool(re.search(r"[.;:]$", ws[b - 1])); comma = ws[b - 1].endswith(",")       # (a comma may stand inside a list: half a clause's end)
+            if not ends and HANGS.fullmatch(bare(ws[b - 1])): continue
+            if any(o0 < b <= o1 or o0 < a <= o1 for o0, o1 in others): continue                  # never through the middle of another amount
+            half = any(o1 < b and b - 1 - o1 < 4 and not ends and not comma for o0, o1 in others)   # a second amount whose own words are cut short
+            nxt = bare(ws[b]) if b < len(ws) else ""
+            score = ((2 if a == 0 or re.search(r"[.;:]$", ws[a - 1]) else 1 if ws[a - 1].endswith(",") else 0.8 if a in (must, frame) and not far else -0.5 if HANGS.fullmatch(bare(ws[a])) and not ws[a][0].isdigit() else 0)   # (the amount's own words are a safe start; a start elsewhere may leave a word behind that the rest needs)
+                     - (1 if a and NEG.fullmatch(bare(ws[a])) and not LIMITS_IT.fullmatch(bare(ws[a])) else 0)
+                     + (2 if ends else (1.5 if b - 1 == least and least > last else (1 if nxt in BETWEEN else 0.4) if comma else 0) + (0.7 if nxt in ("and", "but", "while", "whereas", "although", "because", "which") else -1.5 if nxt in RESTRICTS and not comma else 0))
+                     + 0.05 * (b - a) - (1.5 if half else 0))
+            if best is None or score > best[0]: best = (score, part)
     return best[1].strip(" ,;:.") if best else None
 
 
 NOT_SHOWN = ("an amount of a drug", "timing between uses", "a way of taking compared for strength", "how to prepare or take a drug", "making an effect stronger", "words that are not person-first")
+
+
+SAYS = re.compile(r"(?:is|are|was|were|be|been|has|have|had|can|cannot|may|might|will|would|could|should|must|do|does|did|(?!(?:weed|seed|speed|indeed|hundred|breed|sacred|naked|aged)$)[a-z]{2,}ed|found|finds?|shows?|shown|means?|meant|led|leads?|rose|rises?|fell|falls?|grew|grows?|became|becomes?|remains?|seems?|appears?|suggests?"
+                  r"|reports?|causes?|increases?|decreases?|reduces?|raises?|lowers?|binds?|acts?|lasts?|occurs?|happens?|varies|vary|depends?|includes?|contains?|met|meets?|took|takes?|taken|saw|seen|sees?|got|gets?|gave|gives?|given|made|makes?|knew|knows?|known|felt|feels?|kept|keeps?|held|holds?|said|says?|went|goes|came|comes?"
+                  r"|ran|runs?|drank|drinks?|ate|eats?|lost|loses?|uses?|dies?|needs?|helps?|works?|affects?|differs?|exists?|carr(?:y|ies)|tends?|begins?|began|ends?|stops?|starts?|wears? off|builds?|develops?|experiences?|describes?|states?|advises?|recommends?|warns?|notes?)", re.I)   # a word that makes a part of a sentence say something
 
 
 def words15(quote, text=""):
@@ -270,22 +344,52 @@ def words15(quote, text=""):
     if len(ws) > 15:
         key = {w.lower() for w in re.findall(r"[A-Za-z0-9'’-]+", text or "") if len(w) > 3}; best = None
         for a in range(len(ws)):                                       # every part of 6 to 15 words; one that starts and ends where a clause does stands first
+            if a and neg_before(ws, a): continue                         # never a part that starts just after "not", "no", "without": it would say the opposite
             for b in range(a + 6, min(len(ws), a + 15) + 1):
-                w = ws[a:b]; plain = [x.lower().strip(".,;:()%") for x in w]
-                dangling = b < len(ws) and re.fullmatch(r"(?:every|each|to|of|and|or|with|for|at|in|on|a|an|the|by|from|as|than|per|was|were|is|are|be|it|its|their|that|which|who|those|these)", plain[-1])
-                score = (sum(1 for x in plain if x in key) + sum(0.5 for x in w if re.search(r"\d", x)) + (0.5 if a == 0 or re.search(r"[.;:,]$", ws[a - 1]) else 0)
-                         + (1.0 if b == len(ws) or re.search(r"[.;:,]$", w[-1]) else 0) + 0.03 * (b - a) - (1.5 if dangling else 0))
+                w = ws[a:b]; plain = [bare(x) for x in w]
+                ends = b == len(ws) or bool(re.search(r"[.;:]$", w[-1])); comma = w[-1].endswith(",")
+                if not ends and not comma and HANGS.fullmatch(plain[-1]): continue      # never ending on a word that hangs ("... was not")
+                if " ".join(w).count("(") != " ".join(w).count(")"): continue
+                if not ends and not any(SAYS.fullmatch(x) for x in plain): continue       # a part that says nothing (a subject cut from its verb) is not a quotation
+                nxt = bare(ws[b]) if b < len(ws) else ""
+                score = (sum(1 for x in plain if x in key) + sum(0.5 for x in w if re.search(r"\d", x))
+                         + (0.5 if a == 0 or re.search(r"[.;:,]$", ws[a - 1]) else 0.4 if bare(ws[a - 1]) == "that" else -0.5 if HANGS.fullmatch(plain[0]) and not plain[0][:1].isdigit() and not NEG.fullmatch(plain[0]) else 0)   # (after "showed that" the source's own statement begins)
+                         + (1.0 if ends else (1.0 if nxt in BETWEEN else 0.4) if comma else 0) - (0.5 if nxt in key else 0)                # (a comma before "with", "and", "which" ends a clause; elsewhere it may stand in a list. A cut just before a word our own line uses is a cut in the middle of what is said)
+                         - (1.5 if not ends and not comma and any(x.endswith(",") for x in w[-4:-1]) else 0)                               # (a clause that has only just begun: "..., so the rates")
+                         + 0.03 * (b - a))
                 if best is None or score > best[0]: best = (score, w)
+        if best is None: return None
         ws = best[1]
     show = " ".join(ws).strip(" ,;:.")
     if words(show) >= 4 and not any(rx.search(show) for name, rx in RULES if name in NOT_SHOWN) and not re.search(r'["“”]', show): return show
     return None
 
 
+CARE = re.compile(r"(?:medic|staff|super|thera|hospi|docto|physi|nurse|monit|presc|psych|suppo|couns|train|profe)")   # the stems of words that say under what care an amount was given
+OF_ITS_KIND = {"page": {"offic", "guida", "guide", "advic", "page", "body", "healt"}, "label": {"label", "medic", "presc", "patie"}, "paper": {"study", "studi", "resea", "paper", "parti"}}
+
+
+def row_carried(who, what, passage, around, src):
+    """Are the reader's words for WHO received an amount, under WHAT CARE, and what kind of amount it is, the source's own?
+    Of their content words (four letters or more, compared by their first five), six in ten must stand in the amount's own
+    passage, its heading or the source's title (for a single study also in the other passages shown: its summary says who
+    took part; a review or a page speaks of different people from one passage to the next), and every word about care
+    ("medical", "supervised", "therapists") must: the care an amount was given under is never the reader's to add. Words
+    that only name the kind of source (a study, a label, official guidance) and the plain words for an amount are let be."""
+    stems = lambda t: [w[:5] for w in re.findall(r"[a-z]+", norm(t).lower()) if len(w) >= 4 and w not in STOP]
+    base = set(stems(passage + " " + around))
+    free = {"amoun", "peopl", "perso", "given", "recei", "state", "adult" if "adult" in base else "", "singl", "daily" if re.search(r"\b(?:a|per|each|every)\s+day\b|\bdaily\b", passage, re.I) else "", "weekl" if re.search(r"\b(?:a|per|each|every)\s+week\b|\bweekly\b", passage, re.I) else ""}
+    free |= OF_ITS_KIND["label" if src.get("label") else "page" if src.get("read") == "page" else "paper"]
+    tw = [w for w in stems(who + " " + what) if w not in free]
+    if any(CARE.match(w) and w not in base for w in tw): return False
+    return len(tw) < 2 or sum(w in base for w in tw) / len(tw) >= 0.6
+
+
 def amount_gate(out, picked, src, dwords):
     """The rows of a reader's answer that may be used: (rows, how many were thrown away). A row is kept when its quote
     stands in a passage that was shown, holds a number with its unit, is about people and not about harm, when the passage
-    or the source's title names the drug, and when a part of 15 words at most can be shown."""
+    or the source's title names the drug, when who received it and under what care are the source's own words (not the
+    reader's), and when a part of 15 words at most can be shown."""
     out = out if isinstance(out, dict) else {}; by = {p["n"]: p for p in picked}; rows, dropped = [], 0
     for item in (out.get("amounts") or [])[:8]:
         if not isinstance(item, dict): dropped += 1; continue
@@ -295,7 +399,7 @@ def amount_gate(out, picked, src, dwords):
         show = window15(q) if p else None
         ok = (p and show and 5 <= words(q) <= 70 and who and what and words(who) <= 30 and words(what) <= 20 and AMT.search(q)
               and not NOT_AN_AMOUNT_FOR_PEOPLE.search(q) and not NOT_AN_AMOUNT_FOR_PEOPLE.search(who + " " + what) and not REDOSE.search(q + " " + who + " " + what)
-              and numbers(who + " " + what) <= numbers(p["text"])
+              and numbers(who + " " + what) <= numbers(p["text"]) and row_carried(who, what, p["text"], " ".join([src.get("title") or "", p.get("where") or ""] + ([x["text"] for x in picked] if src.get("read") != "page" and src.get("kind") == "study" else [])), src)
               and (not dwords or O.has_word(O.flat(src["title"] + " " + p["text"]), dwords))
               and not any(rx.search(who + " " + what + " " + show) for name, rx in RULES if name not in ("an amount of a drug", "a quotation or a source in brackets", "a sign instead of a word"))
               and not any(r["show"] == show for r in rows))
@@ -321,6 +425,7 @@ WRITER_SYS = ("You write one answer for Pharmakon, a free drug encyclopedia that
               "- No quotation marks, no brackets with sources, no mention of 'findings', 'passages' or 'the paper says F1'. Never write 'Paper A': say what it is, for example 'A 2024 review of case reports' or 'A survey of 278 people'.\n"
               "- Write 'times', never the sign ×. Write 'people who microdose', 'people who smoke', 'people who drink', never 'microdosers', 'smokers', 'drinkers'. Write 'use' or 'use disorder', never 'abuse' or 'misuse'.\n"
               "- The But must be a limit of THIS answer: who was not studied, how the studies were done, or what is not known about the question itself. Never borrow a limit that the paper states about something else.\n"
+              "- The short answer answers every part of the question, in the order it was asked.\n"
               "- An official page is a statement by that body, not a study. Say whose it is: 'The NHS says ...'. Never write 'studies show' for it.\n"
               "- Where only a paper's summary could be read, say so: 'The summary of a 2021 review says ...'.\n"
               "- If the findings do not answer the question, say plainly what they do show, and set \"complete\" to false.")
@@ -379,10 +484,17 @@ def checker_prompt(parts, labels):
             '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}]}')
 
 
+def room_for(model, plain):
+    """How many tokens a model may answer with. One that reasons before it writes needs room for both: on 16 November 2026
+    gpt-oss-120b used all of 1,400 tokens reasoning and wrote nothing, three times for each of two questions; with 3,000 it
+    reasoned for some 1,300 and then wrote its answer (data/auto/exam/writer-trial.json)."""
+    return plain + 2200 if "gpt-oss" in model else plain
+
+
 def check(chat, model, parts, labels):
     """[(supported?, problem)] for the parts, in order. A sentence without a clear verdict is not supported."""
     for attempt in range(2):
-        out = llm.as_json(chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels)}], 120 + 90 * len(parts)))
+        out = llm.as_json(chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels)}], room_for(model, 120) + 90 * len(parts)))
         vs = {v.get("n"): v for v in (out or {}).get("verdicts") or [] if isinstance(v, dict)}
         if out is not None and all(isinstance(vs.get(n, {}).get("supported"), bool) for n in range(1, len(parts) + 1)):
             return [(vs[n]["supported"] is True, re.sub(r"\s+", " ", str(vs[n].get("problem") or ""))[:240]) for n in range(1, len(parts) + 1)]
@@ -511,10 +623,15 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     dwords = O.drug_words(item, names)[1] if names else [d.replace("-", " ") for d in item.get("drugs") or []]
     # 2 read: papers in full, then official pages, then (where that is not yet enough) reviews in summary
     sources, tags, thrown, ref_ids = [], "ABCDEFGH", 0, set()
+    QV = enc([item["q"]] + list(item.get("ways") or [])[:6])
     def read(src, picked):
         nonlocal thrown
         if amounts: rows, dropped = read_amounts(chat, models["reader"], item["q"], src, picked, dwords); src["rows"] = rows; ok = bool(rows); src.update(design=None, findings=[], limits=[])
-        else: design, fs, ls, dropped = read_source(chat, models["reader"], item["q"], src, picked); src.update(design=design, findings=fs, limits=ls); ok = bool(fs)
+        else:
+            design, fs, ls, dropped = read_source(chat, models["reader"], item["q"], src, picked)
+            if len(fs) > N_TO_WRITER:                                    # the nearest to the question, in the order they stand in the source
+                near = (enc([f["text"] for f in fs]) @ QV.T).max(1); keep = sorted(sorted(range(len(fs)), key=lambda i: -float(near[i]))[:N_TO_WRITER]); fs = [fs[i] for i in keep]
+            src.update(design=design, findings=fs, limits=ls[:1]); ok = bool(fs)
         thrown += dropped
         if not ok: return False
         ref = src["ref"]
@@ -522,19 +639,22 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         ref_ids.add(ref["id"]); src["tag"] = tags[len(sources)]; src["_text"] = {p["n"]: p["text"] for p in picked}; sources.append(src)
         return True
     paper_ref = lambda doi, pmcid=None: (lambda cr: P.reference(doi, cr[0], pmcid) if cr[0] else None)(crossref(doi))
-    n = 0
-    for c in found.get("can_read") or []:
-        if n >= N_PAPERS: break
-        if not c.get("doi"): continue
-        if c["kind"] not in ("review", "study", "case") and not c.get("people"): continue   # an editorial, an opinion, a paper on animals or cells alone: not a source for an answer
+    def paper(c):
+        """One paper read in full: True when it gave something."""
+        if not c.get("doi"): return False
+        if c["kind"] not in ("review", "study", "case") and not c.get("people"): return False   # an editorial, an opinion, a paper on animals or cells alone: not a source for an answer
         ref = paper_ref(c["doi"], c.get("pmcid"))
-        if not ref or P.retraction(ref) in ("retracted", "concern"): continue          # GATE 6, first half: never a retracted paper
+        if not ref or P.retraction(ref) in ("retracted", "concern"): return False      # GATE 6, first half: never a retracted paper
         xml = fulltext(c.get("pmcid"))
-        if not xml: continue
+        if not xml: return False
         doc = P.jats_passages(xml)
-        if len(doc["passages"]) < 4: continue
+        if len(doc["passages"]) < 4: return False
         picked = pick_passages(item["q"], item.get("ways"), doc["passages"], enc, c["kind"])
-        n += read({"read": "full", "ref": ref, "doi": c["doi"], "pmcid": c.get("pmcid"), "title": c["title"], "year": c.get("year"), "journal": c.get("journal"), "kind": c["kind"], "people": bool(c.get("people")), "near": c.get("near"), "money": doc["money"][:3]}, picked)
+        return read({"read": "full", "ref": ref, "doi": c["doi"], "pmcid": c.get("pmcid"), "title": c["title"], "year": c.get("year"), "journal": c.get("journal"), "kind": c["kind"], "people": bool(c.get("people")), "near": c.get("near"), "money": doc["money"][:3]}, picked)
+    n = 0; later = []
+    for c in found.get("can_read") or []:
+        if n >= N_PAPERS: later.append(c); continue
+        n += paper(c)
     n = 0
     for o in official or []:
         if n >= (4 if amounts else N_OFFICIAL) or len(sources) >= len(tags) - 1: break
@@ -545,7 +665,10 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         pg, ref = got
         picked = pick_passages(item["q"], item.get("ways"), [dict(p, n=p["n"] + 1, where=p["where"] or "Top of the page") for p in pg["passages"]], enc, "review", k=7)
         n += read({"read": "page", "ref": ref, "title": pg["title"] or o.get("title") or "", "year": ((ref.get("issued") or {}).get("date-parts") or [[]])[0][:1] and ref["issued"]["date-parts"][0][0] or None, "kind": "official", "people": True,
-                   "near": o.get("near"), "name": o["name"], "short": o.get("short") or o["name"], "tier": o.get("tier", 1), "address": ref.get("URL"), "money": []}, picked)
+                   "near": o.get("near"), "name": o["name"], "short": o.get("short") or o["name"], "tier": o.get("tier", 1), "address": ref.get("URL"), "money": [], "label": bool(o.get("label"))}, picked)
+    for c in later:                                                     # a third paper (and no more) where what was read is not yet enough to rest on
+        if (bool(sources) if amounts else sum(weight(s) for s in sources) >= 2) or len(sources) >= len(tags) - 1: break
+        if paper(c): break
     if amounts or sum(weight(s) for s in sources) < 2 or not any(s["kind"] == "review" for s in sources):
         n = 0
         for w in found.get("wanted") or []:
@@ -582,10 +705,13 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     # 3 write, 5 rules (one more try when a rule is broken), 4 check (one more try for the short answer or the But)
     fix, draft, verdicts = "", None, []
     for attempt in range(3):
-        out = llm.as_json(chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix)}], 1400))   # (room for a model that reasons before it writes)
+        out = llm.as_json(chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix)}], room_for(models["writer"], 900)))
         draft, why = draft_of(out, labels)
-        if not draft: fix = "the form was wrong: " + why; continue
-        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")])
+        if not draft:
+            rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" try {attempt + 1}: {why}" + (f" (how the reply ended: {llm.LAST.get('finish')}; reasoned {llm.LAST.get('reasoned')} characters, wrote {llm.LAST.get('wrote')})" if llm.LAST else "")).strip()
+            if fix.startswith("the form was wrong") and why == "no JSON": break       # the same call would fail the same way: not paid for a third time
+            fix = "the form was wrong: " + why; continue
+        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")] + sorted(numbers(item["q"])))   # (a year a source was published in, or a number of the question itself, may be named)
         lines_bad = {p for p, _ in bad if p.startswith("how")}
         if bad and all(p.startswith("how") for p, _ in bad) and sum(p["part"].startswith("how") for p in draft["parts"]) > len(lines_bad):
             draft["parts"] = [p for p in draft["parts"] if p["part"] not in lines_bad]          # (lane 4) the line goes, the answer stays
@@ -834,6 +960,22 @@ def selftest():
     # 7. a wanted paper that stands nearer than the ones read: published, and not complete
     found2 = dict(found, wanted=[dict(found["wanted"][0], near=0.9)]); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found2, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex); assert r["status"] == "published" and r["complete"] is False and "could not be read" in r["missing"], r
+    # lane 4. GATE 3: a sentence about something else than its quote is thrown away; a name with a figure is not a number; an item with an amount never reaches the writer of an ordinary answer
+    assert not carried("The page does not provide information on what is in fake Xanax bars.", "Developing tolerance means that, over time, you need more of the drug to get the same effect.", "Developing tolerance means that, over time, you need more of the drug to get the same effect.")
+    assert not carried("Mixing synthetic cannabinoids with alcohol and other drugs can increase the risk of serious effects or overdose.", "Avoid mixing synnies with alcohol and other drugs.", "Avoid mixing synnies with alcohol and other drugs.")
+    assert carried("The risk of inducing psychosis is higher with SCs than with natural cannabis.", "In 2015, Van Amsterdam et al showed that psychosis-inducing risk is higher with SCs than with natural cannabis.", "In 2015, Van Amsterdam et al showed that psychosis-inducing risk is higher with SCs than with natural cannabis.")
+    assert numbers("Spice, K2 and 2C-B act on CB1") == set() and numbers("K2 was used by 11.4% of seniors") == {"11.4"}
+    pk = [{"n": 1, "where": "Results", "text": "Counterfeit tablets held etizolam, ranging from 0.7 to 8.3 mg per tablet, and etizolam was the most frequently detected compound in the tablets."}]
+    g = read_gate({"findings": [{"passage": 1, "quote": "ranging from 0.7 to 8.3 mg per tablet", "finding": "Etizolam in counterfeit tablets ranged from 0.7 to 8.3 mg per tablet."},
+                                {"passage": 1, "quote": "etizolam was the most frequently detected compound in the tablets", "finding": "Etizolam was the compound most often detected in the tablets."}]}, pk, amounts_ok=False)
+    assert [f["text"] for f in g[1]] == ["Etizolam was the compound most often detected in the tablets."] and g[3] == 1, g
+    assert len(read_gate({"findings": [{"passage": 1, "quote": "ranging from 0.7 to 8.3 mg per tablet", "finding": "Etizolam in counterfeit tablets ranged from 0.7 to 8.3 mg per tablet."}]}, pk)[1]) == 1     # (for an answer about amounts it stays)
+    # a How-do-we-know line that breaks a rule is left out and the answer stays
+    script["writer"] = [W(ok_short, how=[{"text": "A review of 12 studies of 2,405 people who used ketamine regularly found that between 9% and 27% met criteria for dependence.", "uses": ["DA", "F1"]},
+                                         {"text": "In one study people were given 50 mg of it.", "uses": ["F2"]}])]; script["checker"] = [V(True, True, True)]
+    r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and [x["part"] for x in r["parts"]] == ["short", "but", "how1"] and r["gates"]["rules"].startswith("1 How-do-we-know line(s) left out for a rule"), (r["status"], r["why"], r["gates"])
+    assert room_for("@cf/openai/gpt-oss-120b", 900) == 3100 and room_for("@cf/meta/llama-3.3-70b-instruct-fp8-fast", 900) == 900
     # 8. an official page alone (a body of tier 1) is enough; the answer names the body; its reference is the page's own
     page_ps = [{"n": i, "where": "The risks" if i else "", "text": t} for i, t in enumerate(passages[1:5])]
     nhs = {"body": "nhs", "name": "NHS", "short": "the NHS", "tier": 1, "address": "https://nhs.test/ketamine", "title": "Ketamine", "near": 0.6}
@@ -867,6 +1009,25 @@ def selftest():
     assert window15("Participants received 80 to 120 mg of MDMA in each of three sessions, with two trained therapists present throughout") == "Participants received 80 to 120 mg of MDMA in each of three sessions"
     assert window15("Initiate treatment with 5 to 15 mg every 4 to 6 hours as needed for pain") == "Initiate treatment with 5 to 15 mg" and window15("no amount here at all, only words that go on") is None
     assert REDOSE.search("A supplemental half-dose of 40 to 60 mg was offered") and REDOSE.search("redosing after an hour") and not REDOSE.search("a daily dose of 20 mg")
+    # (lane 4) a cut never changes what the source says: the words that limit an amount, or turn it round, and the words that belong to it stay with it
+    for q, want in [("men and women are advised not to drink more than 14 units a week on a regular basis", "men and women are advised not to drink more than 14 units a week"),
+                    ("2 drinks or less in a day for men and 1 drink or less in a day for women", "2 drinks or less in a day for men"),
+                    ("For healthy adults, the FDA has cited 400 milligrams a day as an amount not generally associated with dangerous, negative effects", "For healthy adults, the FDA has cited 400 milligrams a day"),
+                    ("Healthy adults who are not pregnant should have no more than 400 mg of caffeine a day, which is about three cups of brewed coffee", "who are not pregnant should have no more than 400 mg of caffeine a day"),
+                    ("A total of 59 patients were randomly assigned to receive two separate doses of 25 mg of psilocybin 3 weeks apart plus 6 weeks of daily placebo", "two separate doses of 25 mg of psilocybin"),
+                    ("Women who were not given the 25 mg dose of psilocybin in the first session received it later in the study", "Women who were not given the 25 mg dose of psilocybin in the first session"),
+                    ("Esketamine nasal spray was given at 56 mg or 84 mg twice weekly during a four-week induction phase, in addition to a newly started oral antidepressant", "Esketamine nasal spray was given at 56 mg or 84 mg twice weekly"),
+                    ("Low-risk drinking for women was defined as no more than 3 drinks on any single day and no more than 7 drinks per week", "no more than 3 drinks on any single day"),
+                    ("Patients in maintenance treatment are commonly stabilized at 80 to 120 mg a day once tolerance to methadone has developed", "Patients in maintenance treatment are commonly stabilized at 80 to 120 mg a day")]:
+        assert window15(q) == want, (q, window15(q))
+    assert words15("In this cohort, regular cannabis use was not associated with a higher risk of psychosis once tobacco smoking and family history were taken into account in the final model", "Regular cannabis use was not linked to a higher risk of psychosis.") == "In this cohort, regular cannabis use was not associated with a higher risk of psychosis"
+    assert words15("The authors found no evidence that occasional use of psilocybin under supervised conditions led to lasting psychotic symptoms among the 110 healthy volunteers who took part", "No evidence was found that occasional supervised use led to lasting psychotic symptoms.") == "no evidence that occasional use of psilocybin under supervised conditions led to lasting psychotic symptoms"
+    assert words15("Neither the seller nor the consumer of herbal mixtures, such as Spice, K2, or Black Mumba, can predict their content.", "Neither sellers nor buyers can know what is in them.") is None     # (no part of 15 words keeps both the "neither" and what is denied: no quotation, rather than half of one)
+    # who received an amount, and under what care, are the source's own words, never the reader's
+    st, ar = {"read": "full", "kind": "study"}, "MDMA-assisted therapy for severe PTSD. MDMA-assisted therapy was tested in adults with severe PTSD in a randomized, placebo-controlled phase 3 trial at fifteen sites."
+    ps = "Participants received 80 to 120 mg of MDMA in each of three sessions, with two trained therapists present throughout."
+    assert row_carried("adults with severe PTSD in a clinical trial, with two trained therapists present", "the amount in one session", ps, ar, st)
+    assert not row_carried("adults with severe PTSD, under medical supervision in a hospital", "the amount in one session", ps, ar, st) and not row_carried("healthy young volunteers at a festival", "a recreational amount", ps, ar, st)
     assert AMT.search("a dose of 0.5 mg/kg") is None and AMT.search("levels of 200 ng/mL") is None and AMT.search("14 units a week").group(0) == "14 units"
     mp = ["MDMA-assisted therapy was tested in adults with severe PTSD in a randomized, placebo-controlled phase 3 trial at fifteen sites in three countries.",
           "Participants received 80 to 120 mg of MDMA in each of three sessions, with two trained therapists present throughout.",
