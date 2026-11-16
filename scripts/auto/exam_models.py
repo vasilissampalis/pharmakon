@@ -63,7 +63,7 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     try: old = json.load(open(f, encoding="utf-8"))
     except (OSError, ValueError): old = {}
     res = {k: v for k, v in (old.get("cards") or {}).items() if v.get("clear")} if old.get("room") == room and old.get("effort") == effort else {}
-    chat = chat or llm.chat; left = left or ((lambda: llm.calls_left(svc)) if svc else (lambda: llm.groq_left(model[5:])) if groq else llm.left); stopped_by = None
+    chat = chat or llm.chat; left = left or ((lambda: llm.calls_left(model)) if svc else (lambda: llm.groq_left(model[5:])) if groq else llm.left); stopped_by = None
 
     def result():
         nb = [i for i in bad if i["id"] in res]; ng = [i for i in draw if i["id"] in res]

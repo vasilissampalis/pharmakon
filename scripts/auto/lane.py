@@ -1273,11 +1273,11 @@ def team(file=None):
                     need, calls = {}, {}
                     for role, v in m.items():
                         svc = llm.service_of(v)[0]
-                        if svc: calls[svc] = calls.get(svc, 0) + CALLS[role]
+                        if svc: calls[v] = calls.get(v, 0) + CALLS[role]
                         else: need[v] = need.get(v, 0) + NEED[role][1 if v.startswith("groq:") else 0]
                     if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
                     if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
-                    if any(n > llm.calls_left(svc) for svc, n in calls.items()): continue
+                    if not llm.calls_fit(calls): continue                   # (each model of a call-counted service has its own free allowance: llm.limits_of)
                     return dict(m, team=t.get("name") or "")
     return None
 

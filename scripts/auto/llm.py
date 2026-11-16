@@ -102,7 +102,10 @@ SERVICES = {
     "claude": {"url": "https://api.anthropic.com/v1/messages", "models": "https://api.anthropic.com/v1/models", "key": "ANTHROPIC_API_KEY", "gap": 0.4, "calls": 4000, "paid": True},
 }
 PRICES = ROOT / "data" / "auto" / "lane" / "prices.json"      # what a paid model costs, as read from its maker's own page, and the most that may be spent in a day and in a month
+FREE = ROOT / "data" / "auto" / "lane" / "free-limits.json"   # what each free plan allows each model (calls a minute, calls a day), as read on the service's own page
+OF_A_DAY = 0.9                                                 # where we stop by ourselves: nine tenths of the calls a free plan allows a model in a day
 _last_call = {}
+_minute = {}                                                   # model -> [(when, tokens)] of this run's calls in the last minute (for a plan that counts tokens a minute)
 
 
 def service_of(model):
@@ -114,7 +117,7 @@ def service_of(model):
 def svc_used(svc, d=None):
     """What was used of a service: {"day", "calls", "in", "out", "usd", "month", "usd_month"} (a day and a month by UTC)."""
     u = dict(((d if d is not None else ledger()).get("svc") or {}).get(svc) or {})
-    if u.get("day") != today(): u.update(day=today(), calls=0, usd=0.0, **{"in": 0, "out": 0})
+    if u.get("day") != today(): u.update(day=today(), calls=0, usd=0.0, models={}, **{"in": 0, "out": 0})
     if u.get("month") != today()[:7]: u.update(month=today()[:7], usd_month=0.0)
     return u
 
@@ -130,7 +133,48 @@ def usd_left(svc="claude"):
     return max(0.0, min(float(p.get("usd_a_day") or 0) - u["usd"], float(p.get("usd_a_month") or 0) - u["usd_month"]))
 
 
-def calls_left(svc): return max(0, SERVICES[svc]["calls"] - svc_used(svc)["calls"])
+def free_limits():
+    try: return json.load(open(FREE, encoding="utf-8"))
+    except (OSError, ValueError): return {}
+
+
+def limits_of(model):
+    """What its free plan allows one model of a service: {"gap": seconds between two calls, "calls": calls in a day where we
+    stop by ourselves, "tpm": tokens a minute or None}. From data/auto/lane/free-limits.json (the first pattern of the
+    service's list that matches the model's name, else the service's "else"); where the file says nothing, the service's own
+    cautious numbers above. (The senior author, 16 November 2026: Google gives its models very different free allowances, from
+    20 calls a day to 14,400.)"""
+    svc, name = service_of(model); S = SERVICES[svc]; f = free_limits().get(svc) or {}
+    row = next((r for r in f.get("models") or [] if isinstance(r, dict) and re.search(str(r.get("match") or "$^"), name)), None) or (f.get("else") if isinstance(f.get("else"), dict) else None)
+    if not row: return {"gap": S["gap"], "calls": S["calls"], "tpm": None}
+    rpm, rpd = float(row.get("rpm") or 60.0 / S["gap"]), float(row.get("rpd") or S["calls"] / OF_A_DAY)
+    return {"gap": round(60.0 / max(rpm, 0.1) * 1.1, 2), "calls": int(rpd * OF_A_DAY), "tpm": (int(row["tpm"]) if row.get("tpm") else None)}
+
+
+def calls_left(x):
+    """Calls still open today: for a model of a service ("gemini:gemma-...": its own free allowance), or for a whole service by its name."""
+    svc, name = service_of(x)
+    if svc: return max(0, min(limits_of(x)["calls"] - int((svc_used(svc).get("models") or {}).get(name) or 0), SERVICES[svc]["calls"] - svc_used(svc)["calls"] if not (free_limits().get(svc) or {}) else 10 ** 9))
+    return max(0, SERVICES[x]["calls"] - svc_used(x)["calls"])
+
+
+def calls_fit(by_model):
+    """Can these calls ({a service's model: how many}) all still be made today? Each model against its own allowance; and where
+    a service counts all its models together (no list of its own in free-limits.json: OpenRouter's free models), their sum."""
+    by_svc = {}
+    for m, n in by_model.items():
+        if n > calls_left(m): return False
+        svc = service_of(m)[0]; by_svc[svc] = by_svc.get(svc, 0) + n
+    return all(bool(free_limits().get(svc)) or n <= calls_left(svc) for svc, n in by_svc.items())
+
+
+def never_paid(model):
+    """Why a model may not be asked because it could cost money, or "" (the senior author, 16 November 2026: "Pharmakon must use
+    only free API models, with no billing, paid subscriptions, credit purchases or unexpected charges"). This is code, not a
+    setting: at OpenRouter only a model whose name ends in ":free" costs nothing, so no other is ever asked there."""
+    svc, name = service_of(model)
+    if svc == "openrouter" and not name.endswith(":free"): return f"{name} is not one of the models OpenRouter gives for free (their names end in “:free”): never asked"
+    return ""
 
 
 def cost(model, tokens_in, tokens_out):
@@ -142,7 +186,7 @@ def cost(model, tokens_in, tokens_out):
 def has(model):
     """Can this model be asked at all on this machine (is its service's key there)?"""
     svc, _ = service_of(model)
-    if svc: return bool((os.environ.get(SERVICES[svc]["key"]) or "").strip())
+    if svc: return bool((os.environ.get(SERVICES[svc]["key"]) or "").strip()) and not never_paid(model)
     return bool((os.environ.get("GROQ_API_KEY") or "").strip()) if model.startswith("groq:") else bool((os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip())
 
 
@@ -153,7 +197,9 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
     svc, name = service_of(model); S = SERVICES[svc]
     key = (os.environ.get(S["key"]) or "").strip()
     if not key: raise Unavailable(f"no key for {svc} (the repository secret {S['key']} is not set)")
-    if calls_left(svc) <= 0: raise Budget(f"{svc}: today's calls are used ({S['calls']} is where we stop)")
+    if never_paid(model): raise Unavailable(never_paid(model))
+    lim = limits_of(model)
+    if calls_left(model) <= 0: raise Budget(f"{svc}: today's calls for {name} are used ({lim['calls']} is where we stop)")
     est_in = sum(rough_tokens(m["content"]) for m in messages)
     if S.get("paid"):
         c = cost(model, est_in, max_tokens)
@@ -175,16 +221,24 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
         if svc == "openrouter": headers.update({"HTTP-Referer": "https://pharmakon.world", "X-Title": "Pharmakon"})
     op = opener or urllib.request.urlopen; last = None
     for k in range(tries):
-        wait = S["gap"] - (time.time() - _last_call.get(svc, 0))
+        wait = lim["gap"] - (time.time() - _last_call.get(model, 0))                 # (each model has its own calls a minute)
+        if lim["tpm"]:                                                              # a plan that counts tokens a minute: this run's own calls of the last minute are counted before the next is sent
+            now = time.time(); mine = _minute[model] = [(w, n) for w, n in _minute.get(model, []) if now - w < 60]
+            if mine and sum(n for _, n in mine) + est_in + max_tokens > OF_A_DAY * lim["tpm"]: wait = max(wait, 60 - (now - mine[0][0]) + 1)
         if wait > 0 and not opener: time.sleep(wait)
-        _last_call[svc] = time.time()
+        _last_call[model] = time.time(); _minute.setdefault(model, []).append((time.time(), est_in + max_tokens))
         try:
             with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=180) as r: d = json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
-            detail = e.read().decode("utf-8", "replace")[:400] if hasattr(e, "read") else ""; last = f"{svc} answered {e.code}: {detail}"
+            whole = e.read().decode("utf-8", "replace")[:6000] if hasattr(e, "read") else ""; detail = whole[:400]; last = f"{svc} answered {e.code}: {detail}"
             if e.code == 429 or (e.code == 529 and svc == "claude"):
-                if re.search(r"per day|daily|quota|RESOURCE_EXHAUSTED|free-models-per-day|credit balance|insufficient|exceeded your current", detail, re.I) and not re.search(r"per minute|per second", detail, re.I): raise Budget(f"{svc} says the allowance is used up: {detail[:160]}")
-                ra = str((e.headers or {}).get("Retry-After") or "").strip(); secs = min(60, int(float(ra))) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else 20
+                a_day = re.search(r"per[ _-]?day|daily|free-models-per-day", whole, re.I); a_minute = re.search(r"per[ _-]?(?:minute|second)|\bRPM\b|\bTPM\b", whole, re.I)
+                if a_day or (not a_minute and re.search(r"quota|RESOURCE_EXHAUSTED|credit balance|insufficient|exceeded your current", whole, re.I)):
+                    L = ledger(); used = svc_used(svc, L); used.setdefault("models", {})[name] = max(int(used["models"].get(name) or 0), lim["calls"]); L.setdefault("svc", {})[svc] = used      # the service's own word is believed: this model is done for today
+                    LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+                    raise Budget(f"{svc} says the allowance is used up: {detail[:160]}")
+                ra = str((e.headers or {}).get("Retry-After") or "").strip(); rd = re.search(r'"retryDelay":\s*"(\d+(?:\.\d+)?)s?"', whole)
+                secs = min(65, int(float(ra)) + 1) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else min(65, int(float(rd.group(1))) + 1) if rd else 25
                 if k + 1 < tries: time.sleep(0 if opener else secs); continue
             if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 4 * (k + 1)); continue
             if e.code in (400, 401, 402, 403, 404, 413, 422): raise Unavailable(last)
@@ -203,6 +257,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
             t_in, t_out, finish = int(u.get("prompt_tokens") or est_in), int(u.get("completion_tokens") or rough_tokens(text)), ch.get("finish_reason")
             reasoned = len(msg.get("reasoning") or msg.get("reasoning_content") or "")
         L = ledger(); used = svc_used(svc, L); used["calls"] += 1; used["in"] += t_in; used["out"] += t_out
+        used.setdefault("models", {})[name] = int(used["models"].get(name) or 0) + 1
         c = cost(model, t_in, t_out) if S.get("paid") else 0.0
         used["usd"] = round(used["usd"] + (c or 0.0), 6); used["usd_month"] = round(used["usd_month"] + (c or 0.0), 6)
         L.setdefault("svc", {})[svc] = used
@@ -447,6 +502,39 @@ def selftest():
     try: chat("mistral:mistral-large-latest", [{"role": "user", "content": "x"}], 50, quota); raise AssertionError("no Budget")
     except Budget: pass
     names, why = models_of("mistral", lambda req, timeout=0: Resp({"data": [{"id": "mistral-large-latest"}, {"id": "mistral-small-latest"}]})); assert names == ["mistral-large-latest", "mistral-small-latest"] and why == ""
+    # ---- only free models, by code: at OpenRouter a model that is not marked free is never asked, whatever a file names
+    n = len(seen)
+    try: chat("openrouter:openai/some-paid-model", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a model that costs money was asked at OpenRouter")
+    except Unavailable as e: assert "free" in str(e) and len(seen) == n
+    assert never_paid("openrouter:x/y") and not never_paid("openrouter:x/y:free") and not never_paid("gemini:gemma-4-31b-it") and not has("openrouter:x/y") and has("openrouter:x/y:free")
+    assert not calls_fit({"openrouter:a/b:free": 1}) and calls_fit({"mistral:mistral-medium-latest": 100, "mistral:mistral-small-latest": 100}) and not calls_fit({"mistral:mistral-medium-latest": 1000, "mistral:mistral-small-latest": 600})   # (OpenRouter's day was used up above; a service that counts all its models together: their sum)
+    assert calls_left("mistral:mistral-large-latest") == 0 and not calls_fit({"mistral:mistral-large-latest": 1})          # (the service itself said this model's day was used up, just above: believed)
+    # ---- each model of a service has its own free allowance, read from a file: its calls a day (we stop at nine tenths), its calls a minute
+    global FREE
+    keep_free = FREE; FREE = pathlib.Path(tempfile.mkdtemp()) / "free-limits.json"
+    json.dump({"gemini": {"models": [{"match": "^gemma-4-", "rpm": 30, "rpd": 14400}, {"match": "flash-lite", "rpm": 15, "rpd": 500, "tpm": 250000}], "else": {"rpm": 5, "rpd": 20}}}, open(FREE, "w"))
+    os.environ["GEMINI_API_KEY"] = "G"
+    assert limits_of("gemini:gemma-4-31b-it") == {"gap": 2.2, "calls": 12960, "tpm": None} and limits_of("gemini:gemini-3.5-flash-lite")["calls"] == 450 and limits_of("gemini:gemini-4-hydrogen") == {"gap": 13.2, "calls": 18, "tpm": None}
+    assert limits_of("mistral:mistral-large-latest") == {"gap": SERVICES["mistral"]["gap"], "calls": SERVICES["mistral"]["calls"], "tpm": None}          # a service the file says nothing of keeps its own cautious numbers
+    chat("gemini:gemini-4-hydrogen", [{"role": "user", "content": "x"}], 50, sopener)
+    assert calls_left("gemini:gemini-4-hydrogen") == 17 and calls_left("gemini:gemma-4-31b-it") == 12960 and seen[-1][2]["model"] == "gemini-4-hydrogen"
+    assert calls_fit({"gemini:gemma-4-31b-it": 9000, "gemini:gemma-4-26b-it": 9000, "gemini:gemini-4-hydrogen": 17}) and not calls_fit({"gemini:gemini-4-hydrogen": 18})          # each of Google's models has its own day
+    L = ledger(); L["svc"]["gemini"]["models"]["gemini-4-hydrogen"] = 18; json.dump(L, open(LEDGER, "w"))
+    try: chat("gemini:gemini-4-hydrogen", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a call beyond one model's day")
+    except Budget: pass
+    chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, sopener)                                    # another model of the same service has its own day
+    # Google's own refusals: "a minute" is waited out and asked again; "a day" ends that model's day by our count too
+    state = {"n": 0}
+    def minute_then_ok(req, timeout=0):
+        state["n"] += 1
+        if state["n"] == 1: raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", {}, io.BytesIO(b'{"error": {"code": 429, "message": "You exceeded your current quota", "status": "RESOURCE_EXHAUSTED", "details": [{"quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"}, {"retryDelay": "34s"}]}}'))
+        return sopener(req)
+    assert as_json(chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, minute_then_ok)) == {"ok": True} and state["n"] == 2
+    def day(req, timeout=0): raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", {}, io.BytesIO(b'{"error": {"code": 429, "status": "RESOURCE_EXHAUSTED", "details": [{"quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]}}'))
+    try: chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, day); raise AssertionError("no Budget")
+    except Budget: pass
+    assert calls_left("gemini:gemma-4-31b-it") == 0 and calls_left("gemini:gemini-3.5-flash-lite") == 450
+    FREE = keep_free; del os.environ["GEMINI_API_KEY"]
     for k in ("MISTRAL_API_KEY", "OPENROUTER_API_KEY", "ANTHROPIC_API_KEY"): del os.environ[k]
     if had: os.environ["GROQ_API_KEY"] = had
     LEDGER = keep
