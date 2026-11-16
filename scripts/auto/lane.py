@@ -1108,6 +1108,16 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         verdicts = [((v[0] and not (p["part"] == "short" and whole.get("answers") is False) and not (p["part"] == "but" and whole.get("but_fits") is False)),
                      v[1] if not v[0] else ("it does not answer the question itself" if p["part"] == "short" and whole.get("answers") is False else "it is about something else than the short answer" if p["part"] == "but" and whole.get("but_fits") is False else "") + (f" ({whole.get('why')})" if whole.get("why") and p["part"] in ("short", "but") and (whole.get("answers") is False or whole.get("but_fits") is False) else ""))
                     for p, v in zip(draft["parts"], verdicts)]
+        # 4a further readers (lane 10; scripts/auto/panel.py): a team may name more second readers ("also"), each another model than the
+        # writer and than the second reader. Every one of them must accept a sentence too: what one reader misses another may catch
+        # (no reader we have catches enough alone: data/auto/exam). They are not asked when the short answer or the But is refused
+        # already, because the answer is then written again anyway.
+        for k in sorted(k for k in models if re.fullmatch(r"also\d+", k)):
+            if any(not v[0] for p, v in zip(draft["parts"], verdicts) if p["part"] in ("short", "but")): break
+            more = check(chat, models[k], draft["parts"], labels)
+            rec.setdefault("panel", {})[models[k]] = {p["part"]: [bool(w[0]), w[1]] for p, w in zip(draft["parts"], more)}
+            verdicts = [((v[0] and w[0]), v[1] if not v[0] else ("" if w[0] else f"a further reader ({base(models[k])}) did not accept it: {w[1] or 'it gave no reason'}")) for v, w in zip(verdicts, more)]
+        if rec.get("panel"): rec["gates"]["panel"] = "further readers, each of which must accept every sentence too: " + "; ".join(f"{base(m)} accepted {sum(1 for x in vs.values() if x[0])} of {len(vs)}" for m, vs in rec["panel"].items())
         # 4b our own checker (decision 23): a second judge that must also accept every sentence a model wrote. Its word counts like the
         # second reader's: a How line it does not find in the source's words is dropped, a short answer or a But is written again.
         if own_check is not None:
@@ -1138,9 +1148,9 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     dropped_how = [p["part"] for p, v in zip(draft["parts"], verdicts) if not v[0] and p["part"].startswith("how")]
     if any(not v[0] for p, v in zip(draft["parts"], verdicts) if p["part"] in ("short", "but")) or sum(p["part"].startswith("how") for p, _ in kept) < 1:
         rec["gates"]["check"] = "; ".join(f"{p['part']}: {'accepted' if v[0] else 'NOT accepted: ' + v[1]}" for p, v in zip(draft["parts"], verdicts))
-        ours = [v[1] for p, v in zip(draft["parts"], verdicts) if not v[0] and v[1].startswith("our own checker")]
+        ours = [v[1] for p, v in zip(draft["parts"], verdicts) if not v[0] and (v[1].startswith("our own checker") or v[1].startswith("a further reader"))]
         return done("none", "the second reader did not accept the answer" if not ours else "the answer was not accepted: " + ours[0])
-    rec["gates"]["check"] = f"every sentence kept was accepted by the second reader ({models['checker']})" + (f"; {len(dropped_how)} How-do-we-know line(s) dropped" if dropped_how else "") + ("; it also found that the short answer answers the question and that the But is about that answer" if whole.get("answers") and whole.get("but_fits") else "")
+    rec["gates"]["check"] = f"every sentence kept was accepted by the second reader ({models['checker']})" + ("".join(f" and by {models[k]}" for k in sorted(models) if re.fullmatch(r"also\d+", k))) + (f"; {len(dropped_how)} How-do-we-know line(s) dropped" if dropped_how else "") + ("; it also found that the short answer answers the question and that the But is about that answer" if whole.get("answers") and whole.get("but_fits") else "")
     rec["gates"].setdefault("rules", "nothing against it")
     if rec["gates"]["rules"].startswith("broken"): rec["gates"]["rules"] += "; written again, then nothing against it"
     parts = [p for p, _ in kept]; used_refs = []
@@ -1246,11 +1256,11 @@ def wanted_list():
     return sorted(by.values(), key=lambda w: (-len(w["for"]), -(w.get("near") or 0), w["doi"]))
 
 
-NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000), "planner": (250, 7000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
+NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000), "planner": (250, 7000), "also": (350, 9000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
 
 
 def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|gemini:|openrouter:|claude:)", "", model or "")).split("/")[-1]       # the model itself, whichever service runs it
-CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
+CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1, "also": 3}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
 
 
 def team(file=None):
@@ -1268,13 +1278,17 @@ def team(file=None):
                 for planner in planners:                                   # (lane 10: "planner_else", as for the reader and the second reader: the plan is made where there is room)
                     m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
                     if planner: m["planner"] = planner
+                    also = [a for a in (t.get("also") or []) if isinstance(a, str) and a] if isinstance(t.get("also"), list) else []
+                    for n, a in enumerate(also, 1): m[f"also{n}"] = a          # (lane 10) further second readers: a team that names them is that team only with all of them
                     if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
                     if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
+                    if len({base(a) for a in also} | {base(m["writer"]), base(m["checker"])}) < len(also) + 2: continue      # a further reader is another model than the writer, than the second reader and than the other further readers
                     need, calls = {}, {}
                     for role, v in m.items():
+                        kind = "also" if role.startswith("also") else role
                         svc = llm.service_of(v)[0]
-                        if svc: calls[v] = calls.get(v, 0) + CALLS[role]
-                        else: need[v] = need.get(v, 0) + NEED[role][1 if v.startswith("groq:") else 0]
+                        if svc: calls[v] = calls.get(v, 0) + CALLS[kind]
+                        else: need[v] = need.get(v, 0) + NEED[kind][1 if v.startswith("groq:") else 0]
                     if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
                     if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
                     if not llm.calls_fit(calls): continue                   # (each model of a call-counted service has its own free allowance: llm.limits_of)
@@ -1512,6 +1526,19 @@ def selftest():
         assert team(tf) == {"reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "planner": "groq:openai/gpt-oss-120b", "team": "C"}
         gq["openai/gpt-oss-120b"] = 20000; t = team(tf); assert t["checker"] == "groq:openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t      # room for the check (16,000) but not for the plan as well (7,000 more)
         gq["openai/gpt-oss-120b"] = 5000; t = team(tf); assert t["checker"] == "@cf/openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t
+        # a team with further second readers is that team only with all of them: each needs a key and room, and is another model than the writer and the second reader
+        tf.write_text(json.dumps({"teams": [{"name": "D", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "also": ["gemini:gemma-4-31b-it", "gemini:gemini-3.5-flash-lite"]},
+                                            {"name": "E", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b"}]}), encoding="utf-8")
+        gq["openai/gpt-oss-120b"] = 180000; keys["gemini"] = True; fits = [True]; keep2 = (llm.calls_fit,)
+        llm.has = lambda m: keys.get("gemini", False) if m.startswith("gemini:") else keys["groq"] if m.startswith("groq:") else keys["cf"]; llm.calls_fit = lambda by: not by or (fits[0] and by == {"gemini:gemma-4-31b-it": 3, "gemini:gemini-3.5-flash-lite": 3})
+        try:
+            t = team(tf); assert t["team"] == "D" and t["also1"] == "gemini:gemma-4-31b-it" and t["also2"] == "gemini:gemini-3.5-flash-lite", t
+            fits[0] = False; assert team(tf)["team"] == "E"                                                         # no room for a further reader today: the next team, which names none
+            fits[0] = True; keys["gemini"] = False; assert team(tf)["team"] == "E"                                    # no key for it: the same
+            keys["gemini"] = True
+            tf.write_text(json.dumps({"teams": [{"name": "F", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "also": ["@cf/openai/gpt-oss-120b"]}]}), encoding="utf-8")
+            assert team(tf) is None                                                                                 # the second reader's own model at another service is not a further reader
+        finally: llm.calls_fit, = keep2
     finally: llm.has, llm.left, llm.groq_left = keep
     # (lane 10) the checked claims of the same page: an answer that cannot be true together with one waits for a person; one that says the same is noted; a far claim is not asked about
     cl = lambda drugs: [{"id": "cl_ket_dependence", "drug": "ketamine", "plain": "People who use ketamine often can become dependent on it.", "statement": "Regular ketamine use is associated with dependence."},
@@ -1541,6 +1568,19 @@ def selftest():
     script["writer"] = [W(ok_short), W(ok_short), W(ok_short)]; script["checker"] = [V(True, True, True, True)] * 3
     r3 = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, own_check=Own([a_short[:25]]))
     assert r3["status"] == "none" and "our own checker does not find it" in r3["why"], (r3["status"], r3["why"])
+    # (lane 10) further second readers: each must accept every sentence too. A How line one of them refuses is dropped; a short answer
+    # one refuses is written again; they are not asked when the second reader has refused the head already; what each said is kept
+    M2 = dict(MODELS, also1="gemini:gemma-4-31b-it")
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), V(True, True, True, False)]
+    r = make(item, found, chat, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and sum(p["part"].startswith("how") for p in r["parts"]) == n_how - 1 and r["panel"]["gemini:gemma-4-31b-it"]["how2"][0] is False and "gemma-4-31b-it accepted 3 of 4" in r["gates"]["panel"] and "and by gemini:gemma-4-31b-it" in r["gates"]["check"], (r["status"], r["gates"])
+    assert [c[1] for c in calls if c[0] == "checker"][:2] == [MODELS["checker"], "gemini:gemma-4-31b-it"] and "QUESTION that was asked" not in [c for c in calls if c[0] == "checker"][1][2]      # the further reader is asked about the sentences, not about the answer as a whole
+    calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [V(True, True, True, True), V(False, True, True, True)] * 3
+    r = make(item, found, chat, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "none" and "a further reader (gemma-4-31b-it) did not accept it" in r["why"] and "a second reader did not accept short (a further reader (gemma-4-31b-it)" in [c for c in calls if c[0] == "writer"][1][2], (r["status"], r["why"])
+    calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [V(False, True, True, True)] * 3
+    r = make(item, found, chat, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "none" and not any(c[1] == "gemini:gemma-4-31b-it" for c in calls) and "panel" not in r, (r["status"], r["why"])
     # 5. a question about dying: written, checked, and it waits for a person
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk({"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}); assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
