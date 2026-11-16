@@ -654,6 +654,14 @@ def pieces_verdict(out, sentence, passages, denies=False):
     return {"through": ok, "clear": True, "pieces": len(ps), "missing": missing[:6], "not_there": not_there[:6], "left_out": left_out[:8]}
 
 
+# ---------- our own checker (decision 23) ----------
+def own_word(parts, labels, chk):
+    """Our own checker's score for every sentence a model wrote, against the words it rests on (the quotes and the passages they
+    stand in): {part: score from 0 to 1}. A sentence the code wrote ("fixed") is not asked about."""
+    ask = [(p["part"], " ".join((labels[u]["quote"] + " " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS]).strip() for u in p["uses"]), p["text"]) for p in parts if not p.get("fixed") and p.get("uses")]
+    return dict(zip([a[0] for a in ask], chk.score([(src, text) for _, src, text in ask]))) if ask else {}
+
+
 def room_for(model, plain):
     """How many tokens a model may answer with. One that reasons before it writes needs room for both: on 16 November 2026
     gpt-oss-120b used all of 1,400 tokens reasoning and wrote nothing, three times for each of two questions; with 3,000 it
@@ -947,7 +955,7 @@ def with_checked(chat, model, enc, parts, claims, near=0.5, most=8):
     return differs, same
 
 
-def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None):
+def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None, own_check=None):
     """One question through the lane. Returns the record (see the head of this file). official: the pages official.py found
     for it; page, summary, fulltext, crossref: how a page, a summary, a full text and a Crossref record are fetched (the
     selftest gives its own); before: the record this one replaces, whose state is kept in "history"."""
@@ -1076,6 +1084,14 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         verdicts = [((v[0] and not (p["part"] == "short" and whole.get("answers") is False) and not (p["part"] == "but" and whole.get("but_fits") is False)),
                      v[1] if not v[0] else ("it does not answer the question itself" if p["part"] == "short" and whole.get("answers") is False else "it is about something else than the short answer" if p["part"] == "but" and whole.get("but_fits") is False else "") + (f" ({whole.get('why')})" if whole.get("why") and p["part"] in ("short", "but") and (whole.get("answers") is False or whole.get("but_fits") is False) else ""))
                     for p, v in zip(draft["parts"], verdicts)]
+        # 4b our own checker (decision 23): a second judge that must also accept every sentence a model wrote. Its word counts like the
+        # second reader's: a How line it does not find in the source's words is dropped, a short answer or a But is written again.
+        if own_check is not None:
+            sc = own_word(draft["parts"], labels, own_check); t = float(own_check.e.get("threshold") or 0.5)
+            rec["own"] = {"model": own_check.e.get("name"), "threshold": t, "scores": sc}
+            rec["gates"]["own"] = "our own checker (" + str(own_check.e.get("name")) + ", at least " + str(t) + "): " + ", ".join(f"{k} {v:.2f}" for k, v in sc.items())
+            verdicts = [((v[0] and sc.get(p["part"], 1.0) >= t), v[1] if not v[0] else ("" if sc.get(p["part"], 1.0) >= t else f"our own checker does not find it in the words it rests on ({sc[p['part']]:.2f}): say only what those words say, in their own measure"))
+                        for p, v in zip(draft["parts"], verdicts)]
         head_bad = [(p["part"], v[1]) for p, v in zip(draft["parts"], verdicts) if not v[0] and p["part"] in ("short", "but")]
         if head_bad and attempt < 2:
             fix = "a second reader did not accept " + "; ".join(f"{p} ({w})" for p, w in head_bad) + ". Say only what the items say, answer the question itself, and let the But be a limit of that answer."
@@ -1098,7 +1114,8 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     dropped_how = [p["part"] for p, v in zip(draft["parts"], verdicts) if not v[0] and p["part"].startswith("how")]
     if any(not v[0] for p, v in zip(draft["parts"], verdicts) if p["part"] in ("short", "but")) or sum(p["part"].startswith("how") for p, _ in kept) < 1:
         rec["gates"]["check"] = "; ".join(f"{p['part']}: {'accepted' if v[0] else 'NOT accepted: ' + v[1]}" for p, v in zip(draft["parts"], verdicts))
-        return done("none", "the second reader did not accept the answer")
+        ours = [v[1] for p, v in zip(draft["parts"], verdicts) if not v[0] and v[1].startswith("our own checker")]
+        return done("none", "the second reader did not accept the answer" if not ours else "the answer was not accepted: " + ours[0])
     rec["gates"]["check"] = f"every sentence kept was accepted by the second reader ({models['checker']})" + (f"; {len(dropped_how)} How-do-we-know line(s) dropped" if dropped_how else "") + ("; it also found that the short answer answers the question and that the But is about that answer" if whole.get("answers") and whole.get("but_fits") else "")
     rec["gates"].setdefault("rules", "nothing against it")
     if rec["gates"]["rules"].startswith("broken"): rec["gates"]["rules"] += "; written again, then nothing against it"
@@ -1271,6 +1288,16 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
     if not ids and not again: order.sort(key=lambda w: turn(w))                    # (a stable sort: within one turn, the most asked first)
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []; out_of_room = 0
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
+    # our own checker (decision 23), where one is in use (data/auto/own/models.json): the file that sat the exam, by its SHA-256. If it
+    # is in use and cannot be run here, nothing is published by itself in this run: an answer it did not judge waits for the editor.
+    own_chk, own_err = None, ""
+    if real:
+        try:
+            import own
+            own_chk = own.Check() if own.in_use("check") else None
+        except Exception as e: own_err = str(e)[:200] or type(e).__name__
+        if own_chk: print(f"lane: our own checker is {own_chk.e.get('name')} (from {own_chk.e.get('from')}), at least {own_chk.e.get('threshold')}")
+        if own_err: print("lane: our own checker is in use and could NOT be run here: every answer of this run waits for the editor:", own_err)
     for w in order[:limit]:
         if real:
             models = team()
@@ -1284,7 +1311,8 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             except (OSError, ValueError, KeyError): official = []               # (official.py has not searched for this question yet, or found nothing)
             try: before = json.load(open(af, encoding="utf-8"))
             except (OSError, ValueError): before = None
-            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims)
+            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk)
+            if own_err and rec.get("status") == "published": rec["status"] = "waiting"; rec["why"] = "our own checker is in use and could not be run in this run (" + own_err + "): waiting for the editor"
         except llm.Budget as e:
             # an allowance ran out in the middle of an answer (our count was too low, or Groq said so itself and llm wrote that down): the next
             # question is begun with whichever team still has room; the question that was cut short keeps its turn for the next run
@@ -1465,6 +1493,25 @@ def selftest():
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), {"pairs": [{"n": 1, "is": "same", "why": ""}]}]
     r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, claims=cl)
     assert r["status"] == "published" and r["with_checked"]["same"] and "nothing against them" in r["gates"]["checked"], (r["status"], r["gates"])
+    # (decision 23) our own checker is a second judge: a How line it does not find in the source's words is dropped; a short answer it
+    # refuses is written again, and refused twice there is no answer; what it said is kept in the record
+    class Own:
+        e = {"name": "pharmakon-check-test", "threshold": 0.5}
+        def __init__(self, low): self.low, self.asked = low, []
+        def score(self, pairs): self.asked.append(pairs); return [0.2 if any(w in t for w in self.low) else 0.9 for _, t in pairs]
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    o = Own([]); r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, own_check=o)
+    n_how = sum(p["part"].startswith("how") for p in r["parts"])
+    assert r["status"] == "published" and r["own"]["model"] == "pharmakon-check-test" and set(r["own"]["scores"]) >= {"short", "but"} and all(v == 0.9 for v in r["own"]["scores"].values()) and "our own checker" in r["gates"]["own"], r.get("own")
+    assert all(src.strip() and text.strip() for src, text in o.asked[0])                                    # every sentence is asked about beside the words it rests on
+    a_how = next(p["text"] for p in r["parts"] if p["part"].startswith("how"))
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r2 = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, own_check=Own([a_how[:25]]))
+    assert r2["status"] == "published" and sum(p["part"].startswith("how") for p in r2["parts"]) == n_how - 1 and not any(p["text"] == a_how for p in r2["parts"]), [p["part"] for p in r2["parts"]]
+    a_short = next(p["text"] for p in r["parts"] if p["part"] == "short")
+    script["writer"] = [W(ok_short), W(ok_short), W(ok_short)]; script["checker"] = [V(True, True, True, True)] * 3
+    r3 = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, own_check=Own([a_short[:25]]))
+    assert r3["status"] == "none" and "our own checker does not find it" in r3["why"], (r3["status"], r3["why"])
     # 5. a question about dying: written, checked, and it waits for a person
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk({"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}); assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
