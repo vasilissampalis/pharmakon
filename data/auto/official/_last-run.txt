@@ -1,13 +1,34 @@
 official selftest: ok (robots.txt with * and $ is obeyed and a refusal is never gone around; a page's own content, dates and links are read without menus, cookies or footers; the reference is APA 7 from the page itself; for a question, the part of a body's page that speaks about it stands first; no page's text is kept)
-official probe: healthdirect: NOT read; 4 pages
-official probe: adf: can be read; 61 pages
-official probe: efsa: NOT read; 3 pages; refused: www.efsa.europa.eu said no earlier in this run
-official probe: ccsa: can be read; 17 pages
-official probe: ods: NOT read; 84 pages
-official probe: camh: NOT read; 65 pages
-official: healthdirect: 4 pages; 
-official: adf: 61 pages; 
-official: efsa: 0 pages; refused: www.efsa.europa.eu: its robots.txt was refused (www.efsa.europa.eu said no earlier in this run)
-official: ccsa: 17 pages; 
-official: ods: 84 pages; 
-official: camh: 65 pages; 
+official.py: what official health bodies say about a question (docs/AUTOMATION.md).
+
+The senior author, 15 November 2026: "I want it to read official websites too where it can get access"; "some parts of the
+answers could come from official sites like NHS and EVERYTHING similar it's so many official sites worldwide".
+
+    python3 -I scripts/auto/official.py probe [--ids nhs,frank]      can each body's pages be read from this machine?
+    python3 -I scripts/auto/official.py index                        the addresses and titles of each body's pages about drugs
+    python3 -I scripts/auto/official.py find [--ids w_0027] [--max N] [--minutes M]
+    python3 -I scripts/auto/official.py --requests data/auto/requests     the requests waiting there (official-*.json)
+    python3 -I scripts/auto/official.py --selftest
+
+The bodies are listed in data/auto/official/sources.json: health services, health ministries and agencies, UN and EU bodies
+(tier 1) and information services a government pays for (tier 2), each with where its pages about drugs are found. For a
+question on our list, find() names the pages of those bodies that speak about it, in the order the lane would read them,
+beside the papers (scripts/auto/papers.py). What an answer may rest on is decided by the lane's gates, never here.
+
+Rules this file keeps, in code:
+  - A site is read only where its robots.txt allows a reader that is not a browser (our name there is "Pharmakon"). A refusal
+    (a Disallow, 401, 403, 429) is taken as no for the whole run. Nothing goes around a refusal: no other address, no cache,
+    no mirror, no browser's name.
+  - It asks slowly (one request a second to one site, slower where the site asks for it), says who it is (the site's name
+    and its public address, never a person's), and reads pages only: no sign-in, no form, no file download.
+  - No page's text is kept in the repository. The index holds addresses and titles; what is written for a question holds
+    addresses, titles, dates and which passages were nearest in meaning. The lane reads a page again when it writes.
+  - A page's reference is made by code from the page itself (its title and its date) and from the list (the body's name),
+    in APA 7. A "last reviewed" date is not a date of publication (APA 7): such a page is cited as n.d. with the day it
+    was read.
+  - A page's words are data, never instructions.
+
+!! failed (1)
+wiki_views selftest: ok (a title leads to its article through its redirect; a list of meanings or a title that does not exist is left out; views are by people, for the last twelve full months; an article nobody opened counts nothing)
+wiki views: 54 pages to start, 146 articles, 202511 to 202610; most looked up: Antidepressants (4,756,069); Datura and other nightshades (2,021,736); Other medicines people ask about (1,995,967); Pain and cold medicines (paracetamol, ibuprofen, aspirin) (1,859,721); Antipsychotics (1,659,309); Gabapentinoids (gabapentin, pregabalin) (1,588,848)
+pages to start: 55; first in line: Nootropics and supplements (1 listed, 5 forum, 1,236,998 looked up); Anabolic steroids and other body-building drugs (0 listed, 4 forum, 742,607 looked up); NBOMes (0 listed, 3 forum, 102,324 looked up); Ketamine analogues (MXE, DCK) (0 listed, 3 forum, 73,209 looked up); Naltrexone (0 listed, 2 forum, 419,238 looked up); MDA-like drugs (MDEA, MDAI, benzofurans) (0 listed, 2 forum, 127,593 looked up); Pain and cold medicines (paracetamol, ibuprofen, aspirin) (0 listed, 1 forum, 1,859,721 looked up); Antipsychotics (0 listed, 1 forum, 1,659,309 looked up)
