@@ -1229,6 +1229,8 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             rec["status"] = "waiting"; rec["held"] = "the editor's first reading of lane " + str(LANE); rec["why"] = (rec.get("why") or "") + "; held until the editor has read it (the first answers of this version of the lane)"
         try:                                                           # where the answer belongs on the site (scripts/auto/place.py): a drug's page, a page to start, or one of the general pages
             import place; pl = place.Placer(names).place(w["q"], w.get("ways") or []); rec["place"] = {k: pl[k] for k in ("home", "also", "cls", "why")}
+            if w.get("page") and rec["place"]["home"] != "new:" + w["page"]:        # a question the system asked for a page it should start (scripts/auto/grow.py) belongs on that page, whatever its words name first
+                rec["place"] = dict(rec["place"], home="new:" + w["page"], also=[h for h in dict.fromkeys([pl["home"]] + list(pl["also"])) if h and h != "new:" + w["page"]], why="asked by the system for the page it should start: " + w["page"])
         except Exception as e: rec["place"] = {"home": None, "why": "the place could not be worked out: " + str(e)[:120]}
         json.dump(rec, open(OUT / (rec["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "lane": LANE, "kind": rec["kind"], "complete": rec["complete"], "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}

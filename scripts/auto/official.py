@@ -573,6 +573,7 @@ def drug_words(item, names):
             slugs += [s for s in ss if s not in slugs]
     words = [n.lower() for n, ss in names if len(n) >= 3 and len(ss) <= 2 and any(s in slugs for s in ss)]
     for s in slugs: words += [t.lower() for t in P.SYN.get(s, []) if not t.startswith("(")] + [s.replace("-", " ")]
+    words += [str(n).lower() for n in item.get("names") or [] if len(str(n)) >= 3]         # a drug that has no page yet: what official pages call it comes with the question (scripts/auto/grow.py)
     return slugs, list(dict.fromkeys(words))
 
 
@@ -855,7 +856,7 @@ def main():
     def old(w):
         try: return int(json.load(open(FOUND / (w["id"] + ".json"), encoding="utf-8")).get("official") or 0) < OFFICIAL
         except (OSError, ValueError): return True
-    items = [w for w in items if (w["id"] in ids if ids else old(w))][:limit]
+    items = sorted([w for w in items if (w["id"] in ids if ids else old(w))], key=lambda w: (FOUND / (w["id"] + ".json")).exists())[:limit]     # a question never searched comes before one searched by an older finder
     FOUND.mkdir(parents=True, exist_ok=True); index = json.load(open(INDEX, encoding="utf-8"))["sources"]; done = 0
     for w in items:
         if minutes and time.time() - t0 > minutes * 60: print(f"official: the time for this run is up; {len(items) - done} questions are left for the next run"); break

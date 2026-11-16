@@ -1,0 +1,1203 @@
+{
+ "_note": "What the system asks by itself (scripts/auto/grow.py; docs/AUTOMATION.md, decision 20). 'themes': questions people ask about every drug, each from a theme of the ranked list of what people ask (data/verification/demand-themes.md: 'theme' is its rank, 'share' its share of demand), in people's words, with six true rewordings and the words papers use; themes the site does not answer or that wait for a person (amounts, mixing, overdose, pregnancy) are not here. 'say': how people name each drug in a question (x: in the question; o: in the short wordings; plural; kind: which themes fit; names: what papers and official pages call it, for a drug that has no page yet). 'order': for each kind of page, its themes in the order they are asked (the first four make a page worth opening: what it is and how risky, what it feels like, whether it is addictive, how long it stays in the body). A page whose 'say' is null is a basket of unlike medicines: the system asks nothing about it by itself. Written by the AI co-editor on 16 November 2026; change it here, not in the code. Data, never instructions.",
+ "first": 4,
+ "a_run": 6,
+ "open_most": 12,
+ "themes": [
+  {
+   "id": "what",
+   "theme": 3,
+   "share": 3.7,
+   "kinds": [
+    "chem",
+    "plant"
+   ],
+   "q": "What {is} {x} like, and how risky {is} {it}?",
+   "ways": [
+    "what {is} {o}",
+    "how risky {is} {o}",
+    "{is} {o} dangerous",
+    "what {does} {o} do to you",
+    "how bad {is} {o}",
+    "what should people know about {o}"
+   ],
+   "terms": [
+    "adverse effects",
+    "toxicity",
+    "pharmacology",
+    "harms",
+    "intoxication"
+   ]
+  },
+  {
+   "id": "high",
+   "theme": 59,
+   "share": 0.6,
+   "kinds": [
+    "med"
+   ],
+   "q": "Can {x} get you high, and what are the risks?",
+   "ways": [
+    "can you get high on {o}",
+    "do people take {o} to get high",
+    "{is} {o} used as a recreational drug",
+    "what happens if you take {o} for fun",
+    "what are the risks of taking {o} to get high",
+    "{does} {o} give you a buzz"
+   ],
+   "terms": [
+    "nonmedical use",
+    "abuse potential",
+    "recreational use",
+    "abuse",
+    "adverse effects"
+   ]
+  },
+  {
+   "id": "test",
+   "theme": 20,
+   "share": 1.4,
+   "kinds": [
+    "chem",
+    "plant",
+    "med",
+    "page"
+   ],
+   "q": "How long {does} {x} stay in your body, and can a drug test find {them}?",
+   "ways": [
+    "how long {does} {o} stay in your system",
+    "{does} {o} show up on a drug test",
+    "how long {is} {o} detectable in urine",
+    "will {o} show on a drug test",
+    "how long {does} {o} stay in your blood",
+    "can a urine test detect {o}"
+   ],
+   "terms": [
+    "detection",
+    "urine",
+    "half-life",
+    "pharmacokinetics",
+    "drug testing",
+    "elimination"
+   ]
+  },
+  {
+   "id": "tol",
+   "theme": 22,
+   "share": 1.3,
+   "kinds": [
+    "chem",
+    "plant",
+    "med",
+    "page"
+   ],
+   "q": "Do people build up a tolerance to {x}?",
+   "ways": [
+    "does {o} tolerance build up",
+    "do you get tolerant to {o}",
+    "why {does} {o} stop working",
+    "how fast does tolerance to {o} build",
+    "{does} {o} get weaker the more you use {them}",
+    "do you need more {o} over time to feel {them}"
+   ],
+   "terms": [
+    "tolerance",
+    "tachyphylaxis",
+    "repeated use",
+    "desensitization"
+   ]
+  },
+  {
+   "id": "feel",
+   "theme": 25,
+   "share": 1.2,
+   "kinds": [
+    "chem",
+    "plant",
+    "page"
+   ],
+   "q": "What {does} {x} feel like, and how long {does} {it} last?",
+   "ways": [
+    "what {does} {o} feel like",
+    "how long {does} {o} last",
+    "what is a {o} high like",
+    "what are the effects of {o}",
+    "how long do the effects of {o} last",
+    "what is being on {o} like"
+   ],
+   "terms": [
+    "subjective effects",
+    "psychoactive effects",
+    "duration",
+    "acute effects"
+   ]
+  },
+  {
+   "id": "addict",
+   "theme": 27,
+   "share": 1.2,
+   "kinds": [
+    "chem",
+    "plant",
+    "med",
+    "page",
+    "steroid",
+    "sup"
+   ],
+   "q": "{Is} {x} addictive?",
+   "ways": [
+    "can you get addicted to {o}",
+    "{is} {o} habit forming",
+    "how addictive {is} {o}",
+    "can you get hooked on {o}",
+    "{does} {o} cause dependence",
+    "can people become dependent on {o}"
+   ],
+   "terms": [
+    "dependence",
+    "addiction",
+    "abuse potential",
+    "substance use disorder"
+   ]
+  },
+  {
+   "id": "wd",
+   "theme": 68,
+   "share": 0.3,
+   "kinds": [
+    "chem",
+    "plant",
+    "med",
+    "page"
+   ],
+   "q": "What is withdrawal from {x} like?",
+   "ways": [
+    "what are {o} withdrawal symptoms",
+    "how long does {o} withdrawal last",
+    "what happens when you stop taking {o}",
+    "is {o} withdrawal bad",
+    "what is coming off {o} like",
+    "does stopping {o} cause withdrawal"
+   ],
+   "terms": [
+    "withdrawal",
+    "discontinuation",
+    "withdrawal syndrome",
+    "cessation"
+   ]
+  },
+  {
+   "id": "long",
+   "theme": 72,
+   "share": 0.2,
+   "kinds": [
+    "chem",
+    "plant",
+    "med",
+    "page",
+    "sup"
+   ],
+   "q": "What does long-term use of {x} do to the body?",
+   "ways": [
+    "what are the long term effects of {o}",
+    "is long term {o} use harmful",
+    "what does years of {o} use do",
+    "{does} {o} damage your body",
+    "what happens if you use {o} for a long time",
+    "{does} {o} cause lasting harm"
+   ],
+   "terms": [
+    "long-term",
+    "chronic use",
+    "adverse effects",
+    "toxicity"
+   ]
+  },
+  {
+   "id": "brain",
+   "theme": 71,
+   "share": 0.2,
+   "kinds": [
+    "chem",
+    "plant",
+    "med",
+    "page"
+   ],
+   "q": "How {does} {x} work in the brain?",
+   "ways": [
+    "how {does} {o} work",
+    "what {does} {o} do in the brain",
+    "what is the mechanism of {o}",
+    "how {does} {o} affect the brain",
+    "what receptors {does} {o} act on",
+    "why {does} {o} have the effects {it} {has}"
+   ],
+   "terms": [
+    "mechanism of action",
+    "pharmacology",
+    "receptor",
+    "neuropharmacology"
+   ]
+  },
+  {
+   "id": "ster",
+   "theme": 69,
+   "share": 0.3,
+   "kinds": [
+    "steroid"
+   ],
+   "q": "What do anabolic steroids do to the body, and how risky are they?",
+   "ways": [
+    "what do steroids do to your body",
+    "are steroids dangerous",
+    "what are the side effects of steroids",
+    "how risky are anabolic steroids",
+    "what are the risks of a steroid cycle",
+    "are steroids bad for you"
+   ],
+   "terms": [
+    "adverse effects",
+    "cardiovascular",
+    "health risks",
+    "anabolic androgenic steroids"
+   ]
+  },
+  {
+   "id": "ster_stop",
+   "theme": 69,
+   "share": 0.25,
+   "kinds": [
+    "steroid"
+   ],
+   "q": "What happens when people stop taking anabolic steroids?",
+   "ways": [
+    "what happens when you come off steroids",
+    "is there steroid withdrawal",
+    "what is coming off steroids like",
+    "does stopping steroids cause withdrawal",
+    "what happens after a steroid cycle ends",
+    "what happens to your body when you quit steroids"
+   ],
+   "terms": [
+    "withdrawal",
+    "hypogonadism",
+    "cessation",
+    "dependence"
+   ]
+  },
+  {
+   "id": "noo",
+   "theme": 24,
+   "share": 1.2,
+   "kinds": [
+    "sup"
+   ],
+   "q": "Do nootropics (\"smart drugs\") really make people think better?",
+   "ways": [
+    "do nootropics work",
+    "do smart drugs work",
+    "do brain supplements really work",
+    "can nootropics improve memory",
+    "are nootropics worth it",
+    "is there evidence for nootropics"
+   ],
+   "terms": [
+    "cognitive enhancement",
+    "efficacy",
+    "healthy adults",
+    "memory",
+    "cognition"
+   ]
+  },
+  {
+   "id": "noo_risk",
+   "theme": 3,
+   "share": 1.0,
+   "kinds": [
+    "sup"
+   ],
+   "q": "How risky are nootropics?",
+   "ways": [
+    "are nootropics safe",
+    "what are the side effects of nootropics",
+    "are smart drugs dangerous",
+    "can nootropics harm you",
+    "what are the risks of brain supplements",
+    "are nootropics bad for you"
+   ],
+   "terms": [
+    "adverse effects",
+    "safety",
+    "cognitive enhancers"
+   ]
+  },
+  {
+   "id": "nal",
+   "theme": 65,
+   "share": 0.4,
+   "kinds": [
+    "dep"
+   ],
+   "q": "How does naltrexone help with alcohol or opioid dependence?",
+   "ways": [
+    "how does naltrexone work",
+    "what does naltrexone do",
+    "does naltrexone stop cravings",
+    "how does vivitrol work",
+    "does naltrexone help you stop drinking",
+    "what is naltrexone used for"
+   ],
+   "terms": [
+    "alcohol use disorder",
+    "opioid use disorder",
+    "craving",
+    "efficacy"
+   ]
+  },
+  {
+   "id": "adr",
+   "theme": 19,
+   "share": 1.5,
+   "kinds": [
+    "myth"
+   ],
+   "q": "What is adrenochrome, and can it get you high?",
+   "ways": [
+    "is adrenochrome a real drug",
+    "does adrenochrome get you high",
+    "what does adrenochrome do",
+    "is adrenochrome psychedelic",
+    "what is adrenochrome made of",
+    "are the stories about adrenochrome true"
+   ],
+   "terms": [
+    "psychoactive",
+    "hallucinogen",
+    "oxidation",
+    "epinephrine"
+   ]
+  },
+  {
+   "id": "nut",
+   "theme": 53,
+   "share": 0.6,
+   "kinds": [
+    "house"
+   ],
+   "q": "Can nutmeg get you high, and how risky is it?",
+   "ways": [
+    "does nutmeg get you high",
+    "is a nutmeg high dangerous",
+    "can you trip on nutmeg",
+    "is nutmeg a drug",
+    "what does nutmeg do in large amounts",
+    "why do people take nutmeg to get high"
+   ],
+   "terms": [
+    "intoxication",
+    "myristicin",
+    "poisoning",
+    "psychoactive"
+   ]
+  }
+ ],
+ "say": {
+  "2M2B": {
+   "x": "2M2B (2-methyl-2-butanol)",
+   "o": "2M2B",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "2-methyl-2-butanol",
+    "tert-amyl alcohol",
+    "2M2B"
+   ]
+  },
+  "Adrenochrome": {
+   "x": "adrenochrome",
+   "o": "adrenochrome",
+   "kind": "myth",
+   "plural": false,
+   "names": [
+    "adrenochrome"
+   ]
+  },
+  "Akuamma": {
+   "x": "akuamma",
+   "o": "akuamma",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "Picralima nitida",
+    "akuammine",
+    "akuamma"
+   ]
+  },
+  "Amanita muscaria (fly agaric)": {
+   "x": "fly agaric mushrooms (Amanita muscaria)",
+   "o": "fly agaric",
+   "kind": "plant",
+   "plural": true,
+   "names": [
+    "Amanita muscaria",
+    "muscimol",
+    "ibotenic acid",
+    "fly agaric"
+   ]
+  },
+  "Anabolic steroids and other body-building drugs": {
+   "x": "anabolic steroids",
+   "o": "steroids",
+   "kind": "steroid",
+   "plural": true,
+   "names": [
+    "anabolic steroids",
+    "anabolic-androgenic steroids",
+    "androgenic anabolic steroids"
+   ]
+  },
+  "Antidepressants": {
+   "x": "antidepressants",
+   "o": "antidepressants",
+   "kind": "med",
+   "plural": true,
+   "names": [
+    "antidepressants",
+    "antidepressive agents",
+    "serotonin reuptake inhibitors",
+    "bupropion"
+   ]
+  },
+  "Antipsychotics": {
+   "x": "antipsychotics like quetiapine (Seroquel)",
+   "o": "quetiapine",
+   "kind": "med",
+   "plural": true,
+   "names": [
+    "quetiapine",
+    "antipsychotic agents",
+    "olanzapine"
+   ]
+  },
+  "Baclofen": {
+   "x": "baclofen",
+   "o": "baclofen",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "baclofen"
+   ]
+  },
+  "Barbiturates": {
+   "x": "barbiturates",
+   "o": "barbiturates",
+   "kind": "med",
+   "plural": true,
+   "names": [
+    "barbiturates",
+    "phenobarbital",
+    "butalbital"
+   ]
+  },
+  "Betel nut (areca)": {
+   "x": "betel nut (areca nut)",
+   "o": "betel nut",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "areca nut",
+    "betel quid",
+    "arecoline",
+    "betel nut"
+   ]
+  },
+  "Bromo-DragonFLY": {
+   "x": "Bromo-DragonFLY",
+   "o": "Bromo-DragonFLY",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "Bromo-DragonFLY",
+    "bromo-dragonfly"
+   ]
+  },
+  "Carisoprodol": {
+   "x": "carisoprodol (Soma)",
+   "o": "carisoprodol",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "carisoprodol"
+   ]
+  },
+  "Datura and other nightshades": {
+   "x": "datura (jimsonweed)",
+   "o": "datura",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "Datura stramonium",
+    "datura",
+    "jimsonweed",
+    "scopolamine",
+    "anticholinergic plants"
+   ]
+  },
+  "Desomorphine (krokodil)": {
+   "x": "krokodil (desomorphine)",
+   "o": "krokodil",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "desomorphine",
+    "krokodil"
+   ]
+  },
+  "Diarylethylamines (diphenidine, MXP)": {
+   "x": "diphenidine and MXP",
+   "o": "diphenidine",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "diphenidine",
+    "methoxphenidine",
+    "diarylethylamine"
+   ]
+  },
+  "Dimethocaine": {
+   "x": "dimethocaine",
+   "o": "dimethocaine",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "dimethocaine"
+   ]
+  },
+  "Diphenhydramine and similar antihistamines": {
+   "x": "diphenhydramine (Benadryl)",
+   "o": "Benadryl",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "diphenhydramine",
+    "dimenhydrinate",
+    "doxylamine"
+   ]
+  },
+  "Ephedrine and pseudoephedrine": {
+   "x": "ephedrine or pseudoephedrine (Sudafed)",
+   "o": "pseudoephedrine",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "ephedrine",
+    "pseudoephedrine"
+   ]
+  },
+  "Etomidate": {
+   "x": "etomidate",
+   "o": "etomidate",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "etomidate"
+   ]
+  },
+  "Fluoroamphetamines (2-FA, 4-FA)": {
+   "x": "4-FA and 2-FA",
+   "o": "4-FA",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "4-fluoroamphetamine",
+    "2-fluoroamphetamine",
+    "fluoroamphetamine",
+    "4-FA"
+   ]
+  },
+  "Gabapentinoids (gabapentin, pregabalin)": {
+   "x": "gabapentin or pregabalin (Lyrica)",
+   "o": "gabapentin",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "gabapentin",
+    "pregabalin",
+    "gabapentinoids"
+   ]
+  },
+  "Ibogaine": {
+   "x": "ibogaine",
+   "o": "ibogaine",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "ibogaine",
+    "Tabernanthe iboga",
+    "iboga"
+   ]
+  },
+  "Kambo": {
+   "x": "kambo",
+   "o": "kambo",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "kambo",
+    "Phyllomedusa bicolor",
+    "kambô"
+   ]
+  },
+  "Kava": {
+   "x": "kava",
+   "o": "kava",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "kava",
+    "Piper methysticum",
+    "kavalactones"
+   ]
+  },
+  "Ketamine analogues (MXE, DCK)": {
+   "x": "MXE and other ketamine-like drugs",
+   "o": "MXE",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "methoxetamine",
+    "deschloroketamine",
+    "2-fluorodeschloroketamine",
+    "ketamine analogues"
+   ]
+  },
+  "Khat": {
+   "x": "khat",
+   "o": "khat",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "khat",
+    "Catha edulis",
+    "cathinone"
+   ]
+  },
+  "LSA (morning glory, Hawaiian baby woodrose)": {
+   "x": "LSA (morning glory seeds, Hawaiian baby woodrose)",
+   "o": "LSA",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "lysergic acid amide",
+    "ergine",
+    "morning glory seeds",
+    "Argyreia nervosa"
+   ]
+  },
+  "LSD analogues (1P-LSD, AL-LAD)": {
+   "x": "1P-LSD and other LSD-like drugs",
+   "o": "1P-LSD",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "1P-LSD",
+    "AL-LAD",
+    "ALD-52",
+    "lysergamides"
+   ]
+  },
+  "Loperamide": {
+   "x": "loperamide (Imodium)",
+   "o": "loperamide",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "loperamide"
+   ]
+  },
+  "MDA-like drugs (MDEA, MDAI, benzofurans)": {
+   "x": "6-APB and other MDMA-like drugs",
+   "o": "6-APB",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "MDAI",
+    "6-APB",
+    "5-APB",
+    "MDEA",
+    "benzofurans",
+    "aminoindanes"
+   ]
+  },
+  "Medicines for ADHD that are not stimulants": {
+   "x": "non-stimulant ADHD medicines like atomoxetine (Strattera)",
+   "o": "Strattera",
+   "kind": "med",
+   "plural": true,
+   "names": [
+    "atomoxetine",
+    "guanfacine",
+    "clonidine"
+   ]
+  },
+  "Memantine": {
+   "x": "memantine",
+   "o": "memantine",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "memantine"
+   ]
+  },
+  "Methaqualone (Quaaludes)": {
+   "x": "Quaaludes (methaqualone)",
+   "o": "Quaaludes",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "methaqualone"
+   ]
+  },
+  "Modafinil and armodafinil": {
+   "x": "modafinil",
+   "o": "modafinil",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "modafinil",
+    "armodafinil"
+   ]
+  },
+  "Muscle relaxants (cyclobenzaprine, methocarbamol)": {
+   "x": "muscle relaxants like cyclobenzaprine (Flexeril)",
+   "o": "cyclobenzaprine",
+   "kind": "med",
+   "plural": true,
+   "names": [
+    "cyclobenzaprine",
+    "methocarbamol",
+    "tizanidine"
+   ]
+  },
+  "NBOMes": {
+   "x": "NBOMes (N-bombs)",
+   "o": "NBOMes",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "25I-NBOMe",
+    "NBOMe",
+    "25B-NBOMe",
+    "25C-NBOMe"
+   ]
+  },
+  "Naltrexone": {
+   "x": "naltrexone",
+   "o": "naltrexone",
+   "kind": "dep",
+   "plural": false,
+   "names": [
+    "naltrexone"
+   ]
+  },
+  "Nitazenes and other new synthetic opioids": {
+   "x": "nitazenes",
+   "o": "nitazenes",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "nitazenes",
+    "isotonitazene",
+    "metonitazene",
+    "protonitazene",
+    "2-benzylbenzimidazole opioids"
+   ]
+  },
+  "Nootropics and supplements": {
+   "x": "nootropics",
+   "o": "nootropics",
+   "kind": "sup",
+   "plural": true,
+   "names": [
+    "nootropics",
+    "cognitive enhancers",
+    "piracetam",
+    "racetams"
+   ]
+  },
+  "Nutmeg": {
+   "x": "nutmeg",
+   "o": "nutmeg",
+   "kind": "house",
+   "plural": false,
+   "names": [
+    "nutmeg",
+    "myristicin",
+    "Myristica fragrans"
+   ]
+  },
+  "Opium": {
+   "x": "opium",
+   "o": "opium",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "opium",
+    "Papaver somniferum",
+    "poppy tea"
+   ]
+  },
+  "Other medicines people ask about": null,
+  "Other plants (kanna, blue lotus, damiana, wild dagga)": null,
+  "Other tryptamines (4-AcO-DMT, 4-HO-MET, DPT)": {
+   "x": "4-AcO-DMT and similar tryptamines",
+   "o": "4-AcO-DMT",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "4-AcO-DMT",
+    "O-acetylpsilocin",
+    "4-HO-MET",
+    "tryptamines"
+   ]
+  },
+  "PCP-like drugs (3-MeO-PCP, 3-MeO-PCE)": {
+   "x": "3-MeO-PCP and other PCP-like drugs",
+   "o": "3-MeO-PCP",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "3-MeO-PCP",
+    "3-MeO-PCE",
+    "arylcyclohexylamines"
+   ]
+  },
+  "PMA and PMMA": {
+   "x": "PMA and PMMA",
+   "o": "PMA",
+   "kind": "chem",
+   "plural": true,
+   "names": [
+    "para-methoxyamphetamine",
+    "PMMA",
+    "paramethoxymethamphetamine",
+    "PMA"
+   ]
+  },
+  "Pain and cold medicines (paracetamol, ibuprofen, aspirin)": null,
+  "Phenibut": {
+   "x": "phenibut",
+   "o": "phenibut",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "phenibut"
+   ]
+  },
+  "Phentermine": {
+   "x": "phentermine",
+   "o": "phentermine",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "phentermine"
+   ]
+  },
+  "Semi-synthetic cannabinoids (HHC, THCP)": {
+   "x": "HHC",
+   "o": "HHC",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "hexahydrocannabinol",
+    "HHC",
+    "THCP",
+    "semi-synthetic cannabinoids"
+   ]
+  },
+  "Sleep medicines that block orexin": {
+   "x": "sleep medicines like suvorexant (Belsomra)",
+   "o": "suvorexant",
+   "kind": "med",
+   "plural": true,
+   "names": [
+    "suvorexant",
+    "lemborexant",
+    "daridorexant",
+    "orexin receptor antagonists"
+   ]
+  },
+  "Tianeptine": {
+   "x": "tianeptine",
+   "o": "tianeptine",
+   "kind": "chem",
+   "plural": false,
+   "names": [
+    "tianeptine"
+   ]
+  },
+  "Yopo": {
+   "x": "yopo",
+   "o": "yopo",
+   "kind": "plant",
+   "plural": false,
+   "names": [
+    "Anadenanthera peregrina",
+    "yopo",
+    "bufotenin"
+   ]
+  },
+  "Z-drugs (zolpidem, zopiclone)": {
+   "x": "zolpidem (Ambien) or zopiclone",
+   "o": "Ambien",
+   "kind": "med",
+   "plural": false,
+   "names": [
+    "zolpidem",
+    "zopiclone",
+    "eszopiclone",
+    "Z-drugs"
+   ]
+  },
+  "alcohol": {
+   "x": "alcohol",
+   "o": "alcohol",
+   "kind": "page",
+   "plural": false
+  },
+  "benzodiazepines": {
+   "x": "benzodiazepines (Xanax, Valium)",
+   "o": "benzos",
+   "kind": "page",
+   "plural": true
+  },
+  "ghb-gbl": {
+   "x": "GHB",
+   "o": "GHB",
+   "kind": "page",
+   "plural": false
+  },
+  "caffeine": {
+   "x": "caffeine",
+   "o": "caffeine",
+   "kind": "page",
+   "plural": false
+  },
+  "nicotine": {
+   "x": "nicotine",
+   "o": "nicotine",
+   "kind": "page",
+   "plural": false
+  },
+  "cocaine": {
+   "x": "cocaine",
+   "o": "cocaine",
+   "kind": "page",
+   "plural": false
+  },
+  "amphetamine": {
+   "x": "amphetamine (speed, Adderall)",
+   "o": "amphetamine",
+   "kind": "page",
+   "plural": false
+  },
+  "methamphetamine": {
+   "x": "meth",
+   "o": "meth",
+   "kind": "page",
+   "plural": false
+  },
+  "methylphenidate": {
+   "x": "methylphenidate (Ritalin)",
+   "o": "Ritalin",
+   "kind": "page",
+   "plural": false
+  },
+  "synthetic-cathinones": {
+   "x": "synthetic cathinones (bath salts, 3-MMC)",
+   "o": "bath salts",
+   "kind": "page",
+   "plural": true
+  },
+  "mdma": {
+   "x": "MDMA (ecstasy, molly)",
+   "o": "MDMA",
+   "kind": "page",
+   "plural": false
+  },
+  "lsd": {
+   "x": "LSD",
+   "o": "LSD",
+   "kind": "page",
+   "plural": false
+  },
+  "psilocybin": {
+   "x": "magic mushrooms",
+   "o": "shrooms",
+   "kind": "page",
+   "plural": true
+  },
+  "dmt-ayahuasca": {
+   "x": "DMT",
+   "o": "DMT",
+   "kind": "page",
+   "plural": false
+  },
+  "5-meo-dmt": {
+   "x": "5-MeO-DMT",
+   "o": "5-MeO-DMT",
+   "kind": "page",
+   "plural": false
+  },
+  "mescaline": {
+   "x": "mescaline",
+   "o": "mescaline",
+   "kind": "page",
+   "plural": false
+  },
+  "2c-x": {
+   "x": "2C-B",
+   "o": "2C-B",
+   "kind": "page",
+   "plural": false
+  },
+  "ketamine": {
+   "x": "ketamine",
+   "o": "ketamine",
+   "kind": "page",
+   "plural": false
+  },
+  "pcp": {
+   "x": "PCP",
+   "o": "PCP",
+   "kind": "page",
+   "plural": false
+  },
+  "dxm": {
+   "x": "DXM (dextromethorphan)",
+   "o": "DXM",
+   "kind": "page",
+   "plural": false
+  },
+  "nitrous-oxide": {
+   "x": "nitrous oxide (laughing gas)",
+   "o": "nitrous oxide",
+   "kind": "page",
+   "plural": false
+  },
+  "cannabis": {
+   "x": "cannabis",
+   "o": "weed",
+   "kind": "page",
+   "plural": false
+  },
+  "synthetic-cannabinoids": {
+   "x": "synthetic cannabinoids (Spice, K2)",
+   "o": "spice",
+   "kind": "page",
+   "plural": true
+  },
+  "heroin": {
+   "x": "heroin",
+   "o": "heroin",
+   "kind": "page",
+   "plural": false
+  },
+  "fentanyl-and-analogues": {
+   "x": "fentanyl",
+   "o": "fentanyl",
+   "kind": "page",
+   "plural": false
+  },
+  "prescription-opioids": {
+   "x": "prescription opioids like oxycodone",
+   "o": "oxycodone",
+   "kind": "page",
+   "plural": true
+  },
+  "methadone-buprenorphine": {
+   "x": "methadone or buprenorphine (Suboxone)",
+   "o": "methadone",
+   "kind": "page",
+   "plural": false
+  },
+  "kratom": {
+   "x": "kratom",
+   "o": "kratom",
+   "kind": "page",
+   "plural": false
+  },
+  "alkyl-nitrites-and-inhalants": {
+   "x": "poppers",
+   "o": "poppers",
+   "kind": "page",
+   "plural": true
+  },
+  "salvia-divinorum": {
+   "x": "salvia",
+   "o": "salvia",
+   "kind": "page",
+   "plural": false
+  }
+ },
+ "order": {
+  "chem": [
+   "what",
+   "feel",
+   "addict",
+   "test",
+   "tol",
+   "wd",
+   "long",
+   "brain"
+  ],
+  "plant": [
+   "what",
+   "feel",
+   "addict",
+   "test",
+   "tol",
+   "wd",
+   "long",
+   "brain"
+  ],
+  "med": [
+   "high",
+   "addict",
+   "wd",
+   "test",
+   "tol",
+   "long",
+   "brain"
+  ],
+  "page": [
+   "test",
+   "tol",
+   "feel",
+   "addict",
+   "wd",
+   "long",
+   "brain"
+  ],
+  "steroid": [
+   "ster",
+   "addict",
+   "ster_stop"
+  ],
+  "sup": [
+   "noo",
+   "noo_risk",
+   "addict",
+   "long"
+  ],
+  "dep": [
+   "nal"
+  ],
+  "myth": [
+   "adr"
+  ],
+  "house": [
+   "nut"
+  ]
+ }
+}

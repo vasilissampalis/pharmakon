@@ -300,7 +300,7 @@ def field(terms, title_only=False):
     return "(" + " OR ".join(t if t.startswith("(") else f'TITLE:"{t}"' if title_only else f'TITLE:"{t}" OR ABSTRACT:"{t}"' for t in terms) + ")"
 
 
-def searches(question, ways, names, drugs=None, terms=None):
+def searches(question, ways, names, drugs=None, terms=None, extra=None):
     """The searches for a question, in Europe PMC's syntax, each with what it is for. Reviews that can be read first; then
     any paper that can be read; then reviews that cannot (for the list of papers wanted); then the drug's most cited
     reviews. drugs: the drugs the question is about, by the site's names for them (also where it names none); terms: the
@@ -310,6 +310,7 @@ def searches(question, ways, names, drugs=None, terms=None):
         g = list(dict.fromkeys(SYN.get(s, [s.replace("-", " ")])))
         if g not in groups: groups.append(g)
     if drugs and len(drugs) > 1 and len(groups) > 1 and not drug_terms(question, names)[0]: groups = [[t for g in groups for t in g]]   # several drugs the question does not name one by one: any of them
+    if extra and not groups: groups = [list(dict.fromkeys(str(n) for n in extra if n))]      # a drug that has no page yet: what papers call it comes with the question (scripts/auto/grow.py)
     pat = re.compile(r"(?<!\w)(" + "|".join(re.escape(n) for n, _ in names) + r")(?!\w)", re.I)
     topics = list(terms)[:10] if terms else topic_terms([question] + list(ways or []), lambda t: pat.sub(" ", t))
     drug = " AND ".join(field(g) for g in groups) if groups else field(FAMILY["drugs"])
@@ -372,7 +373,7 @@ def rank(question, ways, cands, enc):
 
 def find(item, names, enc, opener=None):
     """Everything found for one question (see the head of this file)."""
-    qs, groups, topics = searches(item["q"], item.get("ways") or [], names, item.get("drugs"), item.get("terms"))
+    qs, groups, topics = searches(item["q"], item.get("ways") or [], names, item.get("drugs"), item.get("terms"), item.get("names"))
     seen, log, problems = {}, [], []
     for s in qs:
         try: got, hits = epmc_search(s["query"], opener=opener, sort=s.get("sort"))
@@ -485,7 +486,7 @@ def main():
         elif not again: items = [w for w in items if old(w)]
     elif ids: items = [w for w in items if w["id"] in ids]
     else: items = [w for w in items if old(w)]
-    items = items[:limit]
+    items = sorted(items, key=lambda w: (out / (w["id"] + ".json")).exists())[:limit]     # a question never searched comes before one searched by an older finder
     import build_index as bi
     names = bi.names_table(); enc = General(); done = 0
     for w in items:

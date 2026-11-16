@@ -113,6 +113,7 @@ jobs:
             step "a question a visitor sent becomes a question on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run --marker "$RUNNER_TEMP/new-items"
           fi
           if [ "$DO_LANE" = "true" ] || [ -f "$RUNNER_TEMP/new-items" ]; then   # (a question that was just listed is worked on in this same run)
+            step "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run
             step "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 6
             step "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 8
             step "the lane writes" python3 -I scripts/auto/lane.py run --max 3
