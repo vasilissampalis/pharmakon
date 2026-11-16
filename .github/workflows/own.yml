@@ -5,6 +5,9 @@
 #   nli-*.json  {"models": [...]}                                   open checker models sit the whole exam as they are
 #   own-*.json  {"do": "export", "model": "...", "as": "pharmakon-check-0"}   a model is made into a file of numbers, sits
 #                                                                    the exam AS THAT FILE, and becomes a candidate
+#   train-*.json {"from": "...", "as": "pharmakon-check-1"}         an open model's top layers learn from our own lessons
+#                                                                    (data/auto/own/teach, made by the workflow "Lessons"),
+#                                                                    and the result is made into a file and sits the exams
 #
 # Two jobs, on purpose. "make" fetches models and packages from outside and runs them: it may only READ the repository and
 # is given no key at all. "keep" runs nothing from outside: it takes the plain files "make" left (numbers, tables, records)
@@ -19,6 +22,7 @@ on:
     paths:
       - "data/auto/requests/nli-*.json"
       - "data/auto/requests/own-*.json"
+      - "data/auto/requests/train-*.json"
 
 permissions:
   contents: read
@@ -30,7 +34,7 @@ concurrency:
 jobs:
   make:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 240
     permissions:
       contents: read
     steps:
@@ -54,7 +58,7 @@ jobs:
         run: |
           set +e
           L="$RUNNER_TEMP/workshop.log"; : > "$L"; mkdir -p out
-          ls data/auto/requests/nli-*.json data/auto/requests/own-*.json 2>/dev/null > out/_handled.txt
+          ls data/auto/requests/nli-*.json data/auto/requests/own-*.json data/auto/requests/train-*.json 2>/dev/null > out/_handled.txt
           if ls data/auto/requests/nli-*.json >/dev/null 2>&1; then
             python3 -I scripts/auto/nli.py exam --requests --minutes 38 >> "$L" 2>&1 || echo "!! the exam of open models failed ($?)" >> "$L"
           fi
@@ -63,7 +67,12 @@ jobs:
             python3 -I scripts/auto/workshop.py --selftest >> "$L" 2>&1 || echo "!! the workshop's own check failed ($?)" >> "$L"
             python3 -I scripts/auto/workshop.py requests >> "$L" 2>&1 || echo "!! the workshop failed ($?)" >> "$L"
           fi
-          grep -v "Warning\|warn" "$L" | tail -n 80 | cut -c1-700 > out/_notes.txt
+          if ls data/auto/requests/train-*.json >/dev/null 2>&1; then
+            python3 -I scripts/auto/train.py --selftest >> "$L" 2>&1 || echo "!! the trainer's own check failed ($?)" >> "$L"
+            python3 -I scripts/auto/train.py requests >> "$L" 2>&1 || echo "!! the training failed ($?)" >> "$L"
+          fi
+          rm -rf out/_trained out/_tok
+          grep -v "Warning\|warn\|Loading weights\|shards" "$L" | tail -n 90 | cut -c1-700 > out/_notes.txt
           mkdir -p out/exam && cp data/auto/exam/nli-*.json out/exam/ 2>/dev/null
           ls -la out | cut -c20-200 >> out/_notes.txt
       - name: Hand the plain files to the job that may write
@@ -109,7 +118,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # only the requests the first job saw are taken off (one that arrived meanwhile starts its own run); the names are checked, because the list comes from that job
-          grep -E '^data/auto/requests/(nli|own)-[0-9A-Za-z._-]+\.json$' out/_handled.txt 2>/dev/null | while read -r f; do git rm -q --ignore-unmatch "$f"; done
+          grep -E '^data/auto/requests/(nli|own|train)-[0-9A-Za-z._-]+\.json$' out/_handled.txt 2>/dev/null | while read -r f; do git rm -q --ignore-unmatch "$f"; done
           git add -A data/auto/exam data/auto/own data/auto/requests
           git diff --cached --quiet || git commit -q -m "Workshop: what the models said of every card, and the candidates made"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)
