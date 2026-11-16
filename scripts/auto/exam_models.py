@@ -78,6 +78,7 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     bad = [i for i in items if not i["good"]]; good = [i for i in items if i["good"]]
     rnd = random.Random(20261115); draw = rnd.sample(good, min(n_good, len(good)))
     pieces = how == "pieces"                                                                               # (16 November: the reader copies the passage's words for every piece of the card, and the code gives the verdict: lane.pieces_verdict)
+    bare = how == "plain"                                                                                  # (16 November: one verdict, on the card's true part as it stands. The frame "It is a fact that:" made strict readers refuse good cards for the frame's own sureness)
     marks = how == "marks"                                                                                 # (16 November: five small questions, one for each kind of fault our checkers find, and the code gives the verdict: lane.marks_verdict)
     room = lane.room_for(model, 700 if pieces else 420 if marks else 220) if "gpt-oss" in model or not model.startswith("groq:") else 2000          # (a model that reasons first needs room: on 15 November gpt-oss-120b gave no verdict in 220, nor in 700)
     svc = llm.service_of(model)[0]                                                                             # (a service that counts calls: one card is one call, and five calls are kept)
@@ -86,7 +87,7 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     plain_effort = ("low" if model.endswith("gpt-oss-20b") else "medium") if "gpt-oss" in model else "none" if "qwen3" in model else ""
     effort = effort if effort in ("low", "medium", "high") and groq and "gpt-oss" in model else plain_effort
     if groq and effort != plain_effort: llm.EFFORT[model[5:]] = effort
-    f = file or EXAM / ("model-" + re.sub(r"[^a-z0-9.-]+", "-", model.lower()).strip("-") + ("-pieces" if pieces else "-marks" if marks else "") + ("-" + effort if effort != plain_effort else "") + ".json")
+    f = file or EXAM / ("model-" + re.sub(r"[^a-z0-9.-]+", "-", model.lower()).strip("-") + ("-pieces" if pieces else "-marks" if marks else "-plain" if bare else "") + ("-" + effort if effort != plain_effort else "") + ".json")
     if marks and file and "-marks" not in file.name: f = file.with_name(file.name.replace(".json", "-marks.json"))          # (a second way of asking never writes into the first way's file)
     try: old = json.load(open(f, encoding="utf-8"))
     except (OSError, ValueError): old = {}
@@ -119,7 +120,8 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
         sent, plain, lines = framed(it)
         if marks and not it.get("plain"): sent = plain                                                      # (a card's true part, as a checker of sentences reads it: no frame of "It is a fact that")
         try: out = llm.as_json(chat(model, [{"role": "system", "content": lane.PIECES_SYS if pieces else lane.MARKS_SYS if marks else lane.CHECKER_SYS},
-                                            {"role": "user", "content": lane.pieces_prompt(sent, lines, denies=not it["card"]["answer"]) if pieces else lane.marks_prompt(it["card"]["statement"] if it.get("plain") else sent, lines) if marks else prompt(it)}], room))
+                                            {"role": "user", "content": lane.pieces_prompt(sent, lines, denies=not it["card"]["answer"]) if pieces else lane.marks_prompt(it["card"]["statement"] if it.get("plain") else sent, lines) if marks
+                                             else prompt(dict(it, plain=True, card=dict(it["card"], statement=plain))) if bare and not it.get("plain") else prompt(it)}], room))
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e); break
         except llm.Unavailable as e:
             if "too large" in str(e).lower() or "request_too_large" in str(e).lower(): res[it["id"]] = {"through": False, "clear": False, "problem": "the card and its lines are too long for one call"}; continue
@@ -191,6 +193,11 @@ def selftest():
     json.dump({"claims": {"c1": [["THE CLAIM", "People said desire often rose."], ["WHO WAS STUDIED", "20 men"]]}, "items": [{"id": "c1#short~was", "claim": "c1", "good": False, "line": "Desire often goes up.", "what": "a recollection said as a fact"}, {"id": "c1#short", "claim": "c1", "good": True, "line": "People say desire often goes up."}]}, open(xf, "w"))
     xc = lines_cards(xf); pr = prompt(xc[0])
     assert "1. SENTENCE: Desire often goes up.\n   PASSAGE: (THE CLAIM) People said desire often rose.\n   PASSAGE: (WHO WAS STUDIED) 20 men" in pr and xc[1]["good"] and xc[0]["what"], pr[-300:]
+    # one verdict on a card's true part as it stands: no frame, and a file of its own
+    pf = pathlib.Path(tempfile.mkdtemp()) / "p.json"; seen6 = []
+    def chat6(model, messages, room): seen6.append(messages[1]["content"]); return json.dumps({"verdicts": [{"n": 1, "supported": True, "problem": ""}]})
+    r = sit("gemini:gemini-3.5-flash-lite", 3, cards=cards[:6], chat=chat6, left=lambda: 1000, file=pf, how="plain")
+    assert "It is a fact that" not in seen6[0] and "It is a myth" not in "".join(seen6) and "1. SENTENCE: " in seen6[0] and r["how"] == "plain", seen6[0][-300:]
     # asked for marks: five small questions, the code gives the verdict, and the result goes to a file of its own
     mf = pathlib.Path(tempfile.mkdtemp()) / "model-x-lane.json"; got = []
     def chat5(model, messages, room):
@@ -225,6 +232,6 @@ if __name__ == "__main__":
                     lc = lines_cards(); sit(m, 2 * sum(not i["good"] for i in lc), cards=lc, file=EXAM / ("model-" + slug(m) + "-lines.json"), **opts)
                 if which in ("lane", "lines"): continue
                 for h in hows[:2]:
-                    sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until, how=h if h in ("pieces", "marks") else None, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
+                    sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until, how=h if h in ("pieces", "marks", "plain") else None, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
                         most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)
     else: sys.exit(__doc__)
