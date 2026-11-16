@@ -246,6 +246,28 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     is not shown on such a page (a class is a person's judgment, or a source's own words; neither is there yet). The
     emergency page is never written by the system.
 
+23. **Our own models** (16 November 2026, 22:04: "this is why i wanted us to make our own ai. can we make the algorithm
+    to read and write and that can be automated? ... if we can make our own ai we should that's what i was trying to do
+    from the beginning, our own autonomous self expanding ai"; 22:15, of the editor's three steps: "make this perfect
+    and finalized i want us to start this and it to work with no errors and outmost smartness"). He chose this over a
+    paid key for an outside model. What it is: small models of our own for the steps where correctness is decided, run
+    on GitHub's machines with no key and no service, like the search model (Pharmakon Insight).
+    1. *A checker* ("does this passage support this sentence?"): first the open models made for that question sit the
+       whole exam (`scripts/auto/nli.py`: MiniCheck, LettuceDetect); the best joins the lane as a second judge that
+       must also accept every sentence; then it is trained on our own checked record (the cards our blind checkers
+       passed, stopped and corrected; the editor's readings of the lane's own sentences; made-up wrong sentences of the
+       kinds we have seen).
+    2. *A reader* (which sentences of a source answer the question, word for word), measured and trained on our own
+       claims and the passages they rest on.
+    3. *A writer* (a source's sentences into our plain style), trained on our checked answers and on drafts of the free
+       models that our own checker accepted; until it is good enough the free open models write.
+    The rule that holds for every one of them, in code: a model replaces the one in use only if it does better on the
+    exam (fewer wrong sentences let through, no more good ones stopped), and every trial's numbers are kept in the
+    repository. What the editor told him is not possible: a model built from nothing that writes as the editor does;
+    and "no errors" is not promised by anyone: the error rate is measured, shown and pushed down. Things fetched from
+    outside (open models, their packages) run only in a job that may read the repository and holds no key
+    (`.github/workflows/nli.yml`).
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
