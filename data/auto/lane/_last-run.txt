@@ -4,8 +4,17 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)
-== a model sits the exam as the checker
-exam: groq:openai/gpt-oss-120b (effort: medium): caught 5 of 11 wrong cards, stopped 2 of 11 good ones, no clear word on 0; on the whole exam 6.7 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the request asked for 22 cards in this sitting); 40 cards left for the next sitting
-exam: groq:openai/gpt-oss-120b (piece by piece) (effort: medium): caught 10 of 10 wrong cards, stopped 10 of 10 good ones, no clear word on 15; on the whole exam 0.0 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the day's allowance: 2117 tokens left, and 3000 are kept for the site's own work); 42 cards left for the next sitting
+== is everything within reach?
+probe: @cf/qwen/qwen3-30b-a3b-fp8 ok 
+probe: @cf/meta/llama-3.3-70b-instruct-fp8-fast ok 
+probe: @cf/google/gemma-4-26b-a4b-it ok 
+probe: @cf/mistralai/mistral-small-3.1-24b-instruct ok 
+probe: @cf/openai/gpt-oss-120b ok 
+probe: @cf/openai/gpt-oss-20b ok 
+probe: @cf/zai-org/glm-4.7-flash ok 
+probe: @cf/meta/llama-4-scout-17b-16e-instruct ok 
+probe: gemini 64 models offered
+probe: openrouter 14 models offered
+probe: store ok {'questions': 1, 'listed_items_counted': 0}
 == write
 lane: no request waiting
