@@ -1,5 +1,5 @@
 {
- "_note": "The official bodies the machine lane may read (scripts/auto/official.py), by the senior author's decision of 15 November 2026: 'I want it to read official websites too where it can get access'; 'official sites like NHS and EVERYTHING similar it's so many official sites worldwide'. tier 1: a health service, a health ministry or agency, or a UN or EU body. tier 2: an information service that a government pays for. author: the body's name as the reference gives it (APA 7 group author); site: the website's name where it is not the author; short: how an answer names the body in its text. hubs: pages of the site whose links lead to its pages about drugs; include: which of those addresses count (regular expressions on the path); deep: pages read one step further; children: a page that fits leads to the pages under it; api: the body answers a search itself (its public service is asked instead). A body is read only where its own robots.txt allows it; whether it does is found out on the machine that reads (official.py probe, written to _probe.json), never assumed here. To add a body: add a line, run the probe, read what it says. English first: a page in another language is not read yet. Law-enforcement pages are not listed: they are not health bodies. refused: a body whose site said no to our reader, with the day; it is not asked again until someone names it in a request (a refusal is never gone around).",
+ "_note": "The official bodies the machine lane may read (scripts/auto/official.py), by the senior author's decision of 15 November 2026: 'I want it to read official websites too where it can get access'; 'official sites like NHS and EVERYTHING similar it's so many official sites worldwide'. tier 1: a health service, a health ministry or agency, or a UN or EU body. tier 2: an information service that a government pays for. author: the body's name as the reference gives it (APA 7 group author); site: the website's name where it is not the author; short: how an answer names the body in its text. hubs: pages of the site whose links lead to its pages about drugs; include: which of those addresses count (regular expressions on the path); deep: pages read one step further; children: a page that fits leads to the pages under it; api: the body answers a search itself (its public service is asked instead). A body is read only where its own robots.txt allows it; whether it does is found out on the machine that reads (official.py probe, written to _probe.json), never assumed here. To add a body: add a line, run the probe, read what it says. English first: a page in another language is not read yet. Law-enforcement pages are not listed: they are not health bodies. refused: a body whose site said no to our reader, with the day; it is not asked again until someone names it in a request (a refusal is never gone around). 16 November 2026: five more bodies after the first real answers about amounts missed the best-known statements on caffeine (the FDA's pages for consumers, the European Food Safety Authority, Health Canada's page on caffeine in foods) and Canada's newer guidance on alcohol (the Canadian Centre on Substance Use and Addiction); Australia's National Health and Medical Research Council for its alcohol guidelines; Drug Science as a second-tier body. What each site allows is found by the probe, as for the others.",
  "sources": [
   {
    "id": "nhs",
@@ -264,10 +264,12 @@
     "https://www.canada.ca/en/health-canada/services/substance-use.html",
     "https://www.canada.ca/en/health-canada/services/opioids.html",
     "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/health-effects.html",
-    "https://www.canada.ca/en/health-canada/services/substance-use/alcohol.html"
+    "https://www.canada.ca/en/health-canada/services/substance-use/alcohol.html",
+    "https://www.canada.ca/en/health-canada/services/food-nutrition/food-safety/food-additives/caffeine-foods.html"
    ],
    "include": [
-    "^/en/health-canada/services/(substance-use|opioids|drugs-medication/cannabis|smoking-tobacco)(/.+)?\\.html$"
+    "^/en/health-canada/services/(substance-use|opioids|drugs-medication/cannabis|smoking-tobacco)(/.+)?\\.html$",
+    "^/en/health-canada/services/food-nutrition/food-safety/food-additives/caffeine-foods[a-z0-9/-]*\\.html$"
    ],
    "deep": [
     "^/en/health-canada/services/(substance-use|opioids)/[a-z0-9-]+\\.html$"
@@ -363,6 +365,81 @@
    "base": "https://thelevel.org.nz",
    "hubs": [
     "https://thelevel.org.nz/drug-information"
+   ],
+   "include": [
+    "^/drug-information/[a-z0-9-]+/?$"
+   ]
+  },
+  {
+   "id": "fdaconsumer",
+   "author": "U.S. Food and Drug Administration",
+   "short": "the US Food and Drug Administration",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://www.fda.gov",
+   "hubs": [
+    "https://www.fda.gov/consumers/consumer-updates"
+   ],
+   "include": [
+    "^/consumers/consumer-updates/[a-z0-9-]*(caffeine|alcohol|nicotine|vap|e-cigarette|tobacco|smok|cannabis|cbd|delta-8|thc|opioid|fentanyl|naloxone|kratom|tianeptine|benzodiazepine|sleep|melatonin|kava|drug|medicine|medication|overdose|supplement|energy|stimulant|adhd|pain-reliever|acetaminophen)[a-z0-9-]*$"
+   ]
+  },
+  {
+   "id": "efsa",
+   "author": "European Food Safety Authority",
+   "short": "the European Food Safety Authority",
+   "country": "European Union",
+   "tier": 1,
+   "base": "https://www.efsa.europa.eu",
+   "hubs": [
+    "https://www.efsa.europa.eu/en/topics/topic/caffeine",
+    "https://www.efsa.europa.eu/en/topics/topic/cannabidiol"
+   ],
+   "include": [
+    "^/en/topics/topic/(caffeine|cannabidiol|energy-drinks|alcohol|nicotine)[a-z0-9-]*$"
+   ]
+  },
+  {
+   "id": "ccsa",
+   "author": "Canadian Centre on Substance Use and Addiction",
+   "short": "the Canadian Centre on Substance Use and Addiction",
+   "country": "Canada",
+   "tier": 1,
+   "base": "https://www.ccsa.ca",
+   "hubs": [
+    "https://www.ccsa.ca/en/guidance-tools-and-resources/alcohol",
+    "https://www.ccsa.ca/en/guidance-tools-and-resources/cannabis",
+    "https://www.ccsa.ca/en/guidance-tools-and-resources/opioids"
+   ],
+   "include": [
+    "^/en/guidance-tools-and-resources/[a-z0-9-]+(/[a-z0-9-]+)?$",
+    "^/en/canadas-guidance-alcohol-and-health[a-z0-9-]*$"
+   ]
+  },
+  {
+   "id": "nhmrc",
+   "author": "National Health and Medical Research Council",
+   "short": "Australia's National Health and Medical Research Council",
+   "country": "Australia",
+   "tier": 1,
+   "base": "https://www.nhmrc.gov.au",
+   "hubs": [
+    "https://www.nhmrc.gov.au/health-advice/alcohol"
+   ],
+   "include": [
+    "^/health-advice/alcohol[a-z0-9/-]*$",
+    "^/about-us/publications/australian-guidelines-reduce-health-risks-drinking-alcohol[a-z0-9/-]*$"
+   ]
+  },
+  {
+   "id": "drugscience",
+   "author": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "country": "United Kingdom",
+   "tier": 2,
+   "base": "https://www.drugscience.org.uk",
+   "hubs": [
+    "https://www.drugscience.org.uk/drug-information/"
    ],
    "include": [
     "^/drug-information/[a-z0-9-]+/?$"
