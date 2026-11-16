@@ -658,6 +658,7 @@ def room_for(model, plain):
     """How many tokens a model may answer with. One that reasons before it writes needs room for both: on 16 November 2026
     gpt-oss-120b used all of 1,400 tokens reasoning and wrote nothing, three times for each of two questions; with 3,000 it
     reasoned for some 1,300 and then wrote its answer (data/auto/exam/writer-trial.json)."""
+    if llm.service_of(model)[0]: return plain + 1500                         # (a model of another service may reason before it writes: room for both until a trial says how much it needs)
     return plain + (1200 if "gpt-oss-20b" in model else 2200 if "gpt-oss" in model else 0)      # (the small gpt-oss only reads, with little reasoning; qwen3 at Groq answers without reasoning: its free plan gives it 1,000 output tokens a minute)
 
 
@@ -1207,7 +1208,8 @@ def wanted_list():
 NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000), "planner": (250, 7000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
 
 
-def base(model): return re.sub(r"^(?:groq:|@cf/)", "", model or "").split("/")[-1]       # the model itself, whichever service runs it
+def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|gemini:|openrouter:|claude:)", "", model or "")).split("/")[-1]       # the model itself, whichever service runs it
+CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
 
 
 def team(file=None):
@@ -1227,10 +1229,14 @@ def team(file=None):
                     if planner: m["planner"] = planner
                     if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
                     if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
-                    need = {}
-                    for role, v in m.items(): need[v] = need.get(v, 0) + NEED[role][1 if v.startswith("groq:") else 0]
+                    need, calls = {}, {}
+                    for role, v in m.items():
+                        svc = llm.service_of(v)[0]
+                        if svc: calls[svc] = calls.get(svc, 0) + CALLS[role]
+                        else: need[v] = need.get(v, 0) + NEED[role][1 if v.startswith("groq:") else 0]
                     if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
                     if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
+                    if any(n > llm.calls_left(svc) for svc, n in calls.items()): continue
                     return dict(m, team=t.get("name") or "")
     return None
 

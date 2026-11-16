@@ -414,6 +414,40 @@ def selftest():
     except Budget: pass
     assert groq_left("openai/gpt-oss-120b") == 0 and groq_left("openai/gpt-oss-120b", now=time.time() + 6 * 3600) > 29000
     del os.environ["GROQ_API_KEY"]
+    # ---- more services: each is off without its key; a call is counted; the common form and Claude's own form; a paid model is never asked without its price and its limit
+    global PRICES
+    assert not has("mistral:mistral-large-latest") and service_of("mistral:mistral-large-latest") == ("mistral", "mistral-large-latest") and service_of("@cf/openai/gpt-oss-120b") == (None, "@cf/openai/gpt-oss-120b") and service_of("groq:x/y")[0] is None
+    try: chat("mistral:mistral-large-latest", [{"role": "user", "content": "x"}], 50, lambda *a, **k: (_ for _ in ()).throw(AssertionError("called without a key"))); raise AssertionError("no Unavailable")
+    except Unavailable: pass
+    os.environ["MISTRAL_API_KEY"] = "M\n"; os.environ["OPENROUTER_API_KEY"] = "O"; os.environ["ANTHROPIC_API_KEY"] = "A"; seen = []
+    def sopener(req, timeout=0):
+        b = json.loads(req.data.decode("utf-8")); seen.append((req.full_url, dict(req.header_items()), b))
+        if "anthropic" in req.full_url: return Resp({"content": [{"type": "thinking", "thinking": "hm"}, {"type": "text", "text": '{"ok": true}'}], "usage": {"input_tokens": 1000, "output_tokens": 200}, "stop_reason": "end_turn"})
+        return Resp({"choices": [{"message": {"content": '{"ok": true}'}, "finish_reason": "stop"}], "usage": {"prompt_tokens": 900, "completion_tokens": 100}})
+    assert has("mistral:mistral-large-latest") and as_json(chat("mistral:mistral-large-latest", [{"role": "system", "content": "JSON only"}, {"role": "user", "content": "x"}], 50, sopener)) == {"ok": True}
+    u, h, b = seen[-1]; assert u == SERVICES["mistral"]["url"] and h["Authorization"] == "Bearer M" and b["model"] == "mistral-large-latest" and b["response_format"] == {"type": "json_object"} and b["messages"][0]["role"] == "system"
+    assert svc_used("mistral")["calls"] == 1 and svc_used("mistral")["in"] == 900 and calls_left("mistral") == SERVICES["mistral"]["calls"] - 1 and svc_used("mistral")["usd"] == 0
+    chat("openrouter:nvidia/some-model:free", [{"role": "user", "content": "answer in json"}], 50, sopener)
+    u, h, b = seen[-1]; assert u == SERVICES["openrouter"]["url"] and b["model"] == "nvidia/some-model:free" and "response_format" not in b and h.get("X-title") == "Pharmakon"
+    L = ledger(); L["svc"]["openrouter"]["calls"] = SERVICES["openrouter"]["calls"]; json.dump(L, open(LEDGER, "w"))
+    try: chat("openrouter:nvidia/some-model:free", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a call beyond the day's calls")
+    except Budget: pass
+    PRICES = pathlib.Path(tempfile.mkdtemp()) / "prices.json"
+    try: chat("claude:claude-haiku-5-5", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a paid model asked without its price")
+    except Unavailable as e: assert "price" in str(e)
+    json.dump({"usd_a_day": 0.5, "usd_a_month": 20, "models": {"claude:claude-haiku-5-5": [0.10, 0.50], "claude:claude-sonnet-5-5": [2, 10]}}, open(PRICES, "w"))
+    n = len(seen); assert as_json(chat("claude:claude-haiku-5-5", [{"role": "system", "content": "JSON only"}, {"role": "user", "content": "x"}], 50, sopener)) == {"ok": True}
+    u, h, b = seen[-1]; assert u == SERVICES["claude"]["url"] and h["X-api-key"] == "A" and h["Anthropic-version"] == "2023-06-01" and b["system"] == "JSON only" and [m["role"] for m in b["messages"]] == ["user"] and b["max_tokens"] == 50
+    assert abs(svc_used("claude")["usd"] - (1000 * 0.10 + 200 * 0.50) / 1e6) < 1e-9 and abs(usd_left("claude") - (0.5 - 0.0002)) < 1e-6 and LAST["reasoned"] == 2
+    L = ledger(); L["svc"]["claude"]["usd"] = 0.4999; json.dump(L, open(LEDGER, "w"))
+    try: chat("claude:claude-sonnet-5-5", [{"role": "user", "content": "x" * 4000}], 900, sopener); raise AssertionError("a call beyond the day's spending limit")
+    except Budget as e: assert "spending limit" in str(e)
+    assert len(seen) == n + 1
+    def quota(req, timeout=0): raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", {}, io.BytesIO(b'{"error": {"message": "You exceeded your current quota: free tier requests per day"}}'))
+    try: chat("mistral:mistral-large-latest", [{"role": "user", "content": "x"}], 50, quota); raise AssertionError("no Budget")
+    except Budget: pass
+    names, why = models_of("mistral", lambda req, timeout=0: Resp({"data": [{"id": "mistral-large-latest"}, {"id": "mistral-small-latest"}]})); assert names == ["mistral-large-latest", "mistral-small-latest"] and why == ""
+    for k in ("MISTRAL_API_KEY", "OPENROUTER_API_KEY", "ANTHROPIC_API_KEY"): del os.environ[k]
     if had: os.environ["GROQ_API_KEY"] = had
     LEDGER = keep
     print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it)")

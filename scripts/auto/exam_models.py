@@ -53,7 +53,8 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     rnd = random.Random(20261115); draw = rnd.sample(good, min(n_good, len(good)))
     pieces = how == "pieces"                                                                               # (16 November: the reader copies the passage's words for every piece of the card, and the code gives the verdict: lane.pieces_verdict)
     room = lane.room_for(model, 700 if pieces else 220) if "gpt-oss" in model or not model.startswith("groq:") else 2000          # (a model that reasons first needs room: on 15 November gpt-oss-120b gave no verdict in 220, nor in 700)
-    groq = model.startswith("groq:"); keep = max(2000 if groq else KEEP, keep) if isinstance(keep, (int, float)) else 30000 if groq else KEEP      # (Groq counts a day in tokens for each model: 30,000 are left for the lane unless the request says the lane does not run today)
+    svc = llm.service_of(model)[0]                                                                             # (a service that counts calls: one card is one call, and five calls are kept)
+    groq = model.startswith("groq:"); keep = 5 if svc else max(2000 if groq else KEEP, keep) if isinstance(keep, (int, float)) else 30000 if groq else KEEP      # (Groq counts a day in tokens for each model: 30,000 are left for the lane unless the request says the lane does not run today)
     # how hard a reasoning model at Groq thinks: the request's word, else what llm.chat_groq asks by itself (the larger gpt-oss: medium; the smaller: low; qwen3: none)
     plain_effort = ("low" if model.endswith("gpt-oss-20b") else "medium") if "gpt-oss" in model else "none" if "qwen3" in model else ""
     effort = effort if effort in ("low", "medium", "high") and groq and "gpt-oss" in model else plain_effort
@@ -62,7 +63,7 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     try: old = json.load(open(f, encoding="utf-8"))
     except (OSError, ValueError): old = {}
     res = {k: v for k, v in (old.get("cards") or {}).items() if v.get("clear")} if old.get("room") == room and old.get("effort") == effort else {}
-    chat = chat or llm.chat; left = left or ((lambda: llm.groq_left(model[5:])) if groq else llm.left); stopped_by = None
+    chat = chat or llm.chat; left = left or ((lambda: llm.calls_left(svc)) if svc else (lambda: llm.groq_left(model[5:])) if groq else llm.left); stopped_by = None
 
     def result():
         nb = [i for i in bad if i["id"] in res]; ng = [i for i in draw if i["id"] in res]
@@ -85,7 +86,7 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     if isinstance(most, int) and most > 0 and len(todo) > most: todo = todo[:most]; stopped_by = f"the request asked for {most} cards in this sitting"
     for n, it in enumerate(todo, 1):
         if until and time.time() > until: stopped_by = "the time this run has (the job would be stopped before it could keep its results)"; break
-        if left() < keep: stopped_by = f"the day's allowance: {left():.0f} {'tokens' if groq else 'neurons'} left, and {keep} are kept for the site's own work"; break
+        if left() < keep: stopped_by = f"the day's allowance: {left():.0f} {'calls' if svc else 'tokens' if groq else 'neurons'} left, and {keep} are kept for the site's own work"; break
         sent, plain, lines = framed(it)
         try: out = llm.as_json(chat(model, [{"role": "system", "content": lane.PIECES_SYS if pieces else lane.CHECKER_SYS}, {"role": "user", "content": lane.pieces_prompt(sent, lines, denies=not it["card"]["answer"]) if pieces else prompt(it)}], room))
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e); break
@@ -150,7 +151,7 @@ if __name__ == "__main__":
             until = time.time() + 27 * 60                                 # (the job has 40 minutes; a sitting goes on at the next request where it stopped)
             # "how": "pieces", "one verdict", or a list of both (the same cards each way, so that the two can be compared); "most": cards in this sitting; "effort": low, medium or high
             hows = r.get("how") if isinstance(r.get("how"), list) else [r.get("how")]
-            for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:)[A-Za-z0-9._/-]{3,80}", m)][:4]:
+            for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:|mistral:|gemini:|openrouter:)[A-Za-z0-9._/:-]{3,90}", m)][:4]:
                 if not llm.has(m): print(f"exam: {m}: no key for its service on this machine: not sat"); continue
                 for h in hows[:2]:
                     sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until, how="pieces" if h == "pieces" else None, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,

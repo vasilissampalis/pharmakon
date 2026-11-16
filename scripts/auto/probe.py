@@ -31,6 +31,14 @@ def main():
         if not ns: out["store"] = {"ok": False, "why": "no store named pharmakon-questions"}
         else: out["store"] = {"ok": True, "questions": len(fq.read_all(urllib.request.urlopen, token, account, ns)), "listed_items_counted": len(fq.read_wanted(urllib.request.urlopen, token, account, ns))}
     except Exception as e: out["store"] = {"ok": False, "why": type(e).__name__ + ": " + str(e)[:200]}
+    # (16 November 2026) the other model services: for each whose key is there, the names of the models it offers this key (its own list; never a key)
+    out["services"] = {}
+    for svc in llm.SERVICES:
+        if not (os.environ.get(llm.SERVICES[svc]["key"]) or "").strip(): out["services"][svc] = {"key": False}; continue
+        names, why = llm.models_of(svc)
+        out["services"][svc] = {"key": True, "models": names[:400]} if names is not None else {"key": True, "why": why}
+        print("probe:", svc, (str(len(names)) + " models offered") if names is not None else "NOT ok: " + why)
+    out["groq_key"] = bool((os.environ.get("GROQ_API_KEY") or "").strip())
     out["neurons_today"] = llm.ledger()["neurons"]
     p = ROOT / "data" / "auto" / "lane" / "probe.json"; p.parent.mkdir(parents=True, exist_ok=True); json.dump(out, open(p, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("probe: store", "ok" if out["store"].get("ok") else "NOT ok", {k: v for k, v in out["store"].items() if k != "ok"})
