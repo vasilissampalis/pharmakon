@@ -661,17 +661,24 @@ def pieces_verdict(out, sentence, passages, denies=False):
 # another thing counted, a cause or a reason added, a detail from elsewhere. So the reader is asked five small questions, one for
 # each kind, and copies the source's words only for the words of measure. The verdict is the code's: every word of measure must
 # have words of the source that really stand there, and none of the four other faults may be marked.
+# Its first sitting (Gemini 3.5 Flash Lite, 16 November 2026) caught 7 of the lane's 9 faulty sentences where one verdict caught 3 or 4, and
+# stopped 8 of 20 good ones: 7 of those 8 for naming their source ("a 2020 review", "The NZ Drug Foundation says"), and on the cards for words
+# worked out from the lines' numbers ("most", "fewer") and for plain rewordings. The question now says that none of the three is a fault.
 MARKS_SYS = ("You compare one sentence with the passages it was written from. You do not judge whether the sentence is true, and what you know yourself does not count: "
              "only the passages do. You answer the questions you are asked, exactly, with JSON only.")
 
 
 def marks_prompt(sentence, passages):
     ps = "\n".join("   PASSAGE: " + x for x in passages if x)
-    return ("Answer five questions about the SENTENCE, from its PASSAGES only.\n\n"
+    return ("Answer five questions about the SENTENCE, from its PASSAGES only.\n"
+            "A PASSAGE may begin, in brackets, with the name of its source (a body such as Health Canada, or a paper's title with its year) and the place in it. The SENTENCE may name that source in its own words "
+            "(\"Health Canada says\", \"a 2024 review found\", \"one survey\"): naming the source is never a fault, and what the bracket says of the source counts as stated. "
+            "A plain rewording of what a passage says is never a fault either: only what the passages do not say is.\n\n"
             f"SENTENCE: {sentence}\n{ps}\n\n"
             '1. "measure": list every word or phrase of the SENTENCE that says how often, how many, how much, how big, how sure or how good something is '
             '(for example: often, usually, most, all, both, never, always, clearly, proven, severe, slightly, far more, the most common, the riskiest, famous, trained, only). '
-            'For each one copy the words of a PASSAGE that say the same measure, exactly as they stand there, or write NONE when no passage says it. A sentence with no such word gets an empty list.\n'
+            'For each one copy the words of a PASSAGE that say the same measure, exactly as they stand there, or write NONE when no passage says it. A measure that the SENTENCE works out fairly from a passage\'s own numbers '
+            '("most" for 62 of 64; "fewer" for 10 against 28; "about a third" for 33 in 100) is said by those numbers: copy them. Leave out small words that measure nothing (also, what, a while). A sentence with no word of measure gets an empty list.\n'
             '2. "report_as_fact": true when the SENTENCE states as a plain fact something the PASSAGES give only as what people said, reported, rated or recalled, or as what the authors suggest, propose, think or could not rule out. Else false.\n'
             '3. "wider": true when the SENTENCE is about more, or about something else, than the PASSAGES: people in general where the passages speak of men, of patients or of one study\'s volunteers; '
             'every study where it was one; another place, time or thing counted (deaths where pills were counted). Else false.\n'
