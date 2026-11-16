@@ -1158,12 +1158,16 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         # writer and than the second reader. Every one of them must accept a sentence too: what one reader misses another may catch
         # (no reader we have catches enough alone: data/auto/exam). They are not asked when the short answer or the But is refused
         # already, because the answer is then written again anyway.
+        gap = []                                                         # the further readers of the team that could not be asked about THIS draft
         for k in sorted(k for k in models if re.fullmatch(r"also\d+", k)):
             if any(not v[0] for p, v in zip(draft["parts"], verdicts) if p["part"] in ("short", "but")): break
-            more = check(chat, models[k], draft["parts"], labels)
+            try: more = check(chat, models[k], draft["parts"], labels)
+            except (llm.Unavailable, llm.Budget) as e:                     # a free service that is busy or used up must not cost the answer: what the other judges said stands, and the answer waits for this reader
+                rec.setdefault("panel", {})[models[k]] = "could not be asked: " + re.sub(r"\s+", " ", str(e))[:160]; gap.append(base(models[k])); continue
             rec.setdefault("panel", {})[models[k]] = {p["part"]: [bool(w[0]), w[1]] for p, w in zip(draft["parts"], more)}
             verdicts = [((v[0] and w[0]), v[1] if not v[0] else ("" if w[0] else f"a further reader ({base(models[k])}) did not accept it: {w[1] or 'it gave no reason'}")) for v, w in zip(verdicts, more)]
-        if rec.get("panel"): rec["gates"]["panel"] = "further readers, each of which must accept every sentence too: " + "; ".join(f"{base(m)} accepted {sum(1 for x in vs.values() if x[0])} of {len(vs)}" for m, vs in rec["panel"].items())
+        if rec.get("panel"): rec["gates"]["panel"] = "further readers, each of which must accept every sentence too: " + "; ".join(f"{base(m)} accepted {sum(1 for x in vs.values() if x[0])} of {len(vs)}" if isinstance(vs, dict) else f"{base(m)} {vs}" for m, vs in rec["panel"].items())
+        rec["panel_gap"] = gap
         # 4b our own checker (decision 23): a second judge that must also accept every sentence a model wrote. Its word counts like the
         # second reader's: a How line it does not find in the source's words is dropped, a short answer or a But is written again.
         if own_check is not None:
@@ -1225,6 +1229,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         rec["gates"]["checked"] = (f"{len(differs)} sentence(s) cannot be true together with a checked claim of the same page (" + "; ".join(f"{d['part']} against {d['claim']}: {d['why']}" for d in differs)[:400] + ")" if differs
                                    else f"set beside the checked claims of the same page: nothing against them" + (f"; {len(same)} sentence(s) say what a checked claim says" if same else ""))
         if differs: return done("waiting", "it disagrees with a checked claim of the same page (" + ", ".join(sorted({d["claim"] for d in differs})) + "): waiting for a person; the claim is not changed")
+    if rec.get("panel_gap"): return done("waiting", "passed every reader that could be asked, but a further reader of its team could not be (" + ", ".join(rec["panel_gap"]) + "): it waits until that reader, or the editor, has read it")
     return done("published", "passed every gate")
 
 
@@ -1324,8 +1329,15 @@ def team(file=None):
                 for planner in planners:                                   # (lane 10: "planner_else", as for the reader and the second reader: the plan is made where there is room)
                     m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
                     if planner: m["planner"] = planner
-                    also = [a for a in (t.get("also") or []) if isinstance(a, str) and a] if isinstance(t.get("also"), list) else []
-                    for n, a in enumerate(also, 1): m[f"also{n}"] = a          # (lane 10) further second readers: a team that names them is that team only with all of them
+                    also, lacking = [], False                             # (lane 10) further second readers: a team that names them is that team only with all of them
+                    for a in (t.get("also") or []) if isinstance(t.get("also"), list) else []:
+                        if isinstance(a, list):                               # one place, several models: the first that has a key and room today (the strong free models have 20 calls a day each)
+                            pick = next((x for x in a if isinstance(x, str) and x and llm.has(x) and x not in also and (llm.calls_fit({x: CALLS["also"]}) if llm.service_of(x)[0] else True)), None)
+                            if pick: also.append(pick)
+                            else: lacking = True
+                        elif isinstance(a, str) and a: also.append(a)
+                    if lacking: continue
+                    for n, a in enumerate(also, 1): m[f"also{n}"] = a
                     if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
                     if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
                     if len({base(a) for a in also} | {base(m["writer"]), base(m["checker"])}) < len(also) + 2: continue      # a further reader is another model than the writer, than the second reader and than the other further readers
@@ -1582,6 +1594,13 @@ def selftest():
             fits[0] = False; assert team(tf)["team"] == "E"                                                         # no room for a further reader today: the next team, which names none
             fits[0] = True; keys["gemini"] = False; assert team(tf)["team"] == "E"                                    # no key for it: the same
             keys["gemini"] = True
+            # one place, several models: the first that has room today; none of them: the team is not that team
+            tf.write_text(json.dumps({"teams": [{"name": "G", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "also": ["gemini:gemini-3.5-flash-lite", ["gemini:gemini-4-hydrogen", "gemini:gemini-3.8-flash"]]},
+                                                {"name": "E", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b"}]}), encoding="utf-8")
+            used_up = {"gemini:gemini-4-hydrogen"}; llm.calls_fit = lambda by: not (set(by) & used_up)
+            t = team(tf); assert t["team"] == "G" and t["also1"] == "gemini:gemini-3.5-flash-lite" and t["also2"] == "gemini:gemini-3.8-flash", t
+            used_up.add("gemini:gemini-3.8-flash"); assert team(tf)["team"] == "E"
+            llm.calls_fit = lambda by: not by or (fits[0] and by == {"gemini:gemma-4-31b-it": 3, "gemini:gemini-3.5-flash-lite": 3})
             tf.write_text(json.dumps({"teams": [{"name": "F", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "also": ["@cf/openai/gpt-oss-120b"]}]}), encoding="utf-8")
             assert team(tf) is None                                                                                 # the second reader's own model at another service is not a further reader
         finally: llm.calls_fit, = keep2
@@ -1637,6 +1656,13 @@ def selftest():
     calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [V(False, True, True, True)] * 3
     r = make(item, found, chat, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
     assert r["status"] == "none" and not any(c[1] == "gemini:gemma-4-31b-it" for c in calls) and "panel" not in r, (r["status"], r["why"])
+    # a further reader that cannot be reached: the answer is not lost; it has passed the others and waits for that reader or the editor
+    def chat_gap(model, messages, max_tokens=0):
+        if model == "gemini:gemma-4-31b-it": raise llm.Unavailable("gemini answered 503: high demand")
+        return chat(model, messages, max_tokens)
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat_gap, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "waiting" and "a further reader of its team could not be (gemma-4-31b-it)" in r["why"] and r["panel"]["gemini:gemma-4-31b-it"].startswith("could not be asked") and "could not be asked" in r["gates"]["panel"] and len(r["parts"]) >= 4, (r["status"], r["why"], r["gates"])
     # 5. a question about dying: written, checked, and it waits for a person
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk({"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}); assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
