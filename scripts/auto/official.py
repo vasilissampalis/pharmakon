@@ -109,6 +109,8 @@ class Web:
     """Reading a site's pages the way the head of this file says. opener: for the selftest (no waiting, no network)."""
     def __init__(self, opener=None):
         self.opener, self.robots, self.said, self.last, self.count = opener, {}, {}, {}, {}
+        try: self.pace = {bare(urllib.parse.urlsplit(b["base"]).netloc): float(b["slow"]) for b in json.load(open(SOURCES, encoding="utf-8"))["sources"] if b.get("slow")}   # a body that asked us to slow down: seconds between two requests
+        except (OSError, ValueError, KeyError, TypeError): self.pace = {}
 
     def rules(self, url):
         p = urllib.parse.urlsplit(url); host = p.scheme + "://" + p.netloc
@@ -136,6 +138,9 @@ class Web:
             except urllib.error.HTTPError as e:
                 if e.code in (404, 410): return None
                 if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if self.opener else 3 * (k + 1)); continue
+                if e.code == 429 and k + 1 < tries:                          # "too many requests" means slower, not no: wait what the site asks (a minute at most) and ask once more
+                    ra = str((e.headers or {}).get("Retry-After") or "").strip(); secs = int(ra) if ra.isdigit() else 20
+                    if secs <= 60: time.sleep(0 if self.opener else secs); self.pace[bare(host)] = max(self.pace.get(bare(host), 0), 10.0); continue
                 if e.code in (401, 403, 429, 451): P._refused.add(host); raise P.Refused(f"{host} answered {e.code}")
                 raise IOError(f"{host} answered {e.code}")
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
@@ -149,7 +154,7 @@ class Web:
         if r is None: raise P.Refused(urllib.parse.urlsplit(url).netloc + ": " + self.said[host])
         if not r.allowed(url): raise P.Refused("robots.txt does not allow " + urllib.parse.urlsplit(url).path)
         if r.delay > MAX_DELAY and self.count.get(host, 0) >= LITTLE: raise P.Refused(f"{urllib.parse.urlsplit(url).netloc} asks for {r.delay:.0f} seconds between requests: only {LITTLE} pages are read in a run")
-        wait = max(SLOW, min(r.delay, MAX_DELAY)) - (time.time() - self.last.get(host, 0))
+        wait = max(SLOW, self.pace.get(bare(urllib.parse.urlsplit(url).netloc), 0), min(r.delay, MAX_DELAY)) - (time.time() - self.last.get(host, 0))
         if wait > 0 and not self.opener: time.sleep(wait)
         self.last[host] = time.time(); self.count[host] = self.count.get(host, 0) + 1
         got = self._open(url, accept)
@@ -162,6 +167,8 @@ VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "met
 DROP = {"script", "style", "noscript", "template", "svg", "nav", "footer", "aside", "form", "button", "select", "iframe", "dialog", "canvas", "video", "audio", "menu", "object", "map"}
 BLOCK = {"p", "div", "section", "article", "main", "li", "ul", "ol", "dl", "dd", "dt", "table", "tr", "td", "th", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6", "details", "summary", "header", "figure", "figcaption", "pre", "hr", "caption", "address"}
 NOISE = re.compile(r"(?:^|[\s_-])(cookies?|breadcrumbs?|share|sharing|social|related|feedback|newsletter|pagination|pager|skip|skiplink|visually-hidden|sr-only|screen-reader-text|toc|sidebar|sidenav|side-nav|subnav|navbar|footer|survey|promo|advert|modal|popup|back-to-top|print)(?:$|[\s_-])", re.I)
+PANEL = re.compile(r"accordion|collaps|disclosure|expand|faq|panel|tab-?pane|toggle-content|answer", re.I)
+GENERIC = re.compile(r"^(?:english|français|francais|español|espanol|deutsch|en|fr|learn more|read more|more|more info(?:rmation)?|here|home|view|view all|details|link|click here|see more|find out more|download|load more[^/]*|next|previous|back|\W*)$", re.I)
 LAYOUT_SAYS = re.compile(r"(?:with|has|have|no|without|show|hide|is)[-_]+(?:[a-z]+[-_]+)?(?:sidebar|sidenav|side-nav|toc|subnav|navbar|breadcrumbs?|share|social|related|print|footer)|--[a-z-]*(?:sidebar|toc|print|share)", re.I)
 JUNK = re.compile(r"^(back to top|print this page|share this page|skip to (main )?content|on this page|table of contents|contents|more in .{0,60}|was this (page|information) helpful.*|give feedback.*|page last reviewed.*|next review due.*|last (updated|reviewed|modified).{0,60}|date modified.{0,40}|report a problem.*)$", re.I)
 spaces = lambda t: re.sub(r"\s+", " ", t or "").strip()
@@ -201,7 +208,10 @@ class _Page(HTMLParser):
         is_main = tag == "main" or a.get("role") == "main" or (tag == "article" and not self.main)
         noise = None if is_main else NOISE.search(ident)
         if noise and spaces(ident) in self.let: noise = None
-        why = ("tag" if tag in DROP else "header" if tag == "header" and not self.main else "hidden" if "hidden" in a or a.get("aria-hidden") == "true"
+        # (16 November 2026) a part that is only folded shut (an answer under its question, a tab) is the page's own content: it is read
+        # where its class or its role says that it is such a panel; a hidden menu, pop-up or banner still is not
+        folded = ("hidden" in a or a.get("aria-hidden") == "true") and not ((PANEL.search(ident) or a.get("role") in ("region", "tabpanel")) and not noise and (self.main or not self.has_main))
+        why = ("tag" if tag in DROP else "header" if tag == "header" and not self.main else "hidden" if folded
                else "role" if a.get("role") in ("navigation", "banner", "contentinfo", "search", "complementary") else "class" if noise else "")
         gone = bool(why)
         if tag in BLOCK and not self.drop: self._flush()
@@ -420,7 +430,7 @@ def index_source(src, web):
         for u, t in links:
             if not src.get("keep_query"): u = u.split("?", 1)[0]          # one page under one address (FRANK links a drug once for every name it has)
             if not want(u): continue
-            t = t if 3 <= len(t) <= 120 else ""
+            t = t if 3 <= len(t) <= 120 and not GENERIC.match(t) else ""       # ("Learn more", "English": words that name nothing; the address's own words are used)
             if u in pages:
                 if t and t.lower() not in pages[u].lower() and len(pages[u]) < 200: pages[u] += " / " + t      # its other names help to find it
                 continue
@@ -760,6 +770,21 @@ def selftest():
                    + "A long list of other pages that is not this page's own content. " * 40 + "</p></div></body></html>", "https://e.test/k")
     assert len(side["passages"]) == 1 and side["left"] and side["left"][0][0] == "class" and "sidebar" in side["left"][0][1], side
     assert all_links('<a href="#main">Skip to main content</a> <a href="/a#x">A page</a>', "https://e.test/caffeine") == [("https://e.test/a", "A page")]
+    # an answer folded shut under its question is read; a hidden menu is not; "Learn more" is not a page's name; "too many requests" is asked once more
+    fold = extract('<html><body><main><h1>Caffeine</h1><p>Caffeine is found in coffee, tea, cola and in what are sold as energy drinks, as this page says first.</p>'
+                   '<div class="accordion-panel" hidden><p>Single doses of caffeine up to an amount the page names do not raise safety concerns for adults in the general population.</p></div>'
+                   '<div class="mega-menu" hidden><p>Topics, publications, applications, engage, news, about us, and the other things a hidden menu holds for its site.</p></div></main></body></html>', "https://e.test/c")
+    assert any("Single doses" in p["text"] for p in fold["passages"]) and not any("mega" in p["text"] or "hidden menu" in p["text"] for p in fold["passages"]), fold
+    served.update({"https://g.test/robots.txt": "", "https://g.test/hub": '<a href="/drugs/alcohol">Learn more</a> <a href="/drugs/alcohol">Load More Experts +</a> <a href="/drugs/kava">Kava</a>', "https://slow.test/robots.txt": "", "https://slow.test/a": "<main><p>read on the second asking</p></main>"})
+    gpages, _ = index_source({"id": "g", "author": "G", "base": "https://g.test", "hubs": ["https://g.test/hub"], "include": ["^/drugs/[a-z]+$"]}, web)
+    assert gpages == {"https://g.test/drugs/alcohol": "alcohol", "https://g.test/drugs/kava": "Kava"}, gpages
+    busy = {"n": 0}
+    def opener2(req, timeout=0):
+        if req.full_url == "https://slow.test/a":
+            busy["n"] += 1
+            if busy["n"] == 1: raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", {"Retry-After": "5"}, None)
+        return opener(req, timeout)
+    w2 = Web(opener2); assert w2.get("https://slow.test/a")[0].startswith(b"<main>") and busy["n"] == 2 and w2.pace.get("slow.test") == 10.0
     # a hub that leads nowhere says what it looked like, and the list of pages the site itself names in its robots.txt is read
     served.update({"https://m.test/robots.txt": "User-agent: *\nDisallow:\nSitemap: https://m.test/sitemap.xml\nSitemap: https://elsewhere.test/sitemap.xml\n",
                    "https://m.test/drugs": '<html><head><title>Drugs | M</title></head><body><a href="/about/us">About</a> <a href="/about/team">Team</a></body></html>',

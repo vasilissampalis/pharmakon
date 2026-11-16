@@ -128,7 +128,8 @@
    ],
    "sitemaps": [
     "https://nida.nih.gov/sitemap.xml"
-   ]
+   ],
+   "refused": "2026-11-16: its site answers every address, its robots.txt too, with a short page without content to a reader that is not a browser (a wall): not gone around"
   },
   {
    "id": "cdc",
@@ -353,7 +354,11 @@
    ],
    "include": [
     "^/drug-facts/[a-z0-9-]+/$"
-   ]
+   ],
+   "sitemaps": [
+    "https://adf.org.au/sitemap.xml"
+   ],
+   "_note": "Its list of drug facts is drawn by a script (no links in the page itself) and its robots.txt names no sitemap: the usual address of one is tried."
   },
   {
    "id": "thelevel",
@@ -404,7 +409,9 @@
     "^/en/topics/topic/(caffeine|cannabidiol|energy-drinks|alcohol|nicotine)[a-z0-9-]*$",
     "^/en/press/news/150527$",
     "^/en/corporate/pub/efsaexplains[a-z0-9]*caffeine[a-z0-9]*$"
-   ]
+   ],
+   "slow": 10,
+   "_note": "It answered 429 (too many requests) to a third request within three seconds on 16 November 2026: read slowly."
   },
   {
    "id": "ccsa",
@@ -452,14 +459,50 @@
    "country": "United Kingdom",
    "tier": 2,
    "base": "https://www.drugscience.org.uk",
-   "hubs": [
-    "https://www.drugscience.org.uk/drugs"
-   ],
    "include": [
     "^/drugs/[a-z0-9-]+/?$"
    ],
    "sitemaps": [
     "https://www.drugscience.org.uk/sitemap.xml"
+   ],
+   "hubs": []
+  },
+  {
+   "id": "ods",
+   "author": "National Institutes of Health, Office of Dietary Supplements",
+   "short": "the US National Institutes of Health's Office of Dietary Supplements",
+   "country": "United States",
+   "tier": 1,
+   "base": "https://ods.od.nih.gov",
+   "hubs": [
+    "https://ods.od.nih.gov/factsheets/list-all/"
+   ],
+   "include": [
+    "^/factsheets/[A-Za-z0-9-]+-(Consumer|HealthProfessional)/?$"
+   ],
+   "exclude": [
+    "DatosEnEspanol"
+   ]
+  },
+  {
+   "id": "camh",
+   "author": "Centre for Addiction and Mental Health",
+   "short": "Canada's Centre for Addiction and Mental Health, a teaching hospital",
+   "country": "Canada",
+   "tier": 2,
+   "base": "https://www.camh.ca",
+   "hubs": [
+    "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/mha-index-substance-use"
+   ],
+   "include": [
+    "^/en/health-info/mental-illness-and-addiction-index/(substance-use/)?[a-z0-9-]+$"
+   ],
+   "exclude": [
+    "/mha-index-",
+    "-resources$"
+   ],
+   "sitemaps": [
+    "https://www.camh.ca/sitemap.xml"
    ]
   }
  ]
