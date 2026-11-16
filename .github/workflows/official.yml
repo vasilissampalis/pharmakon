@@ -39,8 +39,10 @@ jobs:
           set +e
           L="$RUNNER_TEMP/official.log"; : > "$L"
           python3 -I scripts/auto/official.py --selftest >> "$L" 2>&1 || echo "!! the selftest failed ($?)" >> "$L"
-          python3 -I scripts/auto/official.py --requests data/auto/requests --minutes 25 >> "$L" 2>&1 || echo "!! failed ($?)" >> "$L"
-          git rm -q --ignore-unmatch data/auto/requests/official-*.json >> "$L" 2>&1
+          if ls data/auto/requests/official-*.json >/dev/null 2>&1; then
+            python3 -I scripts/auto/official.py --requests data/auto/requests --minutes 25 >> "$L" 2>&1 || echo "!! failed ($?)" >> "$L"
+            git rm -q --ignore-unmatch data/auto/requests/official-*.json >> "$L" 2>&1
+          fi
           if ls data/auto/requests/views-*.json >/dev/null 2>&1; then
             python3 -I scripts/auto/wiki_views.py --selftest >> "$L" 2>&1 || echo "!! the page-view selftest failed ($?)" >> "$L"
             python3 -I scripts/auto/wiki_views.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the page views failed ($?)" >> "$L"
