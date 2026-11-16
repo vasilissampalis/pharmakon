@@ -949,22 +949,36 @@ def wanted_list():
     return sorted(by.values(), key=lambda w: (-len(w["for"]), -(w.get("near") or 0), w["doi"]))
 
 
+NEED = {"reader": (450, 22000), "writer": (350, 16000), "checker": (500, 16000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
+
+
+def base(model): return re.sub(r"^(?:groq:|@cf/)", "", model or "").split("/")[-1]       # the model itself, whichever service runs it
+
+
+def team(file=None):
+    """The models for the next answer: the first team of data/auto/lane/models.json whose services have a key on this
+    machine and room left today (two free services, each with its own day's allowance: Cloudflare Workers AI in neurons,
+    Groq in tokens for each model). A team names a reader, a writer and a second reader; "reader_else" and "checker_else"
+    are used where the first choice has no key or no room. Never the same model twice in a row: the writer is not the
+    reader's model and the second reader is not the writer's, on whichever service. None when no team has room."""
+    try: mf = json.load(open(file or MODELS_FILE, encoding="utf-8"))
+    except (OSError, ValueError): mf = {}
+    for t in mf.get("teams") or [{k: mf.get(k) or MODELS[k] for k in MODELS}]:
+        for reader in dict.fromkeys([t.get("reader"), t.get("reader_else")]):
+            for checker in dict.fromkeys([t.get("checker"), t.get("checker_else")]):
+                m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
+                if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
+                if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
+                need = {}
+                for role, v in m.items(): need[v] = need.get(v, 0) + NEED[role][1 if v.startswith("groq:") else 0]
+                if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
+                if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
+                return dict(m, team=t.get("name") or "")
+    return None
+
+
 def run(ids=None, limit=3, again=False, chat=None, enc=None):
-    models = dict(MODELS)
-    stand_in = {}
-    if MODELS_FILE.exists():
-        mf = json.load(open(MODELS_FILE, encoding="utf-8")); models.update({k: v for k, v in mf.items() if k in MODELS and isinstance(v, str)})
-        # where a second free service's key exists (llm.has), the roles named for it are done there; when its free day is used up or it
-        # cannot be reached, the role goes back to the model named above for the rest of the call
-        for role, m in (mf.get("with_groq") or {}).items() if chat is None and isinstance(mf.get("with_groq"), dict) else []:
-            if role in MODELS and isinstance(m, str) and llm.has(m) and m != models.get(role): stand_in[m] = models[role]; models[role] = m
-    if chat is None and stand_in:
-        def chat(model, messages, room=700):
-            try: return llm.chat(model, messages, room)
-            except (llm.Budget, llm.Unavailable) as e:
-                if model not in stand_in: raise
-                print(f"lane: {model} could not be used ({str(e)[:120]}): {stand_in[model]} stands in"); return llm.chat(stand_in[model], messages, room)
-        chat.real = True
+    models = dict(MODELS); real = chat is None
     chat = chat or llm.chat
     items = P.listed()
     st = load_state(); order = []
@@ -980,7 +994,10 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     for w in order[:limit]:
-        if (chat is llm.chat or getattr(chat, "real", False)) and llm.left() < ROOM: print(f"lane: today's free allowance has {llm.left():.0f} neurons left, not enough for one more answer: it goes on tomorrow"); break   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
+        if real:
+            models = team()
+            if not models: print(f"lane: no team of models has room left today (Cloudflare: {llm.left():.0f} neurons left): it goes on tomorrow"); break
+            print(f"lane: {models.get('team') or 'the models'}: {models['reader']} reads, {models['writer']} writes, {models['checker']} is the second reader")   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
         pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
         try:
             found = json.load(open(pf, encoding="utf-8")) if pf.exists() and not again else P.find(w, names, enc)
@@ -1092,6 +1109,23 @@ def selftest():
     script["writer"] = [W(ok_short)] * 3; script["checker"] = [dict(V(True, True, True, True), answers_question=False, but_fits=True, why="it says how it is treated")] * 3
     r = mk(); assert r["status"] == "none" and "it does not answer the question itself" in r["gates"]["check"], (r["status"], r["why"], r["gates"])
     assert own_but([{"read": "full", "kind": "review", "people": True}, {"read": "full", "kind": "study", "people": True}, {"read": "page", "kind": "official", "people": True}, {"read": "page", "kind": "official", "people": True}], True) == "This rests on 1 review, 1 study in people and 2 official pages that our system could read. A paper that stands nearer the question could not be read."
+    # the choice of a team of models across two free services: keys, room, and never the same model twice in a row
+    import tempfile
+    tf = pathlib.Path(tempfile.mkdtemp()) / "models.json"
+    tf.write_text(json.dumps({"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/c", "teams": [
+        {"name": "A", "reader": "@cf/r", "reader_else": "groq:openai/gpt-oss-20b", "writer": "groq:openai/gpt-oss-120b", "checker": "groq:qwen/qwen3.8-27b"},
+        {"name": "B", "reader": "@cf/r", "reader_else": "groq:openai/gpt-oss-20b", "writer": "@cf/w", "checker": "groq:openai/gpt-oss-120b", "checker_else": "@cf/openai/gpt-oss-120b"}]}), encoding="utf-8")
+    keep = (llm.has, llm.left, llm.groq_left); cf = [9000]; gq = {"openai/gpt-oss-120b": 180000, "openai/gpt-oss-20b": 180000, "qwen/qwen3.8-27b": 180000}; keys = {"groq": True, "cf": True}
+    llm.has = lambda m: keys["groq"] if m.startswith("groq:") else keys["cf"]; llm.left = lambda: cf[0]; llm.groq_left = lambda n: gq.get(n, 0)
+    try:
+        assert team(tf) == {"reader": "@cf/r", "writer": "groq:openai/gpt-oss-120b", "checker": "groq:qwen/qwen3.8-27b", "team": "A"}
+        cf[0] = 100; assert team(tf)["reader"] == "groq:openai/gpt-oss-20b" and team(tf)["team"] == "A"                    # Cloudflare's day is used up: the reader works at Groq
+        gq["qwen/qwen3.8-27b"] = 1000; assert team(tf) is None                                                             # team A's second reader has no room, and team B's writer is at Cloudflare, which has none
+        cf[0] = 9000; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "groq:openai/gpt-oss-120b", "team": "B"}
+        keys["groq"] = False; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/openai/gpt-oss-120b", "team": "B"}   # no second service: every model at Cloudflare, as before
+        cf[0] = 900; assert team(tf) is None
+        assert base("groq:openai/gpt-oss-120b") == base("@cf/openai/gpt-oss-120b") == "gpt-oss-120b"
+    finally: llm.has, llm.left, llm.groq_left = keep
     # 5. a question about dying: written, checked, and it waits for a person
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk({"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}); assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])

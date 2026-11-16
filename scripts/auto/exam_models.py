@@ -13,7 +13,7 @@ the two shares the result gives what the whole exam would give: of everything th
 wrong (exam.py's bar: 1 in 50; the senior author's goal: 1 in 1,000), and how many good cards it would stop.
 Writes data/auto/exam/model-<name>.json. The exam is small: it can show that a checker is not good enough, never that it is.
 """
-import sys, re, json, random, pathlib
+import sys, time, re, json, random, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import llm, lane, exam
@@ -36,19 +36,20 @@ def prompt(item):
 KEEP = 700            # neurons of the day's allowance the exam leaves for the site's own work (a visitor's question must still be listed)
 
 
-def sit(model, n_good, cards=None, chat=None, left=None, file=None):
+def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None):
     """The model's verdict on every wrong card and a fixed draw of the good ones. It goes on where an earlier sitting with
     the same room stopped (its cards are kept in the result), stops when the day's allowance is down to KEEP, and writes
     as it goes, so that a sitting cut short by the allowance or by the machine's time limit is not lost."""
     items = cards or json.load(open(EXAM / "cards.json", encoding="utf-8"))["items"]
     bad = [i for i in items if not i["good"]]; good = [i for i in items if i["good"]]
     rnd = random.Random(20261115); draw = rnd.sample(good, min(n_good, len(good)))
-    room = lane.room_for(model, 220) if not model.startswith("groq:") else 700          # (a model that reasons first needs room: on 15 November gpt-oss-120b gave no verdict in 220, nor in 700)
+    room = lane.room_for(model, 220) if "gpt-oss" in model or not model.startswith("groq:") else 2000          # (a model that reasons first needs room: on 15 November gpt-oss-120b gave no verdict in 220, nor in 700)
+    groq = model.startswith("groq:"); keep = 30000 if groq else KEEP                                       # (Groq counts a day in tokens for each model: 30,000 are left for the lane)
     f = file or EXAM / ("model-" + re.sub(r"[^a-z0-9.-]+", "-", model.lower()).strip("-") + ".json")
     try: old = json.load(open(f, encoding="utf-8"))
     except (OSError, ValueError): old = {}
     res = {k: v for k, v in (old.get("cards") or {}).items() if v.get("clear")} if old.get("room") == room else {}
-    chat = chat or llm.chat; left = left or llm.left; stopped_by = None
+    chat = chat or llm.chat; left = left or ((lambda: llm.groq_left(model[5:])) if groq else llm.left); stopped_by = None
 
     def result():
         nb = [i for i in bad if i["id"] in res]; ng = [i for i in draw if i["id"] in res]
@@ -68,7 +69,8 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None):
 
     todo = [it for it in bad + draw if it["id"] not in res]
     for n, it in enumerate(todo, 1):
-        if left() < KEEP: stopped_by = f"the day's allowance: {left():.0f} neurons left, and {KEEP} are kept for the site's own work"; break
+        if until and time.time() > until: stopped_by = "the time this run has (the job would be stopped before it could keep its results)"; break
+        if left() < keep: stopped_by = f"the day's allowance: {left():.0f} {'tokens' if groq else 'neurons'} left, and {keep} are kept for the site's own work"; break
         try: out = llm.as_json(chat(model, [{"role": "system", "content": lane.CHECKER_SYS}, {"role": "user", "content": prompt(it)}], room))
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e); break
         except llm.Unavailable as e: stopped_by = "the model service: " + str(e)[:200]; break
@@ -106,6 +108,8 @@ if __name__ == "__main__":
             try: r = json.load(open(f, encoding="utf-8"))
             except ValueError: r = {}
             f.unlink()
-            for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"@cf/[A-Za-z0-9._/-]{3,80}", m)][:4]:
-                sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62)
+            until = time.time() + 27 * 60                                 # (the job has 40 minutes; a sitting goes on at the next request where it stopped)
+            for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:)[A-Za-z0-9._/-]{3,80}", m)][:4]:
+                if not llm.has(m): print(f"exam: {m}: no key for its service on this machine: not sat"); continue
+                sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until)
     else: sys.exit(__doc__)

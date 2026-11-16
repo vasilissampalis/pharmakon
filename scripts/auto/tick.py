@@ -107,7 +107,10 @@ def plan():
     else: why["scout"] = "no key"
     import papers
     items = papers.listed()
-    lane, why["lane"] = lane_has_work(load(ROOT / "data" / "auto" / "lane" / "state.json", {"items": {}}), items, llm.left(), t) if token and account else (False, "no key")
+    try:
+        import lane as L; room = max(llm.left(), ROOM if L.team() else 0)            # (16 November 2026) with a second free service the lane has room when any team of models has
+    except Exception: room = llm.left()
+    lane, why["lane"] = lane_has_work(load(ROOT / "data" / "auto" / "lane" / "state.json", {"items": {}}), items, room, t) if token and account else (False, "no key")
     dep, why["deploy"] = deploy_needed(t, inputs(), load(DEPLOYED, {}))
     t["last"] = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"); t["why"] = why
     TICK.parent.mkdir(parents=True, exist_ok=True); json.dump(t, open(TICK, "w", encoding="utf-8"), indent=1)
