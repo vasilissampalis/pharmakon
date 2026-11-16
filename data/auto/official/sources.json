@@ -378,11 +378,17 @@
    "tier": 1,
    "base": "https://www.fda.gov",
    "hubs": [
-    "https://www.fda.gov/consumers/consumer-updates"
+    "https://www.fda.gov/consumers/consumer-updates/food",
+    "https://www.fda.gov/consumers/consumer-updates/drugs",
+    "https://www.fda.gov/consumers/consumer-updates/dietary-supplements"
    ],
    "include": [
-    "^/consumers/consumer-updates/[a-z0-9-]*(caffeine|alcohol|nicotine|vap|e-cigarette|tobacco|smok|cannabis|cbd|delta-8|thc|opioid|fentanyl|naloxone|kratom|tianeptine|benzodiazepine|sleep|melatonin|kava|drug|medicine|medication|overdose|supplement|energy|stimulant|adhd|pain-reliever|acetaminophen)[a-z0-9-]*$"
-   ]
+    "^/consumers/consumer-updates/[a-z0-9-]*(caffeine|alcohol|nicotine|vap|e-cigarette|tobacco|smok|cannabis|cbd|delta-8|thc|opioid|fentanyl|naloxone|kratom|tianeptine|phenibut|benzodiazepine|sleep|melatonin|kava|drug|medicine|medication|overdose|supplement|energy|stimulant|adhd|pain-reliever|acetaminophen|poppers|nitrite|nitrous|inhal|xylazine|steroid|sarm|bodybuilding|weight-loss|ephedr|dextromethorphan|cough|antihistamine|diphenhydramine|gabapentin|ketamine|psilocybin|mushroom|counterfeit|grapefruit)[a-z0-9-]*$"
+   ],
+   "exclude": [
+    "^/consumers/consumer-updates/(animal-veterinary|childrens-health|cosmetics|dietary-supplements|drugs|food|medical-devices|nutrition|radiation-emitting-products|tobacco-products|vaccines-blood-biologics|articulos-para-el-consumidor-en-espanol)$"
+   ],
+   "_note": "Its robots.txt asks for 30 seconds between requests: three pages are read in a run (official.py, LITTLE), so three hubs, the richest first."
   },
   {
    "id": "efsa",
@@ -392,11 +398,12 @@
    "tier": 1,
    "base": "https://www.efsa.europa.eu",
    "hubs": [
-    "https://www.efsa.europa.eu/en/topics/topic/caffeine",
-    "https://www.efsa.europa.eu/en/topics/topic/cannabidiol"
+    "https://www.efsa.europa.eu/en/topics/topic/caffeine"
    ],
    "include": [
-    "^/en/topics/topic/(caffeine|cannabidiol|energy-drinks|alcohol|nicotine)[a-z0-9-]*$"
+    "^/en/topics/topic/(caffeine|cannabidiol|energy-drinks|alcohol|nicotine)[a-z0-9-]*$",
+    "^/en/press/news/150527$",
+    "^/en/corporate/pub/efsaexplains[a-z0-9]*caffeine[a-z0-9]*$"
    ]
   },
   {
@@ -407,13 +414,20 @@
    "tier": 1,
    "base": "https://www.ccsa.ca",
    "hubs": [
-    "https://www.ccsa.ca/en/guidance-tools-and-resources/alcohol",
-    "https://www.ccsa.ca/en/guidance-tools-and-resources/cannabis",
-    "https://www.ccsa.ca/en/guidance-tools-and-resources/opioids"
+    "https://www.ccsa.ca/en/guidance-tools-resources/substances",
+    "https://www.ccsa.ca/en/guidance-tools-resources/substances/alcohol"
    ],
    "include": [
-    "^/en/guidance-tools-and-resources/[a-z0-9-]+(/[a-z0-9-]+)?$",
-    "^/en/canadas-guidance-alcohol-and-health[a-z0-9-]*$"
+    "^/en/guidance-tools-resources/(substances|substance-use-and-addiction)/[a-z0-9-]+(/[a-z0-9-]+)?$",
+    "^/en/[a-z0-9-]*(alcohol|cannabis|opioid|stimulant|cocaine|methamphetamine|drug)[a-z0-9-]*data-and-trends$"
+   ],
+   "exclude": [
+    "/research$",
+    "your-drink-your-call",
+    "information-hub"
+   ],
+   "deep": [
+    "^/en/guidance-tools-resources/substances/[a-z0-9-]+$"
    ]
   },
   {
@@ -439,10 +453,13 @@
    "tier": 2,
    "base": "https://www.drugscience.org.uk",
    "hubs": [
-    "https://www.drugscience.org.uk/drug-information/"
+    "https://www.drugscience.org.uk/drugs"
    ],
    "include": [
-    "^/drug-information/[a-z0-9-]+/?$"
+    "^/drugs/[a-z0-9-]+/?$"
+   ],
+   "sitemaps": [
+    "https://www.drugscience.org.uk/sitemap.xml"
    ]
   }
  ]

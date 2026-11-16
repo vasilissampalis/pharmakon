@@ -162,14 +162,16 @@ VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "met
 DROP = {"script", "style", "noscript", "template", "svg", "nav", "footer", "aside", "form", "button", "select", "iframe", "dialog", "canvas", "video", "audio", "menu", "object", "map"}
 BLOCK = {"p", "div", "section", "article", "main", "li", "ul", "ol", "dl", "dd", "dt", "table", "tr", "td", "th", "blockquote", "h1", "h2", "h3", "h4", "h5", "h6", "details", "summary", "header", "figure", "figcaption", "pre", "hr", "caption", "address"}
 NOISE = re.compile(r"(?:^|[\s_-])(cookies?|breadcrumbs?|share|sharing|social|related|feedback|newsletter|pagination|pager|skip|skiplink|visually-hidden|sr-only|screen-reader-text|toc|sidebar|sidenav|side-nav|subnav|navbar|footer|survey|promo|advert|modal|popup|back-to-top|print)(?:$|[\s_-])", re.I)
+LAYOUT_SAYS = re.compile(r"(?:with|has|have|no|without|show|hide|is)[-_]+(?:[a-z]+[-_]+)?(?:sidebar|sidenav|side-nav|toc|subnav|navbar|breadcrumbs?|share|social|related|print|footer)|--[a-z-]*(?:sidebar|toc|print|share)", re.I)
 JUNK = re.compile(r"^(back to top|print this page|share this page|skip to (main )?content|on this page|table of contents|contents|more in .{0,60}|was this (page|information) helpful.*|give feedback.*|page last reviewed.*|next review due.*|last (updated|reviewed|modified).{0,60}|date modified.{0,40}|report a problem.*)$", re.I)
 spaces = lambda t: re.sub(r"\s+", " ", t or "").strip()
 
 
 class _Page(HTMLParser):
-    def __init__(self, base):
+    def __init__(self, base, let=()):
         super().__init__(convert_charrefs=True)
         self.base, self.stack, self.drop, self.main, self.has_main = base, [], 0, 0, False
+        self.let, self.left, self.cur_left = set(let), [], None         # layout classes let through on a second look; what was left out: [why, what, characters]
         self.buf, self.blocks, self.heads, self.links, self.meta, self.title, self.h1, self.lang = [], [], {}, [], {}, "", "", ""
         self.in_title, self.a, self.cur_h = False, None, None
 
@@ -197,10 +199,15 @@ class _Page(HTMLParser):
             return
         ident = (a.get("class") or "") + " " + (a.get("id") or "")
         is_main = tag == "main" or a.get("role") == "main" or (tag == "article" and not self.main)
-        gone = (tag in DROP or (tag == "header" and not self.main) or "hidden" in a or a.get("aria-hidden") == "true" or a.get("role") in ("navigation", "banner", "contentinfo", "search", "complementary")
-                or (not is_main and bool(NOISE.search(ident))))
+        noise = None if is_main else NOISE.search(ident)
+        if noise and spaces(ident) in self.let: noise = None
+        why = ("tag" if tag in DROP else "header" if tag == "header" and not self.main else "hidden" if "hidden" in a or a.get("aria-hidden") == "true"
+               else "role" if a.get("role") in ("navigation", "banner", "contentinfo", "search", "complementary") else "class" if noise else "")
+        gone = bool(why)
         if tag in BLOCK and not self.drop: self._flush()
         self.stack.append((tag, gone, is_main))
+        if gone and not self.drop: self.cur_left = [why, (tag + " " + spaces(ident))[:90], 0, spaces(ident), False]; self.left.append(self.cur_left)
+        if self.drop and tag == "h1" and self.cur_left is not None: self.cur_left[4] = True     # it holds the page's own heading
         if gone: self.drop += 1
         if is_main: self.main += 1; self.has_main = True
         if self.drop: return
@@ -225,7 +232,9 @@ class _Page(HTMLParser):
 
     def handle_data(self, data):
         if self.in_title: self.title += data
-        if self.drop: return
+        if self.drop:
+            if self.cur_left is not None and not any(t in ("script", "style", "noscript", "template", "svg") for t, _, _ in self.stack): self.cur_left[2] += len(data.strip())
+            return
         self.buf.append(data)
         if self.a: self.a[1].append(data)
 
@@ -263,10 +272,19 @@ REVIEWED_TEXT = re.compile(r"\b(?:page |content |medically |date )?(?:last )?rev
 def extract(html_text, url, size=1000):
     """What a page says: {title, site, lang, updated, issued, reviewed, passages: [{n, where, text}], links}.
     Only the page's own content is read (its <main> or <article> where it has one): no menus, no footers, no forms."""
-    p = _Page(url)
-    try: p.feed(html_text); p.close()
-    except Exception: pass
-    p._flush()
+    def look(let=()):
+        p = _Page(url, let)
+        try: p.feed(html_text); p.close()
+        except Exception: pass
+        p._flush(); return p
+    p = look(); kept = sum(len(b["text"]) for b in p.blocks)
+    # a layout whose class only SAYS it has a sidebar or a table of contents ("layout--with-sidebar") is not one: where nearly
+    # nothing was kept and an element left out for its class alone holds the page (its heading is inside it, or its class is
+    # written the way layouts are), the page is read once more with it let through. A real sidebar never is.
+    big = [x for x in p.left if x[0] == "class" and x[2] >= 1500 and x[2] > 4 * kept and (x[4] or LAYOUT_SAYS.search(x[3]))]
+    if big:
+        q = look({x[3] for x in big})
+        if sum(len(b["text"]) for b in q.blocks) > 2 * kept: p = q
     blocks = [b for b in p.blocks if b["main"]] if any(b["main"] for b in p.blocks) else p.blocks
     passages, cur = [], None
     def close():
@@ -296,7 +314,8 @@ def extract(html_text, url, size=1000):
     if not p.h1: title = re.split(r"\s+[|–—-]\s+", title)[0] if len(title) > 12 else title
     links = list(dict.fromkeys((u, t) for u, t, m in p.links if m or not p.has_main))
     return {"title": title[:200], "site": spaces(p.meta.get("og:site_name", ""))[:80], "lang": p.lang.lower(), "updated": updated, "issued": issued, "reviewed": reviewed, "passages": passages, "links": links,
-            "org": spaces(p.meta.get("govuk:primary-publishing-organisation", ""))[:120]}
+            "org": spaces(p.meta.get("govuk:primary-publishing-organisation", ""))[:120],
+            "left": [[x[0], x[1], x[2]] for x in sorted(p.left, key=lambda x: -x[2])[:6] if x[2] >= 200]}     # the largest parts left out and why (for the probe)
 
 
 # ---------- the reference, in APA 7 ----------
@@ -344,6 +363,7 @@ def all_links(html_text, base):
     """Every link of a page, wherever it stands: a hub's list of pages is often outside its main part. [(address, words)]"""
     out = []
     for m in re.finditer(r"<a\b[^>]*?\bhref\s*=\s*([\"'])(.*?)\1[^>]*>(.*?)</a>", html_text, re.I | re.S):
+        if m.group(2).strip().startswith("#"): continue                 # a place on the same page ("Skip to main content") is not a page's name
         u = urllib.parse.urldefrag(urllib.parse.urljoin(base, html.unescape(m.group(2).strip())))[0]
         if u.startswith("http"): out.append((u, spaces(html.unescape(re.sub(r"<[^>]+>", " ", m.group(3))))))
     return out
@@ -358,9 +378,10 @@ def wanted_by(src):
     return want
 
 
-def sitemap(url, web, want, files=30, cap=20000):
-    """The addresses a sitemap lists that we want (a sitemap of sitemaps is followed, files of them at most)."""
-    out, queue, seen = {}, [url], set()
+def sitemap(url, web, want, files=30, cap=20000, saw=None):
+    """The addresses a sitemap lists that we want (a sitemap of sitemaps is followed, files of them at most).
+    saw: a dict that is told how many files were read and how many addresses they listed in all."""
+    out, queue, seen = {}, [url], set(); saw = saw if saw is not None else {}; saw.update(files=0, listed=0, eg=[])
     while queue and len(seen) < files and len(out) < cap:
         u = queue.pop(0)
         if u in seen: continue
@@ -369,12 +390,15 @@ def sitemap(url, web, want, files=30, cap=20000):
         if not got: continue
         try: root = ET.fromstring(text_of(got[0]).encode("utf-8"))
         except ET.ParseError: continue
+        saw["files"] += 1
         tag = lambda e: e.tag.rsplit("}", 1)[-1]
         for e in root:
             loc = next((spaces(c.text) for c in e if tag(c) == "loc"), ""); mod = next((spaces(c.text) for c in e if tag(c) == "lastmod"), "")
             if not loc: continue
-            if tag(e) == "sitemap": queue.append(loc)
-            elif want(loc): out[loc] = mod[:10]
+            if tag(e) == "sitemap": queue.append(loc); continue
+            saw["listed"] += 1
+            if len(saw["eg"]) < 4 and saw["listed"] % 37 == 1: saw["eg"].append(urllib.parse.urlsplit(loc).path[:70])
+            if want(loc): out[loc] = mod[:10]
     return out
 
 
@@ -386,8 +410,14 @@ def index_source(src, web):
     def take(hub, into):
         got = web.get(hub)
         if got is None: notes.append(f"{hub}: not there"); return 0
-        n = 0
-        for u, t in all_links(text_of(got[0]), got[1]):
+        n = 0; links = all_links(text_of(got[0]), got[1])
+        if not any(want(u.split("?", 1)[0]) for u, _ in links):          # a hub that led nowhere: what it looked like (a page of the site, or a wall?)
+            tops = {}
+            for u, _ in links:
+                if same_site(u, src["base"]): k = "/".join(urllib.parse.urlsplit(u).path.split("/")[:2]); tops[k] = tops.get(k, 0) + 1
+            title = spaces(re.sub(r"<[^>]+>", " ", (re.search(r"<title[^>]*>(.*?)</title>", text_of(got[0]), re.I | re.S) or [None, ""])[1]))[:70]
+            notes.append(f"{hub}: led nowhere: {len(got[0])} bytes, {len(links)} links, title '{title}', its links go under " + ", ".join(f"{k} ({v})" for k, v in sorted(tops.items(), key=lambda x: -x[1])[:6]))
+        for u, t in links:
             if not src.get("keep_query"): u = u.split("?", 1)[0]          # one page under one address (FRANK links a drug once for every name it has)
             if not want(u): continue
             t = t if 3 <= len(t) <= 120 else ""
@@ -405,12 +435,16 @@ def index_source(src, web):
             try: take(hub, None)
             except IOError as e: notes.append(f"{hub}: {str(e)[:100]}")
         if second: notes.append(f"{min(len(second), 40)} pages read one step further; {len(pages)} pages in all")
-        for sm in src.get("sitemaps", []):
+        maps = [(sm, "") for sm in src.get("sitemaps", [])]
+        if not maps and len(pages) < 5:                                    # the hubs found little: the list of pages the site itself names in its robots.txt
+            r, _ = web.rules(src["base"] + "/")
+            maps = [(sm, " (named by its robots.txt)") for sm in (r.sitemaps if r else [])[:2] if same_site(sm, src["base"])]
+        for sm, how in maps:
             try:
-                got = sitemap(sm, web, want); new = 0
+                saw = {}; got = sitemap(sm, web, want, files=30 if not how else 12, saw=saw); new = 0
                 for u in got:
                     if u not in pages: pages[u] = slug_words(u); new += 1
-                notes.append(f"{sm}: {len(got)} pages ({new} new)")
+                notes.append(f"{sm}{how}: {len(got)} pages ({new} new) of {saw['listed']} addresses in {saw['files']} files" + ("; for example " + ", ".join(saw["eg"]) if not got and saw["eg"] else ""))
             except IOError as e: notes.append(f"{sm}: {str(e)[:100]}")
     except P.Refused as e: notes.append("refused: " + str(e)[:160])                    # the site said no: its reading ends here for this run
     return pages, notes
@@ -637,7 +671,8 @@ def probe(ids=None, web=None):
                     u = next((u for u in sorted(pages) if re.search(r"ketamin|cannabis|alcohol|cocaine|mdma|ecstasy|opioid|heroin", u, re.I)), sorted(pages)[0])
                     pg = web.get(u); page = extract(text_of(pg[0]), pg[1]) if pg else None; row["sample_address"] = u; row["sample_there"] = bool(pg)
                     row["sample"] = page and {"address": pg[1], "title": page["title"], "updated": page["updated"], "issued": page["issued"], "reviewed": page["reviewed"], "passages": len(page["passages"]), "lang": page["lang"],
-                                              "heads": list(dict.fromkeys(p["where"] for p in page["passages"] if p["where"]))[:8], "starts": " ".join(page["passages"][0]["text"].split()[:40]) if page["passages"] else "", "apa": apa(reference(src, page, pg[1]))}
+                                              "heads": list(dict.fromkeys(p["where"] for p in page["passages"] if p["where"]))[:8], "starts": " ".join(page["passages"][0]["text"].split()[:40]) if page["passages"] else "", "apa": apa(reference(src, page, pg[1])),
+                                              "left_out": page["left"] if len(page["passages"]) < 3 else []}
                 row["ok"] = bool(pages) and bool(row.get("sample")) and (row["sample"] or {}).get("passages", 0) >= 3
         except P.Refused as e: row.update({"ok": False, "refused": str(e)[:200]})
         except (IOError, ValueError) as e: row.update({"ok": False, "problem": str(e)[:200]})
@@ -717,6 +752,23 @@ def selftest():
     got = [(p["address"], p["passages"]) for p in res["pages"]]
     assert got and got[0][0] == "https://f.test/drug/ketamine/the-law" and "https://f.test/drug/cocaine" not in [a for a, _ in got], (got, res["problems"])
     assert res["pages"][0]["apa"].startswith("FRANK. (n.d.). *Ketamine and the law*. Retrieved ") and all("text" not in json.dumps(p) for p in res["pages"]) and res["pages"][0]["short"] == "FRANK" and "short" not in res["pages"][0]["ref"]["author"][0], res["pages"][0]
+    # (16 November 2026) a layout whose class only says it HAS a sidebar holds the page: it is read on a second look; a real sidebar stays out
+    body = " ".join(f"Caffeine intakes from all sources up to four hundred milligrams a day do not raise safety concerns for adults, sentence {i}." for i in range(30))
+    lay = extract(f'<html><body><div class="layout layout--with-sidebar"><h1>Caffeine</h1><p>{body}</p><div class="sidebar"><p>Related topics: energy drinks and other things that belong to a sidebar.</p></div></div></body></html>', "https://e.test/caffeine")
+    assert lay["title"] == "Caffeine" and len(lay["passages"]) >= 3 and not any("Related topics" in p["text"] for p in lay["passages"]), lay
+    side = extract('<html><body><main><h1>Ketamine</h1><p>Ketamine is a general anaesthetic that reduces sensations in the body, as its page says in its main part.</p></main><div class="page-sidebar"><p>'
+                   + "A long list of other pages that is not this page's own content. " * 40 + "</p></div></body></html>", "https://e.test/k")
+    assert len(side["passages"]) == 1 and side["left"] and side["left"][0][0] == "class" and "sidebar" in side["left"][0][1], side
+    assert all_links('<a href="#main">Skip to main content</a> <a href="/a#x">A page</a>', "https://e.test/caffeine") == [("https://e.test/a", "A page")]
+    # a hub that leads nowhere says what it looked like, and the list of pages the site itself names in its robots.txt is read
+    served.update({"https://m.test/robots.txt": "User-agent: *\nDisallow:\nSitemap: https://m.test/sitemap.xml\nSitemap: https://elsewhere.test/sitemap.xml\n",
+                   "https://m.test/drugs": '<html><head><title>Drugs | M</title></head><body><a href="/about/us">About</a> <a href="/about/team">Team</a></body></html>',
+                   "https://m.test/sitemap.xml": '<?xml version="1.0"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>https://m.test/sm1.xml</loc></sitemap></sitemapindex>',
+                   "https://m.test/sm1.xml": '<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://m.test/drugs/ketamine</loc><lastmod>2026-01-02</lastmod></url><url><loc>https://m.test/blog/a</loc></url></urlset>'})
+    msrc = {"id": "m", "author": "M", "short": "M", "tier": 2, "base": "https://m.test", "hubs": ["https://m.test/drugs"], "include": ["^/drugs/[a-z0-9-]+$"]}
+    mpages, mnotes = index_source(msrc, web)
+    assert list(mpages) == ["https://m.test/drugs/ketamine"] and "led nowhere" in mnotes[0] and "title 'Drugs | M'" in mnotes[0] and "/about (2)" in mnotes[0], (mpages, mnotes)
+    assert any("named by its robots.txt" in n and "1 pages (1 new) of 2 addresses in 2 files" in n for n in mnotes) and not any("elsewhere.test" in u for u in asked), mnotes
     print("official selftest: ok (robots.txt with * and $ is obeyed and a refusal is never gone around; a page's own content, dates and links are read without menus, cookies or footers; "
           "the reference is APA 7 from the page itself; for a question, the part of a body's page that speaks about it stands first; no page's text is kept)")
 
