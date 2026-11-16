@@ -118,10 +118,11 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
         if until and time.time() > until: stopped_by = "the time this run has (the job would be stopped before it could keep its results)"; break
         if left() < keep: stopped_by = f"the day's allowance: {left():.0f} {'calls' if svc else 'tokens' if groq else 'neurons'} left, and {keep} are kept for the site's own work"; break
         sent, plain, lines = framed(it)
-        if marks and not it.get("plain"): sent = plain                                                      # (a card's true part, as a checker of sentences reads it: no frame of "It is a fact that")
+        c_ = it["card"]; truth = (c_["statement"] + " " if c_["answer"] else "") + re.sub(r"^(?:true|false|myth|fact)[.!:]?\s+", "", c_.get("why") or "", flags=re.I)      # a card's TRUE part: a myth's statement is false on purpose and is no part of it
+        if marks and not it.get("plain"): sent = truth                                                      # (as a checker of sentences reads it: no frame of "It is a fact that")
         try: out = llm.as_json(chat(model, [{"role": "system", "content": lane.PIECES_SYS if pieces else lane.MARKS_SYS if marks else lane.CHECKER_SYS},
                                             {"role": "user", "content": lane.pieces_prompt(sent, lines, denies=not it["card"]["answer"]) if pieces else lane.marks_prompt(it["card"]["statement"] if it.get("plain") else sent, lines) if marks
-                                             else prompt(dict(it, plain=True, card=dict(it["card"], statement=plain))) if bare and not it.get("plain") else prompt(it)}], room))
+                                             else prompt(dict(it, plain=True, card=dict(it["card"], statement=truth))) if bare and not it.get("plain") else prompt(it)}], room))
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e); break
         except llm.Unavailable as e:
             if "too large" in str(e).lower() or "request_too_large" in str(e).lower(): res[it["id"]] = {"through": False, "clear": False, "problem": "the card and its lines are too long for one call"}; continue
@@ -198,6 +199,13 @@ def selftest():
     def chat6(model, messages, room): seen6.append(messages[1]["content"]); return json.dumps({"verdicts": [{"n": 1, "supported": True, "problem": ""}]})
     r = sit("gemini:gemini-3.5-flash-lite", 3, cards=cards[:6], chat=chat6, left=lambda: 1000, file=pf, how="plain")
     assert "It is a fact that" not in seen6[0] and "It is a myth" not in "".join(seen6) and "1. SENTENCE: " in seen6[0] and r["how"] == "plain", seen6[0][-300:]
+    myth = {"id": "m1", "good": True, "lines": {"short": "Not so: 9 in 100 had it.", "but": "", "how": []}, "card": {"statement": "Most people have it.", "answer": False, "why": "False. Only 9 in 100 had it."}}
+    seen6.clear(); sit("gemini:gemini-3.5-flash-lite", 3, cards=[myth, dict(cards[0], id="w9", good=False)], chat=chat6, left=lambda: 1000, file=pf.with_name("p2.json"), how="plain")
+    assert any("1. SENTENCE: Only 9 in 100 had it.\n" in s for s in seen6) and not any("Most people have it" in s for s in seen6), seen6           # a myth's own statement is false on purpose: it is never shown as a sentence to check
+    seen7 = []
+    def chat7(model, messages, room): seen7.append(messages[1]["content"]); return json.dumps({"measure": [], "report_as_fact": False, "wider": False, "cause_added": False, "extra": False, "which": ""})
+    sit("gemini:gemini-3.5-flash-lite", 3, cards=[myth, dict(cards[0], id="w9", good=False)], chat=chat7, left=lambda: 1000, file=pf.with_name("p3.json"), how="marks")
+    assert any("SENTENCE: Only 9 in 100 had it.\n" in s for s in seen7) and not any("Most people have it" in s for s in seen7)
     # asked for marks: five small questions, the code gives the verdict, and the result goes to a file of its own
     mf = pathlib.Path(tempfile.mkdtemp()) / "model-x-lane.json"; got = []
     def chat5(model, messages, room):
