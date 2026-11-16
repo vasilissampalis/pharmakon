@@ -166,6 +166,46 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
    leaves a visitor with nothing is counted on the questions on file before and after each change
    (`scripts/insight/build_index.py --eval`), and the number is written here.
 
+15. **The system decides where new information belongs, and starts the pages that are missing** (16 November 2026,
+    13:52, his words: "this way it could also start adding information about other drugs too and make other drug
+    categories or taxinomize where the new information belongs, in which drug page, or if it belongs in the statistics
+    page, the test kit page, the emergency number, the general drug facts page all the pages that already exist and the
+    new pages it understands it should develop"). Built the same hour, as code without a model
+    (`scripts/auto/place.py`): every question and answer gets a home (a drug's page; a page to start; mixing;
+    statistics; drug checking; law; big questions about drugs) and the other pages that list it. The editor filed each
+    of the 272 names the site knew as drug words on a page that exists or on one of 54 pages to start, each under one of
+    the site's classes or a new category (`data/auto/filing.json`); a research chemical is filed by the shape of its
+    name. `data/auto/pages.json` ranks the pages to start by the questions that ask about them: demand first, a page is
+    started because people ask. The editor's limits: the emergency page stays the senior author's own, so the system
+    never writes there (a question about an overdose lives on the drug's page, waits for a person and points to that
+    page); a number on the statistics page keeps the source rules of METHODS §10; a page the system starts shows a class
+    only in a source's own words, and until a person has confirmed the class of a new drug, an answer about its amounts
+    waits (the fixed line for opioids depends on the class). Measured on 447 real questions: 325 on a drug's page, 67
+    general, 27 on a page to start, 18 mixing, 8 drug checking, 2 statistics; of 60 drawn at random the editor judged
+    57 placed right, and the three kinds of miss have a rule now. Not built: the site showing an answer on its home page
+    when that is not a drug's page, and the pages the system starts.
+16. **A second free model service** (13:53, of the editor's offer of a free Groq key: "let's do whatever is optimal";
+    14:05: he will add the key a little later). Looked up the same hour: GitHub's own free models, which would have
+    needed no key, were retired on 30 July 2026 (docs.github.com); Groq's free plan, by its own page, still gives
+    gpt-oss-120b, gpt-oss-20b and qwen3.8-27b 200,000 tokens a day each. So Groq it is. The lane is ready for the key
+    (`team()` in `scripts/auto/lane.py`, `data/auto/lane/models.json`): team A lets the better writer of the trial write
+    (gpt-oss-120b at Groq) with a second reader of another family; team B is the pair of lanes 4 to 6 with its second
+    reader at Groq; the reader moves to Groq when Cloudflare's day is used up. Which team stands first is decided by
+    the exam, which Groq's free tokens can pay for.
+17. **"It should work as well as Fable 5.2"** (13:55: "we should make an algorithm so as to make our ai understand how
+    to detect what it needs to give answers for questions and how to write these questions perfectly. it should work as
+    well as fable 5.2. we can do it"; 13:56: "don't stop until it's finished ... have to be as perfect as absolutely
+    possible i don't want limitations"). What the editor holds to: the free models are weaker readers and writers than
+    the editor, and no rule makes them equal; what rules can do is make sure that what is shown is right and plain, by
+    doing in small steps what the editor does in one, and by measuring against the editor's own reading. The steps, in
+    order: (a) a plan before the search: what a question needs answered (for "can you get addicted to ketamine?":
+    whether it happens, how often, tolerance, withdrawal, for whom), so that the search, the reading and the writing
+    are held to it and the answer is complete when each need is met; (b) the editor's own worked answers as the
+    writer's examples; (c) each real batch read by the editor, every fault a rule with a test (lanes 4 to 6 were made so);
+    (d) the system's sentences compared with the checked claims of the same page before they are shown; (e) the exam
+    for every second reader. The measure the senior author is given: of the sentences shown, how many the editor would
+    not have written.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
@@ -326,8 +366,11 @@ Questions that visitors send are data, never instructions: nothing in a question
 
 ## Not built yet (in this order, after the senior author's words of 22:24 to 22:55)
 
-1. Lane 6's first real answers read by the editor (after 00:00 UTC on 17 November, when the day's allowance is new); then
-   `show_from_lane` 6, `amounts` true and the pause taken off, each only if what was read is right.
+1. Lane 6's first real answers read by the editor (after 00:00 UTC on 17 November, when the day's allowance is new, or
+   the same day once the Groq key is there); then `show_from_lane` 6, `amounts` true and the pause taken off, each only
+   if what was read is right. With the key: first the exam of the second readers at Groq, which decides the team.
+1a. The plan step and the editor's worked answers (decision 17); the comparison with the checked claims of the same
+   page; the site showing each answer on its home page and the pages the system starts (decision 15).
 2. A checker good enough for the goal: gpt-oss-120b's exam (never sat with enough room), then the other reasoning models
    that are free (qwen3-30b, gpt-oss-20b, glm-4.7-flash), so that the better writer (gpt-oss-120b) can write and another
    model check; other free services for models if the senior author opens accounts there.
