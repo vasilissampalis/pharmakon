@@ -4,6 +4,7 @@
     python3 -I scripts/auto/workshop.py requests          (own-*.json in data/auto/requests, read as data:
                                                            {"do": "export", "model": "<an open model on GROUNDED's list>", "as": "pharmakon-check-0"})
     python3 -I scripts/auto/workshop.py sit NAME DIR       (the exam for files already made: DIR/NAME.onnx, DIR/NAME.tokenizer.json)
+    python3 -I scripts/auto/workshop.py pick NAME          (a candidate's numbers counted again from the scores it left, by today's rule; no model is run)
     python3 -I scripts/auto/workshop.py --selftest
 
 Runs ONLY in the workshop job (.github/workflows/own.yml), which may read the repository and holds no key: this is the
@@ -17,7 +18,13 @@ data/auto/own/candidates/. Adopting a candidate is a separate step with its own 
 Two exams. The cards: every card's true part (a fact's statement and each sentence of its explanation; for a myth only the
 explanation, because a myth's statement is false on purpose) against the lines the card was written from. A card is let
 through when every such sentence scores at least the threshold. The threshold a candidate carries is the one that lets
-the fewest wrong cards through among those that stop no more than one good card in four.
+the fewest wrong cards through among those that stop no more than one good card in twelve (BUDGET). Why so few: our own
+checker is one judge of several, and every judge must accept a sentence, so what each one wrongly stops adds up. The first
+open models showed where such a judge earns its place (16 November 2026): MiniCheck on RoBERTa at 0.05 caught 3 of the 22
+faulty sentences and stopped 4 of 742 good ones (when it speaks there, it is nearly always right); at 0.5 it caught 5 and
+stopped 78. (Until that day the rule here allowed one good card in four; it chose 0.5.)
+Beside the cards the same scores are counted sentence by sentence (data/auto/exam/cards-where.json says which sentence of
+each wrong card carries the fault): the lane's unit is the sentence.
 The lane's own sentences (data/auto/exam/lane-sentences.json): every sentence the system wrote that the editor has judged,
 against the words it rests on. This is the lane's real task; it is small still and grows with every batch the editor reads,
 so a candidate's numbers on it are written down beside the cards' and count in the rule once the exam is large enough
@@ -31,7 +38,8 @@ import own, nli
 
 EXAM = ROOT / "data" / "auto" / "exam"
 OUT = ROOT / "out"
-THRESHOLDS = (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95)
+THRESHOLDS = (0.01, 0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95)
+BUDGET = 1 / 12        # the share of good cards one judge of a panel may stop
 LICENCES = {"lytang/MiniCheck-RoBERTa-Large": "MIT", "lytang/MiniCheck-DeBERTa-v3-Large": "MIT", "lytang/MiniCheck-Flan-T5-Large": "MIT",
             "KRLabsOrg/lettucedect-large-modernbert-en-v1": "MIT", "KRLabsOrg/lettucedect-base-modernbert-en-v1": "MIT"}
 
@@ -48,8 +56,34 @@ def table(rows):
     for t in THRESHOLDS:
         gt = sum(all(s >= t for s in r["scores"]) for r in good); bt = sum(all(s >= t for s in r["scores"]) for r in bad)
         out.append({"threshold": t, "wrong": len(bad), "good": len(good), "wrong_through": bt, "good_stopped": len(good) - gt})
-    ok = [x for x in out if x["good_stopped"] <= 0.25 * len(good)] or out[:1]
+    ok = [x for x in out if x["good_stopped"] <= BUDGET * len(good)] or out[:1]
     return out, min(ok, key=lambda x: (x["wrong_through"], x["good_stopped"]))
+
+
+def sentence_table(rows, where=None):
+    """The same scores, sentence by sentence: for each threshold, how many of the faulty sentences score under it (caught) and
+    how many of the good ones (stopped). where: data/auto/exam/cards-where.json's "cards"."""
+    if where is None:
+        try: where = json.load(open(EXAM / "cards-where.json", encoding="utf-8"))["cards"]
+        except (OSError, ValueError): return []
+    bad, good = [], []
+    for r in rows:
+        at = set((where.get(r["id"]) or {}).get("at") or [])
+        for k, s in enumerate(r["scores"]): (bad if k in at else good).append(s)
+    return [{"threshold": t, "faulty": len(bad), "good": len(good), "faulty_caught": sum(s < t for s in bad), "good_stopped": sum(s < t for s in good)} for t in THRESHOLDS] if bad and good else []
+
+
+def pick(name, folder=None):
+    """Count a candidate's numbers again from the scores it left (no model is run): the tables, the threshold by today's rule,
+    its numbers on the lane's own sentences at that threshold. Writes the candidate's record; returns it."""
+    folder = folder or own.OWN / "candidates"
+    e = json.load(open(folder / (name + ".json"), encoding="utf-8")); sc = json.load(open(folder / (name + ".scores.json"), encoding="utf-8"))
+    tb, best = table(sc["items"]); ltb = table(sc["lane"])[0] if sc.get("lane") else []
+    e.update(threshold=best["threshold"], exam=dict(best, whole=(e.get("exam") or {}).get("whole", True), seconds_a_sentence=(e.get("exam") or {}).get("seconds_a_sentence")), exam_table=tb, exam_sentences=sentence_table(sc["items"]),
+             threshold_rule=f"the fewest wrong cards let through among the thresholds that stop no more than 1 good card in {round(1 / BUDGET)}")
+    if ltb: e.update(exam_lane=at_threshold(ltb, best["threshold"]), exam_lane_table=ltb)
+    json.dump(e, open(folder / (name + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return e
 
 
 def sit_lane(chk, exam=None):
@@ -113,7 +147,8 @@ def finish(entry, name, minutes=0):
     chk = own.Check(entry=dict(entry, files=files), files={"model": OUT / (name + ".onnx"), "tokenizer": OUT / (name + ".tokenizer.json")})
     rows, tb, pick, whole, secs = sit(name, OUT, dict(entry, files=files), minutes, chk)
     lrows, ltb = sit_lane(chk); lane_at = at_threshold(ltb, pick["threshold"])
-    entry = dict(entry, files=files, threshold=pick["threshold"], exam=dict(pick, whole=whole, seconds_a_sentence=round(secs, 2)), exam_table=tb)
+    entry = dict(entry, files=files, threshold=pick["threshold"], exam=dict(pick, whole=whole, seconds_a_sentence=round(secs, 2)), exam_table=tb, exam_sentences=sentence_table(rows),
+                 threshold_rule=f"the fewest wrong cards let through among the thresholds that stop no more than 1 good card in {round(1 / BUDGET)}")
     if lane_at: entry.update(exam_lane=lane_at, exam_lane_table=ltb)
     json.dump(entry, open(OUT / (name + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     json.dump({"_note": "The scores of " + name + " for the true part of every card of the exam, and for every sentence of the lane's own that the editor has judged (scripts/auto/workshop.py).", "items": rows, "lane": lrows},
@@ -128,11 +163,16 @@ def selftest():
     c = {"statement": "Alcohol is addictive.", "answer": True, "why": "True. Many people become dependent. It was one survey."}
     assert true_part(c) == [("Alcohol is addictive.", "statement"), ("Many people become dependent.", "why"), ("It was one survey.", "why")]
     assert true_part(dict(c, answer=False)) == [("Many people become dependent.", "why"), ("It was one survey.", "why")]          # a myth's statement is false on purpose
-    rows = [{"good": True, "scores": [0.9, 0.8]}] * 6 + [{"good": True, "scores": [0.9, 0.35]}] * 2 + [{"good": False, "scores": [0.9, 0.3]}] * 3 + [{"good": False, "scores": [0.95, 0.9]}]
-    tb, pick = table(rows)
+    rows = [{"id": f"g{n}", "good": True, "scores": [0.9, 0.8]} for n in range(22)] + [{"id": "g22", "good": True, "scores": [0.9, 0.35]}, {"id": "g23", "good": True, "scores": [0.9, 0.15]}] \
+         + [{"id": "w0", "good": False, "scores": [0.9, 0.03]}, {"id": "w1", "good": False, "scores": [0.9, 0.3]}, {"id": "w2", "good": False, "scores": [0.95, 0.9]}]
+    tb, best = table(rows)
     at = {x["threshold"]: x for x in tb}
-    assert at[0.3]["wrong_through"] == 4 and at[0.4]["wrong_through"] == 1 and at[0.4]["good_stopped"] == 2 and at[0.95]["good_stopped"] == 8
-    assert pick["threshold"] == 0.4 and pick["wrong_through"] == 1 and pick["good_stopped"] == 2, pick          # the fewest wrong cards through among thresholds that stop no more than one good card in four
+    assert at[0.02]["wrong_through"] == 3 and at[0.05]["wrong_through"] == 2 and at[0.2]["good_stopped"] == 1 and at[0.4]["wrong_through"] == 1 and at[0.4]["good_stopped"] == 2 and at[0.95]["good_stopped"] == 24
+    assert best["threshold"] == 0.4 and best["wrong_through"] == 1 and best["good_stopped"] == 2, best          # 2 of 24 good cards is one in twelve: the fewest wrong cards through within that
+    rows.append({"id": "g24", "good": True, "scores": [0.38]}); assert table(rows)[1]["threshold"] == 0.05      # with 3 of 25 stopped at 0.4 it is over the budget: the best threshold within it
+    st = sentence_table(rows, {"w0": {"at": [1]}, "w1": {"at": [1]}, "w2": {"at": []}})
+    s = {x["threshold"]: x for x in st}
+    assert s[0.05] == {"threshold": 0.05, "faulty": 2, "good": 53, "faulty_caught": 1, "good_stopped": 0} and s[0.4]["faulty_caught"] == 2 and s[0.4]["good_stopped"] == 3, s[0.05]
     # the lane's own sentences: one score a sentence, against the words it rests on, and the numbers at the threshold the candidate carries
     import tempfile
     class Chk:
@@ -144,7 +184,7 @@ def selftest():
     assert c.seen[0] == ("It can be so.", "It can be so.") and [r["scores"] for r in lrows] == [[0.9], [0.2], [0.9]]
     assert at_threshold(ltb, 0.4) == {"threshold": 0.4, "wrong": 2, "good": 1, "wrong_through": 1, "good_stopped": 0} and at_threshold(ltb, 0.95)["good_stopped"] == 1 and at_threshold(ltb, 0.33) is None
     assert sit_lane(c, f.parent / "none.json") == ([], [])
-    print("workshop selftest: ok (a card's true part: a myth's statement is left out; the threshold a candidate carries lets the fewest wrong cards through while it stops no more than one good card in four; "
+    print("workshop selftest: ok (a card's true part: a myth's statement is left out; the threshold a candidate carries lets the fewest wrong cards through while it stops no more than one good card in twelve; the same scores are counted sentence by sentence; "
           "the lane's own sentences are sat against the words they rest on, and counted at that threshold)")
 
 
@@ -161,6 +201,11 @@ if __name__ == "__main__":
             try: finish(export(model, name, quant=r.get("quant") is not False), name, minutes=float(r.get("minutes") or 30))
             except SystemExit: raise
             except Exception as e: print(f"workshop: {name} from {model}: not made ({type(e).__name__}: {str(e)[:300]})")
+    elif len(a) == 2 and a[0] == "pick" and re.fullmatch(r"pharmakon-[a-z]+-[0-9a-z.-]{1,20}", a[1]):
+        e = pick(a[1]); x = e["exam"]; s = next((r for r in e.get("exam_sentences") or [] if r["threshold"] == e["threshold"]), None); l = e.get("exam_lane")
+        print(f"workshop: {a[1]}: at {e['threshold']} ({e['threshold_rule']}): lets {x['wrong_through']} of {x['wrong']} wrong cards through, stops {x['good_stopped']} of {x['good']} good ones"
+              + (f"; sentence by sentence: catches {s['faulty_caught']} of {s['faulty']} faulty ones, stops {s['good_stopped']} of {s['good']} good ones" if s else "")
+              + (f"; of the lane's own sentences: lets {l['wrong_through']} of {l['wrong']} that are not good through, stops {l['good_stopped']} of {l['good']} good ones" if l else ""))
     elif len(a) == 3 and a[0] == "sit":
         e = json.load(open(pathlib.Path(a[2]) / (a[1] + ".json"), encoding="utf-8")); print(sit(a[1], pathlib.Path(a[2]), e)[2])
     else: sys.exit(__doc__)
