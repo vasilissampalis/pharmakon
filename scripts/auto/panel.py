@@ -58,8 +58,9 @@ def judges(cards, sents, exam=None, own=None, lines=None):
     for f in sorted((exam or EXAM).glob("model-*.json")):
         d = load(f) or {}
         if d.get("how") == "pieces" or not isinstance(d.get("cards"), dict): continue
-        which = 1 if f.stem.endswith("-lane") else 2 if f.stem.endswith("-lines") else 0
-        name = str(d.get("model") or f.stem) + ("" if not d.get("effort") or which or not re.search(r"-(low|medium|high)$", f.stem) else " (" + d["effort"] + ")")
+        stem = re.sub(r"-marks$", "", re.sub(r"-(low|medium|high)$", "", f.stem)); marks = d.get("how") == "marks"
+        which = 1 if stem.endswith("-lane") else 2 if stem.endswith("-lines") else 0
+        name = str(d.get("model") or f.stem) + (" [asked for marks]" if marks else "") + (" (" + d["effort"] + ")" if d.get("effort") and re.search(r"-(low|medium|high)$", f.stem) else "")
         got = {k: bool(v.get("through")) for k, v in d["cards"].items() if v.get("clear")}          # no clear word is no verdict: such an item is not counted for this judge
         out.setdefault(name, ({}, {}, {}))[which].update(got)
     for f in sorted((own or OWN).glob("*.scores.json")):

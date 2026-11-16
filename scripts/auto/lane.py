@@ -654,6 +654,52 @@ def pieces_verdict(out, sentence, passages, denies=False):
     return {"through": ok, "clear": True, "pieces": len(ps), "missing": missing[:6], "not_there": not_there[:6], "left_out": left_out[:8]}
 
 
+# ---------- the second reader asked for marks, not for a verdict (16 November 2026; measured first: exam_models.py, "how": "marks") ----------
+# Asked "do the passages support the sentence?", a reader says yes to sentences that are nearly right; asked to copy the source's
+# words for every piece, it ran out of room. The faults our blind checkers find are of a few kinds (data/auto/exam: the cards, the
+# plain lines, the lane's own sentences): a word of measure the source does not carry, a report said as a fact, a wider group or
+# another thing counted, a cause or a reason added, a detail from elsewhere. So the reader is asked five small questions, one for
+# each kind, and copies the source's words only for the words of measure. The verdict is the code's: every word of measure must
+# have words of the source that really stand there, and none of the four other faults may be marked.
+MARKS_SYS = ("You compare one sentence with the passages it was written from. You do not judge whether the sentence is true, and what you know yourself does not count: "
+             "only the passages do. You answer the questions you are asked, exactly, with JSON only.")
+
+
+def marks_prompt(sentence, passages):
+    ps = "\n".join("   PASSAGE: " + x for x in passages if x)
+    return ("Answer five questions about the SENTENCE, from its PASSAGES only.\n\n"
+            f"SENTENCE: {sentence}\n{ps}\n\n"
+            '1. "measure": list every word or phrase of the SENTENCE that says how often, how many, how much, how big, how sure or how good something is '
+            '(for example: often, usually, most, all, both, never, always, clearly, proven, severe, slightly, far more, the most common, the riskiest, famous, trained, only). '
+            'For each one copy the words of a PASSAGE that say the same measure, exactly as they stand there, or write NONE when no passage says it. A sentence with no such word gets an empty list.\n'
+            '2. "report_as_fact": true when the SENTENCE states as a plain fact something the PASSAGES give only as what people said, reported, rated or recalled, or as what the authors suggest, propose, think or could not rule out. Else false.\n'
+            '3. "wider": true when the SENTENCE is about more, or about something else, than the PASSAGES: people in general where the passages speak of men, of patients or of one study\'s volunteers; '
+            'every study where it was one; another place, time or thing counted (deaths where pills were counted). Else false.\n'
+            '4. "cause_added": true when the SENTENCE says or implies that one thing causes, explains or follows from another ("because", "so", "leads to", "which is why") where the PASSAGES only put the two side by side or report a link. Else false.\n'
+            '5. "extra": true when anything else in the SENTENCE (a number, a name, a detail, a whole clause) is not stated in the PASSAGES. Else false.\n'
+            'For 2 to 5, when true, say which words of the SENTENCE in "which".\n\n'
+            'JSON only, in this form: {"measure": [{"word": "often", "passage_words": "NONE"}], "report_as_fact": false, "wider": false, "cause_added": false, "extra": false, "which": ""}')
+
+
+def marks_verdict(out, passages):
+    """The code's verdict on the reader's marks: {"through", "clear", "problem"}. through: every word of measure has words of a
+    passage that really stand in the passages, and none of the four faults is marked. clear: the reader answered all five."""
+    if not isinstance(out, dict) or not isinstance(out.get("measure"), list) or not all(isinstance(out.get(k), bool) for k in ("report_as_fact", "wider", "cause_added", "extra")):
+        return {"through": False, "clear": False, "problem": "the reader did not answer the five questions"}
+    flatten = lambda x: " " + " ".join(re.findall(r"[a-z0-9]+", norm(str(x or "")).lower())) + " "
+    whole = flatten(" ".join(passages)); bad = []
+    for m in out["measure"][:20]:
+        if not isinstance(m, dict): continue
+        word = re.sub(r"\s+", " ", str(m.get("word") or ""))[:60]; w = str(m.get("passage_words") or "").strip()
+        if not w or re.fullmatch(r"(?i)\W*none\W*", w): bad.append(f"“{word}”: no passage says it"); continue
+        bits = [b for b in (flatten(x).strip() for x in re.split(r"\.{3,}|…|\s/\s|\s\|\s", w)) if b]
+        if not bits or not all(" " + b + " " in whole for b in bits): bad.append(f"“{word}”: the words given for it are not in the passages")
+    names = {"report_as_fact": "a report or a suggestion said as a fact", "wider": "it is about more, or about something else, than the passages", "cause_added": "a cause or a reason the passages do not give", "extra": "something the passages do not state"}
+    which = re.sub(r"\s+", " ", str(out.get("which") or ""))[:120]
+    bad += [names[k] + (f" ({which})" if which else "") for k in names if out[k]]
+    return {"through": not bad, "clear": True, "problem": "; ".join(bad)[:300]}
+
+
 # ---------- our own checker (decision 23) ----------
 def own_word(parts, labels, chk):
     """Our own checker's score for every sentence a model wrote, against the words it rests on (the quotes and the passages they
@@ -1568,6 +1614,16 @@ def selftest():
     script["writer"] = [W(ok_short), W(ok_short), W(ok_short)]; script["checker"] = [V(True, True, True, True)] * 3
     r3 = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, own_check=Own([a_short[:25]]))
     assert r3["status"] == "none" and "our own checker does not find it" in r3["why"], (r3["status"], r3["why"])
+    # the second reader's marks: the code gives the verdict; words of measure need the source's own words, and copied words that are not in the passages count for nothing
+    mp = marks_prompt("It often is so for people.", ["It can be so.", "Men said so in one survey."])
+    assert "SENTENCE: It often is so for people.\n   PASSAGE: It can be so.\n   PASSAGE: Men said so in one survey." in mp and '"report_as_fact"' in mp
+    clean = {"measure": [], "report_as_fact": False, "wider": False, "cause_added": False, "extra": False, "which": ""}
+    assert marks_verdict(clean, ["It can be so."]) == {"through": True, "clear": True, "problem": ""}
+    assert marks_verdict(dict(clean, measure=[{"word": "often", "passage_words": "NONE"}]), ["It can be so."])["problem"] == "“often”: no passage says it"
+    assert marks_verdict(dict(clean, measure=[{"word": "often", "passage_words": "is frequently so"}]), ["It can be so."])["problem"] == "“often”: the words given for it are not in the passages"
+    assert marks_verdict(dict(clean, measure=[{"word": "often", "passage_words": "Often, it is so"}]), ["Often it is so."])["through"]
+    v = marks_verdict(dict(clean, wider=True, which="people"), ["Men said so."]); assert not v["through"] and v["clear"] and "more, or about something else" in v["problem"] and "(people)" in v["problem"]
+    assert marks_verdict({"measure": [], "wider": False}, ["x"]) == {"through": False, "clear": False, "problem": "the reader did not answer the five questions"} and not marks_verdict(None, ["x"])["clear"]
     # (lane 10) further second readers: each must accept every sentence too. A How line one of them refuses is dropped; a short answer
     # one refuses is written again; they are not asked when the second reader has refused the head already; what each said is kept
     M2 = dict(MODELS, also1="gemini:gemma-4-31b-it")

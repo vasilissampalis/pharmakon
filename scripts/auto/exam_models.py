@@ -77,14 +77,16 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     bad = [i for i in items if not i["good"]]; good = [i for i in items if i["good"]]
     rnd = random.Random(20261115); draw = rnd.sample(good, min(n_good, len(good)))
     pieces = how == "pieces"                                                                               # (16 November: the reader copies the passage's words for every piece of the card, and the code gives the verdict: lane.pieces_verdict)
-    room = lane.room_for(model, 700 if pieces else 220) if "gpt-oss" in model or not model.startswith("groq:") else 2000          # (a model that reasons first needs room: on 15 November gpt-oss-120b gave no verdict in 220, nor in 700)
+    marks = how == "marks"                                                                                 # (16 November: five small questions, one for each kind of fault our checkers find, and the code gives the verdict: lane.marks_verdict)
+    room = lane.room_for(model, 700 if pieces else 420 if marks else 220) if "gpt-oss" in model or not model.startswith("groq:") else 2000          # (a model that reasons first needs room: on 15 November gpt-oss-120b gave no verdict in 220, nor in 700)
     svc = llm.service_of(model)[0]                                                                             # (a service that counts calls: one card is one call, and five calls are kept)
     groq = model.startswith("groq:"); keep = 5 if svc else max(2000 if groq else KEEP, keep) if isinstance(keep, (int, float)) else 30000 if groq else KEEP      # (Groq counts a day in tokens for each model: 30,000 are left for the lane unless the request says the lane does not run today)
     # how hard a reasoning model at Groq thinks: the request's word, else what llm.chat_groq asks by itself (the larger gpt-oss: medium; the smaller: low; qwen3: none)
     plain_effort = ("low" if model.endswith("gpt-oss-20b") else "medium") if "gpt-oss" in model else "none" if "qwen3" in model else ""
     effort = effort if effort in ("low", "medium", "high") and groq and "gpt-oss" in model else plain_effort
     if groq and effort != plain_effort: llm.EFFORT[model[5:]] = effort
-    f = file or EXAM / ("model-" + re.sub(r"[^a-z0-9.-]+", "-", model.lower()).strip("-") + ("-pieces" if pieces else "") + ("-" + effort if effort != plain_effort else "") + ".json")
+    f = file or EXAM / ("model-" + re.sub(r"[^a-z0-9.-]+", "-", model.lower()).strip("-") + ("-pieces" if pieces else "-marks" if marks else "") + ("-" + effort if effort != plain_effort else "") + ".json")
+    if marks and file and "-marks" not in file.name: f = file.with_name(file.name.replace(".json", "-marks.json"))          # (a second way of asking never writes into the first way's file)
     try: old = json.load(open(f, encoding="utf-8"))
     except (OSError, ValueError): old = {}
     res = {k: v for k, v in (old.get("cards") or {}).items() if v.get("clear")} if old.get("room") == room and old.get("effort") == effort else {}
@@ -113,7 +115,9 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
         if until and time.time() > until: stopped_by = "the time this run has (the job would be stopped before it could keep its results)"; break
         if left() < keep: stopped_by = f"the day's allowance: {left():.0f} {'calls' if svc else 'tokens' if groq else 'neurons'} left, and {keep} are kept for the site's own work"; break
         sent, plain, lines = framed(it)
-        try: out = llm.as_json(chat(model, [{"role": "system", "content": lane.PIECES_SYS if pieces else lane.CHECKER_SYS}, {"role": "user", "content": lane.pieces_prompt(sent, lines, denies=not it["card"]["answer"]) if pieces else prompt(it)}], room))
+        if marks and not it.get("plain"): sent = plain                                                      # (a card's true part, as a checker of sentences reads it: no frame of "It is a fact that")
+        try: out = llm.as_json(chat(model, [{"role": "system", "content": lane.PIECES_SYS if pieces else lane.MARKS_SYS if marks else lane.CHECKER_SYS},
+                                            {"role": "user", "content": lane.pieces_prompt(sent, lines, denies=not it["card"]["answer"]) if pieces else lane.marks_prompt(it["card"]["statement"] if it.get("plain") else sent, lines) if marks else prompt(it)}], room))
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e); break
         except llm.Unavailable as e:
             if "too large" in str(e).lower() or "request_too_large" in str(e).lower(): res[it["id"]] = {"through": False, "clear": False, "problem": "the card and its lines are too long for one call"}; continue
@@ -121,6 +125,10 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
         if pieces:
             v = lane.pieces_verdict(out, plain, lines, denies=not it["card"]["answer"])
             res[it["id"]] = {"through": v["through"], "clear": v["clear"], "problem": ("no words for: " + "; ".join(v["missing"]) if v["missing"] else "words that are not in the lines for: " + "; ".join(v["not_there"]) if v["not_there"] else "pieces leave out: " + ", ".join(v["left_out"]) if not v["through"] and v["left_out"] else "")[:200], "pieces": v["pieces"]}
+            if n % 5 == 0: json.dump(result(), open(f, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            continue
+        if marks:
+            v = lane.marks_verdict(out, lines); res[it["id"]] = {"through": v["through"], "clear": v["clear"], "problem": v["problem"][:200]}
             if n % 5 == 0: json.dump(result(), open(f, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
             continue
         v = ((out or {}).get("verdicts") or [{}])[0] if isinstance((out or {}).get("verdicts"), list) and (out or {}).get("verdicts") else {}
@@ -175,6 +183,14 @@ def selftest():
     json.dump({"claims": {"c1": [["THE CLAIM", "People said desire often rose."], ["WHO WAS STUDIED", "20 men"]]}, "items": [{"id": "c1#short~was", "claim": "c1", "good": False, "line": "Desire often goes up.", "what": "a recollection said as a fact"}, {"id": "c1#short", "claim": "c1", "good": True, "line": "People say desire often goes up."}]}, open(xf, "w"))
     xc = lines_cards(xf); pr = prompt(xc[0])
     assert "1. SENTENCE: Desire often goes up.\n   PASSAGE: (THE CLAIM) People said desire often rose.\n   PASSAGE: (WHO WAS STUDIED) 20 men" in pr and xc[1]["good"] and xc[0]["what"], pr[-300:]
+    # asked for marks: five small questions, the code gives the verdict, and the result goes to a file of its own
+    mf = pathlib.Path(tempfile.mkdtemp()) / "model-x-lane.json"; got = []
+    def chat5(model, messages, room):
+        got.append((messages[0]["content"], messages[1]["content"], room)); often = "SENTENCE: It often" in messages[1]["content"]
+        return json.dumps({"measure": [{"word": "often", "passage_words": "NONE"}] if often else [], "report_as_fact": False, "wider": False, "cause_added": False, "extra": False, "which": ""})
+    r = sit("gemini:gemma-4-31b-it", 10 ** 6, cards=lc, chat=chat5, left=lambda: 1000, file=mf, how="marks")
+    assert got[0][0] == lane.MARKS_SYS and "Answer five questions" in got[0][1] and r["how"] == "marks" and r["wrong_caught"] == 1 and r["good_stopped"] == 0 and (mf.parent / "model-x-lane-marks.json").exists() and not mf.exists(), r
+    assert "no passage says it" in r["cards"]["au_x#short~1"]["problem"]
     print("exam_models selftest: ok (the lane's own question about a card; a sitting that stops at the day's reserve keeps its cards and the next goes on from there; "
           "asked piece by piece, the code gives the verdict from the words the reader copied)")
 
@@ -193,13 +209,14 @@ if __name__ == "__main__":
             for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:|mistral:|gemini:|openrouter:)[A-Za-z0-9._/:-]{3,90}", m)][:4]:
                 if not llm.has(m): print(f"exam: {m}: no key for its service on this machine (or it is not a free model): not sat"); continue
                 which = r.get("exam") if r.get("exam") in ("cards", "lane", "lines", "both", "all") else "cards"
-                opts = dict(until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None, most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)
+                opts = dict(until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None, most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None,
+                            how="marks" if "marks" in hows else None)         # (the lane's sentences and the plain lines are sat one way in a request: with "marks" in "how", that way)
                 if which in ("lane", "both", "all") and lane_cards():    # the lane's own sentences first, all of them: the real task, and small
                     sit(m, 10 ** 6, cards=lane_cards(), file=EXAM / ("model-" + slug(m) + "-lane.json"), **opts)
                 if which in ("lines", "all") and lines_cards():          # plain lines beside their checked claims: every wrong one, and twice as many good ones
                     lc = lines_cards(); sit(m, 2 * sum(not i["good"] for i in lc), cards=lc, file=EXAM / ("model-" + slug(m) + "-lines.json"), **opts)
                 if which in ("lane", "lines"): continue
                 for h in hows[:2]:
-                    sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until, how="pieces" if h == "pieces" else None, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
+                    sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until, how=h if h in ("pieces", "marks") else None, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
                         most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)
     else: sys.exit(__doc__)
