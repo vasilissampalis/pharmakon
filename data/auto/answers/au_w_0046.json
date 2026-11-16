@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0046",
- "lane": 5,
+ "lane": 6,
  "kind": "amounts",
  "from": "w_0046",
  "question": "How much alcohol do health bodies call low-risk drinking?",
@@ -19,140 +19,49 @@
  "made": {
   "on": "2026-11-16",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b"
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "team": "team C"
   },
-  "run": "43788421499",
+  "run": "43904650278",
   "from": {
-   "papers": 1,
+   "papers": 0,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 804.2
+  "neurons": 0.0
  },
  "status": "published",
  "why": "passed every gate (an answer about amounts: decision 11)",
  "gates": {
-  "read": "19 amounts kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 18 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "8 amounts from 3 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
-  "check": "6 of 8 amounts accepted by the second reader (@cf/openai/gpt-oss-120b); not accepted: The sentence suggests the >60 g amount applies to both men and women, but the passage states >60 g is only for women (men have >100 g).; not accepted: The sentence claims 60–100 g applies to both men and women, whereas the passage says women’s high‑risk range is 40–60 g.",
+  "read": "17 amounts kept from 6 sources (2 papers read in full, 4 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "12 amounts from 4 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
+  "check": "4 of 12 amounts accepted by the second reader (groq:openai/gpt-oss-120b); not accepted: Sentence does not state an amount; it describes spreading drinking over days, which is not the low‑risk amount asked.; not accepted: The sentence describes a binge‑drinking amount, not a low‑risk drinking amount.; not accepted: not an amount of the kind the question asks for; not accepted: sentence omits women definition and does not fully match passage; not accepted: sentence desc",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
   {
-   "read": "full",
-   "ref": {
-    "id": "volpicelli_2022",
-    "type": "article-journal",
-    "title": "Rethinking unhealthy alcohol use in the United States: A structured review",
-    "author": [
-     {
-      "family": "Volpicelli",
-      "given": "Joseph R"
-     },
-     {
-      "family": "Menzies",
-      "given": "Percy"
-     }
-    ],
-    "container-title": "Substance Abuse: Research and Treatment",
-    "issued": {
-     "date-parts": [
-      [
-       2022
-      ]
-     ]
-    },
-    "DOI": "10.1177/11782218221111832",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-16"
-     }
-    },
-    "volume": "16",
-    "number": "11782218221111832",
-    "PMCID": "PMC9310219"
-   },
-   "doi": "10.1177/11782218221111832",
-   "pmcid": "PMC9310219",
-   "title": "Rethinking Unhealthy Alcohol Use in the United States: A Structured Review",
-   "year": 2022,
-   "journal": "Substance abuse : research and treatment",
-   "kind": "review",
-   "people": true,
-   "near": 0.704,
-   "money": [],
-   "rows": [
-    {
-     "passage": 14,
-     "where": "Results › Defining the spectrum of alcohol use",
-     "quote": "The highest risk level (very-high-risk) corresponds to more than 100 g of ethanol (7.1 standard drinks) per drinking day for men and more than 60 g of ethanol (4.3 standard drinks) for women.",
-     "show": "The highest risk level (very-high-risk) corresponds to more than 100 g of ethanol",
-     "clause": "The highest risk level (very-high-risk) corresponds to more than 100 g of ethanol (7.1 standard drinks) per drinking day for men and",
-     "who": "men, women",
-     "what": "daily amount for risk levels"
-    },
-    {
-     "passage": 14,
-     "where": "Results › Defining the spectrum of alcohol use",
-     "quote": "The highest risk level (very-high-risk) corresponds to more than 100 g of ethanol (7.1 standard drinks) per drinking day for men and more than 60 g of ethanol (4.3 standard drinks) for women.",
-     "show": "more than 60 g of ethanol (4.3 standard drinks) for women",
-     "clause": "more than 60 g of ethanol (4.3 standard drinks) for women.",
-     "who": "men, women",
-     "what": "daily amount for risk levels"
-    },
-    {
-     "passage": 14,
-     "where": "Results › Defining the spectrum of alcohol use",
-     "quote": "The second highest risk level (high-risk) corresponds to 60 to 100 g of ethanol (4.3-7.1 standard drinks) per drinking day for men and 40 to 60 g of ethanol (2.9-4.3 standard drinks) for women.",
-     "show": "The second highest risk level (high-risk) corresponds to 60 to 100 g of ethanol",
-     "clause": "The second highest risk level (high-risk) corresponds to 60 to 100 g of ethanol (4.3-7.1 standard drinks) per drinking day for men and",
-     "who": "men, women",
-     "what": "daily amount for risk levels"
-    },
-    {
-     "passage": 14,
-     "where": "Results › Defining the spectrum of alcohol use",
-     "quote": "The second highest risk level (high-risk) corresponds to 60 to 100 g of ethanol (4.3-7.1 standard drinks) per drinking day for men and 40 to 60 g of ethanol (2.9-4.3 standard drinks) for women.",
-     "show": "40 to 60 g of ethanol (2.9-4.3 standard drinks) for women",
-     "clause": "40 to 60 g of ethanol (2.9-4.3 standard drinks) for women.",
-     "who": "men, women",
-     "what": "daily amount for risk levels"
-    }
-   ],
-   "design": null,
-   "findings": [],
-   "limits": [],
-   "tag": "B"
-  },
-  {
    "read": "page",
    "ref": {
-    "id": "healthcanada_low-risk-alcohol-drinking-guidelines",
+    "id": "nhs_calculating-alcohol-units",
     "type": "webpage",
-    "title": "Low-risk alcohol drinking guidelines",
+    "title": "Alcohol units",
     "author": [
      {
-      "literal": "Health Canada"
+      "literal": "NHS"
      }
     ],
     "issued": {
      "date-parts": [
       [
-       2025,
-       3,
-       25
+       2024,
+       8,
+       30
       ]
      ]
     },
-    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/low-risk-alcohol-drinking-guidelines.html",
+    "URL": "https://www.nhs.uk/live-well/alcohol-advice/calculating-alcohol-units/",
     "accessed": {
      "date-parts": [
       [
@@ -166,92 +75,37 @@
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
      "verified_on": "2026-11-16"
-    },
-    "publisher": "Government of Canada"
+    }
    },
-   "title": "Low-risk alcohol drinking guidelines",
-   "year": 2025,
+   "title": "Alcohol units",
+   "year": 2024,
    "kind": "official",
    "people": true,
-   "near": 0.797,
-   "name": "Health Canada",
-   "short": "Health Canada",
+   "near": 0.777,
+   "name": "NHS",
+   "short": "the NHS",
    "tier": 1,
-   "address": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/low-risk-alcohol-drinking-guidelines.html",
+   "address": "https://www.nhs.uk/live-well/alcohol-advice/calculating-alcohol-units/",
    "money": [],
    "label": false,
    "rows": [
     {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "2 standard drinks per day",
-     "show": "2 standard drinks per day",
-     "clause": "2 standard drinks per day",
-     "who": "women",
-     "what": "daily low-risk guideline"
+     "passage": 2,
+     "where": "Top of the page",
+     "quote": "men and women are advised not to drink more than 14 units a week on a regular basis; spread your drinking over 3 or more days if you regularly drink as much as 14 units a week; if you want to cut down, try to have several drink-free days each week",
+     "show": "men and women are advised not to drink more than 14 units a week",
+     "clause": "men and women are advised not to drink more than 14 units a week on a regular basis; spread your drinking over 3 or",
+     "who": "men and women",
+     "what": "low‑risk weekly drinking guideline"
     },
     {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "10 standard drinks per week",
-     "show": "10 standard drinks per week",
-     "clause": "10 standard drinks per week",
-     "who": "women",
-     "what": "weekly low-risk guideline"
-    },
-    {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "3 standard drinks on special occasions",
-     "show": "3 standard drinks on special occasions",
-     "clause": "3 standard drinks on special occasions",
-     "who": "women",
-     "what": "amount on special occasions"
-    },
-    {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "3 standard drinks per day",
-     "show": "3 standard drinks per day",
-     "clause": "3 standard drinks per day",
-     "who": "men",
-     "what": "daily low-risk guideline"
-    },
-    {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "15 standard drinks per week",
-     "show": "15 standard drinks per week",
-     "clause": "15 standard drinks per week",
-     "who": "men",
-     "what": "weekly low-risk guideline"
-    },
-    {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "4 standard drinks on special occasions",
-     "show": "4 standard drinks on special occasions",
-     "clause": "4 standard drinks on special occasions",
-     "who": "men",
-     "what": "amount on special occasions"
-    },
-    {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "limit alcohol to no more than: 2 standard drinks per day; 10 standard drinks per week; 3 standard drinks on special occasions; avoid drinking alcohol on some days",
-     "show": "limit alcohol to no more than: 2 standard drinks per day",
-     "clause": "limit alcohol to no more than: 2 standard drinks per day;",
-     "who": "women",
-     "what": "daily, weekly, special occasions and frequency guideline"
-    },
-    {
-     "passage": 4,
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "limit alcohol to no more than: 2 standard drinks per day; 10 standard drinks per week; 3 standard drinks on special occasions; avoid drinking alcohol on some days",
-     "show": "10 standard drinks per week; 3 standard drinks on special occasions",
-     "clause": "10 standard drinks per week; 3 standard drinks on special occasions; avoid drinking alcohol on some days",
-     "who": "women",
-     "what": "daily, weekly, special occasions and frequency guideline"
+     "passage": 2,
+     "where": "Top of the page",
+     "quote": "men and women are advised not to drink more than 14 units a week on a regular basis; spread your drinking over 3 or more days if you regularly drink as much as 14 units a week; if you want to cut down, try to have several drink-free days each week",
+     "show": "more days if you regularly drink as much as 14 units a week",
+     "clause": "more days if you regularly drink as much as 14 units a week; if you want to cut down, try to have several drink-free days each week",
+     "who": "men and women",
+     "what": "low‑risk weekly drinking guideline"
     }
    ],
    "design": null,
@@ -306,47 +160,29 @@
     {
      "passage": 2,
      "where": "Weekly low-risk alcohol guidelines",
-     "quote": "6 standard drinks on any 1 occasion",
-     "show": "6 standard drinks on any 1 occasion",
-     "clause": "6 standard drinks on any 1 occasion",
+     "quote": "The low-risk alcohol guidelines are that you do not drink more than: 11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
+     "show": "11 standard drinks per week, if you are a woman",
+     "clause": "The low-risk alcohol guidelines are that you do not drink more than: 11 standard drinks per week, if you are a woman;",
      "who": "adults",
-     "what": "the amount in one session"
+     "what": "weekly low-risk guideline"
     },
     {
-     "passage": 4,
-     "where": "What's in a standard drink / Examples of standard drinks",
-     "quote": "half a pint of beer, stout or cider (4.5% ABV); a single measure of spirits (35.5ml, 40% ABV); a small glass of wine (100mls, 12.5% ABV); an alcopop (275ml, 4% ABV)",
-     "show": "a single measure of spirits (35.5ml, 40% ABV)",
-     "clause": "half a pint of beer, stout or cider (4.5% ABV); a single measure of spirits (35.5ml, 40% ABV);",
+     "passage": 2,
+     "where": "Weekly low-risk alcohol guidelines",
+     "quote": "The low-risk alcohol guidelines are that you do not drink more than: 11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
+     "show": "17 standard drinks per week, if you are a man",
+     "clause": "17 standard drinks per week, if you are a man",
      "who": "adults",
-     "what": "the amount in a standard drink"
+     "what": "weekly low-risk guideline"
     },
     {
-     "passage": 4,
-     "where": "What's in a standard drink / Examples of standard drinks",
-     "quote": "half a pint of beer, stout or cider (4.5% ABV); a single measure of spirits (35.5ml, 40% ABV); a small glass of wine (100mls, 12.5% ABV); an alcopop (275ml, 4% ABV)",
-     "show": "a small glass of wine (100mls, 12.5% ABV); an alcopop (275ml, 4% ABV)",
-     "clause": "a small glass of wine (100mls, 12.5% ABV); an alcopop (275ml, 4% ABV)",
+     "passage": 2,
+     "where": "Weekly low-risk alcohol guidelines",
+     "quote": "Do not drink more than 6 standard drinks on any 1 occasion",
+     "show": "Do not drink more than 6 standard drinks on any 1 occasion",
+     "clause": "Do not drink more than 6 standard drinks on any 1 occasion",
      "who": "adults",
-     "what": "the amount in a standard drink"
-    },
-    {
-     "passage": 4,
-     "where": "What's in a standard drink / Examples of standard drinks",
-     "quote": "a pint of beer, stout or cider (4.5% ABV); a double measure of spirits (71ml, 40% ABV); a large can of beer (500ml, 4.3% ABV)",
-     "show": "a double measure of spirits (71ml, 40% ABV)",
-     "clause": "a pint of beer, stout or cider (4.5% ABV); a double measure of spirits (71ml, 40% ABV);",
-     "who": "adults",
-     "what": "the amount in two standard drinks"
-    },
-    {
-     "passage": 4,
-     "where": "What's in a standard drink / Examples of standard drinks",
-     "quote": "a pint of beer, stout or cider (4.5% ABV); a double measure of spirits (71ml, 40% ABV); a large can of beer (500ml, 4.3% ABV)",
-     "show": "a large can of beer (500ml, 4.3% ABV)",
-     "clause": "a large can of beer (500ml, 4.3% ABV)",
-     "who": "adults",
-     "what": "the amount in two standard drinks"
+     "what": "maximum per occasion"
     }
    ],
    "design": null,
@@ -364,38 +200,59 @@
   },
   {
    "part": "but",
-   "text": "Each amount was for the people named, under the care named. It says nothing about another person, or about what is sold outside a pharmacy.",
+   "text": "Each amount is that body's own guidance for the people it names. It says nothing about another person.",
    "fixed": true,
    "rests_on": []
   },
   {
    "part": "row1",
-   "text": "Men, women; daily amount for risk levels.",
-   "who": "Men, women",
-   "what": "daily amount for risk levels",
-   "quote": "The highest risk level (very-high-risk) corresponds to more than 100 g of ethanol",
-   "source": "volpicelli_2022",
-   "read": "full",
+   "text": "Men and women; low‑risk weekly drinking guideline.",
+   "who": "Men and women",
+   "what": "low‑risk weekly drinking guideline",
+   "quote": "men and women are advised not to drink more than 14 units a week",
+   "source": "nhs_calculating-alcohol-units",
+   "read": "page",
    "uses": [
     "R1"
    ],
    "rests_on": [
     {
      "label": "R1",
-     "ref": "volpicelli_2022",
-     "where": "Results › Defining the spectrum of alcohol use",
-     "quote": "The highest risk level (very-high-risk) corresponds to more than 100 g of ethanol (7.1 standard drinks) per drinking day for men and more than 60 g of ethanol (4.3 standard drinks) for women.",
-     "sha": "1a59a044db0aa234"
+     "ref": "nhs_calculating-alcohol-units",
+     "where": "Top of the page",
+     "quote": "men and women are advised not to drink more than 14 units a week on a regular basis; spread your drinking over 3 or more days if you regularly drink as much as 14 units a week; if you want to cut down, try to have several drink-free days each week",
+     "sha": "74949b9316e0db4e"
     }
    ]
   },
   {
    "part": "row2",
-   "text": "Women; daily low-risk guideline.",
-   "who": "Women",
-   "what": "daily low-risk guideline",
-   "quote": "2 standard drinks per day",
-   "source": "healthcanada_low-risk-alcohol-drinking-guidelines",
+   "text": "Adults; weekly low-risk guideline.",
+   "who": "Adults",
+   "what": "weekly low-risk guideline",
+   "quote": "11 standard drinks per week, if you are a woman",
+   "source": "hse_weekly-low-risk-alcohol-guidelines",
+   "read": "page",
+   "uses": [
+    "R3"
+   ],
+   "rests_on": [
+    {
+     "label": "R3",
+     "ref": "hse_weekly-low-risk-alcohol-guidelines",
+     "where": "Weekly low-risk alcohol guidelines",
+     "quote": "The low-risk alcohol guidelines are that you do not drink more than: 11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
+     "sha": "49a986fe313b31d0"
+    }
+   ]
+  },
+  {
+   "part": "row3",
+   "text": "Adults; weekly low-risk guideline.",
+   "who": "Adults",
+   "what": "weekly low-risk guideline",
+   "quote": "17 standard drinks per week, if you are a man",
+   "source": "hse_weekly-low-risk-alcohol-guidelines",
    "read": "page",
    "uses": [
     "R4"
@@ -403,20 +260,20 @@
    "rests_on": [
     {
      "label": "R4",
-     "ref": "healthcanada_low-risk-alcohol-drinking-guidelines",
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "2 standard drinks per day",
-     "sha": "c3f4d59103d102c4"
+     "ref": "hse_weekly-low-risk-alcohol-guidelines",
+     "where": "Weekly low-risk alcohol guidelines",
+     "quote": "The low-risk alcohol guidelines are that you do not drink more than: 11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
+     "sha": "49a986fe313b31d0"
     }
    ]
   },
   {
-   "part": "row3",
-   "text": "Women; weekly low-risk guideline.",
-   "who": "Women",
-   "what": "weekly low-risk guideline",
-   "quote": "10 standard drinks per week",
-   "source": "healthcanada_low-risk-alcohol-drinking-guidelines",
+   "part": "row4",
+   "text": "Adults; maximum per occasion.",
+   "who": "Adults",
+   "what": "maximum per occasion",
+   "quote": "Do not drink more than 6 standard drinks on any 1 occasion",
+   "source": "hse_weekly-low-risk-alcohol-guidelines",
    "read": "page",
    "uses": [
     "R5"
@@ -424,73 +281,10 @@
    "rests_on": [
     {
      "label": "R5",
-     "ref": "healthcanada_low-risk-alcohol-drinking-guidelines",
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "10 standard drinks per week",
-     "sha": "c3f4d59103d102c4"
-    }
-   ]
-  },
-  {
-   "part": "row4",
-   "text": "Women; amount on special occasions.",
-   "who": "Women",
-   "what": "amount on special occasions",
-   "quote": "3 standard drinks on special occasions",
-   "source": "healthcanada_low-risk-alcohol-drinking-guidelines",
-   "read": "page",
-   "uses": [
-    "R6"
-   ],
-   "rests_on": [
-    {
-     "label": "R6",
-     "ref": "healthcanada_low-risk-alcohol-drinking-guidelines",
-     "where": "Canada's low-risk alcohol drinking guidelines / The guidelines for consumption limits",
-     "quote": "3 standard drinks on special occasions",
-     "sha": "c3f4d59103d102c4"
-    }
-   ]
-  },
-  {
-   "part": "row5",
-   "text": "Adults; the amount in one session.",
-   "who": "Adults",
-   "what": "the amount in one session",
-   "quote": "6 standard drinks on any 1 occasion",
-   "source": "hse_weekly-low-risk-alcohol-guidelines",
-   "read": "page",
-   "uses": [
-    "R7"
-   ],
-   "rests_on": [
-    {
-     "label": "R7",
      "ref": "hse_weekly-low-risk-alcohol-guidelines",
      "where": "Weekly low-risk alcohol guidelines",
-     "quote": "6 standard drinks on any 1 occasion",
+     "quote": "Do not drink more than 6 standard drinks on any 1 occasion",
      "sha": "49a986fe313b31d0"
-    }
-   ]
-  },
-  {
-   "part": "row6",
-   "text": "Adults; the amount in a standard drink.",
-   "who": "Adults",
-   "what": "the amount in a standard drink",
-   "quote": "a single measure of spirits (35.5ml, 40% ABV)",
-   "source": "hse_weekly-low-risk-alcohol-guidelines",
-   "read": "page",
-   "uses": [
-    "R8"
-   ],
-   "rests_on": [
-    {
-     "label": "R8",
-     "ref": "hse_weekly-low-risk-alcohol-guidelines",
-     "where": "What's in a standard drink / Examples of standard drinks",
-     "quote": "half a pint of beer, stout or cider (4.5% ABV); a single measure of spirits (35.5ml, 40% ABV); a small glass of wine (100mls, 12.5% ABV); an alcopop (275ml, 4% ABV)",
-     "sha": "4164749479d3b194"
     }
    ]
   }
@@ -529,6 +323,14 @@
    "why": "passed every gate (an answer about amounts: decision 11)",
    "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
    "complete": true
+  },
+  {
+   "on": "2026-11-16",
+   "lane": 5,
+   "status": "published",
+   "why": "passed every gate (an answer about amounts: decision 11)",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": true
   }
  ],
  "looked": [
@@ -537,21 +339,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/ijerph19084523",
-   "kept": 0,
-   "thrown": [
-    {
-     "quote": "In the USA in 2015 and 2020, sex-specific advice was released, recommending that women drink one drink or less per day and no more than three in one sitting; less than the two drinks and five drinks s",
-     "who": "women, men",
-     "what": "daily and session low-risk guidelines",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "Canada’s 2012 Lower Risk Drinking Guidelines recommend that women consume less alcohol than men in per day, week or at a sitting, in order to safeguard their health.",
-     "who": "women, men",
-     "what": "weekly, daily and session low-risk guidelines",
-     "why": "no amount with its unit in the quote"
-    }
-   ]
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "Informing low-risk drinking guidelines: a secondary, cross-sectional data analysis of alcohol use and health utility",
@@ -559,51 +348,6 @@
    "kind": "other",
    "at": "10.1186/s13722-026-00679-x",
    "kept": 2,
-   "thrown": [
-    {
-     "quote": "not consume alcohol 7 days per week",
-     "who": "females and males",
-     "what": "weekly low-risk drinking guideline",
-     "why": "no amount with its unit in the quote"
-    }
-   ]
-  },
-  {
-   "title": "Alcohol use and burden for 195 countries and territories, 1990-2016: a systematic analysis for the Global Burden of Disease Study 2016",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1016/s0140-6736(18)31310-2",
-   "kept": 0,
-   "thrown": [
-    {
-     "quote": "consuming zero (95% UI 0·0–0·8) standard drinks daily",
-     "who": "individuals",
-     "what": "daily amount that minimises overall risk",
-     "why": "no amount with its unit in the quote"
-    }
-   ]
-  },
-  {
-   "title": "The effectiveness of a mobile intervention to reduce young adults' alcohol consumption to not exceed low-risk drinking guidelines",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fdgth.2022.1016714",
-   "kept": 0,
-   "thrown": [
-    {
-     "quote": "4 (for females) or 5 (for males) standard units on one occasion",
-     "who": "participants",
-     "what": "binge drinking frequency",
-     "why": "no amount with its unit in the quote"
-    }
-   ]
-  },
-  {
-   "title": "Rethinking Unhealthy Alcohol Use in the United States: A Structured Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1177/11782218221111832",
-   "kept": 4,
    "thrown": []
   },
   {
@@ -611,13 +355,13 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/low-risk-alcohol-drinking-guidelines.html",
-   "kept": 8,
+   "kept": 0,
    "thrown": [
     {
-     "quote": "no more than twice weekly; no more than 1 or 2 standard drinks each time",
-     "who": "youth, with parental consent",
-     "what": "frequency and amount guideline",
-     "why": "who names no people"
+     "quote": "Women: limit alcohol to no more than: 2 standard drinks per day; 10 standard drinks per week; 3 standard drinks on special occasions; avoid drinking alcohol on some days Men: limit alcohol to no more ",
+     "who": "Women, Men, Pregnant women, Youth with parental consent",
+     "what": "low‑risk drinking limits",
+     "why": "the quote is shorter than 4 words or longer than 70"
     }
    ]
   },
@@ -626,42 +370,16 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/live-well/alcohol-advice/calculating-alcohol-units/",
-   "kept": 0,
-   "thrown": [
-    {
-     "quote": "men and women are advised not to drink more than 14 units a week on a regular basis",
-     "who": "men and women",
-     "what": "the weekly low-risk guideline",
-     "why": "who received it, or under what care, is not in the source's words"
-    },
-    {
-     "quote": "14 units is equivalent to 6 pints of average-strength beer or 10 small glasses of lower-strength wine",
-     "who": "men and women",
-     "what": "the weekly low-risk guideline in pints and glasses",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
-    }
-   ]
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "Weekly low-risk alcohol guidelines",
    "read": "page",
    "kind": "official",
    "at": "https://www2.hse.ie/living-well/alcohol/health/improve-your-health/weekly-low-risk-alcohol-guidelines/",
-   "kept": 5,
-   "thrown": [
-    {
-     "quote": "11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
-     "who": "women, men",
-     "what": "weekly low-risk guidelines",
-     "why": "who received it, or under what care, is not in the source's words"
-    },
-    {
-     "quote": "a bottle of wine (12.5% ABV)",
-     "who": "adults",
-     "what": "the amount in a bottle of wine",
-     "why": "no amount with its unit in the quote"
-    }
-   ]
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Health risks of alcohol",
@@ -684,30 +402,18 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.niaaa.nih.gov/alcohols-effects-health/alcohol-drinking-patterns",
-   "kept": 0,
+   "kept": 4,
    "thrown": [
     {
-     "quote": "five or more drinks (male), or four or more drinks (female)",
-     "who": "a typical adult",
-     "what": "the amount in one session for binge drinking",
-     "why": "no amount with its unit in the quote"
+     "quote": "In the United States, a 'standard drink' is defined as any beverage containing 0.6 fl oz or 14 grams of pure alcohol.",
+     "who": "any beverage in the United States",
+     "what": "definition of a standard drink",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
     },
     {
-     "quote": "five or more drinks containing alcohol for males or four or more drinks containing alcohol for females",
-     "who": "males or females",
-     "what": "the amount in one session for binge drinking",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "five or more drinks on any day or 15 or more per week; For women, consuming four or more on any day or eight or more drinks per week",
-     "who": "men or women",
-     "what": "daily and weekly amounts for heavy drinking",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "even one drink per day",
-     "who": "women",
-     "what": "a daily amount associated with increased risk of breast cancer",
+     "quote": "SAMHSA defines heavy alcohol use as binge drinking on five or more days in the past month.",
+     "who": "anyone",
+     "what": "heavy drinking definition",
      "why": "no amount with its unit in the quote"
     }
    ]
@@ -717,27 +423,8 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.cdc.gov/alcohol/about-alcohol-use/index.html",
-   "kept": 0,
-   "thrown": [
-    {
-     "quote": "Four or more drinks for women, or five or more drinks for men during an occasion.",
-     "who": "women, men",
-     "what": "binge drinking amount",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "Eight or more drinks for women, or 15 or more drinks for men during a week.",
-     "who": "women, men",
-     "what": "heavy drinking amount",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "For men—two drinks or less in a day. For women—one drink or less in a day.",
-     "who": "men, women",
-     "what": "moderate drinking amount",
-     "why": "no amount with its unit in the quote"
-    }
-   ]
+   "kept": 4,
+   "thrown": []
   },
   {
    "title": "Do \"Moderate\" Drinkers Have Reduced Mortality Risk? A Systematic Review and Meta-Analysis of Alcohol Consumption and All-Cause Mortality",
@@ -770,5 +457,11 @@
    "kept": 0,
    "thrown": []
   }
- ]
+ ],
+ "place": {
+  "home": "alcohol",
+  "also": [],
+  "cls": null,
+  "why": "it names a drug that has a page"
+ }
 }

@@ -1,21 +1,13 @@
 == the model client's own check
-Traceback (most recent call last):
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/llm.py", line 243, in <module>
-    if "--selftest" in sys.argv: selftest()
-                                 ~~~~~~~~^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/llm.py", line 221, in selftest
-    assert not has("groq:openai/gpt-oss-120b")
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError
-!! this step failed (1)
+llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it)
 == the finder's own check
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)
 == write
-[0;93m2026-11-16 16:00:05.240678440 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
-lane: team A: groq:openai/gpt-oss-20b reads, groq:openai/gpt-oss-120b writes, groq:qwen/qwen3.8-27b is the second reader
-lane: w_0024 'Can you get addicted to ketamine?': published (passed every gate); 1 papers, 2 official pages, 0 summaries; 0.0 neurons
-lane: team A: groq:openai/gpt-oss-20b reads, groq:openai/gpt-oss-120b writes, groq:qwen/qwen3.8-27b is the second reader
-lane: the models cannot be used now: Groq answered 429: {"error":{"message":"Request too large for model `qwen/qwen3.8-27b` in organization `org_01m7jh0mxye8q97saq7yk488v1` service tier `on_demand` on output tokens per minute (OTPM): Limit 1000, Requested 1682. The request's expected output tokens exceed the enforced limit; reduce max_tokens (or the requ
-lane: 1 questions worked on: published 1, waiting 0, none 0; today 8520 of 9000 neurons used
+[0;93m2026-11-16 16:11:23.022650533 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+lane: team C: groq:openai/gpt-oss-20b reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0024 'Can you get addicted to ketamine?': published (passed every gate); 2 papers, 2 official pages, 0 summaries; 0.0 neurons
+lane: team C: groq:openai/gpt-oss-20b reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0046 'How much alcohol do health bodies call low-risk drinking': published (passed every gate (an answer about amounts: decision 11)); 0 papers, 2 official pages, 0 summaries; 0.0 neurons
+lane: 2 questions worked on: published 2, waiting 0, none 0; today 8520 of 9000 neurons used
