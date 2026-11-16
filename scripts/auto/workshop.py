@@ -92,7 +92,7 @@ def export(model, name, quant=True):
     x = tok("A passage of a source." + eos + "A sentence written from it.", return_tensors="pt")
     raw = OUT / (name + ".fp32.onnx")
     torch.onnx.export(m, (x["input_ids"], x["attention_mask"]), str(raw), input_names=["input_ids", "attention_mask"], output_names=["logits"],
-                      dynamic_axes={"input_ids": {0: "n", 1: "t"}, "attention_mask": {0: "n", 1: "t"}, "logits": {0: "n"}}, opset_version=17)
+                      dynamic_axes={"input_ids": {0: "n", 1: "t"}, "attention_mask": {0: "n", 1: "t"}, "logits": {0: "n"}}, opset_version=17, dynamo=False)      # (the plain exporter: the newer one needs a package more and is not needed for a classifier)
     final = OUT / (name + ".onnx")
     if quant:
         from onnxruntime.quantization import quantize_dynamic, QuantType
