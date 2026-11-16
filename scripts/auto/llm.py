@@ -135,16 +135,19 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     raise Unavailable("Groq gave no answer")
 
 
-def chat(model, messages, max_tokens=700, opener=None, tries=3):
+LAST = {}   # about the last answer: why it ended, the service's token counts, how long the model reasoned before it wrote (for the trials; never an answer's words)
+
+
+def chat(model, messages, max_tokens=700, opener=None, tries=3, extra=None):
     """The model's answer to messages ([{"role", "content"}]). Raises Budget before a call that today's allowance cannot
-    hold, Unavailable when there is no key or the service refuses."""
+    hold, Unavailable when there is no key or the service refuses. extra: more fields for the request (a trial's)."""
     if model.startswith("groq:"): return chat_groq(model, messages, max_tokens, opener, tries)
     token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     if not token or not account: raise Unavailable("no key (the repository's two secrets are not set)")
     if not re.fullmatch(r"[0-9a-fA-F]{32}", account) and account != "ACC": raise Unavailable("the account number in the secret CLOUDFLARE_ACCOUNT_ID is not a Cloudflare account ID (32 letters a-f and digits)")
     pi, po = PRICE.get(model, DEAR); est_in = sum(rough_tokens(m["content"]) for m in messages)
     if est_in * pi / 1e6 + max_tokens * po / 1e6 > left(): raise Budget(f"today's free allowance cannot hold this call ({ledger()['neurons']:.0f} of {OUR_LIMIT} neurons used)")
-    body = json.dumps({"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": 0}).encode("utf-8")
+    body = json.dumps(dict({"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": 0}, **(extra or {}))).encode("utf-8")
     opener = opener or urllib.request.urlopen
     for k in range(tries):
         req = urllib.request.Request(API.format(account=account), data=body, method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
@@ -165,6 +168,8 @@ def chat(model, messages, max_tokens=700, opener=None, tries=3):
         if isinstance(text, list): text = "".join(p.get("text", "") for p in text if isinstance(p, dict))
         u = d.get("usage") or {}
         spend(model, int(u.get("prompt_tokens") or est_in), int(u.get("completion_tokens") or rough_tokens(text)))
+        LAST.clear(); LAST.update({"finish": (d.get("choices") or [{}])[0].get("finish_reason"), "in": u.get("prompt_tokens"), "out": u.get("completion_tokens"),
+                                   "reasoned": len(str(ch.get("reasoning_content") or ch.get("reasoning") or "")), "wrote": len(text or "")})
         return clean(text)
     raise Unavailable("the model service gave no answer")
 
