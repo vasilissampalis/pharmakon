@@ -1,6 +1,8 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0024",
+ "lane": 4,
+ "kind": "answer",
  "from": "w_0024",
  "question": "Can you get addicted to ketamine?",
  "ways": [
@@ -15,26 +17,31 @@
   "ketamine"
  ],
  "made": {
-  "on": "2026-11-15",
+  "on": "2026-11-16",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/openai/gpt-oss-120b",
-   "checker": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "@cf/openai/gpt-oss-120b"
   },
-  "run": "43756883812",
-  "neurons": 546.1
+  "run": "43786333922",
+  "from": {
+   "papers": 2,
+   "summaries": 0,
+   "official": 2
+  },
+  "neurons": 488.8
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "read": "11 findings kept from 3 papers; 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "3 review(s) or meta-analyses, 0 single studies in people",
-  "check": "every sentence kept was accepted by the second reader (@cf/meta/llama-3.3-70b-instruct-fp8-fast)",
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b)",
   "rules": "nothing against it"
  },
  "sources": [
   {
-   "tag": "A",
+   "read": "full",
    "ref": {
     "id": "roberts_2024",
     "type": "article-journal",
@@ -67,10 +74,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
+     "verified_on": "2026-11-16",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-15"
+      "checked_on": "2026-11-16"
      }
     },
     "volume": "18",
@@ -82,14 +89,16 @@
    "pmcid": "PMC11882168",
    "title": "The Pharmacological Management of Ketamine Use Disorder: A Systematic Review",
    "year": 2024,
+   "journal": "Journal of addiction medicine",
    "kind": "review",
    "people": true,
    "near": 0.816,
+   "money": [],
    "design": {
     "passage": 1,
     "where": "Abstract",
     "quote": "We aimed to conduct a systematic review to assess the efficacy and tolerability of pharmacological interventions in the management of ketamine use disorder.",
-    "text": "systematic review of pharmacological interventions in ketamine use disorder"
+    "text": "systematic review of pharmacological interventions"
    },
    "findings": [
     {
@@ -105,28 +114,21 @@
      "quote": "benzodiazepine regimens would appear the most salient treatment option for future exploration in management of ketamine intoxication and withdrawal",
      "text": "Benzodiazepine regimens may be the most promising treatment option for ketamine intoxication and withdrawal.",
      "id": "F2"
-    },
-    {
-     "passage": 34,
-     "where": "CONCLUSIONS",
-     "quote": "the current evidence base available for pharmacological treatment in ketamine use disorder is limited and of very low quality",
-     "text": "The current evidence base for pharmacological treatment in ketamine use disorder is limited and of very low quality.",
-     "id": "F3"
     }
    ],
    "limits": [
     {
-     "passage": 31,
-     "where": "DISCUSSION",
-     "quote": "Only very low-quality evidence of efficacy and tolerability was available for any pharmacological intervention in the treatment of ketamine use disorder",
-     "text": "The evidence for pharmacological interventions in ketamine use disorder is of very low quality.",
+     "passage": 34,
+     "where": "CONCLUSIONS",
+     "quote": "the current evidence base available for pharmacological treatment in ketamine use disorder is limited and of very low quality",
+     "text": "The evidence for pharmacological treatment of ketamine use disorder is limited and of very low quality.",
      "id": "L1"
     }
    ],
-   "money": []
+   "tag": "A"
   },
   {
-   "tag": "B",
+   "read": "full",
    "ref": {
     "id": "hakami_2026",
     "type": "article-journal",
@@ -151,10 +153,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
+     "verified_on": "2026-11-16",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-15"
+      "checked_on": "2026-11-16"
      }
     },
     "volume": "17",
@@ -165,9 +167,14 @@
    "pmcid": "PMC13391515",
    "title": "Treating addiction with an addictive drug: the ketamine paradox revisited",
    "year": 2026,
+   "journal": "Frontiers in psychiatry",
    "kind": "review",
    "people": true,
-   "near": 0.838,
+   "near": 0.844,
+   "money": [
+    "The author(s) declared that financial support was not received for this work and/or its publication.",
+    "The author(s) declared that this work was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+   ],
    "design": {
     "passage": 2,
     "where": "Abstract",
@@ -176,189 +183,234 @@
    },
    "findings": [
     {
-     "passage": 56,
-     "where": "Abuse risks and safety concerns › Ketamine’s abuse liability",
-     "quote": "Recreational patterns of ketamine use, particularly among younger age groups, are typically characterized by repeated high-dose administration, often in combination with other substances, driven by the drug’s dissociative and perceptual effects.",
-     "text": "Recreational ketamine use can lead to psychological dependence, tolerance, ulcerative cystitis, and neurocognitive impairment.",
-     "id": "F4"
+     "passage": 76,
+     "where": "Conclusion",
+     "quote": "early trials and systematic reviews suggest that carefully dosed, intermittently administered ketamine in supervised settings, often combined with psychotherapy, can reduce craving and increase abstinence, with some sustained benefits.",
+     "text": "Ketamine can reduce craving and increase abstinence in supervised settings.",
+     "id": "F3"
     },
     {
      "passage": 63,
      "where": "Abuse risks and safety concerns › Psychological dependence on ketamine: a comparative view of therapeutic vs. recreational use",
      "quote": "Psychological dependence on ketamine differs markedly between supervised medical treatment and non−medical, recreational use.",
      "text": "Psychological dependence on ketamine differs between supervised medical treatment and recreational use.",
-     "id": "F5"
+     "id": "F4"
     },
     {
      "passage": 69,
      "where": "Abuse risks and safety concerns › Psychological dependence on ketamine: a comparative view of therapeutic vs. recreational use › Patterns in recreational/non−medical use › Withdrawal/abstinence symptoms",
      "quote": "Among people with ketamine use disorder, common abstinence symptoms include craving, low mood, anxiety, irritability, and other psychological complaints.",
-     "text": "Common abstinence symptoms in people with ketamine use disorder include craving, low mood, anxiety, irritability, and other psychological complaints.",
-     "id": "F6"
-    },
-    {
-     "passage": 70,
-     "where": "The paradox: treating addiction with an addictive substance",
-     "quote": "In this setting, systematic reviews of depression trials and real−world TRD cohorts report very low rates of clear tolerance, dependence, or craving, suggesting that, under medical supervision, ketamine’s abuse liability is comparable to that of other controlled psychotropics and far lower than in recreational use",
-     "text": "Under medical supervision, ketamine's abuse liability is comparable to other controlled psychotropics and far lower than in recreational use.",
-     "id": "F7"
-    },
-    {
-     "passage": 76,
-     "where": "Conclusion",
-     "quote": "Yet its dissociative and reinforcing properties confer a clear risk of abuse.",
-     "text": "Ketamine has a clear risk of abuse due to its dissociative and reinforcing properties.",
-     "id": "F8"
+     "text": "People with ketamine use disorder experience abstinence symptoms such as craving, low mood, anxiety, and irritability.",
+     "id": "F5"
     }
    ],
    "limits": [
     {
      "passage": 76,
      "where": "Conclusion",
-     "quote": "For cannabis and tobacco use disorders, there is a lack of controlled clinical data for ketamine currently;",
-     "text": "There is a lack of controlled clinical data for ketamine in treating cannabis and tobacco use disorders.",
+     "quote": "existing SUD trials have not reported illicit transition, diversion, or ketamine use disorder when delivered under rigorous clinical protocols, highlighting the importance of context, dose, and monitoring,",
+     "text": "The risk of abuse may be mitigated in rigorous clinical protocols, but more research is needed.",
      "id": "L2"
-    },
-    {
-     "passage": 76,
-     "where": "Conclusion",
-     "quote": "the former remains an important unaddressed indication given the absence of any approved pharmacotherapy.",
-     "text": "There is no approved pharmacotherapy for cannabis use disorder.",
-     "id": "L3"
     }
    ],
-   "money": [
-    "The author(s) declared that financial support was not received for this work and/or its publication.",
-    "The author(s) declared that this work was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
-   ]
+   "tag": "B"
   },
   {
-   "tag": "C",
+   "read": "page",
    "ref": {
-    "id": "thomas_2025",
-    "type": "article-journal",
-    "title": "Ketamine’s therapeutic role in substance use disorders: A narrative review",
+    "id": "healthcanada_ketamine",
+    "type": "webpage",
+    "title": "Ketamine",
     "author": [
      {
-      "family": "Thomas",
-      "given": "Alexander"
-     },
-     {
-      "family": "Chambers",
-      "given": "R. Andrew"
+      "literal": "Health Canada"
      }
     ],
-    "container-title": "NeuroSci",
     "issued": {
      "date-parts": [
       [
-       2025
+       2026,
+       6,
+       19
       ]
      ]
     },
-    "DOI": "10.3390/neurosci6030083",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-15",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-15"
-     }
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ketamine.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       16
+      ]
+     ]
     },
-    "volume": "6",
-    "issue": "3",
-    "number": "83",
-    "PMCID": "PMC12452417"
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-16"
+    },
+    "publisher": "Government of Canada"
    },
-   "doi": "10.3390/neurosci6030083",
-   "pmcid": "PMC12452417",
-   "title": "Ketamine's Therapeutic Role in Substance Use Disorders: A Narrative Review",
-   "year": 2025,
-   "kind": "review",
+   "title": "Ketamine",
+   "year": 2026,
+   "kind": "official",
    "people": true,
-   "near": 0.799,
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This narrative review provides an outline of clinical evidence reported in the literature from the 1970s to 2025",
-    "text": "a narrative review of clinical evidence"
-   },
+   "near": 0.752,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ketamine.html",
+   "money": [],
+   "label": false,
+   "design": null,
    "findings": [
     {
-     "passage": 22,
-     "where": "1. Introduction › 1.3. Opioid Use Disorder",
-     "quote": "At 1 year follow-up, the rate of abstinence in the three-session group was significantly higher, 13/26 (50%), as compared to 6/27 (22.2%).",
-     "text": "In a randomized clinical trial, the rate of abstinence in the three-session ketamine group was significantly higher, 50%, as compared to 22.2% in the single-session group at 1 year follow-up.",
+     "passage": 10,
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you use it regularly your body may become tolerant of the drug's effects.",
+     "text": "Regular use of ketamine can lead to tolerance.",
+     "id": "F6"
+    },
+    {
+     "passage": 10,
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop abruptly after frequent use you can experience withdrawal syndrome.",
+     "text": "Abrupt cessation of frequent ketamine use can lead to withdrawal syndrome.",
+     "id": "F7"
+    },
+    {
+     "passage": 10,
+     "where": "Substance use disorders and withdrawal",
+     "quote": "This includes symptoms such as: craving; sweating; headaches",
+     "text": "Symptoms of withdrawal syndrome include craving, sweating, and headaches.",
+     "id": "F8"
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "label_ketamine-hydrochloride",
+    "type": "webpage",
+    "title": "Ketalar (ketamine hydrochloride)",
+    "author": [
+     {
+      "literal": "Henry Schein, Inc"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       2
+      ]
+     ]
+    },
+    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=46dab560-8ecd-4d92-8c92-6baa2310b09b",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       16
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-16"
+    },
+    "publisher": "DailyMed",
+    "genre": "Drug label"
+   },
+   "title": "Ketalar (ketamine hydrochloride)",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.722,
+   "name": "U.S. Food and Drug Administration",
+   "short": "the US label for ketamine",
+   "tier": 1,
+   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=46dab560-8ecd-4d92-8c92-6baa2310b09b",
+   "money": [],
+   "label": true,
+   "design": null,
+   "findings": [
+    {
+     "passage": 17,
+     "where": "Drug abuse and dependence",
+     "quote": "Physical dependence has been reported with prolonged use of ketamine.",
+     "text": "Physical dependence has been reported with prolonged use of ketamine.",
      "id": "F9"
     },
     {
-     "passage": 36,
-     "where": "2. Discussion",
-     "quote": "Evidence from the AUD literature points to ketamine improving SUD outcomes while treating psychiatric comorbidities, disrupting maladaptive reward memories, and providing beneficial mystical experiences.",
-     "text": "Ketamine improves SUD outcomes while treating psychiatric comorbidities, disrupting maladaptive reward memories, and providing beneficial mystical experiences in AUD.",
+     "passage": 18,
+     "where": "Drug abuse and dependence",
+     "quote": "Tolerance has been reported with prolonged use of ketamine.",
+     "text": "Tolerance has been reported with prolonged use of ketamine.",
      "id": "F10"
     },
     {
-     "passage": 42,
-     "where": "3. Conclusions",
-     "quote": "Growing evidence suggests the drug may have efficacies that span addictions involving different substances, with some data hinting at better efficacy with psychedelic-range dosing and repeated sessions.",
-     "text": "Growing evidence suggests ketamine may have efficacies that span addictions involving different substances, with some data hinting at better efficacy with psychedelic-range dosing and repeated sessions.",
+     "passage": 18,
+     "where": "Drug abuse and dependence",
+     "quote": "Withdrawal symptoms have been reported after the discontinuation of frequently used (more than weekly), large doses of ketamine for long periods of time.",
+     "text": "Withdrawal symptoms have been reported after the discontinuation of frequently used (more than weekly), large doses of ketamine for long periods of time.",
      "id": "F11"
     }
    ],
    "limits": [
     {
-     "passage": 42,
-     "where": "3. Conclusions",
-     "quote": "The available research is, however, significantly limited by heterogeneous protocols, a lack of consensus on the best active comparator controls, and many unanswered questions",
-     "text": "The research is limited by heterogeneous protocols, a lack of consensus on the best active comparator controls, and many unanswered questions.",
-     "id": "L4"
+     "passage": 21,
+     "where": "Use in specific populations",
+     "quote": "Clinical Considerations KETALAR use in pregnancy, including obstetrics (either vaginal or abdominal delivery), is not recommended because safe use has not been established",
+     "text": "The safety of ketamine in pregnancy has not been established.",
+     "id": "L3"
     }
    ],
-   "money": [
-    "Support for work on this manuscript was funded in part by HRSA-AMF (T25HP37617) to RA Chambers as PD, and AS Thomas, as an addiction psychiatry fellow and junior faculty supported by the grant."
-   ]
+   "tag": "D"
   }
  ],
  "parts": [
   {
    "part": "short",
-   "text": "Yes, people who use ketamine recreationally can develop psychological dependence and experience cravings, low mood, anxiety, and other withdrawal symptoms, showing an addiction risk.",
+   "text": "People with ketamine use disorder experience abstinence symptoms. Regular use can lead to tolerance and withdrawal syndrome.",
    "uses": [
-    "F4",
+    "F5",
     "F6",
-    "F8"
+    "F7"
    ],
    "rests_on": [
     {
-     "label": "F4",
-     "ref": "hakami_2026",
-     "where": "Abuse risks and safety concerns › Ketamine’s abuse liability",
-     "quote": "Recreational patterns of ketamine use, particularly among younger age groups, are typically characterized by repeated high-dose administration, often in combination with other substances, driven by the drug’s dissociative and perceptual effects.",
-     "sha": "ae478013ccc36f9e"
-    },
-    {
-     "label": "F6",
+     "label": "F5",
      "ref": "hakami_2026",
      "where": "Abuse risks and safety concerns › Psychological dependence on ketamine: a comparative view of therapeutic vs. recreational use › Patterns in recreational/non−medical use › Withdrawal/abstinence symptoms",
      "quote": "Among people with ketamine use disorder, common abstinence symptoms include craving, low mood, anxiety, irritability, and other psychological complaints.",
      "sha": "297adfd30e7494b4"
     },
     {
-     "label": "F8",
-     "ref": "hakami_2026",
-     "where": "Conclusion",
-     "quote": "Yet its dissociative and reinforcing properties confer a clear risk of abuse.",
-     "sha": "63da7b22ab1f314a"
+     "label": "F6",
+     "ref": "healthcanada_ketamine",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you use it regularly your body may become tolerant of the drug's effects.",
+     "sha": "8c938ea049e1516d"
+    },
+    {
+     "label": "F7",
+     "ref": "healthcanada_ketamine",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop abruptly after frequent use you can experience withdrawal syndrome.",
+     "sha": "8c938ea049e1516d"
     }
    ]
   },
   {
    "part": "but",
-   "text": "The evidence comes mainly from low‑quality reviews, so the strength of the conclusion about addiction risk is limited.",
+   "text": "The evidence for pharmacological treatment of ketamine use disorder is limited.",
    "uses": [
     "L1"
    ],
@@ -366,18 +418,17 @@
     {
      "label": "L1",
      "ref": "roberts_2024",
-     "where": "DISCUSSION",
-     "quote": "Only very low-quality evidence of efficacy and tolerability was available for any pharmacological intervention in the treatment of ketamine use disorder",
-     "sha": "0082357f68a3618f"
+     "where": "CONCLUSIONS",
+     "quote": "the current evidence base available for pharmacological treatment in ketamine use disorder is limited and of very low quality",
+     "sha": "b88ce9454ee68670"
     }
    ]
   },
   {
    "part": "how1",
-   "text": "Paper A systematically reviewed ketamine use disorder and reported the condition exists but only very low‑quality evidence supports any medication treatment.",
+   "text": "A 2024 review of pharmacological interventions for ketamine use disorder found limited evidence.",
    "uses": [
     "DA",
-    "F3",
     "L1"
    ],
    "rests_on": [
@@ -389,29 +440,22 @@
      "sha": "7f8a7cb165116475"
     },
     {
-     "label": "F3",
+     "label": "L1",
      "ref": "roberts_2024",
      "where": "CONCLUSIONS",
      "quote": "the current evidence base available for pharmacological treatment in ketamine use disorder is limited and of very low quality",
      "sha": "b88ce9454ee68670"
-    },
-    {
-     "label": "L1",
-     "ref": "roberts_2024",
-     "where": "DISCUSSION",
-     "quote": "Only very low-quality evidence of efficacy and tolerability was available for any pharmacological intervention in the treatment of ketamine use disorder",
-     "sha": "0082357f68a3618f"
     }
-   ]
+   ],
+   "quote": "the current evidence base available for pharmacological treatment in ketamine use disorder is limited",
+   "quote_ref": "roberts_2024"
   },
   {
    "part": "how2",
-   "text": "Paper B reviewed recreational ketamine use and found it can cause psychological dependence, tolerance, cravings, low mood, anxiety, and other withdrawal symptoms, indicating clear abuse risk.",
+   "text": "A 2026 review of ketamine's therapeutic potential found psychological dependence differs between supervised medical treatment and recreational use.",
    "uses": [
     "DB",
-    "F4",
-    "F6",
-    "F8"
+    "F4"
    ],
    "rests_on": [
     {
@@ -424,49 +468,65 @@
     {
      "label": "F4",
      "ref": "hakami_2026",
-     "where": "Abuse risks and safety concerns › Ketamine’s abuse liability",
-     "quote": "Recreational patterns of ketamine use, particularly among younger age groups, are typically characterized by repeated high-dose administration, often in combination with other substances, driven by the drug’s dissociative and perceptual effects.",
-     "sha": "ae478013ccc36f9e"
-    },
-    {
-     "label": "F6",
-     "ref": "hakami_2026",
-     "where": "Abuse risks and safety concerns › Psychological dependence on ketamine: a comparative view of therapeutic vs. recreational use › Patterns in recreational/non−medical use › Withdrawal/abstinence symptoms",
-     "quote": "Among people with ketamine use disorder, common abstinence symptoms include craving, low mood, anxiety, irritability, and other psychological complaints.",
-     "sha": "297adfd30e7494b4"
-    },
-    {
-     "label": "F8",
-     "ref": "hakami_2026",
-     "where": "Conclusion",
-     "quote": "Yet its dissociative and reinforcing properties confer a clear risk of abuse.",
-     "sha": "63da7b22ab1f314a"
+     "where": "Abuse risks and safety concerns › Psychological dependence on ketamine: a comparative view of therapeutic vs. recreational use",
+     "quote": "Psychological dependence on ketamine differs markedly between supervised medical treatment and non−medical, recreational use.",
+     "sha": "c5ae4906c02a3a6f"
     }
-   ]
+   ],
+   "quote": "Psychological dependence on ketamine differs markedly between supervised medical treatment and non-medical, recreational use",
+   "quote_ref": "hakami_2026"
   },
   {
    "part": "how3",
-   "text": "Paper C noted that research on ketamine’s role in substance use disorders is limited by heterogeneous protocols and many unanswered questions.",
+   "text": "Health Canada says regular use can lead to tolerance and withdrawal syndrome.",
    "uses": [
-    "DC",
-    "L4"
+    "F6",
+    "F7"
    ],
    "rests_on": [
     {
-     "label": "DC",
-     "ref": "thomas_2025",
-     "where": "Abstract",
-     "quote": "This narrative review provides an outline of clinical evidence reported in the literature from the 1970s to 2025",
-     "sha": "2fb9c5d3dfa8c213"
+     "label": "F6",
+     "ref": "healthcanada_ketamine",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you use it regularly your body may become tolerant of the drug's effects.",
+     "sha": "8c938ea049e1516d"
     },
     {
-     "label": "L4",
-     "ref": "thomas_2025",
-     "where": "3. Conclusions",
-     "quote": "The available research is, however, significantly limited by heterogeneous protocols, a lack of consensus on the best active comparator controls, and many unanswered questions",
-     "sha": "cd45c433954258e4"
+     "label": "F7",
+     "ref": "healthcanada_ketamine",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop abruptly after frequent use you can experience withdrawal syndrome.",
+     "sha": "8c938ea049e1516d"
     }
-   ]
+   ],
+   "quote": "If you use it regularly your body may become tolerant of the drug's effects",
+   "quote_ref": "healthcanada_ketamine"
+  },
+  {
+   "part": "how4",
+   "text": "The US label for ketamine says physical dependence and tolerance have been reported with prolonged use.",
+   "uses": [
+    "F9",
+    "F10"
+   ],
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "label_ketamine-hydrochloride",
+     "where": "Drug abuse and dependence",
+     "quote": "Physical dependence has been reported with prolonged use of ketamine.",
+     "sha": "b768d10f95f1543c"
+    },
+    {
+     "label": "F10",
+     "ref": "label_ketamine-hydrochloride",
+     "where": "Drug abuse and dependence",
+     "quote": "Tolerance has been reported with prolonged use of ketamine.",
+     "sha": "a54ee9ca3e57b5c8"
+    }
+   ],
+   "quote": "Physical dependence has been reported with prolonged use of ketamine",
+   "quote_ref": "label_ketamine-hydrochloride"
   }
  ],
  "complete": false,
@@ -475,24 +535,34 @@
   {
    "doi": "10.1016/j.brainresbull.2016.05.016",
    "apa": "Liu, Y., Lin, D., Wu, B., & Zhou, W. (2016). Ketamine abuse potential and use disorder. Brain Research Bulletin, 126, 68–73. https://doi.org/10.1016/j.brainresbull.2016.05.016",
-   "near": 0.818,
-   "why": "a review or meta-analysis in people; nearness to the question 0.82; cited 170 times; its full text is not open",
+   "near": 0.813,
+   "why": "a review or meta-analysis in people; nearness to the question 0.81; cited 170 times; its full text is not open",
    "file": "liu_2016_j_brainresbull_2016_05_016.pdf"
-  },
-  {
-   "doi": "10.1159/000506868",
-   "apa": "Cosci, F., & Chouinard, G. (2020). Acute and persistent withdrawal syndromes following discontinuation of psychotropic medications. Psychotherapy and Psychosomatics, 89(5), 283–306. https://doi.org/10.1159/000506868",
-   "near": 0.79,
-   "why": "a review or meta-analysis in people; nearness to the question 0.79; cited 177 times; its full text is not open",
-   "file": "cosci_2020_000506868.pdf"
   },
   {
    "doi": "10.2174/0127724328362434250224105609",
    "apa": "Ng, S. H., Lee, Y. Z., Hong, M. Y., Kow, A. S. F., d’Arqom, A., Tham, C. L., Ho, Y.-C., & Lee, M. T. (2026). Neurobiological mechanisms of ketamine use, its addiction, and withdrawal: A mini review. Current Reviews in Clinical and Experimental Pharmacology, 21(1), 1–11. https://doi.org/10.2174/0127724328362434250224105609",
-   "near": 0.856,
+   "near": 0.861,
    "why": "a review or meta-analysis; nearness to the question 0.86; cited 0 times; its full text is not open",
    "file": "ng_2026_0127724328362434250224105609.pdf"
+  },
+  {
+   "doi": "10.1080/10550887.2025.2464356",
+   "apa": "Lomas, C. (2026). Breaking the cycle: A systematic review of neurobiological mechanisms and psychotherapeutic innovations in ketamine addiction. Journal of Addictive Diseases, 44(2), 121–143. https://doi.org/10.1080/10550887.2025.2464356",
+   "near": 0.822,
+   "why": "a review or meta-analysis in people; nearness to the question 0.82; cited 2 times; its full text is not open",
+   "file": "lomas_2026_10550887_2025_2464356.pdf"
   }
  ],
- "person": null
+ "person": null,
+ "history": [
+  {
+   "on": "2026-11-15",
+   "lane": null,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes, people who use ketamine recreationally can develop psychological dependence and experience cravings, low mood, anxiety, and other withdrawal symptoms, showing an addiction risk.",
+   "complete": false
+  }
+ ]
 }

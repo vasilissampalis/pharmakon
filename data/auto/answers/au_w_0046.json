@@ -1,0 +1,280 @@
+{
+ "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
+ "id": "au_w_0046",
+ "lane": 4,
+ "kind": "amounts",
+ "from": "w_0046",
+ "question": "How much alcohol do health bodies call low-risk drinking?",
+ "ways": [
+  "how many drinks a week is safe",
+  "how many units of alcohol a week is ok",
+  "safe drinking limits",
+  "low risk drinking guidelines",
+  "how much alcohol is too much",
+  "recommended alcohol limit per week"
+ ],
+ "drugs": [
+  "alcohol"
+ ],
+ "made": {
+  "on": "2026-11-16",
+  "models": {
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "@cf/openai/gpt-oss-120b"
+  },
+  "run": "43786333922",
+  "from": {
+   "papers": 0,
+   "summaries": 0,
+   "official": 2
+  },
+  "neurons": 815.7
+ },
+ "status": "published",
+ "why": "passed every gate (an answer about amounts: decision 11)",
+ "gates": {
+  "read": "14 amounts kept from 5 sources (2 papers read in full, 3 official pages, 0 papers read in summary); 27 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "9 amounts from 4 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
+  "check": "3 of 9 amounts accepted by the second reader (@cf/openai/gpt-oss-120b); not accepted: The sentence misstates the high‑risk drinking amount; the passage says >100 g is very‑high‑risk for men and >60 g for women, not high‑risk for both sexes.; not accepted: The sentence assigns the 60–100 g range to women, but the passage defines high‑risk for women as 40–60 g.; not accepted: The passage gives the standard‑drink volume for Canada only; the sentence extends this to “pe",
+  "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
+ },
+ "sources": [
+  {
+   "read": "page",
+   "ref": {
+    "id": "hse_weekly-low-risk-alcohol-guidelines",
+    "type": "webpage",
+    "title": "Weekly low-risk alcohol guidelines",
+    "author": [
+     {
+      "literal": "Health Service Executive"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www2.hse.ie/living-well/alcohol/health/improve-your-health/weekly-low-risk-alcohol-guidelines/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       16
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-16"
+    }
+   },
+   "title": "Weekly low-risk alcohol guidelines",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.763,
+   "name": "Health Service Executive",
+   "short": "Ireland's health service (HSE)",
+   "tier": 1,
+   "address": "https://www2.hse.ie/living-well/alcohol/health/improve-your-health/weekly-low-risk-alcohol-guidelines/",
+   "money": [],
+   "label": false,
+   "rows": [
+    {
+     "passage": 2,
+     "where": "Weekly low-risk alcohol guidelines",
+     "quote": "11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
+     "show": "11 standard drinks per week, if you are a woman",
+     "who": "adults",
+     "what": "weekly low-risk alcohol guidelines"
+    },
+    {
+     "passage": 5,
+     "where": "What's in a standard drink / Units of alcohol",
+     "quote": "8 grams of pure alcohol",
+     "show": "8 grams of pure alcohol",
+     "who": "general public",
+     "what": "amount in a standard drink or unit of alcohol"
+    }
+   ],
+   "design": null,
+   "findings": [],
+   "limits": [],
+   "tag": "D"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "niaaa_alcohol-drinking-patterns",
+    "type": "webpage",
+    "title": "Understanding Alcohol Drinking Patterns",
+    "author": [
+     {
+      "literal": "National Institute on Alcohol Abuse and Alcoholism"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.niaaa.nih.gov/alcohols-effects-health/alcohol-drinking-patterns",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       16
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-16"
+    }
+   },
+   "title": "Understanding Alcohol Drinking Patterns",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.61,
+   "name": "National Institute on Alcohol Abuse and Alcoholism",
+   "short": "the US National Institute on Alcohol Abuse and Alcoholism",
+   "tier": 1,
+   "address": "https://www.niaaa.nih.gov/alcohols-effects-health/alcohol-drinking-patterns",
+   "money": [],
+   "label": false,
+   "rows": [
+    {
+     "passage": 2,
+     "where": "Binge Drinking",
+     "quote": "0.08 grams of alcohol per deciliter",
+     "show": "0.08 grams of alcohol per deciliter",
+     "who": "a typical adult",
+     "what": "binge drinking"
+    },
+    {
+     "passage": 2,
+     "where": "Binge Drinking",
+     "quote": "0.6 fl oz or 14 grams of pure alcohol",
+     "show": "0.6 fl oz or 14 grams of pure alcohol",
+     "who": "a standard drink",
+     "what": "definition of a standard drink"
+    }
+   ],
+   "design": null,
+   "findings": [],
+   "limits": [],
+   "tag": "E"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "fixed": true,
+   "rests_on": []
+  },
+  {
+   "part": "but",
+   "text": "Each amount was for the people named, under the care named. It says nothing about another person, or about what is sold outside a pharmacy.",
+   "fixed": true,
+   "rests_on": []
+  },
+  {
+   "part": "row1",
+   "text": "Adults; weekly low-risk alcohol guidelines.",
+   "who": "Adults",
+   "what": "weekly low-risk alcohol guidelines",
+   "quote": "11 standard drinks per week, if you are a woman",
+   "source": "hse_weekly-low-risk-alcohol-guidelines",
+   "read": "page",
+   "uses": [
+    "R6"
+   ],
+   "rests_on": [
+    {
+     "label": "R6",
+     "ref": "hse_weekly-low-risk-alcohol-guidelines",
+     "where": "Weekly low-risk alcohol guidelines",
+     "quote": "11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
+     "sha": "49a986fe313b31d0"
+    }
+   ]
+  },
+  {
+   "part": "row2",
+   "text": "A typical adult; binge drinking.",
+   "who": "A typical adult",
+   "what": "binge drinking",
+   "quote": "0.08 grams of alcohol per deciliter",
+   "source": "niaaa_alcohol-drinking-patterns",
+   "read": "page",
+   "uses": [
+    "R8"
+   ],
+   "rests_on": [
+    {
+     "label": "R8",
+     "ref": "niaaa_alcohol-drinking-patterns",
+     "where": "Binge Drinking",
+     "quote": "0.08 grams of alcohol per deciliter",
+     "sha": "0882f32b8a3cc025"
+    }
+   ]
+  },
+  {
+   "part": "row3",
+   "text": "A standard drink; definition of a standard drink.",
+   "who": "A standard drink",
+   "what": "definition of a standard drink",
+   "quote": "0.6 fl oz or 14 grams of pure alcohol",
+   "source": "niaaa_alcohol-drinking-patterns",
+   "read": "page",
+   "uses": [
+    "R9"
+   ],
+   "rests_on": [
+    {
+     "label": "R9",
+     "ref": "niaaa_alcohol-drinking-patterns",
+     "where": "Binge Drinking",
+     "quote": "0.6 fl oz or 14 grams of pure alcohol",
+     "sha": "0882f32b8a3cc025"
+    }
+   ]
+  }
+ ],
+ "complete": true,
+ "missing": "",
+ "wanted": [
+  {
+   "doi": "10.15288/jsad.2016.77.185",
+   "apa": "Stockwell, T., Zhao, J., Panwar, S., Roemer, A., Naimi, T., & Chikritzhs, T. (2016). Do “moderate” drinkers have reduced mortality risk? A systematic review and meta-analysis of alcohol consumption and all-cause mortality. Journal of Studies on Alcohol and Drugs, 77(2), 185–198. https://doi.org/10.15288/jsad.2016.77.185",
+   "near": 0.795,
+   "why": "a review or meta-analysis in people; nearness to the question 0.80; cited 391 times; its full text is not open",
+   "file": "stockwell_2016_jsad_2016_77_185.pdf"
+  },
+  {
+   "doi": "10.1111/dar.13458",
+   "apa": "Kersbergen, I., Buykx, P., Brennan, A., Brown, J., Michie, S., & Holmes, J. (2022). Print and online textual news media coverage ofUKlow-risk drinking guidelines from 2014 to 2017: A review and thematic analysis. Drug and Alcohol Review, 41(5), 1161–1173. https://doi.org/10.1111/dar.13458",
+   "near": 0.798,
+   "why": "a review or meta-analysis in people; nearness to the question 0.80; cited 6 times; its full text is not open",
+   "file": "kersbergen_2022_dar_13458.pdf"
+  },
+  {
+   "doi": "10.1111/j.1465-3362.2011.00374.x",
+   "apa": "KERR, W. C., & STOCKWELL, T. I. M. (2012). Understanding standard drinks and drinking guidelines. Drug and Alcohol Review, 31(2), 200–205. https://doi.org/10.1111/j.1465-3362.2011.00374.x",
+   "near": 0.765,
+   "why": "a review or meta-analysis in people; nearness to the question 0.77; cited 119 times; its full text is not open",
+   "file": "kerr_2012_j_1465_3362_2011_00374_x.pdf"
+  }
+ ],
+ "person": null,
+ "history": []
+}
