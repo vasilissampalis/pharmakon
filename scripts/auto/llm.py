@@ -114,7 +114,8 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     # returns its reasoning apart from its answer (reasoning_format is not for it); qwen3.8-27b does not reason unless an effort is set, and with
     # reasoning_format "hidden" its answer comes without its reasoning. The larger gpt-oss writes and checks (medium); the smaller only reads (low).
     if name.startswith("openai/gpt-oss"): body["reasoning_effort"] = "low" if "20b" in name else "medium"
-    elif name.startswith("qwen/qwen3"): body["reasoning_effort"] = "medium"; body["reasoning_format"] = "hidden"
+    elif name.startswith("qwen/qwen3"):                                # Groq's free plan gives it 1,000 output tokens a minute (its refusal of 16 November 2026: "output tokens per minute (OTPM): Limit 1000"): it answers without reasoning first, and never more than 900 tokens
+        body["reasoning_effort"] = "none"; body["max_completion_tokens"] = min(max_tokens, 900)
     op = opener or urllib.request.urlopen
     for k in range(tries):
         req = urllib.request.Request(GROQ, data=json.dumps(body).encode("utf-8"), method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json", "User-Agent": "Pharmakon (https://pharmakon.world; mailto:contact@pharmakon.world)"})
@@ -218,6 +219,7 @@ def selftest():
     except Unavailable: pass
     assert as_json("no json here") is None and as_json('before {"a": [1, 2,], "b": "}"} after') == {"a": [1, 2], "b": "}"}
     # the second service: off without its key; with it, the same form, tokens counted for each model, a call the day cannot hold is not sent
+    had = os.environ.pop("GROQ_API_KEY", None)                       # (on the machine that has the key, this test must still see what happens without it)
     assert not has("groq:openai/gpt-oss-120b")
     try: chat("groq:openai/gpt-oss-120b", [{"role": "user", "content": "x"}], 10, opener); raise AssertionError("no Unavailable")
     except Unavailable: pass
@@ -235,6 +237,7 @@ def selftest():
     try: chat("groq:qwen/qwen3.8-27b", [{"role": "user", "content": "x" * 40000}], 200, gopener); raise AssertionError("a call larger than a minute allows was sent")
     except Unavailable: pass
     assert len(sent) == 1; del os.environ["GROQ_API_KEY"]
+    if had: os.environ["GROQ_API_KEY"] = had
     LEDGER = keep
     print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it)")
 

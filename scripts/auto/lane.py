@@ -201,7 +201,7 @@ def read_gate(out, picked, amounts_ok=True):
         if not text: no("no sentence"); return None
         if not got: no("its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"); return None
         if not numbers(text) <= numbers(got[1]): no("a number of the sentence is not in its quote"); return None
-        if not carried(text, got[1], got[0]["text"], *((0.2, 0.4) if key == "text" else ())): no("the sentence is not carried by its quote and passage"); return None          # (what kind of paper it is may be said more freely)
+        if not carried(text, got[1], got[0]["text"], *((0.2, 0.4) if key == "text" else (0.5, 0.6) if key == "limit" else ())): no("the sentence is not carried by its quote and passage"); return None          # (what kind of paper it is may be said more freely; a limit must stay close to its quote: a reader that says the limit is about something the quote does not name is not followed)
         if not amounts_ok and key != "text" and any(rx.search(text) for name, rx in RULES[:2]): no("it holds an amount or a time between uses"); return None
         return {"passage": got[0]["n"], "where": got[0]["where"], "quote": got[1], "text": text}
     d = out.get("design"); design = one(d, "text") if isinstance(d, dict) else None
@@ -394,7 +394,7 @@ def words15(quote, text=""):
                 if not ends and not any(SAYS.fullmatch(x) for x in plain): continue       # a part that says nothing (a subject cut from its verb) is not a quotation
                 nxt = bare(ws[b]) if b < len(ws) else ""
                 score = (sum(1 for x in plain if x in key) + sum(0.5 for x in w if re.search(r"\d", x))
-                         + (0.5 if a == 0 or re.search(r"[.;:,]$", ws[a - 1]) else 0.4 if bare(ws[a - 1]) == "that" else -0.5 if HANGS.fullmatch(plain[0]) and not plain[0][:1].isdigit() and not NEG.fullmatch(plain[0]) else 0)   # (after "showed that" the source's own statement begins)
+                         + (0.5 if a == 0 or re.search(r"[.;:,]$", ws[a - 1]) else 0.4 if bare(ws[a - 1]) == "that" else -1.1 if HANGS.fullmatch(plain[0]) and not plain[0][:1].isdigit() and not NEG.fullmatch(plain[0]) else -0.6)   # (after "showed that" the source's own statement begins)
                          + (1.0 if ends else (1.0 if nxt in BETWEEN else 0.4) if comma else 0) - (0.5 if nxt in key else 0)                # (a comma before "with", "and", "which" ends a clause; elsewhere it may stand in a list. A cut just before a word our own line uses is a cut in the middle of what is said)
                          - (1.5 if not ends and not comma and any(x.endswith(",") for x in w[-4:-1]) else 0)                               # (a clause that has only just begun: "..., so the rates")
                          + 0.03 * (b - a))
@@ -543,11 +543,14 @@ def checker_prompt(parts, labels, question=None, each=None):
         blocks.append(f"{n}. SENTENCE: {p['text']}\n{ps}")
     return ("For each numbered SENTENCE below, decide whether its PASSAGES support it. Supported means ALL of this: everything the sentence says is stated in its passages; "
             "it is about the same people, animals or setting; every number is the same; it is not stronger or more certain than the passages; it does not say one thing causes another "
-            "where the passages only report a link; it does not turn what one study found into a general fact. If any part of the sentence is not in the passages, it is not supported.\n\n"
+            "where the passages only report a link; it does not turn what one study found into a general fact. If any part of the sentence is not in the passages, it is not supported. "
+            "Each passage is named with its source's title: when a passage speaks of \"the studies\", \"the evidence\" or \"the articles\", it means the ones that source looked at (see its title), "
+            "so a sentence that makes it about something else is not supported.\n\n"
             + "\n\n".join(blocks)
             + (f"\n\nThen judge the answer as a whole. QUESTION that was asked: {question}\n"
                '"answers_question": does sentence 1 answer that QUESTION itself, directly (true), or does it answer a neighbouring question or only talk around it (false)?\n'
-               '"but_fits": is sentence 2 a limit or a doubt about what sentence 1 says (true), or is it about something else, for example about a treatment when the question is whether something happens (false)?'
+               '"but_fits": is sentence 2 a limit or a doubt about what sentence 1 says (true), or is it about something else (false)? It is about something else when its source states the limit about ITS OWN subject and that subject is not what sentence 1 says: '
+               'for example, a review of treatments says that the studies of those treatments were weak; that is no limit of an answer about whether dependence happens.'
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}], "answers_question": true, "but_fits": true, "why": ""}' if question else
                f"\n\nQUESTION that was asked: {each}\nFor every sentence also give \"on_question\": is the amount it states an amount of the kind the QUESTION asks for (true), or of another kind, for example an amount called high-risk when the question asks what is called low-risk, or what a drink contains when the question asks how much people drink (false)?"
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "on_question": true, "problem": ""}, {"n": 2, "supported": false, "on_question": true, "problem": "what the passages do not say"}]}' if each else
@@ -558,7 +561,7 @@ def room_for(model, plain):
     """How many tokens a model may answer with. One that reasons before it writes needs room for both: on 16 November 2026
     gpt-oss-120b used all of 1,400 tokens reasoning and wrote nothing, three times for each of two questions; with 3,000 it
     reasoned for some 1,300 and then wrote its answer (data/auto/exam/writer-trial.json)."""
-    return plain + (1200 if "gpt-oss-20b" in model else 2200 if "gpt-oss" in model else 1800 if "qwen3" in model else 0)      # (the small gpt-oss only reads, with little reasoning; qwen3 reasons where it is asked to)
+    return plain + (1200 if "gpt-oss-20b" in model else 2200 if "gpt-oss" in model else 0)      # (the small gpt-oss only reads, with little reasoning; qwen3 at Groq answers without reasoning: its free plan gives it 1,000 output tokens a minute)
 
 
 def check(chat, model, parts, labels, question=None, whole=None, each=None):
@@ -801,9 +804,9 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     rec["gates"]["sources"] = said()
     labels, n_f, n_l = {}, 0, 0
     for s in sources:
-        if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper_name(s), ref=s["ref"]["id"], passage_text=s["_text"][s["design"]["passage"]])
-        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; labels[f["id"]] = dict(f, paper=paper_name(s), ref=s["ref"]["id"], passage_text=s["_text"][f["passage"]])
-        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; labels[l["id"]] = dict(l, paper=paper_name(s), ref=s["ref"]["id"], passage_text=s["_text"][l["passage"]])
+        if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], passage_text=s["_text"][s["design"]["passage"]])
+        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], passage_text=s["_text"][f["passage"]])
+        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; labels[l["id"]] = dict(l, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], passage_text=s["_text"][l["passage"]])
     keep_sources()
     if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service")
     ex = ex if ex is not None else examples()
@@ -1151,7 +1154,7 @@ def selftest():
                                          {"text": "In one study people were given 50 mg of it.", "uses": ["F2"]}])]; script["checker"] = [V(True, True, True)]
     r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
     assert r["status"] == "published" and [x["part"] for x in r["parts"]] == ["short", "but", "how1"] and r["gates"]["rules"].startswith("1 How-do-we-know line(s) left out for a rule"), (r["status"], r["why"], r["gates"])
-    assert room_for("@cf/openai/gpt-oss-120b", 900) == 3100 and room_for("@cf/meta/llama-3.3-70b-instruct-fp8-fast", 900) == 900 and room_for("groq:openai/gpt-oss-20b", 900) == 2100 and room_for("groq:qwen/qwen3.8-27b", 120) == 1920
+    assert room_for("@cf/openai/gpt-oss-120b", 900) == 3100 and room_for("@cf/meta/llama-3.3-70b-instruct-fp8-fast", 900) == 900 and room_for("groq:openai/gpt-oss-20b", 900) == 2100 and room_for("groq:qwen/qwen3.8-27b", 900) == 900
     # 8. an official page alone (a body of tier 1) is enough; the answer names the body; its reference is the page's own
     page_ps = [{"n": i, "where": "The risks" if i else "", "text": t} for i, t in enumerate(passages[1:5])]
     nhs = {"body": "nhs", "name": "NHS", "short": "the NHS", "tier": 1, "address": "https://nhs.test/ketamine", "title": "Ketamine", "near": 0.6}
