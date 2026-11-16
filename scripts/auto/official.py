@@ -46,7 +46,7 @@ LITTLE = 3
 N_PAGES = 8              # pages read for one question
 N_PER_SOURCE = 2         # of one body, before the children of a page that fits
 NEAR_MIN = 0.40          # how near in meaning a page's best passages must be to the question to be kept
-OFFICIAL = 1             # this finder's own number
+OFFICIAL = 2             # this finder's own number (2, 16 November 2026: seven more bodies can be read, folded panels and wrapped pages are read: every question is searched again)
 TODAY = datetime.date.today()
 HTML_ACCEPT = "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5"
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
