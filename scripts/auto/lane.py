@@ -157,9 +157,27 @@ def reader_prompt(question, src, picked):
             'JSON only, in this form: {' + ("" if page else '"design": {"text": "...", "quote": "...", "passage": 3}, ') + '"findings": [{"passage": 7, "quote": "...", "finding": "..."}], "limits": [{"passage": 9, "quote": "...", "limit": "..."}]}')
 
 
-def read_gate(out, picked):
-    """What of a reader's answer may be used: each item's quote must stand in a passage that was shown (GATE 1), and every
-    number in its plain sentence must be in its quote (GATE 2). Returns (design or None, findings, limits, how many were thrown away)."""
+STOP = set("the and for with from that this these those than then also can could may might will would should does did has have had not nor but into over under about after before between during among per "
+           "more most less least very such some any each other their there which who whom whose what when where how are was were been being its it's they them some many much often".split())
+
+
+def carried(text, quote, passage, least_quote=0.3, least_passage=0.6):
+    """GATE 3 (lane 4): is what our plain sentence says carried by the source? Of the sentence's content words (four letters
+    or more, compared by their first five), at least 30 in 100 must stand in the quote and 60 in 100 in the passage it was
+    taken from. A sentence about something else than its quote ("the page does not say ...", an added reason) fails."""
+    stems = lambda t: [w[:5] for w in re.findall(r"[a-z]+", norm(t).lower()) if len(w) >= 4 and w not in STOP]
+    tw = stems(text)
+    if len(tw) < 2: return True
+    q, p = set(stems(quote)), set(stems(passage))
+    return sum(w in q for w in tw) / len(tw) >= least_quote and sum(w in p for w in tw) / len(tw) >= least_passage
+
+
+def read_gate(out, picked, amounts_ok=True):
+    """What of a reader's answer may be used: each item's quote must stand in a passage that was shown (GATE 1), every
+    number in its plain sentence must be in its quote (GATE 2), and the sentence must be carried by the quote and its
+    passage (GATE 3). amounts_ok False (an ordinary answer): an item whose sentence holds an amount of a drug or a time
+    between uses is not passed on, since no sentence of such an answer may hold one. Returns (design or None, findings,
+    limits, how many were thrown away)."""
     out = out if isinstance(out, dict) else {}
     by = {p["n"]: p for p in picked}; dropped = 0
     def place(item):
@@ -173,6 +191,8 @@ def read_gate(out, picked):
         if not isinstance(item, dict): dropped += 1; return None
         text = re.sub(r"\s+", " ", str(item.get(key) or "")).strip(); got = place(item)
         if not text or not got or not numbers(text) <= numbers(got[1]): dropped += 1; return None
+        if not carried(text, got[1], got[0]["text"], *((0.2, 0.4) if key == "text" else ())): dropped += 1; return None          # (what kind of paper it is may be said more freely)
+        if not amounts_ok and key != "text" and any(rx.search(text) for name, rx in RULES[:2]): dropped += 1; return None
         return {"passage": got[0]["n"], "where": got[0]["where"], "quote": got[1], "text": text}
     d = out.get("design"); design = one(d, "text") if isinstance(d, dict) else None
     fs = [x for x in (one(f, "finding") for f in (out.get("findings") or [])[:6]) if x]
@@ -189,7 +209,7 @@ def ask_json(chat, model, system, prompt, room):
 
 def read_source(chat, model, question, src, picked):
     out = ask_json(chat, model, READER_SYS, reader_prompt(question, src, picked), 900)
-    return read_gate(out, picked) if out is not None else (None, [], [], 0)
+    return read_gate(out, picked, amounts_ok=False) if out is not None else (None, [], [], 0)
 
 
 # ---------- 2b read, for a question about amounts (decision 11) ----------
@@ -566,6 +586,10 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         draft, why = draft_of(out, labels)
         if not draft: fix = "the form was wrong: " + why; continue
         bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")])
+        lines_bad = {p for p, _ in bad if p.startswith("how")}
+        if bad and all(p.startswith("how") for p, _ in bad) and sum(p["part"].startswith("how") for p in draft["parts"]) > len(lines_bad):
+            draft["parts"] = [p for p in draft["parts"] if p["part"] not in lines_bad]          # (lane 4) the line goes, the answer stays
+            rec["gates"]["rules"] = f"{len(lines_bad)} How-do-we-know line(s) left out for a rule (" + "; ".join(f"{p}: {w}" for p, w in bad)[:300] + ")"; bad = []
         if bad: rec["gates"]["rules"] = "broken at try " + str(attempt + 1) + ": " + "; ".join(f"{p}: {w}" for p, w in bad); fix = "; ".join(f"in {p}: {w}" for p, w in bad); draft = None; continue
         verdicts = check(chat, models["checker"], draft["parts"], labels)
         head_bad = [(p["part"], v[1]) for p, v in zip(draft["parts"], verdicts) if not v[0] and p["part"] in ("short", "but")]
