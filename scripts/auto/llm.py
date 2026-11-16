@@ -85,9 +85,144 @@ def clean(text):
     return text.strip()
 
 
+# ---------- more services (16 November 2026) ----------
+# The senior author, 21:11: "we have to make this as perfect as possible as claude to how Fable 5.2 would generate answers". The exam
+# says the free models we have catch about half of what a careful reader catches, so stronger readers are tried: three services
+# with a free plan (Mistral's free mode, Google AI Studio's free tier, OpenRouter's free models) and, only if he chooses to pay, a
+# top model through its own interface. A model is named "service:its name" ("mistral:mistral-large-latest"). Nothing here is used
+# by the lane until a model has sat the exam (exam_models.py) and data/auto/lane/models.json names it.
+#   key: the name of the repository secret; gap: seconds between two calls (the free plans count calls a minute);
+#   calls: calls in a day (UTC) where we stop by ourselves; paid: a service that costs money for every call.
+# What may be sent to any of them: our own wording of a question and passages of public papers and official pages. Never a
+# visitor's words (those go to Cloudflare alone).
+SERVICES = {
+    "mistral": {"url": "https://api.mistral.ai/v1/chat/completions", "models": "https://api.mistral.ai/v1/models", "key": "MISTRAL_API_KEY", "gap": 1.5, "calls": 1500, "json": True},
+    "gemini": {"url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", "models": "https://generativelanguage.googleapis.com/v1beta/openai/models", "key": "GEMINI_API_KEY", "gap": 7.0, "calls": 180, "json": True},
+    "openrouter": {"url": "https://openrouter.ai/api/v1/chat/completions", "models": "https://openrouter.ai/api/v1/models", "key": "OPENROUTER_API_KEY", "gap": 3.5, "calls": 45, "json": False},
+    "claude": {"url": "https://api.anthropic.com/v1/messages", "models": "https://api.anthropic.com/v1/models", "key": "ANTHROPIC_API_KEY", "gap": 0.4, "calls": 4000, "paid": True},
+}
+PRICES = ROOT / "data" / "auto" / "lane" / "prices.json"      # what a paid model costs, as read from its maker's own page, and the most that may be spent in a day and in a month
+_last_call = {}
+
+
+def service_of(model):
+    """("mistral", "mistral-large-latest") for "mistral:mistral-large-latest"; (None, model) for Cloudflare's and Groq's models."""
+    svc, _, name = model.partition(":")
+    return (svc, name) if svc in SERVICES and name else (None, model)
+
+
+def svc_used(svc, d=None):
+    """What was used of a service: {"day", "calls", "in", "out", "usd", "month", "usd_month"} (a day and a month by UTC)."""
+    u = dict(((d if d is not None else ledger()).get("svc") or {}).get(svc) or {})
+    if u.get("day") != today(): u.update(day=today(), calls=0, usd=0.0, **{"in": 0, "out": 0})
+    if u.get("month") != today()[:7]: u.update(month=today()[:7], usd_month=0.0)
+    return u
+
+
+def prices():
+    try: return json.load(open(PRICES, encoding="utf-8"))
+    except (OSError, ValueError): return {}
+
+
+def usd_left(svc="claude"):
+    """Dollars a paid service may still be asked for today (the smaller of what is left of the day's and of the month's limit in prices.json; 0 where no limit is written)."""
+    p = prices(); u = svc_used(svc)
+    return max(0.0, min(float(p.get("usd_a_day") or 0) - u["usd"], float(p.get("usd_a_month") or 0) - u["usd_month"]))
+
+
+def calls_left(svc): return max(0, SERVICES[svc]["calls"] - svc_used(svc)["calls"])
+
+
+def cost(model, tokens_in, tokens_out):
+    """Dollars for a call of a paid model, by data/auto/lane/prices.json ($ per million tokens: [in, out]); None when its price is not written there."""
+    p = (prices().get("models") or {}).get(model)
+    return None if not p else tokens_in * p[0] / 1e6 + tokens_out * p[1] / 1e6
+
+
 def has(model):
     """Can this model be asked at all on this machine (is its service's key there)?"""
+    svc, _ = service_of(model)
+    if svc: return bool((os.environ.get(SERVICES[svc]["key"]) or "").strip())
     return bool((os.environ.get("GROQ_API_KEY") or "").strip()) if model.startswith("groq:") else bool((os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip())
+
+
+def chat_service(model, messages, max_tokens, opener=None, tries=3):
+    """A call to one of SERVICES. Mistral, Google and OpenRouter take the same request (the form OpenAI made common); Claude's
+    own interface takes the system text apart from the messages. A paid service is never asked beyond the limits written in
+    data/auto/lane/prices.json, and never for a model whose price is not written there."""
+    svc, name = service_of(model); S = SERVICES[svc]
+    key = (os.environ.get(S["key"]) or "").strip()
+    if not key: raise Unavailable(f"no key for {svc} (the repository secret {S['key']} is not set)")
+    if calls_left(svc) <= 0: raise Budget(f"{svc}: today's calls are used ({S['calls']} is where we stop)")
+    est_in = sum(rough_tokens(m["content"]) for m in messages)
+    if S.get("paid"):
+        c = cost(model, est_in, max_tokens)
+        if c is None: raise Unavailable(f"{model} costs money and its price is not in data/auto/lane/prices.json: not asked")
+        if c > usd_left(svc): raise Budget(f"{svc}: the spending limit cannot hold this call (${svc_used(svc)['usd']:.2f} spent today, ${svc_used(svc)['usd_month']:.2f} this month)")
+    if svc == "claude":
+        system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
+        body = {"model": name, "max_tokens": max_tokens, "temperature": 0, "messages": [{"role": m["role"], "content": m["content"]} for m in messages if m["role"] != "system"]}
+        if system: body["system"] = system
+        eff = EFFORT.get(name)                                              # an exam's or a trial's own choice: the model thinks before it answers
+        if eff in ("low", "medium", "high"):
+            budget = {"low": 1500, "medium": 4000, "high": 10000}[eff]; body.update(max_tokens=max_tokens + budget, thinking={"type": "enabled", "budget_tokens": budget}); body.pop("temperature")
+        headers = {"x-api-key": key, "anthropic-version": "2023-06-01", "Content-Type": "application/json", "User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"}
+    else:
+        body = {"model": name, "messages": messages, "max_tokens": max_tokens, "temperature": 0}
+        if S.get("json") and any("json" in m["content"].lower() for m in messages): body["response_format"] = {"type": "json_object"}
+        if EFFORT.get(name) in ("low", "medium", "high") and svc == "gemini": body["reasoning_effort"] = EFFORT[name]
+        headers = {"Authorization": "Bearer " + key, "Content-Type": "application/json", "User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"}
+        if svc == "openrouter": headers.update({"HTTP-Referer": "https://pharmakon.world", "X-Title": "Pharmakon"})
+    op = opener or urllib.request.urlopen; last = None
+    for k in range(tries):
+        wait = S["gap"] - (time.time() - _last_call.get(svc, 0))
+        if wait > 0 and not opener: time.sleep(wait)
+        _last_call[svc] = time.time()
+        try:
+            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=180) as r: d = json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode("utf-8", "replace")[:400] if hasattr(e, "read") else ""; last = f"{svc} answered {e.code}: {detail}"
+            if e.code == 429 or (e.code == 529 and svc == "claude"):
+                if re.search(r"per day|daily|quota|RESOURCE_EXHAUSTED|free-models-per-day|credit balance|insufficient|exceeded your current", detail, re.I) and not re.search(r"per minute|per second", detail, re.I): raise Budget(f"{svc} says the allowance is used up: {detail[:160]}")
+                ra = str((e.headers or {}).get("Retry-After") or "").strip(); secs = min(60, int(float(ra))) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else 20
+                if k + 1 < tries: time.sleep(0 if opener else secs); continue
+            if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 4 * (k + 1)); continue
+            if e.code in (400, 401, 402, 403, 404, 413, 422): raise Unavailable(last)
+            continue
+        except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
+            last = f"{svc} could not be reached: {str(e)[:160]}"
+            if k + 1 < tries: time.sleep(0 if opener else 4); continue
+            break
+        if svc == "claude":
+            text = "".join(b.get("text", "") for b in d.get("content") or [] if b.get("type") == "text"); u = d.get("usage") or {}
+            t_in, t_out, finish = int(u.get("input_tokens") or est_in), int(u.get("output_tokens") or rough_tokens(text)), d.get("stop_reason")
+            reasoned = sum(len(b.get("thinking", "")) for b in d.get("content") or [] if b.get("type") == "thinking")
+        else:
+            ch = (d.get("choices") or [{}])[0]; msg = ch.get("message") or {}; text = msg.get("content") or ""; u = d.get("usage") or {}
+            if isinstance(text, list): text = "".join(x.get("text", "") for x in text if isinstance(x, dict))
+            t_in, t_out, finish = int(u.get("prompt_tokens") or est_in), int(u.get("completion_tokens") or rough_tokens(text)), ch.get("finish_reason")
+            reasoned = len(msg.get("reasoning") or msg.get("reasoning_content") or "")
+        L = ledger(); used = svc_used(svc, L); used["calls"] += 1; used["in"] += t_in; used["out"] += t_out
+        c = cost(model, t_in, t_out) if S.get("paid") else 0.0
+        used["usd"] = round(used["usd"] + (c or 0.0), 6); used["usd_month"] = round(used["usd_month"] + (c or 0.0), 6)
+        L.setdefault("svc", {})[svc] = used
+        LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+        LAST.clear(); LAST.update({"finish": finish, "in": t_in, "out": t_out, "reasoned": reasoned, "wrote": len(text)})
+        return clean(text)
+    raise Unavailable(last or f"{svc} gave no answer")
+
+
+def models_of(svc, opener=None):
+    """The names of the models a service offers this key (its own list), or the reason it gave none. No key is ever returned."""
+    S = SERVICES[svc]; key = (os.environ.get(S["key"]) or "").strip()
+    if not key: return None, "no key"
+    headers = {"x-api-key": key, "anthropic-version": "2023-06-01"} if svc == "claude" else {"Authorization": "Bearer " + key}
+    try:
+        with (opener or urllib.request.urlopen)(urllib.request.Request(S["models"], headers=dict(headers, **{"User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"})), timeout=60) as r: d = json.loads(r.read().decode("utf-8"))
+    except urllib.error.HTTPError as e: return None, f"answered {e.code}"
+    except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e: return None, "could not be reached: " + str(e)[:120]
+    rows = d.get("data") if isinstance(d, dict) else d
+    return sorted({str(x.get("id") or x.get("name") or "").replace("models/", "") for x in rows or [] if isinstance(x, dict)} - {""}), ""
 
 
 def groq_level(name, d=None, now=None):
@@ -174,6 +309,7 @@ def chat(model, messages, max_tokens=700, opener=None, tries=3, extra=None):
     """The model's answer to messages ([{"role", "content"}]). Raises Budget before a call that today's allowance cannot
     hold, Unavailable when there is no key or the service refuses. extra: more fields for the request (a trial's)."""
     if model.startswith("groq:"): return chat_groq(model, messages, max_tokens, opener, tries)
+    if service_of(model)[0]: return chat_service(model, messages, max_tokens, opener, tries)
     token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     if not token or not account: raise Unavailable("no key (the repository's two secrets are not set)")
     if not re.fullmatch(r"[0-9a-fA-F]{32}", account) and account != "ACC": raise Unavailable("the account number in the secret CLOUDFLARE_ACCOUNT_ID is not a Cloudflare account ID (32 letters a-f and digits)")
