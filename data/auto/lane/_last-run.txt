@@ -4,17 +4,22 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)
-== is everything within reach?
-probe: @cf/qwen/qwen3-30b-a3b-fp8 ok 
-probe: @cf/meta/llama-3.3-70b-instruct-fp8-fast ok 
-probe: @cf/google/gemma-4-26b-a4b-it ok 
-probe: @cf/mistralai/mistral-small-3.1-24b-instruct ok 
-probe: @cf/openai/gpt-oss-120b ok 
-probe: @cf/openai/gpt-oss-20b ok 
-probe: @cf/zai-org/glm-4.7-flash ok 
-probe: @cf/meta/llama-4-scout-17b-16e-instruct ok 
-probe: gemini 64 models offered
-probe: openrouter 14 models offered
-probe: store ok {'questions': 1, 'listed_items_counted': 0}
+== a model sits the exam as the checker
+exam: gemini:gemma-4-31b-it: caught 0 of 1 wrong cards, stopped 0 of 0 good ones, no clear word on 0; stopped early (the model service: gemini answered 503: [{
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": ); 28 cards left for the next sitting
+exam: gemini:gemma-4-31b-it: caught 0 of 0 wrong cards, stopped 0 of 0 good ones, no clear word on 0; stopped early (the model service: gemini answered 503: [{
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": ); 93 cards left for the next sitting
+exam: gemini:gemini-3.5-flash-lite: caught 5 of 9 wrong cards, stopped 16 of 20 good ones, no clear word on 2; on the whole exam 50.0 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: gemini:gemini-3.5-flash-lite: caught 17 of 31 wrong cards, stopped 23 of 62 good ones, no clear word on 0; on the whole exam 7.2 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: gemini:gemini-4-hydrogen: caught 7 of 7 wrong cards, stopped 6 of 7 good ones, no clear word on 0; on the whole exam 0.0 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the day's allowance: 4 calls left, and 5 are kept for the site's own work); 15 cards left for the next sitting
+exam: gemini:gemini-4-hydrogen: caught 0 of 0 wrong cards, stopped 0 of 0 good ones, no clear word on 0; stopped early (the day's allowance: 4 calls left, and 5 are kept for the site's own work); 93 cards left for the next sitting
+exam: openrouter:nvidia/nemotron-3-ultra-550b-a55b:free: caught 8 of 9 wrong cards, stopped 18 of 20 good ones, no clear word on 3; on the whole exam 33.3 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: openrouter:nvidia/nemotron-3-ultra-550b-a55b:free: caught 4 of 5 wrong cards, stopped 3 of 5 good ones, no clear word on 5; on the whole exam 5.1 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the time this run has (the job would be stopped before it could keep its results)); 83 cards left for the next sitting
 == write
 lane: no request waiting
