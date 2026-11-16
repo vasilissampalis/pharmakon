@@ -128,8 +128,8 @@ def better(cand, cur):
     if cand["wrong"] < 20 or cand["good"] < 100: return False, "the candidate did not sit enough of the exam (20 wrong cards and 100 good ones at least)"
     if cur is None:
         ok = cand["wrong_through"] < cand["wrong"] and cand["good_stopped"] <= 0.4 * cand["good"]
-        return ok, "the first model for this job: it catches wrong cards and stops no more than 4 good ones in 10" if ok else "it catches nothing, or stops more than 4 good cards in 10"
-    if (cand["wrong"], cand["good"]) != (cur.get("wrong"), cur.get("good")): return False, "the two did not sit the same exam: sit the model in use again first"
+        return ok, "the first model for this job: it catches wrong items and stops no more than 4 good ones in 10" if ok else "it catches nothing, or stops more than 4 good items in 10"
+    if (cand["wrong"], cand["good"], cand.get("on")) != (cur.get("wrong"), cur.get("good"), cur.get("on")): return False, "the two did not sit the same exam: sit the model in use again first"
     if cand["wrong_through"] > cur["wrong_through"]: return False, f"it lets more wrong cards through ({cand['wrong_through']} against {cur['wrong_through']})"
     if cand["good_stopped"] > cur["good_stopped"]: return False, f"it stops more good cards ({cand['good_stopped']} against {cur['good_stopped']})"
     if cand["wrong_through"] == cur["wrong_through"] and cand["good_stopped"] == cur["good_stopped"]: return False, "it is no better than the model in use"
@@ -154,6 +154,7 @@ def selftest():
     cur = {"wrong_through": 16, "good_stopped": 40, "wrong": 31, "good": 287}
     assert better({"wrong_through": 12, "good_stopped": 40, "wrong": 31, "good": 287}, cur)[0] and better({"wrong_through": 16, "good_stopped": 30, "wrong": 31, "good": 287}, cur)[0]
     assert not better({"wrong_through": 10, "good_stopped": 41, "wrong": 31, "good": 287}, cur)[0] and not better({"wrong_through": 17, "good_stopped": 10, "wrong": 31, "good": 287}, cur)[0] and not better(dict(cur), cur)[0]
+    assert not better({"wrong_through": 5, "good_stopped": 10, "wrong": 31, "good": 287, "on": "plain lines"}, dict(cur, on="the cards"))[0]          # numbers from another exam are not compared
     assert not better({"wrong_through": 5, "good_stopped": 10, "wrong": 11, "good": 11}, None)[0] and not better({"wrong_through": 10, "good_stopped": 30, "wrong": 30, "good": 287}, cur)[0]       # too little of the exam; not the same exam
     assert better({"wrong_through": 20, "good_stopped": 100, "wrong": 31, "good": 287}, None)[0] and not better({"wrong_through": 31, "good_stopped": 0, "wrong": 31, "good": 287}, None)[0] and not better({"wrong_through": 2, "good_stopped": 200, "wrong": 31, "good": 287}, None)[0]
     # a long passage is cut at sentence ends and the best part counts; the sentence always stands whole after the end sign
