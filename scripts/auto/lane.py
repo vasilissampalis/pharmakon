@@ -707,6 +707,17 @@ def marks_verdict(out, passages):
     return {"through": not bad, "clear": True, "problem": "; ".join(bad)[:300]}
 
 
+def check_marks(chat, model, parts, labels):
+    """[(supported?, problem)] for the parts, in order: the reader is asked the five small questions about each sentence, one
+    call a sentence, and the code gives the verdict (marks_verdict). A team names such a reader as "<model>#marks"."""
+    out = []
+    for p in parts:
+        passages = [f"({labels[u]['paper']}; {labels[u]['where']}) {labels[u]['passage_text'][:PASSAGE_CHARS]}" for u in p["uses"]]
+        v = marks_verdict(llm.as_json(chat(model, [{"role": "system", "content": MARKS_SYS}, {"role": "user", "content": marks_prompt(p["text"], passages)}], room_for(model, 420))), passages)
+        out.append((v["through"], v["problem"] if v["clear"] else "the reader gave no clear answer to the five questions"))
+    return out
+
+
 # ---------- our own checker (decision 23) ----------
 def own_word(parts, labels, chk):
     """Our own checker's score for every sentence a model wrote, against the words it rests on (the quotes and the passages they
@@ -1168,7 +1179,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         gap = []                                                         # the further readers of the team that could not be asked about THIS draft
         for k in sorted(k for k in models if re.fullmatch(r"also\d+", k)):
             if any(not v[0] for p, v in zip(draft["parts"], verdicts) if p["part"] in ("short", "but")): break
-            try: more = check(chat, models[k], draft["parts"], labels)
+            try: more = check_marks(chat, models[k].split("#")[0], draft["parts"], labels) if models[k].endswith("#marks") else check(chat, models[k], draft["parts"], labels)
             except (llm.Unavailable, llm.Budget) as e:                     # a free service that is busy or used up must not cost the answer: what the other judges said stands, and the answer waits for this reader
                 rec.setdefault("panel", {})[models[k]] = "could not be asked: " + re.sub(r"\s+", " ", str(e))[:160]; gap.append(base(models[k])); continue
             rec.setdefault("panel", {})[models[k]] = {p["part"]: [bool(w[0]), w[1]] for p, w in zip(draft["parts"], more)}
@@ -1314,11 +1325,11 @@ def wanted_list():
     return sorted(by.values(), key=lambda w: (-len(w["for"]), -(w.get("near") or 0), w["doi"]))
 
 
-NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000), "planner": (250, 7000), "also": (350, 9000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
+NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000), "planner": (250, 7000), "also": (350, 9000), "also#marks": (900, 24000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
 
 
 def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|gemini:|openrouter:|claude:)", "", model or "")).split("/")[-1]       # the model itself, whichever service runs it
-CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1, "also": 3}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
+CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1, "also": 3, "also#marks": 15}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
 
 
 def team(file=None):
@@ -1339,18 +1350,18 @@ def team(file=None):
                     also, lacking = [], False                             # (lane 10) further second readers: a team that names them is that team only with all of them
                     for a in (t.get("also") or []) if isinstance(t.get("also"), list) else []:
                         if isinstance(a, list):                               # one place, several models: the first that has a key and room today (the strong free models have 20 calls a day each)
-                            pick = next((x for x in a if isinstance(x, str) and x and llm.has(x) and x not in also and (llm.calls_fit({x: CALLS["also"]}) if llm.service_of(x)[0] else True)), None)
+                            pick = next((x for x in a if isinstance(x, str) and x and llm.has(x.split("#")[0]) and x not in also and (llm.calls_fit({x.split("#")[0]: CALLS["also#marks" if x.endswith("#marks") else "also"]}) if llm.service_of(x)[0] else True)), None)
                             if pick: also.append(pick)
                             else: lacking = True
                         elif isinstance(a, str) and a: also.append(a)
                     if lacking: continue
                     for n, a in enumerate(also, 1): m[f"also{n}"] = a
-                    if not all(isinstance(v, str) and v and llm.has(v) for v in m.values()): continue
+                    if not all(isinstance(v, str) and v and llm.has(v.split("#")[0]) for v in m.values()): continue
                     if base(m["checker"]) == base(m["writer"]) or base(m["reader"]) == base(m["writer"]) or base(m["reader"]) == base(m["checker"]): continue
-                    if len({base(a) for a in also} | {base(m["writer"]), base(m["checker"])}) < len(also) + 2: continue      # a further reader is another model than the writer, than the second reader and than the other further readers
+                    if base(m["writer"]) in {base(a.split("#")[0]) for a in also} or base(m["checker"]) in {base(a.split("#")[0]) for a in also if not a.endswith("#marks")} or len(set(also)) < len(also): continue   # a further reader is another model than the writer; one asked the same way as the second reader is another model than it, too
                     need, calls = {}, {}
                     for role, v in m.items():
-                        kind = "also" if role.startswith("also") else role
+                        kind = ("also#marks" if v.endswith("#marks") else "also") if role.startswith("also") else role; v = v.split("#")[0]
                         svc = llm.service_of(v)[0]
                         if svc: calls[v] = calls.get(v, 0) + CALLS[kind]
                         else: need[v] = need.get(v, 0) + NEED[kind][1 if v.startswith("groq:") else 0]
@@ -1607,6 +1618,10 @@ def selftest():
             used_up = {"gemini:gemini-4-hydrogen"}; llm.calls_fit = lambda by: not (set(by) & used_up)
             t = team(tf); assert t["team"] == "G" and t["also1"] == "gemini:gemini-3.5-flash-lite" and t["also2"] == "gemini:gemini-3.8-flash", t
             used_up.add("gemini:gemini-3.8-flash"); assert team(tf)["team"] == "E"
+            # a reader asked for marks is named "<model>#marks": the key and the room are the model's, and it needs a call for every sentence; the second reader's own model may be asked that other way
+            tf.write_text(json.dumps({"teams": [{"name": "M", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "gemini:gemini-3.5-flash-lite", "also": ["gemini:gemini-3.5-flash-lite#marks"]}]}), encoding="utf-8")
+            asked_for = []; llm.calls_fit = lambda by: asked_for.append(dict(by)) or True
+            t = team(tf); assert t["also1"] == "gemini:gemini-3.5-flash-lite#marks" and asked_for[-1] == {"gemini:gemini-3.5-flash-lite": 5 + 15}, (t, asked_for[-1:])
             llm.calls_fit = lambda by: not by or (fits[0] and by == {"gemini:gemma-4-31b-it": 3, "gemini:gemini-3.5-flash-lite": 3})
             tf.write_text(json.dumps({"teams": [{"name": "F", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "also": ["@cf/openai/gpt-oss-120b"]}]}), encoding="utf-8")
             assert team(tf) is None                                                                                 # the second reader's own model at another service is not a further reader
@@ -1663,6 +1678,17 @@ def selftest():
     calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [V(False, True, True, True)] * 3
     r = make(item, found, chat, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
     assert r["status"] == "none" and not any(c[1] == "gemini:gemma-4-31b-it" for c in calls) and "panel" not in r, (r["status"], r["why"])
+    # a further reader asked for marks ("<model>#marks"): five small questions a sentence, the code gives the verdict; a How line with a word of measure the passages do not carry is dropped
+    M3 = dict(MODELS, also1="gemini:gemini-3.5-flash-lite#marks"); marked = []
+    def chat_marks(model, messages, max_tokens=0):
+        if messages[0]["content"] == MARKS_SYS:
+            marked.append((model, messages[1]["content"])); bad_one = "SENTENCE: With frequent use, tolerance came quickly" in messages[1]["content"]
+            return json.dumps({"measure": [{"word": "quickly", "passage_words": "NONE"}] if bad_one else [], "report_as_fact": False, "wider": False, "cause_added": False, "extra": False, "which": ""})
+        return chat(model, messages, max_tokens)
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat_marks, Enc(), M3, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and len(marked) == 4 and marked[0][0] == "gemini:gemini-3.5-flash-lite" and "   PASSAGE: (" in marked[0][1] and sum(p["part"].startswith("how") for p in r["parts"]) == n_how - 1, (r["status"], r["why"], len(marked))
+    assert r["panel"]["gemini:gemini-3.5-flash-lite#marks"]["how2"] == [False, "“quickly”: no passage says it"] and "and by gemini:gemini-3.5-flash-lite#marks" in r["gates"]["check"]
     # a further reader that cannot be reached: the answer is not lost; it has passed the others and waits for that reader or the editor
     def chat_gap(model, messages, max_tokens=0):
         if model == "gemini:gemma-4-31b-it": raise llm.Unavailable("gemini answered 503: high demand")
