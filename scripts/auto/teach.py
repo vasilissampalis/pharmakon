@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """teach.py: lesson material for our own checker (docs/AUTOMATION.md, decision 23, step two).
 
-    python3 -I scripts/auto/teach.py requests            (data/auto/requests/teach-*.json: {"max": 600, "minutes": 40, "models": [...]})
+    python3 -I scripts/auto/teach.py requests            (data/auto/requests/teach-*.json: {"max": 600, "minutes": 40, "models": [...], "at_once": 4})
     python3 -I scripts/auto/teach.py show                 (what has been made, by kind)
     python3 -I scripts/auto/teach.py --selftest
 
@@ -35,7 +35,7 @@ EXAM = ROOT / "data" / "auto" / "exam"
 OUT = ROOT / "data" / "auto" / "own" / "teach"
 MADE = OUT / "made.jsonl"
 MODELS = ["gemini:gemma-4-31b-it", "gemini:gemma-4-26b-a4b-it"]          # two writers, in turn: lessons in more than one hand
-ROOM = 1200                                                                # room for a reply: some open models think aloud before they write (the first run, with 400, got no lesson out of Gemma)
+ROOM = 2600                                                                # room for a reply: Gemma thinks aloud first, in <thought> marks, at length (the first run, with 400, and the second, with 1,200, got next to nothing out of it)
 
 KINDS = {   # kind: (what to do, an invented example: passage, good sentence, the wrong one)
     "measure": ("Add or strengthen ONE word of measure that the PASSAGES do not carry: how often (often, usually, always), how many (most, all, both), how sure (clearly, proven), how big (severe, far more, slightly) or how good (famous, leading, trained).",
@@ -110,7 +110,7 @@ def made(path=None):
     return out
 
 
-def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, today=None):
+def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, today=None, at_once=1):
     """Makes lessons until the limit, the time or the day's allowance ends. Returns how many were written."""
     path = path or MADE; path.parent.mkdir(parents=True, exist_ok=True)
     models = [m for m in (models or MODELS) if chat or llm.has(m)]
@@ -120,28 +120,46 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
     except (OSError, ValueError): pass
     src = sources(exam); rnd = random.Random(20261116); rnd.shuffle(src)                 # the same order every run: a run goes on where the last one stopped
     todo = [(s, k) for s in src for k in KINDS if (s["id"], k) not in have and (s["id"], k) not in skipped]
-    t0 = time.time(); n = asked = 0; why_not = {}; samples = []; wrote = {m: 0 for m in models}; misses = {m: 0 for m in models}
-    with open(path, "a", encoding="utf-8") as f:
-        for s, kind in todo:
-            if n >= limit or time.time() - t0 > minutes * 60 or not models: break
-            model = models[asked % len(models)]; asked += 1; raw = ""
-            def miss(why):                                                # a writer that gives nothing usable twelve times running is left out of this run (it may be busy, or not write in the form asked)
-                why_not[why] = why_not.get(why, 0) + 1; misses[model] += 1
-                if len(samples) < 6 and raw: samples.append(f"{model} ({why}; the reply ended: {llm.LAST.get('finish')}, thought {llm.LAST.get('reasoned')} characters): " + re.sub(r"\s+", " ", raw)[:260])
-                if misses[model] >= 12 and model in models: models.remove(model); print(f"teach: {model} gave nothing usable twelve times running: left out of this run")
-            try: raw = (chat or llm.chat)(model, [{"role": "system", "content": SYS}, {"role": "user", "content": prompt(kind, s["passages"], s["sentence"])}], ROOM); out = llm.as_json(raw)
-            except llm.Budget as e:
-                print(f"teach: {model}: the day's allowance:", str(e)[:160])
-                if model in models: models.remove(model)
-                continue
-            except llm.Unavailable as e: miss("the service: " + str(e)[:60]); continue
-            new, ch = accept(kind, s["sentence"], out)
-            if new is None:
-                if ch == "skip": why_not[ch] = why_not.get(ch, 0) + 1; skipped.add((s["id"], kind)); misses[model] = 0        # the writer's own word that the task cannot be done for this sentence: not asked again
-                else: miss(ch)
-                continue
-            misses[model] = 0; wrote[model] += 1
-            f.write(json.dumps({"from": s["id"], "group": s["group"], "kind": kind, "good": kind == "same", "sentence": new, "changed": ch, "by": model, "on": today or datetime.date.today().isoformat()}, ensure_ascii=False) + "\n"); f.flush(); n += 1
+    t0 = time.time(); n = asked = 0; why_not = {}; samples = []; wrote = {m: 0 for m in models}; misses = {m: 0 for m in models}; live = list(models)
+    import concurrent.futures as cf
+
+    def ask(s, kind, model):
+        """One lesson asked of one writer (run in a worker): (s, kind, model, the reply or None, the service's refusal or "", how the reply ended)."""
+        try: raw = (chat or llm.chat)(model, [{"role": "system", "content": SYS}, {"role": "user", "content": prompt(kind, s["passages"], s["sentence"])}], ROOM)
+        except llm.Budget as e: return s, kind, model, None, "the day's allowance: " + str(e)[:100], ""
+        except llm.Unavailable as e: return s, kind, model, None, "the service: " + str(e)[:60], ""
+        return s, kind, model, raw, "", f"the reply ended: {llm.LAST.get('finish')}"
+
+    # several writers are asked at once (each some calls at a time: a free model that thinks aloud takes half a minute a lesson); the main thread alone writes the files
+    with open(path, "a", encoding="utf-8") as f, cf.ThreadPoolExecutor(max_workers=max(1, at_once * len(models))) as pool:
+        queue = iter(todo); running = set()
+        def more():
+            nonlocal asked
+            while live and len(running) < at_once * len(live) and n + len(running) < limit and time.time() - t0 < minutes * 60:
+                item = next(queue, None)
+                if item is None: return
+                model = live[asked % len(live)]; asked += 1; running.add(pool.submit(ask, item[0], item[1], model))
+        more()
+        while running:
+            done, running = cf.wait(running, return_when=cf.FIRST_COMPLETED)
+            for fu in done:
+                s, kind, model, raw, refused, ended = fu.result()
+                def miss(why):                                            # a writer that gives nothing usable twelve times running is left out of this run (it may be busy, or not write in the form asked)
+                    why_not[why] = why_not.get(why, 0) + 1; misses[model] += 1
+                    if len(samples) < 6 and raw: samples.append(f"{model} ({why}; {ended}): " + re.sub(r"\s+", " ", raw)[:260])
+                    if misses[model] >= 12 and model in live: live.remove(model); print(f"teach: {model} gave nothing usable twelve times running: left out of this run")
+                if refused.startswith("the day's allowance"):
+                    if model in live: live.remove(model); print(f"teach: {model}: {refused}")
+                    continue
+                if refused: miss(refused); continue
+                new, ch = accept(kind, s["sentence"], llm.as_json(raw))
+                if new is None:
+                    if ch == "skip": why_not[ch] = why_not.get(ch, 0) + 1; skipped.add((s["id"], kind)); misses[model] = 0        # the writer's own word that the task cannot be done for this sentence: not asked again
+                    else: miss(ch)
+                    continue
+                misses[model] = 0; wrote[model] += 1
+                f.write(json.dumps({"from": s["id"], "group": s["group"], "kind": kind, "good": kind == "same", "sentence": new, "changed": ch, "by": model, "on": today or datetime.date.today().isoformat()}, ensure_ascii=False) + "\n"); f.flush(); n += 1
+            more()
     json.dump(sorted(skipped), open(path.with_name("skipped.json"), "w", encoding="utf-8"))
     print(f"teach: {n} lessons written ({asked} asked; by writer: {wrote}; not usable: {why_not or 'none'}); {len(todo) - asked} still to make; {len(src)} good sentences to make them from")
     for x in samples: print("teach: a reply that could not be used:", x)
@@ -204,6 +222,7 @@ if __name__ == "__main__":
             except ValueError: r = {}
             f.unlink()
             ms = [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:gemini:|openrouter:)[A-Za-z0-9._/:-]{3,90}", m)] or None
-            run(limit=int(r["max"]) if isinstance(r.get("max"), int) else 600, minutes=float(r["minutes"]) if isinstance(r.get("minutes"), (int, float)) else 40, models=ms)
+            run(limit=int(r["max"]) if isinstance(r.get("max"), int) else 600, minutes=float(r["minutes"]) if isinstance(r.get("minutes"), (int, float)) else 40, models=ms,
+                at_once=min(6, max(1, int(r["at_once"]))) if isinstance(r.get("at_once"), int) else 1)
         show()
     else: sys.exit(__doc__)

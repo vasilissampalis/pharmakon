@@ -52,13 +52,19 @@ class Unavailable(Exception):
     """No key, or the service cannot be used now."""
 
 
+import threading
+LOCK = threading.RLock()        # one writer of the count at a time (the lesson maker asks several models at once)
+
+
 def today(): return datetime.datetime.now(datetime.timezone.utc).date().isoformat()   # the allowance resets at 00:00 UTC
 
 
 def ledger():
-    try: d = json.load(open(LEDGER, encoding="utf-8"))
-    except (OSError, ValueError): d = {}
-    if d.get("day") != today(): d = dict({"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}, **({"groq_rolling": d["groq_rolling"]} if isinstance(d.get("groq_rolling"), dict) else {}))   # (Groq's day does not begin at midnight: see groq_level)
+    with LOCK:
+        try: d = json.load(open(LEDGER, encoding="utf-8"))
+        except (OSError, ValueError): d = {}
+    if d.get("day") != today():        # a new day by UTC: Cloudflare's count begins again. What is counted by another clock is kept: Groq's allowance comes back over 24 hours, and each other service has its own day (svc_used: Google's begins at midnight Pacific time)
+        d = dict({"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}, **{k: d[k] for k in ("groq_rolling", "svc") if isinstance(d.get(k), dict)})
     return d
 
 
@@ -80,8 +86,10 @@ def rough_tokens(text): return int(len(text) / 3.6) + 8   # for the estimate bef
 
 def clean(text):
     """A model's words without the thinking some models print first."""
-    text = re.sub(r"<think>.*?</think>", "", text or "", flags=re.S)
-    if "</think>" in text: text = text.split("</think>", 1)[1]
+    text = re.sub(r"<(think|thought|thinking)>.*?</\1>", "", text or "", flags=re.S)          # (Google's Gemma writes <thought>…</thought>: seen on 16 November 2026)
+    for end in ("</think>", "</thought>", "</thinking>"):
+        if end in text: text = text.split(end, 1)[1]
+    if re.match(r"\s*<(?:think|thought|thinking)>", text): return ""                                # it was still thinking when its room ran out: it wrote nothing
     return text.strip()
 
 
@@ -283,13 +291,14 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
             if isinstance(text, list): text = "".join(x.get("text", "") for x in text if isinstance(x, dict))
             t_in, t_out, finish = int(u.get("prompt_tokens") or est_in), int(u.get("completion_tokens") or rough_tokens(text)), ch.get("finish_reason")
             reasoned = len(msg.get("reasoning") or msg.get("reasoning_content") or "")
-        L = ledger(); used = svc_used(svc, L); used["calls"] += 1; used["in"] += t_in; used["out"] += t_out
-        used.setdefault("models", {})[name] = int(used["models"].get(name) or 0) + 1
-        c = cost(model, t_in, t_out) if S.get("paid") else 0.0
-        used["usd"] = round(used["usd"] + (c or 0.0), 6); used["usd_month"] = round(used["usd_month"] + (c or 0.0), 6)
-        L.setdefault("svc", {})[svc] = used
-        LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
-        LAST.clear(); LAST.update({"finish": finish, "in": t_in, "out": t_out, "reasoned": reasoned, "wrote": len(text)})
+        with LOCK:                                                           # (the lesson maker asks several models at once: one writer of the count at a time)
+            L = ledger(); used = svc_used(svc, L); used["calls"] += 1; used["in"] += t_in; used["out"] += t_out
+            used.setdefault("models", {})[name] = int(used["models"].get(name) or 0) + 1
+            c = cost(model, t_in, t_out) if S.get("paid") else 0.0
+            used["usd"] = round(used["usd"] + (c or 0.0), 6); used["usd_month"] = round(used["usd_month"] + (c or 0.0), 6)
+            L.setdefault("svc", {})[svc] = used
+            LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+            LAST.clear(); LAST.update({"finish": finish, "in": t_in, "out": t_out, "reasoned": reasoned, "wrote": len(text)})
         return clean(text)
     raise Unavailable(last or f"{svc} gave no answer")
 
@@ -529,6 +538,11 @@ def selftest():
     try: chat("mistral:mistral-large-latest", [{"role": "user", "content": "x"}], 50, quota); raise AssertionError("no Budget")
     except Budget: pass
     names, why = models_of("mistral", lambda req, timeout=0: Resp({"data": [{"id": "mistral-large-latest"}, {"id": "mistral-small-latest"}]})); assert names == ["mistral-large-latest", "mistral-small-latest"] and why == ""
+    assert clean("<thought>* TASK: add a word</thought>{\"a\": 1}") == '{"a": 1}' and clean("<thought>still thinking when the room ran out") == "" and clean("<think>x</think> ok") == "ok"
+    # a new day by UTC does not wipe what another clock counts: Google's day is still running at 00:06 UTC
+    L = ledger(); L["day"] = "2000-01-01"; L.setdefault("svc", {})["gemini"] = {"day": day_of("gemini"), "calls": 7, "usd": 0.0, "models": {"gemini-4-hydrogen": 7}, "in": 0, "out": 0}; json.dump(L, open(LEDGER, "w"))
+    assert ledger()["neurons"] == 0 and svc_used("gemini")["models"] == {"gemini-4-hydrogen": 7}
+    L = ledger(); L["svc"].pop("gemini"); json.dump(L, open(LEDGER, "w"))
     # ---- only free models, by code: at OpenRouter a model that is not marked free is never asked, whatever a file names
     n = len(seen)
     try: chat("openrouter:openai/some-paid-model", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a model that costs money was asked at OpenRouter")
