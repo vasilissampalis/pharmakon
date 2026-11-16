@@ -206,6 +206,19 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     for every second reader. The measure the senior author is given: of the sentences shown, how many the editor would
     not have written.
 
+18. **YouTube as a place to learn what people ask** (16 November 2026, 18:56, his words: "also our site could see all drug
+    questions and drug themed videos on youtube to get every idea possible! it's an open platform right?" and "or we
+    can get access to it through a third site maybe"). Not built, and the editor's answer was no, from YouTube's own
+    rules as read that hour (developers.google.com/youtube/terms/developer-policies): YouTube may not be scraped
+    "directly or indirectly", so a third site is the same thing and a refusal is never gone around; the official free
+    door (the YouTube Data API: 100 searches and 10,000 other units a day) forbids keeping what it returns for more
+    than 30 days and using it "to create new or derived data or metrics", which is what a list of questions made from
+    titles and comments would be, and it would oblige the site to carry YouTube's terms. What stays open: the senior
+    author, as a person, may watch and read anything and paste titles and questions he sees (as with the Reddit pages),
+    and the editor lists them the same day; and an open count the system may read by itself, with no key: Wikipedia's
+    public page views (which drug articles people read most), to rank the pages to start. That is next after the
+    batch of 17 November.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
