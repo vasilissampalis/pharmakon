@@ -73,6 +73,7 @@ def lane_has_work(state, items, ledger_left, t):
     """(yes or no, why)"""
     if t["lane"] >= LANE_A_DAY: return False, f"{t['lane']} writing runs today already"
     if ledger_left < ROOM: return False, f"today's free model allowance has {ledger_left:.0f} neurons left: not enough for one answer"
+    if load(ROOT / "data" / "auto" / "lane" / "policy.json", {}).get("pause"): return False, "the editor has paused the lane (data/auto/lane/policy.json, pause)"
     import lane as L
     todo = [w["id"] for w in items if L.turn_of(w, state.get("items") or {}) is not None]
     return (True, f"{len(todo)} listed questions are to be worked on") if todo else (False, "every listed question has been worked on")
