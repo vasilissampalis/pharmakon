@@ -72,7 +72,7 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 9                # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 10               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -789,7 +789,47 @@ def counts(sources):
             "reviews": sum(s["kind"] == "review" for s in full), "studies in people": sum(s["kind"] not in ("review", "case") and s["people"] for s in full), "case reports": sum(s["kind"] == "case" for s in full)}
 
 
-def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None):
+CLAIMS = ROOT / "data" / "claims"
+AGREE_SYS = ("You compare sentences for Pharmakon, a drug encyclopedia. In each numbered PAIR, A is a sentence a machine wrote from sources it read, and B is a statement of the site that readers checked against studies. "
+             "You say how A stands to B. JSON only.")
+
+
+def checked_claims(drugs):
+    """The checked claims of these drugs' pages: [{"id", "drug", "text"}], each with its plain line (and its exact
+    statement, which the second reader sees). The machine lane never edits them: it reads them to see whether what it
+    wrote agrees with what was checked."""
+    out = []
+    for d in drugs or []:
+        try: cs = json.load(open(CLAIMS / (d + ".json"), encoding="utf-8"))
+        except (OSError, ValueError): continue
+        for c in cs if isinstance(cs, list) else []:
+            if isinstance(c, dict) and c.get("id") and (c.get("plain") or c.get("statement")): out.append({"id": c["id"], "drug": d, "plain": str(c.get("plain") or ""), "statement": str(c.get("statement") or "")})
+    return out
+
+
+def with_checked(chat, model, enc, parts, claims, near=0.5, most=8):
+    """How a machine-written answer stands to the checked claims of the same page (decision 17d; the senior author,
+    15 November 2026: the answers must be "coherent with the rest of the website"): ([{"part", "claim", "why"}] where a
+    sentence cannot be true together with a checked claim, [{"part", "claim"}] where it says the same). Each sentence is
+    set beside the checked claims nearest to it in meaning (at most three, none that is far), and the second reader says
+    of each pair: the same, differs, or about something else. Nothing here changes a claim."""
+    sents = [p for p in parts if not p.get("fixed") and p.get("text")]
+    if not sents or not claims: return [], []
+    import numpy as np
+    S = enc([p["text"] for p in sents]); C = enc([c["plain"] or c["statement"] for c in claims]); sim = np.asarray(S @ C.T)
+    pairs = sorted(((float(sim[i, j]), i, j) for i in range(len(sents)) for j in np.argsort(-sim[i])[:3] if sim[i, j] >= near), reverse=True)[:most]
+    if not pairs: return [], []
+    body = "\n\n".join(f"PAIR {n}.\nA (machine): {sents[i]['text']}\nB (checked): {claims[j]['plain'] or claims[j]['statement']}" + (f"\n   B in exact words: {claims[j]['statement'][:500]}" if claims[j]["plain"] and claims[j]["statement"] else "") for n, (_, i, j) in enumerate(pairs, 1))
+    out = ask_json(chat, model, AGREE_SYS, body + "\n\nFor each pair, \"is\": \"same\" if A says what B says, or a part of it; \"differs\" if A and B cannot both be true as they stand (opposite directions, or different numbers for the very same thing in the same people); "
+                   "\"other\" if they are about different things, different people or different conditions, so that both can be true. Say \"differs\" only where they truly cannot both hold.\n"
+                   'JSON only: {"pairs": [{"n": 1, "is": "same", "why": ""}, {"n": 2, "is": "other", "why": ""}]}', room_for(model, 100 + 60 * len(pairs)))
+    got = {v.get("n"): v for v in (out or {}).get("pairs") or [] if isinstance(v, dict)}
+    differs = [{"part": sents[i]["part"], "claim": claims[j]["id"], "why": re.sub(r"\s+", " ", str(got.get(n, {}).get("why") or ""))[:240]} for n, (_, i, j) in enumerate(pairs, 1) if got.get(n, {}).get("is") == "differs"]
+    same = [{"part": sents[i]["part"], "claim": claims[j]["id"]} for n, (_, i, j) in enumerate(pairs, 1) if got.get(n, {}).get("is") == "same"]
+    return differs, same
+
+
+def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None):
     """One question through the lane. Returns the record (see the head of this file). official: the pages official.py found
     for it; page, summary, fulltext, crossref: how a page, a summary, a full text and a Crossref record are fetched (the
     selftest gives its own); before: the record this one replaces, whose state is kept in "history"."""
@@ -962,6 +1002,14 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     rec["missing"] = draft["missing"] if not draft["complete"] else (f"{len(in_summary)} paper(s) could be read in summary only" if in_summary else "a paper that stands nearer the question could not be read" if not rec["complete"] else "")
     why = stakes(item["q"], parts)
     if why: return done("waiting", "about " + why + ": written, and waiting for a person before it is published")
+    # 7 the checked claims of the same page (lane 10): an answer that cannot be true together with a checked claim waits for a person, and
+    # the disagreement is written down for the editor; the claim itself is never touched
+    if claims:
+        differs, same = with_checked(chat, models["checker"], enc, parts, claims(rec["drugs"]))
+        rec["with_checked"] = {"differs": differs, "same": same}
+        rec["gates"]["checked"] = (f"{len(differs)} sentence(s) cannot be true together with a checked claim of the same page (" + "; ".join(f"{d['part']} against {d['claim']}: {d['why']}" for d in differs)[:400] + ")" if differs
+                                   else f"set beside the checked claims of the same page: nothing against them" + (f"; {len(same)} sentence(s) say what a checked claim says" if same else ""))
+        if differs: return done("waiting", "it disagrees with a checked claim of the same page (" + ", ".join(sorted({d["claim"] for d in differs})) + "): waiting for a person; the claim is not changed")
     return done("published", "passed every gate")
 
 
@@ -1111,7 +1159,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             except (OSError, ValueError, KeyError): official = []               # (official.py has not searched for this question yet, or found nothing)
             try: before = json.load(open(af, encoding="utf-8"))
             except (OSError, ValueError): before = None
-            rec = make(w, found, chat, enc, models, official=official, names=names, before=before)
+            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims)
         except llm.Budget as e: print("lane: stopped for today:", e); break
         except llm.Unavailable as e:
             print("lane: the models cannot be used now:", e)
@@ -1123,6 +1171,10 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             print(f"lane: {w['id']}: the lane itself failed ({type(e).__name__}: {str(e)[:200]})"); print("".join(traceback.format_exc().splitlines(True)[-6:]))
             st["items"][w["id"]] = {"status": "none", "why": f"the lane itself failed on it ({type(e).__name__})", "last": TODAY, "lane": LANE, "kind": "", "complete": False, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
             json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); continue
+        try: hold = bool(json.load(open(ROOT / "data" / "auto" / "lane" / "policy.json", encoding="utf-8")).get("hold_new"))
+        except (OSError, ValueError): hold = False
+        if hold and rec.get("status") == "published":                  # the editor reads the first answers of a new version of the lane before they are shown (data/auto/lane/policy.json, hold_new; scripts/editor/release_auto.py lets them out)
+            rec["status"] = "waiting"; rec["held"] = "the editor's first reading of lane " + str(LANE); rec["why"] = (rec.get("why") or "") + "; held until the editor has read it (the first answers of this version of the lane)"
         try:                                                           # where the answer belongs on the site (scripts/auto/place.py): a drug's page, a page to start, or one of the general pages
             import place; pl = place.Placer(names).place(w["q"], w.get("ways") or []); rec["place"] = {k: pl[k] for k in ("home", "also", "cls", "why")}
         except Exception as e: rec["place"] = {"home": None, "why": "the place could not be worked out: " + str(e)[:120]}
@@ -1252,6 +1304,15 @@ def selftest():
         cf[0] = 900; assert team(tf) is None
         assert base("groq:openai/gpt-oss-120b") == base("@cf/openai/gpt-oss-120b") == "gpt-oss-120b"
     finally: llm.has, llm.left, llm.groq_left = keep
+    # (lane 10) the checked claims of the same page: an answer that cannot be true together with one waits for a person; one that says the same is noted; a far claim is not asked about
+    cl = lambda drugs: [{"id": "cl_ket_dependence", "drug": "ketamine", "plain": "People who use ketamine often can become dependent on it.", "statement": "Regular ketamine use is associated with dependence."},
+                        {"id": "cl_ket_far", "drug": "ketamine", "plain": "Zebra finches sing at dawn.", "statement": ""}]
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), {"pairs": [{"n": 1, "is": "differs", "why": "A says nobody becomes dependent"}, {"n": 2, "is": "same", "why": ""}]}]
+    r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, claims=cl)
+    assert r["status"] == "waiting" and "cl_ket_dependence" in r["why"] and r["with_checked"]["differs"][0]["claim"] == "cl_ket_dependence" and "B (checked): People who use ketamine often can become dependent on it." in calls[-1][2] and "Zebra finches" not in calls[-1][2], (r["status"], r["why"], r.get("with_checked"))
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), {"pairs": [{"n": 1, "is": "same", "why": ""}]}]
+    r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, claims=cl)
+    assert r["status"] == "published" and r["with_checked"]["same"] and "nothing against them" in r["gates"]["checked"], (r["status"], r["gates"])
     # 5. a question about dying: written, checked, and it waits for a person
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk({"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}); assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
