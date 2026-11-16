@@ -1,0 +1,44 @@
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 20868.77it/s]
+nli: lytang/MiniCheck-RoBERTa-Large: 318 of 318 cards; 0.67 seconds a pair
+Loading weights:   0%|          | 0/560 [00:00<?, ?it/s]Loading weights: 100%|██████████| 560/560 [00:00<00:00, 26107.46it/s]
+nli: lytang/MiniCheck-Flan-T5-Large: 318 of 318 cards; 0.98 seconds a pair
+Loading weights:   0%|          | 0/174 [00:00<?, ?it/s]Loading weights: 100%|██████████| 174/174 [00:00<00:00, 7323.80it/s]
+nli: KRLabsOrg/lettucedect-large-modernbert-en-v1: 250 of 318 cards; the time for this run was up, the next run goes on; 0.92 seconds a pair
+exam: lytang/MiniCheck-RoBERTa-Large (318 cards): at 0.50: catches 10 of 31 wrong cards, stops 68 of 287 good ones, 8.8 wrong in 100 let through; its best rule, at 0.20: catches 6 of 31 wrong cards, stops 24 of 287 good ones, 8.7 wrong in 100 let through
+exam: lytang/MiniCheck-Flan-T5-Large (318 cards): at 0.50: catches 13 of 31 wrong cards, stops 113 of 287 good ones, 9.4 wrong in 100 let through; its best rule, at 0.30: catches 11 of 31 wrong cards, stops 82 of 287 good ones, 8.9 wrong in 100 let through
+exam: KRLabsOrg/lettucedect-large-modernbert-en-v1 (250 cards, not all yet): at 0.50: catches 10 of 24 wrong cards, stops 31 of 226 good ones, 6.7 wrong in 100 let through; its best rule, at 0.50: catches 10 of 24 wrong cards, stops 31 of 226 good ones, 6.7 wrong in 100 let through
+own: c1 is the model in use for check: the first model for this job: it catches wrong cards and stops no more than 4 good ones in 10
+own: c2 is NOT adopted for check: it lets more wrong cards through (21 against 20)
+own: c3 is the model in use for check: wrong cards let through 20 -> 15, good cards stopped 60 -> 60
+own selftest: ok (a model replaces the one in use only if it lets no more wrong cards through and stops no more good ones, and is better in one; a long passage is cut at sentence ends and its best part counts; a file whose SHA-256 is not the one written down, or that is not from this repository's releases, is refused)
+workshop selftest: ok (a card's true part: a myth's statement is left out; the threshold a candidate carries lets the fewest wrong cards through while it stops no more than one good card in four; the lane's own sentences are sat against the words they rest on, and counted at that threshold)
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 18541.54it/s]
+  torch.onnx.export(m, (x["input_ids"], x["attention_mask"]), str(raw), input_names=["input_ids", "attention_mask"], output_names=["logits"],
+  if (padding_length := kv_length + kv_offset - attention_mask.shape[-1]) > 0:
+  is_causal = q_length > 1 and attention_mask is None and is_causal
+  return opset9.index(g, self, index)
+[0;93m2026-11-16 21:25:23.819878157 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+WARNING:root:Please consider to run pre-processing before quantization. Refer to example: https://github.com/microsoft/onnxruntime-inference-examples/blob/main/quantization/image_classification/cpu/ReadMe.md 
+workshop: pharmakon-check-0 (from lytang/MiniCheck-RoBERTa-Large, 357 MB): at 0.4: lets 23 of 31 wrong cards through, stops 51 of 287 good ones; 0.21 seconds a sentence; of the lane's own sentences it lets 2 of 9 that are not good through and stops 17 of 20 good ones
+Loading weights:   0%|          | 0/394 [00:00<?, ?it/s]Loading weights: 100%|██████████| 394/394 [00:00<00:00, 21252.00it/s]
+  torch.tensor(mid - 1).type_as(relative_pos),
+  torch.ceil(torch.log(abs_pos / mid) / torch.log(torch.tensor((max_position - 1) / mid)) * (mid - 1)) + mid
+  return torch.sqrt(torch.tensor(query_layer.size(-1), dtype=torch.float) * scale_factor)
+  return torch.sqrt(torch.tensor(query_layer.size(-1), dtype=torch.float) * scale_factor)
+  if key_layer.size(-2) != query_layer.size(-2):
+WARNING:root:Please consider to run pre-processing before quantization. Refer to example: https://github.com/microsoft/onnxruntime-inference-examples/blob/main/quantization/image_classification/cpu/ReadMe.md 
+workshop: pharmakon-check-0d (from lytang/MiniCheck-DeBERTa-v3-Large, 642 MB): at 0.1: lets 21 of 31 wrong cards through, stops 60 of 287 good ones; 0.29 seconds a sentence; of the lane's own sentences it lets 2 of 9 that are not good through and stops 13 of 20 good ones
+
+r runner      4096 Nov 16 21:32 .
+r runner      4096 Nov 16 20:47 ..
+r runner        99 Nov 16 20:47 _handled.txt
+r runner      4792 Nov 16 21:32 _notes.txt
+r runner      4096 Nov 16 21:32 exam
+r runner      3477 Nov 16 21:28 pharmakon-check-0.json
+r runner 357252471 Nov 16 21:25 pharmakon-check-0.onnx
+r runner     27080 Nov 16 21:28 pharmakon-check-0.scores.json
+r runner   3558647 Nov 16 21:25 pharmakon-check-0.tokenizer.json
+r runner      3484 Nov 16 21:32 pharmakon-check-0d.json
+r runner 641593599 Nov 16 21:29 pharmakon-check-0d.onnx
+r runner     27106 Nov 16 21:32 pharmakon-check-0d.scores.json
+r runner   8332116 Nov 16 21:29 pharmakon-check-0d.tokenizer.json
