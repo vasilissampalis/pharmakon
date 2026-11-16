@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0024",
- "lane": 6,
+ "lane": 8,
  "kind": "answer",
  "from": "w_0024",
  "question": "Can you get addicted to ketamine?",
@@ -24,7 +24,7 @@
    "checker": "groq:openai/gpt-oss-120b",
    "team": "team C"
   },
-  "run": "43904650278",
+  "run": "43907838668",
   "from": {
    "papers": 2,
    "summaries": 0,
@@ -35,10 +35,10 @@
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
   "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it"
+  "rules": "broken at try 2: but: words that are not person-first (“abuse”); written again, then nothing against it"
  },
  "sources": [
   {
@@ -106,7 +106,7 @@
      "passage": 5,
      "where": "Text",
      "quote": "Recreational use and dependence have been consistently described with a number of reports over the past decade highlighting a concerning increase in the prevalence of ketamine use disorder.",
-     "text": "People who use ketamine can develop dependence, and reports over the past decade have consistently described recreational use and dependence.",
+     "text": "People who use ketamine can develop dependence, and reports over the past decade have consistently described this dependence.",
      "id": "F1"
     },
     {
@@ -344,10 +344,10 @@
    ],
    "limits": [
     {
-     "passage": 17,
+     "passage": 18,
      "where": "Drug abuse and dependence",
-     "quote": "Individuals with a history of drug abuse or dependence may be at greater risk for abuse and misuse of KETALAR.",
-     "text": "The risk of dependence may be higher in people who have a history of drug abuse or dependence.",
+     "quote": "Withdrawal symptoms have been reported after the discontinuation of frequently used (more than weekly), large doses of ketamine for long periods of time.",
+     "text": "The withdrawal symptoms described are based on reports from people who used ketamine frequently and at large doses for extended periods.",
      "id": "L2"
     }
    ],
@@ -357,7 +357,7 @@
  "parts": [
   {
    "part": "short",
-   "text": "Yes. Health Canada says ketamine can be addictive. People who use it can develop dependence and feel withdrawal symptoms when they stop.",
+   "text": "Yes. Health Canada says ketamine can be addictive. People who use it can develop dependence and withdrawal symptoms when they stop.",
    "uses": [
     "F5",
     "F1",
@@ -389,7 +389,7 @@
   },
   {
    "part": "but",
-   "text": "The sources do not say how many people who use ketamine actually become addicted.",
+   "text": "The sources lack a full framework to judge how likely addiction is for different people.",
    "uses": [
     "L1"
    ],
@@ -405,7 +405,7 @@
   },
   {
    "part": "how1",
-   "text": "Health Canada says ketamine can be addictive and stopping abruptly after frequent use can cause withdrawal.",
+   "text": "Health Canada says ketamine can be addictive and stopping after frequent use can cause withdrawal.",
    "uses": [
     "F5",
     "F6"
@@ -431,7 +431,7 @@
   },
   {
    "part": "how2",
-   "text": "A 2024 review found reports of dependence among people who use ketamine for recreation.",
+   "text": "A 2024 review found reports of ketamine dependence have increased over the past decade.",
    "uses": [
     "DA",
     "F1"
@@ -452,12 +452,12 @@
      "sha": "4220148af9145f1e"
     }
    ],
-   "quote": "Recreational use and dependence have been consistently described with a number of reports",
+   "quote": "dependence have been consistently described with a number of reports over the past decade highlighting",
    "quote_ref": "roberts_2024"
   },
   {
    "part": "how3",
-   "text": "The US label for ketamine says physical dependence and withdrawal symptoms have been reported after long, frequent use.",
+   "text": "The US label says physical dependence and withdrawal symptoms have been reported after long, frequent use.",
    "uses": [
     "F7",
     "F8"
@@ -540,6 +540,14 @@
    "why": "passed every gate",
    "short": "Yes, people who use ketamine can become addicted and develop dependence, and stopping after frequent use can cause withdrawal symptoms.",
    "complete": false
+  },
+  {
+   "on": "2026-11-16",
+   "lane": 6,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes. Health Canada says ketamine can be addictive. People who use it can develop dependence and feel withdrawal symptoms when they stop.",
+   "complete": false
   }
  ],
  "looked": [
@@ -596,14 +604,8 @@
    "thrown": [
     {
      "kind": "finding",
-     "text": "People who use ketamine over a long time may develop tolerance, needing higher doses for the same effect.",
+     "text": "People who use ketamine over a long time may develop tolerance, needing higher doses to achieve the same effect.",
      "quote": "Tolerance has been reported with prolonged use of ketamine.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The evidence of dependence comes from reports of prolonged use, not from controlled studies of short-term use.",
-     "quote": "Physical dependence has been reported with prolonged use of ketamine.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]

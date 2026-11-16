@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0002",
- "lane": 3,
+ "lane": 8,
  "kind": "answer",
  "from": "w_0002",
  "question": "What is really in fake Xanax bars?",
@@ -19,249 +19,28 @@
  "made": {
   "on": "2026-11-16",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/openai/gpt-oss-120b",
-   "checker": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "team": "team C"
   },
-  "run": "43781996960",
+  "run": "43907838668",
   "from": {
-   "papers": 3,
+   "papers": 2,
    "summaries": 0,
-   "official": 2
+   "official": 1
   },
-  "neurons": 1021.8
+  "neurons": 0.0
  },
- "status": "none",
- "why": "no draft passed: broken at try 3: how1: an amount of a drug (“8.3 mg”)",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "19 findings kept from 5 sources (3 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "3 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 3: how1: an amount of a drug (“8.3 mg”)"
+  "read": "6 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "rules": "broken at try 1: short: it says “often”, and the words it rests on do not: say it as the source does (“can”, “may”, “has been reported”), or rest it on the item that says so; written again, then nothing against it",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "edinoff_2022",
-    "type": "article-journal",
-    "title": "Novel designer benzodiazepines: Comprehensive review of evolving clinical and adverse effects",
-    "author": [
-     {
-      "family": "Edinoff",
-      "given": "Amber N."
-     },
-     {
-      "family": "Nix",
-      "given": "Catherine A."
-     },
-     {
-      "family": "Odisho",
-      "given": "Amira S."
-     },
-     {
-      "family": "Babin",
-      "given": "Caroline P."
-     },
-     {
-      "family": "Derouen",
-      "given": "Alyssa G."
-     },
-     {
-      "family": "Lutfallah",
-      "given": "Salim C."
-     },
-     {
-      "family": "Cornett",
-      "given": "Elyse M."
-     },
-     {
-      "family": "Murnane",
-      "given": "Kevin S."
-     },
-     {
-      "family": "Kaye",
-      "given": "Adam M."
-     },
-     {
-      "family": "Kaye",
-      "given": "Alan D."
-     }
-    ],
-    "container-title": "Neurology International",
-    "issued": {
-     "date-parts": [
-      [
-       2022
-      ]
-     ]
-    },
-    "DOI": "10.3390/neurolint14030053",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-16"
-     }
-    },
-    "volume": "14",
-    "issue": "3",
-    "page": "648-663",
-    "PMCID": "PMC9397074"
-   },
-   "doi": "10.3390/neurolint14030053",
-   "pmcid": "PMC9397074",
-   "title": "Novel Designer Benzodiazepines: Comprehensive Review of Evolving Clinical and Adverse Effects",
-   "year": 2022,
-   "journal": "Neurology international",
-   "kind": "review",
-   "people": true,
-   "near": 0.679,
-   "money": [
-    "This research received no external funding."
-   ],
-   "design": null,
-   "findings": [
-    {
-     "passage": 17,
-     "where": "1. Introduction › 1.7. Clonazolam",
-     "quote": "From January 2014 to December 2017, there were 234 recorded single-agent exposures to DBZs across 40 states, with the exposures increasing annually with a total increase of 330%.",
-     "text": "There was a 330% increase in designer benzodiazepine exposure from 2014 to 2017 in 40 states.",
-     "id": "F1"
-    },
-    {
-     "passage": 29,
-     "where": "2. Clinical Studies › 2.1. Prevalence of Designer Benzodiazepines",
-     "quote": "The pills were found on an intoxicated patient when they were brought into the emergency department.",
-     "text": "Clonazolam and flubromazolam were found in candy-like pills from an online seller that were taken by an intoxicated patient.",
-     "id": "F2"
-    },
-    {
-     "passage": 32,
-     "where": "2. Clinical Studies › 2.3. Identifying Metabolites of Designer Benzodiazepines on Urine Drug Screening",
-     "quote": "The main metabolites, i.e., the metabolites found in the greatest concentration in each urine sample from the DBZs in this study, were 7-aminoclonazolam, 7-acetominomeclonazepam, and 7-acetaminonifoxipam for clonazolam, meclonazepam, and nifoxipam, respectively.",
-     "text": "The main metabolites of clonazolam, meclonazepam, and nifoxipam in human urine samples were identified in one study.",
-     "id": "F3"
-    }
-   ],
-   "limits": [
-    {
-     "passage": 2,
-     "where": "1. Introduction",
-     "quote": "With so many new DBZs being marketed online, the lack of research regarding their pharmacokinetics and metabolic pathways potentially makes them dangerous and unpredictable.",
-     "text": "There is a lack of research on the pharmacokinetics and metabolic pathways of designer benzodiazepines.",
-     "id": "L1"
-    },
-    {
-     "passage": 30,
-     "where": "2. Clinical Studies › 2.2. Difficulties in Managing and Diagnosing Designer Benzodiazepine Use",
-     "quote": "DBZs are often not the only drugs the user is misusing at the time.",
-     "text": "It is challenging to diagnose and manage designer benzodiazepine use because users often take multiple substances.",
-     "id": "L2"
-    }
-   ],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "wu_2023",
-    "type": "article-journal",
-    "title": "Recent findings and advancements in the detection of designer benzodiazepines: A brief review",
-    "author": [
-     {
-      "family": "Wu",
-      "given": "Dihua"
-     },
-     {
-      "family": "Fu",
-      "given": "Li"
-     }
-    ],
-    "container-title": "Archives of Industrial Hygiene and Toxicology",
-    "issued": {
-     "date-parts": [
-      [
-       2023
-      ]
-     ]
-    },
-    "DOI": "10.2478/aiht-2023-74-3771",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-16"
-     }
-    },
-    "volume": "74",
-    "issue": "4",
-    "page": "224-231",
-    "PMCID": "PMC10750316"
-   },
-   "doi": "10.2478/aiht-2023-74-3771",
-   "pmcid": "PMC10750316",
-   "title": "Recent findings and advancements in the detection of designer benzodiazepines: a brief review",
-   "year": 2022,
-   "journal": "Arhiv za higijenu rada i toksikologiju",
-   "kind": "review",
-   "people": false,
-   "near": 0.698,
-   "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This review article takes a closer look at a new class of psychoactive substances called designer benzodiazepines (DBZs) and the challenges of their detection.",
-    "text": "a brief review of designer benzodiazepines"
-   },
-   "findings": [
-    {
-     "passage": 6,
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "Adinazolam's antidepressant activity may be mediated by heightened serotonin neurotransmission in rat hippocampal pyramidal neurons.",
-     "text": "Adinazolam's antidepressant activity may be mediated by heightened serotonin neurotransmission in rat hippocampal pyramidal neurons.",
-     "id": "F4"
-    },
-    {
-     "passage": 13,
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "Instances of lethal overdoses almost invariably involve a complex interplay of polydrug toxicity, with etizolam seldom standing as the sole culprit.",
-     "text": "In cases of lethal overdoses involving etizolam, it is often used with other substances.",
-     "id": "F5"
-    },
-    {
-     "passage": 14,
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "flualprazolam can considerably impair driving ability even at concentrations below 10 ng/mL, which is much lower than anticipated for other benzodiazepines.",
-     "text": "Flualprazolam can impair driving ability at concentrations below 10 ng/mL.",
-     "id": "F6"
-    },
-    {
-     "passage": 16,
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "flubromazolam in post-mortem cases ranged from 1 to 70 mg/L",
-     "text": "In post-mortem cases, flubromazolam concentrations ranged from 1 to 70 mg/L.",
-     "id": "F7"
-    }
-   ],
-   "limits": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Further research should focus on elucidating their pharmacokinetic properties and metabolism in humans, especially in view of genetic polymorphisms and drug interactions",
-     "text": "The pharmacokinetic properties and metabolism of DBZs in humans, especially regarding genetic polymorphisms and drug interactions, are not yet fully understood.",
-     "id": "L3"
-    }
-   ],
-   "tag": "B"
-  },
   {
    "read": "full",
    "ref": {
@@ -354,160 +133,161 @@
    "money": [
     "No funding or sponsorship was received for this study or publication of this article."
    ],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam.",
+    "text": "Narrative review of counterfeit Xanax tablets and their contents"
+   },
    "findings": [
     {
-     "passage": 13,
-     "where": "Case Studies",
-     "quote": "etizolam was the most frequently detected compound in the illicit tablets",
-     "text": "Etizolam was the most frequently detected compound in illicit tablets.",
-     "id": "F8"
-    },
-    {
-     "passage": 13,
-     "where": "Case Studies",
-     "quote": "ranging from 0.7 to 8.3 mg per tablet",
-     "text": "The dosage of etizolam in counterfeit tablets ranged from 0.7 to 8.3 mg per tablet.",
-     "id": "F9"
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam.",
+     "text": "Counterfeit Xanax tablets contain variable amounts of etizolam.",
+     "id": "F1"
     },
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam",
-     "text": "Counterfeit Xanax tablets contain variable amounts of etizolam.",
-     "id": "F10"
+     "quote": "Tablets with high amounts of etizolam can cause toxicity if ingested, especially when combined with other substances.",
+     "text": "Tablets with high amounts of etizolam can cause toxicity if ingested, especially when combined with other substances.",
+     "id": "F2"
     },
+    {
+     "passage": 13,
+     "where": "Case Studies",
+     "quote": "Blakey et al. conducted a dosage survey of designer benzodiazepines in counterfeit pharmaceuticals and found etizolam was the most frequently detected compound in the illicit tablets.",
+     "text": "In a survey, etizolam was the most frequently detected compound in counterfeit tablets.",
+     "id": "F3"
+    }
+   ],
+   "limits": [
     {
      "passage": 12,
      "where": "Etizolam: Pharmacokinetics and Pharmacodynamics Considerations",
-     "quote": "most reported overdoses involving etizolam typically involve polypharmacy",
-     "text": "Most reported overdoses involving etizolam typically involve polypharmacy.",
-     "id": "F11"
+     "quote": "These dangerous effects are especially concerning related to the fact that etizolam may be used as a substitute for other drugs such as alprazolam.",
+     "text": "The study notes that etizolam is often used as a substitute for other drugs such as alprazolam, which may influence toxicity outcomes.",
+     "id": "L1"
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "grigg_2023",
+    "type": "article-journal",
+    "title": "Real or fake? Sourcing and marketing of non-prescribed benzodiazepines amongst two samples of people who regularly use illicit drugs in Australia",
+    "author": [
+     {
+      "family": "Grigg",
+      "given": "Jodie"
+     },
+     {
+      "family": "Peacock",
+      "given": "Amy"
+     },
+     {
+      "family": "Lenton",
+      "given": "Simon"
+     },
+     {
+      "family": "Salom",
+      "given": "Caroline"
+     },
+     {
+      "family": "Agramunt",
+      "given": "Seraina"
+     },
+     {
+      "family": "Thomas",
+      "given": "Natalie"
+     },
+     {
+      "family": "Lyons",
+      "given": "Tom"
+     },
+     {
+      "family": "Sutherland",
+      "given": "Rachel"
+     }
+    ],
+    "container-title": "Drug and Alcohol Review",
+    "issued": {
+     "date-parts": [
+      [
+       2023
+      ]
+     ]
+    },
+    "DOI": "10.1111/dar.13722",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-16",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-16"
+     }
+    },
+    "volume": "42",
+    "issue": "6",
+    "page": "1559-1565",
+    "PMCID": "PMC10947514"
+   },
+   "doi": "10.1111/dar.13722",
+   "pmcid": "PMC10947514",
+   "title": "Real or fake? Sourcing and marketing of non-prescribed benzodiazepines amongst two samples of people who regularly use illicit drugs in Australia",
+   "year": 2023,
+   "journal": "Drug and alcohol review",
+   "kind": "other",
+   "people": true,
+   "near": 0.715,
+   "money": [
+    "Rachel Sutherland has received untied educational funds from Seqirus. Amy Peacock has received untied educational grants from Seqirus and Mundipharma for study of opioid medications. Simon Lenton has served as an unpaid member of an Advisory Board for Mundipharma. Funding from this organisation has now ceased, funding was for work unrelated to this project, and the funding bodies had no role in study design, analysis and reporting.",
+    "The Drug Trends program (including the Illicit Drug Reporting System and Ecstasy and Related Drugs Reporting System), the National Drug and Alcohol Research Centre and the National Drug Research Institute are funded by the Australian Government Department of Health and Aged Care. Amy Peacock and Rachel Sutherland are supported by National Health and Medical Research Council Emerging Leader Fellowships.",
+    "All other authors have no conflicts of interest to declare."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "There is concern around non‑prescribed benzodiazepine use, particularly with increasing detections of counterfeit products containing high‑risk novel compounds.",
+     "text": "Counterfeit benzodiazepine products are increasingly detected and contain high‑risk novel compounds.",
+     "id": "F4"
     },
     {
      "passage": 18,
-     "where": "Case Studies",
-     "quote": "a lethal etizolam and caffeine overdose",
-     "text": "Etizolam can cause lethal overdose, especially when combined with other substances like caffeine.",
-     "id": "F12"
+     "where": "DISCUSSION",
+     "quote": "most counterfeit benzodiazepine products in Australia appear to be being sold/marketed as alprazolam (e.g.,), placing people who use non‑prescribed alprazolam at particular risk of consuming something unexpected.",
+     "text": "Most counterfeit benzodiazepine products in Australia are marketed as alprazolam, putting users at risk of consuming unexpected substances.",
+     "id": "F5"
     }
    ],
    "limits": [
     {
      "passage": 19,
-     "where": "Conclusion",
-     "quote": "the problem regarding etizolam misuse has become increasingly problematic in recent years",
-     "text": "The study notes that etizolam misuse has become increasingly problematic, but does not provide a direct comparison or baseline.",
-     "id": "L4"
+     "where": "DISCUSSION › Limitations",
+     "quote": "we cannot verify responses (e.g., whether products were genuine diverted prescriptions or pharmaceutically manufactured products) and the data are subject to recall bias.",
+     "text": "The study cannot verify whether reported products were genuine or counterfeit, and responses may be affected by recall bias.",
+     "id": "L2"
     }
    ],
-   "tag": "C"
+   "tag": "B"
   },
   {
    "read": "page",
    "ref": {
-    "id": "healthcanada_benzodiazepines",
+    "id": "thelevel_benzodiazepines",
     "type": "webpage",
     "title": "Benzodiazepines",
     "author": [
      {
-      "literal": "Health Canada"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2023,
-       2,
-       8
-      ]
-     ]
-    },
-    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/benzodiazepines.html",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       16
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-16"
-    },
-    "publisher": "Government of Canada"
-   },
-   "title": "Benzodiazepines",
-   "year": 2023,
-   "kind": "official",
-   "people": true,
-   "near": 0.563,
-   "name": "Health Canada",
-   "short": "Health Canada",
-   "tier": 1,
-   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/benzodiazepines.html",
-   "money": [],
-   "design": null,
-   "findings": [
-    {
-     "passage": 3,
-     "where": "About benzodiazepines",
-     "quote": "Benzodiazepines are only legally available by prescription.",
-     "text": "Benzodiazepines are only legally available by prescription.",
-     "id": "F13"
-    },
-    {
-     "passage": 6,
-     "where": "Risks related to benzodiazepine use",
-     "quote": "Mixing benzodiazepines with other depressants such as alcohol and/or opioids can be dangerous.",
-     "text": "Mixing benzodiazepines with other depressants such as alcohol and/or opioids can be dangerous.",
-     "id": "F14"
-    },
-    {
-     "passage": 7,
-     "where": "Risks related to benzodiazepine use",
-     "quote": "While naloxone is not effective in counteracting the effects of benzodiazepines, it is effective against opioid overdoses and it can be safely administered to people who have taken both opioid and non-opioid drugs.",
-     "text": "Naloxone is not effective in counteracting the effects of benzodiazepines.",
-     "id": "F15"
-    },
-    {
-     "passage": 3,
-     "where": "About benzodiazepines",
-     "quote": "Benzodiazepine use can become problematic, which can lead to substance use disorder, overdose and even death.",
-     "text": "Benzodiazepine use can become problematic, which can lead to substance use disorder, overdose and even death.",
-     "id": "F16"
-    }
-   ],
-   "limits": [
-    {
-     "passage": 6,
-     "where": "Risks related to benzodiazepine use",
-     "quote": "Developing tolerance means that, over time, you need more of the drug to get the same effect.",
-     "text": "The page does not provide information on what is in fake Xanax bars.",
-     "id": "L5"
-    },
-    {
-     "passage": 8,
-     "where": "Substance use disorder and withdrawal",
-     "quote": "Symptoms of benzodiazepine withdrawal include: headache; muscle pain; restlessness; stomach pain; trouble sleeping",
-     "text": "The page does not provide information on the composition of counterfeit or fake benzodiazepine products.",
-     "id": "L6"
-    }
-   ],
-   "tag": "D"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "frank_benzodiazepines",
-    "type": "webpage",
-    "title": "Benzodiazepines and derivatives",
-    "author": [
-     {
-      "literal": "FRANK"
+      "literal": "NZ Drug Foundation"
      }
     ],
     "issued": {
@@ -515,7 +295,7 @@
       []
      ]
     },
-    "URL": "https://www.talktofrank.com/drug/benzodiazepines",
+    "URL": "https://thelevel.org.nz/drug-information/benzodiazepines",
     "accessed": {
      "date-parts": [
       [
@@ -529,63 +309,147 @@
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
      "verified_on": "2026-11-16"
-    }
+    },
+    "publisher": "The Level"
    },
-   "title": "Benzodiazepines and derivatives",
+   "title": "Benzodiazepines",
    "year": null,
    "kind": "official",
    "people": true,
-   "near": 0.544,
-   "name": "FRANK",
-   "short": "FRANK",
-   "tier": 1,
-   "address": "https://www.talktofrank.com/drug/benzodiazepines",
+   "near": 0.537,
+   "name": "NZ Drug Foundation",
+   "short": "the NZ Drug Foundation",
+   "tier": 2,
+   "address": "https://thelevel.org.nz/drug-information/benzodiazepines",
    "money": [],
+   "label": false,
    "design": null,
    "findings": [
     {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "‘Street benzos’ are illicit drugs that are similar but can be far more dangerous.",
-     "text": "Street benzos are illicit drugs that are similar but can be far more dangerous.",
-     "id": "F17"
-    },
-    {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "Some drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
-     "text": "Some drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
-     "id": "F18"
-    },
-    {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "This is happening in a wide range of drugs, not just heroin, and you can never really know what is in any street or counterfeit drug.",
-     "text": "You can never really know what is in any street or counterfeit drug.",
-     "id": "F19"
+     "passage": 8,
+     "where": "How to stay safer / How can you be safer when using benzodiazepines?",
+     "quote": "Be aware of benzodiazepines bought illegally as they are sometimes fake. This means that they might contain different ingredients, adulterants or doses than the actual brand of benzodiazepines.",
+     "text": "Benzodiazepines bought illegally can be fake and may contain different ingredients, adulterants or doses than the genuine brand.",
+     "id": "F6"
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "you can never really know what is in any street or counterfeit drug",
-     "text": "You can never really know what is in any street or counterfeit drug.",
-     "id": "L7"
-    },
-    {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "This is happening in a wide range of drugs, not just heroin",
-     "text": "The issue is not limited to heroin.",
-     "id": "L8"
+     "passage": 8,
+     "where": "How to stay safer / How can you be safer when using benzodiazepines?",
+     "quote": "It is important to know that because they have lots of filler in them and only a small amount of the active ingredient (the part of the medicine that causes the effects), the machine may not be able to give an accurate reading.",
+     "text": "Because fake benzodiazepines often contain a lot of filler and only a small amount of active ingredient, drug‑checking machines may not give an accurate reading.",
+     "id": "L3"
     }
    ],
-   "tag": "E"
+   "tag": "C"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Fake Xanax bars can contain variable amounts of etizolam. They may also contain different ingredients, adulterants, or doses than the genuine brand.",
+   "uses": [
+    "F1",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "kaye_2024",
+     "where": "Abstract",
+     "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam.",
+     "sha": "4e4f2f4786b174f5"
+    },
+    {
+     "label": "F6",
+     "ref": "thelevel_benzodiazepines",
+     "where": "How to stay safer / How can you be safer when using benzodiazepines?",
+     "quote": "Be aware of benzodiazepines bought illegally as they are sometimes fake. This means that they might contain different ingredients, adulterants or doses than the actual brand of benzodiazepines.",
+     "sha": "82b442bf422aaa27"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The NZ Drug Foundation says drug-checking machines may not give an accurate reading because of filler and low active ingredient.",
+   "uses": [
+    "L3"
+   ],
+   "rests_on": [
+    {
+     "label": "L3",
+     "ref": "thelevel_benzodiazepines",
+     "where": "How to stay safer / How can you be safer when using benzodiazepines?",
+     "quote": "It is important to know that because they have lots of filler in them and only a small amount of the active ingredient (the part of the medicine that causes the effects), the machine may not be able to give an accurate reading.",
+     "sha": "82b442bf422aaa27"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2024 narrative review found etizolam was the most frequently detected compound in counterfeit tablets.",
+   "uses": [
+    "DA",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "kaye_2024",
+     "where": "Abstract",
+     "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam.",
+     "sha": "4e4f2f4786b174f5"
+    },
+    {
+     "label": "F3",
+     "ref": "kaye_2024",
+     "where": "Case Studies",
+     "quote": "Blakey et al. conducted a dosage survey of designer benzodiazepines in counterfeit pharmaceuticals and found etizolam was the most frequently detected compound in the illicit tablets.",
+     "sha": "69c4bba467746742"
+    }
+   ],
+   "quote": "counterfeit pharmaceuticals and found etizolam was the most frequently detected compound in the illicit tablets",
+   "quote_ref": "kaye_2024"
+  },
+  {
+   "part": "how2",
+   "text": "A 2023 Australian study found most counterfeit products are marketed as alprazolam, risking unexpected substances.",
+   "uses": [
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "grigg_2023",
+     "where": "DISCUSSION",
+     "quote": "most counterfeit benzodiazepine products in Australia appear to be being sold/marketed as alprazolam (e.g.,), placing people who use non‑prescribed alprazolam at particular risk of consuming something unexpected.",
+     "sha": "c939aefa454315a1"
+    }
+   ],
+   "quote": "most counterfeit benzodiazepine products in Australia appear to be being sold/marketed as alprazolam (e.g.,)",
+   "quote_ref": "grigg_2023"
+  },
+  {
+   "part": "how3",
+   "text": "The NZ Drug Foundation says illegal benzodiazepines may contain different ingredients, adulterants, or doses than the actual brand.",
+   "uses": [
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "thelevel_benzodiazepines",
+     "where": "How to stay safer / How can you be safer when using benzodiazepines?",
+     "quote": "Be aware of benzodiazepines bought illegally as they are sometimes fake. This means that they might contain different ingredients, adulterants or doses than the actual brand of benzodiazepines.",
+     "sha": "82b442bf422aaa27"
+    }
+   ],
+   "quote": "they might contain different ingredients, adulterants or doses than the actual brand of benzodiazepines",
+   "quote_ref": "thelevel_benzodiazepines"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -611,5 +475,145 @@
   }
  ],
  "person": null,
- "history": []
+ "history": [
+  {
+   "on": "2026-11-16",
+   "lane": 3,
+   "status": "none",
+   "why": "no draft passed: broken at try 3: how1: an amount of a drug (“8.3 mg”)",
+   "short": "",
+   "complete": false
+  }
+ ],
+ "looked": [
+  {
+   "title": "Novel Designer Benzodiazepines: Comprehensive Review of Evolving Clinical and Adverse Effects",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/neurolint14030053",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Recent findings and advancements in the detection of designer benzodiazepines: a brief review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2478/aiht-2023-74-3771",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Fake Xanax: Designer Emerging Benzodiazepine Epidemic Linked to Morbidity and Mortality a Narrative Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s40120-024-00628-3",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In a survey, counterfeit tablets contained etizolam in doses ranging from 0.7 to 8.3 mg per tablet.",
+     "quote": "Researchers also found etizolam to have the most significant variation in dosage in visually similar counterfeit tablets, ranging from 0.7 to 8.3 mg per tablet.",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "limit",
+     "text": "The paper acknowledges that regulatory differences across countries contribute to the prevalence of counterfeit Xanax tablets.",
+     "quote": "The rise in fake Xanax tablets containing etizolam and other counterfeit medications has been exacerbated by the difference in regulations regarding these substances in different countries as well as ",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Real or fake? Sourcing and marketing of non-prescribed benzodiazepines amongst two samples of people who regularly use illicit drugs in Australia",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1111/dar.13722",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Observational survey of Australians who use illicit drugs",
+     "quote": "The aims of this study were to investigate how and which non‑prescribed benzodiazepines are being sourced; forms, appearance and packaging; and awareness of risks associated with non‑prescribed benzod",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The findings cannot be generalized to all people who use benzodiazepines due to the sampling methods.",
+     "quote": "Given the sampling methods, the findings cannot be generalised to the wider population of people who use benzodiazepines.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Benzodiazepines",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/benzodiazepines.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Benzodiazepines and derivatives",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/benzodiazepines",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "People who use fake Xanax bars cannot know what substances are in them.",
+     "quote": "you can never really know what is in any street or counterfeit drug.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Benzodiazepines",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/benzodiazepines",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Benzodiazepines",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/benzodiazepines",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Alprazolam",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=2f16ff78-1262-4bb8-9a25-822c13c4746f",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Diazepam",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/diazepam/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Benzofuran compounds",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/benzofuran-compounds",
+   "kept": 0,
+   "thrown": []
+  }
+ ],
+ "place": {
+  "home": "benzodiazepines",
+  "also": [
+   "checking"
+  ],
+  "cls": null,
+  "why": "it names a drug that has a page"
+ }
 }

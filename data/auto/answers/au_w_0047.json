@@ -1,0 +1,384 @@
+{
+ "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
+ "id": "au_w_0047",
+ "lane": 8,
+ "kind": "amounts",
+ "from": "w_0047",
+ "question": "How much caffeine a day do health bodies call safe for adults?",
+ "ways": [
+  "how much caffeine is too much",
+  "safe amount of caffeine per day",
+  "how many mg of caffeine a day is ok",
+  "daily caffeine limit",
+  "how many cups of coffee a day is safe",
+  "maximum caffeine per day"
+ ],
+ "drugs": [
+  "caffeine"
+ ],
+ "made": {
+  "on": "2026-11-16",
+  "models": {
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "team": "team C"
+  },
+  "run": "43907838668",
+  "from": {
+   "papers": 0,
+   "summaries": 1,
+   "official": 0
+  },
+  "neurons": 0.0
+ },
+ "status": "published",
+ "why": "passed every gate (an answer about amounts: decision 11)",
+ "gates": {
+  "read": "6 amounts kept from 3 sources (2 papers read in full, 0 official pages, 1 papers read in summary); 14 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "4 amounts from 2 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
+  "check": "1 of 4 amounts accepted by the second reader (groq:openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
+  "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
+ },
+ "sources": [
+  {
+   "read": "summary",
+   "ref": {
+    "id": "wikoff_2017",
+    "type": "article-journal",
+    "title": "Systematic review of the potential adverse effects of caffeine consumption in healthy adults, pregnant women, adolescents, and children",
+    "author": [
+     {
+      "family": "Wikoff",
+      "given": "Daniele"
+     },
+     {
+      "family": "Welsh",
+      "given": "Brian T."
+     },
+     {
+      "family": "Henderson",
+      "given": "Rayetta"
+     },
+     {
+      "family": "Brorby",
+      "given": "Gregory P."
+     },
+     {
+      "family": "Britt",
+      "given": "Janice"
+     },
+     {
+      "family": "Myers",
+      "given": "Esther"
+     },
+     {
+      "family": "Goldberger",
+      "given": "Jeffrey"
+     },
+     {
+      "family": "Lieberman",
+      "given": "Harris R."
+     },
+     {
+      "family": "O'Brien",
+      "given": "Charles"
+     },
+     {
+      "family": "Peck",
+      "given": "Jennifer"
+     },
+     {
+      "family": "Tenenbein",
+      "given": "Milton"
+     },
+     {
+      "family": "Weaver",
+      "given": "Connie"
+     },
+     {
+      "family": "Harvey",
+      "given": "Seneca"
+     },
+     {
+      "family": "Urban",
+      "given": "Jonathan"
+     },
+     {
+      "family": "Doepker",
+      "given": "Candace"
+     }
+    ],
+    "container-title": "Food and Chemical Toxicology",
+    "issued": {
+     "date-parts": [
+      [
+       2017
+      ]
+     ]
+    },
+    "DOI": "10.1016/j.fct.2017.04.002",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-16",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-16"
+     }
+    },
+    "volume": "109",
+    "page": "585-648"
+   },
+   "doi": "10.1016/j.fct.2017.04.002",
+   "title": "Systematic review of the potential adverse effects of caffeine consumption in healthy adults, pregnant women, adolescents, and children",
+   "year": 2017,
+   "journal": "Food and chemical toxicology : an international journal published for the British Industrial Biological Research Association",
+   "kind": "review",
+   "people": true,
+   "near": 0.682,
+   "money": [],
+   "rows": [
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "400 mg/day for adults [10 g for lethality]",
+     "show": "400 mg/day for adults [10 g for lethality]",
+     "clause": "400 mg/day for adults [10 g for lethality]",
+     "who": "healthy adults",
+     "what": "daily amount not associated with adverse effects"
+    }
+   ],
+   "design": null,
+   "findings": [],
+   "limits": [],
+   "tag": "C"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "fixed": true,
+   "rests_on": []
+  },
+  {
+   "part": "but",
+   "text": "Each amount was for the people named, under the care named. It says nothing about another person, or about what is sold outside a pharmacy.",
+   "fixed": true,
+   "rests_on": []
+  },
+  {
+   "part": "row1",
+   "text": "Healthy adults; daily amount not associated with adverse effects.",
+   "who": "Healthy adults",
+   "what": "daily amount not associated with adverse effects",
+   "quote": "400 mg/day for adults [10 g for lethality]",
+   "source": "wikoff_2017",
+   "read": "summary",
+   "uses": [
+    "R4"
+   ],
+   "rests_on": [
+    {
+     "label": "R4",
+     "ref": "wikoff_2017",
+     "where": "Summary",
+     "quote": "400 mg/day for adults [10 g for lethality]",
+     "sha": "bfaed38c72e1bb9d"
+    }
+   ]
+  }
+ ],
+ "complete": false,
+ "missing": "a paper could be read in summary only",
+ "wanted": [
+  {
+   "doi": "10.1080/0265203021000007840",
+   "apa": "Nawrot, P., Jordan, S., Eastwood, J., Rotstein, J., Hugenholtz, A., & Feeley, M. (2003). Effects of caffeine on human health. Food Additives and Contaminants, 20(1), 1–30. https://doi.org/10.1080/0265203021000007840",
+   "near": 0.745,
+   "why": "a review or meta-analysis in people; nearness to the question 0.74; cited 596 times; its full text is not open",
+   "file": "nawrot_2003_0265203021000007840.pdf"
+  },
+  {
+   "doi": "10.1016/0278-6915(95)00093-3",
+   "apa": "Barone, J. J., & Roberts, H. R. (1996). Caffeine consumption. Food and Chemical Toxicology, 34(1), 119–129. https://doi.org/10.1016/0278-6915(95)00093-3",
+   "near": 0.738,
+   "why": "a review or meta-analysis in people; nearness to the question 0.74; cited 513 times; its full text is not open",
+   "file": "barone_1996_0278_6915_95_00093_3.pdf"
+  },
+  {
+   "doi": "10.1016/j.fct.2017.04.002",
+   "apa": "Wikoff, D., Welsh, B. T., Henderson, R., Brorby, G. P., Britt, J., Myers, E., Goldberger, J., Lieberman, H. R., O'Brien, C., Peck, J., Tenenbein, M., Weaver, C., Harvey, S., Urban, J., & Doepker, C. (2017). Systematic review of the potential adverse effects of caffeine consumption in healthy adults, pregnant women, adolescents, and children. Food and Chemical Toxicology, 109, 585–648. https://doi.org/10.1016/j.fct.2017.04.002",
+   "near": 0.682,
+   "why": "a review or meta-analysis in people; nearness to the question 0.68; cited 270 times; its full text is not open",
+   "file": "wikoff_2017_j_fct_2017_04_002.pdf"
+  }
+ ],
+ "person": null,
+ "history": [],
+ "looked": [
+  {
+   "title": "The Safety of Ingested Caffeine: A Comprehensive Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2017.00080",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "International society of sports nutrition position stand: caffeine and exercise performance",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s12970-020-00383-4",
+   "kept": 3,
+   "thrown": [
+    {
+     "quote": "dietary caffeine consumption of U.S. adult men and women estimated at approximately 200 mg/day in a 2009–2010 survey.",
+     "who": "U.S. adult men and women",
+     "what": "daily dietary caffeine consumption",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
+     "quote": "caffeine-containing products have a range of doses per serving, from 1 mg in milk chocolate up to > 300 mg in some dietary supplements.",
+     "who": "caffeine-containing products",
+     "what": "dose per serving",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    },
+    {
+     "quote": "In summary, caffeine has been consistently shown to be effective as an ergogenic aid when taken in moderate doses (3–6 mg/kg), during endurance-type exercise and sport.",
+     "who": "endurance-type exercisers",
+     "what": "moderate doses per body mass",
+     "why": "no amount with its unit in the quote"
+    },
+    {
+     "quote": "consumed a bar containing 45 g of carbohydrate and 100 mg of caffeine;",
+     "who": "24 well-trained cyclists",
+     "what": "caffeine dose in performance bar",
+     "why": "who names no people"
+    },
+    {
+     "quote": "athletes are encouraged to maintain a urine caffeine concentration below the limit of 12 μg/ml urine which corresponds to 10 mg/kg body mass orally ingested over several hours",
+     "who": "athletes",
+     "what": "caffeine intake per body mass",
+     "why": "no amount with its unit in the quote"
+    }
+   ]
+  },
+  {
+   "title": "Caffeine intake from different dietary sources and its association with sleep quality in employed adults",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/s40795-026-01312-5",
+   "kept": 1,
+   "thrown": [
+    {
+     "quote": "The average daily caffeine intake among participants was 262.5 [144.0-411.0] mg.",
+     "who": "working adults",
+     "what": "daily amount",
+     "why": "no amount with its unit in the quote"
+    },
+    {
+     "quote": "The mean intake among espresso consumers was the highest (185.1 ± 291.6 mg/day).",
+     "who": "espresso consumers",
+     "what": "daily amount",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Energy Drinks",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/energy-drinks",
+   "kept": 0,
+   "thrown": [
+    {
+     "quote": "Caffeine is a major ingredient in both types of energy drink products—at levels of 70 to 240 mg in a 16-oz. drink and 113 to 200 mg in an energy shot.",
+     "who": "energy drink consumers",
+     "what": "caffeine content in a 16-oz. energy drink and an energy shot",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
+     "quote": "For comparison, a 12-oz. can of cola contains about 35 mg of caffeine, and an 8-oz. cup of coffee contains about 100 mg.",
+     "who": "cola drinkers and coffee drinkers",
+     "what": "caffeine content in a 12-oz. cola and an 8-oz. cup of coffee",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    }
+   ]
+  },
+  {
+   "title": "Caffeine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/caffeine",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Effects of caffeine on human health",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1080/0265203021000007840",
+   "kept": 0,
+   "thrown": [
+    {
+     "quote": "moderate daily caffeine intake at a dose level up to 400 mg day(-1) (equivalent to 6 mg kg(-1) body weight day(-1) in a 65-kg person) is not associated with adverse effects such as general toxicity, c",
+     "who": "healthy adult population",
+     "what": "daily amount",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
+     "quote": "reproductive-aged women should consume </=300 mg caffeine per day (equivalent to 4.6 mg kg(-1) bw day(-1) for a 65-kg person)",
+     "who": "reproductive-aged women",
+     "what": "daily amount",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    }
+   ]
+  },
+  {
+   "title": "Caffeine consumption",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/0278-6915(95)00093-3",
+   "kept": 0,
+   "thrown": [
+    {
+     "quote": "limited. Based on product usage and available consumption data, the authors suggest a mean daily caffeine intake for US consumers of 4 mg/kg",
+     "who": "US consumers",
+     "what": "daily amount",
+     "why": "no amount with its unit in the quote"
+    },
+    {
+     "quote": "Among children younger than 18 years of age who are consumers of caffeine-containing foods, the mean daily caffeine intake is about 1 mg/kg.",
+     "who": "children younger than 18 years of age who are consumers of caffeine-containing foods",
+     "what": "daily amount",
+     "why": "no amount with its unit in the quote"
+    }
+   ]
+  },
+  {
+   "title": "Systematic review of the potential adverse effects of caffeine consumption in healthy adults, pregnant women, adolescents, and children",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.fct.2017.04.002",
+   "kept": 2,
+   "thrown": [
+    {
+     "quote": "2.5 mg/kg/day for children and adolescents",
+     "who": "children and adolescents",
+     "what": "daily amount not associated with adverse effects",
+     "why": "no amount with its unit in the quote"
+    }
+   ]
+  }
+ ],
+ "place": {
+  "home": "caffeine",
+  "also": [],
+  "cls": null,
+  "why": "it names a drug that has a page"
+ }
+}
