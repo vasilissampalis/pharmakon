@@ -16,6 +16,8 @@ a look on the one-core machine costs a fifth of a cent; a run that writes answer
 little over one cent (two minutes, measured on 15 November 2026). So a day holds at most LANE_A_DAY runs that write and
 DEPLOY_A_DAY that publish (requests by the editor count too): 48 looks, six writing runs and eight publishings come to
 about 35 cents a day, inside the 40 that a month of 12 dollars gives. On a public repository there would be no such limit.
+(16 November 2026, 22:13 Athens time: the senior author made the repository public. Machine time is free now; the ceilings
+below were lifted the same hour, and what limits a day is the models' free allowances.)
 
   scout   the question store has changed since the scout last read it (scripts/auto/look.py)
   lane    a listed question's turn has come (never tried; written by an older lane; the second look: not complete and
@@ -30,7 +32,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 TICK = ROOT / "data" / "auto" / "tick.json"
 DEPLOYED = ROOT / "data" / "auto" / "deploy" / "deployed.json"
-LANE_A_DAY, DEPLOY_A_DAY = 4, 8      # (16 November 2026: four writing runs a day, three questions each. With the second free service the models are no longer what limits a day; the free machine time of a private repository is: about 40 minutes of writing a day)
+LANE_A_DAY, DEPLOY_A_DAY = 24, 24    # (16 November 2026, 22:13: the senior author made the repository public, so GitHub's machine time is free and no longer limits a day. What limits it now is the models' free allowances: a writing run starts only when a team has room (lane.team), so this number is a ceiling, not a plan. Before that day: 4 and 8, for the paid machine time of a private repository.)
 ROOM = 1200             # neurons one answer may take: the lane starts only when today's allowance has this much left
 RETRY_DAYS = 7
 # everything the site is built from (site/build.js and site/build_public.py read these); the machine lane's answers are counted apart
