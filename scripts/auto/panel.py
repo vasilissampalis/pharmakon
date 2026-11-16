@@ -16,7 +16,8 @@ The judges it knows:
   model files      data/auto/exam/model-<name>.json (the cards) and model-<name>-lane.json (the lane's own sentences)
   our own models   data/auto/own/candidates/<name>.scores.json, at the threshold the candidate carries
 
-Two exams: the cards (data/auto/exam/cards.json) and the lane's own sentences (lane-sentences.json: the real task, small).
+Three exams: the cards (data/auto/exam/cards.json), the lane's own sentences (lane-sentences.json: the real task, small)
+and plain lines beside their checked claims (lines.json: the lane's kind of task, from the blind checks of plain lines).
 For the cards it also says how many of the wrong cards a panel caught are ones whose fault a sentence-reader can see at
 all (cards-where.json): a catch of one of the others is luck.
 
@@ -41,30 +42,30 @@ def true_part(card):
     return ([card["statement"]] if card["answer"] else []) + why
 
 
-def rules_judge(cards, sents):
-    """The lane's rules in code as a judge: {item id: let through} for the cards (their true part) and for the lane's sentences."""
+def rules_judge(cards, sents, lines=None):
+    """The lane's rules in code as a judge: {item id: let through} for the cards (their true part), for the lane's sentences and for the plain lines."""
     import lane
     def ok(ours, src): return not lane.says_more_text(ours, src) and not lane.hedges([{"part": "x", "text": ours, "uses": ["A"]}], {"A": {"quote": src, "passage_text": ""}})
-    lines = lambda L: " ".join(t for t in [L.get("short") or "", L.get("but") or ""] + list(L.get("how") or []) if t)
-    return ({i["id"]: all(ok(s, lines(i["lines"])) for s in true_part(i["card"])) for i in cards},
-            {i["id"]: ok(i["sentence"], " ".join(i["rests_on"])) for i in sents})
+    joined = lambda L: " ".join(t for t in [L.get("short") or "", L.get("but") or ""] + list(L.get("how") or []) if t)
+    return ({i["id"]: all(ok(s, joined(i["lines"])) for s in true_part(i["card"])) for i in cards},
+            {i["id"]: ok(i["sentence"], " ".join(i["rests_on"])) for i in sents},
+            {i["id"]: ok(i["line"], " ".join(x for _, x in lines["claims"][i["claim"]])) for i in (lines or {}).get("items") or []})
 
 
-def judges(cards, sents, exam=None, own=None):
-    """{judge's name: ({card id: through}, {sentence id: through})} from what is on file."""
-    out = {"rules": rules_judge(cards, sents)}
+def judges(cards, sents, exam=None, own=None, lines=None):
+    """{judge's name: ({card id: through}, {sentence id: through}, {plain line id: through})} from what is on file."""
+    out = {"rules": rules_judge(cards, sents, lines)}
     for f in sorted((exam or EXAM).glob("model-*.json")):
         d = load(f) or {}
         if d.get("how") == "pieces" or not isinstance(d.get("cards"), dict): continue
-        name = str(d.get("model") or f.stem) + ("" if not d.get("effort") or f.stem.endswith("-lane") or not re.search(r"-(low|medium|high)$", f.stem) else " (" + d["effort"] + ")")
+        which = 1 if f.stem.endswith("-lane") else 2 if f.stem.endswith("-lines") else 0
+        name = str(d.get("model") or f.stem) + ("" if not d.get("effort") or which or not re.search(r"-(low|medium|high)$", f.stem) else " (" + d["effort"] + ")")
         got = {k: bool(v.get("through")) for k, v in d["cards"].items() if v.get("clear")}          # no clear word is no verdict: such an item is not counted for this judge
-        c, s = out.setdefault(name, ({}, {}))
-        (s if f.stem.endswith("-lane") else c).update(got)
+        out.setdefault(name, ({}, {}, {}))[which].update(got)
     for f in sorted((own or OWN).glob("*.scores.json")):
         rec = load(f.with_name(f.name.replace(".scores.json", ".json"))) or {}; d = load(f) or {}; t = rec.get("threshold")
         if not isinstance(t, (int, float)): continue
-        out[f.name.replace(".scores.json", "") + f" (ours, at {t})"] = ({r["id"]: all(x >= t for x in r["scores"]) for r in d.get("items") or [] if r.get("scores")},
-                                                                    {r["id"]: all(x >= t for x in r["scores"]) for r in d.get("lane") or [] if r.get("scores")})
+        out[f.name.replace(".scores.json", "") + f" (ours, at {t})"] = tuple({r["id"]: all(x >= t for x in r["scores"]) for r in d.get(k) or [] if r.get("scores")} for k in ("items", "lane", "lines"))
     return out
 
 
@@ -109,7 +110,7 @@ def selftest():
     r = count(["a", "b"], v, items); assert r["wrong_through"] == 0 and r["good_stopped"] == 2                       # kept only if every judge accepts: what one misses the other catches, and both stop some good ones
     r = count(["a", "c"], v, items); assert r["wrong_seen"] == 1 and r["good_seen"] == 1 and r["wrong_through"] == 1     # only the items all the judges of a panel saw
     assert count(["c"], {"c": {"g1": True}}, items) is None
-    rows = table({"a": (v["a"], {}), "b": (v["b"], {})}, 0, items, most=2, least_wrong=2, least_good=2)
+    rows = table({"a": (v["a"], {}, {}), "b": (v["b"], {}, {})}, 0, items, most=2, least_wrong=2, least_good=2)
     assert rows[0]["panel"] == ["a", "b"] and len(rows) == 3
     assert true_part({"statement": "It is so.", "answer": False, "why": "False. It is not. One study said so."}) == ["It is not.", "One study said so."]
     print("panel selftest: ok (a sentence is kept only if every judge of a panel accepts it; a panel is counted on the items all its judges saw; panels are ordered by wrong let through, then good stopped)")
@@ -121,8 +122,10 @@ if __name__ == "__main__":
     most = int(a[a.index("--most") + 1]) if "--most" in a else 3
     cards = (load(EXAM / "cards.json") or {}).get("items") or []; sents = (load(EXAM / "lane-sentences.json") or {}).get("items") or []
     where = (load(EXAM / "cards-where.json") or {}).get("cards") or {}
-    js = judges(cards, sents)
-    print("judges on file:", "; ".join(f"{n} ({len(c)} cards, {len(s)} of the lane's sentences)" for n, (c, s) in js.items()))
+    xl = load(EXAM / "lines.json") or {}; xitems = xl.get("items") or []
+    js = judges(cards, sents, lines=xl)
+    print("judges on file:", "; ".join(f"{n} ({len(c)} cards, {len(s)} of the lane's sentences, {len(x)} plain lines)" for n, (c, s, x) in js.items()))
     vis = {"is": lambda cid: bool((where.get(cid) or {}).get("at")), "seen": lambda r: [i["id"] for i in cards if not i["good"] and all(i["id"] in js[j][0] for j in r["panel"])]} if where else None
     show(table(js, 0, cards, most), f"\nTHE CARDS ({sum(not i['good'] for i in cards)} wrong, {sum(i['good'] for i in cards)} good; {sum(1 for w in where.values() if w.get('at'))} of the wrong ones have a fault a sentence-reader can see)", vis)
     show(table(js, 1, sents, most, least_wrong=5, least_good=5), f"\nTHE LANE'S OWN SENTENCES ({sum(not i['good'] for i in sents)} not good, {sum(i['good'] for i in sents)} good)")
+    show(table(js, 2, xitems, most), f"\nPLAIN LINES BESIDE THEIR CHECKED CLAIMS ({sum(not i['good'] for i in xitems)} that say something the claim does not carry, {sum(i['good'] for i in xitems)} good)")

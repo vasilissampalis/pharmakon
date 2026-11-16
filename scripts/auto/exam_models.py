@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """exam_models.py: a model sits the exam as the lane's checker (docs/AUTOMATION.md; scripts/auto/exam.py).
 
-    python3 -I scripts/auto/exam_models.py requests      (data/auto/requests/exam-*.json: {"models": [...], "good": 62, "exam": "cards" | "lane" | "both"})
+    python3 -I scripts/auto/exam_models.py requests      (data/auto/requests/exam-*.json: {"models": [...], "good": 62, "exam": "cards" | "lane" | "lines" | "both" | "all"})
 
 The exam's items are our own blind checks: a Myth or fact? card beside the checked lines it was written from, and whether a
 blind checker who wrote none of it found that the card says only what the lines say. The model is asked the lane's own
@@ -16,6 +16,10 @@ Writes data/auto/exam/model-<name>.json. The exam is small: it can show that a c
 A second exam (16 November 2026), "lane": the sentences the system itself wrote, each beside the words it rests on, with the
 editor's verdict (data/auto/exam/lane-sentences.json; scripts/editor/label_auto.py). This is the lane's real task, asked in
 the same words. It is sat first, whole (it is small), and written to model-<name>-lane.json.
+
+A third exam, "lines" (scripts/auto/exam_lines.py): plain lines beside the checked claims they were written from, with the
+blind checkers' verdicts: every line a checker changed for what it said, and a fixed draw of twice as many good ones.
+The claim's fields are the passages. Written to model-<name>-lines.json. ("both": cards and lane; "all": the three.)
 """
 import sys, time, re, json, random, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -42,6 +46,13 @@ def lane_cards(file=None):
     try: items = json.load(open(file or EXAM / "lane-sentences.json", encoding="utf-8"))["items"]
     except (OSError, ValueError): return []
     return [{"id": i["id"], "good": i["good"], "what": i.get("what"), "plain": True, "lines": {"short": "", "but": "", "how": list(i["rests_on"])}, "card": {"answer": True, "statement": i["sentence"], "why": ""}} for i in items]
+
+
+def lines_cards(file=None):
+    """The exam of plain lines in the shape of the exam's cards: the line as it stands, the checked claim's fields as its passages."""
+    try: d = json.load(open(file or EXAM / "lines.json", encoding="utf-8"))
+    except (OSError, ValueError): return []
+    return [{"id": i["id"], "good": i["good"], "what": i.get("what"), "plain": True, "lines": {"short": "", "but": "", "how": [f"({label}) {text}" for label, text in d["claims"][i["claim"]]]}, "card": {"answer": True, "statement": i["line"], "why": ""}} for i in d["items"]]
 
 
 def slug(model): return re.sub(r"[^a-z0-9.-]+", "-", model.lower()).strip("-")
@@ -160,6 +171,10 @@ def selftest():
     def chat4(model, messages, room): asked.append(messages[1]["content"]); return json.dumps({"verdicts": [{"n": 1, "supported": "SENTENCE: It often" not in messages[1]["content"], "problem": ""}]})
     r = sit("gemini:gemma-4-31b-it", 10 ** 6, cards=lc, chat=chat4, left=lambda: 1000, file=lf.parent / "out.json")
     assert r["wrong_caught"] == 1 and r["good_stopped"] == 0 and r["wrong_cards_seen"] == 1 and r["good_cards_seen"] == 1 and len(asked) == 2, r
+    xf = pathlib.Path(tempfile.mkdtemp()) / "lines.json"
+    json.dump({"claims": {"c1": [["THE CLAIM", "People said desire often rose."], ["WHO WAS STUDIED", "20 men"]]}, "items": [{"id": "c1#short~was", "claim": "c1", "good": False, "line": "Desire often goes up.", "what": "a recollection said as a fact"}, {"id": "c1#short", "claim": "c1", "good": True, "line": "People say desire often goes up."}]}, open(xf, "w"))
+    xc = lines_cards(xf); pr = prompt(xc[0])
+    assert "1. SENTENCE: Desire often goes up.\n   PASSAGE: (THE CLAIM) People said desire often rose.\n   PASSAGE: (WHO WAS STUDIED) 20 men" in pr and xc[1]["good"] and xc[0]["what"], pr[-300:]
     print("exam_models selftest: ok (the lane's own question about a card; a sitting that stops at the day's reserve keeps its cards and the next goes on from there; "
           "asked piece by piece, the code gives the verdict from the words the reader copied)")
 
@@ -177,11 +192,13 @@ if __name__ == "__main__":
             hows = r.get("how") if isinstance(r.get("how"), list) else [r.get("how")]
             for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:|mistral:|gemini:|openrouter:)[A-Za-z0-9._/:-]{3,90}", m)][:4]:
                 if not llm.has(m): print(f"exam: {m}: no key for its service on this machine (or it is not a free model): not sat"); continue
-                which = r.get("exam") if r.get("exam") in ("cards", "lane", "both") else "cards"
-                if which in ("lane", "both") and lane_cards():           # the lane's own sentences first, all of them: the real task, and small
-                    sit(m, 10 ** 6, cards=lane_cards(), file=EXAM / ("model-" + slug(m) + "-lane.json"), until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
-                        most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)
-                if which == "lane": continue
+                which = r.get("exam") if r.get("exam") in ("cards", "lane", "lines", "both", "all") else "cards"
+                opts = dict(until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None, most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)
+                if which in ("lane", "both", "all") and lane_cards():    # the lane's own sentences first, all of them: the real task, and small
+                    sit(m, 10 ** 6, cards=lane_cards(), file=EXAM / ("model-" + slug(m) + "-lane.json"), **opts)
+                if which in ("lines", "all") and lines_cards():          # plain lines beside their checked claims: every wrong one, and twice as many good ones
+                    lc = lines_cards(); sit(m, 2 * sum(not i["good"] for i in lc), cards=lc, file=EXAM / ("model-" + slug(m) + "-lines.json"), **opts)
+                if which in ("lane", "lines"): continue
                 for h in hows[:2]:
                     sit(m, int(r.get("good") or 62) if isinstance(r.get("good"), int) else 62, until=until, how="pieces" if h == "pieces" else None, keep=r.get("keep") if isinstance(r.get("keep"), int) else None,
                         most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None)

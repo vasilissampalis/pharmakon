@@ -5,6 +5,7 @@
                                                            {"do": "export", "model": "<an open model on GROUNDED's list>", "as": "pharmakon-check-0"})
     python3 -I scripts/auto/workshop.py sit NAME DIR       (the exam for files already made: DIR/NAME.onnx, DIR/NAME.tokenizer.json)
     python3 -I scripts/auto/workshop.py pick NAME          (a candidate's numbers counted again from the scores it left, by today's rule; no model is run)
+    python3 -I scripts/auto/workshop.py more NAME lines    (a candidate on file sits a further exam on this machine, as the very file its record names)
     python3 -I scripts/auto/workshop.py --selftest
 
 Runs ONLY in the workshop job (.github/workflows/own.yml), which may read the repository and holds no key: this is the
@@ -82,8 +83,24 @@ def pick(name, folder=None):
     e.update(threshold=best["threshold"], exam=dict(best, whole=(e.get("exam") or {}).get("whole", True), seconds_a_sentence=(e.get("exam") or {}).get("seconds_a_sentence")), exam_table=tb, exam_sentences=sentence_table(sc["items"]),
              threshold_rule=f"the fewest wrong cards let through among the thresholds that stop no more than 1 good card in {round(1 / BUDGET)}")
     if ltb: e.update(exam_lane=at_threshold(ltb, best["threshold"]), exam_lane_table=ltb)
+    if sc.get("lines"):
+        xtb = table(sc["lines"])[0]; e.update(exam_lines=at_threshold(xtb, best["threshold"]), exam_lines_table=xtb)
     json.dump(e, open(folder / (name + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     return e
+
+
+def more(name, what, minutes=0, folder=None):
+    """A candidate that is on file sits a further exam on THIS machine, as the file whose SHA-256 its record names (fetched from
+    the repository's release files by own.fetch, which refuses any other file). what: "lines" or "lane". The scores are added
+    to the candidate's scores and its record is counted again."""
+    folder = folder or own.OWN / "candidates"
+    e = json.load(open(folder / (name + ".json"), encoding="utf-8")); sf = folder / (name + ".scores.json"); sc = json.load(open(sf, encoding="utf-8"))
+    chk = own.Check(entry=e)
+    if what == "lines": sc["lines"] = sit_lines(chk, minutes=minutes)[0]
+    elif what == "lane": sc["lane"] = sit_lane(chk)[0]
+    else: sys.exit("workshop: a further exam is 'lines' or 'lane'")
+    json.dump(sc, open(sf, "w", encoding="utf-8"), ensure_ascii=False)
+    return pick(name, folder)
 
 
 def sit_lane(chk, exam=None):
@@ -93,6 +110,22 @@ def sit_lane(chk, exam=None):
     scores = chk.score([(" ".join(i["rests_on"]), i["sentence"]) for i in items]) if items else []
     rows = [{"id": i["id"], "good": i["good"], "scores": [s]} for i, s in zip(items, scores)]
     return rows, (table(rows)[0] if rows else [])
+
+
+def sit_lines(chk, n_good=168, minutes=0, exam=None, seed=20261116):
+    """The exam of plain lines (scripts/auto/exam_lines.py): every line a blind checker changed for what it said and a fixed
+    draw of the good ones, each against the checked claim it was written from (a long text: the best part counts, as in the
+    lane). Returns (rows, the table)."""
+    import random
+    try: d = json.load(open(exam or EXAM / "lines.json", encoding="utf-8"))
+    except (OSError, ValueError): return [], []
+    bad = [i for i in d["items"] if not i["good"]]; good = [i for i in d["items"] if i["good"]]
+    draw = random.Random(seed).sample(good, min(n_good, len(good)))
+    mixed = [x for pair in zip(bad, draw) for x in pair] + bad[len(draw):] + draw[len(bad):]; rows = []; t0 = time.time()
+    for i in mixed:                                                   # a wrong line, a good one, in turn: a sitting cut short still says something about both
+        if minutes and time.time() - t0 > minutes * 60: break
+        rows.append({"id": i["id"], "good": i["good"], "scores": chk.score([(" ".join(x for _, x in d["claims"][i["claim"]]), i["line"])])})
+    return rows, (table(rows)[0] if any(r["good"] for r in rows) and any(not r["good"] for r in rows) else [])
 
 
 def at_threshold(tb, threshold):
@@ -184,6 +217,10 @@ def selftest():
     assert c.seen[0] == ("It can be so.", "It can be so.") and [r["scores"] for r in lrows] == [[0.9], [0.2], [0.9]]
     assert at_threshold(ltb, 0.4) == {"threshold": 0.4, "wrong": 2, "good": 1, "wrong_through": 1, "good_stopped": 0} and at_threshold(ltb, 0.95)["good_stopped"] == 1 and at_threshold(ltb, 0.33) is None
     assert sit_lane(c, f.parent / "none.json") == ([], [])
+    xf = f.parent / "lines.json"
+    json.dump({"claims": {"c1": [["THE CLAIM", "It can be so."], ["WHO", "20 men"]]}, "items": [{"id": "x~was", "claim": "c1", "good": False, "line": "It often is so."}, {"id": "x", "claim": "c1", "good": True, "line": "It can be so."}, {"id": "y", "claim": "c1", "good": True, "line": "It can be so for men."}]}, open(xf, "w"))
+    c2 = Chk(); xrows, xtb = sit_lines(c2, n_good=1, exam=xf)
+    assert len(xrows) == 2 and not xrows[0]["good"] and xrows[0]["scores"] == [0.2] and c2.seen[0][0] == "It can be so. 20 men" and at_threshold(xtb, 0.5)["wrong_through"] == 0 and at_threshold(xtb, 0.5)["good_stopped"] == 0
     print("workshop selftest: ok (a card's true part: a myth's statement is left out; the threshold a candidate carries lets the fewest wrong cards through while it stops no more than one good card in twelve; the same scores are counted sentence by sentence; "
           "the lane's own sentences are sat against the words they rest on, and counted at that threshold)")
 
@@ -201,11 +238,12 @@ if __name__ == "__main__":
             try: finish(export(model, name, quant=r.get("quant") is not False), name, minutes=float(r.get("minutes") or 30))
             except SystemExit: raise
             except Exception as e: print(f"workshop: {name} from {model}: not made ({type(e).__name__}: {str(e)[:300]})")
-    elif len(a) == 2 and a[0] == "pick" and re.fullmatch(r"pharmakon-[a-z]+-[0-9a-z.-]{1,20}", a[1]):
-        e = pick(a[1]); x = e["exam"]; s = next((r for r in e.get("exam_sentences") or [] if r["threshold"] == e["threshold"]), None); l = e.get("exam_lane")
+    elif len(a) >= 2 and a[0] in ("pick", "more") and re.fullmatch(r"pharmakon-[a-z]+-[0-9a-z.-]{1,20}", a[1]):
+        e = pick(a[1]) if a[0] == "pick" else more(a[1], a[2] if len(a) > 2 else "lines", minutes=float(a[a.index("--minutes") + 1]) if "--minutes" in a else 0); x = e["exam"]; s = next((r for r in e.get("exam_sentences") or [] if r["threshold"] == e["threshold"]), None); l = e.get("exam_lane")
         print(f"workshop: {a[1]}: at {e['threshold']} ({e['threshold_rule']}): lets {x['wrong_through']} of {x['wrong']} wrong cards through, stops {x['good_stopped']} of {x['good']} good ones"
               + (f"; sentence by sentence: catches {s['faulty_caught']} of {s['faulty']} faulty ones, stops {s['good_stopped']} of {s['good']} good ones" if s else "")
-              + (f"; of the lane's own sentences: lets {l['wrong_through']} of {l['wrong']} that are not good through, stops {l['good_stopped']} of {l['good']} good ones" if l else ""))
+              + (f"; of the lane's own sentences: lets {l['wrong_through']} of {l['wrong']} that are not good through, stops {l['good_stopped']} of {l['good']} good ones" if l else "")
+              + (f"; of the plain lines: lets {e['exam_lines']['wrong_through']} of {e['exam_lines']['wrong']} wrong ones through, stops {e['exam_lines']['good_stopped']} of {e['exam_lines']['good']} good ones" if e.get("exam_lines") else ""))
     elif len(a) == 3 and a[0] == "sit":
         e = json.load(open(pathlib.Path(a[2]) / (a[1] + ".json"), encoding="utf-8")); print(sit(a[1], pathlib.Path(a[2]), e)[2])
     else: sys.exit(__doc__)
