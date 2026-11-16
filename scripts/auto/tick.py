@@ -69,11 +69,11 @@ def counts():
     return t
 
 
-def lane_has_work(state, items, ledger_left, t):
+def lane_has_work(state, items, ledger_left, t, paused=None):
     """(yes or no, why)"""
     if t["lane"] >= LANE_A_DAY: return False, f"{t['lane']} writing runs today already"
     if ledger_left < ROOM: return False, f"today's free model allowance has {ledger_left:.0f} neurons left: not enough for one answer"
-    if load(ROOT / "data" / "auto" / "lane" / "policy.json", {}).get("pause"): return False, "the editor has paused the lane (data/auto/lane/policy.json, pause)"
+    if (load(ROOT / "data" / "auto" / "lane" / "policy.json", {}).get("pause") if paused is None else paused): return False, "the editor has paused the lane (data/auto/lane/policy.json, pause)"
     import lane as L
     todo = [w["id"] for w in items if L.turn_of(w, state.get("items") or {}) is not None]
     return (True, f"{len(todo)} listed questions are to be worked on") if todo else (False, "every listed question has been worked on")
@@ -133,13 +133,14 @@ def selftest():
     old = (datetime.date.today() - datetime.timedelta(days=8)).isoformat(); new = datetime.date.today().isoformat()
     import lane as L
     st = {"items": {"w_1": {"status": "published", "last": old, "lane": L.LANE}, "w_2": {"status": "none", "last": new, "lane": L.LANE}}}
-    assert lane_has_work(st, items, 5000, t) == (True, "1 listed questions are to be worked on")                    # w_3 was never tried
-    st["items"]["w_3"] = {"status": "waiting", "last": new, "lane": L.LANE}; assert lane_has_work(st, items, 5000, t)[0] is False      # tried, waiting or too recent
-    st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t)[0] is True                              # no answer a week ago: tried again
-    assert lane_has_work(st, items, 800, t)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=LANE_A_DAY))[0] is False  # no room in the allowance; the day's runs are used
-    st["items"]["w_2"] = {"status": "published", "last": new, "lane": L.LANE - 1}; assert lane_has_work(st, items, 5000, t)[0] is True         # written by an older lane: written again
+    assert lane_has_work(st, items, 5000, t, False) == (True, "1 listed questions are to be worked on")                    # w_3 was never tried
+    st["items"]["w_3"] = {"status": "waiting", "last": new, "lane": L.LANE}; assert lane_has_work(st, items, 5000, t, False)[0] is False      # tried, waiting or too recent
+    st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t, False)[0] is True                              # no answer a week ago: tried again
+    assert lane_has_work(st, items, 800, t, False)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=LANE_A_DAY), False)[0] is False  # no room in the allowance; the day's runs are used
+    st["items"]["w_2"] = {"status": "published", "last": new, "lane": L.LANE - 1}; assert lane_has_work(st, items, 5000, t, False)[0] is True         # written by an older lane: written again
     assert deploy_needed(t, "abc", {"inputs": "abc"})[0] is False and deploy_needed(t, "abd", {"inputs": "abc"})[0] is True and deploy_needed(dict(t, deploy=DEPLOY_A_DAY), "abd", {"inputs": "abc"})[0] is False
     a = inputs(); assert len(a) == 24 and a == inputs()
+    assert lane_has_work(st, items, 5000, t, "the editor's reason")[0] is False                                         # the editor's pause stops it
     print(f"tick selftest: ok (the lane starts for a question never tried, written by an older lane or without an answer for a week, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
 
 
