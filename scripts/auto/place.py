@@ -144,7 +144,9 @@ def selftest():
     assert pl("What should I do if someone overdoses on heroin?")["home"] == "emergency" and pl("Why do people take drugs?")["home"] == "facts" and pl("Are opioids all the same?")["home"] == "facts" and pl("What are entheogens?")["home"] == "facts"
     assert pl("Does it damage the bladder?", ["does ketamine hurt your bladder"])["home"] == "ketamine"       # (what the question itself does not name, its other wordings may)
     f = _filing(); sc = json.load(open(ROOT / "site" / "insight" / "scope.json", encoding="utf-8")); sub = {s["slug"] for s in json.load(open(ROOT / "data" / "site" / "substances.json", encoding="utf-8"))}
-    assert set(f) == set(sc["names"]) and all((v.get("page") in sub | set(GENERAL)) if "page" in v else (v.get("new") and v.get("cls")) for v in f.values())        # every name the site knows is filed, on a page that exists or on one to start
+    try: learned = {k for k, e in (json.load(open(ROOT / "data" / "auto" / "names" / "learned.json", encoding="utf-8")).get("names") or {}).items() if isinstance(e, dict) and e.get("drug") is True}
+    except (OSError, ValueError, AttributeError): learned = set()
+    assert set(f) - learned == set(sc["names"]) and all((v.get("page") in sub | set(GENERAL)) if "page" in v else (v.get("new") and v.get("cls")) for v in f.values())        # every name the site knows is filed, on a page that exists or on one to start
     print("place selftest: ok (a drug's page, a name without a page on the page it belongs to, a page to start with its class, mixing, statistics, checking, law, emergency, general; every known name is filed)")
 
 

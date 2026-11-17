@@ -14,6 +14,7 @@ on:
       - "data/auto/requests/official-*.json"
       - "data/auto/requests/views-*.json"   # (16 November 2026) how often people look a drug up on Wikipedia: scripts/auto/wiki_views.py, for the order of the pages to start
       - "data/auto/requests/names-*.json"   # (17 November 2026, decision 26) open sources of the names of drugs and medicines: scripts/auto/names_open.py
+      - "data/auto/requests/pictures-*.json"   # (17 November 2026, decision 27 step b) pictures with an open licence for the pages the system starts: scripts/auto/pictures.py
 
 permissions:
   contents: write
@@ -54,6 +55,11 @@ jobs:
             python3 -I scripts/auto/names_open.py --selftest >> "$L" 2>&1 || echo "!! the open names selftest failed ($?)" >> "$L"
             python3 -I scripts/auto/names_open.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the open names failed ($?)" >> "$L"
             git rm -q --ignore-unmatch data/auto/requests/names-*.json >> "$L" 2>&1
+          fi
+          if ls data/auto/requests/pictures-*.json >/dev/null 2>&1; then
+            python3 -I scripts/auto/pictures.py --selftest >> "$L" 2>&1 || echo "!! the pictures selftest failed ($?)" >> "$L"
+            python3 -I scripts/auto/pictures.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the pictures failed ($?)" >> "$L"
+            git rm -q --ignore-unmatch data/auto/requests/pictures-*.json >> "$L" 2>&1
           fi
           mkdir -p data/auto/official
           tail -n 80 "$L" | cut -c1-600 > data/auto/official/_last-run.txt
