@@ -53,7 +53,7 @@ function insScript(src) {
 function insightLoad() {
   if (INS.state !== "idle") return INS.loading || Promise.resolve(INS.state === "ready");
   if (typeof WebAssembly !== "object" || typeof BigInt64Array === "undefined" || typeof fetch !== "function" || typeof INS_MODEL !== "string") { INS.state = "off"; return Promise.resolve(false); }
-  INS.state = "loading"; INS.tries++;
+  INS.state = "loading"; INS.tries++; INS.t0 = Date.now();
   const base = INS_BASE(), get = (u, how) => fetch(u).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r[how](); });
   const runtime = insScript(base + "ort.wasm.min.js").then(() => {
     const ort = window.ort; ort.env.wasm.numThreads = 1; ort.env.wasm.proxy = false; ort.env.wasm.wasmPaths = base; ort.env.logLevel = "error"; return ort; });
@@ -62,10 +62,26 @@ function insightLoad() {
     .then(([data, vocab, ort]) => (data.model === INS_MODEL ? told : get(base + data.model, "arrayBuffer"))
       .then(b => ort.InferenceSession.create(new Uint8Array(b), { executionProviders: ["wasm"], graphOptimizationLevel: "all" }))
       .then(s => { insPrepare(data, vocab); INS.session = s; return insEmbed("warm up"); }))
-    .then(() => { INS.state = "ready"; insightReady(); return true; })
-    // offline or an old browser: the word search goes on alone; one more try on the next visit to the box
-    .catch(() => { INS.state = INS.tries < 2 ? "idle" : "off"; INS.loading = null; return false; });
+    .then(() => { INS.state = "ready"; try { localStorage.setItem(INS_HAD, "1"); } catch (e) { /* no storage: fetched on first use, as before */ } insightReady(); return true; })
+    // offline or an old browser: the word search goes on alone; one more try, and then the page says so (it never fails without a word)
+    .catch(() => { INS.state = INS.tries < 2 ? "idle" : "off"; INS.loading = null; insightFailed(); return false; });
   return INS.loading;
+}
+/* (2.16.1; the senior author, 17 November 2026, with a picture of unrelated rows under his question: "did you make insight more stupid?";
+   then, when the real result came: "for a few seconds it didn't and i thought it was stupid".) Those rows were the plain word search, shown
+   while Insight was getting ready (on every opening of the page it has to be started again, which takes a few seconds). Two changes.
+   One: a device that has fetched Insight before starts it when the page opens, so it is ready before the first question (nothing is
+   downloaded for it: the files are in the browser's cache; a first visit still fetches them on first use, and a connection that saves
+   data only when asked). Two: while it is getting ready, a whole question gets one calm line and no rows found by a word in common
+   (insightAfterSearch); when it cannot start, the page says so and offers to try again. */
+const INS_HAD = "pk-ins-had", INS_SLOW = 8000;
+function insWarm() {
+  let had = false; try { had = localStorage.getItem(INS_HAD) === "1"; } catch (e) { had = false; }
+  if (had && INS.state === "idle" && !insSaver()) insightLoad();
+}
+function insightFailed() {
+  const s = document.getElementById("search"), box = document.getElementById("search-results");
+  if (s && box && !box.hidden && s.value.trim()) runSearch(s.value);
 }
 // the index: int8 vectors, each row scaled back to unit length; the words of each answer for the overlap; the drug names
 function insRows(b64, dim) {
@@ -489,8 +505,8 @@ const INS_COUNT = [
 const INS_COUNT_NOT = /\bhow (?:many|much)\s+(?:mg|mcg|ug|milligrams?|micrograms?|grams?|g|ml|pills?|tablets?|tabs?|capsules?|lines?|drinks?|hits?|puffs?|doses?|drops?|times|hours?|days?|weeks?)\b|\bhow (?:much|long)\b(?![^?]*\b(?:people|deaths?)\b)/i;   // an amount or a time, not a count of people
 // a few words that ask for a count without saying "how many" ("heroin deaths", "cocaine statistics", "deaths from alcohol"): only where a
 // drug is named, or drugs or overdoses in general, and the words are not a question of another kind ("what is ego death")
-const INS_COUNT_SHORT = [["death", /^\s*(?:[\w'-]+\s+){1,3}(?:deaths?|death toll|death rate|mortality|fatalities|overdose deaths?)\s*\??$|^\s*(?:deaths?|overdose deaths?|mortality|fatalities)\s+(?:from|by|of|due to|caused by)\s+\S/i],
-  ["use", /^\s*(?:[\w'-]+\s+){1,3}(?:statistics|stats|prevalence|usage|use statistics)\s*\??$/i]];
+const INS_COUNT_SHORT = [["death", /^\s*(?:[\w'-]+\s+){1,3}(?:deaths?|death toll|death rate|mortality|fatalities|overdose deaths?)(?:\s+(?:in|for|across|around)\s+(?:the\s+)?[a-z][a-z'. -]{1,38})?\s*\??$|^\s*(?:deaths?|overdose deaths?|mortality|fatalities)\s+(?:from|by|of|due to|caused by)\s+\S/i],
+  ["use", /^\s*(?:[\w'-]+\s+){1,3}(?:statistics|stats|prevalence|usage|use statistics)(?:\s+(?:in|for|across|around)\s+(?:the\s+)?[a-z][a-z'. -]{1,38})?\s*\??$/i]];
 function insCountKind(q) {
   const t = String(q); for (const [kind, re] of INS_COUNT) if (re.test(t)) return kind;
   if (!INS.nameRe || /^\s*(?:what|why|who|when|where|which|is|are|was|were|does|do|did|can|could|should|will|would|how|my|i)\b/i.test(t)) return "";
@@ -498,8 +514,24 @@ function insCountKind(q) {
   for (const [kind, re] of INS_COUNT_SHORT) if (re.test(t)) return kind;
   return "";
 }
-function insFigures(kind, groups, wantEver) {
+/* (2.16.1; the senior author, 17 November 2026, 23:38, asked "how many heroin deaths in america" and was shown, as the answer, the figure for
+   the European Union: "the ai should understand what i mean!") A counting question that names a place is about that place. insFigPlace reads
+   the place (the world, Europe, a country by any of its names, "here" for the reader's own country); insFigures then marks the figures that
+   are from it (here). With none from it, the question is NOT answered: the page says that it has no figure for that place yet, and what it
+   has from elsewhere stands below as that, never as the answer (insRank: figMiss). */
+function insFigPlace(q) {
+  const t = " " + norm(insMask(q)).replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim() + " ";
+  if (/ (?:worldwide|world wide|globally|global|in the world|around the world|all over the world|across the world|on earth|internationally) /.test(t)) return { file: "global", name: "the world" };
+  if (/ (?:europe|european|europeans|the eu|eu|european union) /.test(t)) return { file: "europe", name: "Europe" };
+  const un = / (?:americans?|in (?:the )?us|us (?:citizens|adults|population)) /.test(t) ? "United States of America" : / greeks? /.test(t) ? "Greece" : insCountry(q);
+  if (!un) return null;
+  if (un === "United States of America") return { file: "us", name: "the United States" };
+  if (un === "Greece") return { file: "greece", name: "Greece" };
+  return { country: shortCtry(un), name: inCtry(un) };
+}
+function insFigures(kind, groups, wantEver, place) {
   if (typeof EPI_ALL === "undefined" || !EPI_ALL.length) return [];
+  const inPlace = r => !place ? false : place.country ? new RegExp("(?:^|[^A-Za-z])" + place.country.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?:$|[^A-Za-z])").test(String(r.geography)) : r.file === place.file;
   const one = groups.length === 1 && groups[0].length === 1 ? groups[0][0] : null, any = !groups.length;
   const rows = [];
   EPI_ALL.forEach(r => { if (r.status !== "verified" || figKind(r) !== kind) return;
@@ -509,19 +541,19 @@ function insFigures(kind, groups, wantEver) {
     // the figure's own drug, read as a whole name (its note in brackets left out): 2 that very drug; 1 the family it belongs to ("opioids"
     // for heroin), shown under the family's own name. A figure about another drug of the family, or about a group nobody names so, is not taken.
     else if (one) { const g = INS.nameOf.get(String(r.substance).toLowerCase().replace(/\s*\([^)]*\)/g, "").trim()); fit = !g ? 0 : g.length === 1 && g[0] === one ? 2 : g.length > 1 && g.includes(one) ? 1 : 0; }
-    if (fit) rows.push({ r, fit }); });
+    if (fit) rows.push({ r, fit, here: inPlace(r) }); });
   const yr = r => parseInt(String(r.data_year).match(/\d{4}/) || "0", 10), count = r => (/^(?:persons|deaths|million|thousand)/.test(String(r.unit)) ? 0 : 1);
   const ever = wantEver ? r => (r.measure === "lifetime-prevalence" ? 0 : 1) : r => (r.measure === "past-year-prevalence" ? 0 : 1);
   const sample = r => (/web survey|non-representative|not a random sample/i.test(String(r.population) + " " + String(r.geography)) ? 1 : 0);   // a survey of whoever answered comes after a count of everyone
   const wide = r => (/^(?:European Union|EU\b|Europe\b|global|United States|Greece)|\b(?:Member States|countries)\b/.test(String(r.geography)) ? 0 : 1);   // a region's figure before one small country's
-  rows.sort((a, b) => b.fit - a.fit || figRank(a.r.file) - figRank(b.r.file) || (kind === "use" ? ever(a.r) - ever(b.r) : 0) || sample(a.r) - sample(b.r) || wide(a.r) - wide(b.r) || count(a.r) - count(b.r) || yr(b.r) - yr(a.r));
+  rows.sort((a, b) => (b.here ? 1 : 0) - (a.here ? 1 : 0) || b.fit - a.fit || figRank(a.r.file) - figRank(b.r.file) || (kind === "use" ? ever(a.r) - ever(b.r) : 0) || sample(a.r) - sample(b.r) || wide(a.r) - wide(b.r) || count(a.r) - count(b.r) || yr(b.r) - yr(a.r));
   // the lowest and the highest of a range of national estimates are one figure, said in one line
   rows.forEach(x => { const m = String(x.r.label || x.r.def || "").match(/^(lowest|highest) (.+)$/i); if (!m) return;
     const other = rows.find(y => y !== x && y.r.file === x.r.file && new RegExp("^(?:lowest|highest) " + m[2].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i").test(String(y.r.label || y.r.def || "")));
     if (other && !other.pair && !x.pair) { const lo = /^lowest/i.test(m[1]) ? x : other, hi = lo === x ? other : x; lo.pair = hi.r; hi.skip = true; } });
   const kept = rows.filter(x => !x.skip);
-  // one figure from a place: the best of each, the reader's own place first
-  const seen = new Set(); return kept.filter(x => !seen.has(x.r.file) && seen.add(x.r.file));
+  // one figure from a place: the best of each, the reader's own place first (a named country's own figure is a place of its own)
+  const seen = new Set(), at = x => x.r.file + (x.here && place && place.country ? "|" + place.country : ""); return kept.filter(x => !seen.has(at(x)) && seen.add(at(x)));
 }
 // a figure in one line: the number in everyday words, what it counts, and where and when; its source
 function insFigLine(r, hi) {
@@ -869,10 +901,13 @@ async function insRank(query, ctx) {
   const ck = insCountKind(res.core);
   if (ck && !res.emergency && res.groups.length <= 1 && !res.routes.some(r => r.kind === "dose") && !INS_COUNT_NOT.test(res.core)) {
     if (!FIGURES_DONE) { try { await Promise.race([loadFigures(), new Promise(ok => setTimeout(ok, 2500))]); } catch (e) { /* the statistics page is still pointed to */ } }
-    const figs = insFigures(ck, res.groups, /\b(?:tried|ever|lifetime|in their li(?:fe|ves))\b/i.test(res.core)), one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
+    const place = insFigPlace(res.core), all = insFigures(ck, res.groups, /\b(?:tried|ever|lifetime|in their li(?:fe|ves))\b/i.test(res.core), place), one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
+    // (2.16.1) a place was named: its own figures are the answer; with none, the figures from elsewhere are only a place to look, and the question stays open
+    const from = place ? all.filter(x => x.here) : all, miss = !!place && !from.length, figs = miss ? all : from;
+    if (miss) res.figMiss = place.name;
     figs.slice(0, 2).forEach(({ r, fit, pair }) => { const l = insFigLine(r, pair);
-      res.routes.push({ kind: "figure", icon: "pulse", k: "Statistics · " + (one ? (fit === 2 ? drugName(one) : insCap(String(r.substance))) : "All drugs") + " · " + INS_FIG_KIND[ck], t: l.t, m: l.m,
-        href: "#numbers/part-n-" + r.file + "/f-" + ck + "-" + numSlug(one ? r.substance : ""), fig: r.file + "|" + (one ? r.substance : "") + "|" + ck }); });
+      res.routes.push(Object.assign({ kind: "figure", icon: "pulse", k: "Statistics · " + (one ? (fit === 2 ? drugName(one) : insCap(String(r.substance))) : "All drugs") + " · " + INS_FIG_KIND[ck], t: l.t, m: l.m,
+        href: "#numbers/part-n-" + r.file + "/f-" + ck + "-" + numSlug(one ? r.substance : ""), fig: r.file + "|" + (one ? r.substance : "") + "|" + ck }, miss ? { loose: true, way: true } : {})); });
   }
   const st = insStarted(res.core);                             // (2.12) a page our system started that the question names
   if (st && !st.loose) res.routes.push(st);                    // asked what it looks like: its pictures are the answer
@@ -930,7 +965,7 @@ async function insRank(query, ctx) {
     // a place to look under the line for a question we have not checked. A question that is not about drugs by its words is a question
     // about the site ("is my search private", "who checks this"): its place is the answer, in place of "not a question about drugs".
     if (res.where && !res.routes.some(r => r.href === res.where.href) && !(res.note === "other" && (INS_RE.greet.test(res.core) || INS_RE.about.test(res.core)))) {
-      const sure = res.note === "other" || res.where.s >= INS.places.cut;
+      const sure = !res.figMiss && (res.note === "other" || res.where.s >= INS.places.cut);   // (2.16.1: a count asked for a place we have no figure for is not answered by the statistics page)
       res.routes.push(sure ? res.where : Object.assign(res.where, { loose: true, way: true })); if (sure) res.note = ""; }
     if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); }
     else if (res.note === "none" && res.routes.some(r => r.named)) res.note = "";   // (2.11) a part of a drug's page asked for by name: the part is what we have
@@ -972,7 +1007,9 @@ function insPlaceholder() {
 
 /* ---------- In the search results ---------- */
 const insQ = (id, page) => isAuto(id) ? AUTO[id].q : (page && sharedQuestion(page, id)) || anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || claimText(claimById[id]);
-const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") + (ASK_ON ? ". What you type stays on it, unless you ask us to check a question." : ". Nothing you type leaves it.");
+const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") +
+  (FIND_ON && autoOn() ? ". With no answer of ours, only the drug’s name and a few key words go out, to look up research." + (ASK_ON ? " Your question is sent only if you send it." : "")
+    : ASK_ON ? ". What you type stays on it, unless you ask us to check a question." : ". Nothing you type leaves it.");
 const INS_ICON = { help: "heart", mix: "mix", dose: "book", test: "flask", page: "molecule", law: "scale", numbers: "phone" };
 // the emergency number where the reader is, or the way to the numbers: shown with an emergency route, and nowhere else
 function insSosHtml(cls) {
@@ -1022,9 +1059,12 @@ function insNoneHtml(res, sheet) {
       : '<p class="sr-fit-none sr-other sr-stranger"><b>We do not know ' + w + " as a drug.</b> If it is one, " + insAskBtn(res.q, "linklike", "send us your question", " and we will look into it.") + "</p>"; }
   if (res.note === "other") return sheet ? '<div class="ins-none ins-other"><p class="ins-none-t">This does not look like a question about drugs.</p><p class="ins-none-s">Pharmakon answers questions about drugs. If yours is about one, name the drug, or send it to us.</p>' + insAskBtn(res.q, "linklike", "Send it to us") + "</div>"
     : '<p class="sr-fit-none sr-other"><b>This does not look like a question about drugs.</b> Pharmakon answers questions about drugs. If yours is about one, name the drug, or ' + insAskBtn(res.q, "linklike", "send it to us", ".") + "</p>";
-  return sheet ? '<div class="ins-none"><p class="ins-none-t">We haven’t checked exactly this yet.</p>' + (res.note === "none" ? insAskBtn(res.q, "qz2-nb ins-askus") : "") + "</div>"
-    : '<p class="sr-fit-none"><b>We haven’t checked exactly this yet.</b>' + (res.note === "none" ? " " + insAskBtn(res.q, "linklike") : "") + "</p>";
+  const line = insNoneLine(res);
+  return sheet ? '<div class="ins-none"><p class="ins-none-t">' + esc(line) + "</p>" + (res.note === "none" ? insAskBtn(res.q, "qz2-nb ins-askus") : "") + "</div>"
+    : '<p class="sr-fit-none"><b>' + esc(line) + "</b>" + (res.note === "none" ? " " + insAskBtn(res.q, "linklike") : "") + "</p>";
 }
+// the line for a drug question we have no answer to: with a count asked for a place we hold no figure for, it says exactly that
+function insNoneLine(res) { return res.figMiss ? "We have no checked figure on this for " + res.figMiss + " yet." : "We haven’t checked exactly this yet."; }
 // 2.9: what a question that is not finished is told: [the line, what to do]. With no drug named: which drug is meant;
 // with one (or on its page): go on about it
 const insHelloText = kind => kind === "hello" ? ["Hello.", "Ask a question about a drug and Insight will look: for example, “is ketamine addictive?”"]
@@ -1047,7 +1087,9 @@ function insFitHtml(res) {
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
   const none = insNoneHtml(res, false);
   const related = res.related.length ? '<p class="sr-fit-h">' + (res.note === "unfinished" ? "You may mean" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
-  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + related + (ways ? '<p class="sr-fit-h">A place to look</p>' + ways : "") + '<button type="button" class="sr-fit-h sr-words" hidden aria-expanded="false">More results</button></div>';
+  // (2.16.1) a count asked for a place we hold no figure for: the figures from other places stand right under the line that says so
+  const far = ways ? '<p class="sr-fit-h">' + (res.figMiss ? "Figures from other places" : "A place to look") + "</p>" + ways : "";
+  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + (res.figMiss ? far + related : related + far) + '<button type="button" class="sr-fit-h sr-words" hidden aria-expanded="false">More results</button></div>';
 }
 // what a screen reader hears when the answers arrive: the route, the tier, the question matched
 function insSay(res) {
@@ -1059,7 +1101,7 @@ function insSay(res) {
   else if (res.note === "hello" || res.note === "about") parts.push(insHelloText(res.note).join(" "));
   else if ((res.note === "none" || res.note === "other") && askedSentHas(res.q)) parts.push("You sent us this question. No answer yet");
   else if (res.note === "other") parts.push(res.stranger ? "We do not know \u201c" + res.stranger + "\u201d as a drug. If it is one, you can send us your question" : "This does not look like a question about drugs. Pharmakon answers questions about drugs");
-  else if (res.note) parts.push("We haven’t checked exactly this yet");
+  else if (res.note) parts.push(insNoneLine(res).replace(/\.$/, ""));
   if (res.related.length) parts.push(res.related.length + " related answer" + (res.related.length === 1 ? "" : "s"));
   return parts.join(". ");
 }
@@ -1093,6 +1135,7 @@ function insInject(box, res) {
     if (!words.hidden) { more.forEach(a => { a.hidden = true; }); words.textContent = "More results (" + more.length + ")"; words.setAttribute("aria-expanded", "false");
       words.onclick = e => { e.preventDefault(); e.stopPropagation(); const open = words.getAttribute("aria-expanded") !== "true"; more.forEach(a => { a.hidden = !open; }); words.setAttribute("aria-expanded", String(open)); words.textContent = (open ? "Fewer results" : "More results (" + more.length + ")"); }; } }
   const live = document.getElementById("search-count"); if (live) live.textContent = insSay(res);
+  insAuto(box.querySelector(".sr-fit"), res, false);   // (2.16.1) with no answer of ours: what is published on it, looked up by itself
   // 2.5: a listed question that stays on the screen is counted once (wantCount), only where its card says so
   clearTimeout(INS.wantT);
   if (res.note === "want") INS.wantT = setTimeout(() => { const b = document.getElementById("search-results"), s = document.getElementById("search");
@@ -1123,9 +1166,27 @@ function insShort(box, q) {
 // called by runSearch after the word search has drawn its results
 function insightAfterSearch(raw) {
   const box = document.getElementById("search-results"); if (!box || box.hidden) return;
-  if (INS.state !== "ready") {   // saving data: one quiet line under the results offers it; once tapped, it says it is coming
-    if (INS.state === "idle" && insSaver()) box.insertAdjacentHTML("beforeend", '<p class="sr-get"><button type="button" class="linklike" data-ins-get>' + esc(insGetText()) + "</button></p>");
-    else if (INS.state === "loading" && (INS.byHand || INS.want)) box.insertAdjacentHTML("beforeend", '<p class="sr-get" role="status">' + (INS.byHand ? "Downloading, once: about " + insMB() + " MB…" : "One moment: getting ready to read your question…") + "</p>");
+  if (INS.state !== "ready") {
+    const q0 = insClean(raw), whole = !!q0 && (insWordsIn(q0) >= INS_WORDS || !!insCountKind(q0));
+    // saving data: one quiet line under the results offers it; once tapped, it says it is coming
+    if (INS.state === "idle" && insSaver()) { box.insertAdjacentHTML("beforeend", '<p class="sr-get"><button type="button" class="linklike" data-ins-get>' + esc(insGetText()) + "</button></p>"); return; }
+    if (INS.state === "idle" && q0) insightLoad();   // (the box's own listener starts it too; here it has begun before the rows are judged)
+    // (2.16.1) it could not start (offline, or a browser that cannot run it): said, with a way to try again; the rows are the word search's own
+    if (INS.state === "off") { if (whole) box.insertAdjacentHTML("afterbegin", '<p class="sr-get sr-wait sr-off" role="status">Insight could not start on this device, so these are matches by words alone. ' + (typeof WebAssembly === "object" ? '<button type="button" class="linklike" data-ins-again>Try again</button>' : "") + "</p>"); return; }
+    if (INS.state !== "loading") return;
+    if (whole) {
+      // (2.16.1) a whole question, and Insight is still getting ready: one calm line. The rows the word search found by a word in common are not an
+      // answer to it and are not shown as one: they wait (a drug's own page stays). On a slow first download they come back after a few seconds,
+      // under a line that says what they are.
+      const waited = Date.now() - (INS.t0 || Date.now()), slow = waited >= INS_SLOW, rows = [...box.querySelectorAll(":scope > a")].filter(a => !/^#(?:s-[a-z0-9-]+|emergency)$/.test(a.getAttribute("href") || ""));
+      box.querySelectorAll(":scope > .sr-ask, :scope > .none").forEach(e => e.remove());
+      if (!slow) rows.forEach(a => { a.hidden = true; });
+      box.insertAdjacentHTML("afterbegin", '<p class="sr-get sr-wait" role="status">' + (INS.byHand ? "Downloading, once: about " + insMB() + " MB…" : slow ? "Still getting ready: the first time, Insight downloads about " + insMB() + " MB." + (rows.length ? " Until then, matches by words alone:" : "") : "One moment: Insight is getting ready to read your question…") + "</p>");
+      clearTimeout(INS.slowT);
+      if (!slow) INS.slowT = setTimeout(() => { const s = document.getElementById("search"); if (INS.state === "loading" && s && !box.hidden && insClean(s.value) === q0) runSearch(s.value); }, INS_SLOW - waited + 60);
+      return;
+    }
+    if (INS.byHand) box.insertAdjacentHTML("beforeend", '<p class="sr-get" role="status">Downloading, once: about ' + insMB() + " MB…</p>");
     return;
   }
   if (!box.querySelector(":scope > .sr-note")) box.insertAdjacentHTML("afterbegin", '<p class="sr-note">' + icon("mobile") + "<span>" + esc(insNoteText()) + "</span></p>");
@@ -1157,6 +1218,11 @@ function insightReady() {
     if (!e.target.closest || !e.target.closest("[data-ins-get]")) return;
     INS.byHand = true; insightLoad(); setTimeout(() => { s.focus(); runSearch(s.value); }, 0);   // after this click has run its course
   });
+  document.getElementById("search-results").addEventListener("click", e => {   // (2.16.1) "Try again", where Insight could not start
+    if (!e.target.closest || !e.target.closest("[data-ins-again]")) return;
+    e.preventDefault(); INS.tries = 0; INS.state = "idle"; insightLoad(); setTimeout(() => { s.focus(); runSearch(s.value); }, 0);
+  });
+  if (window.requestIdleCallback) requestIdleCallback(insWarm, { timeout: 2500 }); else setTimeout(insWarm, 1200);
   window.addEventListener("hashchange", () => { insPlaceholder(); insArrive(); });
   insPlaceholder();
 })();
@@ -1244,7 +1310,8 @@ function insHtml(v) {
     return insBar(icon(w.f.icon) + "<span>" + esc(w.name) + "</span>") + '<div class="ins' + (v.depth ? " ins-" + v.depth : "") + '"><h2 id="ev-title" tabindex="-1">' + esc(insQ(v.id, v.page)) + "</h2>" + (v.sos ? insSosHtml("dh-help ins-sos") : "") +
       '<div class="ins-ans">' + insBodyHtml(v.id, v.depth) + "</div>" + insPageLink(v.id, v.page) + insTailHtml([v.id], [v.id]) + "</div>";
   }
-  const res = v.res, routes = res.routes.map(r => insRouteHtml(r, "ins-route")).join("") + (res.emergency ? insSosHtml("dh-help ins-sos") : "");
+  const res = v.res, away = r => !!(res.figMiss && r.way), routes = res.routes.filter(r => !away(r)).map(r => insRouteHtml(r, "ins-route")).join("") + (res.emergency ? insSosHtml("dh-help ins-sos") : "");
+  const ways = res.routes.filter(away).map(r => insRouteHtml(r, "ins-route")).join("");
   const best = res.best.map((x, n) => { const w = mfWhere(x.page);
     return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written by our system" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
@@ -1253,7 +1320,7 @@ function insHtml(v) {
     return '<li><a href="' + esc(answerAddr(x.id, x.page)) + '" data-insight-next="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span><span class="ins-rel-k">' + esc(w.name) + "</span>" + esc(insQ(x.id, x.page)) + "</span>" + icon("arrow") + "</a></li>"; }).join("") + "</ul></div>" : "";
   const from = (res.best.length ? res.best : res.related).map(x => x.id), shown = res.best.concat(res.related).map(x => x.id);
   return insBar("<span>Your question</span>") + '<div class="ins ins-asked' + (res.depth ? " ins-" + res.depth : "") + '"><h2 id="ev-title" class="ins-yours" tabindex="-1">' + esc(insCap(res.q.length > 240 ? res.q.slice(0, 237) + "…" : res.q)) + "</h2>" +
-    insReadHtml(res, "ins-read") + routes + best + none + related + insTailHtml(from, shown, res.groups) + "</div>";
+    insReadHtml(res, "ins-read") + routes + best + none + (ways ? '<p class="rn-k ins-ways-h">Figures from other places</p>' + ways : "") + related + insTailHtml(from, shown, res.groups) + "</div>";
 }
 function insDraw(v, opener) {
   const sh = document.getElementById("evsheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
@@ -1262,6 +1329,7 @@ function insDraw(v, opener) {
   EV.id = "ins:" + (v.kind === "one" ? v.id : "asked"); EV.open = true; sh.classList.add("open"); document.documentElement.classList.add("sheet-open"); hidePop(); closeSearch();
   INS.view = v; INS.back = null;
   panel.innerHTML = insHtml(v); panel.scrollTop = 0;
+  if (v.kind === "asked") insAuto(panel, v.res, true);   // (2.16.1) with no answer of ours: what is published on it, looked up by itself
   (v.kind === "one" ? [v.id] : v.res.best.map(x => x.id)).forEach(id => { markSeen(id); insOpenedNow().add(id); });
   const f = panel.querySelector("#ev-title"); if (f) f.focus({ preventScroll: true });
   const wc = panel.querySelector(".ins-want[data-count]"); if (wc) wantCount(wc.dataset.want);   // 2.5: Enter on a listed question counts it at once
@@ -1447,12 +1515,14 @@ function askedWatch() {
   // and when the reader comes back to the tab after a while
   document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() - (askedWatch.at || 0) > ASK_LOOK && askedList().some(it => it.st === "wait")) { askedWatch.at = Date.now(); askedLook(); } });
 }
-let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
+// (2.16.1) FIND_ON: the site's server can look up published research (POST api/find). Learned by the same one question to the server
+let FIND_ON = (() => { try { return sessionStorage.getItem("pk-find-on") === "1"; } catch (e) { return false; } })();
+let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); if (sessionStorage.getItem("pk-find-on") == null) return null; return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
 function askProbe() {
   if (ASK_ON !== null) return Promise.resolve(ASK_ON);
   if (askProbe.p) return askProbe.p;
-  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => !!(j && j.ok === true), () => false)
-    .then(on => { ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); } catch (e) { /* this page only */ } return on; }));
+  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); return !!(j && j.ok === true); }, () => false)
+    .then(on => { ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); } catch (e) { /* this page only */ } return on; }));
 }
 function askedList() { try { const x = JSON.parse(localStorage.getItem(ASK_KEY) || "[]"); return Array.isArray(x) ? x.filter(it => it && typeof it.q === "string" && it.k) : []; } catch (e) { return []; } }
 function askedSave(list) { try { localStorage.setItem(ASK_KEY, JSON.stringify(list.slice(-20))); } catch (e) { /* this visit only */ } }
@@ -1559,7 +1629,7 @@ document.addEventListener("click", async e => {
   if (on) {
     let ok = false;
     try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
-    if (ok) { askedSet(it.k, { sent: 1 }); say(ASK_SENT); askedBox(); insFindShow(document.querySelector("#search-results p.ask-said, #evsheet p.ask-said"), q); return; }
+    if (ok) { askedSet(it.k, { sent: 1 }); say(ASK_SENT); askedBox(); return; }   // (the published research stands under it already: insAuto)
   }
   // the page cannot send it (the store is not switched on, or the connection failed): kept on this device, and the email form opens with it
   say("Not sent yet. It is kept on this device only, under “Your questions”. To send it to us, press Send by email in the form.");
@@ -1571,10 +1641,10 @@ if (typeof document !== "undefined") askedBox();
 /* Published research, at once (site 2.16; the senior author, 17 November 2026: "a big problem is that answers take too long to get responses and
    people are used to get responses instantly"; "it feels stupid and slow our ai should be able to find answers almost instantly").
    An answer of ours takes a day or two: papers have to be found, read and checked. But what research has been published on a question can be
-   looked up in seconds. When a reader sends a question, the page asks this site's own server for the papers on its drug and its key words in
-   Europe PMC, the open index of medical research, and shows them under the "Sent" line: title, kind of paper, year, journal, whether it is free
-   to read, and its link. Said plainly with them: we have not read these yet, and a title is not a finding. What leaves the device for this:
-   the drug's names and up to five plain key words, never the sentence (the sentence itself was sent by the reader's own tap, to our list).
+   looked up in seconds. The page asks this site's own server for the papers on its drug and its key words in Europe PMC, the open index of
+   medical research, and shows them: title, kind of paper, year, journal, whether it is free to read, and its link (2.16.0: when a reader sent
+   the question; since 2.16.1 by itself, whenever we have no answer of ours: insAuto, below). Said plainly with them: we have not read these
+   yet, and a title is not a finding. What leaves the device for this: the drug's names and up to five plain key words, never the sentence.
    Not looked up: a question about dying, overdose, amounts, pregnancy, children or an emergency, and a question that names no drug. */
 const FIND_API = "api/find";
 const FIND_STOP = new Set("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked".split(" "));
@@ -1599,17 +1669,42 @@ function insFoundHtml(d) {
   if (!d.papers || !d.papers.length) return '<p class="ins-found-n">We looked in Europe PMC, an open index of medical research, just now: nothing was found on these words.</p>';
   return '<p class="ins-found-h">Published research on this, found just now</p><ul class="ins-found-l">' + d.papers.map(p => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
     return '<li><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" \u00B7 ")) + "</span></li>"; }).join("") +
-    '</ul><p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding. Our own answer follows.</p>';
+    '</ul><p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.</p>';
 }
-async function insFindShow(after, q) {
-  if (!after || !after.parentNode) return;
-  let res = INS.cache && INS.cache.get(insKey(q, insCtx()));
-  if (!res && INS.state === "ready") { try { res = await insRank(q, insCtx()); } catch (e) { res = null; } }   // (asked from a place that did not keep its reading: it is read again)
-  const terms = insFindTerms(res && res.note !== "unfinished" ? res : null); if (!terms) return;
-  const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite"); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; after.insertAdjacentElement("afterend", box);
-  let d = null;
-  try { const r = await fetch(FIND_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(terms) }); d = r.ok ? await r.json() : null; } catch (e) { d = null; }
-  const html = insFoundHtml(d); if (html) box.innerHTML = html; else box.remove();
+/* (2.16.1, 17 November 2026, 23:19 and 23:20 Athens. The senior author, of the list that came only after he had pressed "Send": "it should
+   automatically search the user should not even have to click it"; and, typing a question he had already sent: "now when i type it again the
+   sites do not show".) By itself, every time. Whenever Insight has no answer of ours to a whole question about a drug (not answered, on our
+   list, or a word we do not know as a drug), in the results and in the sheet, sent or not, the page looks the published research up and puts
+   it under the line that says so. In the results it waits a moment (FIND_WAIT) so that nothing is asked while the reader is still typing; in
+   the sheet (Enter) at once. What it found is kept for this visit (FIND_MEM): the same question is not asked twice.
+   The reader can switch this off (About us, Privacy: AUTO_OFF); then one quiet button looks it up on a tap. */
+const AUTO_OFF = "pk-auto", FIND_WAIT = 700, FIND_MEM = new Map();
+function autoOn() { try { return localStorage.getItem(AUTO_OFF) !== "0"; } catch (e) { return true; } }
+function insFindGet(terms) {
+  const key = JSON.stringify(terms); let m = FIND_MEM.get(key); if (m) return m.p;
+  m = { d: undefined };
+  m.p = fetch(FIND_API, { method: "POST", headers: { "content-type": "application/json" }, body: key }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => { m.d = d; if (!d) FIND_MEM.delete(key); return d; });
+  FIND_MEM.set(key, m); if (FIND_MEM.size > 40) FIND_MEM.delete(FIND_MEM.keys().next().value);
+  return m.p;
+}
+// what is looked up for a result: nothing when we have an answer of ours, or when the question is not one a drug's research can answer
+function insFindWanted(res) {
+  if (!res || (res.best && res.best.length) || !(res.note === "none" || res.note === "want" || (res.note === "other" && res.stranger))) return null;
+  return insFindTerms(res);
+}
+function insAuto(root, res, now) {
+  clearTimeout(INS.findT);
+  const terms = insFindWanted(res), after = terms && root ? root.querySelector(".sr-fit-none, .ins-none") : null; if (!after) return;
+  const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite");
+  box.addEventListener("click", e => e.stopPropagation());   // a paper opens in its own tab: the question and its results stay as they are
+  const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };
+  const draw = d => { const html = insFoundHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
+  const have = FIND_MEM.get(JSON.stringify(terms));
+  if (have && have.d) { draw(have.d); return; }
+  const go = () => { if (!after.isConnected) return; put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; insFindGet(terms).then(d => { if (after.isConnected) draw(d); }); };
+  askProbe().then(() => { if (!FIND_ON || !after.isConnected) return;
+    if (!autoOn()) { put(); box.innerHTML = '<p class="ins-found-n"><button type="button" class="linklike" data-find-now>Look up published research on this</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return; }
+    if (now) go(); else INS.findT = setTimeout(go, FIND_WAIT); });
 }
 /* (2.15.3; the senior author, 17 November 2026: "I may want to read the history of questions I made somewhere although it has to be discreet".)
    The questions a reader asked, the last thirty, kept on this device only and shown folded under "Your questions" on the start page. A tap asks
@@ -1839,6 +1934,11 @@ function wantedPage() {
 }
 if (typeof document !== "undefined") {
   wantedPage(); window.addEventListener("hashchange", () => { if (location.hash === "#wanted") wantedPage(); });
+  // (2.16.1) the switch beside it: looking research up by itself, on or off on this device
+  { const sw2 = document.getElementById("auto-switch"), st2 = document.getElementById("auto-state");
+    if (sw2) { const draw2 = () => { sw2.checked = autoOn(); if (st2) st2.textContent = sw2.checked ? "On." : "Off on this device."; };
+      sw2.addEventListener("change", () => { try { if (sw2.checked) localStorage.removeItem(AUTO_OFF); else localStorage.setItem(AUTO_OFF, "0"); } catch (e) { /* this page only */ } draw2(); });
+      draw2(); } }
   // the switch in About us > Privacy: counting on or off on this device
   const sw = document.getElementById("count-switch"), st = document.getElementById("count-state");
   if (sw) {

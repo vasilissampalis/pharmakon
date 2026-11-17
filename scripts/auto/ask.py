@@ -4,7 +4,7 @@
 The senior author, 15 November 2026: "if the user asks a question we should like have a small notification that their answer
 will be answered in the following hour and when it automatically gets answered their question should turn green".
 
-    python3 -I scripts/auto/ask.py run [--max N]
+    python3 -I scripts/auto/ask.py run [--max N] [--report FILE.json]
     python3 -I scripts/auto/ask.py --selftest
 
 The scout (scripts/auto/scout.py) has read what visitors sent and put the same question asked in other words together
@@ -209,6 +209,8 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if "--selftest" in a: selftest()
     elif a[:1] == ["run"]:
-        res = run(limit=int(a[a.index("--max") + 1]) if "--max" in a else A_RUN)
+        # (site 2.17) --report: the scout's report on the questions the page sent by itself, which lives in the run's temporary folder and never in
+        # the repository. They become items exactly as the others do: OUR wording, and a fingerprint of the visitor's words in the state, never the words.
+        res = run(limit=int(a[a.index("--max") + 1]) if "--max" in a else A_RUN, report=json.load(open(a[a.index("--report") + 1], encoding="utf-8")) if "--report" in a else None)
         if "--marker" in a and any(item for _, item in res): pathlib.Path(a[a.index("--marker") + 1]).write_text("new\n")   # a sign for the run that a question was listed just now
     else: sys.exit(__doc__)

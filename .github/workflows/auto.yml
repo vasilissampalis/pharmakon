@@ -113,7 +113,7 @@ jobs:
           step() { echo "== $1" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
           if [ "$DO_SCOUT" = "true" ]; then
             step "build the page and Insight's index (the scout ranks a question as the page does)" node site/build.js
-            step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json"
+            step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json" --auto "$RUNNER_TEMP/auto-sent.json"
             step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json" --unknown "$RUNNER_TEMP/unknown-names.json"
             # (17 November 2026, decision 27 step a) "hardcode is not enough our ai has to correct and update itself with all possible relevant
             # online searches": the unknown words of sent questions (never the questions) are looked up in open name lists that allow it
@@ -121,6 +121,16 @@ jobs:
             step "names we do not know, looked up in open name lists" python3 -I scripts/auto/names_open.py learn --tokens "$RUNNER_TEMP/unknown-names.json"
             step "remember what was read" python3 -I scripts/auto/look.py --done "$RUNNER_TEMP/questions.json"
             step "a question a visitor sent becomes a question on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run --marker "$RUNNER_TEMP/new-items"
+            # (site 2.17, 18 November 2026; the senior author: "it should send the question immediately in every instance and the user should be notified")
+            # the questions the page sent by itself, because the site had no answer. Nobody pressed anything to send these, so their words are never
+            # written into the repository: the scout's second pass keeps everything it writes in this run's own temporary folder, and what reaches the
+            # repository is OUR wording of the question (ask.py) and a fingerprint of the words, as for every other question
+            if [ -s "$RUNNER_TEMP/auto-sent.json" ]; then
+              mkdir -p "$RUNNER_TEMP/private"
+              step "the scout on the questions the page sent by itself (their words stay in this run's own folder)" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/auto-sent.json" --out "$RUNNER_TEMP/private" --report "$RUNNER_TEMP/private/MISSING.md" --no-cards --unknown "$RUNNER_TEMP/unknown-names-2.json"
+              step "names we do not know among them, looked up in open name lists" python3 -I scripts/auto/names_open.py learn --tokens "$RUNNER_TEMP/unknown-names-2.json"
+              if [ -s "$RUNNER_TEMP/private/report.json" ]; then step "they too become questions on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run --report "$RUNNER_TEMP/private/report.json" --marker "$RUNNER_TEMP/new-items"; fi
+            fi
           fi
           if [ "$DO_LANE" = "true" ] || [ -f "$RUNNER_TEMP/new-items" ]; then   # (a question that was just listed is worked on in this same run)
             step "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run

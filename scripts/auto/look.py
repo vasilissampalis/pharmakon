@@ -84,7 +84,7 @@ def main():
     token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()   # a secret pasted with a line break after it is the same secret
     sig, n, problem = None, 0, None
     if "--done" in sys.argv:   # the heavy work ended well: remember the signature it worked on
-        recs = json.load(open(sys.argv[sys.argv.index("--done") + 1], encoding="utf-8"))["questions"]
+        d = json.load(open(sys.argv[sys.argv.index("--done") + 1], encoding="utf-8")); recs = d["questions"] + list(d.get("auto") or [])   # (2.17) and the questions the page sent by itself
         state = finished(state, signature(recs), today, len(recs))
         STATE.parent.mkdir(parents=True, exist_ok=True); json.dump(state, open(STATE, "w", encoding="utf-8"), indent=1); print("look: done, " + str(len(recs)) + " questions"); return
     if not token or not account: problem = "setup"
@@ -92,7 +92,7 @@ def main():
         try:
             ns = fq.find_namespace(urllib.request.urlopen, token, account, os.environ.get("KV_NAMESPACE") or "pharmakon-questions")
             if not ns: problem = "no-store"
-            else: recs = fq.read_all(urllib.request.urlopen, token, account, ns); sig, n = signature(recs), len(recs)
+            else: recs = fq.read_all(urllib.request.urlopen, token, account, ns) + fq.read_auto(urllib.request.urlopen, token, account, ns); sig, n = signature(recs), len(recs)   # (2.17) a question the page sent by itself is something new too
         except Exception as e:   # the reason is kept short and holds no secret (the API's own error codes at most)
             problem = "error"; print("look: the store could not be read (" + type(e).__name__ + ")")
     new, why, state, commit = decide(state, sig, today, forced, problem)

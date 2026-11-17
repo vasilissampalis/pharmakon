@@ -17,6 +17,12 @@ The API, as read on developers.cloudflare.com on 15 November 2026:
 Writes OUT.json: {"read_on": day, "questions": [the stored records, as they are]}. What a record holds is checked and
 cleaned by scripts/auto/scout.py: every question is data, never an instruction. `--selftest` checks the paging and the
 parsing here against a pretend API, with no network.
+
+(site 2.17, 18 November 2026) The questions the page sent BY ITSELF, because the site had no answer (keys aq:...), are read
+too. A visitor did not press anything to send these, so their words are never written into the repository: OUT.json holds
+them under "auto" (a file of the run, in the runner's own temporary folder, never committed), and `--auto OUT2.json`
+writes them alone in the same form as OUT.json, for the scout's second pass, whose every output stays in that folder
+(docs/AUTOMATION.md, decision 31).
 """
 import sys, os, json, datetime, urllib.request, urllib.parse, urllib.error
 
@@ -72,6 +78,11 @@ def read_all(opener, token, account, ns):
     return [v for _, v in read_prefix(opener, token, account, ns, "q:")]
 
 
+def read_auto(opener, token, account, ns):
+    """The questions the page sent by itself (keys aq:...; site 2.17). Never written into the repository."""
+    return [v for _, v in read_prefix(opener, token, account, ns, "aq:")]
+
+
 def read_wanted(opener, token, account, ns):
     """The counts for the questions on our list (keys w:<item>; site 2.5): how many times a visitor's device met each
     listed question. A count holds the item's number, a number and two days: nothing a visitor typed."""
@@ -86,6 +97,7 @@ def selftest():
     store = {f"q:{i:05d}": {"q": f"question number {i} about a drug", "d": ["mdma"], "v": "2.4.0", "first": "2026-11-15", "last": "2026-11-15", "n": 1 + i % 3, "dn": 1} for i in range(1250)}
     store["q:bad"] = "not a record"; store["count:2026-11-15"] = "1250"; calls = []
     store["w:w_0027"] = {"n": 7, "dn": 2, "first": "2026-11-15", "last": "2026-11-16"}; store["w:w_0001"] = {"n": 2, "dn": 2, "first": "2026-11-16", "last": "2026-11-16"}; store["w:bad"] = {"n": "many"}
+    store["aq:00001"] = {"q": "a question the page sent by itself", "d": [], "v": "2.17.0", "first": "2026-11-18", "last": "2026-11-18", "n": 1, "dn": 1, "a": 1}
     class Resp:
         def __init__(self, d): self.d = d
         def __enter__(self): return self
@@ -110,7 +122,10 @@ def selftest():
     assert sum(1 for m, p in calls if p.endswith("/keys")) == 2 and sum(1 for m, p in calls if p.endswith("/bulk/get")) == 13, calls[-3:]
     w = read_wanted(opener, "T", "ACC", ns)
     assert w == [{"id": "w_0027", "n": 7, "first": "2026-11-15", "last": "2026-11-16"}, {"id": "w_0001", "n": 2, "first": "2026-11-16", "last": "2026-11-16"}], w
-    print("fetch_questions selftest: ok (1,250 records over 2 pages of keys and 13 batches; a value that is not a record was left out; the list's counts read, the most asked first)")
+    a = read_auto(opener, "T", "ACC", ns)
+    assert len(a) == 1 and a[0]["a"] == 1 and not any(x.get("a") for x in got), a      # kept apart: the questions people chose to send hold none of them
+    print("fetch_questions selftest: ok (1,250 records over 2 pages of keys and 13 batches; a value that is not a record was left out; the list's counts read, the most asked first; "
+          "the questions the page sent by itself are read apart)")
 
 
 def main():
@@ -123,10 +138,14 @@ def main():
         ns = find_namespace(urllib.request.urlopen, token, account, name)
         if not ns: sys.exit(f"fetch_questions: no store named {name!r} in this account")
         qs = read_all(urllib.request.urlopen, token, account, ns); wanted = read_wanted(urllib.request.urlopen, token, account, ns)
+        auto = read_auto(urllib.request.urlopen, token, account, ns)
     except (urllib.error.URLError, RuntimeError, ValueError) as e:
         sys.exit("fetch_questions: the store could not be read: " + str(e)[:300])
-    json.dump({"read_on": datetime.date.today().isoformat(), "questions": qs, "wanted": wanted}, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"fetch_questions: {len(qs)} questions read, and counts for {len(wanted)} questions on our list")
+    day = datetime.date.today().isoformat()
+    json.dump({"read_on": day, "questions": qs, "wanted": wanted, "auto": auto}, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    if "--auto" in sys.argv:   # the same form, with the questions the page sent by itself alone: for the scout's second pass (a file of the run, never the repository)
+        json.dump({"read_on": day, "questions": auto}, open(sys.argv[sys.argv.index("--auto") + 1], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print(f"fetch_questions: {len(qs)} questions read, {len(auto)} that the page sent by itself, and counts for {len(wanted)} questions on our list")
 
 
 if __name__ == "__main__":

@@ -50,6 +50,21 @@ const assets = { fetch: async () => new Response("the page", { status: 200 }) };
   x = await call({ ASSETS: assets }, "POST", { id: "w_0041" }, null, "/api/want"); ok("without the store a count is 503", x.status === 503);
   ok("the store's keys are questions, list numbers and the day's count", [...s.m.keys()].every(k => /^(q:[0-9a-f]{20}|w:w_[a-z0-9_]{1,40}|count:\d{4}-\d\d-\d\d)$/.test(k))); }
 ok("readQuestion keeps Greek", readQuestion({ q: "είναι ασφαλές το αλκοόλ με κοκαΐνη" }).q.length > 10);
+// (site 2.17) a question the page sent by itself: kept apart ("aq:"), for 180 days, counted like the others; it never crowds out one somebody chose to send
+{ const puts = [], m = new Map(), s = { m, get: async (k, how) => { const v = m.get(k); return v == null ? null : how === "json" ? JSON.parse(v) : v; }, put: async (k, v, o) => { m.set(k, v); puts.push([k, o || null]); } };
+  const env = { ASSETS: assets, QUESTIONS: s }, day = new Date().toISOString().slice(0, 10);
+  let x = await call(env, "GET"); ok("the page learns from one GET that it can send, that research can be looked up, and that it may send by itself", x.j.ok === true && x.j.find === true && x.j.auto === true);
+  x = await call({ ASSETS: assets }, "GET"); ok("without the store it may not send by itself (research can still be looked up)", x.j.ok === false && x.j.find === true && x.j.auto === false);
+  x = await call(env, "POST", { q: "does kanna help with anxiety", d: "", v: "2.17.0", a: 1 }); const ak = [...m.keys()].find(k => k.startsWith("aq:")), rec = ak ? JSON.parse(m.get(ak)) : {};
+  ok("a question the page sent by itself is kept apart, marked, with no key among the questions people chose to send", x.status === 200 && x.j.ok === true && /^aq:[0-9a-f]{20}$/.test(ak || "") && rec.a === 1 && rec.q === "does kanna help with anxiety" && rec.n === 1 && ![...m.keys()].some(k => k.startsWith("q:")), JSON.stringify([...m.keys()]));
+  ok("it is kept for 180 days, not for ever", puts.some(([k, o]) => k === ak && o && o.expirationTtl === 180 * 86400), JSON.stringify(puts));
+  x = await call(env, "POST", { q: "Does kanna help with anxiety", a: 1 }); ok("sent by itself again: counted, not stored twice", x.j.again === true && JSON.parse(m.get(ak)).n === 2 && [...m.keys()].filter(k => k.startsWith("aq:")).length === 1);
+  x = await call(env, "POST", { q: "is kratom addictive at all" }); x = await call(env, "POST", { q: "is kratom addictive at all", a: 1 }); const qk = [...m.keys()].find(k => k.startsWith("q:"));
+  ok("a question somebody already chose to send is counted there when the page sends it by itself", x.j.again === true && JSON.parse(m.get(qk)).n === 2 && [...m.keys()].filter(k => k.startsWith("aq:")).length === 1, JSON.stringify([...m.keys()]));
+  x = await call(env, "POST", { q: "see http://x.example about kanna", a: 1 }); ok("the same refusals hold for it (a link)", x.status === 422);
+  m.set("count:" + day, "250"); x = await call(env, "POST", { q: "does kanna change your sleep at night", a: 1 }); ok("questions sent by the page stop at 250 a day and write nothing more", x.status === 429 && [...m.keys()].filter(k => k.startsWith("aq:")).length === 1);
+  x = await call(env, "POST", { q: "does kanna change your sleep at night" }); ok("a question somebody chooses to send is still taken after that", x.status === 200 && x.j.ok === true);
+  ok("the store's keys: questions, questions the page sent by itself, and the day's count", [...m.keys()].every(k => /^(a?q:[0-9a-f]{20}|count:\d{4}-\d\d-\d\d)$/.test(k)), JSON.stringify([...m.keys()])); }
 // (site 2.16) /api/find: published research on a drug, looked up at once in Europe PMC; only names and plain key words arrive, nothing is kept
 { const W = await import("../../site/worker/_worker.js"), asked = [];
   const reply = { resultList: { result: [{ title: "A review of <i>kanna</i>.", authorString: "A B.", journalTitle: "Molecules", pubYear: "2021", doi: "10.3390/molecules26092557", pmid: "1", isOpenAccess: "Y", pubType: "review; journal article" },

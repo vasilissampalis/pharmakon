@@ -315,7 +315,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.waitForTimeout(1500);
     await typeQ(p, "is modafinil safe");
     const note = await p.evaluate(() => ({ note: !!document.querySelector(".sr-fit .ask-note"), ins: (document.querySelector(".sr-note") || {}).textContent || "" }));
-    ok("with the store off: no promise of sending, and Insight still says nothing typed leaves the device", !note.note && /Nothing you type leaves it/.test(note.ins), JSON.stringify(note));
+    ok("with the store off: no promise of sending; Insight's line says what does go out (the drug's name and key words, to look up research)", !note.note && /^Runs on your (phone|computer)\. With no answer of ours, only the drug’s name and a few key words go out, to look up research\.$/.test(note.ins.trim()), JSON.stringify(note));
     await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
     const fb = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), text: document.getElementById("report-message").value, kept: JSON.parse(localStorage.getItem("pk-asked") || "[]").map(x => x.q + "|" + x.sent) }));
     ok("with the store off: the email form opens with the question, and it is kept on the device", fb.open && fb.text === "is modafinil safe" && fb.kept.join() === "is modafinil safe|0", JSON.stringify(fb));
@@ -527,21 +527,33 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click("#search"); await p.waitForTimeout(600);
     const sug = await p.evaluate(() => ({ hint: (document.querySelector("#search-results .sr-hint") || {}).textContent || "", hrefs: [...document.querySelectorAll("#search-results a.sr-sug")].map(a => a.getAttribute("href")) }));
     ok(w + " px: before a word is typed, the box on the cannabis page offers what people ask most about cannabis", sug.hint === "Most asked about cannabis" && sug.hrefs.length >= 3 && sug.hrefs.every(h => h.startsWith("#s-cannabis/q-")), JSON.stringify(sug));
-    // (2.16) a sent question gets published research at once: the papers on its drug and key words, from Europe PMC through the site's own server;
-    // only the drug's names and plain key words leave the device for it, never the sentence; a question about dying is not looked up
+    // (2.16, 2.16.1) a question we have no answer to gets published research at once and BY ITSELF (no tap): the papers on its drug and key words,
+    // from Europe PMC through the site's own server; only the drug's names and plain key words leave the device for it, never the sentence;
+    // it stands there again when the question is typed again, sent or not; a question about dying is not looked up
     await go(p, "#home"); await p.evaluate(() => pkInsight.load()); await p.waitForFunction(() => pkInsight.state() === "ready", null, { timeout: 120000 });
     const bodies = []; const onReq = r => { if (/\/api\/find$/.test(r.url())) bodies.push(r.postData() || ""); }; p.on("request", onReq); ASKED_EPMC.length = 0;
     await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results button[data-ask]", { timeout: 20000 });
-    await p.click("#search-results button[data-ask]"); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 15000 }).catch(() => {});
+    const byItself = await p.waitForSelector("#search-results .ins-found-l li", { timeout: 15000 }).then(() => true, () => false);
+    ok(w + " px: with no answer of ours, the published research comes by itself, without a tap", byItself && bodies.length === 1, JSON.stringify(bodies));
+    await p.click("#search-results button[data-ask]"); await p.waitForSelector("#search-results .ask-said", { timeout: 8000 }).catch(() => {});
+    await p.fill("#search", ""); await p.waitForTimeout(200); await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results .sr-sent", { timeout: 20000 }).catch(() => {});
+    const again = await p.evaluate(() => ({ sent: !!document.querySelector("#search-results .sr-sent"), rows: document.querySelectorAll("#search-results .ins-found-l li").length }));
+    ok(w + " px: typed again after it was sent, the question shows the research again (and nothing is asked of the server twice)", again.sent && again.rows === 2 && bodies.length === 1, JSON.stringify(again) + " " + bodies.length);
     const found = await p.evaluate(() => { const b = document.querySelector("#search-results .ins-found"); return b ? { h: (b.querySelector(".ins-found-h") || {}).textContent, rows: [...b.querySelectorAll(".ins-found-l li")].map(li => li.querySelector("a").textContent + " | " + li.querySelector("a").getAttribute("href") + " | " + li.querySelector(".m").textContent), note: [...b.querySelectorAll(".ins-found-n")].map(x => x.textContent).join(" ") } : null; });
     const sentBody = bodies.length ? JSON.parse(bodies[0]) : {};
-    ok(w + " px: a sent question gets published research at once, under the “Sent” line: title, kind, year, journal, free to read or not, and its link; and it says we have not read these",
+    ok(w + " px: the research found: title, kind, year, journal, free to read or not, and its link; and it says we have not read these",
       found && found.h === "Published research on this, found just now" && found.rows.length === 2 && found.rows[0] === "A review of the drug and the eye | https://doi.org/10.1234/test.2021.1 | Review \u00B7 2021 \u00B7 Journal of Tests \u00B7 free to read" && found.rows[1] === "A trial in forty volunteers | https://europepmc.org/article/MED/222 | Trial \u00B7 2013 \u00B7 Trials Today" && /We have not read these yet, and a title is not a finding/.test(found.note), JSON.stringify(found));
     ok(w + " px: for it only the drug's names and plain key words leave the device (never the sentence), and Europe PMC is asked for exactly those",
       bodies.length === 1 && Object.keys(sentBody).sort().join() === "names,words" && sentBody.names.join() === "lsd" && sentBody.words.join() === "change,colour" && ASKED_EPMC.length >= 2 && ASKED_EPMC.every(u => u.startsWith("https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=(TITLE:\"lsd\"")) && !ASKED_EPMC.some(u => /does lsd change/.test(u)), JSON.stringify([bodies, ASKED_EPMC.slice(0, 2)]));
     await p.fill("#search", "can lsd kill you"); await p.waitForTimeout(1800);
     const heldN = bodies.length; const hasAsk = await p.$("#search-results button[data-ask]"); if (hasAsk) { await hasAsk.click(); await p.waitForTimeout(900); }
     ok(w + " px: a question about dying is not looked up", bodies.length === heldN && !(await p.$("#search-results .ins-found")), JSON.stringify(bodies.slice(heldN)));
+    // the reader's own switch (About us, Privacy): off, nothing is looked up by itself, and one quiet button looks it up
+    await p.evaluate(() => localStorage.setItem("pk-auto", "0")); await p.fill("#search", "does lsd make your pupils bigger"); await p.waitForSelector("#search-results .sr-fit", { timeout: 20000 }); await p.waitForTimeout(1600);
+    const offN = bodies.length, btn = await p.$("#search-results .ins-found button[data-find-now]");
+    if (btn) { await btn.click(); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 15000 }).catch(() => {}); }
+    ok(w + " px: with the reader's switch off nothing is looked up by itself; one quiet button looks it up", offN === heldN && !!btn && bodies.length === heldN + 1 && (await p.$$("#search-results .ins-found-l li")).length === 2, offN + " " + bodies.length);
+    await p.evaluate(() => localStorage.removeItem("pk-auto"));
     p.off("request", onReq); await p.fill("#search", ""); await p.evaluate(() => { closeSearch(); localStorage.removeItem("pk-asked"); });
     // (2.15.3) past searches: off until the reader turns them on; then kept on this device, folded; turning them off clears them
     await go(p, "#home"); await p.evaluate(() => closeSearch());

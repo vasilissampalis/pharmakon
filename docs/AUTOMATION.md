@@ -718,6 +718,57 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       reader then sees within seconds what the research says in its own words, with its link; nothing is written by a
       model that a reader could take for our finding. About 50 neurons a question.
 
+31. **By itself, at once, and understood** (17 November 2026, 23:17 to 23:57 Athens). His words, in the order he wrote
+    them. Of the line under the box on the start page ("Insight answers on your own device, from research we checked,
+    each country's law, emergency numbers, drug checking and what is known about mixing"): "this is limiting Pharmakon
+    insight ... it's about everything there are no limits". With a picture of unrelated rows under "does kanna help with
+    anxiety": "did you make insight more stupid?"; then: "oh it loaded"; "for a few seconds it didn't and i thought it
+    was stupid". Of the answer within seconds (decision 30): "we have to make instant as good as getting answers from a
+    very good claude api. whatever it takes. you can give me a prompt with steps that i can do with chatgpt". Of the
+    research list that came only after "Send": "it should automatically search the user should not even have to click
+    it"; and, typing a question he had already sent: "now when i type it again the sites do not show". With a picture
+    of "how many heroin deaths in america" answered by the figure for the European Union: "the ai should understand
+    what i mean! it should send the question immediately in every instance and the user should be notified make it
+    ... smart always". And: "Pharmakon Insight under Pharmakon is a bit redundant it is the same logo and the same
+    first word. although i like the name Pharmakon Insight i don't know ... how we should include it".
+    - *Site 2.16.1 (18 November, 00:40 Athens).*
+      **The research comes by itself, every time.** Whenever Insight has no answer of ours to a whole question about a
+      drug (not answered; a question like it on our list; a word we do not know as a drug), in the results and in the
+      sheet, sent or not, the page looks the published research up (`insAuto`, `/api/find`) and puts it under the line
+      that says so. In the results it waits 0.7 s so that nothing is asked while the reader types; on Enter at once;
+      what it found is kept for the visit, so the same question is not asked twice. What leaves the device is what
+      left it in 2.16.0: the drug's names and up to five plain key words, never the sentence. The quiet line at the
+      head of the results now says exactly that ("With no answer of ours, only the drug's name and a few key words go
+      out, to look up research"), and About us, Privacy has a switch for it on the reader's own device
+      (`pk-auto`): off, one quiet button looks it up on a tap. The page learns from its one question to the server
+      (`GET /api/ask`: `find`) whether research can be looked up at all, so a copy of the site without the server asks
+      nothing.
+      **The place a count names is read.** "how many heroin deaths in america" was answered with the EU's 1,600: the
+      figures were chosen by drug and kind and the place asked for was not read. `insFigPlace` reads it (the world,
+      Europe, a country by any of its names, "americans", "here" for the reader's own country) and `insFigures` marks
+      the figures from it. The site has no count of heroin deaths in the United States; so the page now says "We have
+      no checked figure on this for the United States yet", the question stays open (it can be sent, and the reader's
+      list does not call it answered), and the EU's figure stands under "Figures from other places", never as the
+      answer. "heroin deaths in the us", "cocaine statistics in europe": a few words with the place after them are a
+      count too.
+      **The seconds while Insight gets ready.** The unrelated rows were the plain word search, shown while Insight was
+      starting (it has to be started on every opening of the page). A device that has fetched Insight before now starts
+      it when the page opens (`pk-ins-had`; nothing is downloaded for it: the files are in the browser's cache; a first
+      visit still fetches them on first use, and a connection that saves data only when asked). While it gets ready a
+      whole question gets one calm line, "One moment: Insight is getting ready to read your question…", and no row
+      found by a word in common (a drug's own page stays; a name alone keeps its rows); on a slow first download the
+      rows come back after eight seconds under a line that says what they are. When Insight cannot start, the page
+      says so and offers to try again: it no longer fails without a word.
+      **The start page.** The line under the box is "In your own words. No judgement." (the box itself says "Ask
+      anything about drugs"): nothing lists what Insight is "about". Under the bar that already says Pharmakon, with
+      the mark, the name is said by its own word alone, "Insight", in the site's colour: no second mark and no second
+      "Pharmakon". The whole name stands where nothing around says Pharmakon (the box's label for a screen reader,
+      "This is Pharmakon Insight.", About us).
+    - *What follows in this decision (not in 2.16.1):* the question sent by itself with the reader told (site 2.17:
+      the server already keeps such a question apart, keys `aq:`, 180 days, and the half-hourly run reads them in its
+      own memory so that their words never reach the repository); and the written answer within seconds, behind the
+      Workers AI binding that only he can add.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

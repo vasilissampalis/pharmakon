@@ -284,6 +284,14 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
           await p.evaluate(() => /\d{4}/.test((document.querySelector('#search-results a.sr-route[data-ins-route="figure"] .rm') || {}).textContent || "")), JSON.stringify(f1.routes) + " | " + f1.none);
       const f2 = await ask("heroin deaths");
       ok(w + ": “heroin deaths”, two words, gets the same figure", (f2.routes[0] || {}).kind === "figure" && (f2.routes[0] || {}).t === r1.t, JSON.stringify(f2.routes));
+      // (2.16.1; the senior author asked "how many heroin deaths in america" and was shown the EU's figure as the answer: "the ai should understand what i mean!")
+      const f5 = await ask("how many heroin deaths in america"), h5 = await p.evaluate(() => [...document.querySelectorAll("#search-results .sr-fit > *")].map(e => e.matches(".sr-fit-none") ? "none" : e.matches(".sr-fit-h") ? "h:" + e.textContent : e.matches("a.sr-route") ? "route:" + (e.classList.contains("sr-way") ? "way" : "answer") : e.matches("a") ? "row" : ""));
+      ok(w + ": “how many heroin deaths in america” is not answered with the EU's figure: the page says it has no checked figure for the United States, and the EU's stands under “Figures from other places”",
+        /^We have no checked figure on this for the United States yet\./.test(f5.none) && f5.routes.length === 1 && f5.routes[0].kind === "figure" && /in the EU/.test(f5.routes[0].t) && h5.indexOf("none") >= 0 && h5.indexOf("h:Figures from other places") === h5.indexOf("none") + 1 && h5[h5.indexOf("none") + 2] === "route:way" && !h5.includes("route:answer"), JSON.stringify(f5.routes) + " | " + f5.none + " | " + h5.join(","));
+      const f6 = await p.evaluate(async () => { const out = {}; for (const q of ["heroin deaths in the us", "how many americans use heroin", "how many people use cocaine in greece", "how many people use cocaine in germany", "how many heroin deaths in europe", "how many people use cannabis worldwide"]) { const r = await pkInsight.rank(q, {}); out[q] = [r.note || "", r.routes.filter(x => x.kind === "figure").map(x => x.t).join(" / ")]; } return out; });
+      ok(w + ": the place a count names is read (“in the us”, “americans”, “in greece”, “in europe”, “worldwide”): its own figure where the site has one, the plain truth where it has none",
+        f6["heroin deaths in the us"][0] === "none" && /in the EU/.test(f6["heroin deaths in the us"][1]) && f6["how many americans use heroin"][0] === "" && /^556,000/.test(f6["how many americans use heroin"][1]) && f6["how many people use cocaine in greece"][0] === "" && /cocaine/.test(f6["how many people use cocaine in greece"][1]) &&
+          f6["how many people use cocaine in germany"][0] === "none" && f6["how many heroin deaths in europe"][0] === "" && /in the EU/.test(f6["how many heroin deaths in europe"][1]) && f6["how many people use cannabis worldwide"][0] === "" && /worldwide/.test(f6["how many people use cannabis worldwide"][1]), JSON.stringify(f6));
       const f3 = await ask("how many mg of mdma do people take");
       ok(w + ": “how many mg of mdma do people take” asks for an amount, not a count of people: no figure, the line on doses", !f3.routes.some(r => r.kind === "figure") && f3.routes.some(r => r.kind === "dose"), JSON.stringify(f3.routes));
       await ask("how many people die from heroin"); await p.click('#search-results a.sr-route[data-ins-route="figure"]'); await p.waitForTimeout(1500);
@@ -342,11 +350,11 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     // ---- (2.10) the first screen is Insight: its name, the capsule, and things to try; pressing one asks it
     await p.fill("#search", ""); await p.goto(BASE + "home"); await p.evaluate(() => { document.getElementById("search").blur(); closeSearch(); }); await p.waitForTimeout(300);   // (at rest: the answers are closed, the things to try are in view)
     const hero = await p.evaluate(() => { const h = document.getElementById("insight-hero"), s = document.getElementById("search"), cap = document.querySelector("#home-search .sicon"), r = s.getBoundingClientRect(), c = cap.getBoundingClientRect();
-      return { mark: (h.querySelector(".ins-mark") || {}).textContent || "", h1: (h.querySelector("h1") || {}).textContent || "", inHero: !!h.querySelector("#search"), tall: r.height, cap: c.width, capBg: getComputedStyle(cap).backgroundColor, bg: getComputedStyle(s).backgroundColor,
+      return { mark: (h.querySelector(".ins-mark") || {}).textContent || "", markLogo: !!h.querySelector(".ins-mark svg"), h1: (h.querySelector("h1") || {}).textContent || "", inHero: !!h.querySelector("#search"), tall: r.height, cap: c.width, capBg: getComputedStyle(cap).backgroundColor, bg: getComputedStyle(s).backgroundColor,
         tries: [...h.querySelectorAll(".ins-try button")].filter(b => b.offsetParent).map(b => b.dataset.try), pill: !!cap.querySelector(".ic-pill") && getComputedStyle(cap.querySelector(".ic-pill")).display !== "none" && getComputedStyle(cap.querySelector(".ic")).display === "none" }; });
     await shot("hero");
-    ok(w + ": the first screen is Insight: “Pharmakon Insight”, the question, and the box as a capsule (a coloured cap with the site's mark, at least 56px tall), and no example questions under it (2.15.3, at the senior author's word)",
-      hero.mark.replace(/\s+/g, " ").trim() === "Pharmakon Insight" && hero.h1 === "What do you want to know?" && hero.inHero && hero.tall >= 56 && hero.cap >= 56 && hero.capBg !== hero.bg && hero.pill && hero.tries.length === 0, JSON.stringify(hero));
+    ok(w + ": the first screen is Insight: its name by its own word alone (the bar above already says Pharmakon, with the mark: 2.16.1), the question, and the box as a capsule (a coloured cap with the site's mark, at least 56px tall), and no example questions under it (2.15.3, at the senior author's word)",
+      hero.mark.replace(/\s+/g, " ").trim() === "Insight" && !hero.markLogo && hero.h1 === "What do you want to know?" && hero.inHero && hero.tall >= 56 && hero.cap >= 56 && hero.capBg !== hero.bg && hero.pill && hero.tries.length === 0, JSON.stringify(hero));
     await p.fill("#search", "are drugs legal in greece"); await p.waitForTimeout(1700);
     const tried = await snap();
     ok(w + ": pressing a thing to try asks it: “are drugs legal in greece” is in the box and its answer is shown", tried.value === "are drugs legal in greece" && tried.open && tried.routes.length === 1 && tried.routes[0].kind === "law", tried.value + " | " + JSON.stringify(tried.routes));
@@ -607,6 +615,14 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     let release; const hold = new Promise(r => { release = r; });
     await p.route(/\/insight\/vocab\.txt$/, async r => { await hold; await r.continue(); });
     await p.goto(BASE + "home"); await p.waitForTimeout(800); await p.focus("#search"); await p.fill("#search", REAL[2][0]); await p.waitForTimeout(400);
+    // (2.16.1; "did you make insight more stupid?" ... "for a few seconds it didn't and i thought it was stupid") a whole question while Insight is getting
+    // ready: one calm line, and no row found by a word in common shown as if it were the answer; a drug's name alone keeps its rows
+    const wait = await p.evaluate(() => { const b = document.getElementById("search-results"); return { state: pkInsight.state(), line: (b.querySelector(":scope > .sr-wait") || {}).textContent || "", first: !!(b.firstElementChild && b.firstElementChild.matches(".sr-wait")),
+      shown: [...b.querySelectorAll(":scope > a.sr-ans")].filter(a => !a.hidden).length, all: b.querySelectorAll(":scope > a.sr-ans").length, ask: !!b.querySelector(".sr-ask, .none") }; });
+    await p.fill("#search", "ketamine"); await p.waitForTimeout(300);
+    const name = await p.evaluate(() => { const b = document.getElementById("search-results"); return { line: !!b.querySelector(".sr-wait"), rows: [...b.querySelectorAll(":scope > a")].filter(a => !a.hidden).length }; });
+    ok("1280, a whole question while Insight is getting ready: one calm line first and no row found by a word in common; a drug's name alone keeps its rows", wait.state === "loading" && wait.line === "One moment: Insight is getting ready to read your question…" && wait.first && wait.shown === 0 && wait.all > 0 && !wait.ask && !name.line && name.rows > 0, JSON.stringify(wait) + " " + JSON.stringify(name));
+    await p.fill("#search", REAL[2][0]); await p.waitForTimeout(300);
     await p.press("#search", "Enter"); await p.waitForTimeout(500);
     const mid = await p.evaluate(() => ({ state: pkInsight.state(), sheet: !!document.querySelector("#evsheet.open"), hash: location.hash, line: (document.querySelector("#search-results .sr-get") || {}).textContent || "" }));
     release(); await p.waitForSelector("#evsheet.open .ins", { timeout: 120000 }).catch(() => {});
@@ -624,6 +640,10 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     const big = served.slice(mark).filter(x => /\/insight\//.test(x.p)), bytes = big.reduce((a, x) => a + x.bytes, 0);
     ok("a second visit downloads the model and runtime nothing again (the browser's cache, revalidated)", first && second && big.some(x => /\.onnx$/.test(x.p)) && big.some(x => /\.wasm$/.test(x.p)) && bytes === 0,
       big.map(x => x.p.replace(/^.*\//, "") + " " + x.status).join(", ") || "not requested");
+    // (2.16.1) and it is ready before the first question: a device that fetched Insight before starts it when the page opens, with the box untouched
+    await p.reload(); const warm = await p.waitForFunction(() => window.pkInsight && pkInsight.state() === "ready", null, { timeout: 120000 }).then(() => true, () => false);
+    const touched = await p.evaluate(() => document.activeElement && document.activeElement.id === "search");
+    ok("a device that fetched Insight before starts it when the page opens (the box untouched), so it is ready before the first question", warm && !touched, "ready " + warm + ", box focused " + touched);
     await ctx.close(); fs.rmSync(dir, { recursive: true, force: true }); }
   // saving data: nothing fetched on focus; one quiet line offers it, and the word search works meanwhile
   { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
