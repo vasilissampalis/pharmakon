@@ -314,8 +314,35 @@ const AUTO_SHOWN = (() => {
   if (Object.keys(startedPages).length) console.log("machine lane: " + Object.keys(startedPages).length + " pages started by the system are shown: " + Object.values(startedPages).join("; "));
   return out;
 })();
+// (2.12; the senior author, 17 November 2026, of kanna and Mitragyna javanica: "our ai has to create this pages in a perfect coherent
+// format to the rest of the website (and find pictures for them ... if the pictures have not been verified and the ai is uncertain
+// then we could have a small disclaimer") A page the system should start is shown as soon as a visitor has asked about it, or the
+// system has found pictures for it and has questions listed for it, before there is an answer to show: its name, its pictures and
+// what was asked. AUTO_SHELL: {slug: {name, cls, asked: [{id, q, answer}]}}. AUTO_PICS: the pictures the system found and fetched
+// (scripts/auto/pictures.py; data/auto/pictures.json, site/photos-auto): only CC0 and CC BY, each with its maker, licence and
+// record; none was checked by a person, and the page says so. AUTO_NAMES: the names that lead to such a page ({name: slug}).
+const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {};
+{ const rj = (...p) => { const f = path.join(ROOT, ...p); try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null; } catch (e) { return null; } };
+  const pageSlug = n => String(n).toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  const wq = {}; [rj("data", "site", "wanted.json"), rj("data", "auto", "wanted-auto.json")].forEach(d => ((d || {}).items || []).forEach(w => { wq[w.id] = w.q; }));
+  const shown = new Set(AUTO_SHOWN.map(a => a.id)), picDir = path.join(__dirname, "photos-auto"), pics = {};
+  for (const [slug, e] of Object.entries(((rj("data", "auto", "pictures.json") || {}).pages) || {})) {
+    const list = [];
+    for (const s of Object.values((e || {}).species || {})) for (const p of (s || {}).pictures || []) {
+      if (!p.file || !p.sizes || !fs.existsSync(path.join(picDir, p.file + "-m.webp")) || !fs.existsSync(path.join(picDir, p.file + "-t.webp")) || !/^(?:CC0 1\.0|CC BY [1-4]\.0)$/.test(p.licence || "") || p.hold) continue;
+      list.push({ file: p.file, m: p.sizes.m, t: p.sizes.t, species: s.name || "", kind: s.kind || "", maker: p.maker || "", licence: p.licence, licence_url: p.licence_url || "", page: p.page || p.record || "", record: p.record || "", country: p.country || "" }); }
+    if (list.length) pics[slug] = list; }
+  for (const [name, v] of Object.entries(((rj("data", "auto", "pages.json") || {}).pages) || {})) {
+    const slug = pageSlug(name), asked = ((v || {}).listed || []).filter(id => wq[id]).map(id => ({ id, q: wq[id], answer: shown.has("au_" + id) ? "au_" + id : null }));
+    if (!asked.length || !(asked.some(a => /^w_a\d/.test(a.id)) || pics[slug] || startedPages[slug])) continue;
+    AUTO_SHELL[slug] = { name, cls: (v || {}).cls || "", asked }; if (!startedPages[slug]) startedPages[slug] = name; if (pics[slug]) AUTO_PICS[slug] = pics[slug]; }
+  const filing = rj("data", "auto", "filing.json") || {}, learned = ((rj("data", "auto", "names", "learned.json") || {}).names) || {};
+  for (const [n, v] of Object.entries(filing.names || {})) { const slug = v && v.new ? pageSlug(v.new) : ""; if (slug && startedPages[slug]) AUTO_NAMES[n.toLowerCase()] = slug; }
+  for (const [k, e] of Object.entries(learned)) { const slug = e && e.drug === true ? pageSlug(e.name || k) : ""; if (slug && startedPages[slug] && !AUTO_NAMES[k]) AUTO_NAMES[k] = slug; }
+  if (Object.keys(AUTO_SHELL).length) console.log("machine lane: " + Object.keys(AUTO_SHELL).length + " pages people asked about are shown as started (" + Object.keys(AUTO_PICS).length + " with pictures the system found): " + Object.values(AUTO_SHELL).map(x => x.name).join("; "));
+}
 const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
-  ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
+  ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }
@@ -399,5 +426,9 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
     } else console.error("WARNING: site/insight/vendor is incomplete: Insight is left out and the search box answers by words only"); }
   const kb = f => (fs.statSync(path.join(dataDir, f)).size / 1024).toFixed(0) + " KB";
   console.log("wrote", Object.keys(full).length, "substance files to dist/data (largest " + Object.keys(full).map(s => "full-" + s + ".json").sort((a, b) => fs.statSync(path.join(dataDir, b)).size - fs.statSync(path.join(dataDir, a)).size).slice(0, 3).map(f => f + " " + kb(f)).join(", ") + "), refs.json " + kb("refs.json") + ", figures.json " + kb("figures.json")); }
+// (2.12) the pictures the system found for the pages it started: only the ones a page shows are published (dist/img/auto/)
+{ const from = path.join(__dirname, "photos-auto"), to = path.join(__dirname, "dist", "img", "auto"); if (fs.existsSync(to)) fs.rmSync(to, { recursive: true, force: true });
+  const files = Object.values(AUTO_PICS).flat().flatMap(p => [p.file + "-m.webp", p.file + "-t.webp"]);
+  if (files.length) { fs.mkdirSync(to, { recursive: true }); files.forEach(f => fs.copyFileSync(path.join(from, f), path.join(to, f))); console.log("copied", files.length, "files of pictures the system found to dist/img/auto"); } }
 if (fs.existsSync(photoDir)) { fs.mkdirSync(imgDir, { recursive: true }); const n = fs.readdirSync(photoDir).filter(f => f.endsWith(".webp")).map(f => fs.copyFileSync(path.join(photoDir, f), path.join(imgDir, f))).length; console.log("copied", n, "photo files to dist/img"); }
 console.log("built dist/index.html", (html.length / 1024).toFixed(1) + " KB;", refs.length, "refs,", Object.keys(cards).length, "cards,", claims.length, "claims; evidence maps:", Object.keys(maps).length);
