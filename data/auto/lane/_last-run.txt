@@ -4,8 +4,12 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)
+== the blind reader's own check
+blind: cl_x v0.5.2: 6 lines read by 1 of 3 readers; not supported by a reader: how2
+blind: cl_none: no such claim
+blind_lines selftest: ok (every plain line and every sentence of the plain summary is read against the claim's text; a reader is given nothing but the text and the lines; a reader that cannot be asked or gives no verdict twice is said so and decides nothing; what each reader said of each line is kept in its own words)
+== plain lines of checked answers, read again by readers who wrote none of them
+blind: cl_can_smoked_cancer v0.5.2: 9 lines read by 2 of 2 readers; every line supported by every reader that answered
+blind: 1 answer(s) read
 == write
-lane: our own checker is pharmakon-check-0 (from lytang/MiniCheck-RoBERTa-Large), at least 0.05
-lane: team F: gemini:gemini-3.5-flash-lite reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
-lane: w_0048 'Does cannabis make sex better?': waiting (passed every reader that could be asked, but a further reader of its team could not be (gemini-3.8-flash): it waits until that reader, or the editor, has read it); 2 papers, 0 official pages, 0 summaries; 0.0 neurons
-lane: 1 questions worked on: published 0, waiting 1, none 0; today 8279 of 9000 neurons used
+lane: no request waiting
