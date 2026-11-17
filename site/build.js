@@ -362,6 +362,11 @@ const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }
+// (2.15) Old phones (Safari before 16.4) cannot read a look-behind in a pattern, and one written as a literal stops the whole page: refuse
+// one anywhere but in insNb, which asks the browser first (site/src/app.insight.js).
+{ const bad = [];
+  ["app.core.js", "app.simple.js", "app.views.js", "app.insight.js"].forEach(f => src(f).split("\n").forEach((l, i) => { if (/\(\?<[!=]/.test(l) && !/^const INS_LB = |^function insNb\(/.test(l)) bad.push(f + ":" + (i + 1)); }));
+  if (bad.length) { console.error("A LOOK-BEHIND in the page script (old phones cannot read it; use insNb): " + bad.join(", ")); process.exit(1); } }
 // The three files share one scope, so a function declared twice silently replaces the first one everywhere: refuse it.
 { const seen = {}, dup = [];
   [["app.core.js", src("app.core.js")], ["app.simple.js", src("app.simple.js")], ["app.views.js", src("app.views.js")], ["app.insight.js", src("app.insight.js")]].forEach(([f, t]) => {

@@ -165,29 +165,6 @@ function cites(ids) {
   items.sort((a, b) => inTextLabel(a[1], REFS).localeCompare(inTextLabel(b[1], REFS)));
   return "(" + items.map(([id, r]) => '<a class="pop" href="' + esc(refLink(r)) + '" target="_blank" rel="noopener" data-ref="' + esc(id) + '">' + esc(inTextLabel(r, REFS)) + "</a>").join("; ") + ")";
 }
-// Replace author-year mentions inside debate prose with live citations: (Hart et al., 2012) → link.
-function liveCites(text) {
-  return esc(text).replace(/\(([^()]*?\d{4}[a-z]?)\)/g, (m, inner) => {
-    // split at the semicolons between citations, not at the one inside an escaped "&amp;" ("Curran &amp; Morgan, 2000")
-    const parts = inner.split(/(?<!&(?:amp|lt|gt|quot|#39));/).map(s => s.trim());
-    // the text is already escaped, so compare escaped labels ("Curran &amp; Morgan, 2000") and do not escape p again
-    const link = (p, shown) => {
-      const found = REFS.find(r => esc(inTextLabel(r, REFS)) === p);
-      return found ? '<a class="pop" href="' + esc(refLink(found)) + '" target="_blank" rel="noopener" data-ref="' + esc(found.id) + '">' + shown + "</a>" : null;
-    };
-    const out = parts.map(p => {
-      const one = link(p, p);
-      if (one) return one;
-      // APA 7: the same authors with several years, "(Hughes &amp; Stevens, 2010, 2012)": one link per year
-      const multi = p.match(/^(.*?), (\d{4}[a-z]?(?:, \d{4}[a-z]?)+)$/);
-      if (!multi) return p;
-      const years = multi[2].split(", ");
-      const links = years.map((y, i) => link(multi[1] + ", " + y, i === 0 ? multi[1] + ", " + y : y));
-      return links.every(Boolean) ? links.join(", ") : p;
-    });
-    return "(" + out.join("; ") + ")";
-  });
-}
 /* Long research texts in short pieces (senior author, 13 November 2026: the full findings were "too overwhelming, nobody will
    read it"). The checked words stay exactly as they are; only the layout changes: the opening summary sentence on its own, then
    one paragraph per study (a paragraph ends where a citation closes a sentence), and a long paragraph whose parts are joined by

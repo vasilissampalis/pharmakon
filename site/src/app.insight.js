@@ -78,6 +78,14 @@ function insRows(b64, dim) {
   return M;
 }
 const insTok = s => String(s).toLowerCase().match(/[a-z0-9]+/g) || [];
+/* (2.15, 17 November 2026) Old phones. Safari before 16.4 (every iPhone that stopped at iOS 15, and those not updated since early 2023)
+   cannot read a look-behind in a pattern. Written as a literal, one such pattern stopped the whole page there: nothing was shown at all.
+   Now no pattern of the page is written with one. Where a word's left edge is needed, insNb gives the look-behind where the browser
+   reads it, and the plain word edge (\b) where it does not: on such a phone a name that begins with a letter outside a to z is not
+   found by its edge, and everything else reads the same. The build refuses a look-behind anywhere else in the page's script. */
+const INS_LB = (() => { try { new RegExp("(?<!a)b"); return true; } catch (e) { return false; } })();
+function insNb(cls) { return INS_LB ? "(?<![" + cls + "])" : "\\b"; }
+
 const insRx = n => n.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&");
 // word overlap (TF-IDF as scripts/insight/eval_match.py's Lexical): a word's weight is log(1 + N / documents with it);
 // post: word -> [answer, weight in its unit-length vector]
@@ -96,12 +104,12 @@ function insPrepare(d, vocabText) {
   INS.about = d.about.map(xs => new Set(xs.map(k => d.slugs[k])));   // the drugs each answer is about
   // the names that name a drug in a question (build_index.py's names_table: the longest first), and the drugs each stands for
   INS.nameOf = new Map(d.names.map(([n, xs]) => [n, xs.map(k => d.slugs[k])]));
-  INS.nameRe = new RegExp("(?<![\\p{L}\\p{N}_])(" + d.names.map(([n]) => insRx(n)).join("|") + ")(?![\\p{L}\\p{N}_])", "giu");
+  INS.nameRe = new RegExp(insNb("\\p{L}\\p{N}_") + "(" + d.names.map(([n]) => insRx(n)).join("|") + ")(?![\\p{L}\\p{N}_])", "giu");
   Object.assign(INS, insWords(d.docs));
   // 2.5: what makes a question a question about drugs (site/insight/scope.json, through the index: the same patterns, between
   // the same word boundaries, as the build's Ranker.in_scope), and the list of questions not answered yet
   // (data/site/wanted.json): a second, small index of the same kind as the answers', with the judge's cut for it
-  const wb = "(?<![A-Za-z0-9_])(?:", we = ")(?![A-Za-z0-9_])", L = d.wanted;
+  const wb = insNb("A-Za-z0-9_") + "(?:", we = ")(?![A-Za-z0-9_])", L = d.wanted;
   INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
   INS.unfin = d.scope && d.scope.unfinished ? insUnfinRule(d.scope.unfinished, d.names.map(x => x[0])) : null;   // 2.9: is a question finished?
   INS.spell = d.scope && d.scope.spell && INS.unfin ? insSpellRule(d.scope.spell, d.scope.unfinished.names || []) : null;   // 2.9.1: a drug's name with a letter wrong
@@ -123,7 +131,7 @@ function insPrepare(d, vocabText) {
     (ALIASES[s.slug] || []).forEach(a => { if (a.length >= 3) ns.add(a.toLowerCase()); });
     ns.forEach(n => { if (!INS.any.has(n)) INS.any.set(n, s.slug); });
     const alt = [...ns].sort((a, b) => b.length - a.length).map(insRx).join("|");
-    return { slug: s.slug, canon: s.name.split(" (")[0], re: new RegExp("(?<![\\p{L}\\p{N}_])(?:" + alt + ")(?![\\p{L}\\p{N}_])", "u") };
+    return { slug: s.slug, canon: s.name.split(" (")[0], re: new RegExp(insNb("\\p{L}\\p{N}_") + "(?:" + alt + ")(?![\\p{L}\\p{N}_])", "u") };
   }).sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
   INS.canon = new Map(INS.drugs.map(x => [x.slug, x.canon]));
 }
@@ -807,7 +815,7 @@ function insSpellRule(Sp, other) {
   const targets = [...group.keys()].filter(n => n.length >= 6 && /^[a-z]+$/.test(n)).sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));
   // (2.9.3) what people typed for a name the system learned by looking it up ("mytragina javanica"): read as that name first
   const phr = new Map(Object.entries(Sp.phr || {})), keys = [...phr.keys()].sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));
-  const phrRe = keys.length ? new RegExp("(?<![A-Za-z0-9'\u2019-])(?:" + keys.map(k => k.split(" ").map(insRx).join("\\s+")).join("|") + ")(?![A-Za-z0-9'\u2019-])", "gi") : null;
+  const phrRe = keys.length ? new RegExp(insNb("A-Za-z0-9'\u2019-") + "(?:" + keys.map(k => k.split(" ").map(insRx).join("\\s+")).join("|") + ")(?![A-Za-z0-9'\u2019-])", "gi") : null;
   return { map: new Map(Object.entries(Sp.map || {})), keep: new Set(Sp.keep || []), group, targets, phr, phrRe };
 }
 function insSpellWord(w) {
@@ -823,7 +831,8 @@ function insSpellWord(w) {
 function insSpell(q) {
   const read = []; if (!INS.spell) return { text: q, read };
   if (INS.spell.phrRe) q = String(q).replace(INS.spell.phrRe, m => { const name = INS.spell.phr.get(m.toLowerCase().replace(/\s+/g, " ")); read.push([m, name]); return name; });
-  const text = String(q).replace(/(?<![A-Za-z0-9'\u2019-])[A-Za-z]+(?![A-Za-z0-9'\u2019-])/g, m => { const n = insSpellWord(m.toLowerCase()); if (!n) return m; read.push([m, n]); return n; });
+  // (a word with nothing of a word before it: the character before is taken with it and put back, so no look-behind is needed)
+  const text = String(q).replace(/(^|[^A-Za-z0-9'\u2019-])([A-Za-z]+)(?![A-Za-z0-9'\u2019-])/g, (m, pre, word) => { const n = insSpellWord(word.toLowerCase()); if (!n) return m; read.push([word, n]); return pre + n; });
   return { text, read };
 }
 const insReadHtml = (res, cls) => res.read && res.read.length ? '<p class="' + cls + '">We read ' + res.read.map(([a, b]) => "\u201c" + esc(a) + "\u201d as <b>" + esc(b) + "</b>").join(" and ") + ".</p>" : "";
