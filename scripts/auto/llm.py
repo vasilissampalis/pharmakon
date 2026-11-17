@@ -624,4 +624,11 @@ def selftest():
 
 if __name__ == "__main__":
     if "--selftest" in sys.argv: selftest()
+    elif "--spend" in sys.argv:   # (18 November 2026) what another program used of the same free day, written into the ledger: [{"model", "in", "out"}] (scripts/auto/instant_trial.mjs)
+        try: rows = json.load(open(sys.argv[sys.argv.index("--spend") + 1], encoding="utf-8"))
+        except (OSError, ValueError, IndexError): rows = []
+        for r in rows if isinstance(rows, list) else []:
+            if isinstance(r, dict) and str(r.get("model") or "") in PRICE and (int(r.get("in") or 0) or int(r.get("out") or 0)):
+                print(f"llm: {spend(str(r['model']), int(r.get('in') or 0), int(r.get('out') or 0)):.1f} neurons written into the ledger for {r['model']}")
+        print(f"llm: today {ledger()['neurons']:.0f} of {OUR_LIMIT} neurons")
     else: print(json.dumps(ledger(), indent=1))

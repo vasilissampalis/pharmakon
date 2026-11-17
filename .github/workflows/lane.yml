@@ -25,6 +25,7 @@ on:
       - "data/auto/requests/trial-*.json"
       - "data/auto/requests/grow-*.json"   # (16 November 2026) the system lists its own questions (scripts/auto/grow.py) and the finders search for them
       - "data/auto/requests/blind-*.json"  # (17 November 2026) the plain lines of a checked answer read again by free models that wrote none of them (scripts/auto/blind_lines.py)
+      - "data/auto/requests/instant-*.json"  # (18 November 2026) the answer within seconds, tried with the real model on the editor's own questions (scripts/auto/instant_trial.mjs)
 
 permissions:
   contents: write
@@ -75,6 +76,14 @@ jobs:
             step "the blind reader's own check" python3 -I scripts/auto/blind_lines.py --selftest
             step "plain lines of checked answers, read again by readers who wrote none of them" python3 -I scripts/auto/blind_lines.py --requests data/auto/requests
             git rm -q data/auto/requests/blind-*.json >> "$L" 2>&1
+          fi
+          if ls data/auto/requests/instant-*.json >/dev/null 2>&1; then
+            # (18 November 2026) the site's own server code, run here with the real model and the real index of papers, on the editor's own questions;
+            # what it used is written into the lane's ledger, so that the free day is counted once
+            export NEURONS_LEFT="$(python3 -I -c 'import sys; sys.path.insert(0, "scripts/auto"); import llm; print(int(llm.left()))' 2>/dev/null)"
+            step "the answer within seconds, tried with the real model on the editor's own questions" node scripts/auto/instant_trial.mjs data/auto/requests data/auto/instant "$RUNNER_TEMP/instant-usage.json"
+            step "what it used, into the ledger" python3 -I scripts/auto/llm.py --spend "$RUNNER_TEMP/instant-usage.json"
+            git rm -q data/auto/requests/instant-*.json >> "$L" 2>&1
           fi
           step "write" python3 -I scripts/auto/lane.py requests
           echo "What this run did is in data/auto/lane/_last-run.txt (cleaned of anything secret before it is kept)." >> "$GITHUB_STEP_SUMMARY"   # (16 November 2026) never the raw end of the notes

@@ -140,8 +140,8 @@ async function find(request, url, env) {
    stops by itself at IA.neurons a day (and IA.answers new answers); the lane stops at its own share (scripts/auto/llm.py: OUR_LIMIT).
    On Cloudflare's free plan a used-up allowance ends in an error, never in a charge. An answer once written is kept for 30 days and
    given again for the same question (no model is asked twice).
-   What is kept (key "ia:<fingerprint>"): the drug's names and key words, the sentences that passed with their papers, the model's name
-   and the time; never the reader's sentence. So that the editors can read everything the system wrote this way. And the day's count
+   What is kept (key "ia:<fingerprint>"): the drug's names and key words, the sentences that passed with their papers, the sentences the
+   checks refused with the reason (never shown to a reader), the model's name and the time; never the reader's sentence. So that the editors can read everything the system wrote this way. And the day's count
    ("ian:<day>": neurons and answers). Nothing is logged. */
 export const IA = { v: 1, writer: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", price: [26668, 204805], neurons: 3500, answers: 60, kept: 30 * 86400, papers: 5, chars: 1500, room: 420 };
 const IA_NOT_RESEARCH = /\b(legal\w*|illegal\w*|law|laws|lawful|police|arrest\w*|prison|jail|court|customs|border|airport|price|prices|cost|costs|cheap\w*|buy|buying|bought|order\w*|dealers?|vendors?|drug tests?|test positive|urine|piss test|hair test|workplace test|screening test)\b/i;
@@ -175,27 +175,34 @@ const IA_ANIMAL = /\b(?:rats?|mice|mouse|rodents?|zebrafish|in vitro|cell lines?
 const IA_NUMWORD = { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen", 20: "twenty", 30: "thirty", 40: "forty", 50: "fifty", 60: "sixty", 70: "seventy", 80: "eighty", 90: "ninety", 100: "(?:one |a )?hundred" };
 const iaStem = w => (w.length > 6 ? w.slice(0, 5) : w.replace(/(?:es|s|ed)$/, ""));
 /* One finding through the gates: the cleaned line, or null. papers: the ones given to the model, in their order; words: the question's key words. */
-export function iaGate(f, papers, words) {
-  if (!f || typeof f !== "object") return null;
-  const n = Number(f.n), p = Number.isInteger(n) && n >= 1 && n <= papers.length ? papers[n - 1] : null; if (!p) return null;
+export function iaCheck(f, papers, words) {
+  const no = why => ({ line: null, why });
+  if (!f || typeof f !== "object") return no("not a finding");
+  const n = Number(f.n), p = Number.isInteger(n) && n >= 1 && n <= papers.length ? papers[n - 1] : null; if (!p) return no("a paper that was not given");
   let text = clean(f.text).replace(/^["'“]+|["'”]+$/g, ""); const quote = clean(f.quote).replace(/^["'“‘.\s]+|["'”’\s]+$/g, "");
   const tw = iaWords(text), qw = iaWords(quote);
-  if (tw.length < 6 || tw.length > 36 || qw.length < 4 || qw.length > 15 || /[<>{}\[\]\\]|https?:/i.test(text + quote)) return null;
+  if (/[<>{}\[\]\\]|https?:/i.test(text + quote)) return no("markup or a link");
+  if (tw.length < 6 || tw.length > 36) return no("the sentence is too short or too long");
+  if (qw.length < 4 || qw.length > 15) return no("the quoted words are fewer than 4 or more than 15");
   if (!/[.!?]$/.test(text)) text += ".";
   const src = iaFlat(p.ab), all = iaFlat(p.t + ". " + p.ab);
-  if (!src.includes(iaFlat(quote))) return null;                                                             // 1. its paper's own words, copied
-  if (!IA_KIND[p.kind].test(text.split(/\s+/).slice(0, 9).join(" "))) return null;                             // 2. the kind of paper it rests on
-  const years = text.match(/\b(?:19|20)\d\d\b/g) || []; if (years.some(y => y !== p.y)) return null;           //    and no other year than the paper's
+  if (!src.includes(iaFlat(quote))) return no("the quoted words are not in the paper's summary");            // 1. its paper's own words, copied
+  if (!IA_KIND[p.kind].test(text.split(/\s+/).slice(0, 9).join(" "))) return no("it does not name its kind of paper (" + p.kind.toLowerCase() + ")");   // 2. the kind of paper it rests on
+  const years = text.match(/\b(?:19|20)\d\d\b/g) || []; if (years.some(y => y !== p.y)) return no("another year than the paper's");   //    and no other year than the paper's
   for (const num of text.match(/\d+(?:[.,]\d+)?/g) || []) { if (num === p.y) continue;                             // 3. its numbers (a number the summary writes as a word counts: "sixteen" for 16)
-    if (!new RegExp("(?:^|[^0-9.,])" + num.replace(/[.,]/g, "[.,]") + "(?:$|[^0-9])").test(all) && !(IA_NUMWORD[num] && new RegExp("\\b" + IA_NUMWORD[num] + "\\b").test(all))) return null; }
-  if (FIND_HELD.test(text) || IA_AMOUNT.test(text) || IA_ADVICE.test(text) || IA_STRONGER.test(text)) return null;   // 4. no amounts, no advice, nothing on making an effect stronger
-  if (IA_ROUTE.test(text) && IA_THAN.test(text)) return null;                                                 //    no way of taking compared with another
+    if (!new RegExp("(?:^|[^0-9.,])" + num.replace(/[.,]/g, "[.,]") + "(?:$|[^0-9])").test(all) && !(IA_NUMWORD[num] && new RegExp("\\b" + IA_NUMWORD[num] + "\\b").test(all))) return no("a number the summary does not hold (" + num + ")"); }
+  if (FIND_HELD.test(text)) return no("dying, overdose, amounts, pregnancy or children");                      // 4. no amounts, no advice, nothing on making an effect stronger
+  if (IA_AMOUNT.test(text)) return no("an amount, a dose or timing");
+  { const m = text.match(IA_ADVICE); if (m) return no("advice, or speaking to the reader (" + m[0].toLowerCase() + ")"); }
+  if (IA_STRONGER.test(text)) return no("making an effect stronger, or mixing");
+  if (IA_ROUTE.test(text) && IA_THAN.test(text)) return no("a way of taking compared with another");          //    no way of taking compared with another
   const stems = new Set((all.match(/[a-z]+/g) || []).map(iaStem));
-  for (const m of text.toLowerCase().match(IA_MORE) || []) { if (!m.split(/\s+/).every(w => w === "to" || stems.has(iaStem(w)))) return null; }   // 5. no word bigger or surer than the summary's own
-  if (IA_ANIMAL.test(all) && !IA_PEOPLE.test(all) && !IA_SAYS_ANIMAL.test(text)) return null;                  // 6. animals or cells: said
-  if (words && words.length) { const hay = new Set(tw.concat(qw).map(iaStem)); if (!words.some(w => hay.has(iaStem(w)))) return null; }   // 7. it bears on the question
-  return { t: text, quote, n, kind: p.kind, y: p.y, j: p.j, doi: p.doi, pmid: p.pmid };
+  for (const m of text.toLowerCase().match(IA_MORE) || []) { if (!m.split(/\s+/).every(w => w === "to" || stems.has(iaStem(w)))) return no("a word the summary does not have (" + m + ")"); }   // 5. no word bigger or surer than the summary's own
+  if (IA_ANIMAL.test(all) && !IA_PEOPLE.test(all) && !IA_SAYS_ANIMAL.test(text)) return no("a summary about animals or cells, not said");   // 6. animals or cells: said
+  if (words && words.length) { const hay = new Set(tw.concat(qw).map(iaStem)); if (!words.some(w => hay.has(iaStem(w)))) return no("it does not bear on the question"); }   // 7. it bears on the question
+  return { line: { t: text, quote, n, kind: p.kind, y: p.y, j: p.j, doi: p.doi, pmid: p.pmid }, why: "" };
 }
+export const iaGate = (f, papers, words) => iaCheck(f, papers, words).line;
 // the model's reply, whatever shape the service gives it: a string, or an object already parsed
 export function iaParse(out) {
   let v = out && typeof out === "object" ? (out.response !== undefined ? out.response : out.output_text !== undefined ? out.output_text : out.choices && out.choices[0] && out.choices[0].message ? out.choices[0].message.content : out.result !== undefined ? out.result : null) : out;
@@ -236,8 +243,8 @@ async function answer(request, url, env) {
     const qs = findQueries(rf.names, rf.words), [a, b] = await Promise.all([ask(qs[0]), ask(qs[1])]);
     let all = a.concat(b); if (all.length < 2) all = all.concat(await ask(qs[2]));
     for (const p of all) { const k = p.doi || p.pmid; if (seen.has(k)) continue; seen.add(k); papers.push(p); if (papers.length >= IA.papers) break; }
-    const keep = async (lines, why, cost) => {   // what was written (or that nothing passed) is kept, and the day's count
-      const rec = Object.assign({ v: IA.v, at: new Date().toISOString(), names: rf.names, words: rf.words, lines, model: IA.writer }, why ? { why } : {});
+    const keep = async (lines, why, cost, drop) => {   // what was written (or that nothing passed) is kept, and the day's count
+      const rec = Object.assign({ v: IA.v, at: new Date().toISOString(), names: rf.names, words: rf.words, lines, model: IA.writer }, why ? { why } : {}, drop && drop.length ? { drop: drop.slice(0, 6) } : {});
       try { await store.put(key, JSON.stringify(rec), { expirationTtl: IA.kept }); if (cost > 0) await store.put(dk, JSON.stringify({ n: Math.round(((used.n || 0) + cost) * 10) / 10, a: (used.a || 0) + 1 }), { expirationTtl: 3 * 86400 }); } catch (e) { /* not kept: the answer is still given */ }
       return rec;
     };
@@ -252,9 +259,11 @@ async function answer(request, url, env) {
     }
     const parsed = iaParse(out); cost = iaCost(out, sent, JSON.stringify(parsed || "").length + 40);
     if (!parsed) { await keep([], "no reply in the form asked for", cost); return json({ ok: true, none: true, why: "no reply in the form asked for" }); }
-    const lines = [], from = new Set();
-    for (const f of parsed.enough === false ? [] : parsed.findings.slice(0, 6)) { const l = iaGate(f, papers, rf.words); if (!l || from.has(l.n)) continue; from.add(l.n); lines.push(l); if (lines.length >= 3) break; }
-    const rec = await keep(lines, lines.length ? "" : parsed.enough === false ? "the summaries do not bear on the question" : "nothing passed the checks", cost);
+    const lines = [], from = new Set(), drop = [];   // drop: what the model wrote that the checks refused, with the reason: kept beside the answer, for the editors
+    for (const f of parsed.enough === false ? [] : parsed.findings.slice(0, 6)) { const c = iaCheck(f, papers, rf.words), l = c.line;
+      if (!l) { drop.push({ t: clean(f && f.text).slice(0, 300), why: c.why }); continue; }
+      if (from.has(l.n) || lines.length >= 3) continue; from.add(l.n); lines.push(l); }
+    const rec = await keep(lines, lines.length ? "" : parsed.enough === false ? "the summaries do not bear on the question" : "nothing passed the checks", cost, drop);
     return json(lines.length ? { ok: true, answer: { lines, at: rec.at } } : { ok: true, none: true, why: rec.why });
   } catch (e) { return json({ ok: true, none: true, why: "error" }); }
 }

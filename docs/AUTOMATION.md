@@ -846,6 +846,14 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       show one sentence, or none, where a strong model with the papers in hand would write a rounded answer. That
       rounded answer is the lane's, and the checked one is the editors'. The free allowance holds some 30 new
       questions a day; beyond that the reader gets the papers, as in 2.16.
+      **Tried with the real model before a reader meets it (site 2.18.1).** The editor's workspace can reach neither
+      the site nor the model, and on the site the model answers only once he has bound it. `scripts/auto/instant_trial.mjs`
+      (the lane's workflow, a request `instant-*.json`) runs the very file the site's server runs, on GitHub's machine,
+      with the model asked through Cloudflare's own API with the repository's key (the same model, account and free
+      day; what it uses is written into the lane's ledger) and the real Europe PMC, on the editor's own questions. It
+      writes `data/auto/instant/trial-*.json`: the sentences kept, the ones the checks refused with the reason, the
+      model's raw words, the time taken. The server now keeps the refused sentences with their reasons beside each
+      answer too (`drop`; never given to the page), and a number the summary writes as a word counts for its figure.
       **Two small things with it.** "us heroin deaths": "us" is read as the country where it stands first or last in
       a few words that ask for a count ("how many of us use heroin" is not). The heading over the figures of other
       places is now "Figures we do have": for a country inside the EU, the EU's figure is not from another place.
