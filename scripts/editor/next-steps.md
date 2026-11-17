@@ -38,6 +38,9 @@ after every step. `mkdir -p data/auto/requests` before writing a request.
 
 ## What the senior author asked for on 17 November, 12:56 to 13:45 (decision 27 of `docs/AUTOMATION.md`), in this order
 
+Done since: step a (names looked up and kept, site 2.9.3; watch `data/auto/names/learned.json` after each half-hourly
+run and read every learned name) and a first step of d (the first screen is Insight, site 2.10.0). Next: b, then c, then e.
+
 Done in site 2.9.2: the readings "open" and "verb", short forms, a name of two words we do not know, the routes by
 country (the law, emergency numbers, drug checking), the line for a question not in English, two-word beginnings, a
 question already sent, the newest of the reader's questions first.

@@ -1209,6 +1209,10 @@ document.addEventListener("click", async e => {
   if (e.target.closest("button[data-asked-reload]")) { location.reload(); return; }
   const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   const op = e.target.closest("a[data-asked-open]"); if (op) { askedDrop(op.dataset.askedOpen); return; }   // read: it leaves the list (the sheet opens by its data-sheet)
+  // (2.10) a thing to try under the capsule: put in the box and asked
+  const tr = e.target.closest("button[data-try]");
+  if (tr) { e.preventDefault(); const s = document.getElementById("search"); if (!s) return; s.value = tr.dataset.try;
+    setTimeout(() => { s.focus({ preventScroll: true }); runSearch(s.value); }, 0); return; }
   // (2.9) a question that waits: asked again in the box, which shows what the site has on it so far
   const lk = e.target.closest("button[data-asked-look]");
   if (lk) { e.preventDefault(); const it = askedList().find(x => x.k === lk.dataset.askedLook), s = document.getElementById("search"); if (!it || !s) return;

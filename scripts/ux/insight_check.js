@@ -274,6 +274,17 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     await p.fill("#search", ""); const st = await ask(UNCHECKED);
     ok(w + ": a question already sent (“" + UNCHECKED + "”), opened again, says “You sent us this question. No answer yet …” and offers no second way to send it", st.none === "You sent us this question." && !st.askBtn && /No answer yet\. It turns green under “Your questions” on the start page when there is one\./.test(st.text.replace(/\s+/g, " ")), st.none + " | " + st.text.replace(/\s+/g, " ").slice(0, 200));
     await p.evaluate(was => { if (was === null) localStorage.removeItem("pk-asked"); else localStorage.setItem("pk-asked", was); }, keptWas);
+    // ---- (2.10) the first screen is Insight: its name, the capsule, and things to try; pressing one asks it
+    await p.fill("#search", ""); await p.goto(BASE + "home"); await p.evaluate(() => { document.getElementById("search").blur(); closeSearch(); }); await p.waitForTimeout(300);   // (at rest: the answers are closed, the things to try are in view)
+    const hero = await p.evaluate(() => { const h = document.getElementById("insight-hero"), s = document.getElementById("search"), cap = document.querySelector("#home-search .sicon"), r = s.getBoundingClientRect(), c = cap.getBoundingClientRect();
+      return { mark: (h.querySelector(".ins-mark") || {}).textContent || "", h1: (h.querySelector("h1") || {}).textContent || "", inHero: !!h.querySelector("#search"), tall: r.height, cap: c.width, capBg: getComputedStyle(cap).backgroundColor, bg: getComputedStyle(s).backgroundColor,
+        tries: [...h.querySelectorAll(".ins-try button")].filter(b => b.offsetParent).map(b => b.dataset.try), pill: !!cap.querySelector(".ic-pill") && getComputedStyle(cap.querySelector(".ic-pill")).display !== "none" && getComputedStyle(cap.querySelector(".ic")).display === "none" }; });
+    await shot("hero");
+    ok(w + ": the first screen is Insight: “Pharmakon Insight”, the question, and the box as a capsule (a coloured cap with the site's mark, at least 56px tall), with things to try under it",
+      hero.mark.replace(/\s+/g, " ").trim() === "Pharmakon Insight" && hero.h1 === "What do you want to know?" && hero.inHero && hero.tall >= 56 && hero.cap >= 56 && hero.capBg !== hero.bg && hero.pill && hero.tries.length >= 3, JSON.stringify(hero));
+    await p.click('#insight-hero .ins-try button[data-try="are drugs legal in greece"]'); await p.waitForTimeout(1700);
+    const tried = await snap();
+    ok(w + ": pressing a thing to try asks it: “are drugs legal in greece” is in the box and its answer is shown", tried.value === "are drugs legal in greece" && tried.open && tried.routes.length === 1 && tried.routes[0].kind === "law", tried.value + " | " + JSON.stringify(tried.routes));
     // (2.9.1) a drug's name with a letter wrong is read as the name, and the page says what it read
     const sp = await ask(MISSPELT); await shot("list-misspelt");
     const spRead = await p.evaluate(() => (document.querySelector("#search-results .sr-fit .sr-read") || {}).textContent || "");
@@ -427,7 +438,7 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     await p.focus("#search"); await whenReady();
     const bc = await ask("does it kill brain cells"); ui += " " + await uiText(); await shot("list-on-cannabis-page");
     const alc = bc.related.find(x => x.id === "cl_alc_brain_cells");
-    ok(w + ": on the cannabis page the box is there and reads “Ask about cannabis”; “does it kill brain cells” does not get the alcohol answer as best match (related at most, under its own drug's name)", ph1 === "Ask about cannabis" && ph0 === "Search or ask a question" && boxSeen &&
+    ok(w + ": on the cannabis page the box is there and reads “Ask about cannabis”; “does it kill brain cells” does not get the alcohol answer as best match (related at most, under its own drug's name)", ph1 === "Ask about cannabis" && ph0 === "Ask anything about drugs" && boxSeen &&
       !bc.best.some(x => x.id === "cl_alc_brain_cells") && bc.best.every(x => x.k === "Cannabis") && (!alc || alc.k === "Alcohol") && (bc.best.length > 0 || bc.none === "We haven’t checked exactly this yet."),
       "placeholder “" + ph1 + "”; " + bc.kids.join(" > ") + "; related: " + bc.related.map(x => x.k + ": " + x.q).join("; "));
     const ad = await ask("is it addictive");

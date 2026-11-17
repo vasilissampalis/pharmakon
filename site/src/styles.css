@@ -2389,3 +2389,46 @@ button.aq-a { width: 100%; border: 0; background: none; font: inherit; text-alig
 .ask-howl .how-src { white-space: nowrap; }
 /* 2.9.2: the country a question named, on a drug's law part */
 .cq-asked { font-size: .82rem; color: var(--muted); }
+
+/* 2.10: Insight looks like what it is (the senior author, 17 November 2026: "it should be apparent visually that pharmakon
+   insight IS the way to use and develop the site ... it has to feel different look different our search engine has to feel
+   like a drug"). One idea: the question box is a capsule, the site's own mark laid on its side: a pine cap that holds the
+   mark, a white body that holds the words. When it is in use, light gathers behind it and drifts slowly: the one moving
+   thing on the page. Everything around it stays quiet. */
+.sicon .ic-pill { display: none; }
+.ins-mark { display: flex; align-items: center; gap: 9px; font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--muted); }
+.ins-mark .logo { width: 22px; height: 22px; flex: none; }
+.ins-mark .logo .l1 { fill: var(--accent); }
+.ins-mark .logo .l2 { fill: var(--surface); stroke: var(--fg); stroke-width: 2.4; }
+.ins-mark b { font-weight: 900; color: var(--fg); }
+.insight-hero .ask-h1 { margin-top: 12px; }
+.home-search { margin-top: 24px; position: relative; isolation: isolate; z-index: 30; }   /* (its answers open over what follows on the page) */
+.home-search::before { content: ""; position: absolute; z-index: -1; inset: -16px -8px -20px; border-radius: 999px; opacity: 0; transition: opacity 0.6s ease; filter: blur(24px); background-size: 150% 100%;
+  background-image: radial-gradient(58% 120% at 10% 50%, rgba(10, 106, 91, 0.6), transparent 70%), radial-gradient(48% 130% at 58% 42%, rgba(111, 226, 190, 0.8), transparent 72%), radial-gradient(42% 120% at 94% 58%, rgba(244, 196, 84, 0.55), transparent 70%); }
+.home-search:focus-within::before { opacity: 1; animation: ins-drift 9s ease-in-out infinite alternate; }
+@keyframes ins-drift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+.home-search .searchwrap input { min-height: 68px; font-size: 1.22rem; padding: 14px 22px 14px 92px; border: 0; border-radius: 999px; background: var(--surface); color: var(--fg);
+  box-shadow: 0 0 0 2px var(--fg), 0 14px 34px rgba(10, 30, 26, 0.16); transition: box-shadow 0.25s ease; }
+.home-search .searchwrap input:focus { outline: 0; border: 0; box-shadow: 0 0 0 3px var(--accent), 0 18px 44px rgba(10, 106, 91, 0.3); }
+.home-search .searchwrap input::placeholder { color: var(--muted); opacity: 1; }
+.home-search .searchwrap .sicon { left: 2px; top: 2px; bottom: auto; height: 64px; transform: none; width: 74px; border-radius: 999px 0 0 999px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; box-shadow: inset -3px 0 0 rgba(0, 0, 0, 0.16); }
+.home-search .searchwrap .sicon .ic { display: none; }
+.home-search .searchwrap .sicon .ic-pill { display: block; width: 32px; height: 32px; }
+.ic-pill .p1 { fill: currentColor; } .ic-pill .p2 { fill: currentColor; opacity: 0.5; }
+.home-search .search-results { top: calc(100% + 12px); border-radius: 22px; border-color: transparent; box-shadow: 0 0 0 2px var(--accent), 0 22px 54px rgba(10, 30, 26, 0.22); }
+.insight-hero .home-sub { margin-top: 18px; font-size: 1.04rem; max-width: 46em; }
+.ins-try { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ins-try-k { font-family: var(--font-display); font-weight: 800; font-size: 0.98rem; color: var(--muted); margin-right: 2px; }
+.ins-try button { font: inherit; font-size: 0.96rem; line-height: 1.2; padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--fg); cursor: pointer; text-align: left; }
+.ins-try button:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-soft-ink); }
+.ins-try button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 560px) {
+  .home-search .searchwrap input { min-height: 60px; font-size: 1.08rem; padding-left: 76px; padding-right: 14px; }
+  .home-search .searchwrap .sicon { width: 60px; height: 56px; }
+  .home-search .searchwrap .sicon .ic-pill { width: 28px; height: 28px; }
+  .ins-try button:nth-of-type(n+4) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .home-search:focus-within::before { animation: none; } .home-search::before, .home-search .searchwrap input { transition: none; } }
+.home-search .search-results:not([hidden]) { animation: ins-rise 0.22s ease-out; }
+@keyframes ins-rise { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .home-search .search-results:not([hidden]) { animation: none; } }
