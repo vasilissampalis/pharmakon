@@ -821,10 +821,12 @@ def check_marks(chat, model, parts, labels):
 
 
 # ---------- our own checker (decision 23) ----------
-def own_word(parts, labels, chk):
+def own_word(parts, labels, chk, passage=True):
     """Our own checker's score for every sentence a model wrote, against the words it rests on (the quotes and the passages they
-    stand in): {part: score from 0 to 1}. A sentence the code wrote ("fixed") is not asked about."""
-    ask = [(p["part"], " ".join(((labels[u].get("paper") + ". " if labels[u].get("paper") else "") + labels[u]["quote"] + " " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS]).strip() for u in p["uses"]), p["text"]) for p in parts if not p.get("fixed") and p.get("uses")]      # (the source's name stands with its words: a sentence may say "Health Canada says" only because of it)
+    stand in): {part: score from 0 to 1}. A sentence the code wrote ("fixed") is not asked about. passage=False: against the
+    quotes alone, with their sources' names, as the exam of the lane's sentences is sat (workshop.sit_lane: the exam keeps no
+    passage); the record keeps that score too, so that the two ways can be compared on real answers (lane 11)."""
+    ask = [(p["part"], " ".join(((labels[u].get("paper") + ". " if labels[u].get("paper") else "") + labels[u]["quote"] + (" " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS] if passage else "")).strip() for u in p["uses"]), p["text"]) for p in parts if not p.get("fixed") and p.get("uses")]      # (the source's name stands with its words: a sentence may say "Health Canada says" only because of it)
     return dict(zip([a[0] for a in ask], chk.score([(src, text) for _, src, text in ask]))) if ask else {}
 
 
@@ -1316,7 +1318,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         # second reader's: a How line it does not find in the source's words is dropped, a short answer or a But is written again.
         if own_check is not None:
             sc = own_word(draft["parts"], labels, own_check); t = float(own_check.e.get("threshold") or 0.5)
-            rec["own"] = {"model": own_check.e.get("name"), "threshold": t, "scores": sc}
+            rec["own"] = {"model": own_check.e.get("name"), "threshold": t, "scores": sc, "scores_quotes_alone": own_word(draft["parts"], labels, own_check, passage=False)}     # (the second: measured only, it decides nothing)
             rec["gates"]["own"] = "our own checker (" + str(own_check.e.get("name")) + ", at least " + str(t) + "): " + ", ".join(f"{k} {v:.2f}" for k, v in sc.items())
             verdicts = [((v[0] and sc.get(p["part"], 1.0) >= t), v[1] if not v[0] else ("" if sc.get(p["part"], 1.0) >= t else f"our own checker does not find it in the words it rests on ({sc[p['part']]:.2f}): say only what those words say, in their own measure"))
                         for p, v in zip(draft["parts"], verdicts)]
@@ -1789,6 +1791,7 @@ def selftest():
     n_how = sum(p["part"].startswith("how") for p in r["parts"])
     assert r["status"] == "published" and r["own"]["model"] == "pharmakon-check-test" and set(r["own"]["scores"]) >= {"short", "but"} and all(v == 0.9 for v in r["own"]["scores"].values()) and "our own checker" in r["gates"]["own"], r.get("own")
     assert all(src.strip() and text.strip() for src, text in o.asked[0])                                    # every sentence is asked about beside the words it rests on
+    assert len(o.asked) == 2 and set(r["own"]["scores_quotes_alone"]) == set(r["own"]["scores"]) and all(len(a[0]) > len(b[0]) and a[1] == b[1] for a, b in zip(o.asked[0], o.asked[1]))    # (lane 11) and once more against the quotes alone: measured, it decides nothing
     a_how = next(p["text"] for p in r["parts"] if p["part"].startswith("how"))
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r2 = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, own_check=Own([a_how[:25]]))
