@@ -934,7 +934,9 @@ function insCtx() {
 function insPlaceholder() {
   const s = document.getElementById("search"); if (!s) return;
   if (insPlaceholder.own == null) insPlaceholder.own = s.getAttribute("placeholder") || "";
-  const d = insCtx().drug, want = d ? "Ask about " + pageWord(d) : insPlaceholder.own;
+  const home = !!document.querySelector("#view-home.active");
+  // (2.15) the same Insight on every page, and named: "Ask Insight about cannabis" on a drug's page, "Ask Insight about drugs" elsewhere
+  const d = insCtx().drug, want = d ? "Ask Insight about " + pageWord(d) : home ? insPlaceholder.own : "Ask Insight about drugs";
   if (s.getAttribute("placeholder") !== want) s.setAttribute("placeholder", want);
 }
 

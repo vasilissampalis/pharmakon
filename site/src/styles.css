@@ -2461,3 +2461,95 @@ a.wl-b { display: inline-flex; align-items: center; }
 
 /* ---------- 2.14: a figure as an answer: its place, year and source under it ---------- */
 .search-results a.sr-route .t .rm, .ins-route .t .rm { display: block; margin-top: 2px; font-weight: 400; font-size: 0.82rem; color: var(--muted); }
+
+/* ---------- Site 2.15 (17 November 2026): simple first, the science one quiet tap away (the senior author: "users should be able to
+   find quick simple answers and only if they are crazy they should click to the scientific details"; "This is how our website should
+   be designed in general"). A source opens where the reader is; the list of sources says in plain words what each adds; the debate
+   box starts with plain words and keeps the researchers' arguments under one fold. ---------- */
+.ev-inl { position: relative; margin: 8px 0 12px; padding: 10px 12px 2px; border: 1px solid var(--line-strong); border-left: 3px solid var(--accent); border-radius: 12px; background: var(--surface); font-size: 0.94rem; line-height: 1.5; font-weight: 400; color: var(--fg); text-align: left; }
+li > .ev-inl, dd > .ev-inl { margin-top: 10px; }
+.ev-inl-h { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; }
+.ev-inl-x { flex: none; display: inline-grid; place-items: center; width: 40px; height: 40px; margin: -8px -8px 0 0; padding: 0; border: 0; border-radius: 999px; background: none; color: var(--muted); cursor: pointer; }
+.ev-inl-x .ic { width: 18px; height: 18px; }
+.ev-inl-x:hover, .ev-inl-x:focus-visible { background: var(--accent-soft); color: var(--fg); }
+.ev-inl .ev-src-t { display: block; margin: 0 0 6px; }
+.ev-inl .ev-src-fund { margin: 0 0 6px; }
+.ev-inl .ev-src-b { padding: 10px 0 0; }
+a.evcite[aria-expanded="true"] { background: var(--accent-soft); }
+.howsrc a.evcite[aria-expanded="true"] { background: var(--accent); color: var(--accent-ink); }
+.ev-src-k { display: block; margin: 0 0 2px; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.ev-src-p ul { margin: 2px 0 0; padding-left: 1.15em; display: grid; gap: 6px; }
+.ev-src-p li, .ev-refs .ev-src-p li { padding-left: 0; border-left: 0; font-size: 0.94rem; }
+.ev-src-kind { margin: 0; }
+.ev-src-b > .ev-src-acts { margin: -4px 0; }
+details.ev-src-sci { border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; padding-top: 2px; }
+details.ev-src-sci > summary { display: inline-flex; grid-template-columns: none; padding: 0; min-height: 40px; font-size: 0.86rem; font-weight: 600; color: var(--muted); }
+details.ev-src-sci > summary::after { content: none; }
+details.ev-src-sci[open] > summary { margin-bottom: 6px; }
+details.ev-src-sci > .ev-quotes, details.ev-src-sci > .ev-apa, details.ev-src-sci > .ev-src-acts { margin-bottom: 10px; }
+.sc-l { font-size: inherit; }
+.evd-plain { margin: 4px 0 6px; line-height: 1.5; }
+.evd-sides { margin: 6px 0 8px; display: grid; gap: 10px; }
+.evd-sides dt { font-size: 0.8rem; font-weight: 800; color: var(--muted); }
+.evd-sides dd { margin: 2px 0 0; line-height: 1.5; }
+details.evd-full { border-top: 1px solid var(--line); margin-top: 6px; }
+details.evd-full > summary { font-size: 0.88rem; font-weight: 600; color: var(--muted); }
+.evd-full .evd-q { font-size: 0.95rem; }
+
+/* (2.15) Insight looks the same on every page: the capsule of the start page, smaller, in the top bar ("the search engine should be more
+   apparent ... in all other pages of the website too"; "more consistent throughout the website") */
+.bar-search .searchwrap input { min-height: 48px; padding: 10px 16px 10px 64px; border: 0; background: var(--surface); box-shadow: 0 0 0 2px var(--fg); text-overflow: ellipsis; transition: box-shadow 0.2s ease; }
+.bar-search .searchwrap input:focus { outline: 0; border: 0; box-shadow: 0 0 0 3px var(--accent), 0 8px 22px rgba(10, 106, 91, 0.22); }
+.bar-search .searchwrap input::placeholder { color: var(--muted); opacity: 1; text-overflow: ellipsis; }
+.bar-search .searchwrap .sicon { left: 2px; top: 2px; bottom: auto; height: 44px; width: 52px; transform: none; border-radius: 999px 0 0 999px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; box-shadow: inset -2px 0 0 rgba(0, 0, 0, 0.16); }
+.bar-search .searchwrap .sicon .ic { display: none; }
+.bar-search .searchwrap .sicon .ic-pill { display: block; width: 24px; height: 24px; }
+@media (prefers-reduced-motion: reduce) { .bar-search .searchwrap input { transition: none; } }
+/* where the reader is, and the way back, in the bar that stays in view */
+.here { flex: 0 1 auto; min-width: 0; margin: 0; font-size: 0.86rem; font-weight: 600; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.here::before { content: "\203A"; margin-right: 8px; color: var(--line-strong); }
+.barback { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+.barback[hidden] { display: none; }
+.barback .ic { width: 18px; height: 18px; }
+.barback:hover { background: var(--surface-2); }
+@media (max-width: 700px) {
+  .topbar .brand { margin-right: 0; }
+  .here { flex: 1 1 0; margin-right: auto; font-size: 0.8rem; }
+  .on-home .topbar .brand { margin-right: auto; }
+  .barback { padding: 0 11px; }
+  .barback span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
+@media (max-width: 380px) { .topbar .brand .mark { font-size: 1.16rem; } }
+/* a closed answer: its question and the first line of its answer; the bars without their words (they are read aloud, and shown when it opens) */
+details.ask:not([open]) .ask-h { grid-template-columns: minmax(0, 1fr) auto; column-gap: 10px; row-gap: 3px; align-items: center; }
+details.ask:not([open]) .ask-q { grid-column: 1 / -1; }
+details.ask:not([open]) .ask-s { grid-column: 1; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden; color: var(--muted); font-size: 0.97rem; }
+details.ask:not([open]) .ask-s .cue { font-weight: 600; color: var(--fg); }
+details.ask:not([open]) .ask-m { grid-column: 2; }
+details.ask:not([open]) .ask-m .mw { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+details.ask:not([open]) > summary { min-height: 56px; padding-top: 11px; padding-bottom: 11px; }
+/* the topics of a part are its signposts */
+.drug2 .sec .tp, .secpage .sec .tp { margin: 26px 0 8px; font-size: 1rem; font-weight: 800; color: var(--fg); scroll-margin-top: calc(var(--bar-h, 0px) + 70px); }
+.tp-c { margin-left: 4px; font-weight: 600; font-size: 0.86rem; color: var(--muted); }
+.tpj { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 2px; }
+.tpj-b { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 13px; border-radius: 999px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--fg); font: inherit; font-size: 0.93rem; font-weight: 600; cursor: pointer; text-align: left; }
+.tpj-b:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-soft-ink); }
+.tpj-n { font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+
+/* (2.15) on a phone Insight and the way back stay in view: the bar's first row scrolls away, its second row stays (the start page has its own
+   capsule under the question, so its bar scrolls away as before) */
+.barbreak { display: none; }
+@media (max-width: 700px) {
+  .topbar { position: sticky; top: calc(-1 * var(--bar-up, 58px)); }
+  .on-home .topbar { position: relative; top: auto; }
+  .topbar .bar1 { row-gap: 0; }
+  .topbar .brand { order: 1; } .here { order: 2; } .menubtn { order: 3; }
+  .barbreak { display: block; flex: 0 0 100%; height: 0; order: 4; }
+  .barback { order: 5; margin-top: 8px; }
+  .bar-search { order: 6; flex: 1 1 0; min-width: 0; margin-top: 8px; }
+}
+
+/* (2.15) on a wide window the Menu button keeps its place right after the name on every page (site 2.4); where the reader is comes after it */
+@media (min-width: 701px) {
+  .topbar .brand { order: 1; } .menubtn { order: 2; } .here { order: 3; flex: 1 1 0; } .barback { order: 4; } .bar-search { order: 5; }
+}

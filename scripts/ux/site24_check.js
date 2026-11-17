@@ -454,6 +454,73 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.context().close();
   }
 
+  /* ---- Site 2.15 (17 November 2026): simple first, the science one quiet tap away; every citation a link; a source opens where the reader
+     is; Insight the same on every page, with the way back and the place always in view. The senior author's words are in docs/AUTOMATION.md
+     (decision 29). ---- */
+  for (const w of [390, 1280]) {
+    const p = await open(ON, w);
+    await p.evaluate(() => Promise.all(FULL_FILES.map(loadFull).concat(loadRefs())));
+    // every citation of an answer's own source is a link, in every text the evidence shows (the two-author ones never were: "&amp;" was cut at its semicolon)
+    const cit = await p.evaluate(() => { let texts = 0, links = 0; const left = [];
+      for (const c of CLAIMS) { const refs = [...new Set(c.evidence.map(e => e.reference))].filter(r => refById[r]);
+        const f = { statement: c.statement, reasoning: c.grade && c.grade.reasoning, population: c.population, exposure: c.exposure, comparator: c.comparator, outcome: c.outcome, magnitude: c.magnitude };
+        if (c.debate) for (const k of ["evidence_yes", "evidence_no", "neither_can_show", "editors_reading", "what_would_settle_it"]) f["debate." + k] = c.debate[k];
+        for (const [k, t] of Object.entries(f)) { if (!t) continue; texts++; const d = document.createElement("div"); d.innerHTML = sheetCites(String(t), refs); links += d.querySelectorAll("a").length;
+          d.querySelectorAll("a").forEach(a => a.replaceWith("\u0001")); const bare = d.textContent;
+          for (const r of refs) { const L = inTextLabel(refById[r], REFS), cut = L.lastIndexOf(", "), n = L.slice(0, cut), y = L.slice(cut + 2);
+            for (const form of [L, n + " (" + y + ")", n.replace(" & ", " and ") + ", " + y, n.replace(" & ", " and ") + " (" + y + ")"]) if (cut > 0 && bare.includes(form)) left.push(c.id + " " + k + ": " + form); } } }
+      return { texts, links, left }; });
+    ok(w + " px: in every text the evidence shows, an answer's own source is a link wherever it is named (with “&”, with “and”, in a sentence)", cit.texts > 2500 && cit.links > 2650 && cit.left.length === 0, cit.texts + " texts, " + cit.links + " links; left: " + cit.left.slice(0, 6).join(" | "));
+    await go(p, "#s-cannabis"); await p.evaluate(() => openEvidence("cl_can_deaths_attributed")); await p.waitForTimeout(900);
+    // the debate: plain words first, the researchers' five texts under one closed fold; the citation the senior author named is a link
+    const deb = await p.evaluate(() => { const b = document.getElementById("ev-debate"), full = b.querySelector("details.evd-full");
+      const first = b.querySelector(".evd-plain, .evd-sides"), partsOutside = [...b.querySelectorAll(".evd-part")].filter(x => !x.closest(".evd-full")).length;
+      full.open = true; const no = full.querySelector(".evd-part.no"); no.open = true;
+      return { first: first ? first.textContent.trim().slice(0, 80) : "", closed: !b.querySelector("details.evd-full[open] ~ *") && true, parts: full.querySelectorAll(".evd-part").length, partsOutside, q: !!full.querySelector(".evd-q"),
+        link: [...no.querySelectorAll("a.evcite")].some(a => a.textContent === "Launiainen & Ojanperä, 2014") }; });
+    ok(w + " px: “Researchers disagree” starts in plain words; the researchers' question and five texts are under one fold; “(Launiainen & Ojanperä, 2014)” there is a link", deb.first.length > 20 && deb.parts === 5 && deb.partsOutside === 0 && deb.q && deb.link, JSON.stringify(deb));
+    // a citation opens its source where the reader is: the line does not move; a second tap folds it away
+    const inl = await p.evaluate(async () => { const a = [...document.querySelectorAll("#evsheet .evd-part.no a.evcite")].find(x => /Launiainen/.test(x.textContent)); a.scrollIntoView({ block: "center" });
+      await new Promise(r => setTimeout(r, 80)); const y0 = a.getBoundingClientRect().top; a.click(); await new Promise(r => setTimeout(r, 120));
+      const box = document.querySelector("#evsheet .ev-inl"), y1 = a.getBoundingClientRect().top;
+      const out = { moved: Math.round(y1 - y0), open: !!box, after: box ? (box.previousElementSibling && box.previousElementSibling.contains(a)) || box.parentNode.contains(a) : false, expanded: a.getAttribute("aria-expanded"),
+        plain: box ? !!box.querySelector(".ev-src-p") : false, kind: box ? (box.querySelector(".ev-src-kind") || {}).textContent || "" : "", sciClosed: box ? !box.querySelector(".ev-src-sci").open : false, sciHas: box ? box.querySelectorAll(".ev-src-sci .ev-quotes li, .ev-src-sci .ev-apa").length : 0 };
+      a.click(); await new Promise(r => setTimeout(r, 120)); out.closedAgain = !document.querySelector("#evsheet .ev-inl"); out.moved2 = Math.round(a.getBoundingClientRect().top - y1); return out; });
+    ok(w + " px: a citation opens its source under the line being read, in plain words first (what it adds, what kind of study), the science folded; the line does not move; a second tap folds it away",
+      inl.open && inl.after && Math.abs(inl.moved) <= 2 && inl.expanded === "true" && inl.plain && /snapshot/i.test(inl.kind) && inl.sciClosed && inl.sciHas >= 2 && inl.closedAgain && Math.abs(inl.moved2) <= 2, JSON.stringify(inl));
+    // the list of sources: plain first
+    const src = await p.evaluate(() => { const li = document.getElementById("ev-src-drummer_2019"), d = li.querySelector("details"); d.open = true; const b = li.querySelector(".ev-src-b");
+      return { order: [...b.children].map(x => x.className.split(" ").pop()), plain: b.querySelectorAll(".ev-src-p li").length, sci: !b.querySelector(".ev-src-sci").open, sub: (document.querySelector("#evsheet .ev-sub") || {}).textContent }; });
+    ok(w + " px: a source in the list says what it adds to the answer and what kind of study it is; “Scientific detail” is the last thing and closed", src.plain === 3 && src.order[0] === "ev-src-p" && src.order[src.order.length - 1] === "ev-src-sci" && src.sci && /what it adds/.test(src.sub), JSON.stringify(src));
+    await p.evaluate(() => closeEvidence()); await p.waitForTimeout(300);
+    // a part of a drug page: a closed answer is its question and one line; its topics are signposts; many answers start with their topics
+    await go(p, "#s-heroin/part-d-risk", 900);
+    const part = await p.evaluate(() => { const sec = document.querySelector("#drug2 .sec:not([hidden])"), cards = [...sec.querySelectorAll("details.ask")], s = cards[0].querySelector(".ask-s"), lh = parseFloat(getComputedStyle(s).lineHeight);
+      const closed = Math.round(s.getBoundingClientRect().height / lh); cards[0].open = true; const open = Math.round(s.getBoundingClientRect().height / lh); cards[0].open = false;
+      return { cards: cards.length, closed, open, chips: [...sec.querySelectorAll(".tpj-b")].map(b => b.dataset.tp), heads: [...sec.querySelectorAll("h3.tp")].map(h => h.id), mw: getComputedStyle(cards[0].querySelector(".ask-m .mw")).position }; });
+    ok(w + " px: on a part with many answers a closed answer shows one line of its answer (the whole of it when open), and the part starts with its topics, each a jump to its answers",
+      part.cards >= 8 && part.closed === 1 && part.open >= (w < 600 ? 2 : 1) && part.chips.length >= 3 && part.chips.every(x => part.heads.includes(x)) && part.mw === "absolute", JSON.stringify(part));
+    await p.click(".view.active .tpj-b:nth-of-type(3)"); await p.waitForTimeout(900);
+    const jump = await p.evaluate(() => { const b = document.querySelectorAll(".view.active .tpj-b")[2], h = document.getElementById(b.dataset.tp), sm = document.querySelector(".view.active .secmenu"); return { top: Math.round(h.getBoundingClientRect().top), under: Math.round(sm.getBoundingClientRect().bottom) }; });
+    ok(w + " px: a topic's button lands on that topic, just under the bars that stay", jump.top >= jump.under && jump.top <= jump.under + 40, JSON.stringify(jump));
+    // the top bar: the same Insight on every page, where the reader is, and the way back once the Back line is out of sight
+    await go(p, "#home"); await go(p, "#s-cannabis", 700); await go(p, "#s-heroin/part-d-risk", 900);
+    await p.mouse.move(Math.round(w / 2), 400); await p.mouse.wheel(0, -6000); await p.waitForTimeout(500);   // (a reader's own scroll: a jump is kept in place until the reader moves)
+    const bar0 = await p.evaluate(() => ({ y: Math.round(window.scrollY), here: document.getElementById("here").textContent, hereSeen: document.getElementById("here").getClientRects().length > 0, back: document.getElementById("barback").hidden, crumb: document.getElementById("crumb").textContent.trim(),
+      pill: getComputedStyle(document.querySelector("#bar-search .sicon .ic-pill")).display, glass: getComputedStyle(document.querySelector("#bar-search .sicon .ic")).display, ph: document.getElementById("search").placeholder }));
+    await p.mouse.wheel(0, 1200); await p.waitForTimeout(500);
+    const bar1 = await p.evaluate(() => { const s = document.getElementById("search").getBoundingClientRect(), b = document.getElementById("barback"); return { boxTop: Math.round(s.top), boxSeen: s.top >= 0 && s.bottom <= 90 && s.width > 150, back: b.hidden, label: b.getAttribute("aria-label"), backSeen: b.getClientRects().length > 0 && b.getBoundingClientRect().top >= 0 }; });
+    ok(w + " px: on every page the box is Insight's capsule and says so (“Ask Insight about heroin”), and the bar says where the reader is (“Heroin › Risks”)", bar0.pill === "block" && bar0.glass === "none" && bar0.ph === "Ask Insight about heroin" && bar0.here === "Heroin › Risks" && bar0.hereSeen, JSON.stringify(bar0));
+    ok(w + " px: at the top of a page the Back line is the way back (no second Back beside it); further down, Insight is still in view and the bar holds the way back, named", bar0.back === true && /^Back to Cannabis/.test(bar0.crumb) && bar1.boxSeen && bar1.back === false && bar1.backSeen && /^Back to Cannabis/.test(bar1.label || ""), JSON.stringify([bar0.back, bar0.crumb, bar1]));
+    await p.click("#barback"); await p.waitForTimeout(700);
+    ok(w + " px: the bar's Back leads back", (await p.evaluate(() => location.hash)) === "#s-cannabis");
+    // the empty box on a drug's page offers what people ask most about that drug
+    await p.click("#search"); await p.waitForTimeout(600);
+    const sug = await p.evaluate(() => ({ hint: (document.querySelector("#search-results .sr-hint") || {}).textContent || "", hrefs: [...document.querySelectorAll("#search-results a.sr-sug")].map(a => a.getAttribute("href")) }));
+    ok(w + " px: before a word is typed, the box on the cannabis page offers what people ask most about cannabis", sug.hint === "Most asked about cannabis" && sug.hrefs.length >= 3 && sug.hrefs.every(h => h.startsWith("#s-cannabis/q-")), JSON.stringify(sug));
+    await p.context().close();
+  }
+
   ok("no error in any page's console", errors.length === 0, errors.slice(0, 5).join(" || "));
   await browser.close(); ON.server.close(); OFF.server.close();
   console.log(fail ? fail + " of " + (pass + fail) + " checks failed" : "All " + (pass + fail) + " checks passed");

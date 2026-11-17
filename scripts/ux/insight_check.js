@@ -16,7 +16,7 @@
 // - Enter opens the sheet for the question as asked, headed with the person's own words, depth words understood ("full
 //   evidence": How do we know? open, also in a related answer opened from there; "tl;dr": the short answer and its But), with
 //   no guess step anywhere;
-// - on a drug's page the box reads "Ask about <drug>" and a question that names no drug is about that drug;
+// - on a drug's page the box reads "Ask Insight about <drug>" (2.15: the same Insight on every page, and named) and a question that names no drug is about that drug;
 // - an answer linked from outside its own page opens over the page: Myth or fact's "Read the answer" (Back, Escape and the
 //   browser's Back return to the same card, scrolled as it was), the questions to try, a shared answer's other questions;
 // - next questions ("People also ask", "Read next") are about the same drug, without the answers opened in this visit;
@@ -499,7 +499,7 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     await p.focus("#search"); await whenReady();
     const bc = await ask("does it kill brain cells"); ui += " " + await uiText(); await shot("list-on-cannabis-page");
     const alc = bc.related.find(x => x.id === "cl_alc_brain_cells");
-    ok(w + ": on the cannabis page the box is there and reads “Ask about cannabis”; “does it kill brain cells” does not get the alcohol answer as best match (related at most, under its own drug's name)", ph1 === "Ask about cannabis" && ph0 === "Ask anything about drugs" && boxSeen &&
+    ok(w + ": on the cannabis page the box is there and reads “Ask Insight about cannabis”; “does it kill brain cells” does not get the alcohol answer as best match (related at most, under its own drug's name)", ph1 === "Ask Insight about cannabis" && ph0 === "Ask anything about drugs" && boxSeen &&
       !bc.best.some(x => x.id === "cl_alc_brain_cells") && bc.best.every(x => x.k === "Cannabis") && (!alc || alc.k === "Alcohol") && (bc.best.length > 0 || bc.none === "We haven’t checked exactly this yet."),
       "placeholder “" + ph1 + "”; " + bc.kids.join(" > ") + "; related: " + bc.related.map(x => x.k + ": " + x.q).join("; "));
     const ad = await ask("is it addictive");

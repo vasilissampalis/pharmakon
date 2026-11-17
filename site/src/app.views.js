@@ -110,6 +110,7 @@ function navTitle() {
 function navCrumb() {
   const bar = document.getElementById("crumb"); if (!bar) return;
   const home = !!document.querySelector("#view-home.active"), prev = NAV.idx > 0 ? NAV.list[NAV.idx - 1] : null;
+  navHere(home, prev);
   if (home) { bar.hidden = true; bar.innerHTML = ""; return; }
   // inside a section opened from its own page's list, the first chip of the section menu already leads back to that list
   // ("← Statistics"): a second line saying the same thing just above it would be noise, so the line rests there
@@ -119,6 +120,22 @@ function navCrumb() {
     ? '<a class="crumb-a" href="' + esc(prev.h || "#home") + '" data-nav-back>' + icon("arrow") + "<span>Back to " + esc(prev.t) + "</span></a>"
     : '<a class="crumb-a" href="#home">' + icon("arrow") + "<span>Start page</span></a>";
   bar.hidden = false;
+}
+// (2.15) in the top bar, which stays in view: where the reader is ("Cannabis › What can go wrong?"), and the way back
+// once the Back line at the top of the page is out of sight (two Back controls side by side would be noise)
+function navHere(home, prev) {
+  const here = document.getElementById("here"), back = document.getElementById("barback"); if (!here || !back) return;
+  const t = home ? "" : navTitle().replace(/: /, " \u203A ");
+  here.textContent = t; here.hidden = !t;
+  const can = !home && prev && prev.h != null && prev.t;
+  back.dataset.on = can ? "1" : ""; if (can) { back.setAttribute("aria-label", "Back to " + prev.t); back.title = "Back to " + prev.t; }
+  [0, 120, 500].forEach(ms => setTimeout(navBackShow, ms));   // (after the Back line itself is drawn, and again when the page has settled)
+}
+function navBackShow() {
+  const back = document.getElementById("barback"), crumb = document.getElementById("crumb"), top = document.querySelector(".topbar"); if (!back) return;
+  const seen = crumb && !crumb.hidden && top && crumb.getBoundingClientRect().bottom > top.getBoundingClientRect().bottom + 4;
+  const show = back.dataset.on === "1" && !seen;
+  if (back.hidden === show) back.hidden = !show;
 }
 // the page as it was: the question that was open, and the same place; kept there while the page settles, until the reader moves
 function navRestore(e) {
@@ -139,10 +156,11 @@ function navAfter() {
   NAV_TRAVERSE = false; navStore();
 }
 if (typeof window !== "undefined") {
-  window.addEventListener("scroll", () => { clearTimeout(navLeave._t); navLeave._t = setTimeout(navLeave, 250); }, { passive: true });
+  window.addEventListener("scroll", () => { clearTimeout(navLeave._t); navLeave._t = setTimeout(navLeave, 250); if (!navBackShow._f) navBackShow._f = requestAnimationFrame(() => { navBackShow._f = 0; navBackShow(); }); }, { passive: true });
   window.addEventListener("pagehide", navLeave);
   ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => window.addEventListener(t, () => { NAV_MOVED = true; }, { passive: true, capture: true }));
   document.addEventListener("click", ev => {
+    if (ev.target.closest && ev.target.closest("#barback")) { ev.preventDefault(); history.back(); return; }
     const a = ev.target.closest && ev.target.closest("a[data-nav-back]"); if (!a || ev.button || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
     ev.preventDefault(); history.back();
   });
@@ -283,7 +301,13 @@ function stickyH(el) {
 }
 // how much of the top of the window the stuck bars take over a target (over the widest content, with no target)
 function updateSticky(target) {
-  const bar = stickyH(document.querySelector(".topbar")); let below = 0;
+  // (2.15) on a phone the top bar has two rows; the first (the name, where you are, the menu) scrolls away and the second (Insight,
+  // with the way back) stays: the bar is stuck above the window by the height of its first row, which is measured here
+  const tb = document.querySelector(".topbar"), bs = document.getElementById("bar-search"); let bar = stickyH(tb), below = 0;
+  if (bar && bs && bs.getClientRects().length && window.matchMedia && window.matchMedia("(max-width: 700px)").matches) {
+    const up = Math.max(0, Math.round(bs.getBoundingClientRect().top - tb.getBoundingClientRect().top - 6));
+    document.documentElement.style.setProperty("--bar-up", up + "px"); bar = Math.max(0, bar - up);
+  }
   const tr = target && target.getClientRects().length ? target.getBoundingClientRect() : null;
   document.querySelectorAll(".view.active .secmenu, .view.active nav.chips").forEach(n => {
     if (target && n.contains(target)) return;
@@ -1001,8 +1025,13 @@ let searchHits = [];
 // one per drug, a new set on each visit; short ones only, and none that only makes sense after another ("What about…")
 let SUGGEST = null;
 function suggestHtml() {
+  const ok = ([id, q]) => claimById[id] && claimById[id].verification.status !== "draft" && (SIMPLE.claims || {})[id] && q.split(" ").length <= 10 && !/^(what about|and |or |but )/i.test(q);
+  // (2.15: "the search engine should be more consistent throughout the website") on a drug's page the box is about that drug
+  // ("Ask Insight about cannabis"), so what it offers before a word is typed is what people ask most about that drug, not about others
+  const here = typeof insCtx === "function" ? insCtx().drug : null;
+  if (here) { const top = byDemand(drugQuestions(here).filter(ok)).slice(0, 5);
+    if (top.length) return '<p class="sr-hint">Most asked about ' + esc(pageWord(here)) + "</p>" + top.map(x => '<a class="sr-ans sr-sug" href="#s-' + here + "/q-" + esc(x[0]) + '"><span class="t">' + esc(x[1]) + "</span></a>").join(""); }
   if (!SUGGEST) {
-    const ok = ([id, q]) => claimById[id] && claimById[id].verification.status !== "draft" && (SIMPLE.claims || {})[id] && q.split(" ").length <= 10 && !/^(what about|and |or |but )/i.test(q);
     SUGGEST = shuffle(POPULAR.filter(sl => subBySlug[sl]).map(sl => { const top = roundRobin(drugQuestions(sl).filter(ok)).slice(0, 3); return top.length ? { sl, x: top[Math.floor(Math.random() * top.length)] } : null; }).filter(Boolean)).slice(0, 5);
   }
   return SUGGEST.length ? '<p class="sr-hint">Try a question like these</p>' + SUGGEST.map(({ sl, x }) => '<a class="sr-ans sr-sug" href="#s-' + sl + "/q-" + esc(x[0]) + '"><span class="k">' + esc(drugName(sl)) + '</span><span class="t">' + esc(x[1]) + "</span></a>").join("") : "";

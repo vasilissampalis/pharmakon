@@ -826,9 +826,16 @@ function secTopics(items, opt) {
   const top = g => Math.max(...g[1].map(x => demandOf(x[0])));
   return timed ? groups : groups.map((g, i) => [g, i]).sort((a, b) => top(b[0]) - top(a[0]) || a[1] - b[1]).map(p => p[0]);
 }
+/* (2.15; the senior author, 17 November 2026, of a drug page's part: "I feel like all questions look the same and I don't want to read
+   none this is an endless sea of questions ... find exactly what you want without reading so many words"). A closed answer is now its
+   question and the first line of its answer (styles.css); the topics are the signposts, each with its count; and a part with many
+   answers starts with its topics in one row, each a jump to its answers. */
 function secAsks(groups, key, slug, pre) {
-  return groups.map(([t, it], i) => (groups.length > 1 ? '<h3 class="tp">' + esc(t) + "</h3>" : "") + askList(it, key + (groups.length > 1 ? "-" + i : ""), 999, pre || null, slug)).join("");
+  const n = groups.reduce((a, g) => a + g[1].length, 0), many = groups.length >= 3 && n >= 8, id = i => "tp-" + key + "-" + i;
+  const jump = many ? '<nav class="tpj" aria-label="Topics in this part">' + groups.map(([t, it], i) => '<button type="button" class="tpj-b" data-tp="' + esc(id(i)) + '">' + esc(t) + '<span class="tpj-n">' + it.length + "</span></button>").join("") + "</nav>" : "";
+  return jump + groups.map(([t, it], i) => (groups.length > 1 ? '<h3 class="tp" id="' + esc(id(i)) + '">' + esc(t) + (it.length > 1 ? ' <span class="tp-c">' + it.length + "</span>" : "") + "</h3>" : "") + askList(it, key + (groups.length > 1 ? "-" + i : ""), 999, pre || null, slug)).join("");
 }
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button.tpj-b"); if (!b) return; const h = document.getElementById(b.dataset.tp); if (h) { scrollToEl(h, true); h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } });
 // the quiet line of a row: the section's topics (the first three), or with one topic its first question
 const secLine = groups => groups.length > 1 ? groups.slice(0, 3).map(g => g[0]).join(" · ") + (groups.length > 3 ? " · more" : "") : groups[0] && groups[0][1][0] ? groups[0][1][0][1] : "";
 let renderedDrug = null;
@@ -1064,33 +1071,91 @@ const citeLink = (id, page) => { const r = refById[id]; if (!r) return ""; retur
 // a study named in the sheet's text opens that study's place in the list of sources, with what it says for this answer
 // (senior author, 31 October: "I should be able to find the evidence of its respective finding in the most user friendly way")
 const evSrcLink = (id, text) => '<a class="evcite" href="#ev-src-' + esc(id) + '" data-src="' + esc(id) + '">' + text + "</a>";
-let LABEL_REF = null;   // every reference by its escaped in-text label, built once
+let LABEL_REF = null, CITE_YEAR = null;   // every reference by its escaped in-text label, and by the year in it (built once)
+/* (site 2.15; the senior author, 17 November 2026: "the (Launiainen & Ojanperä, 2014) citation ... has not a link to it every
+   citation should have a link to it". The text is escaped before it is read, and the list in brackets was cut at every semicolon:
+   also at the one that ends "&amp;", so no citation of two authors in brackets was ever a link, on any answer. Now the list is cut
+   only between citations, and a reference is found in every form the checked texts use: "Hall & Degenhardt, 2009", "Hall and
+   Degenhardt, 2009", "Hall & Degenhardt 2009", "Hall and Degenhardt (2009)", and the second year of "(Hughes & Stevens, 2010,
+   2012)". This answer's own sources open where the reader is; any other reference of the site opens its paper.) */
+function semiParts(s) {
+  const out = []; let last = 0;
+  for (let i = 0; i < s.length; i++) if (s[i] === ";" && !/&(?:amp|lt|gt|quot|#39)$/.test(s.slice(Math.max(0, i - 5), i))) { out.push(s.slice(last, i)); last = i + 1; }
+  out.push(s.slice(last)); return out;
+}
+const CITE_FORMS = new Map();
+function citeForms(L) {
+  let f = CITE_FORMS.get(L); if (f) return f;
+  const cut = L.lastIndexOf(", ");
+  if (cut < 1 || L.charAt(0) === "“") f = { inner: [L], narr: [] };
+  else {
+    const name = L.slice(0, cut), y = L.slice(cut + 2), names = name.includes(" &amp; ") ? [name, name.replace(" &amp; ", " and ")] : [name];
+    // (an apostrophe in a name is written either way: O'Neal, O’Neal)
+    const all = [...new Set(names.flatMap(citeNames))];
+    // in a sentence the year's bracket may hold more: "Poole et al. (2017, corrected in 2018)", "Kerr et al. (2007, p. 40)"
+    f = { inner: all.flatMap(n => [n + ", " + y, n + " " + y]), narr: all.flatMap(n => [n + " (" + y, n + "&#39;s (" + y, n + "’s (" + y]), one: !/ et al\.| &amp; | and /.test(name) };
+  }
+  CITE_FORMS.set(L, f); return f;
+}
+// a name as texts write it: the apostrophe either way (O'Neal, O’Neal), and a name's small words in either case (De La Torre in
+// the reference's record, de la Torre in a sentence; van der Pol, Van der Pol at the start of one)
+function citeNames(n) {
+  const low = n.replace(/^(?:(?:De|La|Van|Der|Den|Von|Di|Del|Le|Ten|Ter|Da|Dos|Du) )+/, m => m.toLowerCase()), cap = n.charAt(0).toUpperCase() + n.slice(1);
+  return [...new Set([n, low, cap].flatMap(x => [x, x.replace(/’/g, "&#39;"), x.replace(/&#39;/g, "’")]))];
+}
+const CITE_MONTH = /^(?:January|February|March|April|May|June|July|August|September|October|November|December)$/;
+// a study we know only through another source ("Mittleman et al., 2001, as relayed by ...") is not linked to a paper of ours with the same label
+const CITE_RELAYED = /^,?\s*(?:as |and )?(?:relayed|cited|described|reported|quoted|summari[sz]ed|given)\b/;
+const CITE_TAIL = /[A-ZÀ-ÖØ-Þ][\p{L}’'-]+,? (?:&amp;|and) $|[A-ZÀ-ÖØ-Þ][\p{L}’'-]+, $/u;   // the end of a longer list of names: "Weier and Hall (2015)" is not "Hall (2015)"
 function sheetCites(text, refs) {
-  if (!LABEL_REF) LABEL_REF = new Map(REFS.map(r => [esc(inTextLabel(r, REFS)), r]));
+  if (!LABEL_REF) {
+    LABEL_REF = new Map(); CITE_YEAR = new Map();
+    for (const r of REFS) { const L = esc(inTextLabel(r, REFS)); LABEL_REF.set(L, r); const y = (L.match(/((?:1[89]|20)\d\d)[a-z]?$/) || [])[1];
+      if (y) { if (!CITE_YEAR.has(y)) CITE_YEAR.set(y, []); CITE_YEAR.get(y).push([r, L]); } }
+  }
   let h = esc(text); const keep = [];
   const hold = html => { keep.push(html); return "\u0000" + (keep.length - 1) + "\u0000"; };
-  const mine = refs.map(r => [r, esc(inTextLabel(refById[r], REFS))]).sort((a, b) => b[1].length - a[1].length);
-  // narrative citations first: Morgan et al. (2009), Curran & Morgan (2000)
-  for (const [r, lab] of mine) {
-    const cut = lab.lastIndexOf(", "), narr = lab.slice(0, cut) + " (" + lab.slice(cut + 2) + ")";
-    if (h.includes(narr)) h = h.split(narr).join(hold(evSrcLink(r, narr)));
-  }
-  // parenthetical citations, alone or with notes after them: (Grant et al., 2015; funded by ...; Hasin et al., 2007)
-  const starts = (t, L) => t === L || t.startsWith(L + ",") || t.startsWith(L + " ") || t.startsWith(L + ":");
-  h = h.replace(/\(([^()\u0000]{1,900})\)/g, (m, inner) => {
-    if (!/\d{4}/.test(inner)) return m;
-    return "(" + inner.split(";").map(part => {
+  const own = new Set(refs);
+  const link = (r, shown) => own.has(r.id) ? evSrcLink(r.id, shown) : '<a class="pop" href="' + esc(refLink(r)) + '" target="_blank" rel="noopener" data-ref="' + esc(r.id) + '">' + shown + "</a>";
+  // a study card's own number in the researchers' text tells a reader nothing: it opens that card
+  h = h.replace(/\bsc_[a-z0-9_]+\b/g, m => cardById[m] ? hold('<button type="button" class="linklike sc-l" data-card="' + m + '">study card</button>') : m);
+  // the references this text can name: the answer's own sources, and any other of the site whose year stands in it; the longest label first
+  const cand = refs.filter(r => refById[r]).map(r => [refById[r], esc(inTextLabel(refById[r], REFS))]);
+  for (const y of new Set(h.match(/(?:1[89]|20)\d\d/g) || [])) for (const x of CITE_YEAR.get(y) || []) if (!own.has(x[0].id)) cand.push(x);
+  cand.sort((a, b) => b[1].length - a[1].length);
+  const free = (i, one) => (i === 0 || !/[\p{L}\p{N}\u0000-]/u.test(h.charAt(i - 1))) && !(one && CITE_TAIL.test(h.slice(Math.max(0, i - 40), i)));
+  const swap = (form, r, ends, one) => { let i = h.indexOf(form);
+    while (i >= 0) { const after = h.charAt(i + form.length);
+      if (free(i, one) && (!ends || after === "" || ends.includes(after)) && (own.has(r.id) || !CITE_RELAYED.test(h.slice(i + form.length, i + form.length + 30)))) { const tok = hold(link(r, form)); h = h.slice(0, i) + tok + h.slice(i + form.length); i = h.indexOf(form, i + tok.length); }
+      else i = h.indexOf(form, i + 1); } };
+  // in a sentence: Morgan et al. (2009), Curran and Morgan (2000), Poole et al. (2017, corrected in 2018)
+  for (const [r, L] of cand) { const cf = citeForms(L); for (const f of cf.narr) if (h.includes(f)) swap(f, r, ");,:", cf.one); }
+  // in brackets, alone or with notes after them: (Grant et al., 2015; funded by ...; Hasin et al., 2007)
+  const starts = (t, F) => t === F || (t.startsWith(F) && ",.: ".includes(t.charAt(F.length)));
+  const moreYears = (L, rest) => { const name = L.slice(0, L.lastIndexOf(", ")); let out = "", m;
+    while ((m = rest.match(/^, ((?:1[89]|20)\d\d[a-z]?)(?=$|[,.: ])/))) { const r2 = LABEL_REF.get(name + ", " + m[1]); if (!r2) break; out += ", " + hold(link(r2, m[1])); rest = rest.slice(m[0].length); }
+    return out + rest; };
+  h = h.replace(/\(([^()]{1,900})\)/g, (m, inner) => {
+    if (!/(?:1[89]|20)\d\d/.test(inner)) return m;
+    return "(" + semiParts(inner).map(part => {
       const lead = part.match(/^\s*/)[0], t = part.slice(lead.length);
-      for (const [r, L] of mine) if (starts(t, L)) return lead + hold(evSrcLink(r, L)) + t.slice(L.length);
-      const m2 = t.match(/^[^,]+(?:, [^,]+)*?, \d{4}[a-z]?/); const other = m2 && LABEL_REF.get(m2[0]);
-      if (other) return lead + hold('<a class="pop" href="' + esc(refLink(other)) + '" target="_blank" rel="noopener" data-ref="' + esc(other.id) + '">' + m2[0] + "</a>") + t.slice(m2[0].length);
-      // a source of this answer named later in the part: (McCrae et al., 2020, as cited by Halifax et al., 2024)
+      for (const [r, L] of cand) for (const F of citeForms(L).inner) if (starts(t, F) && (own.has(r.id) || !CITE_RELAYED.test(t.slice(F.length)))) return lead + hold(link(r, F)) + moreYears(L, t.slice(F.length));
+      // a reference named later in the part: (McCrae et al., 2020, as cited by Halifax et al., 2024), (see Hall, 2015)
       let t2 = t, hit = false;
-      for (const [r, L] of mine) { const i = t2.indexOf(L), after = t2.charAt(i + L.length);
-        if (i > 0 && t2.charAt(i - 1) === " " && (after === "" || ",.: ".includes(after))) { t2 = t2.slice(0, i) + hold(evSrcLink(r, L)) + t2.slice(i + L.length); hit = true; } }
+      for (const [r, L] of cand) { const cf = citeForms(L); for (const F of cf.inner) { const i = t2.indexOf(F); if (i <= 0) continue; const rest = t2.slice(i + F.length), after = rest.charAt(0);
+        if (t2.charAt(i - 1) === " " && (after === "" || ",.: ".includes(after)) && !(cf.one && CITE_TAIL.test(t2.slice(Math.max(0, i - 40), i))) && (own.has(r.id) || !CITE_RELAYED.test(rest))) { t2 = t2.slice(0, i) + hold(link(r, F)) + rest; hit = true; break; } } }
       return hit ? lead + t2 : part;
     }).join(";") + ")";
   });
+  // loose in a sentence, as the tables of findings name studies: "Zhao et al. 2023, fully adjusted"
+  for (const [r, L] of cand) { if (!own.has(r.id) && !/ et al\.|&amp;/.test(L)) continue; const cf = citeForms(L); for (const F of cf.inner) if (h.includes(F)) swap(F, r, ",.;:) ", cf.one); }
+  // one of this answer's own sources named by its first author and year alone, as the tables of findings do ("Volkow 2014",
+  // "Park 2020 (Baltimore ...)"), or without the letter that tells two works of one year apart: only where one source fits
+  const byFam = new Map();
+  for (const id of refs) { const r = refById[id]; if (!r || !r.author || !r.author[0]) continue; const fam = esc(r.author[0].family || r.author[0].literal || ""), y4 = (String(year(r)).match(/^(?:1[89]|20)\d\d/) || [])[0];
+    if (fam && y4) { const k = fam + "|" + y4; byFam.set(k, byFam.has(k) ? null : r); } }
+  for (const [k, r] of byFam) { if (!r) continue; const [fam0, y4] = k.split("|"), month = CITE_MONTH.test(fam0);
+    for (const fam of citeNames(fam0)) for (const F of [fam + " et al., " + y4, fam + " et al. " + y4, fam + " et al. (" + y4, fam + ", " + y4].concat(month ? [] : [fam + " " + y4, fam + " (" + y4])) if (h.includes(F)) swap(F, r, ",.;:) ", !F.includes(" et al.")); }
   return h.replace(/\u0000(\d+)\u0000/g, (m, i) => keep[+i]);
 }
 // small labels after a "How we know" point, naming the studies it rests on (data/site/simple.json, how_src)
@@ -1101,28 +1166,72 @@ function howSrcHtml(sp, i, inSheet, claimId) {
   return '<span class="howsrc">' + ids.map(r => { const lab = inTextLabel(refById[r], REFS);
     return inSheet ? evSrcLink(r, esc(lab)) : '<a class="evcite" href="#' + esc(claimId) + '" data-focus-src="' + esc(r) + '" title="' + esc(lab) + '" aria-label="Source: ' + esc(lab) + '">' + esc(shortLabel(refById[r])) + "</a>"; }).join("") + "</span>";
 }
+/* A source, in plain words first (site 2.15; the senior author, 17 November 2026, of the list of sources: "the information that comes up
+   is too research based and it's difficult for the casual user to find this interesting users should be able to find quick simple
+   answers and only if they are crazy they should click to the scientific details"). Open, a source says what it adds to this answer
+   (the checked plain lines that rest on it), what kind of study it is in plain words (from its study card's design), and how to open
+   it. The findings as the readers recorded them, with their places in the paper, the quotation, the APA reference and the study card
+   are one more tap away, under "Scientific detail". The same card opens under a line of text when its citation is tapped there. */
+const DESIGN_PLAIN = {
+  "narrative-review": "A review: experts sum up other studies.", "systematic-review": "A review that searched for every study on the question.",
+  "meta-analysis": "Many studies added together.", "rct": "An experiment: people were put in groups by chance.",
+  "crossover-rct": "An experiment: the same people tried each option, in an order set by chance.", "human-laboratory": "A lab study with volunteers.",
+  "prospective-cohort": "People were followed over time.", "retrospective-cohort": "Past records of a group of people, followed over time.",
+  "cross-sectional": "A snapshot of one group at one time.", "survey": "A survey: people answered questions.",
+  "case-control": "People with a problem compared with people without it.", "case-series": "Reports of a few cases.", "case-report": "A report of one case.",
+  "registry": "Official records.", "modelling": "A calculation from other data, not a new measurement.", "test-accuracy": "A test of how well a test works.",
+  "in-vitro": "A lab study on cells or samples, not in people.", "preclinical-animal": "A study in animals, not in people.",
+  "qualitative": "Interviews: what people said, in their own words.", "evidence-report": "A report by a public body that sums up the evidence." };
+// the study card the anchors of this answer name for a source (its flag shows even before that card's file has loaded)
+function evSrcCard(c, r) { const e = c.evidence.find(x => x.reference === r && x.study_card && cardById[x.study_card]); return e ? e.study_card : null; }
+// a funder with a stake shows on the closed row, so it is seen without opening the source (senior author, 12 November)
+function evSrcFund(c, r) {
+  const scId = (c.evidence.find(x => x.reference === r && x.study_card) || {}).study_card, ff = scId && typeof FUNDING_FLAGS !== "undefined" ? FUNDING_FLAGS[scId] : null;
+  return ff ? '<span class="ev-src-fund">' + icon("alert") + "<span>" + esc(fundWords(ff)) + "</span></span>" : "";
+}
+function evSrcBody(c, sp, r, noPlain) {
+  const ref = refById[r], sc = evSrcCard(c, r), link = refLink(ref);
+  const said = e => (e.extracted && !e.extracted.startsWith("[")) || e.quote, mine = c.evidence.filter(e => e.reference === r && said(e));
+  const plain = !noPlain && sp && sp.how ? sp.how.filter((t, i) => ((sp.how_src || [])[i] || []).includes(r)) : [];
+  const kind = sc && DESIGN_PLAIN[cardById[sc].design];
+  const sci = (mine.length ? '<ul class="ev-quotes">' + mine.map(e => '<li><span class="ev-role ' + esc(e.role) + '">' + esc(ROLE_WORDS[e.role] || e.role) + "</span>" +
+      (e.extracted && !e.extracted.startsWith("[") ? "<span>" + esc(e.extracted) + "</span>" : "") + (e.quote ? "<q>" + esc(e.quote) + "</q>" : "") +
+      '<span class="ev-loc">' + esc([e.page, e.locator].filter(Boolean).join(", ")) + "</span></li>").join("") + "</ul>" : "") +
+    '<p class="ev-apa">' + apaReference(ref) + "</p>" +
+    (sc ? '<p class="ev-src-acts"><button type="button" class="ev-card" data-card="' + esc(sc) + '">How this study was done, and its limits</button></p>' : "");
+  return '<div class="ev-src-b">' +
+    (plain.length ? '<div class="ev-src-p"><p class="ev-src-k">What it adds to this answer</p><ul>' + plain.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul></div>" : "") +
+    (kind ? '<p class="ev-src-kind"><span class="ev-src-k">What kind of study</span>' + esc(kind) + "</p>" : "") +
+    (/^https?:/.test(link) ? '<p class="ev-src-acts"><a href="' + esc(link) + '" target="_blank" rel="noopener">' + (ref.type === "article-journal" ? "Open the paper " : "Open the source ") + icon("arrow") + "</a></p>" : "") +
+    '<details class="sf-more ev-src-sci"><summary>Scientific detail</summary>' + sci + "</details></div>";
+}
+/* A source named in the text opens where the reader is (site 2.15; the senior author: "when I click on the links of the in text citations
+   I get lost because I can't find easily where I was before I shouldn't just scroll down I should continue being in the point where I
+   was reading at"). Its card unfolds under the line being read; a second tap, or its own close button, folds it away; the line stays
+   where it was on the screen. One card at a time. */
+function evInline(a) {
+  const panel = document.querySelector("#evsheet .panel"), c = claimById[EV.id]; if (!panel || !c || !a) return;
+  const r = a.dataset.src, ref = refById[r]; if (!ref) return;
+  const host = a.closest("li, dd, p") || a.parentNode, inside = host.matches("li, dd"), y0 = a.getBoundingClientRect().top;
+  const was = inside ? [...host.children].find(x => x.classList.contains("ev-inl") && x.dataset.for === r) : (host.nextElementSibling && host.nextElementSibling.classList.contains("ev-inl") && host.nextElementSibling.dataset.for === r ? host.nextElementSibling : null);
+  panel.querySelectorAll(".ev-inl").forEach(x => x.remove());
+  panel.querySelectorAll('a.evcite[aria-expanded="true"]').forEach(x => x.setAttribute("aria-expanded", "false"));
+  if (!was) {
+    const box = document.createElement("div"); box.className = "ev-inl"; box.dataset.for = r; box.setAttribute("role", "group"); box.setAttribute("aria-label", "Source: " + inTextLabel(ref, REFS));
+    box.innerHTML = '<div class="ev-inl-h"><span class="ev-src-who">' + esc(inTextLabel(ref, REFS)) + '</span><button type="button" class="ev-inl-x" aria-label="Close this source">' + icon("x") + "</button></div>" +
+      '<p class="ev-src-t">' + esc(String(ref.title || "").replace(/<[^>]+>/g, "")) + "</p>" + evSrcFund(c, r) + evSrcBody(c, (SIMPLE.claims || {})[EV.id], r, !!a.closest(".ev-how"));
+    if (inside) host.appendChild(box); else host.insertAdjacentElement("afterend", box);
+    a.setAttribute("aria-expanded", "true");
+  }
+  panel.scrollTop += a.getBoundingClientRect().top - y0;
+}
 function evHtml(id) {
   const c = claimById[id]; if (!c) return "";
   const sp = (SIMPLE.claims || {})[id], q = anyQuestion(id);
   const refs = [...new Set(c.evidence.map(e => e.reference))].filter(r => refById[r]).sort((a, b) => apaAuthors(refById[a].author).localeCompare(apaAuthors(refById[b].author)) || byYear(refById[a], refById[b]));
-  const cardFor = r => { const e = c.evidence.find(x => x.reference === r && x.study_card && cardById[x.study_card]); return e ? e.study_card : null; };
-  const said = e => (e.extracted && !e.extracted.startsWith("[")) || e.quote;
-  // one list of sources: each opens to what it says for this answer, where, and how the study was done
-  const studies = refs.map(r => {
-    const ref = refById[r], sc = cardFor(r), mine = c.evidence.filter(e => e.reference === r && said(e)), link = refLink(ref);
-    const lab = inTextLabel(ref, REFS), title = String(ref.title || "").replace(/<[^>]+>/g, "");
-    // the flag is keyed by the card id the anchors name, so it shows even before that card's file has loaded
-    const scId = (c.evidence.find(x => x.reference === r && x.study_card) || {}).study_card;
-    const ff = scId && typeof FUNDING_FLAGS !== "undefined" ? FUNDING_FLAGS[scId] : null;
-    // a funder with a stake shows on the closed row, so it is seen without opening the source (senior author, 12 November)
-    const fundLine = ff ? '<span class="ev-src-fund">' + icon("alert") + "<span>" + esc(fundWords(ff)) + "</span></span>" : "";
-    return '<li class="ev-src" id="ev-src-' + esc(r) + '"><details><summary><span class="ev-src-who">' + esc(lab) + '</span><span class="ev-src-t">' + esc(title) + "</span>" + fundLine + "</summary>" +
-      '<div class="ev-src-b">' + (mine.length ? '<ul class="ev-quotes">' + mine.map(e => '<li><span class="ev-role ' + esc(e.role) + '">' + esc(ROLE_WORDS[e.role] || e.role) + "</span>" +
-        (e.extracted && !e.extracted.startsWith("[") ? "<span>" + esc(e.extracted) + "</span>" : "") + (e.quote ? "<q>" + esc(e.quote) + "</q>" : "") +
-        '<span class="ev-loc">' + esc([e.page, e.locator].filter(Boolean).join(", ")) + "</span></li>").join("") + "</ul>" : "") +
-      '<p class="ev-apa">' + apaReference(ref) + "</p>" +
-      '<p class="ev-src-acts">' + (/^https?:/.test(link) ? '<a href="' + esc(link) + '" target="_blank" rel="noopener">Open the paper ' + icon("arrow") + "</a>" : "") +
-      (sc ? '<button type="button" class="ev-card" data-card="' + esc(sc) + '">How this study was done, and its limits</button>' : "") + "</p></div></details></li>";
+  // one list of sources: each opens to what it adds to this answer in plain words; the researchers' detail is one more tap away
+  const studies = refs.map(r => { const ref = refById[r], title = String(ref.title || "").replace(/<[^>]+>/g, "");
+    return '<li class="ev-src" id="ev-src-' + esc(r) + '"><details><summary><span class="ev-src-who">' + esc(inTextLabel(ref, REFS)) + '</span><span class="ev-src-t">' + esc(title) + "</span>" + evSrcFund(c, r) + "</summary>" + evSrcBody(c, sp, r, false) + "</details></li>";
   }).join("");
   const cites = t => sheetCites(t, refs);
   const peco = '<dl class="ev-peco"><dt>Who was studied</dt><dd>' + inPieces(c.population, cites) + "</dd><dt>What they took or did</dt><dd>" + inPieces(c.exposure, cites) + "</dd><dt>Compared with</dt><dd>" + inPieces(c.comparator, cites) +
@@ -1133,8 +1242,8 @@ function evHtml(id) {
     (sp ? '<p class="ask-short">' + esc(sp.short) + "</p>" + (sp.but ? '<p class="ask-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") + freqHtml(sp.freq) + helpLine(sp) : '<p class="ask-short">' + esc(c.plain || c.statement) + "</p>") +
     '<div class="ev-cert"><p class="ev-k">How sure the research is</p>' + meterHtml(c.grade.certainty) + whyRating(c, sp, refs) + "</div>" +
     (sp && sp.how && sp.how.length ? '<h3 class="ev-h">How we know</h3><ul class="ev-how">' + sp.how.map((t, i) => "<li>" + esc(t) + howSrcHtml(sp, i, true, id) + "</li>").join("") + "</ul>" : "") +
-    evDebateHtml(c, refs) +
-    '<h3 class="ev-h">' + (refs.length === 1 ? "The source" : "The " + refs.length + " sources") + '</h3><p class="ev-sub small muted">Tap a source to see what it says for this answer, and where.</p><ul class="ev-refs">' + studies + "</ul>" +
+    evDebateHtml(c, refs, sp) +
+    '<h3 class="ev-h">' + (refs.length === 1 ? "The source" : "The " + refs.length + " sources") + '</h3><p class="ev-sub small muted">Tap a source to see what it adds to this answer.</p><ul class="ev-refs">' + studies + "</ul>" +
     // the researchers' text, one quiet tap away and in short pieces (senior author, 13 November: "too overwhelming, nobody will read it")
     // (site 2.3; the senior author: "if an info will not benefit a viewer it should be removed otherwise it creates visual clutter":
     // the stamp "Approved by our editor; sources checked by a second AI reader · version … · n findings from m sources" and the line
@@ -1152,14 +1261,23 @@ function whyRating(c, sp, refs) {
   return '<details class="sf-more ev-why"><summary>Why this rating</summary><p class="ev-rate">' + esc(sp.rate) + '</p>' +
     '<details class="sf-more ev-why-full"><summary>The full reasoning, for researchers</summary>' + full + "</details></details>";
 }
-// a contested answer's debate box (METHODS §7) inside its evidence: the question, then both sides, what neither side can show,
-// the editors' reading and what would settle it, each one tap away (the texts are long); citations open their source below
-function evDebateHtml(c, refs) {
+/* A contested answer's debate box (METHODS §7) inside its evidence. (Site 2.15; the senior author, 17 November 2026: "I think the users
+   should get much faster answers to these with citations still but the answers for researchers should be very discreet and hidden
+   our website should first be able to answer to every common simple human".) First what a reader needs, in plain words: that studies
+   point different ways, and, where the two sides have been written in plain words and blind-checked (data/site/simple.json, "sides"),
+   one line for each side with its sources and one for our reading. The researchers' own question and the five full texts are under
+   one quiet fold; citations in them open their source where the reader is. */
+function evDebateHtml(c, refs, sp) {
   const d = c.debate; if (!d) return "";
   const part = (t, h, cls) => t ? '<details class="sf-more evd-part' + (cls ? " " + cls : "") + '"><summary>' + h + "</summary>" + inPieces(t, x => sheetCites(x, refs)) + "</details>" : "";
-  return '<section class="ev-debate" id="ev-debate" aria-labelledby="ev-debate-h"><h3 class="ev-h" id="ev-debate-h">Researchers disagree</h3><p class="evd-q">' + esc(d.question) + "</p>" +
+  const s = sp && sp.sides, chips = ids => { const ok = (ids || []).filter(r => refById[r] && refs.includes(r)); return ok.length ? '<span class="howsrc">' + ok.map(r => evSrcLink(r, esc(inTextLabel(refById[r], REFS)))).join("") + "</span>" : ""; };
+  const plain = s && s.yes && s.no
+    ? '<dl class="evd-sides"><div><dt>One side</dt><dd>' + esc(s.yes) + chips(s.yes_src) + '</dd></div><div><dt>The other side</dt><dd>' + esc(s.no) + chips(s.no_src) + "</dd></div>" + (s.read ? "<div><dt>Our reading</dt><dd>" + esc(s.read) + "</dd></div>" : "") + "</dl>"
+    : '<p class="evd-plain">Studies point different ways on this. The short answer above is what we can say today.</p>';
+  return '<section class="ev-debate" id="ev-debate" aria-labelledby="ev-debate-h"><h3 class="ev-h" id="ev-debate-h">Researchers disagree</h3>' + plain +
+    '<details class="sf-more evd-full"><summary>Both sides in full, for researchers</summary><p class="evd-q">' + esc(d.question) + "</p>" +
     part(d.evidence_yes, "The strongest evidence for yes", "yes") + part(d.evidence_no, "The strongest evidence for no", "no") +
-    part(d.neither_can_show, "What neither side’s evidence can show") + part(d.editors_reading, "Our reading", "reading") + part(d.what_would_settle_it, "What would settle it") + "</section>";
+    part(d.neither_can_show, "What neither side’s evidence can show") + part(d.editors_reading, "Our reading", "reading") + part(d.what_would_settle_it, "What would settle it") + "</details></section>";
 }
 // a line under a contested answer that opens its evidence at the debate
 function debateLine(c) {
@@ -1181,7 +1299,6 @@ function openEvidence(id, opener, focusRef) {
   // with its Back button, the question and a quiet line, and fills in when they arrive
   const fill = () => {
     panel.innerHTML = evHtml(id); panel.scrollTop = 0;
-    panel.querySelectorAll("[data-card]").forEach(b => b.addEventListener("click", () => openCard(b.dataset.card)));
     const b = panel.querySelector(".ev-back"); if (b) b.focus({ preventScroll: true });
     if (focusRef) setTimeout(() => focusEvSource(focusRef), 60);
   };
@@ -1213,7 +1330,10 @@ document.addEventListener("click", e => {
   if (e.target.closest("#evsheet .ev-back") || e.target.closest("#evsheet > .scrim")) { e.preventDefault(); closeEvidence(); return; }
   // any link to an answer's evidence opens it over the page; a link can still be opened in a new tab
   const ec = e.target.closest("a.evcite[data-src]");
-  if (ec && ec.closest("#evsheet")) { e.preventDefault(); focusEvSource(ec.dataset.src); return; }
+  if (ec && ec.closest("#evsheet")) { e.preventDefault(); evInline(ec); return; }
+  const ix = e.target.closest("#evsheet .ev-inl-x");
+  if (ix) { const box = ix.closest(".ev-inl"), panel = document.querySelector("#evsheet .panel"), a = panel && panel.querySelector('a.evcite[aria-expanded="true"]'); if (a) { evInline(a); a.focus({ preventScroll: true }); } else if (box) box.remove(); return; }
+  const cb = e.target.closest("#evsheet .panel [data-card]"); if (cb) { openCard(cb.dataset.card); return; }
   const a = e.target.closest('a[href^="#cl_"]');
   if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.classList.contains("perma")) return;
   const id = a.getAttribute("href").slice(1); if (!claimById[id]) return;
