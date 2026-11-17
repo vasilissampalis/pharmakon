@@ -674,6 +674,50 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       build refuses a look-behind anywhere else. Tried with every look-behind refused, as such a phone refuses it:
       Insight answers the same. Not tried on a real old phone: none is at hand.
 
+30. **Something real within seconds for a question the site does not know** (17 November 2026, 22:11 and 22:14
+    Athens). His words: "a big problem is that answers take too long to get responses and people are used to get
+    responses instantly. We have to make an ai which is able to do that for questions it does not know"; "it feels
+    stupid and slow our ai should be able to find answers almost instantly". With three pictures from his phone: "I
+    asked 'how many people die from heroin' and it was 'answered' I got sent into the statistics and no statistic is
+    about deaths from heroin... Our ai is stupid"; "'Statistics' with the back arrow is in front of the menu and covers
+    a word behind it that I may want to read"; "I may want to read the history of questions I made somewhere although
+    it has to be discreet"; of the kanna row on his list: "has words in front of its text too ... bad design"; "when I
+    click on 'see the evidence' I see the answer again and I have to scroll down to see the sources the sources should
+    just come down and when I click on 'See the evidence' again they should hide. That way I would not feel lost";
+    "these should be removed from the landing page 'Try is ketamine addictive ...'".
+    - *Site 2.15.3, the faults.* A figure has its own address (`#numbers/part-n-europe/f-death-heroin`): it opens the
+      place on that drug at that kind of count however it is reached (the "Answered" row of his list held only the
+      place). The page's name at the start of a row of parts no longer stays in front of the row. A waiting row is one
+      flow of words. "The evidence" on an answer unfolds the sources under it, plain words first; a second tap folds
+      them; "All the scientific detail" opens the whole research view. No example questions on the start page. Past
+      searches: the last thirty, on the device only, folded under one quiet line, **off until the reader turns it on**
+      (the site keeps nothing typed unless the reader chooses so, and a phone is often shared; a list of questions about
+      drugs is not for everyone who picks it up); turning it off clears it. Found on the way: in the results a
+      machine-written answer's line squeezed the drug's name into a column one letter wide on a phone.
+    - *Site 2.16.0, at once.* An answer of ours takes a day or two, because papers have to be found, read and checked.
+      What has been published on a question can be looked up in seconds. When a reader sends a question, the page asks
+      the site's own server (`/api/find` in `site/worker/_worker.js`) for the papers on its drug and its key words in
+      Europe PMC, the open index of medical research, and shows up to six under the "Sent" line: title, kind of paper,
+      year, journal, free to read or not, and the link. With them: "We have not read these yet, and a title is not a
+      finding. Our own answer follows." What leaves the device for it: the drug's names (a page's names; a started
+      page's names; a word the model's list does not hold, for a drug we do not know) and up to five plain key words;
+      never the sentence. What the server sends on: those terms, from itself. Nothing is kept or logged; Cloudflare may
+      keep Europe PMC's reply for a day. **No model reads anything, so nothing is said that is not a record of a
+      paper**, and it costs none of the free model allowance. Not looked up: a question about dying, overdose, amounts,
+      pregnancy, children or an emergency (the lane's own list of what waits for a person), in the page and again in
+      the server; a question that names no drug. Checks: the server's own test 57 (10 new), layout 137, Insight 177.
+    - *What it is not, and what a written answer within seconds would take.* It is the sources, not an answer in plain
+      words. A written answer at once means a model reading those papers while the reader waits. Two things stand in
+      the way, and both are his to decide. (1) **The server has no model**: Cloudflare's Workers AI has to be bound to
+      the site (in Cloudflare: Workers & Pages, pharmakon, Settings, Bindings, Add, Workers AI, variable name `AI`). (2)
+      **The checks**: the lane's answer passes a reader, a writer, a second reader, further readers and our own checker,
+      about 1,200 neurons and several minutes; the free day leaves about 1,000 neurons beside the lane, so a few answers
+      a day at that price, or many with fewer checks. The step the editor proposes, which loosens nothing: with the
+      binding, the server asks the model for **one fragment of each paper's own summary, at most 15 words, that bears on
+      the question**, and code checks that every fragment stands word for word in that summary before it is shown. The
+      reader then sees within seconds what the research says in its own words, with its link; nothing is written by a
+      model that a reader could take for our finding. About 50 neurons a question.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

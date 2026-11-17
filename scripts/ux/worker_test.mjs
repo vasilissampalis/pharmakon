@@ -50,4 +50,24 @@ const assets = { fetch: async () => new Response("the page", { status: 200 }) };
   x = await call({ ASSETS: assets }, "POST", { id: "w_0041" }, null, "/api/want"); ok("without the store a count is 503", x.status === 503);
   ok("the store's keys are questions, list numbers and the day's count", [...s.m.keys()].every(k => /^(q:[0-9a-f]{20}|w:w_[a-z0-9_]{1,40}|count:\d{4}-\d\d-\d\d)$/.test(k))); }
 ok("readQuestion keeps Greek", readQuestion({ q: "είναι ασφαλές το αλκοόλ με κοκαΐνη" }).q.length > 10);
+// (site 2.16) /api/find: published research on a drug, looked up at once in Europe PMC; only names and plain key words arrive, nothing is kept
+{ const W = await import("../../site/worker/_worker.js"), asked = [];
+  const reply = { resultList: { result: [{ title: "A review of <i>kanna</i>.", authorString: "A B.", journalTitle: "Molecules", pubYear: "2021", doi: "10.3390/molecules26092557", pmid: "1", isOpenAccess: "Y", pubType: "review; journal article" },
+    { title: "A trial in people", pubYear: "2013", pmid: "22", pubType: "randomized controlled trial" }, { title: "short" }, { title: "No link to this paper at all", pubYear: "2020" }, { title: "A review of <i>kanna</i>.", doi: "10.3390/molecules26092557" }] } };
+  const sF = kv(), envF = { ASSETS: assets, QUESTIONS: sF, FETCH: async (u, o) => { asked.push([decodeURIComponent(String(u)), o]); return new Response(JSON.stringify(reply), { status: 200 }); } };
+  const post = async (env, body, origin) => { const r = await W.default.fetch(new Request("https://pharmakon.world/api/find", { method: "POST", headers: Object.assign({ "content-type": "application/json" }, origin ? { origin } : {}), body: JSON.stringify(body) }), env); return { status: r.status, j: await r.json() }; };
+  let x = await post(envF, { names: ["Kanna", "Sceletium tortuosum"], words: ["psychoactive", "effects"] }, "https://pharmakon.world");
+  ok("find: the papers come back with title, journal, year, kind, free or not and a link; one without a link, a title too short and a second copy are left out",
+    x.status === 200 && x.j.ok && x.j.papers.length === 2 && x.j.papers[0].t === "A review of kanna" && x.j.papers[0].kind === "Review" && x.j.papers[0].oa === true && x.j.papers[0].doi === "10.3390/molecules26092557" && x.j.papers[1].kind === "Trial" && x.j.papers[1].pmid === "22" && x.j.papers[1].oa === false, JSON.stringify(x.j));
+  ok("find: Europe PMC is asked for the names and the key words, in its own syntax, reviews first, and its reply may be kept for a day",
+    asked.length >= 2 && asked[0][0].startsWith('https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=(TITLE:"kanna" OR ABSTRACT:"kanna" OR TITLE:"sceletium tortuosum" OR ABSTRACT:"sceletium tortuosum") AND (TITLE:"psychoactive" OR ABSTRACT:"psychoactive" OR TITLE:"effects" OR ABSTRACT:"effects") AND (PUB_TYPE:"review"') && asked[0][0].endsWith("&format=json&resultType=lite&pageSize=8") && asked[0][1].cf.cacheTtl === 86400, asked[0] && asked[0][0]);
+  const n0 = asked.length;
+  x = await post(envF, { names: ["heroin"], words: ["overdose"] }); ok("find: words about dying, overdose or amounts are not looked up", x.status === 200 && x.j.held === true && x.j.papers.length === 0 && asked.length === n0);
+  x = await post(envF, { names: ["mdma"], words: ["pregnancy"] }); ok("find: nor words about pregnancy or children", x.j.held === true && asked.length === n0);
+  x = await post(envF, { names: [], words: ["anxiety"] }); ok("find: without a drug's name nothing is looked up", x.status === 422 && asked.length === n0);
+  x = await post(envF, { names: ['kanna" OR TITLE:"x', "a", "<b>"], words: ["two words", "x", "ok123"] }); ok("find: a name or word that is not plain is dropped; none left: nothing is looked up", x.status === 422 && asked.length === n0, JSON.stringify(x));
+  x = await post(envF, { names: ["kanna"], words: [] }, "https://evil.example"); ok("find: another site's page may not ask", x.status === 403 && asked.length === n0);
+  x = await post({ ASSETS: assets, FETCH: async () => { throw new Error("down"); } }, { names: ["kanna"], words: [] }); ok("find: when Europe PMC cannot be reached the reply is an empty list, not an error on the reader's page", x.status === 200 && x.j.ok && x.j.papers.length === 0);
+  const g = await W.default.fetch(new Request("https://pharmakon.world/api/find"), envF); ok("find: only POST", g.status === 405);
+  ok("find: nothing is written to the store", sF.m.size === 0); }
 console.log(fail ? fail + " of " + (pass + fail) + " checks failed" : "All " + pass + " checks passed"); process.exit(fail ? 1 : 0);

@@ -1,9 +1,16 @@
 # Project status and work queue
 
-Updated 2026-11-17, 20:20 (site 2.15.2, protocol 0.5.4; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
+Updated 2026-11-17, 23:20 (site 2.16.0, protocol 0.5.4; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
 page states the same in public terms. The project's history is in the GitHub repository vasilissampalis/pharmakon (METHODS §11).
 
 ## Where things stand
+
+- **17 November 2026, 23:20 (Athens): published research within seconds for a sent question (site 2.16.0); six faults from his phone (2.15.3). Decision 30 of `docs/AUTOMATION.md`.**
+  - **He, 22:11 and 22:14:** "answers take too long ... people are used to get responses instantly. We have to make an ai which is able to do that for questions it does not know"; "it feels stupid and slow". And: the answered heroin question opened Statistics on every drug; "Statistics" stood in front of the menu; a waiting row's words were in columns; "the sources should just come down"; remove the "Try" lines; a discreet history.
+  - **2.15.3:** a figure's own address; the part menu's name no longer covers the row; the waiting row in one flow; "The evidence" unfolds the sources under an answer and folds them on a second tap; no example questions; past searches as the reader's choice (off until turned on).
+  - **2.16.0:** on sending a question the page shows, within seconds, up to six papers on its drug and key words from Europe PMC (title, kind, year, journal, free or not, link), through the site's own server; no model, nothing written, nothing kept; not for questions about dying, overdose, amounts, pregnancy, children. It cannot be tried from the editor's workspace (Europe PMC and the site are not reachable from it): the server's parts are tested with a stand-in; **the first real look is his.**
+  - **Kanna, 22:00:** tried a second time with its 12 papers; the writer's reply was not in the form the lane reads ("no JSON"), so nothing passed. Tried again when the day's allowance is new (02:00).
+  - **His to decide:** a model on the site's server (the Workers AI binding `AI`), for one fragment of each paper's own summary that bears on the question, checked word for word by code (decision 30).
 
 - **17 November 2026, 20:20 (Athens): his sent questions, and why they waited (site 2.15.2).** He, 19:38, with his list: "will these be answered? they are hours pending this is disappointing. and why are non drug questions included... bad design."
   - **The editor's own fault, found.** The afternoon's fix for a drug without a page (search by its names) never ran on GitHub: the name lookup loads `place.py`, GitHub runs the finder with `-I` (the script's folder is then not on the path), and the failure was swallowed. Kanna and *Mitragyna javanica* were still searched as "illicit drugs AND (kanna OR psychoactive ...)"; the lane tried both at 17:36 UTC with nothing to read. Fixed and tested the way GitHub runs it; a failure is now said in the run's notes; the official-page finder works the names out too; a sent question about a drug without a page carries its names from the moment it is listed (`ask.py`).

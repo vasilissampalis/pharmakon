@@ -15,6 +15,13 @@ Done: places by meaning (2.13.0); figures by question (2.14.0); the lane's pause
 citation a link, a source in place, plain first, shorter cards, topics, the same Insight on every page, the place and
 the way back in the bar).
 
+00. **At once (decision 30).** (a) Look at `/api/find` on the live site (it could not be tried from the workspace): send a question about a
+   drug and read the papers under the "Sent" line; if Europe PMC's reply has another shape than the stand-in's, `findPaper` in
+   `site/worker/_worker.js` is the place. (b) When he has bound Workers AI to the site (variable `AI`): the fragment step (one
+   fragment of at most 15 words from each paper's own summary, `resultType=core` for the summaries, checked word for word by code; a
+   day's count in the store so that the lane's 9,000 neurons stay the lane's). (c) The same list on a started page and behind "See
+   what we have so far" for a question that waits (the finder's own papers are in `data/auto/papers/`). (d) The lane's writer gave
+   "no JSON" for kanna twice in the evening: read its raw reply in the answer's record and let the lane ask once more in the form.
 0. **His sent questions (19:38: "they are hours pending this is disappointing").** Kanna is first in line with 12 papers that can
    be read: read what the lane writes (`data/auto/answers/au_w_a0002.json`). *Mitragyna javanica*: nothing that can be read was
    found; the two papers the finder saw are in `data/auto/papers/w_a0003.json`: if he can save them, ask him with the full APA 7

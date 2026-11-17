@@ -1436,7 +1436,7 @@ let ASK_NEWER = false;
 // run is on and has been seen to keep it (AUTO_LOOP, from data/auto/lane/policy.json at build time); until then: the plain truth
 const ASK_SENT = (typeof AUTO_LOOP !== "undefined" && AUTO_LOOP)
   ? "Sent. Our system starts on it within half an hour. If it finds research it can read, the answer is usually here within the hour: your question then turns green under “Your questions” on the start page."
-  : "Sent. Our system will try to answer it by itself, usually within a day or two; some answers then wait for a person. It is kept under “Your questions” on the start page, and turns green there when it is answered.";
+  : "Sent. Our own answer usually takes a day or two; some wait for a person. It turns green under “Your questions” on the start page.";
 function askedLook() {   // one look: is the site on the server newer than this page?
   if (ASK_NEWER) return Promise.resolve(true);
   return fetch("data/build.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => { if (j && typeof j.build === "string" && j.build !== ASK_BUILD) { ASK_NEWER = true; if (askedWatch.t) clearInterval(askedWatch.t); askedBox(); } return ASK_NEWER; }).catch(() => false);
@@ -1559,7 +1559,7 @@ document.addEventListener("click", async e => {
   if (on) {
     let ok = false;
     try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
-    if (ok) { askedSet(it.k, { sent: 1 }); say(ASK_SENT); askedBox(); return; }
+    if (ok) { askedSet(it.k, { sent: 1 }); say(ASK_SENT); askedBox(); insFindShow(document.querySelector("#search-results p.ask-said, #evsheet p.ask-said"), q); return; }
   }
   // the page cannot send it (the store is not switched on, or the connection failed): kept on this device, and the email form opens with it
   say("Not sent yet. It is kept on this device only, under “Your questions”. To send it to us, press Send by email in the form.");
@@ -1568,6 +1568,49 @@ document.addEventListener("click", async e => {
 // The start page is drawn before this part of the script has run (the list's own names do not exist yet at that moment),
 // so the list of kept questions is drawn here, once: without this line it was missing after every reload.
 if (typeof document !== "undefined") askedBox();
+/* Published research, at once (site 2.16; the senior author, 17 November 2026: "a big problem is that answers take too long to get responses and
+   people are used to get responses instantly"; "it feels stupid and slow our ai should be able to find answers almost instantly").
+   An answer of ours takes a day or two: papers have to be found, read and checked. But what research has been published on a question can be
+   looked up in seconds. When a reader sends a question, the page asks this site's own server for the papers on its drug and its key words in
+   Europe PMC, the open index of medical research, and shows them under the "Sent" line: title, kind of paper, year, journal, whether it is free
+   to read, and its link. Said plainly with them: we have not read these yet, and a title is not a finding. What leaves the device for this:
+   the drug's names and up to five plain key words, never the sentence (the sentence itself was sent by the reader's own tap, to our list).
+   Not looked up: a question about dying, overdose, amounts, pregnancy, children or an emergency, and a question that names no drug. */
+const FIND_API = "api/find";
+const FIND_STOP = new Set("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked".split(" "));
+const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects" };
+const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)|infants?|teen\w*|minors?|suicid\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+function insFindTerms(res) {
+  if (!res || res.emergency || FIND_HELD.test(res.q || "") || (res.routes || []).some(r => r.kind === "help" || r.kind === "dose" || r.kind === "mix")) return null;
+  const names = [], add = s => { s = String(s || "").toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim(); if (s.length >= 3 && !names.includes(s)) names.push(s); };
+  for (const g of res.groups || []) for (const slug of g.slice(0, 2)) { const s = subBySlug[slug]; if (s) String(s.name || "").split(/[(),]| and /).forEach(add); }
+  const pg = (res.routes || []).find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;
+  if (sh) { add(sh.name); (sh.science || []).forEach(x => add(x.name)); }
+  if (!names.length && res.stranger) add(res.stranger);
+  // a question about drugs that names none we know ("is tianeptine addictive"): a word the model's word list does not hold is most likely the drug's name
+  if (!names.length && res.note !== "other") for (const w0 of String(res.core || res.q || "").toLowerCase().match(/[a-z]{5,}/g) || []) { if (!INS.vocab.has(w0) && !FIND_STOP.has(w0)) { add(w0); if (names.length >= 2) break; } }
+  if (!names.length) return null;
+  const inName = new Set(names.join(" ").split(/[^a-z0-9]+/)), words = [];
+  for (const w0 of String(res.core || res.q || "").toLowerCase().match(/[a-z]{3,}/g) || []) { const w = FIND_SAY[w0] || w0; if ((w.length < 4 && !FIND_SAY[w0]) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || words.includes(w)) continue; words.push(w); if (words.length >= 5) break; }
+  return { names: names.slice(0, 6), words };
+}
+function insFoundHtml(d) {
+  if (!d || !d.ok || d.held) return "";
+  if (!d.papers || !d.papers.length) return '<p class="ins-found-n">We looked in Europe PMC, an open index of medical research, just now: nothing was found on these words.</p>';
+  return '<p class="ins-found-h">Published research on this, found just now</p><ul class="ins-found-l">' + d.papers.map(p => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
+    return '<li><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" \u00B7 ")) + "</span></li>"; }).join("") +
+    '</ul><p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding. Our own answer follows.</p>';
+}
+async function insFindShow(after, q) {
+  if (!after || !after.parentNode) return;
+  let res = INS.cache && INS.cache.get(insKey(q, insCtx()));
+  if (!res && INS.state === "ready") { try { res = await insRank(q, insCtx()); } catch (e) { res = null; } }   // (asked from a place that did not keep its reading: it is read again)
+  const terms = insFindTerms(res && res.note !== "unfinished" ? res : null); if (!terms) return;
+  const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite"); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; after.insertAdjacentElement("afterend", box);
+  let d = null;
+  try { const r = await fetch(FIND_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(terms) }); d = r.ok ? await r.json() : null; } catch (e) { d = null; }
+  const html = insFoundHtml(d); if (html) box.innerHTML = html; else box.remove();
+}
 /* (2.15.3; the senior author, 17 November 2026: "I may want to read the history of questions I made somewhere although it has to be discreet".)
    The questions a reader asked, the last thirty, kept on this device only and shown folded under "Your questions" on the start page. A tap asks
    one again. Kept when a question is asked with Enter, when one of its results is opened, and when it is sent. Nothing of it leaves the device.

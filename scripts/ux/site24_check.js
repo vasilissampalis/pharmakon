@@ -6,6 +6,7 @@
 // The question endpoint is the real one (site/worker/_worker.js) with a store kept in memory.
 const http = require("http"), fs = require("fs"), path = require("path");
 const { chromium } = require("playwright");
+const ASKED_EPMC = [];   // (2.16) what the worker asked Europe PMC's stand-in
 const ROOT = path.join(__dirname, "..", "..", "site", "public");
 const SHOTS = process.argv.includes("--shots") ? process.argv[process.argv.indexOf("--shots") + 1] : null;
 const TYPES = { ".html": "text/html; charset=utf-8", ".json": "application/json", ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".css": "text/css", ".js": "text/javascript", ".mjs": "text/javascript", ".wasm": "application/wasm", ".txt": "text/plain; charset=utf-8", ".onnx": "application/octet-stream" };
@@ -17,7 +18,11 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
   // one server per state of the store: on (a store kept in memory) and off (no store bound: the worker answers 503)
   const serve = withStore => new Promise(resolve => {
     const kv = new Map(), store = { get: async (k, how) => { const v = kv.get(k); return v == null ? null : how === "json" ? JSON.parse(v) : v; }, put: async (k, v) => { kv.set(k, v); } };
-    const env = Object.assign({ ASSETS: { fetch: async () => new Response("", { status: 404 }) } }, withStore ? { QUESTIONS: store } : {});
+    // (2.16) Europe PMC, stood in for: the worker asks it through env.FETCH here; what it was asked is kept for the check
+    const epmc = async url => { ASKED_EPMC.push(decodeURIComponent(String(url))); return new Response(JSON.stringify({ resultList: { result: [
+      { title: "A review of <i>the drug</i> and the eye.", authorString: "Alpha A, Beta B.", journalTitle: "Journal of Tests", pubYear: "2021", doi: "10.1234/test.2021.1", pmid: "111", isOpenAccess: "Y", pubType: "review; journal article" },
+      { title: "A trial in forty volunteers", authorString: "Gamma C.", journalTitle: "Trials Today", pubYear: "2013", pmid: "222", isOpenAccess: "N", pubType: "randomized controlled trial; journal article" }] } }), { status: 200, headers: { "content-type": "application/json" } }); };
+    const env = Object.assign({ ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: epmc }, withStore ? { QUESTIONS: store } : {});
     const server = http.createServer(async (req, res) => {
       const p0 = decodeURIComponent(req.url.split("?")[0]);
       if (p0.startsWith("/api/")) {
@@ -268,7 +273,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     ok("with the store on: the button says what it sends", /We haven.t checked exactly this yet/.test(before.none) && before.note === "Sends only this question. No name, no address.", JSON.stringify(before));
     await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
     const said = await p.evaluate(() => (document.querySelector(".ask-said") || {}).textContent || "");
-    ok("one tap: the page says it was sent, and promises only what is true (no answer within the hour until the half-hourly run keeps it)", said === "Sent. Our system will try to answer it by itself, usually within a day or two; some answers then wait for a person. It is kept under “Your questions” on the start page, and turns green there when it is answered." && await p.evaluate(() => AUTO_LOOP === false), said);
+    ok("one tap: the page says it was sent, and promises only what is true (no answer within the hour until the half-hourly run keeps it)", said === "Sent. Our own answer usually takes a day or two; some wait for a person. It turns green under “Your questions” on the start page." && await p.evaluate(() => AUTO_LOOP === false), said);
     const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
     ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "is modafinil safe" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
@@ -522,6 +527,22 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click("#search"); await p.waitForTimeout(600);
     const sug = await p.evaluate(() => ({ hint: (document.querySelector("#search-results .sr-hint") || {}).textContent || "", hrefs: [...document.querySelectorAll("#search-results a.sr-sug")].map(a => a.getAttribute("href")) }));
     ok(w + " px: before a word is typed, the box on the cannabis page offers what people ask most about cannabis", sug.hint === "Most asked about cannabis" && sug.hrefs.length >= 3 && sug.hrefs.every(h => h.startsWith("#s-cannabis/q-")), JSON.stringify(sug));
+    // (2.16) a sent question gets published research at once: the papers on its drug and key words, from Europe PMC through the site's own server;
+    // only the drug's names and plain key words leave the device for it, never the sentence; a question about dying is not looked up
+    await go(p, "#home"); await p.evaluate(() => pkInsight.load()); await p.waitForFunction(() => pkInsight.state() === "ready", null, { timeout: 120000 });
+    const bodies = []; const onReq = r => { if (/\/api\/find$/.test(r.url())) bodies.push(r.postData() || ""); }; p.on("request", onReq); ASKED_EPMC.length = 0;
+    await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results button[data-ask]", { timeout: 20000 });
+    await p.click("#search-results button[data-ask]"); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 15000 }).catch(() => {});
+    const found = await p.evaluate(() => { const b = document.querySelector("#search-results .ins-found"); return b ? { h: (b.querySelector(".ins-found-h") || {}).textContent, rows: [...b.querySelectorAll(".ins-found-l li")].map(li => li.querySelector("a").textContent + " | " + li.querySelector("a").getAttribute("href") + " | " + li.querySelector(".m").textContent), note: [...b.querySelectorAll(".ins-found-n")].map(x => x.textContent).join(" ") } : null; });
+    const sentBody = bodies.length ? JSON.parse(bodies[0]) : {};
+    ok(w + " px: a sent question gets published research at once, under the “Sent” line: title, kind, year, journal, free to read or not, and its link; and it says we have not read these",
+      found && found.h === "Published research on this, found just now" && found.rows.length === 2 && found.rows[0] === "A review of the drug and the eye | https://doi.org/10.1234/test.2021.1 | Review \u00B7 2021 \u00B7 Journal of Tests \u00B7 free to read" && found.rows[1] === "A trial in forty volunteers | https://europepmc.org/article/MED/222 | Trial \u00B7 2013 \u00B7 Trials Today" && /We have not read these yet, and a title is not a finding/.test(found.note), JSON.stringify(found));
+    ok(w + " px: for it only the drug's names and plain key words leave the device (never the sentence), and Europe PMC is asked for exactly those",
+      bodies.length === 1 && Object.keys(sentBody).sort().join() === "names,words" && sentBody.names.join() === "lsd" && sentBody.words.join() === "change,colour" && ASKED_EPMC.length >= 2 && ASKED_EPMC.every(u => u.startsWith("https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=(TITLE:\"lsd\"")) && !ASKED_EPMC.some(u => /does lsd change/.test(u)), JSON.stringify([bodies, ASKED_EPMC.slice(0, 2)]));
+    await p.fill("#search", "can lsd kill you"); await p.waitForTimeout(1800);
+    const heldN = bodies.length; const hasAsk = await p.$("#search-results button[data-ask]"); if (hasAsk) { await hasAsk.click(); await p.waitForTimeout(900); }
+    ok(w + " px: a question about dying is not looked up", bodies.length === heldN && !(await p.$("#search-results .ins-found")), JSON.stringify(bodies.slice(heldN)));
+    p.off("request", onReq); await p.fill("#search", ""); await p.evaluate(() => { closeSearch(); localStorage.removeItem("pk-asked"); });
     // (2.15.3) past searches: off until the reader turns them on; then kept on this device, folded; turning them off clears them
     await go(p, "#home"); await p.evaluate(() => closeSearch());
     const h0 = await p.evaluate(() => ({ line: (document.querySelector("#home-hist .hist-off") || {}).textContent || "", kept: localStorage.getItem("pk-hist") }));
