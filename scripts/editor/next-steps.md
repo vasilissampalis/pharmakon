@@ -22,10 +22,16 @@ the way back in the bar).
    writes. If its drafts pass as often as qwen's, put it second. Measure a rule for "an effect said where the source
    reports what people say" on the exams before adding it (an earlier, wider rule stopped 12 good cards for 2 wrong
    ones); then let the lane rewrite `w_0048`.
-2. **The school** (`scripts/auto/language.py`, decision 28): build it as designed; a daily schedule in
-   `.github/workflows/official.yml`; add `site/insight/places.json` and `data/auto/language/learned.json` to
-   `scripts/auto/tick.py` BUILT_FROM. First lesson: whole questions, from Natural Questions "open". Develop with a
-   made-up test set; the first real fetch happens on GitHub's machine, not in the editor's workspace.
+2. **The school** is built and runs every day (decision 28; `data/auto/language/report.json` is its own account). Next
+   lessons, in this order: (a) **everyday words with a letter wrong**: "is ketmine adictive" finds nothing, because only
+   drug names are corrected. Rule to measure first: a word the model's word list does not hold, five letters or more,
+   with exactly one word of the list one letter away (a letter dropped, added, changed, or two swapped), is read as that
+   word; measure on the 1,021 forum questions and the school's real questions that no good word is changed; page and
+   build must read the same (parity). (b) **more language**: the web client reads the first 6 MB of a file, so the same
+   61,898 questions every day: read the rest (a larger room for this one reader, or a part of a file), and add open
+   collections whose licence has been read (`data/auto/language/sources.json`). (c) the two smaller errors its report
+   names ("which drug?" for a question of everyday words that is about something else; a last word taken for one still
+   being typed).
 3. **The two sides of the 32 debates in plain words** (`data/site/simple.json`, a claim's `sides`: `yes`, `no`, `read`,
    `yes_src`, `no_src`; the page shows them when `yes` and `no` are there). One line each, from the checked debate
    text only; every line read blind (`scripts/auto/blind_lines.py` reads a claim's statement: it needs a small change
@@ -36,9 +42,8 @@ the way back in the bar).
    which letter?); "Harris et al. (2003)" in `cl_mix_cocaine_alcohol_drunkenness`; "Strickland et al. (2021)" in
    `cl_xc_mindset_before`; "Ruberto et al., 2021, as described" in `cl_can_chs_dopamine_antagonists`. Through the
    checks, not by hand.
-6. **Old phones.** `site/src/app.insight.js` uses look-behind in patterns (lines with `(?<!`); Safari before 16.4 cannot
-   read them, and a pattern written as a literal stops the whole page there. Rewrite without look-behind; a build check
-   that refuses one. (`liveCites` in `app.core.js` has one too and is no longer called: remove it.)
+6. **Old phones**: done in 2.15.1 (no look-behind in the page's script; the build refuses one). Not tried on a real
+   phone with iOS 15: if one is at hand, open the site on it.
 7. **The bar on a phone** takes 58 px for Insight and the way back, above a drug page's 60 px of parts. If that proves
    too much, let it slide away on the way down and come back on the way up (the jump code must then know its height).
 8. **The pictures fetched at 15:33 UTC** (`pictures-0004`): look, hold or pass; then a judge of pictures in code.

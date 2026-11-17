@@ -573,7 +573,7 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       (decision 24); Mistral as before. The two small jobs of the half-hourly run (the look, the start of a publishing)
       ran on GitHub's small runner, which did not start twice within an hour (16:15 and 16:33 UTC; both runs were
       cancelled): they run on the usual runner now.
-    - *The school (designed, not built).* A daily run without any key (`scripts/auto/language.py`, in the Official
+    - *The school: the design.* A daily run without any key (`scripts/auto/language.py`, in the Official
       workflow): it fetches open collections of questions people really typed (first: Natural Questions "open", the
       questions of Google Search users that Google published under CC BY-SA 3.0, 3,610 and 87,925 questions, from
       raw.githubusercontent.com, which has no robots.txt), asks the page's own reading of each (is it a whole question?),
@@ -584,6 +584,30 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       questions next (a sent question that the site answered only after a second wording: the wording is learned, in our
       words), then spellings and street names. Each lesson: a source, a measure, a rule for what may be learned, a gate,
       a report. It needs no editor.
+    - *The school: built the same evening, and its first two days* (`scripts/auto/language.py`; every day at 03:23 UTC in
+      the Official workflow, which holds no key; `data/auto/language/`: `sources.json`, `learned.json`, `report.json`).
+      It read 65,508 questions that people typed into Google (Natural Questions "open", CC BY-SA 3.0; the web client
+      reads the first 6 MB of the large file) and let the page's own reader read each. **What it found was not what the
+      design expected**: no finished question was called unfinished for want of a verb (one verb was learned: "snow");
+      2,019 were called unfinished because they end on a word a question "cannot end on" ("how many super bowl games
+      has the patriots played in"). So the same evening it got a third lesson, endings: two last words that end at
+      least five different real questions which begin as a question does, the last a preposition. The pairs join the
+      reader's own patterns as one pattern, the same string for the page and the build (`ending_pattern`). The measure
+      now counts only what begins as a question does (57,973 of the 65,508): a search query that is a sentence to be
+      completed ("the outer layer of the skin is the") is rightly called unfinished. **Second run: 19.9 of every
+      thousand finished questions were called unfinished before, 13.4 after**; 31 endings learned ("stand for", "named
+      after", "come from", "known as", "come on", "made of" ...); one refused by the gate ("made from": four cut-off
+      drug questions of the site's own set would have passed as finished). On the site's own sets nothing moved (no
+      whole forum question called unfinished; the cut-off ones caught as before). "what does thc stand for" and "how
+      long until shrooms come on" are now read as finished; "can you die from" and "is it safe to mix weed with" are
+      still read as unfinished. The questions visitors send (`data/auto/questions.json`) and the site's own question
+      texts count as evidence beside the open collections; a visitor's question is only counted, never kept by this
+      tool, never part of the measure. What it cannot learn yet, by its own report: 63 questions made only of everyday
+      words that it takes for "which drug?" ("who has the most number one single hits"), 14 whose last word it takes
+      for a word still being typed ("... on psych"), and the endings seen fewer than five times. Next lessons, in this
+      order: everyday words with a letter wrong ("is ketmine adictive" finds nothing: only drug names are corrected
+      now), the rest of the large file and further open collections (each needs its licence read first), the two
+      smaller errors above.
 29. **Simple first, the science one quiet tap away** (17 November 2026, 17:04 to 17:20 Athens). His words, of an
     answer's "Researchers disagree" box: "I think the users should get much faster answers to these with citations
     still but the answers for researchers should be very discreet and hidden our website should first be able to answer
@@ -641,8 +665,14 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     - *Not done yet.* The plain lines for the two sides of the 32 debates (to be written from the checked texts, read
       blind by readers that wrote none of them, and adjudicated: the checked lane's rule for plain lines). A plain line
       for what each source found, where no plain line of the answer rests on it. The same order on the old research
-      page of an answer. Old phones (iOS before 16.4) cannot read two patterns the page uses (a look-behind in
-      `app.insight.js`): to be rewritten.
+      page of an answer.
+    - *Site 2.15.1, old phones.* Safari before 16.4 (every iPhone that stopped at iOS 15, and those not updated since
+      early 2023) cannot read a look-behind in a pattern. Two were written as literals in the page's script, and a
+      literal the browser cannot read stops the whole script: such a phone showed nothing at all, since before this
+      version. Now no pattern of the page has one (`insNb` asks the browser first and uses the plain word edge where it
+      cannot; the spelling pass takes the character before a word with it); `liveCites`, no longer called, is gone; the
+      build refuses a look-behind anywhere else. Tried with every look-behind refused, as such a phone refuses it:
+      Insight answers the same. Not tried on a real old phone: none is at hand.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

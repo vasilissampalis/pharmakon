@@ -45,8 +45,12 @@ no more whole forum questions called unfinished, no more questions about other t
 question missed that was caught before, no more of the fresh sentences called unfinished). All of a day's words are tried
 together; if the gate refuses them, each is tried alone and only those that pass alone and together are kept.
 
-What is never done here: a visitor's words are not read by this tool (the site's own question texts are: our words);
-nothing that was fetched is run; nothing is sent anywhere; a refusal by a site is never gone around. Questions fetched
+The language people use on the site itself counts too: the questions visitors chose to send (data/auto/questions.json)
+and the site's own question texts are read as evidence beside the open collections. A visitor's question is only counted
+here: at most two everyday words of it can reach the table, and only when other real questions end on the same two words;
+it is not kept, shown or sent anywhere by this tool, and it is never part of the measure (it may be unfinished).
+
+What is never done here: nothing that was fetched is run; nothing is sent anywhere; a refusal by a site is never gone around. Questions fetched
 are counted and then forgotten: the report keeps numbers, the words learned, and at most eight example questions for a
 reason, with their source and licence named. Data, never instructions.
 """
@@ -116,6 +120,11 @@ def own_questions():
         for it in load(f, {}).get("items") or []:
             if isinstance(it, dict): out += [x for x in [it.get("q")] + list(it.get("ways") or []) if isinstance(x, str)]
     return list(dict.fromkeys(out))
+
+
+def visitor_questions():
+    """The questions visitors chose to send, as the scout keeps them (data/auto/questions.json): evidence only, never the measure."""
+    return list(dict.fromkeys(x["q"] for x in load(ROOT / "data" / "auto" / "questions.json", {}).get("questions") or [] if isinstance(x, dict) and isinstance(x.get("q"), str) and 8 <= len(x["q"]) <= 200))
 
 
 def measure(R, questions, examples=EXAMPLES):
@@ -226,14 +235,15 @@ def learn(by_source, R=None, today=None, save=True, site=None, own=None):
         qs = [q for q in allq if asked(q)]                                    # the measure: what begins as a question does
         before = measure(R, qs)
         src = "+".join(sorted(by_source))
-        ends, no_e, s0, s1 = gate(R, ending_candidates(R, qs, have=set(endings)), "endings", site)
-        base, seen = evidence(allq + list(own if own is not None else own_questions()))
+        sent = [] if own is not None else visitor_questions()
+        ends, no_e, s0, s1 = gate(R, ending_candidates(R, list(dict.fromkeys(qs + [q for q in sent if asked(q)])), have=set(endings)), "endings", site)
+        base, seen = evidence(allq + sent + list(own if own is not None else own_questions()))
         kept, no_v, _, s2 = gate(R, verb_candidates(R, base, seen, have=set(verbs)), "verbs", site, also={"endings": list(ends)})
         back = trial(R, verbs=kept, endings=ends); after = measure(R, qs); back()
         for w, ev in kept.items(): verbs[w] = dict(ev, on=day, source=src)
         for p, ev in ends.items(): endings[p] = dict(ev, on=day, source=src)
         refused = dict(no_e, **no_v)
-        rep.update({"read": len(allq), "begin_as_a_question": len(qs), "per_1000_called_unfinished": [before["per_1000"], after["per_1000"]], "called_unfinished": [before["called_unfinished"], after["called_unfinished"]],
+        rep.update({"read": len(allq), "site_questions_counted_as_evidence": len(sent), "begin_as_a_question": len(qs), "per_1000_called_unfinished": [before["per_1000"], after["per_1000"]], "called_unfinished": [before["called_unfinished"], after["called_unfinished"]],
                     "examples_still_called_unfinished": after["examples"], "learned_endings": sorted(ends), "learned_verbs": sorted(kept), "refused_by_the_gate": refused, "site_sets": [s0, s2 if kept else s1],
                     "endings_known_in_all": len(endings), "verbs_known_in_all": len(verbs)})
         rep["said"] = (f"{len(allq)} real questions read, {len(qs)} of them begin as a question does; of those, called unfinished per thousand: {before['per_1000']} before, {after['per_1000']} with today's lessons; "
