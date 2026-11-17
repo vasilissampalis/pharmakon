@@ -118,7 +118,8 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
     out, made = [], 0
     for g in sorted(report.get("groups") or [], key=lambda g: -int(g.get("asked") or 0)):
         lead = str(g.get("question") or ""); key = finger(lead)
-        if not lead or key in st["done"]: continue
+        # (2.9.3) a question once set aside as not about drugs is looked at again when the site has learned its drug's name since
+        if not lead or (key in st["done"] and not (g.get("about_drugs") and str(st["done"][key].get("what") or "").startswith("not about drugs"))): continue
         def decide(what, item=None):
             st["done"][key] = {"on": TODAY, "what": what, "asked": int(g.get("asked") or 0)}; out.append((what, item))
         if g.get("listed"): decide("on the editors' list already: " + str(g["listed"])); continue

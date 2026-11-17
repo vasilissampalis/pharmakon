@@ -320,6 +320,10 @@ class Ranker:
         insSpell. site/insight/scope.json ("spell") explains the rule."""
         R = getattr(self, "spell", None); read = []
         if not R: return q, read
+        if R.get("phr_re") is not None:                                                            # a learned name typed wrong, of one word or more
+            def whole(m):
+                name = R["phr"][re.sub(r"\s+", " ", m.group(0).lower())]; read.append([m.group(0), name]); return name
+            q = R["phr_re"].sub(whole, str(q))
         def one(m):
             n = spell_word(R, m.group(0).lower(), self.scope_re)
             if not n: return m.group(0)
@@ -677,6 +681,38 @@ def unknown_words(q, vocab, known=()):
     return out
 
 
+def stranger(R, q):
+    """The unknown word or words (three at most) of a question whose other words could be asked of any drug, in the order
+    typed ("is tusi dangerous": "tusi"; "what is mytragina javanica": "mytragina javanica"), or "" (the page's insStranger).
+    R: a Ranker or WordRules. What the half-hourly run looks up in open name lists (scripts/auto/names_open.py, learn)."""
+    U = R.unfin
+    if not U: return ""
+    unk = unknown_words(q, U["vocab"] or set(), U["known"])
+    if not unk or len(unk) > 3: return ""
+    toks = [x for x in (y.strip("'") for y in re.findall(r"[a-z0-9']+", str(q).lower().replace("\u2019", "'"))) if x]
+    rest = [x for x in toks if x not in unk]
+    if not rest or not all(x in U["known"] for x in rest): return ""
+    return " ".join(dict.fromkeys(x for x in toks if x in unk))
+
+
+LEARNED = ROOT / "data" / "auto" / "names" / "learned.json"
+
+
+def learned_names():
+    """(names, phrases) from data/auto/names/learned.json (scripts/auto/names_open.py, learn; decision 27, step a): the names
+    the system looked up in open name lists and found to be drugs, in small letters, and what people typed for them
+    ({what was typed: the name as it is written}). Only entries marked as a drug count. No file: nothing learned yet."""
+    try: L = json.load(open(LEARNED, encoding="utf-8")).get("names") or {}
+    except (OSError, ValueError, AttributeError): return [], {}
+    names, phr = [], {}
+    for key, e in sorted(L.items()):
+        if not (isinstance(e, dict) and e.get("drug") is True and re.fullmatch(r"[a-z][a-z -]{3,60}", key)): continue
+        names.append(key)
+        for t in e.get("typed") or []:
+            if isinstance(t, str) and re.fullmatch(r"[a-z]{3,30}(?: [a-z]{3,30}){0,2}", t) and t != key: phr[t] = str(e.get("name") or key)
+    return names, phr
+
+
 SPELL_WORD = re.compile(r"(?<![A-Za-z0-9'\u2019-])[A-Za-z]+(?![A-Za-z0-9'\u2019-])")
 
 
@@ -696,7 +732,10 @@ def spell_rule(Sp, names, other, vocab, known):
     words of the unfinished rule's lists."""
     if Sp is None: return None
     group = {n: "|".join(g) for n, g in names.items()}; group.update({n: "other:" + n for n in other if n not in group})
-    return {"map": dict(Sp.get("map") or {}), "keep": set(Sp.get("keep") or []), "exact": set(group), "vocab": vocab or set(), "known": set(known),
+    # (2.9.3) what people typed for a name the system learned ("mytragina javanica"), read as that name before the words are read
+    phr = dict(Sp.get("phr") or {})
+    phr_re = re.compile(r"(?<![A-Za-z0-9'\u2019-])(?:" + "|".join(r"\s+".join(re.escape(w) for w in k.split(" ")) for k in sorted(phr, key=lambda k: (-len(k), k))) + r")(?![A-Za-z0-9'\u2019-])", re.I) if phr else None
+    return {"map": dict(Sp.get("map") or {}), "keep": set(Sp.get("keep") or []), "exact": set(group), "vocab": vocab or set(), "known": set(known), "phr": phr, "phr_re": phr_re,
             "targets": sorted((n for n in group if len(n) >= 6 and re.fullmatch(r"[a-z]+", n)), key=lambda n: (-len(n), n)), "group": group}
 
 
@@ -728,13 +767,17 @@ def scope_block():
     plain = lambda n: re.sub(r"([.^$*+?()\[\]{}|\\])", r"\\\1", n)
     src = "|".join(["(?:" + w + ")" for w in S["words"]] + [plain(n) for n in S["names"]] + ["(?:" + S["chem"] + ")"])
     U = S.get("unfinished") or {}
+    # (2.9.3) the names the system learned by looking them up (data/auto/names/learned.json) are names of drugs the site does not cover yet
+    more, phr = learned_names(); S = dict(S, names=list(S["names"]) + [n for n in more if n not in S["names"]])
+    src = "|".join(["(?:" + w + ")" for w in S["words"]] + [plain(n) for n in S["names"]] + ["(?:" + S["chem"] + ")"])
     # (2.9) is a question finished? the page's insUnfinished and Ranker.unfinished read the same lists and patterns; 'names':
     # the names of drugs the site does not cover, for a name that is still being typed
     unf = {k: sorted(set(U.get(k) or [])) for k in UNF_SETS}; unf.update({k: list(U.get(k) or []) for k in UNF_PATS}); unf["names"] = sorted(set(S["names"]))
     unf["short"] = dict(sorted((U.get("short") or {}).items()))
     # (2.9.1) a drug's name with a letter wrong: 'map' (only to names the site knows) and 'keep'; the names of drugs without a page are in unfinished.names
     Sp = S.get("spell") or {}; known = {n for n, _ in names_table()} | set(S["names"])
-    spell = {"map": {k: v for k, v in sorted((Sp.get("map") or {}).items()) if v in known and k not in known}, "keep": sorted(set(Sp.get("keep") or []))}
+    spell = {"map": {k: v for k, v in sorted((Sp.get("map") or {}).items()) if v in known and k not in known}, "keep": sorted(set(Sp.get("keep") or [])),
+             "phr": {k: v for k, v in sorted(phr.items()) if k not in known}}
     for k, v in sorted((Sp.get("map") or {}).items()):
         if k not in spell["map"]: print(f"NOTE: scope.json spell.map: “{k}” -> “{v}” left out ({'the word is itself a name' if k in known else 'not a name the site knows'})")
     return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"]), "unfinished": unf, "spell": spell}

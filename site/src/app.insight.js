@@ -611,7 +611,10 @@ function insNear(a, b) {   // one letter apart: a letter put in, left out or cha
 function insSpellRule(Sp, other) {
   const group = new Map(); INS.nameOf.forEach((g, n) => group.set(n, g.join("|"))); other.forEach(n => { if (!group.has(n)) group.set(n, "other:" + n); });
   const targets = [...group.keys()].filter(n => n.length >= 6 && /^[a-z]+$/.test(n)).sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));
-  return { map: new Map(Object.entries(Sp.map || {})), keep: new Set(Sp.keep || []), group, targets };
+  // (2.9.3) what people typed for a name the system learned by looking it up ("mytragina javanica"): read as that name first
+  const phr = new Map(Object.entries(Sp.phr || {})), keys = [...phr.keys()].sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));
+  const phrRe = keys.length ? new RegExp("(?<![A-Za-z0-9'\u2019-])(?:" + keys.map(k => k.split(" ").map(insRx).join("\\s+")).join("|") + ")(?![A-Za-z0-9'\u2019-])", "gi") : null;
+  return { map: new Map(Object.entries(Sp.map || {})), keep: new Set(Sp.keep || []), group, targets, phr, phrRe };
 }
 function insSpellWord(w) {
   const R = INS.spell; if (R.map.has(w)) return R.map.get(w);
@@ -625,6 +628,7 @@ function insSpellWord(w) {
 }
 function insSpell(q) {
   const read = []; if (!INS.spell) return { text: q, read };
+  if (INS.spell.phrRe) q = String(q).replace(INS.spell.phrRe, m => { const name = INS.spell.phr.get(m.toLowerCase().replace(/\s+/g, " ")); read.push([m, name]); return name; });
   const text = String(q).replace(/(?<![A-Za-z0-9'\u2019-])[A-Za-z]+(?![A-Za-z0-9'\u2019-])/g, m => { const n = insSpellWord(m.toLowerCase()); if (!n) return m; read.push([m, n]); return n; });
   return { text, read };
 }

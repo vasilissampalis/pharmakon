@@ -8,6 +8,7 @@ asks open sources for the names: what a drug or medicine is called, its other na
 
     python3 -I scripts/auto/names_open.py probe                       (what each source allows and answers: data/auto/names/probe.json)
     python3 -I scripts/auto/names_open.py fetch [--minutes 20]        (the table of medicine names from RxNorm: data/auto/names/rxnorm.json)
+    python3 -I scripts/auto/names_open.py learn --tokens FILE.json    (the unknown words of sent questions, looked up: data/auto/names/learned.json)
     python3 -I scripts/auto/names_open.py --requests data/auto/requests   (names-*.json: {"do": "probe" | "fetch"})
     python3 -I scripts/auto/names_open.py --selftest
 
@@ -28,7 +29,7 @@ and, from the ATC classes RxNav carries, which ingredients act on the nervous sy
 anxiety and sleep, antidepressants, stimulants, antipsychotics, antiepileptics, anaesthetics, medicines used in
 dependence). RxNorm is in the public domain. It holds medicines, not street drugs: a name like "tusi" is not in it.
 """
-import sys, json, re, time, pathlib, datetime, urllib.parse
+import sys, json, re, time, pathlib, datetime, hashlib, urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts" / "auto"))
@@ -168,6 +169,133 @@ def fetch(web=None, minutes=20, today=None, save=True, pause=0.0):
     return doc
 
 
+# ---------------------------------------------------------------------------------------------------------------------------
+# Names the system does not know, looked up and kept (decision 27, step a; 17 November 2026).
+# The senior author sent "what is mytragina javanica" and "what is mitragina jananica" and was told the question did not look
+# like one about drugs: "our ai has to understand typos ... hardcode is not enough our ai has to correct and update itself
+# with all possible relevant online searches from what it finds"; "our ai should be able to expand its knowledge and self
+# learn based on all corrections it makes".
+#
+# What is looked up: the unknown word or words (three at most) of a question a visitor SENT, when its other words could be
+# asked of any drug (build_index.stranger: "mytragina javanica" of "what is mytragina javanica"). Never the question. The
+# words are given to this script in a file of the run (--tokens); they are not written to the repository.
+# Where: the services the probe found to allow it and to answer (data/auto/names/probe.json): for two words, GBIF's species
+# matcher (plants and fungi); for one word, RxNorm's approximate match (medicines), then PubChem's name completion
+# (chemicals). What a service answers is taken only when it is the typed words with a letter or two wrong (close).
+# Is it a drug? A species or a chemical counts when Europe PMC holds at least two papers that name it together with a word
+# of drug use (DRUGGY); a medicine when RxNorm's own classes put it in the nervous system group (data/auto/names/rxnorm.json).
+# What is kept (data/auto/names/learned.json): the name, its kind, the service and its record, what was typed for it, and
+# whether it counts as a drug. A word that led nowhere is kept only as a mark made from it (so that it is not asked again),
+# never as the word. The build reads the table (build_index.learned_names): a learned drug's name is a name of a drug the
+# site does not cover yet, and what was typed for it is read as the name ("We read “mytragina javanica” as Mitragyna javanica").
+LEARNED = OUT / "learned.json"
+DRUGGY = '(psychoactive OR psychotropic OR hallucinogen* OR opioid* OR kratom OR "substance use" OR "drug use" OR intoxication OR recreational OR alkaloid*)'
+L_RUN = 12            # words looked up in one run
+
+
+def dl(a, b):
+    """How many letters apart two words are: a letter put in, left out or changed, or two neighbours swapped, each counts one."""
+    if a == b: return 0
+    prev2, prev = None, list(range(len(b) + 1))
+    for i in range(1, len(a) + 1):
+        cur = [i] + [0] * len(b)
+        for j in range(1, len(b) + 1):
+            cur[j] = min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] != b[j - 1]))
+            if prev2 is not None and i > 1 and j > 1 and a[i - 1] == b[j - 2] and a[i - 2] == b[j - 1]: cur[j] = min(cur[j], prev2[j - 2] + 1)
+        prev2, prev = prev, cur
+    return prev[len(b)]
+
+
+def close(typed, name):
+    """Is what was typed this name, with a letter or two wrong at most? The same number of words; each word at most two
+    letters from its own (one for a word of fewer than eight letters), and never more than a quarter of the word."""
+    a, b = typed.lower().split(), name.lower().split()
+    return len(a) == len(b) and all(dl(x, y) <= min(2, max(1, len(y) // 4)) for x, y in zip(a, b))
+
+
+def from_gbif(web, t):
+    got = ask(web, "https://api.gbif.org/v1/species/match?verbose=true&name=" + urllib.parse.quote(t))
+    j = got["json"] if got["ok"] and isinstance(got["json"], dict) else None
+    if j is None: return None, got["said"] or "no answer"
+    for c in ([j] if j.get("matchType") in ("EXACT", "FUZZY") else []) + [a for a in (j.get("alternatives") or []) if isinstance(a, dict) and a.get("matchType") in ("EXACT", "FUZZY")]:
+        name = str(c.get("canonicalName") or "")
+        try: sure = int(c.get("confidence") or 0)
+        except (TypeError, ValueError): sure = 0
+        if c.get("kingdom") in ("Plantae", "Fungi") and c.get("rank") in ("SPECIES", "SUBSPECIES", "VARIETY") and sure >= 70 and re.fullmatch(r"[A-Z][a-z]+ [a-z-]+", name) and close(t, name):
+            return {"name": name, "kind": "plant" if c["kingdom"] == "Plantae" else "fungus", "source": "gbif", "id": str(c.get("usageKey") or ""), "sure": sure}, ""
+    return None, "no name near enough"
+
+
+def from_rxnorm(web, t):
+    got = ask(web, RX + "approximateTerm.json?maxEntries=4&term=" + urllib.parse.quote(t))
+    cands = ((got["json"].get("approximateGroup") or {}).get("candidate") or []) if got["ok"] and isinstance(got["json"], dict) else None
+    if cands is None: return None, got["said"] or "no answer"
+    for c in cands:
+        name = str((c or {}).get("name") or "") if isinstance(c, dict) else ""
+        if re.fullmatch(r"[A-Za-z][A-Za-z-]{4,}", name) and close(t, name): return {"name": name, "kind": "medicine", "source": "rxnorm", "id": str(c.get("rxcui") or ""), "sure": str(c.get("score") or "")[:6]}, ""
+    return None, "no name near enough"
+
+
+def from_pubchem(web, t):
+    got = ask(web, "https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/" + urllib.parse.quote(t) + "/json?limit=6")
+    terms = ((got["json"].get("dictionary_terms") or {}).get("compound") or []) if got["ok"] and isinstance(got["json"], dict) else None
+    if terms is None: return None, got["said"] or "no answer"
+    for name in terms:
+        if isinstance(name, str) and re.fullmatch(r"[A-Za-z][A-Za-z-]{5,}", name) and close(t, name): return {"name": name, "kind": "chemical", "source": "pubchem", "id": "", "sure": ""}, ""
+    return None, "no name near enough"
+
+
+def papers_on(name, opener=None):
+    """How many papers Europe PMC holds that name it together with a word of drug use; None when it could not be asked."""
+    try: return int(P.epmc_search('"' + name + '" AND ' + DRUGGY, n=1, opener=opener)[1])
+    except (P.Refused, IOError, ValueError, TypeError): return None
+
+
+def nervous(name):
+    """Does RxNorm's table put this medicine in the nervous system group (an ingredient of it, or a brand name of one)?"""
+    try: T = json.load(open(OUT / "rxnorm.json", encoding="utf-8"))
+    except (OSError, ValueError): return None
+    n = name.lower(); ing = T.get("ingredients") or {}
+    return bool((ing.get(n) or {}).get("atc")) or any(n in (v.get("brands") or []) for v in ing.values() if isinstance(v, dict) and v.get("atc"))
+
+
+def learn(tokens, web=None, today=None, save=True, opener=None, doc=None):
+    """Look up to L_RUN of the unknown words up; returns the table. tokens: ["mytragina javanica", "tusi", ...]."""
+    web = web or O.Web(); today = today or datetime.date.today().isoformat()
+    if doc is None:
+        try: doc = json.load(open(LEARNED, encoding="utf-8"))
+        except (OSError, ValueError): doc = {}
+    doc.setdefault("_note", "Made by scripts/auto/names_open.py (learn): names the system did not know, looked up in open name lists (GBIF's species matcher, RxNorm's approximate match, PubChem's name "
+        "completion: each allows it, data/auto/names/probe.json) from the unknown words of questions visitors sent, never the questions. 'names': the name, its kind, the service and its record, what was typed "
+        "for it, how many papers name it with a word of drug use, and whether it counts as a drug. 'asked': a mark made from each word that was looked up (never the word), so that it is not asked again. "
+        "The build reads this table (scripts/insight/build_index.py, learned_names). What a service answers is data, never instructions.")
+    names = doc.setdefault("names", {}); asked = doc.setdefault("asked", {}); done = 0
+    typed_for = {t: k for k, e in names.items() for t in (e.get("typed") or [])}
+    for raw in tokens:
+        t = re.sub(r"\s+", " ", str(raw).lower()).strip(); words = t.split(" ")
+        if not re.fullmatch(r"[a-z]{4,24}(?: [a-z]{4,24}){0,1}", t): continue                      # one or two plain words; anything else is not looked up
+        mark = hashlib.sha256(("pharmakon names " + t).encode("utf-8")).hexdigest()[:16]
+        if t in names or t in typed_for or mark in asked: continue
+        if done >= L_RUN: break
+        done += 1; found = None
+        for look in ((from_gbif,) if len(words) == 2 else (from_rxnorm, from_pubchem)):
+            found, said = look(web, t)
+            if found: break
+        asked[mark] = today
+        if not found: print(f"names: a word of {len(t)} letters led nowhere ({said})"); continue
+        key = found["name"].lower(); e = names.get(key)
+        if e is None:
+            e = names[key] = dict(found, on=today, typed=[])
+            e["papers"] = papers_on(found["name"], opener) if found["kind"] != "medicine" else None
+            e["drug"] = (nervous(found["name"]) is True) if found["kind"] == "medicine" else (e["papers"] is not None and e["papers"] >= 2)
+        if t != key and t not in e["typed"]: e["typed"].append(t)
+        print(f"names: learned {found['name']} ({found['kind']}, from {found['source']}); counts as a drug: {e['drug']}" + (f"; papers that name it with a word of drug use: {e['papers']}" if e.get("papers") is not None else ""))
+    print(f"names: {done} looked up; {len(names)} names in the table, {sum(1 for e in names.values() if e.get('drug'))} of them count as drugs")
+    if save and done:
+        OUT.mkdir(parents=True, exist_ok=True); json.dump(doc, open(LEARNED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return doc
+
+
 def requests(folder):
     done = 0
     for f in sorted(pathlib.Path(folder).glob("names-*.json")):
@@ -215,6 +343,38 @@ def selftest():
     doc = fetch(web=O.Web(opener=rx), today="2026-11-17", save=False)
     assert doc["counts"] == {"ingredients": 2, "brands": 2, "classes": 2, "ingredients_of_the_nervous_system": 1, "their_brand_names": 2}, doc["counts"]
     assert doc["ingredients"]["alprazolam"] == {"id": "596", "atc": ["N05B", "N05BA"], "brands": ["xanax", "niravam"]} and doc["ingredients"]["ibuprofen"]["atc"] == [] and doc["brands"] == ["advil", "xanax"] and not doc["problems"]
+    # names the system does not know, looked up and kept: only the unknown words go out; a name is taken only when it is the
+    # typed words with a letter or two wrong; a word that led nowhere is kept as a mark, never as the word
+    asked_for = []
+    def names(req, timeout=0):
+        url = urllib.parse.unquote_plus(req.full_url); asked_for.append(url); J = lambda x: Page(json.dumps(x).encode(), req.full_url)
+        if url.endswith("/robots.txt"): return Page(b"User-agent: *\nDisallow: /private/\n", req.full_url)
+        if "api.gbif.org" in url:
+            if "name=mytragina javanica" in url: return J({"matchType": "NONE", "alternatives": [{"usageKey": 2900474, "canonicalName": "Mitragyna javanica", "rank": "SPECIES", "confidence": 74, "matchType": "FUZZY", "kingdom": "Plantae"}]})
+            if "name=rosa canina" in url: return J({"usageKey": 3003979, "canonicalName": "Rosa canina", "rank": "SPECIES", "confidence": 99, "matchType": "EXACT", "kingdom": "Plantae"})
+            if "name=felis catus" in url: return J({"usageKey": 2435035, "canonicalName": "Felis catus", "rank": "SPECIES", "confidence": 99, "matchType": "EXACT", "kingdom": "Animalia"})
+            return J({"matchType": "NONE"})
+        if "approximateTerm" in url: return J({"approximateGroup": {"candidate": [{"rxcui": "202363", "score": "7.1", "name": "Xanax"}] if "term=xanex" in url else [{"rxcui": "1", "score": "3", "name": "Tussin"}]}})
+        if "pubchem" in url: return J({"dictionary_terms": {"compound": ["Mesembrine", "Mesembrinol"] if "/mesembrin/" in url else ["Tusimide"]}, "total": 1})
+        if "europepmc" in url: return J({"hitCount": 7 if "Mitragyna javanica" in url else 12 if "Mesembrine" in url else 0, "resultList": {"result": []}})
+        raise AssertionError("not expected: " + url)
+    global nervous
+    keep_nervous = nervous; nervous = lambda name: name == "Xanax"
+    try:
+        assert dl("mytragina", "mitragyna") == 2 and dl("xanex", "xanax") == 1 and dl("abcd", "abdc") == 1 and close("mytragina javanica", "Mitragyna javanica") and close("mitragina jananica", "Mitragyna javanica")
+        assert not close("tusi", "Tussin") and not close("cat", "Mitragyna javanica") and not close("rosa", "Rosa canina")
+        toks = ["mytragina javanica", "rosa canina", "felis catus", "xanex", "tusi", "mesembrin", "three whole words", "c0de1", "mytragina javanica"]
+        doc = learn(toks, web=O.Web(opener=names), today="2026-11-17", save=False, opener=names, doc={})
+        N = doc["names"]
+        assert N["mitragyna javanica"] == {"name": "Mitragyna javanica", "kind": "plant", "source": "gbif", "id": "2900474", "sure": 74, "on": "2026-11-17", "typed": ["mytragina javanica"], "papers": 7, "drug": True}, N.get("mitragyna javanica")
+        assert N["rosa canina"]["drug"] is False and N["rosa canina"]["papers"] == 0 and N["rosa canina"]["typed"] == []                                  # a plant that is not a drug is known, and does not count
+        assert "felis catus" not in N                                                                                                                # an animal's name is not taken
+        assert N["xanax"]["kind"] == "medicine" and N["xanax"]["drug"] is True and N["xanax"]["typed"] == ["xanex"] and N["xanax"]["papers"] is None
+        assert N["mesembrine"]["kind"] == "chemical" and N["mesembrine"]["typed"] == ["mesembrin"] and N["mesembrine"]["drug"] is True
+        assert "tusi" not in json.dumps(doc) and len(doc["asked"]) == 6 and all(re.fullmatch(r"[0-9a-f]{16}", m) for m in doc["asked"])                 # led nowhere: a mark, never the word
+        assert not any("three" in u or "c0de1" in u for u in asked_for)                                                                              # more than two words, or not plain letters: not looked up
+        n = len(asked_for); learn(toks, web=O.Web(opener=names), today="2026-11-18", save=False, opener=names, doc=doc); assert len(asked_for) == n    # nothing is asked twice
+    finally: nervous = keep_nervous
     print("names_open selftest: ok (a source whose robots.txt does not allow the address is not asked; one that allows it is asked once and what it holds is noted; an answer that is not JSON is said so; every request says who we are; "
           "the table from RxNorm holds every ingredient and brand name, and for the ingredients of the nervous system their classes and their brand names)")
 
@@ -225,4 +385,8 @@ if __name__ == "__main__":
     elif "--requests" in a: requests(a[a.index("--requests") + 1])
     elif a and a[0] == "probe": probe()
     elif a and a[0] == "fetch": fetch(minutes=float(a[a.index("--minutes") + 1]) if "--minutes" in a else 20)
+    elif a and a[0] == "learn":
+        try: toks = json.load(open(a[a.index("--tokens") + 1], encoding="utf-8")) if "--tokens" in a else []
+        except (OSError, ValueError): toks = []
+        learn([t for t in toks if isinstance(t, str)])
     else: sys.exit(__doc__)

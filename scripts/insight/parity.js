@@ -60,7 +60,7 @@ const cuts = [...new Set(goldAll.filter((_, i) => i % 3 === 0).flatMap(q => { co
   "what do you use it for", "what does cbd actually work for", "has anyone tried this before", "how long does gabapentin take to kick in", "what is cannabis (thc)", "do old people", "should parents", "will the police",
   "does my doctor", "gay people", "can pregnant women", "is she pregnant", "is diet coke", "why are people who use drugs looked down on", "does anyone have any idea what i was spiked with"]))];
 // 2.9.1: names with a letter wrong, and words that must be left as they are
-const spells = ["can i die from cocane", "is ketamin addictive", "herion withdrawal", "is adderal safe", "does marijauna cause cancer", "how long does xanex last", "is heroine addictive", "can you overdose on tramadole",
+const spells = ["what is mytragina javanica", "mitragina  JANANICA effects", "can i die from cocane", "is ketamin addictive", "herion withdrawal", "is adderal safe", "does marijauna cause cancer", "how long does xanex last", "is heroine addictive", "can you overdose on tramadole",
   "what is extasy", "is canabis legal", "mushroms and alcohol", "is morphing a thing", "what is escaline", "how do i treat a sunburn", "is it safe to eat moldy bread", "why do cats purr", "what is photosynthesis",
   "is tusi dangerous", "does caffiene keep you awake", "alchohol and benzodiazapines", "is codiene an opiod", "how does methamphetamin work", "what is the capital of mongolia", "is gabapentine addictive",
   "is modafanil safe", "are steriods bad", "psycadelics and anxiety", "can i mix oxycodon and alcohol", "how long does 4-mmc last", "is nicotene addictive", "what about ayahuaska", "is cocaines effect long",

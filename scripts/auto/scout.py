@@ -164,6 +164,9 @@ def main():
     rows, vecs = [], []
     for r in qs:
         drug = next((d for d in r["d"] if d in R.canon), None)
+        # (2.9.3) read as the page reads it: a drug's name with a letter wrong, or what people typed for a name the system
+        # learned, is read as the name first (the page's insSpell; before this the run read the words as typed)
+        asked = r["q"]; r = dict(r, q=R.correct(asked)[0] if hasattr(R, "correct") else asked)
         full, masked, groups = R.texts(r["q"], drug)
         v, mv = bi.embed_all([full, masked], quiet=True)
         k = R.rank_vectors(r["q"], v, mv, groups)
@@ -175,6 +178,13 @@ def main():
                      # through the quiet link the page keeps for it: either a drug word the rule does not know yet, or not about drugs
                      "listed": (R.want(r["q"], v, mv, groups) or {}).get("id") if not k["best"] else None, "about_drugs": bool(drug) or R.in_scope(r["q"])})
         vecs.append(v)
+
+    # (2.9.3, decision 27 step a) the unknown words of the questions that are not about drugs by the site's rule: for the lookup
+    # in open name lists (scripts/auto/names_open.py, learn). A file of this run, never the repository; only the words, never
+    # the questions
+    if opt("--unknown"):
+        unknown = list(dict.fromkeys(w for w in (bi.stranger(R, r["q"]) for r in rows if not r["about_drugs"] and r["state"] != "answered") if w))
+        json.dump(unknown, open(opt("--unknown"), "w", encoding="utf-8")); print(f"scout: {len(unknown)} unknown word(s) of sent questions put aside for the lookup in open name lists")
 
     # 2. the questions without an answer, the same thing asked in other words counted once
     open_i = [i for i, r in enumerate(rows) if r["state"] != "answered"]

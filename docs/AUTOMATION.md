@@ -470,6 +470,23 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       device so that the store holds what it cannot read; "as easy as it is now". (d) **Insight looks like what it is**:
       the way to use the site, not a search box. (e) **What the site needs, found by itself** ("it has to think about
       what the site needs objectively even before us").
+    - *Step a, built (site 2.9.3, 17 November).* What the probe found (`data/auto/names/probe.json`): GBIF's species
+      matcher, RxNorm's approximate match and PubChem's name completion allow programs and answer ("Mytragina javanica"
+      came back as *Mitragyna javanica*, a plant; "xanex" as Xanax; "mesembrin" as Mesembrine). NCBI's spelling
+      suggestion, Wikipedia's search, Wikimedia Commons' search, iNaturalist's and Openverse's addresses are not allowed
+      by their robots.txt and were not asked. GBIF's records with pictures are allowed (for step b). The lookup
+      (`scripts/auto/names_open.py`, learn) runs in the half-hourly run after the scout: only the unknown word or words
+      of a sent question go out (`build_index.stranger`; from a file of the run, never the repository, never the
+      question); two words go to GBIF (plants and fungi), one word to RxNorm and then PubChem; an answer is taken only
+      when it is the typed words with a letter or two wrong. A species or a chemical counts as a drug when Europe PMC
+      holds two papers or more that name it with a word of drug use, a medicine when RxNorm puts it in the nervous
+      system group. `data/auto/names/learned.json` keeps the name, its kind, the service's record and what was typed
+      for it; a word that led nowhere is kept only as a mark made from it. The build reads the table: a learned drug's
+      name is the name of a drug the site does not cover yet, and what was typed for it is read as the name on the page
+      and in the run alike ("We read “mytragina javanica” as Mitragyna javanica"); a question set aside as not about
+      drugs is looked at again once its name is known (`scripts/auto/ask.py`), and a new name is a reason to publish
+      (`scripts/auto/tick.py`). The privacy text says so. Not measured yet on real traffic: how often a service's answer
+      is wrong although it is close; every learned name is in the table to be read by the editor.
     - *What stays.* Free models only. A refusal by a site is never gone around. The Section 7 gate and the rule on
       amounts stand as written. Nothing new of the system's is shown until it reads clean.
 

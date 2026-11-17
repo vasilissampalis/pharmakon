@@ -114,7 +114,11 @@ jobs:
           if [ "$DO_SCOUT" = "true" ]; then
             step "build the page and Insight's index (the scout ranks a question as the page does)" node site/build.js
             step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json"
-            step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json"
+            step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json" --unknown "$RUNNER_TEMP/unknown-names.json"
+            # (17 November 2026, decision 27 step a) "hardcode is not enough our ai has to correct and update itself with all possible relevant
+            # online searches": the unknown words of sent questions (never the questions) are looked up in open name lists that allow it
+            # (GBIF, RxNorm, PubChem); what is learned is kept in data/auto/names/learned.json and read by the next build
+            step "names we do not know, looked up in open name lists" python3 -I scripts/auto/names_open.py learn --tokens "$RUNNER_TEMP/unknown-names.json"
             step "remember what was read" python3 -I scripts/auto/look.py --done "$RUNNER_TEMP/questions.json"
             step "a question a visitor sent becomes a question on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run --marker "$RUNNER_TEMP/new-items"
           fi
