@@ -189,7 +189,7 @@ def selftest():
         url = req.full_url; seen.append((url, req.get_header("User-agent")))
         host = urllib.parse.urlsplit(url).netloc
         if url.endswith("/robots.txt"):
-            return Page({"query.wikidata.org": b"User-agent: *\nDisallow: /sparql\n", "id.nlm.nih.gov": b"User-agent: *\nDisallow: /private/\n", "rxnav.nlm.nih.gov": b""}[host], url)
+            return Page({"query.wikidata.org": b"User-agent: *\nDisallow: /sparql\n", "id.nlm.nih.gov": b"User-agent: *\nDisallow: /private/\n", "rxnav.nlm.nih.gov": b""}.get(host, b"User-agent: *\nDisallow: /\n"), url)   # (every other source of the probe: not allowed here, so never asked)
         if host == "id.nlm.nih.gov": return Page(json.dumps({"results": {"bindings": [{"d": {"value": "http://id.nlm.nih.gov/mesh/D008775"}, "label": {"value": "Mescaline"}}]}}).encode(), url)
         if host == "rxnav.nlm.nih.gov": return Page(b"<html>not json</html>", url)
         raise AssertionError("an address its robots.txt does not allow was asked for: " + url)
