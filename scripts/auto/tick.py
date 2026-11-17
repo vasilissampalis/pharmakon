@@ -36,7 +36,7 @@ LANE_A_DAY, DEPLOY_A_DAY = 24, 24    # (16 November 2026, 22:13: the senior auth
 ROOM = 1200             # neurons one answer may take: the lane starts only when today's allowance has this much left
 RETRY_DAYS = 1     # (17 November 2026: a question without an answer is tried again the next day, not the next week: "this should be done as fast and good as possible")
 # everything the site is built from (site/build.js and site/build_public.py read these); the machine lane's answers are counted apart
-BUILT_FROM = ["site/src", "site/build.js", "site/build_public.py", "site/public-assets", "site/worker", "site/insight/model.json", "site/insight/scope.json", "site/insight/vendor", "site/photos",
+BUILT_FROM = ["site/src", "site/build.js", "site/build_public.py", "site/public-assets", "site/worker", "site/insight/model.json", "site/insight/scope.json", "site/insight/places.json", "site/insight/vendor", "data/auto/language/learned.json", "site/photos",
               "data/auto/lane/policy.json", "data/auto/lane/lines.json", "data/auto/names/learned.json",   # (2.9.3) the names the system learned by looking them up: a new one is a reason to publish
               "data/auto/pages.json", "data/auto/wanted-auto.json", "data/auto/filing.json", "data/auto/pictures.json", "site/photos-auto",   # (2.12) the pages people asked about: their questions, their names, their pictures
               "data/site", "data/claims", "data/references", "data/study-cards", "data/epidemiology", "data/legal", "data/identity", "data/monographs",

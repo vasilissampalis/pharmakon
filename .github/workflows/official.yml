@@ -8,9 +8,12 @@ name: Official
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "23 3 * * *"   # (17 November 2026, decision 28) every day: the school (scripts/auto/language.py). The senior author: "it has to always improve by itself"; "it should not depend on us to get better"
   push:
     branches: [main]
     paths:
+      - "data/auto/requests/language-*.json"   # (the school, asked for now)
       - "data/auto/requests/official-*.json"
       - "data/auto/requests/views-*.json"   # (16 November 2026) how often people look a drug up on Wikipedia: scripts/auto/wiki_views.py, for the order of the pages to start
       - "data/auto/requests/names-*.json"   # (17 November 2026, decision 26) open sources of the names of drugs and medicines: scripts/auto/names_open.py
@@ -60,6 +63,12 @@ jobs:
             python3 -I scripts/auto/pictures.py --selftest >> "$L" 2>&1 || echo "!! the pictures selftest failed ($?)" >> "$L"
             python3 -I scripts/auto/pictures.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the pictures failed ($?)" >> "$L"
             git rm -q --ignore-unmatch data/auto/requests/pictures-*.json >> "$L" 2>&1
+          fi
+          # (decision 28) the school: every day by the clock, or when asked. It needs no key; what it fetches is read as data, counted and forgotten.
+          if [ "${{ github.event_name }}" = "schedule" ] || ls data/auto/requests/language-*.json >/dev/null 2>&1; then
+            python3 -I scripts/auto/language.py --selftest >> "$L" 2>&1 || echo "!! the school's selftest failed ($?)" >> "$L"
+            python3 -I scripts/auto/language.py learn --minutes 12 >> "$L" 2>&1 || echo "!! the school failed ($?)" >> "$L"
+            git rm -q --ignore-unmatch data/auto/requests/language-*.json >> "$L" 2>&1
           fi
           mkdir -p data/auto/official
           tail -n 80 "$L" | cut -c1-600 > data/auto/official/_last-run.txt

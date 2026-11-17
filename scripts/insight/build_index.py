@@ -700,6 +700,19 @@ def stranger(R, q):
 LEARNED = ROOT / "data" / "auto" / "names" / "learned.json"
 
 
+LEARNED_LANGUAGE = ROOT / "data" / "auto" / "language" / "learned.json"
+
+
+def learned_verbs():
+    """The verbs the school learned by itself (scripts/auto/language.py; docs/AUTOMATION.md, decision 28): words it found used
+    as verbs in questions people really typed, which the model's word list does not show to be verbs. They join the rule's
+    own list ('unfinished.verbs' of site/insight/scope.json), so the page and the build read the same list. Only plain
+    words of 3 to 14 letters with their evidence beside them count. No file: nothing learned yet."""
+    try: L = json.load(open(LEARNED_LANGUAGE, encoding="utf-8")).get("verbs") or {}
+    except (OSError, ValueError, AttributeError): return []
+    return sorted(w for w, e in L.items() if isinstance(w, str) and re.fullmatch(r"[a-z]{3,14}", w) and isinstance(e, dict) and int(e.get("in_a_verbs_place") or 0) >= 3 and e.get("forms"))
+
+
 def learned_names():
     """(names, phrases) from data/auto/names/learned.json (scripts/auto/names_open.py, learn; decision 27, step a): the names
     the system looked up in open name lists and found to be drugs, in small letters, and what people typed for them
@@ -775,6 +788,9 @@ def scope_block():
     # (2.9) is a question finished? the page's insUnfinished and Ranker.unfinished read the same lists and patterns; 'names':
     # the names of drugs the site does not cover, for a name that is still being typed
     unf = {k: sorted(set(U.get(k) or [])) for k in UNF_SETS}; unf.update({k: list(U.get(k) or []) for k in UNF_PATS}); unf["names"] = sorted(set(S["names"]))
+    # (2.15) the verbs the school learned by itself: never a word the rule's other lists already read another way
+    other = set().union(*(set(U.get(k) or []) for k in UNF_SETS if k != "verbs"))
+    unf["verbs"] = sorted(set(unf["verbs"]) | {w for w in learned_verbs() if w not in other})
     unf["short"] = dict(sorted((U.get("short") or {}).items()))
     # (2.9.1) a drug's name with a letter wrong: 'map' (only to names the site knows) and 'keep'; the names of drugs without a page are in unfinished.names
     Sp = S.get("spell") or {}; known = {n for n, _ in names_table()} | set(S["names"])
