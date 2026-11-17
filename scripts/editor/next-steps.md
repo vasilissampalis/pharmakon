@@ -8,6 +8,42 @@ Rules that stand: nothing new of the system's is shown (`hold_new` true, `amount
 `show_from_lane` 9) until the editor has read it and it reads clean. Requests go one after the other. Commit and push
 after every step. `mkdir -p data/auto/requests` before writing a request.
 
+
+## What the senior author asked for on 17 November, 16:33 to 17:26 (decisions 28 and 29 of `docs/AUTOMATION.md`), in this order
+
+Done: places by meaning (2.13.0); figures by question (2.14.0); the lane's pause, retry and finder; site 2.15.0 (every
+citation a link, a source in place, plain first, shorter cards, topics, the same Insight on every page, the place and
+the way back in the bar).
+
+1. **The lane, when the allowances are new (00:00 UTC).** Read what it wrote for kanna and *Mitragyna javanica* and for
+   the 46 questions never tried (`data/auto/lane/_last-auto-run.txt`, `data/auto/lane/state.json`). Compare team I (a
+   free reader) with team H: does "rests on too few sources" come more often? If so, team I goes behind team H. Try
+   team K by name on two questions (`data/auto/requests/trial-*.json`, `"team": "team K"`): Gemma reads, plans and
+   writes. If its drafts pass as often as qwen's, put it second. Measure a rule for "an effect said where the source
+   reports what people say" on the exams before adding it (an earlier, wider rule stopped 12 good cards for 2 wrong
+   ones); then let the lane rewrite `w_0048`.
+2. **The school** (`scripts/auto/language.py`, decision 28): build it as designed; a daily schedule in
+   `.github/workflows/official.yml`; add `site/insight/places.json` and `data/auto/language/learned.json` to
+   `scripts/auto/tick.py` BUILT_FROM. First lesson: whole questions, from Natural Questions "open". Develop with a
+   made-up test set; the first real fetch happens on GitHub's machine, not in the editor's workspace.
+3. **The two sides of the 32 debates in plain words** (`data/site/simple.json`, a claim's `sides`: `yes`, `no`, `read`,
+   `yes_src`, `no_src`; the page shows them when `yes` and `no` are there). One line each, from the checked debate
+   text only; every line read blind (`scripts/auto/blind_lines.py` reads a claim's statement: it needs a small change
+   to read the debate's parts); the editor adjudicates. Until then the box says "Studies point different ways on this."
+4. **A plain line for what a source found**, for sources that no plain line of the answer rests on (now such a source
+   shows its kind of study and its link, and the findings only under "Scientific detail").
+5. **Four citations code cannot decide**: "Hollander et al., 1995" in `cl_coc_chest_pain_mi` (three works of that year:
+   which letter?); "Harris et al. (2003)" in `cl_mix_cocaine_alcohol_drunkenness`; "Strickland et al. (2021)" in
+   `cl_xc_mindset_before`; "Ruberto et al., 2021, as described" in `cl_can_chs_dopamine_antagonists`. Through the
+   checks, not by hand.
+6. **Old phones.** `site/src/app.insight.js` uses look-behind in patterns (lines with `(?<!`); Safari before 16.4 cannot
+   read them, and a pattern written as a literal stops the whole page there. Rewrite without look-behind; a build check
+   that refuses one. (`liveCites` in `app.core.js` has one too and is no longer called: remove it.)
+7. **The bar on a phone** takes 58 px for Insight and the way back, above a drug page's 60 px of parts. If that proves
+   too much, let it slide away on the way down and come back on the way up (the jump code must then know its height).
+8. **The pictures fetched at 15:33 UTC** (`pictures-0004`): look, hold or pass; then a judge of pictures in code.
+9. The older queue below: step f (Myth or fact cards by the system), step c (one list on phone and desktop), step e.
+
 ## Waiting for the senior author (asked 17 November, 12:30 Athens)
 
 1. **"approve"** for the Section 7 answer `cl_can_smoked_cancer` (*Does smoking cannabis cause lung cancer?*), the

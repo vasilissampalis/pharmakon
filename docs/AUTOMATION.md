@@ -526,6 +526,123 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     - *What stays.* Free models only. A refusal by a site is never gone around. The Section 7 gate and the rule on
       amounts stand as written. Nothing new that the lane writes is shown until it reads clean (`hold_new`); a started
       page's questions and pictures are shown by their own rules, each with its line.
+28. **Places by meaning, figures by question, the lane running again, and a school for the system's language**
+    (17 November 2026, 16:33 to 17:26 Athens). His words: "our ai system has to always improve how it understands human
+    language by learning from the language people use online and from the language people use in our website. it has to
+    always improve by itself"; "it should not depend on us to get better"; "like the best apis in the world". Of "how
+    can i use test kits at home", which got "We haven't checked exactly this yet" above a list of rows: "i think i should
+    be answered and be given links etc and i think we already have info about that on the website. man we have to
+    incorporate every instance of human language it is still stupid". With a picture of Chrome offering his saved
+    addresses over the box: "i don't want any browser specific recommended choices only what the site recommends". Of the
+    rows under "How many people die from methamphetamine": "completely irrelevant ... this creates visual clutter". Of
+    "How many people die from heroin": "it should be much easier to find what I want this is so confusing I read so many
+    things I don't want to read"; the Statistics page it sent him to showed "irrelevant" figures; "this is such a simple
+    question ... our site is very lacking". Of his own sent questions still waiting: "why aren't they being automaatically
+    answered? this should be done as fast and good as possible"; "the site should be as full as it gets as soon as possible
+    it has not got answers for very basic questions it should develop so much".
+    - *A place of the site is found by the meaning of a question* (site 2.13.0). The routes were patterns of words:
+      "how can i use test kits at home" matched none. Now every place of the site (28 of them; `site/insight/places.json`)
+      is described by questions it truly holds something on (344 ways), each read by the same small model that reads a
+      visitor's question, on the visitor's device. Near enough (0.80), the place is the answer; nearer than 0.66, it is
+      offered as a place to look; a drug page's own part (test kits, the law, doses, looks, mixing) where one drug is
+      named. Measured (`build_index.py --places`): of 89 questions written apart from the ways
+      (`data/verification/insight/places-gold.json`) 79 are sent to the right place and none to a wrong one; of 1,021
+      forum questions 43 are sent to a place and 85 held back; of 165 questions about other things, none. Rows found by
+      words alone stay only when near in meaning (0.4), and the rest wait behind "More results (N)". The box says in
+      every way a browser and a password manager read that it is a search box with its own list; this could not be
+      tried here (a browser without a window has no saved addresses): his own look decides.
+    - *A question that asks for a count is answered from the official figures* (site 2.14.0). "How many people die
+      from heroin" now gets, first, the figures for that drug and that kind of count (deaths, treatment, use, disorder,
+      harm) from the checked rows of the Statistics page, the lowest and the highest as one line with place and year, and
+      the link opens the Statistics page on that drug and that kind. Only rows whose own label names the drug; deaths
+      only where the row counts deaths.
+    - *The lane.* It had been paused by the editor since 16 November; a question without an answer was tried again after
+      a week; kanna and *Mitragyna javanica*, which have no page, were searched without their own names as a required
+      word. All three changed at 15:59 UTC: the pause is lifted, a question is tried again the next day, a drug without a
+      page is searched by its names (`papers.page_names`). "Does cannabis make sex better?" passed the models and waited
+      for a further reader; the editor read it: it said as an effect what its sources report as people's own accounts, so
+      it is held (`data/auto/held.json`). "Does cannabis cause cancer?" disagrees with a checked answer that is a Section
+      7 answer and is not shown: it waits for his "approve". **What limits a day is the free allowance**: on 17 November
+      14 questions could be tried, and by 16:15 UTC no team had room (Cloudflare 8,781 of 9,000 neurons, 6,770 of them
+      the reader's; Groq's strongest model 178,071 of 200,000 tokens). The allowances are new at 00:00 UTC (Google's at
+      08:00). Of 64 listed questions 46 had never been tried. So: team I, first in `data/auto/lane/models.json`, lets
+      Google's free Gemini 3.5 Flash Lite read (500 calls a day), so that Cloudflare's day goes to the second reader; no
+      gate changes (a reader only copies, and code checks every quote against its passage). Team K (Google's Gemma 4
+      reads, plans and writes; the second reader stays) stands last and is to be tried by name. Read on the services'
+      own pages the same evening: Cerebras gives its free trial "after adding a verified payment method": not used
+      (decision 24); Mistral as before. The two small jobs of the half-hourly run (the look, the start of a publishing)
+      ran on GitHub's small runner, which did not start twice within an hour (16:15 and 16:33 UTC; both runs were
+      cancelled): they run on the usual runner now.
+    - *The school (designed, not built).* A daily run without any key (`scripts/auto/language.py`, in the Official
+      workflow): it fetches open collections of questions people really typed (first: Natural Questions "open", the
+      questions of Google Search users that Google published under CC BY-SA 3.0, 3,610 and 87,925 questions, from
+      raw.githubusercontent.com, which has no robots.txt), asks the page's own reading of each (is it a whole question?),
+      and counts how many finished questions per thousand it calls unfinished. What it may learn by itself, by evidence
+      only: a verb it does not know (seen as a base form after "to" or a helper verb at least three times, and in at
+      least two other forms), kept in `data/auto/language/learned.json` and read by the next build; nothing is kept
+      unless the measure on the site's own sets (`measure_words`) is no worse. The same frame is to take the site's own
+      questions next (a sent question that the site answered only after a second wording: the wording is learned, in our
+      words), then spellings and street names. Each lesson: a source, a measure, a rule for what may be learned, a gate,
+      a report. It needs no editor.
+29. **Simple first, the science one quiet tap away** (17 November 2026, 17:04 to 17:20 Athens). His words, of an
+    answer's "Researchers disagree" box: "I think the users should get much faster answers to these with citations
+    still but the answers for researchers should be very discreet and hidden our website should first be able to answer
+    to every common simple human in a sense that makes the users it's easy and fast to understand the information";
+    "the (Launiainen & Ojanperä, 2014) citation in the 'strongest evidence for no' has not a link to it every citation
+    should have a link to it"; "when I click on the links of the in text citations I get lost because I can't find
+    easily where I was before I shouldn't just scroll down I should continue being in the point where I was reading
+    at"; of the list of sources: "the information that comes up is too research based and it's difficult for the casual
+    user to find this interesting users should be able to find quick simple answers and only if they are crazy they
+    should click to the scientific details"; "**This is how our website should be designed in general and what
+    principles our ai should use**". Of a drug page's part: "I feel like all questions look the same and I don't want to
+    read none this is an endless sea of questions ... find exactly what you want without reading so many words". Of
+    Insight: "the search engine should be more apparent not only in the landing page but in all other pages of the
+    website too, it should not just be a search engine"; "more consistent throughout the website"; "when you jump to
+    another page because of a search while navigating it should be super easy to go back"; "the user should never feel
+    lost and 'where am i' in the website".
+    - *The principle, for every page and for everything the system writes* (also `docs/WRITING-RULES.md`, "Simple
+      first"): (1) what a reader sees first answers the question in plain words, in a line or two, and says where it
+      comes from; (2) the research (methods, numbers with their intervals, page numbers, quotations, references in full,
+      the researchers' own arguments) is always there, one tap further, behind a quiet label, and never between a reader
+      and the answer; (3) nothing opens somewhere else when it can open where the reader is, and a reader can always see
+      where they are and how to go back; (4) a long list is led by its signposts (topics, counts), and each row shows only
+      what tells it from the others; (5) the same thing looks and works the same on every page. Nothing checked is
+      removed or reworded for this: only its place and its order change.
+    - *Site 2.15.0, the evidence of an answer.* **Every citation is a link.** The text was escaped before it was read
+      and the list in brackets was cut at every semicolon, also at the one that ends "&amp;": no citation of two authors
+      in brackets was ever a link, on any answer. Now a reference is found in every form the checked texts use ("Hall &
+      Degenhardt, 2009", "Hall and Degenhardt (2009)", "Zhao et al. 2023", "Poole et al. (2017, corrected in 2018)", the
+      second year of "(Hughes & Stevens, 2010, 2012)", "Volkow 2014" where one source of the answer fits, "de la
+      Torre" for "De La Torre"). Counted over the 2,768 texts the evidence shows for the 374 answers: 2,251 linked
+      mentions before, 2,725 now; none of an answer's own sources is left unlinked in its canonical forms (a check now).
+      Four mentions are left that code cannot decide (two works of the same authors and year named without their letter:
+      "Hollander et al., 1995"; a relayed study; two whose anchors were removed): the editor's to settle in the text. A
+      study we know only through another source ("Mittleman et al., 2001, as relayed by ...") has no reference of ours:
+      the source that relays it is its link. A study card's own number in the researchers' text ("sc_...") opens that
+      card. **A source opens where the reader is**: its card unfolds under the line being read, the line does not move,
+      a second tap folds it away. **A source says in plain words** what it adds to this answer (the checked plain lines
+      that rest on it) and what kind of study it is (twenty plain names for the study cards' designs), then "Open the
+      paper"; the findings as recorded, with their places, the quotation, the APA reference and the study card are under
+      "Scientific detail". **"Researchers disagree"** starts in plain words; the researchers' question and the five full
+      texts are under one fold, "Both sides in full, for researchers". Where the two sides are written in plain words
+      and blind-checked (`data/site/simple.json`, a claim's "sides": yes, no, read, and their sources), the box shows one
+      line for each side with its sources and one for our reading: the place is ready, none is written yet (32 debates).
+    - *Site 2.15.0, the pages.* **A closed answer is its question and the first line of its answer**, with the bars
+      (their words are read aloud and shown when it opens): the cards of a part are half as tall. The topics of a part
+      are its signposts, each with its count, and a part with eight answers or more and three topics or more starts with
+      its topics in a row, each a jump to its answers. **Insight looks the same on every page**: the capsule of the
+      start page, smaller, in the top bar, and it says so ("Ask Insight about cannabis"); before a word is typed it
+      offers what people ask most about the drug whose page it is on. **The bar says where the reader is** ("Heroin ›
+      Risks"). **The way back is always in reach**: at the top of a page it is the Back line, as before; once that line
+      is out of sight the bar holds a Back button, named ("Back to Cannabis"). On a phone the bar's first row scrolls
+      away and its second row stays: Insight and the way back, 58 px. The Menu button keeps its place.
+    - *What a reader gave up.* A closed answer no longer shows its whole short answer: one tap opens it. This changes
+      "redesign 2" of 13 November at his word.
+    - *Not done yet.* The plain lines for the two sides of the 32 debates (to be written from the checked texts, read
+      blind by readers that wrote none of them, and adjudicated: the checked lane's rule for plain lines). A plain line
+      for what each source found, where no plain line of the answer rests on it. The same order on the old research
+      page of an answer. Old phones (iOS before 16.4) cannot read two patterns the page uses (a look-behind in
+      `app.insight.js`): to be rewritten.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

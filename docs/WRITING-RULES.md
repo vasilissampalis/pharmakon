@@ -71,6 +71,27 @@ The senior author, 18 October 2026, asked for real photos of the drugs instead o
 
 A shallower depth never says more than a deeper one. The short answer is written from the claim, never beyond it.
 
+## Simple first (the senior author, 17 November 2026: "This is how our website should be designed in general and what principles our ai should use")
+
+His words: "our website should first be able to answer to every common simple human in a sense that makes ... it's easy
+and fast to understand the information"; "users should be able to find quick simple answers and only if they are crazy
+they should click to the scientific details"; "the answers for researchers should be very discreet and hidden"; "every
+citation should have a link to it"; "the user should never feel lost". For every page, and for everything the system
+writes by itself (`docs/AUTOMATION.md`, decision 29):
+
+1. **The answer first, in plain words.** What a reader sees first answers the question in a line or two and says where
+   it comes from. No method, no interval, no page number, no researcher's word before it.
+2. **The science is always there, one quiet tap further.** Methods, numbers with their intervals, quotations, page
+   numbers, full references and the researchers' own arguments sit behind a small plain label ("Scientific detail",
+   "Both sides in full, for researchers"). Nothing checked is removed or reworded to make a page simpler.
+3. **Every citation is a link, and it opens where the reader is.** A source named in a line opens under that line. The
+   line does not move. Nothing sends a reader down or away when it can open in place.
+4. **A reader always knows where they are and how to go back.** The bar that stays in view names the page and its part
+   and holds the way back.
+5. **A list is led by its signposts.** Topics with their counts first; each row shows only what tells it from the
+   others (the question, and the first line of its answer).
+6. **The same thing looks and works the same on every page.** One Insight, one kind of card, one kind of source.
+
 ## The answer format, in this order
 
 0. **In short, first** (26 October): each drug page opens with three answers that need no tapping (the first question of each topic, in the editors' order), each with its "But" and its evidence bars. The full evidence for any answer opens over the page, so the reader never loses their place.

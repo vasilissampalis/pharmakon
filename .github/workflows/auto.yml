@@ -36,7 +36,7 @@ concurrency:
 
 jobs:
   tick:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest   # (17 November 2026: the small runner did not start twice in one hour, 16:15 and 16:33 UTC, and both runs were cancelled; the repository is public, so the usual runner costs nothing)
     timeout-minutes: 5
     outputs:
       work: ${{ steps.plan.outputs.work }}
@@ -160,7 +160,7 @@ jobs:
   publish:
     needs: [tick, work]
     if: ${{ always() && (needs.tick.outputs.deploy == 'true' || needs.work.outputs.deploy == 'true') }}
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest   # (17 November 2026: the small runner did not start twice in one hour, 16:15 and 16:33 UTC, and both runs were cancelled; the repository is public, so the usual runner costs nothing)
     timeout-minutes: 3
     steps:
       - name: Start the publishing run
