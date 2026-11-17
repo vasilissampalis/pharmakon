@@ -93,9 +93,12 @@ def ask(web, url):
 
 def shape(j):
     """A few words on what an answer holds: for the record, so that the next step can be written from what was seen."""
-    if isinstance(j, dict) and isinstance((j.get("results") or {}).get("bindings"), list):
+    if isinstance(j, dict) and isinstance(j.get("results"), dict) and isinstance(j["results"].get("bindings"), list):
         b = j["results"]["bindings"]; return {"rows": len(b), "first": [{k: str(v.get("value"))[:80] for k, v in row.items()} for row in b[:3]]}
-    if isinstance(j, dict): return {"keys": sorted(j)[:12], "inside": {k: (sorted(v)[:8] if isinstance(v, dict) else len(v) if isinstance(v, list) else str(v)[:60]) for k, v in list(j.items())[:4]}}
+    # (17 November 2026: an answer whose "results" is a list broke the first try of the second probe.) Any other answer: its
+    # keys, and the beginning of what each holds as text, enough to write the next step from
+    if isinstance(j, dict): return {"keys": sorted(j)[:14], "inside": {k: re.sub(r"\s+", " ", json.dumps(v, ensure_ascii=False))[:420] for k, v in list(j.items())[:8]}}
+    if isinstance(j, list): return {"kind": "list", "n": len(j), "first": re.sub(r"\s+", " ", json.dumps(j[:2], ensure_ascii=False))[:600]}
     return {"kind": type(j).__name__}
 
 
