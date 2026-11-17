@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0047",
- "lane": 13,
+ "lane": 14,
  "kind": "amounts",
  "from": "w_0047",
  "question": "How much caffeine a day do health bodies call safe for adults?",
@@ -21,25 +21,28 @@
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "@cf/openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.8-flash",
-   "team": "team H2"
+   "team": "team G",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "43998154503",
+  "run": "43999200560",
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 343.5
+  "neurons": 216.1
  },
  "status": "waiting",
  "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
  "gates": {
+  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): llama-4-scout-17b-16e-instruct read from there",
   "read": "6 amounts kept from 2 sources (0 papers read in full, 2 official pages, 0 papers read in summary); 14 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "5 amounts from 2 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people); 1 amount(s) stated for pregnancy, for children or about suicide left out (a person's part)",
-  "check": "2 of 5 amounts accepted by the second reader (@cf/openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
+  "check": "2 of 5 amounts accepted by the second reader (groq:openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
@@ -94,8 +97,9 @@
      "show": "Intakes up to 400mg per day",
      "clause": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
      "who": "healthy adults in the general population",
-     "what": "daily safe intake",
-     "near": 0.661
+     "what": "an amount for a day",
+     "what_read": "daily safe intake",
+     "near": 0.6025
     },
     {
      "passage": 8,
@@ -104,8 +108,9 @@
      "show": "Single doses of caffeine up to 200mg",
      "clause": "Single doses of caffeine up to 200mg - about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
      "who": "general healthy adult population",
-     "what": "single dose safe intake",
-     "near": 0.7654
+     "what": "an amount for one occasion",
+     "what_read": "single dose safe intake",
+     "near": 0.7348
     },
     {
      "passage": 8,
@@ -115,7 +120,7 @@
      "clause": "Single doses of 100mg (about 1.4mg/kg bw) of caffeine may affect sleep duration and patterns in some adults, particularly when consumed close to bedtime.",
      "who": "some adults",
      "what": "single dose that may affect sleep",
-     "near": 0.4395
+     "near": 0.4269
     },
     {
      "passage": 4,
@@ -125,7 +130,7 @@
      "clause": "Adults (18-65 years) 37-319mg",
      "who": "Adults",
      "what": "daily intake range",
-     "near": 0.5998
+     "near": 0.5877
     }
    ],
    "design": null,
@@ -190,7 +195,7 @@
      "clause": "Adults (18 years and over) 400 mg",
      "who": "Adults (18 years and over)",
      "what": "Recommended maximum daily intake",
-     "near": 0.602
+     "near": 0.6025
     }
    ],
    "design": null,
@@ -214,9 +219,10 @@
   },
   {
    "part": "row1",
-   "text": "Healthy adults in the general population; daily safe intake.",
+   "text": "Healthy adults in the general population; an amount for a day.",
    "who": "Healthy adults in the general population",
-   "what": "daily safe intake",
+   "what": "an amount for a day",
+   "what_read": "daily safe intake",
    "quote": "Intakes up to 400mg per day",
    "source": "efsa_caffeine",
    "read": "page",
@@ -313,6 +319,14 @@
    "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
    "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
    "complete": false
+  },
+  {
+   "on": "2026-11-17",
+   "lane": 13,
+   "status": "waiting",
+   "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": true
   }
  ],
  "looked": [
@@ -420,10 +434,10 @@
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     },
     {
-     "quote": "a single 16-oz. container of an energy drink may contain 54 to 62 grams of added sugar",
-     "who": "people",
+     "quote": "54 to 62 grams of added sugar",
+     "who": "teens",
      "what": "added sugar in a 16-oz. energy drink",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     }
    ]
   },
@@ -439,7 +453,7 @@
  "person_rows": [
   {
    "who": "pregnant women",
-   "what": "daily safe intake for the foetus",
+   "what": "an amount for a day",
    "quote": "Caffeine intakes from all sources up to 200mg per day",
    "where": "FAQ",
    "source": "efsa_caffeine"
@@ -448,7 +462,7 @@
  "refused_rows": [
   {
    "who": "general healthy adult population",
-   "what": "single dose safe intake",
+   "what": "an amount for one occasion",
    "quote": "Single doses of caffeine up to 200mg",
    "full": "Single doses of caffeine up to 200mg – about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
    "where": "FAQ",
@@ -474,7 +488,7 @@
    "said": "not an amount of the kind the question asks for"
   }
  ],
- "held": "the editor's first reading of lane 13",
+ "held": "the editor's first reading of lane 14",
  "place": {
   "home": "caffeine",
   "also": [],
