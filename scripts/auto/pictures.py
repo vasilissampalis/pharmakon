@@ -8,7 +8,8 @@ verified and the ai is uncertain then we could have a small disclaimer, i just t
 even before us".
 
     python3 -I scripts/auto/pictures.py find [--max 12]                 (which pictures there are: data/auto/pictures.json)
-    python3 -I scripts/auto/pictures.py --requests data/auto/requests   (pictures-*.json: {"do": "find", "max": 12})
+    python3 -I scripts/auto/pictures.py fetch [--max 12]                (fetch them and make the web copies: site/photos-auto/)
+    python3 -I scripts/auto/pictures.py --requests data/auto/requests   (pictures-*.json: {"do": "find" | "fetch", "max": 12})
     python3 -I scripts/auto/pictures.py --selftest
 
 Where pictures may come from (the probe of 17 November 2026, data/auto/names/probe.json): Wikimedia Commons' search,
@@ -115,12 +116,58 @@ def find(most=12, web=None, today=None, save=True, pages=None):
     return doc
 
 
+PICS = ROOT / "site" / "photos-auto"
+SIZES = {"m": (800, 74), "t": (400, 70)}       # as scripts/build_photos.py: the long side in px, and the WebP quality
+PER_PAGE = 3
+
+
+def asked_first(pages):
+    """The pages in the order they are fetched for: one that people asked about (data/auto/pages.json, 'listed') before the others."""
+    listed = {slug_of(n) for n, v in (load(ROOT / "data" / "auto" / "pages.json", {}).get("pages") or {}).items() if isinstance(v, dict) and v.get("listed")}
+    return sorted(pages, key=lambda s: (s not in listed, s))
+
+
+def fetch(most=12, web=None, today=None, save=True, doc=None, out_dir=None):
+    """Fetch pictures that find put on file, up to PER_PAGE for a page, and make their web copies (site/photos-auto/<page>-<n>-m.webp
+    and -t.webp, with nothing of the original's metadata). Only from a host whose robots.txt allows it. iNaturalist's open store
+    keeps each photo in several sizes: its 'large' one (1024 px) is asked for, not the original. The record keeps where the
+    copy came from and a fingerprint of what was fetched. Every picture stays 'not checked by a person' until one has looked."""
+    import io, hashlib
+    from PIL import Image, ImageOps
+    web = web or O.Web(); today = today or datetime.date.today().isoformat(); doc = doc if doc is not None else load(OUT, {}); out_dir = pathlib.Path(out_dir or PICS); n = 0
+    for slug in asked_first(list((doc.get("pages") or {}).keys())):
+        e = doc["pages"][slug]; have = [p for s in e["species"].values() for p in (s.get("pictures") or []) if p.get("file")]
+        for s in e["species"].values():
+            for p in s.get("pictures") or []:
+                if len(have) >= PER_PAGE or n >= most: break
+                if p.get("file") or p.get("failed") or not p.get("host_allows"): continue
+                url = re.sub(r"/original\.(jpe?g|png)$", r"/large.\1", p["url"]) if p.get("host") == "inaturalist-open-data.s3.amazonaws.com" else p["url"]
+                n += 1
+                try: got = web.get(url, "image/jpeg,image/png,image/webp;q=0.9,image/*;q=0.5")
+                except (O.P.Refused, IOError, ValueError) as ex: p["failed"] = re.sub(r"\s+", " ", str(ex))[:140]; continue
+                if not got: p["failed"] = "nothing there"; continue
+                try:
+                    im = Image.open(io.BytesIO(got[0])); im.load(); im = ImageOps.exif_transpose(im).convert("RGB")
+                except Exception: p["failed"] = "not a picture that could be read"; continue
+                if min(im.size) < 300: p["failed"] = "too small to show"; continue
+                k = 1 + max([int(m.group(1)) for x in have for m in [re.search(r"-(\d+)$", x["file"])] if m] or [0]); fid = f"{slug}-{k}"; sizes = {}
+                out_dir.mkdir(parents=True, exist_ok=True)
+                for key, (side, q) in SIZES.items():
+                    c = im.copy(); c.thumbnail((side, side), Image.LANCZOS); f = out_dir / f"{fid}-{key}.webp"; c.save(f, "WEBP", quality=q, method=6); sizes[key] = [c.size[0], c.size[1], f.stat().st_size]
+                p.update({"file": fid, "sizes": sizes, "fetched_on": today, "fetched_from": url, "sha256": hashlib.sha256(got[0]).hexdigest(), "species": s.get("name"), "checked_by_person": False}); have.append(p)
+                print(f"pictures: {e['name']}: fetched {fid} ({s.get('name')}, {p['licence']}, by {p['maker'] or 'no one named'}), {sizes['m'][0]}x{sizes['m'][1]}")
+    print(f"pictures: {n} asked for; {sum(1 for e in (doc.get('pages') or {}).values() for s in e['species'].values() for p in (s.get('pictures') or []) if p.get('file'))} pictures have web copies")
+    if save and n: json.dump(doc, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    return doc
+
+
 def requests(folder):
     done = 0
     for f in sorted(pathlib.Path(folder).glob("pictures-*.json")):
         try: req = json.load(open(f, encoding="utf-8"))
         except (OSError, ValueError): print("pictures: a request that is not JSON:", f.name); continue
         if isinstance(req, dict) and req.get("do") == "find": find(most=max(1, min(40, int(req.get("max") or 12)))); done += 1
+        elif isinstance(req, dict) and req.get("do") == "fetch": fetch(most=max(1, min(40, int(req.get("max") or 12)))); done += 1
         else: print("pictures: a request that asks for nothing this script does:", f.name)
     print(f"pictures: {done} request(s) done")
 
@@ -160,6 +207,25 @@ def selftest():
     assert c["licence"] == "CC0 1.0" and c["host_allows"] is False and not any(u.startswith("https://closed.example/e") or u.startswith("https://open.example/a") for u in asked)      # nothing was downloaded; a host that does not allow it is only noted
     assert "said" in e["species"]["Felis catus"] and "said" in e["species"]["Nothing nowhere"]                                                                                    # an animal, and a name GBIF does not know: no pictures
     assert slug_of("Other plants (blue lotus, damiana, wild dagga)") == "other-plants-blue-lotus-damiana-wild-dagga"
+    # fetch: only from a host that allows it; the web copies hold nothing of the original's metadata; what is not a picture is said so
+    import io, tempfile
+    from PIL import Image
+    buf = io.BytesIO(); Image.new("RGB", (1600, 1200), (40, 120, 60)).save(buf, "JPEG"); jpg = buf.getvalue(); got_urls = []
+    def files(req, timeout=0):
+        url = req.full_url; got_urls.append(url)
+        if url.endswith("/robots.txt"): return Page(b"User-agent: *\nDisallow: /\n" if "closed.example" in url else b"", url)
+        if url == "https://inaturalist-open-data.s3.amazonaws.com/photos/1/large.jpg": return Page(jpg, url)
+        if url == "https://open.example/notapicture.jpg": return Page(b"<html>no</html>", url)
+        raise AssertionError("not expected: " + url)
+    pic = lambda u, host, ok=True: {"url": u, "licence": "CC0 1.0", "licence_url": "http://creativecommons.org/publicdomain/zero/1.0/", "maker": "", "record": "r", "page": "", "host": host, "host_allows": ok, "country": "", "day": ""}
+    d2 = {"pages": {"kanna": {"name": "Kanna", "species": {"Sceletium tortuosum": {"gbif": 7, "name": "Sceletium tortuosum", "kind": "plant", "pictures": [
+        pic("https://inaturalist-open-data.s3.amazonaws.com/photos/1/original.jpg", "inaturalist-open-data.s3.amazonaws.com"), pic("https://open.example/notapicture.jpg", "open.example"), pic("https://closed.example/x.jpg", "closed.example", False)]}}}}}
+    with tempfile.TemporaryDirectory() as tmp:
+        fetch(web=O.Web(opener=files), today="2026-11-17", save=False, doc=d2, out_dir=tmp)
+        a, b, c = d2["pages"]["kanna"]["species"]["Sceletium tortuosum"]["pictures"]
+        assert a["file"] == "kanna-1" and a["sizes"]["m"][:2] == [800, 600] and a["sizes"]["t"][:2] == [400, 300] and a["checked_by_person"] is False and a["fetched_from"].endswith("/large.jpg") and len(a["sha256"]) == 64 and a["species"] == "Sceletium tortuosum"
+        im = Image.open(pathlib.Path(tmp) / "kanna-1-m.webp"); assert im.size == (800, 600) and not im.info.get("exif")
+        assert b.get("failed") == "not a picture that could be read" and "file" not in b and "file" not in c and not c.get("failed") and not any("closed.example/x.jpg" in u or "original.jpg" in u for u in got_urls)
     print("pictures selftest: ok (a page's species are found by asking GBIF; only CC0 and CC BY pictures of records a person observed are kept, CC BY only with its maker named; non-commercial and share-alike are not taken; "
           "a host that does not allow programs is noted and not asked; nothing is downloaded by find)")
 
@@ -169,4 +235,5 @@ if __name__ == "__main__":
     if "--selftest" in a: selftest()
     elif "--requests" in a: requests(a[a.index("--requests") + 1])
     elif a[:1] == ["find"]: find(most=int(a[a.index("--max") + 1]) if "--max" in a else 12)
+    elif a[:1] == ["fetch"]: fetch(most=int(a[a.index("--max") + 1]) if "--max" in a else 12)
     else: sys.exit(__doc__)
