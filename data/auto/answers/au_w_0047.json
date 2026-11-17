@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0047",
- "lane": 12,
+ "lane": 13,
  "kind": "amounts",
  "from": "w_0047",
  "question": "How much caffeine a day do health bodies call safe for adults?",
@@ -26,23 +26,113 @@
    "also1": "gemini:gemini-3.8-flash",
    "team": "team H2"
   },
-  "run": "43995397912",
+  "run": "43998154503",
   "from": {
    "papers": 0,
-   "summaries": 2,
-   "official": 1
+   "summaries": 0,
+   "official": 2
   },
-  "neurons": 701.3
+  "neurons": 343.5
  },
  "status": "waiting",
  "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
  "gates": {
-  "read": "18 amounts kept from 7 sources (2 papers read in full, 3 official pages, 2 papers read in summary); 27 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "11 amounts from 6 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people); 6 amount(s) stated for pregnancy, for children or about suicide left out (a person's part); 1 that said the same amount for the same people again left out",
-  "check": "6 of 11 amounts accepted by the second reader (@cf/openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
+  "read": "6 amounts kept from 2 sources (0 papers read in full, 2 official pages, 0 papers read in summary); 14 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "5 amounts from 2 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people); 1 amount(s) stated for pregnancy, for children or about suicide left out (a person's part)",
+  "check": "2 of 5 amounts accepted by the second reader (@cf/openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
+  {
+   "read": "page",
+   "ref": {
+    "id": "efsa_caffeine",
+    "type": "webpage",
+    "title": "Caffeine",
+    "author": [
+     {
+      "literal": "European Food Safety Authority"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.efsa.europa.eu/en/topics/topic/caffeine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       17
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-17"
+    }
+   },
+   "title": "Caffeine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.724,
+   "name": "European Food Safety Authority",
+   "short": "the European Food Safety Authority",
+   "tier": 1,
+   "address": "https://www.efsa.europa.eu/en/topics/topic/caffeine",
+   "money": [],
+   "label": false,
+   "rows": [
+    {
+     "passage": 8,
+     "where": "FAQ",
+     "quote": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
+     "show": "Intakes up to 400mg per day",
+     "clause": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
+     "who": "healthy adults in the general population",
+     "what": "daily safe intake",
+     "near": 0.661
+    },
+    {
+     "passage": 8,
+     "where": "FAQ",
+     "quote": "Single doses of caffeine up to 200mg – about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
+     "show": "Single doses of caffeine up to 200mg",
+     "clause": "Single doses of caffeine up to 200mg - about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
+     "who": "general healthy adult population",
+     "what": "single dose safe intake",
+     "near": 0.7654
+    },
+    {
+     "passage": 8,
+     "where": "FAQ",
+     "quote": "Single doses of 100mg (about 1.4mg/kg bw) of caffeine may affect sleep duration and patterns in some adults, particularly when consumed close to bedtime.",
+     "show": "Single doses of 100mg",
+     "clause": "Single doses of 100mg (about 1.4mg/kg bw) of caffeine may affect sleep duration and patterns in some adults, particularly when consumed close to bedtime.",
+     "who": "some adults",
+     "what": "single dose that may affect sleep",
+     "near": 0.4395
+    },
+    {
+     "passage": 4,
+     "where": "FAQ",
+     "quote": "Adults (18-65 years) 37-319mg",
+     "show": "Adults (18-65 years) 37-319mg",
+     "clause": "Adults (18-65 years) 37-319mg",
+     "who": "Adults",
+     "what": "daily intake range",
+     "near": 0.5998
+    }
+   ],
+   "design": null,
+   "findings": [],
+   "limits": [],
+   "tag": "A"
+  },
   {
    "read": "page",
    "ref": {
@@ -100,250 +190,13 @@
      "clause": "Adults (18 years and over) 400 mg",
      "who": "Adults (18 years and over)",
      "what": "Recommended maximum daily intake",
-     "near": 0.6017
+     "near": 0.602
     }
    ],
    "design": null,
    "findings": [],
    "limits": [],
-   "tag": "D"
-  },
-  {
-   "read": "summary",
-   "ref": {
-    "id": "nawrot_2003",
-    "type": "article-journal",
-    "title": "Effects of caffeine on human health",
-    "author": [
-     {
-      "family": "Nawrot",
-      "given": "P."
-     },
-     {
-      "family": "Jordan",
-      "given": "S."
-     },
-     {
-      "family": "Eastwood",
-      "given": "J."
-     },
-     {
-      "family": "Rotstein",
-      "given": "J."
-     },
-     {
-      "family": "Hugenholtz",
-      "given": "A."
-     },
-     {
-      "family": "Feeley",
-      "given": "M."
-     }
-    ],
-    "container-title": "Food Additives and Contaminants",
-    "issued": {
-     "date-parts": [
-      [
-       2003
-      ]
-     ]
-    },
-    "DOI": "10.1080/0265203021000007840",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-17"
-     }
-    },
-    "volume": "20",
-    "issue": "1",
-    "page": "1-30"
-   },
-   "doi": "10.1080/0265203021000007840",
-   "title": "Effects of caffeine on human health",
-   "year": 2003,
-   "journal": "Food additives and contaminants",
-   "kind": "review",
-   "people": true,
-   "near": 0.745,
-   "money": [],
-   "rows": [
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "up to 400 mg day(-1)",
-     "show": "up to 400 mg day(-1)",
-     "clause": "up to 400 mg day(-1)",
-     "who": "healthy adult population",
-     "what": "moderate daily caffeine intake",
-     "near": 0.8256
-    },
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "6 mg kg(-1) body weight day(-1) in a 65-kg person",
-     "show": "6 mg kg(-1) body weight day(-1) in a 65-kg person",
-     "clause": "6 mg kg(-1) body weight day(-1) in a 65-kg person",
-     "who": "healthy adult population",
-     "what": "moderate daily caffeine intake",
-     "near": 0.7695
-    },
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "</=300 mg caffeine per day",
-     "show": "</=300 mg caffeine per day",
-     "clause": "</=300 mg caffeine per day",
-     "who": "reproductive-aged women",
-     "what": "daily caffeine intake",
-     "near": 0.7193
-    },
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "4.6 mg kg(-1) bw day(-1) for a 65-kg person",
-     "show": "4.6 mg kg(-1) bw day(-1) for a 65-kg person",
-     "clause": "4.6 mg kg(-1) bw day(-1) for a 65-kg person",
-     "who": "reproductive-aged women",
-     "what": "daily caffeine intake",
-     "near": 0.7255
-    }
-   ],
-   "design": null,
-   "findings": [],
-   "limits": [],
-   "tag": "F"
-  },
-  {
-   "read": "summary",
-   "ref": {
-    "id": "wikoff_2017",
-    "type": "article-journal",
-    "title": "Systematic review of the potential adverse effects of caffeine consumption in healthy adults, pregnant women, adolescents, and children",
-    "author": [
-     {
-      "family": "Wikoff",
-      "given": "Daniele"
-     },
-     {
-      "family": "Welsh",
-      "given": "Brian T."
-     },
-     {
-      "family": "Henderson",
-      "given": "Rayetta"
-     },
-     {
-      "family": "Brorby",
-      "given": "Gregory P."
-     },
-     {
-      "family": "Britt",
-      "given": "Janice"
-     },
-     {
-      "family": "Myers",
-      "given": "Esther"
-     },
-     {
-      "family": "Goldberger",
-      "given": "Jeffrey"
-     },
-     {
-      "family": "Lieberman",
-      "given": "Harris R."
-     },
-     {
-      "family": "O'Brien",
-      "given": "Charles"
-     },
-     {
-      "family": "Peck",
-      "given": "Jennifer"
-     },
-     {
-      "family": "Tenenbein",
-      "given": "Milton"
-     },
-     {
-      "family": "Weaver",
-      "given": "Connie"
-     },
-     {
-      "family": "Harvey",
-      "given": "Seneca"
-     },
-     {
-      "family": "Urban",
-      "given": "Jonathan"
-     },
-     {
-      "family": "Doepker",
-      "given": "Candace"
-     }
-    ],
-    "container-title": "Food and Chemical Toxicology",
-    "issued": {
-     "date-parts": [
-      [
-       2017
-      ]
-     ]
-    },
-    "DOI": "10.1016/j.fct.2017.04.002",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-17"
-     }
-    },
-    "volume": "109",
-    "page": "585-648"
-   },
-   "doi": "10.1016/j.fct.2017.04.002",
-   "title": "Systematic review of the potential adverse effects of caffeine consumption in healthy adults, pregnant women, adolescents, and children",
-   "year": 2017,
-   "journal": "Food and chemical toxicology : an international journal published for the British Industrial Biological Research Association",
-   "kind": "review",
-   "people": true,
-   "near": 0.682,
-   "money": [],
-   "rows": [
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "400 mg/day for adults",
-     "show": "400 mg/day for adults",
-     "clause": "400 mg/day for adults",
-     "who": "healthy adults",
-     "what": "daily amount",
-     "near": 0.6273
-    },
-    {
-     "passage": 3,
-     "where": "Summary",
-     "quote": "up to 400 mg caffeine/day",
-     "show": "up to 400 mg caffeine/day",
-     "clause": "up to 400 mg caffeine/day",
-     "who": "healthy adults",
-     "what": "daily amount",
-     "near": 0.8397
-    }
-   ],
-   "design": null,
-   "findings": [],
-   "limits": [],
-   "tag": "G"
+   "tag": "B"
   }
  ],
  "parts": [
@@ -355,12 +208,33 @@
   },
   {
    "part": "but",
-   "text": "Each amount was for the people named, under the care named. It says nothing about another person, or about what is sold outside a pharmacy.",
+   "text": "Each amount is that body's own guidance for the people it names. It says nothing about another person.",
    "fixed": true,
    "rests_on": []
   },
   {
    "part": "row1",
+   "text": "Healthy adults in the general population; daily safe intake.",
+   "who": "Healthy adults in the general population",
+   "what": "daily safe intake",
+   "quote": "Intakes up to 400mg per day",
+   "source": "efsa_caffeine",
+   "read": "page",
+   "uses": [
+    "R1"
+   ],
+   "rests_on": [
+    {
+     "label": "R1",
+     "ref": "efsa_caffeine",
+     "where": "FAQ",
+     "quote": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
+     "sha": "ddaaa4a092b178f7"
+    }
+   ]
+  },
+  {
+   "part": "row2",
    "text": "Adults (18 years and over); Recommended maximum daily intake.",
    "who": "Adults (18 years and over)",
    "what": "Recommended maximum daily intake",
@@ -368,126 +242,21 @@
    "source": "healthcanada_caffeine-foods",
    "read": "page",
    "uses": [
-    "R4"
+    "R5"
    ],
    "rests_on": [
     {
-     "label": "R4",
+     "label": "R5",
      "ref": "healthcanada_caffeine-foods",
      "where": "Recommended maximum daily intake",
      "quote": "Adults (18 years and over) 400 mg",
      "sha": "a059dbff83d6d0aa"
     }
    ]
-  },
-  {
-   "part": "row2",
-   "text": "Healthy adult population; moderate daily caffeine intake.",
-   "who": "Healthy adult population",
-   "what": "moderate daily caffeine intake",
-   "quote": "up to 400 mg day(-1)",
-   "source": "nawrot_2003",
-   "read": "summary",
-   "uses": [
-    "R7"
-   ],
-   "rests_on": [
-    {
-     "label": "R7",
-     "ref": "nawrot_2003",
-     "where": "Summary",
-     "quote": "up to 400 mg day(-1)",
-     "sha": "b3c01a78adb6a4d1"
-    }
-   ]
-  },
-  {
-   "part": "row3",
-   "text": "Healthy adult population; moderate daily caffeine intake.",
-   "who": "Healthy adult population",
-   "what": "moderate daily caffeine intake",
-   "quote": "6 mg kg(-1) body weight day(-1) in a 65-kg person",
-   "source": "nawrot_2003",
-   "read": "summary",
-   "uses": [
-    "R8"
-   ],
-   "rests_on": [
-    {
-     "label": "R8",
-     "ref": "nawrot_2003",
-     "where": "Summary",
-     "quote": "6 mg kg(-1) body weight day(-1) in a 65-kg person",
-     "sha": "b3c01a78adb6a4d1"
-    }
-   ]
-  },
-  {
-   "part": "row4",
-   "text": "Reproductive-aged women; daily caffeine intake.",
-   "who": "Reproductive-aged women",
-   "what": "daily caffeine intake",
-   "quote": "</=300 mg caffeine per day",
-   "source": "nawrot_2003",
-   "read": "summary",
-   "uses": [
-    "R9"
-   ],
-   "rests_on": [
-    {
-     "label": "R9",
-     "ref": "nawrot_2003",
-     "where": "Summary",
-     "quote": "</=300 mg caffeine per day",
-     "sha": "b3c01a78adb6a4d1"
-    }
-   ]
-  },
-  {
-   "part": "row5",
-   "text": "Reproductive-aged women; daily caffeine intake.",
-   "who": "Reproductive-aged women",
-   "what": "daily caffeine intake",
-   "quote": "4.6 mg kg(-1) bw day(-1) for a 65-kg person",
-   "source": "nawrot_2003",
-   "read": "summary",
-   "uses": [
-    "R10"
-   ],
-   "rests_on": [
-    {
-     "label": "R10",
-     "ref": "nawrot_2003",
-     "where": "Summary",
-     "quote": "4.6 mg kg(-1) bw day(-1) for a 65-kg person",
-     "sha": "b3c01a78adb6a4d1"
-    }
-   ]
-  },
-  {
-   "part": "row6",
-   "text": "Healthy adults; daily amount.",
-   "who": "Healthy adults",
-   "what": "daily amount",
-   "quote": "up to 400 mg caffeine/day",
-   "source": "wikoff_2017",
-   "read": "summary",
-   "uses": [
-    "R11"
-   ],
-   "rests_on": [
-    {
-     "label": "R11",
-     "ref": "wikoff_2017",
-     "where": "Summary",
-     "quote": "up to 400 mg caffeine/day",
-     "sha": "20a1679082343cd3"
-    }
-   ]
   }
  ],
- "complete": false,
- "missing": "a paper could be read in summary only",
+ "complete": true,
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1080/0265203021000007840",
@@ -536,87 +305,17 @@
    "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
    "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
    "complete": false
+  },
+  {
+   "on": "2026-11-17",
+   "lane": 12,
+   "status": "waiting",
+   "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": false
   }
  ],
  "looked": [
-  {
-   "title": "The Safety of Ingested Caffeine: A Comprehensive Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fpsyt.2017.00080",
-   "kept": 2,
-   "thrown": [
-    {
-     "quote": "The threshold of caffeine toxicity appears to be around 400 mg/day in healthy adults (19 years or older), 100 mg/day in healthy adolescents (12–18 years old), and 2.5 mg/kg/day in healthy children (le",
-     "who": "healthy adults, healthy adolescents, healthy children",
-     "what": "threshold of caffeine toxicity",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
-    },
-    {
-     "quote": "For healthy adults, moderate chronic intakes of caffeine up to 400 mg/day are not associated with adverse effects on cardiovascular health, calcium balance and bone status, behavior, cancer risk, or m",
-     "who": "healthy adults",
-     "what": "moderate chronic intake",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    },
-    {
-     "quote": "For example, the European Food and Safety Authority considers 3-mg/kg body weight/day of habitual caffeine consumption to be safe for children and adolescents.",
-     "who": "children and adolescents",
-     "what": "safe habitual consumption",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "caffeine intoxication is diagnosed if clinically significant impairment results from the following criteria: (1) recent consumption of caffeine, usually in excess of 250 mg, (2) five (or more) of the ",
-     "who": "people with caffeine intoxication",
-     "what": "amount for diagnosis",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    },
-    {
-     "quote": "Bronstein et al. identified 48,177 poison center calls related to caffeine consumption and 6,724 calls related specifically to energy drink consumption.",
-     "who": "people making poison center calls",
-     "what": "number of poison center calls",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "Data have been collected in children and adolescents using dose–response and placebo-controlled research methods. Outcomes, such as cardiovascular function, mood, and cognitive performance, have all b",
-     "who": "children and adolescents",
-     "what": "research dose range",
-     "why": "who names no people"
-    }
-   ]
-  },
-  {
-   "title": "International society of sports nutrition position stand: caffeine and exercise performance",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s12970-020-00383-4",
-   "kept": 1,
-   "thrown": [
-    {
-     "quote": "32 to 300 mg",
-     "who": "a 75 kg individual",
-     "what": "dose",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    },
-    {
-     "quote": "approximately 200 mg",
-     "who": "individuals",
-     "what": "dose",
-     "why": "the quote is shorter than 4 words or longer than 70"
-    },
-    {
-     "quote": "studied 24 well-trained cyclists that were randomized to 3 groups: (1) consumed a bar containing 45 g of carbohydrate and 100 mg of caffeine",
-     "who": "24 well-trained cyclists",
-     "what": "amount in a bar",
-     "why": "who names no people"
-    },
-    {
-     "quote": "300 mg",
-     "who": "20 exercise-trained men and women",
-     "what": "amount in an energy drink",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    }
-   ]
-  },
   {
    "title": "Caffeine",
    "read": "page",
@@ -694,7 +393,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nccih.nih.gov/health/energy-drinks",
-   "kept": 1,
+   "kept": 0,
    "thrown": [
     {
      "quote": "a 12-oz. can of cola contains about 35 mg of caffeine",
@@ -709,16 +408,22 @@
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     },
     {
+     "quote": "at levels of 70 to 240 mg in a 16-oz. drink",
+     "who": "people",
+     "what": "caffeine in a 16-oz. energy drink",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
      "quote": "113 to 200 mg in an energy shot",
      "who": "people",
      "what": "caffeine in an energy shot",
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     },
     {
-     "quote": "54 to 62 grams of added sugar",
-     "who": "teens",
+     "quote": "a single 16-oz. container of an energy drink may contain 54 to 62 grams of added sugar",
+     "who": "people",
      "what": "added sugar in a 16-oz. energy drink",
-     "why": "who names no people"
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
     }
    ]
   },
@@ -729,57 +434,15 @@
    "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/caffeine",
    "kept": 0,
    "thrown": []
-  },
+  }
+ ],
+ "person_rows": [
   {
-   "title": "Effects of caffeine on human health",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1080/0265203021000007840",
-   "kept": 4,
-   "thrown": [
-    {
-     "quote": "</=2.5 mg kg(-1) bw day(-1)",
-     "who": "children",
-     "what": "daily caffeine intake",
-     "why": "who names no people"
-    }
-   ]
-  },
-  {
-   "title": "Caffeine consumption",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/0278-6915(95)00093-3",
-   "kept": 0,
-   "thrown": [
-    {
-     "quote": "4 mg/kg",
-     "who": "US consumers",
-     "what": "mean daily caffeine intake",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    }
-   ]
-  },
-  {
-   "title": "Systematic review of the potential adverse effects of caffeine consumption in healthy adults, pregnant women, adolescents, and children",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.fct.2017.04.002",
-   "kept": 4,
-   "thrown": [
-    {
-     "quote": "2.5 mg/kg/day for children and adolescents",
-     "who": "children and adolescents",
-     "what": "daily amount",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "2.5 mg caffeine/kg body weight/day",
-     "who": "children and adolescents",
-     "what": "daily amount",
-     "why": "who names no people"
-    }
-   ]
+   "who": "pregnant women",
+   "what": "daily safe intake for the foetus",
+   "quote": "Caffeine intakes from all sources up to 200mg per day",
+   "where": "FAQ",
+   "source": "efsa_caffeine"
   }
  ],
  "refused_rows": [
@@ -809,27 +472,9 @@
    "where": "FAQ",
    "source": "efsa_caffeine",
    "said": "not an amount of the kind the question asks for"
-  },
-  {
-   "who": "people",
-   "what": "caffeine in a 16-oz. energy drink",
-   "quote": "at levels of 70 to 240 mg in a 16-oz. drink",
-   "full": "at levels of 70 to 240 mg in a 16-oz. drink",
-   "where": "Top of the page",
-   "source": "nccih_energy-drinks",
-   "said": "not an amount of the kind the question asks for"
-  },
-  {
-   "who": "U.S. adult men and women",
-   "what": "daily consumption",
-   "quote": "approximately 200 mg/day",
-   "full": "approximately 200 mg/day",
-   "where": "Introduction",
-   "source": "guest_2021",
-   "said": "not an amount of the kind the question asks for"
   }
  ],
- "held": "the editor's first reading of lane 12",
+ "held": "the editor's first reading of lane 13",
  "place": {
   "home": "caffeine",
   "also": [],
