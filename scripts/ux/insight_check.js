@@ -56,7 +56,7 @@ const WORDS = [["can i die from ", "ends"], ["is it addictive", "which"], ["is i
 // (2.9.2) every circumstance has its response: [question, the line, what its text must hold, is there a way to send it]
 const CIRC = [["do gay people", "Go on.", /Finish your question and we will look\./, false], ["why do women", "Go on.", /Finish your question and we will look\./, false],
   ["how long does the high", "Go on.", /Finish your question and we will look\./, false], ["does smoking weed", "Go on.", /Finish your question about cannabis and we will look\./, false],
-  ["what is mytragina javanica", "We do not know “mytragina javanica” as a drug.", /If it is one, send us your question and we will look into it\./, true],
+  ["what is blorptia javanensis", "We do not know “blorptia javanensis” as a drug.", /If it is one, send us your question and we will look into it\./, true],
   ["είναι ασφαλές το MDMA", "Pharmakon reads questions in English for now.", /Please ask in English\. Προς το παρόν διαβάζουμε ερωτήσεις μόνο στα αγγλικά\./, false],
   ["является ли кокаин опасным", "Pharmakon reads questions in English for now.", /Please ask in English\.$/, false],
   ["who are you", "This is Pharmakon Insight.", /finds the answer on this site\. No person and no chatbot replies to you\. Ask about a drug: for example, “is ketamine addictive\?” About us$/, false], ["are you an ai", "This is Pharmakon Insight.", /reads your question on your own device/, false],
@@ -249,6 +249,11 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     for (const [q, line, re, send] of CIRC) { const r = await ask(q);
       if (!(r.none === line && re.test(r.text.replace(/\s+/g, " ").trim()) && !!r.askBtn === send && !r.best.length && !r.wordAsk)) cbad.push("“" + q + "”: " + r.none + " | " + r.text.replace(/\s+/g, " ").slice(0, 150) + " | send: " + r.askBtn); }
     await shot("list-go-on");
+    // (2.9.3) a name the system learned by looking it up: what people typed for it is read as the name (when the table holds it)
+    let learned = {}; try { learned = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "..", "data", "auto", "names", "learned.json"), "utf8")).names || {}; } catch (e) { learned = {}; }
+    const lk = Object.keys(learned).find(k => learned[k].drug === true && (learned[k].typed || []).length);
+    if (lk) { const typed = learned[lk].typed[0], r = await ask("what is " + typed), rd = await p.evaluate(() => (document.querySelector("#search-results .sr-fit .sr-read") || {}).textContent || "");
+      ok(w + ": a name the system learned by looking it up: “what is " + typed + "” is read as " + learned[lk].name + ", and is a question about drugs", rd === "We read “" + typed + "” as " + learned[lk].name + "." && r.none === "We haven’t checked exactly this yet.", rd + " | " + r.none); }
     ok(w + ": every circumstance has its response (" + CIRC.length + " questions: “do gay people” and “why do women” are told “Go on. Finish your question and we will look.” with nothing to send; a name of two words we do not know is named; a question in Greek or Russian is asked for in English)", !cbad.length, cbad.slice(0, 3).join(" ;; ") || "all as they should be");
     // the law by country: the route is the answer, from the page of treaties; with a drug named, from that drug's law part, shown for the country asked about
     const lw = await ask("are drugs legal in greece"); await shot("list-law-country");
