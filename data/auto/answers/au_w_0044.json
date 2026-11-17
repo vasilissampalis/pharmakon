@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0044",
- "lane": 5,
+ "lane": 10,
  "kind": "amounts",
  "from": "w_0044",
  "question": "What amounts of psilocybin have studies given to people?",
@@ -17,26 +17,29 @@
   "psilocybin"
  ],
  "made": {
-  "on": "2026-11-16",
+  "on": "2026-11-17",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b"
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "@cf/openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.8-flash",
+   "team": "team H2"
   },
-  "run": "43788421499",
+  "run": "43985089101",
   "from": {
    "papers": 2,
-   "summaries": 2,
+   "summaries": 1,
    "official": 0
   },
-  "neurons": 530.0
+  "neurons": 361.7
  },
- "status": "published",
- "why": "passed every gate (an answer about amounts: decision 11)",
+ "status": "waiting",
+ "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
  "gates": {
-  "read": "9 amounts kept from 4 sources (2 papers read in full, 0 official pages, 2 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "8 amounts from 4 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
-  "check": "8 of 8 amounts accepted by the second reader (@cf/openai/gpt-oss-120b)",
+  "read": "8 amounts kept from 3 sources (2 papers read in full, 0 official pages, 1 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "8 amounts from 3 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
+  "check": "8 of 8 amounts accepted by the second reader (groq:openai/gpt-oss-120b)",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
@@ -82,10 +85,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
+     "verified_on": "2026-11-17",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-16"
+      "checked_on": "2026-11-17"
      }
     },
     "volume": "14",
@@ -189,10 +192,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
+     "verified_on": "2026-11-17",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-16"
+      "checked_on": "2026-11-17"
      },
      "online_first_year": 2023
     },
@@ -219,7 +222,7 @@
      "quote": "patients took a low dose (10 mg) of psilocybin, and in the second session, patients took a high dose (25 mg) of psilocybin.",
      "show": "patients took a low dose (10 mg) of psilocybin",
      "clause": "patients took a low dose (10 mg) of psilocybin, and in the second session,",
-     "who": "12 patients with moderate to severe MDD, who had not shown significant improvement despite taking two different types of antidepressant treatments for at least 6 weeks",
+     "who": "12 patients with moderate to severe MDD",
      "what": "low and high doses in two sessions"
     },
     {
@@ -228,7 +231,7 @@
      "quote": "patients took a low dose (10 mg) of psilocybin, and in the second session, patients took a high dose (25 mg) of psilocybin.",
      "show": "patients took a high dose (25 mg) of psilocybin",
      "clause": "patients took a high dose (25 mg) of psilocybin.",
-     "who": "12 patients with moderate to severe MDD, who had not shown significant improvement despite taking two different types of antidepressant treatments for at least 6 weeks",
+     "who": "12 patients with moderate to severe MDD",
      "what": "low and high doses in two sessions"
     },
     {
@@ -238,7 +241,7 @@
      "show": "a very low dose (1 or 3 mg/70 kg)",
      "clause": "a very low dose (1 or 3 mg/70 kg) and",
      "who": "cancer patients with symptoms of depression and/or anxiety",
-     "what": "very low and high doses"
+     "what": "very low and high doses in counterbalanced sequence"
     },
     {
      "passage": 20,
@@ -247,7 +250,7 @@
      "show": "a high dose (22 or 30 mg/70 kg) of psilocybin",
      "clause": "a high dose (22 or 30 mg/70 kg) of psilocybin",
      "who": "cancer patients with symptoms of depression and/or anxiety",
-     "what": "very low and high doses"
+     "what": "very low and high doses in counterbalanced sequence"
     }
    ],
    "design": null,
@@ -289,10 +292,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
+     "verified_on": "2026-11-17",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-16"
+      "checked_on": "2026-11-17"
      }
     },
     "volume": "29",
@@ -311,9 +314,9 @@
     {
      "passage": 1,
      "where": "Summary",
-     "quote": "participants (n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
-     "show": "(n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
-     "clause": "participants (n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
+     "quote": "at least 20 mg/70 kg",
+     "show": "at least 20 mg/70 kg",
+     "clause": "at least 20 mg/70 kg",
      "who": "participants",
      "what": "oral dose of psilocybin"
     }
@@ -322,90 +325,6 @@
    "findings": [],
    "limits": [],
    "tag": "C"
-  },
-  {
-   "read": "summary",
-   "ref": {
-    "id": "he_2026",
-    "type": "article-journal",
-    "title": "Therapeutic effects of psilocybin in major depressive disorder: A systematic review and meta-analysis exploring dose effects",
-    "author": [
-     {
-      "family": "He",
-      "given": "Ziping"
-     },
-     {
-      "family": "Wang",
-      "given": "Yijie"
-     },
-     {
-      "family": "Chen",
-      "given": "Jiemin"
-     },
-     {
-      "family": "Cheng",
-      "given": "Junzhe"
-     },
-     {
-      "family": "Feng",
-      "given": "Yuxin"
-     },
-     {
-      "family": "Niu",
-      "given": "Shuliang"
-     },
-     {
-      "family": "Yan",
-      "given": "Jie"
-     }
-    ],
-    "container-title": "European Archives of Psychiatry and Clinical Neuroscience",
-    "issued": {
-     "date-parts": [
-      [
-       2026
-      ]
-     ]
-    },
-    "DOI": "10.1007/s00406-025-02165-y",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-16"
-     }
-    },
-    "volume": "276",
-    "issue": "4",
-    "page": "1487-1503"
-   },
-   "doi": "10.1007/s00406-025-02165-y",
-   "title": "Therapeutic effects of psilocybin in major depressive disorder: a systematic review and meta-analysis exploring dose effects",
-   "year": 2026,
-   "journal": "European archives of psychiatry and clinical neuroscience",
-   "kind": "review",
-   "people": true,
-   "near": 0.854,
-   "money": [],
-   "rows": [
-    {
-     "passage": 3,
-     "where": "Summary",
-     "quote": "the dose regimen of 35-50 mg/70kg",
-     "show": "the dose regimen of 35-50 mg/70kg",
-     "clause": "the dose regimen of 35-50 mg/70kg",
-     "who": "adults diagnosed with MDD",
-     "what": "dose regimen"
-    }
-   ],
-   "design": null,
-   "findings": [],
-   "limits": [],
-   "tag": "D"
   }
  ],
  "parts": [
@@ -486,8 +405,8 @@
   },
   {
    "part": "row4",
-   "text": "12 patients with moderate to severe MDD, who had not shown significant improvement despite taking two different types of antidepressant treatments for at least 6 weeks; low and high doses in two sessions.",
-   "who": "12 patients with moderate to severe MDD, who had not shown significant improvement despite taking two different types of antidepressant treatments for at least 6 weeks",
+   "text": "12 patients with moderate to severe MDD; low and high doses in two sessions.",
+   "who": "12 patients with moderate to severe MDD",
    "what": "low and high doses in two sessions",
    "quote": "patients took a low dose (10 mg) of psilocybin",
    "source": "wang_2024",
@@ -507,8 +426,8 @@
   },
   {
    "part": "row5",
-   "text": "12 patients with moderate to severe MDD, who had not shown significant improvement despite taking two different types of antidepressant treatments for at least 6 weeks; low and high doses in two sessions.",
-   "who": "12 patients with moderate to severe MDD, who had not shown significant improvement despite taking two different types of antidepressant treatments for at least 6 weeks",
+   "text": "12 patients with moderate to severe MDD; low and high doses in two sessions.",
+   "who": "12 patients with moderate to severe MDD",
    "what": "low and high doses in two sessions",
    "quote": "patients took a high dose (25 mg) of psilocybin",
    "source": "wang_2024",
@@ -528,9 +447,9 @@
   },
   {
    "part": "row6",
-   "text": "Cancer patients with symptoms of depression and/or anxiety; very low and high doses.",
+   "text": "Cancer patients with symptoms of depression and/or anxiety; very low and high doses in counterbalanced sequence.",
    "who": "Cancer patients with symptoms of depression and/or anxiety",
-   "what": "very low and high doses",
+   "what": "very low and high doses in counterbalanced sequence",
    "quote": "a very low dose (1 or 3 mg/70 kg)",
    "source": "wang_2024",
    "read": "full",
@@ -549,32 +468,32 @@
   },
   {
    "part": "row7",
-   "text": "Participants; oral dose of psilocybin.",
-   "who": "Participants",
-   "what": "oral dose of psilocybin",
-   "quote": "(n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
-   "source": "barrett_2015",
-   "read": "summary",
+   "text": "Cancer patients with symptoms of depression and/or anxiety; very low and high doses in counterbalanced sequence.",
+   "who": "Cancer patients with symptoms of depression and/or anxiety",
+   "what": "very low and high doses in counterbalanced sequence",
+   "quote": "a high dose (22 or 30 mg/70 kg) of psilocybin",
+   "source": "wang_2024",
+   "read": "full",
    "uses": [
     "R7"
    ],
    "rests_on": [
     {
      "label": "R7",
-     "ref": "barrett_2015",
-     "where": "Summary",
-     "quote": "participants (n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
-     "sha": "f63692dd967f9ddd"
+     "ref": "wang_2024",
+     "where": "RESULTS › Double Blinded Randomized Controlled Studies",
+     "quote": "a very low dose (1 or 3 mg/70 kg) and a high dose (22 or 30 mg/70 kg) of psilocybin",
+     "sha": "512dfd85bd3760f6"
     }
    ]
   },
   {
    "part": "row8",
-   "text": "Adults diagnosed with MDD; dose regimen.",
-   "who": "Adults diagnosed with MDD",
-   "what": "dose regimen",
-   "quote": "the dose regimen of 35-50 mg/70kg",
-   "source": "he_2026",
+   "text": "Participants; oral dose of psilocybin.",
+   "who": "Participants",
+   "what": "oral dose of psilocybin",
+   "quote": "at least 20 mg/70 kg",
+   "source": "barrett_2015",
    "read": "summary",
    "uses": [
     "R8"
@@ -582,10 +501,10 @@
    "rests_on": [
     {
      "label": "R8",
-     "ref": "he_2026",
+     "ref": "barrett_2015",
      "where": "Summary",
-     "quote": "the dose regimen of 35-50 mg/70kg",
-     "sha": "dacf5ce435119159"
+     "quote": "at least 20 mg/70 kg",
+     "sha": "f63692dd967f9ddd"
     }
    ]
   }
@@ -624,6 +543,14 @@
    "why": "passed every gate (an answer about amounts: decision 11)",
    "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
    "complete": false
+  },
+  {
+   "on": "2026-11-16",
+   "lane": 5,
+   "status": "published",
+   "why": "passed every gate (an answer about amounts: decision 11)",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": false
   }
  ],
  "looked": [
@@ -648,14 +575,7 @@
    "kind": "review",
    "at": "10.9758/cpn.23.1134",
    "kept": 4,
-   "thrown": [
-    {
-     "quote": "the very low dose could be considered as placebo.",
-     "who": "cancer patients with symptoms of depression and/or anxiety",
-     "what": "very low dose considered as placebo",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Psilocybin for Mental Health and Addiction: What You Need To Know",
@@ -721,8 +641,22 @@
    "read": "summary",
    "kind": "review",
    "at": "10.1007/s00406-025-02165-y",
-   "kept": 1,
-   "thrown": []
+   "kept": 0,
+   "thrown": [
+    {
+     "quote": "the dose regimen of 35-50 mg/70kg",
+     "who": "adults diagnosed with MDD",
+     "what": "dose regimen",
+     "why": "who received it, or under what care, is not in the source's words"
+    }
+   ]
   }
- ]
+ ],
+ "held": "the editor's first reading of lane 10",
+ "place": {
+  "home": "psilocybin",
+  "also": [],
+  "cls": null,
+  "why": "it names a drug that has a page"
+ }
 }

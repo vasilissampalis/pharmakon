@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0001",
- "lane": 8,
+ "lane": 10,
  "kind": "answer",
  "from": "w_0001",
  "question": "What is synthetic weed (Spice, K2) like, and is it riskier than real cannabis?",
@@ -18,29 +18,31 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-16",
+  "on": "2026-11-17",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "team": "team C"
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-4-hydrogen",
+   "team": "team H2"
   },
-  "run": "43907838668",
+  "run": "43985089101",
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 0.0
+  "neurons": 329.7
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
   "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b)",
-  "but": "the writer's But was not accepted (it is about something else than the short answer (All sentences are fully supported by the provided passages. Sentence 1 directly answers the asked question abo): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it"
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.47, but 0.45, how1 0.37, how2 0.86, how3 0.62, how4 0.80",
+  "check": "short: NOT accepted: adds claim 'harder to control' which is not stated in the passages; but: NOT accepted: passages do not state that data are limited; they mention increasing data and lack of human testing; how1: accepted; how2: accepted; how3: accepted; how4: accepted",
+  "rules": "broken at try 2: but: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
  },
  "sources": [
   {
@@ -73,10 +75,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
+     "verified_on": "2026-11-17",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-16"
+      "checked_on": "2026-11-17"
      }
     },
     "page": "113",
@@ -95,37 +97,37 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "New psychoactive drugs that have appeared over the last decade are typically dominated by cathinones and synthetic cannabinoids (SCs).",
-    "text": "Review paper on synthetic cannabinoids"
+    "text": "research paper on synthetic cannabinoids"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "SCs have been emerging as recreational drugs because they mimic the euphoria effect of cannabis while still being legal.",
-     "text": "SCs are marketed as legal alternatives that mimic the euphoria of cannabis.",
+     "quote": "Desired effects by CB1 agonist users are relaxation/recreative, however, cardiovascular, gastrointestinal, or psychiatric/neurological side effects are commonly reported.",
+     "text": "People who use synthetic cannabinoids may feel relaxed and recreational, but commonly report cardiovascular, gastrointestinal, or psychiatric/neurological side effects.",
      "id": "F1"
     },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Desired effects by CB1 agonist users are relaxation/recreative, however, cardiovascular, gastrointestinal, or psychiatric/neurological side effects are commonly reported.",
-     "text": "People who use SCs commonly experience cardiovascular, gastrointestinal, or psychiatric/neurological side effects.",
+     "passage": 3,
+     "where": "Introduction",
+     "quote": "Among SCs, CB1 agonists mimic the effects of cannabis where consumers may feel happy and relaxed.",
+     "text": "Synthetic cannabinoids that are CB1 agonists can make people feel happy and relaxed like cannabis.",
      "id": "F2"
     },
     {
      "passage": 47,
      "where": "Conclusion",
-     "quote": "Along with unpleasant central nervous system effects, there are several physical adverse effects including kidney damage, pulmonary, gastrointestinal, and cardiovascular effects that can make consumption unsafe.",
-     "text": "SC use can cause kidney damage, pulmonary, gastrointestinal, and cardiovascular adverse effects.",
+     "quote": "Even if most of the SCs mimic marijuana effects, some SCs bind much more strongly to CB1 receptors than natural can-nabinoids, which can lead to more potent, unpredictable, or dangerous effects.",
+     "text": "Some synthetic cannabinoids can have more potent, unpredictable, or dangerous effects than natural cannabinoids because they bind more strongly to CB1 receptors.",
      "id": "F3"
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "At present there is no specific antidote existing if an overdose of designer drugs was to occur, and no cura",
-     "text": "There is currently no specific antidote for SC overdose.",
+     "passage": 3,
+     "where": "Introduction",
+     "quote": "Nevertheless, as ever-increasing data on the identification or analysis methods, pharmacokinetics or pharmacodynamics, animal or human pharmacology or toxicity, and addictive potential are becoming available,",
+     "text": "There is still limited data available on the pharmacology, toxicity, and addictive potential of synthetic cannabinoids.",
      "id": "L1"
     }
    ],
@@ -165,10 +167,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
+     "verified_on": "2026-11-17",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-16"
+      "checked_on": "2026-11-17"
      }
     },
     "volume": "5",
@@ -188,24 +190,24 @@
    "design": null,
    "findings": [
     {
-     "passage": 12,
+     "passage": 13,
      "where": "Immediate and Short-Lived Effects of Cannabinoids › Non-experimental evidence › Evidence from anecdotal reports and surveys of the effects of synthetic cannabinoids (Spice, K2)",
-     "quote": "Spice has gained popularity as a drug of abuse since it is more psychoactive than cannabis, is readily available over the Internet (advertised as “natural herbs” or “harmless incense” under brand names such as Spice, K2, Yucatan Fire, Skunk, Moon Rocks), and is non-detectable in standard urine toxicological tests.",
-     "text": "Spice is more psychoactive than cannabis and is widely available as “natural herbs” or “harmless incense”.",
+     "quote": "The psychotomimetic effects reported include anxiety, agitation, disorientation, hallucinations, and paranoia",
+     "text": "People who use Spice/K2 report anxiety, agitation, disorientation, hallucinations, and paranoia.",
      "id": "F4"
     },
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "Acute exposure to both cannabis and synthetic cannabinoids (Spice/K2) can produce a full range of transient psychotomimetic symptoms, cognitive deficits, and psychophysiological abnormalities that bear a striking resemblance to symptoms of schizophrenia.",
-     "text": "Acute use of synthetic cannabinoids can produce transient psychotomimetic symptoms similar to schizophrenia.",
+     "text": "Spice/K2 can produce symptoms similar to schizophrenia.",
      "id": "F5"
     },
     {
-     "passage": 13,
+     "passage": 14,
      "where": "Immediate and Short-Lived Effects of Cannabinoids › Non-experimental evidence › Evidence from anecdotal reports and surveys of the effects of synthetic cannabinoids (Spice, K2)",
-     "quote": "The psychotomimetic effects reported include anxiety, agitation, disorientation, hallucinations, and paranoia.",
-     "text": "Synthetic cannabinoids can cause anxiety, agitation, disorientation, hallucinations, and paranoia.",
+     "quote": "Case reports document the ability of these compounds to precipitate a psychotic relapse in patients with pre-existing psychotic disorders and psychotic symptoms in those with no prior history of psychosis",
+     "text": "Spice/K2 can cause psychotic relapse in people with pre-existing psychotic disorders and psychotic symptoms in those without prior history.",
      "id": "F6"
     }
    ],
@@ -213,8 +215,8 @@
     {
      "passage": 16,
      "where": "Immediate and Short-Lived Effects of Cannabinoids › Non-experimental evidence › Evidence from anecdotal reports and surveys of the effects of synthetic cannabinoids (Spice, K2)",
-     "quote": "The sparse literature on Spice/K2 effects reviewed above has a number of limitations, including selection bias, reliance on the accuracy of written record or subject recall, uncontrolled nature of the evidence, the inadequate characterization of cases, lack of standardized assessments, confounding effects of concomitant drug use, different doses and routes of administration, and variable individual expectancy, set, and setting.",
-     "text": "The evidence on Spice/K2 effects is limited by selection bias, uncontrolled studies, and lack of standardized assessments.",
+     "quote": "The temporal profile, range, and intensity of Spice/K2 effects, and whether the effects are dose-related or biphasic, are not known.",
+     "text": "The temporal profile, range, intensity, and dose-related effects of Spice/K2 are not known.",
      "id": "L2"
     }
    ],
@@ -242,21 +244,21 @@
       [
        2026,
        11,
-       16
+       17
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-16"
+     "verified_on": "2026-11-17"
     }
    },
    "title": "Synthetic and semi-synthetic cannabinoids",
    "year": null,
    "kind": "official",
    "people": true,
-   "near": 0.692,
+   "near": 0.696,
    "name": "FRANK",
    "short": "FRANK",
    "tier": 1,
@@ -266,275 +268,124 @@
    "design": null,
    "findings": [
     {
-     "passage": 4,
-     "where": "Quick info / Effects on your body",
-     "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
-     "text": "Synthetic weed can produce effects similar to cannabis but can also be stronger or more unpleasant.",
+     "passage": 9,
+     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
+     "quote": "Synthetic and semi-synthetic cannabinoids, possibly because of their potency, are more likely to be associated with hallucinations than natural cannabis.",
+     "text": "Synthetic and semi-synthetic cannabinoids are more likely to be associated with hallucinations than natural cannabis.",
      "id": "F7"
     },
     {
-     "passage": 7,
-     "where": "Common risks",
-     "quote": "Easy to want more and take larger doses. Mental health can get worse. Psychotic episodes can be triggered, usually in those already susceptible, and last for weeks.",
-     "text": "People who use synthetic weed may find it easy to want more and take larger doses, which can worsen mental health and trigger psychotic episodes that last for weeks.",
+     "passage": 4,
+     "where": "Quick info / Effects on your body",
+     "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
+     "text": "The effects of synthetic and semi-synthetic cannabinoids can be similar to cannabis but can also be stronger or more unpleasant.",
      "id": "F8"
     },
     {
      "passage": 9,
      "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
-     "quote": "synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis , so it's easier to use too much and experience unpleasant and harmful effects.",
-     "text": "Synthetic weed is often more potent than natural cannabis, making it easier to use too much and experience unpleasant and harmful effects.",
+     "quote": "However, synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis , so it's easier to use too much and experience unpleasant and harmful effects.",
+     "text": "Synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis.",
      "id": "F9"
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 16,
+     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / What are Synthetic and semi-synthetic cannabinoids cut with?",
+     "quote": "The chemical composition of synthetic and semi-synthetic cannabinoids and the ingredients of smoking mixtures are changing all the time, so you can never be sure of what you're getting, how powerful it is, and how it could affect you.",
+     "text": "The chemical composition of synthetic and semi-synthetic cannabinoids is constantly changing, making it uncertain what their effects will be.",
+     "id": "L3"
+    }
+   ],
    "tag": "C"
   },
   {
    "read": "page",
    "ref": {
-    "id": "thelevel_synthetic-cannabinoids",
+    "id": "adf_synthetic-cannabinoids",
     "type": "webpage",
-    "title": "Synthetic Cannabinoids",
+    "title": "Synthetic cannabinoids",
     "author": [
      {
-      "literal": "NZ Drug Foundation"
+      "literal": "Alcohol and Drug Foundation"
      }
     ],
     "issued": {
      "date-parts": [
-      []
+      [
+       2025,
+       5,
+       19
+      ]
      ]
     },
-    "URL": "https://thelevel.org.nz/drug-information/synthetic-cannabinoids",
+    "URL": "https://adf.org.au/drug-facts/synthetic-cannabinoids/",
     "accessed": {
      "date-parts": [
       [
        2026,
        11,
-       16
+       17
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-16"
-    },
-    "publisher": "The Level"
+     "verified_on": "2026-11-17"
+    }
    },
-   "title": "Synthetic Cannabinoids",
-   "year": null,
+   "title": "Synthetic cannabinoids",
+   "year": 2025,
    "kind": "official",
    "people": true,
-   "near": 0.653,
-   "name": "NZ Drug Foundation",
-   "short": "the NZ Drug Foundation",
+   "near": 0.675,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
    "tier": 2,
-   "address": "https://thelevel.org.nz/drug-information/synthetic-cannabinoids",
+   "address": "https://adf.org.au/drug-facts/synthetic-cannabinoids/",
    "money": [],
    "label": false,
    "design": null,
    "findings": [
     {
      "passage": 2,
-     "where": "Key things to know",
-     "quote": "The effects of synthetic cannabinoids are much more dangerous and unpredictable than cannabis.",
-     "text": "Synthetic cannabinoids are more dangerous and unpredictable than cannabis.",
+     "where": "What are synthetic cannabinoids?",
+     "quote": "They can be stronger, more dangerous and cause unpredictable effects.",
+     "text": "Synthetic cannabinoids can be stronger, more dangerous and cause unpredictable effects.",
      "id": "F10"
     },
     {
-     "passage": 5,
-     "where": "How to stay safer / How can you be safer when using synthetic cannabinoids?",
-     "quote": "Synthetic cannabinoids come with the risk of ‘dropping’ or losing consciousness quickly, so try to avoid taking them with alcohol, other drugs or medicines.",
-     "text": "Synthetic cannabinoids carry a risk of suddenly losing consciousness, especially when combined with alcohol or other drugs.",
+     "passage": 2,
+     "where": "What are synthetic cannabinoids?",
+     "quote": "novel synthetic cannabinoids can produce very different effects to cannabis (THC) (delta-9 tetrahydrocannabinol), the active ingredient in cannabis.",
+     "text": "Synthetic cannabinoids can produce very different effects to cannabis.",
      "id": "F11"
     },
     {
-     "passage": 13,
-     "where": "Long-term effects / What are the long-term effects of synthetic cannabinoids?",
-     "quote": "Synthetic cannabinoids can be addictive, and many people who use these drugs say that it can be difficult to stop taking them once you have started to use regularly.",
-     "text": "Synthetic cannabinoids can be addictive, making it difficult for people who use them to stop once they start regularly.",
+     "passage": 1,
+     "where": "What are synthetic cannabinoids?",
+     "quote": "Synthetic cannabinoids were first developed in the 1980s by researchers who were trying to create medicines with similar therapeutic effects (e.g. nausea and pain relief) to cannabis (THC) and CBD (cannabidiol).",
+     "text": "Synthetic cannabinoids were first developed in the 1980s for therapeutic effects similar to cannabis.",
      "id": "F12"
     }
    ],
    "limits": [
     {
-     "passage": 14,
-     "where": "Long-term effects / What are the long-term effects of synthetic cannabinoids?",
-     "quote": "We don't know as much about the physical effects of long-term use.",
-     "text": "The physical long‑term effects of synthetic cannabinoids are not well understood.",
-     "id": "L3"
+     "passage": 4,
+     "where": "What are synthetic cannabinoids? / Misleading packaging",
+     "quote": "Chemicals usually change from batch to batch, so different packets can produce different effects, even if the packaging looks the same.",
+     "text": "Different batches of synthetic cannabinoids can produce different effects.",
+     "id": "L4"
     }
    ],
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Synthetic weed can feel like cannabis but is often stronger and more unpleasant. It is more dangerous and unpredictable than real cannabis.",
-   "uses": [
-    "F7",
-    "F9",
-    "F10"
-   ],
-   "rests_on": [
-    {
-     "label": "F7",
-     "ref": "frank_synthetic-cannabinoids",
-     "where": "Quick info / Effects on your body",
-     "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
-     "sha": "ada4d50dff7e284b"
-    },
-    {
-     "label": "F9",
-     "ref": "frank_synthetic-cannabinoids",
-     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
-     "quote": "synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis , so it's easier to use too much and experience unpleasant and harmful effects.",
-     "sha": "7cc2ae518bba7119"
-    },
-    {
-     "label": "F10",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Key things to know",
-     "quote": "The effects of synthetic cannabinoids are much more dangerous and unpredictable than cannabis.",
-     "sha": "bf0f728cafec65b5"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews and 2 official pages that our system could read. A paper that stands nearer the question could not be read.",
-   "uses": [
-    "DA",
-    "F4",
-    "F7",
-    "F10"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "debruyne_2015",
-     "where": "Abstract",
-     "quote": "New psychoactive drugs that have appeared over the last decade are typically dominated by cathinones and synthetic cannabinoids (SCs).",
-     "sha": "ef47a5ca26c3c803"
-    },
-    {
-     "label": "F4",
-     "ref": "radhakrishnan_2014",
-     "where": "Immediate and Short-Lived Effects of Cannabinoids › Non-experimental evidence › Evidence from anecdotal reports and surveys of the effects of synthetic cannabinoids (Spice, K2)",
-     "quote": "Spice has gained popularity as a drug of abuse since it is more psychoactive than cannabis, is readily available over the Internet (advertised as “natural herbs” or “harmless incense” under brand names such as Spice, K2, Yucatan Fire, Skunk, Moon Rocks), and is non-detectable in standard urine toxicological tests.",
-     "sha": "da7f9294d5713d3a"
-    },
-    {
-     "label": "F7",
-     "ref": "frank_synthetic-cannabinoids",
-     "where": "Quick info / Effects on your body",
-     "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
-     "sha": "ada4d50dff7e284b"
-    },
-    {
-     "label": "F10",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Key things to know",
-     "quote": "The effects of synthetic cannabinoids are much more dangerous and unpredictable than cannabis.",
-     "sha": "bf0f728cafec65b5"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2015 review says synthetic cannabinoids mimic cannabis euphoria but commonly cause heart, gut, and brain side effects.",
-   "uses": [
-    "F1",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "debruyne_2015",
-     "where": "Abstract",
-     "quote": "SCs have been emerging as recreational drugs because they mimic the euphoria effect of cannabis while still being legal.",
-     "sha": "ef47a5ca26c3c803"
-    },
-    {
-     "label": "F2",
-     "ref": "debruyne_2015",
-     "where": "Abstract",
-     "quote": "Desired effects by CB1 agonist users are relaxation/recreative, however, cardiovascular, gastrointestinal, or psychiatric/neurological side effects are commonly reported.",
-     "sha": "ef47a5ca26c3c803"
-    }
-   ],
-   "quote": "SCs have been emerging as recreational drugs because they mimic the euphoria effect of cannabis",
-   "quote_ref": "debruyne_2015"
-  },
-  {
-   "part": "how2",
-   "text": "A 2014 review says Spice is more psychoactive than cannabis and can cause symptoms like schizophrenia.",
-   "uses": [
-    "F4",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "radhakrishnan_2014",
-     "where": "Immediate and Short-Lived Effects of Cannabinoids › Non-experimental evidence › Evidence from anecdotal reports and surveys of the effects of synthetic cannabinoids (Spice, K2)",
-     "quote": "Spice has gained popularity as a drug of abuse since it is more psychoactive than cannabis, is readily available over the Internet (advertised as “natural herbs” or “harmless incense” under brand names such as Spice, K2, Yucatan Fire, Skunk, Moon Rocks), and is non-detectable in standard urine toxicological tests.",
-     "sha": "da7f9294d5713d3a"
-    },
-    {
-     "label": "F5",
-     "ref": "radhakrishnan_2014",
-     "where": "Abstract",
-     "quote": "Acute exposure to both cannabis and synthetic cannabinoids (Spice/K2) can produce a full range of transient psychotomimetic symptoms, cognitive deficits, and psychophysiological abnormalities that bear a striking resemblance to symptoms of schizophrenia.",
-     "sha": "e16300c0e7fd0a5d"
-    }
-   ],
-   "quote": "cognitive deficits, and psychophysiological abnormalities that bear a striking resemblance to symptoms of schizophrenia",
-   "quote_ref": "radhakrishnan_2014"
-  },
-  {
-   "part": "how3",
-   "text": "FRANK says synthetic weed is often more potent than cannabis, making it easier to use too much.",
-   "uses": [
-    "F9"
-   ],
-   "rests_on": [
-    {
-     "label": "F9",
-     "ref": "frank_synthetic-cannabinoids",
-     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
-     "quote": "synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis , so it's easier to use too much and experience unpleasant and harmful effects.",
-     "sha": "7cc2ae518bba7119"
-    }
-   ],
-   "quote": "synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis",
-   "quote_ref": "frank_synthetic-cannabinoids"
-  },
-  {
-   "part": "how4",
-   "text": "The NZ Drug Foundation says synthetic cannabinoids are more dangerous and unpredictable than cannabis.",
-   "uses": [
-    "F10"
-   ],
-   "rests_on": [
-    {
-     "label": "F10",
-     "ref": "thelevel_synthetic-cannabinoids",
-     "where": "Key things to know",
-     "quote": "The effects of synthetic cannabinoids are much more dangerous and unpredictable than cannabis.",
-     "sha": "bf0f728cafec65b5"
-    }
-   ],
-   "quote": "The effects of synthetic cannabinoids are much more dangerous and unpredictable than cannabis",
-   "quote_ref": "thelevel_synthetic-cannabinoids"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "a paper that stands nearer the question could not be read",
+ "missing": "exact magnitude of risk compared to cannabis",
  "wanted": [
   {
    "doi": "10.1097/pec.0000000000001970",
@@ -575,6 +426,14 @@
    "why": "passed every gate",
    "short": "Synthetic weed can feel like cannabis but is often stronger and more unpleasant. It is much more dangerous and unpredictable than real cannabis.",
    "complete": false
+  },
+  {
+   "on": "2026-11-16",
+   "lane": 8,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Synthetic weed can feel like cannabis but is often stronger and more unpleasant. It is more dangerous and unpredictable than real cannabis.",
+   "complete": false
   }
  ],
  "looked": [
@@ -587,9 +446,9 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "The pharmacological properties of many SCs have not been extensively studied before human use.",
-     "quote": "The pharmacological properties are infrequently explored before human use.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "The toxicological profile of synthetic cannabinoids is not yet fully understood due to the large number of compounds.",
+     "quote": "Because of the multitude of compounds, a complete toxicological profile of SCs is far from being drawn and understood.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -602,8 +461,14 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "Review article on cannabis and psychosis",
+     "text": "A review of associations between cannabis and psychosis",
      "quote": "Gone to Pot - A Review of the Association between Cannabis and Psychosis",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "Synthetic cannabinoids (Spice/K2) are more potent than THC.",
+     "quote": "Unlike THC, which is a weak partial agonist of brain CB1Rs, the synthetic cannabinoids are highly potent, full agonists of CB1R, which would predict more robust effects.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -617,29 +482,61 @@
    "thrown": []
   },
   {
-   "title": "Cannabis (Marijuana) and Cannabinoids: What You Need To Know",
+   "title": "Synthetic cannabinoids",
    "read": "page",
    "kind": "official",
-   "at": "https://www.nccih.nih.gov/health/cannabis-marijuana-and-cannabinoids-what-you-need-to-know",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Synthetic Cannabinoids",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/synthetic-cannabinoids",
+   "at": "https://adf.org.au/drug-facts/synthetic-cannabinoids/",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The onset speed and duration of effects vary greatly depending on the type, method of use, and individual body processing.",
-     "quote": "How fast the effects come on and how long they last varies greatly depending on which type, how it is taken and how your body processes it.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   }
  ],
+ "plan": {
+  "short": [
+   "F3",
+   "F8"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F3",
+    "F2",
+    "F1"
+   ],
+   [
+    "F9",
+    "F8",
+    "F7"
+   ],
+   [
+    "F10",
+    "F11",
+    "F12"
+   ],
+   [
+    "F4",
+    "F5",
+    "F6"
+   ]
+  ],
+  "unanswered": "exact magnitude of risk compared to cannabis"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.4741,
+   "but": 0.4547,
+   "how1": 0.3738,
+   "how2": 0.8597,
+   "how3": 0.6172,
+   "how4": 0.8023
+  }
+ },
  "place": {
   "home": "synthetic-cannabinoids",
   "also": [

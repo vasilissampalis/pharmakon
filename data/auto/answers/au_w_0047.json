@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0047",
- "lane": 8,
+ "lane": 10,
  "kind": "amounts",
  "from": "w_0047",
  "question": "How much caffeine a day do health bodies call safe for adults?",
@@ -17,27 +17,29 @@
   "caffeine"
  ],
  "made": {
-  "on": "2026-11-16",
+  "on": "2026-11-17",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "team": "team C"
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.8-flash",
+   "team": "team H2"
   },
-  "run": "43907838668",
+  "run": "43985089101",
   "from": {
    "papers": 0,
    "summaries": 1,
    "official": 0
   },
-  "neurons": 0.0
+  "neurons": 612.6
  },
- "status": "published",
- "why": "passed every gate (an answer about amounts: decision 11)",
+ "status": "waiting",
+ "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
  "gates": {
-  "read": "6 amounts kept from 3 sources (2 papers read in full, 0 official pages, 1 papers read in summary); 14 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "4 amounts from 2 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
-  "check": "1 of 4 amounts accepted by the second reader (groq:openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
+  "read": "11 amounts kept from 4 sources (2 papers read in full, 1 official pages, 1 papers read in summary); 27 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "6 amounts from 3 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
+  "check": "2 of 6 amounts accepted by the second reader (@cf/openai/gpt-oss-120b); not accepted: The passage specifies \"about 3 mg per kilogram of body weight\", while the sentence says \"about 3 mg\" without the per‑kg qualifier.; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
@@ -123,10 +125,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-16",
+     "verified_on": "2026-11-17",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-16"
+      "checked_on": "2026-11-17"
      }
     },
     "volume": "109",
@@ -144,17 +146,26 @@
     {
      "passage": 2,
      "where": "Summary",
-     "quote": "400 mg/day for adults [10 g for lethality]",
-     "show": "400 mg/day for adults [10 g for lethality]",
-     "clause": "400 mg/day for adults [10 g for lethality]",
+     "quote": "400 mg/day for adults",
+     "show": "400 mg/day for adults",
+     "clause": "400 mg/day for adults",
      "who": "healthy adults",
-     "what": "daily amount not associated with adverse effects"
+     "what": "daily amount"
+    },
+    {
+     "passage": 3,
+     "where": "Summary",
+     "quote": "up to 400 mg caffeine/day",
+     "show": "up to 400 mg caffeine/day",
+     "clause": "up to 400 mg caffeine/day",
+     "who": "healthy adults",
+     "what": "daily amount"
     }
    ],
    "design": null,
    "findings": [],
    "limits": [],
-   "tag": "C"
+   "tag": "D"
   }
  ],
  "parts": [
@@ -172,22 +183,43 @@
   },
   {
    "part": "row1",
-   "text": "Healthy adults; daily amount not associated with adverse effects.",
+   "text": "Healthy adults; daily amount.",
    "who": "Healthy adults",
-   "what": "daily amount not associated with adverse effects",
-   "quote": "400 mg/day for adults [10 g for lethality]",
+   "what": "daily amount",
+   "quote": "400 mg/day for adults",
    "source": "wikoff_2017",
    "read": "summary",
    "uses": [
-    "R4"
+    "R5"
    ],
    "rests_on": [
     {
-     "label": "R4",
+     "label": "R5",
      "ref": "wikoff_2017",
      "where": "Summary",
-     "quote": "400 mg/day for adults [10 g for lethality]",
+     "quote": "400 mg/day for adults",
      "sha": "bfaed38c72e1bb9d"
+    }
+   ]
+  },
+  {
+   "part": "row2",
+   "text": "Healthy adults; daily amount.",
+   "who": "Healthy adults",
+   "what": "daily amount",
+   "quote": "up to 400 mg caffeine/day",
+   "source": "wikoff_2017",
+   "read": "summary",
+   "uses": [
+    "R6"
+   ],
+   "rests_on": [
+    {
+     "label": "R6",
+     "ref": "wikoff_2017",
+     "where": "Summary",
+     "quote": "up to 400 mg caffeine/day",
+     "sha": "20a1679082343cd3"
     }
    ]
   }
@@ -218,73 +250,152 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-16",
+   "lane": 8,
+   "status": "published",
+   "why": "passed every gate (an answer about amounts: decision 11)",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "The Safety of Ingested Caffeine: A Comprehensive Review",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2017.00080",
-   "kept": 0,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "quote": "The threshold of caffeine toxicity appears to be around 400 mg/day in healthy adults (19 years or older), 100 mg/day in healthy adolescents (12–18 years old), and 2.5 mg/kg/day in healthy children (le",
+     "who": "healthy adults, healthy adolescents, healthy children",
+     "what": "daily threshold of caffeine toxicity",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
+     "quote": "one standard sized can of a popular energy drink provides 77 mg of caffeine (or 1.1 mg/kg/day) for a 70-kg male and twice that, 2.2 mg/kg/day, for a 35-kg pre-teen.",
+     "who": "a 70-kg male, a 35-kg pre-teen",
+     "what": "amount in one can of energy drink",
+     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
+     "quote": "The European Food and Safety Authority considers 3-mg/kg body weight/day of habitual caffeine consumption to be safe for children and adolescents.",
+     "who": "children and adolescents",
+     "what": "daily safe amount of habitual caffeine consumption",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    },
+    {
+     "quote": "For healthy adults, moderate chronic intakes of caffeine up to 400 mg/day are not associated with adverse effects on cardiovascular health, calcium balance and bone status, behavior, cancer risk, or m",
+     "who": "healthy adults",
+     "what": "daily amount with no adverse effects",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    }
+   ]
   },
   {
    "title": "International society of sports nutrition position stand: caffeine and exercise performance",
    "read": "full",
    "kind": "review",
    "at": "10.1186/s12970-020-00383-4",
-   "kept": 3,
+   "kept": 1,
    "thrown": [
     {
-     "quote": "dietary caffeine consumption of U.S. adult men and women estimated at approximately 200 mg/day in a 2009–2010 survey.",
-     "who": "U.S. adult men and women",
-     "what": "daily dietary caffeine consumption",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+     "quote": "1 mg in milk chocolate up to > 300 mg in some dietary supplements",
+     "who": "adults",
+     "what": "amounts of caffeine in products",
+     "why": "an amount added in the same session"
     },
     {
-     "quote": "caffeine-containing products have a range of doses per serving, from 1 mg in milk chocolate up to > 300 mg in some dietary supplements.",
-     "who": "caffeine-containing products",
-     "what": "dose per serving",
+     "quote": "3–6 mg/kg",
+     "who": "athletes during endurance-type exercise and sport",
+     "what": "moderate doses of caffeine",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
     },
     {
-     "quote": "In summary, caffeine has been consistently shown to be effective as an ergogenic aid when taken in moderate doses (3–6 mg/kg), during endurance-type exercise and sport.",
-     "who": "endurance-type exercisers",
-     "what": "moderate doses per body mass",
-     "why": "no amount with its unit in the quote"
+     "quote": "3–6 mg/kg body mass",
+     "who": "individuals",
+     "what": "doses of caffeine",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
     },
     {
-     "quote": "consumed a bar containing 45 g of carbohydrate and 100 mg of caffeine;",
-     "who": "24 well-trained cyclists",
-     "what": "caffeine dose in performance bar",
-     "why": "who names no people"
-    },
-    {
-     "quote": "athletes are encouraged to maintain a urine caffeine concentration below the limit of 12 μg/ml urine which corresponds to 10 mg/kg body mass orally ingested over several hours",
+     "quote": "10 mg/kg body mass orally ingested over several hours",
      "who": "athletes",
-     "what": "caffeine intake per body mass",
+     "what": "amount of caffeine corresponding to a urine concentration",
      "why": "no amount with its unit in the quote"
     }
    ]
   },
   {
-   "title": "Caffeine intake from different dietary sources and its association with sleep quality in employed adults",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/s40795-026-01312-5",
-   "kept": 1,
+   "title": "Caffeine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.efsa.europa.eu/en/topics/topic/caffeine",
+   "kept": 4,
    "thrown": [
     {
-     "quote": "The average daily caffeine intake among participants was 262.5 [144.0-411.0] mg.",
-     "who": "working adults",
-     "what": "daily amount",
+     "quote": "A safety level of 3mg/kg bw per day is also proposed for habitual caffeine consumption by children and adolescents.",
+     "who": "children and adolescents",
+     "what": "daily safety level",
      "why": "no amount with its unit in the quote"
     },
     {
-     "quote": "The mean intake among espresso consumers was the highest (185.1 ± 291.6 mg/day).",
-     "who": "espresso consumers",
-     "what": "daily amount",
+     "quote": "The single doses of caffeine considered to be of no concern for adults (3mg/kg bw per day) may also be applied to children, because the caffeine “clearance rate” in children and adolescents is at leas",
+     "who": "children",
+     "what": "single dose",
+     "why": "no amount with its unit in the quote"
+    },
+    {
+     "quote": "Very elderly (75 years and above) 22-417mg",
+     "who": "very elderly",
+     "what": "daily intake",
+     "why": "who names no people"
+    },
+    {
+     "quote": "Elderly (65-75 years) 23-362mg",
+     "who": "elderly",
+     "what": "daily intake",
+     "why": "who names no people"
+    }
+   ]
+  },
+  {
+   "title": "Caffeine in Foods",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/food-nutrition/food-safety/food-additives/caffeine-foods.html",
+   "kept": 0,
+   "thrown": [
+    {
+     "quote": "400 mg",
+     "who": "Adults (18 years and over)",
+     "what": "Recommended maximum daily intake",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    },
+    {
+     "quote": "300 mg",
+     "who": "People planning to become pregnant",
+     "what": "Recommended maximum daily intake",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    },
+    {
+     "quote": "300 mg",
+     "who": "People who are pregnant",
+     "what": "Recommended maximum daily intake",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    },
+    {
+     "quote": "300 mg",
+     "who": "People who are breastfeeding",
+     "what": "Recommended maximum daily intake",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    },
+    {
+     "quote": "2.5 mg per kg of body weight",
+     "who": "Children and adolescents (up to 18 years)",
+     "what": "Recommended maximum daily intake",
+     "why": "no amount with its unit in the quote"
     }
    ]
   },
@@ -296,16 +407,22 @@
    "kept": 0,
    "thrown": [
     {
-     "quote": "Caffeine is a major ingredient in both types of energy drink products—at levels of 70 to 240 mg in a 16-oz. drink and 113 to 200 mg in an energy shot.",
-     "who": "energy drink consumers",
-     "what": "caffeine content in a 16-oz. energy drink and an energy shot",
+     "quote": "at levels of 70 to 240 mg in a 16-oz. drink and 113 to 200 mg in an energy shot.",
+     "who": "no specific group mentioned",
+     "what": "amount of caffeine in energy drinks",
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     },
     {
-     "quote": "For comparison, a 12-oz. can of cola contains about 35 mg of caffeine, and an 8-oz. cup of coffee contains about 100 mg.",
-     "who": "cola drinkers and coffee drinkers",
-     "what": "caffeine content in a 12-oz. cola and an 8-oz. cup of coffee",
+     "quote": "a 12-oz. can of cola contains about 35 mg of caffeine, and an 8-oz. cup of coffee contains about 100 mg.",
+     "who": "no specific group mentioned",
+     "what": "amount of caffeine in cola and coffee",
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
+     "quote": "A single 16-oz. container of an energy drink may contain 54 to 62 grams of added sugar;",
+     "who": "no specific group mentioned",
+     "what": "amount of added sugar in energy drinks",
+     "why": "who names no people"
     }
    ]
   },
@@ -325,16 +442,22 @@
    "kept": 0,
    "thrown": [
     {
-     "quote": "moderate daily caffeine intake at a dose level up to 400 mg day(-1) (equivalent to 6 mg kg(-1) body weight day(-1) in a 65-kg person) is not associated with adverse effects such as general toxicity, c",
-     "who": "healthy adult population",
-     "what": "daily amount",
+     "quote": "up to 400 mg day(-1) (equivalent to 6 mg kg(-1) body weight day(-1) in a 65-kg person)",
+     "who": "the healthy adult population",
+     "what": "moderate daily caffeine intake",
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     },
     {
-     "quote": "reproductive-aged women should consume </=300 mg caffeine per day (equivalent to 4.6 mg kg(-1) bw day(-1) for a 65-kg person)",
+     "quote": "</=300 mg caffeine per day (equivalent to 4.6 mg kg(-1) bw day(-1) for a 65-kg person)",
      "who": "reproductive-aged women",
-     "what": "daily amount",
+     "what": "daily caffeine intake",
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
+    },
+    {
+     "quote": "</=2.5 mg kg(-1) bw day(-1)",
+     "who": "children",
+     "what": "daily caffeine intake",
+     "why": "who names no people"
     }
    ]
   },
@@ -346,16 +469,16 @@
    "kept": 0,
    "thrown": [
     {
-     "quote": "limited. Based on product usage and available consumption data, the authors suggest a mean daily caffeine intake for US consumers of 4 mg/kg",
+     "quote": "4 mg/kg",
      "who": "US consumers",
-     "what": "daily amount",
-     "why": "no amount with its unit in the quote"
+     "what": "mean daily caffeine intake",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
     },
     {
-     "quote": "Among children younger than 18 years of age who are consumers of caffeine-containing foods, the mean daily caffeine intake is about 1 mg/kg.",
+     "quote": "1 mg/kg",
      "who": "children younger than 18 years of age who are consumers of caffeine-containing foods",
-     "what": "daily amount",
-     "why": "no amount with its unit in the quote"
+     "what": "mean daily caffeine intake",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
     }
    ]
   },
@@ -364,17 +487,24 @@
    "read": "summary",
    "kind": "review",
    "at": "10.1016/j.fct.2017.04.002",
-   "kept": 2,
+   "kept": 4,
    "thrown": [
     {
      "quote": "2.5 mg/kg/day for children and adolescents",
      "who": "children and adolescents",
-     "what": "daily amount not associated with adverse effects",
+     "what": "daily amount",
      "why": "no amount with its unit in the quote"
+    },
+    {
+     "quote": "2.5 mg caffeine/kg body weight/day",
+     "who": "child and adolescent populations",
+     "what": "daily amount",
+     "why": "who names no people"
     }
    ]
   }
  ],
+ "held": "the editor's first reading of lane 10",
  "place": {
   "home": "caffeine",
   "also": [],

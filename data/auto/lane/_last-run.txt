@@ -4,16 +4,19 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)
-== a model sits the exam as the checker
-exam: gemini:gemini-3.6-flash: caught 5 of 7 wrong cards, stopped 2 of 7 good ones, no clear word on 0; on the whole exam 15.2 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the day's allowance: 4 calls left, and 5 are kept for the site's own work); 15 cards left for the next sitting
-exam: gemini:gemini-3-flash-preview: caught 4 of 7 wrong cards, stopped 0 of 7 good ones, no clear word on 0; on the whole exam 16.2 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the day's allowance: 4 calls left, and 5 are kept for the site's own work); 15 cards left for the next sitting
-exam: gemini:gemini-2.5-flash: caught 0 of 0 wrong cards, stopped 0 of 0 good ones, no clear word on 0; stopped early (the model service: gemini answered 404: [{
-  "error": {
-    "code": 404,
-    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for); 29 cards left for the next sitting
-exam: gemini:gemini-3.5-flash-lite: caught 2 of 4 wrong cards, stopped 1 of 4 good ones, no clear word on 0; on the whole exam 23.1 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the day's allowance: gemini says the allowance is used up: [{
-  "error": {
-    "code": 429,
-    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error); 21 cards left for the next sitting
 == write
-lane: no request waiting
+[0;93m2026-11-17 00:08:10.527995579 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+lane: our own checker is pharmakon-check-0 (from lytang/MiniCheck-RoBERTa-Large), at least 0.05
+lane: team H2: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0041 'Does cannabis cause cancer?': none (the second reader did not accept the answer); 2 papers, 1 official pages, 0 summaries; 447.5 neurons
+lane: team H2: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0001 'What is synthetic weed (Spice, K2) like, and is it riski': none (the second reader did not accept the answer); 2 papers, 2 official pages, 0 summaries; 329.7 neurons
+lane: team H2: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0002 'What is really in fake Xanax bars?': waiting (passed every reader that could be asked, but a further reader of its team could not be (gemini-4-hydrogen): it waits until that reader, or the editor, has read it); 2 papers, 1 official pages, 0 summaries; 362.0 neurons
+lane: team H2: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0044 'What amounts of psilocybin have studies given to people?': waiting (passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)); 2 papers, 0 official pages, 1 summaries; 361.7 neurons
+lane: team H2: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0046 'How much alcohol do health bodies call low-risk drinking': waiting (passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)); 0 papers, 3 official pages, 0 summaries; 398.5 neurons
+lane: team H2: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, @cf/openai/gpt-oss-120b is the second reader
+lane: w_0047 'How much caffeine a day do health bodies call safe for a': waiting (passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)); 0 papers, 0 official pages, 1 summaries; 612.6 neurons
+lane: 6 questions worked on: published 0, waiting 4, none 2; today 2512 of 9000 neurons used
