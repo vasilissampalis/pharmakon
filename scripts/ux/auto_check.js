@@ -163,6 +163,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "a count of drinks written as a word is an amount: one row for men and one for women, each in the body's own words", dr && dr.rows.length === 2 && dr.rows[0].q === "For pretend men-two drinks or less in a day" && dr.rows[1].q === "For pretend women-one drink or less in a day" && dr.rows.every(r => r.src === "Pretend Health Body, 2026"), dr && JSON.stringify(dr.rows));
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     ok(w + "an amount that is not in its source's own words never reaches the page: the build leaves that answer out and names it", /au_fixture_badamount \(an amount that is not in its source's own words/.test(b.stderr) && await p.evaluate(() => !AUTO.au_fixture_badamount));
+    ok(w + "an amount for each kilogram of body weight, or a summary's flattened signs, never reaches the page even in its source's own words (2.8.1)", /au_fixture_perkg \(an amount for each kilogram of body weight/.test(b.stderr) && await p.evaluate(() => !AUTO.au_fixture_perkg));
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     // ---- the list of questions not answered yet, and a kept question
     await go(p, "#wanted", 500);

@@ -263,6 +263,9 @@ const AUTO_SHOWN = (() => {
   const NUM = "(?:\\d+(?:[.,]\\d+)?|(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|twenty-one)(?=(?:\\s*(?:to|-|or)\\s*[\\w-]+)?\\s+(?:or\\s+(?:more|less|fewer)\\s+)?(?:standard\\s+)?(?:drinks?|units?)\\b))";
   const AMT = new RegExp("(?<![\\w.,\\/])" + NUM + "(?:\\s*(?:to|-|or)\\s*" + NUM + ")?(?:\\s+or\\s+(?:more|less|fewer))?\\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)\\b", "i");
   const flat = t => String(t || "").normalize("NFKC").replace(/[‘’‚′`]/g, "'").replace(/[“”„″]/g, '"').replace(/[‐‑‒–—−]/g, "-").replace(/\s+/g, " ").trim();
+  // (2.8.1) the lane's own rules for what an amount's shown words never hold, kept here too: the build is the last gate. An amount for each
+  // kilogram of body weight, however written ("3 mg/kg", "3 mg per kilogram", "6 mg kg(-1)"), and a summary's flattened signs ("mg day(-1)", "</=300 mg")
+  const perKg = /\d\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml)\s*(?:\/\s*(?:kg\b|kilo)|[·.]?\s*kg\b|\s+(?:of\s+[\w-]+\s+)?(?:per|for\s+each|for\s+every|a|each)\s+(?:kg\b|kilo))/i, oddSigns = /\(-?\d\)|[<>]\s?\/?\s?=|\^\s?-?\d|=\s?\/?[<>]/;
   const timing = /\bre-?dos\w*|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\bsupplement\w*|\byou\s+(?:should|must|need to)\b/i;
   for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
     const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
@@ -282,7 +285,8 @@ const AUTO_SHOWN = (() => {
       : from.papers + from.summaries + from.official !== refs.length ? "its count of sources" : "";
     if (!why && !amounts) why = !how.length ? "a part is missing" : first ? "a line only an answer about amounts may carry" : [short, but].concat(how).some(t => bad.test(t)) ? "an amount, advice or a quotation in its text" : (a.parts || []).some(p => !(p.rests_on || []).length) ? "a sentence that rests on nothing" : "";
     if (!why && amounts) why = !LINES ? "the lines the code writes are missing" : short !== LINES.amounts || !(but === LINES.amounts_but || (guidance && but === LINES.amounts_but_guidance)) || first !== classLine ? "a line that is not the code's own" : !rows.length ? "no amount"
-      : rows.some(r => !r.who || !r.what || !r.quote || r.quote.split(/\s+/).length > 15 || !AMT.test(r.quote) || !flat(r.on).includes(flat(r.quote)) || !refs.some(x => x.id === r.ref) || /["“”]/.test(r.who + r.what + r.quote) || AMT.test(r.who + " " + r.what) || timing.test(r.who + " " + r.what + " " + r.quote)) ? "an amount that is not in its source's own words, or too long, or with a time between uses" : "";
+      : rows.some(r => !r.who || !r.what || !r.quote || r.quote.split(/\s+/).length > 15 || !AMT.test(r.quote) || !flat(r.on).includes(flat(r.quote)) || !refs.some(x => x.id === r.ref) || /["“”]/.test(r.who + r.what + r.quote) || AMT.test(r.who + " " + r.what) || timing.test(r.who + " " + r.what + " " + r.quote)) ? "an amount that is not in its source's own words, or too long, or with a time between uses"
+      : rows.some(r => perKg.test(r.quote) || oddSigns.test(r.quote)) ? "an amount for each kilogram of body weight, or a notation that is not plain words" : "";
     if (why) { left.push(a.id + " (" + why + ")"); continue; }
     // (2.7.1) under a How-do-we-know line: its source's own words, 15 at most, so that a reader can compare. Shown only when they stand in
     // the longer quote the record keeps for that line and hold nothing the site never shows; otherwise the line stands without them
