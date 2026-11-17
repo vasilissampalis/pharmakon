@@ -47,6 +47,29 @@ SOURCES = {
                  "SELECT ?d ?label FROM <http://id.nlm.nih.gov/mesh> WHERE { ?d meshv:pharmacologicalAction mesh:D013287 . ?d rdfs:label ?label } LIMIT 5")},
     "rxnav": {"what": "RxNorm and its classes, US National Library of Medicine (public domain)", "home": "https://rxnav.nlm.nih.gov/",
               "probe": "https://rxnav.nlm.nih.gov/REST/rxclass/classMembers.json?classId=N05B&relaSource=ATC"},
+    # (decision 27, step a; the senior author, 17 November 2026, of his "what is mytragina javanica": "our ai has to understand
+    # typos ... hardcode is not enough our ai has to correct and update itself with all possible relevant online searches".)
+    # Services that take a name as someone typed it and answer with the name it most likely is. Each is asked here with a
+    # name typed wrong, to see whether it may be asked and what it answers; nothing is built on one until this was seen.
+    "gbif_match": {"what": "GBIF, the species name matcher (names of plants, fungi and animals; CC0 and CC BY)", "home": "https://api.gbif.org/",
+                   "probe": "https://api.gbif.org/v1/species/match?verbose=true&name=" + urllib.parse.quote("Mytragina javanica")},
+    "rx_approx": {"what": "RxNorm's approximate match, US National Library of Medicine (public domain)", "home": "https://rxnav.nlm.nih.gov/",
+                  "probe": "https://rxnav.nlm.nih.gov/REST/approximateTerm.json?maxEntries=3&term=xanex"},
+    "pubchem_auto": {"what": "PubChem's name completion, US National Library of Medicine (public domain)", "home": "https://pubchem.ncbi.nlm.nih.gov/",
+                     "probe": "https://pubchem.ncbi.nlm.nih.gov/rest/autocomplete/compound/mesembrin/json?limit=5"},
+    "ncbi_spell": {"what": "NCBI's spelling suggestion for PubMed, US National Library of Medicine (public domain)", "home": "https://eutils.ncbi.nlm.nih.gov/",
+                   "probe": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/espell.fcgi?db=pubmed&term=" + urllib.parse.quote("mytragina javanica")},
+    "wikipedia_search": {"what": "Wikipedia's title search (CC BY-SA text; only the title would be used)", "home": "https://en.wikipedia.org/",
+                         "probe": "https://en.wikipedia.org/w/api.php?action=opensearch&limit=3&format=json&search=" + urllib.parse.quote("mytragina javanica")},
+    # and, for step b, where a picture with an open licence could be found, each with its licence in its own record
+    "commons_search": {"what": "Wikimedia Commons' file search (each file has its own licence)", "home": "https://commons.wikimedia.org/",
+                       "probe": "https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrlimit=3&prop=imageinfo&iiprop=url%7Cextmetadata&gsrsearch=" + urllib.parse.quote("Sceletium tortuosum")},
+    "gbif_media": {"what": "GBIF's records with a picture (each picture has its own licence)", "home": "https://api.gbif.org/",
+                   "probe": "https://api.gbif.org/v1/occurrence/search?mediaType=StillImage&limit=2&scientificName=" + urllib.parse.quote("Sceletium tortuosum")},
+    "inat_taxa": {"what": "iNaturalist's taxa (each photo has its own licence)", "home": "https://api.inaturalist.org/",
+                  "probe": "https://api.inaturalist.org/v1/taxa?per_page=2&q=" + urllib.parse.quote("Sceletium tortuosum")},
+    "openverse": {"what": "Openverse, a search of openly licensed pictures (each picture has its own licence)", "home": "https://api.openverse.org/",
+                  "probe": "https://api.openverse.org/v1/images/?page_size=3&license=cc0,pdm,by&q=" + urllib.parse.quote("Sceletium tortuosum")},
 }
 
 
