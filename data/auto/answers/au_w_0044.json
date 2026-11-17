@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0044",
- "lane": 10,
+ "lane": 11,
  "kind": "amounts",
  "from": "w_0044",
  "question": "What amounts of psilocybin have studies given to people?",
@@ -21,25 +21,25 @@
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.8-flash",
    "team": "team H2"
   },
-  "run": "43985089101",
+  "run": "43992055441",
   "from": {
    "papers": 2,
    "summaries": 1,
    "official": 0
   },
-  "neurons": 361.7
+  "neurons": 563.9
  },
  "status": "waiting",
  "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
  "gates": {
   "read": "8 amounts kept from 3 sources (2 papers read in full, 0 official pages, 1 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "8 amounts from 3 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
-  "check": "8 of 8 amounts accepted by the second reader (groq:openai/gpt-oss-120b)",
+  "check": "8 of 8 amounts accepted by the second reader (@cf/openai/gpt-oss-120b)",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
@@ -314,9 +314,9 @@
     {
      "passage": 1,
      "where": "Summary",
-     "quote": "at least 20 mg/70 kg",
-     "show": "at least 20 mg/70 kg",
-     "clause": "at least 20 mg/70 kg",
+     "quote": "participants (n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
+     "show": "received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
+     "clause": "participants (n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
      "who": "participants",
      "what": "oral dose of psilocybin"
     }
@@ -342,8 +342,9 @@
   },
   {
    "part": "row1",
-   "text": "12 subjects with moderate-to-severe TRD; doses of psilocybin.",
-   "who": "12 subjects with moderate-to-severe TRD",
+   "text": "12 subjects with moderate-to-severe treatment-resistant depression; doses of psilocybin.",
+   "who": "12 subjects with moderate-to-severe treatment-resistant depression",
+   "who_read": "12 subjects with moderate-to-severe TRD",
    "what": "doses of psilocybin",
    "quote": "two oral doses of psilocybin (10 mg and 25 mg)",
    "source": "salvetti_2024",
@@ -363,8 +364,9 @@
   },
   {
    "part": "row2",
-   "text": "19 subjects with a diagnosis of TRD; doses of psilocybin.",
-   "who": "19 subjects with a diagnosis of TRD",
+   "text": "19 subjects with a diagnosis of treatment-resistant depression; doses of psilocybin.",
+   "who": "19 subjects with a diagnosis of treatment-resistant depression",
+   "who_read": "19 subjects with a diagnosis of TRD",
    "what": "doses of psilocybin",
    "quote": "two doses of psilocybin (10 mg and 25 mg)",
    "source": "salvetti_2024",
@@ -405,8 +407,9 @@
   },
   {
    "part": "row4",
-   "text": "12 patients with moderate to severe MDD; low and high doses in two sessions.",
-   "who": "12 patients with moderate to severe MDD",
+   "text": "12 patients with moderate to severe major depressive disorder; low and high doses in two sessions.",
+   "who": "12 patients with moderate to severe major depressive disorder",
+   "who_read": "12 patients with moderate to severe MDD",
    "what": "low and high doses in two sessions",
    "quote": "patients took a low dose (10 mg) of psilocybin",
    "source": "wang_2024",
@@ -426,8 +429,9 @@
   },
   {
    "part": "row5",
-   "text": "12 patients with moderate to severe MDD; low and high doses in two sessions.",
-   "who": "12 patients with moderate to severe MDD",
+   "text": "12 patients with moderate to severe major depressive disorder; low and high doses in two sessions.",
+   "who": "12 patients with moderate to severe major depressive disorder",
+   "who_read": "12 patients with moderate to severe MDD",
    "what": "low and high doses in two sessions",
    "quote": "patients took a high dose (25 mg) of psilocybin",
    "source": "wang_2024",
@@ -492,7 +496,7 @@
    "text": "Participants; oral dose of psilocybin.",
    "who": "Participants",
    "what": "oral dose of psilocybin",
-   "quote": "at least 20 mg/70 kg",
+   "quote": "received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
    "source": "barrett_2015",
    "read": "summary",
    "uses": [
@@ -503,7 +507,7 @@
      "label": "R8",
      "ref": "barrett_2015",
      "where": "Summary",
-     "quote": "at least 20 mg/70 kg",
+     "quote": "participants (n=184) received a moderate to high oral dose of psilocybin (at least 20 mg/70 kg)",
      "sha": "f63692dd967f9ddd"
     }
    ]
@@ -549,6 +553,14 @@
    "lane": 5,
    "status": "published",
    "why": "passed every gate (an answer about amounts: decision 11)",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": false
+  },
+  {
+   "on": "2026-11-17",
+   "lane": 10,
+   "status": "waiting",
+   "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
    "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
    "complete": false
   }
@@ -652,7 +664,8 @@
    ]
   }
  ],
- "held": "the editor's first reading of lane 10",
+ "refused_rows": [],
+ "held": "the editor's first reading of lane 11",
  "place": {
   "home": "psilocybin",
   "also": [],

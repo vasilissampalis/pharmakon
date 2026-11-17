@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0046",
- "lane": 10,
+ "lane": 11,
  "kind": "amounts",
  "from": "w_0046",
  "question": "How much alcohol do health bodies call low-risk drinking?",
@@ -26,20 +26,20 @@
    "also1": "gemini:gemini-3.8-flash",
    "team": "team H2"
   },
-  "run": "43985089101",
+  "run": "43992055441",
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 3
   },
-  "neurons": 398.5
+  "neurons": 573.5
  },
  "status": "waiting",
  "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
  "gates": {
-  "read": "16 amounts kept from 6 sources (2 papers read in full, 4 official pages, 0 papers read in summary); 16 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "12 amounts from 4 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
-  "check": "9 of 12 amounts accepted by the second reader (groq:openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: Sentence adds 'weekly low-risk guideline' which is not stated in the passage; not accepted: not an amount of the kind the question asks for",
+  "read": "26 amounts kept from 8 sources (2 papers read in full, 6 official pages, 0 papers read in summary); 18 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "18 amounts from 5 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
+  "check": "9 of 18 amounts accepted by the second reader (groq:openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: The passage does not describe the 2‑drink‑or‑less weekly level as a \"low‑risk\" guideline; it only states it is a level where consequences are likely avoided.; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the k",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
@@ -265,7 +265,7 @@
      "quote": "do not drink more than: 11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
      "show": "do not drink more than: 11 standard drinks per week, if you are a woman",
      "clause": "do not drink more than: 11 standard drinks per week, if you are a woman;",
-     "who": "women, men",
+     "who": "women",
      "what": "weekly low-risk guidelines"
     },
     {
@@ -274,7 +274,7 @@
      "quote": "do not drink more than: 11 standard drinks per week, if you are a woman; 17 standard drinks per week, if you are a man",
      "show": "17 standard drinks per week, if you are a man",
      "clause": "17 standard drinks per week, if you are a man",
-     "who": "women, men",
+     "who": "men",
      "what": "weekly low-risk guidelines"
     },
     {
@@ -455,8 +455,8 @@
   },
   {
    "part": "row8",
-   "text": "Women, men; weekly low-risk guidelines.",
-   "who": "Women, men",
+   "text": "Women; weekly low-risk guidelines.",
+   "who": "Women",
    "what": "weekly low-risk guidelines",
    "quote": "do not drink more than: 11 standard drinks per week, if you are a woman",
    "source": "hse_weekly-low-risk-alcohol-guidelines",
@@ -476,8 +476,8 @@
   },
   {
    "part": "row9",
-   "text": "Women, men; weekly low-risk guidelines.",
-   "who": "Women, men",
+   "text": "Men; weekly low-risk guidelines.",
+   "who": "Men",
    "what": "weekly low-risk guidelines",
    "quote": "17 standard drinks per week, if you are a man",
    "source": "hse_weekly-low-risk-alcohol-guidelines",
@@ -544,6 +544,14 @@
    "lane": 6,
    "status": "published",
    "why": "passed every gate (an answer about amounts: decision 11)",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": true
+  },
+  {
+   "on": "2026-11-17",
+   "lane": 10,
+   "status": "waiting",
+   "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
    "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
    "complete": true
   }
@@ -616,19 +624,19 @@
     {
      "quote": "14 units is equivalent to 6 pints of average-strength beer",
      "who": "men and women",
-     "what": "the weekly low-risk guideline in pints of beer",
+     "what": "the weekly low-risk guideline in pints",
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     },
     {
      "quote": "14 units is equivalent to 10 small glasses of lower-strength wine",
      "who": "men and women",
-     "what": "the weekly low-risk guideline in glasses of wine",
+     "what": "the weekly low-risk guideline in glasses",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
     },
     {
      "quote": "One unit equals 10ml or 8g of pure alcohol, which is around the amount of alcohol the average adult can process in an hour",
      "who": "the average adult",
-     "what": "the amount of alcohol that can be processed in an hour",
+     "what": "amount processed in an hour",
      "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
     }
    ]
@@ -683,13 +691,58 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/alcohol/canadas-guidance-alcohol-and-health",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "quote": "0 drinks per week",
-     "who": "people living in Canada",
+     "who": "people in Canada",
      "what": "no drinking for better health",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Health risks of alcohol",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/health-risks.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "What You Can Do to Lower Your Risk of Alcohol-Related Harms",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/lower-alcohol-related-harms.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Understanding Alcohol Drinking Patterns",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.niaaa.nih.gov/alcohols-effects-health/alcohol-drinking-patterns",
+   "kept": 5,
+   "thrown": []
+  },
+  {
+   "title": "Alcohol Use and Your Health",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/index.html",
+   "kept": 4,
+   "thrown": [
+    {
+     "quote": "any alcohol use by people younger than 21.",
+     "who": "people younger than 21",
+     "what": "underage drinking",
+     "why": "no amount with its unit in the quote"
+    },
+    {
+     "quote": "any alcohol use during pregnancy.",
+     "who": "pregnant women",
+     "what": "drinking while pregnant",
+     "why": "no amount with its unit in the quote"
     }
    ]
   },
@@ -725,7 +778,90 @@
    "thrown": []
   }
  ],
- "held": "the editor's first reading of lane 10",
+ "refused_rows": [
+  {
+   "who": "adults",
+   "what": "amount in one session",
+   "quote": "Do not drink more than 6 standard drinks on any 1 occasion",
+   "full": "Do not drink more than 6 standard drinks on any 1 occasion",
+   "where": "Weekly low-risk alcohol guidelines",
+   "source": "hse_weekly-low-risk-alcohol-guidelines",
+   "said": "not an amount of the kind the question asks for"
+  },
+  {
+   "who": "people in Canada",
+   "what": "weekly low-risk drinking level",
+   "quote": "2 standard drinks or less per week",
+   "full": "2 standard drinks or less per week",
+   "where": "Overview",
+   "source": "ccsa_canadas-guidance-alcohol-and-health",
+   "said": "The passage does not describe the 2‑drink‑or‑less weekly level as a \"low‑risk\" guideline; it only states it is a level where consequences are likely avoided."
+  },
+  {
+   "who": "people in Canada",
+   "what": "weekly drinking level with increased cancer risk",
+   "quote": "3-6 standard drinks per week",
+   "full": "3–6 standard drinks per week",
+   "where": "Overview",
+   "source": "ccsa_canadas-guidance-alcohol-and-health",
+   "said": "not an amount of the kind the question asks for"
+  },
+  {
+   "who": "people in Canada",
+   "what": "weekly drinking level with increasingly high health risks",
+   "quote": "more than 6 standard drinks a week",
+   "full": "more than 6 standard drinks a week",
+   "where": "Canada's Guidance on Alcohol and Health",
+   "source": "ccsa_canadas-guidance-alcohol-and-health",
+   "said": "not an amount of the kind the question asks for"
+  },
+  {
+   "who": "a typical adult",
+   "what": "the amount in one session for binge drinking",
+   "quote": "five or more drinks (male), or four or more drinks (female)",
+   "full": "five or more drinks (male), or four or more drinks (female)",
+   "where": "Binge Drinking",
+   "source": "niaaa_alcohol-drinking-patterns",
+   "said": "not an amount of the kind the question asks for"
+  },
+  {
+   "who": "males",
+   "what": "the amount in one session for binge drinking",
+   "quote": "five or more drinks containing alcohol for males or four or more drinks",
+   "full": "five or more drinks containing alcohol for males or four or more drinks containing alcohol for females",
+   "where": "Binge Drinking",
+   "source": "niaaa_alcohol-drinking-patterns",
+   "said": "Sentence includes \"four or more drinks\" for males, which the passage does not state; the passage limits four-or-more drinks to females."
+  },
+  {
+   "who": "women",
+   "what": "daily and weekly amounts for heavy drinking",
+   "quote": "five or more drinks on any day or 15 or more per week",
+   "full": "five or more drinks on any day or 15 or more per week; For women, consuming four or more on any day or eight or more drinks per week",
+   "where": "Heavy Drinking",
+   "source": "niaaa_alcohol-drinking-patterns",
+   "said": "Numbers (five drinks on any day or 15 per week) do not match the passage's definition for women (four drinks on any day or eight per week)."
+  },
+  {
+   "who": "men or women",
+   "what": "daily and weekly amounts for heavy drinking",
+   "quote": "consuming four or more on any day or eight or more drinks per week",
+   "full": "five or more drinks on any day or 15 or more per week; For women, consuming four or more on any day or eight or more drinks per week",
+   "where": "Heavy Drinking",
+   "source": "niaaa_alcohol-drinking-patterns",
+   "said": "Sentence applies women's heavy‑drinking thresholds (four drinks/day, eight per week) to men as well, contradicting the passage which gives higher thresholds for men."
+  },
+  {
+   "who": "women",
+   "what": "a daily amount associated with increased risk of breast cancer",
+   "quote": "even one drink per day",
+   "full": "even one drink per day",
+   "where": "What Are Other Harms of Alcohol Misuse?",
+   "source": "niaaa_alcohol-drinking-patterns",
+   "said": "not an amount of the kind the question asks for"
+  }
+ ],
+ "held": "the editor's first reading of lane 11",
  "place": {
   "home": "alcohol",
   "also": [],
