@@ -119,6 +119,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # only the requests the first job saw are taken off (one that arrived meanwhile starts its own run); the names are checked, because the list comes from that job
           grep -E '^data/auto/requests/(nli|own|train)-[0-9A-Za-z._-]+\.json$' out/_handled.txt 2>/dev/null | while read -r f; do git rm -q --ignore-unmatch "$f"; done
-          git add -A data/auto/exam data/auto/own data/auto/requests
+          git add -A data/auto   # (the whole folder, never the requests folder by name: when its last request is taken off, that folder is gone; naming it lost a night's lessons in the Lessons workflow on 17 November, and here it would have kept a candidate's file and lost its record)
           git diff --cached --quiet || git commit -q -m "Workshop: what the models said of every card, and the candidates made"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)

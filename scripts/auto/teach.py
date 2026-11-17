@@ -110,8 +110,24 @@ def made(path=None):
     return out
 
 
-def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, today=None, at_once=1):
-    """Makes lessons until the limit, the time or the day's allowance ends. Returns how many were written."""
+def merge(other, path=None):
+    """Lessons saved elsewhere (the branch a run saves to while it goes on) that this file does not hold yet are added to it:
+    one lesson for a sentence and a kind, the one already here. Returns how many were added."""
+    path = path or MADE; have = {(x["from"], x["kind"]) for x in made(path)}; new = []
+    for x in made(other):
+        if isinstance(x, dict) and all(isinstance(x.get(k), str) for k in ("from", "kind", "sentence", "by")) and x["kind"] in KINDS and (x["from"], x["kind"]) not in have: have.add((x["from"], x["kind"])); new.append(x)
+    if new:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "a", encoding="utf-8") as f:
+            for x in new: f.write(json.dumps(x, ensure_ascii=False) + "\n")
+    return len(new)
+
+
+def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, today=None, at_once=1, rests=3, rest=300):
+    """Makes lessons until the limit, the time or the day's allowance ends. Returns how many were written.
+    (17 November 2026) A writer that gives nothing usable twelve times running RESTS for five minutes and is asked again, three
+    times at most, before it is left out: on the night of 16 November both Gemma writers were answered "high demand" for a
+    quarter of an hour, were left out for good, and the run ended two hours early."""
     path = path or MADE; path.parent.mkdir(parents=True, exist_ok=True)
     models = [m for m in (models or MODELS) if chat or llm.has(m)]
     if not models: print("teach: no model with a key on this machine: nothing made"); return 0
@@ -121,6 +137,7 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
     src = sources(exam); rnd = random.Random(20261116); rnd.shuffle(src)                 # the same order every run: a run goes on where the last one stopped
     todo = [(s, k) for s in src for k in KINDS if (s["id"], k) not in have and (s["id"], k) not in skipped]
     t0 = time.time(); n = asked = 0; why_not = {}; samples = []; wrote = {m: 0 for m in models}; misses = {m: 0 for m in models}; live = list(models)
+    rested = {m: 0 for m in models}; back = {}                                # how often a writer has rested; when a resting writer comes back
     import concurrent.futures as cf
 
     def ask(s, kind, model):
@@ -135,6 +152,7 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
         queue = iter(todo); running = set()
         def more():
             nonlocal asked
+            for m in [m for m, t in back.items() if time.time() >= t]: back.pop(m); live.append(m); print(f"teach: {m} is asked again after its rest")
             while live and len(running) < at_once * len(live) and n + len(running) < limit and time.time() - t0 < minutes * 60:
                 item = next(queue, None)
                 if item is None: return
@@ -147,7 +165,10 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
                 def miss(why):                                            # a writer that gives nothing usable twelve times running is left out of this run (it may be busy, or not write in the form asked)
                     why_not[why] = why_not.get(why, 0) + 1; misses[model] += 1
                     if len(samples) < 6 and raw: samples.append(f"{model} ({why}; {ended}): " + re.sub(r"\s+", " ", raw)[:260])
-                    if misses[model] >= 12 and model in live: live.remove(model); print(f"teach: {model} gave nothing usable twelve times running: left out of this run")
+                    if misses[model] >= 12 and model in live:
+                        live.remove(model); misses[model] = 0
+                        if rested[model] < rests: rested[model] += 1; back[model] = time.time() + rest; print(f"teach: {model} gave nothing usable twelve times running: it rests for {rest / 60:.0f} minutes (rest {rested[model]} of {rests})")
+                        else: print(f"teach: {model} gave nothing usable twelve times running, after {rests} rests: left out of this run")
                 if refused.startswith("the day's allowance"):
                     if model in live: live.remove(model); print(f"teach: {model}: {refused}")
                     continue
@@ -160,6 +181,8 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
                 misses[model] = 0; wrote[model] += 1
                 f.write(json.dumps({"from": s["id"], "group": s["group"], "kind": kind, "good": kind == "same", "sentence": new, "changed": ch, "by": model, "on": today or datetime.date.today().isoformat()}, ensure_ascii=False) + "\n"); f.flush(); n += 1
             more()
+            while not running and back and time.time() - t0 < minutes * 60 and n < limit:      # every writer is resting: wait for the first to come back
+                time.sleep(max(0.0, min(back.values()) - time.time())); more()
     json.dump(sorted(skipped), open(path.with_name("skipped.json"), "w", encoding="utf-8"))
     print(f"teach: {n} lessons written ({asked} asked; by writer: {wrote}; not usable: {why_not or 'none'}); {len(todo) - asked} still to make; {len(src)} good sentences to make them from")
     for x in samples: print("teach: a reply that could not be used:", x)
@@ -196,15 +219,23 @@ def selftest():
     p = d / "teach" / "made.jsonl"
     n = run(limit=5, minutes=5, chat=chat, exam=d / "exam", path=p, today="2026-11-16")
     rows = made(p); assert n == 5 and len(rows) == 5 and {r["good"] for r in rows if r["kind"] == "same"} <= {True} and all(not r["good"] for r in rows if r["kind"] != "same") and rows[0]["by"] in MODELS and rows[0]["group"]
-    assert asked[0][0] != asked[1][0]                                                              # two writers, in turn
+    assert sorted([m for m, _ in asked].count(x) for x in MODELS) == [2, 3]                          # two writers, in turn (which of two calls made at once is noted first is chance: the count is not)
     n2 = run(limit=100, minutes=5, chat=chat, exam=d / "exam", path=p, today="2026-11-16")
     rows = made(p); assert len(rows) == 4 * 6 and n2 == 24 - 5 and len({(r["from"], r["kind"]) for r in rows}) == 24 and not any(r["kind"] == "hedge" for r in rows)      # it goes on where it stopped, never twice; what cannot be done is not asked again
     k = len(asked); assert run(limit=100, minutes=5, chat=chat, exam=d / "exam", path=p) == 0 and len(asked) == k
     # a writer that gives nothing usable twelve times running is left out of the run; what it failed on is asked again another time (only its own "skip" is remembered)
     p2 = d / "teach2" / "made.jsonl"; seen2 = []
     def chat2(model, messages, room): seen2.append(model); return "I think about it..." if model == MODELS[0] else json.dumps({"sentence": "Indeed " + messages[1]["content"].split("\nSENTENCE: ")[-1].split("\n")[0], "changed": "indeed"})
-    n3 = run(limit=100, minutes=5, chat=chat2, exam=d / "exam", path=p2, today="2026-11-16")
+    n3 = run(limit=100, minutes=5, chat=chat2, exam=d / "exam", path=p2, today="2026-11-16", rests=0)
     assert seen2.count(MODELS[0]) == 12 and n3 == 28 - 12 and not json.load(open(p2.with_name("skipped.json"))), (seen2.count(MODELS[0]), n3)
+    # a writer that fails twelve times running rests and is asked again (here: one rest of no length), and only then is left out; a run whose every writer rests waits for them
+    p3 = d / "teach3" / "made.jsonl"; seen3 = []
+    def chat3(model, messages, room): seen3.append(model); return "I think about it..."
+    assert run(limit=100, minutes=5, models=[MODELS[0]], chat=chat3, exam=d / "exam", path=p3, rests=1, rest=0) == 0 and len(seen3) == 24, len(seen3)
+    # lessons saved elsewhere are added once: the one already here stays
+    p4 = d / "teach4" / "made.jsonl"; p4.parent.mkdir(parents=True); rows2 = made(p2)
+    open(p4, "w").write(json.dumps(dict(rows2[0], sentence="The one that is here.")) + "\n")
+    assert merge(p2, p4) == len(rows2) - 1 and merge(p2, p4) == 0 and made(p4)[0]["sentence"] == "The one that is here." and len(made(p4)) == len(rows2) and merge(d / "nothing.jsonl", p4) == 0
     n4 = run(limit=100, minutes=5, chat=chat, exam=d / "exam", path=p2); sk = json.load(open(p2.with_name("skipped.json")))
     assert n4 + len(sk) == 12 and len(made(p2)) + len(sk) == 28 and all(k == "hedge" for _, k in sk)          # the twelve it failed on are asked again: each becomes a lesson, or the writer's own "skip"
     print("teach selftest: ok (lessons come only from sentences a checker passed or the editor judged good, never from a plain line of the third exam; one made-up fault of each kind and one faithful rewording; "
@@ -215,6 +246,7 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if "--selftest" in a: selftest()
     elif a and a[0] == "show": show()
+    elif len(a) == 2 and a[0] == "merge": print(f"teach: {merge(pathlib.Path(a[1]))} lessons that a run had saved while it went on were added"); show()
     elif a and a[0] == "requests":
         llm.LEDGER = OUT / "ledger.json"                               # its own count of the day's calls: the lane's ledger is not touched from this workflow
         for f in sorted((ROOT / "data" / "auto" / "requests").glob("teach-*.json")):

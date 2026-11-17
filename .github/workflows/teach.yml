@@ -40,9 +40,26 @@ jobs:
         run: |
           set +e
           L="$RUNNER_TEMP/teach.log"; : > "$L"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # (17 November 2026) What is made is saved as it is made. On the night of 16 November a run of three hours and twenty
+          # minutes was lost whole: its last step failed on a folder's name, and nothing had been saved before it.
+          # Now every ten minutes the lessons so far go to the side branch lessons-wip (a side branch, so that nothing is
+          # rebased under the feet of the run), and a run begins by taking in what an earlier run saved there and never brought home.
+          if git fetch -q origin lessons-wip 2>/dev/null && git show FETCH_HEAD:data/auto/own/teach/made.jsonl > "$RUNNER_TEMP/wip.jsonl" 2>/dev/null; then
+            python3 -I scripts/auto/teach.py merge "$RUNNER_TEMP/wip.jsonl" >> "$L" 2>&1
+          fi
+          save() {
+            ( export GIT_INDEX_FILE="$RUNNER_TEMP/wip.index"
+              git read-tree HEAD && git add -A data/auto/own/teach &&
+              c=$(git commit-tree "$(git write-tree)" -p HEAD -m "Lessons so far: saved while the run goes on") &&
+              git push -q -f origin "$c:refs/heads/lessons-wip" ) >> "$L" 2>&1 || echo "!! a save of the lessons so far failed" >> "$L"
+          }
           python3 -I scripts/auto/llm.py --selftest >> "$L" 2>&1 || echo "!! the model client's own check failed ($?)" >> "$L"
           python3 -I scripts/auto/teach.py --selftest >> "$L" 2>&1 || echo "!! the lesson maker's own check failed ($?)" >> "$L"
+          ( while sleep 600; do save; done ) & SAVER=$!
           python3 -I scripts/auto/teach.py requests >> "$L" 2>&1 || echo "!! the lesson maker failed ($?)" >> "$L"
+          kill "$SAVER" 2>/dev/null; save
           echo "What this run did is in data/auto/own/teach/_last-run.txt (cleaned of anything secret before it is kept)." >> "$GITHUB_STEP_SUMMARY"
       - name: Keep the lessons
         if: always()
@@ -61,6 +78,6 @@ jobs:
           pathlib.Path("data/auto/own/teach/_last-run.txt").write_text(t[-8000:], encoding="utf-8")
           PY
           git rm -q --ignore-unmatch data/auto/requests/teach-*.json
-          git add -A data/auto/own/teach data/auto/requests
+          git add -A data/auto   # (the whole folder, never the requests folder by name: when its last request is taken off, that folder is gone, and naming it made this step fail on 17 November and a night's lessons were lost)
           git diff --cached --quiet || git commit -q -m "Lessons: made-up wrong sentences and faithful rewordings for our own checker to learn from"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)
