@@ -2,49 +2,27 @@ official selftest: ok (robots.txt with * and $ is obeyed and a refusal is never 
 names: wikidata: its robots.txt does not allow this address: not asked
 names: mesh: answered, {"rows": 1, "first": [{"d": "http://id.nlm.nih.gov/mesh/D008775", "label": "Mescaline"}]}
 names: rxnav: the answer is not JSON: <html>not json</html>
-Traceback (most recent call last):
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 221, in <module>
-    if "--selftest" in a: selftest()
-                          ~~~~~~~~^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 196, in selftest
-    doc = probe(web=O.Web(opener=opener), today="2026-11-17", save=False); s = doc["sources"]
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 106, in probe
-    got = ask(web, S["probe"])
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 80, in ask
-    r, host = web.rules(url)
-              ~~~~~~~~~^^^^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/official.py", line 121, in rules
-    try: got = self._open(host + "/robots.txt", "text/plain,*/*;q=0.5")
-               ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/official.py", line 138, in _open
-    with op(urllib.request.Request(url, headers={"User-Agent": P.UA.replace("scripts/auto/papers.py", "scripts/auto/official.py"), "Accept": accept, "Accept-Language": "en"}), timeout=25) as r:
-         ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 192, in opener
-    return Page({"query.wikidata.org": b"User-agent: *\nDisallow: /sparql\n", "id.nlm.nih.gov": b"User-agent: *\nDisallow: /private/\n", "rxnav.nlm.nih.gov": b""}[host], url)
-                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-KeyError: 'api.gbif.org'
-!! the open names selftest failed (1)
-names: wikidata: its robots.txt does not allow this address: not asked
-names: mesh: its robots.txt does not allow this address: not asked
-names: rxnav: answered, {"keys": ["drugMemberGroup"], "inside": {"drugMemberGroup": ["drugMember"]}}
-names: gbif_match: answered, {"keys": ["alternatives", "matchType", "note", "synonym"], "inside": {"note": "No match because of too little confidence", "matchType": "NONE", "alternatives": 1, "synonym": "False"}}
-names: rx_approx: answered, {"keys": ["approximateGroup"], "inside": {"approximateGroup": ["candidate", "inputTerm"]}}
-names: pubchem_auto: answered, {"keys": ["dictionary_terms", "status", "total"], "inside": {"status": ["code"], "total": "5", "dictionary_terms": ["compound"]}}
+names: gbif_match: its robots.txt does not allow this address: not asked
+names: rx_approx: the answer is not JSON: <html>not json</html>
+names: pubchem_auto: its robots.txt does not allow this address: not asked
 names: ncbi_spell: its robots.txt does not allow this address: not asked
 names: wikipedia_search: its robots.txt does not allow this address: not asked
 names: commons_search: its robots.txt does not allow this address: not asked
-Traceback (most recent call last):
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 222, in <module>
-    elif "--requests" in a: requests(a[a.index("--requests") + 1])
-                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 174, in requests
-    if do == "probe": probe(); done += 1
-                      ~~~~~^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 108, in probe
-    "holds": shape(got["json"]) if got["ok"] else None}
-             ~~~~~^^^^^^^^^^^^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/names_open.py", line 96, in shape
-    if isinstance(j, dict) and isinstance((j.get("results") or {}).get("bindings"), list):
-                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'list' object has no attribute 'get'
-!! the open names failed (1)
+names: gbif_media: its robots.txt does not allow this address: not asked
+names: inat_taxa: its robots.txt does not allow this address: not asked
+names: openverse: its robots.txt does not allow this address: not asked
+names: RxNorm: 2 ingredients, 2 brands, 2 classes, 1 ingredients of the nervous system, 2 their brand names
+names_open selftest: ok (a source whose robots.txt does not allow the address is not asked; one that allows it is asked once and what it holds is noted; an answer that is not JSON is said so; every request says who we are; the table from RxNorm holds every ingredient and brand name, and for the ingredients of the nervous system their classes and their brand names)
+names: wikidata: its robots.txt does not allow this address: not asked
+names: mesh: its robots.txt does not allow this address: not asked
+names: rxnav: answered, {"keys": ["drugMemberGroup"], "inside": {"drugMemberGroup": "{\"drugMember\": [{\"minConcept\": {\"rxcui\": \"1749\", \"name\": \"bromazepam\", \"tty\": \"IN\"}, \"nodeAttr\": [{\"attrName\": \"Source
+names: gbif_match: answered, {"keys": ["alternatives", "matchType", "note", "synonym"], "inside": {"note": "\"No match because of too little confidence\"", "matchType": "\"NONE\"", "alternatives": "[{\"usageKey\": 2900474, \"acce
+names: rx_approx: answered, {"keys": ["approximateGroup"], "inside": {"approximateGroup": "{\"inputTerm\": null, \"candidate\": [{\"rxcui\": \"202363\", \"rxaui\": \"1135627\", \"score\": \"7.169748306274414\", \"rank\": \"1\", 
+names: pubchem_auto: answered, {"keys": ["dictionary_terms", "status", "total"], "inside": {"status": "{\"code\": 0}", "total": "5", "dictionary_terms": "{\"compound\": [\"Mesembrine\", \"(-)-Mesembrine\", \"Mesembrin\", \"Mesembri
+names: ncbi_spell: its robots.txt does not allow this address: not asked
+names: wikipedia_search: its robots.txt does not allow this address: not asked
+names: commons_search: its robots.txt does not allow this address: not asked
+names: gbif_media: answered, {"keys": ["count", "endOfRecords", "facets", "limit", "offset", "results"], "inside": {"offset": "0", "limit": "2", "endOfRecords": "false", "count": "169", "results": "[{\"key\": 6130551240, \"datase
+names: inat_taxa: its robots.txt does not allow this address: not asked
+names: openverse: its robots.txt does not allow this address: not asked
+names: 1 request(s) done
