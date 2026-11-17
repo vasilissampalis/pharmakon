@@ -43,8 +43,17 @@ OVERDOSE = re.compile(r"\boverdos\w*|\b(?:od|o\.d\.)(?:'?d|ing)?\b|\boveramp\w*|
 
 
 def _filing():
-    try: return json.load(open(ROOT / "data" / "auto" / "filing.json", encoding="utf-8"))["names"]
-    except (OSError, ValueError, KeyError): return {}
+    try: f = dict(json.load(open(ROOT / "data" / "auto" / "filing.json", encoding="utf-8"))["names"])
+    except (OSError, ValueError, KeyError, TypeError): f = {}
+    # (site 2.10, decision 27 step a) a name the system learned by looking it up (data/auto/names/learned.json) and found to be a
+    # drug is filed by its kind until the editor files it by hand: a plant or a fungus under "Other plants", a medicine under
+    # "Medicines", a chemical under "Other". Its page is one the system should start, under the name as it is written.
+    try: L = json.load(open(ROOT / "data" / "auto" / "names" / "learned.json", encoding="utf-8")).get("names") or {}
+    except (OSError, ValueError, AttributeError): L = {}
+    for key, e in sorted(L.items()):
+        if isinstance(e, dict) and e.get("drug") is True and re.fullmatch(r"[a-z][a-z -]{3,60}", key) and key not in f:
+            f[key] = {"new": str(e.get("name") or key), "cls": {"plant": "Other plants", "fungus": "Other plants", "medicine": "Medicines"}.get(e.get("kind"), "Other")}
+    return f
 
 
 def _chem():
