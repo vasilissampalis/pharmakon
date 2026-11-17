@@ -24,6 +24,7 @@ on:
       - "data/auto/requests/exam-*.json"
       - "data/auto/requests/trial-*.json"
       - "data/auto/requests/grow-*.json"   # (16 November 2026) the system lists its own questions (scripts/auto/grow.py) and the finders search for them
+      - "data/auto/requests/blind-*.json"  # (17 November 2026) the plain lines of a checked answer read again by free models that wrote none of them (scripts/auto/blind_lines.py)
 
 permissions:
   contents: write
@@ -69,6 +70,11 @@ jobs:
             step "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 8 --minutes 6
             step "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 8 --minutes 8
             git rm -q data/auto/requests/grow-*.json >> "$L" 2>&1
+          fi
+          if ls data/auto/requests/blind-*.json >/dev/null 2>&1; then
+            step "the blind reader's own check" python3 -I scripts/auto/blind_lines.py --selftest
+            step "plain lines of checked answers, read again by readers who wrote none of them" python3 -I scripts/auto/blind_lines.py --requests data/auto/requests
+            git rm -q data/auto/requests/blind-*.json >> "$L" 2>&1
           fi
           step "write" python3 -I scripts/auto/lane.py requests
           echo "What this run did is in data/auto/lane/_last-run.txt (cleaned of anything secret before it is kept)." >> "$GITHUB_STEP_SUMMARY"   # (16 November 2026) never the raw end of the notes
