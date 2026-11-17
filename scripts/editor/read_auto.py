@@ -14,7 +14,7 @@ opt = lambda k, d=None: arg[arg.index(k) + 1] if k in arg else d
 lane, ids, since = opt("--lane"), [x for x in (opt("--ids") or "").split(",") if x], opt("--since", "")
 wrap = lambda t, ind: textwrap.fill(t, 150, initial_indent=ind, subsequent_indent=" " * len(ind))
 n = {}
-for f in sorted(glob.glob(str(ROOT / "data" / "auto" / "answers" / "au_*.json"))):
+for f in sorted(glob.glob(str(ROOT / "data" / "auto" / ("trial/answers" if "--trial" in arg else "answers") / "au_*.json"))):      # (--trial: the records of trial questions, which are not on the site's list)
     a = json.load(open(f, encoding="utf-8"))
     if ids and a["id"] not in ids: continue
     if lane and str(a.get("lane")) != str(lane): continue

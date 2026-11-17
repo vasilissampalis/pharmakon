@@ -80,7 +80,8 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 14               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+TRIAL = ROOT / "data" / "auto" / "trial"                                # (17 November 2026) questions that are not on the site's list, written to try the lane on what it has never seen: never shown, never placed
+LANE = 15               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -1506,7 +1507,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
 
 
 NOT_THEM = re.compile(r"\b(?:non[- ]?|not\s+|except(?:\s+for)?\s+|excluding\s+|other\s+than\s+|apart\s+from\s+)(?:pregnan\w+|breast-?feeding|lactating)(?:\s+(?:women|adults|people|persons))?", re.I)   # (lane 13) "non-pregnant adults", "except pregnant women": the people an amount is NOT for; lane 12 left the body's own daily amount for adults to a person for the word "pregnant" in it
-ASKS_BODIES = re.compile(r"\b(?:health bod(?:y|ies)|official\w*|guidelines?|guidance|recommend\w*|authorit\w+|governments?|agenc(?:y|ies)|regulators?|on the label)\b", re.I)   # (lane 13) a question about what official bodies say is answered from their own pages
+ASKS_BODIES = re.compile(r"\b(?:health bod(?:y|ies)|official\w*|guidelines?|guidance|recommend\w*|authorit\w+|governments?|agenc(?:y|ies)|regulators?|labels?|leaflets?|prescribing information)\b", re.I)   # (lane 13) a question about what official bodies say is answered from their own pages
 
 
 def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_name):
@@ -1678,7 +1679,20 @@ def fitting(chat):
     return ask
 
 
-def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None):
+def trial_items(raw):
+    """The trial questions of a request, as items the lane can work on: [{"id": "t_...", "q", "ways", "drugs"}]. A trial question is
+    one the site's list does not hold: the editor writes it to try the lane on something it has never seen. What the lane makes of it
+    is written to data/auto/trial/ and is never shown, never placed on a page, never counted as an answer. Anything else in the
+    request's list is left out."""
+    out = []
+    for x in raw if isinstance(raw, list) else []:
+        if not isinstance(x, dict) or not re.fullmatch(r"t_[a-z0-9_]{1,40}", str(x.get("id") or "")) or not isinstance(x.get("q"), str) or not 10 <= len(x["q"]) <= 200: continue
+        drugs = [d for d in x.get("drugs") or [] if isinstance(d, str) and re.fullmatch(r"[a-z0-9][a-z0-9-]{1,40}", d)][:4]
+        out.append({"id": x["id"], "q": re.sub(r"\s+", " ", x["q"]).strip(), "ways": [re.sub(r"\s+", " ", w).strip() for w in x.get("ways") or [] if isinstance(w, str) and 3 <= len(w) <= 120][:6], "drugs": drugs, "trial": True})
+    return out[:12]
+
+
+def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, trial=None):
     models = dict(MODELS); real = chat is None
     chat = fitting(chat or llm.chat)
     items = P.listed()
@@ -1692,6 +1706,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None):
             if w["id"] in ids: order.append(w)
         elif again or turn(w) is not None: order.append(w)
     if not ids and not again: order.sort(key=lambda w: turn(w))                    # (a stable sort: within one turn, the most asked first)
+    if trial: order = list(trial); limit = max(limit, len(order))                  # (trial questions only: nothing of the site's list is worked on in such a run)
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []; out_of_room = 0
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     # our own checker (decision 23), where one is in use (data/auto/own/models.json): the file that sat the exam, by its SHA-256. If it
@@ -1710,9 +1725,14 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None):
             if not models: print(f"lane: no team of models has room left today (Cloudflare: {llm.left():.0f} neurons left): it goes on tomorrow"); break
             print(f"lane: {models.get('team') or 'the models'}: {models['reader']} reads, {models['writer']} writes, {models['checker']} is the second reader")   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
         pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
+        if w.get("trial"): pf = TRIAL / "papers" / (w["id"] + ".json"); of = TRIAL / "official" / (w["id"] + ".json"); af = TRIAL / "answers" / ("au_" + w["id"] + ".json")
         try:
             found = json.load(open(pf, encoding="utf-8")) if pf.exists() and not again else P.find(w, names, enc)
             if not pf.exists() or again: pf.parent.mkdir(parents=True, exist_ok=True); json.dump(found, open(pf, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            if w.get("trial") and not of.exists():                             # the official pages for a trial question are looked for here (for a listed question official.py has done it before)
+                try:
+                    import official as O; res = O.find(w, names, enc); of.parent.mkdir(parents=True, exist_ok=True); json.dump(res, open(of, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+                except Exception as e: print(f"lane: {w['id']}: the official pages could not be looked for ({type(e).__name__}: {str(e)[:120]})")
             try: official = json.load(open(of, encoding="utf-8"))["pages"]
             except (OSError, ValueError, KeyError): official = []               # (official.py has not searched for this question yet, or found nothing)
             try: before = json.load(open(af, encoding="utf-8"))
@@ -1735,6 +1755,13 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None):
             print(f"lane: {w['id']}: the lane itself failed ({type(e).__name__}: {str(e)[:200]})"); print("".join(traceback.format_exc().splitlines(True)[-6:]))
             st["items"][w["id"]] = {"status": "none", "why": f"the lane itself failed on it ({type(e).__name__})", "last": TODAY, "lane": LANE, "kind": "", "complete": False, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
             json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); continue
+        if w.get("trial"):                                              # a trial: what the lane would have done is kept beside the record, and the record itself can never be shown
+            rec["trial"] = {"would_be": rec["status"], "why": rec.get("why")}
+            if rec["status"] == "published": rec["status"] = "waiting"; rec["held"] = "a trial question"; rec["why"] = (rec.get("why") or "") + "; a trial question: never shown"
+            af.parent.mkdir(parents=True, exist_ok=True); json.dump(rec, open(af, "w", encoding="utf-8"), ensure_ascii=False, indent=1); made.append(rec)
+            f = rec["made"].get("from") or {}
+            print(f"lane: TRIAL {w['id']} {w['q'][:56]!r}: would be {rec['trial']['would_be']} ({rec['trial']['why']}); {f.get('papers', 0)} papers, {f.get('official', 0)} official pages, {f.get('summaries', 0)} summaries; {rec['made'].get('neurons', 0)} neurons")
+            continue
         try: hold = holds(json.load(open(ROOT / "data" / "auto" / "lane" / "policy.json", encoding="utf-8")).get("hold_new"), rec.get("kind"))
         except (OSError, ValueError): hold = False
         if hold and rec.get("status") == "published":                  # the editor reads the first answers of a new version of the lane before they are shown (data/auto/lane/policy.json, hold_new; scripts/editor/release_auto.py lets them out)
@@ -2131,6 +2158,8 @@ def selftest():
     assert who_of_shown("women", "17 standard drinks per week, if you are a man", "") is None and who_of_shown("adults (men and women)", "3 drinks for men", "") == "men"
     g = amount_gate({"amounts": [{"passage": 1, "quote": hse, "who": "women, men", "what": "weekly low-risk guidelines"}]}, [{"n": 1, "where": "Guidelines", "text": "To keep the risk low, " + hse + ". Alcohol is a drug."}], {"read": "page", "title": "Weekly low-risk alcohol guidelines"}, ["alcohol"])
     assert [(x["who"], x["show"]) for x in g[0]] == [("women", "do not drink more than: 11 standard drinks per week, if you are a woman"), ("men", "17 standard drinks per week, if you are a man")], g
+    ti = trial_items([{"id": "t_lsd_1", "q": "What amounts  of LSD have studies given to people?", "drugs": ["lsd", "Not A Slug"], "ways": ["lsd dose in studies", 5]}, {"id": "w_0001", "q": "A listed question is not a trial"}, {"id": "t_x", "q": "short"}, "words"])
+    assert ti == [{"id": "t_lsd_1", "q": "What amounts of LSD have studies given to people?", "ways": ["lsd dose in studies"], "drugs": ["lsd"], "trial": True}] and trial_items(None) == [] and trial_items({"id": "t_a"}) == []
     assert holds(True, "amounts") and not holds(False, "answer") and not holds(None, "answer") and holds({"answer": True, "amounts": False}, "answer") and not holds({"answer": True, "amounts": False}, "amounts") and holds({"amounts": False}, None) and holds({}, "amounts")
     # (lane 12) the words that lead into a further part belong to that part; whom another amount is for belongs to that amount; a group's name that leads into the reader's quote is taken into it
     niaaa = "five or more drinks containing alcohol for males or four or more drinks containing alcohol for females"
@@ -2209,7 +2238,7 @@ def selftest():
     theirs = lambda r: any(rx.search(NOT_THEM.sub(" ", r["who"] + " " + r["what"] + " " + (r.get("clause") or r["quote"]))) for what, rx in STAKES if what in ("pregnancy or children", "suicide or self-harm"))
     assert [theirs(x) for x in g[0]] == [False, True] and theirs({"who": "reproductive-aged women", "what": "daily intake", "quote": "300 mg caffeine per day"}) and theirs({"who": "women of childbearing age", "what": "x", "quote": "300 mg"})
     assert not theirs({"who": "healthy adults", "what": "x", "quote": "400 mg per day do not raise safety concerns for healthy adults, except pregnant women"}) and theirs({"who": "adults", "what": "x", "quote": "not for children: 100 mg"})
-    assert ASKS_BODIES.search("How much caffeine a day do health bodies call safe for adults?") and ASKS_BODIES.search("What is the recommended amount?") and not ASKS_BODIES.search("What amounts of psilocybin have studies given to people?")
+    assert ASKS_BODIES.search("How much caffeine a day do health bodies call safe for adults?") and ASKS_BODIES.search("What is the recommended amount?") and not ASKS_BODIES.search("What amounts of psilocybin have studies given to people?") and ASKS_BODIES.search("What daily amount of methadone does the medicine's label state?")
     # (lane 12) the second reader is asked about the amounts nearest the question when there are more than its room; what the room did not hold is on file
     mp2 = mp[:2] + ["In the second trial, participants received 100 mg of MDMA in each of two sessions, with two trained therapists present throughout.",
                     "The sessions were held in a quiet room with music, and participants stayed overnight at the site after each one of them.",
@@ -2288,7 +2317,7 @@ if __name__ == "__main__":
     elif len(sys.argv) > 1 and sys.argv[1] == "requests":
         # the requests waiting in data/auto/requests (lane-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
         # A request is a file in the repository, written by the editor: read as data, never run.
-        ids, limit, again, any_req, only_team = [], 3, False, False, None
+        ids, limit, again, any_req, only_team, trial = [], 3, False, False, None, []
         for f in sorted((ROOT / "data" / "auto" / "requests").glob("lane-*.json")):
             try: r = json.load(open(f, encoding="utf-8"))
             except ValueError: r = {}
@@ -2296,8 +2325,10 @@ if __name__ == "__main__":
             if isinstance(r.get("max"), int): limit = max(1, min(20, r["max"]))
             again = again or r.get("again") is True
             if isinstance(r.get("team"), str) and re.fullmatch(r"[A-Za-z0-9 ]{1,24}", r["team"]): only_team = r["team"]      # ("team": "team G": only that team of data/auto/lane/models.json)
+            trial += trial_items(r.get("trial"))                              # ("trial": [{"id": "t_...", "q": "...", "drugs": ["lsd"]}]: questions that are not on the site's list; see trial_items)
             f.unlink()
-        if any_req: run(ids=ids or None, limit=max(limit, len(ids)) if ids else limit, again=again, only_team=only_team)
+        if trial: run(limit=len(trial), only_team=only_team, trial=trial)
+        if any_req and (ids or not trial): run(ids=ids or None, limit=max(limit, len(ids)) if ids else limit, again=again, only_team=only_team)
         else: print("lane: no request waiting")
     elif len(sys.argv) > 1 and sys.argv[1] == "run":
         a = sys.argv[2:]; opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d

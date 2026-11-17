@@ -6,6 +6,7 @@ lane-sentences.json (scripts/editor/label_auto.py).
     python3 -I scripts/editor/label_rows.py show [--ids au_w_0046,...] [--at COMMIT]    (every row not judged yet)
     python3 -I scripts/editor/label_rows.py add FILE.json [--at COMMIT] [--again]       ({"au_w_0046": {"row1": [1, ""], "row13": [0, "what is wrong"]}})
     python3 -I scripts/editor/label_rows.py rate                                         (for each lane: of the rows it kept, how many are not good)
+    (--trial with show or add: the records of trial questions, data/auto/trial/answers: questions that are not on the site's list)
     python3 -I scripts/editor/label_rows.py --selftest
 
 A row is one amount as the site would show it: who it is for, what kind of amount it is, and the source's own words (15 at
@@ -118,9 +119,10 @@ def selftest():
 
 if __name__ == "__main__":
     a = sys.argv[1:]; at = a[a.index("--at") + 1] if "--at" in a else None
+    if "--trial" in a: ANSWERS = ROOT / "data" / "auto" / "trial" / "answers"
     if "--selftest" in a: selftest()
     elif a and a[0] == "show":
-        ids = set((a[a.index("--ids") + 1]).split(",")) if "--ids" in a else None; doc = load(); w = waiting(doc, answers(at), ids); last = None
+        ids = set((a[a.index("--ids") + 1]).split(",")) if "--ids" in a else None; doc = load(); w = waiting(doc, answers(at, ANSWERS), ids); last = None
         wrap = lambda t, ind: textwrap.fill(t, 150, initial_indent=ind, subsequent_indent=" " * len(ind))
         for rec, p in w:
             if rec["id"] != last: last = rec["id"]; print("=" * 150); print(f"{rec['id']}  lane {rec.get('lane')}  {rec.get('status')}"); print(wrap(rec["question"], "Q: "))
@@ -128,7 +130,7 @@ if __name__ == "__main__":
             for r in p.get("rests_on") or []: print(wrap(f"({r.get('where')}) {r.get('quote')}", "          rests on: "))
         print("=" * 150); print(f"{len(w)} rows wait for a verdict; judged so far: {doc['good']} good, {doc['bad']} not good")
     elif len(a) >= 2 and a[0] == "add":
-        doc = load(); n, bad = add(json.load(open(a[1], encoding="utf-8")), doc, answers(at), again="--again" in a)
+        doc = load(); n, bad = add(json.load(open(a[1], encoding="utf-8")), doc, answers(at, ANSWERS), again="--again" in a)
         if n: json.dump(doc, open(EXAM, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         for b in bad: print("refused:", b)
         print(f"{n} verdicts written; the exam of rows now: {doc['good']} good, {doc['bad']} not good")

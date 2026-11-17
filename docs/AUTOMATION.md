@@ -355,6 +355,11 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     14, 0 of 10. Lane 11 read clean and lane 12 did not on the same three questions, because the reader copies
     differently each time: a clean batch on questions the rules were mended on proves little, and the switch for
     publishing answers about amounts by themselves waits for a clean batch of questions the lane has never seen.
+    For that the lane has a trial (lane 15): a request may hold questions that are NOT on the site's list
+    (`"trial": [{"id": "t_...", "q": "...", "drugs": ["lsd"]}]` in a `lane-*.json`); the lane finds, reads, writes and
+    checks them like any other, and what it makes is written to `data/auto/trial/` and can never be shown, placed or
+    counted as an answer. The editor reads those records like the others (`read_auto.py --trial`,
+    `label_rows.py --trial`), and their rows go into the exam of rows.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
