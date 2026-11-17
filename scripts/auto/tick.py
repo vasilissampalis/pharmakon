@@ -21,7 +21,7 @@ below were lifted the same hour, and what limits a day is the models' free allow
 
   scout   the question store has changed since the scout last read it (scripts/auto/look.py)
   lane    a listed question's turn has come (never tried; written by an older lane; the second look: not complete and
-          the finders have found something since; no answer for a week), today's free model allowance has room for at
+          the finders have found something since; no answer since the day before), today's free model allowance has room for at
           least one answer, and fewer than LANE_A_DAY such runs were made today
   deploy  what the site is built from is not what was last published (data/auto/deploy/deployed.json), and fewer than
           DEPLOY_A_DAY publishings were made today
@@ -34,7 +34,7 @@ TICK = ROOT / "data" / "auto" / "tick.json"
 DEPLOYED = ROOT / "data" / "auto" / "deploy" / "deployed.json"
 LANE_A_DAY, DEPLOY_A_DAY = 24, 24    # (16 November 2026, 22:13: the senior author made the repository public, so GitHub's machine time is free and no longer limits a day. What limits it now is the models' free allowances: a writing run starts only when a team has room (lane.team), so this number is a ceiling, not a plan. Before that day: 4 and 8, for the paid machine time of a private repository.)
 ROOM = 1200             # neurons one answer may take: the lane starts only when today's allowance has this much left
-RETRY_DAYS = 7
+RETRY_DAYS = 1     # (17 November 2026: a question without an answer is tried again the next day, not the next week: "this should be done as fast and good as possible")
 # everything the site is built from (site/build.js and site/build_public.py read these); the machine lane's answers are counted apart
 BUILT_FROM = ["site/src", "site/build.js", "site/build_public.py", "site/public-assets", "site/worker", "site/insight/model.json", "site/insight/scope.json", "site/insight/vendor", "site/photos",
               "data/auto/lane/policy.json", "data/auto/lane/lines.json", "data/auto/names/learned.json",   # (2.9.3) the names the system learned by looking them up: a new one is a reason to publish
@@ -141,13 +141,13 @@ def selftest():
     st = {"items": {"w_1": {"status": "published", "last": old, "lane": L.LANE}, "w_2": {"status": "none", "last": new, "lane": L.LANE}}}
     assert lane_has_work(st, items, 5000, t, False) == (True, "1 listed questions are to be worked on")                    # w_3 was never tried
     st["items"]["w_3"] = {"status": "waiting", "last": new, "lane": L.LANE}; assert lane_has_work(st, items, 5000, t, False)[0] is False      # tried, waiting or too recent
-    st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t, False)[0] is True                              # no answer a week ago: tried again
+    st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t, False)[0] is True                              # no answer a day or more ago: tried again
     assert lane_has_work(st, items, 800, t, False)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=LANE_A_DAY), False)[0] is False  # no room in the allowance; the day's runs are used
     st["items"]["w_2"] = {"status": "published", "last": new, "lane": L.LANE - 1}; assert lane_has_work(st, items, 5000, t, False)[0] is True         # written by an older lane: written again
     assert deploy_needed(t, "abc", {"inputs": "abc"})[0] is False and deploy_needed(t, "abd", {"inputs": "abc"})[0] is True and deploy_needed(dict(t, deploy=DEPLOY_A_DAY), "abd", {"inputs": "abc"})[0] is False
     a = inputs(); assert len(a) == 24 and a == inputs()
     assert lane_has_work(st, items, 5000, t, "the editor's reason")[0] is False                                         # the editor's pause stops it
-    print(f"tick selftest: ok (the lane starts for a question never tried, written by an older lane or without an answer for a week, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
+    print(f"tick selftest: ok (the lane starts for a question never tried, written by an older lane or without an answer since the day before, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
 
 
 if __name__ == "__main__":

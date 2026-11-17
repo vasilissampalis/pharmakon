@@ -371,9 +371,42 @@ def rank(question, ways, cands, enc):
     return sorted(cands, key=lambda c: (-c["score"], c["epmc"]))
 
 
+_PLACE = None
+
+
+def page_names(item):
+    """(17 November 2026) The names papers may use for a drug that has no page here, for a question that brings none with it (a
+    question a visitor sent, listed by scripts/auto/ask.py). The senior author asked about kanna and Mitragyna javanica; both
+    were searched as (illicit drugs OR substance use OR psychoactive drugs) AND (kanna OR psychoactive OR euphoric ...): the
+    name was one word among the topic's, so papers about anything psychoactive came back and none about kanna. The names are
+    the ones the question itself uses (the filing's and the ones the system learned: scripts/auto/place.py), and, where the
+    page is the page of one drug, the titles the filing keeps for it (its species: "Sceletium tortuosum" for kanna).
+    [] where the question names a drug that has a page, or none."""
+    global _PLACE
+    try:
+        import place as PL
+        if _PLACE is None: _PLACE = PL.Placer()
+        got = _PLACE.place(item["q"], item.get("ways") or [])
+    except Exception: return []
+    home = got.get("home") or ""
+    if not home.startswith("new:") or got.get("drugs"): return []
+    page = home[4:]; out = [n for n in got.get("fresh") or [] if isinstance(n, str)]
+    try: F = json.load(open(ROOT / "data" / "auto" / "filing.json", encoding="utf-8"))
+    except (OSError, ValueError): F = {}
+    of_page = [n for n, v in (F.get("names") or {}).items() if isinstance(v, dict) and v.get("new") == page]
+    if len(of_page) <= 3: out += of_page + [t for t in (F.get("wiki") or {}).get(page) or [] if isinstance(t, str)]      # the page of one drug: every name of it
+    if not of_page and re.fullmatch(r"[A-Z][a-z]+ [a-z-]+", page): out.append(page)                                             # a name the system learned: the page is named after it
+    seen, names_ = set(), []
+    for n in out:
+        n = (n or "").strip()
+        if n and n.lower() not in seen: seen.add(n.lower()); names_.append(n)
+    return names_[:8]
+
+
 def find(item, names, enc, opener=None):
     """Everything found for one question (see the head of this file)."""
-    qs, groups, topics = searches(item["q"], item.get("ways") or [], names, item.get("drugs"), item.get("terms"), item.get("names"))
+    extra = item.get("names") or (page_names(item) if not item.get("drugs") else [])
+    qs, groups, topics = searches(item["q"], item.get("ways") or [], names, item.get("drugs"), item.get("terms"), extra)
     seen, log, problems = {}, [], []
     for s in qs:
         try: got, hits = epmc_search(s["query"], opener=opener, sort=s.get("sort"))
@@ -467,10 +500,12 @@ def main():
     out = ROOT / opt("--out", "data/auto/papers"); out.mkdir(parents=True, exist_ok=True)
     items = listed()
     ids = [x for x in (opt("--ids") or "").split(",") if x]; limit = int(opt("--max", "50")); t0 = time.time(); minutes = float(opt("--minutes", "0") or 0)
-    def old(w):   # not searched yet, or searched by an older finder
+    def old(w):   # not searched yet, or searched by an older finder, or searched without the name of its drug (page_names: a drug without a page)
         f = out / (w["id"] + ".json")
-        try: return int(json.load(open(f, encoding="utf-8")).get("finder") or 1) < FINDER
+        try: rec = json.load(open(f, encoding="utf-8"))
         except (OSError, ValueError): return True
+        if int(rec.get("finder") or 1) < FINDER: return True
+        return not rec.get("drugs_searched") and not w.get("drugs") and not w.get("names") and bool(page_names(w))
     # --requests DIR: the requests waiting there (papers-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
     # A request is a file in the repository, written by the editor: it is read as data here and never reaches a command line.
     if "--requests" in arg:

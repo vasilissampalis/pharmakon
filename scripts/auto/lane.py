@@ -1702,7 +1702,7 @@ def turn_of(w, done):
     if int(s.get("lane") or 1) < LANE: return 1
     newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
     if (s.get("status") == "none" or s.get("complete") is False) and newer > s.get("last", ""): return 2
-    if s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=7)).isoformat(): return 3
+    if s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=1)).isoformat(): return 3     # (17 November 2026: the next day, not the next week)
     return None
 
 
