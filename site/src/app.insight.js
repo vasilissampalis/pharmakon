@@ -1218,5 +1218,6 @@ window.pkInsight = {
   read: (t, ctx) => { const r = insRead(t, ctx || {}); return { core: r.core, depth: r.depth, note: r.note, routes: r.routes.map(x => x.kind), groups: r.groups }; },
   rank: (t, ctx) => insRank(t, ctx || {}).then(r => ({ q: r.q, core: r.core, depth: r.depth, note: r.note, emergency: r.emergency, routes: r.routes.map(x => ({ kind: x.kind, t: x.t, href: x.href, el: x.el || null, mix: x.mix || null })),
     best: r.best, related: r.related, judge: r.judge || null, want: r.want || null, unf: r.unf || "", demoted: !!r.demoted, stranger: r.stranger || "", read: r.read || [], ms: r.ms })),
+  say: (t, ctx) => insRank(t, ctx || {}).then(r => insSay(r)),   // (the words a screen reader hears: scripts/ux/say.js)
   scope: t => insScope(t), unfinished: (t, on) => insUnfinished(t, !!on), unknown: t => insUnknown(t), spell: t => insSpell(t), listed: () => (INS.list ? INS.list.ids.slice() : [])
 };
