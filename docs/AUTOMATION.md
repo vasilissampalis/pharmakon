@@ -416,9 +416,15 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       with the words rule kept as a second check. (d) Fresh test sets of thousands of real questions for each class,
       and the measured error rate written here. "Every instance" of how people write cannot be had; millions of real
       examples and a measured error rate can.
-    - *What stays as it is.* Free models only; a visitor's words are never published, never stored in the repository
-      and go to no model service but Cloudflare's; the system starts pages and writes, rewrites and takes down its own
-      answers, and never edits a checked claim.
+    - *What stays as it is.* Free models only; a visitor's words are never shown on the site as typed (the list is in
+      our own words) and go to no model service but Cloudflare's; the system starts pages and writes, rewrites and
+      takes down its own answers, and never edits a checked claim.
+    - *An open point, put to the senior author on 17 November 2026.* The scout keeps the questions people sent, cleaned
+      of links, addresses and long numbers, in its working files (`data/auto/questions.json`, `data/auto/report.json`,
+      `docs/MISSING.md`), and this repository is public. So far those files hold two questions, both his own tests. The
+      privacy text says what is sent and kept, not that the kept words can be read in a public repository. Either the
+      text says so, or the words stay in the store alone and the repository keeps our wording, the counts and a
+      fingerprint. Not changed until he decides.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
