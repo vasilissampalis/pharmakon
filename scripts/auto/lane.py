@@ -1476,6 +1476,13 @@ def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_nam
     return done("published", "passed every gate (an answer about amounts: decision 11)")
 
 
+def holds(hold_new, kind):
+    """Is what the lane writes of this kind held for the editor's reading (data/auto/lane/policy.json, hold_new)? true: everything;
+    {"answer": true, "amounts": false}: by kind (17 November 2026: the two kinds are made in two ways and are read clean at
+    different times), and a kind that is not named is held."""
+    return bool(hold_new.get(kind or "answer", True)) if isinstance(hold_new, dict) else bool(hold_new)
+
+
 # ---------- the run ----------
 def _searched(path):
     """The day a finder last searched for a question ("" where it has not)."""
@@ -1631,7 +1638,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
             print(f"lane: {w['id']}: the lane itself failed ({type(e).__name__}: {str(e)[:200]})"); print("".join(traceback.format_exc().splitlines(True)[-6:]))
             st["items"][w["id"]] = {"status": "none", "why": f"the lane itself failed on it ({type(e).__name__})", "last": TODAY, "lane": LANE, "kind": "", "complete": False, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
             json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); continue
-        try: hold = bool(json.load(open(ROOT / "data" / "auto" / "lane" / "policy.json", encoding="utf-8")).get("hold_new"))
+        try: hold = holds(json.load(open(ROOT / "data" / "auto" / "lane" / "policy.json", encoding="utf-8")).get("hold_new"), rec.get("kind"))
         except (OSError, ValueError): hold = False
         if hold and rec.get("status") == "published":                  # the editor reads the first answers of a new version of the lane before they are shown (data/auto/lane/policy.json, hold_new; scripts/editor/release_auto.py lets them out)
             rec["status"] = "waiting"; rec["held"] = "the editor's first reading of lane " + str(LANE); rec["why"] = (rec.get("why") or "") + "; held until the editor has read it (the first answers of this version of the lane)"
@@ -2026,6 +2033,7 @@ def selftest():
     assert who_of_shown("women", "17 standard drinks per week, if you are a man", "") is None and who_of_shown("adults (men and women)", "3 drinks for men", "") == "men"
     g = amount_gate({"amounts": [{"passage": 1, "quote": hse, "who": "women, men", "what": "weekly low-risk guidelines"}]}, [{"n": 1, "where": "Guidelines", "text": "To keep the risk low, " + hse + ". Alcohol is a drug."}], {"read": "page", "title": "Weekly low-risk alcohol guidelines"}, ["alcohol"])
     assert [(x["who"], x["show"]) for x in g[0]] == [("women", "do not drink more than: 11 standard drinks per week, if you are a woman"), ("men", "17 standard drinks per week, if you are a man")], g
+    assert holds(True, "amounts") and not holds(False, "answer") and not holds(None, "answer") and holds({"answer": True, "amounts": False}, "answer") and not holds({"answer": True, "amounts": False}, "amounts") and holds({"amounts": False}, None) and holds({}, "amounts")
     # (lane 12) the words that lead into a further part belong to that part; whom another amount is for belongs to that amount; a group's name that leads into the reader's quote is taken into it
     niaaa = "five or more drinks containing alcohol for males or four or more drinks containing alcohol for females"
     assert [w for w, _ in windows15(niaaa, clauses=True)] == ["five or more drinks containing alcohol for males", "four or more drinks containing alcohol for females"]       # lane 11 showed "... for males or four or more drinks" under "males"
