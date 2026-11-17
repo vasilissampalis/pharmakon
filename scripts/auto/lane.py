@@ -81,7 +81,7 @@ MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/me
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
 TRIAL = ROOT / "data" / "auto" / "trial"                                # (17 November 2026) questions that are not on the site's list, written to try the lane on what it has never seen: never shown, never placed
-LANE = 15               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 16               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -527,6 +527,41 @@ def sentence_around(text, q):
     return t[a:i + len(s) + (e.start() if e else len(t))].strip()
 
 
+# (lane 16) A source often reports what ANOTHER study found. On 17 November 2026 a review of cannabis and lung cancer said in its
+# discussion "A meta-analysis in 2019 ... found no significant association ... However, long-term marijuana use (over 10 years) was
+# associated with ... testicular germ cell tumors", and the lane wrote "A 2026 review found a potential link between ... long-term use
+# over 10 years and testicular tumors": true to the quoted words, wrong about who found it; the second reader accepted it twice.
+CITED = re.compile(r"\b(?:a|an|another|one|two|three|several|some|many|most|recent|previous|earlier|prior|other|these|those)\s+(?:[\w-]+\s+){0,3}(?:meta-analys[ie]s|systematic reviews?|reviews?|stud(?:y|ies)|trials?|surveys?|reports?|analys[ie]s|cohorts?|investigations?|experiments?|authors?|researchers?)\b[^.;]{0,90}\b(?:found|showed|shown|reported|observed|evaluated|concluded|suggested|demonstrated|indicated|noted|described|examined|revealed)\b"
+                   r"|\baccording to\s+(?:a|an|one|the|another|recent|earlier|some|several)\b"
+                   r"|(?-i:\b[A-Z][a-z]+(?:\s+et al|\s+and\s+[A-Z][a-z]+|\s+and colleagues))\s*(?:\(\d{4}\)|\[\d+\])?,?\s+(?:found|showed|reported|observed|concluded|suggested|demonstrated|noted|described)\b"
+                   r"|\b(?:reports|studies|data|evidence|findings|research)\s+(?:suggests?|shows?|indicates?|have shown|has shown|have found|found|report)\b", re.I)
+OWN_FRAME = re.compile(r"\b(?:we|our|ours)\b|\b(?:this|the present|the current|present|current)\s+(?:systematic\s+|narrative\s+|scoping\s+|literature\s+)?(?:study|review|meta-analysis|analysis|survey|trial|paper|work|report|article|investigation)\b|\bin this (?:study|review|paper|article|work)\b", re.I)
+CONTINUES = re.compile(r"^(?:however|moreover|furthermore|in addition|additionally|also|similarly|likewise|conversely|in contrast|by contrast|they|the authors|it also|these|those|evidence|nevertheless|notably|specifically|in particular|but|and|yet)\b", re.I)
+OWN_FIND = re.compile(r"\b(?:a|the|this|one)\s+(?:\d{4}\s+)?(?:systematic\s+|literature\s+|narrative\s+|recent\s+|large\s+|small\s+|online\s+)?(?:review|meta-analysis|study|survey|trial|paper|analysis|report)\b(?:\s+of\s+[^.,;]{0,50})?\s+(?:found|finds|showed|shows|concluded|concludes|observed|observes|demonstrated|established|confirmed|proved)\b", re.I)
+SECOND_SAID = re.compile(r"\b(?:cit(?:es|ed|ing)|earlier|previous|prior|another|other (?:stud(?:y|ies)|analys[ie]s|reviews?|research)|in (?:one|a|an|some|several|a few|recent|earlier|other|two|three) (?:[\w-]+ )?(?:stud(?:y|ies)|analys[ie]s|reviews?|surveys?|trials?|reports?)|studies (?:in|of|that|which|it)|reports? (?:that )?(?:an?|one|some|several|earlier|other)\s+(?:[\w-]+ )?(?:stud|analys|review|survey|trial|meta))", re.I)
+_ABBR_DOT = re.compile(r"\b(et al|e\.g|i\.e|vs|cf|approx|fig|no)\.", re.I)
+
+
+def second_hand(text, q):
+    """Does the source report these words from another study, by the passage they stand in? Yes when the sentence of the
+    quote names another study as the finder ("A meta-analysis in 2019 ... found", "According to a study of ...", "Kipping
+    and Lynn found"), or goes on from such a sentence ("However, ...", "Evidence for ..."), up to three sentences back. No
+    when a sentence on the way speaks of the source's own work ("we", "this review", "the present study")."""
+    undot = lambda x: _ABBR_DOT.sub(lambda m: m.group(0)[:-1], x)
+    t = undot(norm(text)); s = undot(norm(q)).strip(' ."\'…'); i = t.find(s)
+    if i < 0 or not s: return False
+    spans = [(m.start(), m.end()) for m in re.finditer(r"[^.!?]+(?:[.!?]+|$)", t)]
+    k = next((n for n, (a, b) in enumerate(spans) if a <= i < b), None)
+    if k is None: return False
+    for _ in range(4):
+        x = t[spans[k][0]:spans[k][1]].strip()
+        if OWN_FRAME.search(x): return False
+        if CITED.search(x): return True
+        if k == 0 or not CONTINUES.match(x): return False
+        k -= 1
+    return False
+
+
 def widen(q, among):
     """(lane 11) A quote too short to be found for sure (a cell of a table: "400 mg") is widened to the clause it stands in
     (a row of the table, a sentence), when it stands in ONE place of the passages it may come from and that clause is short:
@@ -755,8 +790,9 @@ def writer_prompt(question, sources, examples, fix="", plan=None):
         if s["read"] == "page": lines.append(f"OFFICIAL PAGE {s['tag']}: \"{s['title']}\", a page of {s['name']}" + (f" ({s['year']})" if s.get("year") else "") + f". When you use it, name the body: \"{s['short'][0].upper() + s['short'][1:]} says\".")
         else: lines.append(f"PAPER {s['tag']}{' (ONLY ITS SUMMARY COULD BE READ)' if s['read'] == 'summary' else ''}: {s['title']} ({s.get('year') or 'n.d.'}). {('A review or meta-analysis.' if s['kind'] == 'review' else 'A case report: one person or a few.' if s['kind'] == 'case' else 'A single study.')}")
         if s.get("design"): lines.append(f"  [D{s['tag']}] what it is and who was studied: {s['design']['text']} (the paper's words: {s['design']['quote']})")
-        for f in s["findings"]: lines.append(f"  [{f['id']}] {f['text']} (the paper's words: {f['quote']})")
-        for l in s["limits"]: lines.append(f"  [{l['id']}] a limit the paper states: {l['text']} (the paper's words: {l['quote']})")
+        other = lambda x: " (IT REPORTS THIS FROM ANOTHER STUDY: never say that this source found it; say that it reports or cites an earlier study, or \"in one study\")" if x.get("second_hand") else ""
+        for f in s["findings"]: lines.append(f"  [{f['id']}] {f['text']} (the paper's words: {f['quote']})" + other(f))
+        for l in s["limits"]: lines.append(f"  [{l['id']}] a limit the paper states: {l['text']} (the paper's words: {l['quote']})" + other(l))
     ex = "\n\n".join(f"Question: {e['q']}\nshort: {e['short']}\nbut: {e['but']}\nhow: " + " | ".join(e["how"][:3]) for e in examples)
     return (f"QUESTION that people ask: {question}\n\nWHAT THE SOURCES SAY (each item has a label in square brackets):\n" + "\n".join(lines) + "\n\n"
             "HOW THE SITE WRITES (three answers from the site, for the form only, not for their facts):\n" + ex + "\n\n"
@@ -794,25 +830,47 @@ CHECKER_SYS = ("You check sentences against the passages of research papers they
                "nothing you know from elsewhere counts. You answer with JSON only.")
 
 
+OPENER = re.compile(r"^(Yes|No)\s*[.,:;]\s+|^(Sometimes|It depends|Not known|It is not known|Nobody knows|We do not know|It can|It may|Probably|Possibly|Rarely|Usually|Often|Partly|Mostly|Likely|Unlikely)\s*[.:;]\s+", re.I)
+
+
+def opener_of(text):
+    """(the word a short answer opens with, the rest as a sentence) where that word stands apart from what follows ("It
+    depends. Cannabis smoke has ...", "Yes, it can ..."), else ("", the text). Lane 16: on 17 November 2026 the second
+    reader refused "It depends." as "not stated in any passage", though it had been told that the word answers the
+    question; the writer then left the word out and broke the rule that asks for it, and no answer was written for the
+    senior author's own question (Does cannabis cause cancer?). The word is no longer part of the sentence the readers set
+    beside the passages: it is judged apart, as the answer to the question (checker_prompt, "opening")."""
+    t = str(text).strip(); m = OPENER.match(t)
+    if not m: return "", text
+    rest = t[m.end():]
+    if len(rest.split()) < 4: return "", text
+    return (m.group(1) or m.group(2)), rest[:1].upper() + rest[1:]
+
+
 def checker_prompt(parts, labels, question=None, each=None):
-    blocks = []
+    blocks = []; opening = ""
     for n, p in enumerate(parts, 1):
         ps = "\n".join(f"   PASSAGE ({labels[u]['paper']}; {labels[u]['where']}): {labels[u]['passage_text'][:PASSAGE_CHARS]}" for u in p["uses"])
-        blocks.append(f"{n}. SENTENCE: {p['text']}\n{ps}")
+        text = p["text"]
+        if n == 1 and not each and p.get("part", "short") == "short": opening, text = opener_of(text)
+        blocks.append(f"{n}. SENTENCE: {text}\n{ps}")
     return ("For each numbered SENTENCE below, decide whether its PASSAGES support it. Supported means ALL of this: everything the sentence says is stated in its passages; "
             "it is about the same people, animals or setting; every number is the same; it is not stronger or more certain than the passages; it does not say one thing causes another "
             "where the passages only report a link; it does not turn what one study found into a general fact; where the passages say \"can\" or \"may\" it does not say \"often\" or \"usually\", and it does not leave out words that narrow the passage (\"usually in those already susceptible\", \"in some people\", \"after long use\"). If any part of the sentence is not in the passages, it is not supported. "
             "Each passage is named with its source's title: when a passage speaks of \"the studies\", \"the evidence\" or \"the articles\", it means the ones that source looked at (see its title), "
             "so a sentence that makes it about something else is not supported.\n\n"
             + "\n\n".join(blocks)
-            + ("\n\nSentence 1 may open with one of the words Yes, No, It can, Sometimes, It depends or Not known: the site answers a yes-or-no question that way. That word is the answer to the QUESTION, "
-               "not a claim to look for in the passages: accept it when what the passages say bears that answer out; refuse it, and say what the passages say instead, only when they point another way or are less sure than the word."
+            + ((f"\n\nOn the site the answer opens with the word “{opening}”, before sentence 1: a yes-or-no question is answered that way. That word is not part of sentence 1 and is not a claim to look for in the passages: it is the answer to the QUESTION. "
+                f"\"opening\": is “{opening}” a fair answer to the QUESTION, given what the passages of sentences 1 and 2 say (true)? It is not (false) when they point another way, or are less sure or more sure than that word; then say in \"why\" which word would be fair."
+                if opening else
+                "\n\nSentence 1 may open with one of the words Yes, No, It can, Sometimes, It depends or Not known: the site answers a yes-or-no question that way. That word is the answer to the QUESTION, "
+                "not a claim to look for in the passages: accept it when what the passages say bears that answer out; refuse it, and say what the passages say instead, only when they point another way or are less sure than the word.")
                if question else "")
             + (f"\n\nThen judge the answer as a whole. QUESTION that was asked: {question}\n"
                '"answers_question": does sentence 1 answer that QUESTION itself, directly (true), or does it answer a neighbouring question or only talk around it (false)?\n'
                '"but_fits": is sentence 2 a limit or a doubt about what sentence 1 says (true), or is it about something else (false)? It is about something else when its source states the limit about ITS OWN subject and that subject is not what sentence 1 says: '
                'for example, a review of treatments says that the studies of those treatments were weak; that is no limit of an answer about whether dependence happens.'
-               '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}], "answers_question": true, "but_fits": true, "why": ""}' if question else
+               '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}], ' + ('"opening": true, ' if opening else "") + '"answers_question": true, "but_fits": true, "why": ""}' if question else
                f"\n\nQUESTION that was asked: {each}\nFor every sentence also give \"on_question\": is the amount it states an amount of the kind the QUESTION asks for (true), or of another kind, for example an amount called high-risk when the question asks what is called low-risk, or what a drink contains when the question asks how much people drink (false)? A limit for one day or for one occasion that the same guidance gives beside its weekly amount is of the kind asked."
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "on_question": true, "problem": ""}, {"n": 2, "supported": false, "on_question": true, "problem": "what the passages do not say"}]}' if each else
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}]}'))
@@ -952,19 +1010,30 @@ def check(chat, model, parts, labels, question=None, whole=None, each=None):
     for attempt in range(2):
         out = llm.as_json(chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels, question, each)}], room_for(model, 120) + 90 * len(parts) + (80 if question else 0)))
         vs = {v.get("n"): v for v in (out or {}).get("verdicts") or [] if isinstance(v, dict)}
-        if out is not None and all(isinstance(vs.get(n, {}).get("supported"), bool) for n in range(1, len(parts) + 1)):
+        # (lane 16) the opening word of the short answer was judged apart, as the answer to the question: its verdict must be there too
+        opening = opener_of(parts[0]["text"])[0] if question and parts and not each and parts[0].get("part", "short") == "short" else ""
+        if out is not None and all(isinstance(vs.get(n, {}).get("supported"), bool) for n in range(1, len(parts) + 1)) and (not opening or isinstance(out.get("opening"), bool)):
             if whole is not None:
                 whole.update(answers=out.get("answers_question") if isinstance(out.get("answers_question"), bool) else None, but_fits=out.get("but_fits") if isinstance(out.get("but_fits"), bool) else None, why=re.sub(r"\s+", " ", str(out.get("why") or ""))[:240])
-            return [(vs[n]["supported"] is True and not (each and vs[n].get("on_question") is False),
-                     re.sub(r"\s+", " ", str(vs[n].get("problem") or "") or ("not an amount of the kind the question asks for" if each and vs[n].get("on_question") is False else ""))[:240]) for n in range(1, len(parts) + 1)]
+                if opening: whole["opening"] = [opening, out["opening"]]
+            got = [(vs[n]["supported"] is True and not (each and vs[n].get("on_question") is False),
+                    re.sub(r"\s+", " ", str(vs[n].get("problem") or "") or ("not an amount of the kind the question asks for" if each and vs[n].get("on_question") is False else ""))[:240]) for n in range(1, len(parts) + 1)]
+            if opening and out["opening"] is False and got[0][0]:
+                got[0] = (False, (f"the word it opens with (“{opening}”) is not the answer the passages bear out" + (": " + re.sub(r"\s+", " ", str(out.get("why") or "")) if out.get("why") else ""))[:240])
+            return got
     return [(False, "the checker gave no clear verdict")] * len(parts)
 
 
 # ---------- 5 rules ----------
+FORMS = r"wax|shatter|dabs?|concentrates?|flower|buds?|edibles?|gummies|tinctures?|oils?|hash(?:ish)?|resin|cartridges?|carts|vapes?|joints?|blunts?|bongs?|powder|crystals?|rocks?|pills?|tablets?|capsules?|blotters?|liquid|patch(?:es)?|lozenges?|sprays?"
+WANTED = r"satisfaction|pleasure|high|euphoria|enjoyment|effects?|functioning|function|arousal|orgasms?|libido|desire|energy|focus|creativity|relaxation|buzz|rush|trip"
 RULES = [
     ("an amount of a drug", re.compile(r"\b\d+(?:[.,]\d+)?\s?(?:mg|milligrams?|µg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|mg/kg|iu|ounces?|oz)\b|\b\d+(?:[.,]\d+)?\s?(?:pills?|tablets?|tabs?|capsules?|lines?|hits?|drops?|puffs?|joints?|shots?|bumps?|blotters?)\b", re.I)),
     ("timing between uses", re.compile(r"\bre-?dos\w*|\b(?:wait|space)\w*\s+(?:at least\s+)?\d|\bevery\s+\d+\s+(?:minutes?|hours?)\b|\b\d+\s+(?:minutes?|hours?)\s+(?:before|after|apart)\s+(?:taking|using|the (?:first|last|next))", re.I)),
     ("a way of taking compared for strength", re.compile(r"\b(?:snort\w*|inject\w*|smok\w*|swallow\w*|plugg\w*|boof\w*|vap\w*|eaten|eating)\b[^.]{0,70}\b(?:stronger|faster|harder|more intense|more potent|better high)\b|\b(?:stronger|faster|more intense|more potent)\b[^.]{0,50}\b(?:when|if)\s+(?:snorted|injected|smoked|swallowed|vaped|eaten)\b", re.I)),
+    # (lane 16) 17 November 2026: "with wax and flower forms linked to higher satisfaction" passed every reader. The forms of a drug
+    # compared for an effect people want is what the site keeps for the section the senior author approves himself (Section 7).
+    ("a form of a drug compared for a wanted effect", re.compile(r"\b(?:" + FORMS + r")\b[^.]{0,80}\b(?:higher|increased|greater|better|stronger|improved|more|most|best)\b[^.]{0,30}\b(?:" + WANTED + r")\b|\b(?:higher|increased|greater|better|stronger|improved|more|most|best)\b[^.]{0,30}\b(?:" + WANTED + r")\b[^.]{0,60}\b(?:with|from|for|using|after|on)\s+(?:the\s+)?(?:" + FORMS + r")\b", re.I)),
     ("how to prepare or take a drug", re.compile(r"\b(?:crush(?:ed|ing)?|dissolv\w*|cook(?:ed|ing)? (?:it|the)|extract\w* (?:it|the)|filter\w* (?:it|the)|hold (?:it )?under the tongue|on an empty stomach)\b", re.I)),
     ("making an effect stronger", re.compile(r"\bpotentiat\w*|\b(?:boost|enhanc|intensif|strengthen)\w*\s+(?:the\s+)?(?:high|effects?|trip)\b|\bmak\w+\s+(?:it|the high|the effects?|the trip)\s+(?:stronger|last longer|more intense)\b", re.I)),
     ("advice or a promise of safety", re.compile(r"\byou\s+(?:should|must|need to|ought to|can safely|had better)\b|\b(?:it is|it's|is|are)\s+(?:completely |totally |perfectly |generally |relatively )?safe\b|\bsafe to\s+(?:take|use|mix|combine|drink|smoke)\b|\bharmless\b|\brisk-free\b|\bno risk\b|\bwe (?:recommend|advise|suggest)\b", re.I)),
@@ -1138,6 +1207,10 @@ def rules(parts, labels, years=(), asked=()):
             m = rx.search(p["text"])
             if m: bad.append((p["part"], f"{what} (“{m.group(0)}”)"))
         if words(p["text"]) > LIMITS.get(p["part"], 40): bad.append((p["part"], f"too long ({words(p['text'])} words)"))
+        # (lane 16) what a source reports from another study is not what that source found
+        cited = [u for u in p["uses"] if labels[u].get("second_hand")]; m = OWN_FIND.search(p["text"])
+        if cited and m and not SECOND_SAID.search(p["text"]):
+            bad.append((p["part"], f"it says its source found (“{m.group(0)}”) what that source only reports from another study ({', '.join(cited)}): say that the source reports or cites an earlier study that found it, or “in one study”"))
         have = set().union(*[numbers(labels[u]["quote"]) for u in p["uses"]])
         known = [labels[u] for u in p["uses"] if "year" in labels[u]]                       # (labels that say which year their source is of; where none does, as before: any source's year)
         own = {str(l["year"]) for l in known if l.get("year")} if known else all_years
@@ -1375,8 +1448,8 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     labels, n_f, n_l = {}, 0, 0
     for s in sources:
         if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][s["design"]["passage"]])
-        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][f["passage"]])
-        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; labels[l["id"]] = dict(l, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][l["passage"]])
+        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; f["second_hand"] = second_hand(s["_text"][f["passage"]], f["quote"]); labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][f["passage"]])
+        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; l["second_hand"] = second_hand(s["_text"][l["passage"]], l["quote"]); labels[l["id"]] = dict(l, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][l["passage"]])
     keep_sources()
     if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service")
     ex = ex if ex is not None else examples()
@@ -1429,11 +1502,16 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         gap = []                                                         # the further readers of the team that could not be asked about THIS draft
         for k in sorted(k for k in models if re.fullmatch(r"also\d+", k)):
             if any(not v[0] for p, v in zip(draft["parts"], verdicts) if p["part"] in ("short", "but")): break
-            try: more = check_marks(chat, models[k].split("#")[0], draft["parts"], labels) if models[k].endswith("#marks") else check(chat, models[k], draft["parts"], labels)
-            except (llm.Unavailable, llm.Budget) as e:                     # a free service that is busy or used up must not cost the answer: what the other judges said stands, and the answer waits for this reader
-                rec.setdefault("panel", {})[models[k]] = "could not be asked: " + re.sub(r"\s+", " ", str(e))[:160]; gap.append(base(models[k])); continue
-            rec.setdefault("panel", {})[models[k]] = {p["part"]: [bool(w[0]), w[1]] for p, w in zip(draft["parts"], more)}
-            verdicts = [((v[0] and w[0]), v[1] if not v[0] else ("" if w[0] else f"a further reader ({base(models[k])}) did not accept it: {w[1] or 'it gave no reason'}")) for v, w in zip(verdicts, more)]
+            # (lane 16) a place that names several models: where the first cannot be asked (busy, or its day's free calls are used up, as
+            # Gemini 4 Hydrogen's were on 17 November 2026 for the senior author's own question), the next one named for that place is asked
+            more = asked = None
+            for mdl in [models[k]] + [x for x in str(models.get(k + "_else") or "").split("|") if x]:
+                try: more = check_marks(chat, mdl.split("#")[0], draft["parts"], labels) if mdl.endswith("#marks") else check(chat, mdl, draft["parts"], labels); asked = mdl; break
+                except (llm.Unavailable, llm.Budget) as e:                 # a free service that is busy or used up must not cost the answer: what the other judges said stands, and the answer waits for this reader
+                    rec.setdefault("panel", {})[mdl] = "could not be asked: " + re.sub(r"\s+", " ", str(e))[:160]
+            if asked is None: gap.append(base(models[k])); continue
+            rec.setdefault("panel", {})[asked] = {p["part"]: [bool(w[0]), w[1]] for p, w in zip(draft["parts"], more)}
+            verdicts = [((v[0] and w[0]), v[1] if not v[0] else ("" if w[0] else f"a further reader ({base(asked)}) did not accept it: {w[1] or 'it gave no reason'}")) for v, w in zip(verdicts, more)]
         if rec.get("panel"): rec["gates"]["panel"] = "further readers, each of which must accept every sentence too: " + "; ".join(f"{base(m)} accepted {sum(1 for x in vs.values() if x[0])} of {len(vs)}" if isinstance(vs, dict) else f"{base(m)} {vs}" for m, vs in rec["panel"].items())
         rec["panel_gap"] = gap
         # 4b our own checker (decision 23): a second judge that must also accept every sentence a model wrote. Its word counts like the
@@ -1639,11 +1717,11 @@ def team(file=None, only=None):
                 for planner in planners:                                   # (lane 10: "planner_else", as for the reader and the second reader: the plan is made where there is room)
                     m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
                     if planner: m["planner"] = planner
-                    also, lacking = [], False                             # (lane 10) further second readers: a team that names them is that team only with all of them
+                    also, lacking, rest = [], False, {}                   # (lane 10) further second readers: a team that names them is that team only with all of them
                     for a in (t.get("also") or []) if isinstance(t.get("also"), list) else []:
                         if isinstance(a, list):                               # one place, several models: the first that has a key and room today (the strong free models have 20 calls a day each)
                             pick = next((x for x in a if isinstance(x, str) and x and llm.has(x.split("#")[0]) and x not in also and (llm.calls_fit({x.split("#")[0]: CALLS["also#marks" if x.endswith("#marks") else "also"]}) if llm.service_of(x)[0] else True)), None)
-                            if pick: also.append(pick)
+                            if pick: also.append(pick); rest[len(also)] = [x for x in a[a.index(pick) + 1:] if isinstance(x, str) and x and llm.has(x.split("#")[0]) and base(x.split("#")[0]) not in (base(t.get("writer") or ""), base(checker or ""))]   # (lane 16) the others named for this place, asked in turn where the first cannot be
                             else: lacking = True
                         elif isinstance(a, str) and a: also.append(a)
                     if lacking: continue
@@ -1661,7 +1739,7 @@ def team(file=None, only=None):
                     if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
                     if not llm.calls_fit(calls): continue                   # (each model of a call-counted service has its own free allowance: llm.limits_of)
                     other = next((r for r in (t.get("reader"), t.get("reader_else")) if isinstance(r, str) and r and r != m["reader"] and llm.has(r) and base(r) not in (base(m["writer"]), base(m["checker"]))), None)
-                    return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}))
+                    return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}), **{f"also{n}_else": "|".join(r) for n, r in rest.items() if r})
     return None
 
 
@@ -1821,7 +1899,7 @@ def selftest():
         "how": how or [{"text": "A review of 12 studies of 2,405 people who used ketamine regularly found that between 9% and 27% met criteria for dependence.", "uses": ["DA", "F1"]},
                        {"text": "With frequent use, tolerance came quickly and many people described cravings and trouble stopping.", "uses": ["F2"]}], "complete": True, "missing": ""}
     ok_short = "Yes. In a review of studies, between 9% and 27% of people who used ketamine regularly met criteria for dependence."
-    V = lambda *xs: {"verdicts": [{"n": i + 1, "supported": x is True, "problem": "" if x is True else x} for i, x in enumerate(xs)]}
+    V = lambda *xs: {"verdicts": [{"n": i + 1, "supported": x is True, "problem": "" if x is True else x} for i, x in enumerate(xs)], "opening": True}
     item = {"id": "w_0024", "q": "Can you get addicted to ketamine?", "ways": ["is ketamine addictive"]}
     ex = [{"q": "Q?", "short": "S.", "but": "B.", "how": ["H1.", "H2."]}] * 3
     mk = lambda it=item: make(it, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
@@ -2024,6 +2102,24 @@ def selftest():
     calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found, chat_gap, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
     assert r["status"] == "waiting" and "a further reader of its team could not be (gemma-4-31b-it)" in r["why"] and r["panel"]["gemini:gemma-4-31b-it"].startswith("could not be asked") and "could not be asked" in r["gates"]["panel"] and len(r["parts"]) >= 4, (r["status"], r["why"], r["gates"])
+    # (lane 16) where the place names more than one model, the next one is asked: the answer does not wait, and the record says who could not be asked and who read it
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), V(True, True, True, True)]
+    r = make(item, found, chat_gap, Enc(), dict(M2, also1_else="gemini:gemini-3.8-flash|gemini:gemini-3.6-flash"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and not r.get("panel_gap") and r["panel"]["gemini:gemma-4-31b-it"].startswith("could not be asked") and r["panel"]["gemini:gemini-3.8-flash"]["short"][0] is True and "gemini:gemini-3.6-flash" not in r["panel"], (r["status"], r["why"], r.get("panel"))
+    assert [c[1] for c in calls if c[0] == "checker"] == [MODELS["checker"], "gemini:gemini-3.8-flash"]
+    # (lane 16) the word a short answer opens with is not part of the sentence the readers set beside the passages; the second reader judges it apart, as the answer to the question
+    assert opener_of(ok_short) == ("Yes", "In a review of studies, between 9% and 27% of people who used ketamine regularly met criteria for dependence.")
+    assert opener_of("It depends. Cannabis smoke has cancer-causing chemicals.") == ("It depends", "Cannabis smoke has cancer-causing chemicals.") and opener_of("No, the studies found no such link in people.")[0] == "No"
+    assert opener_of("It can improve perceived sexual functioning for men and women.")[0] == "" and opener_of("Yes. It can.")[0] == "" and opener_of("Sometimes, in some people, it does so after long use.")[0] == ""
+    lab1 = {"F1": {"paper": "P", "where": "Results", "passage_text": "between 9% and 27% met criteria", "quote": "between 9% and 27% met criteria"}}
+    cp = checker_prompt([{"part": "short", "text": ok_short, "uses": ["F1"]}, {"part": "but", "text": "B.", "uses": ["F1"]}], lab1, question="Can you get addicted to ketamine?")
+    assert "1. SENTENCE: In a review of studies" in cp and "SENTENCE: Yes." not in cp and "opens with the word “Yes”" in cp and '"opening": true, "answers_question"' in cp, cp[:300]
+    cp = checker_prompt([{"part": "short", "text": ok_short, "uses": ["F1"]}], lab1); assert "1. SENTENCE: In a review of studies" in cp and "opening" not in cp      # a further reader sees the sentence without the word, and is not asked about it
+    calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [dict(V(True, True, True, True), opening=False, why="the passages only say that some people do: It can")] * 3
+    r = mk(); assert r["status"] == "none" and "the word it opens with (“Yes”) is not the answer the passages bear out: the passages only say that some people do: It can" in r["gates"]["check"], (r["status"], r["why"], r["gates"]["check"])
+    assert "the word it opens with (“Yes”) is not the answer the passages bear out" in [c for c in calls if c[0] == "writer"][1][2]                 # and the writer is told so when it writes again
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [{"verdicts": V(True, True, True, True)["verdicts"]}, V(True, True, True, True)]          # no word on the opening: asked once more
+    r = mk(); assert r["status"] == "published" and len([c for c in calls if c[0] == "checker"]) == 2, (r["status"], r["why"])
     # 5. a question about dying: written, checked, and it waits for a person
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk({"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}); assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
@@ -2304,8 +2400,23 @@ def selftest():
     assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
     assert stakes("Is ketamine addictive?", [{"text": "Some people who use it become dependent."}]) == "" and stakes("Do psychedelics and antidepressants interact?", []) == "mixing drugs" and stakes("x", [{"text": "It can be fatal."}]) == "dying"
     assert not rules([{"part": "short", "text": "Between 9% and 27% of people met criteria for dependence.", "uses": ["F1"]}], {"F1": {"quote": "between 9% and 27% met criteria"}})
-    for bad in ("Take it 2 hours after the first dose.", "It is generally safe.", "Snorting it hits faster and stronger.", "Addicts relapse.", 'The paper says "yes".', "You should wait.", "It potentiates the high.", "Passages show a link."):
+    for bad in ("Take it 2 hours after the first dose.", "It is generally safe.", "Snorting it hits faster and stronger.", "Addicts relapse.", 'The paper says "yes".', "You should wait.", "It potentiates the high.", "Passages show a link.",
+                "A 2023 online survey of adults who used cannabis found both men and women saw benefits, with wax and flower forms linked to higher satisfaction.", "People reported a stronger high from edibles."):      # (lane 16) forms compared for a wanted effect
         assert rules([{"part": "short", "text": bad, "uses": ["F1"]}], {"F1": {"quote": "2"}}), bad
+    assert not [w for p, w in rules([{"part": "how1", "text": "Edibles were linked to more emergency visits than smoked cannabis in one study.", "uses": ["F1"]}], {"F1": {"quote": "more emergency visits"}}) if "form of a drug" in w]   # a risk fact about a form is not that
+    # (lane 16) what a source reports from another study is not what that source found
+    disc = ("Our pooled analysis of cohort studies showed a statistically significant relationship. A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers. "
+            "However, long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors (TGCT), particularly nonseminoma TGCT. Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels. In this review, we found a potential association with lung cancer.")
+    assert second_hand(disc, "long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors") and second_hand(disc, "Evidence for other cancers, including lung cancer, was inconclusive") and second_hand(disc, "found no significant association between ever using marijuana")
+    assert not second_hand(disc, "we found a potential association with lung cancer") and not second_hand(disc, "Our pooled analysis of cohort studies showed a statistically significant relationship") and not second_hand("Smoke from cannabis has many of the same toxins as tobacco smoke.", "Smoke from cannabis has many of the same toxins")
+    assert second_hand("According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm.", "cannabis use before partnered sex eased reaching orgasm") and second_hand("In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function.", "moderate doses of cannabis improved female sexual function")
+    assert second_hand("Smith et al. (2019) reported that half of the sample relapsed. They also noted cravings in most.", "They also noted cravings in most") and not second_hand("Results from this study indicated that both men and women see benefits.", "both men and women see benefits") and not second_hand("Men and women reported benefits.", "Men and women reported benefits")
+    L2 = {"F2": {"quote": "a potential association between marijuana smoking and an increased risk of lung cancer", "second_hand": False}, "F4": {"quote": "long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors", "second_hand": True}}
+    told = rules([{"part": "how2", "text": "A 2026 review found a potential link between smoking marijuana and lung cancer, and long-term use over 10 years and testicular tumors.", "uses": ["F2", "F4"]}], L2, years=[2026])
+    assert len(told) == 1 and "what that source only reports from another study (F4)" in told[0][1], told
+    assert not rules([{"part": "how2", "text": "A 2026 review found a potential link between smoking marijuana and lung cancer. It cites an earlier analysis that linked long-term use over 10 years to testicular tumors.", "uses": ["F2", "F4"]}], L2, years=[2026])
+    assert not rules([{"part": "how2", "text": "A 2026 review found a potential link between smoking marijuana and lung cancer.", "uses": ["F2"]}], L2, years=[2026]) and not rules([{"part": "short", "text": "In one study, long-term use was linked to testicular tumors.", "uses": ["F4"]}], L2)
+    assert "IT REPORTS THIS FROM ANOTHER STUDY" in writer_prompt("Q?", [{"read": "full", "tag": "A", "title": "T", "year": 2026, "kind": "review", "design": None, "findings": [{"id": "F4", "text": "x", "quote": "y", "second_hand": True}, {"id": "F2", "text": "x", "quote": "y", "second_hand": False}], "limits": []}], ex).split("[F4]")[1].split("[F2]")[0]
     print("lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; "
           "a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; "
           "an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, "

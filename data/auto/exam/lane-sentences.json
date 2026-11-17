@@ -1,7 +1,7 @@
 {
  "_note": "The exam of the lane's own sentences (decision 23; docs/AUTOMATION.md): every sentence the system wrote that the editor has read against the words it rests on, with the editor's verdict by the blind checkers' standard (good: the sentence says only what those words say; not good: it says something they do not carry, however small: a word of how often or how sure, a cause where the source reports, a hedge left out, a thing from elsewhere). Leaving something out is not counted as wrong. A checker of our own sits this exam beside the quiz cards' exam (data/auto/exam/cards.json), because this is the lane's real task. It grows with every batch the editor reads (scripts/editor/label_auto.py). The words a sentence rests on are the quotes the record keeps (the lane itself also sees the passage around them); 'passages' gives each quote with its source's name and its place, as the lane's own second reader sees them: a sentence may say 'Health Canada says' or 'a 2024 review' only because its source is named there.",
- "good": 24,
- "bad": 10,
+ "good": 42,
+ "bad": 14,
  "items": [
   {
    "id": "au_w_0001#short~8150e6",
@@ -942,6 +942,602 @@
    "what": "",
    "read_on": "2026-11-17",
    "read_by": "the AI co-editor (Claude Fable 5.2)"
+  },
+  {
+   "id": "au_w_0041#t1.short~de2ba1",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "It depends. Cannabis smoke has cancer-causing chemicals, and smoking it is linked to a higher risk of lung cancer.",
+   "rests_on": [
+    "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+    "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+   ],
+   "passages": [
+    {
+     "source": "Centers for Disease Control and Prevention: Cannabis and Lung Health",
+     "where": "Lung health and smoking cannabis",
+     "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke."
+    },
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Conclusion",
+     "quote": "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+    }
+   ],
+   "good": false,
+   "what": "the source says a potential association with lung cancer; 'is linked to a higher risk' leaves the hedge out",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t1.but~ac61da",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels and limited data on marijuana-only users.",
+   "rests_on": [
+    "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels, poor exposure assessment, and limited data on marijuana-only users."
+   ],
+   "passages": [
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Discussion",
+     "quote": "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels, poor exposure assessment, and limited data on marijuana-only users."
+    }
+   ],
+   "good": true,
+   "what": "true to its words; they report an earlier analysis that the review cites, which the sentence does not say",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "refused by a rule: a rule: words that are not person-first (“users”)"
+  },
+  {
+   "id": "au_w_0041#t1.how1~cf5fb3",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "The US Centers for Disease Control and Prevention says cannabis smoke has many of the same cancer-causing chemicals as tobacco smoke.",
+   "rests_on": [
+    "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke."
+   ],
+   "passages": [
+    {
+     "source": "Centers for Disease Control and Prevention: Cannabis and Lung Health",
+     "where": "Lung health and smoking cannabis",
+     "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t1.how2~27c9ac",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "A 2026 review found a potential link between smoking marijuana and lung cancer, and long-term use over 10 years and testicular tumors.",
+   "rests_on": [
+    "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship.",
+    "However, long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors (TGCT), particularly nonseminoma TGCT."
+   ],
+   "passages": [
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Conclusion",
+     "quote": "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+    },
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Discussion",
+     "quote": "However, long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors (TGCT), particularly nonseminoma TGCT."
+    }
+   ],
+   "good": false,
+   "what": "the testicular finding is an earlier meta-analysis's (2019) that this review cites; the sentence says the 2026 review found it",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t1.how3~bac222",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "A 2026 review says the link between cannabis and DNA damage is still poorly defined, with some suggesting CBD may cause it.",
+   "rests_on": [
+    "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis."
+   ],
+   "passages": [
+    {
+     "source": "Medical Cannabis and the Hallmarks of Cancer: A Critical Narrative Review (2026)",
+     "where": "11. Hallmark Enabling Characteristics › 11.1. Loss of Genomic Integrity—Gene Mutations and CIN",
+     "quote": "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t2.short~62828d",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "It depends. The US Centers for Disease Control and Prevention says cannabis smoke has cancer-causing chemicals. A 2026 review found a potential link between smoking it and lung cancer.",
+   "rests_on": [
+    "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+    "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+   ],
+   "passages": [
+    {
+     "source": "Centers for Disease Control and Prevention: Cannabis and Lung Health",
+     "where": "Lung health and smoking cannabis",
+     "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke."
+    },
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Conclusion",
+     "quote": "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+    }
+   ],
+   "good": true,
+   "what": "the sentence after its opening word says only what the two sources say; the second reader refused the opening word, which lane 16 judges apart",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "refused by the second reader: The sentence includes the phrase \"It depends.\" which is not stated in any passage."
+  },
+  {
+   "id": "au_w_0041#t2.but~7c1dda",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels, poor exposure assessment, and limited data on marijuana-only people.",
+   "rests_on": [
+    "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels, poor exposure assessment, and limited data on marijuana-only users."
+   ],
+   "passages": [
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Discussion",
+     "quote": "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels, poor exposure assessment, and limited data on marijuana-only users."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t2.how1~dff956",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "The US Centers for Disease Control and Prevention says smoke from cannabis contains many of the same toxins, irritants, and carcinogens as tobacco smoke.",
+   "rests_on": [
+    "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke."
+   ],
+   "passages": [
+    {
+     "source": "Centers for Disease Control and Prevention: Cannabis and Lung Health",
+     "where": "Lung health and smoking cannabis",
+     "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t2.how2~87d6ff",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "A 2026 review found a potential association between marijuana smoking and lung cancer. Long-term use over 10 years was linked to testicular germ cell tumors.",
+   "rests_on": [
+    "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship.",
+    "However, long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors (TGCT), particularly nonseminoma TGCT."
+   ],
+   "passages": [
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Conclusion",
+     "quote": "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+    },
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Discussion",
+     "quote": "However, long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors (TGCT), particularly nonseminoma TGCT."
+    }
+   ],
+   "good": true,
+   "what": "the second sentence says only what its words say and names no finder; read after 'A 2026 review found' it can be taken as that review's finding, which it is not",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t2.how3~c9c2b9",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "A 2026 review says the link between cannabis and DNA damage is poorly defined. Some suggest CBD may induce DNA damage and THC may contribute to it.",
+   "rests_on": [
+    "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis."
+   ],
+   "passages": [
+    {
+     "source": "Medical Cannabis and the Hallmarks of Cancer: A Critical Narrative Review (2026)",
+     "where": "11. Hallmark Enabling Characteristics › 11.1. Loss of Genomic Integrity—Gene Mutations and CIN",
+     "quote": "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t3.short~0ee53a",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "Cannabis smoke has cancer-causing chemicals. A review found a potential link between smoking it and lung cancer.",
+   "rests_on": [
+    "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+    "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+   ],
+   "passages": [
+    {
+     "source": "Centers for Disease Control and Prevention: Cannabis and Lung Health",
+     "where": "Lung health and smoking cannabis",
+     "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke."
+    },
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Conclusion",
+     "quote": "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "refused by a rule: a rule: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
+  },
+  {
+   "id": "au_w_0041#t3.but~c0d855",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "Evidence for lung cancer was inconclusive due to low exposure levels and limited data on marijuana-only users.",
+   "rests_on": [
+    "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels, poor exposure assessment, and limited data on marijuana-only users."
+   ],
+   "passages": [
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Discussion",
+     "quote": "Evidence for other cancers, including lung cancer, was inconclusive due to low exposure levels, poor exposure assessment, and limited data on marijuana-only users."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "refused by a rule: a rule: words that are not person-first (“users”)"
+  },
+  {
+   "id": "au_w_0041#t3.how2~3b7815",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "A 2026 review found a potential link between smoking marijuana and lung cancer, and long-term use and testicular tumors.",
+   "rests_on": [
+    "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship.",
+    "However, long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors (TGCT), particularly nonseminoma TGCT."
+   ],
+   "passages": [
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Conclusion",
+     "quote": "This systematic review and meta-analysis highlight a potential association between marijuana smoking and an increased risk of lung cancer, particularly as evidenced by cohort studies showing a statistically significant relationship."
+    },
+    {
+     "source": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis (2026)",
+     "where": "Discussion",
+     "quote": "However, long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors (TGCT), particularly nonseminoma TGCT."
+    }
+   ],
+   "good": false,
+   "what": "the testicular finding is an earlier meta-analysis's (2019) that this review cites; the sentence says the 2026 review found it",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0041#t3.how3~eaeb9e",
+   "lane": 15,
+   "question": "Does cannabis cause cancer?",
+   "sentence": "A 2026 review says the link between cannabis and DNA damage is poorly defined, with some suggesting CBD may cause it.",
+   "rests_on": [
+    "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis."
+   ],
+   "passages": [
+    {
+     "source": "Medical Cannabis and the Hallmarks of Cancer: A Critical Narrative Review (2026)",
+     "where": "11. Hallmark Enabling Characteristics › 11.1. Loss of Genomic Integrity—Gene Mutations and CIN",
+     "quote": "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0048#short~4c0d5b",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "It can improve perceived sexual functioning and satisfaction for men and women. In one study, it eased reaching orgasm for women with difficulty.",
+   "rests_on": [
+    "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure.",
+    "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm"
+   ],
+   "passages": [
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Conclusion",
+     "quote": "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure."
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "General effects of cannabis on sexuality in humans",
+     "quote": "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm"
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)"
+  },
+  {
+   "id": "au_w_0048#but~545c0d",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "More human clinical trials are essential to better understand the implications of cannabis use on sexual health and behavior.",
+   "rests_on": [
+    "Animal studies have provided valuable insights into the potential effects of cannabis on sexual behavior in both males and females, but further research, including human clinical trials, is essential to better understand the implications of cannabis use on sexual health and behavior in humans."
+   ],
+   "passages": [
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Conclusion",
+     "quote": "Animal studies have provided valuable insights into the potential effects of cannabis on sexual behavior in both males and females, but further research, including human clinical trials, is essential to better understand the implications of cannabis use on sexual health and behavior in humans."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)"
+  },
+  {
+   "id": "au_w_0048#how1~442aaf",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "A 2024 review of literature found cannabis may enhance pleasure, reduce anxiety, and improve female sexual function in some studies.",
+   "rests_on": [
+    "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction.",
+    "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm",
+    "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal.",
+    "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partners"
+   ],
+   "passages": [
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Abstract",
+     "quote": "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction."
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "General effects of cannabis on sexuality in humans",
+     "quote": "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm"
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Effects of dose and frequency › Dosage",
+     "quote": "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal."
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Discussion",
+     "quote": "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partners"
+    }
+   ],
+   "good": true,
+   "what": "the source says moderate doses improved it; 'may ... in some studies' carries that",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)"
+  },
+  {
+   "id": "au_w_0048#how2~b7a410",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "A 2023 online survey of adults who used cannabis found both men and women saw benefits, with wax and flower forms linked to higher satisfaction.",
+   "rests_on": [
+    "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
+    "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
+    "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure.",
+    "Although duration and frequency of cannabis use were not significant predictors, the forms of wax and flower predicted increased sexual functioning and satisfaction."
+   ],
+   "passages": [
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Abstract",
+     "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use."
+    },
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Discussion › Sexual functioning and satisfaction",
+     "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation."
+    },
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Conclusion",
+     "quote": "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure."
+    },
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Discussion › Sexual functioning and satisfaction",
+     "quote": "Although duration and frequency of cannabis use were not significant predictors, the forms of wax and flower predicted increased sexual functioning and satisfaction."
+    }
+   ],
+   "good": true,
+   "what": "true to its source; the site does not compare the forms of a drug for a wanted effect, which lane 16 now stops by rule: not to be shown",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)"
+  },
+  {
+   "id": "au_w_0048#t1.short~aa7006",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "It can improve sexual function and satisfaction for men and women. In one study, it helped women reach orgasm more easily.",
+   "rests_on": [
+    "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure.",
+    "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm"
+   ],
+   "passages": [
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Conclusion",
+     "quote": "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure."
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "General effects of cannabis on sexuality in humans",
+     "quote": "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm"
+    }
+   ],
+   "good": false,
+   "what": "the source says perceived functioning, and the study was of women with difficulty reaching orgasm: both are left out",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "refused by a rule: a rule: it says “easily”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+  },
+  {
+   "id": "au_w_0048#t1.but~9e12d7",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "More human clinical trials are needed to fully understand how cannabis affects sexual health and behavior in people.",
+   "rests_on": [
+    "Animal studies have provided valuable insights into the potential effects of cannabis on sexual behavior in both males and females, but further research, including human clinical trials, is essential to better understand the implications of cannabis use on sexual health and behavior in humans."
+   ],
+   "passages": [
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Conclusion",
+     "quote": "Animal studies have provided valuable insights into the potential effects of cannabis on sexual behavior in both males and females, but further research, including human clinical trials, is essential to better understand the implications of cannabis use on sexual health and behavior in humans."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0048#t1.how1~5a8a2c",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "A 2024 review of literature found cannabis may enhance pleasure, reduce anxiety, and improve female sexual function.",
+   "rests_on": [
+    "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction.",
+    "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm",
+    "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal.",
+    "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partners"
+   ],
+   "passages": [
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Abstract",
+     "quote": "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction."
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "General effects of cannabis on sexuality in humans",
+     "quote": "According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm, improved orgasm frequency and satisfaction with orgasm"
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Effects of dose and frequency › Dosage",
+     "quote": "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal."
+    },
+    {
+     "source": "Update on cannabis in human sexuality (2024)",
+     "where": "Discussion",
+     "quote": "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partners"
+    }
+   ],
+   "good": true,
+   "what": "the source says moderate doses improved it; 'may' carries that",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
+  },
+  {
+   "id": "au_w_0048#t1.how2~b308bc",
+   "lane": 15,
+   "question": "Does cannabis make sex better?",
+   "sentence": "A 2023 online survey of adults who used cannabis found both men and women saw benefits for sexual satisfaction.",
+   "rests_on": [
+    "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
+    "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
+    "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure.",
+    "Although duration and frequency of cannabis use were not significant predictors, the forms of wax and flower predicted increased sexual functioning and satisfaction."
+   ],
+   "passages": [
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Abstract",
+     "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use."
+    },
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Discussion › Sexual functioning and satisfaction",
+     "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation."
+    },
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Conclusion",
+     "quote": "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure."
+    },
+    {
+     "source": "The influence of cannabis on sexual functioning and satisfaction (2023)",
+     "where": "Discussion › Sexual functioning and satisfaction",
+     "quote": "Although duration and frequency of cannabis use were not significant predictors, the forms of wax and flower predicted increased sexual functioning and satisfaction."
+    }
+   ],
+   "good": true,
+   "what": "",
+   "read_on": "2026-11-17",
+   "read_by": "the AI co-editor (Claude Fable 5.2)",
+   "kept": false,
+   "lane_said": "accepted, in a draft that was written again"
   }
  ]
 }
