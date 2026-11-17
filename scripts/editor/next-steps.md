@@ -58,7 +58,18 @@ a. **Names the system does not know, looked up online and kept** ("mytragina jav
    (a word or two, never the question), and only words that are not in the model's word list. Measure before it is
    switched on: no word of the 1,021 forum questions may be "learned" as a name.
 b. **Pages for drugs without one** (kanna, *Mitragyna javanica*), "in a perfect coherent format to the rest of the
-   website", with pictures. The system's pages exist (site 2.8: `AUTO_PAGES`, `#auto/p-<slug>`, decision 22); what is
+   website", with pictures. What the probe of 17 November found for pictures: Wikimedia Commons' search, iNaturalist's
+   and Openverse's addresses are not allowed by their robots.txt (not asked, not gone around); **GBIF's records with
+   pictures are allowed** (`api.gbif.org/v1/occurrence/search?mediaType=StillImage&scientificName=…`: 169 records for
+   *Sceletium tortuosum*), each picture with its own licence, creator and source in the record: take only CC0 and
+   CC BY (never NC, never ND, never SA), fetch the file only if its host's robots.txt allows it, keep the record
+   beside the file as `data/site/photos.json` does, and show "Picture not yet checked by a person" until the editor
+   has looked. Plants and fungi only; pills and powders have no such source yet. A learned name needs its filing
+   (`data/auto/filing.json`: by kind, plants and fungi under "Other plants", medicines under "Medicines") so that
+   `scripts/auto/place.py` starts its page. Seen at 12:07 UTC: the run listed his questions by itself
+   (`w_a0001` *What is the legal status of drugs in Greece?*, `w_a0002` *Does kanna have psychoactive effects?*), found
+   papers, and the lane wrote nothing that passed (kanna: "no source that can be read gave a finding"): the page
+   shell and the pictures can come before the answers do. The system's pages exist (site 2.8: `AUTO_PAGES`, `#auto/p-<slug>`, decision 22); what is
    missing is the site's own page form for them (what it is, forms, effects, risks, the law, each from the system's
    answers under their label) and pictures: Wikimedia Commons through its API only if its robots.txt allows the
    address (else not), licence read from the file's own record (public domain, CC0, CC BY; never CC BY-SA unless the
