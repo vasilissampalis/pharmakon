@@ -30,7 +30,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 LEDGER = ROOT / "data" / "auto" / "lane" / "usage.json"
 API = "https://api.cloudflare.com/client/v4/accounts/{account}/ai/v1/chat/completions"
 FREE_A_DAY = 10000      # Cloudflare's free allocation of neurons a day
-OUR_LIMIT = 9000        # where the lane stops by itself
+OUR_LIMIT = 6000        # where the lane stops by itself. (18 November 2026, decision 31) It was 9,000 while the lane was the account's only user. The site's own
+                        # server now writes answers within seconds with the same free allowance (site/worker/_worker.js, /api/answer: it stops by itself at
+                        # IA.neurons = 3,500 a day, counted in the store under "ian:<day>"). 6,000 + 3,500 = 9,500 of Cloudflare's 10,000: the two can never
+                        # use the day up between them, and on the free plan a used-up day ends in an error, never in a charge.
 # neurons per million tokens, in and out (Cloudflare's pricing page, 15 November 2026); a model not listed is counted dear
 PRICE = {"@cf/meta/llama-3.3-70b-instruct-fp8-fast": (26668, 204805), "@cf/meta/llama-3.1-8b-instruct-fp8-fast": (4119, 34868), "@cf/meta/llama-4-scout-17b-16e-instruct": (24545, 77273),
          "@cf/mistralai/mistral-small-3.1-24b-instruct": (31876, 50488), "@cf/google/gemma-3-12b-it": (31371, 50560), "@cf/google/gemma-4-26b-a4b-it": (9091, 27273),

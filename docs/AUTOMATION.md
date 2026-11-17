@@ -764,10 +764,67 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       the mark, the name is said by its own word alone, "Insight", in the site's colour: no second mark and no second
       "Pharmakon". The whole name stands where nothing around says Pharmakon (the box's label for a screen reader,
       "This is Pharmakon Insight.", About us).
-    - *What follows in this decision (not in 2.16.1):* the question sent by itself with the reader told (site 2.17:
-      the server already keeps such a question apart, keys `aq:`, 180 days, and the half-hourly run reads them in its
-      own memory so that their words never reach the repository); and the written answer within seconds, behind the
-      Workers AI binding that only he can add.
+    - *Site 2.17.0 (18 November, 02:30 Athens): the question, sent by itself, and the reader told.* His words: "it
+      should send the question immediately in every instance and the user should be notified".
+      **What the reader sees.** A whole question about a drug that Insight has no answer to no longer has a button.
+      Once it has stood unchanged for 2.5 seconds in the results (so that a sentence still being typed is not sent
+      piece by piece), or at once on Enter, the page sends it and says so in the same place: "Sent to our system, so
+      that it gets answered. It turns green under 'Your questions' on the start page when it is." with one quiet way
+      out beside it, "Don't send mine", which switches it off on that device. The question is put on the reader's own
+      list like one they sent themselves; a beginning that went out a moment before the whole question leaves that
+      list; a question the reader took off the list is not put back in that visit. The line at the head of the results
+      says what is true now: "A question we have no answer to is sent to our system by itself, so that it gets
+      answered: no name, no address." A count asked for a place we hold no figure for is sent in the same way (so the
+      system learns that the United States' figures are wanted).
+      **What is not sent by itself.** A beginning; a question that is not about drugs (its quiet "send it to us"
+      stays); what the site does not answer; a question Insight answers. A word we do not know as a drug is sent by
+      itself only when research is published under that name (the lookup found papers): then it is most likely a drug
+      the system has yet to learn. For a question like one on our list nothing of the reader's is sent: the device
+      counts the listed question by its number, as before, and the LISTED question (the list's words) is put on the
+      reader's list by itself, so that they are told when it is answered.
+      **The editor's own rule for these, which he did not ask for and which stands unless he says otherwise.** Nobody
+      pressed anything to send such a question, so its words are never written into the public repository. The server
+      keeps it apart (`aq:` keys, 180 days; counted with the question somebody chose to send when it is the very same
+      one; at most 250 a day, so that such questions can never crowd out one that somebody sent). The half-hourly run
+      reads them into a file of the run's own temporary folder (`fetch_questions.py --auto`), the scout's second pass
+      writes everything there (`--out`, `--report`), and `ask.py --report` makes the item on the system's list from
+      it: OUR wording, and a fingerprint of the visitor's words in its state, as for every question. The questions
+      people chose to send before are still in `data/auto/questions.json`, `data/auto/report.json` and
+      `docs/MISSING.md`: whether those stay public is still his to say ("keep them private").
+      **The switch.** About us, Privacy: "Send unanswered questions and look up research by themselves" (`pk-auto`).
+      Off: the button to send by hand is back, saying what it sends, and one quiet button looks research up.
+      **Not tied to the browser's "do not track" wish**, unlike the counting of listed questions: nothing here follows
+      a person (no name, no address, no cookie, no number for the device), and a reader whose browser sends that wish
+      would otherwise meet a site that looks broken. The notice and its own way out are what the reader gets.
+    - *The written answer within seconds (site 2.18; the server's part is in 2.17 and does nothing until the binding
+      exists).* `POST /api/answer` in `site/worker/_worker.js`: for a question about a drug that the site has no
+      answer to, the summaries of the papers Europe PMC finds are read by one model run by Cloudflare itself (Workers
+      AI: `@cf/meta/llama-3.3-70b-instruct-fp8-fast`, the lane's writer, which keeps to a form), which writes one to
+      three sentences, each saying what ONE paper found, each with that paper's own words (at most 15, copied) and
+      its link. The code decides what is shown, not the model; a sentence that fails any of these is thrown away:
+      its quoted words stand in its paper's summary, character for character; it names the kind of paper it rests on
+      as Europe PMC files it, and no other year; every number in it is in that summary; no amount, dose or timing, no
+      advice, nothing on making an effect stronger, no way of taking compared with another; a word that makes a
+      finding bigger or surer only where the summary has that word; a summary about animals or cells says so; it
+      bears on the question. Not answered there: dying, overdose, amounts, pregnancy, children, suicide (they wait for
+      a person, as in the lane), and what research summaries cannot answer (the law, prices, drug tests).
+      It is shown under its own label and is never an answer of ours: nothing of it enters the site's data; the
+      question still goes to the lane, which reads the papers themselves.
+      **Why not the lane's own checks.** The lane's exam (decision 23) measured the free models as judges: the best of
+      them let through as many wrong cards as chance. What worked there was a model that copies the source's words and
+      code that decides. The answer within seconds is built on exactly that and on nothing a model judges.
+      **What it costs.** Cloudflare's free allowance is 10,000 neurons a day for the whole account. The answer within
+      seconds stops by itself at 3,500 a day and 60 new answers (`IA` in the worker; counted in the store under
+      `ian:<day>`); the lane now stops at 6,000 (`OUR_LIMIT` in `scripts/auto/llm.py`, was 9,000). About 100 neurons
+      an answer: some 30 new questions a day; an answer once written is kept for 30 days and given again without a
+      model. On the free plan a used-up day ends in an error, never in a charge (Cloudflare's pricing page, read on
+      18 November 2026: "further operations will fail with an error"); the page then shows the papers as before.
+      **What is kept.** The drug's names, the key words, the sentences that passed with their papers, the model and
+      the time (`ia:` keys, 30 days); never the reader's sentence: so that the editors can read everything the system
+      wrote this way. Reading them into the editors' view is the next step (`scripts/editor/next-steps.md`).
+      **His step.** Cloudflare, Workers & Pages, pharmakon, Settings, Production, Bindings, Add, Workers AI, variable
+      name `AI`; then one publishing. Given to him on 17 November at 23:45 with a prompt for ChatGPT that asks for no
+      token, key or account number.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

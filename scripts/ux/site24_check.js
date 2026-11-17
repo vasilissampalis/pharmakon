@@ -269,26 +269,49 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const p = await open(ON, 390);
     await p.waitForTimeout(1500);   // the page asks once whether it can send
     await typeQ(p, "is modafinil safe");
-    const before = await p.evaluate(() => ({ none: (document.querySelector(".sr-fit-none") || {}).textContent || "", note: (document.querySelector(".sr-fit .ask-note") || {}).textContent || "", insNote: (document.querySelector(".sr-note") || {}).textContent || "" }));
-    ok("with the store on: the button says what it sends", /We haven.t checked exactly this yet/.test(before.none) && before.note === "Sends only this question. No name, no address.", JSON.stringify(before));
-    await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
-    const said = await p.evaluate(() => (document.querySelector(".ask-said") || {}).textContent || "");
-    ok("one tap: the page says it was sent, and promises only what is true (no answer within the hour until the half-hourly run keeps it)", said === "Sent. Our own answer usually takes a day or two; some wait for a person. It turns green under “Your questions” on the start page." && await p.evaluate(() => AUTO_LOOP === false), said);
-    const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
-    ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "is modafinil safe" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
+    // (site 2.17; the senior author: "it should send the question immediately in every instance and the user should be notified") a question the site
+    // has no answer to is sent by itself, and the page says so in the same place; nothing is pressed
+    const before = await p.evaluate(() => ({ none: (document.querySelector(".sr-fit-none") || {}).textContent || "", btn: !!document.querySelector(".sr-fit button[data-ask]"), insNote: (document.querySelector(".sr-note") || {}).textContent || "" }));
+    ok("with the store on: no button to press, and the line at the head of the results says that a question we cannot answer is sent by itself", /We haven.t checked exactly this yet/.test(before.none) && !before.btn && /^Runs on your (phone|computer)\. A question we have no answer to is sent to our system by itself, so that it gets answered: no name, no address\.$/.test(before.insNote.trim()), JSON.stringify(before));
+    const early = [...ON.kv.keys()].filter(k => /^a?q:/.test(k)).length;
+    await p.waitForSelector(".sr-fit .ask-auto-said", { timeout: 9000 }).catch(() => {});
+    const said = await p.evaluate(() => (document.querySelector(".sr-fit .ask-auto-said") || {}).textContent || "");
+    ok("after a moment (not while it is being typed) the question is sent by itself, and the page says so in the same place, with a way to stop it", early === 0 && said === "Sent to our system, so that it gets answered. It turns green under “Your questions” on the start page when it is. Don’t send mine", early + " | " + said);
+    const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("aq:")).map(([, v]) => JSON.parse(v));
+    ok("the store holds it apart, marked as sent by the page: the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "is modafinil safe" && kept[0].a === 1 && Object.keys(kept[0]).sort().join() === "a,d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v) && ![...ON.kv.keys()].some(k => k.startsWith("q:")), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, rows: [...b.querySelectorAll(".aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
     ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking · sent less than an hour ago \| is modafinil safe/.test(list.rows[0]), JSON.stringify(list));   // (2.15.2: a row says how long ago it was sent)
-    ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered."));
+    ok("the list says where it is kept, and that a question we had no answer to is sent by itself (and where that is switched off)", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. A question we had no answer to is sent to our system by itself (About us, Privacy switches that off). It works on them by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered."));
     // (2.9; the senior author, of his two sent questions: "i cannot click on them to see the answer") a question that waits opens too
     await p.click("#home-asked .aq.wait button.aq-look"); await p.waitForTimeout(900);
     const lk = await p.evaluate(() => ({ value: document.getElementById("search").value, open: !document.getElementById("search-results").hidden, go: (document.querySelector("#home-asked .aq.wait .aq-go") || {}).textContent || "", fit: !!document.querySelector("#search-results .sr-fit, #search-results a, #search-results .sr-get") }));
     ok("a question that waits can be opened: its row asks it again in the box, which shows what the site has on it so far", lk.value === "is modafinil safe" && lk.open && lk.fit && /^See what we have so far/.test(lk.go), JSON.stringify(lk));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
-    await typeQ(p, "why do people take drugs"); await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(800);
+    // a pause in the middle of a sentence: the beginning that went out leaves the reader's list when the whole question follows
+    const sentFor = q => p.waitForFunction(q => { const f = document.querySelector("#search-results .sr-fit"); return f && f.dataset.q === q && f.querySelector(".ask-auto-said"); }, q, { timeout: 12000 }).then(() => true, () => false);
+    await typeQ(p, "is modafinil bad"); const part = await sentFor("is modafinil bad"); await typeQ(p, "is modafinil bad for the liver"); const whole = await sentFor("is modafinil bad for the liver");
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     list = await p.evaluate(() => [...document.querySelectorAll("#home-asked .aq-q")].map(e => e.textContent));
-    ok("a second question is kept beside the first", list.length === 2 && list.includes("why do people take drugs"), JSON.stringify(list));
+    ok("a second question is kept beside the first; a beginning that was sent a moment before the whole question does not stay on the list", part && whole && list.length === 2 && list.includes("is modafinil bad for the liver") && !list.includes("is modafinil bad") && [...ON.kv.keys()].filter(k => k.startsWith("aq:")).length === 3, JSON.stringify(list) + " " + [...ON.kv.keys()].join(","));
+    // Enter sends at once (the sheet); "Don't send mine" turns it off on this device, and the way to send by hand is back
+    await typeQ(p, "does modafinil cause hair loss"); await p.keyboard.press("Enter"); await p.waitForSelector("#evsheet.open .ins-none .ask-auto-said", { timeout: 6000 }).catch(() => {});
+    const atOnce = await p.evaluate(() => ({ said: (document.querySelector("#evsheet .ins-none .ask-auto-said") || {}).textContent || "", btn: !!document.querySelector("#evsheet .ins-none button[data-ask]") }));
+    ok("Enter: the sheet sends the question at once and says so", /^Sent to our system, so that it gets answered\./.test(atOnce.said) && !atOnce.btn && [...ON.kv.keys()].filter(k => k.startsWith("aq:")).length === 4, JSON.stringify(atOnce));
+    await p.click("#evsheet .ins-none button[data-auto-stop]"); await p.waitForTimeout(200);
+    const stopped = await p.evaluate(() => ({ text: (document.querySelector("#evsheet .ins-none .ask-auto-said") || {}).textContent || "", off: localStorage.getItem("pk-auto") }));
+    await p.keyboard.press("Escape"); await p.waitForTimeout(400); await p.fill("#search", ""); await p.waitForTimeout(100);
+    await typeQ(p, "does modafinil make you smarter"); await p.waitForTimeout(3200);
+    const byHand = await p.evaluate(() => ({ btn: !!document.querySelector(".sr-fit button[data-ask]"), note: (document.querySelector(".sr-fit .ask-note") || {}).textContent || "", auto: !!document.querySelector(".sr-fit .ask-auto-said"), line: (document.querySelector(".sr-note") || {}).textContent || "" }));
+    ok("“Don’t send mine” switches it off on this device and says so; from then on nothing is sent by itself and the button to send by hand is back, saying what it sends",
+      /^Off on this device: from now on nothing is sent or looked up by itself/.test(stopped.text) && stopped.off === "0" && byHand.btn && byHand.note === "Sends only this question. No name, no address." && !byHand.auto && /What you type stays on it, unless you ask us to check a question\.$/.test(byHand.line) && [...ON.kv.keys()].filter(k => k.startsWith("aq:")).length === 4, JSON.stringify(stopped) + " " + JSON.stringify(byHand));
+    await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
+    const saidHand = await p.evaluate(() => (document.querySelector(".sr-fit .ask-said") || {}).textContent || ""), keptHand = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
+    ok("sent by hand: the page says it was sent, promises only what is true (no answer within the hour until the half-hourly run keeps it), and the store keeps it among the questions people chose to send",
+      saidHand === "Sent. Our own answer usually takes a day or two; some wait for a person. It turns green under “Your questions” on the start page." && await p.evaluate(() => AUTO_LOOP === false) && keptHand.length === 1 && keptHand[0].q === "does modafinil make you smarter" && Object.keys(keptHand[0]).sort().join() === "d,dn,first,last,n,q,v", saidHand + " " + JSON.stringify(keptHand));
+    await p.evaluate(() => { localStorage.removeItem("pk-auto"); const a = JSON.parse(localStorage.getItem("pk-asked") || "[]").filter(x => /modafinil safe|for the liver/.test(x.q)); localStorage.setItem("pk-asked", JSON.stringify(a)); });
+    await p.reload(); await p.waitForTimeout(900);
+    await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await shot(p, "390-home-asked");
     await p.reload(); await p.waitForTimeout(900);
     ok("the list is still there after a reload", (await p.evaluate(() => document.querySelectorAll("#home-asked .aq").length)) === 2);
@@ -359,10 +382,12 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     ok("the words typed are nowhere in the store, and no question was sent", ![...ON.kv.entries()].some(([k, v]) => /die from alcohol/i.test(k + v)) && !reqs.some(x => /POST api\/ask/.test(x)), [...ON.kv.keys()].join(", "));
     await typeW(p, "can alcohol kill you"); await p.waitForTimeout(3000); w = wkeys(ON);
     ok("the same item asked again in other words is not counted twice in one visit", w.length === 1 && w[0][1].n === 1 && reqs.filter(x => /api\/want/.test(x)).length === 1, JSON.stringify(w));
-    await p.click("#search-results button[data-want-keep]"); await p.waitForTimeout(300);
+    // (2.17: "the user should be notified") the listed question is put on the reader's own list by itself, after the same moment; the card then says so
+    const onCard = await p.evaluate(() => ({ btn: !!document.querySelector("#search-results .sr-want button[data-want-keep]"), said: (document.querySelector("#search-results .sr-want .ask-said") || {}).textContent || "" }));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     const row = await p.evaluate(() => { const r = document.querySelector("#home-asked .aq"); return r ? r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent : ""; });
-    ok("Tell me when it is answered: Your questions keeps the LISTED question, as On our list", /onlist \| In line\. Not tried yet · asked less than an hour ago \| How can you die from alcohol\?$/.test(row), row);   // (2.15.2: what our system has done with it so far, and since when)
+    ok("a listed question goes on the reader's own list by itself: Your questions keeps the LISTED question (never the words typed), as On our list, and the card says so in place of its button",
+      /onlist \| In line\. Not tried yet · asked less than an hour ago \| How can you die from alcohol\?$/.test(row) && !onCard.btn && onCard.said === "It is on your list: we will tell you on this device when it is answered." && (await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked")).map(x => x.q).join("|"))) === "How can you die from alcohol?" && !reqs.some(x => /POST api\/ask/.test(x)), row + " " + JSON.stringify(onCard));   // (2.15.2: what our system has done with it so far, and since when)
     await shot(p, "390-home-onlist");
     // its own words instead
     await typeW(p, "does weed cause cancer"); await p.click("#search-results .sr-want .want-other"); await p.waitForTimeout(900);
@@ -386,10 +411,10 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     // the list's own page
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await go(p, "#wanted", 600);
     const pg = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-wanted h1").textContent, rows: document.querySelectorAll("#wanted-list .wl-i").length, listed: WANTED.length, kept: [...document.querySelectorAll("#wanted-list .wl-s")].map(e => e.closest(".wl-i").querySelector(".wl-q").textContent), first: document.querySelector("#wanted-list .wl-b").dataset.wantKeep, wide: document.documentElement.scrollWidth > innerWidth + 1 }));
-    ok("the list has its own page: every listed question, the one already kept marked so, nothing wider than the phone", pg.title === "On our list · Pharmakon" && pg.h1 === "On our list" && pg.rows === pg.listed && pg.rows >= 30 && pg.kept.join() === "How can you die from alcohol?" && !pg.wide, JSON.stringify(pg));
+    ok("the list has its own page: every listed question, the one already kept marked so, nothing wider than the phone", pg.title === "On our list · Pharmakon" && pg.h1 === "On our list" && pg.rows === pg.listed && pg.rows >= 30 && pg.kept.slice().sort().join("|") === ["How can you die from alcohol?", other.q].sort().join("|") && !pg.wide, JSON.stringify(pg));   // (2.17: the one the sheet was opened on with Enter was put on the list by itself too)
     await shot(p, "390-wanted");
     await p.click("#wanted-list .wl-b"); await p.waitForTimeout(500); w = wkeys(ON);
-    ok("on that page, Tell me when it is answered counts the item and keeps it in Your questions", w.some(([k, v]) => k === "w:" + pg.first && v.n === 1) && (await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked")).filter(x => x.w).length)) === 2 && /^We will tell you on this device/.test(await p.evaluate(() => (document.querySelector("#wanted-list .ask-said") || {}).textContent || "")), JSON.stringify(w));
+    ok("on that page, Tell me when it is answered counts the item and keeps it in Your questions", w.some(([k, v]) => k === "w:" + pg.first && v.n === 1) && (await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked")).filter(x => x.w).length)) === 3 && /^We will tell you on this device/.test(await p.evaluate(() => (document.querySelector("#wanted-list .ask-said") || {}).textContent || "")), JSON.stringify(w));
     // the switch in Privacy
     await go(p, "#about/part-a-privacy", 700);
     const sw = await p.evaluate(() => { const s = document.getElementById("count-switch"); return { there: !!(s && s.offsetParent), checked: s.checked, disabled: s.disabled, state: document.getElementById("count-state").textContent, text: s.closest("li").textContent.replace(/\s+/g, " ").slice(0, 160), old: /no tracking or analytics/.test(document.getElementById("view-about").textContent) }; });
@@ -532,10 +557,10 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     // it stands there again when the question is typed again, sent or not; a question about dying is not looked up
     await go(p, "#home"); await p.evaluate(() => pkInsight.load()); await p.waitForFunction(() => pkInsight.state() === "ready", null, { timeout: 120000 });
     const bodies = []; const onReq = r => { if (/\/api\/find$/.test(r.url())) bodies.push(r.postData() || ""); }; p.on("request", onReq); ASKED_EPMC.length = 0;
-    await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results button[data-ask]", { timeout: 20000 });
+    await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results .sr-fit-none", { timeout: 20000 });
     const byItself = await p.waitForSelector("#search-results .ins-found-l li", { timeout: 15000 }).then(() => true, () => false);
     ok(w + " px: with no answer of ours, the published research comes by itself, without a tap", byItself && bodies.length === 1, JSON.stringify(bodies));
-    await p.click("#search-results button[data-ask]"); await p.waitForSelector("#search-results .ask-said", { timeout: 8000 }).catch(() => {});
+    await p.waitForSelector("#search-results .ask-auto-said", { timeout: 9000 }).catch(() => {});   // (2.17: sent by itself)
     await p.fill("#search", ""); await p.waitForTimeout(200); await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results .sr-sent", { timeout: 20000 }).catch(() => {});
     const again = await p.evaluate(() => ({ sent: !!document.querySelector("#search-results .sr-sent"), rows: document.querySelectorAll("#search-results .ins-found-l li").length }));
     ok(w + " px: typed again after it was sent, the question shows the research again (and nothing is asked of the server twice)", again.sent && again.rows === 2 && bodies.length === 1, JSON.stringify(again) + " " + bodies.length);

@@ -1008,7 +1008,8 @@ function insPlaceholder() {
 /* ---------- In the search results ---------- */
 const insQ = (id, page) => isAuto(id) ? AUTO[id].q : (page && sharedQuestion(page, id)) || anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || claimText(claimById[id]);
 const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") +
-  (FIND_ON && autoOn() ? ". With no answer of ours, only the drug’s name and a few key words go out, to look up research." + (ASK_ON ? " Your question is sent only if you send it." : "")
+  (autoSendOn() ? ". A question we have no answer to is sent to our system by itself, so that it gets answered: no name, no address."
+    : FIND_ON && autoOn() ? ". With no answer of ours, only the drug’s name and a few key words go out, to look up research." + (ASK_ON ? " Your question is sent only if you send it." : "")
     : ASK_ON ? ". What you type stays on it, unless you ask us to check a question." : ". Nothing you type leaves it.");
 const INS_ICON = { help: "heart", mix: "mix", dose: "book", test: "flask", page: "molecule", law: "scale", numbers: "phone" };
 // the emergency number where the reader is, or the way to the numbers: shown with an emergency route, and nowhere else
@@ -1032,7 +1033,9 @@ function insNoneHtml(res, sheet) {
   if (!res.note) return "";
   if (res.note === "want") {
     const w = res.want, note = wantOn() ? '<span class="want-n">We count how many people ask this. Your words are not sent.</span>' : "", at = ' data-want="' + esc(w.id) + '"' + (note ? " data-count" : "");
-    const keep = '<button type="button" class="' + (sheet ? "qz2-nb ins-askus" : "linklike") + '" data-want-keep="' + esc(w.id) + '">Tell me when it is answered</button>';
+    // (2.17) already on the reader's own list (put there by a tap, or by the page itself: insAutoSend): the card says so in place of the button
+    const keep = askedList().some(x => x.w === w.id) ? '<p class="ask-said" role="status">It is on your list: we will tell you on this device when it is answered.</p>'
+      : '<button type="button" class="' + (sheet ? "qz2-nb ins-askus" : "linklike") + '" data-want-keep="' + esc(w.id) + '">Tell me when it is answered</button>';
     const other = '<button type="button" class="linklike want-other" data-ask="' + esc(res.q) + '">Not the same? Send yours to us</button>';
     const list = w.started ? "#auto/p-" + w.started : "#wanted";   // (2.12) a question listed on a page our system started: that page is where it stands
     return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="' + esc(list) + '">' + (w.started ? "See its page " : "See the whole list ") + icon("arrow") + "</a></div>"
@@ -1059,9 +1062,10 @@ function insNoneHtml(res, sheet) {
       : '<p class="sr-fit-none sr-other sr-stranger"><b>We do not know ' + w + " as a drug.</b> If it is one, " + insAskBtn(res.q, "linklike", "send us your question", " and we will look into it.") + "</p>"; }
   if (res.note === "other") return sheet ? '<div class="ins-none ins-other"><p class="ins-none-t">This does not look like a question about drugs.</p><p class="ins-none-s">Pharmakon answers questions about drugs. If yours is about one, name the drug, or send it to us.</p>' + insAskBtn(res.q, "linklike", "Send it to us") + "</div>"
     : '<p class="sr-fit-none sr-other"><b>This does not look like a question about drugs.</b> Pharmakon answers questions about drugs. If yours is about one, name the drug, or ' + insAskBtn(res.q, "linklike", "send it to us", ".") + "</p>";
-  const line = insNoneLine(res);
-  return sheet ? '<div class="ins-none"><p class="ins-none-t">' + esc(line) + "</p>" + (res.note === "none" ? insAskBtn(res.q, "qz2-nb ins-askus") : "") + "</div>"
-    : '<p class="sr-fit-none"><b>' + esc(line) + "</b>" + (res.note === "none" ? " " + insAskBtn(res.q, "linklike") : "") + "</p>";
+  // (2.17) where the page sends such a question by itself (insAutoSend) there is no button to press: the place where the notice will stand
+  const line = insNoneLine(res), auto = res.note === "none" && autoSendOn() && !askedGone(res.q);
+  return sheet ? '<div class="ins-none"><p class="ins-none-t">' + esc(line) + "</p>" + (res.note !== "none" ? "" : auto ? '<span class="ask-auto"></span>' : insAskBtn(res.q, "qz2-nb ins-askus")) + "</div>"
+    : '<p class="sr-fit-none"><b>' + esc(line) + "</b>" + (res.note !== "none" ? "" : auto ? ' <span class="ask-auto"></span>' : " " + insAskBtn(res.q, "linklike")) + "</p>";
 }
 // the line for a drug question we have no answer to: with a count asked for a place we hold no figure for, it says exactly that
 function insNoneLine(res) { return res.figMiss ? "We have no checked figure on this for " + res.figMiss + " yet." : "We haven’t checked exactly this yet."; }
@@ -1517,12 +1521,19 @@ function askedWatch() {
 }
 // (2.16.1) FIND_ON: the site's server can look up published research (POST api/find). Learned by the same one question to the server
 let FIND_ON = (() => { try { return sessionStorage.getItem("pk-find-on") === "1"; } catch (e) { return false; } })();
-let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); if (sessionStorage.getItem("pk-find-on") == null) return null; return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
+// (2.17) AUTO_SRV: the server takes a question the page sends by itself (POST api/ask with a: 1), and keeps it apart
+let AUTO_SRV = (() => { try { return sessionStorage.getItem("pk-auto-on") === "1"; } catch (e) { return false; } })();
+let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); if (sessionStorage.getItem("pk-find-on") == null || sessionStorage.getItem("pk-auto-on") == null) return null; return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
+// The reader's own switch for what the page does by itself (looking research up; sending a question we have no answer to): on, unless switched
+// off on this device (About us, Privacy; or "Don't send mine" on the notice). These stand here, above the first drawing of the reader's list.
+const AUTO_OFF = "pk-auto";
+function autoOn() { try { return localStorage.getItem(AUTO_OFF) !== "0"; } catch (e) { return true; } }
+function autoSendOn() { return ASK_ON === true && AUTO_SRV && autoOn(); }
 function askProbe() {
   if (ASK_ON !== null) return Promise.resolve(ASK_ON);
   if (askProbe.p) return askProbe.p;
-  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); return !!(j && j.ok === true); }, () => false)
-    .then(on => { ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); } catch (e) { /* this page only */ } return on; }));
+  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); AUTO_SRV = !!(j && j.auto === true); return !!(j && j.ok === true); }, () => false)
+    .then(on => { ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); sessionStorage.setItem("pk-auto-on", AUTO_SRV ? "1" : "0"); } catch (e) { /* this page only */ } return on; }));
 }
 function askedList() { try { const x = JSON.parse(localStorage.getItem(ASK_KEY) || "[]"); return Array.isArray(x) ? x.filter(it => it && typeof it.q === "string" && it.k) : []; } catch (e) { return []; } }
 function askedSave(list) { try { localStorage.setItem(ASK_KEY, JSON.stringify(list.slice(-20))); } catch (e) { /* this visit only */ } }
@@ -1535,6 +1546,12 @@ function askedAdd(q, drug) {
 const askedSentHas = q => { const k = insClean(q).slice(0, 200).toLowerCase(); return askedList().some(it => it.k === k && it.sent); };
 function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k === k); if (!it) return; Object.assign(it, patch); askedSave(list); }
 function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
+// (2.17) a question the reader took off the list is not put back by the page in this visit (kept until the tab closes: its key only)
+function askedGoneSet() { try { const a = JSON.parse(sessionStorage.getItem("pk-asked-x") || "[]"); return new Set(Array.isArray(a) ? a : []); } catch (e) { return askedGoneSet.mem || (askedGoneSet.mem = new Set()); } }
+function askedGoneAdd(k) { const s = askedGoneSet(); s.add(String(k)); try { sessionStorage.setItem("pk-asked-x", JSON.stringify([...s].slice(-40))); } catch (e) { askedGoneSet.mem = s; } }
+const askedGone = q => askedGoneSet().has(insClean(q).slice(0, 200).toLowerCase());
+// a question sent by the page a moment ago that was only the beginning of this one ("does kanna help" before "does kanna help with anxiety") leaves the list
+function askedTidy(k) { const now = Date.now(), list = askedList(), keep = list.filter(x => x.k === k || !(x.auto && !x.w && now - (x.t || 0) < 180000 && k.length > x.k.length && k.indexOf(x.k) === 0)); if (keep.length !== list.length) askedSave(keep); }
 function askedBox() {
   const box = document.getElementById("home-asked"); if (!box) return;
   { const all = askedList(), keep = all.filter(it => !it.u && !it.gone); if (keep.length !== all.length) askedSave(keep); }   // (2.15.2) rows kept by an older page as "Not a whole question" leave the list
@@ -1557,7 +1574,8 @@ function askedBox() {
   // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
   // didn't send the email? ... the user should be informed": the list says where it is kept, and each row whether it was sent)
   const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
-  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered.</p>' + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>";
+  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">' + (autoSendOn() ? "This list is kept on this device only. A question we had no answer to is sent to our system by itself (About us, Privacy switches that off). It works on them by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered."
+    : "This list is kept on this device only. We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered.") + "</p>" + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>";
   box.hidden = false;
   askedCheckSoon(); askedWatch();
 }
@@ -1592,7 +1610,7 @@ function askedCheckSoon() {
 document.addEventListener("click", async e => {
   if (!e.target.closest) return;
   if (e.target.closest("button[data-asked-reload]")) { location.reload(); return; }
-  const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
+  const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedGoneAdd(xb.dataset.askedX); askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   const op = e.target.closest("a[data-asked-open]"); if (op) { askedDrop(op.dataset.askedOpen); return; }   // read: it leaves the list (the sheet opens by its data-sheet)
   // (2.10) a thing to try under the capsule: put in the box and asked
   const tr = e.target.closest("button[data-try]");
@@ -1678,8 +1696,7 @@ function insFoundHtml(d) {
    it under the line that says so. In the results it waits a moment (FIND_WAIT) so that nothing is asked while the reader is still typing; in
    the sheet (Enter) at once. What it found is kept for this visit (FIND_MEM): the same question is not asked twice.
    The reader can switch this off (About us, Privacy: AUTO_OFF); then one quiet button looks it up on a tap. */
-const AUTO_OFF = "pk-auto", FIND_WAIT = 700, FIND_MEM = new Map();
-function autoOn() { try { return localStorage.getItem(AUTO_OFF) !== "0"; } catch (e) { return true; } }
+const FIND_WAIT = 700, FIND_MEM = new Map();
 function insFindGet(terms) {
   const key = JSON.stringify(terms); let m = FIND_MEM.get(key); if (m) return m.p;
   m = { d: undefined };
@@ -1693,19 +1710,91 @@ function insFindWanted(res) {
   return insFindTerms(res);
 }
 function insAuto(root, res, now) {
-  clearTimeout(INS.findT);
-  const terms = insFindWanted(res), after = terms && root ? root.querySelector(".sr-fit-none, .ins-none") : null; if (!after) return;
+  clearTimeout(INS.findT); clearTimeout(INS.sendT);
+  const after = root && res ? root.querySelector(".sr-fit-none, .ins-none") : null; if (!after) return;
+  askProbe().then(() => { if (!after.isConnected) return; const found = insAutoFind(after, res, now); insAutoSend(after, res, now, found); });
+}
+// the published research under the line; resolves with what was found (null when nothing is looked up)
+function insAutoFind(after, res, now) {
+  const terms = FIND_ON ? insFindWanted(res) : null; if (!terms) return Promise.resolve(null);
   const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite");
   box.addEventListener("click", e => e.stopPropagation());   // a paper opens in its own tab: the question and its results stay as they are
   const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };
   const draw = d => { const html = insFoundHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
   const have = FIND_MEM.get(JSON.stringify(terms));
-  if (have && have.d) { draw(have.d); return; }
-  const go = () => { if (!after.isConnected) return; put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; insFindGet(terms).then(d => { if (after.isConnected) draw(d); }); };
-  askProbe().then(() => { if (!FIND_ON || !after.isConnected) return;
-    if (!autoOn()) { put(); box.innerHTML = '<p class="ins-found-n"><button type="button" class="linklike" data-find-now>Look up published research on this</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return; }
-    if (now) go(); else INS.findT = setTimeout(go, FIND_WAIT); });
+  if (have && have.d) { draw(have.d); return Promise.resolve(have.d); }
+  const go = () => { if (!after.isConnected) return Promise.resolve(null); put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; return insFindGet(terms).then(d => { if (after.isConnected) draw(d); return d; }); };
+  if (!autoOn()) { put(); box.innerHTML = '<p class="ins-found-n"><button type="button" class="linklike" data-find-now>Look up published research on this</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return Promise.resolve(null); }
+  if (now) return go();
+  return new Promise(ok => { INS.findT = setTimeout(() => ok(go()), FIND_WAIT); });
 }
+/* (site 2.17, 18 November 2026. The senior author, 17 November, 23:38, of a question the site could not answer: "the ai should understand what i mean!
+   it should send the question immediately in every instance and the user should be notified".) The question, sent by itself. When Insight has no
+   answer of ours to a whole question about a drug, the page sends it to our system so that it gets answered, without a button, and says so in the
+   same place: "Sent to our system, so that it gets answered. It turns green under 'Your questions' on the start page when it is." The question is
+   put on the reader's own list like one they sent themselves.
+   - When: in the results once the question has stood unchanged for AUTO_WAIT (so that a sentence still being typed is not sent piece by piece);
+     on Enter (the sheet) at once. A beginning sent a moment before the whole question leaves the reader's list (askedTidy).
+   - What: exactly what "Ask us to check it" sends (the question's words, the drug page, the site's version), marked as sent by the page (a: 1).
+     The server keeps such a question apart and its words are never written into the public repository (site/worker/_worker.js; docs/AUTOMATION.md,
+     decision 31). No name, no address, no cookie.
+   - Not sent by itself: a beginning, a question that is not about drugs, what the site does not answer; a question the reader took off their list
+     in this visit; anything, once the reader has switched it off (the notice's own "Don't send mine", or About us, Privacy).
+   - A word we do not know as a drug ("We do not know 'x' as a drug"): sent by itself only when research is published under that name (the lookup
+     above found papers): then it is most likely a drug we have yet to learn, not a slip of the keyboard.
+   - A question like one on our list: nothing of the reader's is sent (the device counts the listed question by its number, as before); the LISTED
+     question is put on the reader's list by itself, so that they are told when it is answered. */
+const AUTO_WAIT = 2500, AUTO_SENT = "Sent to our system, so that it gets answered. It turns green under “Your questions” on the start page when it is.";
+const insAutoSaidHtml = t => '<span class="ask-said ask-auto-said" role="status">' + esc(t) + ' <button type="button" class="linklike" data-auto-stop>Don’t send mine</button></span>';
+function insAutoSaid(after, text) {
+  let slot = after.querySelector(".ask-auto");
+  if (!slot) {   // the card was drawn with the way to send by hand (before the server had answered, or for a word we did not know): that gives way to the notice
+    const b = after.querySelector("button[data-ask]"), n = after.querySelector(".ask-note"); if (!b) return;
+    if (after.matches(".sr-stranger, .ins-stranger")) { [...after.childNodes].forEach(x => { if (!(x.nodeType === 1 && x.matches("b, .ins-none-t"))) x.remove(); }); slot = document.createElement("span"); after.appendChild(document.createTextNode(" ")); after.appendChild(slot); }
+    else { slot = document.createElement("span"); b.replaceWith(slot); if (n) n.remove(); }
+  }
+  slot.outerHTML = insAutoSaidHtml(text);
+}
+function insAutoSend(after, res, now, found) {
+  if (!autoOn()) return;
+  const sheet = after.matches(".ins-none");
+  const still = q => { if (!after.isConnected) return false; if (now) return true; const s = document.getElementById("search"), b = document.getElementById("search-results"); return !!(s && b && !b.hidden && insClean(s.value) === q); };
+  // a question like one on our list: the listed question goes on the reader's own list by itself (nothing of theirs is sent)
+  if (res.note === "want" && res.want) {
+    const id = res.want.id, wq = wantQ(id) || autoAskedQ(id); if (!wq || askedGone(wq) || askedList().some(x => x.w === id)) return;
+    const keep = () => { if (!still(res.q)) return; const it = askedAdd(wq, ""); if (!it) return; askedSet(it.k, { w: id, sent: 1, kept: 1, auto: 1 }); askedBox();
+      const b = after.querySelector("button[data-want-keep]"); if (b) { const said = document.createElement("p"); said.className = "ask-said"; said.setAttribute("role", "status"); said.textContent = "It is on your list: we will tell you on this device when it is answered."; b.replaceWith(said); } };
+    if (now) keep(); else INS.sendT = setTimeout(keep, AUTO_WAIT);
+    return;
+  }
+  const stranger = res.note === "other" && !!res.stranger, q = res.q;
+  if (!autoSendOn() || !(res.note === "none" || stranger) || askedSentHas(q) || askedGone(q)) return;
+  const drug = insCtx().drug || "";
+  const send = async () => {
+    if (!still(q) || insAutoSend.busy === q || askedSentHas(q)) return;
+    insAutoSend.busy = q;
+    try {
+      if (stranger) { const d = await found; if (!d || !d.papers || !d.papers.length || !still(q)) return; }
+      const k = insClean(q).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k), it = askedAdd(q, drug); if (!it) return;
+      let ok = false;
+      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION, a: 1 }) }); ok = r.ok; } catch (e) { ok = false; }
+      if (!ok) {   // not taken (the day's room for such questions is used, or the connection failed): nothing is claimed; the way to send by hand stands
+        if (!had) askedDrop(it.k);
+        const slot = after.querySelector(".ask-auto"); if (slot) slot.outerHTML = insAskBtn(q, sheet ? "qz2-nb ins-askus" : "linklike");
+        return; }
+      askedSet(it.k, { sent: 1, auto: 1 }); askedTidy(it.k); askedBox();
+      if (after.isConnected) insAutoSaid(after, AUTO_SENT);
+    } finally { insAutoSend.busy = null; }
+  };
+  if (now) send(); else INS.sendT = setTimeout(send, AUTO_WAIT);
+}
+if (typeof document !== "undefined") document.addEventListener("click", e => {   // "Don't send mine": off on this device, said in the same place
+  const b = e.target.closest && e.target.closest("button[data-auto-stop]"); if (!b) return;
+  e.preventDefault(); e.stopPropagation();
+  try { localStorage.setItem(AUTO_OFF, "0"); } catch (err) { /* this page only */ }
+  const p = b.closest(".ask-auto-said"); if (p) p.textContent = "Off on this device: from now on nothing is sent or looked up by itself (About us, Privacy turns it on again). This one question was sent.";
+  askedBox();
+}, true);
 /* (2.15.3; the senior author, 17 November 2026: "I may want to read the history of questions I made somewhere although it has to be discreet".)
    The questions a reader asked, the last thirty, kept on this device only and shown folded under "Your questions" on the start page. A tap asks
    one again. Kept when a question is asked with Enter, when one of its results is opened, and when it is sent. Nothing of it leaves the device.
