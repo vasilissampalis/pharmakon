@@ -268,13 +268,13 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     ok("with the store on: the button says what it sends", /We haven.t checked exactly this yet/.test(before.none) && before.note === "Sends only this question. No name, no address.", JSON.stringify(before));
     await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
     const said = await p.evaluate(() => (document.querySelector(".ask-said") || {}).textContent || "");
-    ok("one tap: the page says it was sent, and promises only what is true (no answer within the hour until the half-hourly run keeps it)", said === "Sent. We will check it. It is kept under “Your questions” on the start page, and turns green there when it is answered." && await p.evaluate(() => AUTO_LOOP === false), said);
+    ok("one tap: the page says it was sent, and promises only what is true (no answer within the hour until the half-hourly run keeps it)", said === "Sent. Our system will try to answer it by itself, usually within a day or two; some answers then wait for a person. It is kept under “Your questions” on the start page, and turns green there when it is answered." && await p.evaluate(() => AUTO_LOOP === false), said);
     const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
     ok("the store holds the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "is modafinil safe" && Object.keys(kept[0]).sort().join() === "d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, rows: [...b.querySelectorAll(".aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
-    ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking \| is modafinil safe/.test(list.rows[0]), JSON.stringify(list));
-    ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it. A question turns green here when it is answered."));
+    ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking · sent less than an hour ago \| is modafinil safe/.test(list.rows[0]), JSON.stringify(list));   // (2.15.2: a row says how long ago it was sent)
+    ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered."));
     // (2.9; the senior author, of his two sent questions: "i cannot click on them to see the answer") a question that waits opens too
     await p.click("#home-asked .aq.wait button.aq-look"); await p.waitForTimeout(900);
     const lk = await p.evaluate(() => ({ value: document.getElementById("search").value, open: !document.getElementById("search-results").hidden, go: (document.querySelector("#home-asked .aq.wait .aq-go") || {}).textContent || "", fit: !!document.querySelector("#search-results .sr-fit, #search-results a, #search-results .sr-get") }));
@@ -291,14 +291,18 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     ok("the cross takes a question off the list", (await p.evaluate(() => document.querySelectorAll("#home-asked .aq").length)) === 1);
     // answered: a question kept under an older version of the site, which the site can answer now
     // (2.5: the first one is a question the reader asked to be told about from our list; it turns green the same way)
-    await p.evaluate(() => { localStorage.setItem("pk-asked", JSON.stringify([{ k: "is weed addictive", q: "is weed addictive", d: "", t: Date.now() - 864e5, cv: "0.0.1", st: "wait", sent: 1, w: "w_0000" }, { k: "what is the capital of mongolia", q: "what is the capital of mongolia", d: "", t: Date.now(), cv: "0.0.1", st: "wait", sent: 1 }])); });
-    await p.reload(); await p.waitForSelector("#home-asked .aq.ans", { timeout: 90000 });
+    await p.evaluate(() => { localStorage.setItem("pk-asked", JSON.stringify([{ k: "is weed addictive", q: "is weed addictive", d: "", t: Date.now() - 864e5, cv: "0.0.1", st: "wait", sent: 1, w: "w_0000" }, { k: "what is the capital of mongolia", q: "what is the capital of mongolia", d: "", t: Date.now(), cv: "0.0.1", st: "wait", sent: 1 },
+      // (2.15.2; the senior author, of "do gay people" on his list: "why are non drug questions included... bad design") a question that is not about drugs, and a beginning
+      // that is not a whole question, leave the list; a drug question the site cannot answer yet stays
+      { k: "do gay people", q: "do gay people", d: "", t: Date.now() - 2e7, cv: "0.0.1", st: "wait", sent: 1, u: 1 }, { k: "does lsd change your eye colour", q: "does lsd change your eye colour", d: "", t: Date.now() - 3e7, cv: "0.0.1", st: "wait", sent: 1 }])); });
+    await p.reload(); await p.waitForSelector("#home-asked .aq.ans", { timeout: 90000 }); await p.waitForTimeout(1500);
     const ans = await p.evaluate(() => [...document.querySelectorAll("#home-asked .aq")].map(r => ({ cls: r.className, k: r.querySelector(".aq-k").textContent, q: r.querySelector(".aq-q").textContent, href: (r.querySelector("a.aq-a") || {}).getAttribute ? r.querySelector("a.aq-a").getAttribute("href") : null })));
-    ok("a kept question that the site can answer now shows first, in green, as Answered; the other is still being checked", ans.length === 2 && /ans/.test(ans[0].cls) && ans[0].k === "Answered" && ans[0].q === "is weed addictive" && /^#/.test(ans[0].href || "") && /wait/.test(ans[1].cls), JSON.stringify(ans));
+    ok("a kept question that the site can answer now shows first, in green, as Answered; the other is still being checked", ans.length === 2 && /ans/.test(ans[0].cls) && ans[0].k === "Answered" && ans[0].q === "is weed addictive" && /^#/.test(ans[0].href || "") && /wait/.test(ans[1].cls) && ans[1].q === "does lsd change your eye colour" && /sent \d+ hours ago$/.test(ans[1].k), JSON.stringify(ans));
+    ok("a question that is not about drugs, and a beginning that is not a whole question, are not kept on the list", !ans.some(x => /mongolia|gay/.test(x.q)) && (await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked")).map(x => x.k).join("|"))) === "is weed addictive|does lsd change your eye colour", JSON.stringify(ans));
     await shot(p, "390-home-answered");
     await p.click("#home-asked .aq.ans a.aq-a"); await p.waitForTimeout(900);
     const opened = await p.evaluate(() => ({ sheet: document.getElementById("evsheet").classList.contains("open"), left: JSON.parse(localStorage.getItem("pk-asked")).map(x => x.k) }));
-    ok("reading it opens the answer over the page and takes it off the list", opened.sheet && opened.left.join() === "what is the capital of mongolia", JSON.stringify(opened));
+    ok("reading it opens the answer over the page and takes it off the list", opened.sheet && opened.left.join() === "does lsd change your eye colour", JSON.stringify(opened));
     await p.context().close();
   }
   {
@@ -328,7 +332,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click("#home-asked button.aq-send"); await p.waitForTimeout(900);
     const after = await p.evaluate(() => ({ k: (document.querySelector("#home-asked .aq-k") || {}).textContent || "", form: document.getElementById("report").classList.contains("open"), send: !!document.querySelector("#home-asked button.aq-send") }));
     const stored = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v).q);
-    ok("with the store on: a question that was not sent is sent from the list in one tap, and the row says so", before === "Not sent" && after.k === "Sent. We are checking" && !after.form && !after.send && stored.includes("does cannabis cause cancer"), JSON.stringify({ before, after, stored }));
+    ok("with the store on: a question that was not sent is sent from the list in one tap, and the row says so", before === "Not sent" && after.k === "Sent. We are checking · sent less than an hour ago" && !after.form && !after.send && stored.includes("does cannabis cause cancer"), JSON.stringify({ before, after, stored }));
     await p.context().close();
   }
 
@@ -353,7 +357,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click("#search-results button[data-want-keep]"); await p.waitForTimeout(300);
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     const row = await p.evaluate(() => { const r = document.querySelector("#home-asked .aq"); return r ? r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent : ""; });
-    ok("Tell me when it is answered: Your questions keeps the LISTED question, as On our list", /onlist \| On our list \| How can you die from alcohol\?$/.test(row), row);
+    ok("Tell me when it is answered: Your questions keeps the LISTED question, as On our list", /onlist \| On our list\. Not tried yet: it is in line · asked less than an hour ago \| How can you die from alcohol\?$/.test(row), row);   // (2.15.2: what our system has done with it so far, and since when)
     await shot(p, "390-home-onlist");
     // its own words instead
     await typeW(p, "does weed cause cancer"); await p.click("#search-results .sr-want .want-other"); await p.waitForTimeout(900);

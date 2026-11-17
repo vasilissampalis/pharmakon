@@ -245,6 +245,20 @@ const AUTO_LOOP = process.env.PK_AUTO_LOOP ? process.env.PK_AUTO_LOOP === "1" : 
 // amounts: answers about amounts are shown only once the editor has read the first real ones the lane wrote (the checks' build shows its pretend ones)
 const AUTO_AMOUNTS = process.env.PK_AUTO_FIXTURE ? true : AUTO_POLICY.amounts === true;
 const startedPages = {};   // (2.8) {slug: name} of the pages the system started that have an answer to show
+// (2.15.2) what our system has done so far with each listed question, in one word, for the reader's own list of sent questions: "new"
+// (not tried yet), "tried" (no answer has passed the checks; it is tried again), "person" (written; a person has to check it first)
+const AUTO_STATE = (() => {
+  const out = {}; let st = {}, held = {};
+  try { st = JSON.parse(fs.readFileSync(path.join(ROOT, "data/auto/lane/state.json"), "utf8")).items || {}; } catch (e) { st = {}; }
+  try { held = JSON.parse(fs.readFileSync(path.join(ROOT, "data/auto/held.json"), "utf8")); } catch (e) { held = {}; }
+  const heldIds = new Set((Array.isArray(held.held) ? held.held.map(x => x && x.id) : Object.keys(held.held || {})).filter(Boolean).map(k => String(k).replace(/^au_/, "")));
+  const listed = [];
+  for (const f of ["data/site/wanted.json", "data/auto/wanted-auto.json"]) { try { listed.push(...(JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8")).items || [])); } catch (e) { /* no such list yet */ } }
+  for (const w of listed) { if (!w || !/^w_[a-z0-9_]{1,40}$/.test(String(w.id))) continue; const s = st[w.id];
+    out[w.id] = heldIds.has(w.id) ? "person" : !s ? "new" : s.status === "waiting" ? "person" : s.status === "none" ? "tried" : s.status === "published" ? "" : "new";
+    if (!out[w.id]) delete out[w.id]; }
+  return out;
+})();
 const AUTO_SHOWN = (() => {
   const heldFile = path.join(ROOT, "data", "auto", "held.json"), held = new Set(fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []).map(x => x.id || x) : []);
   const drugSlugs = new Set(site("substances.json").map(s => s.slug)), out = [], left = [];
@@ -358,7 +372,7 @@ const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {};
   if (fresh.length) console.log("machine lane: " + fresh.length + " pages people asked about are shown as started, with no answer yet (" + Object.keys(AUTO_PICS).length + " pages have pictures the system found): " + fresh.map(k => AUTO_SHELL[k].name).join("; "));
 }
 const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
-  ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
+  ";\nconst AUTO_STATE = " + JSON.stringify(AUTO_STATE) + ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }

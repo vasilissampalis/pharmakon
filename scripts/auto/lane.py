@@ -1693,6 +1693,18 @@ def _searched(path):
     except (OSError, ValueError): return ""
 
 
+RESERVE = {"neurons": 2400, "groq": 50000}
+def kept_for_sent(w):
+    """(17 November 2026; the senior author, of the questions he had sent: "they are hours pending this is disappointing".) On that day
+    the system's own questions had used the whole free allowance by 16:15 UTC, and a question a person sent in the evening could not be
+    tried until the next day. So the end of a day's allowance is kept for the questions people send: once Cloudflare has fewer than
+    RESERVE["neurons"] left AND Groq's strongest model fewer than RESERVE["groq"] tokens (room for three or four answers), the system's
+    own questions wait for the next day, and a sent question is still worked on at once. True: this question waits."""
+    if w.get("from") == "a question visitors sent" or w.get("trial"): return False
+    try: return llm.left() < RESERVE["neurons"] and llm.groq_left("openai/gpt-oss-120b") < RESERVE["groq"]
+    except Exception: return False
+
+
 def turn_of(w, done):
     """When a question's turn comes (the smaller, the sooner), or None when there is nothing to do for it: a question never
     tried (0); one whose answer an older lane wrote (1); the second look: an answer that is not complete, or no answer, for
@@ -1826,6 +1838,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         except Exception as e: own_err = str(e)[:200] or type(e).__name__
         if own_chk: print(f"lane: our own checker is {own_chk.e.get('name')} (from {own_chk.e.get('from')}), at least {own_chk.e.get('threshold')}")
         if own_err: print("lane: our own checker is in use and could NOT be run here: every answer of this run waits for the editor:", own_err)
+    if real and not trial and not ids: order = [w for w in order if not kept_for_sent(w)] or order[:0]      # (what is left of the day is for the questions people send)
     for w in order[:limit]:
         if real:
             models = team(only=only_team)
@@ -1889,7 +1902,20 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
     return made
 
 
+def _reserve_selftest():
+    keep = (llm.left, llm.groq_left)
+    try:
+        llm.left = lambda: 5000; llm.groq_left = lambda n: 10000
+        assert not kept_for_sent({"id": "w_1"}) and not kept_for_sent({"id": "w_a1", "from": "a question visitors sent"})          # room at Cloudflare: every question is worked on
+        llm.left = lambda: 800
+        assert kept_for_sent({"id": "w_1"}) and kept_for_sent({"id": "w_g1", "from": "the system's own question"}) and not kept_for_sent({"id": "w_a1", "from": "a question visitors sent"}) and not kept_for_sent({"id": "t_1", "trial": True})
+        llm.groq_left = lambda n: 90000
+        assert not kept_for_sent({"id": "w_1"})                                                                                    # room at Groq: the system's own go on
+    finally: llm.left, llm.groq_left = keep
+
+
 def selftest():
+    _reserve_selftest()
     import tempfile, numpy as np
     global OUT, STATE, WANTED
     tmp = pathlib.Path(tempfile.mkdtemp()); llm.LEDGER = tmp / "usage.json"

@@ -145,6 +145,9 @@ const server = http.createServer((req, res) => {
     if (a.judge.id !== b.first.id || dp > 1e-4 || df > 1e-4) rkBad.push(tag + " the judge: page " + a.judge.id + " " + a.judge.p.toFixed(5) + " [" + a.judge.f.map(x => x.toFixed(4)) + "] build " + b.first.id + " " + b.first.p.toFixed(5) + " [" + b.first.f.map(x => x.toFixed(4)) + "]");
     // (2.9) a question that is not finished and names no drug has no best match on the page: the answers found are shown as ways to go on
     const bb = a.demoted ? [] : b.best, br = a.demoted ? b.best.concat(b.related).slice(0, 3) : b.related; if (a.demoted) demoted++;
+    // (2.15.2) where two named drugs have a checked answer about the two together, the page shows that answer first whatever the judge's number
+    // (a.pair): the build ranks by the judge alone, so what is compared there is what the judge alone gave the page (a.judged: no best match, and the related ids)
+    if (a.judged) { const ids = a.judged.related.join(), want = br.map(r => r.id).join(); if (bb.length || ids !== want) rkBad.push(tag + " (two drugs together) the judge alone: page related [" + ids + "] build best [" + bb.map(r => r.id) + "] related [" + want + "]"); if (!a.emergency) nRel += br.length; nNone++; return; }
     const pairs = [["best", a.best, bb]]; if (a.emergency) urgent++; else pairs.push(["related", a.related, br]);
     for (const [k, x, y] of pairs) {
       if (x.map(r => r.id).join() !== y.map(r => r.id).join()) { rkBad.push(tag + " " + k + ": page [" + x.map(r => r.id + " " + r.plain + "/" + r.topic) + "] build [" + y.map(r => r.id + " " + r.plain + "/" + r.topic) + "]"); continue; }

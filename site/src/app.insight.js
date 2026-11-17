@@ -890,6 +890,27 @@ async function insRank(query, ctx) {
     const row = c => ({ id: INS.ids[c.i], page: insPageOf(INS.ids[c.i], tx.groups, drug), plain: +c.plain.toFixed(4), topic: +c.topic.toFixed(4), off: !c.on });
     res.best = tiers.best.map(row); res.related = res.emergency ? [] : tiers.related.map(row);   // an emergency gets its route and the answers that fit, nothing nearby
     res.judge = { id: INS.ids[tiers.first.i], p: tiers.first.p, f: tiers.first.f };              // (for the checks: the first candidate and the judge's number for it)
+    // (2.15.2; the senior author, 17 November 2026, of his sent "is cocaethylene more dangerous than cocaine or alcohol alone?", hours on his
+    // list: "will these be answered? ... this is disappointing". The site had the checked answer on cocaine with alcohol, which names
+    // cocaethylene; the judge's number for it was under its cut, so it stood under "Related" and the page offered to send the question.)
+    // Two drugs are named and the site has checked answers about mixing exactly those two: they are what we have checked on the question,
+    // whatever the judge's number. The nearest in meaning first, two at most.
+    // It must be an answer about those two with each other: its own question names both, by two different names ("Cocaine with alcohol"; an
+    // answer on "opioids with benzodiazepines" is not an answer on fentanyl with heroin). And the question must be about the two together:
+    // the mixing tool's own reading of it (its route), or a word of the question that the model's word list does not hold and that the
+    // answer's own plain text uses ("cocaethylene"). "cocaine vs alcohol, which is more addictive" is neither.
+    if (!res.best.length && !res.emergency && !unf && tx.groups.length === 2) {
+      const [g1, g2] = tx.groups, text = id => { const s = (SIMPLE.claims || {})[id] || {}; return (insQ(id) + " " + (s.short || "") + " " + (s.but || "") + " " + (s.how || []).join(" ")).toLowerCase(); };
+      const namesIn = t => { const out = []; INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(t))) out.push(INS.nameOf.get(m[1].toLowerCase()) || []); INS.nameRe.lastIndex = 0; return out; };
+      const both = id => { const ns = namesIn(String(insQ(id) || "").toLowerCase()); return ns.some((a, i) => a.some(s => g1.includes(s)) && ns.some((b, j) => j !== i && b.some(s => g2.includes(s)))); };
+      const rare = (res.core.toLowerCase().match(/[a-z]{8,}/g) || []).filter(w => !INS.vocab.has(w) && !INS.nameOf.has(w));
+      const mixing = res.routes.some(r => r.kind === "mix");
+      const pair = INS.ids.map((id, i) => i).filter(i => { const id = INS.ids[i], m = MIXFOR[id] || []; if (!(g1.some(s => m.includes(s)) && g2.some(s => m.includes(s))) || !both(id)) return false; return mixing || rare.some(w => text(id).includes(w)); })
+        .sort((a, b) => (sc.topic[b] || 0) - (sc.topic[a] || 0)).slice(0, 2);
+      if (pair.length) { res.judged = { best: [], related: res.related.map(x => x.id) };   // (what the judge alone gave, for the check that the page and the build rank alike)
+        res.best = pair.map(i => ({ id: INS.ids[i], page: insPageOf(INS.ids[i], tx.groups, drug), plain: +(sc.bw[i] || 0).toFixed(4), topic: +(sc.topic[i] || 0).toFixed(4), off: false, pair: true }));
+        const got = new Set(res.best.map(x => x.id)); res.related = res.related.filter(x => !got.has(x.id)); res.pair = true; }
+    }
     // 2.9: a question that is not finished and names no drug has no "best match": the answers found are ways to go on
     if (unf && !named && !answered && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
     if (!res.best.length && !answered && !unf) res.want = insWant(v, mv, res.core, tx.groups);   // 2.5: is it on our list?
@@ -1415,7 +1436,7 @@ let ASK_NEWER = false;
 // run is on and has been seen to keep it (AUTO_LOOP, from data/auto/lane/policy.json at build time); until then: the plain truth
 const ASK_SENT = (typeof AUTO_LOOP !== "undefined" && AUTO_LOOP)
   ? "Sent. Our system starts on it within half an hour. If it finds research it can read, the answer is usually here within the hour: your question then turns green under “Your questions” on the start page."
-  : "Sent. We will check it. It is kept under “Your questions” on the start page, and turns green there when it is answered.";
+  : "Sent. Our system will try to answer it by itself, usually within a day or two; some answers then wait for a person. It is kept under “Your questions” on the start page, and turns green there when it is answered.";
 function askedLook() {   // one look: is the site on the server newer than this page?
   if (ASK_NEWER) return Promise.resolve(true);
   return fetch("data/build.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => { if (j && typeof j.build === "string" && j.build !== ASK_BUILD) { ASK_NEWER = true; if (askedWatch.t) clearInterval(askedWatch.t); askedBox(); } return ASK_NEWER; }).catch(() => false);
@@ -1446,25 +1467,27 @@ function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k 
 function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
 function askedBox() {
   const box = document.getElementById("home-asked"); if (!box) return;
+  { const all = askedList(), keep = all.filter(it => !it.u && !it.gone); if (keep.length !== all.length) askedSave(keep); }   // (2.15.2) rows kept by an older page as "Not a whole question" leave the list
   const list = askedList().filter(it => it.st !== "ans" || it.h || claimById[it.id] || isAuto(it.id));
   if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
   const byNew = (a, b) => (b.t || 0) - (a.t || 0);   // (2.9.2, the senior author) the newest first, the oldest last
   // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question
   // that waits can be opened too: it is asked again in the box above, which shows what the site has on it so far
-  const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + k + '</span><span class="aq-q">' + esc(it.q) +
+  // (2.15.2) how long ago, and for a question on our list what our system has done with it so far (AUTO_STATE, from the lane's own record)
+  const ago = it => { const h = (Date.now() - (it.t || Date.now())) / 3600000; return h < 1 ? "less than an hour ago" : h < 36 ? Math.round(h) + (Math.round(h) === 1 ? " hour ago" : " hours ago") : Math.round(h / 24) + " days ago"; };
+  const state = it => { const s = it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : ""; return s === "person" ? "Written by our system. A person has to check it first" : s === "tried" ? "On our list. Tried: no answer has passed our checks yet. It is tried again" : s === "new" ? "On our list. Not tried yet: it is in line" : ""; };
+  const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + (state(it) || k) + (it.sent ? '<span class="aq-ago"> · ' + (it.kept ? "asked " : "sent ") + ago(it) + "</span>" : "") + '</span><span class="aq-q">' + esc(it.q) +
     '</span><span class="aq-go">See what we have so far ' + icon("arrow") + "</span></button>" + x(it) + "</li>";
   const row = it => it.st === "ans"
     ? '<li class="aq ans"><a class="aq-a" href="' + esc(it.h ? it.h : isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '"' + (it.h ? "" : ' data-sheet="' + esc(it.id) + '"') + ' data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
-    : it.u ? '<li class="aq wait unfin"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + 'Not a whole question</span><span class="aq-q">' + esc(it.q) +
-      '</span><span class="aq-go">Finish it and ask again ' + icon("arrow") + "</span></button>" + x(it) + "</li>"   // (2.9.2) a beginning ("do gay people"): nothing can be checked until it is finished
     : it.w ? look(it, "On our list")
     : it.sent ? look(it, "Sent. We are checking")
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
   // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
   // didn't send the email? ... the user should be informed": the list says where it is kept, and each row whether it was sent)
   const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
-  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it. A question turns green here when it is answered.</p>' + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>";
+  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered.</p>' + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>";
   box.hidden = false;
   askedCheckSoon(); askedWatch();
 }
@@ -1480,10 +1503,15 @@ async function askedCheck() {
       if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
       else if (rt) { it.st = "ans"; it.h = rt.href; }
       else if (res.want && !it.w && it.sent) it.w = res.want.id;   // (2.9) sent, not answered yet, and now on our list: its row says so
-      if (res.note === "unfinished") it.u = 1; else delete it.u;      // (2.9.2) a beginning, not a whole question: its row says so
-      it.cv = ASK_BUILD; changed = true; } catch (e) { /* asked again on the next visit */ }
+      else if (!it.w && it.sent) { const pg = res.routes.find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;   // (2.15.2) about a drug whose page the system started: the question listed on that page is the one it waits for
+        if (sh && sh.asked && sh.asked.length) it.w = sh.asked[0].id; }
+      // (2.15.2; the senior author, of "do gay people" on his list as "Not a whole question": "why are non drug questions included... bad
+      // design") a beginning, or a question that is not about drugs, is not a question the site can work on: it leaves the list. One with
+      // a word we do not know stays (it may be the name of a drug the system has yet to learn).
+      if (res.note === "unfinished" || (res.note === "other" && !res.stranger)) it.gone = 1;
+      delete it.u; it.cv = ASK_BUILD; changed = true; } catch (e) { /* asked again on the next visit */ }
   }
-  if (changed) { askedSave(list); askedBox(); }
+  if (changed) { askedSave(list.filter(it => !it.gone)); askedBox(); }
 }
 function askedCheckSoon() {
   if (askedCheckSoon.done || !askedList().some(it => it.st === "wait" && it.cv !== ASK_BUILD)) return;
@@ -1516,7 +1544,7 @@ document.addEventListener("click", async e => {
   // reader's own list; it turns green when a later version of the site answers it
   const wk = e.target.closest("button[data-want-keep]");
   if (wk) { e.preventDefault(); e.stopPropagation(); const id = wk.dataset.wantKeep, q = wantQ(id) || autoAskedQ(id); if (!q) return;   // (2.12: a question listed on a page our system started is kept the same way)
-    const it = askedAdd(q, ""); if (it) askedSet(it.k, { w: id, sent: 1 });
+    const it = askedAdd(q, ""); if (it) askedSet(it.k, { w: id, sent: 1, kept: 1 });   // (kept: a question of our list the reader asked to be told about; no words of theirs were sent)
     if (wk.closest("#view-wanted, [data-count]")) wantCount(id);   // counted where the page says so (the list's own page; a card that carries the line)
     const said = document.createElement("p"); said.className = "ask-said"; said.setAttribute("role", "status"); said.textContent = "We will tell you on this device. It is under “Your questions” on the start page."; wk.replaceWith(said);
     askedBox(); return; }
