@@ -256,7 +256,8 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
         if wait > 0 and not opener: time.sleep(wait)
         _last_call[model] = time.time(); _minute.setdefault(model, []).append((time.time(), est_in + max_tokens))
         try:
-            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=180 if S.get("paid") else 80) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it)
+            few = not S.get("paid") and 0 < lim["calls"] <= 20                 # a model with a handful of free calls a day (Google's strong readers): each call is dear
+            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=180 if S.get("paid") else 170 if few else 80) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it. 17 November 2026: a strong reader that thinks before it answers is given 170 seconds; Gemini 3.8 Flash did not answer six sentences in 80)
         except urllib.error.HTTPError as e:
             whole = e.read().decode("utf-8", "replace")[:6000] if hasattr(e, "read") else ""; detail = whole[:400]; last = f"{svc} answered {e.code}: {detail}"
             if e.code == 429 or (e.code == 529 and svc == "claude"):
@@ -280,6 +281,11 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
             continue
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
             last = f"{svc} could not be reached: {str(e)[:160]}"
+            if isinstance(e, TimeoutError) or "timed out" in str(e).lower():      # (17 November 2026) the request was sent and the service was working on it: it counts it as a call, so we do; and a model with few calls a day is not asked the same thing again at once
+                with LOCK:
+                    L = ledger(); used = svc_used(svc, L); used["calls"] += 1; used.setdefault("models", {})[name] = int(used["models"].get(name) or 0) + 1; L.setdefault("svc", {})[svc] = used
+                    LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+                if few: break
             if k + 1 < tries: time.sleep(0 if opener else 4); continue
             break
         if svc == "claude":
@@ -577,6 +583,15 @@ def selftest():
     assert calls_left("gemini:gemma-4-31b-it") == 0 and calls_left("gemini:gemini-3.5-flash-lite") == 450
     # Google's day begins at midnight Pacific time: at 03:00 UTC it is still yesterday there; a model in high demand is waited for, four times, before the usual tries
     assert day_of("gemini", datetime.datetime(2026, 11, 17, 3, 0, tzinfo=datetime.timezone.utc)) == "2026-11-16" and day_of("gemini", datetime.datetime(2026, 11, 17, 9, 0, tzinfo=datetime.timezone.utc)) == "2026-11-17" and day_of("mistral", datetime.datetime(2026, 11, 17, 3, 0, tzinfo=datetime.timezone.utc)) == "2026-11-17"
+    # a call that timed out was sent: it is counted; a model with few calls a day is not asked again at once, another is, and each is given its time
+    L = ledger(); L["svc"]["gemini"]["models"] = {}; json.dump(L, open(LEDGER, "w")); slow = {"n": 0, "t": []}
+    def too_slow(req, timeout=0): slow["n"] += 1; slow["t"].append(timeout); raise TimeoutError("The read operation timed out")
+    try: chat("gemini:gemini-4-hydrogen", [{"role": "user", "content": "x"}], 50, too_slow); raise AssertionError("no Unavailable")
+    except Unavailable as e: assert "timed out" in str(e)
+    assert slow == {"n": 1, "t": [170]} and svc_used("gemini")["models"] == {"gemini-4-hydrogen": 1} and calls_left("gemini:gemini-4-hydrogen") == 17, (slow, svc_used("gemini")["models"])
+    try: chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, too_slow); raise AssertionError("no Unavailable")
+    except Unavailable: pass
+    assert slow["n"] == 4 and slow["t"][1:] == [80, 80, 80] and svc_used("gemini")["models"]["gemma-4-31b-it"] == 3, slow
     L = ledger(); L["svc"]["gemini"]["models"] = {}; json.dump(L, open(LEDGER, "w")); hits = {"n": 0}
     def crowded(req, timeout=0):
         hits["n"] += 1
