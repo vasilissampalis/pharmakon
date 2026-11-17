@@ -240,6 +240,7 @@ class Ranker:
         self.expand = drug_names(); self.canon = {s["slug"]: s["name"].split(" (")[0] for s in SUB}
         # 2.5: the list of questions not answered yet, as a ranker of its own over the same names, weights and judge
         Sc = D.get("scope"); self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A) if Sc else None
+        self.unfin = {k: set(v) for k, v in ((Sc or {}).get("unfinished") or {}).items()} or None
         self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A) if Sc else None
         Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0); self.want_near = (Wd or {}).get("near", [0.0, 0.0])
         if Wd: self.wanted = Ranker({"dim": dim, "ids": Wd["ids"], "rows": Wd["rows"], "W": Wd["W"], "M": Wd["M"], "S": Wd["S"], "docs": Wd["docs"], "weights": D["weights"], "tiers": D["tiers"], "judge": D["judge"],
@@ -313,6 +314,16 @@ class Ranker:
         full, masked, groups = self.texts(q, drug)
         v, mv = embed_all([full, masked], quiet=True)
         return self.rank_vectors(q, v, mv, groups)
+    def unfinished(self, q):
+        """Is this question not finished yet, by its words alone (the page's insUnfinished; site/insight/scope.json,
+        "unfinished")? Only asked of a question that names no drug and is not asked on a drug's page."""
+        U = self.unfin
+        if not U: return False
+        w = re.findall(r"[a-z0-9']+", str(q).lower())
+        if not w: return False
+        if w[-1] in U["ends"] and not (w[0] in ("what", "which", "who", "whom", "where") and w[-1] in U["stranded"]): return True
+        if not all(x in U["func"] or x in U["topic"] for x in w): return False
+        return not (re.match(r"what (?:is|are|was|were|does|do)\b", " ".join(w)) and any(x in U["topic"] for x in w))
     def in_scope(self, q):
         """Is this a question about drugs, by its words alone (the page's insScope; site/insight/scope.json)? Yes when,
         with the phrases that are not drug talk taken out, it names a drug the site covers or holds a drug word, the name
@@ -444,7 +455,9 @@ def scope_block():
     S = json.load(open(ROOT / "site" / "insight" / "scope.json", encoding="utf-8"))
     plain = lambda n: re.sub(r"([.^$*+?()\[\]{}|\\])", r"\\\1", n)
     src = "|".join(["(?:" + w + ")" for w in S["words"]] + [plain(n) for n in S["names"]] + ["(?:" + S["chem"] + ")"])
-    return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"])}
+    U = S.get("unfinished") or {}
+    return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"]),
+            "unfinished": {k: sorted(set(U.get(k) or [])) for k in ("ends", "stranded", "func", "topic")}}      # (2.9) is a question finished? the page's insUnfinished and Ranker.unfinished read the same lists
 
 
 WANT_CUT = 0.75            # the judge's number from which a typed question can be a listed one (see wanted_index)
