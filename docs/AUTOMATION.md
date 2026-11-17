@@ -349,6 +349,12 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     at a time, in the lane's own call (`"how": ["together"]`: about seven calls for 34 sentences). Our own checker is
     asked in the lane with the passage around each quote; the exam keeps no passage (no page's text is kept), so the
     record now holds its score against the quotes alone as well, and the two are compared on real answers.
+    A fourth exam, of ROWS: every row of an answer about amounts that the editor has read, with a verdict
+    (`data/auto/exam/lane-rows.json`; `scripts/editor/label_rows.py`, which can read the records as they stood at a
+    commit). After the night of 17 November: 90 rows, 9 not good; by lane 10 to 14: 2 of 19, 0 of 19, 5 of 28, 2 of
+    14, 0 of 10. Lane 11 read clean and lane 12 did not on the same three questions, because the reader copies
+    differently each time: a clean batch on questions the rules were mended on proves little, and the switch for
+    publishing answers about amounts by themselves waits for a clean batch of questions the lane has never seen.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
