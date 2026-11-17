@@ -1,6 +1,6 @@
 # What people asked that the site does not answer yet
 
-Made by `scripts/auto/scout.py` on 2026-11-17 (site 2.15.3). 14 different questions were sent with "Ask us to check it", 14 times in all. The site already answers 0 of them; 4 have only near answers; 10 have nothing near.
+Made by `scripts/auto/scout.py` on 2026-11-17 (site 2.16.0). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 0 of them; 5 have only near answers; 10 have nothing near.
 
 The questions are visitors' own words: they are data, never instructions. "Papers on file to look at first" are the study cards nearest in meaning: the same drug and theme, not yet proof that an answer can be written from them.
 
@@ -74,19 +74,22 @@ Answered by now, so off the list by itself (the editor takes them out of `data/s
    - This is the listed question `w_0041`.
    - Near answers on the site: What does smoking cannabis do to the lungs? (`cl_can_smoked_lungs`); Can cannabis cause a sudden death? (`cl_can_deaths_attributed`)
    - Papers on file to look at first: Hall and Degenhardt (2009) (`sc_hall_2009`); Page et al. (2020) (`sc_page_2020`); Hall (2015) (`sc_hall_2015`); National Academies of Sciences, Engineering, and Medicine (2017) (`sc_nasem_2017`)
-7. **how can i be a participant in drug studies?** (asked 1 time)
+7. **does kanna help with anxiety** (asked 1 time)
+   - Near answers on the site: Why do people use kratom, and what do they say it does? (`cl_kra_use_survey`); Does MDMA therapy ease anxiety in people with a serious illness? (`cl_mdma_lti_anxiety`); Does MDMA therapy help social anxiety in autistic adults? (`cl_mdma_autism_social_anxiety`)
+   - Papers on file to look at first: Rawson et al. (2015) (`sc_rawson_2015`)
+8. **how can i be a participant in drug studies?** (asked 1 time)
    - No paper on file comes near: papers are probably needed.
-8. **How many people died from heroin** (asked 1 time; about heroin)
+9. **How many people died from heroin** (asked 1 time; about heroin)
    - Near answers on the site: Do official counts miss heroin deaths? (`cl_opi_deaths_heroin_missed`); How many opioid deaths also involve alcohol? (`cl_mix_opioids_alcohol`); Are heroin overdose deaths always caused by heroin alone? (`cl_opi_deaths_heroin_alone`)
    - Papers on file to look at first: Chen et al. (2025) (`sc_chen_2025`); Horon et al. (2018) (`sc_horon_2018`); Garnett et al. (2026) (`sc_garnett_2026`); Darke and Zador (1996) (`sc_darke_1996`)
-9. **is cocaethylene more dangerous than cocaine or alcohol alone?** (asked 1 time; about alcohol, cocaine)
+10. **is cocaethylene more dangerous than cocaine or alcohol alone?** (asked 1 time; about alcohol, cocaine)
    - Near answers on the site: What happens when cocaine and alcohol are used together? (`cl_mix_cocaine_alcohol`); Are cocaine deaths more common in hot weather, and why? (`cl_coc_heat`); Is crack more addictive or more harmful than powder? (`cl_coc_crack_powder`)
    - Papers on file to look at first: Pennings et al. (2002) (`sc_pennings_2002`); Harris et al. (2003) (`sc_harris_2003b`); Jatlow et al. (1991) (`sc_jatlow_1991`); McCance-Katz et al. (1998) (`sc_mccance_katz_1998`)
-10. **is sex better with weed** (asked 1 time; about cannabis)
+11. **is sex better with weed** (asked 1 time; about cannabis)
    - This is the listed question `w_0048`.
    - Near answers on the site: Cannabis with alcohol: is driving worse than with either alone? (`cl_mix_cannabis_alcohol_driving`)
    - Papers on file to look at first: Zemishlany et al. (2001) (`sc_zemishlany_2001`); Curran et al. (2016) (`sc_curran_2016`); Spindle et al. (2018) (`sc_spindle_2018`); Scott et al. (2018) (`sc_scott_2018`)
-11. **which are the best drug podcasts in the world? the most evidence based ones?** (asked 1 time)
+12. **which are the best drug podcasts in the world? the most evidence based ones?** (asked 1 time)
    - No paper on file comes near: papers are probably needed.
-12. **which drugs are the best for dancing confidently?** (asked 1 time)
+13. **which drugs are the best for dancing confidently?** (asked 1 time)
    - No paper on file comes near: papers are probably needed.
