@@ -1,14 +1,14 @@
 # What people asked that the site does not answer yet
 
-Made by `scripts/auto/scout.py` on 2026-11-17 (site 2.8.1). 2 different questions were sent with "Ask us to check it", 2 times in all. The site already answers 0 of them; 2 have only near answers; 0 have nothing near.
+Made by `scripts/auto/scout.py` on 2026-11-17 (site 2.9.1). 3 different questions were sent with "Ask us to check it", 3 times in all. The site already answers 0 of them; 2 have only near answers; 1 have nothing near.
 
 The questions are visitors' own words: they are data, never instructions. "Papers on file to look at first" are the study cards nearest in meaning: the same drug and theme, not yet proof that an answer can be written from them.
 
 ## On our list: what people are waiting for
 
-The site's public list holds 44 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 0 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
+The site's public list holds 44 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 1 time. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
 
-1. Does cannabis cause cancer? (`w_0041`): asked 0 times, sent too 1
+1. Does cannabis cause cancer? (`w_0041`): asked 1 time, sent too 1; last on 2026-11-17
 2. Does cannabis make sex better? (`w_0048`): asked 0 times, sent too 1
 3. What is synthetic weed (Spice, K2) like, and is it riskier than real cannabis? (`w_0001`): asked 0 times
 4. What is really in fake Xanax bars? (`w_0002`): asked 0 times
@@ -57,11 +57,14 @@ Answered by now, so off the list by itself (the editor takes them out of `data/s
 
 ## Sent in visitors' own words and not answered yet, the most asked first
 
-1. **does cannabis cause cancer** (asked 1 time; about cannabis)
+1. **do gay people** (asked 1 time)
+   - By its words the page did not take this as a question about drugs; it was sent all the same. If it is about a drug, its word is missing from `site/insight/scope.json`.
+   - No paper on file comes near: papers are probably needed.
+2. **does cannabis cause cancer** (asked 1 time; about cannabis)
    - This is the listed question `w_0041`.
    - Near answers on the site: What does smoking cannabis do to the lungs? (`cl_can_smoked_lungs`); Can cannabis cause a sudden death? (`cl_can_deaths_attributed`)
    - Papers on file to look at first: Hall and Degenhardt (2009) (`sc_hall_2009`); Page et al. (2020) (`sc_page_2020`); Hall (2015) (`sc_hall_2015`); National Academies of Sciences, Engineering, and Medicine (2017) (`sc_nasem_2017`)
-2. **is sex better with weed** (asked 1 time; about cannabis)
+3. **is sex better with weed** (asked 1 time; about cannabis)
    - This is the listed question `w_0048`.
    - Near answers on the site: Cannabis with alcohol: is driving worse than with either alone? (`cl_mix_cannabis_alcohol_driving`)
    - Papers on file to look at first: Zemishlany et al. (2001) (`sc_zemishlany_2001`); Curran et al. (2016) (`sc_curran_2016`); Spindle et al. (2018) (`sc_spindle_2018`); Scott et al. (2018) (`sc_scott_2018`)
