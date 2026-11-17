@@ -1162,7 +1162,7 @@ function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k 
 function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
 function askedBox() {
   const box = document.getElementById("home-asked"); if (!box) return;
-  const list = askedList().filter(it => it.st !== "ans" || claimById[it.id] || isAuto(it.id));
+  const list = askedList().filter(it => it.st !== "ans" || it.h || claimById[it.id] || isAuto(it.id));
   if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
   const byNew = (a, b) => (b.t || 0) - (a.t || 0);   // (2.9.2, the senior author) the newest first, the oldest last
@@ -1171,7 +1171,7 @@ function askedBox() {
   const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + k + '</span><span class="aq-q">' + esc(it.q) +
     '</span><span class="aq-go">See what we have so far ' + icon("arrow") + "</span></button>" + x(it) + "</li>";
   const row = it => it.st === "ans"
-    ? '<li class="aq ans"><a class="aq-a" href="' + esc(isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
+    ? '<li class="aq ans"><a class="aq-a" href="' + esc(it.h ? it.h : isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '"' + (it.h ? "" : ' data-sheet="' + esc(it.id) + '"') + ' data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
     : it.u ? '<li class="aq wait unfin"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + 'Not a whole question</span><span class="aq-q">' + esc(it.q) +
       '</span><span class="aq-go">Finish it and ask again ' + icon("arrow") + "</span></button>" + x(it) + "</li>"   // (2.9.2) a beginning ("do gay people"): nothing can be checked until it is finished
     : it.w ? look(it, "On our list")
@@ -1191,7 +1191,10 @@ async function askedCheck() {
   for (const it of list) {
     if (it.st !== "wait" || it.cv === ASK_BUILD) continue;
     try { const res = await insRank(it.q, { drug: it.d && subBySlug[it.d] ? it.d : null });
+      // (2.10.1) answered by a checked answer, or by a place on the site that is the answer ("are drugs legal in greece": Greece on the page of treaties)
+      const rt = res.note ? null : res.routes.find(r => r.kind !== "mix" && !r.loose);
       if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
+      else if (rt) { it.st = "ans"; it.h = rt.href; }
       else if (res.want && !it.w && it.sent) it.w = res.want.id;   // (2.9) sent, not answered yet, and now on our list: its row says so
       if (res.note === "unfinished") it.u = 1; else delete it.u;      // (2.9.2) a beginning, not a whole question: its row says so
       it.cv = ASK_BUILD; changed = true; } catch (e) { /* asked again on the next visit */ }
