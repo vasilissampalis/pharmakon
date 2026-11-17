@@ -35,7 +35,22 @@ for f in sorted(glob.glob(str(ROOT / "data" / "auto" / "answers" / "au_*.json"))
     for p in a.get("parts") or []:
         print(wrap(p.get("text", ""), f"  {p['part']:>6}: "))
         if p.get("quote"): print(wrap("“" + p["quote"] + "”  (" + str(p.get("quote_ref") or p.get("source")) + ")", "          shown: "))
+        if p.get("who_read"): print(wrap(p["who_read"], "          who, as the system's reader gave it: "))
         for r in p.get("rests_on") or []: print(wrap(f"{r.get('label')} {r.get('ref')} ({r.get('where')}): {r.get('quote')}", "          rests on: "))
+    # (lane 11) what did not stand: the amounts the second reader refused, the lines that were dropped, the drafts that were written again
+    for x in a.get("refused_rows") or []:
+        print(wrap(f"{x.get('who')}; {x.get('what')}: “{x.get('quote')}”  ({x.get('source')}, {x.get('where')})", "  REFUSED amount: ")); print(wrap(str(x.get("said")), "          the second reader: "))
+        if x.get("full") and x.get("full") != x.get("quote"): print(wrap(x["full"], "          the whole quote: "))
+    for x in a.get("dropped") or []:
+        print(wrap(x.get("text", ""), f"  DROPPED {x.get('part')} (try {x.get('try')}): ")); print(wrap(str(x.get("said")), f"          {x.get('by')}: "))
+        for r in x.get("rests_on") or []: print(wrap(f"{r.get('label')} {r.get('ref')} ({r.get('where')}): {r.get('quote')}", "          rests on: "))
+    for x in a.get("tries") or []:
+        print(wrap(str(x.get("why")), f"  TRY {x.get('try')} did not stand: "))
+        for p in x.get("parts") or []:
+            print(wrap(p.get("text", ""), f"      {p.get('part'):>6} {'ok ' if p.get('ok') else 'NOT'}: "))
+            if not p.get("ok"): print(wrap(str(p.get("said")), f"             {p.get('by')}: "))
+            if "--all" in arg or not p.get("ok"):
+                for r in p.get("rests_on") or []: print(wrap(f"{r.get('label')} {r.get('ref')} ({r.get('where')}): {r.get('quote')}", "             rests on: "))
     if "--all" in arg:                                                 # every source the reader was given, with what its gate threw away and why
         for l in a.get("looked") or []:
             print(wrap(f"{l.get('read')}/{l.get('kind')}: {str(l.get('title'))[:90]} | kept {l.get('kept')}, thrown {len(l.get('thrown') or [])}", "  looked at: "))

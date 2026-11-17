@@ -20,6 +20,10 @@ the same words. It is sat first, whole (it is small), and written to model-<name
 A third exam, "lines" (scripts/auto/exam_lines.py): plain lines beside the checked claims they were written from, with the
 blind checkers' verdicts: every line a checker changed for what it said, and a fixed draw of twice as many good ones.
 The claim's fields are the passages. Written to model-<name>-lines.json. ("both": cards and lane; "all": the three.)
+
+"how": ["together"] with "exam": "lane" (17 November 2026): the lane's sentences asked about as the lane itself asks a further
+reader, the sentences of one answer in one call (sit_together). About ten calls instead of one for each sentence: the only
+way a reader with 20 free calls a day can sit the whole exam, and the very call the lane makes. model-<name>-lane-together.json.
 """
 import sys, time, re, json, random, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -152,6 +156,57 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     return out
 
 
+def sit_together(model, items=None, chat=None, file=None, until=None, group=6, left=None, keep=2):
+    """(17 November 2026) The lane's own sentences, asked about as the lane itself asks a further reader: the sentences of ONE
+    answer in ONE call (lane.check, in the lane's own words), not a call for each sentence. These are the verdicts the lane
+    really uses; and for a reader whose free plan counts calls (the strong ones: 20 a day) it is the only way to sit the whole
+    exam, about ten calls instead of thirty-four. Each sentence stands beside the words it rests on, named with their source
+    (the lane shows the whole passage around them; the exam keeps the quotes). It goes on where an earlier sitting stopped,
+    writes as it goes, and stops while KEEP calls of the day are left. Written to model-<name>-lane-together.json."""
+    try: items = items if items is not None else json.load(open(EXAM / "lane-sentences.json", encoding="utf-8"))["items"]
+    except (OSError, ValueError): items = []
+    f = file or EXAM / ("model-" + slug(model) + "-lane-together.json")
+    try: old = json.load(open(f, encoding="utf-8"))
+    except (OSError, ValueError): old = {}
+    res = {k: v for k, v in (old.get("cards") or {}).items() if v.get("clear")}; calls = int(old.get("calls") or 0)
+    chat = chat or llm.chat; svc = llm.service_of(model)[0]; left = left or ((lambda: llm.calls_left(model)) if svc else None); stopped_by = None
+    by_answer = {}
+    for i in items: by_answer.setdefault(i["id"].split("#")[0], []).append(i)
+    chunks = [g[k:k + group] for g in by_answer.values() for k in range(0, len(g), group)]
+    def result():
+        bad = [i for i in items if not i["good"] and i["id"] in res]; good = [i for i in items if i["good"] and i["id"] in res]
+        return {"_note": "A model as a further reader of the lane, on the lane's own sentences, asked as the lane asks: the sentences of one answer in one call (scripts/auto/exam_models.py, sit_together).", "model": model, "how": "together", "calls": calls,
+                "wrong_cards_seen": len(bad), "wrong_caught": sum(not res[i["id"]]["through"] for i in bad), "wrong_let_through_ids": [i["id"] for i in bad if res[i["id"]]["through"]],
+                "good_cards_seen": len(good), "good_stopped": sum(not res[i["id"]]["through"] for i in good), "good_stopped_ids": [i["id"] for i in good if not res[i["id"]]["through"]],
+                "no_clear_verdict": sum(1 for i in items if i["id"] not in res), "stopped_early": stopped_by, "cards": res}
+    failed = 0
+    for chunk in chunks:
+        if all(i["id"] in res for i in chunk): continue
+        if until and time.time() > until: stopped_by = "the time this run has"; break
+        if left and left() < keep: stopped_by = f"the day's allowance: {left():.0f} calls left, and {keep} are kept"; break
+        labels, parts = {}, []
+        for n, i in enumerate(chunk, 1):
+            uses = []
+            for k, x in enumerate(i.get("passages") or [{"quote": q} for q in i["rests_on"]], 1):
+                labels[f"P{n}_{k}"] = {"paper": x.get("source") or "its source", "where": x.get("where") or "", "passage_text": x["quote"]}; uses.append(f"P{n}_{k}")
+            parts.append({"part": f"s{n}", "text": i["sentence"], "uses": uses})
+        try: vs = lane.check(chat, model, parts, labels); calls += 1; failed = 0
+        except llm.Budget as e: stopped_by = "the day's allowance: " + str(e)[:160]; break
+        except llm.Unavailable as e:
+            failed += 1
+            if failed < 3 and re.search(r"answered 50\d|high demand|could not be reached|timed out|gave no answer", str(e), re.I):
+                if chat is llm.chat: time.sleep(20)
+                continue
+            stopped_by = "the model service: " + str(e)[:200]; break
+        for i, v in zip(chunk, vs):
+            if v[1] != "the checker gave no clear verdict": res[i["id"]] = {"through": bool(v[0]), "clear": True, "problem": str(v[1])[:200]}
+        json.dump(result(), open(f, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    out = result(); json.dump(out, open(f, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print(f"exam: {model} (the lane's sentences, an answer's sentences in one call): caught {out['wrong_caught']} of {out['wrong_cards_seen']} not good, stopped {out['good_stopped']} of {out['good_cards_seen']} good, no clear word on {out['no_clear_verdict']}, {calls} calls"
+          + (f"; stopped early ({stopped_by})" if stopped_by else ""))
+    return out
+
+
 def selftest():
     it = {"lines": {"short": "In one study, 9 in 100 people had it.", "but": "It was a small study.", "how": ["A survey of 200 adults."]}, "card": {"statement": "Most people have it.", "answer": False, "why": "In one study 9 in 100 had it."}}
     p = prompt(it); assert "It is a myth (it is not true) that: Most people have it. Because: In one study 9 in 100 had it." in p and "PASSAGE: But It was a small study." in p and p.count("PASSAGE:") == 3
@@ -214,6 +269,20 @@ def selftest():
     r = sit("gemini:gemma-4-31b-it", 10 ** 6, cards=lc, chat=chat5, left=lambda: 1000, file=mf, how="marks")
     assert got[0][0] == lane.MARKS_SYS and "Answer five questions" in got[0][1] and r["how"] == "marks" and r["wrong_caught"] == 1 and r["good_stopped"] == 0 and (mf.parent / "model-x-lane-marks.json").exists() and not mf.exists(), r
     assert "no passage says it" in r["cards"]["au_x#short~1"]["problem"]
+    # the lane's sentences as the lane asks: the sentences of one answer in one call; a sitting goes on where it stopped; a call that fails for a moment costs nothing
+    import tempfile
+    tf = pathlib.Path(tempfile.mkdtemp()) / "model-t-lane-together.json"
+    its = [{"id": f"au_a#p{n}~x", "good": n != 2, "sentence": f"Sentence {n} of answer a.", "rests_on": [f"Words {n}."], "passages": [{"source": "Health Canada: Ketamine", "where": "Risks", "quote": f"Words {n}."}]} for n in range(1, 9)]
+    its += [{"id": "au_b#short~y", "good": False, "sentence": "A sentence of answer b.", "rests_on": ["Other words."]}]
+    seen8 = []
+    def chat8(model, messages, room):
+        seen8.append(messages[1]["content"]); ns = [int(x) for x in re.findall(r"(?m)^(\d+)\. SENTENCE", messages[1]["content"])]
+        return json.dumps({"verdicts": [{"n": n, "supported": "Sentence 2 " not in messages[1]["content"].split(f"{n}. SENTENCE: ")[1].split("\n")[0] and "answer b" not in messages[1]["content"], "problem": "" } for n in ns]})
+    r = sit_together("x", items=its, chat=chat8, file=tf)
+    assert len(seen8) == 3 and seen8[0].count("SENTENCE:") == 6 and seen8[1].count("SENTENCE:") == 2 and seen8[2].count("SENTENCE:") == 1 and "PASSAGE (Health Canada: Ketamine; Risks): Words 1." in seen8[0] and "PASSAGE (its source; ): Other words." in seen8[2], [s[:200] for s in seen8]
+    assert r["how"] == "together" and r["calls"] == 3 and r["wrong_caught"] == 2 and r["wrong_cards_seen"] == 2 and r["good_stopped"] == 0 and r["good_cards_seen"] == 7 and r["no_clear_verdict"] == 0, {k: v for k, v in r.items() if k != "cards"}
+    its.append({"id": "au_c#short~z", "good": True, "sentence": "A sentence of answer c.", "rests_on": ["More words."]}); seen8.clear()
+    r = sit_together("x", items=its, chat=chat8, file=tf); assert len(seen8) == 1 and r["calls"] == 4 and r["good_cards_seen"] == 8, (len(seen8), r["calls"])       # only what was not asked yet
     print("exam_models selftest: ok (the lane's own question about a card; a sitting that stops at the day's reserve keeps its cards and the next goes on from there; "
           "asked piece by piece, the code gives the verdict from the words the reader copied)")
 
@@ -234,6 +303,9 @@ if __name__ == "__main__":
                 which = r.get("exam") if r.get("exam") in ("cards", "lane", "lines", "both", "all") else "cards"
                 opts = dict(until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None, most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None,
                             how="marks" if "marks" in hows else None)         # (the lane's sentences and the plain lines are sat one way in a request: with "marks" in "how", that way)
+                if "together" in hows:                                   # (17 November 2026) the lane's sentences as the lane asks: an answer's sentences in one call
+                    if which in ("lane", "both", "all"): sit_together(m, until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else 2)
+                    continue
                 if which in ("lane", "both", "all") and lane_cards():    # the lane's own sentences first, all of them: the real task, and small
                     sit(m, 10 ** 6, cards=lane_cards(), file=EXAM / ("model-" + slug(m) + "-lane.json"), **opts)
                 if which in ("lines", "all") and lines_cards():          # plain lines beside their checked claims: every wrong one, and twice as many good ones

@@ -189,6 +189,7 @@ class _Page(HTMLParser):
         self.let, self.left, self.cur_left, self.in_left_a = set(let), [], None, False         # what is let through on a second look; what was left out
         self.buf, self.blocks, self.heads, self.links, self.meta, self.title, self.h1, self.lang = [], [], {}, [], {}, "", "", ""
         self.in_title, self.a, self.cur_h = False, None, None
+        self.row = 0                                                    # the number of the table row being read (17 November 2026): a cell is kept with its row
 
     def _flush(self):
         t = spaces("".join(self.buf)); self.buf = []
@@ -199,7 +200,8 @@ class _Page(HTMLParser):
             self.heads = {k: v for k, v in self.heads.items() if k < lvl}; self.heads[lvl] = t
             return
         if JUNK.match(t): return
-        self.blocks.append({"where": " / ".join(self.heads[k] for k in sorted(self.heads) if k > 1), "text": t, "main": self.main > 0, "li": any(x[0] == "li" for x in self.stack)})
+        self.blocks.append({"where": " / ".join(self.heads[k] for k in sorted(self.heads) if k > 1), "text": t, "main": self.main > 0, "li": any(x[0] == "li" for x in self.stack),
+                            "row": self.row if any(x[0] in ("td", "th") for x in self.stack) else None})
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -224,6 +226,7 @@ class _Page(HTMLParser):
                else "role" if a.get("role") in ("navigation", "banner", "contentinfo", "search", "complementary") else "class" if noise else "")
         gone = bool(why)
         if tag in BLOCK and not self.drop: self._flush()
+        if tag == "tr": self.row += 1
         self.stack.append((tag, gone, is_main))
         if gone and not self.drop: self.cur_left = [why, (tag + " " + spaces(ident))[:90], 0, ("form " if why == "form" else "") + spaces(ident), False, 0]; self.left.append(self.cur_left)   # [why, what, characters, key, holds the heading, characters inside links]
         if self.drop and tag == "a": self.in_left_a = True
@@ -325,10 +328,17 @@ def extract(html_text, url, size=1000):
                 if acc and len(acc) + len(s) > size: parts.append(acc); acc = s
                 else: acc = (acc + " " + s).strip()
             if acc: parts.append(acc)
+        row = b.get("row")
         for t in parts:
-            if cur and (cur["where"] != b["where"] or len(cur["text"]) + len(t) > size): close()
-            if cur is None: cur = {"where": b["where"], "text": t}
-            else: cur["text"] += ("; " if b["li"] and not re.search(r"[.:;!?]$", cur["text"]) else " ") + t
+            # (17 November 2026) a table is read row by row: the cells of one row stand together ("Adults (18 years and over) 400 mg") and
+            # a row ends like an item of a list, so that an amount in a cell is read with whom it is for and not with the next row's
+            # words; a short row is never cut in two by a passage's end. Before, the lane's reader quoted the bare cell ("400 mg").
+            same_row = row is not None and row == cur.get("row") if cur else False
+            if cur and (cur["where"] != b["where"] or (len(cur["text"]) + len(t) > size and not (same_row and len(cur["text"]) + len(t) <= size + 300))): close()
+            if cur is None: cur = {"where": b["where"], "text": t, "row": row}
+            else:
+                new_row = row != cur.get("row") and (row is not None or cur.get("row") is not None)
+                cur["text"] += ("; " if (b["li"] or new_row) and not re.search(r"[.:;!?]$", cur["text"]) else " ") + t; cur["row"] = row
     close()
     whole = " ".join(b["text"] for b in p.blocks) + " " + spaces(re.sub(r"<[^>]+>", " ", html_text[-6000:]))
     ld = lambda k: next((m for m in re.findall(r'"' + k + r'"\s*:\s*"([^"]{4,40})"', html_text)), "")
@@ -734,6 +744,11 @@ def selftest():
     assert len(texts) == 3 and wheres == ["", "The risks / Physical health risks", "Mixing"], (wheres, texts)
     assert "it can increase your heart rate; it can make you confused & agitated" in texts[1] and not any("cookies" in t or "Copyright" in t or "not this" in t or "reviewed" in t for t in texts), texts
     assert ("https://f.test/drug/ketamine/the-law", "The law") in pg["links"] and not any("cocaine" in u for u, _ in pg["links"]) and not any(u.endswith("/drugs-a-z") for u, _ in pg["links"]), pg["links"]
+    # a table is read row by row: a cell stands with its row, a row ends like an item of a list, and what follows the table does not run into its last row
+    tb = extract("""<main><h1>Caffeine in foods</h1><p>Health bodies give a most for each day, for groups of people, in the table below this line.</p>
+      <table><tr><th>Population group</th><th>Recommended maximum daily intake</th></tr><tr><td>Adults (18 years and over)</td><td><p>400 mg</p></td></tr>
+      <tr><td>People who are pregnant</td><td>300 mg</td></tr></table><p>These amounts are for all sources of caffeine taken together in one day.</p></main>""", "https://f.test/caffeine")
+    assert len(tb["passages"]) == 1 and "below this line. Population group Recommended maximum daily intake; Adults (18 years and over) 400 mg; People who are pregnant 300 mg; These amounts are for all sources" in tb["passages"][0]["text"], tb["passages"]
     src = {"id": "frank", "author": "FRANK", "short": "FRANK", "site": "", "tier": 1, "base": "https://f.test", "hubs": ["https://f.test/drugs-a-z"], "include": ["^/drug/[a-z0-9-]+(/[a-z-]+)?$"], "children": True}
     ref = reference(src, pg, "https://f.test/drug/ketamine")
     assert apa(ref) == "FRANK. (2024, May 2). *Ketamine*. https://f.test/drug/ketamine" and ref["id"] == "frank_ketamine", apa(ref)

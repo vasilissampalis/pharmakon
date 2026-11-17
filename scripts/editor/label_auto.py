@@ -4,6 +4,7 @@
 
     python3 -I scripts/editor/label_auto.py show [--ids au_w_0044,...]     (every sentence not judged yet, beside the words it rests on)
     python3 -I scripts/editor/label_auto.py add FILE.json                    (the verdicts: {"au_w_0001": {"short": [0, "what it says that its source does not"], "how1": [1, ""]}})
+    python3 -I scripts/editor/label_auto.py rate                             (for each lane: of the sentences it kept, how many are not good; of the ones it did not keep, how many were good)
     python3 -I scripts/editor/label_auto.py --selftest
 
 The standard is the blind checkers' own. Good (1): the sentence says only what the words it rests on say. Not good (0): it
@@ -41,12 +42,33 @@ def source_name(a, ref):
     return f"{s.get('name')}: {s.get('title')}" if s.get("read") == "page" or s.get("name") else f"{s.get('title')} ({s.get('year')})"
 
 
+def all_parts(a):
+    """Every sentence a model wrote for an answer, the ones the lane kept and (lane 11) the ones it did not: [(name, the part, kept?, what the lane said of it)].
+    The kept ones are the answer's own parts. The others are the sentences of each draft that was written again ("t1.short": the
+    short answer of try 1) and the lines that were dropped ("x2.how3": line 3, dropped at try 2). The same sentence over the same
+    words is listed once: where a draft's sentence went on into the answer it is the answer's part."""
+    out, seen = [], set()
+    def add(name, p, kept, said):
+        quotes = tuple(r["quote"] for r in p.get("rests_on") or [] if r.get("quote"))
+        if p.get("fixed") or not p.get("text") or not quotes or (p["text"], quotes) in seen: return
+        seen.add((p["text"], quotes)); out.append((name, p, kept, said))
+    for p in a.get("parts") or []: add(p["part"], p, True, "kept")
+    for t in a.get("tries") or []:
+        for p in t.get("parts") or []: add(f"t{t.get('try')}.{p.get('part')}", p, False, ("accepted, in a draft that was written again" if p.get("ok") else f"refused by {p.get('by')}: {p.get('said')}"))
+    for p in a.get("dropped") or []: add(f"x{p.get('try')}.{p.get('part')}", p, False, f"dropped by {p.get('by')}: {p.get('said')}")
+    return out
+
+
 def judged_parts(a):
     """The sentences of an answer that are judged here: [(part, text, [the quotes it rests on], [each quote with its source's name and its place])]."""
     if a.get("kind") == "amounts": return []
-    return [(p["part"], p["text"], [r["quote"] for r in p.get("rests_on") or [] if r.get("quote")],
-             [{"source": source_name(a, r.get("ref")), "where": r.get("where") or "", "quote": r["quote"]} for r in p.get("rests_on") or [] if r.get("quote")]) for p in a.get("parts") or []
-            if not p.get("fixed") and p.get("text") and any(r.get("quote") for r in p.get("rests_on") or [])]
+    return [(name, p["text"], [r["quote"] for r in p.get("rests_on") or [] if r.get("quote")],
+             [{"source": source_name(a, r.get("ref")), "where": r.get("where") or "", "quote": r["quote"]} for r in p.get("rests_on") or [] if r.get("quote")]) for name, p, _, _ in all_parts(a)]
+
+
+def lane_said(a):
+    """{part's name: (did the lane keep it, what the lane said of it)}"""
+    return {name: (kept, said) for name, _, kept, said in all_parts(a)} if a.get("kind") != "amounts" else {}
 
 
 def load(exam=None):
@@ -74,7 +96,7 @@ def add(verdicts, doc, recs, today=None, by=BY, again=False):
     for aid, parts in verdicts.items():
         a = recs.get(aid)
         if not a: refused.append(f"{aid}: no such answer"); continue
-        here = {part: (text, quotes, passages) for part, text, quotes, passages in judged_parts(a)}
+        here = {part: (text, quotes, passages) for part, text, quotes, passages in judged_parts(a)}; said = lane_said(a)
         for part, v in parts.items():
             if part not in here: refused.append(f"{aid}#{part}: not a sentence that is judged here (a line the code writes, a row of amounts, or no such part)"); continue
             if not (isinstance(v, (list, tuple)) and len(v) == 2 and v[0] in (0, 1, True, False) and isinstance(v[1], str)): refused.append(f"{aid}#{part}: a verdict is [1 or 0, what is wrong]"); continue
@@ -83,6 +105,7 @@ def add(verdicts, doc, recs, today=None, by=BY, again=False):
             text, quotes, passages = here[part]; k = key(aid, part, text)
             item = {"id": k, "lane": a.get("lane") or 1, "question": a["question"], "sentence": text, "rests_on": quotes, "passages": passages, "good": good, "what": what,
                     "read_on": today or datetime.date.today().isoformat(), "read_by": by}
+            if not said[part][0]: item["kept"] = False; item["lane_said"] = said[part][1][:300]         # (lane 11) a sentence the lane itself did not keep: judged all the same (was it rightly refused?)
             if k in at:
                 old = doc["items"][at[k]]
                 if (old["good"], old["what"]) == (good, what): continue
@@ -98,6 +121,18 @@ def by_lane(doc):
     out = {}
     for i in doc["items"]: g = out.setdefault(i["lane"], [0, 0]); g[0 if i["good"] else 1] += 1
     return "; ".join(f"lane {l}: {g} good, {b} not good" for l, (g, b) in sorted(out.items()))
+
+
+def rate(doc):
+    """What the lane as a whole did with the sentences its models wrote, by the editor's verdicts: for each lane, of the sentences
+    it KEPT how many are not good (what a reader would have been shown wrong, before the editor's reading), and of the ones it
+    did NOT keep how many were good (what it lost). Sentences it did not keep are on file from lane 11 on."""
+    out = {}
+    for i in doc["items"]:
+        g = out.setdefault(i["lane"], {"kept": 0, "kept_bad": 0, "not_kept": 0, "not_kept_good": 0})
+        if i.get("kept", True): g["kept"] += 1; g["kept_bad"] += not i["good"]
+        else: g["not_kept"] += 1; g["not_kept_good"] += bool(i["good"])
+    return out
 
 
 def selftest():
@@ -122,7 +157,20 @@ def selftest():
     recs["au_t_1"]["parts"][0]["text"] = "It can be so."                                                                                 # the system rewrote its answer: a new item, the old one stays
     assert [p for _, p, _, _ in waiting(doc, recs)] == ["short"] and add({"au_t_1": {"short": [1, ""]}}, doc, recs)[0] == 1 and len(doc["items"]) == 3
     assert by_lane(doc) == "lane 9: 3 good, 0 not good"
-    print("label_auto selftest: ok (only the sentences the models wrote are judged; a 'not good' names what is wrong; a verdict is never changed silently; a rewritten sentence is a new item)")
+    # (lane 11) the sentences the lane did not keep are judged too: those of a draft that was written again, and the lines that were dropped
+    q = lambda t: [{"quote": t, "ref": "r1", "where": "Risks"}]
+    recs["au_t_3"] = {"id": "au_t_3", "lane": 11, "question": "Is it so?", "sources": recs["au_t_1"]["sources"],
+                      "parts": [{"part": "short", "text": "It can be so.", "rests_on": q("It can be so.")}, {"part": "how1", "text": "One page says it can be so.", "rests_on": q("It can be so.")}],
+                      "tries": [{"try": 1, "why": "the short answer or the But was not accepted: written again", "parts": [
+                          {"part": "short", "text": "It always is so.", "rests_on": q("It can be so."), "ok": False, "by": "the second reader", "said": "always is not in the passage"},
+                          {"part": "how1", "text": "One page says it can be so.", "rests_on": q("It can be so."), "ok": True}]}],
+                      "dropped": [{"try": 2, "part": "how2", "text": "It is so for everyone.", "rests_on": q("It can be so."), "by": "our own checker", "said": "our own checker does not find it (0.02)"}]}
+    assert [p for _, p, _, _ in waiting(doc, recs, {"au_t_3"})] == ["short", "how1", "t1.short", "x2.how2"]                                 # the line of try 1 that went on into the answer is listed once, as the answer's
+    n, bad = add({"au_t_3": {"short": [1, ""], "how1": [1, ""], "t1.short": [0, "'always': the source says 'can be'"], "x2.how2": [0, "'for everyone' is not in the source"]}}, doc, recs, today="2026-11-17")
+    kept_no = [i for i in doc["items"] if i.get("kept") is False]
+    assert n == 4 and not bad and [i["lane_said"] for i in kept_no] == ["refused by the second reader: always is not in the passage", "dropped by our own checker: our own checker does not find it (0.02)"], (n, bad, kept_no)
+    assert rate(doc)[11] == {"kept": 2, "kept_bad": 0, "not_kept": 2, "not_kept_good": 0} and rate(doc)[9] == {"kept": 3, "kept_bad": 0, "not_kept": 0, "not_kept_good": 0}, rate(doc)
+    print("label_auto selftest: ok (only the sentences the models wrote are judged, the ones the lane kept and the ones it did not; a 'not good' names what is wrong; a verdict is never changed silently; a rewritten sentence is a new item)")
 
 
 if __name__ == "__main__":
@@ -132,9 +180,10 @@ if __name__ == "__main__":
         ids = set((a[a.index("--ids") + 1]).split(",")) if "--ids" in a else None; doc = load(); w = waiting(doc, answers(), ids); last = None
         wrap = lambda t, ind: textwrap.fill(t, 150, initial_indent=ind, subsequent_indent=" " * len(ind))
         for rec, part, text, quotes in w:
-            if rec["id"] != last: last = rec["id"]; print("=" * 150); print(f"{rec['id']}  lane {rec.get('lane') or 1}  {rec.get('status')}  ({rec.get('why')})"); print(wrap(rec["question"], "Q: "))
-            print(wrap(text, f"  {part:>6}: "))
-            for q in quotes: print(wrap(q, "          rests on: "))
+            if rec["id"] != last: last = rec["id"]; said = lane_said(rec); print("=" * 150); print(f"{rec['id']}  lane {rec.get('lane') or 1}  {rec.get('status')}  ({rec.get('why')})"); print(wrap(rec["question"], "Q: "))
+            print(wrap(text, f"  {part:>8}: "))
+            if not said[part][0]: print(wrap(said[part][1], "            the lane: "))
+            for q in quotes: print(wrap(q, "            rests on: "))
         print("=" * 150); print(f"{len(w)} sentences wait for a verdict; judged so far: {doc['good']} good, {doc['bad']} not good ({by_lane(doc) or 'none'})")
     elif len(a) >= 2 and a[0] == "add":
         doc = load(); n, bad = add(json.load(open(a[1], encoding="utf-8")), doc, answers(), again="--again" in a)
@@ -142,4 +191,7 @@ if __name__ == "__main__":
         for b in bad: print("refused:", b)
         print(f"{n} verdicts written; the exam now: {doc['good']} good, {doc['bad']} not good ({by_lane(doc)})")
         sys.exit(1 if bad else 0)
+    elif a and a[0] == "rate":
+        for l, g in sorted(rate(load()).items()):
+            print(f"lane {l}: of {g['kept']} sentences it kept, {g['kept_bad']} are not good" + (f"; of {g['not_kept']} it did not keep, {g['not_kept_good']} were good" if g["not_kept"] else "; the ones it did not keep are not on file (kept from lane 11 on)"))
     else: sys.exit(__doc__)
