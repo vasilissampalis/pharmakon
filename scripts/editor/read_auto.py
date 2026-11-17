@@ -36,11 +36,14 @@ for f in sorted(glob.glob(str(ROOT / "data" / "auto" / "answers" / "au_*.json"))
         print(wrap(p.get("text", ""), f"  {p['part']:>6}: "))
         if p.get("quote"): print(wrap("“" + p["quote"] + "”  (" + str(p.get("quote_ref") or p.get("source")) + ")", "          shown: "))
         if p.get("who_read"): print(wrap(p["who_read"], "          who, as the system's reader gave it: "))
+        if p.get("what_read"): print(wrap(p["what_read"], "          what, as the system's reader gave it (a word in it calls the amount something the passage does not): "))
         for r in p.get("rests_on") or []: print(wrap(f"{r.get('label')} {r.get('ref')} ({r.get('where')}): {r.get('quote')}", "          rests on: "))
     # (lane 11) what did not stand: the amounts the second reader refused, the lines that were dropped, the drafts that were written again
     for x in a.get("refused_rows") or []:
         print(wrap(f"{x.get('who')}; {x.get('what')}: “{x.get('quote')}”  ({x.get('source')}, {x.get('where')})", "  REFUSED amount: ")); print(wrap(str(x.get("said")), "          the second reader: "))
         if x.get("full") and x.get("full") != x.get("quote"): print(wrap(x["full"], "          the whole quote: "))
+    for x in a.get("not_checked_rows") or []:
+        print(wrap(f"{x.get('who')}; {x.get('what')}: “{x.get('quote')}”  ({x.get('source')}, {x.get('where')}; near {x.get('near')})", "  NOT CHECKED (no room: the nearest the question were): "))
     for x in a.get("dropped") or []:
         print(wrap(x.get("text", ""), f"  DROPPED {x.get('part')} (try {x.get('try')}): ")); print(wrap(str(x.get("said")), f"          {x.get('by')}: "))
         for r in x.get("rests_on") or []: print(wrap(f"{r.get('label')} {r.get('ref')} ({r.get('where')}): {r.get('quote')}", "          rests on: "))

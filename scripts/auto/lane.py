@@ -80,10 +80,11 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 11               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 12               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
+N_ROWS = 20             # amounts of one answer that the second reader is asked about (the nearest the question)
 N_SUMMARIES = 2         # reviews behind a paywall read in summary, where the rest is not enough
 ROOM = 1100             # neurons that must be left of today's allowance before a question is begun
 N_PASSAGES = 7          # passages of a paper shown to the reader
@@ -252,7 +253,9 @@ def amounts_prompt(question, src, picked, drug_names):
             f"TASK. From these passages only, list the AMOUNTS of {', '.join(drug_names[:4]) or 'the drug'} that were given to PEOPLE or are stated for people: in a study, in treatment, on a medicine's label, in official guidance. For each amount give:\n"
             '"passage": its number; "quote": the whole sentence or clause of that passage that states the amount, copied exactly, word for word (8 to 40 words, with the number, its unit, and the words that say whom it is for when they stand there);\n'
             '"who": the PEOPLE who received it or whom it is stated for, and under what care, in one plain phrase, using the passage\'s own words (for example: adults with PTSD in a clinical trial, with two therapists present; men; women; healthy adults). Never add care or a setting that the passage does not state;\n'
-            '"what": what kind of amount it is, in a few words, using the passage\'s own words (for example: the amount in one session; the starting amount on the label; a daily amount in long-term treatment; the weekly low-risk guideline).\n'
+            '"what": what kind of amount it is, in a few words, using the passage\'s own words (for example: the amount in one session; the starting amount on the label; a daily amount in long-term treatment; the weekly low-risk guideline). '
+            'Call an amount low-risk, safe, moderate, recommended, a limit or a guideline ONLY if the passage itself calls it so; never borrow such a word from the QUESTION.\n'
+            "Begin with the amounts that answer the QUESTION most directly; ten items at most. "
             "If one sentence states amounts for several groups (for men and for women), give ONE item and quote the sentence whole. If the groups stand in separate sentences or separate lists, give one item for each group, with that group as who, and quote no more than 40 words. "
             "Leave out: amounts given to animals; amounts that harmed or killed someone; amounts of a plant or a product (dried mushrooms, cannabis flower, what a tablet contains) and amounts found in products that were sold or seized; "
             "an amount worked out from another (\"equivalent to\", \"corresponding to\"); levels in blood, breath or urine; what a standard drink or a unit contains; amounts for each kilogram of body weight; an amount added later in the same session. "
@@ -269,8 +272,8 @@ NEG = re.compile(r"(?:not|no|never|without|neither|nor|cannot|unless|except|rare
 UNIT = r"(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml|millilit(?:re|er)s?|units?|standard drinks?|drinks?)"
 AFTER_AMOUNT = re.compile(r"^(?:\s*/\s*\d+(?:[.,]\d+)?\s*kg\b)?(?:\s+(?:or|to|and)\s+\d+(?:[.,]\d+)?\s?" + UNIT + r"\b(?:\s*/\s*\d+(?:[.,]\d+)?\s*kg\b)?)*(?:\s+of\s+[\w-]+)?(?:\s+(?:or\s+(?:less|more|fewer|under|over)|at\s+(?:most|least)|and\s+(?:above|over|under|below)))?"
                           r"(?:\s+(?:(?:once|twice|thrice|(?:two|three|four|\d+)\s+times)\s+)?(?:(?:a|per|each|every)\s+(?:day|week|month|night|session|occasion|sitting)|daily|weekly|monthly|(?:in|on)\s+(?:a|any|one|each|any\s+one|any\s+single|a\s+single)\s+(?:day|week|session|occasion|sitting)))?", re.I)   # "or 84 mg", "of caffeine", "or less", "a day", "twice weekly": words that belong to the amount
-GROUP_AFTER = re.compile(r"^(?:\s*\([^)]{0,48}\))?(?:\s+(?:per|a|each|every)\s+(?:drinking\s+)?(?:day|week|occasion|session))?,?\s+(?:for|in|among|if\s+you\s+are|if\s+you're)\s+(?:(?:a|an|the|most|all|healthy|adult|older|younger|both)\s+){0,3}"
-                         r"(?:men|man|women|woman|adults?|people|males?|females?|patients?|participants?|those|everyone)\b", re.I)   # "(7.1 standard drinks) per drinking day for men", ", if you are a woman": whom the amount is for
+GROUP_AFTER = re.compile(r"^(?:\s*\([^)]{0,48}\))?(?:\s+(?:per|a|each|every)\s+(?:drinking\s+)?(?:day|week|occasion|session))?(?:\s+(?!(?:and|or|but|while|whereas|per)\b)[A-Za-z][A-Za-z-]*){0,3}?,?\s+(?:for|in|among|if\s+you\s+are|if\s+you're)\s+(?:(?:a|an|the|most|all|healthy|adult|older|younger|both)\s+){0,3}"
+                         r"(?:men|man|women|woman|adults?|people|males?|females?|patients?|participants?|those|everyone)\b", re.I)   # "(7.1 standard drinks) per drinking day for men", ", if you are a woman", (lane 12) "containing alcohol for females": whom the amount is for, up to three plain words after it
 RESTRICTS = ("for", "in", "among", "if", "when", "unless", "except", "provided", "only", "aged", "under", "during", "after", "before")   # a word after which the source says whom or when the amount is for
 
 
@@ -308,8 +311,10 @@ def window15(quote, k=0, span=False):
     if k >= len(ms): return None
     m = ms[k]
     word_at = lambda i: len(text[:i].split(" ")) - 1
-    def phrase(x):                                                     # an amount with the words that belong to it: (first word, last word of the amount, last word of the phrase)
-        more = AFTER_AMOUNT.match(text[x.end():]); return word_at(x.start()), word_at(x.end() - 1), (word_at(x.end() + more.end() - 1) if more and more.end() else word_at(x.end() - 1))
+    def phrase(x, group=False):                                        # an amount with the words that belong to it: (first word, last word of the amount, last word of the phrase)
+        more = AFTER_AMOUNT.match(text[x.end():]); end = x.end() + (more.end() if more else 0)
+        grp = GROUP_AFTER.match(text[end:]) if group else None           # (lane 12) for another amount of the same words, whom it is for belongs to it too: "... for males or four or more drinks | containing alcohol for females" was cut there, and the females' amount stood under "males"
+        return word_at(x.start()), word_at(x.end() - 1), (word_at(end + grp.end() - 1) if grp else word_at(end - 1) if more and more.end() else word_at(x.end() - 1))
     first, last, least = phrase(m)
     times = [(word_at(t.start()), word_at(t.end() - 1)) for t in TIMING.finditer(text)]        # the words that state a time between uses: no part of them is shown
     if any(t0 <= least and first <= t1 for t0, t1 in times): least = last
@@ -317,7 +322,7 @@ def window15(quote, k=0, span=False):
         more = AFTER_AMOUNT.match(text[m.end():]); end = m.end() + (more.end() if more else 0); grp = GROUP_AFTER.match(text[end:])
         if grp and not any(t0 <= word_at(end + grp.end() - 1) and least < t1 for t0, t1 in times): least = word_at(end + grp.end() - 1)   # whom it is for stays with the amount
     if any(t0 <= last and first <= t1 for t0, t1 in times): return None
-    others = [o for o in (phrase(x) for x in ms if x is not m) if not first <= o[0] <= least]   # the other amounts in the same words
+    others = [o for o in (phrase(x, group=True) for x in ms if x is not m) if not first <= o[0] <= least]   # the other amounts in the same words
     others = [(o0, o1, o1 if any(t0 <= o2 and o1 < t1 for t0, t1 in times) else o2) for o0, o1, o2 in others]
     must, far = first, False
     for j in range(first - 1, max(-1, first - 9), -1):                 # the words that limit the amount, or turn it round, stay with it
@@ -374,7 +379,16 @@ def windows15(quote, most=3, clauses=False):
         out = [o for o in out if not (got[1] <= o[1] and o[2] <= got[2])] + [got]        # a part that holds an earlier part whole takes its place
         if len(out) >= most: break
     if not clauses: return [o[0] for o in out]
-    starts = [0] + [o[1] for o in out[1:]] + [len(ws)]
+    # (lane 12) the words that lead into a further part belong to THAT part ("...15 or more per week; For women, consuming four or more..."):
+    # its stretch begins after the last full stop, semicolon or colon before it, else at the first "and", "or", "but" between the
+    # two parts. Lane 11 gave "For women," to the part before it, and the men's amount was labelled for women.
+    out = sorted(out, key=lambda o: o[1]); starts = [0]
+    for prev, o in zip(out, out[1:]):
+        lo, hi = max(prev[2] - 1, 0), o[1]
+        stop = next((j + 1 for j in range(hi - 1, lo - 1, -1) if re.search(r"[.;:]$", ws[j])), None)
+        if stop is None: stop = next((j for j in range(prev[2], hi) if bare(ws[j]) in ("and", "or", "but", "while", "whereas")), hi)
+        starts.append(min(stop, hi))
+    starts.append(len(ws))
     return [(o[0], " ".join(ws[starts[i]:starts[i + 1]])) for i, o in enumerate(out)]
 
 
@@ -442,6 +456,26 @@ def row_carried(who, what, passage, around, src):
 
 PEOPLE = re.compile(r"\b(?:people|person|persons|adults?|men|man|women|woman|patients?|participants?|volunteers?|individuals?|subjects|those|anyone|everyone|public|population|males?|females?|veterans?|students?|workers?|drivers?|athletes?|you)\b", re.I)
 QUOTE_NEVER = ("timing between uses", "a way of taking compared for strength", "how to prepare or take a drug", "making an effect stronger", "advice or a promise of safety")   # what a source's own words must not hold to be shown beside an amount
+
+
+CALLS_IT = re.compile(r"\b(low(?:er)?[- ]?risk|high(?:er)?[- ]?risk|safe(?:ly|ty)?|moderate|recommended|maximum|minimum|limits?|guidelines?|guidance|heavy|binge|harmful|hazardous|excessive|normal|typical|usual|optimal|acceptable|tolerable)\b", re.I)
+
+
+def plain_what(what, show, text):
+    """(lane 12) What kind of amount a row states, as it may be shown. The reader is asked for the passage's own words and
+    sometimes gives the question's: "the weekly low-risk level" for an amount whose page never calls it low-risk. A word that
+    CALLS the amount something (low-risk, safe, moderate, recommended, a limit, a guideline, heavy) must stand in the passage,
+    its heading or the source's title. Where one does not, the row is not lost for it: what is then said by the code from
+    the shown words alone ("an amount for a week"), which claims nothing; whether the amount belongs to the question is the
+    second reader's to say from the passage."""
+    base = norm(text).lower().replace("-", " ")
+    def carried(w):
+        w = w.lower().replace("-", " ")
+        if "risk" in w: return bool(re.search(w[:3] + r"\w*\s*risk", base))
+        return ("guid" if w.startswith("guid") else w[:5]) in base
+    if all(carried(m.group(1)) for m in CALLS_IT.finditer(what)): return what
+    r = {m.group(0).lower()[:3] for m in RATE.finditer(show)}
+    return "an amount for a day" if r & {"day", "dai"} else "an amount for a week" if "wee" in r else "an amount for a month" if "mon" in r else "an amount for one occasion" if r & {"occ", "ses", "sit", "sin", "onc"} else "an amount"
 
 
 SEXES = (("women", re.compile(r"\b(?:women|woman|females?)\b", re.I)), ("men", re.compile(r"\b(?:men|man|males?)\b", re.I)))
@@ -533,7 +567,7 @@ def amount_gate(out, picked, src, dwords):
     are the source's own words (not the reader's), and when a part of 15 words at most can be shown. A quote that holds
     several amounts ("11 standard drinks per week, if you are a woman; 17 ..., if you are a man") gives a row for each."""
     out = out if isinstance(out, dict) else {}; by = {p["n"]: p for p in picked}; rows, dropped = [], []
-    for item in (out.get("amounts") or [])[:8]:
+    for item in (out.get("amounts") or [])[:10]:
         if not isinstance(item, dict): dropped.append({"why": "not an item"}); continue
         q = re.sub(r"\s+", " ", str(item.get("quote") or "")).strip(); who = re.sub(r"\s+", " ", str(item.get("who") or "")).strip(" ."); what = re.sub(r"\s+", " ", str(item.get("what") or "")).strip(" .")
         p = by.get(item.get("passage")) if isinstance(item.get("passage"), int) else None
@@ -550,7 +584,9 @@ def amount_gate(out, picked, src, dwords):
             if any(lim(w) for w in before[-3:]):
                 j = next(k for k, w in enumerate(before) if lim(w) or NEG.fullmatch(bare(w)))
                 if j and NEG.fullmatch(bare(before[j])) and re.fullmatch(r"(?:should|must|do|does|did|can|could|may|is|are|was|were|will|would)", bare(before[j - 1])): j -= 1
-                q = (" ".join(before[j:]) + " " + norm(q).strip(' ."\'…')).strip()
+                q = (" ".join(before[j:]) + " " + norm(q).strip(' ."\'…')).strip(); before = before[:j]
+            lead = re.search(r"(?:^|\s)((?:(?:for|in|among)\s+)?(?:(?:most|all|healthy|adult|older|younger)\s+){0,2}(?:men|women|males?|females?)\s*[,:])$", " ".join(before), re.I)
+            if lead: q = lead.group(1).strip() + " " + norm(q).strip(' ."\'…')        # (lane 12) "For men, | consuming five or more drinks ...": the reader's quote began after the words that say whose amount it is
         why = ("its quote does not stand in a passage that was shown (or is shorter than 20 letters)" if not p else
                "the quote is shorter than 4 words or longer than 70" if not 4 <= words(q) <= 70 else
                "no amount with its unit in the quote" if not AMT.search(q) else
@@ -569,12 +605,13 @@ def amount_gate(out, picked, src, dwords):
         for w, c in shows:
             whom = who_of_shown(who, w, c)                              # (lane 11) "Women, men" over an amount for one of them
             if whom is None: dropped.append({"quote": w[:200], "who": who[:120], "what": what[:120], "why": "this amount is for one sex and who names only the other"}); continue
-            rows.append({"passage": p["n"], "where": p["where"], "quote": q, "show": w, "clause": c, "who": whom, "what": what})
+            said = plain_what(what, w, " ".join([p["text"], p.get("where") or "", src.get("title") or ""]))        # (lane 12) what the amount is called must be the passage's word
+            rows.append({"passage": p["n"], "where": p["where"], "quote": q, "show": w, "clause": c, "who": whom, "what": said, **({"what_read": what} if said != what else {})})
     return rows, dropped
 
 
 def read_amounts(chat, model, question, src, picked, dwords):
-    out = ask_json(chat, model, READER_SYS, amounts_prompt(question, src, picked, list(dwords)), room_for(model, 900))
+    out = ask_json(chat, model, READER_SYS, amounts_prompt(question, src, picked, list(dwords)), room_for(model, 1200))
     return amount_gate(out, picked, src, dwords) if out is not None else ([], [{"why": "the reader gave no JSON"}])
 
 
@@ -706,7 +743,7 @@ def checker_prompt(parts, labels, question=None, each=None):
                '"but_fits": is sentence 2 a limit or a doubt about what sentence 1 says (true), or is it about something else (false)? It is about something else when its source states the limit about ITS OWN subject and that subject is not what sentence 1 says: '
                'for example, a review of treatments says that the studies of those treatments were weak; that is no limit of an answer about whether dependence happens.'
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}], "answers_question": true, "but_fits": true, "why": ""}' if question else
-               f"\n\nQUESTION that was asked: {each}\nFor every sentence also give \"on_question\": is the amount it states an amount of the kind the QUESTION asks for (true), or of another kind, for example an amount called high-risk when the question asks what is called low-risk, or what a drink contains when the question asks how much people drink (false)?"
+               f"\n\nQUESTION that was asked: {each}\nFor every sentence also give \"on_question\": is the amount it states an amount of the kind the QUESTION asks for (true), or of another kind, for example an amount called high-risk when the question asks what is called low-risk, or what a drink contains when the question asks how much people drink (false)? A limit for one day or for one occasion that the same guidance gives beside its weekly amount is of the kind asked."
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "on_question": true, "problem": ""}, {"n": 2, "supported": false, "on_question": true, "problem": "what the passages do not say"}]}' if each else
                '\n\nJSON only, one verdict for every sentence, in this form: {"verdicts": [{"n": 1, "supported": true, "problem": ""}, {"n": 2, "supported": false, "problem": "what the passages do not say"}]}'))
 
@@ -1246,7 +1283,11 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     keep_sources()
     if not sources: return done("none", "no source that can be read " + ("states an amount for people" if amounts else "gave a finding") + " for this question")
     paper_name = lambda s: (f"{s['name']}: {s['title']}" if s["read"] == "page" else f"{s['title']} ({s['year']})")
-    if amounts: return make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_name)
+    if amounts:
+        every = [r for s in sources for r in s["rows"]]                 # (lane 12) how near each amount stands to the question: where there are more than the second reader is asked about, the nearest are
+        if every:
+            for r, x in zip(every, (enc([f"{r['what']}, for {r['who']}: {r['show']}" for r in every]) @ QV.T).max(1)): r["near"] = round(float(x), 4)
+        return make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_name)
     # GATE 6: enough to rest on
     said = lambda: f"{cn['reviews']} review(s) or meta-analyses, {cn['studies in people']} single studies in people, {cn['case reports']} case report(s) (which do not count), {cn['official']} official page(s), {cn['summaries']} paper(s) read in summary only"
     rec["gates"]["sources"] = said()
@@ -1393,8 +1434,16 @@ def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_nam
     for s in sources: s["rows"] = [r for r in s["rows"] if not any(rx.search(r["who"] + " " + r["what"] + " " + (r.get("clause") or r["quote"])) for what, rx in STAKES if what in ("pregnancy or children", "suicide or self-harm"))]
     n_person = n_all - sum(len(s["rows"]) for s in sources)
     solid = lambda s: (s["read"] == "page" and s.get("tier", 1) == 1) or (s["read"] in ("full", "summary") and s["people"] and s["kind"] in ("review", "study"))
-    L = lines(); rows = [(s, r) for s in sorted(sources, key=lambda s: 0 if s["read"] == "page" else 1 if s["read"] == "full" else 2) if solid(s) for r in s["rows"][:6]]   # (official pages first, then papers read in full, then summaries)
-    n_solid = len(rows); rows = one_of_each(rows); n_twins = n_solid - len(rows); rows = rows[:18]     # (lane 11) the same amount for the same people twice from one source is one row; the sources that do not count no longer take room from those that do
+    nearest = lambda rs, k: [r for r in rs if id(r) in {id(x) for x in sorted(rs, key=lambda r: -(r.get("near") or 0))[:k]}]      # the k nearest the question, in the order they stand
+    L = lines(); rows = [(s, r) for s in sorted(sources, key=lambda s: 0 if s["read"] == "page" else 1 if s["read"] == "full" else 2) if solid(s) for r in nearest(s["rows"], 6)]   # (official pages first, then papers read in full, then summaries)
+    n_solid = len(rows); rows = one_of_each(rows); n_twins = n_solid - len(rows)                       # (lane 11) the same amount for the same people twice from one source is one row; the sources that do not count no longer take room from those that do
+    # (lane 12) the second reader is asked about 20 amounts at most: the ones nearest the question. With the first 18 in the order of
+    # reading, five amounts about binge and heavy drinking took the room of a page's answer to the question itself. What the room
+    # did not hold is kept in the record.
+    if len(rows) > N_ROWS:
+        take = {id(r) for r in nearest([r for _, r in rows], N_ROWS)}
+        rec["not_checked_rows"] = [{"who": r["who"], "what": r["what"], "quote": r["show"], "where": r["where"], "source": s["ref"]["id"], "near": r.get("near")} for s, r in rows if id(r) not in take]
+        rows = [(s, r) for s, r in rows if id(r) in take]
     rec["gates"]["sources"] = (f"{len(rows)} amounts from {len({s['ref']['id'] for s, _ in rows})} sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)"
                                + (f"; {n_person} amount(s) stated for pregnancy, for children or about suicide left out (a person's part)" if n_person else "") + (f"; {n_twins} that said the same amount for the same people again left out" if n_twins else ""))
     if not rows: return done("none", "no official page and no study in people states an amount for this question")
@@ -1417,7 +1466,7 @@ def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_nam
     out = ([{"part": "first", "text": first, "fixed": True, "rests_on": []}] if first else []) + [{"part": "short", "text": L["amounts"], "fixed": True, "rests_on": []}, {"part": "but", "text": L["amounts_but_guidance" if guidance else "amounts_but"], "fixed": True, "rests_on": []}]
     for n, (s, r, lab) in enumerate(kept, 1):
         who = spelled(r["who"], s.get("_abbr")); who = who[0].upper() + who[1:]           # (lane 11) "TRD" written out, as the source itself writes it out
-        out.append({"part": f"row{n}", "text": f"{who}; {r['what']}.", "who": who, **({"who_read": r["who"]} if who.lower() != r["who"].lower() else {}), "what": r["what"], "quote": r["show"], "source": s["ref"]["id"], "read": s["read"], "uses": [lab],
+        out.append({"part": f"row{n}", "text": f"{who}; {r['what']}.", "who": who, **({"who_read": r["who"]} if who.lower() != r["who"].lower() else {}), "what": r["what"], **({"what_read": r["what_read"]} if r.get("what_read") else {}), "quote": r["show"], "source": s["ref"]["id"], "read": s["read"], "uses": [lab],
                     "rests_on": [{"label": lab, "ref": s["ref"]["id"], "where": r["where"], "quote": r["quote"], "sha": hashlib.sha256(norm(s["_text"][r["passage"]]).encode("utf-8")).hexdigest()[:16]}]})
     rec["parts"] = out
     rec["complete"] = len(used) >= 2 and not any(s["read"] == "summary" for s in sources)
@@ -1977,6 +2026,35 @@ def selftest():
     assert who_of_shown("women", "17 standard drinks per week, if you are a man", "") is None and who_of_shown("adults (men and women)", "3 drinks for men", "") == "men"
     g = amount_gate({"amounts": [{"passage": 1, "quote": hse, "who": "women, men", "what": "weekly low-risk guidelines"}]}, [{"n": 1, "where": "Guidelines", "text": "To keep the risk low, " + hse + ". Alcohol is a drug."}], {"read": "page", "title": "Weekly low-risk alcohol guidelines"}, ["alcohol"])
     assert [(x["who"], x["show"]) for x in g[0]] == [("women", "do not drink more than: 11 standard drinks per week, if you are a woman"), ("men", "17 standard drinks per week, if you are a man")], g
+    # (lane 12) the words that lead into a further part belong to that part; whom another amount is for belongs to that amount; a group's name that leads into the reader's quote is taken into it
+    niaaa = "five or more drinks containing alcohol for males or four or more drinks containing alcohol for females"
+    assert [w for w, _ in windows15(niaaa, clauses=True)] == ["five or more drinks containing alcohol for males", "four or more drinks containing alcohol for females"]       # lane 11 showed "... for males or four or more drinks" under "males"
+    heavy = "For men, consuming five or more drinks on any day or 15 or more per week; For women, consuming four or more on any day or eight or more drinks per week"
+    cl = windows15(heavy, clauses=True); assert "women" not in cl[0][1] and cl[1][1].startswith("For women, consuming four") and "men," in cl[0][1], cl      # lane 11 gave "For women," to the part before it: the men's amount stood under "women"
+    g = amount_gate({"amounts": [{"passage": 1, "quote": heavy.split(", ", 1)[1], "who": "men or women", "what": "daily and weekly amounts"}]}, [{"n": 1, "where": "Drinking patterns", "text": "The institute describes it this way: " + heavy + ". Alcohol is a drug."}], {"read": "page", "title": "Understanding alcohol drinking patterns"}, ["alcohol"])
+    assert [(x["who"], x["show"]) for x in g[0]] == [("men", "For men, consuming five or more drinks on any day"), ("women", "consuming four or more on any day or eight or more drinks per week")] and g[0][0]["quote"].startswith("For men, consuming five"), g
+    assert who_of_shown("men or women", "15 or more per week", "15 or more per week; For women,") == "women"      # (what the old stretch did: kept here as the reason the stretch was mended, not as a wish)
+    # (lane 12) what an amount is CALLED must be the passage's word: where the reader borrowed the question's, the code says what the shown words say and no more
+    ccsa = [{"n": 1, "where": "Overview", "text": "A continuum of risk for people in Canada: 2 standard drinks or less per week: you are likely to avoid alcohol-related consequences for yourself or others at this level; 3-6 standard drinks per week: your risk of developing several types of cancer increases at this level."}]
+    g = amount_gate({"amounts": [{"passage": 1, "quote": "2 standard drinks or less per week", "who": "people in Canada", "what": "weekly low-risk drinking level"}, {"passage": 1, "quote": "3-6 standard drinks per week", "who": "people in Canada", "what": "weekly level at which the risk of cancer increases"}]}, ccsa, {"read": "page", "title": "Canada's Guidance on Alcohol and Health"}, ["alcohol"])
+    assert [(x["what"], x.get("what_read")) for x in g[0]] == [("an amount for a week", "weekly low-risk drinking level"), ("weekly level at which the risk of cancer increases", None)], g
+    assert plain_what("recommended maximum daily intake", "Adults (18 years and over) 400 mg", "Adults (18 years and over) 400 mg Recommended maximum daily intake") == "recommended maximum daily intake"
+    assert plain_what("daily low-risk guideline", "no more than: 2 standard drinks per day", "no more than: 2 standard drinks per day Low-risk alcohol drinking guidelines") == "daily low-risk guideline"
+    assert plain_what("a safe single amount", "single doses of 200 mg", "single doses do not raise concerns") == "an amount for one occasion" and plain_what("amount in one session", "25 mg", "x") == "amount in one session" and plain_what("the safe amount", "400 mg", "x") == "an amount"
+    assert "Begin with the amounts that answer the QUESTION most directly; ten items at most." in amounts_prompt("How much?", {"read": "page", "title": "T", "name": "N"}, [{"n": 1, "where": "W", "text": "x"}], ["caffeine"]) and "never borrow such a word from the QUESTION" in amounts_prompt("How much?", {"read": "page", "title": "T", "name": "N"}, [{"n": 1, "where": "W", "text": "x"}], ["caffeine"])
+    assert "A limit for one day or for one occasion that the same guidance gives beside its weekly amount is of the kind asked." in checker_prompt([{"text": "x", "uses": ["R1"]}], {"R1": {"paper": "p", "where": "w", "passage_text": "t"}}, each="How much?")
+    # (lane 12) the second reader is asked about the amounts nearest the question when there are more than its room; what the room did not hold is on file
+    mp2 = mp[:2] + ["In the second trial, participants received 100 mg of MDMA in each of two sessions, with two trained therapists present throughout.",
+                    "The sessions were held in a quiet room with music, and participants stayed overnight at the site after each one of them.",
+                    "Symptoms were rated by assessors who did not know which participants had received the medicine and which the placebo."]
+    mxml2 = "<article><front><article-meta><abstract><p>" + mp2[0] + "</p></abstract></article-meta></front><body><sec><title>Methods</title>" + "".join(f"<p>{t}</p>" for t in mp2[1:]) + "</sec></body></article>"
+    two = {"amounts": [mrows["amounts"][0], {"passage": 3, "quote": mp2[2].rstrip("."), "who": "participants of the second trial, with two trained therapists present", "what": "the amount in one session"}]}
+    script["amounts"] = [two]; script["checker"] = [V(True, True)]
+    r = make(mitem, mfound, chat, Enc(), MODELS, fulltext=lambda pmcid: mxml2, crossref=crossref, ex=ex, names=nm); assert sum(p["part"].startswith("row") for p in r["parts"]) == 2 and "not_checked_rows" not in r, r["gates"]
+    globals()["N_ROWS"] = 1; script["amounts"] = [two]; script["checker"] = [V(True)]
+    try: r = make(mitem, mfound, chat, Enc(), MODELS, fulltext=lambda pmcid: mxml2, crossref=crossref, ex=ex, names=nm)
+    finally: globals()["N_ROWS"] = 20
+    assert sum(p["part"].startswith("row") for p in r["parts"]) == 1 and len(r["not_checked_rows"]) == 1 and r["not_checked_rows"][0]["quote"] and "near" in r["not_checked_rows"][0], (r["parts"], r.get("not_checked_rows"))
     # (lane 11) a cell of a table quoted bare is widened to its row, when it stands in one place only; never where it stands twice
     cells = [{"n": 1, "where": "How much", "text": "Population group Recommended maximum daily intake; Adults (18 years and over) 400 mg; People who are breastfeeding 300 mg; People planning to become pregnant 300 mg"}]
     assert widen("400 mg", cells)[0] == "Adults (18 years and over) 400 mg" and widen("300 mg", cells) is None and widen("40 mg", cells) is None and widen("Adults", cells) is None
