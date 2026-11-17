@@ -123,11 +123,13 @@ def merge(other, path=None):
     return len(new)
 
 
-def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, today=None, at_once=1, rests=3, rest=300):
+def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, today=None, at_once=1, rests=3, rest=300, day_of=None):
     """Makes lessons until the limit, the time or the day's allowance ends. Returns how many were written.
     (17 November 2026) A writer that gives nothing usable twelve times running RESTS for five minutes and is asked again, three
     times at most, before it is left out: on the night of 16 November both Gemma writers were answered "high demand" for a
-    quarter of an hour, were left out for good, and the run ended two hours early."""
+    quarter of an hour, were left out for good, and the run ended two hours early. A writer whose day's allowance is used
+    up comes back when its service's day turns (Google's, at midnight Pacific time): a run that goes through that hour uses
+    the new day. And the run says how far it is every five minutes, so that the notes saved while it goes on can be read."""
     path = path or MADE; path.parent.mkdir(parents=True, exist_ok=True)
     models = [m for m in (models or MODELS) if chat or llm.has(m)]
     if not models: print("teach: no model with a key on this machine: nothing made"); return 0
@@ -138,6 +140,8 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
     todo = [(s, k) for s in src for k in KINDS if (s["id"], k) not in have and (s["id"], k) not in skipped]
     t0 = time.time(); n = asked = 0; why_not = {}; samples = []; wrote = {m: 0 for m in models}; misses = {m: 0 for m in models}; live = list(models)
     rested = {m: 0 for m in models}; back = {}                                # how often a writer has rested; when a resting writer comes back
+    day = day_of or ((lambda m: llm.day_of(llm.service_of(m)[0])) if not chat else None); spent = {}; told = [t0]      # the day on which a writer's allowance ran out
+    def say(*a): print(*a, flush=True)
     import concurrent.futures as cf
 
     def ask(s, kind, model):
@@ -152,7 +156,9 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
         queue = iter(todo); running = set()
         def more():
             nonlocal asked
-            for m in [m for m, t in back.items() if time.time() >= t]: back.pop(m); live.append(m); print(f"teach: {m} is asked again after its rest")
+            for m in [m for m, t in back.items() if time.time() >= t]: back.pop(m); live.append(m); say(f"teach: {m} is asked again after its rest")
+            for m in [m for m, d0 in spent.items() if day and day(m) != d0]: spent.pop(m); live.append(m); say(f"teach: {m} is asked again: its service's day has turned")
+            if time.time() - told[0] >= 300: told[0] = time.time(); say(f"teach: {(time.time() - t0) / 60:.0f} minutes in: {n} lessons written ({asked} asked; by writer: {wrote}; not usable: {why_not or 'none'}); asked now: {live}; resting: {sorted(back)}; waiting for a new day: {sorted(spent)}")
             while live and len(running) < at_once * len(live) and n + len(running) < limit and time.time() - t0 < minutes * 60:
                 item = next(queue, None)
                 if item is None: return
@@ -167,10 +173,12 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
                     if len(samples) < 6 and raw: samples.append(f"{model} ({why}; {ended}): " + re.sub(r"\s+", " ", raw)[:260])
                     if misses[model] >= 12 and model in live:
                         live.remove(model); misses[model] = 0
-                        if rested[model] < rests: rested[model] += 1; back[model] = time.time() + rest; print(f"teach: {model} gave nothing usable twelve times running: it rests for {rest / 60:.0f} minutes (rest {rested[model]} of {rests})")
-                        else: print(f"teach: {model} gave nothing usable twelve times running, after {rests} rests: left out of this run")
+                        if rested[model] < rests: rested[model] += 1; back[model] = time.time() + rest; say(f"teach: {model} gave nothing usable twelve times running ({why}): it rests for {rest / 60:.0f} minutes (rest {rested[model]} of {rests})")
+                        else: say(f"teach: {model} gave nothing usable twelve times running, after {rests} rests ({why}): left out of this run")
                 if refused.startswith("the day's allowance"):
-                    if model in live: live.remove(model); print(f"teach: {model}: {refused}")
+                    if model in live:
+                        live.remove(model); say(f"teach: {model}: {refused}")
+                        if day: spent[model] = day(model)
                     continue
                 if refused: miss(refused); continue
                 new, ch = accept(kind, s["sentence"], llm.as_json(raw))
@@ -181,8 +189,8 @@ def run(limit=600, minutes=40, models=None, chat=None, exam=None, path=None, tod
                 misses[model] = 0; wrote[model] += 1
                 f.write(json.dumps({"from": s["id"], "group": s["group"], "kind": kind, "good": kind == "same", "sentence": new, "changed": ch, "by": model, "on": today or datetime.date.today().isoformat()}, ensure_ascii=False) + "\n"); f.flush(); n += 1
             more()
-            while not running and back and time.time() - t0 < minutes * 60 and n < limit:      # every writer is resting: wait for the first to come back
-                time.sleep(max(0.0, min(back.values()) - time.time())); more()
+            while not running and (back or spent) and time.time() - t0 < minutes * 60 and n < limit:      # every writer is resting or waits for its new day: wait for the first to come back
+                time.sleep(max(0.0, min(min(back.values()) - time.time() if back else 60.0, 60.0 if spent else 1e9))); more()
     json.dump(sorted(skipped), open(path.with_name("skipped.json"), "w", encoding="utf-8"))
     print(f"teach: {n} lessons written ({asked} asked; by writer: {wrote}; not usable: {why_not or 'none'}); {len(todo) - asked} still to make; {len(src)} good sentences to make them from")
     for x in samples: print("teach: a reply that could not be used:", x)
@@ -232,6 +240,14 @@ def selftest():
     p3 = d / "teach3" / "made.jsonl"; seen3 = []
     def chat3(model, messages, room): seen3.append(model); return "I think about it..."
     assert run(limit=100, minutes=5, models=[MODELS[0]], chat=chat3, exam=d / "exam", path=p3, rests=1, rest=0) == 0 and len(seen3) == 24, len(seen3)
+    # a writer whose day's allowance is used up comes back when its service's day turns, and writes on
+    p5 = d / "teach5" / "made.jsonl"; turn = {"looks": 0, "n": 0}
+    def day5(m): turn["looks"] += 1; return "d1" if turn["looks"] == 1 else "d2"       # the day as it was when the allowance ran out, and a new day at every look after
+    def chat5(model, messages, room):
+        turn["n"] += 1
+        if turn["n"] == 1: raise llm.Budget("the free calls of the day are used")
+        return json.dumps({"sentence": "Indeed " + messages[1]["content"].split("\nSENTENCE: ")[-1].split("\n")[0], "changed": "indeed"})
+    assert run(limit=3, minutes=5, models=[MODELS[0]], chat=chat5, exam=d / "exam", path=p5, day_of=day5) == 3 and turn["n"] == 4, turn
     # lessons saved elsewhere are added once: the one already here stays
     p4 = d / "teach4" / "made.jsonl"; p4.parent.mkdir(parents=True); rows2 = made(p2)
     open(p4, "w").write(json.dumps(dict(rows2[0], sentence="The one that is here.")) + "\n")

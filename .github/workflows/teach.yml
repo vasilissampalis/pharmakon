@@ -49,7 +49,20 @@ jobs:
           if git fetch -q origin lessons-wip 2>/dev/null && git show FETCH_HEAD:data/auto/own/teach/made.jsonl > "$RUNNER_TEMP/wip.jsonl" 2>/dev/null; then
             python3 -I scripts/auto/teach.py merge "$RUNNER_TEMP/wip.jsonl" >> "$L" 2>&1
           fi
+          # the notes of the run, cleaned of both keys, are written beside the lessons at every save: a run can be read while it goes on
+          cat > "$RUNNER_TEMP/notes.py" <<'PY'
+          import os, re, pathlib
+          src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "teach.log"
+          t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
+          for k in ("GEMINI_API_KEY", "OPENROUTER_API_KEY"):
+              v = (os.environ.get(k) or "").strip()
+              if len(v) >= 6: t = t.replace(v, "***")
+          t = re.sub(r"(key=)[A-Za-z0-9_\-]{12,}", r"\1***", t)
+          pathlib.Path("data/auto/own/teach").mkdir(parents=True, exist_ok=True)
+          pathlib.Path("data/auto/own/teach/_last-run.txt").write_text(t[-8000:], encoding="utf-8")
+          PY
           save() {
+            python3 -I "$RUNNER_TEMP/notes.py" 2>/dev/null
             ( export GIT_INDEX_FILE="$RUNNER_TEMP/wip.index"
               git read-tree HEAD && git add -A data/auto/own/teach &&
               c=$(git commit-tree "$(git write-tree)" -p HEAD -m "Lessons so far: saved while the run goes on") &&
@@ -67,16 +80,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mkdir -p data/auto/own/teach
-          python3 -I - <<'PY'
-          import os, re, pathlib
-          src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "teach.log"
-          t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
-          for k in ("GEMINI_API_KEY", "OPENROUTER_API_KEY"):
-              v = (os.environ.get(k) or "").strip()
-              if len(v) >= 6: t = t.replace(v, "***")
-          t = re.sub(r"(key=)[A-Za-z0-9_\-]{12,}", r"\1***", t)
-          pathlib.Path("data/auto/own/teach/_last-run.txt").write_text(t[-8000:], encoding="utf-8")
-          PY
+          python3 -I "$RUNNER_TEMP/notes.py" || echo "the notes of this run could not be written" > data/auto/own/teach/_last-run.txt
           git rm -q --ignore-unmatch data/auto/requests/teach-*.json
           git add -A data/auto   # (the whole folder, never the requests folder by name: when its last request is taken off, that folder is gone, and naming it made this step fail on 17 November and a night's lessons were lost)
           git diff --cached --quiet || git commit -q -m "Lessons: made-up wrong sentences and faithful rewordings for our own checker to learn from"
