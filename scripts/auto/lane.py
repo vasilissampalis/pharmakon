@@ -72,7 +72,7 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 10               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 11               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -599,6 +599,9 @@ def checker_prompt(parts, labels, question=None, each=None):
             "Each passage is named with its source's title: when a passage speaks of \"the studies\", \"the evidence\" or \"the articles\", it means the ones that source looked at (see its title), "
             "so a sentence that makes it about something else is not supported.\n\n"
             + "\n\n".join(blocks)
+            + ("\n\nSentence 1 may open with one of the words Yes, No, It can, Sometimes, It depends or Not known: the site answers a yes-or-no question that way. That word is the answer to the QUESTION, "
+               "not a claim to look for in the passages: accept it when what the passages say bears that answer out; refuse it, and say what the passages say instead, only when they point another way or are less sure than the word."
+               if question else "")
             + (f"\n\nThen judge the answer as a whole. QUESTION that was asked: {question}\n"
                '"answers_question": does sentence 1 answer that QUESTION itself, directly (true), or does it answer a neighbouring question or only talk around it (false)?\n'
                '"but_fits": is sentence 2 a limit or a doubt about what sentence 1 says (true), or is it about something else (false)? It is about something else when its source states the limit about ITS OWN subject and that subject is not what sentence 1 says: '
@@ -916,17 +919,24 @@ def own_but(sources, wanted_nearer):
     return f"This rests on {what} that our system could read. " + ("A paper that stands nearer the question could not be read." if wanted_nearer else "It has not read every study on this question.")
 
 
-def rules(parts, labels, years=()):
-    """What the site's content rules have against a draft: [(part, what)]. Empty when nothing. years: the years the papers
-    were published, which a sentence may name ("a 2022 review")."""
-    bad = []
+def rules(parts, labels, years=(), asked=()):
+    """What the site's content rules have against a draft: [(part, what)]. Empty when nothing. years: the years the answer's
+    sources were published. A sentence may name the year of a source IT rests on ("a 2022 review"), not another source's
+    (lane 11: the first real run of lane 10 wrote "A 2022 review says" over the words of a paper of 2023, because the answer
+    also had a source of 2022; the second reader and our own checker let it through). asked: the numbers of the question itself."""
+    bad = []; all_years = {str(y) for y in years}
     for p in parts:
         for what, rx in RULES:
             m = rx.search(p["text"])
             if m: bad.append((p["part"], f"{what} (“{m.group(0)}”)"))
         if words(p["text"]) > LIMITS.get(p["part"], 40): bad.append((p["part"], f"too long ({words(p['text'])} words)"))
         have = set().union(*[numbers(labels[u]["quote"]) for u in p["uses"]])
-        extra = numbers(p["text"]) - have - {str(y) for y in years}
+        known = [labels[u] for u in p["uses"] if "year" in labels[u]]                       # (labels that say which year their source is of; where none does, as before: any source's year)
+        own = {str(l["year"]) for l in known if l.get("year")} if known else all_years
+        extra = numbers(p["text"]) - have - own - {str(a) for a in asked}
+        other = sorted(x for x in extra if x in all_years)
+        if other: bad.append((p["part"], f"the year {', '.join(other)} belongs to another source: the source this sentence rests on is " + (f"of {', '.join(sorted(own))}" if own else "a page with no year") + ". Name the right one, or no year"))
+        extra -= set(other)
         if extra: bad.append((p["part"], "a number that is not in the paper's words it rests on (" + ", ".join(sorted(extra)) + ")"))
     return bad
 
@@ -1099,7 +1109,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         n += paper(c)
     n = 0
     for o in official or []:
-        if n >= (4 if amounts else N_OFFICIAL) or len(sources) >= len(tags) - 1: break
+        if n >= (6 if amounts else N_OFFICIAL) or len(sources) >= len(tags) - 1: break          # (lane 11: six pages for a question about amounts; with four, the US bodies' pages on drinking were never opened)
         if amounts and o.get("tier", 1) != 1: continue                                  # amounts only from a body of tier 1 or a medicine's label
         try: got = page(o)
         except (P.Refused, IOError, ValueError): continue
@@ -1138,9 +1148,9 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     rec["gates"]["sources"] = said()
     labels, n_f, n_l = {}, 0, 0
     for s in sources:
-        if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], passage_text=s["_text"][s["design"]["passage"]])
-        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], passage_text=s["_text"][f["passage"]])
-        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; labels[l["id"]] = dict(l, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], passage_text=s["_text"][l["passage"]])
+        if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][s["design"]["passage"]])
+        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][f["passage"]])
+        for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; labels[l["id"]] = dict(l, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][l["passage"]])
     keep_sources()
     if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service")
     ex = ex if ex is not None else examples()
@@ -1159,7 +1169,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" try {attempt + 1}: {why}" + (f" (how the reply ended: {llm.LAST.get('finish')}; reasoned {llm.LAST.get('reasoned')} characters, wrote {llm.LAST.get('wrote')})" if llm.LAST else "")).strip()
             if fix.startswith("the form was wrong") and why == "no JSON": break       # the same call would fail the same way: not paid for a third time
             fix = "the form was wrong: " + why; continue
-        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")] + sorted(numbers(item["q"]))) + lead(item["q"], draft["parts"]) + hedges(draft["parts"], labels) + says_more(draft["parts"], labels)   # (a year a source was published in, or a number of the question itself, may be named)
+        bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")], asked=sorted(numbers(item["q"]))) + lead(item["q"], draft["parts"]) + hedges(draft["parts"], labels) + says_more(draft["parts"], labels)   # (a year a source was published in, or a number of the question itself, may be named)
         lines_bad = {p for p, _ in bad if p.startswith("how")}
         if bad and all(p.startswith("how") for p, _ in bad) and sum(p["part"].startswith("how") for p in draft["parts"]) > len(lines_bad):
             draft["parts"] = [p for p in draft["parts"] if p["part"] not in lines_bad]          # (lane 4) the line goes, the answer stays
@@ -1257,7 +1267,7 @@ def make_amounts(item, rec, sources, chat, models, done, keep_sources, paper_nam
     # an amount stated for pregnancy, for children or about suicide is not the system's to publish: that row is left out
     # (a person's part); the question itself is looked at below
     for s in sources: s["rows"] = [r for r in s["rows"] if not any(rx.search(r["who"] + " " + r["what"] + " " + (r.get("clause") or r["quote"])) for what, rx in STAKES if what in ("pregnancy or children", "suicide or self-harm"))]
-    L = lines(); rows = [(s, r) for s in sorted(sources, key=lambda s: 0 if s["read"] == "page" else 1 if s["read"] == "full" else 2) for r in s["rows"][:6]][:12]   # (official pages first, then papers read in full, then summaries)
+    L = lines(); rows = [(s, r) for s in sorted(sources, key=lambda s: 0 if s["read"] == "page" else 1 if s["read"] == "full" else 2) for r in s["rows"][:6]][:18]   # (official pages first, then papers read in full, then summaries)
     solid = lambda s: (s["read"] == "page" and s.get("tier", 1) == 1) or (s["read"] in ("full", "summary") and s["people"] and s["kind"] in ("review", "study"))
     rows = [(s, r) for s, r in rows if solid(s)]
     rec["gates"]["sources"] = f"{len(rows)} amounts from {len({s['ref']['id'] for s, _ in rows})} sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)"
