@@ -713,6 +713,24 @@ def learned_verbs():
     return sorted(w for w, e in L.items() if isinstance(w, str) and re.fullmatch(r"[a-z]{3,14}", w) and isinstance(e, dict) and int(e.get("in_a_verbs_place") or 0) >= 3 and e.get("forms"))
 
 
+ASK_WORDS = ("who", "whom", "whose", "what", "when", "where", "which", "why", "how", "is", "are", "was", "were", "do", "does", "did", "can", "could", "will", "would", "should", "has", "have", "had", "may", "might", "must")
+
+
+def ending_pattern(pairs):
+    """One pattern for the endings the school learned (scripts/auto/language.py, lesson 3): a question that begins as a question
+    does (a question word or a helper verb) and ends on one of these pairs of words ("played in", "named after") is finished,
+    though its last word is one a question usually cannot end on. "" when there is none. The same string for the page and the build."""
+    pairs = sorted({p for p in pairs if isinstance(p, str) and re.fullmatch(r"[a-z]{2,14} [a-z]{2,8}", p)})
+    return "^(?:" + "|".join(ASK_WORDS) + ")\\b.* (?:" + "|".join(pairs) + ")$" if pairs else ""
+
+
+def learned_endings():
+    """The endings the school learned by itself (data/auto/language/learned.json, "endings"): only two plain words, each with its count of real questions (five or more)."""
+    try: L = json.load(open(LEARNED_LANGUAGE, encoding="utf-8")).get("endings") or {}
+    except (OSError, ValueError, AttributeError): return []
+    return sorted(p for p, e in L.items() if isinstance(p, str) and re.fullmatch(r"[a-z]{2,14} [a-z]{2,8}", p) and isinstance(e, dict) and int(e.get("questions") or 0) >= 5)
+
+
 def learned_names():
     """(names, phrases) from data/auto/names/learned.json (scripts/auto/names_open.py, learn; decision 27, step a): the names
     the system looked up in open name lists and found to be drugs, in small letters, and what people typed for them
@@ -791,6 +809,8 @@ def scope_block():
     # (2.15) the verbs the school learned by itself: never a word the rule's other lists already read another way
     other = set().union(*(set(U.get(k) or []) for k in UNF_SETS if k != "verbs"))
     unf["verbs"] = sorted(set(unf["verbs"]) | {w for w in learned_verbs() if w not in other})
+    pat = ending_pattern(learned_endings())
+    if pat: unf["strand"] = list(unf["strand"]) + [pat]
     unf["short"] = dict(sorted((U.get("short") or {}).items()))
     # (2.9.1) a drug's name with a letter wrong: 'map' (only to names the site knows) and 'keep'; the names of drugs without a page are in unfinished.names
     Sp = S.get("spell") or {}; known = {n for n, _ in names_table()} | set(S["names"])

@@ -29,6 +29,16 @@ a report. The lessons so far:
      verb and a pronoun: "did he ...", "can you ...") in at least three different questions, and its own -ing or -ed
      forms are used (two forms, or one at least three times). A drug word, a name and a function word are never
      learned as verbs.
+  3. Endings (what is learned). The reader holds a list of words a question cannot end on ("in", "of", "from" ...): a
+     question that ends on one is still being typed. But English leaves such words at the end of a finished question:
+     "how many games have the patriots played in", "who is the airport named after". Evidence that two last words are
+     such an ending: at least five different questions that begin as a question does (a question word or a helper verb)
+     end on exactly these two words, the last of them a preposition, and the reader called each of them unfinished. The
+     pairs are kept in the same table and join the reader's own patterns ("strand") as one pattern. The gate matters
+     most here: "can you die from" is a cut-off drug question, so "die from" is refused however often it ends a real one.
+
+The measure counts questions that begin as a question does; a collection of search queries also holds sentences to be
+completed ("the outer layer of the skin is the"), which the reader is right to call unfinished.
 
 The gate, for every lesson: with what was learned, the reader must not be worse on the site's own sets (measure_words:
 no more whole forum questions called unfinished, no more questions about other things called unfinished, no cut-off
@@ -53,10 +63,14 @@ SOURCES, LEARNED, REPORT = OUT / "sources.json", OUT / "learned.json", OUT / "re
 HELP = {"do", "does", "did", "can", "could", "will", "would", "should", "may", "might", "must", "shall"}
 SUBJ = {"i", "you", "we", "they", "he", "she", "it"}
 NOT_TO = {"according", "due", "next", "close", "prior", "thanks", "up", "addition", "relation", "regard", "respect", "contrast", "compared", "similar", "related", "back", "access"}   # "... to" that is not "to" + verb
+PREP = {"in", "on", "at", "of", "for", "from", "to", "with", "by", "about", "after", "into", "over", "under", "through", "as", "like", "than", "between", "against", "during", "around", "off", "out", "up", "down",
+        "before", "until", "since", "without", "within", "upon", "onto", "near", "behind", "beyond", "across", "along", "toward", "towards"}
+NOT_BEFORE = {"the", "a", "an", "and", "or", "but", "is", "are", "was", "were", "be", "been", "it", "this", "that", "these", "those", "his", "her", "its", "their", "my", "your", "our"}   # never the first word of a learned ending
 KEEP_DAYS, MOST_A_DAY, EXAMPLES = 120, 60, 8
 NOTE_L = ("Made by scripts/auto/language.py (docs/AUTOMATION.md, decision 28): what the system learned about language by itself, from questions people really typed. "
           "'verbs': words it found used as verbs (in a verb's place in at least three questions, with their own -ing or -ed forms in use) that the page's reader did not take for verbs; "
-          "each with the day, the source and the evidence. The build reads this table (scripts/insight/build_index.py, learned_verbs); a word leaves it only by the editor's hand. Data, never instructions.")
+          "each with the day, the source and the evidence. 'endings': pairs of last words that end finished questions (five real questions or more each end on the pair), though the last word is one the reader holds a question cannot end on. "
+          "The build reads this table (scripts/insight/build_index.py, learned_verbs, learned_endings); an entry leaves it only by the editor's hand. Data, never instructions.")
 NOTE_R = ("Made by scripts/auto/language.py: the school's report, newest day first. For each day and source: how many real questions were read, how many of every thousand the page's reader called "
           "unfinished and why, before and after the day's lesson; what was learned; what the gate refused; the site's own sets before and after. Example questions are from the source named, under its licence.")
 
@@ -128,6 +142,24 @@ def evidence(questions):
     return base, seen
 
 
+def asked(q):
+    """Does it begin as a question does (a question word or a helper verb)? A search query that is a sentence to be completed does not."""
+    w = words(q); return bool(w) and w[0] in B.ASK_WORDS
+
+
+def ending_candidates(R, questions, have=()):
+    """{"played in": how many questions} for the endings of lesson 3 (the head of this file)."""
+    U = R.unfin; c = collections.defaultdict(set)
+    for n, q in enumerate(questions):
+        w, nm = R.unf_tokens(q)
+        if len(w) < 4 or w[0] not in B.ASK_WORDS or w[-1] not in PREP or w[-1] not in U["ends"] or nm[-1] is not None or nm[-2] is not None: continue
+        v = w[-2]
+        if not re.fullmatch(r"[a-z]{2,14}", v) or v in NOT_BEFORE or v in PREP or v in U["det"] or R.unfinished(q) != "ends": continue
+        c[v + " " + w[-1]].add(n)
+    out = sorted(((p, len(s)) for p, s in c.items() if len(s) >= 5 and p not in have and re.fullmatch(r"[a-z]{2,14} [a-z]{2,8}", p)), key=lambda kv: (-kv[1], kv[0]))
+    return {p: {"questions": n} for p, n in out[:MOST_A_DAY * 4]}
+
+
 def verb_candidates(R, base, seen, have=()):
     """{word: evidence} for the words used as verbs that the reader does not take for verbs (lesson 2 at the head of this file)."""
     U = R.unfin; out = {}
@@ -151,54 +183,65 @@ def worse(a, b):
     return f"fresh_called_unfinished: {fa} -> {fb}" if fb > fa else ""
 
 
-def with_verbs(R, more):
-    """The reader with more verbs, for a trial: the same object, its verbs widened (taken back by `without`)."""
-    R.unfin["verbs"] = set(R.unfin["verbs"]) | set(more); return R
+def trial(R, verbs=(), endings=()):
+    """The reader with more verbs and more endings, for a trial: the same object, widened. Returns what takes them back."""
+    v0, s0 = R.unfin["verbs"], R.unfin["strand"]
+    pat = B.ending_pattern(list(endings))
+    R.unfin["verbs"] = set(v0) | set(verbs); R.unfin["strand"] = list(s0) + ([re.compile(pat)] if pat else [])
+    def back(): R.unfin["verbs"], R.unfin["strand"] = v0, s0
+    return back
 
 
-def gate(R, cand, site=None):
-    """(kept, refused, before, after): the candidates the site's own sets allow. site: measure_words(R) -> numbers (the selftest gives its own)."""
-    site = site or (lambda r: B.measure_words(r, show=False))
-    start = set(R.unfin["verbs"]); before = site(R)
+def gate(R, cand, kind="verbs", site=None, also=None):
+    """(kept, refused, before, after): the candidates the site's own sets allow. kind: "verbs" or "endings". also: what an earlier
+    lesson of the day kept (it stays in the trial). site: measure_words(R) -> numbers (the selftest gives its own)."""
+    site = site or (lambda r: B.measure_words(r, show=False)); also = also or {}
+    def numbers(subset):
+        back = trial(R, **dict(also, **{kind: list(also.get(kind) or []) + list(subset)}))
+        try: return site(R)
+        finally: back()
+    before = numbers([])
     if not cand: return {}, {}, before, before
-    try:
-        with_verbs(R, cand); all_at_once = site(R); why = worse(before, all_at_once)
-        if not why: return dict(cand), {}, before, all_at_once
-        kept, refused = {}, {}
-        for w, ev in cand.items():
-            R.unfin["verbs"] = start | {w}; one = worse(before, site(R))
-            if one: refused[w] = one
-            else: kept[w] = ev
-        R.unfin["verbs"] = start | set(kept); after = site(R); why = worse(before, after)
-        if why: return {}, dict({w: "together with the others: " + why for w in kept}, **refused), before, before
-        return kept, refused, before, after
-    finally:
-        R.unfin["verbs"] = start
+    all_at_once = numbers(cand); why = worse(before, all_at_once)
+    if not why: return dict(cand), {}, before, all_at_once
+    kept, refused = {}, {}
+    for w, ev in cand.items():
+        one = worse(before, numbers([w]))
+        if one: refused[w] = one
+        else: kept[w] = ev
+    after = numbers(kept); why = worse(before, after)
+    if why: return {}, dict({w: "together with the others: " + why for w in kept}, **refused), before, before
+    return kept, refused, before, after
 
 
 def learn(by_source, R=None, today=None, save=True, site=None, own=None):
     """One day at school. by_source: {name: {"questions": [...], "licence": "...", "problem": "" }}. Returns the day's report."""
     R = R or B.WordRules(); day = today or datetime.date.today().isoformat()
-    L = load(LEARNED, {}) if save else {}; verbs = dict(L.get("verbs") or {})
+    L = load(LEARNED, {}) if save else {}; verbs = dict(L.get("verbs") or {}); endings = dict(L.get("endings") or {})
     allq = list(dict.fromkeys(q for s in by_source.values() for q in s.get("questions") or []))
     rep = {"day": day, "sources": {n: {"questions": len(s.get("questions") or []), "licence": s.get("licence") or "", **({"problem": s["problem"]} if s.get("problem") else {})} for n, s in by_source.items()}}
     if not allq:
         rep["said"] = "no questions could be read today: nothing measured, nothing learned"
     else:
-        before = measure(R, allq)
+        qs = [q for q in allq if asked(q)]                                    # the measure: what begins as a question does
+        before = measure(R, qs)
+        src = "+".join(sorted(by_source))
+        ends, no_e, s0, s1 = gate(R, ending_candidates(R, qs, have=set(endings)), "endings", site)
         base, seen = evidence(allq + list(own if own is not None else own_questions()))
-        cand = verb_candidates(R, base, seen, have=set(verbs))
-        kept, refused, s0, s1 = gate(R, cand, site)
-        start = set(R.unfin["verbs"]); with_verbs(R, kept); after = measure(R, allq); R.unfin["verbs"] = start
-        for w, ev in kept.items(): verbs[w] = dict(ev, on=day, source="+".join(sorted(by_source)))
-        rep.update({"read": len(allq), "per_1000_called_unfinished": [before["per_1000"], after["per_1000"]], "called_unfinished": [before["called_unfinished"], after["called_unfinished"]],
-                    "examples_still_called_unfinished": after["examples"], "learned_verbs": sorted(kept), "refused_by_the_gate": refused, "site_sets": [s0, s1],
-                    "verbs_known_in_all": len(verbs)})
-        rep["said"] = (f"{len(allq)} real questions read; called unfinished per thousand: {before['per_1000']} before, {after['per_1000']} with today's lesson; "
-                       f"{len(kept)} verb(s) learned" + (": " + ", ".join(sorted(kept)[:20]) if kept else "") + (f"; {len(refused)} refused by the gate" if refused else ""))
+        kept, no_v, _, s2 = gate(R, verb_candidates(R, base, seen, have=set(verbs)), "verbs", site, also={"endings": list(ends)})
+        back = trial(R, verbs=kept, endings=ends); after = measure(R, qs); back()
+        for w, ev in kept.items(): verbs[w] = dict(ev, on=day, source=src)
+        for p, ev in ends.items(): endings[p] = dict(ev, on=day, source=src)
+        refused = dict(no_e, **no_v)
+        rep.update({"read": len(allq), "begin_as_a_question": len(qs), "per_1000_called_unfinished": [before["per_1000"], after["per_1000"]], "called_unfinished": [before["called_unfinished"], after["called_unfinished"]],
+                    "examples_still_called_unfinished": after["examples"], "learned_endings": sorted(ends), "learned_verbs": sorted(kept), "refused_by_the_gate": refused, "site_sets": [s0, s2 if kept else s1],
+                    "endings_known_in_all": len(endings), "verbs_known_in_all": len(verbs)})
+        rep["said"] = (f"{len(allq)} real questions read, {len(qs)} of them begin as a question does; of those, called unfinished per thousand: {before['per_1000']} before, {after['per_1000']} with today's lessons; "
+                       f"{len(ends)} ending(s) learned" + (": " + ", ".join(sorted(ends)[:12]) if ends else "") + f"; {len(kept)} verb(s) learned" + (": " + ", ".join(sorted(kept)[:12]) if kept else "")
+                       + (f"; {len(refused)} refused by the gate" if refused else ""))
     if save:
         OUT.mkdir(parents=True, exist_ok=True)
-        if rep.get("learned_verbs"): json.dump({"_note": NOTE_L, "verbs": dict(sorted(verbs.items()))}, open(LEARNED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        if rep.get("learned_verbs") or rep.get("learned_endings"): json.dump({"_note": NOTE_L, "verbs": dict(sorted(verbs.items())), "endings": dict(sorted(endings.items()))}, open(LEARNED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         R0 = load(REPORT, {}); days = [d for d in (R0.get("days") or []) if isinstance(d, dict) and d.get("day") != day]
         json.dump({"_note": NOTE_R, "days": ([rep] + days)[:KEEP_DAYS]}, open(REPORT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("language:", rep["said"])
@@ -225,12 +268,13 @@ def selftest():
     class U(dict): pass
     class Reader:                                                    # a small reader with the real rule's shape: a helper verb needs a verb the word list knows as one
         def __init__(self):
-            self.unfin = {"verbs": {"take"}, "vocab": {"take", "taking", "legalize", "dissolve", "school", "happen", "happening", "people", "weed"},
+            self.unfin = {"strand": [], "verbs": {"take"}, "vocab": {"take", "taking", "legalize", "dissolve", "school", "happen", "happening", "people", "weed"},
                           "aux": {"the", "a"}, "be": {"is", "are"}, "help": set(HELP), "gap": {"it"}, "who": {"people"}, "whoadj": set(), "det": {"the", "a"}, "func": {"of", "in"}, "ends": {"the", "of"}, "open": {"how", "what", "why"}, "nouns": set(), "topic": set(), "join": {"and"}}
         def in_scope(self, w): return w in ("weed", "ketamine")
+        def unf_tokens(self, q): w = words(q); return w, [None] * len(w)
         def unfinished(self, q):
             w = words(q)
-            if w and w[-1] in self.unfin["ends"]: return "ends"
+            if w and w[-1] in self.unfin["ends"] and not any(p.search(" ".join(w)) for p in self.unfin["strand"]): return "ends"
             for i, x in enumerate(w):
                 if x in HELP:                                        # the first word after the helper and its subject must be a verb
                     y = next((y for y in w[i + 1:] if y not in SUBJ and y not in self.unfin["who"] and y not in self.unfin["det"] and not self.in_scope(y)), "")
@@ -251,12 +295,27 @@ def selftest():
     def site(r):                                                     # the site's own sets: "dissolve" as a verb lets one cut-off question through
         calls.append(sorted(r.unfin["verbs"])); bad = "dissolve" in r.unfin["verbs"]
         return {"real_called_unfinished": 0, "other_called_unfinished": 1, "cut_before_the_name": [291 if bad else 292, 399], "fresh_called_unfinished": {"which": 14}}
-    kept, refused, s0, s1 = gate(R, cand, site)
+    kept, refused, s0, s1 = gate(R, cand, "verbs", site)
     assert set(kept) == {"legalize"} and "cut_before_the_name: 292 -> 291" in refused["dissolve"] and R.unfin["verbs"] == {"take"} and s1["cut_before_the_name"][0] == 292, (kept, refused)
+    # lesson 3: an ending is learned from five questions that begin as questions do; a sentence to be completed is no evidence; the gate refuses an ending that a cut-off drug question has
+    R.unfin["ends"] = {"the", "of", "in", "from"}
+    eq = [f"how many games have the {t} played in" for t in ("patriots", "giants", "jets", "bears", "colts")] + [f"what did {p} die from" for p in ("mozart", "bach", "elvis", "prince", "lincoln")] + \
+         ["the capital city that the romans lived in", "what is the song in", "who is this named from", "the outer layer of the skin is the"]
+    ec = ending_candidates(R, eq)
+    assert ec == {"die from": {"questions": 5}, "played in": {"questions": 5}} and asked("what did bach die from") and not asked("the outer layer of the skin is the"), ec
+    assert B.ending_pattern(["played in", "Bad One", "x y z"]) == "^(?:" + "|".join(B.ASK_WORDS) + ")\\b.* (?:played in)$" and B.ending_pattern([]) == ""
+    def site2(r):                                                    # "can you die from" is a cut-off drug question in the site's own set
+        miss = not r.unfinished("can you die from")
+        return {"real_called_unfinished": 0, "other_called_unfinished": 1, "cut_after_a_word_that_cannot_end": [1114 if miss else 1115, 1176], "fresh_called_unfinished": {}}
+    ek, er, _, _ = gate(R, ec, "endings", site2)
+    assert set(ek) == {"played in"} and "cut_after_a_word_that_cannot_end: 1115 -> 1114" in er["die from"] and R.unfin["strand"] == [] and R.unfinished("how many games have the jets played in") == "ends", (ek, er)
+    back = trial(R, endings=ek); assert R.unfinished("how many games have the jets played in") == "" and R.unfinished("the team the jets played in") == "ends" and R.unfinished("what did bach die from") == "ends"; back()
+    R.unfin["ends"] = {"the", "of"}
     assert worse({"a": [5, 9], "real_called_unfinished": 0}, {"a": [5, 9], "real_called_unfinished": 1}).startswith("real_called_unfinished") and not worse(s0, s0)
     assert worse({"fresh_called_unfinished": {"which": 2}}, {"fresh_called_unfinished": {"which": 2, "verb": 1}}) == "fresh_called_unfinished: 2 -> 3"
     rep = learn({"made-up": {"questions": qs, "licence": "none: written for this test"}}, R=R, today="2026-11-17", save=False, site=site, own=[])
-    assert rep["learned_verbs"] == ["legalize"] and rep["per_1000_called_unfinished"] == [333.33, 200.0] and rep["called_unfinished"][1] == {"ends": 1, "verb": 2} and "dissolve" in rep["refused_by_the_gate"] and R.unfin["verbs"] == {"take"}, rep
+    # (of the 15, 12 begin as a question does: "going to school in france", "close to school zones" and "the powder dissolved quickly why" do not)
+    assert rep["learned_verbs"] == ["legalize"] and rep["begin_as_a_question"] == 12 and rep["per_1000_called_unfinished"] == [416.67, 250.0] and rep["called_unfinished"][1] == {"ends": 1, "verb": 2} and "dissolve" in rep["refused_by_the_gate"] and R.unfin["verbs"] == {"take"}, rep
     assert learn({"x": {"questions": [], "licence": "y", "problem": "refused: robots.txt"}}, R=R, save=False, site=site, own=[])["said"].startswith("no questions could be read")
     # the list of sources is read as data: an address that is not https, or a field that is not a plain name, is passed over
     global SOURCES
