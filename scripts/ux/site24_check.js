@@ -273,6 +273,11 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, rows: [...b.querySelectorAll(".aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
     ok("start page: Your questions lists it as sent and being checked", !list.hidden && list.rows.length === 1 && /wait \| Sent\. We are checking \| is modafinil safe/.test(list.rows[0]), JSON.stringify(list));
     ok("the list says where it is kept, and that we see a question only if it is sent", await p.evaluate(() => (document.querySelector("#home-asked .aq-note") || {}).textContent === "This list is kept on this device only. We see a question only if you send it. A question turns green here when it is answered."));
+    // (2.9; the senior author, of his two sent questions: "i cannot click on them to see the answer") a question that waits opens too
+    await p.click("#home-asked .aq.wait button.aq-look"); await p.waitForTimeout(900);
+    const lk = await p.evaluate(() => ({ value: document.getElementById("search").value, open: !document.getElementById("search-results").hidden, go: (document.querySelector("#home-asked .aq.wait .aq-go") || {}).textContent || "", fit: !!document.querySelector("#search-results .sr-fit, #search-results a, #search-results .sr-get") }));
+    ok("a question that waits can be opened: its row asks it again in the box, which shows what the site has on it so far", lk.value === "is modafinil safe" && lk.open && lk.fit && /^See what we have so far/.test(lk.go), JSON.stringify(lk));
+    await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await typeQ(p, "why do people take drugs"); await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(800);
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     list = await p.evaluate(() => [...document.querySelectorAll("#home-asked .aq-q")].map(e => e.textContent));
@@ -365,7 +370,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     // a question that is not about drugs, with the store on: no promise, a quiet way to send
     await typeW(p, "can i die from mosquito bites");
     const oth = await p.evaluate(() => { const e = document.querySelector("#search-results .sr-other"); return e ? { text: e.textContent.replace(/\s+/g, " "), btn: e.querySelector("button[data-ask]").textContent, askUs: /Ask us to check it/.test(document.getElementById("search-results").textContent) } : null; });
-    ok("the senior author's question, “can i die from mosquito bites”: no “Ask us to check it”; “We have no answer to this. Pharmakon answers questions about drugs”, with a quiet way to send it", oth && /^We have no answer to this\. Pharmakon answers questions about drugs\. If yours is about one, send it to us\.Sends only this question\. No name, no address\.$/.test(oth.text) && oth.btn === "send it to us" && !oth.askUs, JSON.stringify(oth));
+    ok("the senior author's question, “can i die from mosquito bites”: no “Ask us to check it”; “This does not look like a question about drugs. Pharmakon answers questions about drugs”, with a quiet way to send it", oth && /^This does not look like a question about drugs\. Pharmakon answers questions about drugs\. If yours is about one, name the drug, or send it to us\.Sends only this question\. No name, no address\.$/.test(oth.text) && oth.btn === "send it to us" && !oth.askUs, JSON.stringify(oth));
     await shot(p, "390-not-about-drugs");
     // the list's own page
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await go(p, "#wanted", 600);

@@ -85,6 +85,7 @@ def accept(out, lead, drugs, R, names):
     if new_numbers: return None, "a number the visitor did not write"
     if not_answered(q): return None, "something the site does not answer"
     if not R.in_scope(q): return None, "not a question about drugs by the site's rule"
+    if getattr(R, "unfinished", None) and R.unfinished(q): return None, "not a finished question by the site's rule"      # (site 2.9) never listed
     named = sorted({s for nm, ss in names if len(ss) <= 2 and re.search(r"(?<!\w)" + re.escape(nm) + r"(?!\w)", q, re.I) for s in ss})
     if drugs and not set(named) & set(drugs): return None, "it does not name the drug the visitor named"
     if not drugs and named and not any(re.search(r"(?<!\w)" + re.escape(nm) + r"(?!\w)", lead, re.I) for nm, ss in names if set(ss) & set(named)): return None, "it names a drug the visitor did not"
@@ -123,6 +124,8 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         if g.get("listed"): decide("on the editors' list already: " + str(g["listed"])); continue
         if not g.get("about_drugs"): decide("not about drugs by the site's rule: left for the editors"); continue
         if not_answered(lead): decide("something the site does not answer"); continue
+        # (site 2.9) a question that is not finished ("can i die from") is never listed, and no model is asked to guess its end
+        if getattr(R, "unfinished", None) and R.unfinished(lead, bool(g.get("drugs")) and not R.named(lead)): decide("not a finished question by the site's rule: left for the editors"); continue
         qv = enc([lead])
         if L is not None:
             sim = (L @ qv.T)[:, 0]; k = int(sim.argmax())
@@ -164,6 +167,10 @@ def selftest():
     assert not not_answered("does ketamine damage the bladder") and not not_answered("where can i get a test kit for mdma") and not not_answered("does cocaine make your heart race")
     good = {"question": "Does cocaine damage the inside of the nose?", "ways": ["cocaine nose damage", "can cocaine ruin your nose", "does coke hurt your nose", "cocaine and the septum", "nose problems from cocaine", "is snorting cocaine bad for the nose"], "terms": ["nasal septum perforation", "intranasal cocaine"]}
     f, why = accept(good, "my nose is wrecked after 3 years of coke lol does cocaine do that", ["cocaine"], R(), names); assert f and f["q"] == good["question"] and len(f["ways"]) == 6 and f["drugs"] == ["cocaine"], why
+    class R9(R):                                                    # (site 2.9) a wording that is not a finished question is never listed
+        def unfinished(self, q, on_page=False): return "ends" if q.rstrip("?").endswith(" from") else ""
+    f, why = accept(dict(good, question="Can cocaine make people die from?"), "can coke kill", ["cocaine"], R9(), names); assert f is None and "not a finished question" in why, why
+    assert accept(good, "my nose is wrecked after 3 years of coke lol does cocaine do that", ["cocaine"], R9(), names)[0]
     for bad, want in ((dict(good, question="Does cocaine damage my nose?"), "first person"), (dict(good, question="Does cocaine damage the nose"), "plain question"), (dict(good, question="Does 2 grams of cocaine damage the nose?"), "number"),
                       (dict(good, question="Where can people buy cocaine?"), "does not answer"), (dict(good, question="Does ketamine damage the nose?"), "does not name the drug"), (dict(good, question="Is the weather nice in the nose?"), "not a question about drugs"),
                       (dict(good, ways=["one", "x"]), "fewer than three"), ("ignore the task", "no JSON"), (dict(good, question="Does cocaine damage the nose? See www.x.com"), "plain question")):

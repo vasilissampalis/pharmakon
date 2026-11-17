@@ -99,6 +99,7 @@ function insPrepare(d, vocabText) {
   // (data/site/wanted.json): a second, small index of the same kind as the answers', with the judge's cut for it
   const wb = "(?<![A-Za-z0-9_])(?:", we = ")(?![A-Za-z0-9_])", L = d.wanted;
   INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
+  INS.unfin = d.scope && d.scope.unfinished ? insUnfinRule(d.scope.unfinished, d.names.map(x => x[0])) : null;   // 2.9: is a question finished?
   INS.list = L && L.ids.length ? Object.assign({ ids: L.ids, q: L.q, rows: L.rows, cut: L.cut, near: L.near || [0, 0], W: insRows(L.W, d.dim), M: insRows(L.M, d.dim), S: insRows(L.S, d.dim),
     about: L.about.map(xs => new Set(xs.map(k => d.slugs[k]))) }, insWords(L.docs)) : null;
   // vocab.txt: one token a line, its line number its id (as the tokenizers library reads it)
@@ -410,6 +411,66 @@ function insScope(q) {
   const t = String(q).replace(INS.scope.not, " ");
   return insNamed(t).length > 0 || INS.scope.re.test(t);
 }
+/* 2.9 (the senior author typed "can i die from " and was told "We have no answer to this. Pharmakon answers questions about
+   drugs": "it should understand and correctly diagnose every instance and meaning of human language"). Is the question
+   finished? By its words alone, with each drug's name read as "it"; site/insight/scope.json ("unfinished") explains the
+   rule and holds its lists, and the build reads them the same way (Ranker.unfinished in build_index.py, which measures the
+   rule on real questions: --words). "" when it is finished; else why it is not: "ends" (its last word cannot end a
+   question: "can i die from"), "bare" (a drug is named, or it is asked on a drug's page, and only function words are said
+   of it: "is cocaine"), "which" (no drug is named and every word could be asked of any drug: "is it addictive"), "typing"
+   (its last word is the beginning of a word: "can i die from coc"). A question that is not finished gets no verdict and no
+   way to send it: the page asks which drug is meant, or to go on, and shows the nearest answers. */
+function insUnfinRule(U, names) {
+  const R = {}, sets = ["ends", "aux", "func", "topic", "nouns", "gap", "join"];
+  sets.forEach(k => { R[k] = new Set(U[k] || []); });
+  ["strand", "whole", "named"].forEach(k => { R[k] = (U[k] || []).map(p => new RegExp(p)); });
+  R.known = new Set(); sets.forEach(k => R[k].forEach(x => R.known.add(x)));
+  // every beginning of a word: of a word of the lists (two letters or more), of a word of a drug's name (three or more);
+  // a word without its plural s is a word, not a beginning
+  const begin = (words, start) => { const out = new Set(); words.forEach(w => { for (let i = start; i < w.length; i++) out.add(w.slice(0, i)); }); words.forEach(w => { if (w.endsWith("s")) out.delete(w.slice(0, -1)); }); return out; };
+  const ofNames = new Set(); names.concat(U.names || []).forEach(n => (n.toLowerCase().match(/[a-z0-9]+/g) || []).forEach(x => { if (x.length >= 4) ofNames.add(x); }));
+  R.begin = begin(R.known, 2); R.beginName = begin(ofNames, 3);
+  return R;
+}
+function insUnfinished(q, onPage) {
+  const U = INS.unfin; if (!U) return "";
+  let names = 0; INS.nameRe.lastIndex = 0;
+  const t = String(q).toLowerCase().replace(/\u2019/g, "'").replace(INS.nameRe, () => { names++; return " it "; });
+  const w = (t.match(/[a-z0-9']+/g) || []).map(x => x.replace(/^'+|'+$/g, "")).filter(Boolean); if (!w.length) return "";
+  const s = w.join(" "), any = ps => ps.some(p => p.test(s)), all = (xs, S) => xs.every(x => S.has(x)), last = w[w.length - 1];
+  if (any(U.whole)) return "";
+  if (U.ends.has(last) && !any(U.strand)) return "ends";
+  if (names >= 2 && w.every(x => x === "it" || U.join.has(x))) return "";               // two drugs and a word that joins them
+  if (names || onPage) { if (all(w, U.aux)) return names && any(U.named) ? "" : "bare"; }   // "what is ketamine" is finished
+  else if (all(w, U.known)) return !w.some(x => U.gap.has(x)) && (w.some(x => U.nouns.has(x)) || (w[0] === "why" && w.some(x => U.topic.has(x)))) ? "" : "which";
+  // the last word is still being typed: not a word, and the beginning of a drug's name, or (in a question that otherwise
+  // reads as one about drugs) of a word this rule knows
+  if (w.length >= 2 && !U.known.has(last) && !INS.vocab.has(last)) {
+    if (U.beginName.has(last)) return "typing";
+    if (U.begin.has(last) && (names || onPage || all(w.slice(0, -1), U.known) || insScope(w.slice(0, -1).join(" ")))) return "typing";
+  }
+  return "";
+}
+/* 2.9: a word of the question that the model does not know (three letters or more; not in its vocabulary with or without
+   an ending; not a word of the lists above), when everything else in the question could be asked of any drug: it may be
+   the name of a drug we do not know ("is tusi dangerous"). build_index.py's unknown_words reads the same way. */
+const INS_UNK_ENDS = [["s", ""], ["es", ""], ["ies", "y"], ["ed", ""], ["ed", "e"], ["d", ""], ["ing", ""], ["ing", "e"], ["ly", ""], ["er", ""], ["est", ""]];
+function insUnknown(q) {
+  if (!INS.unfin || !INS.vocab) return [];
+  const t = String(q).toLowerCase().replace(/n['\u2019]t\b/g, " not").replace(/['\u2019](?:s|re|ve|ll|d|m)\b/g, " "), out = [];
+  new Set(t.match(/[a-z]{3,}/g) || []).forEach(w => {
+    if (INS.unfin.known.has(w)) return;
+    const forms = [w].concat(INS_UNK_ENDS.filter(([end]) => w.length > end.length + 2 && w.endsWith(end)).map(([end, put]) => w.slice(0, -end.length) + put));
+    if (!forms.some(f => INS.vocab.has(f))) out.push(w);
+  });
+  return out;
+}
+// (the one unknown word of a question whose other words could be asked of any drug: what the page then says of it)
+function insStranger(q) {
+  const unk = insUnknown(q); if (unk.length !== 1) return "";
+  const rest = (String(q).toLowerCase().replace(/\u2019/g, "'").match(/[a-z0-9']+/g) || []).map(x => x.replace(/^'+|'+$/g, "")).filter(x => x && x !== unk[0]);
+  return rest.length && rest.every(x => INS.unfin.known.has(x)) ? unk[0] : "";
+}
 // the page an answer is shown as being on: a drug the question names (or the page's own) when the answer is asked there
 function insPageOf(id, groups, drug) {
   if (isAuto(id)) return AUTO[id].page;   // (2.6) an answer written by the system lives on its drug's page, or among the big questions
@@ -435,18 +496,26 @@ async function insRank(query, ctx) {
   const t0 = performance.now(), res = insRead(query, ctx);
   if (res.note === "blocked") { res.ms = performance.now() - t0; return res; }
   const whole = res.routes.some(r => r.whole);                 // the question is a drug's name and nothing more: its page is the answer
+  const answered = res.routes.some(r => r.kind !== "mix"), named = !res.drug && res.groups.length > 0, unf = insUnfinished(res.core, !!res.drug);
   if (!(whole && insWordsIn(res.core) < INS_WORDS)) {
     const drug = ctx && ctx.drug, tx = insTexts(res.core, drug), v = await insEmbed(tx.full), mv = tx.masked === tx.full ? v : await insEmbed(tx.masked);
     const tiers = insTiers(insScore(v, mv, res.core), tx.groups);
     const row = c => ({ id: INS.ids[c.i], page: insPageOf(INS.ids[c.i], tx.groups, drug), plain: +c.plain.toFixed(4), topic: +c.topic.toFixed(4), off: !c.on });
     res.best = tiers.best.map(row); res.related = res.emergency ? [] : tiers.related.map(row);   // an emergency gets its route and the answers that fit, nothing nearby
     res.judge = { id: INS.ids[tiers.first.i], p: tiers.first.p, f: tiers.first.f };              // (for the checks: the first candidate and the judge's number for it)
-    if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.want = insWant(v, mv, res.core, tx.groups);   // 2.5: is it on our list?
+    // 2.9: a question that is not finished and names no drug has no "best match": the answers found are ways to go on
+    if (unf && !named && !answered && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
+    if (!res.best.length && !answered && !unf) res.want = insWant(v, mv, res.core, tx.groups);   // 2.5: is it on our list?
   }
   // with no best match, say so, unless a route already is the answer to what was asked (help, a dose, a test, the drug's page).
-  // 2.5: "want", a question like it is on our list; "other", by its words it is not a question about drugs (on a drug's
-  // page a question that names no drug is about that drug); "none", a drug question we have not checked yet
-  if (!res.best.length && !res.routes.some(r => r.kind !== "mix")) res.note = res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
+  // 2.9: "unfinished", the question is not finished yet (unf says why); 2.5: "want", a question like it is on our list;
+  // "other", by its words it is not a question about drugs (on a drug's page a question that names no drug is about that
+  // drug), with the one word we do not know, if that is what stands in the way (stranger); "none", a drug question we have
+  // not checked yet
+  if (!res.best.length && !answered) {
+    res.note = unf ? "unfinished" : res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
+    if (unf) res.unf = unf; else if (res.note === "other") res.stranger = insStranger(res.core);
+  }
   res.ms = performance.now() - t0; INS.times.push(res.ms);
   return res;
 }
@@ -500,10 +569,27 @@ function insNoneHtml(res, sheet) {
     return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="#wanted">See the whole list ' + icon("arrow") + "</a></div>"
       : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> A question like yours is <a href="#wanted">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
   }
-  if (res.note === "other") return sheet ? '<div class="ins-none ins-other"><p class="ins-none-t">We have no answer to this.</p><p class="ins-none-s">Pharmakon answers questions about drugs. If yours is about one, you can send it to us.</p>' + insAskBtn(res.q, "linklike", "Send it to us") + "</div>"
-    : '<p class="sr-fit-none sr-other"><b>We have no answer to this.</b> Pharmakon answers questions about drugs. If yours is about one, ' + insAskBtn(res.q, "linklike", "send it to us", ".") + "</p>";
+  // 2.9: not finished yet: no verdict, no way to send it; which drug is meant, or go on
+  if (res.note === "unfinished") { const t = insUnfinText(res);
+    return sheet ? '<div class="ins-none ins-unfin"><p class="ins-none-t">' + esc(t[0]) + '</p><p class="ins-none-s">' + esc(t[1]) + "</p></div>" : '<p class="sr-fit-none sr-unfin"><b>' + esc(t[0]) + "</b> " + esc(t[1]) + "</p>"; }
+  // 2.9: not about drugs by its words. The line says what the page read (the senior author, of "We have no answer to this":
+  // "it has to have 1/1000 error rate"): with one word it does not know among words that could be asked of any drug, that
+  // the word is not known as a drug; else that this does not look like a question about drugs. Both keep the way to send:
+  // the rule reads words, and a drug question in everyday words must not be lost.
+  if (res.note === "other" && res.stranger) { const w = "\u201c" + esc(res.stranger) + "\u201d";
+    return sheet ? '<div class="ins-none ins-other ins-stranger"><p class="ins-none-t">We do not know ' + w + ' as a drug.</p><p class="ins-none-s">If it is one, send us your question and we will look into it.</p>' + insAskBtn(res.q, "linklike", "Send it to us") + "</div>"
+      : '<p class="sr-fit-none sr-other sr-stranger"><b>We do not know ' + w + " as a drug.</b> If it is one, " + insAskBtn(res.q, "linklike", "send us your question", " and we will look into it.") + "</p>"; }
+  if (res.note === "other") return sheet ? '<div class="ins-none ins-other"><p class="ins-none-t">This does not look like a question about drugs.</p><p class="ins-none-s">Pharmakon answers questions about drugs. If yours is about one, name the drug, or send it to us.</p>' + insAskBtn(res.q, "linklike", "Send it to us") + "</div>"
+    : '<p class="sr-fit-none sr-other"><b>This does not look like a question about drugs.</b> Pharmakon answers questions about drugs. If yours is about one, name the drug, or ' + insAskBtn(res.q, "linklike", "send it to us", ".") + "</p>";
   return sheet ? '<div class="ins-none"><p class="ins-none-t">We haven’t checked exactly this yet.</p>' + (res.note === "none" ? insAskBtn(res.q, "qz2-nb ins-askus") : "") + "</div>"
     : '<p class="sr-fit-none"><b>We haven’t checked exactly this yet.</b>' + (res.note === "none" ? " " + insAskBtn(res.q, "linklike") : "") + "</p>";
+}
+// 2.9: what a question that is not finished is told: [the line, what to do]. With no drug named: which drug is meant;
+// with one (or on its page): go on about it
+function insUnfinText(res) {
+  if (!res.groups.length) return ["Which drug do you mean?", "Finish your question with its name and we will look."];
+  const one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
+  return ["Go on.", "Finish your question" + (one ? " about " + pageWord(one) : "") + " and we will look."];
 }
 function insRowHtml(x, best) {
   if (isAuto(x.id)) return autoRowHtml(x, best);
@@ -515,7 +601,7 @@ function insFitHtml(res) {
   const routes = res.routes.map(r => insRouteHtml(r, "sr-route")).join("") + (res.emergency ? insSosHtml("sr-sos") : "");
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
   const none = insNoneHtml(res, false);
-  const related = res.related.length ? '<p class="sr-fit-h">Related</p>' + res.related.map(x => insRowHtml(x, false)).join("") : "";
+  const related = res.related.length ? '<p class="sr-fit-h">' + (res.note === "unfinished" ? "You may mean" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
   return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + routes + best + none + related + '<p class="sr-fit-h sr-words" hidden>More results</p></div>';
 }
 // what a screen reader hears when the answers arrive: the route, the tier, the question matched
@@ -523,7 +609,8 @@ function insSay(res) {
   const parts = res.routes.map(r => r.t);
   if (res.best.length) parts.push("Best match: " + res.best.map(x => insQ(x.id, x.page)).join("; "));
   else if (res.note === "want") parts.push("Not answered yet. A question like yours is on our list: " + res.want.q);
-  else if (res.note === "other") parts.push("We have no answer to this. Pharmakon answers questions about drugs");
+  else if (res.note === "unfinished") parts.push(insUnfinText(res).join(" ").replace(/\.$/, ""));
+  else if (res.note === "other") parts.push(res.stranger ? "We do not know \u201c" + res.stranger + "\u201d as a drug. If it is one, you can send us your question" : "This does not look like a question about drugs. Pharmakon answers questions about drugs");
   else if (res.note) parts.push("We haven’t checked exactly this yet");
   if (res.related.length) parts.push(res.related.length + " related answer" + (res.related.length === 1 ? "" : "s"));
   return parts.join(". ");
@@ -678,7 +765,7 @@ function insHtml(v) {
     return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written by our system" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
   const none = insNoneHtml(res, true);
-  const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"><p class="rn-k">Related</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
+  const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"><p class="rn-k">' + (res.note === "unfinished" ? "You may mean" : "Related") + '</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
     return '<li><a href="' + esc(answerAddr(x.id, x.page)) + '" data-insight-next="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span><span class="ins-rel-k">' + esc(w.name) + "</span>" + esc(insQ(x.id, x.page)) + "</span>" + icon("arrow") + "</a></li>"; }).join("") + "</ul></div>" : "";
   const from = (res.best.length ? res.best : res.related).map(x => x.id), shown = res.best.concat(res.related).map(x => x.id);
   return insBar("<span>Your question</span>") + '<div class="ins ins-asked' + (res.depth ? " ins-" + res.depth : "") + '"><h2 id="ev-title" class="ins-yours" tabindex="-1">' + esc(insCap(res.q.length > 240 ? res.q.slice(0, 237) + "…" : res.q)) + "</h2>" +
@@ -876,10 +963,14 @@ function askedBox() {
   const list = askedList().filter(it => it.st !== "ans" || claimById[it.id] || isAuto(it.id));
   if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
+  // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question
+  // that waits can be opened too: it is asked again in the box above, which shows what the site has on it so far
+  const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + k + '</span><span class="aq-q">' + esc(it.q) +
+    '</span><span class="aq-go">See what we have so far ' + icon("arrow") + "</span></button>" + x(it) + "</li>";
   const row = it => it.st === "ans"
     ? '<li class="aq ans"><a class="aq-a" href="' + esc(isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
-    : it.w ? '<li class="aq wait onlist"><span class="aq-a"><span class="aq-k">' + icon("clock") + 'On our list</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>"
-    : it.sent ? '<li class="aq wait"><span class="aq-a"><span class="aq-k">' + icon("clock") + 'Sent. We are checking</span><span class="aq-q">' + esc(it.q) + "</span></span>" + x(it) + "</li>"
+    : it.w ? look(it, "On our list")
+    : it.sent ? look(it, "Sent. We are checking")
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
   // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
   // didn't send the email? ... the user should be informed": the list says where it is kept, and each row whether it was sent)
@@ -896,6 +987,7 @@ async function askedCheck() {
     if (it.st !== "wait" || it.cv === ASK_BUILD) continue;
     try { const res = await insRank(it.q, { drug: it.d && subBySlug[it.d] ? it.d : null });
       if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
+      else if (res.want && !it.w && it.sent) it.w = res.want.id;   // (2.9) sent, not answered yet, and now on our list: its row says so
       it.cv = ASK_BUILD; changed = true; } catch (e) { /* asked again on the next visit */ }
   }
   if (changed) { askedSave(list); askedBox(); }
@@ -911,6 +1003,11 @@ document.addEventListener("click", async e => {
   if (e.target.closest("button[data-asked-reload]")) { location.reload(); return; }
   const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   const op = e.target.closest("a[data-asked-open]"); if (op) { askedDrop(op.dataset.askedOpen); return; }   // read: it leaves the list (the sheet opens by its data-sheet)
+  // (2.9) a question that waits: asked again in the box, which shows what the site has on it so far
+  const lk = e.target.closest("button[data-asked-look]");
+  if (lk) { e.preventDefault(); const it = askedList().find(x => x.k === lk.dataset.askedLook), s = document.getElementById("search"); if (!it || !s) return;
+    s.value = it.q; if (s.scrollIntoView) s.scrollIntoView({ block: "center" });
+    setTimeout(() => { s.focus({ preventScroll: true }); runSearch(it.q); }, 0); return; }   // after this click has run its course (the page closes the results on a click outside them)
   // a question in the list that was not sent: one tap sends it where the site can send; elsewhere the email form opens with it
   const sb = e.target.closest("button[data-asked-send]");
   if (sb) { e.preventDefault(); const it = askedList().find(x => x.k === sb.dataset.askedSend); if (!it) return; sb.disabled = true;
@@ -1085,6 +1182,6 @@ window.pkInsight = {
   embed: t => insEmbed(t).then(v => Array.from(v)), tiers: () => Object.assign({}, INS.t), weights: () => Object.assign({}, INS.wt), judge: () => JSON.parse(JSON.stringify(INS.judge)),
   read: (t, ctx) => { const r = insRead(t, ctx || {}); return { core: r.core, depth: r.depth, note: r.note, routes: r.routes.map(x => x.kind), groups: r.groups }; },
   rank: (t, ctx) => insRank(t, ctx || {}).then(r => ({ q: r.q, core: r.core, depth: r.depth, note: r.note, emergency: r.emergency, routes: r.routes.map(x => ({ kind: x.kind, t: x.t, href: x.href, el: x.el || null, mix: x.mix || null })),
-    best: r.best, related: r.related, judge: r.judge || null, want: r.want || null, ms: r.ms })),
-  scope: t => insScope(t), listed: () => (INS.list ? INS.list.ids.slice() : [])
+    best: r.best, related: r.related, judge: r.judge || null, want: r.want || null, unf: r.unf || "", demoted: !!r.demoted, stranger: r.stranger || "", ms: r.ms })),
+  scope: t => insScope(t), unfinished: (t, on) => insUnfinished(t, !!on), unknown: t => insUnknown(t), listed: () => (INS.list ? INS.list.ids.slice() : [])
 };

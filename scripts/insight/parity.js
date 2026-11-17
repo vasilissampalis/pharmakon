@@ -45,6 +45,14 @@ const queries = goldAll.filter((_, i) => i % 5 === 2).slice(0, 60).map(q => [q, 
   "what is 6-apb like", "is modafinil safe", "how long does the high last", "is it ok to take ibuprofen every day", "why do people take drugs", "what is the best tablet for drawing"].map(q => [q, null]),
   [["does it kill brain cells", "cannabis"], ["is it addictive", "cannabis"], ["how long does it stay in your blood", "ketamine"], ["is it addictive", "kratom"], ["can it damage my bladder", "ketamine"],
    ["what does mdma do to serotonin", "cannabis"], ["how long does it last", "lsd"], ["is it safe with alcohol", "mdma"]]);
+// 2.9: questions as a reader who is still typing leaves them: every third forum question of the gold set cut after each of its
+// words and in the middle of each word of five letters or more, and the ones the rule was written for
+const cuts = [...new Set(goldAll.filter((_, i) => i % 3 === 0).flatMap(q => { const w = q.replace(/[?!.]+$/, "").split(" "), out = [];
+  for (let i = 1; i <= w.length; i++) { out.push(w.slice(0, i).join(" ")); if (i < w.length && w[i].length >= 5) out.push(w.slice(0, i).join(" ") + " " + w[i].slice(0, Math.ceil(w[i].length / 2))); }
+  return out; }).concat(["can i die from ", "can i die from", "is it addictive", "can you overdose", "how long does it last", "what is tolerance", "how long does withdrawal last", "why do people get addicted",
+  "what is it cut with", "what are pills cut with", "what is heroin cut with", "is cocaine", "what is ketamine", "what is ketamine for", "weed and alcohol", "weed and", "how does mdma", "can i die from coc", "is weed lega",
+  "is cocaine addi", "can a gay man go to the court", "who are you", "what time is it", "how much ecstasy is too much", "what does it feel like", "what’s it like", "DOES IT SHOW UP ON A DRUG TEST", "is tusi dangerous",
+  "what is photosynthesis", "how do i stop snoring", "don't you know what's in it", "Why does meth not work like it used to?", "what might someone have been spiked with", "xanax vs", "'quoted' words and", ""]))];
 // the build's side, in Python: the same reading of every text, and the page's ranking rule from the same index
 const py = `
 import sys, json, importlib.util, numpy as np
@@ -60,8 +68,10 @@ vec = dict(zip(uniq, bi.embed_all(uniq, quiet=True)))
 rank = []
 for (q, d), (full, masked, groups) in zip(req["queries"], read):
     r = R.rank_vectors(q, vec[full], vec[masked], groups)
-    rank.append({"full": full, "masked": masked, "groups": groups, "best": r["best"], "related": r["related"], "first": r["first"], "want": R.want(q, vec[full], vec[masked], groups), "scope": R.in_scope(q)})
+    rank.append({"full": full, "masked": masked, "groups": groups, "best": r["best"], "related": r["related"], "first": r["first"], "want": R.want(q, vec[full], vec[masked], groups), "scope": R.in_scope(q), "unf": R.unfinished(q, bool(d) and not R.named(q))})
 out["rank"] = rank
+# 2.9: is the question finished, and which of its words are not known: the two rules on words alone, on every cut
+out["cuts"] = [[R.unfinished(c, False), R.unfinished(c, True), bi.unknown_words(c, R.unfin["vocab"] or set(), R.unfin["known"])] for c in req["cuts"]]
 print(json.dumps(out))
 `;
 const server = http.createServer((req, res) => {
@@ -77,18 +87,19 @@ const server = http.createServer((req, res) => {
   await p.goto("http://127.0.0.1:" + server.address().port + "/#home"); await p.waitForTimeout(500);
   const loaded = await p.evaluate(() => pkInsight.load());
   if (!loaded) { console.error("Insight did not load in the page", errors); process.exit(1); }
-  const js = await p.evaluate(async ({ texts, queries }) => {
+  const js = await p.evaluate(async ({ texts, queries, cuts }) => {
     const out = { ids: [], vecs: [], expand: [], mask: [], named: [], rank: [], tiers: pkInsight.tiers(), weights: pkInsight.weights(), judge: pkInsight.judge() };
     for (const t of texts) { out.ids.push(pkInsight.encode(t)); out.vecs.push(await pkInsight.embed(t)); }
     for (const t of texts.concat(queries.map(q => q[0]))) { out.expand.push(pkInsight.expand(t)); out.mask.push(pkInsight.mask(t)); out.named.push(pkInsight.named(t)); }
     for (const [q, drug] of queries) { const r = await pkInsight.rank(q, drug ? { drug } : {}); r.scope = pkInsight.scope(r.core); out.rank.push(r); }
     out.listed = pkInsight.listed();
+    out.cuts = cuts.map(c => [pkInsight.unfinished(c, false), pkInsight.unfinished(c, true), pkInsight.unknown(c)]);
     return out;
-  }, { texts, queries });
+  }, { texts, queries, cuts });
   await browser.close(); server.close();
   // the build ranks what the page ranks: the question without its depth words (the page says which words those were)
   const asked = queries.map(([q, d], i) => [js.rank[i].core, d]);
-  const r = spawnSync("python3", ["-I", "-c", py, path.join(REPO, "scripts/insight/build_index.py"), path.join(ROOT, "data/insight.json")], { input: JSON.stringify({ texts, raw: queries.map(q => q[0]), queries: asked }), maxBuffer: 1 << 28, encoding: "utf8" });
+  const r = spawnSync("python3", ["-I", "-c", py, path.join(REPO, "scripts/insight/build_index.py"), path.join(ROOT, "data/insight.json")], { input: JSON.stringify({ texts, raw: queries.map(q => q[0]), queries: asked, cuts }), maxBuffer: 1 << 28, encoding: "utf8" });
   if (r.status !== 0) { console.error(r.stderr); process.exit(2); }
   const ref = JSON.parse(r.stdout), D = JSON.parse(fs.readFileSync(path.join(ROOT, "data", "insight.json"), "utf8"));
   let fails = 0; const say = (pass, name, detail) => { if (!pass) fails++; console.log((pass ? "PASS " : "FAIL ") + name + (detail ? "  (" + detail + ")" : "")); };
@@ -110,13 +121,15 @@ const server = http.createServer((req, res) => {
   // the ranking: the same first candidate with the same six numbers and the same judge's number (to 1e-4), the same best match and
   // related answers, in order, with both scores within 0.005. (What the page adds on top of the rule: a question we do not answer
   // gets nothing, and an emergency gets no related answers: by design, counted apart.)
-  let maxd = 0, maxp = 0, maxf = 0, nBest = 0, nRel = 0, nNone = 0, blocked = 0, urgent = 0, whole = 0; const rkBad = [], pj = [];
+  let maxd = 0, maxp = 0, maxf = 0, nBest = 0, nRel = 0, nNone = 0, blocked = 0, urgent = 0, whole = 0, demoted = 0; const rkBad = [], pj = [];
   queries.forEach(([q, drug], i) => { const a = js.rank[i], b = ref.rank[i], tag = JSON.stringify(q.slice(0, 50)) + (drug ? " on " + drug : "");
     if (a.note === "blocked") { blocked++; return; }
     if (!a.judge) { whole++; return; }
     const dp = Math.abs(a.judge.p - b.first.p), df = Math.max(...a.judge.f.map((x, j) => Math.abs(x - b.first.f[j]))); maxp = Math.max(maxp, dp); maxf = Math.max(maxf, df); pj.push(a.judge.p);
     if (a.judge.id !== b.first.id || dp > 1e-4 || df > 1e-4) rkBad.push(tag + " the judge: page " + a.judge.id + " " + a.judge.p.toFixed(5) + " [" + a.judge.f.map(x => x.toFixed(4)) + "] build " + b.first.id + " " + b.first.p.toFixed(5) + " [" + b.first.f.map(x => x.toFixed(4)) + "]");
-    const pairs = [["best", a.best, b.best]]; if (a.emergency) urgent++; else pairs.push(["related", a.related, b.related]);
+    // (2.9) a question that is not finished and names no drug has no best match on the page: the answers found are shown as ways to go on
+    const bb = a.demoted ? [] : b.best, br = a.demoted ? b.best.concat(b.related).slice(0, 3) : b.related; if (a.demoted) demoted++;
+    const pairs = [["best", a.best, bb]]; if (a.emergency) urgent++; else pairs.push(["related", a.related, br]);
     for (const [k, x, y] of pairs) {
       if (x.map(r => r.id).join() !== y.map(r => r.id).join()) { rkBad.push(tag + " " + k + ": page [" + x.map(r => r.id + " " + r.plain + "/" + r.topic) + "] build [" + y.map(r => r.id + " " + r.plain + "/" + r.topic) + "]"); continue; }
       x.forEach((r, j) => { const d = Math.max(Math.abs(r.plain - y[j].plain), Math.abs(r.topic - y[j].topic)); maxd = Math.max(maxd, d); if (d > 0.005 || r.off !== y[j].off) rkBad.push(tag + " " + k + " " + r.id + ": page " + r.plain + "/" + r.topic + (r.off ? " off" : "") + " build " + y[j].plain + "/" + y[j].topic + (y[j].off ? " off" : "")); });
@@ -127,14 +140,17 @@ const server = http.createServer((req, res) => {
   say(!rkBad.length && compared >= queries.length - 6 && nBest >= 5 && nRel >= 40 && nNone >= 15 && pj.some(x => x >= D.judge.best) && pj.some(x => x < D.judge.best),
     "the same first candidate, six numbers and judge's number (to 1e-4), the same best match and related answers in the same order, both scores within 0.005, for " + compared + " questions (" + queries.filter(q => q[1]).length + " asked on a drug's page)",
     rkBad.slice(0, 3).join("; ") || nBest + " best matches, " + nRel + " related answers, " + nNone + " questions with no best match; the judge's number from " + Math.min(...pj).toFixed(3) + " to " + Math.max(...pj).toFixed(3) + ", largest difference " + maxp.toExponential(1) +
-      " (six numbers " + maxf.toExponential(1) + ", scores " + maxd.toFixed(5) + "); by design not compared: " + blocked + " not answered, " + whole + " a drug's name alone; related left out for " + urgent + " emergencies");
+      " (six numbers " + maxf.toExponential(1) + ", scores " + maxd.toFixed(5) + "); by design not compared: " + blocked + " not answered, " + whole + " a drug's name alone; related left out for " + urgent + " emergencies; " + demoted + " not finished and naming no drug: their best match shown as a way to go on");
   // 2.5: the second look and the scope rule. Where the page has no best match and no route that answers, it looks at the list:
   // the same listed question as the build, with the same judge's number (to 1e-4), or none on both sides; and by its words the
   // question is, or is not, a question about drugs on both sides; the line the page then says follows from the two.
-  const wBad = [], seen = { want: 0, other: 0, none: 0 }; let maxw = 0;
+  const wBad = [], seen = { want: 0, other: 0, none: 0, unfinished: 0 }; let maxw = 0;
   queries.forEach(([q, drug], i) => { const a = js.rank[i], b = ref.rank[i], tag = JSON.stringify(q.slice(0, 50)) + (drug ? " on " + drug : "");
     if (a.scope !== b.scope) wBad.push(tag + " about drugs: page " + a.scope + " build " + b.scope);
-    if (!["want", "other", "none"].includes(a.note)) return;
+    if (!["want", "other", "none", "unfinished"].includes(a.note)) return;
+    // (2.9) not finished yet, by the same rule on both sides: that is what the page says, before anything else
+    if ((a.note === "unfinished") !== !!b.unf || a.unf !== b.unf) { wBad.push(tag + " finished: page " + JSON.stringify(a.unf) + " (says " + a.note + ") build " + JSON.stringify(b.unf)); return; }
+    if (a.note === "unfinished") { seen.unfinished++; return; }
     const pw = a.want ? a.want.id : null, bw = b.want ? b.want.id : null;
     if (pw !== bw) { wBad.push(tag + " on our list: page " + pw + " build " + bw); return; }
     if (pw) { const d = Math.abs(a.want.p - b.want.p); maxw = Math.max(maxw, d); if (d > 1e-4) wBad.push(tag + " the judge's number for the listed question: page " + a.want.p + " build " + b.want.p); }
@@ -142,7 +158,13 @@ const server = http.createServer((req, res) => {
     if (a.note !== should) wBad.push(tag + " says " + a.note + ", should say " + should); seen[a.note]++; });
   say(JSON.stringify(js.listed) === JSON.stringify((D.wanted || { ids: [] }).ids) && !wBad.length && seen.want >= 6 && seen.other >= 5 && seen.none >= 8,
     "the same listed question (or none) with the same judge's number, and the same reading of what is a question about drugs, for all " + queries.length + " questions; the page's line follows from them",
-    wBad.slice(0, 3).join("; ") || js.listed.length + " questions on the list; of the questions with no answer, " + seen.want + " are on the list, " + seen.none + " are drug questions not checked yet, " + seen.other + " are not about drugs; largest difference of the judge's number " + maxw.toExponential(1));
+    wBad.slice(0, 3).join("; ") || js.listed.length + " questions on the list; of the questions with no answer, " + seen.unfinished + " are not finished, " + seen.want + " are on the list, " + seen.none + " are drug questions not checked yet, " + seen.other + " are not about drugs; largest difference of the judge's number " + maxw.toExponential(1));
+  // 2.9: the two rules on words alone, the same on both sides for every cut
+  const cBad = cuts.map((c, i) => JSON.stringify(js.cuts[i]) === JSON.stringify(ref.cuts[i]) ? null : JSON.stringify(c) + ": page " + JSON.stringify(js.cuts[i]) + " build " + JSON.stringify(ref.cuts[i])).filter(Boolean);
+  const nUnf = js.cuts.filter(x => x[0]).length, kinds = {}; js.cuts.forEach(x => { if (x[0]) kinds[x[0]] = (kinds[x[0]] || 0) + 1; });
+  say(!cBad.length && cuts.length >= 800 && ["ends", "bare", "which", "typing"].every(k => kinds[k] >= 5),
+    "the same reading of whether a question is finished (off and on a drug's page) and of which words are not known, for " + cuts.length + " questions cut as a reader who is still typing leaves them",
+    cBad.slice(0, 3).join("; ") || nUnf + " not finished off a drug's page (" + Object.keys(kinds).sort().map(k => kinds[k] + " " + k).join(", ") + "); " + js.cuts.filter(x => x[2].length).length + " hold a word that is not known");
   say(!errors.length, "no console errors", errors.slice(0, 3).join(" | "));
   console.log(fails ? fails + " parity checks failed" : "All parity checks passed");
   process.exit(fails ? 1 : 0);

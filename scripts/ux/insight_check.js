@@ -38,6 +38,15 @@ const ECSTASY = ["does ecstasy damage your brain permanently", "cl_mdma_neurotox
 // (2.5) UNCHECKED: a drug question with no answer that is not on our list; LISTED: one that is on the list (data/site/wanted.json);
 // NONE: a question that is not about drugs
 const UNCHECKED = "is modafinil safe", LISTED = "how can you die from alcohol", KETAMINE = "give me the full evidence about how can i die from ketamine", NONE = "what is the capital of mongolia";
+// (2.9) a question that is not finished, with no drug named and with one; a question whose one unknown word may be a drug's name;
+// and questions each read as finished or not by their words alone: [question, how it is read ("" finished), asked on a drug's page]
+const UNFIN = "can i die from", UNFIN_DRUG = "can i mix cocaine with", STRANGER = "is tusi dangerous";
+const WORDS = [["can i die from ", "ends"], ["is it addictive", "which"], ["is it addictive", "", true], ["can you overdose", "which"], ["how long does it last", "which"], ["how long does it last", "", true],
+  ["what is tolerance", ""], ["how long does withdrawal last", ""], ["why do people get addicted", ""], ["what is it cut with", "which"], ["what are pills cut with", ""], ["what is heroin cut with", ""],
+  ["is cocaine", "bare"], ["what is ketamine", ""], ["what is ketamine for", ""], ["weed and alcohol", ""], ["weed and", "ends"], ["how does mdma", "bare"], ["can i die from coc", "typing"], ["is weed lega", "typing"],
+  ["is cocaine addi", "typing"], ["can a gay man go to the court", ""], ["who are you", ""], ["what time is it", ""], ["how much ecstasy is too much", ""], ["what does it feel like", "which"], ["what does lsd feel like", ""],
+  ["does cannabis cause cancer", ""], ["is sex better with weed", ""], ["what happens if i take", "which"], ["what should i know about", "ends"], ["what is the best way to", "ends"], ["is it", "bare", true], ["how much", "bare", true],
+  ["how do i fix a flat tire", ""], ["why does meth not work like it used to", ""], ["what might someone have been spiked with", ""], ["is it legal", "which"], ["hello", ""], ["what are the side effects of", "ends"]];
 const MIX = "can i mix molly and alcohol", DOSE = "how much mdma should i take", HELP = "my friend took ketamine and is not breathing what do i do", TEST = "how do i test my mdma", BUY = "where can i buy mdma online";
 // Each route has its test: questions that must take it, and questions close to it that must not ("" = no route). A third
 // item is the drug page the question is asked on.
@@ -193,13 +202,32 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     await p.waitForTimeout(3000);
     ok(w + ": with the store off, a listed question is not counted (no request to api/want)", !sent.some(x => /api\/want/.test(x)), sent.filter(x => /api\/want/.test(x)).join(" | ") || "none");
     const no = await ask(NONE); ui += " " + await uiText(); await shot("list-not-about-drugs");
-    ok(w + ": a question that is not about drugs (“" + NONE + "”) is not promised a check: “We have no answer to this. Pharmakon answers questions about drugs”, with a quiet way to send it all the same, which carries the words typed",
-      !no.best.length && !no.related.length && no.kids.join() === "none" && no.none === "We have no answer to this." && no.askBtn === "send it to us" && /Pharmakon answers questions about drugs\. If yours is about one, send it to us\./.test(no.text.replace(/\s+/g, " ")) && !no.wordAsk &&
-        /^We have no answer to this/.test(no.live), no.kids.join(" > ") + " | " + no.text.replace(/\s+/g, " ") + " | heard: " + no.live);
+    ok(w + ": a question that is not about drugs (“" + NONE + "”) is told what the page read, with no promise to check it: “This does not look like a question about drugs. Pharmakon answers questions about drugs”, and a quiet way to send it all the same, which carries the words typed",
+      !no.best.length && !no.related.length && no.kids.join() === "none" && no.none === "This does not look like a question about drugs." && no.askBtn === "send it to us" && /Pharmakon answers questions about drugs\. If yours is about one, name the drug, or send it to us\./.test(no.text.replace(/\s+/g, " ")) && !no.wordAsk &&
+        /^This does not look like a question about drugs/.test(no.live), no.kids.join(" > ") + " | " + no.text.replace(/\s+/g, " ") + " | heard: " + no.live);
     await p.click("#search-results .sr-fit-none button"); await p.waitForTimeout(400);
     const pn = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), msg: document.getElementById("report-message").value, mode: (document.querySelector('.fb-opt[aria-pressed="true"]') || { dataset: {} }).dataset.mode }));
     ok(w + ": its “send it to us” opens Ask a question with the words typed (the store is off here)", pn.open && pn.msg === NONE && pn.mode === "feedback", JSON.stringify(pn));
     await p.keyboard.press("Escape"); await p.waitForTimeout(200);
+    // ---- (2.9) a question that is not finished gets no verdict and no way to send it: which drug is meant, or go on
+    const un = await ask(UNFIN); ui += " " + await uiText(); await shot("list-unfinished");
+    ok(w + ": a question that is not finished (“" + UNFIN + "”) gets no verdict: “Which drug do you mean? Finish your question with its name and we will look.”, nothing to send, no best match, and what was found stands under “You may mean”",
+      !un.best.length && un.kids[0] === "none" && un.none === "Which drug do you mean?" && !un.askBtn && !un.wordAsk && /Which drug do you mean\? Finish your question with its name and we will look\./.test(un.text.replace(/\s+/g, " ")) &&
+        un.related.length >= 1 && un.kids.includes("h:You may mean") && !un.kids.includes("h:Related") && !un.kids.includes("h:Best match") && /^Which drug do you mean\? Finish your question with its name and we will look/.test(un.live),
+      un.kids.join(" > ") + " | " + un.text.replace(/\s+/g, " ").slice(0, 160) + " | heard: " + un.live);
+    const unS = await enter(); await shot("sheet-unfinished");
+    ok(w + ": Enter on it says the same in the sheet, with nothing to send", unS && unS.none === "Which drug do you mean?" && !unS.askBtn && !unS.ones.length && !unS.guess &&
+      await p.evaluate(() => /Finish your question with its name and we will look\./.test((document.querySelector("#evsheet .ins-unfin") || {}).textContent || "") && (!document.querySelector("#evsheet .ins-rel") || document.querySelector("#evsheet .ins-rel .rn-k").textContent === "You may mean")), unS ? unS.none + " | " + unS.askBtn : "no sheet");
+    await p.keyboard.press("Escape"); await p.waitForTimeout(300);
+    const un2 = await ask(UNFIN_DRUG);
+    ok(w + ": the same with a drug named (“" + UNFIN_DRUG + "”): “Go on. Finish your question about cocaine and we will look.”, nothing to send", !un2.best.length && un2.none === "Go on." && !un2.askBtn && !un2.wordAsk &&
+      /Go on\. Finish your question about cocaine and we will look\./.test(un2.text.replace(/\s+/g, " ")), un2.kids.join(" > ") + " | " + un2.text.replace(/\s+/g, " ").slice(0, 160));
+    const unk = await ask(STRANGER);
+    ok(w + ": a question whose one unknown word may be a drug's name (“" + STRANGER + "”): “We do not know “tusi” as a drug. If it is one, send us your question and we will look into it.”", !unk.best.length && unk.none === "We do not know “tusi” as a drug." && unk.askBtn === "send us your question" &&
+      /If it is one, send us your question and we will look into it\./.test(unk.text.replace(/\s+/g, " ")) && /^We do not know “tusi” as a drug/.test(unk.live), unk.kids.join(" > ") + " | " + unk.text.replace(/\s+/g, " ").slice(0, 200) + " | heard: " + unk.live);
+    const words = await p.evaluate(Q => Q.map(([q, on]) => pkInsight.unfinished(q, on)), WORDS.map(x => [x[0], !!x[2]]));
+    const wbad = WORDS.map(([q, want, on], i) => words[i] === want ? null : "“" + q + "”" + (on ? " on a drug's page" : "") + " read as [" + words[i] + "], not [" + want + "]").filter(Boolean);
+    ok(w + ": finished or not, by the words alone: " + WORDS.length + " questions each read as it should be", !wbad.length, wbad.slice(0, 4).join("; ") || WORDS.filter(x => x[1]).length + " not finished, " + WORDS.filter(x => !x[1]).length + " finished");
 
     // ---- routes: each has its test
     const rt = await p.evaluate(E => E.map(([q, want, drug]) => { const r = pkInsight.read(q, drug ? { drug } : {}); return r.note === "blocked" ? "blocked" : r.routes.join("+"); }), ROUTES);
@@ -291,8 +319,8 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     ok(w + ": “Tell me when it is answered” keeps the LISTED question (not the words typed) in the reader's own list, as waiting", /^We will tell you on this device/.test(kept1.said) && kept1.list.length === 1 && /^How can you die from alcohol\? \/ w_\d+ \/ wait$/.test(kept1.list[0]), JSON.stringify(kept1));
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await ask(NONE); const os = await enter(); await shot("sheet-not-about-drugs");
-    ok(w + ": Enter on a question that is not about drugs says so calmly in the sheet, without “Ask us to check it”", os && os.title === "What is the capital of mongolia" && !os.ones.length && os.none === "We have no answer to this." && os.askBtn === "Send it to us" && !os.related.length && !os.guess && !os.sos &&
-      await p.evaluate(() => /Pharmakon answers questions about drugs\. If yours is about one, you can send it to us\./.test((document.querySelector("#evsheet .ins-other") || {}).textContent || "")), os ? os.none + " | " + os.askBtn : "no sheet");
+    ok(w + ": Enter on a question that is not about drugs says so calmly in the sheet, without “Ask us to check it”", os && os.title === "What is the capital of mongolia" && !os.ones.length && os.none === "This does not look like a question about drugs." && os.askBtn === "Send it to us" && !os.related.length && !os.guess && !os.sos &&
+      await p.evaluate(() => /Pharmakon answers questions about drugs\. If yours is about one, name the drug, or send it to us\./.test((document.querySelector("#evsheet .ins-other") || {}).textContent || "")), os ? os.none + " | " + os.askBtn : "no sheet");
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await ask(UNCHECKED); const as = await enter(); await shot("sheet-not-checked");
     ok(w + ": Enter on a drug question with no best match says so in the sheet, with “Ask us to check it” and the related questions as links", as && as.title === cap(UNCHECKED) && !as.ones.length && as.none === "We haven’t checked exactly this yet." && as.askBtn === "Ask us to check it" && as.related.length >= 1 && as.related.length <= 3 && !as.guess && !as.sos,

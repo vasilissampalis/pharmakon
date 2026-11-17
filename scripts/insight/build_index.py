@@ -240,7 +240,7 @@ class Ranker:
         self.expand = drug_names(); self.canon = {s["slug"]: s["name"].split(" (")[0] for s in SUB}
         # 2.5: the list of questions not answered yet, as a ranker of its own over the same names, weights and judge
         Sc = D.get("scope"); self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A) if Sc else None
-        self.unfin = {k: set(v) for k, v in ((Sc or {}).get("unfinished") or {}).items()} or None
+        self.unfin = unfinished_rule((Sc or {}).get("unfinished"), [n for n, _ in D["names"]], vocabulary())
         self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A) if Sc else None
         Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0); self.want_near = (Wd or {}).get("near", [0.0, 0.0])
         if Wd: self.wanted = Ranker({"dim": dim, "ids": Wd["ids"], "rows": Wd["rows"], "W": Wd["W"], "M": Wd["M"], "S": Wd["S"], "docs": Wd["docs"], "weights": D["weights"], "tiers": D["tiers"], "judge": D["judge"],
@@ -314,16 +314,34 @@ class Ranker:
         full, masked, groups = self.texts(q, drug)
         v, mv = embed_all([full, masked], quiet=True)
         return self.rank_vectors(q, v, mv, groups)
-    def unfinished(self, q):
+    def unfinished(self, q, on_page=False):
         """Is this question not finished yet, by its words alone (the page's insUnfinished; site/insight/scope.json,
-        "unfinished")? Only asked of a question that names no drug and is not asked on a drug's page."""
+        "unfinished")? "" when it is finished; else why it is not: "ends" (it ends on a word a question cannot end on),
+        "bare" (a drug is named, or it is asked on a drug's page, and nothing but function words is said about it),
+        "which" (it names no drug and every word could be asked of any drug), "typing" (its last word is the beginning of
+        a word). on_page: it is asked on a drug's page and names no drug."""
         U = self.unfin
-        if not U: return False
-        w = re.findall(r"[a-z0-9']+", str(q).lower())
-        if not w: return False
-        if w[-1] in U["ends"] and not (w[0] in ("what", "which", "who", "whom", "where") and w[-1] in U["stranded"]): return True
-        if not all(x in U["func"] or x in U["topic"] for x in w): return False
-        return not (re.match(r"what (?:is|are|was|were|does|do)\b", " ".join(w)) and any(x in U["topic"] for x in w))
+        if not U: return ""
+        t = str(q).lower().replace("\u2019", "'"); names = len(self.pat.findall(t))
+        w = [x for x in (y.strip("'") for y in re.findall(r"[a-z0-9']+", self.pat.sub(" it ", t))) if x]
+        if not w: return ""
+        s = " ".join(w)
+        if any(p.search(s) for p in U["whole"]): return ""
+        if w[-1] in U["ends"] and not any(p.search(s) for p in U["strand"]): return "ends"
+        if names >= 2 and all(x == "it" or x in U["join"] for x in w): return ""               # two drugs and a word that joins them
+        if names or on_page:
+            if all(x in U["aux"] for x in w):
+                return "" if names and any(p.search(s) for p in U["named"]) else "bare"                 # "what is ketamine" is finished
+        elif all(x in U["known"] for x in w):
+            general = not any(x in U["gap"] for x in w) and (any(x in U["nouns"] for x in w) or (w[0] == "why" and any(x in U["topic"] for x in w)))
+            return "" if general else "which"
+        # the last word is still being typed: not a word, and the beginning of a drug's name, or (in a question that otherwise
+        # reads as one about drugs) of a word this rule knows
+        last = w[-1]
+        if len(w) >= 2 and last not in U["known"] and not (U["vocab"] and last in U["vocab"]):
+            if last in U["begin_name"]: return "typing"
+            if last in U["begin"] and (names or on_page or all(x in U["known"] for x in w[:-1]) or self.in_scope(" ".join(w[:-1]))): return "typing"
+        return ""
     def in_scope(self, q):
         """Is this a question about drugs, by its words alone (the page's insScope; site/insight/scope.json)? Yes when,
         with the phrases that are not drug talk taken out, it names a drug the site covers or holds a drug word, the name
@@ -341,6 +359,63 @@ class Ranker:
         r = self.wanted.rank_vectors(q, v, mv, groups); c = r["first"]
         on = bool(r["ok"][self.wanted.ids.index(c["id"])])
         return {"id": c["id"], "p": c["p"]} if on and c["p"] >= self.want_cut and c["f"][0] >= self.want_near[0] and c["f"][4] >= self.want_near[1] else None
+
+
+class WordRules:
+    """The rules that read a question's words alone (the drugs it names; is it about drugs; is it finished), without the
+    model and without a built index: from the same tables the index is built from. For --words and for callers that only
+    need these."""
+    def __init__(self):
+        t = names_table(); self.name_of = {n: g for n, g in t}; self.pat = name_pattern([n for n, _ in t]); Sc = scope_block()
+        self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A); self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A)
+        self.unfin = unfinished_rule(Sc["unfinished"], [n for n, _ in t], vocabulary())
+    named = Ranker.named; in_scope = Ranker.in_scope; unfinished = Ranker.unfinished
+    def unknown(self, q): return unknown_words(q, self.unfin["vocab"] or set(), self.unfin["known"])
+
+
+def forum_questions():
+    """The real questions the word rules are measured on: the forum questions of 14 November 2026 and the gold set's."""
+    F = [x["question"] if isinstance(x, dict) else x for x in json.load(open(ROOT / "data/verification/questions-2026-11-14/forums.json", encoding="utf-8"))["questions"]]
+    G = [x["question"] for x in json.load(open(ROOT / "data/verification/insight/gold-sample.json", encoding="utf-8"))["questions"]]
+    return list(dict.fromkeys(F + G))
+
+
+def measure_words(R, show=True):
+    """The rule 'is this question finished?' on real questions (no model needed). Three numbers: of the forum questions,
+    whole, how many it wrongly calls unfinished; of the questions about other things, how many it calls unfinished (they
+    are finished: they get the line for a question that is not about drugs); and of forum questions cut off as a reader
+    who is still typing leaves them (just before the first drug they name; after the first half of that name; after each
+    word a question cannot end on), how many it catches. Returns the numbers."""
+    real = forum_questions(); other = json.load(open(ROOT / "data/verification/insight/scope-other.json", encoding="utf-8"))["questions"]
+    wrong = [(R.unfinished(q), q) for q in real if R.unfinished(q)]; wrong_o = [(R.unfinished(q), q) for q in other if R.unfinished(q)]
+    before, inside, after = [], [], []
+    for q in real:
+        m = R.pat.search(q)
+        if m:
+            pre = q[:m.start()].strip()
+            if len(pre.split()) >= 2 and not R.named(pre):
+                before.append(pre); half = q[:m.start() + max(3, (len(m.group(1)) + 1) // 2)]
+                if not R.named(half): inside.append(half)                                   # (half a name can be a name: "meth" of "methadone")
+        w = q.rstrip("?!. ").split()
+        for i in range(2, len(w)):
+            if w[i - 1].lower().strip(",;:()'\"") in R.unfin["ends"]: after.append(" ".join(w[:i]))
+    out = {"real": len(real), "real_called_unfinished": len(wrong), "other": len(other), "other_called_unfinished": len(wrong_o)}
+    for name, cuts in (("cut_before_the_name", before), ("cut_inside_the_name", inside), ("cut_after_a_word_that_cannot_end", after)):
+        cuts = list(dict.fromkeys(cuts)); miss = [c for c in cuts if not R.unfinished(c)]; out[name] = [len(cuts) - len(miss), len(cuts)]
+        if show:
+            print(f"unfinished rule, forum questions {name.replace('_', ' ')}: {len(cuts) - len(miss)} of {len(cuts)} called unfinished")
+            for c in miss[:400]: print("    not caught:", repr(c), "" if R.in_scope(c) else "(and not taken as about drugs)")
+    # what a question that is not taken as about drugs is told: with a word the model does not know, "We do not know <word>.
+    # If it is a drug, send us your question"; with none, "This does not look like a question about drugs"
+    plain = [q for q in other if not R.in_scope(q) and not R.unfinished(q)]; with_word = [(R.unknown(q), q) for q in plain if R.unknown(q)]
+    missed = [q for q in real if not R.in_scope(q) and not R.unfinished(q)]; missed_word = [(R.unknown(q), q) for q in missed if R.unknown(q)]
+    out.update({"other_plain": len(plain), "other_with_an_unknown_word": len(with_word), "real_not_taken_as_about_drugs": len(missed), "of_which_with_an_unknown_word": len(missed_word)})
+    if show:
+        print(f"unfinished rule: whole forum questions called unfinished {len(wrong)} of {len(real)}:", wrong)
+        print(f"unfinished rule: questions about other things called unfinished {len(wrong_o)} of {len(other)}:", wrong_o)
+        print(f"unknown words: of {len(plain)} questions about other things that get the line for them, {len(with_word)} hold a word the model does not know:", with_word[:40])
+        print(f"unknown words: of {len(missed)} forum questions the scope rule does not take as about drugs, {len(missed_word)} hold a word the model does not know:", [(u, q) for u, q in missed_word], "; without one:", [q for q in missed if not R.unknown(q)])
+    return out
 
 
 def next_lists(A, sim):
@@ -446,6 +521,42 @@ def main():
 
 
 SCOPE_B, SCOPE_E = r"(?<![A-Za-z0-9_])(?:", r")(?![A-Za-z0-9_])"   # a word boundary that reads the same in JavaScript and in Python
+UNF_SETS, UNF_PATS = ("ends", "aux", "func", "topic", "nouns", "gap", "join"), ("strand", "whole", "named")
+
+
+def unfinished_rule(U, names, vocab):
+    """The rule 'is this question finished?' ready to use: the lists as sets, the patterns compiled, and every beginning (of
+    two letters or more) of a word the rule knows or of a word of a drug's name, for a last word that is still being typed.
+    names: every name that names a drug; vocab: the model's vocabulary (a set of words), or None."""
+    if not U: return None
+    R = {k: set(U.get(k) or []) for k in UNF_SETS}; R.update({k: [re.compile(p) for p in U.get(k) or []] for k in UNF_PATS})
+    R["known"] = set().union(*(R[k] for k in UNF_SETS)); R["vocab"] = vocab
+    of_names = set()
+    for n in list(names) + list(U.get("names") or []): of_names.update(x for x in re.findall(r"[a-z0-9]+", n.lower()) if len(x) >= 4)
+    begin = lambda words, start: {w[:i] for w in words for i in range(start, len(w))} - {w[:-1] for w in words if w.endswith("s")}   # (a word without its plural s is a word)
+    R["begin"] = begin(R["known"], 2); R["begin_name"] = begin(of_names, 3)
+    return R
+
+
+UNK_ENDS = (("s", ""), ("es", ""), ("ies", "y"), ("ed", ""), ("ed", "e"), ("d", ""), ("ing", ""), ("ing", "e"), ("ly", ""), ("er", ""), ("est", ""))
+
+
+def unknown_words(q, vocab, known=()):
+    """The words of a question that are not words the model knows (the page's insUnknown): three letters or more, not in
+    its vocabulary with or without an ending, not a word of the unfinished rule's lists. A question that is not about
+    drugs by its words and holds one gets "We do not know <word>. If it is a drug, send us your question"."""
+    t = re.sub(r"['\u2019](?:s|re|ve|ll|d|m)\b", " ", re.sub(r"n['\u2019]t\b", " not", str(q).lower())); out = []
+    for w in dict.fromkeys(re.findall(r"[a-z]{3,}", t)):
+        if w in known: continue
+        forms = [w] + [w[:-len(end)] + put for end, put in UNK_ENDS if len(w) > len(end) + 2 and w.endswith(end)]
+        if not any(f in vocab for f in forms): out.append(w)
+    return out
+
+
+def vocabulary():
+    """The model's vocabulary as a set of whole words (site/insight/vendor/vocab.txt, the file the page reads)."""
+    try: return {l.rstrip("\n").rstrip() for l in open(VENDOR / "vocab.txt", encoding="utf-8")}
+    except OSError: return None
 
 
 def scope_block():
@@ -456,8 +567,10 @@ def scope_block():
     plain = lambda n: re.sub(r"([.^$*+?()\[\]{}|\\])", r"\\\1", n)
     src = "|".join(["(?:" + w + ")" for w in S["words"]] + [plain(n) for n in S["names"]] + ["(?:" + S["chem"] + ")"])
     U = S.get("unfinished") or {}
-    return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"]),
-            "unfinished": {k: sorted(set(U.get(k) or [])) for k in ("ends", "stranded", "func", "topic")}}      # (2.9) is a question finished? the page's insUnfinished and Ranker.unfinished read the same lists
+    # (2.9) is a question finished? the page's insUnfinished and Ranker.unfinished read the same lists and patterns; 'names':
+    # the names of drugs the site does not cover, for a name that is still being typed
+    unf = {k: sorted(set(U.get(k) or [])) for k in UNF_SETS}; unf.update({k: list(U.get(k) or []) for k in UNF_PATS}); unf["names"] = sorted(set(S["names"]))
+    return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"]), "unfinished": unf}
 
 
 WANT_CUT = 0.75            # the judge's number from which a typed question can be a listed one (see wanted_index)
@@ -581,4 +694,5 @@ def evaluate(D, near=None):
 
 
 if __name__ == "__main__":
-    main()
+    if "--words" in sys.argv: print(json.dumps(measure_words(WordRules(), "--quiet" not in sys.argv)))
+    else: main()
