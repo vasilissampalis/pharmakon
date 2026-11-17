@@ -50,10 +50,12 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
   const PAGES = ["#home", "#facts", "#quiz", "#numbers", "#checking", "#methods", "#about", "#howto", "#s-cannabis", "#substances", "#interactions", "#glossary", "#emergency", "#law", "#wanted", "#auto"];
   for (const width of [1280, 390]) {
     const p = await open(ON, width), seen = [];
-    for (const h of PAGES) {
+    // (2.12) a page our system started is a page like the others: the first one the build shows today is walked through too
+    const started = await p.evaluate(() => (typeof AUTO_PAGES === "object" && AUTO_PAGES ? Object.keys(AUTO_PAGES)[0] || "" : ""));
+    for (const h of PAGES.concat(started ? ["#auto/p-" + started] : [])) {
       await go(p, h, 350);
       const brand = await box(p, ".topbar .brand"), menu = await box(p, "#menubtn"), h1 = await box(p, ".view.active h1");
-      const col = await p.evaluate(() => { const v = document.querySelector(".view.active .wrap"); const r = v.getBoundingClientRect(), s = getComputedStyle(v); return Math.round(r.left + parseFloat(s.paddingLeft)); });
+      const col = await p.evaluate(() => { const v = [...document.querySelectorAll(".view.active .wrap")].find(e => e.getClientRects().length); const r = v.getBoundingClientRect(), s = getComputedStyle(v); return Math.round(r.left + parseFloat(s.paddingLeft)); });   // (the column that is shown: a view may hold one that is not)
       seen.push({ h, brand: brand.x, menu: menu.x, gap: menu.x - brand.r, col, h1: h1 ? h1.x : null });
     }
     const same = k => new Set(seen.map(x => x[k])).size === 1;

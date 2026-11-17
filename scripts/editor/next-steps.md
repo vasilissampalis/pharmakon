@@ -41,7 +41,34 @@ after every step. `mkdir -p data/auto/requests` before writing a request.
 ## What the senior author asked for on 17 November, 12:56 to 13:45 (decision 27 of `docs/AUTOMATION.md`), in this order
 
 Done since: step a (names looked up and kept, site 2.9.3; watch `data/auto/names/learned.json` after each half-hourly
-run and read every learned name) and a first step of d (the first screen is Insight, site 2.10.0). Next: b, then c, then e.
+run and read every learned name), a first step of d (the first screen is Insight, site 2.10.0), every place can be asked
+for (2.11.0), and step b (site 2.12.0: pages people asked about in a drug page's form, with pictures). Next: f, then c,
+then e.
+
+Step b, what is left (in this order):
+1. **Look at every newly fetched picture** (`data/auto/pictures.json`: a "file" without "looked_by_editor" is not shown).
+   `python3 -I scripts/auto/pictures.py looked <day> <names…>` and `… hold <name> "<why>"`, against docs/WRITING-RULES.md
+   "Photos" (never people or hands; the thing itself; nothing else that takes the eye; no writing over it). A fetch was
+   asked for on 17 November in place of the six held ones (`pictures-0003.json`).
+2. **A judge of pictures, so that this runs without the editor**: a free model that takes pictures (Google's free tier
+   through `llm.py`, or a Cloudflare one), asked for JSON only (people or hands? writing or a mark over the picture? is one
+   plant or fungus the clear subject?), on the web copies (made by Pillow in the job without keys, so no outside bytes
+   are decoded where a key is held). Measured first on pictures the editor has judged (the 12 of 17 November are too few:
+   fetch and judge more), with the numbers written down; a picture is shown without the editor only if the judge is
+   seen to let no held picture through. Until then the editor's look is the gate.
+3. **The system's own list in the page's index of listed questions** (so that "can i get high with kanna" is told
+   "Not answered yet. A question like yours is on our list: Does kanna have psychoactive effects?"): `site/build.js`
+   gives the index only `data/site/wanted.json`; adding `data/auto/wanted-auto.json` changes what Insight says, so
+   measure first (`build_index.py --eval`). Today only the same words are matched, on the started page's own list.
+4. **A question asked on a started page is about that page** ("is it addictive" on the kanna page): the box's context
+   is a checked drug page only. Needs the page's name carried with the question to the store and the scout.
+5. **Page and species held together by a source**: the species under a filed page's name is the filing's own title;
+   GBIF's common names for the species (`species/<key>/vernacularNames`) could confirm it by code.
+6. **Other forms and other pages**: GBIF holds the living plant only. Pictures of a dried plant, a powder or a capsule,
+   and pictures for pages that are not a plant or a fungus, need a store that allows a program (none of those probed
+   does) or the editor's own search with each licence read at its source, as for `data/site/photos.json`.
+7. **Pictures on file are never looked for again** (`find` skips a species it has): when every picture of a species is
+   held, find has to ask GBIF again, past the records it already saw.
 
 Done in site 2.9.2: the readings "open" and "verb", short forms, a name of two words we do not know, the routes by
 country (the law, emergency numbers, drug checking), the line for a question not in English, two-word beginnings, a

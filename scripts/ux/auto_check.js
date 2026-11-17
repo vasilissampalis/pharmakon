@@ -68,23 +68,67 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const st = await p.evaluate(() => ({ h: [...document.querySelectorAll("#auto-list .auto-h")].map(e => e.textContent), pages: [...document.querySelectorAll("#auto-list .auto-pages a")].map(a => a.getAttribute("href") + " | " + a.textContent),
       row: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.textContent).find(t => /^Is kava addictive\?/.test(t)) || "" }));
     ok(w + "the list page names the pages our system started, each with its number of answers and its label, before every answer; an answer on such a page names the page",
-      st.h.join("|") === "Pages our system started|Every answer" && st.pages.length === 1 && st.pages[0] === "#auto/p-kava | Kava1 answer · not yet checked by a person" && /^Is kava addictive\?Kava · 1 paper/.test(st.row), JSON.stringify(st));
+      st.h.join("|") === "Pages our system started|Every answer" && st.pages.includes("#auto/p-kava | Kava1 answer") && /^Is kava addictive\?Kava · 1 paper/.test(st.row), JSON.stringify(st));
     await go(p, "#auto/p-kava", 600);
-    const kp = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-auto h1").textContent, lede: document.querySelector("#view-auto .lede").textContent, how: document.querySelector("#view-auto .auto-how").hidden,
-      rows: [...document.querySelectorAll("#auto-list .auto-i .wl-q")].map(e => e.textContent), back: (document.querySelector('#auto-list .auto-back a[href="#auto"]') || {}).textContent || "", active: document.getElementById("view-auto").classList.contains("active"), wide: document.documentElement.scrollWidth > innerWidth + 1 }));
-    ok(w + "a started page has an address of its own: its name as the heading and in the tab, a first line that says our system started it and that nobody has checked it, its answers, and the way back",
-      kp.active && kp.title === "Kava · Pharmakon" && kp.h1 === "Kava" && /^Our system started this page by itself, because people ask about Kava and the site had no page for it\..+A person has not checked it yet\.$/.test(kp.lede) && kp.how && kp.rows.join() === "Is kava addictive?" && kp.back === "Everything written by our system" && !kp.wide, JSON.stringify(kp));
+    // (2.12) in the form of a drug's page: a drug page's header with the name, the line that says who made it, and its parts
+    const kp = await p.evaluate(() => { const pg = document.getElementById("auto-page"); return { title: document.title, h1: document.querySelector("#view-auto h1").textContent, head: !!pg.querySelector("header.dh h1"), top: (pg.querySelector(".auto-top") || {}).textContent || "",
+      main: document.getElementById("auto-main").hidden, shown: !pg.hidden, secs: [...pg.querySelectorAll("section.sec > h2")].map(e => e.textContent), cls: pg.querySelectorAll(".dh-fam").length,
+      rows: [...pg.querySelectorAll(".auto-i .wl-q")].map(e => e.textContent), back: (pg.querySelector('.auto-back a[href="#auto"]') || {}).textContent || "", ask: (pg.querySelector("button[data-ask-fill]") || {}).textContent || "",
+      active: document.getElementById("view-auto").classList.contains("active"), wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
+    ok(w + "a started page has an address of its own and the form of a drug's page: its name as the heading and in the tab, a first line that says our system started it and that nobody has checked it, its answers, a way to ask, and the way back; it shows no class nobody checked",
+      kp.active && kp.title === "Kava · Pharmakon" && kp.h1 === "Kava" && kp.head && kp.shown && kp.main && kp.top === "People asked about kava, and the site had no page. Our system started this one by itself and wrote what is on it. A person has not checked it yet." &&
+        kp.secs.join("|") === "Written by our system" && kp.rows.join() === "Is kava addictive?" && kp.back === "Everything written by our system" && kp.ask === "Ask a question" && kp.cls === 0 && !kp.wide, JSON.stringify(kp));
     await shot(p, width + "-started-page");
-    await p.click('#auto-list a[data-sheet="au_fixture_kava"]'); await p.waitForTimeout(600);
+    await p.click('#auto-page button[data-ask-fill]'); await p.waitForTimeout(300);
+    ok(w + "“Ask a question” there puts the page's name in the box and the cursor after it", await p.evaluate(() => { const s = document.getElementById("search"); return s.value === "kava " && document.activeElement === s; }));
+    await p.fill("#search", ""); await p.keyboard.press("Escape");
+    await p.click('#auto-page a[data-sheet="au_fixture_kava"]'); await p.waitForTimeout(600);
     const sk = await p.evaluate(() => { const s = document.querySelector("#evsheet.open .panel .ins"); return s ? { title: document.getElementById("ev-title").textContent, line: (s.querySelector(".auto-l") || {}).textContent || "", link: (s.querySelector(".ins-page a") || {}).getAttribute("href") || "", linkText: (s.querySelector(".ins-page a") || {}).textContent || "" } : null; });
     ok(w + "its answer opens over the page with its line, and leads back to the page our system started", sk && sk.title === "Is kava addictive?" && sk.line === LINE1 && sk.link === "#auto/p-kava" && /^Kava: the page our system started/.test(sk.linkText), JSON.stringify(sk));
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await go(p, "#auto", 400);
-    const back = await p.evaluate(() => ({ h1: document.querySelector("#view-auto h1").textContent, how: document.querySelector("#view-auto .auto-how").hidden, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "" }));
-    ok(w + "back on the list page, its own heading and lines are there again", back.h1 === "Written by our system" && back.how === false && back.n === "6 answers, the newest first.", JSON.stringify(back));
+    const back = await p.evaluate(() => ({ h1: document.querySelector("#view-auto h1").textContent, how: document.querySelector("#view-auto .auto-how").hidden, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", pg: document.getElementById("auto-page").hidden, main: document.getElementById("auto-main").hidden }));
+    ok(w + "back on the list page, its own heading and lines are there again", back.h1 === "Written by our system" && back.how === false && back.n === "6 answers, the newest first." && back.pg && !back.main, JSON.stringify(back));
+    // ---- (2.12) the pages people asked about, shown before there is an answer: whatever pages the build shows today
+    const shells = await p.evaluate(() => Object.keys(AUTO_SHELL).map(k => ({ k, name: AUTO_PAGES[k], asked: AUTO_SHELL[k].asked.map(a => a.id), pics: (AUTO_PICS[k] || []).length, ans: Object.keys(AUTO).filter(id => AUTO[id].page === "new:" + k).length, kind: (AUTO_SHELL[k].science[0] || {}).kind || "" })));
+    const look = shells.filter(s => s.pics).slice(0, 2).concat(shells.filter(s => !s.pics && !s.ans).slice(0, 2));
+    if (!look.length) ok(w + "(no page people asked about is shown without an answer today)", true);
+    for (const s of look) {
+      await go(p, "#auto/p-" + s.k, 600);
+      const parts = (s.pics ? 1 : 0) + (s.asked.length ? 1 : 0) + (s.ans ? 1 : 0);
+      const sp = await p.evaluate(() => { const pg = document.getElementById("auto-page"), img = pg.querySelector("header.dh .dh-ph img"); return { h1: (pg.querySelector("header.dh h1") || {}).textContent || "", top: (pg.querySelector(".auto-top") || {}).textContent || "", fam: (pg.querySelector(".dh-fam") || {}).textContent || "",
+        menu: [...pg.querySelectorAll(".secmenu .sm-b .sm-n")].map(e => e.textContent), one: [...pg.querySelectorAll("section.auto-one > h2")].map(e => e.textContent), head: img ? img.complete && img.naturalWidth > 0 && !!img.alt : null, title: document.title, wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
+      ok(w + "“" + s.name + "”, a page people asked about: a drug page's header with its name, a line that says our system started it and that nobody has checked it, " + (parts > 1 ? "a menu of its " + parts + " parts" : "its one part shown at once") + (s.pics ? ", its picture at the top" : "") + "; the only word above the name is what the open list of species says it is",
+        sp.h1 === s.name && sp.title === s.name + " · Pharmakon" && /Our system started this one by itself/.test(sp.top) && /A person has not checked/.test(sp.top) && (parts > 1 ? sp.menu.length === parts && !sp.one.length : sp.one.length === parts && !sp.menu.length) &&
+          (s.pics ? sp.head === true : sp.head === null) && sp.fam === (s.kind === "plant" ? "Plant" : s.kind === "fungus" ? "Fungus" : "") && !sp.wide, JSON.stringify(sp));
+      if (s.pics) {
+        await go(p, "#auto/p-" + s.k + (parts > 1 ? "/part-p-looks" : ""), 700);
+        await p.evaluate(() => document.querySelectorAll("#p-looks img").forEach(i => i.scrollIntoView())); await p.waitForTimeout(500);
+        const lk = await p.evaluate(() => { const sec = document.getElementById("p-looks"); const cr = sec.querySelector("details.look-credits"); return { shown: !sec.hidden, imgs: [...sec.querySelectorAll(".look img")].map(i => i.complete && i.naturalWidth > 0 && !!i.alt && /^img\/auto\/[a-z0-9-]+-t\.webp$/.test(i.getAttribute("src"))),
+          credits: cr ? [...cr.querySelectorAll("a")].map(a => a.href) : [], creditText: cr ? cr.textContent : "", note: (sec.querySelector(".auto-picnote") || {}).textContent || "", wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
+        ok(w + "its pictures: each one loads and says what it shows, each has its maker and its licence (CC0 or CC BY, nothing else) one tap away, and a small line says that our system found them and that no person has checked them",
+          lk.shown && lk.imgs.length === s.pics && lk.imgs.every(Boolean) && lk.credits.filter(h => /^https:\/\/creativecommons\.org\/(?:publicdomain\/zero\/1\.0|licenses\/by\/[1-4]\.0)\/$/.test(h)).length === s.pics && lk.credits.length >= 2 * s.pics - 1 && !/\b(?:NC|ND|SA)\b/.test(lk.creditText) &&
+            /^Our system found these pictures by itself\..+A person here has not checked them yet\./.test(lk.note) && !lk.wide, JSON.stringify(lk));
+        await shot(p, width + "-started-looks");
+      }
+      if (s.asked.length) {
+        await go(p, "#auto/p-" + s.k + (parts > 1 ? "/part-p-asked" : ""), 600);
+        const before = await p.evaluate(() => localStorage.getItem("pk-asked"));
+        const aq = await p.evaluate(() => { const sec = document.getElementById("p-asked"); return { shown: !sec.hidden, rows: [...sec.querySelectorAll(".wl-i")].map(li => ({ q: li.querySelector(".wl-q").textContent, open: !!li.querySelector(".wl-n"), keep: (li.querySelector("button[data-want-keep]") || {}).dataset ? li.querySelector("button[data-want-keep]").dataset.wantKeep : "", link: (li.querySelector("a.wl-b") || {}).href || "" })) }; });
+        ok(w + "what people asked about it: every listed question in our words, each “Not answered yet” with the way to be told, or with the way to what our system wrote",
+          aq.shown && aq.rows.length === s.asked.length && aq.rows.every(r => r.q.length > 8 && (r.open ? s.asked.includes(r.keep) : /#auto\/q-au_/.test(r.link))), JSON.stringify(aq));
+        const first = aq.rows.find(r => r.keep);
+        if (first) { await p.click('#p-asked button[data-want-keep="' + first.keep + '"]'); await p.waitForTimeout(300);
+          const kept = await p.evaluate(id => { const l = JSON.parse(localStorage.getItem("pk-asked") || "[]"), it = l.find(x => x.w === id); return { it: it ? { q: it.q, sent: it.sent, st: it.st } : null, said: (document.querySelector("#p-asked .ask-said") || {}).textContent || "" }; }, first.keep);
+          ok(w + "“Tell me when it is answered” keeps the listed question (our words) on this device and says where", !!kept.it && kept.it.q === first.q.slice(0, 200) && kept.it.sent === 1 && kept.it.st === "wait" && /^We will tell you on this device\./.test(kept.said), JSON.stringify(kept));
+          await p.evaluate(v => { if (v === null) localStorage.removeItem("pk-asked"); else localStorage.setItem("pk-asked", v); }, before); }
+        await shot(p, width + "-started-asked");
+      }
+    }
+    await go(p, "#auto", 400);
     await go(p, "#substances", 600);
     const sub = await p.evaluate(() => ({ h: (document.querySelector("#sub-started .auto-h") || {}).textContent || "", a: [...document.querySelectorAll("#sub-started .auto-pages a")].map(a => a.getAttribute("href") + " | " + a.querySelector(".wl-q").textContent), cards: document.querySelectorAll("#subgrid > *").length, wide: document.documentElement.scrollWidth > innerWidth + 1 }));
-    ok(w + "under the drugs, “All drugs” lists the pages our system started, apart from the 30 checked pages", sub.h === "Pages our system started" && sub.a.join() === "#auto/p-kava | Kava" && sub.cards === 30 && !sub.wide, JSON.stringify(sub));
+    ok(w + "under the drugs, “All drugs” lists the pages our system started, apart from the 30 checked pages", sub.h === "Pages our system started" && sub.a.includes("#auto/p-kava | Kava") && sub.cards === 30 && !sub.wide, JSON.stringify(sub));
     await p.click('#filters .chip:nth-child(2)'); await p.waitForTimeout(300);
     ok(w + "a family chosen shows that family's checked pages only", await p.evaluate(() => !document.querySelector("#sub-started .auto-pages") && document.querySelectorAll("#subgrid > *").length < 30));
     await p.click('#filters .chip:nth-child(1)'); await p.waitForTimeout(200);

@@ -439,6 +439,28 @@ function insLawLine(un) {
   const c = WORLD_LAW.countries.find(x => x.name === un), n = c ? ["c1961", "c1971", "c1988"].filter(k => c[k] && c[k].status === "party").length : 0, nm = insCap(inCtry(un));
   return (n === 3 ? nm + " has joined all three UN drug treaties" : n ? nm + " has joined " + n + " of the three UN drug treaties" : nm + " has not joined the UN drug treaties") + ". Its own law on each drug is on that drug’s page";
 }
+/* (2.12) A page our system started, for a question that names what it is about ("can i get high with kanna", "what is mitragyna
+   javanica"): the page is a place to look. It does not answer the question, so the row does not count as an answer. Asked
+   what it looks like, a page with pictures is the answer. The names are the page's own, the filing's, the ones the system
+   learned and the species' (AUTO_NAMES, from the build), read with the phrases taken out in which a drug's name is not a drug. */
+const INS_LOOKS = /\b(?:looks? like|pictures?|photos?|images?|appearance)\b/i;
+function insStartedFlat(s) { return norm(s).replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim(); }
+function insStartedNames() {
+  if (!insStartedNames.t) insStartedNames.t = typeof AUTO_NAMES === "object" && AUTO_NAMES && typeof AUTO_PAGES === "object" && AUTO_PAGES
+    ? Object.keys(AUTO_NAMES).map(n => [insStartedFlat(n), AUTO_NAMES[n]]).filter(x => x[0].length >= 3 && AUTO_PAGES[x[1]]).sort((a, b) => b[0].length - a[0].length) : [];
+  return insStartedNames.t;
+}
+function insStarted(q) {
+  const t = " " + insStartedFlat(INS.scope ? String(q).replace(INS.scope.not, " ") : q) + " ";
+  const hit = insStartedNames().find(([n]) => t.includes(" " + n + " ") || t.includes(" " + n + "s ") || (n.length >= 5 && n.endsWith("s") && t.includes(" " + n.slice(0, -1) + " ")));
+  if (!hit) return null;
+  const k = hit[1], name = AUTO_PAGES[k], sh = autoShell(k), pics = autoPics(k), n = autoFor("new:" + k).length, kind = sh && sh.science.length ? sh.science[0].kind : "";
+  const base = { kind: "page", icon: kind === "fungus" ? "mushroom" : kind === "plant" ? "leaf" : "book", k: "A page our system started", href: "#auto/p-" + k, started: k };
+  if (pics.length && INS_LOOKS.test(q)) return Object.assign(base, { href: base.href + (pics.length > 1 || n || (sh && sh.asked.length) ? "/part-p-looks" : ""),
+    t: insCap(autoLow(k)) + ": " + pics.length + (pics.length === 1 ? " picture" : " pictures") + " our system found, not yet checked by a person" });
+  const has = [pics.length ? "pictures" : "", n ? n + (n === 1 ? " answer" : " answers") + " by our system" : "", sh && sh.asked.length ? "what people ask" : ""].filter(Boolean);
+  return Object.assign(base, { t: name + (has.length ? ": " + andList(has) : ""), loose: true });
+}
 function insRoutes(q, groups, drug) {
   const out = [], one = groups.filter(g => g.length === 1).map(g => g[0]).filter((s, i, a) => a.indexOf(s) === i && subBySlug[s]);
   const about = one[0] || (drug && subBySlug[drug] ? drug : null);   // the drug a route is for: the one named, else the page's
@@ -682,7 +704,8 @@ function insStranger(q) {
 }
 // does a question that is not finished and names no drug call for a drug's name ("is it addictive", "can i die from"), or only for its end ("do gay people")?
 function insUnfCue(q) {
-  const U = INS.unfin, w = insUnfTokens(q).w, last = w[w.length - 1];
+  const U = INS.unfin, T = insUnfTokens(q), w = T.w, last = w[w.length - 1];
+  if (T.nm.some(n => n !== null)) return false;   // (2.12) a drug is named, though the site has no page on it ("is kanna addictive for"): "which drug do you mean?" would be wrong
   return w.some(x => U.gap.has(x) || U.topic.has(x)) || (U.wants.has(last) && w.some(x => U.func.has(x) && !U.who.has(x)));
 }
 /* 2.9.1: a drug's name with a letter wrong is read as that name before the question is read ("can i die from cocane",
@@ -748,6 +771,8 @@ async function insRank(query, ctx) {
   // Pharmakon reads English for now: the page says so, keeps the emergency route and the rows the word search found (it knows
   // the drugs' Greek names), and gives no verdict
   if (insForeign(res.q) && !res.emergency) { res.note = "language"; res.greek = /\p{Script=Greek}/u.test(res.q); res.routes = res.routes.filter(r => r.kind === "help"); res.ms = performance.now() - t0; return res; }
+  const st = insStarted(res.core);                             // (2.12) a page our system started that the question names
+  if (st && !st.loose) res.routes.push(st);                    // asked what it looks like: its pictures are the answer
   const whole = res.routes.some(r => r.whole);                 // the question is a drug's name and nothing more: its page is the answer
   // (2.9.2) the law of a named country on a named drug: the drug's law rows are fetched (once), so that the row says what the law says
   const lr = res.routes.find(r => r.kind === "law" && r.country && r.slug);
@@ -780,6 +805,13 @@ async function insRank(query, ctx) {
     else if (res.note === "other" && INS_RE.about.test(res.core)) res.note = "about";
     else if (res.note === "other") res.stranger = insStranger(res.core);
   }
+  // (2.12) the page our system started for what the question names: first when nothing else was found, else among the places to look.
+  // A question that names it is a question about a drug, whatever its other words.
+  if (st && st.loose) { if (res.note === "other") { res.note = "none"; delete res.stranger; }
+    // the very question that page lists (the same words): not answered yet, and on our list
+    if (res.note === "none") { const sh = autoShell(st.started), flat = insStartedFlat(res.core), hit = sh && sh.asked.find(a => !(a.answer && isAuto(a.answer)) && insStartedFlat(a.q) === flat);
+      if (hit) { res.note = "want"; res.want = { id: hit.id, q: hit.q, started: st.started }; } }
+    res.routes.push(Object.assign(st, res.best.length || res.routes.length ? { way: true } : {})); }
   res.ms = performance.now() - t0; INS.times.push(res.ms);
   return res;
 }
@@ -830,8 +862,9 @@ function insNoneHtml(res, sheet) {
     const w = res.want, note = wantOn() ? '<span class="want-n">We count how many people ask this. Your words are not sent.</span>' : "", at = ' data-want="' + esc(w.id) + '"' + (note ? " data-count" : "");
     const keep = '<button type="button" class="' + (sheet ? "qz2-nb ins-askus" : "linklike") + '" data-want-keep="' + esc(w.id) + '">Tell me when it is answered</button>';
     const other = '<button type="button" class="linklike want-other" data-ask="' + esc(res.q) + '">Not the same? Send yours to us</button>';
-    return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="#wanted">See the whole list ' + icon("arrow") + "</a></div>"
-      : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> A question like yours is <a href="#wanted">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
+    const list = w.started ? "#auto/p-" + w.started : "#wanted";   // (2.12) a question listed on a page our system started: that page is where it stands
+    return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="' + esc(list) + '">' + (w.started ? "See its page " : "See the whole list ") + icon("arrow") + "</a></div>"
+      : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> A question like yours is <a href="' + esc(list) + '">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
   }
   // (2.10.2) a greeting, and a question about the site itself
   if (res.note === "hello" || res.note === "about") { const t = insHelloText(res.note);
@@ -900,6 +933,9 @@ function insInject(box, res) {
   // what Insight shows is not repeated by the word search below it, which no longer calls any of its rows the best answer
   res.best.concat(res.related).forEach(x => box.querySelectorAll('a.sr-ans[data-cid="' + x.id + '"]').forEach(a => a.remove()));
   res.routes.forEach(r => box.querySelectorAll(':scope > a[href="' + r.href + '"]').forEach(a => a.remove()));
+  // (2.12) the question names a drug of a page our system started and no drug the site has checked answers on: the answers the
+  // word search found are about other drugs (a stray word in common), and the page's own row is the route above
+  if (res.routes.some(r => r.started) && !res.groups.length) box.querySelectorAll(":scope > a.sr-ans, :scope > a[href^='#auto/p-']").forEach(a => a.remove());
   box.querySelectorAll(":scope > a.sr-ans.best").forEach(a => { a.classList.remove("best"); const k = a.querySelector(".k"); if (k) k.textContent = k.textContent.replace(/^Best answer/, "Answer"); });
   const none = box.querySelector(":scope > .none"), ask = box.querySelector(":scope > .sr-ask");
   if (none) none.remove();                                     // Insight has its own line for a question with no checked answer
@@ -927,6 +963,7 @@ function insShort(box, q) {
   if (!unf) return;
   box.querySelectorAll(":scope > .sr-ask, :scope > .none").forEach(e => e.remove());
   if (groups.length && insUnfTokens(text).w.every(x => x === "it")) return;            // the name and nothing more: its rows are the answer
+  { const flat = insStartedFlat(text); if (insStartedNames().some(([n]) => n === flat || n + "s" === flat || n === flat + "s")) return; }   // (2.12) the same for a page our system started
   const res = { q, note: "unfinished", unf, groups: groups.length ? groups : drug ? [[drug]] : [] }; if (!res.groups.length) res.cue = insUnfCue(text);
   const html = '<div class="sr-fit" data-q="' + esc(q) + '">' + insNoneHtml(res, false) + "</div>", note = box.querySelector(":scope > .sr-note");
   if (note) note.insertAdjacentHTML("afterend", html); else box.insertAdjacentHTML("afterbegin", html);
@@ -1340,7 +1377,7 @@ document.addEventListener("click", async e => {
   // 2.5: a question on our list: "Tell me when it is answered" keeps the LISTED question (never the words typed) in the
   // reader's own list; it turns green when a later version of the site answers it
   const wk = e.target.closest("button[data-want-keep]");
-  if (wk) { e.preventDefault(); e.stopPropagation(); const id = wk.dataset.wantKeep, q = wantQ(id); if (!q) return;
+  if (wk) { e.preventDefault(); e.stopPropagation(); const id = wk.dataset.wantKeep, q = wantQ(id) || autoAskedQ(id); if (!q) return;   // (2.12: a question listed on a page our system started is kept the same way)
     const it = askedAdd(q, ""); if (it) askedSet(it.k, { w: id, sent: 1 });
     if (wk.closest("#view-wanted, [data-count]")) wantCount(id);   // counted where the page says so (the list's own page; a card that carries the line)
     const said = document.createElement("p"); said.className = "ask-said"; said.setAttribute("role", "status"); said.textContent = "We will tell you on this device. It is under “Your questions” on the start page."; wk.replaceWith(said);
@@ -1418,33 +1455,108 @@ function autoListHtml(ids, withPage) {
 }
 // (2.8) the pages the system started: drugs people ask about that had no page. Each has an address of its own (#auto/p-kava), is
 // listed with the drugs, and says at its top that the system started it and that nobody has checked it yet.
-function autoStarted() { return typeof AUTO_PAGES === "object" && AUTO_PAGES ? Object.keys(AUTO_PAGES).filter(k => autoFor("new:" + k).length).sort((a, b) => AUTO_PAGES[a].localeCompare(AUTO_PAGES[b])) : []; }
+function autoStarted() { return typeof AUTO_PAGES === "object" && AUTO_PAGES ? Object.keys(AUTO_PAGES).filter(k => autoFor("new:" + k).length || autoShell(k)).sort((a, b) => AUTO_PAGES[a].localeCompare(AUTO_PAGES[b])) : []; }
 function autoStartedListHtml() {
   const ks = autoStarted(); if (!ks.length) return "";
+  const meta = k => { const n = autoFor("new:" + k).length, p = autoPics(k).length, sh = autoShell(k), q = sh ? sh.asked.length : 0;
+    return [n ? n + (n === 1 ? " answer" : " answers") : "No answer yet", p ? p + (p === 1 ? " picture" : " pictures") : "", q ? q + (q === 1 ? " question asked" : " questions asked") : ""].filter(Boolean).join(" · "); };
   return '<h2 class="auto-h">Pages our system started</h2><p class="auto-sec">Drugs and medicines people ask about that had no page here. Our system started these by itself. A person has not checked them yet.</p><ul class="wl auto-pages">' +
-    ks.map(k => { const n = autoFor("new:" + k).length; return '<li class="wl-i"><a class="auto-a" href="#auto/p-' + esc(k) + '"><span class="wl-q">' + esc(AUTO_PAGES[k]) + '</span><span class="auto-meta">' + n + (n === 1 ? " answer" : " answers") + " · not yet checked by a person</span></a></li>"; }).join("") + "</ul>";
+    ks.map(k => { const ph = autoPics(k)[0]; return '<li class="wl-i"><a class="auto-a' + (ph ? " hasth" : "") + '" href="#auto/p-' + esc(k) + '">' + (ph ? '<span class="auto-th">' + autoPicImg(ph, "t", "", true) + "</span>" : "") +
+      '<span class="wl-q">' + esc(AUTO_PAGES[k]) + '</span><span class="auto-meta">' + meta(k) + "</span></a></li>"; }).join("") + "</ul>";
+}
+/* ---------- (2.12) A page people asked about, in the form of a drug's page ----------
+   The senior author, 17 November 2026, of kanna and Mitragyna javanica (two drugs he asked about that had no page): "our ai has
+   to create this pages in a perfect coherent format to the rest of the website (and find pictures for them, their different forms
+   etc. if the pictures have not been verified and the ai is uncertain then we could have a small disclaimer". So a page the
+   system started has a drug page's header (its picture, its name), a line that says who made it, and a drug page's menu of
+   parts: what it looks like (the pictures the system found: only CC0 and CC BY, each with its maker; a small line says that no
+   person has checked them), what people ask (the listed questions, in our words, each with the way to be told when it is
+   answered), and what the system has written. It is shown as soon as people ask, before there is an answer. Nothing on it
+   says what the drug is or does: the species under the name is GBIF's own record, and the class it is filed under is not shown.
+   (These are declarations, not constants: the page's first route runs before this file's constants exist.) */
+function autoShell(k) { return (typeof AUTO_SHELL === "object" && AUTO_SHELL && AUTO_SHELL[k]) || null; }
+function autoPics(k) { return (typeof AUTO_PICS === "object" && AUTO_PICS && AUTO_PICS[k]) || []; }
+function autoAskedQ(id) { if (typeof AUTO_SHELL !== "object" || !AUTO_SHELL) return ""; for (const k of Object.keys(AUTO_SHELL)) { const x = AUTO_SHELL[k].asked.find(a => a.id === id); if (x) return x.q; } return ""; }
+// the page's name inside a sentence: "kanna", "anabolic steroids and other body-building drugs"; a species' name and a name in capitals as written
+function autoLow(k) { const n = String(AUTO_PAGES[k]).replace(/\s*\(.*\)$/, ""), sh = autoShell(k); return (sh && sh.science.some(s => norm(s.name) === norm(n))) || !/^[A-Z][a-z]+\b/.test(n) ? n : n.charAt(0).toLowerCase() + n.slice(1); }
+function autoKindWord(kind) { return kind === "fungus" ? "fungus" : "plant"; }
+function autoPicAlt(p) { return p.species + ", the " + autoKindWord(p.kind) + (p.country ? ", seen in " + inCtry(p.country) : ""); }
+function autoPicImg(p, size, alt, lazy) { const d = p[size]; return '<img class="ph" src="img/auto/' + esc(p.file) + "-" + size + '.webp" width="' + d[0] + '" height="' + d[1] + '" alt="' + esc(alt) + '"' + (lazy ? ' loading="lazy" decoding="async"' : "") + ">"; }
+// who made a picture, its licence, and where it is kept (the licences ask for this)
+function autoPicCredit(p) {
+  const inat = /^https:\/\/www\.inaturalist\.org\//.test(p.page), who = p.maker || (inat ? "iNaturalist" : "its record");
+  return (p.page ? '<a href="' + esc(p.page) + '" target="_blank" rel="noopener">' + esc(who) + "</a>" : esc(who)) + ", " +
+    (p.licence_url ? '<a href="' + esc(p.licence_url) + '" target="_blank" rel="noopener">' + esc(p.licence) + "</a>" : esc(p.licence)) + (p.maker && inat ? ", via iNaturalist" : "");
+}
+function autoLooksHtml(k) {
+  const pics = autoPics(k); if (!pics.length) return "";
+  const kinds = [...new Set(pics.map(p => p.kind))];
+  return '<ul class="looks auto-looks">' + pics.map(p => '<li class="look hasph"><span class="look-ph">' + autoPicImg(p, "t", autoPicAlt(p), true) + '</span><span class="look-t"><b>The ' + autoKindWord(p.kind) + "</b><span><i>" + esc(p.species) + "</i>" +
+      (p.country ? ". Seen in " + esc(inCtry(p.country)) + "." : "") + "</span></span></li>").join("") + "</ul>" +
+    '<details class="look-credits"><summary>Photo credits</summary><p>' + pics.map((p, i) => "Photo " + (i + 1) + ": " + autoPicCredit(p)).join("; ") + ".</p></details>" +
+    // (the site's rule for every gallery, docs/WRITING-RULES.md: it shows examples; the same thing can look different and different things the same)
+    '<p class="look-note auto-picnote">Our system found these pictures by itself. They come from GBIF, an open record of plants and fungi that people saw and named. A person here has not checked them yet. They are examples: ' +
+      (kinds.length === 1 && kinds[0] === "fungus" ? "the same fungus can look different, and different fungi can look the same" : kinds.length === 1 ? "the same plant can look different, and different plants can look the same" : "the same species can look different, and different species can look the same") +
+      ". A picture cannot tell you what you have. " + phToggle() + "</p>";
+}
+// the listed questions a reader keeps on this device (the list under "Your questions": the key is ASK_KEY's, read here because this may be drawn before that constant exists)
+function autoKept() { try { const x = JSON.parse(localStorage.getItem("pk-asked") || "[]"); return new Set((Array.isArray(x) ? x : []).filter(it => it && it.w).map(it => it.w)); } catch (e) { return new Set(); } }
+function autoAskedHtml(k) {
+  const sh = autoShell(k), asked = sh ? sh.asked : []; if (!asked.length) return "";
+  const kept = autoKept();
+  return '<ul class="wl auto-asked">' + asked.map(a => '<li class="wl-i"><span class="wl-q">' + esc(a.q) + "</span>" +
+    (a.answer && isAuto(a.answer) ? '<a class="wl-b" href="#auto/q-' + esc(a.answer) + '" data-sheet="' + esc(a.answer) + '">Read what our system wrote</a>'
+      : '<span class="wl-n">Not answered yet</span>' + (kept.has(a.id) ? '<span class="wl-s">' + icon("check") + "We will tell you on this device</span>" : '<button type="button" class="wl-b" data-want-keep="' + esc(a.id) + '">Tell me when it is answered</button>')) + "</li>").join("") + "</ul>" +
+    '<p class="auto-sec">' + (asked.length === 1 ? "This question is on our list. Our system looks for research on it by itself." : "These questions are on our list. Our system looks for research on them by itself.") + "</p>";
+}
+function autoPageHtml(k) {
+  const name = AUTO_PAGES[k], sh = autoShell(k) || { name, science: [], asked: [] }, pics = autoPics(k), ids = autoFor("new:" + k), base = "auto/p-" + k, low = autoLow(k);
+  const kind = sh.science.length ? sh.science[0].kind : "", ph = pics[0] || null, secs = [], open = sh.asked.filter(a => !(a.answer && isAuto(a.answer))).length;
+  if (pics.length) secs.push({ id: "p-looks", name: "What does it look like?", chip: "Looks", icon: "eye", n: pics.length + (pics.length === 1 ? " picture" : " pictures"), line: "Not yet checked by a person", body: autoLooksHtml(k) });
+  if (sh.asked.length) secs.push({ id: "p-asked", name: "What people ask", chip: "Questions", icon: "message", n: sh.asked.length + (sh.asked.length === 1 ? " question" : " questions"),
+    line: !open ? "Answered by our system" : open === sh.asked.length ? "Not answered yet" : open + " not answered yet", body: autoAskedHtml(k) });
+  if (ids.length) secs.push({ id: "p-auto", name: "Written by our system", chip: "By our system", icon: "book", n: ids.length + (ids.length === 1 ? " answer" : " answers"), line: "Not yet checked by a person",
+    body: '<p class="auto-sec">Our system wrote these by itself from research papers and official health pages it found and read. A person has not checked them yet.</p>' + autoListHtml(ids, false) });
+  const aka = sh.science.filter(s => norm(s.name) !== norm(name));
+  const head = '<header class="dh' + (ph ? " hasph" : "") + (name.length > 24 ? " long" : "") + '">' + (ph ? '<figure class="dh-ph">' + autoPicImg(ph, "m", autoPicAlt(ph), false) + (pics.length > 1 ? '<a class="dh-forms" href="#' + base + '/part-p-looks">See all ' + pics.length + " pictures</a>" : "") + "</figure>" : "") +
+    '<div class="dh-t">' + (kind ? '<p class="dh-fam">' + icon(kind === "fungus" ? "mushroom" : "leaf") + (kind === "fungus" ? "Fungus" : "Plant") + "</p>" : "") + "<h1>" + esc(name) + "</h1>" +
+    (aka.length ? '<p class="dh-aka">' + aka.map(s => "<i>" + esc(s.name) + "</i>").join(", ") + "</p>" : "") + "</div></header>";
+  const top = '<p class="auto-top" role="note">' + icon("bulb") + "<span>People asked about " + esc(low) + ", and the site had no page. Our system started this one by itself" +
+    (ids.length ? " and wrote what is on it. A person has not checked it yet." : ". It has not written an answer yet. A person has not checked this page.") + "</span></p>";
+  // one part is shown at once; two or more are behind the menu, as on a drug's page
+  const body = secs.length > 1 ? secPageHtml(name.replace(/\s*\(.*\)$/, ""), secs, "")
+    : secs.map(x => '<section class="sec auto-one" id="' + x.id + '" aria-labelledby="' + x.id + '-h"><h2 id="' + x.id + '-h" tabindex="-1"><span class="sec-ic">' + icon(x.icon) + "</span>" + esc(x.name) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("");
+  const ask = '<section class="sec fbline" aria-label="Ask or report"><p><b>Ask about ' + esc(low) + ".</b> Type your question in the box at the top. If the site cannot answer it yet, you can send it to us with one tap.</p><div class=\"fb-two\">" +
+    '<button type="button" data-ask-fill="' + esc(low) + '">' + icon("search") + 'Ask a question</button><button type="button" data-fb="issue">' + icon("flag") + "Report a mistake</button></div></section>";
+  return head + top + body + ask + '<p class="auto-back"><a class="go" href="#auto">Everything written by our system</a></p>';
 }
 function autoPage(started) {
   const box = document.getElementById("auto-list"); if (!box) return;
   const head = document.querySelector("#view-auto .pagetitle"), lede = document.querySelector("#view-auto .lede"), how = document.querySelector("#view-auto .auto-how");
-  if (started && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[started]) {            // one started page
-    const ids = autoFor("new:" + started), name = AUTO_PAGES[started];
-    if (head) head.textContent = name;
-    if (lede) lede.textContent = "Our system started this page by itself, because people ask about " + name + " and the site had no page for it. Everything here was written by our system from research papers and official health pages. A person has not checked it yet.";
-    if (how) how.hidden = true;
-    box.innerHTML = (ids.length ? '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + " so far, the newest first.</p>" + autoListHtml(ids, false) : '<p class="muted">Nothing yet.</p>') +
-      '<p class="auto-back"><a class="go" href="#auto">Everything written by our system</a></p>';
-    return;
+  const pg = document.getElementById("auto-page"), main = document.getElementById("auto-main");
+  if (started && pg && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[started]) {            // one started page, in the form of a drug's page (2.12)
+    pg.dataset.base = "auto/p-" + started; pg.innerHTML = autoPageHtml(started); pg.hidden = false; if (main) main.hidden = true;
+    applyPhotoPref(); return;
   }
+  if (pg) { pg.hidden = true; pg.innerHTML = ""; delete pg.dataset.base; }
+  if (main) main.hidden = false;
   if (head) head.textContent = "Written by our system";
   if (lede) lede.textContent = "Answers our system wrote by itself, from research papers and official health pages it found and read. A person has not checked them yet. Each one says so and shows its sources.";
   if (how) how.hidden = false;
   const ids = typeof AUTO === "object" && AUTO ? Object.keys(AUTO).sort((a, b) => (AUTO[b].made || "").localeCompare(AUTO[a].made || "") || a.localeCompare(b)) : [];
-  box.innerHTML = ids.length ? autoStartedListHtml() + (autoStarted().length ? '<h2 class="auto-h">Every answer</h2>' : "") + '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + ", the newest first.</p>" + autoListHtml(ids, true)
-    : '<p class="muted">Nothing yet. The first answers appear here as soon as the system has written them.</p>';
+  const st = autoStartedListHtml();
+  box.innerHTML = st + (ids.length ? (st ? '<h2 class="auto-h">Every answer</h2>' : "") + '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + ", the newest first.</p>" + autoListHtml(ids, true)
+    : st ? '<h2 class="auto-h">Every answer</h2><p class="muted">No answer is shown right now.</p>' : '<p class="muted">Nothing yet. The first answers appear here as soon as the system has written them.</p>');
 }
 if (typeof document !== "undefined") {
-  autoPage();
+  { const pg = document.getElementById("auto-page"); if (!(pg && pg.dataset.base)) autoPage(); }   // (a started page the first route has just drawn stays)
+  // (2.12) "Ask a question" on a started page: its name is put in the box, and the reader goes on from there
+  document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button[data-ask-fill]"); if (!b) return;
+    e.preventDefault(); const s = document.getElementById("search"); if (!s) return; s.value = b.dataset.askFill + " ";
+    if (s.scrollIntoView) s.scrollIntoView({ block: "center" }); setTimeout(() => { s.focus({ preventScroll: true }); try { s.setSelectionRange(s.value.length, s.value.length); } catch (err) { /* the cursor stays where the browser puts it */ } }, 0); });
+  // every picture the system found is also named among the site's photo credits (About us)
+  { const el = document.getElementById("photo-credits"); if (el && typeof AUTO_PICS === "object" && AUTO_PICS) el.insertAdjacentHTML("beforeend", Object.keys(AUTO_PICS).map(k => AUTO_PICS[k].map(p =>
+      "<li><b>" + esc(AUTO_PAGES[k] || k) + ":</b> the " + autoKindWord(p.kind) + " <i>" + esc(p.species) + '</i>, found by our system. <span class="phcredit">Photo: ' + autoPicCredit(p) + "</span></li>").join("")).join("")); }
   document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button[data-auto-report]"); if (!b) return;
     e.preventDefault(); const id = b.dataset.autoReport; if (EV.open) closeEvidence(); openFeedback("issue", "#auto/q-" + id, ""); });
 }

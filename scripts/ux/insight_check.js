@@ -258,7 +258,26 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     let learned = {}; try { learned = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "..", "data", "auto", "names", "learned.json"), "utf8")).names || {}; } catch (e) { learned = {}; }
     const lk = Object.keys(learned).find(k => learned[k].drug === true && (learned[k].typed || []).length);
     if (lk) { const typed = learned[lk].typed[0], r = await ask("what is " + typed), rd = await p.evaluate(() => (document.querySelector("#search-results .sr-fit .sr-read") || {}).textContent || "");
-      ok(w + ": a name the system learned by looking it up: “what is " + typed + "” is read as " + learned[lk].name + ", and is a question about drugs", rd === "We read “" + typed + "” as " + learned[lk].name + "." && r.none === "We haven’t checked exactly this yet.", rd + " | " + r.none); }
+      // (2.12: when a page our system started lists this very question, the line is "Not answered yet.": it is on our list)
+      ok(w + ": a name the system learned by looking it up: “what is " + typed + "” is read as " + learned[lk].name + ", and is a question about drugs", rd === "We read “" + typed + "” as " + learned[lk].name + "." && (r.none === "We haven’t checked exactly this yet." || r.none === "Not answered yet."), rd + " | " + r.none); }
+    // (2.12) a page our system started (people asked about a drug that had no page): a question that names it is shown the way to that
+    // page and is never called "not about drugs"; its name alone finds the page; asked what it looks like, its pictures are the answer.
+    // The check goes by the pages the build shows today, whatever they are.
+    { const sp = await p.evaluate(() => { if (typeof AUTO_NAMES !== "object" || !AUTO_NAMES) return null;
+        const n = Object.keys(AUTO_NAMES).filter(x => /^[a-z]{5,}$/.test(x)).sort((a, b) => ((AUTO_PICS[AUTO_NAMES[b]] || []).length - (AUTO_PICS[AUTO_NAMES[a]] || []).length) || a.localeCompare(b))[0];
+        return n ? { n, k: AUTO_NAMES[n], pics: (AUTO_PICS[AUTO_NAMES[n]] || []).length, parts: ((AUTO_PICS[AUTO_NAMES[n]] || []).length ? 1 : 0) + (AUTO_SHELL[AUTO_NAMES[n]] && AUTO_SHELL[AUTO_NAMES[n]].asked.length ? 1 : 0) + (Object.keys(AUTO).some(id => AUTO[id].page === "new:" + AUTO_NAMES[n]) ? 1 : 0) } : null; });
+      if (!sp) ok(w + ": (no page our system started is shown today: nothing to ask about one)", true);
+      else {
+        const r1 = await ask("can people get addicted to " + sp.n), rt1 = r1.routes.find(x => x.href === "#auto/p-" + sp.k);
+        ok(w + ": a question that names a drug of a page our system started (“can people get addicted to " + sp.n + "”) is shown the way to that page, is not called “not about drugs”, and is not shown answers about other drugs",
+          !!rt1 && rt1.kind === "page" && rt1.k === "A page our system started" && !/does not look like a question about drugs|as a drug/.test(r1.none) && !r1.best.length && await p.evaluate(() => !document.querySelector("#search-results > a.sr-ans")), JSON.stringify(r1.routes) + " | " + r1.none);
+        typed.push(sp.n); await p.fill("#search", sp.n); await p.waitForTimeout(700);
+        const r2 = await p.evaluate(k => ({ row: !!document.querySelector('#search-results a[href="#auto/p-' + k + '"]'), unfin: !!document.querySelector("#search-results .sr-unfin"), none: !!document.querySelector("#search-results > .none") }), sp.k);
+        ok(w + ": its name alone (“" + sp.n + "”) finds the page, with no “finish your question” and no “no match”", r2.row && !r2.unfin && !r2.none, JSON.stringify(r2));
+        if (sp.pics) { const r3 = await ask("what does " + sp.n + " look like"), rt3 = r3.routes[0];
+          ok(w + ": “what does " + sp.n + " look like” goes to its pictures, says that our system found them and that no person has checked them, and nothing says “we haven't checked”",
+            !!rt3 && rt3.kind === "page" && rt3.href === "#auto/p-" + sp.k + (sp.parts > 1 ? "/part-p-looks" : "") && /our system found, not yet checked by a person$/.test(rt3.t) && !r3.none, JSON.stringify(r3.routes) + " | " + r3.none); }
+      } }
     ok(w + ": every circumstance has its response (" + CIRC.length + " questions: “do gay people” and “why do women” are told “Go on. Finish your question and we will look.” with nothing to send; a name of two words we do not know is named; a question in Greek or Russian is asked for in English)", !cbad.length, cbad.slice(0, 3).join(" ;; ") || "all as they should be");
     // the law by country: the route is the answer, from the page of treaties; with a drug named, from that drug's law part, shown for the country asked about
     const lw = await ask("are drugs legal in greece"); await shot("list-law-country");

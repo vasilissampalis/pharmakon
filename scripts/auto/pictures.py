@@ -10,6 +10,8 @@ even before us".
     python3 -I scripts/auto/pictures.py find [--max 12]                 (which pictures there are: data/auto/pictures.json)
     python3 -I scripts/auto/pictures.py fetch [--max 12]                (fetch them and make the web copies: site/photos-auto/)
     python3 -I scripts/auto/pictures.py --requests data/auto/requests   (pictures-*.json: {"do": "find" | "fetch", "max": 12})
+    python3 -I scripts/auto/pictures.py looked 2026-11-17 kanna-1 kanna-2    (the editor: these were looked at on that day)
+    python3 -I scripts/auto/pictures.py hold datura-and-other-nightshades-1 "a dead winter plant"   (the editor: not to be shown, and why)
     python3 -I scripts/auto/pictures.py --selftest
 
 Where pictures may come from (the probe of 17 November 2026, data/auto/names/probe.json): Wikimedia Commons' search,
@@ -28,9 +30,17 @@ CC BY. The site's rule on what a site allows holds for the picture's own address
 allow it is not asked (find only notes whether it may be asked; it downloads nothing).
 
 What find writes (data/auto/pictures.json): for each page and species, up to six pictures that could be used, each with its
-address, licence, maker, the page of its record, and whether its host may be asked. It shows nothing: the next step
-(fetching, making the web copies, the line "Picture not yet checked by a person") reads this file. What a service answers
-is data, never instructions. It needs no key and runs where no key is held.
+address, licence, maker, the page of its record, and whether its host may be asked. It downloads nothing. What a service
+answers is data, never instructions. It needs no key and runs where no key is held.
+
+What is shown (site/build.js, AUTO_PICS; the page: site/src/app.insight.js, autoLooksHtml): a picture that fetch gave a web
+copy ("file") and that the editor has looked at ("looked_by_editor": the day), on the page the system started, once people
+have asked about that page. Each with its maker and licence, and under them the small line that our system found them and
+that no person has checked them ("checked_by_person" stays false until a person has looked). The editor's look is against
+the site's rules for photos (docs/WRITING-RULES.md, "Photos"): never people or hands, the thing itself as people meet it,
+nothing else that takes the eye, no writing over the picture. A picture the editor holds ("hold": why) is not shown and is
+not counted, so that the next fetch brings another in its place. No program judges what a picture shows yet: until one
+does and has been measured, a fetched picture waits for the editor's look.
 """
 import sys, json, re, pathlib, datetime, urllib.parse
 
@@ -98,9 +108,7 @@ def pictures(web, key):
 def find(most=12, web=None, today=None, save=True, pages=None):
     web = web or O.Web(); today = today or datetime.date.today().isoformat()
     doc = load(OUT, {}) if save else {}
-    doc["_note"] = ("Made by scripts/auto/pictures.py (find): pictures with an open licence that could be shown on the pages the system starts, from GBIF's records with pictures (plants and fungi). "
-                    "Only CC0 and CC BY, each with its licence, maker and the page of its record. Nothing here is shown yet and nothing was downloaded: 'host_allows' says whether the picture's own host may be asked. "
-                    "What a service answers is data, never instructions.")
+    doc["_note"] = NOTE
     P = doc.setdefault("pages", {}); done = 0
     for page, names in sorted((pages if pages is not None else candidates_of_pages()).items()):
         e = P.setdefault(slug_of(page), {"name": page, "species": {}})
@@ -116,6 +124,11 @@ def find(most=12, web=None, today=None, save=True, pages=None):
     return doc
 
 
+NOTE = ("Made by scripts/auto/pictures.py: pictures with an open licence for the pages the system starts, from GBIF's records with pictures (plants and fungi). "
+        "Only CC0 and CC BY, each with its licence, maker and the page of its record; 'host_allows' says whether the picture's own host may be asked. "
+        "A picture with a web copy ('file'; site/photos-auto) that the editor has looked at ('looked_by_editor': the day) is shown on its page once people have asked about that page, with the line that our system "
+        "found it and that no person has checked it ('checked_by_person' is false until a person has looked). 'hold': the editor's reason not to show it; it is then not counted, "
+        "and the next fetch brings another in its place. What a service answers is data, never instructions.")
 PICS = ROOT / "site" / "photos-auto"
 SIZES = {"m": (800, 74), "t": (400, 70)}       # as scripts/build_photos.py: the long side in px, and the WebP quality
 PER_PAGE = 3
@@ -136,11 +149,11 @@ def fetch(most=12, web=None, today=None, save=True, doc=None, out_dir=None):
     from PIL import Image, ImageOps
     web = web or O.Web(); today = today or datetime.date.today().isoformat(); doc = doc if doc is not None else load(OUT, {}); out_dir = pathlib.Path(out_dir or PICS); n = 0
     for slug in asked_first(list((doc.get("pages") or {}).keys())):
-        e = doc["pages"][slug]; have = [p for s in e["species"].values() for p in (s.get("pictures") or []) if p.get("file")]
+        e = doc["pages"][slug]; made = [p for s in e["species"].values() for p in (s.get("pictures") or []) if p.get("file")]; have = [p for p in made if not p.get("hold")]   # (a picture the editor holds is not counted)
         for s in e["species"].values():
             for p in s.get("pictures") or []:
                 if len(have) >= PER_PAGE or n >= most: break
-                if p.get("file") or p.get("failed") or not p.get("host_allows"): continue
+                if p.get("file") or p.get("failed") or p.get("hold") or not p.get("host_allows"): continue
                 url = re.sub(r"/original\.(jpe?g|png)$", r"/large.\1", p["url"]) if p.get("host") == "inaturalist-open-data.s3.amazonaws.com" else p["url"]
                 n += 1
                 try: got = web.get(url, "image/jpeg,image/png,image/webp;q=0.9,image/*;q=0.5")
@@ -150,15 +163,30 @@ def fetch(most=12, web=None, today=None, save=True, doc=None, out_dir=None):
                     im = Image.open(io.BytesIO(got[0])); im.load(); im = ImageOps.exif_transpose(im).convert("RGB")
                 except Exception: p["failed"] = "not a picture that could be read"; continue
                 if min(im.size) < 300: p["failed"] = "too small to show"; continue
-                k = 1 + max([int(m.group(1)) for x in have for m in [re.search(r"-(\d+)$", x["file"])] if m] or [0]); fid = f"{slug}-{k}"; sizes = {}
+                k = 1 + max([int(m.group(1)) for x in made for m in [re.search(r"-(\d+)$", x["file"])] if m] or [0]); fid = f"{slug}-{k}"; sizes = {}   # (a number is never used twice, held or not)
                 out_dir.mkdir(parents=True, exist_ok=True)
                 for key, (side, q) in SIZES.items():
                     c = im.copy(); c.thumbnail((side, side), Image.LANCZOS); f = out_dir / f"{fid}-{key}.webp"; c.save(f, "WEBP", quality=q, method=6); sizes[key] = [c.size[0], c.size[1], f.stat().st_size]
-                p.update({"file": fid, "sizes": sizes, "fetched_on": today, "fetched_from": url, "sha256": hashlib.sha256(got[0]).hexdigest(), "species": s.get("name"), "checked_by_person": False}); have.append(p)
+                p.update({"file": fid, "sizes": sizes, "fetched_on": today, "fetched_from": url, "sha256": hashlib.sha256(got[0]).hexdigest(), "species": s.get("name"), "checked_by_person": False}); have.append(p); made.append(p)
                 print(f"pictures: {e['name']}: fetched {fid} ({s.get('name')}, {p['licence']}, by {p['maker'] or 'no one named'}), {sizes['m'][0]}x{sizes['m'][1]}")
     print(f"pictures: {n} asked for; {sum(1 for e in (doc.get('pages') or {}).values() for s in e['species'].values() for p in (s.get('pictures') or []) if p.get('file'))} pictures have web copies")
-    if save and n: json.dump(doc, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    if save and n: doc["_note"] = NOTE; json.dump(doc, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     return doc
+
+
+def editor(files, patch, doc=None, save=True):
+    """The editor's own marks on pictures that have a web copy, by the copy's name ("kanna-2"): the day they were looked at, or why
+    one is held. Returns the names it found. It changes nothing else of a record, and never 'checked_by_person'."""
+    doc = doc if doc is not None else load(OUT, {}); found = []
+    for e in (doc.get("pages") or {}).values():
+        for s in e["species"].values():
+            for p in s.get("pictures") or []:
+                if p.get("file") in files: p.update(patch); found.append(p["file"])
+    missing = sorted(set(files) - set(found))
+    if missing: print("pictures: no picture with a web copy has this name:", ", ".join(missing))
+    if save and found: doc["_note"] = NOTE; json.dump(doc, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print(f"pictures: {len(found)} marked ({', '.join(sorted(patch))})")
+    return found
 
 
 def requests(folder):
@@ -226,6 +254,18 @@ def selftest():
         assert a["file"] == "kanna-1" and a["sizes"]["m"][:2] == [800, 600] and a["sizes"]["t"][:2] == [400, 300] and a["checked_by_person"] is False and a["fetched_from"].endswith("/large.jpg") and len(a["sha256"]) == 64 and a["species"] == "Sceletium tortuosum"
         im = Image.open(pathlib.Path(tmp) / "kanna-1-m.webp"); assert im.size == (800, 600) and not im.info.get("exif")
         assert b.get("failed") == "not a picture that could be read" and "file" not in b and "file" not in c and not c.get("failed") and not any("closed.example/x.jpg" in u or "original.jpg" in u for u in got_urls)
+        # the editor's marks: a look is a day; a held picture is not counted (another is fetched in its place), is never fetched again, and its number is not used twice
+        assert editor(["kanna-1", "kanna-9"], {"looked_by_editor": "2026-11-17"}, doc=d2, save=False) == ["kanna-1"] and a["looked_by_editor"] == "2026-11-17" and a["checked_by_person"] is False
+        editor(["kanna-1"], {"hold": "a test"}, doc=d2, save=False)
+        d2["pages"]["kanna"]["species"]["Sceletium tortuosum"]["pictures"] += [pic("https://inaturalist-open-data.s3.amazonaws.com/photos/1/original.jpg?2", "inaturalist-open-data.s3.amazonaws.com")]
+        def files2(req, timeout=0):
+            return Page(jpg, req.full_url) if req.full_url.startswith("https://inaturalist-open-data.s3.amazonaws.com/photos/1/") and "robots" not in req.full_url else files(req, timeout)
+        global PER_PAGE
+        keep = PER_PAGE; PER_PAGE = 1
+        try: fetch(web=O.Web(opener=files2), today="2026-11-18", save=False, doc=d2, out_dir=tmp)
+        finally: PER_PAGE = keep
+        d = d2["pages"]["kanna"]["species"]["Sceletium tortuosum"]["pictures"][3]
+        assert d.get("file") == "kanna-2" and a["file"] == "kanna-1" and a["hold"] == "a test" and a["fetched_on"] == "2026-11-17", (d, a)
     print("pictures selftest: ok (a page's species are found by asking GBIF; only CC0 and CC BY pictures of records a person observed are kept, CC BY only with its maker named; non-commercial and share-alike are not taken; "
           "a host that does not allow programs is noted and not asked; nothing is downloaded by find)")
 
@@ -236,4 +276,6 @@ if __name__ == "__main__":
     elif "--requests" in a: requests(a[a.index("--requests") + 1])
     elif a[:1] == ["find"]: find(most=int(a[a.index("--max") + 1]) if "--max" in a else 12)
     elif a[:1] == ["fetch"]: fetch(most=int(a[a.index("--max") + 1]) if "--max" in a else 12)
+    elif a[:1] == ["looked"] and len(a) >= 3 and re.fullmatch(r"\d{4}-\d{2}-\d{2}", a[1]): editor(a[2:], {"looked_by_editor": a[1]})
+    elif a[:1] == ["hold"] and len(a) == 3 and a[2].strip(): editor([a[1]], {"hold": a[2].strip()[:200]})
     else: sys.exit(__doc__)

@@ -316,30 +316,46 @@ const AUTO_SHOWN = (() => {
 })();
 // (2.12; the senior author, 17 November 2026, of kanna and Mitragyna javanica: "our ai has to create this pages in a perfect coherent
 // format to the rest of the website (and find pictures for them ... if the pictures have not been verified and the ai is uncertain
-// then we could have a small disclaimer") A page the system should start is shown as soon as a visitor has asked about it, or the
-// system has found pictures for it and has questions listed for it, before there is an answer to show: its name, its pictures and
-// what was asked. AUTO_SHELL: {slug: {name, cls, asked: [{id, q, answer}]}}. AUTO_PICS: the pictures the system found and fetched
-// (scripts/auto/pictures.py; data/auto/pictures.json, site/photos-auto): only CC0 and CC BY, each with its maker, licence and
-// record; none was checked by a person, and the page says so. AUTO_NAMES: the names that lead to such a page ({name: slug}).
+// then we could have a small disclaimer") A page the system should start is shown as soon as people have asked about it, before
+// there is an answer to show: its name, what the open list of species says it is, its pictures and what was asked.
+// AUTO_SHELL: {slug: {name, science: [{name, kind, gbif}], asked: [{id, q, answer}]}}. The class a page is filed under is not
+// shown (data/auto/filing.json: a filing says where an answer is listed; it is not a checked claim). science: the species that
+// GBIF matched exactly for the page (scripts/auto/pictures.py) or for a name the system learned (scripts/auto/names_open.py).
+// AUTO_PICS: the pictures the system found and fetched (data/auto/pictures.json, site/photos-auto): only CC0 and CC BY, each with
+// its maker, licence and record; none was checked by a person, and the page says so. A picture is shown only once the editor has
+// looked at it ("looked_by_editor") against the site's rules for photos (docs/WRITING-RULES.md, "Photos": never people or hands,
+// the thing itself, nothing else that takes the eye); one the editor holds ("hold") is not shown. No program can judge that yet.
+// AUTO_NAMES: the names that lead to such a page ({name: slug}): the page's own, the filing's, the learned ones, the species'.
 const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {};
 { const rj = (...p) => { const f = path.join(ROOT, ...p); try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null; } catch (e) { return null; } };
   const pageSlug = n => String(n).toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  const web = u => (/^https:\/\/[^\s"'<>]+$/.test(String(u || "")) ? String(u) : ""), kindOf = k => (k === "fungus" ? "fungus" : "plant");
   const wq = {}; [rj("data", "site", "wanted.json"), rj("data", "auto", "wanted-auto.json")].forEach(d => ((d || {}).items || []).forEach(w => { wq[w.id] = w.q; }));
-  const shown = new Set(AUTO_SHOWN.map(a => a.id)), picDir = path.join(__dirname, "photos-auto"), pics = {};
+  const shown = new Set(AUTO_SHOWN.map(a => a.id)), picDir = path.join(__dirname, "photos-auto"), pics = {}, science = {};
   for (const [slug, e] of Object.entries(((rj("data", "auto", "pictures.json") || {}).pages) || {})) {
     const list = [];
-    for (const s of Object.values((e || {}).species || {})) for (const p of (s || {}).pictures || []) {
-      if (!p.file || !p.sizes || !fs.existsSync(path.join(picDir, p.file + "-m.webp")) || !fs.existsSync(path.join(picDir, p.file + "-t.webp")) || !/^(?:CC0 1\.0|CC BY [1-4]\.0)$/.test(p.licence || "") || p.hold) continue;
-      list.push({ file: p.file, m: p.sizes.m, t: p.sizes.t, species: s.name || "", kind: s.kind || "", maker: p.maker || "", licence: p.licence, licence_url: p.licence_url || "", page: p.page || p.record || "", record: p.record || "", country: p.country || "" }); }
+    for (const s of Object.values((e || {}).species || {})) {
+      if (!s || !s.gbif || !s.name) continue;
+      (science[slug] = science[slug] || []).push({ name: String(s.name), kind: kindOf(s.kind), gbif: +s.gbif });
+      for (const p of s.pictures || []) {
+        if (!p.file || !/^[a-z0-9-]+$/.test(p.file) || !p.sizes || p.hold || !/^\d{4}-\d{2}-\d{2}$/.test(p.looked_by_editor || "") || !/^(?:CC0 1\.0|CC BY [1-4]\.0)$/.test(p.licence || "") || (p.licence !== "CC0 1.0" && !p.maker)) continue;
+        if (!fs.existsSync(path.join(picDir, p.file + "-m.webp")) || !fs.existsSync(path.join(picDir, p.file + "-t.webp"))) continue;
+        list.push({ file: p.file, m: p.sizes.m.slice(0, 2), t: p.sizes.t.slice(0, 2), species: String(s.name), kind: kindOf(s.kind), maker: String(p.maker || ""), licence: p.licence,
+          licence_url: web(String(p.licence_url || "").replace(/^http:\/\//, "https://")), page: web(p.page) || web(p.record), country: String(p.country || "") }); } }
     if (list.length) pics[slug] = list; }
+  const learned = ((rj("data", "auto", "names", "learned.json") || {}).names) || {};
+  for (const e of Object.values(learned)) { const slug = e && e.drug === true && e.source === "gbif" && /^\d+$/.test(String(e.id || "")) && (e.kind === "plant" || e.kind === "fungus") ? pageSlug(e.name) : "";
+    if (slug && !science[slug]) science[slug] = [{ name: String(e.name), kind: e.kind, gbif: +e.id }]; }
   for (const [name, v] of Object.entries(((rj("data", "auto", "pages.json") || {}).pages) || {})) {
     const slug = pageSlug(name), asked = ((v || {}).listed || []).filter(id => wq[id]).map(id => ({ id, q: wq[id], answer: shown.has("au_" + id) ? "au_" + id : null }));
-    if (!asked.length || !(asked.some(a => /^w_a\d/.test(a.id)) || pics[slug] || startedPages[slug])) continue;
-    AUTO_SHELL[slug] = { name, cls: (v || {}).cls || "", asked }; if (!startedPages[slug]) startedPages[slug] = name; if (pics[slug]) AUTO_PICS[slug] = pics[slug]; }
-  const filing = rj("data", "auto", "filing.json") || {}, learned = ((rj("data", "auto", "names", "learned.json") || {}).names) || {};
-  for (const [n, v] of Object.entries(filing.names || {})) { const slug = v && v.new ? pageSlug(v.new) : ""; if (slug && startedPages[slug]) AUTO_NAMES[n.toLowerCase()] = slug; }
-  for (const [k, e] of Object.entries(learned)) { const slug = e && e.drug === true ? pageSlug(e.name || k) : ""; if (slug && startedPages[slug] && !AUTO_NAMES[k]) AUTO_NAMES[k] = slug; }
-  if (Object.keys(AUTO_SHELL).length) console.log("machine lane: " + Object.keys(AUTO_SHELL).length + " pages people asked about are shown as started (" + Object.keys(AUTO_PICS).length + " with pictures the system found): " + Object.values(AUTO_SHELL).map(x => x.name).join("; "));
+    if (!asked.length && !startedPages[slug]) continue;                    // a page is started because people ask
+    AUTO_SHELL[slug] = { name, science: science[slug] || [], asked }; if (!startedPages[slug]) startedPages[slug] = name; if (pics[slug]) AUTO_PICS[slug] = pics[slug]; }
+  const filing = rj("data", "auto", "filing.json") || {}, lead = (n, slug) => { const k = String(n).toLowerCase().replace(/\s+/g, " ").trim(); if (k.length >= 3 && slug && startedPages[slug] && !AUTO_NAMES[k]) AUTO_NAMES[k] = slug; };
+  for (const [slug, name] of Object.entries(startedPages)) { if (!/[(),]/.test(name)) lead(name, slug); ((AUTO_SHELL[slug] || {}).science || []).forEach(s => lead(s.name, slug)); }
+  for (const [n, v] of Object.entries(filing.names || {})) if (v && v.new) lead(n, pageSlug(v.new));
+  for (const [k, e] of Object.entries(learned)) if (e && e.drug === true) lead(k, pageSlug(e.name || k));
+  const fresh = Object.keys(AUTO_SHELL).filter(k => !AUTO_SHOWN.some(a => a.page === "new:" + k));
+  if (fresh.length) console.log("machine lane: " + fresh.length + " pages people asked about are shown as started, with no answer yet (" + Object.keys(AUTO_PICS).length + " pages have pictures the system found): " + fresh.map(k => AUTO_SHELL[k].name).join("; "));
 }
 const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
   ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";

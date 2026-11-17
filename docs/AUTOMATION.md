@@ -487,8 +487,45 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       drugs is looked at again once its name is known (`scripts/auto/ask.py`), and a new name is a reason to publish
       (`scripts/auto/tick.py`). The privacy text says so. Not measured yet on real traffic: how often a service's answer
       is wrong although it is close; every learned name is in the table to be read by the editor.
+    - *Step b, built (site 2.12.0, protocol 0.5.4, 17 November).* **Pages people asked about are shown before there is
+      an answer, in the form of a drug's page.** A page the system should start (`data/auto/pages.json`) is shown as soon
+      as a listed question belongs to it: six on this day (kanna and *Mitragyna javanica*, which he asked about;
+      nootropics and supplements, anabolic steroids, NBOMes and ketamine analogues, from the forums' questions and the
+      system's own). The page (`site/src/app.insight.js`, autoPageHtml; `#auto/p-kanna`, its parts
+      `#auto/p-kanna/part-p-looks`) has a drug page's header and a drug page's menu of parts: what it looks like, what
+      people ask (each listed question in our words, "Not answered yet", "Tell me when it is answered"), and what our
+      system wrote. Its first line: "People asked about kanna, and the site had no page. Our system started this one by
+      itself. It has not written an answer yet. A person has not checked this page." It shows no class; for a plant or a
+      fungus, the species' name and the word "Plant" or "Fungus", where GBIF matches the name exactly. **Pictures**
+      (`scripts/auto/pictures.py`, in the job that holds no key): from GBIF's records of what people saw, only CC0 and
+      CC BY, each with its maker, licence and record (49 on file for 11 pages; 12 fetched, web copies in
+      `site/photos-auto/`); under them: "Our system found these pictures by itself. They come from GBIF, an open record
+      of plants and fungi that people saw and named. A person here has not checked them yet. A picture cannot tell you
+      what you have."; each is also named among the site's photo credits. The editor looked at the twelve
+      (`looked_by_editor`): kanna's three are shown; six are held with their reasons (a dead winter plant, one leaf on
+      the ground, two plants in one picture, a pale cap that does not show the look people know) and a fetch was asked
+      for in their place; three wait for their pages. The site's rules for photos stand for these pictures too
+      (`docs/WRITING-RULES.md`, his words of 18 October: never people or hands, the thing itself as people meet it,
+      nothing else that takes the eye), and no program can judge that yet: so a fetched picture is shown only after the
+      editor has looked at it, and carries the line he asked for ("if the pictures have not been verified … a small
+      disclaimer") until a person has. A judge of pictures that is measured first is what would let this run without
+      the editor.
+      **Insight**: a question that names such a drug is shown the way to its page first ("can i get high with kanna":
+      "A page our system started · Kanna: pictures and what people ask"), keeps "We haven't checked exactly this yet"
+      and the way to send it, and is no longer shown answers about other drugs that the word search found by a stray
+      word; the very question a page lists is told "Not answered yet. A question like yours is on our list"; "what
+      does kanna look like" goes to the pictures; the name alone finds the page, also with a letter wrong. The
+      half-hourly run publishes when the pages, their listed questions or the pictures change (`scripts/auto/tick.py`).
+      Checks: auto 96, insight 157, site24 108 (a started page is walked through like every page), parity, smoke 9;
+      they go by whatever pages the build shows that day. *Not built*: pictures of other forms (the dried plant, a
+      powder, capsules: GBIF holds the living plant, and the other open picture stores do not allow a program);
+      pictures for pages that are not a plant or a fungus; a judge of what a picture shows (today the editor looks);
+      a question on a started page's list found by meaning (today only by the same words: the system's own list is
+      not in the page's index of listed questions; to be measured first); a question asked on a started page read as
+      a question about that page.
     - *What stays.* Free models only. A refusal by a site is never gone around. The Section 7 gate and the rule on
-      amounts stand as written. Nothing new of the system's is shown until it reads clean.
+      amounts stand as written. Nothing new that the lane writes is shown until it reads clean (`hold_new`); a started
+      page's questions and pictures are shown by their own rules, each with its line.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

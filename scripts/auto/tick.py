@@ -38,6 +38,7 @@ RETRY_DAYS = 7
 # everything the site is built from (site/build.js and site/build_public.py read these); the machine lane's answers are counted apart
 BUILT_FROM = ["site/src", "site/build.js", "site/build_public.py", "site/public-assets", "site/worker", "site/insight/model.json", "site/insight/scope.json", "site/insight/vendor", "site/photos",
               "data/auto/lane/policy.json", "data/auto/lane/lines.json", "data/auto/names/learned.json",   # (2.9.3) the names the system learned by looking them up: a new one is a reason to publish
+              "data/auto/pages.json", "data/auto/wanted-auto.json", "data/auto/filing.json", "data/auto/pictures.json", "site/photos-auto",   # (2.12) the pages people asked about: their questions, their names, their pictures
               "data/site", "data/claims", "data/references", "data/study-cards", "data/epidemiology", "data/legal", "data/identity", "data/monographs",
               "data/verification/senior-gate.json", "data/evidence-maps.json", "data/doi-index.json", "scripts/insight/build_index.py"]
 

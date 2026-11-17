@@ -216,9 +216,16 @@ function routeTo() {
   // (2.6) the answers the system wrote: the page that lists them, and one of them opened over it (#auto/q-au_...)
   const am = h.match(/^auto(?:\/q-(au_[a-z0-9_]+))?$/);
   if (am) { autoPage(); show("auto"); setTitle(PAGE_TITLES.auto); if (!am[1]) { window.scrollTo({ top: 0 }); if (!first) focusHeading("auto"); } else if (isAuto(am[1])) setTimeout(() => { if (!EV.open) openInsight(am[1], null, true); }, 80); return; }
-  // (2.8) a page the system started: #auto/p-kava
-  const ap = h.match(/^auto\/p-([a-z0-9-]{1,60})$/);
-  if (ap && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[ap[1]]) { autoPage(ap[1]); show("auto"); setTitle(AUTO_PAGES[ap[1]]); window.scrollTo({ top: 0 }); if (!first) focusHeading("auto"); return; }
+  // (2.8) a page the system started: #auto/p-kava; (2.12) in the form of a drug's page, with its parts: #auto/p-kanna/part-p-looks
+  const ap = h.match(/^auto\/p-([a-z0-9-]{1,60})(?:\/(part-[a-z0-9-]+))?$/);
+  if (ap && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[ap[1]]) {
+    const pg = document.getElementById("auto-page"), same = !!pg && !pg.hidden && pg.dataset.base === "auto/p-" + ap[1], was = same && document.getElementById("view-auto").classList.contains("active") ? openSec(pg) : "";
+    if (!same) autoPage(ap[1]);
+    show("auto"); setTitle(AUTO_PAGES[ap[1]]);
+    if (pg && pg.querySelector(".secmenu")) secGo(pg, "auto", ap[2] || "", { first, was });
+    else { const sec = ap[2] && pg ? pg.querySelector("#" + ap[2].slice(5)) : null; if (sec) scrollToEl(sec); else { window.scrollTo({ top: 0 }); if (!first) focusHeading("auto"); } }
+    return;
+  }
   // a page of sections: #methods, #methods/part-m-search (the text pages), #numbers/part-n-europe (the statistics)
   const sp = h.match(/^(howto|methods|about|numbers)(?:\/(part-[a-z0-9-]+))?$/);
   if (sp) {
@@ -931,6 +938,11 @@ function buildIndex() {
     const prime = [s.name].concat(ALIASES[s.slug] || [], ALIASES_EL[s.slug] || []).map(norm).filter(Boolean);
     const names = prime.concat(identityTerms(s.slug).map(norm)).filter(Boolean);
     INDEX.push({ type: "drug", kind: "Drug · " + s.cls, title: s.name, prime: new Set(prime), names: [...new Set(names)], text: norm(s.cls + " " + s.mech), href: "#s-" + s.slug });
+  });
+  // (2.12) the pages our system started for drugs people asked about that had no page: found by their names like any drug
+  if (typeof AUTO_PAGES === "object" && AUTO_PAGES) Object.keys(AUTO_PAGES).forEach(k => {
+    const names = [AUTO_PAGES[k]].concat(typeof AUTO_NAMES === "object" && AUTO_NAMES ? Object.keys(AUTO_NAMES).filter(n => AUTO_NAMES[n] === k) : []).map(norm).filter(Boolean);
+    INDEX.push({ type: "drug", kind: "A page our system started", title: AUTO_PAGES[k], prime: new Set(names), names: [...new Set(names)], text: "", href: "#auto/p-" + k });
   });
   const asked = buildAnswerIndex();
   CLAIMS.filter(c => !asked.has(c.id)).forEach(c => INDEX.push({ type: "claim", kind: "Finding · " + (subBySlug[c.substance] ? subBySlug[c.substance].name : c.substance), title: claimText(c), t: norm(claimText(c)), text: norm(c.statement + " " + c.outcome + " " + c.exposure), href: "#" + c.id, badge: editorApproved(c) ? "Approved" : readerStamp(c.verification.status).split(":")[0], badgeCls: editorApproved(c) ? "ok" : "draft" }));
