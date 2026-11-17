@@ -81,7 +81,7 @@ MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/me
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
 TRIAL = ROOT / "data" / "auto" / "trial"                                # (17 November 2026) questions that are not on the site's list, written to try the lane on what it has never seen: never shown, never placed
-LANE = 17               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 18               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -538,7 +538,7 @@ CITED = re.compile(r"\b(?:a|an|another|one|two|three|several|some|many|most|rece
 OWN_FRAME = re.compile(r"\b(?:we|our|ours)\b|\b(?:this|the present|the current|present|current)\s+(?:systematic\s+|narrative\s+|scoping\s+|literature\s+)?(?:study|review|meta-analysis|analysis|survey|trial|paper|work|report|article|investigation)\b|\bin this (?:study|review|paper|article|work)\b", re.I)
 CONTINUES = re.compile(r"^(?:however|moreover|furthermore|in addition|additionally|also|similarly|likewise|conversely|in contrast|by contrast|they|the authors|it also|these|those|evidence|nevertheless|notably|specifically|in particular|but|and|yet)\b", re.I)
 OWN_FIND = re.compile(r"\b(?:a|the|this|one)\s+(?:\d{4}\s+)?(?:systematic\s+|literature\s+|narrative\s+|recent\s+|large\s+|small\s+|online\s+)?(?:review|meta-analysis|study|survey|trial|paper|analysis|report)\b(?:\s+of\s+[^.,;]{0,50})?\s+(?:found|finds|showed|shows|concluded|concludes|observed|observes|demonstrated|established|confirmed|proved)\b", re.I)
-SECOND_SAID = re.compile(r"\b(?:(?:and|also|it|which)\s+(?:also\s+)?(?:reports?|notes?|mentions?|describes?)\b|cit(?:es|ed|ing)|earlier|previous|prior|another|other (?:stud(?:y|ies)|analys[ie]s|reviews?|research)|in (?:one|a|an|some|several|a few|recent|earlier|other|two|three) (?:[\w-]+ )?(?:stud(?:y|ies)|analys[ie]s|reviews?|surveys?|trials?|reports?)|studies (?:in|of|that|which|it)|reports? (?:that )?(?:an?|one|some|several|earlier|other)\s+(?:[\w-]+ )?(?:stud|analys|review|survey|trial|meta))", re.I)
+SECOND_SAID = re.compile(r"\b(?:reports?|reported|notes?|noted|mentions?|mentioned|describes?|described|cit(?:es|ed|ing)|earlier|previous|prior|another|other (?:stud(?:y|ies)|analys[ie]s|reviews?|research)|in (?:one|a|an|some|several|a few|recent|earlier|other|two|three) (?:[\w-]+ )?(?:stud(?:y|ies)|analys[ie]s|reviews?|surveys?|trials?|reports?)|studies (?:in|of|that|which|it)|reports? (?:that )?(?:an?|one|some|several|earlier|other)\s+(?:[\w-]+ )?(?:stud|analys|review|survey|trial|meta))", re.I)
 _ABBR_DOT = re.compile(r"\b(et al|e\.g|i\.e|vs|cf|approx|fig|no)\.", re.I)
 
 
@@ -1163,14 +1163,36 @@ def says_more_text(ours, src):
     return out
 
 
+# (lane 18) What people perceive or say of themselves, said as what is. On 17 November 2026 a survey's "positive influence on perceived
+# sexual functioning and satisfaction" became "tends to positively influence sexual functioning and satisfaction" in eight sentences of
+# four runs, and the second reader accepted most of them. The rule is narrow on purpose (an earlier, wider one on "reported" stopped 12
+# good cards for 2 wrong ones and was not put to work): the source's own quoted words say "perceived", "self-reported", "self-rated",
+# "self-assessed" or "subjective" of a thing, our sentence names that thing, and nothing in our sentence says that people said, felt or
+# rated it. Measured before it was put here: on the exam of the lane's own sentences (104 judged) it catches 8 of the 34 that are not
+# good (all eight are the sentences it was written for, so this is not a fresh measure) and stops none of the 70 good ones; on the 318
+# cards it stops 1 good card ("self-rated depression fell") and catches no wrong one.
+SELF_SEEN = re.compile(r"\b(perceived|self-reported|self-rated|self-assessed|subjective)\s+((?:[a-z-]+\s+){0,2}[a-z-]+)", re.I)
+SELF_SAID = re.compile(r"\b(?:perceiv\w+|self-\w+|subjective\w*|said|say|says|saying|felt|feel|feels|feeling|rated|rate|rating|see|saw|seen|describ\w+|experienc\w+|told|(?:people|men|women|adults|participants|respondents|they|who)\s+(?:also\s+)?report\w*)\b", re.I)
+
+
+def as_was(ours, quotes):
+    """The source's words for what people perceive or say of themselves, where our sentence names the same thing as what is; else None."""
+    if SELF_SAID.search(ours): return None
+    for m in SELF_SEEN.finditer(quotes):
+        if any(re.search(r"\b" + re.escape(h), ours, re.I) for h in re.findall(r"[a-z]+", m.group(2).lower()) if len(h) >= 6): return m.group(0)
+    return None
+
+
 def says_more(parts, labels):
-    """What a draft says that its sources do not carry (the kinds in MORE, a self-report said as a finding, a result for one sex said of people): [(part, what)]."""
+    """What a draft says that its sources do not carry (the kinds in MORE, what people say of themselves said as what is, a result for one sex said of people): [(part, what)]."""
     bad = []
     for p in parts:
         if p.get("fixed"): continue
         src = " ".join(labels[u]["quote"] + " " + (labels[u].get("passage_text") or "")[:PASSAGE_CHARS] for u in p["uses"])
         found = says_more_text(p["text"], src)
-        if found: bad.append((p["part"], found[0][2]))
+        if found: bad.append((p["part"], found[0][2])); continue
+        w = as_was(p["text"], " ".join(labels[u]["quote"] for u in p["uses"]))
+        if w: bad.append((p["part"], f"its source says “{w}”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"))
     return bad
 
 
@@ -2426,6 +2448,15 @@ def selftest():
     assert second_hand("According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm.", "cannabis use before partnered sex eased reaching orgasm") and second_hand("In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function.", "moderate doses of cannabis improved female sexual function")
     assert second_hand("Smith et al. (2019) reported that half of the sample relapsed. They also noted cravings in most.", "They also noted cravings in most") and not second_hand("Results from this study indicated that both men and women see benefits.", "both men and women see benefits") and not second_hand("Men and women reported benefits.", "Men and women reported benefits")
     assert second_hand(disc, "long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors").startswith("A meta-analysis in 2019 evaluated")          # (lane 17) it says which earlier work
+    # (lane 18) "A 2023 survey found ... A 2024 review reports ...": the second sentence says who reports it, so the rule has nothing against the first sentence's "found"
+    assert not rules([{"part": "short", "text": "A 2023 survey found cannabis tends to improve perceived sexual satisfaction. A 2024 review reports that moderate doses improved female sexual function.", "uses": ["F5", "F1"]}], {"F5": {"quote": "x", "second_hand": ""}, "F1": {"quote": "y", "second_hand": "In a review of recent studies, Kipping and Lynn found"}}, years=[2023, 2024])
+    # (lane 18) what people perceive or say of themselves, said as what is
+    Lp = {"F5": {"quote": "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age", "passage_text": ""}}
+    told = says_more([{"part": "how3", "text": "A 2023 online survey of adults who used cannabis found it tends to positively influence sexual functioning and satisfaction.", "uses": ["F5"]}], Lp)
+    assert len(told) == 1 and "perceived sexual functioning" in told[0][1] and "Keep the word" in told[0][1], told
+    assert not says_more([{"part": "how3", "text": "A 2023 online survey found it tends to positively influence perceived sexual functioning.", "uses": ["F5"]}], Lp)
+    assert not says_more([{"part": "how3", "text": "In a 2023 online survey, people said cannabis tended to make their sexual functioning better.", "uses": ["F5"]}], Lp)
+    assert not says_more([{"part": "how3", "text": "A 2023 online survey was of adults who had used cannabis.", "uses": ["F5"]}], Lp)          # it does not name the thing: nothing to say
     assert not rules([{"part": "how2", "text": "A 2026 review found a potential link between smoking marijuana and lung cancer, and reports a link to testicular tumors from an earlier meta-analysis.", "uses": ["F2", "F4"]}], {"F2": {"quote": "x"}, "F4": {"quote": "y", "second_hand": "A meta-analysis in 2019 found"}}, years=[2026])
     cp = checker_prompt([{"part": "short", "text": ok_short, "uses": ["F1"]}, {"part": "but", "text": "B.", "uses": ["F1"]}], lab1, question="Can you get addicted to ketamine?")
     assert "does the answer (the opening word “Yes” followed by sentence 1) answer that QUESTION itself" in cp
