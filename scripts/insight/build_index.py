@@ -241,6 +241,7 @@ class Ranker:
         # 2.5: the list of questions not answered yet, as a ranker of its own over the same names, weights and judge
         Sc = D.get("scope"); self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A) if Sc else None
         self.unfin = unfinished_rule((Sc or {}).get("unfinished"), [n for n, _ in D["names"]], vocabulary())
+        self.spell = spell_rule((Sc or {}).get("spell"), self.name_of, ((Sc or {}).get("unfinished") or {}).get("names") or [], vocabulary(), (self.unfin or {}).get("known") or ()) if Sc else None
         self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A) if Sc else None
         Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0); self.want_near = (Wd or {}).get("near", [0.0, 0.0])
         if Wd: self.wanted = Ranker({"dim": dim, "ids": Wd["ids"], "rows": Wd["rows"], "W": Wd["W"], "M": Wd["M"], "S": Wd["S"], "docs": Wd["docs"], "weights": D["weights"], "tiers": D["tiers"], "judge": D["judge"],
@@ -314,6 +315,16 @@ class Ranker:
         full, masked, groups = self.texts(q, drug)
         v, mv = embed_all([full, masked], quiet=True)
         return self.rank_vectors(q, v, mv, groups)
+    def correct(self, q):
+        """(the question with every misspelt name of a drug read as that name, [[the word as typed, the name]]): the page's
+        insSpell. site/insight/scope.json ("spell") explains the rule."""
+        R = getattr(self, "spell", None); read = []
+        if not R: return q, read
+        def one(m):
+            n = spell_word(R, m.group(0).lower(), self.scope_re)
+            if not n: return m.group(0)
+            read.append([m.group(0), n]); return n
+        return SPELL_WORD.sub(one, str(q)), read
     def unfinished(self, q, on_page=False):
         """Is this question not finished yet, by its words alone (the page's insUnfinished; site/insight/scope.json,
         "unfinished")? "" when it is finished; else why it is not: "ends" (it ends on a word a question cannot end on),
@@ -369,7 +380,8 @@ class WordRules:
         t = names_table(); self.name_of = {n: g for n, g in t}; self.pat = name_pattern([n for n, _ in t]); Sc = scope_block()
         self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A); self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A)
         self.unfin = unfinished_rule(Sc["unfinished"], [n for n, _ in t], vocabulary())
-    named = Ranker.named; in_scope = Ranker.in_scope; unfinished = Ranker.unfinished
+        self.spell = spell_rule(Sc["spell"], self.name_of, Sc["unfinished"]["names"], vocabulary(), self.unfin["known"])
+    named = Ranker.named; in_scope = Ranker.in_scope; unfinished = Ranker.unfinished; correct = Ranker.correct
     def unknown(self, q): return unknown_words(q, self.unfin["vocab"] or set(), self.unfin["known"])
 
 
@@ -553,6 +565,43 @@ def unknown_words(q, vocab, known=()):
     return out
 
 
+SPELL_WORD = re.compile(r"(?<![A-Za-z0-9'\u2019-])[A-Za-z]+(?![A-Za-z0-9'\u2019-])")
+
+
+def near(a, b):
+    """Are two words one letter apart: a letter put in, left out or changed, or two neighbours swapped (the page's insNear)?"""
+    la, lb = len(a), len(b)
+    if a == b or abs(la - lb) > 1: return False
+    i = 0
+    while i < la and i < lb and a[i] == b[i]: i += 1
+    if la == lb: return a[i + 1:] == b[i + 1:] or (i + 1 < la and a[i] == b[i + 1] and a[i + 1] == b[i] and a[i + 2:] == b[i + 2:])
+    return a[i:] == b[i + 1:] if la < lb else a[i + 1:] == b[i:]
+
+
+def spell_rule(Sp, names, other, vocab, known):
+    """The rule 'a drug's name with a letter wrong' ready to use (site/insight/scope.json, "spell"). names: {a name the page
+    knows: the drugs it stands for}; other: the names of drugs without a page; vocab: the model's vocabulary; known: the
+    words of the unfinished rule's lists."""
+    if Sp is None: return None
+    group = {n: "|".join(g) for n, g in names.items()}; group.update({n: "other:" + n for n in other if n not in group})
+    return {"map": dict(Sp.get("map") or {}), "keep": set(Sp.get("keep") or []), "exact": set(group), "vocab": vocab or set(), "known": set(known),
+            "targets": sorted((n for n in group if len(n) >= 6 and re.fullmatch(r"[a-z]+", n)), key=lambda n: (-len(n), n)), "group": group}
+
+
+def spell_word(R, w, scope_re):
+    """The name a word is read as, or None (w in small letters)."""
+    if w in R["map"]: return R["map"][w]
+    if len(w) < 5 or w in R["exact"] or w in R["keep"] or w in R["known"]: return None
+    forms = [w] + [w[:-len(end)] + put for end, put in UNK_ENDS if len(w) > len(end) + 2 and w.endswith(end)]
+    if any(f in R["vocab"] for f in forms): return None                                    # a word
+    for end in ("s", "es"):                                                                 # a name with a plural or possessive s: the name
+        if len(w) > len(end) + 2 and w.endswith(end) and w[:-len(end)] in R["exact"]: return w[:-len(end)]
+    if any(f in R["exact"] for f in forms[1:]) or (scope_re is not None and scope_re.search(w)): return None   # a name with another ending, or drug talk
+    hits = [n for n in R["targets"] if abs(len(n) - len(w)) <= 1 and near(w, n)]
+    if not hits or len({R["group"][n] for n in hits}) != 1: return None
+    return hits[0]
+
+
 def vocabulary():
     """The model's vocabulary as a set of whole words (site/insight/vendor/vocab.txt, the file the page reads)."""
     try: return {l.rstrip("\n").rstrip() for l in open(VENDOR / "vocab.txt", encoding="utf-8")}
@@ -570,7 +619,12 @@ def scope_block():
     # (2.9) is a question finished? the page's insUnfinished and Ranker.unfinished read the same lists and patterns; 'names':
     # the names of drugs the site does not cover, for a name that is still being typed
     unf = {k: sorted(set(U.get(k) or [])) for k in UNF_SETS}; unf.update({k: list(U.get(k) or []) for k in UNF_PATS}); unf["names"] = sorted(set(S["names"]))
-    return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"]), "unfinished": unf}
+    # (2.9.1) a drug's name with a letter wrong: 'map' (only to names the site knows) and 'keep'; the names of drugs without a page are in unfinished.names
+    Sp = S.get("spell") or {}; known = {n for n, _ in names_table()} | set(S["names"])
+    spell = {"map": {k: v for k, v in sorted((Sp.get("map") or {}).items()) if v in known and k not in known}, "keep": sorted(set(Sp.get("keep") or []))}
+    for k, v in sorted((Sp.get("map") or {}).items()):
+        if k not in spell["map"]: print(f"NOTE: scope.json spell.map: “{k}” -> “{v}” left out ({'the word is itself a name' if k in known else 'not a name the site knows'})")
+    return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"]), "unfinished": unf, "spell": spell}
 
 
 WANT_CUT = 0.75            # the judge's number from which a typed question can be a listed one (see wanted_index)

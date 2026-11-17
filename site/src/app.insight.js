@@ -104,6 +104,7 @@ function insPrepare(d, vocabText) {
   const wb = "(?<![A-Za-z0-9_])(?:", we = ")(?![A-Za-z0-9_])", L = d.wanted;
   INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
   INS.unfin = d.scope && d.scope.unfinished ? insUnfinRule(d.scope.unfinished, d.names.map(x => x[0])) : null;   // 2.9: is a question finished?
+  INS.spell = d.scope && d.scope.spell && INS.unfin ? insSpellRule(d.scope.spell, d.scope.unfinished.names || []) : null;   // 2.9.1: a drug's name with a letter wrong
   INS.list = L && L.ids.length ? Object.assign({ ids: L.ids, q: L.q, rows: L.rows, cut: L.cut, near: L.near || [0, 0], W: insRows(L.W, d.dim), M: insRows(L.M, d.dim), S: insRows(L.S, d.dim),
     about: L.about.map(xs => new Set(xs.map(k => d.slugs[k]))) }, insWords(L.docs)) : null;
   // vocab.txt: one token a line, its line number its id (as the tokenizers library reads it)
@@ -475,6 +476,36 @@ function insStranger(q) {
   const rest = (String(q).toLowerCase().replace(/\u2019/g, "'").match(/[a-z0-9']+/g) || []).map(x => x.replace(/^'+|'+$/g, "")).filter(x => x && x !== unk[0]);
   return rest.length && rest.every(x => INS.unfin.known.has(x)) ? unk[0] : "";
 }
+/* 2.9.1: a drug's name with a letter wrong is read as that name before the question is read ("can i die from cocane",
+   "is ketamin addictive", "herion"), and the page says what it read. site/insight/scope.json ("spell") explains the rule
+   and holds its tables; build_index.py reads the same way (Ranker.correct) and parity.js holds the two to each other. */
+function insNear(a, b) {   // one letter apart: a letter put in, left out or changed, or two neighbours swapped
+  const la = a.length, lb = b.length; if (a === b || Math.abs(la - lb) > 1) return false;
+  let i = 0; while (i < la && i < lb && a[i] === b[i]) i++;
+  if (la === lb) return a.slice(i + 1) === b.slice(i + 1) || (i + 1 < la && a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2));
+  return la < lb ? a.slice(i) === b.slice(i + 1) : a.slice(i + 1) === b.slice(i);
+}
+function insSpellRule(Sp, other) {
+  const group = new Map(); INS.nameOf.forEach((g, n) => group.set(n, g.join("|"))); other.forEach(n => { if (!group.has(n)) group.set(n, "other:" + n); });
+  const targets = [...group.keys()].filter(n => n.length >= 6 && /^[a-z]+$/.test(n)).sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));
+  return { map: new Map(Object.entries(Sp.map || {})), keep: new Set(Sp.keep || []), group, targets };
+}
+function insSpellWord(w) {
+  const R = INS.spell; if (R.map.has(w)) return R.map.get(w);
+  if (w.length < 5 || R.group.has(w) || R.keep.has(w) || INS.unfin.known.has(w)) return null;
+  const forms = [w].concat(INS_UNK_ENDS.filter(([end]) => w.length > end.length + 2 && w.endsWith(end)).map(([end, put]) => w.slice(0, -end.length) + put));
+  if (forms.some(f => INS.vocab.has(f))) return null;                                    // a word
+  for (const end of ["s", "es"]) if (w.length > end.length + 2 && w.endsWith(end) && R.group.has(w.slice(0, -end.length))) return w.slice(0, -end.length);   // a name with a plural or possessive s
+  if (forms.slice(1).some(f => R.group.has(f)) || (INS.scope && INS.scope.re.test(w))) return null;   // a name with another ending, or drug talk
+  const hits = R.targets.filter(n => Math.abs(n.length - w.length) <= 1 && insNear(w, n));
+  return hits.length && new Set(hits.map(n => R.group.get(n))).size === 1 ? hits[0] : null;
+}
+function insSpell(q) {
+  const read = []; if (!INS.spell) return { text: q, read };
+  const text = String(q).replace(/(?<![A-Za-z0-9'\u2019-])[A-Za-z]+(?![A-Za-z0-9'\u2019-])/g, m => { const n = insSpellWord(m.toLowerCase()); if (!n) return m; read.push([m, n]); return n; });
+  return { text, read };
+}
+const insReadHtml = (res, cls) => res.read && res.read.length ? '<p class="' + cls + '">We read ' + res.read.map(([a, b]) => "\u201c" + esc(a) + "\u201d as <b>" + esc(b) + "</b>").join(" and ") + ".</p>" : "";
 // the page an answer is shown as being on: a drug the question names (or the page's own) when the answer is asked there
 function insPageOf(id, groups, drug) {
   if (isAuto(id)) return AUTO[id].page;   // (2.6) an answer written by the system lives on its drug's page, or among the big questions
@@ -489,8 +520,8 @@ function insPageOf(id, groups, drug) {
    "blocked": the first line without the way to ask; "": nothing, the route says it). insRead is the part that needs no model: the depth
    words, the drugs named, the routes. */
 function insRead(query, ctx) {
-  const q = insClean(query), drug = ctx && ctx.drug && subBySlug[ctx.drug] ? ctx.drug : null, d = insDepth(q), named = insNamed(d.core);
-  const res = { q, core: d.core, depth: d.depth, drug: named.length ? null : drug, groups: named.length ? named : drug ? [[drug]] : [], routes: [], best: [], related: [], note: "", emergency: false };
+  const q = insClean(query), sp = insSpell(q), drug = ctx && ctx.drug && subBySlug[ctx.drug] ? ctx.drug : null, d = insDepth(sp.text), named = insNamed(d.core);   // (2.9.1) a misspelt name is read as the name
+  const res = { q, core: d.core, depth: d.depth, drug: named.length ? null : drug, groups: named.length ? named : drug ? [[drug]] : [], routes: [], best: [], related: [], note: "", emergency: false, read: sp.read };
   // (2.5: with the phrases in which a drug's name is not a drug taken out first: "how do i cook mushrooms in butter" is not a request to make a drug)
   if (insBlocked(INS.scope ? d.core.replace(INS.scope.not, " ") : d.core)) { res.note = "blocked"; return res; }
   res.routes = insRoutes(d.core, named, drug); res.emergency = res.routes.some(r => r.kind === "help");
@@ -606,11 +637,11 @@ function insFitHtml(res) {
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
   const none = insNoneHtml(res, false);
   const related = res.related.length ? '<p class="sr-fit-h">' + (res.note === "unfinished" ? "You may mean" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
-  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + routes + best + none + related + '<p class="sr-fit-h sr-words" hidden>More results</p></div>';
+  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + related + '<p class="sr-fit-h sr-words" hidden>More results</p></div>';
 }
 // what a screen reader hears when the answers arrive: the route, the tier, the question matched
 function insSay(res) {
-  const parts = res.routes.map(r => r.t);
+  const parts = (res.read && res.read.length ? ["We read " + res.read.map(([a, b]) => a + " as " + b).join(" and ")] : []).concat(res.routes.map(r => r.t));
   if (res.best.length) parts.push("Best match: " + res.best.map(x => insQ(x.id, x.page)).join("; "));
   else if (res.note === "want") parts.push("Not answered yet. A question like yours is on our list: " + res.want.q);
   else if (res.note === "unfinished") parts.push(insUnfinText(res).join(" ").replace(/\.$/, ""));
@@ -773,7 +804,7 @@ function insHtml(v) {
     return '<li><a href="' + esc(answerAddr(x.id, x.page)) + '" data-insight-next="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span><span class="ins-rel-k">' + esc(w.name) + "</span>" + esc(insQ(x.id, x.page)) + "</span>" + icon("arrow") + "</a></li>"; }).join("") + "</ul></div>" : "";
   const from = (res.best.length ? res.best : res.related).map(x => x.id), shown = res.best.concat(res.related).map(x => x.id);
   return insBar("<span>Your question</span>") + '<div class="ins ins-asked' + (res.depth ? " ins-" + res.depth : "") + '"><h2 id="ev-title" class="ins-yours" tabindex="-1">' + esc(insCap(res.q.length > 240 ? res.q.slice(0, 237) + "…" : res.q)) + "</h2>" +
-    routes + best + none + related + insTailHtml(from, shown, res.groups) + "</div>";
+    insReadHtml(res, "ins-read") + routes + best + none + related + insTailHtml(from, shown, res.groups) + "</div>";
 }
 function insDraw(v, opener) {
   const sh = document.getElementById("evsheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
@@ -1186,6 +1217,6 @@ window.pkInsight = {
   embed: t => insEmbed(t).then(v => Array.from(v)), tiers: () => Object.assign({}, INS.t), weights: () => Object.assign({}, INS.wt), judge: () => JSON.parse(JSON.stringify(INS.judge)),
   read: (t, ctx) => { const r = insRead(t, ctx || {}); return { core: r.core, depth: r.depth, note: r.note, routes: r.routes.map(x => x.kind), groups: r.groups }; },
   rank: (t, ctx) => insRank(t, ctx || {}).then(r => ({ q: r.q, core: r.core, depth: r.depth, note: r.note, emergency: r.emergency, routes: r.routes.map(x => ({ kind: x.kind, t: x.t, href: x.href, el: x.el || null, mix: x.mix || null })),
-    best: r.best, related: r.related, judge: r.judge || null, want: r.want || null, unf: r.unf || "", demoted: !!r.demoted, stranger: r.stranger || "", ms: r.ms })),
-  scope: t => insScope(t), unfinished: (t, on) => insUnfinished(t, !!on), unknown: t => insUnknown(t), listed: () => (INS.list ? INS.list.ids.slice() : [])
+    best: r.best, related: r.related, judge: r.judge || null, want: r.want || null, unf: r.unf || "", demoted: !!r.demoted, stranger: r.stranger || "", read: r.read || [], ms: r.ms })),
+  scope: t => insScope(t), unfinished: (t, on) => insUnfinished(t, !!on), unknown: t => insUnknown(t), spell: t => insSpell(t), listed: () => (INS.list ? INS.list.ids.slice() : [])
 };

@@ -53,6 +53,13 @@ const cuts = [...new Set(goldAll.filter((_, i) => i % 3 === 0).flatMap(q => { co
   "what is it cut with", "what are pills cut with", "what is heroin cut with", "is cocaine", "what is ketamine", "what is ketamine for", "weed and alcohol", "weed and", "how does mdma", "can i die from coc", "is weed lega",
   "is cocaine addi", "can a gay man go to the court", "who are you", "what time is it", "how much ecstasy is too much", "what does it feel like", "what’s it like", "DOES IT SHOW UP ON A DRUG TEST", "is tusi dangerous",
   "what is photosynthesis", "how do i stop snoring", "don't you know what's in it", "Why does meth not work like it used to?", "what might someone have been spiked with", "xanax vs", "'quoted' words and", ""]))];
+// 2.9.1: names with a letter wrong, and words that must be left as they are
+const spells = ["can i die from cocane", "is ketamin addictive", "herion withdrawal", "is adderal safe", "does marijauna cause cancer", "how long does xanex last", "is heroine addictive", "can you overdose on tramadole",
+  "what is extasy", "is canabis legal", "mushroms and alcohol", "is morphing a thing", "what is escaline", "how do i treat a sunburn", "is it safe to eat moldy bread", "why do cats purr", "what is photosynthesis",
+  "is tusi dangerous", "does caffiene keep you awake", "alchohol and benzodiazapines", "is codiene an opiod", "how does methamphetamin work", "what is the capital of mongolia", "is gabapentine addictive",
+  "is modafanil safe", "are steriods bad", "psycadelics and anxiety", "can i mix oxycodon and alcohol", "how long does 4-mmc last", "is nicotene addictive", "what about ayahuaska", "is cocaines effect long",
+  "asteroids and comets", "what is a ketimine", "do peppers help", "is tobaco worse than weed", "valum for sleep", "is vyvance like adderall", "fentanil test strips", "does mdna hurt the brain", "COCANE and Ketamin?",
+  "cocane-like drugs", "the heroine's journey", "xanaxes", "weeds in my garden", "is MDNA an album"];
 // the build's side, in Python: the same reading of every text, and the page's ranking rule from the same index
 const py = `
 import sys, json, importlib.util, numpy as np
@@ -72,6 +79,8 @@ for (q, d), (full, masked, groups) in zip(req["queries"], read):
 out["rank"] = rank
 # 2.9: is the question finished, and which of its words are not known: the two rules on words alone, on every cut
 out["cuts"] = [[R.unfinished(c, False), R.unfinished(c, True), bi.unknown_words(c, R.unfin["vocab"] or set(), R.unfin["known"])] for c in req["cuts"]]
+# 2.9.1: a drug's name with a letter wrong, read as the name: on the cuts and on misspellings and words that must be left alone
+out["spell"] = [list(R.correct(c)) for c in req["cuts"] + req["spells"]]
 print(json.dumps(out))
 `;
 const server = http.createServer((req, res) => {
@@ -87,19 +96,20 @@ const server = http.createServer((req, res) => {
   await p.goto("http://127.0.0.1:" + server.address().port + "/#home"); await p.waitForTimeout(500);
   const loaded = await p.evaluate(() => pkInsight.load());
   if (!loaded) { console.error("Insight did not load in the page", errors); process.exit(1); }
-  const js = await p.evaluate(async ({ texts, queries, cuts }) => {
+  const js = await p.evaluate(async ({ texts, queries, cuts, spells }) => {
     const out = { ids: [], vecs: [], expand: [], mask: [], named: [], rank: [], tiers: pkInsight.tiers(), weights: pkInsight.weights(), judge: pkInsight.judge() };
     for (const t of texts) { out.ids.push(pkInsight.encode(t)); out.vecs.push(await pkInsight.embed(t)); }
     for (const t of texts.concat(queries.map(q => q[0]))) { out.expand.push(pkInsight.expand(t)); out.mask.push(pkInsight.mask(t)); out.named.push(pkInsight.named(t)); }
     for (const [q, drug] of queries) { const r = await pkInsight.rank(q, drug ? { drug } : {}); r.scope = pkInsight.scope(r.core); out.rank.push(r); }
     out.listed = pkInsight.listed();
     out.cuts = cuts.map(c => [pkInsight.unfinished(c, false), pkInsight.unfinished(c, true), pkInsight.unknown(c)]);
+    out.spell = cuts.concat(spells).map(c => { const r = pkInsight.spell(c); return [r.text, r.read]; });
     return out;
-  }, { texts, queries, cuts });
+  }, { texts, queries, cuts, spells });
   await browser.close(); server.close();
   // the build ranks what the page ranks: the question without its depth words (the page says which words those were)
   const asked = queries.map(([q, d], i) => [js.rank[i].core, d]);
-  const r = spawnSync("python3", ["-I", "-c", py, path.join(REPO, "scripts/insight/build_index.py"), path.join(ROOT, "data/insight.json")], { input: JSON.stringify({ texts, raw: queries.map(q => q[0]), queries: asked, cuts }), maxBuffer: 1 << 28, encoding: "utf8" });
+  const r = spawnSync("python3", ["-I", "-c", py, path.join(REPO, "scripts/insight/build_index.py"), path.join(ROOT, "data/insight.json")], { input: JSON.stringify({ texts, raw: queries.map(q => q[0]), queries: asked, cuts, spells }), maxBuffer: 1 << 28, encoding: "utf8" });
   if (r.status !== 0) { console.error(r.stderr); process.exit(2); }
   const ref = JSON.parse(r.stdout), D = JSON.parse(fs.readFileSync(path.join(ROOT, "data", "insight.json"), "utf8"));
   let fails = 0; const say = (pass, name, detail) => { if (!pass) fails++; console.log((pass ? "PASS " : "FAIL ") + name + (detail ? "  (" + detail + ")" : "")); };
@@ -165,6 +175,11 @@ const server = http.createServer((req, res) => {
   say(!cBad.length && cuts.length >= 800 && ["ends", "bare", "which", "typing"].every(k => kinds[k] >= 5),
     "the same reading of whether a question is finished (off and on a drug's page) and of which words are not known, for " + cuts.length + " questions cut as a reader who is still typing leaves them",
     cBad.slice(0, 3).join("; ") || nUnf + " not finished off a drug's page (" + Object.keys(kinds).sort().map(k => kinds[k] + " " + k).join(", ") + "); " + js.cuts.filter(x => x[2].length).length + " hold a word that is not known");
+  // 2.9.1: the same word read as the same name, and the same words left alone, on both sides
+  const sAll = cuts.concat(spells), sBad = sAll.map((c, i) => JSON.stringify(js.spell[i]) === JSON.stringify(ref.spell[i]) ? null : JSON.stringify(c) + ": page " + JSON.stringify(js.spell[i]) + " build " + JSON.stringify(ref.spell[i])).filter(Boolean);
+  const nRead = js.spell.slice(cuts.length).filter(x => x[1].length).length, inCuts = js.spell.slice(0, cuts.length).filter(x => x[1].length).length;
+  say(!sBad.length && nRead >= 25 && nRead <= spells.length - 12, "the same misspelt names read as the same names, and the same words left as they are, for " + sAll.length + " questions",
+    sBad.slice(0, 3).join("; ") || nRead + " of " + spells.length + " test questions hold a word read as a name; " + inCuts + " of the " + cuts.length + " cuts of real questions do");
   say(!errors.length, "no console errors", errors.slice(0, 3).join(" | "));
   console.log(fails ? fails + " parity checks failed" : "All parity checks passed");
   process.exit(fails ? 1 : 0);
