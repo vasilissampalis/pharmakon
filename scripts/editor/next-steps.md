@@ -15,6 +15,13 @@ Done: places by meaning (2.13.0); figures by question (2.14.0); the lane's pause
 citation a link, a source in place, plain first, shorter cards, topics, the same Insight on every page, the place and
 the way back in the bar).
 
+0. **His sent questions (19:38: "they are hours pending this is disappointing").** Kanna is first in line with 12 papers that can
+   be read: read what the lane writes (`data/auto/answers/au_w_a0002.json`). *Mitragyna javanica*: nothing that can be read was
+   found; the two papers the finder saw are in `data/auto/papers/w_a0003.json`: if he can save them, ask him with the full APA 7
+   references. Cocaethylene: the lane's own answer (`au_w_a0005`, waiting for a person) says "25-fold higher risk of sudden
+   cardiac death": read its sources against our checked answer before anything is shown. The scout should know that a question
+   about two drugs together is answered by the checked answer on the pair (the page does from 2.15.2; the build's ranker does
+   not), so that such a question is not listed again.
 1. **The lane, when the allowances are new (00:00 UTC).** Read what it wrote for kanna and *Mitragyna javanica* and for
    the 46 questions never tried (`data/auto/lane/_last-auto-run.txt`, `data/auto/lane/state.json`). Compare team I (a
    free reader) with team H: does "rests on too few sources" come more often? If so, team I goes behind team H. Try

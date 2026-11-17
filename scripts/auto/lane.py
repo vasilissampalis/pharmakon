@@ -1687,6 +1687,15 @@ def holds(hold_new, kind):
 
 
 # ---------- the run ----------
+def found_now(w):
+    """How many sources the finders hold for a question now: the papers that can be read, and the official pages."""
+    n = 0
+    for f, k in ((ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"), "can_read"), (FOUND_OFFICIAL / (w["id"] + ".json"), "pages")):
+        try: n += len(json.load(open(f, encoding="utf-8")).get(k) or [])
+        except (OSError, ValueError, TypeError): pass
+    return n
+
+
 def _searched(path):
     """The day a finder last searched for a question ("" where it has not)."""
     try: return str(json.load(open(path, encoding="utf-8")).get("searched_on") or "")
@@ -1714,6 +1723,12 @@ def turn_of(w, done):
     if int(s.get("lane") or 1) < LANE: return 1
     newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
     if (s.get("status") == "none" or s.get("complete") is False) and newer > s.get("last", ""): return 2
+    # (17 November 2026, 20:10) the finders may find more on the very day the lane tried: kanna was tried at 17:36 UTC with nothing to read and
+    # searched by its own name at 17:55 (12 papers that can be read). A day is too coarse: the lane notes how many sources it had ("had"), and a
+    # question with no answer is looked at again as soon as the finders hold more. (A try noted before this rule: only where it had nothing to read.)
+    if s.get("status") == "none" or s.get("complete") is False:
+        n, had = found_now(w), s.get("had")
+        if (had is None and "no source that can be read" in str(s.get("why") or "") and n > 0) or (had is not None and n > int(had)): return 2
     if s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=1)).isoformat(): return 3     # (17 November 2026: the next day, not the next week)
     return None
 
@@ -1824,7 +1839,9 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         if ids:
             if w["id"] in ids: order.append(w)
         elif again or turn(w) is not None: order.append(w)
-    if not ids and not again: order.sort(key=lambda w: turn(w))                    # (a stable sort: within one turn, the most asked first)
+    # (a stable sort: within one turn, the most asked first. 17 November 2026: a question a person sent comes before every question of the system's
+    # own, whatever its turn: kanna, sent and waiting for its second look, would have stood behind 46 of the system's own that were never tried)
+    if not ids and not again: order.sort(key=lambda w: (0 if w.get("from") == "a question visitors sent" else 1, turn(w)))
     if trial: order = list(trial); limit = max(limit, len(order))                  # (trial questions only: nothing of the site's list is worked on in such a run)
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []; out_of_room = 0
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
@@ -1873,7 +1890,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         except Exception as e:                                           # a fault of the lane itself on this question: written down, and the question is not tried again by this lane (it would fail the same way and spend the day's allowance)
             import traceback
             print(f"lane: {w['id']}: the lane itself failed ({type(e).__name__}: {str(e)[:200]})"); print("".join(traceback.format_exc().splitlines(True)[-6:]))
-            st["items"][w["id"]] = {"status": "none", "why": f"the lane itself failed on it ({type(e).__name__})", "last": TODAY, "lane": LANE, "kind": "", "complete": False, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
+            st["items"][w["id"]] = {"status": "none", "why": f"the lane itself failed on it ({type(e).__name__})", "last": TODAY, "lane": LANE, "kind": "", "complete": False, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1, "had": found_now(w)}
             json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); continue
         if w.get("trial"):                                              # a trial: what the lane would have done is kept beside the record, and the record itself can never be shown
             rec["trial"] = {"would_be": rec["status"], "why": rec.get("why")}
@@ -1892,7 +1909,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
                 rec["place"] = dict(rec["place"], home="new:" + w["page"], also=[h for h in dict.fromkeys([pl["home"]] + list(pl["also"])) if h and h != "new:" + w["page"]], why="asked by the system for the page it should start: " + w["page"])
         except Exception as e: rec["place"] = {"home": None, "why": "the place could not be worked out: " + str(e)[:120]}
         json.dump(rec, open(OUT / (rec["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-        st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "lane": LANE, "kind": rec["kind"], "complete": rec["complete"], "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1}
+        st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "lane": LANE, "kind": rec["kind"], "complete": rec["complete"], "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1, "had": found_now(w)}
         json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); made.append(rec)
         f = rec["made"].get("from") or {}
         print(f"lane: {w['id']} {w['q'][:56]!r}: {rec['status']} ({rec['why']}); {f.get('papers', 0)} papers, {f.get('official', 0)} official pages, {f.get('summaries', 0)} summaries; {rec['made'].get('neurons', 0)} neurons")

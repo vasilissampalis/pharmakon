@@ -253,9 +253,12 @@ const AUTO_STATE = (() => {
   try { held = JSON.parse(fs.readFileSync(path.join(ROOT, "data/auto/held.json"), "utf8")); } catch (e) { held = {}; }
   const heldIds = new Set((Array.isArray(held.held) ? held.held.map(x => x && x.id) : Object.keys(held.held || {})).filter(Boolean).map(k => String(k).replace(/^au_/, "")));
   const listed = [];
+  // how many sources the finders hold for a question (the papers that can be read, the official pages)
+  const sources = id => { let n = 0; for (const [f, k] of [["data/auto/papers/" + id + ".json", "can_read"], ["data/auto/official/found/" + id + ".json", "pages"]]) { try { n += (JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8"))[k] || []).length; } catch (e) { /* not searched yet */ } } return n; };
   for (const f of ["data/site/wanted.json", "data/auto/wanted-auto.json"]) { try { listed.push(...(JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8")).items || [])); } catch (e) { /* no such list yet */ } }
   for (const w of listed) { if (!w || !/^w_[a-z0-9_]{1,40}$/.test(String(w.id))) continue; const s = st[w.id];
-    out[w.id] = heldIds.has(w.id) ? "person" : !s ? "new" : s.status === "waiting" ? "person" : s.status === "none" ? "tried" : s.status === "published" ? "" : "new";
+    const nothing = s && s.status === "none" && /no source that can be read/.test(String(s.why || "")) && !sources(w.id);
+    out[w.id] = heldIds.has(w.id) ? "person" : !s ? "new" : s.status === "waiting" ? "person" : nothing ? "nosource" : s.status === "none" ? "tried" : s.status === "published" ? "" : "new";
     if (!out[w.id]) delete out[w.id]; }
   return out;
 })();
