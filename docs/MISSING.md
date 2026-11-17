@@ -57,24 +57,21 @@ Answered by now, so off the list by itself (the editor takes them out of `data/s
 
 ## Sent in visitors' own words and not answered yet, the most asked first
 
-1. **are drugs legal in greece** (asked 1 time)
+1. **what is Mitragyna javanica?** (asked 2 times)
+   - Also asked as: what is Mitragyna javanica?
    - No paper on file comes near: papers are probably needed.
-2. **can i get high with kanna?** (asked 1 time)
+2. **are drugs legal in greece** (asked 1 time)
    - No paper on file comes near: papers are probably needed.
-3. **do gay people** (asked 1 time)
+3. **can i get high with kanna?** (asked 1 time)
+   - No paper on file comes near: papers are probably needed.
+4. **do gay people** (asked 1 time)
    - By its words the page did not take this as a question about drugs; it was sent all the same. If it is about a drug, its word is missing from `site/insight/scope.json`.
    - No paper on file comes near: papers are probably needed.
-4. **does cannabis cause cancer** (asked 1 time; about cannabis)
+5. **does cannabis cause cancer** (asked 1 time; about cannabis)
    - This is the listed question `w_0041`.
    - Near answers on the site: What does smoking cannabis do to the lungs? (`cl_can_smoked_lungs`); Can cannabis cause a sudden death? (`cl_can_deaths_attributed`)
    - Papers on file to look at first: Hall and Degenhardt (2009) (`sc_hall_2009`); Page et al. (2020) (`sc_page_2020`); Hall (2015) (`sc_hall_2015`); National Academies of Sciences, Engineering, and Medicine (2017) (`sc_nasem_2017`)
-5. **is sex better with weed** (asked 1 time; about cannabis)
+6. **is sex better with weed** (asked 1 time; about cannabis)
    - This is the listed question `w_0048`.
    - Near answers on the site: Cannabis with alcohol: is driving worse than with either alone? (`cl_mix_cannabis_alcohol_driving`)
    - Papers on file to look at first: Zemishlany et al. (2001) (`sc_zemishlany_2001`); Curran et al. (2016) (`sc_curran_2016`); Spindle et al. (2018) (`sc_spindle_2018`); Scott et al. (2018) (`sc_scott_2018`)
-6. **what is mitragina jananica?** (asked 1 time)
-   - By its words the page did not take this as a question about drugs; it was sent all the same. If it is about a drug, its word is missing from `site/insight/scope.json`.
-   - No paper on file comes near: papers are probably needed.
-7. **what is mytragina javanica?** (asked 1 time)
-   - By its words the page did not take this as a question about drugs; it was sent all the same. If it is about a drug, its word is missing from `site/insight/scope.json`.
-   - No paper on file comes near: papers are probably needed.
