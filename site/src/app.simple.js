@@ -1225,6 +1225,21 @@ function evInline(a) {
   }
   panel.scrollTop += a.getBoundingClientRect().top - y0;
 }
+/* "The evidence" under an answer (site 2.15.3; the senior author, 17 November 2026: "when I click on 'see the evidence' I see the answer again and I
+   have to scroll down to see the sources the sources should just come down and when I click on 'See the evidence' again they should hide. That way
+   I would not feel lost"). The sources unfold under the answer, each in plain words first (the same cards as in the full view); a second tap folds
+   them away. The whole research view (the checked text, the debate, the certainty in full) is one link further, for those who want it. */
+function askSources(a) {
+  const id = a.getAttribute("href").slice(1), foot = a.closest(".ask-foot"); if (!foot || !claimById[id]) return;
+  const was = foot.nextElementSibling && foot.nextElementSibling.classList.contains("ask-srcs") ? foot.nextElementSibling : null;
+  if (was) { was.remove(); a.setAttribute("aria-expanded", "false"); return; }
+  const box = document.createElement("div"); box.className = "ask-srcs"; foot.insertAdjacentElement("afterend", box); a.setAttribute("aria-expanded", "true");
+  const draw = () => { const c = claimById[id], sp = (SIMPLE.claims || {})[id], refs = [...new Set(c.evidence.map(e => e.reference))].filter(r => refById[r]);
+    box.innerHTML = '<p class="ask-srcs-h">' + (refs.length === 1 ? "The source" : "The " + refs.length + " sources") + '</p><ol class="ev-refs">' + refs.map(r => { const ref = refById[r];
+      return '<li class="ev-src"><details><summary><span class="ev-src-who">' + esc(inTextLabel(ref, REFS)) + '</span><span class="ev-src-t">' + esc(String(ref.title || "").replace(/<[^>]+>/g, "")) + "</span>" + evSrcFund(c, r) + "</summary>" + evSrcBody(c, sp, r, false) + "</details></li>"; }).join("") +
+      '</ol><p class="ask-srcs-all"><a href="#' + esc(id) + '">All the scientific detail ' + icon("arrow") + "</a></p>"; };
+  if (fullReady([id])) draw(); else whenReady(() => needFull([id]), box, "The sources", () => { if (box.isConnected) draw(); });
+}
 function evHtml(id) {
   const c = claimById[id]; if (!c) return "";
   const sp = (SIMPLE.claims || {})[id], q = anyQuestion(id);
@@ -1334,8 +1349,10 @@ document.addEventListener("click", e => {
   const ix = e.target.closest("#evsheet .ev-inl-x");
   if (ix) { const box = ix.closest(".ev-inl"), panel = document.querySelector("#evsheet .panel"), a = panel && panel.querySelector('a.evcite[aria-expanded="true"]'); if (a) { evInline(a); a.focus({ preventScroll: true }); } else if (box) box.remove(); return; }
   const cb = e.target.closest("#evsheet .panel [data-card]"); if (cb) { openCard(cb.dataset.card); return; }
+  const sc = e.target.closest(".ask-srcs [data-card]"); if (sc) { openCard(sc.dataset.card); return; }
   const a = e.target.closest('a[href^="#cl_"]');
   if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.classList.contains("perma")) return;
+  if (a.classList.contains("ask-ev")) { e.preventDefault(); askSources(a); return; }
   const id = a.getAttribute("href").slice(1); if (!claimById[id]) return;
   e.preventDefault(); openEvidence(id, a, a.dataset.focusSrc || null);
 });

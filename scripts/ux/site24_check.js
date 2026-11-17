@@ -357,7 +357,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click("#search-results button[data-want-keep]"); await p.waitForTimeout(300);
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     const row = await p.evaluate(() => { const r = document.querySelector("#home-asked .aq"); return r ? r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent : ""; });
-    ok("Tell me when it is answered: Your questions keeps the LISTED question, as On our list", /onlist \| On our list\. Not tried yet: it is in line · asked less than an hour ago \| How can you die from alcohol\?$/.test(row), row);   // (2.15.2: what our system has done with it so far, and since when)
+    ok("Tell me when it is answered: Your questions keeps the LISTED question, as On our list", /onlist \| In line\. Not tried yet · asked less than an hour ago \| How can you die from alcohol\?$/.test(row), row);   // (2.15.2: what our system has done with it so far, and since when)
     await shot(p, "390-home-onlist");
     // its own words instead
     await typeW(p, "does weed cause cancer"); await p.click("#search-results .sr-want .want-other"); await p.waitForTimeout(900);
@@ -522,6 +522,20 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click("#search"); await p.waitForTimeout(600);
     const sug = await p.evaluate(() => ({ hint: (document.querySelector("#search-results .sr-hint") || {}).textContent || "", hrefs: [...document.querySelectorAll("#search-results a.sr-sug")].map(a => a.getAttribute("href")) }));
     ok(w + " px: before a word is typed, the box on the cannabis page offers what people ask most about cannabis", sug.hint === "Most asked about cannabis" && sug.hrefs.length >= 3 && sug.hrefs.every(h => h.startsWith("#s-cannabis/q-")), JSON.stringify(sug));
+    // (2.15.3) past searches: off until the reader turns them on; then kept on this device, folded; turning them off clears them
+    await go(p, "#home"); await p.evaluate(() => closeSearch());
+    const h0 = await p.evaluate(() => ({ line: (document.querySelector("#home-hist .hist-off") || {}).textContent || "", kept: localStorage.getItem("pk-hist") }));
+    await p.fill("#search", "does lsd change your eye colour"); await p.waitForTimeout(500); await p.keyboard.press("Enter"); await p.waitForTimeout(500);
+    const h1 = await p.evaluate(() => localStorage.getItem("pk-hist"));
+    await p.evaluate(() => { if (EV.open) closeEvidence(); closeSearch(); }); await go(p, "#home"); await p.evaluate(() => closeSearch());
+    await p.click("#home-hist [data-hist-on]"); await p.fill("#search", "does lsd change your eye colour"); await p.waitForTimeout(500); await p.keyboard.press("Enter"); await p.waitForTimeout(600);
+    await p.evaluate(() => { if (EV.open) closeEvidence(); closeSearch(); }); await go(p, "#home"); await p.evaluate(() => closeSearch());
+    await p.reload(); await p.waitForTimeout(800);   // (on the next visit the list is folded)
+    const h2 = await p.evaluate(() => { const b = document.getElementById("home-hist"), d = b.querySelector("details"); return { sum: (b.querySelector("summary") || {}).textContent, folded: d ? !d.open : null, qs: [...b.querySelectorAll(".hist-q")].map(x => x.textContent) }; });
+    await p.evaluate(() => { document.querySelector("#home-hist details").open = true; }); await p.click("#home-hist [data-hist-clear]"); await p.waitForTimeout(200);
+    const h3 = await p.evaluate(() => ({ kept: localStorage.getItem("pk-hist"), on: localStorage.getItem("pk-hist-on"), line: !!document.querySelector("#home-hist .hist-off") }));
+    ok(w + " px: past searches are off until the reader turns them on (nothing typed is kept before that); on, a question asked is kept on this device, folded under one quiet line; turning them off clears them",
+      /Keep my past searches on this device/.test(h0.line) && h0.kept === null && h1 === null && h2.sum === "Your past searches (1)" && h2.folded === true && h2.qs.join() === "does lsd change your eye colour" && h3.kept === null && h3.on === null && h3.line, JSON.stringify([h0, h1, h2, h3]));
     await p.context().close();
   }
 

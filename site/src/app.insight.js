@@ -872,7 +872,7 @@ async function insRank(query, ctx) {
     const figs = insFigures(ck, res.groups, /\b(?:tried|ever|lifetime|in their li(?:fe|ves))\b/i.test(res.core)), one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
     figs.slice(0, 2).forEach(({ r, fit, pair }) => { const l = insFigLine(r, pair);
       res.routes.push({ kind: "figure", icon: "pulse", k: "Statistics · " + (one ? (fit === 2 ? drugName(one) : insCap(String(r.substance))) : "All drugs") + " · " + INS_FIG_KIND[ck], t: l.t, m: l.m,
-        href: "#numbers/part-n-" + r.file, fig: r.file + "|" + (one ? r.substance : "") + "|" + ck }); });
+        href: "#numbers/part-n-" + r.file + "/f-" + ck + "-" + numSlug(one ? r.substance : ""), fig: r.file + "|" + (one ? r.substance : "") + "|" + ck }); });
   }
   const st = insStarted(res.core);                             // (2.12) a page our system started that the question names
   if (st && !st.loose) res.routes.push(st);                    // asked what it looks like: its pictures are the answer
@@ -1322,7 +1322,7 @@ function insArrive() {
   if (g.mix) insMixPick(g.mix[0], g.mix[1]);
   if (g.country) insLawFor(g.country);
   // (2.14) the figures a counting question asked for: the statistics page shows that place, that drug's figures, at that kind
-  if (g.fig) { const [file, sub, kind] = g.fig.split("|"); let n = 0;
+  if (g.fig && !/\/f-/.test(location.hash)) { const [file, sub, kind] = g.fig.split("|"); let n = 0;   // (2.15.3: the address itself carries the drug and the kind now)
     const show = () => { const sec = document.getElementById("n-" + file), sel = document.getElementById("num-sub-" + file);
       if (!sec || !sec.querySelector(".sec-b") || !sec.querySelector(".sec-b").children.length) { if (n++ < 40) setTimeout(show, 100); return; }
       if (sel && sub && sel.value !== sub && [...sel.options].some(o => o.value === sub)) { sel.value = sub; sel.dispatchEvent(new Event("change", { bubbles: true })); }
@@ -1476,7 +1476,7 @@ function askedBox() {
   // that waits can be opened too: it is asked again in the box above, which shows what the site has on it so far
   // (2.15.2) how long ago, and for a question on our list what our system has done with it so far (AUTO_STATE, from the lane's own record)
   const ago = it => { const h = (Date.now() - (it.t || Date.now())) / 3600000; return h < 1 ? "less than an hour ago" : h < 36 ? Math.round(h) + (Math.round(h) === 1 ? " hour ago" : " hours ago") : Math.round(h / 24) + " days ago"; };
-  const state = it => { const s = it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : ""; return s === "person" ? "Written by our system. A person has to check it first" : s === "nosource" ? "On our list. We searched: no research that we can read has been published on it yet" : s === "tried" ? "On our list. Tried: no answer has passed our checks yet. It is tried again" : s === "new" ? "On our list. Not tried yet: it is in line" : ""; };
+  const state = it => { const s = it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : ""; return s === "person" ? "Written. A person has to check it first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "tried" ? "Tried. No answer passed our checks yet" : s === "new" ? "In line. Not tried yet" : ""; };
   const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + (state(it) || k) + (it.sent ? '<span class="aq-ago"> · ' + (it.kept ? "asked " : "sent ") + ago(it) + "</span>" : "") + '</span><span class="aq-q">' + esc(it.q) +
     '</span><span class="aq-go">See what we have so far ' + icon("arrow") + "</span></button>" + x(it) + "</li>";
   const row = it => it.st === "ans"
@@ -1568,6 +1568,37 @@ document.addEventListener("click", async e => {
 // The start page is drawn before this part of the script has run (the list's own names do not exist yet at that moment),
 // so the list of kept questions is drawn here, once: without this line it was missing after every reload.
 if (typeof document !== "undefined") askedBox();
+/* (2.15.3; the senior author, 17 November 2026: "I may want to read the history of questions I made somewhere although it has to be discreet".)
+   The questions a reader asked, the last thirty, kept on this device only and shown folded under "Your questions" on the start page. A tap asks
+   one again. Kept when a question is asked with Enter, when one of its results is opened, and when it is sent. Nothing of it leaves the device.
+   It is OFF until the reader turns it on, with one quiet line on the start page: the site's promise stands that nothing typed is kept unless the
+   reader chooses so, and a phone is often shared (a list of questions about drugs is not for everyone who picks it up). Turning it off clears it. */
+const HIST_KEY = "pk-hist", HIST_ON = "pk-hist-on", HIST_MAX = 30;
+function histOn() { try { return localStorage.getItem(HIST_ON) === "1"; } catch (e) { return false; } }
+function histList() { try { const a = JSON.parse(localStorage.getItem(HIST_KEY) || "[]"); return Array.isArray(a) ? a.filter(x => x && typeof x.q === "string").slice(0, HIST_MAX) : []; } catch (e) { return []; } }
+function histAdd(q) {
+  if (!histOn()) return;
+  q = insClean(q); if (insWordsIn(q) < 2 || q.length > 160) return;
+  try { const k = q.toLowerCase(), a = histList().filter(x => x.q.toLowerCase() !== k); a.unshift({ q, t: Date.now() }); localStorage.setItem(HIST_KEY, JSON.stringify(a.slice(0, HIST_MAX))); } catch (e) { /* no storage: no history */ }
+  histBox();
+}
+function histBox() {
+  const box = document.getElementById("home-hist"); if (!box) return; box.hidden = false;
+  if (!histOn()) { box.innerHTML = '<p class="hist-off"><button type="button" class="linklike" data-hist-on>Keep my past searches on this device</button></p>'; return; }
+  const a = histList(), was = box.querySelector("details"), open = was && was.open;
+  box.innerHTML = '<details class="hist"' + (open ? " open" : "") + '><summary>Your past searches (' + a.length + ')</summary><p class="hist-n">Kept on this device only. ' + (a.length ? "" : "Nothing yet: a question is kept when you ask it. ") + '</p><ul>' +
+    a.map(x => '<li><button type="button" class="hist-q" data-hist="' + esc(x.q) + '">' + esc(x.q) + "</button></li>").join("") + '</ul><p class="hist-c"><button type="button" class="linklike" data-hist-clear>Stop keeping them and clear this list</button></p></details>';
+}
+if (typeof document !== "undefined") {
+  histBox();
+  document.addEventListener("click", e => { if (!e.target.closest) return;
+    const hq = e.target.closest("button[data-hist]"); if (hq) { const s = document.getElementById("search"); if (!s) return; s.value = hq.dataset.hist; window.scrollTo(0, 0); setTimeout(() => { s.focus({ preventScroll: true }); runSearch(s.value); }, 0); return; }
+    if (e.target.closest("button[data-hist-clear]")) { try { localStorage.removeItem(HIST_KEY); localStorage.removeItem(HIST_ON); } catch (err) { /* nothing kept */ } histBox(); return; }
+    if (e.target.closest("button[data-hist-on]")) { try { localStorage.setItem(HIST_ON, "1"); } catch (err) { /* no storage: it stays off */ } histBox(); const d = document.querySelector("#home-hist details"); if (d) d.open = true; return; }
+    if (e.target.closest("#search-results a, #search-results button[data-ask]")) { const s = document.getElementById("search"); if (s && s.value) histAdd(s.value); }
+  }, true);
+  document.addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing && e.target && e.target.id === "search" && e.target.value) histAdd(e.target.value); }, true);
+}
 if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdleCallback(() => askProbe(), { timeout: 3000 }); else setTimeout(askProbe, 1200); }
 
 /* ---------- Written by our system (site 2.6, 15 November 2026). The senior author: machine-written answers "should be published

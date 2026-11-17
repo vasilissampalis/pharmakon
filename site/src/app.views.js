@@ -245,11 +245,13 @@ function routeTo() {
     return;
   }
   // a page of sections: #methods, #methods/part-m-search (the text pages), #numbers/part-n-europe (the statistics)
-  const sp = h.match(/^(howto|methods|about|numbers)(?:\/(part-[a-z0-9-]+))?$/);
+  // (2.15.3) a figure has its own address: #numbers/part-n-europe/f-death-heroin opens Europe on heroin, at the deaths. Before, only a tap on Insight's
+  // own row carried the drug and the kind; the same answer opened from "Your questions" showed the place with all drugs, at the top.
+  const sp = h.match(/^(howto|methods|about|numbers)(?:\/(part-[a-z0-9-]+))?(?:\/(f-[a-z]+-[a-z0-9-]*))?$/);
   if (sp) {
     const view = sp[1], page = document.querySelector("#view-" + view + " .secpage"), was = page && document.getElementById("view-" + view).classList.contains("active") ? openSec(page) : "";
     show(view); setTitle(PAGE_TITLES[view]);
-    if (view === "numbers") { showNumbers(sp[2] || "", { first, was }); return; }
+    if (view === "numbers") { if (sp[3]) numFocus(sp[2], sp[3]); showNumbers(sp[2] || "", { first, was }); return; }
     if (page) secGo(page, view, sp[2] || "", { first, was }); else { window.scrollTo({ top: 0 }); if (!first) focusHeading(view); }
     return;
   }
@@ -657,6 +659,19 @@ function figBars(rows, kind) {
         '</ul><p class="fb-s">' + esc(figSrc(r0)) + (r0.unit === "percent" ? " · share of people" : " · numbers of " + esc(figVal(r0).u || r0.unit)) + "</p></figure>"; }).join("");
 }
 const NUM_SUB = {};   // the drug chosen in each place
+function numSlug(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+// the figures an address names: that place shows that drug, and the page stands at that kind of count
+function numFocus(part, f) {
+  const file = String(part || "").replace(/^part-n-/, ""), m = /^f-([a-z]+)-(.*)$/.exec(f || ""); if (!m || !file) return;
+  const kind = m[1], sub = [...new Set(EPI_ALL.filter(r => r.file === file && r.status === "verified").map(r => r.substance))].find(x => numSlug(x) === m[2]) || "";
+  NUM_SUB[file] = sub; let n = 0;
+  const show = () => { const sec = document.getElementById("n-" + file), b = sec && sec.querySelector(".sec-b");
+    if (!b || !b.children.length || sec.hidden) { if (n++ < 50) setTimeout(show, 100); return; }
+    const sel = document.getElementById("num-sub-" + file); if (sel && sel.value !== sub) b.innerHTML = numPlaceHtml(file);
+    const name = (FIG_KINDS.find(x => x[0] === kind) || [])[1], h = name && [...sec.querySelectorAll("h3.tp")].find(x => x.textContent.indexOf(name) === 0);
+    if (h) { scrollToEl(h); h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } };
+  setTimeout(show, 80);
+}
 function numPlaceHtml(g) {
   const all = EPI_ALL.filter(r => r.file === g && r.status === "verified"), sub = NUM_SUB[g] || "", rows = all.filter(r => !sub || r.substance === sub);
   const counts = {}; all.forEach(r => { counts[r.substance] = (counts[r.substance] || 0) + 1; });

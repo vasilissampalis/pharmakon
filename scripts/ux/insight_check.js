@@ -287,8 +287,12 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
       const f3 = await ask("how many mg of mdma do people take");
       ok(w + ": “how many mg of mdma do people take” asks for an amount, not a count of people: no figure, the line on doses", !f3.routes.some(r => r.kind === "figure") && f3.routes.some(r => r.kind === "dose"), JSON.stringify(f3.routes));
       await ask("how many people die from heroin"); await p.click('#search-results a.sr-route[data-ins-route="figure"]'); await p.waitForTimeout(1500);
-      const arr = await p.evaluate(() => { const g = location.hash.replace("#numbers/part-n-", ""), sel = document.getElementById("num-sub-" + g), a = document.activeElement; return { hash: location.hash, sub: sel ? sel.value : "", at: a ? a.textContent.slice(0, 20) : "", view: document.getElementById("view-numbers").classList.contains("active") }; });
-      ok(w + ": its row opens the statistics page at that place, with that drug's figures chosen, at “Deaths”", arr.view && /^#numbers\/part-n-/.test(arr.hash) && arr.sub === "heroin" && /^Deaths/.test(arr.at), JSON.stringify(arr));
+      const arr = await p.evaluate(() => { const g = location.hash.replace("#numbers/part-n-", "").replace(/\/f-.*$/, ""), sel = document.getElementById("num-sub-" + g), a = document.activeElement; return { hash: location.hash, sub: sel ? sel.value : "", at: a ? a.textContent.slice(0, 20) : "", view: document.getElementById("view-numbers").classList.contains("active") }; });
+      ok(w + ": its row opens the statistics page at that place, with that drug's figures chosen, at “Deaths”", arr.view && /^#numbers\/part-n-[a-z]+\/f-death-heroin$/.test(arr.hash) && arr.sub === "heroin" && /^Deaths/.test(arr.at), JSON.stringify(arr));
+      // (2.15.3) the address alone does the same (the senior author opened the answer from “Your questions” and stood before every drug's figures, at the top)
+      await p.goto(BASE + "home"); await p.waitForTimeout(300); await p.goto(BASE + arr.hash.slice(1)); await p.waitForTimeout(1600);
+      const arr2 = await p.evaluate(() => { const g = location.hash.replace("#numbers/part-n-", "").replace(/\/f-.*$/, ""), sel = document.getElementById("num-sub-" + g), a = document.activeElement; return { sub: sel ? sel.value : "", at: a ? a.textContent.slice(0, 20) : "" }; });
+      ok(w + ": a figure's own address opens the same place, drug and kind, however it is reached", arr2.sub === "heroin" && /^Deaths/.test(arr2.at), JSON.stringify(arr2));
       await p.evaluate(() => { location.hash = "#home"; }); await p.waitForTimeout(600); }
     // (2.12) a page our system started (people asked about a drug that had no page): a question that names it is shown the way to that
     // page and is never called "not about drugs"; its name alone finds the page; asked what it looks like, its pictures are the answer.
@@ -341,9 +345,9 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
       return { mark: (h.querySelector(".ins-mark") || {}).textContent || "", h1: (h.querySelector("h1") || {}).textContent || "", inHero: !!h.querySelector("#search"), tall: r.height, cap: c.width, capBg: getComputedStyle(cap).backgroundColor, bg: getComputedStyle(s).backgroundColor,
         tries: [...h.querySelectorAll(".ins-try button")].filter(b => b.offsetParent).map(b => b.dataset.try), pill: !!cap.querySelector(".ic-pill") && getComputedStyle(cap.querySelector(".ic-pill")).display !== "none" && getComputedStyle(cap.querySelector(".ic")).display === "none" }; });
     await shot("hero");
-    ok(w + ": the first screen is Insight: “Pharmakon Insight”, the question, and the box as a capsule (a coloured cap with the site's mark, at least 56px tall), with things to try under it",
-      hero.mark.replace(/\s+/g, " ").trim() === "Pharmakon Insight" && hero.h1 === "What do you want to know?" && hero.inHero && hero.tall >= 56 && hero.cap >= 56 && hero.capBg !== hero.bg && hero.pill && hero.tries.length >= 3, JSON.stringify(hero));
-    await p.click('#insight-hero .ins-try button[data-try="are drugs legal in greece"]'); await p.waitForTimeout(1700);
+    ok(w + ": the first screen is Insight: “Pharmakon Insight”, the question, and the box as a capsule (a coloured cap with the site's mark, at least 56px tall), and no example questions under it (2.15.3, at the senior author's word)",
+      hero.mark.replace(/\s+/g, " ").trim() === "Pharmakon Insight" && hero.h1 === "What do you want to know?" && hero.inHero && hero.tall >= 56 && hero.cap >= 56 && hero.capBg !== hero.bg && hero.pill && hero.tries.length === 0, JSON.stringify(hero));
+    await p.fill("#search", "are drugs legal in greece"); await p.waitForTimeout(1700);
     const tried = await snap();
     ok(w + ": pressing a thing to try asks it: “are drugs legal in greece” is in the box and its answer is shown", tried.value === "are drugs legal in greece" && tried.open && tried.routes.length === 1 && tried.routes[0].kind === "law", tried.value + " | " + JSON.stringify(tried.routes));
     // (2.9.1) a drug's name with a letter wrong is read as the name, and the page says what it read
@@ -470,10 +474,17 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     const o1 = await sheet(); ui += " " + await uiText(); await shot("sheet-one-answer");
     ok(w + ": a row tapped opens that one answer at once: no guess, no emergency line; the short answer, its rating, the evidence, the way to its page, and up to 3 next questions", o1 && o1.title === Q0 && !o1.guess && !o1.sos && o1.single && o1.single.short && o1.single.bars && o1.single.ev && o1.single.how === false &&
       o1.single.page.toLowerCase().startsWith("see it on the " + K0.toLowerCase() + " page") && o1.nextLabel === "People also ask" && o1.next.length >= 1 && o1.next.length <= 3 && !o1.searchOpen && !o1.moving.length, o1 ? JSON.stringify({ title: o1.title, single: o1.single, next: o1.next, moving: o1.moving }) : "no sheet");
-    await p.click("#evsheet .ins-ans a.ask-ev"); await p.waitForFunction(() => document.querySelector("#evsheet.open") && !document.querySelector("#evsheet .ins") && !document.querySelector("#evsheet .loading"), null, { timeout: 15000 }).catch(() => {});
+    // (2.15.3; the senior author: "the sources should just come down and when I click on 'See the evidence' again they should hide") the evidence unfolds under the answer, in place
+    await p.click("#evsheet .ins-ans a.ask-ev"); await p.waitForSelector("#evsheet .ins-ans .ask-srcs li.ev-src", { timeout: 15000 }).catch(() => {});
+    const srcs = await p.evaluate(() => { const b = document.querySelector("#evsheet .ins-ans .ask-srcs"); return { n: b ? b.querySelectorAll("li.ev-src").length : 0, ins: !!document.querySelector("#evsheet .ins .ins-ans"), exp: document.querySelector("#evsheet .ins-ans a.ask-ev").getAttribute("aria-expanded"), all: b ? (b.querySelector(".ask-srcs-all a") || {}).textContent : "" }; });
+    await p.click("#evsheet .ins-ans a.ask-ev"); await p.waitForTimeout(200);
+    const shut = await p.evaluate(() => !document.querySelector("#evsheet .ins-ans .ask-srcs"));
+    ok(w + ": “The evidence” unfolds the sources under the answer, which stays where it is; a second tap folds them away; the whole research view is one link further", srcs.n >= 1 && srcs.ins && srcs.exp === "true" && /All the scientific detail/.test(srcs.all || "") && shut, JSON.stringify([srcs, shut]));
+    await p.click("#evsheet .ins-ans a.ask-ev"); await p.waitForSelector("#evsheet .ins-ans .ask-srcs-all a", { timeout: 15000 }).catch(() => {});
+    await p.click("#evsheet .ins-ans .ask-srcs-all a"); await p.waitForFunction(() => document.querySelector("#evsheet.open") && !document.querySelector("#evsheet .ins") && !document.querySelector("#evsheet .loading"), null, { timeout: 15000 }).catch(() => {});
     await p.click("#evsheet .ev-back"); await p.waitForTimeout(300);
     const back = await p.evaluate(() => ({ open: !!document.querySelector("#evsheet.open"), ins: !!document.querySelector("#evsheet .ins .ins-ans"), title: (document.getElementById("ev-title") || {}).textContent }));
-    ok(w + ": the evidence opened from the answer comes back to it with Back", back.open && back.ins && back.title === Q0, JSON.stringify(back));
+    ok(w + ": the whole research view opened from the answer comes back to it with Back", back.open && back.ins && back.title === Q0, JSON.stringify(back));
     const run = [REAL[0][1]];
     for (let i = 0; i < 3; i++) {
       const nx = await p.evaluate(() => { const a = document.querySelector("#evsheet .ins-next a[data-insight-next]"); return a ? a.dataset.insightNext : null; }); if (!nx) break;

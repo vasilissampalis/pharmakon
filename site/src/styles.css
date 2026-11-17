@@ -2556,3 +2556,36 @@ details.ask:not([open]) > summary { min-height: 56px; padding-top: 11px; padding
 
 /* (2.15.2) the reader's own list: how long ago a question was sent */
 .aq-ago { font-weight: 400; color: var(--muted); }
+
+/* ---------- Site 2.15.3 (17 November 2026) ---------- */
+/* the name of the page at the start of a row of parts no longer stays in front of the row: it covered the parts that passed under it
+   ("'Statistics' with the back arrow is in front of the menu and covers a word behind it that I may want to read") */
+.secmenu.on .sm-up { position: static; box-shadow: none; }
+/* a waiting question's line: one flow of words, nothing in columns, nothing under the close button */
+.aq-k { display: block; line-height: 1.4; }
+.aq-k .ic { display: inline-block; vertical-align: -3px; margin-right: 6px; }
+/* the evidence under an answer */
+.ask-ev[aria-expanded="true"] .ic { transform: rotate(90deg); }
+.ask-srcs { margin: 10px 0 2px; padding-top: 10px; border-top: 1px solid var(--line); }
+.ask-srcs-h { margin: 0 0 6px; font-weight: 800; font-size: 0.95rem; }
+.ask-srcs .ev-refs { margin: 0; }
+.ask-srcs-all { margin: 10px 0 0; font-size: 0.9rem; }
+.ask-srcs-all a { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: var(--muted); font-weight: 600; }
+.ask-srcs-all .ic { width: 15px; height: 15px; }
+/* past searches: quiet */
+.hist-box { margin: 10px 0 0; }
+details.hist > summary { display: inline-flex; align-items: center; min-height: 40px; cursor: pointer; font-size: 0.86rem; font-weight: 600; color: var(--muted); list-style: none; }
+details.hist > summary::-webkit-details-marker { display: none; }
+details.hist > summary::after { content: "\25BE"; margin-left: 6px; }
+details.hist[open] > summary::after { content: "\25B4"; }
+.hist-n { margin: 0 0 6px; font-size: 0.82rem; color: var(--muted); }
+details.hist ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.hist-q { width: 100%; min-height: 40px; padding: 6px 0; border: 0; background: none; font: inherit; font-size: 0.95rem; color: var(--fg); text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.hist-q:hover { text-decoration: underline; }
+.hist-c { margin: 6px 0 0; font-size: 0.86rem; }
+/* a machine-written answer in the results: its line "Written by our system ..." took the whole first row and squeezed the drug's name into
+   a column one letter wide (K, E, T, A ... one under the other on a phone). The line has its own row, last. */
+.search-results a.sr-ans.sr-auto { grid-template-areas: "k k" "t t" "a a" "m m"; }
+.search-results a.sr-ans.sr-auto .m { justify-self: start; }
+.hist-off { margin: 0; font-size: 0.84rem; }
+.hist-off .linklike { color: var(--muted); min-height: 40px; }
