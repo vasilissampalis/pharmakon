@@ -301,6 +301,9 @@ const INS_RE = {
   law: new RegExp(["\\b(?:is|are|isn'?t|aren'?t|was|were)\\b[^?.!]{0,50}\\b(?:legal(?! highs?\\b)|illegal|lawful|unlawful|banned|prohibited|outlawed|decriminali[sz]ed|criminali[sz]ed|controlled|allowed by law)\\b",
     "\\b(?:legal status|legality|drug laws?|the law|laws? (?:on|about|for|in|around|regarding)|penalt(?:y|ies)|(?:go|goes|going|went|sent|get) to (?:jail|prison)|(?:jail|prison) time|arrested for|get arrested|caught with|possession)\\b"].join("|"), "i"),
   lawNot: /^(?:why|when|who|should|shouldn'?t|how come|since when)\b/i,
+  // (2.10.2) a greeting, and a question about the site itself: each has a line of its own, and nothing to send
+  greet: /^(?:hi|hello|hey|yo|hiya|good (?:morning|evening|afternoon)|thanks|thank you|thx|ok|okay|test|testing)(?: (?:there|you|test|testing|pharmakon))*[.!? ]*$/i,
+  about: /^(?:(?:who|what|how|where|why) (?:are|is|made|created|built|were) (?:you|this|this site|this website|pharmakon|insight|pharmakon insight)|what can you do|what do you do|how do you work|how does (?:this|it|insight|this site) work|are you (?:real|human|a human|a person|a robot|an ai|ai|a bot|a chatbot|chatgpt|there)|what(?:'s| is) your name|who am i talking to)[.!? ]*$/i,
   lawc: /\b(?:legal(?! highs?\b)|illegal|laws?|allowed|permitted|ok|okay|strict|tolerated|decriminali[sz]ed|banned)\b/i,
   lawPlain: /\b(?:legal|illegal|lawful|unlawful|banned|prohibited|outlawed|decriminali[sz]ed|criminali[sz]ed|controlled substance|controlled|allowed|permitted|legal status|legality|laws?|the law)(?:\s+(?:in|at|on|for|here|there|where|anywhere|everywhere|now|yet|today|still)\b[^?.!]*)?\s*[?.!]*$/i,
   nums: /\b(?:emergency|ambulance|poisons? (?:control|cent(?:er|re)|line|information)|helpline|hotline|crisis line)\b[^?.!]{0,40}\b(?:numbers?|lines?|phone|call)\b|\b(?:what|which) number\b|\bwho (?:do|should|can) (?:i|we|you) call\b|\bnumber (?:to|do i|should i) call\b/i,
@@ -686,7 +689,10 @@ async function insRank(query, ctx) {
   // not checked yet
   if (!res.best.length && !answered) {
     res.note = unf ? "unfinished" : res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
-    if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); } else if (res.note === "other") res.stranger = insStranger(res.core);
+    if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); }
+    else if (res.note === "other" && INS_RE.greet.test(res.core)) res.note = "hello";
+    else if (res.note === "other" && INS_RE.about.test(res.core)) res.note = "about";
+    else if (res.note === "other") res.stranger = insStranger(res.core);
   }
   res.ms = performance.now() - t0; INS.times.push(res.ms);
   return res;
@@ -741,6 +747,10 @@ function insNoneHtml(res, sheet) {
     return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="#wanted">See the whole list ' + icon("arrow") + "</a></div>"
       : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> A question like yours is <a href="#wanted">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
   }
+  // (2.10.2) a greeting, and a question about the site itself
+  if (res.note === "hello" || res.note === "about") { const t = insHelloText(res.note);
+    return sheet ? '<div class="ins-none ins-hello"><p class="ins-none-t">' + esc(t[0]) + '</p><p class="ins-none-s">' + esc(t[1]) + (res.note === "about" ? ' <a href="#about">About us</a>' : "") + "</p></div>"
+      : '<p class="sr-fit-none sr-hello"><b>' + esc(t[0]) + "</b> " + esc(t[1]) + (res.note === "about" ? ' <a href="#about">About us</a>' : "") + "</p>"; }
   if (res.note === "language") { const el = res.greek ? " Προς το παρόν διαβάζουμε ερωτήσεις μόνο στα αγγλικά." : "";
     return sheet ? '<div class="ins-none ins-lang"><p class="ins-none-t">Pharmakon reads questions in English for now.</p><p class="ins-none-s">Please ask in English.' + el + "</p></div>" : '<p class="sr-fit-none sr-lang"><b>Pharmakon reads questions in English for now.</b> Please ask in English.' + el + "</p>"; }
   // (2.9.2; the senior author opened a question he had sent and was offered to send it again) a question already sent says so
@@ -763,6 +773,8 @@ function insNoneHtml(res, sheet) {
 }
 // 2.9: what a question that is not finished is told: [the line, what to do]. With no drug named: which drug is meant;
 // with one (or on its page): go on about it
+const insHelloText = kind => kind === "hello" ? ["Hello.", "Ask a question about a drug and Insight will look: for example, “is ketamine addictive?”"]
+  : ["This is Pharmakon Insight.", "It reads your question on your own device and finds the answer on this site. No person and no chatbot replies to you. Ask about a drug: for example, “is ketamine addictive?”"];
 function insUnfinText(res) {
   if (!res.groups.length) return res.cue === false ? ["Go on.", "Finish your question and we will look."] : ["Which drug do you mean?", "Finish your question with its name and we will look."];
   const one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
@@ -788,6 +800,7 @@ function insSay(res) {
   else if (res.note === "want") parts.push("Not answered yet. A question like yours is on our list: " + res.want.q);
   else if (res.note === "unfinished") parts.push(insUnfinText(res).join(" ").replace(/\.$/, ""));
   else if (res.note === "language") parts.push("Pharmakon reads questions in English for now. Please ask in English");
+  else if (res.note === "hello" || res.note === "about") parts.push(insHelloText(res.note).join(" "));
   else if ((res.note === "none" || res.note === "other") && askedSentHas(res.q)) parts.push("You sent us this question. No answer yet");
   else if (res.note === "other") parts.push(res.stranger ? "We do not know \u201c" + res.stranger + "\u201d as a drug. If it is one, you can send us your question" : "This does not look like a question about drugs. Pharmakon answers questions about drugs");
   else if (res.note) parts.push("We haven’t checked exactly this yet");
@@ -804,7 +817,7 @@ function insInject(box, res) {
   if (none) none.remove();                                     // Insight has its own line for a question with no checked answer
   if (ask && (res.note || !box.querySelector(":scope > a"))) ask.remove();   // one way to ask us, not two (and none for what we do not answer)
   if (res.note === "blocked") box.querySelectorAll(":scope > a").forEach(a => { if (!/^#s-[a-z0-9-]+$/.test(a.getAttribute("href") || "")) a.remove(); });
-  if (res.note === "other") box.querySelectorAll(":scope > a").forEach(a => a.remove());   // 2.5: not about drugs by its words: one calm line, no rows found by a stray word
+  if (res.note === "other" || res.note === "hello" || res.note === "about") box.querySelectorAll(":scope > a").forEach(a => a.remove());   // 2.5: not about drugs by its words: one calm line, no rows found by a stray word
   const note = box.querySelector(":scope > .sr-note");
   if (note) note.insertAdjacentHTML("afterend", insFitHtml(res)); else box.insertAdjacentHTML("afterbegin", insFitHtml(res));
   // the word search's own rows follow under a quiet label, so that none reads as part of the best match or the related answers
@@ -819,7 +832,11 @@ function insInject(box, res) {
    cocaine"), the page says so in place of "No match … Ask us": a beginning is not sent. A drug's name alone keeps its rows. */
 function insShort(box, q) {
   if (!INS.unfin || !q) return;
-  const text = insSpell(q).text, groups = insNamed(text), drug = groups.length ? null : insCtx().drug, unf = insUnfinished(text, !!drug); if (!unf) return;
+  const text = insSpell(q).text, groups = insNamed(text), drug = groups.length ? null : insCtx().drug, unf = insUnfinished(text, !!drug);
+  // a greeting of one or two words ("hello", "thank you"): its own line, in place of "No match"
+  if (!groups.length && !drug && INS_RE.greet.test(q) && !box.querySelector(":scope > a")) { box.querySelectorAll(":scope > .sr-ask, :scope > .none").forEach(e => e.remove());
+    box.insertAdjacentHTML("afterbegin", '<div class="sr-fit" data-q="' + esc(q) + '">' + insNoneHtml({ q, note: "hello" }, false) + "</div>"); const l = document.getElementById("search-count"); if (l) l.textContent = insHelloText("hello").join(" "); return; }
+  if (!unf) return;
   box.querySelectorAll(":scope > .sr-ask, :scope > .none").forEach(e => e.remove());
   if (groups.length && insUnfTokens(text).w.every(x => x === "it")) return;            // the name and nothing more: its rows are the answer
   const res = { q, note: "unfinished", unf, groups: groups.length ? groups : drug ? [[drug]] : [] }; if (!res.groups.length) res.cue = insUnfCue(text);

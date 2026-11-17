@@ -58,7 +58,9 @@ const CIRC = [["do gay people", "Go on.", /Finish your question and we will look
   ["how long does the high", "Go on.", /Finish your question and we will look\./, false], ["does smoking weed", "Go on.", /Finish your question about cannabis and we will look\./, false],
   ["what is mytragina javanica", "We do not know “mytragina javanica” as a drug.", /If it is one, send us your question and we will look into it\./, true],
   ["είναι ασφαλές το MDMA", "Pharmakon reads questions in English for now.", /Please ask in English\. Προς το παρόν διαβάζουμε ερωτήσεις μόνο στα αγγλικά\./, false],
-  ["является ли кокаин опасным", "Pharmakon reads questions in English for now.", /Please ask in English\.$/, false]];
+  ["является ли кокаин опасным", "Pharmakon reads questions in English for now.", /Please ask in English\.$/, false],
+  ["who are you", "This is Pharmakon Insight.", /finds the answer on this site\. No person and no chatbot replies to you\. Ask about a drug: for example, “is ketamine addictive\?” About us$/, false], ["are you an ai", "This is Pharmakon Insight.", /reads your question on your own device/, false],
+  ["hello there pharmakon", "Hello.", /Ask a question about a drug and Insight will look: for example, “is ketamine addictive\?”$/, false]];
 const MIX = "can i mix molly and alcohol", DOSE = "how much mdma should i take", HELP = "my friend took ketamine and is not breathing what do i do", TEST = "how do i test my mdma", BUY = "where can i buy mdma online";
 // Each route has its test: questions that must take it, and questions close to it that must not ("" = no route). A third
 // item is the drug page the question is asked on.
