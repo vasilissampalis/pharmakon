@@ -80,7 +80,7 @@ WANTED = ROOT / "data" / "auto" / "papers-wanted.json"
 MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast", "checker": "@cf/openai/gpt-oss-120b"}
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
-LANE = 13               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 14               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -492,6 +492,7 @@ def plain_what(what, show, text):
     def carried(w):
         w = w.lower().replace("-", " ")
         if "risk" in w: return bool(re.search(w[:3] + r"\w*\s*risk", base))
+        if w.startswith("safe"): return bool(re.search(r"\bsafe(?:ly)?\b", base))          # (lane 14) "do not raise safety concerns" does not call the amount safe
         return ("guid" if w.startswith("guid") else w[:5]) in base
     if all(carried(m.group(1)) for m in CALLS_IT.finditer(what)): return what
     r = {m.group(0).lower()[:3] for m in RATE.finditer(show)}
@@ -607,7 +608,24 @@ def spelled(who, known=None):
     return re.sub(r"\b([A-Z]{2,6})s?\b", full, who)
 
 
-def amount_gate(out, picked, src, dwords):
+POINTS_LOW = re.compile(r"\blow(?:er)?[- ]risks?\b|\bsafe(?:ly)?\b|\bmoderate\w*|\bto a low level\b|\bdo(?:es)? not (?:raise|give rise to)\b|\bavoid\w*\s+(?:[\w-]+\s+){0,2}(?:consequences|harms?)\b", re.I)
+POINTS_HIGH = re.compile(r"\bhigh(?:er)?[- ]risks?\b|\bincreasingly high\b|\bheavy\b|\bbinge\b|\bharmful\b|\bhazardous\b|\bexcessive\b|\bincreas\w+\s+(?:the\s+|your\s+)?risks?\b|\brisks?\b[^.;]{0,60}\bincreas\w+", re.I)
+
+
+def other_way(question, sentence):
+    """(lane 14) Does the amount's own sentence point the other way than the question asks? A question about what is called low-risk,
+    safe or moderate is not answered by a sentence about high risk, heavy or binge drinking that has no word of the question's
+    kind, and the reverse: "6 or fewer drinks/wk helps avoid increasingly high risks" was shown under "How much do health bodies
+    call low-risk drinking?" (the page calls 1 to 2 low risk and 3 to 6 moderate). The second reader judges this too (its
+    "on_question"); here the plain case is refused in code. Returns why, or ""."""
+    q_low, q_high = bool(POINTS_LOW.search(question or "")), bool(POINTS_HIGH.search(question or ""))
+    s_low, s_high = bool(POINTS_LOW.search(sentence or "")), bool(POINTS_HIGH.search(sentence or ""))
+    if q_low and not q_high and s_high and not s_low: return "its sentence speaks of high risk, and the question asks what is called low-risk, safe or moderate"
+    if q_high and not q_low and s_low and not s_high: return "its sentence speaks of what is low-risk or safe, and the question asks about high risk"
+    return ""
+
+
+def amount_gate(out, picked, src, dwords, question=None):
     """The rows of a reader's answer that may be used: (rows, what was thrown away and why). A row is kept when its quote
     stands in a passage that was shown, holds a number with its unit, is about people and not about harm, a product or a
     level in the blood, when the passage or the source's title names the drug, when who received it and under what care
@@ -643,6 +661,7 @@ def amount_gate(out, picked, src, dwords):
                "who or what is missing, or too long" if not (who and what and words(who) <= 30 and words(what) <= 20) else
                "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood" if NOT_AN_AMOUNT_FOR_PEOPLE.search(q) or NOT_AN_AMOUNT_FOR_PEOPLE.search(ours) or NOT_AN_AMOUNT_FOR_PEOPLE.search(sent) else
                "an amount added in the same session" if REDOSE.search(q + " " + ours + " " + sent) else
+               other_way(question, sent) if question and other_way(question, sent) else
                "who names no people" if not PEOPLE.search(who) else
                "an amount in our own words for who or what" if AMT.search(ours) else
                "a number in who or what that is not in the passage" if not numbers(ours) <= numbers(p["text"]) else
@@ -662,7 +681,7 @@ def amount_gate(out, picked, src, dwords):
 
 def read_amounts(chat, model, question, src, picked, dwords):
     out = ask_json(chat, model, READER_SYS, amounts_prompt(question, src, picked, list(dwords)), room_for(model, 1200))
-    return amount_gate(out, picked, src, dwords) if out is not None else ([], [{"why": "the reader gave no JSON"}])
+    return amount_gate(out, picked, src, dwords, question) if out is not None else ([], [{"why": "the reader gave no JSON"}])
 
 
 # ---------- 3 write ----------
@@ -1262,11 +1281,21 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     sources, tags, thrown, ref_ids = [], "ABCDEFGHIJKL" if amounts else "ABCDEFGH", 0, set()      # (lane 11) twelve sources at most for a question about amounts: six official pages have room beside the papers
     looked = rec["looked"] = []                                         # every source the reader was given, with what was thrown away and why (for the editor)
     QV = enc([item["q"]] + list(item.get("ways") or [])[:6])
+    def by_reader(fn, *a):
+        """(lane 14) The reader's call. A reader of a free service that is busy or used up must not cost the answer: the team's other reader
+        ("reader_2": a team's reader_else, or its reader) reads from there on, and the record says so."""
+        try: return fn(chat, models["reader"], *a)
+        except (llm.Unavailable, llm.Budget) as e:
+            alt = models.get("reader_2")
+            if not alt or alt == models["reader"] or "larger than Groq's free plan allows" in str(e): raise
+            rec["gates"]["reader"] = f"{base(models['reader'])} could not read on ({re.sub(r'[ \t\n]+', ' ', str(e))[:140]}): {base(alt)} read from there"
+            rec["made"]["models"].update(reader=alt, reader_first=models["reader"]); models["reader"], models["reader_2"] = alt, ""
+            return fn(chat, alt, *a)
     def read(src, picked):
         nonlocal thrown
-        if amounts: rows, dropped = read_amounts(chat, models["reader"], item["q"], src, picked, dwords); src["rows"] = rows; ok = bool(rows); src.update(design=None, findings=[], limits=[])
+        if amounts: rows, dropped = by_reader(read_amounts, item["q"], src, picked, dwords); src["rows"] = rows; ok = bool(rows); src.update(design=None, findings=[], limits=[])
         else:
-            design, fs, ls, dropped = read_source(chat, models["reader"], item["q"], src, picked)
+            design, fs, ls, dropped = by_reader(read_source, item["q"], src, picked)
             if len(fs) > N_TO_WRITER:                                    # the nearest to the question, in the order they stand in the source
                 near = (enc([f["text"] for f in fs]) @ QV.T).max(1); keep = sorted(sorted(range(len(fs)), key=lambda i: -float(near[i]))[:N_TO_WRITER]); fs = [fs[i] for i in keep]
             if len(ls) > 1: ls = [ls[int((enc([l["text"] for l in ls]) @ QV.T).max(1).argmax())]]      # one limit: the one nearest the question
@@ -1593,7 +1622,7 @@ def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|g
 CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1, "also": 3, "also#marks": 15}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
 
 
-def team(file=None):
+def team(file=None, only=None):
     """The models for the next answer: the first team of data/auto/lane/models.json whose services have a key on this
     machine and room left today (two free services, each with its own day's allowance: Cloudflare Workers AI in neurons,
     Groq in tokens for each model). A team names a reader, a writer and a second reader; "reader_else" and "checker_else"
@@ -1602,6 +1631,7 @@ def team(file=None):
     try: mf = json.load(open(file or MODELS_FILE, encoding="utf-8"))
     except (OSError, ValueError): mf = {}
     for t in mf.get("teams") or [{k: mf.get(k) or MODELS[k] for k in MODELS}]:
+        if only and t.get("name") != only: continue                        # (a request may name its team: a new reader is tried on a question or two before it stands in the order)
         planners = [p for p in dict.fromkeys([t.get("planner"), t.get("planner_else")]) if isinstance(p, str) and p and base(p) != base(t.get("writer") or "")] or [None]
         for reader in dict.fromkeys([t.get("reader"), t.get("reader_else")]):
             for checker in dict.fromkeys([t.get("checker"), t.get("checker_else")]):
@@ -1629,7 +1659,8 @@ def team(file=None):
                     if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
                     if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
                     if not llm.calls_fit(calls): continue                   # (each model of a call-counted service has its own free allowance: llm.limits_of)
-                    return dict(m, team=t.get("name") or "")
+                    other = next((r for r in (t.get("reader"), t.get("reader_else")) if isinstance(r, str) and r and r != m["reader"] and llm.has(r) and base(r) not in (base(m["writer"]), base(m["checker"]))), None)
+                    return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}))
     return None
 
 
@@ -1647,7 +1678,7 @@ def fitting(chat):
     return ask
 
 
-def run(ids=None, limit=3, again=False, chat=None, enc=None):
+def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None):
     models = dict(MODELS); real = chat is None
     chat = fitting(chat or llm.chat)
     items = P.listed()
@@ -1675,7 +1706,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None):
         if own_err: print("lane: our own checker is in use and could NOT be run here: every answer of this run waits for the editor:", own_err)
     for w in order[:limit]:
         if real:
-            models = team()
+            models = team(only=only_team)
             if not models: print(f"lane: no team of models has room left today (Cloudflare: {llm.left():.0f} neurons left): it goes on tomorrow"); break
             print(f"lane: {models.get('team') or 'the models'}: {models['reader']} reads, {models['writer']} writes, {models['checker']} is the second reader")   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
         pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
@@ -1854,10 +1885,11 @@ def selftest():
     keep = (llm.has, llm.left, llm.groq_left); cf = [9000]; gq = {"openai/gpt-oss-120b": 180000, "openai/gpt-oss-20b": 180000, "qwen/qwen3.8-27b": 180000}; keys = {"groq": True, "cf": True}
     llm.has = lambda m: keys["groq"] if m.startswith("groq:") else keys["cf"]; llm.left = lambda: cf[0]; llm.groq_left = lambda n: gq.get(n, 0)
     try:
-        assert team(tf) == {"reader": "@cf/r", "writer": "groq:openai/gpt-oss-120b", "checker": "groq:qwen/qwen3.8-27b", "team": "A"}
+        assert team(tf) == {"reader": "@cf/r", "writer": "groq:openai/gpt-oss-120b", "checker": "groq:qwen/qwen3.8-27b", "team": "A", "reader_2": "groq:openai/gpt-oss-20b"}      # (lane 14: the team's other reader stands by)
+        assert team(tf, only="B")["team"] == "B" and team(tf, only="Z") is None                                               # (a request may name its team)
         cf[0] = 100; assert team(tf)["reader"] == "groq:openai/gpt-oss-20b" and team(tf)["team"] == "A"                    # Cloudflare's day is used up: the reader works at Groq
         gq["qwen/qwen3.8-27b"] = 1000; assert team(tf) is None                                                             # team A's second reader has no room, and team B's writer is at Cloudflare, which has none
-        cf[0] = 9000; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "groq:openai/gpt-oss-120b", "team": "B"}
+        cf[0] = 9000; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "groq:openai/gpt-oss-120b", "team": "B", "reader_2": "groq:openai/gpt-oss-20b"}
         keys["groq"] = False; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/openai/gpt-oss-120b", "team": "B"}   # no second service: every model at Cloudflare, as before
         cf[0] = 900; assert team(tf) is None
         assert base("groq:openai/gpt-oss-120b") == base("@cf/openai/gpt-oss-120b") == "gpt-oss-120b"
@@ -1865,7 +1897,7 @@ def selftest():
         tf.write_text(json.dumps({"teams": [{"name": "C", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "checker_else": "@cf/openai/gpt-oss-120b",
                                              "planner": "groq:openai/gpt-oss-120b", "planner_else": "@cf/openai/gpt-oss-120b"}]}), encoding="utf-8")
         keys["groq"] = True; cf[0] = 9000; gq.update({"qwen/qwen3.8-27b": 180000, "openai/gpt-oss-120b": 180000})
-        assert team(tf) == {"reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "planner": "groq:openai/gpt-oss-120b", "team": "C"}
+        assert {k: v for k, v in team(tf).items() if k != "reader_2"} == {"reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "planner": "groq:openai/gpt-oss-120b", "team": "C"}
         gq["openai/gpt-oss-120b"] = 20000; t = team(tf); assert t["checker"] == "groq:openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t      # room for the check (16,000) but not for the plan as well (7,000 more)
         gq["openai/gpt-oss-120b"] = 5000; t = team(tf); assert t["checker"] == "@cf/openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t
         # a team with further second readers is that team only with all of them: each needs a key and room, and is another model than the writer and the second reader
@@ -2117,6 +2149,23 @@ def selftest():
     assert plain_what("a safe single amount", "single doses of 200 mg", "single doses do not raise concerns") == "an amount for one occasion" and plain_what("amount in one session", "25 mg", "x") == "amount in one session" and plain_what("the safe amount", "400 mg", "x") == "an amount"
     assert "Begin with the amounts that answer the QUESTION most directly; ten items at most." in amounts_prompt("How much?", {"read": "page", "title": "T", "name": "N"}, [{"n": 1, "where": "W", "text": "x"}], ["caffeine"]) and "never borrow such a word from the QUESTION" in amounts_prompt("How much?", {"read": "page", "title": "T", "name": "N"}, [{"n": 1, "where": "W", "text": "x"}], ["caffeine"])
     assert "A limit for one day or for one occasion that the same guidance gives beside its weekly amount is of the kind asked." in checker_prompt([{"text": "x", "uses": ["R1"]}], {"R1": {"paper": "p", "where": "w", "passage_text": "t"}}, each="How much?")
+    # ---- lane 14: what the editor's reading of lane 13's two answers about amounts asked for (17 November 2026, 01:55 UTC) ----
+    lowq = "How much alcohol do health bodies call low-risk drinking?"
+    post = "Canada's Guidance on Alcohol & Health shows 6 or fewer drinks/wk helps avoid increasingly high risks for health issues."      # (a sample post on the body's page; the page calls 1 to 2 drinks low risk and 3 to 6 moderate: lane 13 showed it under the question about low-risk drinking)
+    assert other_way(lowq, post) and not other_way(lowq, "2 standard drinks or less per week: you are likely to avoid alcohol-related consequences for yourself or others at this level") and not other_way(lowq, "men and women are advised not to drink more than 14 units a week on a regular basis")
+    assert other_way("How much is heavy drinking?", "For men, two drinks or less in a day is moderate drinking") and not other_way("What amounts of psilocybin have studies given to people?", "a high dose (25 mg) raised the risk of headache") and not other_way("How much caffeine a day do health bodies call safe for adults?", "Intakes up to 400mg per day do not raise safety concerns for healthy adults")
+    g = amount_gate({"amounts": [{"passage": 1, "quote": "6 or fewer drinks/wk helps avoid increasingly high risks for health issues", "who": "people in Canada", "what": "weekly low-risk drinking guideline"}]}, [{"n": 1, "where": "Social media", "text": "A post that may be shared: " + post + " Read more on our site."}], {"read": "page", "title": "Canada's Guidance on Alcohol and Health"}, ["alcohol"], lowq)
+    assert not g[0] and "speaks of high risk" in g[1][0]["why"], g
+    assert plain_what("daily safe intake", "Intakes up to 400mg per day", "Intakes up to 400mg per day do not raise safety concerns for healthy adults FAQ Caffeine") == "an amount for a day" and plain_what("safe daily amount", "400 mg a day", "400 mg a day is considered safe for most adults") == "safe daily amount"      # "safety concerns" does not call the amount safe
+    # a reader that cannot be asked does not cost the answer: the team's other reader reads from there on, and the record says so
+    def chat_busy(model, messages, max_tokens=0):
+        if model == "gemini:gemma-x": raise llm.Unavailable("gemini answered 503: this model is in high demand")
+        return chat(model, messages, max_tokens)
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat_busy, Enc(), dict(MODELS, reader="gemini:gemma-x", reader_2=MODELS["reader"]), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and "gemma-x could not read on" in r["gates"]["reader"] and r["made"]["models"]["reader"] == MODELS["reader"] and r["made"]["models"]["reader_first"] == "gemini:gemma-x", (r["status"], r["why"], r["gates"].get("reader"))
+    try: make(item, found, chat_busy, Enc(), dict(MODELS, reader="gemini:gemma-x"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex); raise AssertionError("no reader, and no error")
+    except llm.Unavailable: pass
     # ---- lane 13: what the editor's reading of lane 12's three answers about amounts asked for (17 November 2026, 01:40 UTC) ----
     PG = lambda text, where="W": [{"n": 1, "where": where, "text": text}]
     # the parts of one quote never overlap, and a list the reader copied twice gives each amount once
@@ -2239,15 +2288,16 @@ if __name__ == "__main__":
     elif len(sys.argv) > 1 and sys.argv[1] == "requests":
         # the requests waiting in data/auto/requests (lane-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
         # A request is a file in the repository, written by the editor: read as data, never run.
-        ids, limit, again, any_req = [], 3, False, False
+        ids, limit, again, any_req, only_team = [], 3, False, False, None
         for f in sorted((ROOT / "data" / "auto" / "requests").glob("lane-*.json")):
             try: r = json.load(open(f, encoding="utf-8"))
             except ValueError: r = {}
             any_req = True; ids += [x for x in (r.get("ids") or []) if isinstance(x, str) and re.fullmatch(r"w_[a-z0-9_]{1,40}", x)]
             if isinstance(r.get("max"), int): limit = max(1, min(20, r["max"]))
             again = again or r.get("again") is True
+            if isinstance(r.get("team"), str) and re.fullmatch(r"[A-Za-z0-9 ]{1,24}", r["team"]): only_team = r["team"]      # ("team": "team G": only that team of data/auto/lane/models.json)
             f.unlink()
-        if any_req: run(ids=ids or None, limit=max(limit, len(ids)) if ids else limit, again=again)
+        if any_req: run(ids=ids or None, limit=max(limit, len(ids)) if ids else limit, again=again, only_team=only_team)
         else: print("lane: no request waiting")
     elif len(sys.argv) > 1 and sys.argv[1] == "run":
         a = sys.argv[2:]; opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d
