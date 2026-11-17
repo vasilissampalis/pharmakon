@@ -105,6 +105,8 @@ function insPrepare(d, vocabText) {
   INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
   INS.unfin = d.scope && d.scope.unfinished ? insUnfinRule(d.scope.unfinished, d.names.map(x => x[0])) : null;   // 2.9: is a question finished?
   INS.spell = d.scope && d.scope.spell && INS.unfin ? insSpellRule(d.scope.spell, d.scope.unfinished.names || []) : null;   // 2.9.1: a drug's name with a letter wrong
+  // 2.13: the places of the site, found by the meaning of a question (site/insight/places.json through the index: insWhere)
+  { const PL = d.places; INS.places = PL && PL.ids && PL.ids.length ? { ids: PL.ids, rows: PL.rows, meta: PL.meta, cut: PL.cut, near: PL.near, W: insRows(PL.W, d.dim) } : null; }
   INS.list = L && L.ids.length ? Object.assign({ ids: L.ids, q: L.q, rows: L.rows, cut: L.cut, near: L.near || [0, 0], W: insRows(L.W, d.dim), M: insRows(L.M, d.dim), S: insRows(L.S, d.dim),
     about: L.about.map(xs => new Set(xs.map(k => d.slugs[k]))) }, insWords(L.docs)) : null;
   // vocab.txt: one token a line, its line number its id (as the tokenizers library reads it)
@@ -392,7 +394,29 @@ const INS_PART_FILL = /\b(?:what|whats|what's|does|do|is|are|the|of|a|an|it|its|
 function insPartHas(slug, id) {
   const zone = z => drugQuestions(slug).some(([, , t]) => topicZone(t) === z);
   return id === "d-looks" ? (FORMS[slug] || []).some(x => x.name) : id === "d-quiz" ? mfCount(mfPagePool(slug)) >= 3 : id === "d-risk" ? zone("risk") : id === "d-feel" ? zone("feel") : id === "d-after" ? zone("after")
-    : id === "d-med" ? zone("med") : id === "d-mix" ? mixQuestions(slug).length > 0 : id === "d-law" ? LEGAL.some(d => d.substance === slug) : false;
+    : id === "d-med" ? zone("med") : id === "d-mix" ? mixQuestions(slug).length > 0 : id === "d-law" ? LEGAL.some(d => d.substance === slug)
+    : id === "d-kits" ? !NO_TEST.includes(slug) : id === "d-doses" ? !!dosesBody(slug) : false;
+}
+/* (2.13, 17 November 2026) A place of the site by the MEANING of a question. The senior author asked "how can i use test kits at
+   home" and was told "We haven't checked exactly this yet", although the site has a part on test kits to use at home: "i should
+   be answered and be given links etc and i think we already have info about that on the website. man we have to incorporate
+   every instance of human language it is still stupid". A place was found only by patterns of words (INS_PLACES, INS_RE): a
+   wording nobody had foreseen found nothing. Now every place has the ways people ask for what it holds (site/insight/places.json),
+   the build turns them into the model's numbers, and here the question (its drug names read as "it") is compared with every way:
+   the place of the nearest one is taken when it is near enough. An entry that is not a place ("does it show up on a drug test" is
+   not drug checking) leads nowhere when its way is the nearest. With one drug named, the same part of that drug's page.
+   Returns the route and how near it is (s), or null. Measured: scripts/insight/build_index.py --places. */
+const INS_PART_T = { "d-kits": s => "Test kits for " + pageWord(s) + ": what home tests can and can’t tell you", "d-doses": () => "We don’t list doses. These harm reduction groups do",
+  "d-law": s => "Is " + pageWord(s) + " legal where you are?", "d-looks": s => "What " + pageWord(s) + " looks like: every form", "d-mix": s => "Is it safe to mix " + pageWord(s) + " with other drugs?" };
+function insWhere(mv, groups) {
+  const X = INS.places; if (!X || !mv) return null;
+  const dim = INS.dim, n = X.ids.length, best = new Float32Array(n).fill(-1);
+  for (let k = 0, o = 0; k < X.rows.length; k++, o += dim) { let s = 0; for (let j = 0; j < dim; j++) s += mv[j] * X.W[o + j]; if (s > best[X.rows[k]]) best[X.rows[k]] = s; }
+  let i = 0; for (let j = 1; j < n; j++) if (best[j] > best[i]) i = j;
+  const m = X.meta[i], s = best[i]; if (m.none || s < X.near) return null;
+  const one = groups.length === 1 && groups[0].length === 1 && subBySlug[groups[0][0]] ? groups[0][0] : null;
+  if (m.part && one && INS_PART_T[m.part] && insPartHas(one, m.part)) return { kind: "part", icon: SEC_ICON[m.part] || m.icon, k: drugName(one), t: INS_PART_T[m.part](one), href: "#s-" + one + "/part-" + m.part, where: X.ids[i], s: +s.toFixed(4) };
+  return { kind: "go", icon: m.icon, k: m.k, t: m.t, href: m.href, where: X.ids[i], s: +s.toFixed(4) };
 }
 // the word of the glossary a question asks the meaning of ("what does tolerance mean", "define half-life", "bioavailability meaning"), or null
 function insTerm(q) {
@@ -782,13 +806,16 @@ async function insRank(query, ctx) {
   const answered = res.routes.some(r => r.kind !== "mix" && !r.loose), named = !res.drug && res.groups.length > 0, unf = insUnfinished(res.core, !!res.drug);
   if (!(whole && insWordsIn(res.core) < INS_WORDS)) {
     const drug = ctx && ctx.drug, tx = insTexts(res.core, drug), v = await insEmbed(tx.full), mv = tx.masked === tx.full ? v : await insEmbed(tx.masked);
-    const tiers = insTiers(insScore(v, mv, res.core), tx.groups);
+    const sc = insScore(v, mv, res.core), tiers = insTiers(sc, tx.groups);
+    Object.defineProperty(res, "sc", { value: { bw: sc.bw, topic: sc.topic }, enumerable: false });   // (2.13) how near every answer is in meaning: for the word search's rows (insInject)
     const row = c => ({ id: INS.ids[c.i], page: insPageOf(INS.ids[c.i], tx.groups, drug), plain: +c.plain.toFixed(4), topic: +c.topic.toFixed(4), off: !c.on });
     res.best = tiers.best.map(row); res.related = res.emergency ? [] : tiers.related.map(row);   // an emergency gets its route and the answers that fit, nothing nearby
     res.judge = { id: INS.ids[tiers.first.i], p: tiers.first.p, f: tiers.first.f };              // (for the checks: the first candidate and the judge's number for it)
     // 2.9: a question that is not finished and names no drug has no "best match": the answers found are ways to go on
     if (unf && !named && !answered && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
     if (!res.best.length && !answered && !unf) res.want = insWant(v, mv, res.core, tx.groups);   // 2.5: is it on our list?
+    // (2.13) nothing answers it yet: a place of the site that holds what is asked, found by meaning
+    if (!res.best.length && !answered && !unf && !res.want && !res.routes.some(r => r.named)) res.where = insWhere(mv, tx.groups);
   }
   // with no best match, say so, unless a route already is the answer to what was asked (help, a dose, a test, the drug's page).
   // 2.9: "unfinished", the question is not finished yet (unf says why); 2.5: "want", a question like it is on our list;
@@ -797,8 +824,14 @@ async function insRank(query, ctx) {
   // not checked yet
   if (!res.best.length && !answered) {
     // (2.11) with no checked answer: a place on the site that the question points towards, as a way on ("how many people use cocaine": Statistics)
-    if (!unf && !res.routes.length) { const drug1 = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null, way = insPlace(res.core, drug1, true); if (way) res.routes.push(way); }
+    if (!unf && !res.routes.length && !res.where) { const drug1 = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null, way = insPlace(res.core, drug1, true); if (way) res.routes.push(way); }
     res.note = unf ? "unfinished" : res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
+    // (2.13) the place found by meaning. A question about drugs: the place is the answer when it is very near (the index's 'cut'), else
+    // a place to look under the line for a question we have not checked. A question that is not about drugs by its words is a question
+    // about the site ("is my search private", "who checks this"): its place is the answer, in place of "not a question about drugs".
+    if (res.where && !res.routes.some(r => r.href === res.where.href) && !(res.note === "other" && (INS_RE.greet.test(res.core) || INS_RE.about.test(res.core)))) {
+      const sure = res.note === "other" || res.where.s >= INS.places.cut;
+      res.routes.push(sure ? res.where : Object.assign(res.where, { loose: true, way: true })); if (sure) res.note = ""; }
     if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); }
     else if (res.note === "none" && res.routes.some(r => r.named)) res.note = "";   // (2.11) a part of a drug's page asked for by name: the part is what we have
     else if (res.note === "other" && INS_RE.greet.test(res.core)) res.note = "hello";
@@ -912,7 +945,7 @@ function insFitHtml(res) {
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
   const none = insNoneHtml(res, false);
   const related = res.related.length ? '<p class="sr-fit-h">' + (res.note === "unfinished" ? "You may mean" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
-  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + related + (ways ? '<p class="sr-fit-h">A place to look</p>' + ways : "") + '<p class="sr-fit-h sr-words" hidden>More results</p></div>';
+  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + related + (ways ? '<p class="sr-fit-h">A place to look</p>' + ways : "") + '<button type="button" class="sr-fit-h sr-words" hidden aria-expanded="false">More results</button></div>';
 }
 // what a screen reader hears when the answers arrive: the route, the tier, the question matched
 function insSay(res) {
@@ -936,6 +969,11 @@ function insInject(box, res) {
   // (2.12) the question names a drug of a page our system started and no drug the site has checked answers on: the answers the
   // word search found are about other drugs (a stray word in common), and the page's own row is the route above
   if (res.routes.some(r => r.started) && !res.groups.length) box.querySelectorAll(":scope > a.sr-ans, :scope > a[href^='#auto/p-']").forEach(a => a.remove());
+  // (2.13; the senior author asked "How many people die from methamphetamine" and found the rows under "More results" "completely
+  // irrelevant ... this creates visual clutter") The word search finds an answer by a word in common ("people", "meth", "test"). Under
+  // Insight's own block such a row stays only when the answer is also near the question in meaning (the nearest of its wordings
+  // with the drug names taken out, INS_MORE or more); the others are taken out.
+  if (res.sc) box.querySelectorAll(":scope > a.sr-ans[data-cid]").forEach(a => { const i = INS.idx.get(a.dataset.cid); if (i == null || res.sc.topic[i] < INS_MORE) a.remove(); });
   box.querySelectorAll(":scope > a.sr-ans.best").forEach(a => { a.classList.remove("best"); const k = a.querySelector(".k"); if (k) k.textContent = k.textContent.replace(/^Best answer/, "Answer"); });
   const none = box.querySelector(":scope > .none"), ask = box.querySelector(":scope > .sr-ask");
   if (none) none.remove();                                     // Insight has its own line for a question with no checked answer
@@ -945,13 +983,24 @@ function insInject(box, res) {
   const note = box.querySelector(":scope > .sr-note");
   if (note) note.insertAdjacentHTML("afterend", insFitHtml(res)); else box.insertAdjacentHTML("afterbegin", insFitHtml(res));
   // the word search's own rows follow under a quiet label, so that none reads as part of the best match or the related answers
-  const words = box.querySelector(".sr-fit .sr-words"); if (words) words.hidden = !box.querySelector(":scope > a") || !(res.routes.length || res.best.length || res.related.length || res.note);
+  // (2.13; the senior author, of a question that got nine rows: "it should be much easier to find what I want this is so confusing I read so many
+  // things I don't want to read") What Insight found stands alone. The word search's own rows wait behind one quiet button, "More results (5)",
+  // and open on a tap; with nothing from Insight they are the results and stand open.
+  const words = box.querySelector(".sr-fit .sr-words"), more = [...box.querySelectorAll(":scope > a")], shown = !!(res.routes.length || res.best.length || res.related.length || res.note);
+  if (words) { words.hidden = !more.length || !shown;
+    if (!words.hidden) { more.forEach(a => { a.hidden = true; }); words.textContent = "More results (" + more.length + ")"; words.setAttribute("aria-expanded", "false");
+      words.onclick = e => { e.preventDefault(); e.stopPropagation(); const open = words.getAttribute("aria-expanded") !== "true"; more.forEach(a => { a.hidden = !open; }); words.setAttribute("aria-expanded", String(open)); words.textContent = (open ? "Fewer results" : "More results (" + more.length + ")"); }; } }
   const live = document.getElementById("search-count"); if (live) live.textContent = insSay(res);
   // 2.5: a listed question that stays on the screen is counted once (wantCount), only where its card says so
   clearTimeout(INS.wantT);
   if (res.note === "want") INS.wantT = setTimeout(() => { const b = document.getElementById("search-results"), s = document.getElementById("search");
     if (b && !b.hidden && s && insClean(s.value) === res.q && b.querySelector('.sr-want[data-count][data-want="' + res.want.id + '"]')) wantCount(res.want.id); }, WANT_WAIT);
 }
+// How near in meaning an answer the word search found must be to stay under "More results": the nearest of its wordings with the drug names taken out
+// (the same look that makes an answer "related"). Looked at on 17 November 2026: for "how many people die from methamphetamine" every row the word
+// search added was 0.37 or less (none was about dying); for "how can i use test kits at home" the answers about test strips were 0.37 to 0.48 and the
+// rows found by the word "test" alone 0.29 or less; for "does weed help you sleep" the answer about sleep was 0.55 and the others 0.35 or less.
+const INS_MORE = 0.4;
 /* (2.9.2) An entry of one or two words is for the word search. When it is not a finished question ("can i", "do gay", "is
    cocaine"), the page says so in place of "No match … Ask us": a beginning is not sent. A drug's name alone keeps its rows. */
 function insShort(box, q) {

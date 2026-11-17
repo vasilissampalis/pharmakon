@@ -260,6 +260,22 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     if (lk) { const typed = learned[lk].typed[0], r = await ask("what is " + typed), rd = await p.evaluate(() => (document.querySelector("#search-results .sr-fit .sr-read") || {}).textContent || "");
       // (2.12: when a page our system started lists this very question, the line is "Not answered yet.": it is on our list)
       ok(w + ": a name the system learned by looking it up: “what is " + typed + "” is read as " + learned[lk].name + ", and is a question about drugs", rd === "We read “" + typed + "” as " + learned[lk].name + "." && (r.none === "We haven’t checked exactly this yet." || r.none === "Not answered yet."), rd + " | " + r.none); }
+    // (2.13; the senior author asked "how can i use test kits at home" and was told "We haven't checked exactly this yet") a place of the site
+    // is found by the meaning of a question, not only by patterns of words; a drug test of the body is not drug checking; a question about
+    // the site itself is led to its place and is not called "not about drugs"
+    { const k1 = await ask("how can i use test kits at home");
+      ok(w + ": “how can i use test kits at home” is led to the part on test kits to use at home, first, and nothing says “we haven't checked”",
+        k1.routes.length >= 1 && k1.routes[0].kind === "go" && k1.routes[0].href === "#checking/part-c-kits" && /^Test kits to use at home/.test(k1.routes[0].t) && !k1.none && k1.kids[0] === "route:go", JSON.stringify(k1.routes) + " | " + k1.none + " | " + k1.kids.join(","));
+      const k2 = await ask("does weed show up on a drug test");
+      ok(w + ": “does weed show up on a drug test” is not led to drug checking (a test of the body is not a test of a drug)", !k2.routes.some(r => /^#checking/.test(r.href)), JSON.stringify(k2.routes));
+      const k3 = await ask("is my search private");
+      ok(w + ": “is my search private” is led to the part on privacy and is not called “not about drugs”", k3.routes.length === 1 && k3.routes[0].href === "#about/part-a-privacy" && !k3.none, JSON.stringify(k3.routes) + " | " + k3.none); }
+    // (2.13; "How many people die from methamphetamine": the rows under "More results" were "completely irrelevant ... visual clutter") an
+    // answer the word search found by a word in common stays under Insight's block only when it is near the question in meaning
+    { const m1 = await ask("how many people die from methamphetamine");
+      const left = await p.evaluate(async () => { const r = await insAnswer("how many people die from methamphetamine", insCtx()); return [...document.querySelectorAll("#search-results > a.sr-ans[data-cid]")].map(a => [a.querySelector(".t").textContent.slice(0, 60), +r.sc.topic[INS.idx.get(a.dataset.cid)].toFixed(2)]); });
+      ok(w + ": “how many people die from methamphetamine” gets its answer, and no answer about something else that only shares a word (“people”, “meth”) stands under “More results”",
+        m1.best.length === 1 && m1.best[0].id === "cl_meth_mortality" && left.every(x => x[1] >= 0.4) && !left.some(x => /cash|dopamine|grey matter/.test(x[0])), JSON.stringify(m1.best.map(b => b.id)) + " | " + JSON.stringify(left)); }
     // (2.12) a page our system started (people asked about a drug that had no page): a question that names it is shown the way to that
     // page and is never called "not about drugs"; its name alone finds the page; asked what it looks like, its pictures are the answer.
     // The check goes by the pages the build shows today, whatever they are.
@@ -377,7 +393,7 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     const by = await ask(BUY); ui += " " + await uiText(); await shot("list-not-answered");
     // (the word search may still list the drug's own page; never an answer, never a way to ask us)
     const byRows = await p.evaluate(() => { const rows = [...document.querySelectorAll("#search-results > a")]; return { all: rows.length, ans: rows.filter(a => a.matches(".sr-ans")).length, pages: rows.filter(a => /^#s-[a-z0-9-]+$/.test(a.getAttribute("href") || "")).length }; });
-    ok(w + ": getting drugs (“" + BUY + "”): no route, no answer, “We haven’t checked exactly this yet” without the way to ask us (the drug's own page at most)", by.kids[0] === "none" && by.kids.every(k => k === "none" || k === "h:More results") && by.none === "We haven’t checked exactly this yet." && !by.askBtn && !by.best.length && !by.related.length && !by.routes.length && !by.wordAsk &&
+    ok(w + ": getting drugs (“" + BUY + "”): no route, no answer, “We haven’t checked exactly this yet” without the way to ask us (the drug's own page at most)", by.kids[0] === "none" && by.kids.every(k => k === "none" || /^h:More results( \(\d+\))?$/.test(k) || /sr-words/.test(k)) && by.none === "We haven’t checked exactly this yet." && !by.askBtn && !by.best.length && !by.related.length && !by.routes.length && !by.wordAsk &&
       byRows.ans === 0 && byRows.all <= 2 && byRows.pages === byRows.all, by.kids.join(" > ") + " | " + by.text.replace(/\s+/g, " ") + " | rows under it: " + JSON.stringify(byRows));
 
     // ---- Enter: the sheet for the question as asked

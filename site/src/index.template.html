@@ -13,9 +13,14 @@
     <button type="button" class="menubtn" id="menubtn" aria-expanded="false" aria-controls="menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
     <div class="bar-search" id="bar-search">
       <div class="searchwrap" id="searchwrap">
-        <label class="sr" for="search">Ask a question, or search a drug or street name</label>
+        <!-- (2.13; the senior author, 17 November 2026: "when i click on the search engine my address should not appear as a recommended choice. i don't
+             want any browser specific recommended choices only what the site recommends") The label said "a drug or street name": a browser takes
+             "street" and "name" for an address field and offers the reader's saved addresses, whatever autocomplete says. The label has no such
+             word now, and the box says in every way a browser and a password manager read that it is a search box with its own list. -->
+        <label class="sr" for="search">Ask Pharmakon Insight</label>
         <span class="sicon" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4 11a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-5-5"/></svg><svg class="ic-pill" viewBox="0 0 32 32" focusable="false"><path class="p1" d="M13.2 27.8a6.8 6.8 0 0 1-9.6-9.6L10 11.8l9.6 9.6z"/><path class="p2" d="M10 11.8l6.4-6.4a6.8 6.8 0 0 1 9.6 9.6l-6.4 6.4z"/></svg></span>
-        <input id="search" type="search" placeholder="Ask anything about drugs" autocomplete="off">
+        <input id="search" name="q" type="search" placeholder="Ask anything about drugs" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"
+               role="combobox" aria-autocomplete="list" aria-controls="search-results" aria-expanded="false" data-form-type="other" data-lpignore="true" data-1p-ignore data-bwignore="true">
         <div id="search-results" class="search-results" hidden></div>
         <p class="sr" id="search-count" aria-live="polite"></p>
       </div>

@@ -1045,10 +1045,12 @@ function runSearch(raw) {
 }
 function closeSearch() { const box = document.getElementById("search-results"); if (box) { box.hidden = true; } }
 const searchInput = document.getElementById("search");
+// (2.13) the box is a combobox with a list of its own (so that a browser offers nothing of its own there): it says whether the list is open
+if (typeof MutationObserver === "function") new MutationObserver(() => searchInput.setAttribute("aria-expanded", String(!document.getElementById("search-results").hidden))).observe(document.getElementById("search-results"), { attributes: true, attributeFilter: ["hidden"] });
 searchInput.addEventListener("input", () => runSearch(searchInput.value));
 searchInput.addEventListener("focus", () => runSearch(searchInput.value));
-searchInput.addEventListener("keydown", e => { if (e.key === "ArrowDown") { const f = document.querySelector("#search-results a"); if (f) { e.preventDefault(); f.focus(); } return; } if (e.key === "Enter") { const first = norm(searchInput.value) && document.querySelector("#search-results a"); if (first) { e.preventDefault(); first.click(); } } if (e.key === "Escape") { searchInput.value = ""; closeSearch(); } });
-document.getElementById("search-results").addEventListener("keydown", e => { const a = e.target.closest && e.target.closest("a"); if (!a) return; const all = [...document.querySelectorAll("#search-results a")], i = all.indexOf(a); if (e.key === "ArrowDown" && all[i + 1]) { e.preventDefault(); all[i + 1].focus(); } if (e.key === "ArrowUp") { e.preventDefault(); (all[i - 1] || searchInput).focus(); } if (e.key === "Escape") { searchInput.focus(); closeSearch(); } });
+searchInput.addEventListener("keydown", e => { if (e.key === "ArrowDown") { const f = document.querySelector("#search-results a:not([hidden])"); if (f) { e.preventDefault(); f.focus(); } return; } if (e.key === "Enter") { const first = norm(searchInput.value) && document.querySelector("#search-results a:not([hidden])"); if (first) { e.preventDefault(); first.click(); } } if (e.key === "Escape") { searchInput.value = ""; closeSearch(); } });
+document.getElementById("search-results").addEventListener("keydown", e => { const a = e.target.closest && e.target.closest("a"); if (!a) return; const all = [...document.querySelectorAll("#search-results a:not([hidden])")], i = all.indexOf(a); if (e.key === "ArrowDown" && all[i + 1]) { e.preventDefault(); all[i + 1].focus(); } if (e.key === "ArrowUp") { e.preventDefault(); (all[i - 1] || searchInput).focus(); } if (e.key === "Escape") { searchInput.focus(); closeSearch(); } });
 document.getElementById("search-results").addEventListener("click", e => { if (e.target.closest("a")) { searchInput.value = ""; closeSearch(); } });
 
 /* ---------- Popover ---------- */

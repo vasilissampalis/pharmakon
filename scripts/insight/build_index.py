@@ -611,6 +611,8 @@ def main():
     # 2.5: the list of questions not answered yet (data/site/wanted.json), as a second, small index of the same kind
     wl = wanted_index(json.load(open(IN, encoding="utf-8")).get("wanted") or [], out, names, pat, at)
     if wl: out["wanted"] = wl
+    pl = places_index()   # 2.13: the places of the site, found by the meaning of a question (site/insight/places.json)
+    if pl: out["places"] = pl
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
     if len(args) > 2:
@@ -787,6 +789,85 @@ WANT_CUT = 0.75            # the judge's number from which a typed question can 
 WANT_NEAR = [0.70, 0.70]   # and how near its best wording must be: with the drug's name, and with the drug names taken out
 
 
+PLACES = ROOT / "site/insight/places.json"
+
+
+def places_table():
+    """site/insight/places.json: the places of the site with the ways people ask for what each holds, and the entries that say
+    what is not a place ('none')."""
+    try: D = json.load(open(PLACES, encoding="utf-8"))
+    except (OSError, ValueError): return None
+    P = [p for p in D.get("places") or [] if isinstance(p, dict) and p.get("id") and p.get("ways")]
+    for p in P: p["ways"] = list(dict.fromkeys(str(x).strip().lower() for x in p["ways"] if isinstance(x, str) and x.strip()))
+    return {"cut": float(D.get("cut", 0.8)), "near": float(D.get("near", 0.66)), "places": P} if P else None
+
+
+def places_index():
+    """(2.13, 17 November 2026; the senior author asked "how can i use test kits at home", was told "We haven't checked exactly
+    this yet" although the site has a part on test kits to use at home, and wrote: "we have to incorporate every instance of
+    human language it is still stupid".) The places of the site as a third small index: every way of asking for a place as
+    the model's numbers. The page compares a question (its drug names read as "it") with every way and takes the place of
+    the nearest one (insWhere; here: where). An entry marked 'none' is not a place: when its way is the nearest, the
+    question asks for an answer and is led nowhere ("does it show up on a drug test" is not drug checking)."""
+    T = places_table()
+    if not T: return None
+    rows, W = [], []
+    for i, p in enumerate(T["places"]):
+        for w in p["ways"]: rows.append(i); W.append(w)
+    wb, _ = int8(embed_all(W))
+    print(f"insight: {sum(1 for p in T['places'] if not p.get('none'))} places of the site can be found by the meaning of a question ({len(W)} ways of asking; "
+          f"{sum(1 for p in T['places'] if p.get('none'))} entries say what is not a place)", file=sys.stderr)
+    return {"ids": [p["id"] for p in T["places"]], "rows": rows, "W": wb, "cut": T["cut"], "near": T["near"],
+            "meta": [{"none": 1} if p.get("none") else {k: p[k] for k in ("href", "icon", "k", "t", "part") if p.get(k)} for p in T["places"]]}
+
+
+def where(Wv, rows, n, mv):
+    """The page's insWhere: (the entry whose nearest way is nearest to the question, how near)."""
+    s = Wv @ mv; best = np.full(n, -1.0)
+    for k, i in enumerate(rows):
+        if s[k] > best[i]: best[i] = s[k]
+    i = int(best.argmax()); return i, float(best[i])
+
+
+def measure_places(show=True):
+    """How well the look for a place by meaning does (no index needed, the model is): on the questions written for it
+    (data/verification/insight/places-gold.json, none of them a way of the table), on the 1,021 forum questions and on the
+    165 questions about other things. A question is read as the page reads it: a misspelt name as the name, every drug's
+    name as "it". Prints what is sent where, for the editor to read; returns the numbers."""
+    T = places_table(); P = T["places"]; R = WordRules()
+    G = json.load(open(ROOT / "data/verification/insight/places-gold.json", encoding="utf-8"))["questions"]
+    forum = forum_questions(); other = json.load(open(ROOT / "data/verification/insight/scope-other.json", encoding="utf-8"))["questions"]
+    rows, W = [], []
+    for i, p in enumerate(P):
+        for w in p["ways"]: rows.append(i); W.append(w)
+    ways = set(W); again = [g["q"] for g in G if g["q"].strip().lower() in ways]
+    read = lambda qs: [R.pat.sub("it", R.correct(q)[0]).lower() for q in qs]
+    V = embed_all(W + read([g["q"] for g in G]) + read(forum) + read(other), quiet=True); _, Wv = int8(V[:len(W)])
+    a, b = len(W), len(W) + len(G); c = b + len(forum)
+    look = lambda v: (lambda i, s: (P[i]["id"], s, bool(P[i].get("none"))))(*where(Wv, rows, len(P), v))
+    g = [look(v) for v in V[a:b]]; f = [look(v) for v in V[b:c]]; o = [look(v) for v in V[c:]]
+    near, cut = T["near"], T["cut"]
+    out = {"places": sum(1 for p in P if not p.get("none")), "ways": len(W), "near": near, "cut": cut, "gold": len(G), "gold_also_a_way": len(again),
+           "gold_right": sum(1 for x, (pid, s, none) in zip(G, g) if s >= near and pid == x["place"]), "gold_wrong_place": sum(1 for x, (pid, s, none) in zip(G, g) if s >= near and not none and pid != x["place"]),
+           "gold_right_as_the_answer": sum(1 for x, (pid, s, none) in zip(G, g) if s >= cut and pid == x["place"]), "gold_wrong_as_the_answer": sum(1 for x, (pid, s, none) in zip(G, g) if s >= cut and not none and pid != x["place"]),
+           "forum": len(forum), "forum_sent_to_a_place": sum(1 for pid, s, none in f if s >= near and not none), "forum_as_the_answer": sum(1 for pid, s, none in f if s >= cut and not none),
+           "forum_held_back_as_not_a_place": sum(1 for pid, s, none in f if s >= near and none),
+           "other": len(other), "other_sent_to_a_place": sum(1 for pid, s, none in o if s >= near and not none)}
+    if show:
+        print(f"places by meaning: {out['places']} places, {out['ways']} ways; a place to look from {near}, the answer from {cut}")
+        print(f"  the {len(G)} questions written for it: the right place {out['gold_right']}, a wrong place {out['gold_wrong_place']}, none {len(G) - out['gold_right'] - out['gold_wrong_place']}; as the answer: right {out['gold_right_as_the_answer']}, wrong {out['gold_wrong_as_the_answer']}")
+        for x, (pid, s, none) in zip(G, g):
+            if not (s >= near and pid == x["place"]): print(f"    not found: {s:.2f} {pid} (wanted {x['place']}) | {x['q']}")
+        print(f"  the {len(forum)} forum questions: sent to a place {out['forum_sent_to_a_place']} (as the answer {out['forum_as_the_answer']}); held back because the nearest way is not a place {out['forum_held_back_as_not_a_place']}")
+        for q, (pid, s, none) in zip(forum, f):
+            if s >= near and not none: print(f"    {s:.2f} {pid} | {q}")
+        print(f"  the {len(other)} questions about other things: sent to a place {out['other_sent_to_a_place']}")
+        for q, (pid, s, none) in zip(other, o):
+            if s >= near and not none: print(f"    {s:.2f} {pid} | {q}")
+        if again: print("  !! questions of the measure that are also ways of the table (they measure nothing):", again)
+    return out
+
+
 def wanted_index(items, out, names, pat, at):
     """The list of questions the site does not answer yet (site 2.5; the senior author, 15 November 2026: "make the site
     understand on its own what the users want added in the website in-app and not via email"). When no answer is a best
@@ -905,4 +986,5 @@ def evaluate(D, near=None):
 
 if __name__ == "__main__":
     if "--words" in sys.argv: print(json.dumps(measure_words(WordRules(), "--quiet" not in sys.argv)))
+    elif "--places" in sys.argv: print(json.dumps(measure_places("--quiet" not in sys.argv)))
     else: main()

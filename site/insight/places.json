@@ -1,0 +1,636 @@
+{
+ "_note": "The places of the site that Insight can lead to by the MEANING of a question (site 2.13, 17 November 2026; the senior author asked \"how can i use test kits at home\", was told \"We haven't checked exactly this yet\" although the site has a part on test kits to use at home, and wrote: \"i should be answered and be given links etc and i think we already have info about that on the website. man we have to incorporate every instance of human language it is still stupid\"). Until then a place was found only by patterns of words (site/src/app.insight.js, INS_PLACES, INS_RE): a wording nobody had foreseen found nothing. Here each place has the ways people ask for what it holds, in everyday words; the build turns them into the model's numbers (scripts/insight/build_index.py, places_index), and the page looks for the nearest way when no checked answer is a best match and no pattern gave the answer (insWhere). 'cut' and 'near': at 'cut' or more the place is the answer to what was asked (it is shown first, and nothing says \"we haven't checked\"); from 'near' to 'cut' it is a place to look, under the line for a question we have not checked. Both were measured (data/verification/insight/places-gold.json; scripts/insight/build_index.py --places). 'part': on a page of one drug, when the question names that one drug, the same part of that drug's page (d-kits, d-law, d-doses, d-looks, d-help) is where it leads. A way is written without a drug's name (\"it\" stands for the drug). A way must be a question the place really holds something on: a place is never offered for an answer it does not have. Adding a place or a way: measure again before it ships.",
+ "cut": 0.8,
+ "near": 0.66,
+ "places": [
+  {
+   "id": "kits",
+   "href": "#checking/part-c-kits",
+   "icon": "flask",
+   "k": "Drug checking",
+   "t": "Test kits to use at home: who sells them where you are, and what the law says",
+   "part": "d-kits",
+   "ways": [
+    "how can i use test kits at home",
+    "how do i use a drug test kit",
+    "how do test kits work",
+    "where can i buy a test kit",
+    "where do i get fentanyl test strips",
+    "how to test my drugs at home",
+    "can i check what is in my drugs myself",
+    "home testing kit for drugs",
+    "reagent test kit",
+    "which test kit do i need",
+    "how do i test it",
+    "how do i check if it is real",
+    "how do i know what is really in it",
+    "is there a way to test it before taking it",
+    "how can i tell if it is laced",
+    "how to check if it has fentanyl in it",
+    "are test kits legal to buy",
+    "kit to test pills",
+    "fentanyl test strips",
+    "drug test kit for home use",
+    "how do you use a reagent",
+    "how do i use fentanyl strips",
+    "check my pills before i take them",
+    "is my stuff cut with something",
+    "what is in my pill",
+    "testing it myself"
+   ]
+  },
+  {
+   "id": "kits-work",
+   "href": "#checking/part-c-work",
+   "icon": "search",
+   "k": "Drug checking",
+   "t": "Do home test kits work? What studies found",
+   "ways": [
+    "do test kits work",
+    "are test strips accurate",
+    "can i trust a test kit",
+    "how reliable are fentanyl test strips",
+    "can a test kit be wrong",
+    "do reagent tests give false results",
+    "how accurate is a home drug test kit",
+    "can a test strip miss fentanyl",
+    "does a colour test prove what it is",
+    "do fentanyl strips really work",
+    "how good are home test kits",
+    "are reagent tests reliable",
+    "can i rely on a test strip",
+    "false negative test strip",
+    "do drug test kits tell the truth"
+   ]
+  },
+  {
+   "id": "checking",
+   "href": "#checking/part-c-near",
+   "icon": "pin",
+   "k": "Drug checking",
+   "t": "Where can I get a drug tested? Services by country",
+   "ways": [
+    "where can i get my drugs tested",
+    "drug checking service near me",
+    "is there a lab that tests drugs",
+    "pill testing near me",
+    "can i send my drugs to a lab",
+    "drug testing by post",
+    "free drug checking",
+    "where to test pills at a festival",
+    "who can test it for me",
+    "anonymous drug testing service",
+    "get a sample analysed",
+    "send a sample to be tested",
+    "post a sample to a lab",
+    "drug checking services",
+    "where can it be analysed",
+    "testing service at a festival",
+    "get it tested by a lab near me"
+   ]
+  },
+  {
+   "id": "lookalikes",
+   "href": "#checking/part-c-look",
+   "icon": "eye",
+   "k": "Drug checking",
+   "t": "Different drugs can look the same: white powders and pills, side by side",
+   "ways": [
+    "can you tell what a drug is by looking at it",
+    "do all white powders look the same",
+    "how do i know which pill this is by its look",
+    "can i identify a drug by its colour",
+    "does it look different from other drugs",
+    "which drugs look alike",
+    "do different drugs look the same",
+    "can two powders look identical",
+    "tell two drugs apart by sight",
+    "identify a pill by its logo"
+   ]
+  },
+  {
+   "id": "emergency",
+   "href": "#emergency",
+   "icon": "phone",
+   "k": "Emergency numbers",
+   "t": "Emergency numbers and help lines, country by country",
+   "ways": [
+    "what number do i call in an emergency",
+    "ambulance number",
+    "who do i call if someone overdoses",
+    "poison control number",
+    "helpline for drug problems",
+    "emergency number when abroad",
+    "crisis line number",
+    "who can i talk to about my drug use",
+    "where can i get help to stop",
+    "is there a free helpline",
+    "drug helpline",
+    "hotline to call about drugs",
+    "phone number for an ambulance",
+    "someone to talk to about drugs",
+    "who do i ring in an emergency",
+    "overdose what number",
+    "addiction help line"
+   ]
+  },
+  {
+   "id": "law",
+   "href": "#law",
+   "icon": "scale",
+   "k": "The law",
+   "t": "Drug treaties, country by country",
+   "part": "d-law",
+   "ways": [
+    "which countries signed the drug treaties",
+    "un drug conventions",
+    "international drug law",
+    "drug laws by country",
+    "is it legal in my country",
+    "what does the law say about it",
+    "is it against the law",
+    "is it decriminalised",
+    "which countries allow it",
+    "is possession illegal",
+    "legal status around the world",
+    "where is it legal"
+   ]
+  },
+  {
+   "id": "mixing",
+   "href": "#interactions",
+   "icon": "mix",
+   "k": "Mixing",
+   "t": "Is it safe to mix? Choose two drugs and see what is known",
+   "part": "d-mix",
+   "ways": [
+    "which drugs are dangerous to mix",
+    "drug combination chart",
+    "can i take two drugs together",
+    "what should not be mixed",
+    "interactions between drugs",
+    "is it safe to combine them",
+    "can i take it with my medication",
+    "what happens if you take it with other drugs",
+    "does it interact with antidepressants",
+    "which combinations of drugs are dangerous",
+    "is it bad to mix it with other things",
+    "does it mix badly with medicine",
+    "taking it together with my pills",
+    "drug interaction checker",
+    "risky combos"
+   ]
+  },
+  {
+   "id": "numbers",
+   "href": "#numbers",
+   "icon": "pulse",
+   "k": "Statistics",
+   "t": "Official figures: how many people use each drug, deaths, treatment",
+   "ways": [
+    "how many people use drugs",
+    "how common is drug use",
+    "drug deaths per year",
+    "how many people die from overdoses",
+    "drug use statistics in europe",
+    "what percentage of people have tried it",
+    "how many people are in treatment",
+    "is drug use going up",
+    "which drug is used the most",
+    "how many people use it",
+    "how widespread is it",
+    "numbers on overdose deaths",
+    "is more of it used now than before",
+    "official drug figures",
+    "how many users are there",
+    "how many people in the world use it",
+    "what percentage of people use it"
+   ]
+  },
+  {
+   "id": "doses",
+   "href": "#substances",
+   "icon": "book",
+   "k": "Doses",
+   "t": "We don’t list doses. Each drug’s page links to harm reduction groups that do",
+   "part": "d-doses",
+   "ways": [
+    "how much should i take",
+    "what is a safe dose",
+    "what is a normal dose",
+    "how many milligrams is right",
+    "dosage guide",
+    "how much is too much",
+    "what dose do people take",
+    "how much of it is safe",
+    "how many mg",
+    "amount to take",
+    "what is the right amount",
+    "how much do you take",
+    "typical dose",
+    "how much do people take",
+    "how much of it do people usually take",
+    "how many pills do people take",
+    "what amount do people use"
+   ]
+  },
+  {
+   "id": "looks",
+   "href": "#substances",
+   "icon": "eye",
+   "k": "All drugs",
+   "t": "What each drug looks like: every form, with photos",
+   "part": "d-looks",
+   "ways": [
+    "what does it look like",
+    "pictures of it",
+    "show me a photo of it",
+    "what colour is it",
+    "what form does it come in",
+    "how do i recognise it",
+    "what do the pills look like",
+    "photos of it",
+    "what does a pill of it look like",
+    "how to recognize it"
+   ]
+  },
+  {
+   "id": "facts",
+   "href": "#facts",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Big questions about drugs, not about one drug",
+   "ways": [
+    "big questions about drugs",
+    "questions about drugs in general",
+    "general questions not about one drug",
+    "the big picture on drugs"
+   ]
+  },
+  {
+   "id": "f-hooked",
+   "href": "#facts/part-f-hooked",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Why do some people get hooked?",
+   "ways": [
+    "why do some people get hooked",
+    "why do some people get addicted and others do not",
+    "who gets addicted",
+    "what makes a person addicted",
+    "is addiction in your genes"
+   ]
+  },
+  {
+   "id": "f-setting",
+   "href": "#facts/part-f-setting",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Is it the drug, or the setting?",
+   "ways": [
+    "is it the drug or the setting",
+    "does it matter where you take it",
+    "set and setting",
+    "does your mood change how a drug feels"
+   ]
+  },
+  {
+   "id": "f-recover",
+   "href": "#facts/part-f-recover",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Do people recover?",
+   "ways": [
+    "do people recover from addiction",
+    "can addiction be beaten",
+    "do people stop on their own",
+    "how many people get over a drug problem"
+   ]
+  },
+  {
+   "id": "f-laws",
+   "href": "#facts/part-f-laws",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Do drug laws and campaigns work?",
+   "ways": [
+    "do drug laws work",
+    "does banning drugs reduce use",
+    "do anti-drug campaigns work",
+    "does decriminalisation lower drug use",
+    "is the war on drugs working"
+   ]
+  },
+  {
+   "id": "f-several",
+   "href": "#facts/part-f-several",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Using more than one drug",
+   "ways": [
+    "people who use more than one drug",
+    "polydrug use",
+    "using several drugs at the same time in general"
+   ]
+  },
+  {
+   "id": "f-sex",
+   "href": "#facts/part-f-sex",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Are women and men different?",
+   "ways": [
+    "do drugs affect women and men differently",
+    "are women more affected by drugs than men",
+    "differences between men and women in drug use"
+   ]
+  },
+  {
+   "id": "f-stigma",
+   "href": "#facts/part-f-stigma",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "Words, stigma and the news",
+   "ways": [
+    "does the word addict do harm",
+    "stigma around drug use",
+    "how the news writes about drugs",
+    "which words to use for people who use drugs"
+   ]
+  },
+  {
+   "id": "f-deaths",
+   "href": "#facts/part-f-deaths",
+   "icon": "bulb",
+   "k": "Big questions",
+   "t": "How are drug deaths counted?",
+   "ways": [
+    "how are drug deaths counted",
+    "what counts as a drug death",
+    "are overdose numbers reliable",
+    "who decides that a death was caused by a drug"
+   ]
+  },
+  {
+   "id": "quiz",
+   "href": "#quiz",
+   "icon": "bulb",
+   "k": "Myth or fact?",
+   "t": "Guess first, then see what studies found: every card, by drug",
+   "ways": [
+    "test my knowledge about drugs",
+    "drug quiz",
+    "myths about drugs",
+    "common myths",
+    "is that a myth",
+    "true or false questions about drugs",
+    "surprising facts about drugs",
+    "quiz me",
+    "myth or fact",
+    "give me some drug myths",
+    "true or false"
+   ]
+  },
+  {
+   "id": "glossary",
+   "href": "#glossary",
+   "icon": "book",
+   "k": "Words explained",
+   "t": "What the words on this site mean",
+   "ways": [
+    "what do these words mean",
+    "explain the terms",
+    "dictionary of drug words",
+    "what does that term mean",
+    "list of definitions",
+    "i do not understand a word",
+    "what does this word mean",
+    "meaning of the terms used here",
+    "glossary of terms"
+   ]
+  },
+  {
+   "id": "methods",
+   "href": "#methods",
+   "icon": "search",
+   "k": "How we check facts",
+   "t": "How every answer is checked, and what the bars mean",
+   "ways": [
+    "how do you know this is true",
+    "where does your information come from",
+    "can i trust this site",
+    "who checks the answers",
+    "what do the bars mean",
+    "how is the evidence rated",
+    "is this information reliable",
+    "what are your sources",
+    "how do you decide what is true",
+    "why should i believe this",
+    "who checks what is written here",
+    "why should i trust you",
+    "how do i know you are right",
+    "is this site legit",
+    "how reliable is this"
+   ]
+  },
+  {
+   "id": "howto",
+   "href": "#howto",
+   "icon": "book",
+   "k": "How to read this site",
+   "t": "What each part of a page is for",
+   "ways": [
+    "how do i use this site",
+    "how does this website work",
+    "how do i read an answer",
+    "what is each part of the page for",
+    "guide to this site",
+    "i am lost on this site",
+    "how do i find things here",
+    "how to get around this website",
+    "help me use this site"
+   ]
+  },
+  {
+   "id": "about",
+   "href": "#about",
+   "icon": "people",
+   "k": "About us",
+   "t": "Who writes Pharmakon, and who pays for it",
+   "ways": [
+    "who made this site",
+    "who writes this",
+    "who pays for this site",
+    "who is behind pharmakon",
+    "how do i contact you",
+    "are you funded by a drug company",
+    "is this site written by doctors",
+    "what is pharmakon",
+    "who runs this site",
+    "who owns this website",
+    "who are you people",
+    "get in touch with you"
+   ]
+  },
+  {
+   "id": "privacy",
+   "href": "#about/part-a-privacy",
+   "icon": "people",
+   "k": "Privacy",
+   "t": "What this site keeps, what it sends and what it counts",
+   "ways": [
+    "do you track me",
+    "is this anonymous",
+    "what happens to my questions",
+    "do you store what i type",
+    "do you use cookies",
+    "can anyone see what i searched",
+    "is my search private",
+    "do you share my data",
+    "will the police see this",
+    "are you tracking me",
+    "is what i type private",
+    "do you keep what i ask",
+    "do you save my searches",
+    "can the police see what i search here",
+    "is this site safe to use privately"
+   ]
+  },
+  {
+   "id": "wanted",
+   "href": "#wanted",
+   "icon": "message",
+   "k": "On our list",
+   "t": "Questions the site does not answer yet, and how many people wait for each",
+   "ways": [
+    "which questions are not answered yet",
+    "what are you working on",
+    "what will you answer next",
+    "questions people are waiting for",
+    "when will you answer my question",
+    "what have you not answered yet",
+    "upcoming answers",
+    "what is coming next"
+   ]
+  },
+  {
+   "id": "auto",
+   "href": "#auto",
+   "icon": "book",
+   "k": "Written by our system",
+   "t": "Answers our system wrote by itself, not yet checked by a person",
+   "ways": [
+    "which answers were written by ai",
+    "is this written by a machine",
+    "answers not checked by a person",
+    "do you use artificial intelligence",
+    "what did your system write",
+    "which answers came from a computer",
+    "is an ai writing the answers",
+    "answers made by a program"
+   ]
+  },
+  {
+   "id": "substances",
+   "href": "#substances",
+   "icon": "molecule",
+   "k": "All drugs",
+   "t": "Every drug on this site, by family",
+   "ways": [
+    "which drugs do you cover",
+    "list of all drugs",
+    "show me every drug",
+    "what drugs are on this site",
+    "types of drugs",
+    "kinds of drugs",
+    "drug families",
+    "what drugs do you have pages for",
+    "the full list of drugs",
+    "what kinds of drugs exist",
+    "browse all drugs"
+   ]
+  },
+  {
+   "id": "x-bodytest",
+   "none": true,
+   "why": "a drug test of the body (urine, blood, hair, at work) is not drug checking",
+   "ways": [
+    "does it show up on a drug test",
+    "will i fail a drug test",
+    "how long does it stay in my urine",
+    "how long is it detectable",
+    "can a urine test find it",
+    "drug test at work",
+    "will it show on a blood test",
+    "pass a drug screen",
+    "does it show in a hair test",
+    "how long does it stay in your system",
+    "can a drug test tell which drug i took",
+    "what does a drug test look for"
+   ]
+  },
+  {
+   "id": "x-take",
+   "none": true,
+   "why": "how a drug is taken: the site gives no ways of taking a drug",
+   "ways": [
+    "how do i take it",
+    "how do you smoke it",
+    "how do people use it",
+    "best way to take it",
+    "how to inject it",
+    "can you snort it",
+    "how do you eat it",
+    "how is it taken"
+   ]
+  },
+  {
+   "id": "x-get",
+   "none": true,
+   "why": "getting or making drugs: not answered",
+   "ways": [
+    "where can i buy it",
+    "how do i get it",
+    "where to find a dealer",
+    "how do i make it",
+    "how is it made at home",
+    "can i order it online",
+    "how much does it cost"
+   ]
+  },
+  {
+   "id": "x-drug",
+   "none": true,
+   "why": "a question about what a drug is or does asks for an answer, not for a place",
+   "ways": [
+    "what does it feel like",
+    "is it addictive",
+    "what are the side effects",
+    "is it dangerous",
+    "how long does it last",
+    "can it kill you",
+    "what does it do to your brain",
+    "is it bad for you",
+    "how long does the comedown last",
+    "what is it",
+    "does it cause damage",
+    "is it safe",
+    "what happens when you stop taking it",
+    "does it help with anxiety",
+    "can you overdose on it",
+    "how does it work",
+    "does it get you high",
+    "what is a high dose like",
+    "what does a low dose feel like",
+    "which one feels the best",
+    "can it get you high",
+    "can you get addicted to it",
+    "can people become addicted to it",
+    "how addictive is it",
+    "does it cause lasting problems",
+    "do the after-effects go away",
+    "do people recover from the problems it causes"
+   ]
+  }
+ ]
+}

@@ -150,10 +150,12 @@ def fetch(most=12, web=None, today=None, save=True, doc=None, out_dir=None):
     web = web or O.Web(); today = today or datetime.date.today().isoformat(); doc = doc if doc is not None else load(OUT, {}); out_dir = pathlib.Path(out_dir or PICS); n = 0
     for slug in asked_first(list((doc.get("pages") or {}).keys())):
         e = doc["pages"][slug]; made = [p for s in e["species"].values() for p in (s.get("pictures") or []) if p.get("file")]; have = [p for p in made if not p.get("hold")]   # (a picture the editor holds is not counted)
-        for s in e["species"].values():
-            for p in s.get("pictures") or []:
-                if len(have) >= PER_PAGE or n >= most: break
-                if p.get("file") or p.get("failed") or p.get("hold") or not p.get("host_allows"): continue
+        while len(have) < PER_PAGE and n < most:
+            # a page of several species: each has a picture before one has two (the species with the fewest shown so far is served first)
+            open_ = [(sum(1 for q in (s.get("pictures") or []) if q.get("file") and not q.get("hold")), i, s, p) for i, s in enumerate(e["species"].values())
+                     for p in [next((q for q in (s.get("pictures") or []) if not (q.get("file") or q.get("failed") or q.get("hold")) and q.get("host_allows")), None)] if p]
+            if not open_: break
+            for _, _, s, p in [min(open_, key=lambda x: x[:2])]:
                 url = re.sub(r"/original\.(jpe?g|png)$", r"/large.\1", p["url"]) if p.get("host") == "inaturalist-open-data.s3.amazonaws.com" else p["url"]
                 n += 1
                 try: got = web.get(url, "image/jpeg,image/png,image/webp;q=0.9,image/*;q=0.5")
