@@ -52,7 +52,13 @@ const cuts = [...new Set(goldAll.filter((_, i) => i % 3 === 0).flatMap(q => { co
   return out; }).concat(["can i die from ", "can i die from", "is it addictive", "can you overdose", "how long does it last", "what is tolerance", "how long does withdrawal last", "why do people get addicted",
   "what is it cut with", "what are pills cut with", "what is heroin cut with", "is cocaine", "what is ketamine", "what is ketamine for", "weed and alcohol", "weed and", "how does mdma", "can i die from coc", "is weed lega",
   "is cocaine addi", "can a gay man go to the court", "who are you", "what time is it", "how much ecstasy is too much", "what does it feel like", "what’s it like", "DOES IT SHOW UP ON A DRUG TEST", "is tusi dangerous",
-  "what is photosynthesis", "how do i stop snoring", "don't you know what's in it", "Why does meth not work like it used to?", "what might someone have been spiked with", "xanax vs", "'quoted' words and", ""]))];
+  "what is photosynthesis", "how do i stop snoring", "don't you know what's in it", "Why does meth not work like it used to?", "what might someone have been spiked with", "xanax vs", "'quoted' words and", "",
+  // 2.9.2: a subject and nothing said of it; a helper verb and no main verb; the endings and short forms the fresh questions showed
+  "do gay people", "can a gay man", "why do women", "how many people", "are gay people", "are people gay", "is my mom", "does smoking weed", "how long does the high", "can dogs", "does the government",
+  "do antidepressants", "what drugs can", "smoking weed can", "how long does withdrawal", "can you digest", "how do i weed my garden", "can i speed up the comedown", "how to do drugs", "what happens when you do drugs",
+  "people do drugs", "is weed for kids", "how do i get a girlfriend", "does he like me", "can u die from", "do ppl", "wat is", "is it safe rn", "eating before drinking lower bac", "what is mytragina javanica",
+  "what do you use it for", "what does cbd actually work for", "has anyone tried this before", "how long does gabapentin take to kick in", "what is cannabis (thc)", "do old people", "should parents", "will the police",
+  "does my doctor", "gay people", "can pregnant women", "is she pregnant", "is diet coke", "why are people who use drugs looked down on", "does anyone have any idea what i was spiked with"]))];
 // 2.9.1: names with a letter wrong, and words that must be left as they are
 const spells = ["can i die from cocane", "is ketamin addictive", "herion withdrawal", "is adderal safe", "does marijauna cause cancer", "how long does xanex last", "is heroine addictive", "can you overdose on tramadole",
   "what is extasy", "is canabis legal", "mushroms and alcohol", "is morphing a thing", "what is escaline", "how do i treat a sunburn", "is it safe to eat moldy bread", "why do cats purr", "what is photosynthesis",
@@ -172,7 +178,7 @@ const server = http.createServer((req, res) => {
   // 2.9: the two rules on words alone, the same on both sides for every cut
   const cBad = cuts.map((c, i) => JSON.stringify(js.cuts[i]) === JSON.stringify(ref.cuts[i]) ? null : JSON.stringify(c) + ": page " + JSON.stringify(js.cuts[i]) + " build " + JSON.stringify(ref.cuts[i])).filter(Boolean);
   const nUnf = js.cuts.filter(x => x[0]).length, kinds = {}; js.cuts.forEach(x => { if (x[0]) kinds[x[0]] = (kinds[x[0]] || 0) + 1; });
-  say(!cBad.length && cuts.length >= 800 && ["ends", "bare", "which", "typing"].every(k => kinds[k] >= 5),
+  say(!cBad.length && cuts.length >= 800 && ["ends", "bare", "which", "typing", "open", "verb"].every(k => kinds[k] >= 5),
     "the same reading of whether a question is finished (off and on a drug's page) and of which words are not known, for " + cuts.length + " questions cut as a reader who is still typing leaves them",
     cBad.slice(0, 3).join("; ") || nUnf + " not finished off a drug's page (" + Object.keys(kinds).sort().map(k => kinds[k] + " " + k).join(", ") + "); " + js.cuts.filter(x => x[2].length).length + " hold a word that is not known");
   // 2.9.1: the same word read as the same name, and the same words left alone, on both sides

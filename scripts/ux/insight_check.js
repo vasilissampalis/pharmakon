@@ -46,7 +46,19 @@ const WORDS = [["can i die from ", "ends"], ["is it addictive", "which"], ["is i
   ["is cocaine", "bare"], ["what is ketamine", ""], ["what is ketamine for", ""], ["weed and alcohol", ""], ["weed and", "ends"], ["how does mdma", "bare"], ["can i die from coc", "typing"], ["is weed lega", "typing"],
   ["is cocaine addi", "typing"], ["can a gay man go to the court", ""], ["who are you", ""], ["what time is it", ""], ["how much ecstasy is too much", ""], ["what does it feel like", "which"], ["what does lsd feel like", ""],
   ["does cannabis cause cancer", ""], ["is sex better with weed", ""], ["what happens if i take", "which"], ["what should i know about", "ends"], ["what is the best way to", "ends"], ["is it", "bare", true], ["how much", "bare", true],
-  ["how do i fix a flat tire", ""], ["why does meth not work like it used to", ""], ["what might someone have been spiked with", ""], ["is it legal", "which"], ["hello", ""], ["what are the side effects of", "ends"]];
+  ["how do i fix a flat tire", ""], ["why does meth not work like it used to", ""], ["what might someone have been spiked with", ""], ["is it legal", "which"], ["hello", ""], ["what are the side effects of", "ends"],
+  // (2.9.2) a subject and nothing said of it; a helper verb and no main verb; and the questions that only look like these
+  ["do gay people", "open"], ["can a gay man", "open"], ["why do women", "open"], ["how many people", "open"], ["are gay people", "open"], ["are people gay", ""], ["do gay people", "bare", true], ["do gay people use more drugs", ""],
+  ["does smoking weed", "verb"], ["how long does the high", "verb"], ["can dogs", "verb"], ["does the government", "verb"], ["how long does withdrawal", "verb"], ["what drugs can", "verb"], ["can you digest", ""],
+  ["how do i weed my garden", ""], ["can i speed up the comedown", ""], ["what happens when you do drugs", ""], ["how to do drugs", ""], ["is weed for kids", ""], ["how do i get a girlfriend", ""], ["does he like me", ""],
+  ["can u die from", "ends"], ["do ppl", "open"], ["is it safe rn", "which"], ["eating before drinking lower bac", ""], ["what does cbd actually work for", ""], ["how long does gabapentin take to kick in", ""],
+  ["has anyone tried this before", "which"], ["is it safe to take it before", "ends"], ["are legal highs safe", ""], ["what is cannabis (thc)", ""], ["why are people who use drugs looked down on", ""]];
+// (2.9.2) every circumstance has its response: [question, the line, what its text must hold, is there a way to send it]
+const CIRC = [["do gay people", "Go on.", /Finish your question and we will look\./, false], ["why do women", "Go on.", /Finish your question and we will look\./, false],
+  ["how long does the high", "Go on.", /Finish your question and we will look\./, false], ["does smoking weed", "Go on.", /Finish your question about cannabis and we will look\./, false],
+  ["what is mytragina javanica", "We do not know “mytragina javanica” as a drug.", /If it is one, send us your question and we will look into it\./, true],
+  ["είναι ασφαλές το MDMA", "Pharmakon reads questions in English for now.", /Please ask in English\. Προς το παρόν διαβάζουμε ερωτήσεις μόνο στα αγγλικά\./, false],
+  ["является ли кокаин опасным", "Pharmakon reads questions in English for now.", /Please ask in English\.$/, false]];
 const MIX = "can i mix molly and alcohol", DOSE = "how much mdma should i take", HELP = "my friend took ketamine and is not breathing what do i do", TEST = "how do i test my mdma", BUY = "where can i buy mdma online";
 // Each route has its test: questions that must take it, and questions close to it that must not ("" = no route). A third
 // item is the drug page the question is asked on.
@@ -58,6 +70,10 @@ const ROUTES = [
   ["my friend is not breathing", "help"], ["he won't wake up after taking ghb", "help"], ["my friend passed out", "help"], ["i think i'm overdosing", "help"], ["she is having a seizure", "help"], ["i am too high right now", "help"], ["greening out help", "help"], ["bad trip help please", "help"], ["im freaking out on acid", "help"],
   ["my friend took too much ketamine what do i do", "help"], ["i feel suicidal after a coke binge", "help"],
   ["would i know if someone was overdosing on opioids", ""], ["what does an opioid overdose look like", ""], ["my teenager smokes weed what should i do", ""], ["is teenage cannabis use linked to suicidal thoughts", ""], ["can medicine stop me having a seizure when i stop drinking", ""],
+  // (2.9.2) the site's other sections, by country: the law, the emergency numbers, drug checking
+  ["are drugs legal in greece", "law"], ["is weed legal in greece", "law"], ["is cocaine legal", "law"], ["drug laws in the uk", "law"], ["is it allowed in japan", "law"], ["can you go to jail for weed", "law"],
+  ["what is the penalty for cocaine possession in spain", "law"], ["why is weed illegal", ""], ["should drugs be legal", ""], ["can cocaine cause cardiac arrest", ""], ["are legal highs safe", ""], ["does legalization increase cannabis use", ""],
+  ["what is the emergency number in greece", "numbers"], ["who do i call", "numbers"], ["where can i get my drugs tested in spain", "test"], ["drug checking in germany", "test"],
   ["how do i test my mdma", "test"], ["is my coke cut with something", "test"], ["where can i get fentanyl test strips", "test"], ["which test kit for ketamine", "test"], ["mdma test kit", "test"], ["how to test for fentanyl", "test"], ["is this pill real mdma", "test"],
   ["do fentanyl test strips work", ""], ["can you fail a drug test from secondhand weed smoke", ""], ["can test kits do harm by making people feel falsely safe", ""], ["i felt sober after coke is that real", ""],
   ["what is ketamine", "page"], ["what's ghb", "page"], ["tell me about kratom", "page"], ["what is speed", "page"], ["what is ketamine used for in hospitals", ""],
@@ -225,6 +241,39 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     const unk = await ask(STRANGER);
     ok(w + ": a question whose one unknown word may be a drug's name (“" + STRANGER + "”): “We do not know “tusi” as a drug. If it is one, send us your question and we will look into it.”", !unk.best.length && unk.none === "We do not know “tusi” as a drug." && unk.askBtn === "send us your question" &&
       /If it is one, send us your question and we will look into it\./.test(unk.text.replace(/\s+/g, " ")) && /^We do not know “tusi” as a drug/.test(unk.live), unk.kids.join(" > ") + " | " + unk.text.replace(/\s+/g, " ").slice(0, 200) + " | heard: " + unk.live);
+    // ---- (2.9.2) every circumstance has its response: a subject with nothing said of it, a helper with no main verb, a name
+    // of two words that we do not know, a question that is not in English
+    const cbad = [];
+    for (const [q, line, re, send] of CIRC) { const r = await ask(q);
+      if (!(r.none === line && re.test(r.text.replace(/\s+/g, " ").trim()) && !!r.askBtn === send && !r.best.length && !r.wordAsk)) cbad.push("“" + q + "”: " + r.none + " | " + r.text.replace(/\s+/g, " ").slice(0, 150) + " | send: " + r.askBtn); }
+    await shot("list-go-on");
+    ok(w + ": every circumstance has its response (" + CIRC.length + " questions: “do gay people” and “why do women” are told “Go on. Finish your question and we will look.” with nothing to send; a name of two words we do not know is named; a question in Greek or Russian is asked for in English)", !cbad.length, cbad.slice(0, 3).join(" ;; ") || "all as they should be");
+    // the law by country: the route is the answer, from the page of treaties; with a drug named, from that drug's law part, shown for the country asked about
+    const lw = await ask("are drugs legal in greece"); await shot("list-law-country");
+    ok(w + ": “are drugs legal in greece” goes to Greece on the page of treaties: the route says what Greece has joined, nothing says “we haven't checked”, nothing to send",
+      lw.routes.length === 1 && lw.routes[0].kind === "law" && lw.routes[0].href === "#law/c-Greece" && /^Greece has joined all three UN drug treaties\. Its own law on each drug is on that drug’s page$/.test(lw.routes[0].t) && !lw.none && !lw.askBtn,
+      JSON.stringify(lw.routes) + " | " + lw.none + " | " + lw.askBtn);
+    const lw2 = await ask("is weed legal in greece");
+    const lw2ok = lw2.routes.length >= 1 && lw2.routes[0].kind === "law" && lw2.routes[0].href === "#s-cannabis/part-d-law" && /Greece/.test(lw2.routes[0].t) && !/^What the law of/.test(lw2.routes[0].t) && !lw2.none;
+    await p.click('#search-results a.sr-route[data-ins-route="law"]'); await p.waitForTimeout(900);
+    const lawPart = await p.evaluate(() => { const b = document.querySelector("#drug2 #d-law .sec-b"); let own = null; try { own = localStorage.getItem("pk-country"); } catch (e) { own = "?"; }
+      return { hash: location.hash, where: b ? (b.querySelector(".cq-where") || {}).textContent || "" : "", asked: b ? (b.querySelector(".cq-asked") || {}).textContent || "" : "", say: b ? (b.querySelector(".say") || {}).textContent || "" : "", own }; });
+    ok(w + ": “is weed legal in greece”: the route says what the law of Greece says about cannabis, and opens cannabis' law part for Greece, “The country you asked about”, without changing the reader's own country",
+      lw2ok && lawPart.hash === "#s-cannabis/part-d-law" && lawPart.where === "Greece" && lawPart.asked === "The country you asked about" && /Greece/.test(lawPart.say) && lawPart.own === null, JSON.stringify(lw2.routes).slice(0, 260) + " | " + JSON.stringify(lawPart));
+    await p.goto(BASE + "home"); await p.waitForTimeout(300);
+    const lw3 = await ask("can you go to jail for weed");
+    ok(w + ": a question of the law that the law part does not answer by itself (“can you go to jail for weed”) gets the route and keeps the line and the way to send it", lw3.routes.some(r => r.kind === "law") && lw3.none === "We haven’t checked exactly this yet." && !!lw3.askBtn, JSON.stringify(lw3.routes) + " | " + lw3.none + " | " + lw3.askBtn);
+    const nm = await ask("what is the emergency number in greece");
+    ok(w + ": “what is the emergency number in greece”: the route says the number and opens Greece on the emergency page", nm.routes.length === 1 && nm.routes[0].kind === "numbers" && nm.routes[0].href === "#emergency/c-Greece" && nm.routes[0].t === "In Greece, call 112" && !nm.none, JSON.stringify(nm.routes));
+    // an entry of one or two words that is a beginning: told to go on, in place of "No match … Ask us"
+    await p.fill("#search", "can i"); await p.waitForTimeout(500);
+    const sh = await p.evaluate(() => { const b = document.getElementById("search-results"); return { unf: (b.querySelector(".sr-fit .sr-unfin") || {}).textContent || "", ask: !!b.querySelector(".sr-ask, button[data-ask]"), none: !!b.querySelector(":scope > .none"), live: document.getElementById("search-count").textContent }; });
+    ok(w + ": two words that are a beginning (“can i”) are told “Go on. Finish your question and we will look.”, with no “No match” and nothing to send", sh.unf === "Go on. Finish your question and we will look." && !sh.ask && !sh.none && sh.live === sh.unf, JSON.stringify(sh));
+    // a question the reader already sent, opened again: it says so, and offers no second way to send it
+    const keptWas = await p.evaluate(q => { const was = localStorage.getItem("pk-asked"), list = JSON.parse(was || "[]"); list.push({ k: q, q, d: "", t: Date.now(), cv: "x", st: "wait", sent: 1 }); localStorage.setItem("pk-asked", JSON.stringify(list)); return was; }, UNCHECKED);
+    await p.fill("#search", ""); const st = await ask(UNCHECKED);
+    ok(w + ": a question already sent (“" + UNCHECKED + "”), opened again, says “You sent us this question. No answer yet …” and offers no second way to send it", st.none === "You sent us this question." && !st.askBtn && /No answer yet\. It turns green under “Your questions” on the start page when there is one\./.test(st.text.replace(/\s+/g, " ")), st.none + " | " + st.text.replace(/\s+/g, " ").slice(0, 200));
+    await p.evaluate(was => { if (was === null) localStorage.removeItem("pk-asked"); else localStorage.setItem("pk-asked", was); }, keptWas);
     // (2.9.1) a drug's name with a letter wrong is read as the name, and the page says what it read
     const sp = await ask(MISSPELT); await shot("list-misspelt");
     const spRead = await p.evaluate(() => (document.querySelector("#search-results .sr-fit .sr-read") || {}).textContent || "");

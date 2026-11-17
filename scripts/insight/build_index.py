@@ -333,19 +333,30 @@ class Ranker:
         a word). on_page: it is asked on a drug's page and names no drug."""
         U = self.unfin
         if not U: return ""
-        t = str(q).lower().replace("\u2019", "'"); names = len(self.pat.findall(t))
-        w = [x for x in (y.strip("'") for y in re.findall(r"[a-z0-9']+", self.pat.sub(" it ", t))) if x]
+        w, nm = self.unf_tokens(q); names = sum(1 for n in nm if n is not None)
         if not w: return ""
         s = " ".join(w)
         if any(p.search(s) for p in U["whole"]): return ""
         if w[-1] in U["ends"] and not any(p.search(s) for p in U["strand"]): return "ends"
         if names >= 2 and all(x == "it" or x in U["join"] for x in w): return ""               # two drugs and a word that joins them
+        # (2.9.2) nothing but function words and words for people: a subject, and nothing said of it ("do gay people"), unless
+        # a form of "be" stands before a last word that describes people ("are people gay": finished, and not about drugs)
+        people = all(x in U["aux"] or x in U["who"] or x in U["whoadj"] for x in w)
+        be = next((i for i, x in enumerate(w) if x in U["be"]), -1); gap = any(x in U["gap"] for x in w)
+        said = be >= 0 and w[-1] in U["whoadj"] and be < len(w) - 1                                     # "are people gay"
+        said_of = be >= 0 and any(x in U["pp"] for x in w[be + 2:-1])                                   # "is weed for kids": something is said of it
         if names or on_page:
-            if all(x in U["aux"] for x in w):
+            if people and not said and not said_of:
                 return "" if names and any(p.search(s) for p in U["named"]) else "bare"                 # "what is ketamine" is finished
+            if not people and self.verbless(w, nm): return "verb"
         elif all(x in U["known"] for x in w):
-            general = not any(x in U["gap"] for x in w) and (any(x in U["nouns"] for x in w) or (w[0] == "why" and any(x in U["topic"] for x in w)))
+            if people: return "" if said or (said_of and not gap) else "open"
+            if self.verbless(w, nm): return "verb"                                                     # "how long does withdrawal"
+            # a word for people that is not an everyday one, and no "it": the question is about people, and finished ("how do i get a girlfriend")
+            if not gap and any((x in U["who"] or x in U["whoadj"]) and x not in U["func"] and x not in U["aux"] and x not in U["topic"] for x in w): return ""
+            general = not gap and (any(x in U["nouns"] for x in w) or (w[0] == "why" and any(x in U["topic"] for x in w)))
             return "" if general else "which"
+        elif self.verbless(w, nm): return "verb"                                                       # "does the government", "can dogs"
         # the last word is still being typed: not a word, and the beginning of a drug's name, or (in a question that otherwise
         # reads as one about drugs) of a word this rule knows
         last = w[-1]
@@ -353,6 +364,50 @@ class Ranker:
             if last in U["begin_name"]: return "typing"
             if last in U["begin"] and (names or on_page or all(x in U["known"] for x in w[:-1]) or self.in_scope(" ".join(w[:-1]))): return "typing"
         return ""
+    def unf_tokens(self, q):
+        """The words of a question as the rule 'is it finished?' reads them (the page's insUnfTokens): small letters, each drug's
+        name read as "it", and beside each word the name it stands for (None for a word that is not a name). A name inside a
+        phrase that is not drug talk ("weed my garden", "diet coke": the scope rule's 'not') is not a name."""
+        t = str(q).lower().replace("\u2019", "'")
+        blank = self.scope_not.sub(lambda m: " " * len(m.group(0)), t) if getattr(self, "scope_not", None) is not None else t
+        out, surf, at = [], [], 0
+        for m in self.pat.finditer(blank):
+            out += [t[at:m.start()], " 0n0 "]; surf.append(t[m.start():m.end()]); at = m.end()
+        out.append(t[at:]); w, nm, k = [], [], 0
+        short = (self.unfin or {}).get("short") or {}
+        for y in re.findall(r"[a-z0-9']+", "".join(out)):
+            y = y.strip("'")
+            if not y: continue
+            if y == "0n0" and k < len(surf): w.append("it"); nm.append(surf[k]); k += 1
+            else:
+                for z in (short[y].split(" ") if y in short else [y]): w.append(z); nm.append(None)    # "u" is "you", "gonna" is "going to"
+        return w, nm
+    def verbless(self, w, nm):
+        """(2.9.2) A helper verb and no main verb after it: "do gay people", "does smoking weed", "how long does the high",
+        "can dogs". Grammar, not topic: after do, does, can, should, will … a question needs a verb in its base form.
+        site/insight/scope.json ("unfinished": help, do, open, det, be, verbs) explains what can be that verb. Only short
+        questions (six words or fewer) are read this way: a longer one has room for a second clause this rule cannot see."""
+        U = self.unfin
+        if len(w) > 6: return False
+        thing = lambda x: self.scope_re is not None and bool(self.scope_re.search(x))               # a drug word
+        def base(j):                                                                                # may word j be the main verb where it stands?
+            x, prev = w[j], (w[j - 1] if j else "")
+            if prev in U["det"]: return False                                                       # "the high", "a test": a thing
+            if nm[j] is not None:                                                                   # a drug's name: only where its own word can be a verb ("can i speed up")
+                return j > 0 and prev not in U["help"] and not prev.endswith("ing") and re.fullmatch(r"[a-z]+", nm[j]) is not None and verbish(nm[j], U["vocab"])
+            if x in U["verbs"] or x in U["be"]: return True
+            if x in U["aux"] or x in U["gap"] or x in U["who"] or x in U["whoadj"]: return False
+            if j and (nm[j - 1] is not None or prev in UNF_SUBJ): return True                       # right after a pronoun or a drug's name: the verb's place
+            if thing(x): return False
+            return verbish(x, U["vocab"])
+        for i, x in enumerate(w):
+            prev = w[i - 1] if i else ""
+            if nm[i] is None and x in U["help"] and prev not in U["det"] and prev != "to":
+                if x in U["do"] and any(y not in U["open"] for y in w[:i]): return False            # "people do drugs": do can be the main verb
+                return not any(base(j) for j in range(i + 1, len(w)))
+            # before the helper: question words, function words, people, drugs' names and drug words, a word in -ing ("smoking weed can"); nothing else
+            if nm[i] is None and (x in U["be"] or x == "to" or not (x in U["open"] or x in U["aux"] or x in U["ends"] or x in U["gap"] or x in U["who"] or x in U["whoadj"] or x.endswith("ing") or thing(x))): return False
+        return False
     def in_scope(self, q):
         """Is this a question about drugs, by its words alone (the page's insScope; site/insight/scope.json)? Yes when,
         with the phrases that are not drug talk taken out, it names a drug the site covers or holds a drug word, the name
@@ -381,7 +436,7 @@ class WordRules:
         self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A); self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A)
         self.unfin = unfinished_rule(Sc["unfinished"], [n for n, _ in t], vocabulary())
         self.spell = spell_rule(Sc["spell"], self.name_of, Sc["unfinished"]["names"], vocabulary(), self.unfin["known"])
-    named = Ranker.named; in_scope = Ranker.in_scope; unfinished = Ranker.unfinished; correct = Ranker.correct
+    named = Ranker.named; in_scope = Ranker.in_scope; unfinished = Ranker.unfinished; correct = Ranker.correct; unf_tokens = Ranker.unf_tokens; verbless = Ranker.verbless
     def unknown(self, q): return unknown_words(q, self.unfin["vocab"] or set(), self.unfin["known"])
 
 
@@ -390,6 +445,28 @@ def forum_questions():
     F = [x["question"] if isinstance(x, dict) else x for x in json.load(open(ROOT / "data/verification/questions-2026-11-14/forums.json", encoding="utf-8"))["questions"]]
     G = [x["question"] for x in json.load(open(ROOT / "data/verification/insight/gold-sample.json", encoding="utf-8"))["questions"]]
     return list(dict.fromkeys(F + G))
+
+
+def repo_questions():
+    """Every sentence that ends in a question mark in the repository's question files (the forum questions' own rewordings,
+    the near-miss readers' wordings, the site's own questions, the list of questions not answered yet), without the ones
+    the word rules were written with (forum_questions) and without the questions about other things: finished questions
+    that the rule 'is it finished?' was not tuned on (site 2.9.2: the fresh measure of decision 26, step d)."""
+    out = []
+    def walk(o):
+        if isinstance(o, str):
+            s = o.strip()
+            if s.endswith("?") and 8 <= len(s) <= 220 and "\n" not in s: out.append(s)
+        elif isinstance(o, list):
+            for x in o: walk(x)
+        elif isinstance(o, dict):
+            for v in o.values(): walk(v)
+    for f in sorted((ROOT / "data/verification").glob("questions-*/*.json")) + sorted((ROOT / "data/verification/insight").glob("*.json")) + sorted((ROOT / "data/site").glob("*.json")):
+        if f.name == "scope-other.json": continue
+        try: walk(json.load(open(f, encoding="utf-8")))
+        except (OSError, ValueError): pass
+    tuned = set(forum_questions())
+    return [q for q in dict.fromkeys(out) if q not in tuned]
 
 
 def measure_words(R, show=True):
@@ -422,6 +499,17 @@ def measure_words(R, show=True):
     plain = [q for q in other if not R.in_scope(q) and not R.unfinished(q)]; with_word = [(R.unknown(q), q) for q in plain if R.unknown(q)]
     missed = [q for q in real if not R.in_scope(q) and not R.unfinished(q)]; missed_word = [(R.unknown(q), q) for q in missed if R.unknown(q)]
     out.update({"other_plain": len(plain), "other_with_an_unknown_word": len(with_word), "real_not_taken_as_about_drugs": len(missed), "of_which_with_an_unknown_word": len(missed_word)})
+    # (2.9.2) the fresh measure: question sentences the rule was not written with. Many of the site's own are asked on a drug's
+    # page ("How do people take it?"): there "it" is that drug, and off the page "which drug?" is the right reading
+    fresh = repo_questions(); fresh_hit = {}
+    for q in fresh:
+        u = R.unfinished(q)
+        if u: fresh_hit.setdefault(u, []).append(q)
+    out.update({"fresh": len(fresh), "fresh_called_unfinished": {k: len(v) for k, v in sorted(fresh_hit.items())}})
+    if show:
+        print(f"unfinished rule, fresh: of {len(fresh)} question sentences it was not written with, called unfinished: {out['fresh_called_unfinished']}")
+        for k, v in sorted(fresh_hit.items()):
+            for q in v: print(f"    {k}: {q}")
     if show:
         print(f"unfinished rule: whole forum questions called unfinished {len(wrong)} of {len(real)}:", wrong)
         print(f"unfinished rule: questions about other things called unfinished {len(wrong_o)} of {len(other)}:", wrong_o)
@@ -533,7 +621,31 @@ def main():
 
 
 SCOPE_B, SCOPE_E = r"(?<![A-Za-z0-9_])(?:", r")(?![A-Za-z0-9_])"   # a word boundary that reads the same in JavaScript and in Python
-UNF_SETS, UNF_PATS = ("ends", "aux", "func", "topic", "nouns", "gap", "join"), ("strand", "whole", "named")
+UNF_SETS, UNF_PATS = ("ends", "aux", "func", "topic", "nouns", "gap", "join", "who", "whoadj", "help", "do", "det", "be", "open", "verbs", "wants", "pp", "abbr"), ("strand", "whole", "named")
+UNF_KNOWN = ("ends", "aux", "func", "topic", "nouns", "gap", "join", "who", "whoadj", "help", "det", "be", "abbr")   # the words that could be asked of any drug ('verbs', 'open', 'wants' only say how a word is read)
+UNF_SUBJ = ("i", "you", "we", "they", "he", "she", "it")                                                    # after one of these stands the verb
+
+
+def verb_forms(x):
+    """The -ing and -ed forms a verb with this base form would have (the page's insVerbForms)."""
+    f = [x + "ing", x + "ed"]
+    if x.endswith("e"): f += [x[:-1] + "ing", x + "d"]
+    if x.endswith("ie"): f.append(x[:-2] + "ying")
+    if len(x) > 2 and x.endswith("y") and x[-2] not in "aeiou": f.append(x[:-1] + "ied")
+    if len(x) >= 2 and x[-1] not in "aeiouwxy" and x[-2] in "aeiou": f += [x + x[-1] + "ing", x + x[-1] + "ed"]
+    if x.endswith("c"): f += [x + "king", x + "ked"]
+    return f
+
+
+def verbish(x, vocab):
+    """May this word be the base form of a verb, by the model's word list alone (the page's insVerbish)? A word the list
+    knows: when it also knows an -ing or -ed form of it. A word it does not know: yes (it may be a verb we do not know),
+    unless it has an ending (-ing, -ed, a plural or third-person -s on a word the list knows): then it is not a base form."""
+    if not vocab: return True
+    if x in vocab: return any(f in vocab for f in verb_forms(x))
+    if x.endswith("ing") or x.endswith("ed"): return False
+    if x.endswith("s") and not x.endswith("ss") and (x[:-1] in vocab or (x.endswith("es") and x[:-2] in vocab) or (x.endswith("ies") and x[:-3] + "y" in vocab)): return False
+    return True
 
 
 def unfinished_rule(U, names, vocab):
@@ -542,7 +654,7 @@ def unfinished_rule(U, names, vocab):
     names: every name that names a drug; vocab: the model's vocabulary (a set of words), or None."""
     if not U: return None
     R = {k: set(U.get(k) or []) for k in UNF_SETS}; R.update({k: [re.compile(p) for p in U.get(k) or []] for k in UNF_PATS})
-    R["known"] = set().union(*(R[k] for k in UNF_SETS)); R["vocab"] = vocab
+    R["short"] = dict(U.get("short") or {}); R["known"] = set().union(*(R[k] for k in UNF_KNOWN)) | set(R["short"]); R["vocab"] = vocab
     of_names = set()
     for n in list(names) + list(U.get("names") or []): of_names.update(x for x in re.findall(r"[a-z0-9]+", n.lower()) if len(x) >= 4)
     begin = lambda words, start: {w[:i] for w in words for i in range(start, len(w))} - {w[:-1] for w in words if w.endswith("s")}   # (a word without its plural s is a word)
@@ -619,6 +731,7 @@ def scope_block():
     # (2.9) is a question finished? the page's insUnfinished and Ranker.unfinished read the same lists and patterns; 'names':
     # the names of drugs the site does not cover, for a name that is still being typed
     unf = {k: sorted(set(U.get(k) or [])) for k in UNF_SETS}; unf.update({k: list(U.get(k) or []) for k in UNF_PATS}); unf["names"] = sorted(set(S["names"]))
+    unf["short"] = dict(sorted((U.get("short") or {}).items()))
     # (2.9.1) a drug's name with a letter wrong: 'map' (only to names the site knows) and 'keep'; the names of drugs without a page are in unfinished.names
     Sp = S.get("spell") or {}; known = {n for n, _ in names_table()} | set(S["names"])
     spell = {"map": {k: v for k, v in sorted((Sp.get("map") or {}).items()) if v in known and k not in known}, "keep": sorted(set(Sp.get("keep") or []))}

@@ -290,6 +290,21 @@ const INS_RE = {
     "\\bwhere\\b[^?.!]{0,30}\\b(?:test(?:ing)?\\s+kits?|test\\s+strips?|reagents?|fentanyl\\s+strips?|drug\\s+checking|tested|test\\s+(?:my|it|them))\\b",
     "\\bwhat\\s+(?:kind\\s+of\\s+|type\\s+of\\s+|sort\\s+of\\s+)?(?:test(?:ing)?\\s+kits?|test\\s+strips?|reagents?)\\s+(?:do|should|can|to|for|is|are|works?)\\b",
     "^(?:[\\w-]+\\s+){0,2}(?:test(?:ing)?\\s+kits?|reagents?|test\\s+strips?|drug\\s+checking)\\s*\\??$"].join("|"), "i"),
+  /* (2.9.2; the senior author asked "are drugs legal in greece" and was told "We haven't checked exactly this yet", while the
+     site has the answer on its page of treaties by country: "pharmakon insight has to incorporate all information from the
+     website from all sections".) law: a question of what the law says: "is … legal", "the laws on", "go to jail for".
+     "legal highs" are a kind of drug, and a question that begins with why, when, who or should asks for something else
+     (lawNot). lawc: with a country named, one of these words is enough ("is it allowed in japan"). lawPlain: the question
+     asks what is legal and nothing more ("are drugs legal in greece"): the route is its answer; any other keeps the line
+     for a question we have not checked and the way to send it ("can you go to jail for weed": the route is shown, loose).
+     nums: a question for an emergency number. checkc: drug checking, with a country named. */
+  law: new RegExp(["\\b(?:is|are|isn'?t|aren'?t|was|were)\\b[^?.!]{0,50}\\b(?:legal(?! highs?\\b)|illegal|lawful|unlawful|banned|prohibited|outlawed|decriminali[sz]ed|criminali[sz]ed|controlled|allowed by law)\\b",
+    "\\b(?:legal status|legality|drug laws?|the law|laws? (?:on|about|for|in|around|regarding)|penalt(?:y|ies)|(?:go|goes|going|went|sent|get) to (?:jail|prison)|(?:jail|prison) time|arrested for|get arrested|caught with|possession)\\b"].join("|"), "i"),
+  lawNot: /^(?:why|when|who|should|shouldn'?t|how come|since when)\b/i,
+  lawc: /\b(?:legal(?! highs?\b)|illegal|laws?|allowed|permitted|ok|okay|strict|tolerated|decriminali[sz]ed|banned)\b/i,
+  lawPlain: /\b(?:legal|illegal|lawful|unlawful|banned|prohibited|outlawed|decriminali[sz]ed|criminali[sz]ed|controlled substance|controlled|allowed|permitted|legal status|legality|laws?|the law)(?:\s+(?:in|at|on|for|here|there|where|anywhere|everywhere|now|yet|today|still)\b[^?.!]*)?\s*[?.!]*$/i,
+  nums: /\b(?:emergency|ambulance|poisons? (?:control|cent(?:er|re)|line|information)|helpline|hotline|crisis line)\b[^?.!]{0,40}\b(?:numbers?|lines?|phone|call)\b|\b(?:what|which) number\b|\bwho (?:do|should|can) (?:i|we|you) call\b|\bnumber (?:to|do i|should i) call\b/i,
+  checkc: /\b(?:drug[- ]check\w*|pill[- ]test\w*|test(?:ing|ed)? (?:my |your |the |some )?(?:drugs?|pills?|stuff)|(?:drugs?|pills?) tested)\b/i,
   // two drugs: mixed (a mixing word), not compared, and not one as a treatment for the other, found in the other or counted
   // in deaths with it (those are questions with answers of their own, not a request for the mixing tool)
   mixing: /\b(?:mix|mixing|mixed|combin\w*|together|same time|at once|on top of|with|while (?:on|taking|drinking|using))\b/i,
@@ -323,6 +338,26 @@ function insBlocked(q) {
   return named && INS_RE.recipe.test(q);
 }
 const insCap = t => t.charAt(0).toUpperCase() + t.slice(1);
+/* (2.9.2) The country a question names: the UN's names, the names the site shows, their other names and a few everyday
+   ones, read with the drugs' names taken out ("china white" is not China). "here", "where i am", "my country": the country
+   the reader chose, if any. Returns the UN's name, or "". */
+const INS_CTRY_MORE = { "United States of America": ["usa", "u.s.a.", "u.s.", "america", "the states", "the us"], "United Kingdom of Great Britain and Northern Ireland": ["uk", "u.k.", "britain", "great britain", "england", "scotland", "wales", "northern ireland"],
+  "Netherlands (Kingdom of the)": ["holland"], "United Arab Emirates": ["uae", "dubai"], "Republic of Korea": ["korea"] };
+function insCountry(q) {
+  const flat = s => norm(s).replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!insCountry.t) { insCountry.t = [];
+    WORLD_LAW.countries.forEach(c => { if (c.name === "European Union") return;
+      [c.name, ctryName(c.name), shortCtry(c.name)].concat(CTRY_ALT[c.name] || [], INS_CTRY_MORE[c.name] || []).forEach(n => { const k = flat(n); if (k.length >= 2) insCountry.t.push([k, c.name]); }); });
+    insCountry.t.sort((a, b) => b[0].length - a[0].length); }
+  const t = " " + flat(insMask(q)).replace(/\bcold turkey\b/g, " ") + " ", hit = insCountry.t.find(([n]) => t.includes(" " + n + " "));
+  if (hit) return hit[1];
+  return PREF_COUNTRY && /\b(?:here|where i (?:am|live)|(?:in )?my country)\b/.test(t) ? PREF_COUNTRY : "";
+}
+// what the treaties page says of a country, in a line
+function insLawLine(un) {
+  const c = WORLD_LAW.countries.find(x => x.name === un), n = c ? ["c1961", "c1971", "c1988"].filter(k => c[k] && c[k].status === "party").length : 0, nm = insCap(inCtry(un));
+  return (n === 3 ? nm + " has joined all three UN drug treaties" : n ? nm + " has joined " + n + " of the three UN drug treaties" : nm + " has not joined the UN drug treaties") + ". Its own law on each drug is on that drug’s page";
+}
 function insRoutes(q, groups, drug) {
   const out = [], one = groups.filter(g => g.length === 1).map(g => g[0]).filter((s, i, a) => a.indexOf(s) === i && subBySlug[s]);
   const about = one[0] || (drug && subBySlug[drug] ? drug : null);   // the drug a route is for: the one named, else the page's
@@ -342,6 +377,19 @@ function insRoutes(q, groups, drug) {
     if (about && !NO_TEST.includes(about)) add("test", INS_PLACE.test(about), drugName(about), "Test kits for " + pageWord(about));
     else add("test", INS_PLACE.checking(), "Drug checking", "Drug checking and test kits");
   }
+  // (2.9.2) the site's other sections, by country: the law, the emergency numbers, drug checking
+  const c = insCountry(q);
+  if (!INS_RE.lawNot.test(q) && (INS_RE.law.test(q) || (c && INS_RE.lawc.test(q)))) { const loose = INS_RE.lawPlain.test(q) ? null : { loose: true };
+    if (about) add("law", { href: "#s-" + about + "/part-d-law" }, "The law · " + drugName(about) + (c ? " · " + shortCtry(c) : ""),
+      c ? (legalReady(about) ? lawPlain(about, c) : "What the law of " + inCtry(c) + " says about " + pageWord(about)) : "Is " + pageWord(about) + " legal where you are?", Object.assign(c ? { country: c, slug: about } : {}, loose));
+    else if (c) add("law", { href: "#law/c-" + encodeURIComponent(ctryName(c)) }, "The law · " + shortCtry(c), insLawLine(c), loose);
+    else add("law", { href: "#law" }, "The law", "Drug treaties, country by country", loose);
+  }
+  if (INS_RE.nums.test(q) && !out.some(r => r.kind === "help")) { const em = c ? emFor(c) : null;
+    add("numbers", { href: em ? "#emergency/c-" + encodeURIComponent(em.country) : "#emergency" }, "Emergency numbers" + (c ? " · " + shortCtry(c) : ""), em ? "In " + inCtry(c) + ", call " + em.numbers[0].n : "Emergency numbers, country by country"); }
+  if (c && INS_RE.checkc.test(q)) { const dc = DRUGCHECK.services.filter(s => sameCountry(s.country, c)), i = out.findIndex(r => r.kind === "test");
+    const r = Object.assign({ kind: "test", k: "Drug checking · " + shortCtry(c), t: dc.length ? dc.length + " drug checking service" + (dc.length === 1 ? "" : "s") + " in " + inCtry(c) : "Drug checking in " + inCtry(c) + ": what we found" }, { href: "#checking/c-" + encodeURIComponent(dc.length ? dc[0].country : shortCtry(c)) });
+    if (i >= 0 && !about) out[i] = r; else out.push(r); }
   const w = (q.match(INS_RE.what) || [])[1], slug = w && INS.any.get(w.toLowerCase().replace(/[.!?]+$/, "").trim());
   if (slug && subBySlug[slug] && !out.length) add("page", INS_PLACE.page(slug), "Drug · " + subBySlug[slug].cls, subBySlug[slug].name, { whole: true });
   return out;
@@ -426,10 +474,12 @@ function insScope(q) {
    (its last word is the beginning of a word: "can i die from coc"). A question that is not finished gets no verdict and no
    way to send it: the page asks which drug is meant, or to go on, and shows the nearest answers. */
 function insUnfinRule(U, names) {
-  const R = {}, sets = ["ends", "aux", "func", "topic", "nouns", "gap", "join"];
+  const R = {}, sets = ["ends", "aux", "func", "topic", "nouns", "gap", "join", "who", "whoadj", "help", "do", "det", "be", "open", "verbs", "wants", "pp", "abbr"];
   sets.forEach(k => { R[k] = new Set(U[k] || []); });
   ["strand", "whole", "named"].forEach(k => { R[k] = (U[k] || []).map(p => new RegExp(p)); });
-  R.known = new Set(); sets.forEach(k => R[k].forEach(x => R.known.add(x)));
+  // the words that could be asked of any drug ("verbs", "open", "wants", "pp" only say how a word is read); the short forms people type are words too
+  R.short = new Map(Object.entries(U.short || {}));
+  R.known = new Set(); ["ends", "aux", "func", "topic", "nouns", "gap", "join", "who", "whoadj", "help", "det", "be", "abbr"].forEach(k => R[k].forEach(x => R.known.add(x))); R.short.forEach((v, k) => R.known.add(k));
   // every beginning of a word: of a word of the lists (two letters or more), of a word of a drug's name (three or more);
   // a word without its plural s is a word, not a beginning
   const begin = (words, start) => { const out = new Set(); words.forEach(w => { for (let i = start; i < w.length; i++) out.add(w.slice(0, i)); }); words.forEach(w => { if (w.endsWith("s")) out.delete(w.slice(0, -1)); }); return out; };
@@ -437,17 +487,82 @@ function insUnfinRule(U, names) {
   R.begin = begin(R.known, 2); R.beginName = begin(ofNames, 3);
   return R;
 }
+/* 2.9.2 (the senior author typed "do gay people" and was told "This does not look like a question about drugs": "we have to
+   include our site responding perfectly to every circumstance this is what smartness is about"). Two more ways a question is
+   not finished, both in scope.json's note: "open", nothing but function words and words for people ("do gay people", "why do
+   women"); "verb", a helper verb and no main verb after it ("does smoking weed", "how long does the high", "can dogs").
+   insUnfTokens: the words as the rule reads them: small letters, the short forms people type read as their words ("u",
+   "ppl", "gonna"), each drug's name read as "it" (nm: the name it stands for), and a name inside a phrase that is not drug
+   talk ("weed my garden") left as a word. */
+function insUnfTokens(q) {
+  const U = INS.unfin, t = String(q).toLowerCase().replace(/\u2019/g, "'"), blank = INS.scope ? t.replace(INS.scope.not, m => " ".repeat(m.length)) : t;
+  const surf = [], w = [], nm = []; let out = "", at = 0, m, k = 0; INS.nameRe.lastIndex = 0;
+  while ((m = INS.nameRe.exec(blank))) { out += t.slice(at, m.index) + " 0n0 "; surf.push(t.slice(m.index, m.index + m[0].length)); at = m.index + m[0].length; }
+  out += t.slice(at);
+  (out.match(/[a-z0-9']+/g) || []).forEach(y => { y = y.replace(/^'+|'+$/g, ""); if (!y) return;
+    if (y === "0n0" && k < surf.length) { w.push("it"); nm.push(surf[k++]); return; }
+    (U.short.has(y) ? U.short.get(y).split(" ") : [y]).forEach(z => { w.push(z); nm.push(null); }); });
+  return { w, nm };
+}
+// the -ing and -ed forms a verb with this base form would have; may a word be the base form of a verb, by the model's word list alone
+function insVerbForms(x) {
+  const f = [x + "ing", x + "ed"], n = x.length;
+  if (x.endsWith("e")) f.push(x.slice(0, -1) + "ing", x + "d");
+  if (x.endsWith("ie")) f.push(x.slice(0, -2) + "ying");
+  if (n > 2 && x.endsWith("y") && !"aeiou".includes(x[n - 2])) f.push(x.slice(0, -1) + "ied");
+  if (n >= 2 && !"aeiouwxy".includes(x[n - 1]) && "aeiou".includes(x[n - 2])) f.push(x + x[n - 1] + "ing", x + x[n - 1] + "ed");
+  if (x.endsWith("c")) f.push(x + "king", x + "ked");
+  return f;
+}
+function insVerbish(x) {
+  const V = INS.vocab;
+  if (V.has(x)) return insVerbForms(x).some(f => V.has(f));
+  if (x.endsWith("ing") || x.endsWith("ed")) return false;
+  if (x.endsWith("s") && !x.endsWith("ss") && (V.has(x.slice(0, -1)) || (x.endsWith("es") && V.has(x.slice(0, -2))) || (x.endsWith("ies") && V.has(x.slice(0, -3) + "y")))) return false;
+  return true;
+}
+const INS_SUBJ = new Set(["i", "you", "we", "they", "he", "she", "it"]);   // after one of these stands the verb
+function insVerbless(w, nm) {
+  const U = INS.unfin; if (w.length > 6) return false;
+  const thing = x => !!INS.scope && INS.scope.re.test(x);                                 // a drug word
+  const base = j => { const x = w[j], prev = j ? w[j - 1] : "";                           // may word j be the main verb where it stands?
+    if (U.det.has(prev)) return false;                                                    // "the high", "a test": a thing
+    if (nm[j] !== null) return j > 0 && !U.help.has(prev) && !prev.endsWith("ing") && /^[a-z]+$/.test(nm[j]) && insVerbish(nm[j]);   // a drug's name: only where its own word can be a verb ("can i speed up")
+    if (U.verbs.has(x) || U.be.has(x)) return true;
+    if (U.aux.has(x) || U.gap.has(x) || U.who.has(x) || U.whoadj.has(x)) return false;
+    if (j && (nm[j - 1] !== null || INS_SUBJ.has(prev))) return true;                     // right after a pronoun or a drug's name: the verb's place
+    if (thing(x)) return false;
+    return insVerbish(x); };
+  for (let i = 0; i < w.length; i++) { const x = w[i], prev = i ? w[i - 1] : "";
+    if (nm[i] === null && U.help.has(x) && !U.det.has(prev) && prev !== "to") {
+      if (U.do.has(x) && w.slice(0, i).some(y => !U.open.has(y))) return false;           // "people do drugs": do can be the main verb
+      for (let j = i + 1; j < w.length; j++) if (base(j)) return false;
+      return true; }
+    // before the helper: question words, function words, people, drugs' names and drug words, a word in -ing ("smoking weed can"); nothing else
+    if (nm[i] === null && (U.be.has(x) || x === "to" || !(U.open.has(x) || U.aux.has(x) || U.ends.has(x) || U.gap.has(x) || U.who.has(x) || U.whoadj.has(x) || x.endsWith("ing") || thing(x)))) return false; }
+  return false;
+}
 function insUnfinished(q, onPage) {
   const U = INS.unfin; if (!U) return "";
-  let names = 0; INS.nameRe.lastIndex = 0;
-  const t = String(q).toLowerCase().replace(/\u2019/g, "'").replace(INS.nameRe, () => { names++; return " it "; });
-  const w = (t.match(/[a-z0-9']+/g) || []).map(x => x.replace(/^'+|'+$/g, "")).filter(Boolean); if (!w.length) return "";
+  const { w, nm } = insUnfTokens(q), names = nm.filter(n => n !== null).length; if (!w.length) return "";
   const s = w.join(" "), any = ps => ps.some(p => p.test(s)), all = (xs, S) => xs.every(x => S.has(x)), last = w[w.length - 1];
   if (any(U.whole)) return "";
   if (U.ends.has(last) && !any(U.strand)) return "ends";
   if (names >= 2 && w.every(x => x === "it" || U.join.has(x))) return "";               // two drugs and a word that joins them
-  if (names || onPage) { if (all(w, U.aux)) return names && any(U.named) ? "" : "bare"; }   // "what is ketamine" is finished
-  else if (all(w, U.known)) return !w.some(x => U.gap.has(x)) && (w.some(x => U.nouns.has(x)) || (w[0] === "why" && w.some(x => U.topic.has(x)))) ? "" : "which";
+  // nothing but function words and words for people: a subject, and nothing said of it, unless a form of "be" stands before
+  // a last word that describes people ("are people gay") or before "for kids" and the like ("is weed for kids")
+  const people = w.every(x => U.aux.has(x) || U.who.has(x) || U.whoadj.has(x)), be = w.findIndex(x => U.be.has(x)), gap = w.some(x => U.gap.has(x));
+  const said = be >= 0 && U.whoadj.has(last) && be < w.length - 1, saidOf = be >= 0 && w.slice(be + 2, -1).some(x => U.pp.has(x));
+  if (names || onPage) {
+    if (people && !said && !saidOf) return names && any(U.named) ? "" : "bare";          // "what is ketamine" is finished
+    if (!people && insVerbless(w, nm)) return "verb";
+  } else if (all(w, U.known)) {
+    if (people) return said || (saidOf && !gap) ? "" : "open";
+    if (insVerbless(w, nm)) return "verb";                                                // "how long does withdrawal"
+    // a word for people that is not an everyday one, and no "it": the question is about people, and finished ("how do i get a girlfriend")
+    if (!gap && w.some(x => (U.who.has(x) || U.whoadj.has(x)) && !U.func.has(x) && !U.aux.has(x) && !U.topic.has(x))) return "";
+    return !gap && (w.some(x => U.nouns.has(x)) || (w[0] === "why" && w.some(x => U.topic.has(x)))) ? "" : "which";
+  } else if (insVerbless(w, nm)) return "verb";                                           // "does the government", "can dogs"
   // the last word is still being typed: not a word, and the beginning of a drug's name, or (in a question that otherwise
   // reads as one about drugs) of a word this rule knows
   if (w.length >= 2 && !U.known.has(last) && !INS.vocab.has(last)) {
@@ -470,11 +585,19 @@ function insUnknown(q) {
   });
   return out;
 }
-// (the one unknown word of a question whose other words could be asked of any drug: what the page then says of it)
+// (the unknown word or words, three at most, of a question whose other words could be asked of any drug: what the page
+// then says of them. 2.9.2, the senior author of "what is mytragina javanica" being told "This does not look like a question
+// about drugs": a name of two words that we do not know is a name we do not know)
 function insStranger(q) {
-  const unk = insUnknown(q); if (unk.length !== 1) return "";
-  const rest = (String(q).toLowerCase().replace(/\u2019/g, "'").match(/[a-z0-9']+/g) || []).map(x => x.replace(/^'+|'+$/g, "")).filter(x => x && x !== unk[0]);
-  return rest.length && rest.every(x => INS.unfin.known.has(x)) ? unk[0] : "";
+  const unk = insUnknown(q); if (!unk.length || unk.length > 3) return "";
+  const toks = (String(q).toLowerCase().replace(/\u2019/g, "'").match(/[a-z0-9']+/g) || []).map(x => x.replace(/^'+|'+$/g, "")).filter(Boolean), set = new Set(unk);
+  const rest = toks.filter(x => !set.has(x));
+  return rest.length && rest.every(x => INS.unfin.known.has(x)) ? toks.filter((x, i) => set.has(x) && toks.indexOf(x) === i).join(" ") : "";
+}
+// does a question that is not finished and names no drug call for a drug's name ("is it addictive", "can i die from"), or only for its end ("do gay people")?
+function insUnfCue(q) {
+  const U = INS.unfin, w = insUnfTokens(q).w, last = w[w.length - 1];
+  return w.some(x => U.gap.has(x) || U.topic.has(x)) || (U.wants.has(last) && w.some(x => U.func.has(x) && !U.who.has(x)));
 }
 /* 2.9.1: a drug's name with a letter wrong is read as that name before the question is read ("can i die from cocane",
    "is ketamin addictive", "herion"), and the page says what it read. site/insight/scope.json ("spell") explains the rule
@@ -527,11 +650,21 @@ function insRead(query, ctx) {
   res.routes = insRoutes(d.core, named, drug); res.emergency = res.routes.some(r => r.kind === "help");
   return res;
 }
+// (2.9.2) a question that is not written in the Latin alphabet (three letters or more, three in ten of its letters)
+function insForeign(q) { const L = String(q).match(/\p{L}/gu) || [], o = L.filter(ch => !/\p{Script=Latin}/u.test(ch)).length; return o >= 3 && o / L.length >= 0.3; }
 async function insRank(query, ctx) {
   const t0 = performance.now(), res = insRead(query, ctx);
   if (res.note === "blocked") { res.ms = performance.now() - t0; return res; }
+  // Pharmakon reads English for now: the page says so, keeps the emergency route and the rows the word search found (it knows
+  // the drugs' Greek names), and gives no verdict
+  if (insForeign(res.q) && !res.emergency) { res.note = "language"; res.greek = /\p{Script=Greek}/u.test(res.q); res.routes = res.routes.filter(r => r.kind === "help"); res.ms = performance.now() - t0; return res; }
   const whole = res.routes.some(r => r.whole);                 // the question is a drug's name and nothing more: its page is the answer
-  const answered = res.routes.some(r => r.kind !== "mix"), named = !res.drug && res.groups.length > 0, unf = insUnfinished(res.core, !!res.drug);
+  // (2.9.2) the law of a named country on a named drug: the drug's law rows are fetched (once), so that the row says what the law says
+  const lr = res.routes.find(r => r.kind === "law" && r.country && r.slug);
+  if (lr && !legalReady(lr.slug)) { try { await Promise.race([loadFull(lr.slug), new Promise(ok => setTimeout(ok, 2500))]); } catch (e) { /* the row keeps its plain words */ } }
+  if (lr && legalReady(lr.slug)) lr.t = lawPlain(lr.slug, lr.country);
+  // a route is the answer to what was asked, except the mixing tool and a route that only points the way (loose)
+  const answered = res.routes.some(r => r.kind !== "mix" && !r.loose), named = !res.drug && res.groups.length > 0, unf = insUnfinished(res.core, !!res.drug);
   if (!(whole && insWordsIn(res.core) < INS_WORDS)) {
     const drug = ctx && ctx.drug, tx = insTexts(res.core, drug), v = await insEmbed(tx.full), mv = tx.masked === tx.full ? v : await insEmbed(tx.masked);
     const tiers = insTiers(insScore(v, mv, res.core), tx.groups);
@@ -549,7 +682,7 @@ async function insRank(query, ctx) {
   // not checked yet
   if (!res.best.length && !answered) {
     res.note = unf ? "unfinished" : res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
-    if (unf) res.unf = unf; else if (res.note === "other") res.stranger = insStranger(res.core);
+    if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); } else if (res.note === "other") res.stranger = insStranger(res.core);
   }
   res.ms = performance.now() - t0; INS.times.push(res.ms);
   return res;
@@ -577,7 +710,7 @@ function insPlaceholder() {
 /* ---------- In the search results ---------- */
 const insQ = (id, page) => isAuto(id) ? AUTO[id].q : (page && sharedQuestion(page, id)) || anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || claimText(claimById[id]);
 const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") + (ASK_ON ? ". What you type stays on it, unless you ask us to check a question." : ". Nothing you type leaves it.");
-const INS_ICON = { help: "heart", mix: "mix", dose: "book", test: "flask", page: "molecule" };
+const INS_ICON = { help: "heart", mix: "mix", dose: "book", test: "flask", page: "molecule", law: "scale", numbers: "phone" };
 // the emergency number where the reader is, or the way to the numbers: shown with an emergency route, and nowhere else
 function insSosHtml(cls) {
   const em = PREF_COUNTRY ? emFor(PREF_COUNTRY) : null;
@@ -585,7 +718,7 @@ function insSosHtml(cls) {
     '<a href="#emergency">' + (em ? "Other numbers" : "Emergency numbers by country") + "</a></span></p>";
 }
 function insRouteHtml(r, cls) {
-  return '<a class="' + cls + " r-" + r.kind + '" href="' + esc(r.href) + '" data-ins-route="' + r.kind + '"' + (r.el ? ' data-el="' + esc(r.el) + '"' : "") + (r.mix ? ' data-mix="' + esc(r.mix) + '"' : "") + ">" +
+  return '<a class="' + cls + " r-" + r.kind + '" href="' + esc(r.href) + '" data-ins-route="' + r.kind + '"' + (r.el ? ' data-el="' + esc(r.el) + '"' : "") + (r.mix ? ' data-mix="' + esc(r.mix) + '"' : "") + (r.country ? ' data-country="' + esc(r.country) + '"' : "") + ">" +
     '<span class="ri">' + icon(INS_ICON[r.kind] || "arrow") + '</span><span class="k">' + esc(r.k) + '</span><span class="t">' + esc(r.t) + '</span><span class="go">' + icon("arrow") + "</span></a>";
 }
 // "Ask us to check it": one tap (2.4, below: Your questions); where the page can send it, a quiet line says what is sent
@@ -604,6 +737,11 @@ function insNoneHtml(res, sheet) {
     return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="#wanted">See the whole list ' + icon("arrow") + "</a></div>"
       : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> A question like yours is <a href="#wanted">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
   }
+  if (res.note === "language") { const el = res.greek ? " Προς το παρόν διαβάζουμε ερωτήσεις μόνο στα αγγλικά." : "";
+    return sheet ? '<div class="ins-none ins-lang"><p class="ins-none-t">Pharmakon reads questions in English for now.</p><p class="ins-none-s">Please ask in English.' + el + "</p></div>" : '<p class="sr-fit-none sr-lang"><b>Pharmakon reads questions in English for now.</b> Please ask in English.' + el + "</p>"; }
+  // (2.9.2; the senior author opened a question he had sent and was offered to send it again) a question already sent says so
+  if ((res.note === "none" || res.note === "other") && askedSentHas(res.q)) { const who = res.stranger ? "We do not know \u201c" + esc(res.stranger) + "\u201d as a drug yet. " : "", rest = who + "No answer yet. It turns green under “Your questions” on the start page when there is one.";
+    return sheet ? '<div class="ins-none ins-sent"><p class="ins-none-t">You sent us this question.</p><p class="ins-none-s">' + rest + "</p></div>" : '<p class="sr-fit-none sr-sent"><b>You sent us this question.</b> ' + rest + "</p>"; }
   // 2.9: not finished yet: no verdict, no way to send it; which drug is meant, or go on
   if (res.note === "unfinished") { const t = insUnfinText(res);
     return sheet ? '<div class="ins-none ins-unfin"><p class="ins-none-t">' + esc(t[0]) + '</p><p class="ins-none-s">' + esc(t[1]) + "</p></div>" : '<p class="sr-fit-none sr-unfin"><b>' + esc(t[0]) + "</b> " + esc(t[1]) + "</p>"; }
@@ -622,7 +760,7 @@ function insNoneHtml(res, sheet) {
 // 2.9: what a question that is not finished is told: [the line, what to do]. With no drug named: which drug is meant;
 // with one (or on its page): go on about it
 function insUnfinText(res) {
-  if (!res.groups.length) return ["Which drug do you mean?", "Finish your question with its name and we will look."];
+  if (!res.groups.length) return res.cue === false ? ["Go on.", "Finish your question and we will look."] : ["Which drug do you mean?", "Finish your question with its name and we will look."];
   const one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
   return ["Go on.", "Finish your question" + (one ? " about " + pageWord(one) : "") + " and we will look."];
 }
@@ -645,6 +783,8 @@ function insSay(res) {
   if (res.best.length) parts.push("Best match: " + res.best.map(x => insQ(x.id, x.page)).join("; "));
   else if (res.note === "want") parts.push("Not answered yet. A question like yours is on our list: " + res.want.q);
   else if (res.note === "unfinished") parts.push(insUnfinText(res).join(" ").replace(/\.$/, ""));
+  else if (res.note === "language") parts.push("Pharmakon reads questions in English for now. Please ask in English");
+  else if ((res.note === "none" || res.note === "other") && askedSentHas(res.q)) parts.push("You sent us this question. No answer yet");
   else if (res.note === "other") parts.push(res.stranger ? "We do not know \u201c" + res.stranger + "\u201d as a drug. If it is one, you can send us your question" : "This does not look like a question about drugs. Pharmakon answers questions about drugs");
   else if (res.note) parts.push("We haven’t checked exactly this yet");
   if (res.related.length) parts.push(res.related.length + " related answer" + (res.related.length === 1 ? "" : "s"));
@@ -671,6 +811,18 @@ function insInject(box, res) {
   if (res.note === "want") INS.wantT = setTimeout(() => { const b = document.getElementById("search-results"), s = document.getElementById("search");
     if (b && !b.hidden && s && insClean(s.value) === res.q && b.querySelector('.sr-want[data-count][data-want="' + res.want.id + '"]')) wantCount(res.want.id); }, WANT_WAIT);
 }
+/* (2.9.2) An entry of one or two words is for the word search. When it is not a finished question ("can i", "do gay", "is
+   cocaine"), the page says so in place of "No match … Ask us": a beginning is not sent. A drug's name alone keeps its rows. */
+function insShort(box, q) {
+  if (!INS.unfin || !q) return;
+  const text = insSpell(q).text, groups = insNamed(text), drug = groups.length ? null : insCtx().drug, unf = insUnfinished(text, !!drug); if (!unf) return;
+  box.querySelectorAll(":scope > .sr-ask, :scope > .none").forEach(e => e.remove());
+  if (groups.length && insUnfTokens(text).w.every(x => x === "it")) return;            // the name and nothing more: its rows are the answer
+  const res = { q, note: "unfinished", unf, groups: groups.length ? groups : drug ? [[drug]] : [] }; if (!res.groups.length) res.cue = insUnfCue(text);
+  const html = '<div class="sr-fit" data-q="' + esc(q) + '">' + insNoneHtml(res, false) + "</div>", note = box.querySelector(":scope > .sr-note");
+  if (note) note.insertAdjacentHTML("afterend", html); else box.insertAdjacentHTML("afterbegin", html);
+  const live = document.getElementById("search-count"); if (live) live.textContent = insUnfinText(res).join(" ");
+}
 // called by runSearch after the word search has drawn its results
 function insightAfterSearch(raw) {
   const box = document.getElementById("search-results"); if (!box || box.hidden) return;
@@ -681,7 +833,7 @@ function insightAfterSearch(raw) {
   }
   if (!box.querySelector(":scope > .sr-note")) box.insertAdjacentHTML("afterbegin", '<p class="sr-note">' + icon("mobile") + "<span>" + esc(insNoteText()) + "</span></p>");
   const q = insClean(raw); clearTimeout(INS.timer);
-  if (insWordsIn(q) < INS_WORDS) { INS.seq++; return; }
+  if (insWordsIn(q) < INS_WORDS) { INS.seq++; insShort(box, q); return; }
   const ctx = insCtx(), have = INS.cache.get(insKey(q, ctx));
   if (have) { INS.seq++; insInject(box, have); return; }
   const seq = ++INS.seq;
@@ -868,8 +1020,18 @@ function insClosed() {
 function insArrive() {
   const g = INS.go; INS.go = null; if (!g || Date.now() - g.at > 4000) return;
   if (g.mix) insMixPick(g.mix[0], g.mix[1]);
+  if (g.country) insLawFor(g.country);
   if (g.el) setTimeout(() => { const el = document.getElementById(g.el); if (!el || !el.closest(".view.active")) return; scrollToEl(el);
     const h = el.querySelector("h2, h3") || el; h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }, 60);
+}
+// (2.9.2) the law part of a drug's page for the country a question named ("is weed legal in greece"), without changing the
+// country the reader chose for themselves; the reader's own country comes back with the page's next drawing
+function insLawFor(un) {
+  setTimeout(() => { const slug = renderedDrug, box = document.querySelector("#drug2 #d-law .sec-b"); if (!slug || !box || !WORLD_LAW.countries.some(x => x.name === un)) return;
+    const draw = () => { if (renderedDrug !== slug) return;
+      box.innerHTML = '<div class="cq set"><p class="cq-where">' + icon("pin") + "<span>" + esc(shortCtry(un)) + '</span></p><span class="cq-asked">The country you asked about</span></div><p class="say">' + esc(lawPlain(slug, un)) +
+        '</p><details class="lawmore" open><summary>What the law says, with its sources</summary><div class="lawmore-b">' + countryOut(slug, un) + '<p class="small"><a href="#law">Treaties, country by country</a></p></div></details>'; };
+    if (legalReady(slug)) draw(); else whenReady(() => loadFull(slug), box, "The law", draw); }, 120);
 }
 /* The mixing tool with both drugs chosen. The tool (app.simple.js renderMix2) takes one drug; here the second chip is pressed
    too and the list keeps to the answers about both. With no checked answer about the pair, it says so and shows what is
@@ -903,7 +1065,7 @@ document.addEventListener("click", e => {
   const inSheet = !!a.closest("#evsheet"), inSearch = !!a.closest("#search-results");
   // a route: the link goes to the page; what is left to do there is noted for when the page has drawn (insArrive)
   if (a.dataset.insRoute) {
-    INS.go = { at: Date.now(), el: a.dataset.el || null, mix: a.dataset.mix ? a.dataset.mix.split(",") : null };
+    INS.go = { at: Date.now(), el: a.dataset.el || null, mix: a.dataset.mix ? a.dataset.mix.split(",") : null, country: a.dataset.country || null };
     if (location.hash === a.getAttribute("href")) { e.preventDefault(); if (inSearch) { const s = document.getElementById("search"); if (s) s.value = ""; closeSearch(); } route(); insArrive(); }
     return;
   }
@@ -991,6 +1153,7 @@ function askedAdd(q, drug) {
   if (!it) { it = { k, q: text, d: drug || "", t: Date.now(), cv: ASK_BUILD, st: "wait", sent: 0 }; list.push(it); askedSave(list); }
   return it;
 }
+const askedSentHas = q => { const k = insClean(q).slice(0, 200).toLowerCase(); return askedList().some(it => it.k === k && it.sent); };
 function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k === k); if (!it) return; Object.assign(it, patch); askedSave(list); }
 function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
 function askedBox() {
@@ -998,19 +1161,22 @@ function askedBox() {
   const list = askedList().filter(it => it.st !== "ans" || claimById[it.id] || isAuto(it.id));
   if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
+  const byNew = (a, b) => (b.t || 0) - (a.t || 0);   // (2.9.2, the senior author) the newest first, the oldest last
   // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question
   // that waits can be opened too: it is asked again in the box above, which shows what the site has on it so far
   const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + k + '</span><span class="aq-q">' + esc(it.q) +
     '</span><span class="aq-go">See what we have so far ' + icon("arrow") + "</span></button>" + x(it) + "</li>";
   const row = it => it.st === "ans"
     ? '<li class="aq ans"><a class="aq-a" href="' + esc(isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '" data-sheet="' + esc(it.id) + '" data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
+    : it.u ? '<li class="aq wait unfin"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + 'Not a whole question</span><span class="aq-q">' + esc(it.q) +
+      '</span><span class="aq-go">Finish it and ask again ' + icon("arrow") + "</span></button>" + x(it) + "</li>"   // (2.9.2) a beginning ("do gay people"): nothing can be checked until it is finished
     : it.w ? look(it, "On our list")
     : it.sent ? look(it, "Sent. We are checking")
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
   // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
   // didn't send the email? ... the user should be informed": the list says where it is kept, and each row whether it was sent)
   const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
-  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it. A question turns green here when it is answered.</p>' + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").concat(list.filter(it => it.st !== "ans")).map(row).join("") + "</ul>";
+  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">This list is kept on this device only. We see a question only if you send it. A question turns green here when it is answered.</p>' + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>";
   box.hidden = false;
   askedCheckSoon(); askedWatch();
 }
@@ -1023,6 +1189,7 @@ async function askedCheck() {
     try { const res = await insRank(it.q, { drug: it.d && subBySlug[it.d] ? it.d : null });
       if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
       else if (res.want && !it.w && it.sent) it.w = res.want.id;   // (2.9) sent, not answered yet, and now on our list: its row says so
+      if (res.note === "unfinished") it.u = 1; else delete it.u;      // (2.9.2) a beginning, not a whole question: its row says so
       it.cv = ASK_BUILD; changed = true; } catch (e) { /* asked again on the next visit */ }
   }
   if (changed) { askedSave(list); askedBox(); }

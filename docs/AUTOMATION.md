@@ -426,6 +426,53 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       text says so, or the words stay in the store alone and the repository keeps our wording, the counts and a
       fingerprint. Not changed until he decides.
 
+27. **Insight answers from every section, and every circumstance has its response** (17 November 2026, 12:56 to
+    13:45. The senior author typed "do gay people", was told "This does not look like a question about drugs", sent it,
+    and wrote: "we have to include our site responding perfectly to every circumstance this is what smartness is
+    about". Then: "are drugs legal in greece" got "We haven't checked exactly this yet" while the site has the answer
+    on its page of treaties: "pharmakon insight has to incorporate all information from the website from all
+    sections"; "it should be apparent that the best way to use the website is Pharmakon Insight"; of "what is mytragina
+    javanica": "hardcode is not enough our ai has to correct and update itself with all possible relevant online
+    searches"; "i want the site to work perfectly without us"; "our search engine has to feel like a drug".)
+    - *Site 2.9.2.* (1) Two more ways a question is not finished, by grammar and not by topic
+      (`site/insight/scope.json`, "unfinished"): **open**, nothing but function words and words for people ("do gay
+      people", "why do women"); **verb**, a helper verb and no main verb after it ("does smoking weed", "how long does
+      the high", "can dogs"). Both are told "Go on. Finish your question and we will look." and have nothing to send;
+      "Which drug do you mean?" is kept for a question that calls for a drug ("is it addictive", "can i die from").
+      (2) The short forms people type are read as their words ("u", "ppl", "wat", "gonna"). (3) A name of two or three
+      words that we do not know is named ("We do not know “mytragina javanica” as a drug"), not called "not about
+      drugs". (4) **Routes to the site's other sections, by country**: the law ("are drugs legal in greece" opens
+      Greece on the page of treaties and says what it has joined; "is weed legal in greece" opens cannabis' law part
+      for Greece, without changing the reader's own country), the emergency numbers ("In Greece, call 112"), drug
+      checking ("3 drug checking services in Spain"). A question of the law that the law part does not answer by itself
+      keeps the line and the way to send it. (5) A question that is not in the Latin alphabet is asked for in English
+      (and in Greek, for Greek). (6) An entry of one or two words that is a beginning ("can i") is told to go on, in
+      place of "No match … Ask us". (7) A question already sent says so when opened again; a beginning that was sent
+      is listed as "Not a whole question"; the list of the reader's questions shows the newest first.
+    - *Measured* (`python3 -I scripts/insight/build_index.py --words`). The two new readings call none of the 1,021
+      forum questions unfinished, none of the 165 questions about other things, and none of **2,324 question sentences
+      the rules were not written with** (the first fresh measure of step d). On those 2,324 the older readings erred
+      before this version (32 called unfinished) and were corrected with what the fresh set showed (stranded endings:
+      "what do you use it for", "…looked down on", "…kick in", "tried this before"); 18 are still called unfinished, 13
+      of them the site's own questions that are asked on a drug's page ("How do people take it?": off the page "which
+      drug?" is the right reading). Questions cut as a reader who is still typing leaves them: before the name 292 of
+      399 (2.9.1: 276), inside the name 350 of 474 (331), after a word that cannot end a question 1,115 of 1,176
+      (1,119; four that end "…days after" now read as finished). The page and the build read 1,370 cut questions the
+      same way (`scripts/insight/parity.js`). Not yet a fresh measure of the new readings' misses: fragments are made
+      by cutting, and a cut is not always a fragment.
+    - *What he asked for next, in this order* (`scripts/editor/next-steps.md`). (a) **Names the system does not
+      know**: looked up in open name services that allow it (species, medicines, chemicals), on GitHub's machines in
+      the job that holds no key, and kept in a table the build reads, so that "mytragina javanica" becomes *Mitragyna
+      javanica* without a list written by hand. (b) **Pages for drugs without one** (kanna, *Mitragyna javanica*):
+      the system's pages of decision 22, in the form of the site's own pages, with pictures only under an open licence
+      and a line where a picture was not checked by a person; pictures also where an existing page lacks them. (c)
+      **One list on phone and desktop without an account**: a private link or QR code, the list encrypted on the
+      device so that the store holds what it cannot read; "as easy as it is now". (d) **Insight looks like what it is**:
+      the way to use the site, not a search box. (e) **What the site needs, found by itself** ("it has to think about
+      what the site needs objectively even before us").
+    - *What stays.* Free models only. A refusal by a site is never gone around. The Section 7 gate and the rule on
+      amounts stand as written. Nothing new of the system's is shown until it reads clean.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

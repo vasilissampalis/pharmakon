@@ -1,6 +1,6 @@
 # The editor's next steps (a working note, kept in the repository so that it survives a reset)
 
-Written 17 November 2026, 10:35 UTC (12:35 Athens), by the AI co-editor for itself. Not a decision of the senior
+Written 17 November 2026, 10:35 UTC (12:35 Athens), brought up to date 12:00 UTC (site 2.9.2), by the AI co-editor for itself. Not a decision of the senior
 author; nothing here lets anything out. The state it starts from is the newest entry of `docs/STATUS.md` and
 decision 26 of `docs/AUTOMATION.md`.
 
@@ -35,6 +35,50 @@ after every step. `mkdir -p data/auto/requests` before writing a request.
 
 5. **"use readers"**: the second reader for `MDMA/Vrolijk_2017_OnlinePillReportsSafety.pdf` (saved 17 November) and for any
    other paper of the checked lane. Readers on his plan run only when he asks.
+
+## What the senior author asked for on 17 November, 12:56 to 13:45 (decision 27 of `docs/AUTOMATION.md`), in this order
+
+Done in site 2.9.2: the readings "open" and "verb", short forms, a name of two words we do not know, the routes by
+country (the law, emergency numbers, drug checking), the line for a question not in English, two-word beginnings, a
+question already sent, the newest of the reader's questions first.
+
+a. **Names the system does not know, looked up online and kept** ("mytragina javanica" is *Mitragyna javanica*; "hardcode
+   is not enough"). In `scripts/auto/names_open.py` (the job that holds no key; robots.txt obeyed through
+   `official.Web`; a probe first, as for RxNorm): for each unknown word or pair of words that the scout saw in a sent
+   question, ask the open name services that allow it. Candidates to probe: GBIF's species match
+   (`api.gbif.org/v1/species/match?name=…&verbose=true`, fuzzy, for plant and fungus names), RxNorm's approximate term
+   (`rxnav.nlm.nih.gov/REST/approximateTerm.json`), PubChem's autocomplete and synonyms (`pubchem.ncbi.nlm.nih.gov/rest/`),
+   NCBI's spelling suggestion (`eutils … espell.fcgi`). Keep what is found in `data/auto/names/learned.json`: what was
+   typed, the name, its kind, the service and its record, how sure. The build reads the table: the name counts as a drug
+   we do not cover yet (scope), the typed form is read as the name ("We read “mytragina javanica” as Mitragyna
+   javanica"), and the name is a candidate for a page to start. Only a visitor's unknown WORDS go to a name service
+   (a word or two, never the question), and only words that are not in the model's word list. Measure before it is
+   switched on: no word of the 1,021 forum questions may be "learned" as a name.
+b. **Pages for drugs without one** (kanna, *Mitragyna javanica*), "in a perfect coherent format to the rest of the
+   website", with pictures. The system's pages exist (site 2.8: `AUTO_PAGES`, `#auto/p-<slug>`, decision 22); what is
+   missing is the site's own page form for them (what it is, forms, effects, risks, the law, each from the system's
+   answers under their label) and pictures: Wikimedia Commons through its API only if its robots.txt allows the
+   address (else not), licence read from the file's own record (public domain, CC0, CC BY; never CC BY-SA unless the
+   site's photo rule is changed by him), with a line "Picture not yet checked by a person" until the editor has looked.
+   Pictures also for existing pages that lack them (`data/site/photos.json` says which have one). `hold_new` stays
+   true until the lane's answers read clean; the page shell and the pictures do not depend on it.
+c. **One list on phone and desktop without an account**, "as easy as it is now". A private link and a QR code made on
+   the device: a random key in the address's fragment (never sent to a server), the list encrypted with it in the
+   browser (WebCrypto AES-GCM), the store keeps only the ciphertext under a name derived from the key
+   (`site/worker/_worker.js`: `api/list`, a size limit, kept 180 days). Opening the link on the other device joins the
+   two lists. The text under "Your questions" then says so in plain words. The QR code is drawn by a small encoder
+   kept in the repository (no outside script).
+d. **Insight looks like what it is**: "it should be apparent visually that pharmakon insight IS the way to use and
+   develop the site … it has to feel different look different our search engine has to feel like a drug". The start
+   page's first screen becomes Insight itself (its own name, its own surface, what it can do in its own words:
+   answers, the law by country, emergency numbers, drug checking, mixing), designed with the frontend-design guidance
+   and looked at in screenshots at 390 and 1280 before it ships.
+e. **What the site needs, found by itself**: a standing report made by the half-hourly run (pages without pictures,
+   drugs asked about without a page, sections no question reaches, questions that end at "we haven't checked"), from
+   which the system starts work without being told.
+
+Also from the fresh measure: a line of its own for greetings and for "who are you" (now the line for a question that
+is not about drugs); emoji that stand for a drug; the trained reader of decision 26 (c).
 
 ## In flight (17 November, 10:35 UTC; brought up to date 11:10 UTC)
 
