@@ -584,6 +584,9 @@ def drug_words(item, names):
     words = [n.lower() for n, ss in names if len(n) >= 3 and len(ss) <= 2 and any(s in slugs for s in ss)]
     for s in slugs: words += [t.lower() for t in P.SYN.get(s, []) if not t.startswith("(")] + [s.replace("-", " ")]
     words += [str(n).lower() for n in item.get("names") or [] if len(str(n)) >= 3]         # a drug that has no page yet: what official pages call it comes with the question (scripts/auto/grow.py)
+    # (17 November 2026) a question a visitor sent about a drug without a page ("can you get high from kanna") brought no name with it:
+    # its pages were chosen by the topic's words alone (SAMHSA's page on hallucinogens for kanna). The names are worked out as the paper finder does.
+    if not slugs and not words: words += [str(n).lower() for n in P.page_names(item) if len(str(n)) >= 3]
     return slugs, list(dict.fromkeys(words))
 
 
@@ -868,9 +871,11 @@ def main():
     import build_index as bi
     names, enc, web, t0, minutes = bi.names_table(), P.General(), Web(), time.time(), float(opt("--minutes", "0") or 0)
     items = P.listed()
-    def old(w):
-        try: return int(json.load(open(FOUND / (w["id"] + ".json"), encoding="utf-8")).get("official") or 0) < OFFICIAL
+    def old(w):   # not searched yet, or by an older finder, or searched without the name of its drug (a drug without a page)
+        try: rec = json.load(open(FOUND / (w["id"] + ".json"), encoding="utf-8"))
         except (OSError, ValueError): return True
+        if int(rec.get("official") or 0) < OFFICIAL: return True
+        return not rec.get("drug_words") and not w.get("drugs") and (bool(w.get("names")) or bool(P.page_names(w)))
     items = sorted([w for w in items if (w["id"] in ids if ids else old(w))], key=lambda w: (FOUND / (w["id"] + ".json")).exists())[:limit]     # a question never searched comes before one searched by an older finder
     FOUND.mkdir(parents=True, exist_ok=True); index = json.load(open(INDEX, encoding="utf-8"))["sources"]; done = 0
     for w in items:

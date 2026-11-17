@@ -33,6 +33,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts")); sys.path.insert(0, str(ROOT / "scripts" / "insight"))
+sys.path.insert(0, str(ROOT / "scripts" / "auto"))   # (17 November 2026, 19:50) GitHub runs this file with -I, which leaves its own folder off the path: page_names could not load place.py there, said nothing, and kanna and Mitragyna javanica were searched without their names all afternoon
 EPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest/"
 CROSSREF = "https://api.crossref.org/works/"
 UA = "Pharmakon/2.5 (https://pharmakon.world; mailto:contact@pharmakon.world) scripts/auto/papers.py"
@@ -387,7 +388,9 @@ def page_names(item):
         import place as PL
         if _PLACE is None: _PLACE = PL.Placer()
         got = _PLACE.place(item["q"], item.get("ways") or [])
-    except Exception: return []
+    except Exception as e:                                                    # (never silently again: the run's notes say it)
+        if not getattr(page_names, "said", False): page_names.said = True; print("papers: !! the names of a drug without a page could not be worked out:", type(e).__name__, str(e)[:160])
+        return []
     home = got.get("home") or ""
     if not home.startswith("new:") or got.get("drugs"): return []
     page = home[4:]; out = [n for n in got.get("fresh") or [] if isinstance(n, str)]
@@ -505,7 +508,7 @@ def main():
         try: rec = json.load(open(f, encoding="utf-8"))
         except (OSError, ValueError): return True
         if int(rec.get("finder") or 1) < FINDER: return True
-        return not rec.get("drugs_searched") and not w.get("drugs") and not w.get("names") and bool(page_names(w))
+        return not rec.get("drugs_searched") and not w.get("drugs") and (bool(w.get("names")) or bool(page_names(w)))
     # --requests DIR: the requests waiting there (papers-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
     # A request is a file in the repository, written by the editor: it is read as data here and never reaches a command line.
     if "--requests" in arg:

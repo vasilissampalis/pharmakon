@@ -145,6 +145,9 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         near = float((enc([fields["q"]]) @ qv.T)[0, 0])
         if near < NEAR_OWN: decide(f"our wording was not near the visitor's question ({near:.2f}): left for the editors"); continue
         item = dict({"id": f"w_a{st['next']:04d}"}, **fields, **{"from": "a question visitors sent", "added": TODAY, "asked": int(g.get("asked") or 0), "near": round(near, 3)})
+        if not item.get("drugs"):                                      # (17 November 2026) a drug without a page: the names the finders must search by come with the question, as they do with the system's own
+            nm = P.page_names(item)
+            if nm: item["names"] = nm
         st["next"] += 1; auto["items"].append(item); made += 1
         v = enc([item["q"]] + item["ways"]); L = v if L is None else __import__("numpy").vstack([L, v]); owner += [item["id"]] * len(v)
         decide("listed as " + item["id"], item)
