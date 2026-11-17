@@ -731,7 +731,7 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     what i mean! it should send the question immediately in every instance and the user should be notified make it
     ... smart always". And: "Pharmakon Insight under Pharmakon is a bit redundant it is the same logo and the same
     first word. although i like the name Pharmakon Insight i don't know ... how we should include it".
-    - *Site 2.16.1 (18 November, 00:40 Athens).*
+    - *Site 2.16.1 (18 November, 00:12 Athens).*
       **The research comes by itself, every time.** Whenever Insight has no answer of ours to a whole question about a
       drug (not answered; a question like it on our list; a word we do not know as a drug), in the results and in the
       sheet, sent or not, the page looks the published research up (`insAuto`, `/api/find`) and puts it under the line
@@ -764,7 +764,7 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       the mark, the name is said by its own word alone, "Insight", in the site's colour: no second mark and no second
       "Pharmakon". The whole name stands where nothing around says Pharmakon (the box's label for a screen reader,
       "This is Pharmakon Insight.", About us).
-    - *Site 2.17.0 (18 November, 02:30 Athens): the question, sent by itself, and the reader told.* His words: "it
+    - *Site 2.17.0 (18 November, 00:49 Athens): the question, sent by itself, and the reader told.* His words: "it
       should send the question immediately in every instance and the user should be notified".
       **What the reader sees.** A whole question about a drug that Insight has no answer to no longer has a button.
       Once it has stood unchanged for 2.5 seconds in the results (so that a sentence still being typed is not sent
@@ -825,6 +825,30 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       **His step.** Cloudflare, Workers & Pages, pharmakon, Settings, Production, Bindings, Add, Workers AI, variable
       name `AI`; then one publishing. Given to him on 17 November at 23:45 with a prompt for ChatGPT that asks for no
       token, key or account number.
+    - *Site 2.18.0 (18 November): the page's part.* Where the server says it can (`GET /api/ask`: `quick`, asked once
+      on every opening of the page now, not once per tab, so that a tab left open learns of the binding), a question
+      that is sent by itself also gets its few sentences: asked for 1.2 s after the result stands (at once on Enter),
+      once per question per visit, shown right under the line that says we have no answer of ours and above the list
+      of papers, as "In short, from the papers' own summaries": each sentence, then its paper as a link (kind, year,
+      journal) and "The paper's own words: ...". Last, the line that says who wrote it and what was not read: "Written
+      just now by our system from the summaries of these papers. It has not read the papers themselves, and no person
+      has checked it. Our own answer follows when it is ready." (an answer given again from the store says the day it
+      was written). With the reader's switch off, one quiet button asks for it. The site says how it is made under
+      "Answers written by our system" (Methods) and what goes where under Privacy.
+      **How the editor sees it work.** The workspace cannot reach the site, so every publishing run now asks the live
+      server three things and writes the replies into its notes (`scripts/auto/live_check.py`; lines that begin
+      "server:" in `data/auto/deploy/_last-run.txt`): what the server can do, the research it finds for the editor's
+      own test question ("does kanna help with anxiety"), and the answer within seconds with every sentence that
+      passed. No key, no visitor's words; the server keeps an answer for 30 days, so the test costs the free allowance
+      once.
+      **What it is not, said plainly.** It reads summaries, not papers; it says what single papers found, not what the
+      evidence as a whole shows; a free model writes it and rules in code decide what may be shown, so it will often
+      show one sentence, or none, where a strong model with the papers in hand would write a rounded answer. That
+      rounded answer is the lane's, and the checked one is the editors'. The free allowance holds some 30 new
+      questions a day; beyond that the reader gets the papers, as in 2.16.
+      **Two small things with it.** "us heroin deaths": "us" is read as the country where it stands first or last in
+      a few words that ask for a count ("how many of us use heroin" is not). The heading over the figures of other
+      places is now "Figures we do have": for a country inside the EU, the EU's figure is not from another place.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

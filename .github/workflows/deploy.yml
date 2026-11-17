@@ -95,6 +95,13 @@ jobs:
               sleep 10
             done
             if [ "$LIVE" = "1" ]; then echo "live: pharmakon.world serves this publishing (stamp $WANT)" >> "$L"; else echo "!! live: pharmakon.world does not serve this publishing yet (it serves stamp '$GOT'; this one is $WANT)" >> "$L"; fi
+            # (18 November 2026) what the site's own server answers on the live site: what it can do, the research it finds for the editor's own test
+            # question, and the answer within seconds with every sentence that passed (scripts/auto/live_check.py: no key, no visitor's words).
+            # The editor's workspace cannot reach the site, so these lines are how it sees the server at work. Nothing here can fail a publishing.
+            if [ "$LIVE" = "1" ]; then
+              echo "== the site's own server, asked on the live site ($(date -u +%H:%M:%S))" >> "$L"
+              timeout 150 python3 -I scripts/auto/live_check.py >> "$L" 2>&1 || echo "server: the check itself did not finish" >> "$L"
+            fi
             echo "LIVE=$LIVE" >> "$GITHUB_ENV"; echo "STAMP=$WANT" >> "$GITHUB_ENV"
           fi
           echo "OK=$OK" >> "$GITHUB_ENV"
@@ -116,7 +123,7 @@ jobs:
               v = (os.environ.get(k) or "").strip()
               if len(v) >= 6: t = t.replace(v, "***")
           t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)
-          keep = [l for l in t.splitlines() if l.startswith(("==", "!!", "published", "live:")) or re.search(r"hard failures|All \d+ checks passed|checks failed|FAIL |public site:|Deployment complete|https://[a-z0-9.-]*pages\.dev|error", l, re.I)]
+          keep = [l for l in t.splitlines() if l.startswith(("==", "!!", "published", "live:", "server:")) or re.search(r"hard failures|All \d+ checks passed|checks failed|FAIL |public site:|Deployment complete|https://[a-z0-9.-]*pages\.dev|error", l, re.I)]
           pathlib.Path("data/auto/deploy/_last-run.txt").write_text("\n".join(keep[-60:]) + "\n", encoding="utf-8")
           if os.environ.get("OK") == "1":
               sha = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()

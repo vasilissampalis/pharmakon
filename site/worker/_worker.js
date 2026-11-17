@@ -172,6 +172,7 @@ const IA_STRONGER = /\b(?:potentiat\w*|boost\w*|stronger|strongest|intensif\w*|e
 const IA_ROUTE = /\b(?:oral\w*|smok\w*|inject\w*|snort\w*|intranasal\w*|insufflat\w*|intraven\w*|sublingual\w*|rectal\w*|vap\w*|edibles?|eaten|eating|swallow\w*|chew\w*|inhal\w*)\b/i, IA_THAN = /\b(?:than|compared|versus|vs|faster|slower|quicker)\b/i;
 const IA_MORE = /\b(?:prov(?:e|es|ed|en)|definite\w*|certain\w*|clear(?:ly)?|always|never|all|every|everyone|everybody|nobody|none|most|majority|cur(?:e|es|ed)|treat(?:s|ed|ment)?|heal(?:s|ed)?|guarantee\w*|significan\w*|strong(?:ly)?|powerful\w*|dramatic\w*|very|highly|extremely|greatly|caus(?:e|es|ed)|leads? to|prevent\w*|protect\w*|effective\w*|works?|worked|help(?:s|ed|ful)?|improv\w*|reduc\w*|lower\w*|rais\w*|increas\w*|decreas\w*|common\w*|rare\w*|often|usually|addictive|dependence|toxic\w*|dangerous\w*|harm\w*|benefi\w*)\b/gi;
 const IA_ANIMAL = /\b(?:rats?|mice|mouse|rodents?|zebrafish|in vitro|cell lines?|cultured cells|animals?|murine|preclinical)\b/i, IA_PEOPLE = /\b(?:participants?|patients?|volunteers?|humans?|men|women|adults?|people|subjects|students|respondents|users|individuals|persons)\b/i, IA_SAYS_ANIMAL = /\b(?:rats?|mice|mouse|animals?|cells?|lab|laboratory|zebrafish|rodents?|test tube)\b/i;
+const IA_NUMWORD = { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen", 20: "twenty", 30: "thirty", 40: "forty", 50: "fifty", 60: "sixty", 70: "seventy", 80: "eighty", 90: "ninety", 100: "(?:one |a )?hundred" };
 const iaStem = w => (w.length > 6 ? w.slice(0, 5) : w.replace(/(?:es|s|ed)$/, ""));
 /* One finding through the gates: the cleaned line, or null. papers: the ones given to the model, in their order; words: the question's key words. */
 export function iaGate(f, papers, words) {
@@ -185,7 +186,8 @@ export function iaGate(f, papers, words) {
   if (!src.includes(iaFlat(quote))) return null;                                                             // 1. its paper's own words, copied
   if (!IA_KIND[p.kind].test(text.split(/\s+/).slice(0, 9).join(" "))) return null;                             // 2. the kind of paper it rests on
   const years = text.match(/\b(?:19|20)\d\d\b/g) || []; if (years.some(y => y !== p.y)) return null;           //    and no other year than the paper's
-  for (const num of text.match(/\d+(?:[.,]\d+)?/g) || []) { if (num === p.y) continue; if (!new RegExp("(?:^|[^0-9.,])" + num.replace(/[.,]/g, "[.,]") + "(?:$|[^0-9])").test(all)) return null; }   // 3. its numbers
+  for (const num of text.match(/\d+(?:[.,]\d+)?/g) || []) { if (num === p.y) continue;                             // 3. its numbers (a number the summary writes as a word counts: "sixteen" for 16)
+    if (!new RegExp("(?:^|[^0-9.,])" + num.replace(/[.,]/g, "[.,]") + "(?:$|[^0-9])").test(all) && !(IA_NUMWORD[num] && new RegExp("\\b" + IA_NUMWORD[num] + "\\b").test(all))) return null; }
   if (FIND_HELD.test(text) || IA_AMOUNT.test(text) || IA_ADVICE.test(text) || IA_STRONGER.test(text)) return null;   // 4. no amounts, no advice, nothing on making an effect stronger
   if (IA_ROUTE.test(text) && IA_THAN.test(text)) return null;                                                 //    no way of taking compared with another
   const stems = new Set((all.match(/[a-z]+/g) || []).map(iaStem));

@@ -119,6 +119,7 @@ ok("readQuestion keeps Greek", readQuestion({ q: "είναι ασφαλές το
   bad("the wrong kind of paper (a review called a trial)", { n: 1, quote: GOOD.findings[0].quote, text: "A 2021 trial found that a kanna extract reduced anxiety-related activity in a part of the brain." });
   bad("another year than the paper's", { n: 1, quote: GOOD.findings[0].quote, text: "A 2019 review says a kanna extract reduced anxiety-related activity in a part of the brain." });
   bad("a number the summary does not hold", { n: 2, quote: GOOD.findings[1].quote, text: "A 2013 trial in 40 healthy volunteers found less reactivity to fearful faces tied to anxiety after the extract." });
+  ok("gate: a number the summary writes as a word may be written as a figure (sixteen, 16)", !!g({ n: 2, quote: GOOD.findings[1].quote, text: "A 2013 trial in 16 healthy volunteers found less reactivity to fearful faces tied to anxiety after the extract than after placebo." }));
   bad("an amount", { n: 2, quote: GOOD.findings[1].quote, text: "A 2013 trial found less reactivity to fearful faces tied to anxiety after 25 mg of the extract." });
   bad("a dose in words", { n: 2, quote: GOOD.findings[1].quote, text: "A 2013 trial found less reactivity to fearful faces tied to anxiety after a single dose of the extract." });
   bad("advice", { n: 1, quote: GOOD.findings[0].quote, text: "A 2021 review says kanna reduced anxiety-related activity, so people with anxiety should try it." });

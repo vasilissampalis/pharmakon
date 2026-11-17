@@ -523,7 +523,8 @@ function insFigPlace(q) {
   const t = " " + norm(insMask(q)).replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim() + " ";
   if (/ (?:worldwide|world wide|globally|global|in the world|around the world|all over the world|across the world|on earth|internationally) /.test(t)) return { file: "global", name: "the world" };
   if (/ (?:europe|european|europeans|the eu|eu|european union) /.test(t)) return { file: "europe", name: "Europe" };
-  const un = / (?:americans?|in (?:the )?us|us (?:citizens|adults|population)) /.test(t) ? "United States of America" : / greeks? /.test(t) ? "Greece" : insCountry(q);
+  // ("us" alone is also a pronoun: it is the country where it stands after "in", before "citizens", or first or last in a few words that ask for a count: "us heroin deaths")
+  const un = / (?:americans?|in (?:the )?us|us (?:citizens|adults|population)) |^ us [a-z]| [a-z]+ us $/.test(t) && !/ (?:of|for|to|with|about|tell|give|show|help|let) us $/.test(t) ? "United States of America" : / greeks? /.test(t) ? "Greece" : insCountry(q);
   if (!un) return null;
   if (un === "United States of America") return { file: "us", name: "the United States" };
   if (un === "Greece") return { file: "greece", name: "Greece" };
@@ -1092,7 +1093,7 @@ function insFitHtml(res) {
   const none = insNoneHtml(res, false);
   const related = res.related.length ? '<p class="sr-fit-h">' + (res.note === "unfinished" ? "You may mean" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
   // (2.16.1) a count asked for a place we hold no figure for: the figures from other places stand right under the line that says so
-  const far = ways ? '<p class="sr-fit-h">' + (res.figMiss ? "Figures from other places" : "A place to look") + "</p>" + ways : "";
+  const far = ways ? '<p class="sr-fit-h">' + (res.figMiss ? "Figures we do have" : "A place to look") + "</p>" + ways : "";
   return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + (res.figMiss ? far + related : related + far) + '<button type="button" class="sr-fit-h sr-words" hidden aria-expanded="false">More results</button></div>';
 }
 // what a screen reader hears when the answers arrive: the route, the tier, the question matched
@@ -1324,7 +1325,7 @@ function insHtml(v) {
     return '<li><a href="' + esc(answerAddr(x.id, x.page)) + '" data-insight-next="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span><span class="ins-rel-k">' + esc(w.name) + "</span>" + esc(insQ(x.id, x.page)) + "</span>" + icon("arrow") + "</a></li>"; }).join("") + "</ul></div>" : "";
   const from = (res.best.length ? res.best : res.related).map(x => x.id), shown = res.best.concat(res.related).map(x => x.id);
   return insBar("<span>Your question</span>") + '<div class="ins ins-asked' + (res.depth ? " ins-" + res.depth : "") + '"><h2 id="ev-title" class="ins-yours" tabindex="-1">' + esc(insCap(res.q.length > 240 ? res.q.slice(0, 237) + "…" : res.q)) + "</h2>" +
-    insReadHtml(res, "ins-read") + routes + best + none + (ways ? '<p class="rn-k ins-ways-h">Figures from other places</p>' + ways : "") + related + insTailHtml(from, shown, res.groups) + "</div>";
+    insReadHtml(res, "ins-read") + routes + best + none + (ways ? '<p class="rn-k ins-ways-h">Figures we do have</p>' + ways : "") + related + insTailHtml(from, shown, res.groups) + "</div>";
 }
 function insDraw(v, opener) {
   const sh = document.getElementById("evsheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
@@ -1523,17 +1524,21 @@ function askedWatch() {
 let FIND_ON = (() => { try { return sessionStorage.getItem("pk-find-on") === "1"; } catch (e) { return false; } })();
 // (2.17) AUTO_SRV: the server takes a question the page sends by itself (POST api/ask with a: 1), and keeps it apart
 let AUTO_SRV = (() => { try { return sessionStorage.getItem("pk-auto-on") === "1"; } catch (e) { return false; } })();
+// (2.18) QUICK_ON: the server can write an answer within seconds (POST api/answer: a language model is bound to it)
+let QUICK_ON = (() => { try { return sessionStorage.getItem("pk-quick-on") === "1"; } catch (e) { return false; } })();
 let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); if (sessionStorage.getItem("pk-find-on") == null || sessionStorage.getItem("pk-auto-on") == null) return null; return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
 // The reader's own switch for what the page does by itself (looking research up; sending a question we have no answer to): on, unless switched
 // off on this device (About us, Privacy; or "Don't send mine" on the notice). These stand here, above the first drawing of the reader's list.
 const AUTO_OFF = "pk-auto";
 function autoOn() { try { return localStorage.getItem(AUTO_OFF) !== "0"; } catch (e) { return true; } }
 function autoSendOn() { return ASK_ON === true && AUTO_SRV && autoOn(); }
+// (2.18) The server is asked once on every opening of the page, not once per tab: what it can do changes with a publishing (a model bound to it), and a
+// tab left open must not go on believing yesterday's answer. Until its reply is in, the page starts from what the tab learned before.
 function askProbe() {
-  if (ASK_ON !== null) return Promise.resolve(ASK_ON);
   if (askProbe.p) return askProbe.p;
-  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); AUTO_SRV = !!(j && j.auto === true); return !!(j && j.ok === true); }, () => false)
-    .then(on => { ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); sessionStorage.setItem("pk-auto-on", AUTO_SRV ? "1" : "0"); } catch (e) { /* this page only */ } return on; }));
+  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); AUTO_SRV = !!(j && j.auto === true); QUICK_ON = !!(j && j.quick === true); return !!(j && j.ok === true); }, () => { FIND_ON = false; AUTO_SRV = false; QUICK_ON = false; return false; })
+    .then(on => { const was = ASK_ON; ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); sessionStorage.setItem("pk-auto-on", AUTO_SRV ? "1" : "0"); sessionStorage.setItem("pk-quick-on", QUICK_ON ? "1" : "0"); } catch (e) { /* this page only */ }
+      if (was !== on && typeof askedBox === "function") askedBox(); return on; }));
 }
 function askedList() { try { const x = JSON.parse(localStorage.getItem(ASK_KEY) || "[]"); return Array.isArray(x) ? x.filter(it => it && typeof it.q === "string" && it.k) : []; } catch (e) { return []; } }
 function askedSave(list) { try { localStorage.setItem(ASK_KEY, JSON.stringify(list.slice(-20))); } catch (e) { /* this visit only */ } }
@@ -1712,14 +1717,54 @@ function insFindWanted(res) {
 function insAuto(root, res, now) {
   clearTimeout(INS.findT); clearTimeout(INS.sendT);
   const after = root && res ? root.querySelector(".sr-fit-none, .ins-none") : null; if (!after) return;
-  askProbe().then(() => { if (!after.isConnected) return; const found = insAutoFind(after, res, now); insAutoSend(after, res, now, found); });
+  clearTimeout(INS.quickT);
+  askProbe().then(() => { if (!after.isConnected) return; const found = insAutoFind(after, res, now); insAutoSend(after, res, now, found); insAutoQuick(after, res, now); });
+}
+/* (site 2.18, 18 November 2026. The senior author, 17 November: "people are used to get responses instantly. We have to make an ai which is able to do that
+   for questions it does not know"; "we have to make instant as good as getting answers from a very good claude api. whatever it takes".)
+   The answer within seconds. Where the site's server has a language model bound to it (QUICK_ON), a question that is sent by itself is also answered at
+   once: one to three sentences from the SUMMARIES of the papers found, each with its paper's own words and its link (the server's code decides what
+   may be shown: site/worker/_worker.js, iaGate). It stands right under the line that says we have no answer of ours, above the list of papers, under
+   its own label: written by our system from the papers' summaries, the papers themselves not read, no person has checked it. It is never called an
+   answer of ours and nothing of it is kept on the page. Asked for a moment after the papers (QUICK_WAIT; at once on Enter), once per question per visit.
+   Not asked for: a question about dying, overdose, amounts, pregnancy, children (insFindTerms gives nothing for these); anything, when the reader has
+   switched the page's own doing off (then one quiet button asks for it). */
+const QUICK_API = "api/answer", QUICK_WAIT = 1200, QUICK_MEM = new Map();
+function insQuickGet(body) {
+  const key = JSON.stringify(body); let m = QUICK_MEM.get(key); if (m) return m.p;
+  m = { d: undefined };
+  m.p = fetch(QUICK_API, { method: "POST", headers: { "content-type": "application/json" }, body: key }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => { m.d = d; if (!d) QUICK_MEM.delete(key); return d; });
+  QUICK_MEM.set(key, m); if (QUICK_MEM.size > 40) QUICK_MEM.delete(QUICK_MEM.keys().next().value);
+  return m.p;
+}
+function insQuickHtml(d) {
+  const L = d && d.ok && d.answer && Array.isArray(d.answer.lines) ? d.answer.lines.filter(l => l && typeof l.t === "string" && typeof l.quote === "string" && (l.doi || l.pmid)).slice(0, 3) : []; if (!L.length) return "";
+  let when = "just now"; if (d.again && d.answer.at) { const t = new Date(d.answer.at); if (!isNaN(t)) when = "on " + t.getUTCDate() + " " + ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][t.getUTCMonth()]; }
+  return '<p class="ins-quick-h">In short, from the papers’ own summaries</p><ul class="ins-quick-l">' + L.map(l => { const href = l.doi ? "https://doi.org/" + l.doi : "https://europepmc.org/article/MED/" + l.pmid;
+    return '<li><p class="qk-t">' + esc(l.t) + '</p><p class="qk-m"><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc([l.kind, l.y, l.j].filter(Boolean).join(" \u00B7 ")) + '</a><span class="qk-q">The paper’s own words: \u201C' + esc(l.quote) + "\u201D</span></p></li>"; }).join("") +
+    '</ul><p class="ins-quick-n">Written ' + esc(when) + " by our system from the summaries of these papers. It has not read the papers themselves, and no person has checked it. Our own answer follows when it is ready.</p>";
+}
+function insAutoQuick(after, res, now) {
+  if (!QUICK_ON || ASK_ON !== true || res.note !== "none" || (res.best && res.best.length)) return;
+  const terms = insFindTerms(res); if (!terms) return;
+  const body = { q: res.q, names: terms.names, words: terms.words };
+  const box = document.createElement("div"); box.className = "ins-quick"; box.setAttribute("aria-live", "polite");
+  box.addEventListener("click", e => e.stopPropagation());
+  const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };   // (right under the line: above the papers)
+  const draw = d => { const html = insQuickHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
+  const have = QUICK_MEM.get(JSON.stringify(body));
+  if (have && have.d) { draw(have.d); return; }
+  const go = () => { if (!after.isConnected) return; put(); box.innerHTML = '<p class="ins-quick-n ins-quick-w">Writing a short answer from the papers’ summaries\u2026</p>'; insQuickGet(body).then(d => { if (after.isConnected) draw(d); else box.remove(); }); };
+  if (!autoOn()) { put(); box.innerHTML = '<p class="ins-quick-n"><button type="button" class="linklike" data-quick-now>Get a short answer from the research, written by our system</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return; }
+  if (askedGone(res.q)) return;
+  if (now) go(); else INS.quickT = setTimeout(() => { const s = document.getElementById("search"), b = document.getElementById("search-results"); if (s && b && !b.hidden && insClean(s.value) === res.q) go(); }, QUICK_WAIT);
 }
 // the published research under the line; resolves with what was found (null when nothing is looked up)
 function insAutoFind(after, res, now) {
   const terms = FIND_ON ? insFindWanted(res) : null; if (!terms) return Promise.resolve(null);
   const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite");
   box.addEventListener("click", e => e.stopPropagation());   // a paper opens in its own tab: the question and its results stay as they are
-  const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };
+  const put = () => { if (box.isConnected || !after.isConnected) return; const q = after.nextElementSibling; (q && q.classList.contains("ins-quick") ? q : after).insertAdjacentElement("afterend", box); };   // (under the answer within seconds, when that is there)
   const draw = d => { const html = insFoundHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
   const have = FIND_MEM.get(JSON.stringify(terms));
   if (have && have.d) { draw(have.d); return Promise.resolve(have.d); }
