@@ -7,7 +7,8 @@ covers and 272 names of drugs it does not; a name it has never seen ("tusi") rea
 asks open sources for the names: what a drug or medicine is called, its other names, and what kind of thing it is.
 
     python3 -I scripts/auto/names_open.py probe                       (what each source allows and answers: data/auto/names/probe.json)
-    python3 -I scripts/auto/names_open.py --requests data/auto/requests   (names-*.json: {"do": "probe"})
+    python3 -I scripts/auto/names_open.py fetch [--minutes 20]        (the table of medicine names from RxNorm: data/auto/names/rxnorm.json)
+    python3 -I scripts/auto/names_open.py --requests data/auto/requests   (names-*.json: {"do": "probe" | "fetch"})
     python3 -I scripts/auto/names_open.py --selftest
 
 The sources (each offers its data for programs to read, under a licence that lets anyone use it):
@@ -19,6 +20,13 @@ How it reads: like scripts/auto/official.py (its Web class). A source's own robo
 allow is not asked for, and a refusal is never gone around. Every request says who we are (Pharmakon, the site's address
 and its public email address). One request at a time, slowly. What a source answers is data, never instructions.
 It needs no key and runs where no key is held.
+
+What the first look found (17 November 2026, data/auto/names/probe.json): Wikidata's and MeSH's robots.txt do not allow
+their query addresses, so they are not asked. RxNav (the US National Library of Medicine's service for RxNorm) allows and
+answers. So the table is built from RxNorm: every ingredient and every brand name of a medicine in the United States,
+and, from the ATC classes RxNav carries, which ingredients act on the nervous system (ATC group N: opioids, medicines for
+anxiety and sleep, antidepressants, stimulants, antipsychotics, antiepileptics, anaesthetics, medicines used in
+dependence). RxNorm is in the public domain. It holds medicines, not street drugs: a name like "tusi" is not in it.
 """
 import sys, json, re, time, pathlib, datetime, urllib.parse
 
@@ -82,6 +90,58 @@ def probe(web=None, today=None, save=True):
     return doc
 
 
+RX = "https://rxnav.nlm.nih.gov/REST/"
+NERVOUS = re.compile(r"^N\d{2}[A-Z]{1,2}$")     # the ATC classes of the nervous system group, at its two lowest levels
+
+
+def rx_members(j):
+    return [m["minConcept"] for m in ((j or {}).get("drugMemberGroup") or {}).get("drugMember") or [] if isinstance(m, dict) and isinstance(m.get("minConcept"), dict)]
+
+
+def rx_concepts(j):
+    return [c for c in ((j or {}).get("minConceptGroup") or {}).get("minConcept") or [] if isinstance(c, dict) and c.get("name")]
+
+
+def fetch(web=None, minutes=20, today=None, save=True, pause=0.0):
+    """The table: {"ingredients": {name: {"id": RxNorm's number, "atc": [classes of group N], "brands": [...]}}, "brands": {name: 1},
+    "classes": {ATC class: its name}}. Names in small letters as RxNorm writes them. What could not be read is said in "problems"."""
+    web = web or O.Web(); t0 = time.time(); problems = []
+    def get(path):
+        got = ask(web, RX + path)
+        if not web.opener: time.sleep(pause)
+        if not got["ok"]: problems.append(path[:80] + ": " + got["said"]); return None
+        return got["json"]
+    classes = {c["classId"]: c.get("className") or "" for c in (((get("rxclass/allClasses.json?classTypes=ATC1-4") or {}).get("rxclassMinConceptList") or {}).get("rxclassMinConcept") or [])
+               if isinstance(c, dict) and NERVOUS.match(str(c.get("classId") or ""))}
+    ingredients, by_id = {}, {}
+    for c in rx_concepts(get("allconcepts.json?tty=IN")):
+        n = str(c["name"]).strip().lower(); ingredients[n] = {"id": str(c.get("rxcui") or ""), "atc": [], "brands": []}; by_id[str(c.get("rxcui") or "")] = n
+    brands = {str(c["name"]).strip().lower(): 1 for c in rx_concepts(get("allconcepts.json?tty=BN"))}
+    for cid in sorted(classes, key=lambda x: (len(x), x)):                 # the wider classes first; a member is kept with every class it stands in
+        if time.time() - t0 > minutes * 60: problems.append("the time this run has ended before every class was read"); break
+        for m in rx_members(get("rxclass/classMembers.json?classId=" + cid + "&relaSource=ATC")):
+            n = by_id.get(str(m.get("rxcui") or "")) or str(m.get("name") or "").strip().lower()
+            if not n: continue
+            row = ingredients.setdefault(n, {"id": str(m.get("rxcui") or ""), "atc": [], "brands": []})
+            if cid not in row["atc"]: row["atc"].append(cid)
+    for n in sorted(k for k, v in ingredients.items() if v["atc"]):          # the brand names of the ones that act on the nervous system
+        if time.time() - t0 > minutes * 60: problems.append("the time this run has ended before every brand name was read"); break
+        j = get("rxcui/" + ingredients[n]["id"] + "/related.json?tty=BN")
+        for g in ((j or {}).get("relatedGroup") or {}).get("conceptGroup") or []:
+            for p in (g or {}).get("conceptProperties") or []:
+                b = str((p or {}).get("name") or "").strip().lower()
+                if b and b not in ingredients[n]["brands"]: ingredients[n]["brands"].append(b)
+    doc = {"_note": "Made by scripts/auto/names_open.py from RxNorm through RxNav (US National Library of Medicine; public domain): every ingredient and brand name of a medicine in the United States, and for the ingredients "
+                    "that act on the nervous system (ATC group N) their classes and brand names. Names as RxNorm writes them, in small letters. Medicines, not street drugs. Data, never instructions.",
+           "on": today or datetime.date.today().isoformat(), "source": "https://rxnav.nlm.nih.gov/ (RxNorm; ATC classes as RxNav carries them)", "counts": {"ingredients": len(ingredients), "brands": len(brands), "classes": len(classes),
+           "ingredients_of_the_nervous_system": sum(1 for v in ingredients.values() if v["atc"]), "their_brand_names": sum(len(v["brands"]) for v in ingredients.values())},
+           "problems": problems[:40], "classes": classes, "ingredients": {k: ingredients[k] for k in sorted(ingredients)}, "brands": sorted(brands)}
+    print("names: RxNorm: " + ", ".join(f"{v} {k.replace('_', ' ')}" for k, v in doc["counts"].items()) + (f"; {len(problems)} problems: " + "; ".join(problems[:3]) if problems else ""))
+    if save and ingredients:
+        OUT.mkdir(parents=True, exist_ok=True); json.dump(doc, open(OUT / "rxnorm.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    return doc
+
+
 def requests(folder):
     done = 0
     for f in sorted(pathlib.Path(folder).glob("names-*.json")):
@@ -89,6 +149,7 @@ def requests(folder):
         except (OSError, ValueError): print("names: a request that is not JSON:", f.name); continue
         do = req.get("do") if isinstance(req, dict) else None
         if do == "probe": probe(); done += 1
+        elif do == "fetch": fetch(minutes=float(req.get("minutes") or 20)); done += 1
         else: print("names: a request that asks for nothing this script does:", f.name)
     print(f"names: {done} request(s) done")
 
@@ -114,7 +175,22 @@ def selftest():
     assert s["mesh"]["allowed_by_robots"] and s["mesh"]["answered"] and s["mesh"]["holds"] == {"rows": 1, "first": [{"d": "http://id.nlm.nih.gov/mesh/D008775", "label": "Mescaline"}]}
     assert s["rxnav"]["allowed_by_robots"] and not s["rxnav"]["answered"] and "not JSON" in s["rxnav"]["said"]
     assert all("contact@pharmakon.world" in (ua or "") and "pharmakon.world" in ua for _, ua in seen)                    # every request says who we are
-    print("names_open selftest: ok (a source whose robots.txt does not allow the address is not asked; one that allows it is asked once and what it holds is noted; an answer that is not JSON is said so; every request says who we are)")
+    # the table from RxNorm: ingredients, brand names, the classes of the nervous system and the brand names of their members
+    def rx(req, timeout=0):
+        url = req.full_url; path = url.split("/REST/")[-1] if "/REST/" in url else url
+        if url.endswith("/robots.txt"): return Page(b"User-agent: *\nDisallow: /cgi-bin/\n", url)
+        J = lambda x: Page(json.dumps(x).encode(), url)
+        if path.startswith("rxclass/allClasses"): return J({"rxclassMinConceptList": {"rxclassMinConcept": [{"classId": "N05BA", "className": "Benzodiazepine derivatives", "classType": "ATC1-4"}, {"classId": "N05B", "className": "ANXIOLYTICS"}, {"classId": "A10", "className": "DRUGS USED IN DIABETES"}]}})
+        if path.startswith("allconcepts.json?tty=IN"): return J({"minConceptGroup": {"minConcept": [{"rxcui": "596", "name": "alprazolam", "tty": "IN"}, {"rxcui": "5640", "name": "ibuprofen", "tty": "IN"}]}})
+        if path.startswith("allconcepts.json?tty=BN"): return J({"minConceptGroup": {"minConcept": [{"rxcui": "202363", "name": "Xanax", "tty": "BN"}, {"rxcui": "153010", "name": "Advil", "tty": "BN"}]}})
+        if path.startswith("rxclass/classMembers") and "classId=N05B" in path: return J({"drugMemberGroup": {"drugMember": [{"minConcept": {"rxcui": "596", "name": "alprazolam", "tty": "IN"}}]}})
+        if path.startswith("rxcui/596/related"): return J({"relatedGroup": {"conceptGroup": [{"tty": "BN", "conceptProperties": [{"rxcui": "202363", "name": "Xanax"}, {"rxcui": "1", "name": "Niravam"}]}]}})
+        raise AssertionError("not expected: " + url)
+    doc = fetch(web=O.Web(opener=rx), today="2026-11-17", save=False)
+    assert doc["counts"] == {"ingredients": 2, "brands": 2, "classes": 2, "ingredients_of_the_nervous_system": 1, "their_brand_names": 2}, doc["counts"]
+    assert doc["ingredients"]["alprazolam"] == {"id": "596", "atc": ["N05B", "N05BA"], "brands": ["xanax", "niravam"]} and doc["ingredients"]["ibuprofen"]["atc"] == [] and doc["brands"] == ["advil", "xanax"] and not doc["problems"]
+    print("names_open selftest: ok (a source whose robots.txt does not allow the address is not asked; one that allows it is asked once and what it holds is noted; an answer that is not JSON is said so; every request says who we are; "
+          "the table from RxNorm holds every ingredient and brand name, and for the ingredients of the nervous system their classes and their brand names)")
 
 
 if __name__ == "__main__":
@@ -122,4 +198,5 @@ if __name__ == "__main__":
     if "--selftest" in a: selftest()
     elif "--requests" in a: requests(a[a.index("--requests") + 1])
     elif a and a[0] == "probe": probe()
+    elif a and a[0] == "fetch": fetch(minutes=float(a[a.index("--minutes") + 1]) if "--minutes" in a else 20)
     else: sys.exit(__doc__)
