@@ -1,0 +1,645 @@
+{
+ "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
+ "id": "au_w_0003",
+ "lane": 18,
+ "kind": "answer",
+ "from": "w_0003",
+ "question": "How often are drugs something other than what they were sold as?",
+ "ways": [
+  "how often are drugs fake",
+  "how common is it to get something other than what you bought",
+  "are street drugs usually what the dealer says",
+  "how often is a drug sold as something else",
+  "how many drugs are mis-sold",
+  "do drugs often contain a different drug"
+ ],
+ "drugs": [],
+ "made": {
+  "on": "2026-11-17",
+  "models": {
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.8-flash",
+   "team": "team H",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-3.6-flash"
+  },
+  "run": "44077621252",
+  "from": {
+   "papers": 2,
+   "summaries": 0,
+   "official": 0
+  },
+  "neurons": 0.0
+ },
+ "status": "none",
+ "why": "after the second reader's check the answer rests on too few sources",
+ "gates": {
+  "read": "6 findings kept from 3 sources (3 papers read in full, 0 official pages, 0 papers read in summary); 10 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "rules": "broken at try 1: but: it says “the main”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out; written again, then nothing against it",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3.8-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview could not be asked: its reply held no verdict, twice; gemini-3.6-flash could not be asked: gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.67, but 0.43, how1 0.95, how2 0.33",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.8-flash; it also found that the short answer answers the question and that the But is about that answer"
+ },
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "coney_2025",
+    "type": "article-journal",
+    "title": "Comparison of strength and adulteration between illicit drugs obtained from cryptomarkets versus off-line",
+    "author": [
+     {
+      "family": "Coney",
+      "given": "Leigh"
+     },
+     {
+      "family": "Peacock",
+      "given": "Amy"
+     },
+     {
+      "family": "van der Gouwe",
+      "given": "Daan"
+     },
+     {
+      "family": "Smit-Rigter",
+      "given": "Laura"
+     },
+     {
+      "family": "Hutten",
+      "given": "Nadia"
+     },
+     {
+      "family": "Ventura",
+      "given": "Mireia"
+     },
+     {
+      "family": "Quesada",
+      "given": "Adrià"
+     },
+     {
+      "family": "Barratt",
+      "given": "Monica J."
+     }
+    ],
+    "container-title": "Addiction",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1111/add.16665",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-17",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-17"
+     },
+     "online_first_year": 2024
+    },
+    "volume": "120",
+    "issue": "1",
+    "page": "128-137",
+    "PMCID": "PMC11638503"
+   },
+   "doi": "10.1111/add.16665",
+   "pmcid": "PMC11638503",
+   "title": "Comparison of strength and adulteration between illicit drugs obtained from cryptomarkets versus off-line",
+   "year": 2025,
+   "journal": "Addiction (Abingdon, England)",
+   "kind": "study",
+   "people": false,
+   "near": 0.631,
+   "money": [
+    "A.P. has received untied educational grants from Seqirus and Mundipharma. Funding from these organizations has now ceased, funding was for work unrelated to this project and the funding bodies had no role in study design, analysis and reporting. No pharmaceutical grants were received for this study. M.J.B. has an unpaid role as Research Lead for The Loop Australia, a charity that delivers drug‐checking services in Australia. All other authors have no further relevant disclosures of interest to declare."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Drugs sold on cryptomarkets are thought to have lower levels of adulteration and higher strength compared with those sourced off‑line.",
+    "text": "Comparative study of cryptomarket versus off‑line sourced illicit drugs"
+   },
+   "findings": [
+    {
+     "passage": 25,
+     "where": "RESULTS › Matching advertised substance",
+     "quote": "MDMA tablets, MDMA powder, cocaine and LSD were significantly more likely to match their advertised description (in terms of containing any amount of the substance) when sourced from cryptomarkets (Table).",
+     "text": "MDMA tablets, MDMA powder, cocaine and LSD were significantly more likely to match their advertised description when sourced from cryptomarkets.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "DISCUSSION",
+     "quote": "MDMA tablets, MDMA powder, cocaine and LSD were more likely to contain the expected substance when sourced from cryptomarkets.",
+     "text": "MDMA tablets, MDMA powder, cocaine and LSD were more likely to contain the expected substance when sourced from cryptomarkets.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 34,
+     "where": "DISCUSSION › Limitations",
+     "quote": "The samples analysed in the current study probably reflect the practices of these dominant vendors. However, smaller vendors with potentially more variable quality may be under‑represented.",
+     "text": "The findings may not represent smaller vendors who could have more variable quality.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "joye_2020",
+    "type": "article-journal",
+    "title": "High-throughput qualitative and quantitative drug checking by MALDI HRMS",
+    "author": [
+     {
+      "family": "Joye",
+      "given": "Timothée"
+     },
+     {
+      "family": "Widmer",
+      "given": "Christèle"
+     },
+     {
+      "family": "Morger Mégevand",
+      "given": "Roxane"
+     },
+     {
+      "family": "Longère",
+      "given": "Serge"
+     },
+     {
+      "family": "Augsburger",
+      "given": "Marc"
+     },
+     {
+      "family": "Thomas",
+      "given": "Aurélien"
+     }
+    ],
+    "container-title": "Frontiers in Chemistry",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.3389/fchem.2020.00695",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-17",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-17"
+     }
+    },
+    "volume": "8",
+    "number": "695",
+    "PMCID": "PMC7477897"
+   },
+   "doi": "10.3389/fchem.2020.00695",
+   "pmcid": "PMC7477897",
+   "title": "High-Throughput Qualitative and Quantitative Drug Checking by MALDI HRMS",
+   "year": 2020,
+   "journal": "Frontiers in chemistry",
+   "kind": "other",
+   "people": true,
+   "near": 0.575,
+   "money": [
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.",
+    "Funding. The authors acknowledge financial support from the Swiss Federal Office of Public Health (contract no. 14.013792.204.0001/1300)."
+   ],
+   "design": {
+    "passage": 20,
+    "where": "Results and Discussion › MALDI Qualitative Analyses",
+    "quote": "In total, 67 drug checking samples were analyzed with the developed procedure leading to 101 identifications including 36 different substances.",
+    "text": "High‑throughput MALDI‑HRMS drug‑checking study on illicit samples"
+   },
+   "findings": [
+    {
+     "passage": 20,
+     "where": "Results and Discussion › MALDI Qualitative Analyses",
+     "quote": "In total, 67 drug checking samples were analyzed with the developed procedure leading to 101 identifications including 36 different substances.",
+     "text": "The study identified 101 substances in 67 illicit drug samples, representing 36 different compounds.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Results and Discussion › MALDI Qualitative Analyses",
+     "quote": "most samples contained classical drugs of abuse, with 22 samples positive to cocaine and 16 samples positive to MDMA.",
+     "text": "Most samples contained classical drugs of abuse, with 22 samples positive to cocaine and 16 samples positive to MDMA.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Results and Discussion › MALDI Qualitative Analyses",
+     "quote": "Only classical cocaine cutting agents were identified, yet the identification of such substances is of importance since evidence suggests the concomitant role of certain adulterants and illicit drugs on toxicity.",
+     "text": "Only classical cocaine cutting agents were identified, highlighting their importance in influencing toxicity.",
+     "id": "F6",
+     "second_hand": "Only classical cocaine cutting agents were identified, yet the identification of such substances is of importance since evidence suggests the concomitant role of certain adulterant"
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  }
+ ],
+ "parts": [],
+ "complete": false,
+ "missing": "overall prevalence rate of misrepresentation",
+ "wanted": [
+  {
+   "doi": "10.5055/jom.2015.0252",
+   "apa": "Kirsh, PhD, K. L., Christo, MD, MBA, P. J., Heit, MD, H., Steffel, PharmD, K., & Passik, PhD, S. D. (2015). Specimen validity testing in urine drug monitoring of medications and illicit drugs: Clinical implications. Journal of Opioid Management, 11(1). https://doi.org/10.5055/jom.2015.0252",
+   "near": 0.685,
+   "why": "a review or meta-analysis in people; nearness to the question 0.69; cited 5 times; its full text is not open",
+   "file": "kirshphd_2015_jom_2015_0252.pdf"
+  },
+  {
+   "doi": "10.1097/ftd.0000000000001360",
+   "apa": "Dasgupta, A. (2026). Beating drug tests by ingesting detoxifying agents or adulterating urine in vitro: Are these practices effective? Therapeutic Drug Monitoring, 48(3), 283–294. https://doi.org/10.1097/ftd.0000000000001360",
+   "near": 0.675,
+   "why": "a review or meta-analysis in people; nearness to the question 0.68; cited 0 times; its full text is not open",
+   "file": "dasgupta_2026_ftd_0000000000001360.pdf"
+  },
+  {
+   "doi": "10.1002/dta.220",
+   "apa": "Cole, C., Jones, L., McVeigh, J., Kicman, A., Syed, Q., & Bellis, M. (2011). Adulterants in illicit drugs: A review of empirical evidence. Drug Testing and Analysis, 3(2), 89–96. https://doi.org/10.1002/dta.220",
+   "near": 0.604,
+   "why": "a review or meta-analysis in people; nearness to the question 0.60; cited 156 times; its full text is not open",
+   "file": "cole_2011_dta_220.pdf"
+  }
+ ],
+ "person": null,
+ "history": [],
+ "looked": [
+  {
+   "title": "An overview of forensic drug testing methods and their suitability for harm reduction point-of-care services",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s12954-017-0179-5",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review paper on forensic drug testing methods for harm reduction point‑of‑care services",
+     "quote": "Given the current opioid crisis around the world, harm reduction agencies are seeking to help people who use drugs to do so more safely.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Comparison of strength and adulteration between illicit drugs obtained from cryptomarkets versus off-line",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1111/add.16665",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Patterns of ecstasy use amongst live music event attendees and their opinions on pill testing: a cross sectional study",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/s13011-020-00295-1",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In one survey, 31.2% of participants would still take a drug if it contained amphetamine.",
+     "quote": "this was followed by amphetamine (31.2%)",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "In one survey, 27.8% of participants would still take a drug if it contained ketamine.",
+     "quote": "ketamine (27.8%)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "In one survey, 17.8% of participants would still take a drug if it contained opiates.",
+     "quote": "opiates (17.8%)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "The findings may be influenced by chance due to the study design.",
+     "quote": "This may have been due to chance.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study used convenience sampling, which may limit generalisability.",
+     "quote": "we used convenience sampling.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Controlled and illegal drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Canadian Drugs and Substances Strategy: Overview",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/canadian-drugs-substances-strategy.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "2C drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/2c",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Mixing alcohol with medicines or drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Know the Risks of Using Drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.samhsa.gov/substance-use/learn/risks",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Music festival attendees' illicit drug use, knowledge and practices regarding drug content and purity: a cross-sectional survey",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/s12954-017-0205-7",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "cross‑sectional survey of festival attendees in Australia",
+     "quote": "This study aimed to investigate the proportion and patterns of illicit drug use among young people, their attitudes towards drug checking at festivals and the potential impact of drug checking on inte",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "High-Throughput Qualitative and Quantitative Drug Checking by MALDI HRMS",
+   "read": "full",
+   "kind": "other",
+   "at": "10.3389/fchem.2020.00695",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The study did not detect non‑classical cutting agents, so their prevalence remains unknown.",
+     "quote": "Only classical cocaine cutting agents were identified, yet the identification of such substances is of importance since evidence suggests the concomitant role of certain adulterants and illicit drugs ",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study did not assess the impact of identified adulterants on user toxicity directly.",
+     "quote": "Only classical cocaine cutting agents were identified, yet the identification of such substances is of importance since evidence suggests the concomitant role of certain adulterants and illicit drugs ",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Specimen validity testing in urine drug monitoring of medications and illicit drugs: clinical implications",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.5055/jom.2015.0252",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Beating Drug Tests by Ingesting Detoxifying Agents or Adulterating Urine in vitro: Are These Practices Effective?",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1097/ftd.0000000000001360",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Adulterants in illicit drugs: a review of empirical evidence",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1002/dta.220",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review of empirical evidence on adulterants in illicit drugs",
+     "quote": "Adulterants are deliberately added to increase bulk, enhance or mimic a pharmacological effect, or to facilitate drug delivery.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  }
+ ],
+ "plan": {
+  "short": [
+   "F1",
+   "F2"
+  ],
+  "direct": "It depends",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1",
+    "F2"
+   ],
+   [
+    "DC",
+    "F4",
+    "F5"
+   ]
+  ],
+  "unanswered": "overall prevalence rate of misrepresentation"
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends on where the drug is bought. MDMA, cocaine and LSD from cryptomarkets were more likely to match their description than off-line drugs.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "coney_2025",
+       "where": "RESULTS › Matching advertised substance",
+       "quote": "MDMA tablets, MDMA powder, cocaine and LSD were significantly more likely to match their advertised description (in terms of containing any amount of the substance) when sourced from cryptomarkets (Table).",
+       "sha": "73cff75c91f0f0a9"
+      },
+      {
+       "label": "F2",
+       "ref": "coney_2025",
+       "where": "DISCUSSION",
+       "quote": "MDMA tablets, MDMA powder, cocaine and LSD were more likely to contain the expected substance when sourced from cryptomarkets.",
+       "sha": "da98041968837a8f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The study likely missed smaller vendors, who may have more variable quality than the main sellers tested.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "coney_2025",
+       "where": "DISCUSSION › Limitations",
+       "quote": "The samples analysed in the current study probably reflect the practices of these dominant vendors. However, smaller vendors with potentially more variable quality may be under‑represented.",
+       "sha": "cec783d468801dff"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “the main”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 study compared drugs from cryptomarkets and off-line sources. MDMA, cocaine and LSD from cryptomarkets were more likely to contain the expected substance.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "coney_2025",
+       "where": "Abstract",
+       "quote": "Drugs sold on cryptomarkets are thought to have lower levels of adulteration and higher strength compared with those sourced off‑line.",
+       "sha": "5e3ea4038d870b6e"
+      },
+      {
+       "label": "F1",
+       "ref": "coney_2025",
+       "where": "RESULTS › Matching advertised substance",
+       "quote": "MDMA tablets, MDMA powder, cocaine and LSD were significantly more likely to match their advertised description (in terms of containing any amount of the substance) when sourced from cryptomarkets (Table).",
+       "sha": "73cff75c91f0f0a9"
+      },
+      {
+       "label": "F2",
+       "ref": "coney_2025",
+       "where": "DISCUSSION",
+       "quote": "MDMA tablets, MDMA powder, cocaine and LSD were more likely to contain the expected substance when sourced from cryptomarkets.",
+       "sha": "da98041968837a8f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2020 lab study checked 67 illicit samples. It found 36 different substances, with cocaine and MDMA being the most common.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "joye_2020",
+       "where": "Results and Discussion › MALDI Qualitative Analyses",
+       "quote": "In total, 67 drug checking samples were analyzed with the developed procedure leading to 101 identifications including 36 different substances.",
+       "sha": "69f80859f973fe28"
+      },
+      {
+       "label": "F4",
+       "ref": "joye_2020",
+       "where": "Results and Discussion › MALDI Qualitative Analyses",
+       "quote": "In total, 67 drug checking samples were analyzed with the developed procedure leading to 101 identifications including 36 different substances.",
+       "sha": "69f80859f973fe28"
+      },
+      {
+       "label": "F5",
+       "ref": "joye_2020",
+       "where": "Results and Discussion › MALDI Qualitative Analyses",
+       "quote": "most samples contained classical drugs of abuse, with 22 samples positive to cocaine and 16 samples positive to MDMA.",
+       "sha": "69f80859f973fe28"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.8-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": "could not be asked: its reply held no verdict, twice",
+  "gemini:gemini-3.6-flash": "could not be asked: gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try"
+ },
+ "panel_gap": [
+  "gemini-3.8-flash"
+ ],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6728,
+   "but": 0.4333,
+   "how1": 0.9543,
+   "how2": 0.3281
+  },
+  "scores_quotes_alone": {
+   "short": 0.0916,
+   "but": 0.8929,
+   "how1": 0.685,
+   "how2": 0.2313
+  }
+ },
+ "place": {
+  "home": "facts",
+  "also": [],
+  "cls": null,
+  "why": "no one drug is named: a question about drugs in general"
+ }
+}
