@@ -1,51 +1,66 @@
-# The editor's next steps for the machine lane (a working note, kept in the repository so that it survives a reset)
+# The editor's next steps (a working note, kept in the repository so that it survives a reset)
 
-Written 17 November 2026, 05:00 UTC, by the AI co-editor for itself. Not a decision of the senior author; nothing here
-lets anything out. The state it starts from is the two newest entries of `docs/STATUS.md`.
+Written 17 November 2026, 10:35 UTC (12:35 Athens), by the AI co-editor for itself. Not a decision of the senior
+author; nothing here lets anything out. The state it starts from is the newest entry of `docs/STATUS.md` and
+decision 26 of `docs/AUTOMATION.md`.
 
-Rules that stand: nothing new is shown (`hold_new` true, `amounts` false, the lane's clock paused, `show_from_lane` 9)
-until a whole batch on questions the lane has never seen reads clean. Requests go one after the other, never two at
-once. Commit and push after every step. `mkdir -p data/auto/requests` before writing a request.
+Rules that stand: nothing new of the system's is shown (`hold_new` true, `amounts` false, the lane's clock paused,
+`show_from_lane` 9) until the editor has read it and it reads clean. Requests go one after the other. Commit and push
+after every step. `mkdir -p data/auto/requests` before writing a request.
 
-## After 08:00 UTC, 17 November (Google's day is new)
+## Waiting for the senior author (asked 17 November, 12:30 Athens)
 
-1. **Lessons and training.** `git pull`; `python3 -I scripts/auto/teach.py show`; read
-   `data/auto/own/teach/_last-run.txt` (also on the side branch: `git fetch origin lessons-wip` and
-   `git show FETCH_HEAD:data/auto/own/teach/_last-run.txt`). When no Lessons run is going and there are about 800
-   lessons or more, ask for the first training run, to prove the whole path on GitHub's machines:
-   `data/auto/requests/train-0001.json` = `{"from": "lytang/MiniCheck-RoBERTa-Large", "as": "pharmakon-check-1", "top": 4, "epochs": 2, "minutes": 80}`.
-   Adopt its model only by the rule (`own.better`; `workshop.py pick`).
-2. **The strong reader's exam, an answer at a time**:
-   `exam-00NN.json` = `{"models": ["gemini:gemini-4-hydrogen"], "exam": "lane", "how": ["together"], "keep": 9}`
-   (about seven calls; nine are kept for the lane). Compare with the editor's verdicts. Gemini 3.8 Flash the same way
-   only if Hydrogen answered within its time (3.8 timed out three times at 80 seconds; it has 170 now).
-3. **A trial on questions about amounts the lane has never seen, with team F** (Gemini 3.5 Flash Lite reads: no neurons):
-   `lane-00NN.json` = `{"team": "team F", "trial": [
-   {"id": "t_lsd_studies", "q": "What amounts of LSD have studies given to people?", "drugs": ["lsd"], "ways": ["lsd dose in studies"]},
-   {"id": "t_methadone_label", "q": "What daily amount of methadone does the medicine's label state for treatment?", "drugs": ["methadone-buprenorphine"], "ways": ["methadone dose on the label"]},
-   {"id": "t_dmt_studies", "q": "What amounts of DMT have studies given to people?", "drugs": ["dmt-ayahuasca"], "ways": ["dmt dose in studies"]}]}`.
-   Read with `python3 -I scripts/editor/read_auto.py --trial`; judge with `python3 -I scripts/editor/label_rows.py show --trial` and `add FILE --trial`.
-4. **One ordinary question with Hydrogen as the further reader**, only if Groq's gpt-oss-120b or Cloudflare has room
-   (8,279 of 9,000 neurons were used at 02:13 UTC): `{"ids": ["w_0041"], "max": 1}`. Read it with
-   `read_auto.py --ids au_w_0041 --all`; judge every sentence, kept or not, with `label_auto.py`.
-5. Whatever is wrong: a rule with a test in `scripts/auto/lane.py`, the lane's number up by one, and the run again.
-6. Tell the senior author briefly and plainly what was written, what is shown, what is held and why.
+1. **"approve"** for the Section 7 answer `cl_can_smoked_cancer` (*Does smoking cannabis cause lung cancer?*), the
+   checked answer to his own question "does cannabis cause cancer". Only on his word. Then:
+   - the plain lines he had on his to-do page are in `data/verification/s7-review-2026-11-13/s7_on_todo_page.json`
+     (its `v` 0.5.3, `rewritten`); the claim in `data/claims/cannabis.json` is 0.5.2. Check in `data/verification/`
+     that those plain lines were blind-checked; if they were not, they are checked before anything is shown;
+   - bring the lines into `data/site/simple.json`, the claim to the version he reviewed with a changelog line, and
+     record his approval in `data/verification/senior-gate.json` with his words and the time he gave them;
+   - `scripts/snapshot_published.py`, `python3 -I scripts/validate.py`, build, the page checks, a deploy request;
+   - 37 more Section 7 answers wait the same way (the list: every claim of section 7 whose version is not in the gate).
+2. **The PDF** of the 2026 meta-analysis that the system found and the checked answer does not know yet (ask after
+   step 1, one step at a time): Karimi, M., Kazemi, K., Pourhanifeh, M. H., Irajian, P., & Asbaghi, O. (2026).
+   Marijuana (cannabis) smoking increases the risk of lung cancer: Evidence from a systematic review and
+   meta-analysis. *Addiction and Health, 18*, 1710. https://doi.org/10.34172/ahj.1710 (reference from Crossref).
+3. **"keep them private"**: the scout's files with the questions people sent (`data/auto/questions.json`,
+   `data/auto/report.json`, `docs/MISSING.md`) are in this public repository. If he says so: the words stay in the
+   store alone; the repository keeps our wording, the counts and a fingerprint (scout.py, look.py, ask.py, and the
+   three files taken out of the repository's history is his call too).
+4. Still open from before: "no Google"; whether the system may change a checked claim (now: never).
 
-## After 00:00 UTC, 18 November (Cloudflare's day is new)
+## In flight (17 November, 10:35 UTC)
 
-- The rest of ten trial questions about amounts (same form): THC in studies (`cannabis`); the buprenorphine label
-  (`methadone-buprenorphine`); the esketamine label for depression (`ketamine`); the diazepam label for anxiety in
-  adults (`benzodiazepines`); the dexamfetamine label for adults (`amphetamine`); "How many drinks a day do US health
-  bodies call moderate drinking?" (`alcohol`); "How much caffeine at one time do health bodies say raises no safety
-  concern?" (`caffeine`).
-- The listed questions about amounts that no late lane has written: `w_0043` (MDMA in studies), `w_0045` (ketamine for
-  depression), `w_0044` (psilocybin, last written by lane 12).
-- The other two ordinary questions: `w_0001`, `w_0002`.
-- If ten unseen questions about amounts read clean: `amounts` true, `hold_new` `{"answer": true, "amounts": false}`,
-  release what was read (`scripts/editor/release_auto.py`), a deploy request, and `deployed.json` checked. If not: the
-  faults get their rules, and another ten unseen questions.
+- **Lane 18 on `w_0048`** (*Does cannabis make sex better?*), request `lane-0019`. Read every sentence
+  (`read_auto.py --ids au_w_0048 --all`), judge all of them into the exam (`label_auto.py`), release only what reads
+  clean. Today's four runs gave no clean answer; the exam of the lane's sentences holds 104 (70 good, 34 not good).
+- **`au_w_0041`** (*Does cannabis cause cancer?*, lane 17): five sentences, all good, held because it disagrees with
+  the checked claim above. It stays held. If he approves the checked answer, the system's answer is not needed.
+- **The table of medicine names from RxNorm** (`names-0002`, Official workflow): `data/auto/names/rxnorm.json`.
+  Wikidata and MeSH do not allow their query addresses (robots.txt): not asked, not gone around.
+- **Lessons** (`teach-0005` after the long run ends) and, with 800 lessons or more at home, a real training run
+  (`train-*.json`; the path was proved today with `pharmakon-check-1-try`, which is not adopted).
 
-## Open with the senior author (asked before; no answer yet)
+## Decision 26, in this order
 
-- Whether Google's free tier may be used at all ("no Google" switches it off): its terms let Google use what is sent
-  to improve its products; we send our own sentences and passages of public sources, never a visitor's words.
+a. **Names.** From `rxnorm.json`: the ingredients of the nervous system (ATC group N) and their brand names become
+   names the page knows as "a medicine we do not cover yet" (scope) and candidates for pages to start
+   (`scripts/auto/place.py`, `data/auto/filing.json`); other medicines get their own line ("a medicine, not a drug
+   this site covers") only after it is measured on real questions. The table is too large for the index as a pattern:
+   a file of its own, loaded with Insight's files, read as a set. Street names are not in RxNorm: look for an open
+   source that allows it (a probe first, as for these three).
+b. **Misspelt names**: done (site 2.9.1). Watch what real visitors type; grow `spell.map` and `spell.keep`.
+c. **Real language in bulk and a trained reader for the page.** Open collections of what people typed, only under a
+   licence that allows it, fetched in the job that holds no key; never a visitor's words. Classes: about drugs or not,
+   finished or not, which drug. The words rule stays as a second check.
+d. **Fresh test sets** of thousands of real questions for each class; the measured error rate goes into
+   `docs/AUTOMATION.md`. "1 in 1,000" is said only after about 3,000 fresh questions with no error.
+
+## The lane, when the allowances are new (Cloudflare 00:00 UTC, Google 08:00 UTC)
+
+- A further reader that answers: today none of the three Gemini models named did (a time-out, no verdict, "high
+  demand"); Gemini 4 Hydrogen answers but has 18 calls a day. Try the marks reader (`gemini-3.5-flash-lite#marks`)
+  in a team whose first reader is another model, and measure it on the exam first.
+- The trial on unseen questions about amounts with team F (the request is in git history: `next-steps.md` of 17
+  November, 05:00 UTC), then the rest of ten; `amounts` stays false until ten unseen questions read clean.
+- `w_0043`, `w_0045`, `w_0044`, `w_0001`, `w_0002`.
