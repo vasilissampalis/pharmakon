@@ -24,10 +24,18 @@ the way back in the bar).
    ones); then let the lane rewrite `w_0048`.
 2. **The school** is built and runs every day (decision 28; `data/auto/language/report.json` is its own account). Next
    lessons, in this order: (a) **everyday words with a letter wrong**: "is ketmine adictive" finds nothing, because only
-   drug names are corrected. Rule to measure first: a word the model's word list does not hold, five letters or more,
-   with exactly one word of the list one letter away (a letter dropped, added, changed, or two swapped), is read as that
-   word; measure on the 1,021 forum questions and the school's real questions that no good word is changed; page and
-   build must read the same (parity). (b) **more language**: the web client reads the first 6 MB of a file, so the same
+   drug names are corrected. **Measured on 17 November, 19:50 (a trial, nothing shipped):** the plain rule (a word the
+   model's word list does not hold, five letters or more, with exactly one word of that list one letter away) reads
+   "overdoze", "adiction", "withdrawl", "tolerence", "paranoya", "anxeity", "dangrous", "simptoms", "posible" rightly,
+   but it also changed 7 good words in the 1,021 forum questions, because the list of 30,000 words lacks them: "inhale"
+   to "inhaled", "irritate" to "irritated", "airway" to "airways", "purer" to "pure", "purify" to "purity", and
+   "salivation" to "salvation". So it must not ship as it is. Two guards to build and measure: (1) never a change at the
+   end of the word (an ending is not a typo: this stops the first five); (2) only toward a word the site itself uses (its
+   questions and short answers: the word index of the answers), and never away from a word that real questions use (the
+   school can keep the words it has seen three times or more: a new table, "words"). It missed "adictive" and
+   "halucination" (the drug-talk pattern takes them before the rule is asked: let the rule read them first). Then
+   measure again on the forum questions and on the school's real questions: no good word changed. Page and build must
+   read the same (parity). (b) **more language**: the web client reads the first 6 MB of a file, so the same
    61,898 questions every day: read the rest (a larger room for this one reader, or a part of a file), and add open
    collections whose licence has been read (`data/auto/language/sources.json`). (c) the two smaller errors its report
    names ("which drug?" for a question of everyday words that is about something else; a last word taken for one still
