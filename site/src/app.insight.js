@@ -463,6 +463,67 @@ function insLawLine(un) {
   const c = WORLD_LAW.countries.find(x => x.name === un), n = c ? ["c1961", "c1971", "c1988"].filter(k => c[k] && c[k].status === "party").length : 0, nm = insCap(inCtry(un));
   return (n === 3 ? nm + " has joined all three UN drug treaties" : n ? nm + " has joined " + n + " of the three UN drug treaties" : nm + " has not joined the UN drug treaties") + ". Its own law on each drug is on that drug’s page";
 }
+/* (2.14, 17 November 2026) A question that asks for a count ("how many people die from heroin", "how many people use cocaine",
+   "how common is ketamine") is answered from the official figures the site holds (the statistics page: every figure checked at
+   its source). The senior author asked the first, was told "We haven't checked exactly this yet" with nine rows about other
+   things, opened the statistics page it pointed to and found "all statistics were irrelevant": "this is such a simple question".
+   The site had the figure (heroin was involved in an estimated 1,600 deaths in the EU in 2024); nothing led to it.
+   insCountKind: what kind of count a question asks for (the statistics page's own kinds: death, use, disorder, treat, harm), or "".
+   insFigures: the figures of that kind for the drug named, the ones about that very drug before the ones about its family
+   ("opioids"), the reader's own place first, the newest first; with no drug named, the figures about all drugs. */
+const INS_COUNT = [
+  ["death", /\b(?:how many|how much|number of|numbers? (?:on|of|for)|count of|statistics (?:on|of|for)|figures (?:on|of|for))\b[^?]*\b(?:die|dies|died|dying|deaths?|killed|kills|fatal|fatalities|overdoses?|od)\b|\b(?:deaths?|death toll|death rate|mortality|fatalities|overdose deaths?)\b[^?]*\b(?:per year|a year|each year|every year|yearly|annually|statistics|stats|numbers?|figures?|rate|toll|how many)\b|\bhow many (?:people )?(?:does|do|did|has|have) [^?]{1,40}\b(?:kill|killed)\b|\b(?:death|mortality) (?:statistics|stats|numbers|figures|rate|toll)\b/i],
+  ["treat", /\bhow many\b[^?]*\b(?:in treatment|treated|in rehab|enter(?:ing)? treatment|get(?:ting)? treatment|seek(?:ing)? (?:help|treatment))\b/i],
+  ["disorder", /\bhow (?:many|common)\b[^?]*\b(?:addicted|dependent|hooked|addicts|use disorder|dependence|addiction)\b/i],
+  ["harm", /\bhow many\b[^?]*\b(?:hospital|hospitalised|hospitalized|emergency room|emergency department|a&e|\ber\b)/i],
+  ["use", /\bhow (?:many|common|widespread|popular|prevalent)\b[^?]*\b(?:use|uses|used|using|users?|take|takes|taking|took|tried|try|smoke|smokes|smoking|drink|drinks|drinking|inject|injects|do|does|on)\b|\bhow (?:common|widespread|popular|prevalent) (?:is|are)\b|\bwhat (?:percentage|percent|share|proportion|fraction) of\b|\b(?:prevalence|usage statistics|use statistics|how many users)\b|\bhow many (?:people|adults|teens|teenagers|students|young people|americans|europeans|greeks)\b[^?]*\b(?:it|them)\b/i]
+];
+const INS_COUNT_NOT = /\bhow (?:many|much)\s+(?:mg|mcg|ug|milligrams?|micrograms?|grams?|g|ml|pills?|tablets?|tabs?|capsules?|lines?|drinks?|hits?|puffs?|doses?|drops?|times|hours?|days?|weeks?)\b|\bhow (?:much|long)\b(?![^?]*\b(?:people|deaths?)\b)/i;   // an amount or a time, not a count of people
+// a few words that ask for a count without saying "how many" ("heroin deaths", "cocaine statistics", "deaths from alcohol"): only where a
+// drug is named, or drugs or overdoses in general, and the words are not a question of another kind ("what is ego death")
+const INS_COUNT_SHORT = [["death", /^\s*(?:[\w'-]+\s+){1,3}(?:deaths?|death toll|death rate|mortality|fatalities|overdose deaths?)\s*\??$|^\s*(?:deaths?|overdose deaths?|mortality|fatalities)\s+(?:from|by|of|due to|caused by)\s+\S/i],
+  ["use", /^\s*(?:[\w'-]+\s+){1,3}(?:statistics|stats|prevalence|usage|use statistics)\s*\??$/i]];
+function insCountKind(q) {
+  const t = String(q); for (const [kind, re] of INS_COUNT) if (re.test(t)) return kind;
+  if (!INS.nameRe || /^\s*(?:what|why|who|when|where|which|is|are|was|were|does|do|did|can|could|should|will|would|how|my|i)\b/i.test(t)) return "";
+  if (!(insNamed(insSpell(t).text).length === 1 || /\b(?:drugs?|overdoses?)\b/i.test(t))) return "";
+  for (const [kind, re] of INS_COUNT_SHORT) if (re.test(t)) return kind;
+  return "";
+}
+function insFigures(kind, groups, wantEver) {
+  if (typeof EPI_ALL === "undefined" || !EPI_ALL.length) return [];
+  const one = groups.length === 1 && groups[0].length === 1 ? groups[0][0] : null, any = !groups.length;
+  const rows = [];
+  EPI_ALL.forEach(r => { if (r.status !== "verified" || figKind(r) !== kind) return;
+    if (kind === "death" && r.measure !== "deaths") return;                         // a count of deaths, not years of life lost
+    let fit = 0;
+    if (any) fit = /^any (?:drug|illicit drug)$/.test(r.substance) ? 2 : 0;
+    // the figure's own drug, read as a whole name (its note in brackets left out): 2 that very drug; 1 the family it belongs to ("opioids"
+    // for heroin), shown under the family's own name. A figure about another drug of the family, or about a group nobody names so, is not taken.
+    else if (one) { const g = INS.nameOf.get(String(r.substance).toLowerCase().replace(/\s*\([^)]*\)/g, "").trim()); fit = !g ? 0 : g.length === 1 && g[0] === one ? 2 : g.length > 1 && g.includes(one) ? 1 : 0; }
+    if (fit) rows.push({ r, fit }); });
+  const yr = r => parseInt(String(r.data_year).match(/\d{4}/) || "0", 10), count = r => (/^(?:persons|deaths|million|thousand)/.test(String(r.unit)) ? 0 : 1);
+  const ever = wantEver ? r => (r.measure === "lifetime-prevalence" ? 0 : 1) : r => (r.measure === "past-year-prevalence" ? 0 : 1);
+  const sample = r => (/web survey|non-representative|not a random sample/i.test(String(r.population) + " " + String(r.geography)) ? 1 : 0);   // a survey of whoever answered comes after a count of everyone
+  const wide = r => (/^(?:European Union|EU\b|Europe\b|global|United States|Greece)|\b(?:Member States|countries)\b/.test(String(r.geography)) ? 0 : 1);   // a region's figure before one small country's
+  rows.sort((a, b) => b.fit - a.fit || figRank(a.r.file) - figRank(b.r.file) || (kind === "use" ? ever(a.r) - ever(b.r) : 0) || sample(a.r) - sample(b.r) || wide(a.r) - wide(b.r) || count(a.r) - count(b.r) || yr(b.r) - yr(a.r));
+  // the lowest and the highest of a range of national estimates are one figure, said in one line
+  rows.forEach(x => { const m = String(x.r.label || x.r.def || "").match(/^(lowest|highest) (.+)$/i); if (!m) return;
+    const other = rows.find(y => y !== x && y.r.file === x.r.file && new RegExp("^(?:lowest|highest) " + m[2].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$", "i").test(String(y.r.label || y.r.def || "")));
+    if (other && !other.pair && !x.pair) { const lo = /^lowest/i.test(m[1]) ? x : other, hi = lo === x ? other : x; lo.pair = hi.r; hi.skip = true; } });
+  const kept = rows.filter(x => !x.skip);
+  // one figure from a place: the best of each, the reader's own place first
+  const seen = new Set(); return kept.filter(x => !seen.has(x.r.file) && seen.add(x.r.file));
+}
+// a figure in one line: the number in everyday words, what it counts, and where and when; its source
+function insFigLine(r, hi) {
+  const f = figParts(r), v = figVal(r); let unit = v.u; if (unit === "people" && r.measure === "deaths") unit = "deaths";
+  if (hi) { v.v = v.v + " to " + figVal(hi).v; f.what = "Lowest and highest " + f.what.replace(/^lowest /i, ""); f.place = f.place + " (lowest), " + figParts(hi).place + " (highest)"; }
+  const cont = /^[a-z]/.test(f.what); if ((unit === "people" || unit === "deaths") && (cont || /death|people|persons/i.test(f.what))) unit = "";
+  const what = cont || /^[A-Z]{2}|^[A-Z][a-z]*[A-Z0-9]/.test(f.what) ? f.what : f.what.charAt(0).toLowerCase() + f.what.slice(1);
+  return { t: v.v + (unit ? " " + unit : "") + (cont ? " " : ": ") + what + (f.period ? " (" + f.period + ")" : ""), m: f.place + " · " + figYear(r) + " · " + figSrc(r) };
+}
+const INS_FIG_KIND = { death: "Deaths", use: "How many people use it", disorder: "Use disorder", treat: "Treatment", harm: "Hospital emergencies" };
 /* (2.12) A page our system started, for a question that names what it is about ("can i get high with kanna", "what is mitragyna
    javanica"): the page is a place to look. It does not answer the question, so the row does not count as an answer. Asked
    what it looks like, a page with pictures is the answer. The names are the page's own, the filing's, the ones the system
@@ -795,6 +856,15 @@ async function insRank(query, ctx) {
   // Pharmakon reads English for now: the page says so, keeps the emergency route and the rows the word search found (it knows
   // the drugs' Greek names), and gives no verdict
   if (insForeign(res.q) && !res.emergency) { res.note = "language"; res.greek = /\p{Script=Greek}/u.test(res.q); res.routes = res.routes.filter(r => r.kind === "help"); res.ms = performance.now() - t0; return res; }
+  // (2.14) a question that asks for a count: the official figures are fetched (once) and the ones that answer it are routes of their own
+  const ck = insCountKind(res.core);
+  if (ck && !res.emergency && res.groups.length <= 1 && !res.routes.some(r => r.kind === "dose") && !INS_COUNT_NOT.test(res.core)) {
+    if (!FIGURES_DONE) { try { await Promise.race([loadFigures(), new Promise(ok => setTimeout(ok, 2500))]); } catch (e) { /* the statistics page is still pointed to */ } }
+    const figs = insFigures(ck, res.groups, /\b(?:tried|ever|lifetime|in their li(?:fe|ves))\b/i.test(res.core)), one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
+    figs.slice(0, 2).forEach(({ r, fit, pair }) => { const l = insFigLine(r, pair);
+      res.routes.push({ kind: "figure", icon: "pulse", k: "Statistics · " + (one ? (fit === 2 ? drugName(one) : insCap(String(r.substance))) : "All drugs") + " · " + INS_FIG_KIND[ck], t: l.t, m: l.m,
+        href: "#numbers/part-n-" + r.file, fig: r.file + "|" + (one ? r.substance : "") + "|" + ck }); });
+  }
   const st = insStarted(res.core);                             // (2.12) a page our system started that the question names
   if (st && !st.loose) res.routes.push(st);                    // asked what it looks like: its pictures are the answer
   const whole = res.routes.some(r => r.whole);                 // the question is a drug's name and nothing more: its page is the answer
@@ -879,8 +949,8 @@ function insSosHtml(cls) {
     '<a href="#emergency">' + (em ? "Other numbers" : "Emergency numbers by country") + "</a></span></p>";
 }
 function insRouteHtml(r, cls) {
-  return '<a class="' + cls + " r-" + r.kind + '" href="' + esc(r.href) + '" data-ins-route="' + r.kind + '"' + (r.el ? ' data-el="' + esc(r.el) + '"' : "") + (r.mix ? ' data-mix="' + esc(r.mix) + '"' : "") + (r.country ? ' data-country="' + esc(r.country) + '"' : "") + (r.fb ? ' data-fb-open="' + esc(r.fb) + '"' : "") + ">" +
-    '<span class="ri">' + icon(r.icon || INS_ICON[r.kind] || "arrow") + '</span><span class="k">' + esc(r.k) + '</span><span class="t">' + esc(r.t) + '</span><span class="go">' + icon("arrow") + "</span></a>";
+  return '<a class="' + cls + " r-" + r.kind + '" href="' + esc(r.href) + '" data-ins-route="' + r.kind + '"' + (r.el ? ' data-el="' + esc(r.el) + '"' : "") + (r.mix ? ' data-mix="' + esc(r.mix) + '"' : "") + (r.country ? ' data-country="' + esc(r.country) + '"' : "") + (r.fb ? ' data-fb-open="' + esc(r.fb) + '"' : "") + (r.fig ? ' data-fig="' + esc(r.fig) + '"' : "") + ">" +
+    '<span class="ri">' + icon(r.icon || INS_ICON[r.kind] || "arrow") + '</span><span class="k">' + esc(r.k) + '</span><span class="t">' + esc(r.t) + (r.m ? '<span class="rm">' + esc(r.m) + "</span>" : "") + '</span><span class="go">' + icon("arrow") + "</span></a>";
 }
 // "Ask us to check it": one tap (2.4, below: Your questions); where the page can send it, a quiet line says what is sent
 const insAskBtn = (q, cls, label, after) => '<button type="button" class="' + cls + '" data-ask="' + esc(q) + '">' + (label || "Ask us to check it") + "</button>" + (after || "") + (ASK_ON ? '<span class="ask-note">Sends only this question. No name, no address.</span>' : "");
@@ -1028,7 +1098,7 @@ function insightAfterSearch(raw) {
   }
   if (!box.querySelector(":scope > .sr-note")) box.insertAdjacentHTML("afterbegin", '<p class="sr-note">' + icon("mobile") + "<span>" + esc(insNoteText()) + "</span></p>");
   const q = insClean(raw); clearTimeout(INS.timer);
-  if (insWordsIn(q) < INS_WORDS) { INS.seq++; insShort(box, q); return; }
+  if (insWordsIn(q) < INS_WORDS && !insCountKind(q)) { INS.seq++; insShort(box, q); return; }   // (2.14: "heroin deaths" asks for a count, in two words)
   const ctx = insCtx(), have = INS.cache.get(insKey(q, ctx));
   if (have) { INS.seq++; insInject(box, have); return; }
   const seq = ++INS.seq;
@@ -1062,7 +1132,7 @@ function insightReady() {
    opens the first result: that stays for a word or two (a drug's name goes to its page) and when Insight is not there. */
 document.addEventListener("keydown", e => {
   if (e.key !== "Enter" || e.isComposing || !e.target || e.target.id !== "search") return;
-  const q = insClean(e.target.value); if (insWordsIn(q) < INS_WORDS) return;
+  const q = insClean(e.target.value); if (insWordsIn(q) < INS_WORDS && !insCountKind(q)) return;
   if (INS.state === "ready") { e.preventDefault(); e.stopPropagation(); insAsk(q); return; }
   if (INS.state === "loading") { e.preventDefault(); e.stopPropagation(); INS.want = q; runSearch(e.target.value); }   // it opens once ready (insightReady)
 }, true);
@@ -1190,7 +1260,7 @@ function insAsk(q) {
 function insFollow(r) {
   const s = document.getElementById("search"); if (s) { s.value = ""; s.blur(); } closeSearch();
   if (r.fb) { openFeedback(r.fb, location.hash, ""); return; }                       // (2.11) "report a mistake": the form
-  INS.go = { at: Date.now(), el: r.el || null, mix: r.mix ? r.mix.split(",") : null, country: r.country || null };   // (the country a law question named goes with it)
+  INS.go = { at: Date.now(), el: r.el || null, mix: r.mix ? r.mix.split(",") : null, country: r.country || null, fig: r.fig || null };   // (the country a law question named goes with it; the figures a counting question asked for)
   if (location.hash === r.href) { route(); insArrive(); } else location.hash = r.href;
 }
 /* Back to where the reader was. The sheet closes in app.simple.js (its Back button, a tap outside, Escape, the phone's Back);
@@ -1219,6 +1289,14 @@ function insArrive() {
   const g = INS.go; INS.go = null; if (!g || Date.now() - g.at > 4000) return;
   if (g.mix) insMixPick(g.mix[0], g.mix[1]);
   if (g.country) insLawFor(g.country);
+  // (2.14) the figures a counting question asked for: the statistics page shows that place, that drug's figures, at that kind
+  if (g.fig) { const [file, sub, kind] = g.fig.split("|"); let n = 0;
+    const show = () => { const sec = document.getElementById("n-" + file), sel = document.getElementById("num-sub-" + file);
+      if (!sec || !sec.querySelector(".sec-b") || !sec.querySelector(".sec-b").children.length) { if (n++ < 40) setTimeout(show, 100); return; }
+      if (sel && sub && sel.value !== sub && [...sel.options].some(o => o.value === sub)) { sel.value = sub; sel.dispatchEvent(new Event("change", { bubbles: true })); }
+      const name = (FIG_KINDS.find(x => x[0] === kind) || [])[1], h = name && [...sec.querySelectorAll("h3.tp")].find(x => x.textContent.indexOf(name) === 0);
+      if (h) { scrollToEl(h); h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } };
+    setTimeout(show, 80); }
   if (g.el) setTimeout(() => { const el = document.getElementById(g.el); if (!el || !el.closest(".view.active")) return; scrollToEl(el);
     const h = el.querySelector("h2, h3") || el; h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }, 60);
 }
@@ -1264,7 +1342,7 @@ document.addEventListener("click", e => {
   // a route: the link goes to the page; what is left to do there is noted for when the page has drawn (insArrive)
   if (a.dataset.insRoute) {
     if (a.dataset.fbOpen) { e.preventDefault(); e.stopPropagation(); if (inSearch) { const s = document.getElementById("search"); if (s) s.value = ""; closeSearch(); } openFeedback(a.dataset.fbOpen, location.hash, ""); return; }   // (2.11) "report a mistake": the form
-    INS.go = { at: Date.now(), el: a.dataset.el || null, mix: a.dataset.mix ? a.dataset.mix.split(",") : null, country: a.dataset.country || null };
+    INS.go = { at: Date.now(), el: a.dataset.el || null, mix: a.dataset.mix ? a.dataset.mix.split(",") : null, country: a.dataset.country || null, fig: a.dataset.fig || null };
     if (location.hash === a.getAttribute("href")) { e.preventDefault(); if (inSearch) { const s = document.getElementById("search"); if (s) s.value = ""; closeSearch(); } route(); insArrive(); }
     return;
   }

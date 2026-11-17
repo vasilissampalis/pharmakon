@@ -276,6 +276,20 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
       const left = await p.evaluate(async () => { const r = await insAnswer("how many people die from methamphetamine", insCtx()); return [...document.querySelectorAll("#search-results > a.sr-ans[data-cid]")].map(a => [a.querySelector(".t").textContent.slice(0, 60), +r.sc.topic[INS.idx.get(a.dataset.cid)].toFixed(2)]); });
       ok(w + ": “how many people die from methamphetamine” gets its answer, and no answer about something else that only shares a word (“people”, “meth”) stands under “More results”",
         m1.best.length === 1 && m1.best[0].id === "cl_meth_mortality" && left.every(x => x[1] >= 0.4) && !left.some(x => /cash|dopamine|grey matter/.test(x[0])), JSON.stringify(m1.best.map(b => b.id)) + " | " + JSON.stringify(left)); }
+    // (2.14; the senior author asked "How many people die from heroin", was told "We haven't checked exactly this yet" and found the statistics
+    // page "irrelevant": "this is such a simple question") a question that asks for a count is answered from the official figures the site holds
+    { const f1 = await ask("how many people die from heroin"), r1 = f1.routes[0] || {};
+      ok(w + ": “how many people die from heroin” is answered with the official figure, first, with its place, year and source, and nothing says “we haven't checked”",
+        r1.kind === "figure" && r1.k === "Statistics · Heroin · Deaths" && /^[\d,.]+(?: deaths)?: .*heroin/i.test(r1.t) && /^#numbers\/part-n-/.test(r1.href) && !f1.none && f1.kids[0] === "route:figure" &&
+          await p.evaluate(() => /\d{4}/.test((document.querySelector('#search-results a.sr-route[data-ins-route="figure"] .rm') || {}).textContent || "")), JSON.stringify(f1.routes) + " | " + f1.none);
+      const f2 = await ask("heroin deaths");
+      ok(w + ": “heroin deaths”, two words, gets the same figure", (f2.routes[0] || {}).kind === "figure" && (f2.routes[0] || {}).t === r1.t, JSON.stringify(f2.routes));
+      const f3 = await ask("how many mg of mdma do people take");
+      ok(w + ": “how many mg of mdma do people take” asks for an amount, not a count of people: no figure, the line on doses", !f3.routes.some(r => r.kind === "figure") && f3.routes.some(r => r.kind === "dose"), JSON.stringify(f3.routes));
+      await ask("how many people die from heroin"); await p.click('#search-results a.sr-route[data-ins-route="figure"]'); await p.waitForTimeout(1500);
+      const arr = await p.evaluate(() => { const g = location.hash.replace("#numbers/part-n-", ""), sel = document.getElementById("num-sub-" + g), a = document.activeElement; return { hash: location.hash, sub: sel ? sel.value : "", at: a ? a.textContent.slice(0, 20) : "", view: document.getElementById("view-numbers").classList.contains("active") }; });
+      ok(w + ": its row opens the statistics page at that place, with that drug's figures chosen, at “Deaths”", arr.view && /^#numbers\/part-n-/.test(arr.hash) && arr.sub === "heroin" && /^Deaths/.test(arr.at), JSON.stringify(arr));
+      await p.evaluate(() => { location.hash = "#home"; }); await p.waitForTimeout(600); }
     // (2.12) a page our system started (people asked about a drug that had no page): a question that names it is shown the way to that
     // page and is never called "not about drugs"; its name alone finds the page; asked what it looks like, its pictures are the answer.
     // The check goes by the pages the build shows today, whatever they are.
