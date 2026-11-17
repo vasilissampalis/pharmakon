@@ -23,6 +23,10 @@
      that as its first row. Getting drugs, hiding use, beating a drug test: no route and no answer.
    - While typing: the route, then "Best match" with the short answer in full, then "Related"; with no best match, one calm
      line, "We haven't checked exactly this yet.", and the way to ask us. A related answer is never shown as the answer.
+     (2.9) A question that is not finished ("can i die from", "is it addictive" off a drug's page) gets no verdict and no
+     way to send it: "Which drug do you mean?" or "Go on.", with what was found under "You may mean". A question that is
+     not about drugs by its words is told so ("This does not look like a question about drugs"), or, where one unknown
+     word stands among words that could be asked of any drug, "We do not know <word> as a drug"; both keep a way to send.
    - Enter opens the sheet for the question as asked: the person's own words as the heading, each best answer in full under
      it; "full evidence", "the studies", "in detail" open "How do we know?"; "short", "tl;dr", "eli5" keep to the short
      answer and its But. No guess first, anywhere. No emergency line, except when the question is an emergency.

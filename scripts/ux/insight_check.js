@@ -8,7 +8,7 @@
 //   answer in full in the list; a drug question it does not answer exactly ("is modafinil safe", "give me the full evidence
 //   about how can i die from ketamine") says "We haven't checked exactly this yet" with "Ask us to check it", and a near
 //   answer shows under "Related" at most; (2.5) a question on our list ("how can you die from alcohol") says "Not answered
-//   yet. A question like yours is on our list"; a question that is not about drugs gets no promise ("We have no answer to this"). What is a best match is decided by the judge whose numbers,
+//   yet. A question like yours is on our list"; a question that is not about drugs gets no promise ("This does not look like a question about drugs"); (2.9) a question that is not finished gets no verdict ("Which drug do you mean?", "Go on."), and one whose single unknown word may be a drug's name is told so. What is a best match is decided by the judge whose numbers,
 //   like the weights and the tiers, the page reads from data/insight.json (set in site/insight/model.json): no number here;
 // - routes, each with its test: two drugs (the mixing row first, opening the mixing tool with both chosen), a dose (the
 //   Doses row, no amount), an emergency (the help row and the emergency number line, which shows nowhere else), testing a

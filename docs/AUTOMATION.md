@@ -360,6 +360,65 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     checks them like any other, and what it makes is written to `data/auto/trial/` and can never be shown, placed or
     counted as an answer. The editor reads those records like the others (`read_auto.py --trial`,
     `label_rows.py --trial`), and their rows go into the exam of rows.
+    - *Lane 16* (17 November 2026, after the editor read what lane 15 wrote for the senior author's own two questions; 22
+      sentences judged, 18 good, 4 not good). Three faults, each with its rule and test. (1) The second reader refused
+      the opening word "It depends." as "not stated in any passage"; the writer then left the word out and broke the
+      rule that asks for it: no answer, and a good draft lost. The opening word is now taken out of the sentence the
+      readers set beside the passages (`opener_of`) and judged apart, as the answer to the question (the checker's
+      "opening"). (2) "A 2026 review found ... long-term use and testicular tumors": the review only cites an earlier
+      meta-analysis for that, and the second reader accepted it twice. `second_hand()` reads from the passage whether a
+      finding is reported from another study ("A meta-analysis in 2019 ... found", "According to a study", "However,
+      ..." after such a sentence); the writer is told, and a sentence that says its source found such a thing breaks a
+      rule. (3) "wax and flower forms linked to higher satisfaction": true to its source, and a comparison of the forms
+      of a drug for a wanted effect, which the site keeps for the section the senior author approves; a rule stops it.
+      Also: where a team names several models for one further reader and the first cannot be asked (its day's free
+      calls used up), the next is asked in the same answer instead of leaving the answer to wait.
+
+26. **The page reads a question in more ways, and the aim is one error in a thousand** (17 November 2026, 10:39 to
+    11:11, his words: "it should understand and correctly diagnoze every instance and meaning of human language"; of
+    "We have no answer to this. Pharmakon answers questions about drugs" under his unfinished "can i die from " and
+    under "can a gay man go to the court": "this is pathetic it has to have 1/1000 error rate"; "ignore some questions
+    as irrelevant to drugs at a 1000 to 1 accuracy rate"; "if a user makes a question about a different drug our ai
+    should create that drug page"; "i want us to invlolve everything human language can consist of taken from every
+    instance of how people actually write on the internet"; and of his two sent questions: "i cannot click on them to
+    see the answer").
+    - *What site 2.9.0 does* (words only, the same on the page and in the build; `site/insight/scope.json`,
+      "unfinished"; `insUnfinished`, `Ranker.unfinished`). A question is read as **not finished** when its last word
+      cannot end a question ("can i die from"), when a drug is named and only function words are said of it ("is
+      cocaine"), when no drug is named and every word could be asked of any drug ("is it addictive", off a drug's
+      page), or when its last word is the beginning of a drug's name or of a known word ("can i die from coc"). It gets
+      no verdict and no way to send it: "Which drug do you mean? Finish your question with its name and we will look."
+      or "Go on. Finish your question about cocaine and we will look.", and what was found stands under "You may mean"
+      (never as a best match). `scripts/auto/ask.py` never lists such a question. A question that is **not about
+      drugs** by its words is told what the page read: "This does not look like a question about drugs. ... If yours is
+      about one, name the drug, or send it to us."; where one word the model does not know stands among words that
+      could be asked of any drug ("is tusi dangerous"): "We do not know “tusi” as a drug. If it is one, send us your
+      question and we will look into it." Both keep the way to send, because the rule reads words and a drug question
+      in everyday words must not be lost ("no false negatives"). In "Your questions" a question that waits can be
+      opened (it is asked again in the box), and a sent question that is now on our list says so.
+    - *Measured* (`python3 -I scripts/insight/build_index.py --words`, no model needed; on the questions the lists
+      were written with, so this is not a fresh measure): of 1,021 real forum questions none is called unfinished; of
+      165 questions about other things, 1 ("why is this not working"); of forum questions cut after a word that cannot
+      end a question, 1,119 of 1,176 are caught (the others are finished: "What is tramadol like"); cut just before
+      the drug's name, 276 of 399 (the rest end on a word of content: "Is smoking or snorting"); cut in the middle of
+      the name, 331 of 474. `scripts/insight/parity.js` holds the page to the build on 1,325 cut questions.
+    - *What "one in a thousand" asks, and where we are.* The scope rule (is it about drugs?) took 94 in 100 fresh
+      forum questions before their misses were added and none of 165 questions about other things. To say "at most 1
+      wrong in 1,000" for a class needs about 3,000 fresh questions of that class with no error. So the number is
+      measured and stated, never promised, and the firm line ("This is not a question about drugs", with no way to
+      send) waits for it.
+    - *The plan, in this order.* (a) A large open table of drug and medicine names with their other names (open data,
+      fetched on GitHub's machines), so that an unknown name is recognised and gets its page to start (decision 15).
+      (b) Misspelt names read as the drug they mean, where the word is not a word of its own and stands one letter from
+      a name. (c) Real language in bulk: open collections of what people actually typed (search questions, forum
+      questions), only where a licence allows it, fetched in the job that holds no key; never a visitor's words. A
+      small reader trained on them for the page (about drugs or not, finished or not, which drug), on top of the model,
+      with the words rule kept as a second check. (d) Fresh test sets of thousands of real questions for each class,
+      and the measured error rate written here. "Every instance" of how people write cannot be had; millions of real
+      examples and a measured error rate can.
+    - *What stays as it is.* Free models only; a visitor's words are never published, never stored in the repository
+      and go to no model service but Cloudflare's; the system starts pages and writes, rewrites and takes down its own
+      answers, and never edits a checked claim.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
