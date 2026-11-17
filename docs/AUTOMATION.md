@@ -150,6 +150,19 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
    medical treatment were reached step by step, under care." (He was shown the three lines at 22:46 and may change them.)
    What stays with a person, by the editor's rule: a question that asks which amount kills (the rule for questions about
    dying), and amounts for pregnancy or children. Answers to other questions still hold no amounts. The quiz is unchanged.
+   *What the editor's reading of the first real batches added (17 November 2026; lanes 11 and 12, each rule with a test
+   in `scripts/auto/lane.py`).* None of it changes what may be shown; it makes the rows exact. Who an amount is for: a
+   sentence that states one amount for women and another for men gives a row for each, and each row carries the one
+   sex its own part names; an amount is never shown under the other's name; the words that lead into a part ("For
+   women, ...") belong to that part. What an amount is called: "low-risk", "safe", "recommended", "a limit" stand in
+   a row only where the passage, its heading or the page's title says so; where the system's reader borrowed such a
+   word from the question, the code writes what the shown words say and no more ("an amount for a week"). Never
+   shown: an amount for each kilogram of body weight, however it is written, and a part that stops just before
+   "per". A table is read row by row, and a bare cell ("400 mg") is widened to its row where it stands in one place
+   only. The same amount for the same people twice from one source is one row. Abbreviations in who received it are
+   written out as the source itself writes them out (or from ten that have one meaning in this field). Up to six
+   official pages are read; the second reader is asked about the 20 amounts nearest the question. The record keeps
+   every amount the second reader refused, with its reason, and every amount its room did not hold.
 12. **The second look** (22:54, 22:55). Its own answers: the system goes back to them. When new papers, summaries or
    official pages can be read for a question, when a source is retracted, or when an answer is "not complete", the answer
    is written again towards being complete, or taken down; what it was before is kept in the record. The checked answers:
@@ -327,6 +340,15 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     the size ("by as much as 2 to 5 times" written as "2 to 5 times") is a kind of its own; "statistically
     significant" is a term; a denied word of sureness claims less. On the plain lines the rules catch 1 of 56: with a
     long source nearly every word is carried somewhere, so there the judges must be readers.
+    *17 November 2026.* What the lane does NOT keep is on file from lane 11 on: every draft that was written again
+    (each sentence with who refused it and why), every line that was dropped, every amount that was refused. The
+    editor judges those sentences for the exam as well, so the exam can say two things about the lane as a whole
+    (`python3 -I scripts/editor/label_auto.py rate`): of the sentences a lane KEPT, how many are not good (what a
+    reader would have been shown wrong before the editor's reading: lane 10, 1 of 5), and of the ones it did not keep,
+    how many were good (what it lost). A reader whose free plan gives 20 calls a day sits the lane's exam an answer
+    at a time, in the lane's own call (`"how": ["together"]`: about seven calls for 34 sentences). Our own checker is
+    asked in the lane with the passage around each quote; the exam keeps no passage (no page's text is kept), so the
+    record now holds its score against the quotes alone as well, and the two are compared on real answers.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
