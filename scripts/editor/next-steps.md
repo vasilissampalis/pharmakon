@@ -27,7 +27,9 @@ after every step. `mkdir -p data/auto/requests` before writing a request.
    step 1, one step at a time): Karimi, M., Kazemi, K., Pourhanifeh, M. H., Irajian, P., & Asbaghi, O. (2026).
    Marijuana (cannabis) smoking increases the risk of lung cancer: Evidence from a systematic review and
    meta-analysis. *Addiction and Health, 18*, 1710. https://doi.org/10.34172/ahj.1710 (reference from Crossref).
-3. **"keep them private"**: the scout's files with the questions people sent (`data/auto/questions.json`,
+3. **"keep them private"** (asked again on 17 November, 14:55; no answer yet; the editor's own note of 12:55 UTC to do it
+   without his word is withdrawn: it is his to weigh, because the plain report of what people ask in their own words,
+   which "demand first" rests on, would leave the repository with them): the scout's files with the questions people sent (`data/auto/questions.json`,
    `data/auto/report.json`, `docs/MISSING.md`) are in this public repository. If he says so: the words stay in the
    store alone; the repository keeps our wording, the counts and a fingerprint (scout.py, look.py, ask.py, and the
    three files taken out of the repository's history is his call too).
@@ -90,6 +92,24 @@ d. **Insight looks like what it is**: "it should be apparent visually that pharm
 e. **What the site needs, found by itself**: a standing report made by the half-hourly run (pages without pictures,
    drugs asked about without a page, sections no question reaches, questions that end at "we haven't checked"), from
    which the system starts work without being told.
+
+f. **The system makes Myth or fact cards by itself** (the senior author, 17 November, 15:25: "our ai has to make new myth
+   or fact questions based on what real users search online constantly --- the myth or drug claims have to be perfectly
+   incorporated to the drug pages and in all other relevant pages … if there are no such pages they should be created. but
+   the format of the website should be as easy to use as possible"). To design before building: (1) where a card comes
+   from: only from an answer that already stands (a checked claim without a card, or an answer the lane published), chosen
+   by what people ask most (`data/site/demand.json`, the counts of the list, the sent questions); never from a model's own
+   knowledge; (2) the rules for cards stand as written (useful, surprising research facts; never amounts, doses, timing,
+   routes compared for strength, or reaching or strengthening effects; mixing only as risk facts): as code, like the
+   lane's gates; (3) every card is read against its answer by readers who wrote none of it (`scripts/auto/blind_lines.py`
+   is the pattern), and a card made by the system carries the system's label until a person has checked it; (4) where it
+   shows: the drug's own deck, the start page's deck, the answer's own page ("Read the answer"), and the page the system
+   started for a drug without one; (5) measured before it is switched on: the system's cards for answers that already
+   have a checked card, compared with those cards.
+
+Step e and the site's navigation: done in part by site 2.11.0 (every place can be asked for). Still to do for "navigate
+the site perfectly": the parts of the statistics and methods pages by name, a country's emergency numbers and drug
+checking from one question about the country ("greece"), and the reader's own country remembered across questions.
 
 Also from the fresh measure: a line of its own for greetings and for "who are you" (now the line for a question that
 is not about drugs); emoji that stand for a drug; the trained reader of decision 26 (c).

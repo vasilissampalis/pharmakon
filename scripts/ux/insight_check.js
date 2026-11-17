@@ -76,6 +76,11 @@ const ROUTES = [
   ["are drugs legal in greece", "law"], ["is weed legal in greece", "law"], ["is cocaine legal", "law"], ["drug laws in the uk", "law"], ["is it allowed in japan", "law"], ["can you go to jail for weed", "law"],
   ["what is the penalty for cocaine possession in spain", "law"], ["why is weed illegal", ""], ["should drugs be legal", ""], ["can cocaine cause cardiac arrest", ""], ["are legal highs safe", ""], ["does legalization increase cannabis use", ""],
   ["what is the emergency number in greece", "numbers"], ["who do i call", "numbers"], ["where can i get my drugs tested in spain", "test"], ["drug checking in germany", "test"],
+  // (2.11) every place on the site can be asked for; a part of a drug's page; the meaning of a word of the glossary
+  ["show me all drugs", "go"], ["where is the quiz", "go"], ["how do you check facts", "go"], ["is this site reliable", "go"], ["do you track me", "go"], ["who made this site", "go"], ["open the glossary", "go"],
+  ["report a mistake please", "go"], ["what did i ask", "go"], ["where does your information come from", "go"], ["what does tolerance mean", "term"], ["what is half-life", "term"], ["define bioavailability", "term"],
+  ["what does lsd look like", "part"], ["pictures of cocaine", "part"], ["cocaine risks", "part"], ["what are the side effects of kratom", "part"], ["what does lsd feel like", "part"], ["what does cocaine feel like", ""], ["what is the best way to quit smoking", ""], ["how many people use cocaine", ""],
+  ["does cocaine feel different when snorted", ""], ["is cocaine dangerous for the heart", ""],
   ["how do i test my mdma", "test"], ["is my coke cut with something", "test"], ["where can i get fentanyl test strips", "test"], ["which test kit for ketamine", "test"], ["mdma test kit", "test"], ["how to test for fentanyl", "test"], ["is this pill real mdma", "test"],
   ["do fentanyl test strips work", ""], ["can you fail a drug test from secondhand weed smoke", ""], ["can test kits do harm by making people feel falsely safe", ""], ["i felt sober after coke is that real", ""],
   ["what is ketamine", "page"], ["what's ghb", "page"], ["tell me about kratom", "page"], ["what is speed", "page"], ["what is ketamine used for in hospitals", ""],

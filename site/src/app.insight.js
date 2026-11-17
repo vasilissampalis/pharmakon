@@ -340,6 +340,84 @@ function insBlocked(q) {
   }
   return named && INS_RE.recipe.test(q);
 }
+/* (2.11; the senior author, 17 November 2026: "the user can navigate the site perfectly through pharmakon insight … this search
+   engine should be the best ever possible it has to be so good that it feels like you dream it".) Every place on the site can
+   be asked for. INS_PLACES: a place, the words people use for it (p), and, for some, words that only point towards it (h).
+   A question that IS a request for the place ("show me all drugs", "where is the quiz", "how do you check facts", "do you
+   track me") gets the place as its answer (insRoutes). A question with no checked answer that points towards a place ("how
+   many people use cocaine") gets the place as a way on, under the line that says we have not checked it (insRank). The parts
+   of a drug's page work the same way (INS_PARTS), and a word of the glossary asked for by its meaning gets its meaning. */
+const INS_NAV_PRE = "^(?:(?:please |pls |can you |could you |i want to |i'd like to |let me )?(?:go to|open|show(?: me)?|take me to|bring me to|where(?:'s| is| are| can i (?:find|see|read))|find|see|read|view|give me|can i see|do you have|is there|i want|what(?:'s| is| are))\\s+)?(?:(?:the|your|a|an|all|all the|some|any|this|that)\\s+)*(?:";
+const INS_NAV_POST = ")(?:\\s+(?:page|section|tool|part|list|here|please|pls|(?:on|of|for) (?:this|the) (?:site|website)))*\\s*[?.!]*$";
+const INS_PLACES = [
+  { href: "#substances", icon: "molecule", k: "All drugs", t: "Every drug on this site, by family",
+    p: "all drugs|all the drugs|every drug|list of (?:all )?(?:the )?drugs|drugs? list|drug index|drugs a-z|(?:which|what) drugs (?:do you (?:have|cover)|are (?:here|covered|on (?:this|the) (?:site|website)))" },
+  { href: "#interactions", icon: "mix", k: "Mixing", t: "Is it safe to mix? Choose two drugs and see what is known",
+    p: "mixing|mixing drugs|mixing (?:tool|checker)|drug (?:combinations?|interactions?)|(?:combination|interaction)s? (?:tool|checker|chart|table)|combo chart|is it safe to mix(?: drugs)?|what (?:can|can't|cannot|shouldn't) (?:i|you|be) mix(?:ed)?", h: "mix|mixing|mixed|combine|combining|combination" },
+  { href: "#numbers", icon: "pulse", k: "Statistics", t: "Official figures: how many people use each drug, deaths, treatment",
+    p: "statistics|stats|official figures|figures|drug statistics", h: "how many people|how common|prevalence|statistics|per year|percentage of people|percent of people" },
+  { href: "#facts", icon: "bulb", k: "Big questions", t: "Big questions about drugs, not about one drug", p: "big questions(?: about drugs)?|general questions|questions about drugs in general" },
+  { href: "#quiz", icon: "bulb", k: "Myth or fact?", t: "Guess first, then see what studies found: every card, by drug", p: "quiz|myth or fact|myths(?: and facts)?|test my knowledge|trivia|game" },
+  { href: "#glossary", icon: "book", k: "Words explained", t: "What the words on this site mean", p: "glossary|dictionary|words explained|terms explained|list of terms" },
+  { href: "#methods", icon: "search", k: "How we check facts", t: "How every answer is checked, and what the bars mean",
+    p: "how (?:do|did) you (?:check|verify|know|grade|rate)(?: (?:the |your )?(?:facts?|answers?|evidence|this|that|things))?|how we check facts|methods?|methodology|what (?:do|does) the (?:bars?|dots?|certainty bars?) mean|how (?:is|are) (?:the |your )?(?:evidence|answers|facts|certainty) (?:checked|graded|rated|verified)|can i trust (?:this|you|this site|pharmakon)|is (?:this|this site|pharmakon) (?:reliable|trustworthy|legit|accurate|biased)|where (?:do|does) (?:your|the|this) (?:information|info|facts|answers|data) come from|sources" },
+  { href: "#howto", icon: "book", k: "How to read this site", t: "What each part of a page is for", p: "how (?:do i|to) (?:use|read|navigate) (?:this|the) (?:site|website|page)|how does this (?:site|website) work|how to read this site|site guide|user guide" },
+  { href: "#about", icon: "people", k: "About us", t: "Who writes Pharmakon, and who pays for it",
+    p: "about|about (?:us|you|this site|pharmakon)|who (?:made|makes|wrote|writes|runs|owns|funds|pays for|is behind) (?:this|this site|this website|pharmakon|the site)|who are the (?:authors|editors)|contact|contact (?:us|you)|funding|conflicts? of interest|authors|editors" },
+  { href: "#about/part-a-privacy", icon: "people", k: "Privacy", t: "What this site keeps, what it sends and what it counts",
+    p: "privacy|privacy policy|cookies|my data|do you (?:track|record|log|store|keep|save)(?: me| my (?:data|questions|searches))?|what do you (?:keep|store|know|save)(?: about me)?|is (?:this|it) (?:anonymous|private)|are my (?:questions|searches) (?:private|anonymous|saved|stored)" },
+  { href: "#wanted", icon: "message", k: "On our list", t: "Questions the site does not answer yet, and how many people wait for each",
+    p: "on (?:our|your) list|not answered yet|unanswered questions|questions? (?:without|with no) (?:an )?answers?|what (?:are )?people (?:waiting|asking) for" },
+  { href: "#auto", icon: "book", k: "Written by our system", t: "Answers our system wrote by itself, not yet checked by a person",
+    p: "written by (?:your|the|our) system|machine[- ]written(?: answers)?|ai[- ]written(?: answers)?|system(?:'s)? answers|answers (?:by|from) (?:the |your |an )?(?:ai|machine|system)" },
+  { href: "#home", el: "home-asked", icon: "message", k: "Your questions", t: "The questions you asked us, kept on this device", p: "my questions|your questions|questions i (?:asked|sent)|what (?:did|have) i (?:ask|asked|sent)" },
+  { href: "#about", fb: "issue", icon: "message", k: "Report a mistake", t: "Tell us what is wrong: opens the form",
+    p: "report (?:a |an )?(?:mistake|error|problem|bug)|i found (?:a |an )?(?:mistake|error|problem|bug)|something is wrong|this is wrong|feedback|send feedback|suggestion|suggest something|share an idea" }
+].map(x => Object.assign(x, { nav: new RegExp(INS_NAV_PRE + x.p + INS_NAV_POST, "i"), hint: x.h ? new RegExp("\\b(?:" + x.h + ")\\b", "i") : null }));
+// the parts of a drug's page: [the words that ask for it, the part, its name]. A question that is nothing but such words and
+// the drug's name ("cocaine risks", "what does lsd look like", "is ketamine legal") gets the part as a way straight to it,
+// above whatever else is found; any other question that holds such a word gets it only when no checked answer was found.
+const INS_PARTS = [
+  ["looks? like|looks?|pictures?|photos?|images?|appearance|recogni[sz]e|forms?", "d-looks", "What does it look like?"],
+  ["myth or fact|quiz|myths?|facts?", "d-quiz", "Myth or fact?"],
+  ["risks?|risky|dangers?|dangerous|go wrong|side effects?|harms?|harmful|bad|safe|unsafe", "d-risk", "What can go wrong?"],
+  ["feels? like|feels?|feeling|effects?|high", "d-feel", "What does it feel like?"],
+  ["comedowns?|hangovers?|day after|next day|after ?effects?|stopping|withdrawals?|quitting|coming off", "d-after", "The day after, and after stopping"],
+  ["medicines?|medical|medically|medicinal|therapy|treatment|prescribed|therapeutic", "d-med", "As a medicine, and treatment"],
+  ["mix|mixing|mixed|combinations?|combining|other drugs|interactions?", "d-mix", "Is it safe to mix?"],
+  ["law|laws|legal|illegal|legality|legal status", "d-law", "Is it legal where you are?"]
+].map(([w, id, name]) => ({ id, name, any: new RegExp("\\b(?:" + w + ")\\b", "i"), only: new RegExp("^(?:\\s*(?:" + w + "))+\\s*$", "i") }));
+const INS_PART_FILL = /\b(?:what|whats|what's|does|do|is|are|the|of|a|an|it|its|how|can|could|with|on|for|about|me|tell|show|to|please|i|you|will|would|there|any|some|and|get|have|has|use|uses|used|using|go|page|section|part|open|see|read)\b/gi;
+// does this drug's page have this part? (a part exists only where there is something to show in it)
+function insPartHas(slug, id) {
+  const zone = z => drugQuestions(slug).some(([, , t]) => topicZone(t) === z);
+  return id === "d-looks" ? (FORMS[slug] || []).some(x => x.name) : id === "d-quiz" ? mfCount(mfPagePool(slug)) >= 3 : id === "d-risk" ? zone("risk") : id === "d-feel" ? zone("feel") : id === "d-after" ? zone("after")
+    : id === "d-med" ? zone("med") : id === "d-mix" ? mixQuestions(slug).length > 0 : id === "d-law" ? LEGAL.some(d => d.substance === slug) : false;
+}
+// the word of the glossary a question asks the meaning of ("what does tolerance mean", "define half-life", "bioavailability meaning"), or null
+function insTerm(q) {
+  const flat = s => norm(s).replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!insTerm.t) { insTerm.t = [];
+    GLOSSARY.forEach((g, i) => String(g.term).replace(/\(([^)]*)\)/g, ",$1").split(/,|\/|:|\band\b|\bversus\b/).forEach(n => { const k = flat(n); if (k.length >= 3 && k.split(" ").length <= 4) insTerm.t.push([k, i]); })); }
+  const t = flat(q), m = t.match(/^(?:what(?:'s| is| are| does| do)|define|definition of|meaning of|explain|what is meant by)\s+(?:an? |the )?(.+?)(?:\s+(?:mean|means|stand for|stands for))?$/) || t.match(/^(.+?)\s+(?:meaning|definition|means|defined)$/);
+  if (!m || INS.any.get(m[1])) return null;
+  const x = m[1].replace(/s$/, ""), hit = insTerm.t.find(([k]) => k === m[1] || k === x || k.replace(/s$/, "") === x);
+  return hit ? { i: hit[1], g: GLOSSARY[hit[1]] } : null;
+}
+// a place the question asks for by name (plain: the place is the answer), and, in insRank, a place it points towards
+function insPlace(q, about, pointing) {
+  if (about && insWordsIn(q) <= 8) {
+    // what is left of the question without the drug's name and the small words: nothing but a part's words, or not
+    const rest = insMask(q).toLowerCase().replace(/[^a-z' ]+/g, " ").replace(INS_PART_FILL, " ").replace(/\s+/g, " ").trim();
+    const part = INS_PARTS.find(x => insPartHas(about, x.id) && (pointing ? x.any.test(q) : rest && x.only.test(rest)));
+    // (the part with the pictures is the answer to "what does it look like". Any other part asked for by name is a way straight to
+    // it: what else is found still shows, and the line "we haven't checked exactly this" is left out, the part being what we have)
+    if (part) return Object.assign({ kind: "part", icon: SEC_ICON[part.id] || "molecule", k: drugName(about), t: part.name.replace(/\bit\b/, pageWord(about)), href: "#s-" + about + "/part-" + part.id },
+      pointing ? { loose: true, way: true } : part.id !== "d-looks" ? { loose: true, named: true } : {}); }
+  if (about && !pointing) return null;
+  const pl = INS_PLACES.find(x => pointing ? x.hint && x.hint.test(q) : x.nav.test(q));
+  return pl ? Object.assign({ kind: "go", icon: pl.icon, k: pl.k, t: pl.t, href: pl.href }, pl.el ? { el: pl.el } : {}, pl.fb ? { fb: pl.fb } : {}, pointing ? { loose: true, way: true } : {}) : null;
+}
 const insCap = t => t.charAt(0).toUpperCase() + t.slice(1);
 /* (2.9.2) The country a question names: the UN's names, the names the site shows, their other names and a few everyday
    ones, read with the drugs' names taken out ("china white" is not China). "here", "where i am", "my country": the country
@@ -376,7 +454,8 @@ function insRoutes(q, groups, drug) {
     if (about) add("dose", INS_PLACE.doses(about), drugName(about), "We don’t list doses. These harm reduction groups do");
     else add("dose", INS_PLACE.drugs(), "Doses", "We don’t list doses. Each drug’s page links to harm reduction groups that do");
   }
-  if (INS_RE.test.test(q)) {
+  const term = insTerm(q), place = term ? null : insPlace(q, about, false);   // (2.11) a place asked for by name is not a request to test a drug ("how do you check facts")
+  if (INS_RE.test.test(q) && !(place && place.kind === "go")) {
     if (about && !NO_TEST.includes(about)) add("test", INS_PLACE.test(about), drugName(about), "Test kits for " + pageWord(about));
     else add("test", INS_PLACE.checking(), "Drug checking", "Drug checking and test kits");
   }
@@ -393,6 +472,10 @@ function insRoutes(q, groups, drug) {
   if (c && INS_RE.checkc.test(q)) { const dc = DRUGCHECK.services.filter(s => sameCountry(s.country, c)), i = out.findIndex(r => r.kind === "test");
     const r = Object.assign({ kind: "test", k: "Drug checking · " + shortCtry(c), t: dc.length ? dc.length + " drug checking service" + (dc.length === 1 ? "" : "s") + " in " + inCtry(c) : "Drug checking in " + inCtry(c) + ": what we found" }, { href: "#checking/c-" + encodeURIComponent(dc.length ? dc[0].country : shortCtry(c)) });
     if (i >= 0 && !about) out[i] = r; else out.push(r); }
+  // (2.11) a place on the site asked for by name, a part of a drug's page, or the meaning of a word of the glossary
+  if (!out.length) {
+    if (term) add("term", { href: "#g-" + term.i }, "Words explained", term.g.term + ": " + String(term.g.short || term.g.def).replace(/\.$/, ""), { icon: "book" });
+    else if (place) out.push(place); }
   const w = (q.match(INS_RE.what) || [])[1], slug = w && INS.any.get(w.toLowerCase().replace(/[.!?]+$/, "").trim());
   if (slug && subBySlug[slug] && !out.length) add("page", INS_PLACE.page(slug), "Drug · " + subBySlug[slug].cls, subBySlug[slug].name, { whole: true });
   return out;
@@ -688,8 +771,11 @@ async function insRank(query, ctx) {
   // drug), with the one word we do not know, if that is what stands in the way (stranger); "none", a drug question we have
   // not checked yet
   if (!res.best.length && !answered) {
+    // (2.11) with no checked answer: a place on the site that the question points towards, as a way on ("how many people use cocaine": Statistics)
+    if (!unf && !res.routes.length) { const drug1 = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null, way = insPlace(res.core, drug1, true); if (way) res.routes.push(way); }
     res.note = unf ? "unfinished" : res.want ? "want" : res.drug || insScope(res.core) ? "none" : "other";
     if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); }
+    else if (res.note === "none" && res.routes.some(r => r.named)) res.note = "";   // (2.11) a part of a drug's page asked for by name: the part is what we have
     else if (res.note === "other" && INS_RE.greet.test(res.core)) res.note = "hello";
     else if (res.note === "other" && INS_RE.about.test(res.core)) res.note = "about";
     else if (res.note === "other") res.stranger = insStranger(res.core);
@@ -728,8 +814,8 @@ function insSosHtml(cls) {
     '<a href="#emergency">' + (em ? "Other numbers" : "Emergency numbers by country") + "</a></span></p>";
 }
 function insRouteHtml(r, cls) {
-  return '<a class="' + cls + " r-" + r.kind + '" href="' + esc(r.href) + '" data-ins-route="' + r.kind + '"' + (r.el ? ' data-el="' + esc(r.el) + '"' : "") + (r.mix ? ' data-mix="' + esc(r.mix) + '"' : "") + (r.country ? ' data-country="' + esc(r.country) + '"' : "") + ">" +
-    '<span class="ri">' + icon(INS_ICON[r.kind] || "arrow") + '</span><span class="k">' + esc(r.k) + '</span><span class="t">' + esc(r.t) + '</span><span class="go">' + icon("arrow") + "</span></a>";
+  return '<a class="' + cls + " r-" + r.kind + '" href="' + esc(r.href) + '" data-ins-route="' + r.kind + '"' + (r.el ? ' data-el="' + esc(r.el) + '"' : "") + (r.mix ? ' data-mix="' + esc(r.mix) + '"' : "") + (r.country ? ' data-country="' + esc(r.country) + '"' : "") + (r.fb ? ' data-fb-open="' + esc(r.fb) + '"' : "") + ">" +
+    '<span class="ri">' + icon(r.icon || INS_ICON[r.kind] || "arrow") + '</span><span class="k">' + esc(r.k) + '</span><span class="t">' + esc(r.t) + '</span><span class="go">' + icon("arrow") + "</span></a>";
 }
 // "Ask us to check it": one tap (2.4, below: Your questions); where the page can send it, a quiet line says what is sent
 const insAskBtn = (q, cls, label, after) => '<button type="button" class="' + cls + '" data-ask="' + esc(q) + '">' + (label || "Ask us to check it") + "</button>" + (after || "") + (ASK_ON ? '<span class="ask-note">Sends only this question. No name, no address.</span>' : "");
@@ -787,11 +873,13 @@ function insRowHtml(x, best) {
     '</span><span class="a">' + (best ? cueNum(esc(sp.short)) : esc(glanceClause(sp.short))) + '</span><span class="m">' + meterHtml(c.grade.certainty, true) + "</span></a>";
 }
 function insFitHtml(res) {
-  const routes = res.routes.map(r => insRouteHtml(r, "sr-route")).join("") + (res.emergency ? insSosHtml("sr-sos") : "");
+  // (2.11) a place the question only points towards stands last, under its own small heading: the answers found come first
+  const routes = res.routes.filter(r => !r.way).map(r => insRouteHtml(r, "sr-route")).join("") + (res.emergency ? insSosHtml("sr-sos") : "");
+  const ways = res.routes.filter(r => r.way).map(r => insRouteHtml(r, "sr-route sr-way")).join("");
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
   const none = insNoneHtml(res, false);
   const related = res.related.length ? '<p class="sr-fit-h">' + (res.note === "unfinished" ? "You may mean" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
-  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + related + '<p class="sr-fit-h sr-words" hidden>More results</p></div>';
+  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + related + (ways ? '<p class="sr-fit-h">A place to look</p>' + ways : "") + '<p class="sr-fit-h sr-words" hidden>More results</p></div>';
 }
 // what a screen reader hears when the answers arrive: the route, the tier, the question matched
 function insSay(res) {
@@ -1007,13 +1095,16 @@ function insFromSearch(id) { const s = document.getElementById("search"); return
 function insAsk(q) {
   const from = insFromSearch(null);
   return insAnswer(q, insCtx()).then(res => {
-    if (!res.best.length && res.routes.length === 1 && res.routes[0].kind !== "mix") { insFollow(res.routes[0]); return res; }
+    // Enter goes straight to a place only when the place is the answer, or was asked for by name; a place the question only points
+    // towards, or that leaves the question open, is shown in the sheet with what else was found and the way to ask us (2.11)
+    if (!res.best.length && res.routes.length === 1 && res.routes[0].kind !== "mix" && (!res.routes[0].loose || res.routes[0].named)) { insFollow(res.routes[0]); return res; }
     insCount(true); if (!EV.open) INS.from = from; insDraw({ kind: "asked", res }, null); return res;
   });
 }
 function insFollow(r) {
   const s = document.getElementById("search"); if (s) { s.value = ""; s.blur(); } closeSearch();
-  INS.go = { at: Date.now(), el: r.el || null, mix: r.mix ? r.mix.split(",") : null };
+  if (r.fb) { openFeedback(r.fb, location.hash, ""); return; }                       // (2.11) "report a mistake": the form
+  INS.go = { at: Date.now(), el: r.el || null, mix: r.mix ? r.mix.split(",") : null, country: r.country || null };   // (the country a law question named goes with it)
   if (location.hash === r.href) { route(); insArrive(); } else location.hash = r.href;
 }
 /* Back to where the reader was. The sheet closes in app.simple.js (its Back button, a tap outside, Escape, the phone's Back);
@@ -1086,6 +1177,7 @@ document.addEventListener("click", e => {
   const inSheet = !!a.closest("#evsheet"), inSearch = !!a.closest("#search-results");
   // a route: the link goes to the page; what is left to do there is noted for when the page has drawn (insArrive)
   if (a.dataset.insRoute) {
+    if (a.dataset.fbOpen) { e.preventDefault(); e.stopPropagation(); if (inSearch) { const s = document.getElementById("search"); if (s) s.value = ""; closeSearch(); } openFeedback(a.dataset.fbOpen, location.hash, ""); return; }   // (2.11) "report a mistake": the form
     INS.go = { at: Date.now(), el: a.dataset.el || null, mix: a.dataset.mix ? a.dataset.mix.split(",") : null, country: a.dataset.country || null };
     if (location.hash === a.getAttribute("href")) { e.preventDefault(); if (inSearch) { const s = document.getElementById("search"); if (s) s.value = ""; closeSearch(); } route(); insArrive(); }
     return;
