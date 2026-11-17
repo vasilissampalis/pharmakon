@@ -1670,21 +1670,39 @@ if (typeof document !== "undefined") askedBox();
    yet, and a title is not a finding. What leaves the device for this: the drug's names and up to five plain key words, never the sentence.
    Not looked up: a question about dying, overdose, amounts, pregnancy, children or an emergency, and a question that names no drug. */
 const FIND_API = "api/find";
-const FIND_STOP = new Set("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked".split(" "));
-const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects" };
+const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
+  // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
+  "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus").split(" "));
+// an everyday word and the word papers use for it: the search asks for both
+const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
+  hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
+  horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "kidney", lungs: "lung", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover" };
 const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)|infants?|teen\w*|minors?|suicid\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+/* What is looked up for a result: the names of its drug and up to five key words; null when nothing is to be looked up.
+   (2.18.2, after looking at what twenty real questions gave) The names: the name as the reader wrote it, when it is a name of its own and not an
+   everyday word ("xanax", on the page about benzodiazepines; "weed", "acid", "speed", "ice" are everyday words and would find every paper that
+   holds them); then the page's names, each on its own ("GHB / GBL" is two names); a started page's names; a word we do not know as a drug; and, for
+   a question about drugs that names none we know, the first word that is no everyday word, nor one made from one ("addictive", "migraines").
+   The key words: from the question with the drugs' names taken out by whatever name was used (insMask: "magic" of "magic mushrooms" is no key
+   word), without the words that stand in every summary; an everyday word goes with the word papers use for it ("hungry": appetite). */
 function insFindTerms(res) {
   if (!res || res.emergency || FIND_HELD.test(res.q || "") || (res.routes || []).some(r => r.kind === "help" || r.kind === "dose" || r.kind === "mix")) return null;
   const names = [], add = s => { s = String(s || "").toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim(); if (s.length >= 3 && !names.includes(s)) names.push(s); };
-  for (const g of res.groups || []) for (const slug of g.slice(0, 2)) { const s = subBySlug[slug]; if (s) String(s.name || "").split(/[(),]| and /).forEach(add); }
+  const text = String(res.core || res.q || "").toLowerCase();
+  if ((res.groups || []).length && INS.nameRe) { INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(text))) { const a = String(m[1] || "").toLowerCase(); if (a.length >= 4 && !/\s/.test(a) && !INS.vocab.has(a)) add(a); if (m.index === INS.nameRe.lastIndex) INS.nameRe.lastIndex++; } INS.nameRe.lastIndex = 0; }
+  for (const g of res.groups || []) for (const slug of g.slice(0, 2)) { const s = subBySlug[slug]; if (s) String(s.name || "").split(/[(),/]| and | or /).forEach(add); }
   const pg = (res.routes || []).find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;
   if (sh) { add(sh.name); (sh.science || []).forEach(x => add(x.name)); }
   if (!names.length && res.stranger) add(res.stranger);
-  // a question about drugs that names none we know ("is tianeptine addictive"): a word the model's word list does not hold is most likely the drug's name
-  if (!names.length && res.note !== "other") for (const w0 of String(res.core || res.q || "").toLowerCase().match(/[a-z]{5,}/g) || []) { if (!INS.vocab.has(w0) && !FIND_STOP.has(w0)) { add(w0); if (names.length >= 2) break; } }
+  // a question about drugs that names none we know ("is tianeptine addictive"): the first word that is no everyday word is most likely the drug's name
+  if (!names.length && res.note !== "other") { const known = w => INS.vocab.has(w) || FIND_STOP.has(w) || !!FIND_SAY[w],
+      plain = w => known(w) || ["ies", "es", "s", "ed", "d", "ing", "ly", "ive", "al", "er", "est", "y", "ness", "ful"].some(suf => w.length > suf.length + 2 && w.endsWith(suf) && (known(w.slice(0, -suf.length)) || known(w.slice(0, -suf.length) + "e") || (suf === "ies" && known(w.slice(0, -3) + "y")) || (suf === "ive" && known(w.slice(0, -3) + "ion"))));
+    const cand = (text.match(/[a-z]{5,}/g) || []).filter(w => !plain(w)); if (cand.length) add(cand[0]); }
   if (!names.length) return null;
-  const inName = new Set(names.join(" ").split(/[^a-z0-9]+/)), words = [];
-  for (const w0 of String(res.core || res.q || "").toLowerCase().match(/[a-z]{3,}/g) || []) { const w = FIND_SAY[w0] || w0; if ((w.length < 4 && !FIND_SAY[w0]) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || words.includes(w)) continue; words.push(w); if (words.length >= 5) break; }
+  const inName = new Set(names.join(" ").split(/[^a-z0-9]+/)), words = [], masked = (typeof insMask === "function" ? String(insMask(text)) : text).toLowerCase();
+  for (const w0 of masked.match(/[a-z]{3,}/g) || []) { const say = FIND_SAY[w0];
+    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0)) continue;
+    for (const w of say && say !== w0 ? [say, w0] : [w0]) { if (!words.includes(w) && words.length < 5) words.push(w); } }
   return { names: names.slice(0, 6), words };
 }
 function insFoundHtml(d) {

@@ -76,6 +76,9 @@ export function readFind(body) {
 }
 export function findQueries(names, words) {
   const field = (ts, titleOnly) => "(" + ts.map(t => titleOnly ? `TITLE:"${t}"` : `TITLE:"${t}" OR ABSTRACT:"${t}"`).join(" OR ") + ")";
+  // (2.18.2) a key word is asked for in its one and its many ("migraines" also as "migraine"): the search takes a quoted word as it is written
+  const forms = w => (/ies$/.test(w) && w.length > 5 ? [w, w.slice(0, -3) + "y"] : /[^su]s$/.test(w) && w.length > 4 ? [w, w.slice(0, -1)] : [w]);
+  words = [...new Set(words.flatMap(forms))];
   const tail = ' AND LANG:eng NOT PUB_TYPE:"retracted publication" NOT PUB_TYPE:"retraction of publication"';
   const rev = ' AND (PUB_TYPE:"review" OR PUB_TYPE:"systematic review" OR PUB_TYPE:"meta-analysis")';
   const core = field(names) + (words.length ? " AND " + field(words) : "");

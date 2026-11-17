@@ -854,6 +854,17 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       writes `data/auto/instant/trial-*.json`: the sentences kept, the ones the checks refused with the reason, the
       model's raw words, the time taken. The server now keeps the refused sentences with their reasons beside each
       answer too (`drop`; never given to the page), and a number the summary writes as a word counts for its figure.
+      **What is looked up, made more exact (site 2.18.2).** The editor printed what twenty real questions sent to the
+      lookup and found five faults, mended in `insFindTerms` and `findQueries`: a question about a drug we do not know
+      took a second everyday word as a drug's name ("is tianeptine addictive" searched for every paper with
+      "addictive"): now only the first word that is no everyday word, nor made from one; the name the reader wrote was
+      lost where a page stands for several drugs ("xanax" searched as benzodiazepines only): it now goes first, unless
+      it is an everyday word ("weed", "acid", "speed" would find every paper that holds them); "GHB / GBL" was one name
+      and found nothing: two names; a street name's own word counted as a key word ("magic" of "magic mushrooms"): the
+      key words are read with the names taken out; words that stand in every summary were key words ("cause",
+      "study", "time", "same"): left out. An everyday word now goes with the word papers use ("hungry": appetite;
+      "nosebleeds": epistaxis; "concentrate": attention), and a key word is asked for in its one and its many
+      ("migraines", "migraine").
       **Two small things with it.** "us heroin deaths": "us" is read as the country where it stands first or last in
       a few words that ask for a count ("how many of us use heroin" is not). The heading over the figures of other
       places is now "Figures we do have": for a country inside the EU, the EU's figure is not from another place.
