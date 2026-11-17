@@ -13,6 +13,7 @@ on:
     paths:
       - "data/auto/requests/official-*.json"
       - "data/auto/requests/views-*.json"   # (16 November 2026) how often people look a drug up on Wikipedia: scripts/auto/wiki_views.py, for the order of the pages to start
+      - "data/auto/requests/names-*.json"   # (17 November 2026, decision 26) open sources of the names of drugs and medicines: scripts/auto/names_open.py
 
 permissions:
   contents: write
@@ -48,6 +49,11 @@ jobs:
             python3 -I scripts/auto/wiki_views.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the page views failed ($?)" >> "$L"
             python3 -I scripts/auto/place.py --pages >> "$L" 2>&1 || echo "!! the list of pages to start failed ($?)" >> "$L"
             git rm -q --ignore-unmatch data/auto/requests/views-*.json >> "$L" 2>&1
+          fi
+          if ls data/auto/requests/names-*.json >/dev/null 2>&1; then
+            python3 -I scripts/auto/names_open.py --selftest >> "$L" 2>&1 || echo "!! the open names selftest failed ($?)" >> "$L"
+            python3 -I scripts/auto/names_open.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the open names failed ($?)" >> "$L"
+            git rm -q --ignore-unmatch data/auto/requests/names-*.json >> "$L" 2>&1
           fi
           mkdir -p data/auto/official
           tail -n 80 "$L" | cut -c1-600 > data/auto/official/_last-run.txt
