@@ -1032,6 +1032,34 @@ def room_for(model, plain):
     return plain + (1200 if "gpt-oss-20b" in model else 2200 if "gpt-oss" in model else 0)      # (the small gpt-oss only reads, with little reasoning; qwen3 at Groq answers without reasoning: its free plan gives it 1,000 output tokens a minute)
 
 
+LAST_REPLY = {"head": ""}       # the first characters of the last reader's reply that held no verdict (for the record: how a reply that could not be read looked)
+
+
+def verdicts_json(text):
+    """(lane 19) A reader's reply as {"verdicts": [...], ...}, or None. A reader may answer with the list alone ([{"n": 1, ...}, {"n": 2, ...}]), with one
+    object for one sentence, with the number or the verdict as a word ("1", "true"), or with no numbers at all (then in the order given). On 17 and 18
+    November 2026 Gemini's readers answered real answers so (186 characters, ended in order: four verdicts in a bare list), were counted as having given no
+    verdict, twice each, and five answers were parked for them. What a reader said is read as it said it; nothing is added to it."""
+    out = llm.as_json(text)
+    if isinstance(out, dict) and isinstance(out.get("verdicts"), list): pass
+    elif isinstance(out, dict) and "supported" in out: out = {"verdicts": [out]}
+    else:
+        s = text or ""; a, b = s.find("["), s.rfind("]"); v = None
+        if 0 <= a < b:
+            for cand in (s[a:b + 1], re.sub(r",\s*([}\]])", r"\1", s[a:b + 1])):
+                try: v = json.loads(cand); break
+                except ValueError: continue
+        out = {"verdicts": v} if isinstance(v, list) and v and all(isinstance(x, dict) for x in v) else out if isinstance(out, dict) else None
+    if not isinstance(out, dict): return None
+    vs = [v for v in out.get("verdicts") or [] if isinstance(v, dict)]
+    for v in vs:
+        if isinstance(v.get("n"), str) and v["n"].strip().isdigit(): v["n"] = int(v["n"].strip())
+        if isinstance(v.get("supported"), str) and v["supported"].strip().lower() in ("true", "false", "yes", "no"): v["supported"] = v["supported"].strip().lower() in ("true", "yes")
+    if vs and all(v.get("n") is None for v in vs):
+        for i, v in enumerate(vs, 1): v["n"] = i
+    return out
+
+
 def check(chat, model, parts, labels, question=None, whole=None, each=None, risk=""):
     """[(supported?, problem)] for the parts, in order. A sentence without a clear verdict is not supported. With a
     question, the second reader also says whether the short answer answers it and whether the But is about that answer
@@ -1039,7 +1067,8 @@ def check(chat, model, parts, labels, question=None, whole=None, each=None, risk
     room = room_for(model, 120) + 90 * len(parts) + (80 if question else 0) + (40 if risk else 0)
     for attempt in range(2):
         if attempt and llm.LAST.get("finish") == "length": room = min(2 * room, 12000)        # (lane 19) a reply that was cut off before its verdicts is asked for again with twice the room, not the same way
-        out = llm.as_json(chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels, question, each, risk)}], room))
+        reply = chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels, question, each, risk)}], room)
+        out = verdicts_json(reply); LAST_REPLY["head"] = re.sub(r"\s+", " ", str(reply or ""))[:90]
         vs = {v.get("n"): v for v in (out or {}).get("verdicts") or [] if isinstance(v, dict)}
         # (lane 16) the opening word of the short answer was judged apart, as the answer to the question: its verdict must be there too
         opening = opener_of(parts[0]["text"])[0] if question and parts and not each and parts[0].get("part", "short") == "short" else ""
@@ -1169,8 +1198,13 @@ def ceiling_as_size(ours, src):
         for mo in re.finditer(NUM_OR_RANGE, ours):
             if [x for x in mo.groups() if x] == nums and not re.search(r"\b" + BOUND + r"\b", ours[max(0, mo.start() - 40):mo.end() + 14], re.I): return m.group(0)
     return None
-ONE_SEX = [(re.compile(r"\b(?:men|males?)\b", re.I), re.compile(r"\b(?:women|females?|both sexes|men and women|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:men|males?)\b", re.I), "men"),
-           (re.compile(r"\b(?:women|females?)\b", re.I), re.compile(r"\b(?:\bmen\b|\bmales?\b|both sexes|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:women|females?)\b", re.I), "women")]
+# (lane 19) Only the words "men" and "women" say that a result was for one sex. "Male" and "female" stand beside a word for people that the second pattern
+# holds anyway ("20 healthy male volunteers": volunteers), or beside animals, or alone of animals ("in males, the extract decreased anxiety-like behavior"):
+# on 17 and 18 November 2026 an answer to a question the senior author had sent (Does kanna help with anxiety?) was refused six times as "a result for men"
+# where the study was of 16 healthy participants. Measured on the exam before the change and after it (scripts/auto/exam.py run says-more): the same cards
+# caught and the same cards stopped.
+ONE_SEX = [(re.compile(r"\bmen\b", re.I), re.compile(r"\b(?:women|females?|both sexes|men and women|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:men|males?)\b", re.I), "men"),
+           (re.compile(r"\bwomen\b", re.I), re.compile(r"\b(?:\bmen\b|\bmales?\b|both sexes|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:women|females?)\b", re.I), "women")]
 ANYBODY = re.compile(r"\b(?:people|everyone|anyone|adults|persons|those who|the public)\b", re.I)
 # (lane 19) "male Wistar rats", "female mice": the sex of animals is no result for men or for women. On 17 November 2026 an answer to a question the senior
 # author had sent (Does kanna help with anxiety?) was refused three times for "the source gives this for men" where the study was of 16 healthy participants
@@ -1657,7 +1691,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
                 # (lane 17) a further reader whose reply held no verdict at all, asked twice, has not read the answer: on 17 November 2026 Gemini 3.8
                 # Flash answered so, and an answer that every other judge had accepted was thrown away as if it had refused every sentence
                 if more and all(not w[0] and w[1] == NO_VERDICT for w in more):
-                    rec.setdefault("panel", {})[mdl] = "could not be asked: its reply held no verdict, twice" + (f" (how the last reply ended: {llm.LAST.get('finish')}; it reasoned {llm.LAST.get('reasoned')} characters and wrote {llm.LAST.get('wrote')})" if llm.LAST else ""); more = None; continue
+                    rec.setdefault("panel", {})[mdl] = "could not be asked: its reply held no verdict, twice" + (f" (how the last reply ended: {llm.LAST.get('finish')}; it reasoned {llm.LAST.get('reasoned')} characters and wrote {llm.LAST.get('wrote')}; it began: {LAST_REPLY['head']})" if llm.LAST else ""); more = None; continue
                 asked = mdl
                 if risk and not mdl.endswith("#marks"): downs.append(w2.get("plays_down"))
                 break
@@ -2803,6 +2837,13 @@ def selftest():
     r = make(dict(item, drugs=["ketamine"]), found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, claims=cl, agreed=("cl_ket_dependence",))
     assert r["status"] == "published" and r["with_checked"]["differs"] == [] and r["with_checked"]["editor_found_both_can_hold"][0]["claim"] == "cl_ket_dependence", (r["status"], r["why"], r.get("with_checked"))     # the editor's word on a disagreement: that claim does not stop the answer
     assert NEVER_ALONE.search("what to do if a friend overdoses") and NEVER_ALONE.search("How do I help someone who took too much GHB?") and NEVER_ALONE.search("does narcan work on fentanyl") and not NEVER_ALONE.search("Can you overdose on ketamine?")
+    # a reader's reply is read as it was given: the list alone, a verdict as a word, no numbers
+    assert [v["supported"] for v in verdicts_json('[{"n":1,"supported":true,"problem":""},{"n":2,"supported":false,"problem":"x"}]')["verdicts"]] == [True, False]
+    assert verdicts_json('{"verdicts": [{"n": "1", "supported": "true"}, {"n": "2", "supported": "no", "problem": "y"}], "opening": true}')["verdicts"][1] == {"n": 2, "supported": False, "problem": "y"}
+    assert [v["n"] for v in verdicts_json('```json\n[{"supported": true}, {"supported": true}, {"supported": false}]\n```')["verdicts"]] == [1, 2, 3] and verdicts_json("I cannot say.") is None and verdicts_json('{"x": 1}') == {"x": 1}
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), V(True, True, True, True)["verdicts"]]          # a further reader that answers with the list alone has read the answer
+    r = make(item, found, chat, Enc(), dict(MODELS, also1="gemini:gemini-3.5-flash-lite"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and r["panel"]["gemini:gemini-3.5-flash-lite"]["short"] == [True, ""] and not r.get("panel_gap"), (r["status"], r["why"], r.get("panel"))
     # when a question's turn comes
     yday = (datetime.date.today() - datetime.timedelta(days=1)).isoformat(); wk = (datetime.date.today() - datetime.timedelta(days=9)).isoformat()
     sent, own_q = {"id": "w_a1", "from": "a question visitors sent"}, {"id": "w_1"}
