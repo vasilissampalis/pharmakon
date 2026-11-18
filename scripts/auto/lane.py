@@ -1535,9 +1535,18 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         except (llm.Unavailable, llm.Budget) as e:
             alt = models.get("reader_2")
             if not alt or alt == models["reader"] or "larger than Groq's free plan allows" in str(e): raise
-            rec["gates"]["reader"] = f"{base(models['reader'])} could not read on ({re.sub(r'[ \t\n]+', ' ', str(e))[:140]}): {base(alt)} read from there"
-            rec["made"]["models"].update(reader=alt, reader_first=models["reader"]); models["reader"], models["reader_2"] = alt, ""
-            return fn(chat, alt, *a)
+            first, why = models["reader"], re.sub(r'[ \t\n]+', ' ', str(e))[:140]
+            try: out = fn(chat, alt, *a)
+            except llm.Budget:
+                # (18 November 2026, 21:36 and 22:55 Athens: with questions people had sent still waiting, team L's reader could not read on, the reader that stands
+                # by (at Groq) had no tokens left, and that came up as "an allowance ran out in the middle of an answer": twice, and the run said "stopped for
+                # today" although the team's own models had room.) The stand-by without room is not the day's end: the answer is given up for THIS run, as when a
+                # model cannot be reached, with what the first reader said, and the question is tried again in the next run
+                models["reader_2"] = ""
+                raise llm.Unavailable(f"{base(first)} could not read on ({why}), and the reader that stands by ({base(alt)}) has no room left today")
+            rec["gates"]["reader"] = f"{base(first)} could not read on ({why}): {base(alt)} read from there"
+            rec["made"]["models"].update(reader=alt, reader_first=first); models["reader"], models["reader_2"] = alt, ""
+            return out
     def read(src, picked):
         nonlocal thrown
         if amounts: rows, dropped = by_reader(read_amounts, item["q"], src, picked, dwords); src["rows"] = rows; ok = bool(rows); src.update(design=None, findings=[], limits=[])
@@ -2712,6 +2721,14 @@ def selftest():
     assert r["status"] == "published" and "gemma-x could not read on" in r["gates"]["reader"] and r["made"]["models"]["reader"] == MODELS["reader"] and r["made"]["models"]["reader_first"] == "gemini:gemma-x", (r["status"], r["why"], r["gates"].get("reader"))
     try: make(item, found, chat_busy, Enc(), dict(MODELS, reader="gemini:gemma-x"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex); raise AssertionError("no reader, and no error")
     except llm.Unavailable: pass
+    # the reader that stands by has no room left today: that is "a model could not be reached" for this run (tried again in the next), with what the first reader said; never "an allowance ran out"
+    def chat_both(model, messages, max_tokens=0):
+        if model == "gemini:gemma-x": raise llm.Unavailable("gemini answered 503: this model is in high demand")
+        if model == "groq:stand-by": raise llm.Budget("today's free tokens at Groq cannot hold this call for stand-by")
+        return chat(model, messages, max_tokens)
+    try: make(item, found, chat_both, Enc(), dict(MODELS, reader="gemini:gemma-x", reader_2="groq:stand-by"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex); raise AssertionError("no reader with room, and no error")
+    except llm.Budget: raise AssertionError("a stand-by reader without room must not end the day")
+    except llm.Unavailable as e: assert "gemma-x could not read on (gemini answered 503" in str(e) and "has no room left today" in str(e), str(e)
     # ---- lane 13: what the editor's reading of lane 12's three answers about amounts asked for (17 November 2026, 01:40 UTC) ----
     PG = lambda text, where="W": [{"n": 1, "where": where, "text": text}]
     # the parts of one quote never overlap, and a list the reader copied twice gives each amount once

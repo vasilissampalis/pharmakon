@@ -301,6 +301,26 @@ def field(terms, title_only=False):
     return "(" + " OR ".join(t if t.startswith("(") else f'TITLE:"{t}"' if title_only else f'TITLE:"{t}" OR ABSTRACT:"{t}"' for t in terms) + ")"
 
 
+# (18 November 2026, 22:40 Athens) A question about a place is about that place. "What is the mortality rate associated with heroin use in Greece?" was searched
+# under words for deaths from opioids, none of which was the country: the lane read papers on other countries and wrote that no source it could read gave a
+# finding. The countries a question names (data/site/world-law.json, with the everyday names of a few), and Europe: its papers must name the place.
+PLACE_MORE = {"United States of America": ["United States", "USA", "U.S.", "America", "American"], "United Kingdom of Great Britain and Northern Ireland": ["United Kingdom", "UK", "Britain", "British", "England", "Scotland", "Wales"],
+              "Russian Federation": ["Russia", "Russian"], "Netherlands (Kingdom of the)": ["Netherlands", "Dutch", "Holland"], "Iran (Islamic Republic of)": ["Iran", "Iranian"], "Republic of Korea": ["South Korea", "Korea", "Korean"],
+              "Czech Republic": ["Czechia", "Czech Republic", "Czech"], "Greece": ["Greece", "Greek"], "Germany": ["Germany", "German"], "France": ["France", "French"], "Spain": ["Spain", "Spanish"], "Italy": ["Italy", "Italian"],
+              "Portugal": ["Portugal", "Portuguese"], "Sweden": ["Sweden", "Swedish"], "Norway": ["Norway", "Norwegian"], "Australia": ["Australia", "Australian"], "Canada": ["Canada", "Canadian"], "Ireland": ["Ireland", "Irish"]}
+def places_named(question):
+    """The places a question names, each as the words a paper may use for it: [["Greece", "Greek"]]. Read from the question as our own wording puts it."""
+    try: C = [c["name"] for c in json.load(open(ROOT / "data" / "site" / "world-law.json", encoding="utf-8"))["countries"] if c.get("name") and c["name"] != "European Union"]
+    except (OSError, ValueError, KeyError): C = []
+    out, text = [], " " + re.sub(r"[^A-Za-z.' -]+", " ", str(question)) + " "
+    for name in C:
+        ways = list(dict.fromkeys(PLACE_MORE.get(name) or [re.sub(r"\s*\(.*\)$", "", name)]))
+        said = [w for w in ways if re.search(r"(?<![A-Za-z])" + re.escape(w) + r"(?![A-Za-z])", text)]      # (as written, with its capital: "cold turkey" is not Turkey)
+        if said and ways not in out: out.append(ways)
+    if re.search(r"(?<![A-Za-z])(?:Europe|European Union|the EU)(?![A-Za-z])", text): out.append(["Europe", "European"])
+    return out[:2]
+
+
 def searches(question, ways, names, drugs=None, terms=None, extra=None):
     """The searches for a question, in Europe PMC's syntax, each with what it is for. Reviews that can be read first; then
     any paper that can be read; then reviews that cannot (for the list of papers wanted); then the drug's most cited
@@ -327,6 +347,7 @@ def searches(question, ways, names, drugs=None, terms=None, extra=None):
     drug = " AND ".join(field(g) for g in groups) if groups else field(FAMILY["drugs"])
     topic = field(topics) if topics else ""
     core = drug + (" AND " + topic if topic else "")
+    for pl in places_named(question): core += " AND " + field(pl)          # (a question about a place: its papers name the place)
     rev = '(PUB_TYPE:"review" OR PUB_TYPE:"systematic review" OR PUB_TYPE:"meta-analysis")'
     not_retr = 'NOT PUB_TYPE:"retracted publication" NOT PUB_TYPE:"retraction of publication"'
     out = [{"for": "reviews and meta-analyses whose full text is open", "query": f"{core} AND {rev} AND OPEN_ACCESS:y AND LANG:eng {not_retr}"},
@@ -495,6 +516,10 @@ def selftest():
     assert t5 == ["growth", "height", "caffeine intake"] and '(TITLE:"growth" OR ABSTRACT:"growth" OR TITLE:"height"' in q5[0]["query"] and ' AND (TITLE:"caffeine" OR ABSTRACT:"caffeine" OR TITLE:"growth"' not in q5[0]["query"], (t5, q5[0]["query"])
     q6, g6, t6 = searches("Does caffeine affect growth?", ["can caffeine stunt growth", "caffeine and height growth"], [["caffeine", ["caffeine"]]], ["caffeine"], ["caffeine", "coffee"])
     assert "growth" in t6 and "caffeine" not in t6 and "coffee" not in t6, t6
+    # a question about a place: its papers must name the place (and "cold turkey" is no country)
+    assert places_named("What is the mortality rate associated with heroin use in Greece?") == [["Greece", "Greek"]] and places_named("How do people come off opioids cold turkey?") == [] and places_named("How many people in the United States and in Europe use cocaine?") == [["United States", "USA", "U.S.", "America", "American"], ["Europe", "European"]], places_named("How many people in the United States and in Europe use cocaine?")
+    q7, _, _ = searches("What is the mortality rate associated with heroin use in Greece?", [], [["heroin", ["heroin"]]], ["heroin"], ["opioid-related mortality", "drug-related deaths"])
+    assert all(' AND (TITLE:"Greece" OR ABSTRACT:"Greece" OR TITLE:"Greek" OR ABSTRACT:"Greek")' in q["query"] for q in q7[:4]) and "Greece" not in q7[-1]["query"], [q["query"][:200] for q in q7]
     # a pretend service: two searches answer, the full text is offered for one paper, Crossref knows the DOIs
     core = lambda i, **k: dict({"id": str(100 + i), "source": "MED", "pmid": str(100 + i), "doi": f"10.1000/j.{i}", "title": f"Causes of death from alcohol: review number {i}.", "authorString": "Smith J, Jones K.",
                                "journalInfo": {"journal": {"title": "Addiction"}}, "pubYear": "2021", "abstractText": "<p>Alcohol can cause death by acute poisoning that stops breathing. Participants were adults in ten countries.</p>",

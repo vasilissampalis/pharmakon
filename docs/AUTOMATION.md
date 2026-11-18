@@ -1424,6 +1424,121 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     to the editor (steps in the editor's message of that day). (3) Unchanged: "use readers" (CDC death figures),
     "keep them private" (the questions people chose to send).
 
+33. **When the site does not have the answer, and when it only thinks it has** (18 November 2026, 22:15 and 22:16
+    Athens; site 2.22.0, protocol 0.5.9). His words, with two pictures of the page. Of a question whether one sex uses
+    more than the other (six words, no drug word), which the page had answered with a part of the Big questions page:
+    "we should also include the possibility that the user is asking something that the site does not understand!
+    because it guessed wrong in this instance! it think it knows but it does not. the app should understand that this
+    is a question it does not know (we have to make this function as accurate as it gets it is not accurate enough)".
+    Of a question how many people die from heroin in one country, which got "No answer yet", a figure for the EU and
+    related answers: "in general for question it does not know there should be instant searches available at least
+    when the user is waiting for his/her answer! but then what would happen with the relevant statistics or claims?
+    should they hide under an arrow? what's the best design"; "the site should include all valid drug websites
+    worldwide for every site and have access to all scientific paper platforms to give instant answers when it does
+    not have the answer ready"; "what is the best design for when the app thinks it knows but it does not? should it
+    change to instant search results and pend the answer inside the website? and if yes, how can it change simply
+    and perfectly for the user ...? i may be wrong, for every instance i want absolute optimal design". And, a
+    minute later, of the second question, sent a few minutes before: "still not answered... pathetic"; "the users
+    want to know fast we live in the day of scrolling and fast rewards".
+    **What was true that evening.** (a) *Why the question was not answered.* A run started for it by itself at 22:07
+    (the key of decision 32). The free models' allowance of the day had been used up at about 21:50 (Cloudflare: 8,901
+    of 9,000 neurons; Groq's tokens for the reader that stands by, too), and it turns at 02:00 Athens: nothing could
+    be written before then. A written, checked answer takes minutes at best; it is never there at once. So what a
+    reader sees AT ONCE has to carry the page. (b) *Where the page thought it knew.* Measured
+    (`scripts/insight/build_index.py --eval`, the gold set of 400 forum questions read by two readers): the page gave
+    a best match to 40; 24 of those answer the question in full, 10 in part, 6 not at all (two of the six are answers
+    written after the readers' labels and are in fact right). Of 1,810 near-miss questions (each written as a question
+    one answer does NOT answer) 147 got that very answer. Five ways of asking about dying for each of the 30 drugs
+    (150 questions): 20 got a best match, and 6 of those answers say nothing about dying ("can you die from nitrous
+    oxide": the answer on nerve damage, with the judge at 0.93; "can you die from lsd": how long LSD stays in the
+    body). The judge sees how near an answer's wordings are and how far ahead it is of the next answer; where a drug
+    has few answers, the nearest one is far ahead and is taken for the answer. And a place found by meaning counted as
+    the answer: a part of the Big questions page for any question near enough to its subject.
+    **What changed (site 2.22.0).**
+    - *What counts as knowing.* (1) A part of the Big questions page is never the answer, however near: it is a place
+      to look, under the line that says the question is not answered, and the question is sent and looked up
+      (`site/insight/places.json`, `topic`). A question that names no drug and holds no drug word but is nearest to
+      such a part is a question about drugs by its meaning; of the 165 questions about other things none comes that
+      near to any place. (2) Who uses more or less ("do women use less than men"; "heavy users") is drug talk for the
+      scope rule (`site/insight/scope.json`; none of the 165 other questions is let in by it). (3) What a question
+      asks ABOUT (`site/insight/model.json`, `aspects`; the index marks every answer once): where a question asks
+      about dying, an answer none of whose wordings speaks of dying is never its best match; nor is an answer about a
+      NARROWER case than the question: one whose own question is about withdrawal or stopping, about touching, about
+      pregnancy or children, about test strips or naloxone, or about two drugs together, where the question does not
+      say so too. Measured again on the 150 questions: 12 best matches, none silent on dying and none about a narrower
+      case (before: 20, of which 6 said nothing of dying, and "can you die from heroin" got the answer on dying from
+      opioid WITHDRAWAL with the judge at 0.84, one of that answer's wordings being nearly the same sentence, and "can
+      you overdose on fentanyl" the answer on TOUCHING fentanyl). Tried first and dropped: a higher cut for the judge
+      on such questions (0.9); it took the wrong ones away and with them most of the right ones (how many deaths;
+      whether kratom or cannabis has killed). On the gold set nothing changed (40 best matches: 24 full, 10 partial,
+      6 not), and 147 of the 1,810 near-miss questions still get the answer they do not ask for: the judge is still
+      wrong often. What changed is what a wrong judgement costs the reader.
+      (4) A best match the judge is not sure of (under 0.8, `judge.sure`: on the gold set about four in ten of those
+      answer in full, four in ten in part) keeps its place, and the page looks up the research and the official pages
+      under it by itself, "in case the answer above is not what you asked"; nothing is sent.
+    - *The way out.* Under everything the page takes for THE answer (a best match, an official figure, a place found
+      by meaning) stands one line: "Not what you asked? Search wider". One tap, and the same question is read as not
+      answered, in place: what stood as the answer becomes the first of the closest answers we have, the question is
+      sent at once together with WHICH answer it was (`x`: an answer's id or a place's address; the server keeps it
+      with the question, `site/worker/_worker.js`), and the research is looked up. The reader's own list keeps it, so
+      the question stays "not answered" on that device for as long as that same answer is all the page would give,
+      and does not turn green for it. This is also how the system will learn which answers do not answer which
+      questions (the scout does not read `x` yet: next).
+    - *One layout for a question the site has no answer to*, read from the top: one line that says so and that it was
+      sent; a row that names what stands below, each name a jump ("Figures 1", "Closest answers 3", "Research 5",
+      "Official pages 7"); the official figures we have; the closest answers we have (up to three); the published
+      research found at that moment; the pages of official bodies about the drug; a place of the site to look in; the
+      word search's rows behind "More results". His question, whether the figures and claims should hide under an
+      arrow: no. They are checked and they are there at once, so they stand first; what is only found, and arrives a
+      moment later, stands below them, so that nothing a reader has begun to read is pushed away; and the row of jumps
+      says at a glance that it is there. Nothing folds: a longer list shows its first rows and a plain "Show all".
+      The sheet (Enter) has the same order.
+    - *Research at once for questions about dying.* Until that day a word about dying or overdose held the whole
+      lookup. Now a question of FACT about dying or overdose is looked up under the words papers use ("mortality",
+      "deaths", "fatal"; "overdose", "poisoning"), and its papers are listed BY TITLE ONLY (the rule for a paper's own
+      words is unchanged: it shows nothing about dying). Overdose with no drug named is looked up under "drug
+      overdose". Still never looked up, and the page says so in one line with the way to the emergency numbers: an
+      amount that kills ("how much ... kills", "too much", "how many pills"), a way of dying asked for on purpose
+      ("painless", "the easiest way"), ending a life. Suicide and self-harm, doses and amounts stay shut as before.
+      Someone who asks for the easiest or a painless way to die, or says that someone HAS overdosed, gets the
+      emergency route at once (before, "how to help someone who overdosed" was asked which drug was meant).
+    - *Official pages, at once.* Under the research: "Official pages about <drug>", from the list the machine lane
+      reads for its own answers (`data/auto/official/`: 22 bodies; the build picks each drug's pages, `site/build.js`,
+      `OFFICIAL`: 31 drugs and started pages, 16 bodies, 293 pages). Each body's own page about the drug ("FRANK on
+      heroin · United Kingdom"), the reader's own country first, three shown and the rest behind "Show all"; a page on
+      a part of the subject only where its title holds a word of the question. They are links to the bodies' own
+      sites, picked on the reader's device: nothing is sent for them, nothing of them is our text, and the page says
+      that they are about the drug, not about the question, and that we have not checked them.
+    **Tried and not used: a second look at the question and the answer together** (`scripts/insight/pair.py`). The open
+    cross-encoder ms-marco-MiniLM-L-6-v2 was taught with our own examples only (3,187 ways of asking against their own
+    answer; 1,810 near-miss questions; 9,561 ways of asking against the wrong answers that rank highest), with one fifth
+    of the answers held out. On the held-out answers it tells a way of asking from a near-miss better than the judge
+    (area under the curve 0.907 against 0.877), and on the known wrong matches it is right where the judge is not
+    ("can you die from heroin" against the answer on withdrawal: 0.00; against "can opioid withdrawal kill you": 0.98).
+    But on the gold set, as a veto on the page's best match at 0.5, it leaves 14 best matches (12 full, none partial, 2
+    "wrong" that are the two late answers) and takes away 12 of the 24 that answer in full; the judge alone at 0.8
+    leaves 21 (16 full, 2 partial, 3 wrong). It would also be 23 MB more for every reader to fetch. Not enough for
+    that price, yet. What would make it enough: teaching it first on a large open set of questions that mean the same
+    (on GitHub's machines), and our own examples from real use: every "Search wider" names a question and an answer
+    that does not answer it.
+    **Not done yet, in this order.** (1) *More indexes of papers* beside Europe PMC, which was slow all that evening:
+    PubMed first, then the other open ones, each asked by the page through the site's own server in a request of its
+    own, the lists joined as they come; titles only from a new index until a trial of its words has been read; the
+    Privacy text and the rule in CLAUDE.md name every index before it is asked. (2) *The system reads `x`*: a question
+    sent with the answer that does not answer it becomes a question of its own on the list even where the judge would
+    call it answered. (3) *The lane's allowance*: one reader without room must not end the day for teams that have
+    room; further free sources of model calls, read in their own documentation first. (4) The thirteenth point of
+    decision 32 stands: the time from a question to its answer on a healthy run is measured before the page promises
+    any time.
+    **Checks.** `scripts/ux/worker_test.mjs` (158: titles only for dying, what stays held, the answer a reader said is
+    not theirs kept with the question and nothing else), `scripts/ux/site24_check.js` (the layout's order, the row of
+    jumps, no arrows, the official pages and "Show all", the reader's country first, a part of the Big questions page
+    as a place to look, the way out and what is sent with it, the unsure best match, what is not looked up),
+    `scripts/ux/insight_check.js`, parity (the page and the build give the same best match with the new rule),
+    `build_index.py --eval` and `--places`, the validator.
+    **For him.** Unchanged and still his: "approve" (the checked answer on smoked cannabis and lung cancer, Section
+    7), "use readers", "keep them private".
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

@@ -2671,3 +2671,40 @@ details.hist ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2
 /* under an answer of the system's that is about dying, overdose, mixing, pregnancy or children: the way to the emergency numbers */
 .auto-sos { margin: 10px 0 0; padding: 8px 12px; border-radius: 10px; background: var(--surface-2); font-size: 0.92rem; }
 .auto-sos a { font-weight: 700; }
+
+/* ---------- Site 2.22 (18 November 2026): one layout for a question the site has no answer to, and the way out under what it took for the answer ----------
+   (the senior author, 22:15 Athens: "what is the best design for when the app thinks it knows but it does not? should it change to instant search results
+   and pend the answer inside the website? ... for every instance i want absolute optimal design"; "the users want to know fast we live in the day of
+   scrolling and fast rewards") */
+/* "Not what you asked? Search wider": one quiet line right under what the page took for the answer */
+.search-results .sr-exit { margin: 0; padding: 6px 14px 10px; font-size: 0.9rem; line-height: 1.45; color: var(--muted); border-bottom: 1px solid var(--line); }
+.search-results .sr-exit .linklike, .ins-exit .linklike { font-size: inherit; font-weight: 700; padding: 6px 0; }
+.ins-exit { margin: 14px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--surface-2); font-size: 0.95rem; line-height: 1.45; color: var(--muted); }
+/* the places where what is found stands, under the nearest things we have checked: the published research, then the pages of official bodies */
+.ins-slot:empty { display: none; }
+.search-results .sr-fit > .ins-slot > .ins-found, .search-results .sr-fit > .ins-slot > .ins-off { margin: 0; padding: 12px 14px 14px; border-top: 1px solid var(--line); }
+.ins-off { margin: 10px 0 2px; padding-top: 10px; border-top: 1px solid var(--line); text-align: left; }
+.search-results .ins-off a { display: block; padding: 0; border-top: 0; font-size: 0.95rem; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.search-results .ins-off a:hover { background: none; }
+/* "Show all": the rest of a short list, in place; a plain button, no arrow */
+.ins-found-n.ins-all { margin-top: 10px; }
+.ins-found-n.ins-all .linklike { font-size: 0.9rem; padding: 6px 0; }
+.ins-found-l li[hidden] { display: none; }
+/* what stands below, in one row under the line: each name leads to its block (the site's own chips) */
+.ins-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 2px 14px 12px; }
+.ins-jump[hidden] { display: none; }
+.ins-jump .chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--fg); cursor: pointer; }
+.ins-jump .chip:hover, .ins-jump .chip:focus-visible { border-color: var(--fg); }
+.ins-jump-n { font-weight: 500; color: var(--muted); }
+.ins .ins-jump { padding: 0; margin: 12px 0 2px; }
+.search-results .sr-fit [data-at], .ins-slot { scroll-margin-top: 84px; }
+/* an official body's page: its name and its country on one line where there is room */
+.ins-off-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.ins-off-l li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; }
+.ins-off-l li[hidden] { display: none; }
+.ins-off-l a, .search-results .ins-off .ins-off-l a { display: inline; min-height: 0; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+.ins-off-l .m { font-size: 0.82rem; color: var(--muted); }
+/* a question that is not looked up (an amount that kills, a way of dying): the line that says so, and the way to the emergency numbers */
+.ins-shut .ins-shut-sos { margin-top: 8px; }
+.search-results .ins-found .ins-shut-sos a, .ins-found .ins-shut-sos a { display: inline; font-size: inherit; }
+.ins-found .ins-lead { margin: 0 0 6px; }

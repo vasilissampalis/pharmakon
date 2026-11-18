@@ -15,6 +15,30 @@ Done: places by meaning (2.13.0); figures by question (2.14.0); the lane's pause
 citation a link, a source in place, plain first, shorter cards, topics, the same Insight on every page, the place and
 the way back in the bar).
 
+00000. **When the site does not have the answer, and when it only thinks it has (decision 33; site 2.22.0, 18 November, 22:15).** Done: a part of
+   the Big questions page is never the answer; who uses more is drug talk; an answer silent on dying, or about a narrower case than the question,
+   never answers a question about dying; the unsure best match (under 0.8) gets research and official pages under it; "Not what you asked? Search
+   wider" (the question read as not answered, sent with which answer it was); one layout for an unanswered question (line, jumps, figures, closest
+   answers, research, official pages); research by title for questions of fact about dying; official pages as links (`OFFICIAL`). In the lane: a
+   stand-by reader without room no longer ends the day; the finder asks for the place a question names. Next, in this order:
+   (1) **Trial 14** (`data/auto/instant/`): read every line of the death questions' titles (are they about the question? is any title an
+   instruction or an amount?) and of the general ones (women and men; overdose with no drug). Tighten key words where a list is off.
+   (2) **PubMed as a second index**, then OpenAlex: his words of 22:15 ("access to all scientific paper platforms"). Read NCBI's own page on
+   E-utilities first (requests a second without a key; what must be sent). Design: the page asks `/api/find` once per index (`src`), each request
+   with its own budget of fifty outgoing calls, the lists joined on the device by DOI or PMID as they come; titles only from a new index until a
+   trial of the words has been read; the Privacy text, the Methods text and the rule in CLAUDE.md name the index BEFORE it is asked.
+   (3) **The scout reads `x`** (the answer a reader said is not theirs): such a question is not "answered" for the scout even where the judge says so;
+   it gets an item of its own (our wording), and the item records which answer it is not. Then the page: a listed question that is nearer than the
+   best match wins over it.
+   (4) **A sent question that an existing answer does answer becomes a wording of that answer** (our wording of it, never the visitor's): the lane's
+   model reads the question against the nearest answers. Measure on the gold set what it adds; this is also how the pair model gets its examples.
+   (5) **The pair model** (`scripts/insight/pair.py`): teach it first on an open set of questions that mean the same (on GitHub's machines), then on
+   ours; ship only if, on the gold set, it keeps at least 20 of the 23 full best matches while taking away the partial and the wrong ones.
+   (6) **Free model calls that need no key**: read GitHub's own page on its Models service (may a workflow call it with its own token; how many calls
+   a day; how many tokens a call). If it holds: a team whose reader is there, tried by name on two questions.
+   (7) His question of 22:10 (`w_a0015`, deaths from heroin in one country): the finder now asks for the country; read what the next run finds. A
+   figure for one country belongs to the statistics page, from the body that counts it: that needs readers ("use readers").
+
 0000. **Answered by itself, within minutes (decision 32; lane 19; site 2.21.0, 18 November).** Done: the lane tries again by itself and parks
    nothing for a reader; the stricter bar for questions where a wrong word can hurt, in the place of a person; the look every five minutes
    with a first pass for sent questions that is published in the middle of the run; the server's own start of the work (needs his key);

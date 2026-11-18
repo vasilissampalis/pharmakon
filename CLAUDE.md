@@ -63,9 +63,11 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   model's sentences said more than their papers (one in three; four in ten under the strictest rule), and its choice of words was
   worse than a rule's. Do not bring a model back into what a reader is shown at once without his word and an exam written into
   `docs/AUTOMATION.md`. The rules are code and are not loosened to let more through: most papers get no words, and that is the
-  price; dying, overdose, amounts and suicide get no papers this way; a question about pregnancy or children, and one that names
-  no single drug, get papers BY TITLE ONLY, with no words of theirs (his words of 18 November 2026, decision 32: "we have to give
-  instant search on this instance too"; words for them only after a trial of such questions). Before changing a rule, run a trial on
+  price; amounts, suicide and self-harm, an amount that kills and a way of dying asked for on purpose get no papers this way (the
+  page says so, with the way to the emergency numbers); a question about pregnancy or children, one that names no single drug, and
+  a question of FACT about dying or overdose get papers BY TITLE ONLY, with no words of theirs (his words of 18 November 2026,
+  decision 32: "we have to give instant search on this instance too"; decision 33, of a question about deaths: "in general for
+  question it does not know there should be instant searches available"; words for them only after a trial of such questions). Before changing a rule, run a trial on
   our own questions (`data/auto/requests/instant-*.json`; `scripts/auto/instant_trial.mjs` on GitHub's machines) and read every
   line. A reader's sentence goes nowhere for this: the drug's names and key words go to this server and to Europe PMC only. A
   paper's summary is never copied into the repository: trial files hold the words shown and the shape around them. Europe PMC
@@ -73,6 +75,15 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   back empty; while they are out it says it is still looking, and where the index did not answer it says that and offers to
   look again (site 2.21.1). The same in the lane: a source that could not be fetched is a fault of the moment, never "nothing
   is published".
+- What Insight takes for THE answer (site 2.22, his words of 18 November 2026, 22:15: "it think it knows but it does not ... we have
+  to make this function as accurate as it gets"; `docs/AUTOMATION.md`, decision 33). A program on the reader's device judges it and is
+  often wrong (measured: 24 of 40 best matches answer in full): so a part of the Big questions page is never the answer, only a place
+  to look; an answer silent on dying, or about a narrower case than the question (withdrawal, touching, two drugs together), never
+  answers a question about dying (`site/insight/model.json`, aspects); under everything given as the answer stands "Not what you asked? Search wider", which reads the
+  question as not answered, sends it with WHICH answer it was (an id, nothing more) and looks the research up. Measure before changing
+  any of it (`scripts/insight/build_index.py --eval`, `--places`); never make the judge laxer to answer more. Under the research the
+  page lists the pages of official bodies about the drug (`OFFICIAL` in `site/build.js`, from `data/auto/official/`): links only, picked
+  on the device, nothing of them our text. A new index of papers or a new body is named in the Privacy text before it is asked.
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY.

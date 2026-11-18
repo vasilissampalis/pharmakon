@@ -61,7 +61,9 @@ export function readQuestion(body) {
   if (q.length < 8 || q.split(" ").length < 2 || !/\p{L}{2}/u.test(q)) return { error: "too short" };
   if (/https?:\/\/|www\.|[^\s@]+@[^\s@]+\.[a-z]{2,}|<\s*[a-z!/]/i.test(q)) return { error: "no links or addresses" };
   if (/\d[\d\s().+-]{7,}\d/.test(q)) return { error: "no long numbers" };
-  return { q, d, v, a: !!(body && (body.a === 1 || body.a === true)) };
+  // (2.22) x: what the page had taken for the answer, where the reader pressed "Not what you asked?": an answer's id, or the address of a place of the site. Nothing else is taken
+  const x0 = String((body && body.x) == null ? "" : body.x), x = /^(?:cl|au)_[a-z0-9_]{1,60}$/.test(x0) || /^#[a-z0-9][a-z0-9_\/-]{1,70}$/.test(x0) ? x0 : "";
+  return Object.assign({ q, d, v, a: !!(body && (body.a === 1 || body.a === true)) }, x ? { x } : {});
 }
 // ---- published research, looked up at once, each paper with its own words on the question (POST /api/find; sites 2.16 to 2.20)
 /* The senior author, 17 November 2026: "people are used to get responses instantly. We have to make an ai which is able to do that for
@@ -112,9 +114,13 @@ export function readQuestion(body) {
    A line says "in animals or cells, not in people" where its sentence or its whole summary is about those, and that the summary covers
    such work too where it covers both and the sentence does not say which.
    For "what is X" the rule takes the sentence that says what the drug is ("X is a ...") from the start of a summary instead.
-   Not looked up at all: words about dying, overdose, suicide or amounts (FIND_NEVER). Papers are listed but NO WORDS of them are shown (titles
+   Not looked up at all: words about suicide, self-harm or amounts (FIND_NEVER). Papers are listed but NO WORDS of them are shown (titles
    only) for what research summaries cannot settle for a reader (the law, prices, drug tests), and, since site 2.21, for a question about pregnancy or
-   children (FIND_TITLES) and for a question that names no single drug (the page says so: titles). The senior author, 18 November 2026, 13:38 and 13:40
+   children (FIND_TITLES) and for a question that names no single drug (the page says so: titles); since site 2.22 also for a question of fact about
+   dying or overdose (FIND_DEATH). The senior author, 18 November 2026, 22:15 Athens, of a question how many people die from heroin in one country, which got no
+   research: "in general for question it does not know there should be instant searches available at least when the user is waiting". Until that
+   day a key word about dying held the whole lookup. Which of those questions the PAGE does not send at all (an amount that kills, a way of dying, ending
+   one's own life) is decided on the reader's device, which alone sees the sentence (app.insight.js, FIND_DEATH_NOT); here only the key words arrive. The senior author, 18 November 2026, 13:38 and 13:40
    Athens, of a question about mothers and their children's drug use that got no research: "we have to give instant search on this instance too". Until
    that day such a question was not looked up at all. What the rule may show of a paper's own words is unchanged: FIND_HELD stands in it as it did.
    What arrives: the names of a drug (up to 6) and plain key words (up to 6), chosen on the reader's device; never the reader's sentence.
@@ -122,11 +128,12 @@ export function readQuestion(body) {
    here; Cloudflare keeps Europe PMC's reply for a day so that the same search is not asked twice. */
 const EPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest/search";
 export const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)|infants?|teen\w*|minors?|suicid\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|mortalit\w*|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
-// (2.21) never looked up: dying, overdose, suicide, amounts. Looked up and listed by title only: pregnancy and children
-export const FIND_NEVER = /\b(suicid\w*|self-?harm\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|mortalit\w*|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+// never looked up: suicide, self-harm, amounts. Looked up and listed by title only: pregnancy and children (2.21); dying and overdose (2.22: FIND_DEATH)
+export const FIND_NEVER = /\b(suicid\w*|self-?harm\w*|lethal|ld50|dos(e|es|age|ing)|mg|mcg|milligrams?|grams?|micrograms?)\b/i;
+export const FIND_DEATH = /\b(kill\w*|die[sd]?|dying|deaths?|dead|deadly|mortalit\w*|overdos\w*|fatal\w*|poisoning)\b/i;
 export const FIND_TITLES = /\b(pregnan\w*|breast-?feed\w*|lactat\w*|child|children|childhood|kids?|bab(y|ies)|infants?|newborns?|toddlers?|teen\w*|adolescen\w*|minors?|youths?|underage|school\w*|f(?:o)?etus|f(?:o)?etal|prenatal|perinatal|maternal|mothers?|paternal|fathers?|parent\w*|p(?:a)?ediatric\w*)\b/i;
 // (2.21) what research calls the subject of a question that names no single drug: these stand in the place of a drug's name (the page sends them)
-const FIND_GEN_NAMES = new Set(["drug use", "substance use", "addiction", "substance use disorder"]);
+const FIND_GEN_NAMES = new Set(["drug use", "substance use", "addiction", "substance use disorder", "drug overdose", "overdose"]);   // (2.22: overdose, where no drug is named)
 const FIND_NOT_RESEARCH = /^(?:legal\w*|illegal\w*|law|laws|lawful|police|arrest\w*|prison|jail|court|customs|border|airport|price|prices|cost|costs|cheap\w*|buy|buying|bought|order\w*|dealers?|vendors?|urine|test|tests|tested|testing|screen\w*|detect\w*)$/i;
 const findName = s => { s = clean(s).toLowerCase(); return /^[a-z0-9][a-z0-9 ,.'+()\-]{1,58}[a-z0-9)]$/.test(s) && !/["\\:]/.test(s) ? s : ""; };
 const findWord = s => { s = clean(s).toLowerCase(); return /^[a-z]{3,24}$/.test(s) ? s : ""; };
@@ -142,7 +149,7 @@ export function readFind(body) {
   const groups = (Array.isArray(body && body.words) ? body.words : []).slice(0, 12).map(e => uniq(String(e == null ? "" : e).split("|").slice(0, 3).map(findWord)).filter(w => !names.includes(w))).filter(g => g.length).slice(0, 6);
   const words = uniq(groups.flat());
   if (!names.length) return { error: "no name" };
-  return { names, also, words, groups, def: !!(body && (body.def === 1 || body.def === true)) && !groups.length, gen: names.every(n => FIND_GEN_NAMES.has(n)), noq: !!(body && (body.t === 1 || body.t === true)) || names.every(n => FIND_GEN_NAMES.has(n)) || words.some(w => FIND_NOT_RESEARCH.test(w)) || names.concat(also, words).some(t => FIND_TITLES.test(t)), held: names.concat(also, words).some(t => FIND_NEVER.test(t)) };
+  return { names, also, words, groups, def: !!(body && (body.def === 1 || body.def === true)) && !groups.length, gen: names.every(n => FIND_GEN_NAMES.has(n)), noq: !!(body && (body.t === 1 || body.t === true)) || names.every(n => FIND_GEN_NAMES.has(n)) || words.some(w => FIND_NOT_RESEARCH.test(w)) || names.concat(also, words).some(t => FIND_TITLES.test(t) || FIND_DEATH.test(t)), held: names.concat(also, words).some(t => FIND_NEVER.test(t)) };
 }
 const FIND_SPELL = "colour color|behaviour behavior|tumour tumor|flavour flavor|odour odor|labour labor|vapour vapor|anaemia anemia|anaesthesia anesthesia|anaesthetic anesthetic|haemorrhage hemorrhage|oedema edema|diarrhoea diarrhea|oestrogen estrogen|ageing aging|centre center|fibre fiber|analogue analog|programme program|grey gray|sulphate sulfate|leukaemia leukemia".split("|").map(p => p.split(" "));
 // a word as papers may write it: its one and its many ("migraines", "migraine") and its other spelling ("colour", "color"; "-ise", "-ize")
@@ -638,9 +645,10 @@ export default {
       if (had) {
         had.n = (had.n || 1) + 1; had.dn = had.last === day ? (had.dn || 1) + 1 : 1; had.last = day;
         if (r.d && !(had.d || []).includes(r.d)) had.d = (had.d || []).concat(r.d).slice(0, 5);
+        if (r.x && !(had.x || []).includes(r.x)) had.x = (had.x || []).concat(r.x).slice(0, 5);   // (2.22) the answers a reader said do not answer this question
         await store.put(key, JSON.stringify(had), opts); return json({ ok: true, again: true });
       }
-      await store.put(key, JSON.stringify(Object.assign({ q: r.q, d: r.d ? [r.d] : [], v: r.v, first: day, last: day, n: 1, dn: 1 }, auto ? { a: 1 } : {})), opts);
+      await store.put(key, JSON.stringify(Object.assign({ q: r.q, d: r.d ? [r.d] : [], v: r.v, first: day, last: day, n: 1, dn: 1 }, auto ? { a: 1 } : {}, r.x ? { x: [r.x] } : {})), opts);
       { const go = startWork(env, store).catch(() => "failed"); if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(go); }   // a new question: the system's work is started now (see startWork), behind the reply
       return json({ ok: true });
     } catch (e) { return json({ ok: false, error: "store" }, 503); }

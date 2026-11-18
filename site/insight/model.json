@@ -1,5 +1,5 @@
 {
- "_note": "Insight's model and its numbers, in one place. file: the encoder in site/insight/vendor/ (published unmodified as insight/<file>). scripts/insight/build_index.py and embed.js make the index with it; site/build.js copies it and tells the page its name; the checks read the name from the index. A new model must take the same vocab.txt and inputs (input_ids, attention_mask, token_type_ids) and give the same output (last_hidden_state): add its file to site/insight/vendor/, change the name here, build (everything is embedded again: the vectors' cache is kept by the model file's SHA-256). weights: how the two looks at a question are weighed. tiers: where a related answer begins. judge: what makes a best match: a logistic regression on six numbers the page has for its first candidate (features, in order; each less mu, over sd, times w, summed with b), a best match when its number is `best` or more; made for this model by scripts/insight/judge2.py (--six --save) from our own wordings and near-miss questions, so a new model needs new numbers. Each is explained in scripts/insight/build_index.py; measure a change with its --eval. build_index.py copies them into data/insight.json, the only place the page and the checks read them from: no number is written anywhere else.",
+ "_note": "Insight's model and its numbers, in one place. file: the encoder in site/insight/vendor/ (published unmodified as insight/<file>). scripts/insight/build_index.py and embed.js make the index with it; site/build.js copies it and tells the page its name; the checks read the name from the index. A new model must take the same vocab.txt and inputs (input_ids, attention_mask, token_type_ids) and give the same output (last_hidden_state): add its file to site/insight/vendor/, change the name here, build (everything is embedded again: the vectors' cache is kept by the model file's SHA-256). weights: how the two looks at a question are weighed. tiers: where a related answer begins. judge: what makes a best match: a logistic regression on six numbers the page has for its first candidate (features, in order; each less mu, over sd, times w, summed with b), a best match when its number is `best` or more; made for this model by scripts/insight/judge2.py (--six --save) from our own wordings and near-miss questions, so a new model needs new numbers. Each is explained in scripts/insight/build_index.py; measure a change with its --eval. build_index.py copies them into data/insight.json, the only place the page and the checks read them from: no number is written anywhere else. aspects (site 2.22, 18 November 2026; the senior author: \"it think it knows but it does not ... we have to make this function as accurate as it gets\"): what a question asks ABOUT, where getting it wrong does harm. Measured that evening: \"can you die from nitrous oxide\" got the answer on nerve damage as its best match (judge 0.93), \"can you die from lsd\" the answer on how long LSD stays in the body: the judge sees how near an answer is and how far ahead of the next, not what is asked. Each aspect is two patterns of words: ask (the question asks about it) and has (an answer speaks of it: any of its wordings or its short answer). An answer that does not speak of what the question asks about is never its best match (it stays among the nearest answers). build_index.py marks every answer once, in the index; the page and the build read the same marks. judge.sure (site 2.22): from this number on the page is sure of its best match. Between judge.best and judge.sure the best match is still shown as the best match, but the page also looks up the published research and the official pages under it by itself, in case it is not what was asked: on the gold set, of the best matches under 0.8 about four in ten answer the question in full, four in ten in part and the rest not at all; from 0.8 on, about nine in ten answer it in full (scripts/insight/build_index.py --eval, 18 November 2026). An aspect may also name what is NARROWER than the question ('narrow': patterns; 'two': an answer whose own question names two drugs): for a question that asks about the aspect, an answer about a narrower case than the question asks about is never its best match. Dying: \"can you die from heroin\" got the answer on dying from opioid WITHDRAWAL (judge 0.84: one of that answer's wordings is nearly the same sentence), \"can you overdose on fentanyl\" the answer on TOUCHING fentanyl, \"how many people die from benzodiazepines\" the answer on opioid deaths that also involve them. An answer whose own question is about withdrawal or stopping, touching, pregnancy or children, test strips or naloxone, or about two drugs together, answers a question about dying only where the question says so too. (Tried first and dropped: a higher cut for the judge on such questions, 0.9. It took those away, and with them 13 of the 17 best matches that DO answer: how many deaths, whether kratom or cannabis has killed.) An aspect may still set 'best', a higher cut of its own; none does.",
  "file": "pharmakon-insight-1-q8.onnx",
  "weights": {
   "q": 0.7,
@@ -46,6 +46,21 @@
    1.5797454118728638
   ],
   "b": -2.6831297874450684,
-  "best": 0.6
- }
+  "best": 0.6,
+  "sure": 0.8
+ },
+ "aspects": [
+  {
+   "name": "dying",
+   "ask": "\\b(?:die|dies|died|dying|death|deaths|dead|deadly|kill|kills|killed|killing|fatal|fatally|fatality|fatalities|lethal|overdose|overdoses|overdosed|overdosing|od|ods)\\b",
+   "has": "\\b(?:die|dies|died|dying|death|deaths|dead|deadly|kill|kills|killed|killing|killer|fatal|fatally|fatality|fatalities|lethal|overdose|overdoses|overdosed|overdosing|mortality|poisoning|poisonings|poisoned|life-threatening|survive|survived|survival)\\b",
+   "narrow": [
+    "\\b(?:withdraw\\w*|coming off|come off|comes off|stop|stops|stopping|stopped|quit\\w*|detox\\w*|cold turkey|abstinen\\w*)\\b",
+    "\\b(?:touch\\w*|skin|second-?hand|passive)\\b",
+    "\\b(?:pregnan\\w*|breast-?feed\\w*|bab(?:y|ies)|unborn|newborns?|child\\w*|kids?|teen\\w*|adolescen\\w*)\\b",
+    "\\b(?:test strips?|strips?|reagents?|kits?|naloxone)\\b"
+   ],
+   "two": true
+  }
+ ]
 }

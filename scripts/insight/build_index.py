@@ -234,6 +234,8 @@ class Ranker:
         dim = D["dim"]; self.ids = D["ids"]; self.n = len(self.ids); self.rows = np.array(D["rows"])
         self.W, self.M, self.S = unit_rows(D["W"], dim), unit_rows(D["M"], dim), unit_rows(D["S"], dim)
         self.lex = Words(D["docs"]); self.wt = D["weights"]; self.t = D["tiers"]; self.J = D["judge"]
+        # 2.22: (what the question asks about, which answers speak of it, the judge's cut for such a question, the narrower cases with the answers that are about each, the answers about two drugs)
+        self.aspects = [(re.compile(a["ask"], re.I | re.A), a["has"], float(a.get("best") or 0), [(re.compile(n, re.I | re.A), bits) for n, bits in a.get("narrow") or []], a.get("two") or "") for a in D.get("aspects") or []]
         self.about = [set(D["slugs"][k] for k in xs) for xs in D["about"]]
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
         self.pat = name_pattern([n for n, _ in D["names"]])
@@ -279,7 +281,7 @@ class Ranker:
         ok = np.array([all(has(i, g) for g in groups) for i in range(self.n)])
         some = np.array([not groups or any(has(i, g) for g in groups) for i in range(self.n)])
         by = plain + self.wt["topic"] * bm
-        return {"bw": bw, "bw2": bw2, "sh": sh, "lx": lx, "plain": plain, "topic": bm, "ok": ok, "some": some, "by": by, "key": by + self.wt["same"] * ok, "groups": groups}
+        return {"bw": bw, "bw2": bw2, "sh": sh, "lx": lx, "plain": plain, "topic": bm, "ok": ok, "some": some, "by": by, "key": by + self.wt["same"] * ok, "groups": groups, "q": q}
     def six(self, L, c):
         """The judge's six numbers for answer c (judge.features, in that order): its best wording, its second-best wording
         (0 if it has one wording), its short answer, word overlap, topic, and its lead over the next answer: by[c] less the
@@ -291,9 +293,24 @@ class Ranker:
         """The judge's number for six numbers f: how sure it is that the first candidate answers what was asked."""
         J = self.J; z = sum(w * (x - m) / d for w, x, m, d in zip(J["w"], f, J["mu"], J["sd"])) + J["b"]
         return 1.0 / (1.0 + math.exp(-z))
-    def tiers(self, plain, topic, groups, feats):
+    def speaks(self, q, c, p=1.0, ng=0):
+        """(2.22) Does answer c speak of what the question asks about, and of no narrower case than the question does?
+        False where the question asks about something that does harm when it is got wrong (dying: model.json, aspects)
+        and: none of the answer's wordings nor its short answer speaks of it; or the judge's number p is under the cut
+        the aspect sets; or the answer's own question is about a narrower case (withdrawal, touching, pregnancy ...)
+        that the question does not name; or it is about two drugs and the question names fewer (ng: how many it names).
+        q None: not asked (the callers that have no question at hand)."""
+        if q is None: return True
+        for ask, has, best, narrow, two in self.aspects:
+            if not ask.search(q): continue
+            if has[c] != "1" or p < best: return False
+            if any(bits[c] == "1" and not rx.search(q) for rx, bits in narrow): return False
+            if two and two[c] == "1" and ng < 2: return False
+        return True
+    def tiers(self, plain, topic, groups, feats, q=None):
         """The page's rule. c, the first candidate in the page's order, is the best match if it is about every drug the
-        question names and the judge's number for it (feats(c): its six numbers) is judge.best or more; there is never a
+        question names, the judge's number for it (feats(c): its six numbers) is judge.best or more, and (2.22, with q
+        given) it speaks of what the question asks about; there is never a
         second best match. Related: the next answers in that order, up to three, with a first look of tiers.related or
         more and a topic of tiers.near or more, about at least one of the drugs named (c first among them when it is not
         the best match). Returns the best match (a list of none or one), the related answers and the judge's number."""
@@ -302,11 +319,11 @@ class Ranker:
         some = np.array([not groups or any(has(i, g) for g in groups) for i in range(self.n)])
         order = np.argsort(-(plain + self.wt["topic"] * topic + self.wt["same"] * ok), kind="stable")
         c = int(order[0]); p = self.judge(feats(c))
-        best = [c] if ok[c] and p >= self.J["best"] else []
+        best = [c] if ok[c] and p >= self.J["best"] and self.speaks(q, c, p, len(groups)) else []
         related = [int(i) for i in order if int(i) not in best and plain[i] >= t["related"] and topic[i] >= t["near"] and some[i]][:3]
         return best, related, p
     def rank_vectors(self, q, v, mv, groups):
-        L = self.look(v, mv, q, groups); best, related, p = self.tiers(L["plain"], L["topic"], groups, lambda c: self.six(L, c))
+        L = self.look(v, mv, q, groups); best, related, p = self.tiers(L["plain"], L["topic"], groups, lambda c: self.six(L, c), q)
         c = int(np.argsort(-L["key"], kind="stable")[0])
         row = lambda i: {"id": self.ids[i], "plain": round(float(L["plain"][i]), 4), "topic": round(float(L["topic"][i]), 4), "off": not bool(L["ok"][i])}
         return {"best": [row(i) for i in best], "related": [row(i) for i in related], "first": {"id": self.ids[c], "p": p, "f": self.six(L, c)},
@@ -608,6 +625,21 @@ def main():
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
            "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
     out["scope"] = scope_block()   # 2.5: what makes a question a question about drugs (site/insight/scope.json)
+    # 2.22: what a question asks about, where getting it wrong does harm (site/insight/model.json, aspects): each answer is marked once, by ALL its wordings and its short answer
+    spoken = [" ".join(w for r, w in zip(rows, W_txt) if r == i) + " " + shorts[i] for i in range(len(A))]
+    # ... and, for an answer about a NARROWER case than a question may ask about, by its OWN question as the site words it: each narrow pattern it holds, and whether it names two drugs
+    name_of = {n: xs for n, xs in names}
+    def two(text):
+        seen = []
+        for m in pat.finditer(text):
+            g = name_of.get(m.group(1).lower())
+            if g and g not in seen: seen.append(g)
+        # two drugs TOGETHER ("Cocaine with alcohol", "opioid deaths that also involve benzodiazepines"); "people who use meth or amphetamine" names two of a kind, not a mix
+        return len(seen) >= 2 and bool(re.search(r"\b(?:with|plus|mix\w*|combin\w*|together|involve[sd]?|alongside|on top of)\b", text, re.I | re.A))
+    own = [a["wordings"][0] if a["wordings"] else "" for a in A]
+    out["aspects"] = [dict({"name": a["name"], "ask": a["ask"], "has": "".join("1" if re.search(a["has"], s, re.I | re.A) else "0" for s in spoken)}, **({"best": float(a["best"])} if a.get("best") else {}),
+                           **({"narrow": [[n, "".join("1" if re.search(n, s, re.I | re.A) else "0" for s in own)] for n in a["narrow"]]} if a.get("narrow") else {}),
+                           **({"two": "".join("1" if two(s) else "0" for s in own)} if a.get("two") else {})) for a in CONFIG.get("aspects") or []]
     # 2.5: the list of questions not answered yet (data/site/wanted.json), as a second, small index of the same kind
     wl = wanted_index(json.load(open(IN, encoding="utf-8")).get("wanted") or [], out, names, pat, at)
     if wl: out["wanted"] = wl
@@ -854,7 +886,7 @@ def places_index():
     print(f"insight: {sum(1 for p in T['places'] if not p.get('none'))} places of the site can be found by the meaning of a question ({len(W)} ways of asking; "
           f"{sum(1 for p in T['places'] if p.get('none'))} entries say what is not a place)", file=sys.stderr)
     return {"ids": [p["id"] for p in T["places"]], "rows": rows, "W": wb, "cut": T["cut"], "near": T["near"],
-            "meta": [{"none": 1} if p.get("none") else {k: p[k] for k in ("href", "icon", "k", "t", "part") if p.get(k)} for p in T["places"]]}
+            "meta": [{"none": 1} if p.get("none") else {k: p[k] for k in ("href", "icon", "k", "t", "part", "topic") if p.get(k)} for p in T["places"]]}
 
 
 def where(Wv, rows, n, mv):
@@ -881,14 +913,16 @@ def measure_places(show=True):
     V = embed_all(W + read([g["q"] for g in G]) + read(forum) + read(other), quiet=True); _, Wv = int8(V[:len(W)])
     a, b = len(W), len(W) + len(G); c = b + len(forum)
     look = lambda v: (lambda i, s: (P[i]["id"], s, bool(P[i].get("none"))))(*where(Wv, rows, len(P), v))
+    topic = {p["id"] for p in P if p.get("topic")}   # (2.22) a part of the Big questions page: a place to look, never the answer
     g = [look(v) for v in V[a:b]]; f = [look(v) for v in V[b:c]]; o = [look(v) for v in V[c:]]
     near, cut = T["near"], T["cut"]
     out = {"places": sum(1 for p in P if not p.get("none")), "ways": len(W), "near": near, "cut": cut, "gold": len(G), "gold_also_a_way": len(again),
            "gold_right": sum(1 for x, (pid, s, none) in zip(G, g) if s >= near and pid == x["place"]), "gold_wrong_place": sum(1 for x, (pid, s, none) in zip(G, g) if s >= near and not none and pid != x["place"]),
-           "gold_right_as_the_answer": sum(1 for x, (pid, s, none) in zip(G, g) if s >= cut and pid == x["place"]), "gold_wrong_as_the_answer": sum(1 for x, (pid, s, none) in zip(G, g) if s >= cut and not none and pid != x["place"]),
-           "forum": len(forum), "forum_sent_to_a_place": sum(1 for pid, s, none in f if s >= near and not none), "forum_as_the_answer": sum(1 for pid, s, none in f if s >= cut and not none),
+           "gold_right_as_the_answer": sum(1 for x, (pid, s, none) in zip(G, g) if s >= cut and pid == x["place"] and pid not in topic), "gold_wrong_as_the_answer": sum(1 for x, (pid, s, none) in zip(G, g) if s >= cut and not none and pid != x["place"] and pid not in topic),
+           "forum": len(forum), "forum_sent_to_a_place": sum(1 for pid, s, none in f if s >= near and not none), "forum_as_the_answer": sum(1 for pid, s, none in f if s >= cut and not none and pid not in topic),
            "forum_held_back_as_not_a_place": sum(1 for pid, s, none in f if s >= near and none),
-           "other": len(other), "other_sent_to_a_place": sum(1 for pid, s, none in o if s >= near and not none)}
+           "other": len(other), "other_sent_to_a_place": sum(1 for pid, s, none in o if s >= near and not none),
+           "other_read_as_about_drugs": sum(1 for pid, s, none in o if s >= near and not none and pid in topic)}   # (2.22) nearest to a part of the Big questions page: taken as a question about drugs
     if show:
         print(f"places by meaning: {out['places']} places, {out['ways']} ways; a place to look from {near}, the answer from {cut}")
         print(f"  the {len(G)} questions written for it: the right place {out['gold_right']}, a wrong place {out['gold_wrong_place']}, none {len(G) - out['gold_right'] - out['gold_wrong_place']}; as the answer: right {out['gold_right_as_the_answer']}, wrong {out['gold_wrong_as_the_answer']}")
@@ -988,7 +1022,7 @@ def evaluate(D, near=None):
     # the near-miss questions: (question, the answer it must not get), for answers on the page
     nm = [(q, a) for a, qs in sorted((near or {}).items()) if a in idset for q in qs]
     LN = looks([q for q, _ in nm]) if nm else []
-    def ranked(L): return R.tiers(L["plain"], L["topic"], L["groups"], lambda c: R.six(L, c))
+    def ranked(L): return R.tiers(L["plain"], L["topic"], L["groups"], lambda c: R.six(L, c), L.get("q"))
     for split, use in (("dev (odd-numbered)", lambda n: n % 2 == 1), ("test (even-numbered)", lambda n: n % 2 == 0), ("all", lambda n: True)):
         rs = [(t, L) for t, L in zip(tests, LG) if use(t[0])]
         nun = sum(t[4] for t, _ in rs); nf = sum(bool(t[2]) for t, _ in rs)

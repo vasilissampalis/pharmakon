@@ -380,7 +380,50 @@ const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {};
   const fresh = Object.keys(AUTO_SHELL).filter(k => !AUTO_SHOWN.some(a => a.page === "new:" + k));
   if (fresh.length) console.log("machine lane: " + fresh.length + " pages people asked about are shown as started, with no answer yet (" + Object.keys(AUTO_PICS).length + " pages have pictures the system found): " + fresh.map(k => AUTO_SHELL[k].name).join("; "));
 }
-const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
+/* (2.22, 18 November 2026; the senior author: "the site should include all valid drug websites worldwide for every site ... to give instant answers when it
+   does not have the answer ready".) OFFICIAL: for every drug of the site (and every page the system started), the pages of official bodies about it, from
+   the list the machine lane reads for its own answers (data/auto/official/index.json: addresses and titles only, made by scripts/auto/official.py where a
+   body's robots.txt allows it; sources.json names each body). The page shows them, as links, under a question it has no answer to (app.insight.js,
+   insOfficialHtml). Nothing here is our text: a body's own page about the drug (main: 1; the page says "<body> on <drug>") or a page of the body whose
+   address names the drug, under the body's own title for it.
+   { made, src: {body: [its name, its country]}, by: {slug | "new:" + slug: [[body, address, title or "", main]]} }: a drug's own pages first, one a body
+   (health services and agencies before information services, in the list's order), then up to thirty pages on a part of the subject. */
+const OFFICIAL = (() => {
+  const rj = (...p) => { try { return JSON.parse(fs.readFileSync(path.join(ROOT, ...p), "utf8")); } catch (e) { return null; } };
+  const idx = rj("data", "auto", "official", "index.json"), srcs = rj("data", "auto", "official", "sources.json"); if (!idx || !srcs) return null;
+  const meta = {}; (srcs.sources || []).forEach((s, n) => { meta[s.id] = Object.assign({ n }, s); });
+  const flat = s => String(s).toLowerCase().normalize("NFKD").replace(/\.(?:html?|aspx)$/, "").replace(/[^a-z0-9]+/g, " ").trim();
+  const JUNK = /^(?:skip\b|cookie|here'?s how you know|search$|menu$|home$|visit the\b|section on\b)/i;   // what a page's navigation says, where the reader took it for the title
+  const title = x => { const parts = String(x || "").split(" / ").map(s => s.replace(/[\u200b-\u200f\ufeff]/g, "").replace(/\s+/g, " ").trim()).filter(s => s && !JUNK.test(s)); let s = parts[0] || "";
+    if (s.length > 90) s = s.slice(0, 88).replace(/\s+\S*$/, "") + "\u2026"; return s && s === s.toLowerCase() ? s.charAt(0).toUpperCase() + s.slice(1) : s; };
+  const pages = [];
+  for (const [id, v] of Object.entries(idx.sources || {})) { const m = meta[id]; if (!m || !v || !Array.isArray(v.pages)) continue;
+    for (const pg of v.pages) { if (!pg || !/^https:\/\/[^\s"'<>]+$/.test(String(pg.u || ""))) continue; let seg = "", way = "";
+      try { const parts = new URL(pg.u).pathname.replace(/\/+$/, "").split("/"); way = flat(decodeURIComponent(parts.join(" "))); seg = parts.pop() || ""; if (/^index\b/i.test(seg)) seg = parts.pop() || ""; seg = flat(decodeURIComponent(seg)); } catch (e) { seg = ""; }
+      pages.push({ id, u: pg.u, seg, way, t: title(pg.t) }); } }
+  // everyday words that are also street names name nothing in an address; a few names bodies use that the site's own lists do not hold
+  const WEAK = new Set("drink pills crystal ice speed tabs brown lean glue toad robo balloons spice oat microdosing vaping pouches solvents butane acid coffee hash dabs edibles tina bufo salvia crack".split(" "));
+  const MORE = { psilocybin: ["magic mushrooms"], "prescription-opioids": ["opioids", "opioid painkillers", "prescription opioids"], nicotine: ["smoking", "vaping", "e cigarettes"], "alkyl-nitrites-and-inhalants": ["poppers", "inhalants", "volatile substances"],
+    "synthetic-cannabinoids": ["synthetic cannabis", "synthetic cannabinoids"], "nitrous-oxide": ["nitrous oxide"], "dmt-ayahuasca": ["dmt", "ayahuasca"], "salvia-divinorum": ["salvia divinorum"], cocaine: ["cocaine crack", "crack cocaine"] };
+  const FILL = new Set("and or the of a drug drugs facts about information info".split(" "));
+  const by = {}, used = new Set();
+  const add = (key, names) => {
+    names = [...new Set(names.map(flat).filter(n => n.length >= 3 && !WEAK.has(n)))]; if (!names.length) return;
+    const isMain = seg => !!seg && (names.includes(seg) || names.some(a => names.some(b => a !== b && seg === a + b)) ||
+      (names.some(n => seg === n || seg.startsWith(n + " ") || seg.endsWith(" " + n)) && seg.split(" ").every(w => FILL.has(w) || names.some(n => n.split(" ").includes(w)))));
+    const has = s => names.some(n => (" " + s + " ").includes(" " + n + " "));
+    const mains = {}, topics = [];
+    for (const pg of pages) { if (isMain(pg.seg)) { if (!mains[pg.id] || pg.u.length < mains[pg.id].u.length) mains[pg.id] = pg; } else if (pg.t && has(pg.way)) topics.push(pg); }
+    const order = (a, b) => (meta[a.id].tier || 9) - (meta[b.id].tier || 9) || meta[a.id].n - meta[b.id].n;
+    const rows = Object.values(mains).sort(order).map(pg => [pg.id, pg.u, "", 1]).concat(topics.sort(order).slice(0, 30).map(pg => [pg.id, pg.u, pg.t, 0]));
+    if (rows.length) { by[key] = rows; rows.forEach(r => used.add(r[0])); } };
+  for (const s of site("substances.json")) add(s.slug, [s.slug.replace(/-/g, " ")].concat(String(s.name).split(/[()\/,;]| and /), site("aliases.json")[s.slug] || [], MORE[s.slug] || []));
+  for (const [k, name] of Object.entries(startedPages)) add("new:" + k, [String(name).replace(/\s*\(.*\)$/, ""), k.replace(/-/g, " ")].concat(((AUTO_SHELL[k] || {}).science || []).map(x => x.name)));
+  const src = {}; used.forEach(id => { const m = meta[id]; src[id] = [m.name || (m.site && !/^(?:Government of|GOV\.)/i.test(m.site) ? m.site : m.author), m.country === "international" ? "" : m.country || ""]; });
+  const n = Object.keys(by).length; if (n) console.log("official pages: " + n + " drugs and started pages have pages of " + Object.keys(src).length + " official bodies to link to (" + Object.values(by).reduce((a, r) => a + r.length, 0) + " pages)");
+  return n ? { made: idx.made || "", src, by } : null;
+})();
+const data2 = data + "\nconst OFFICIAL = " + JSON.stringify(OFFICIAL) + ";\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
   ";\nconst AUTO_STATE = " + JSON.stringify(AUTO_STATE) + ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).

@@ -117,6 +117,8 @@ function insPrepare(d, vocabText) {
   INS.dim = d.dim; INS.ids = d.ids; INS.rows = d.rows; INS.wt = d.weights; INS.t = d.tiers; INS.judge = d.judge;
   INS.W = insRows(d.W, d.dim); INS.M = insRows(d.M, d.dim); INS.S = insRows(d.S, d.dim);
   INS.idx = new Map(d.ids.map((id, i) => [id, i]));
+  // (2.22) what a question asks about, where getting it wrong does harm (site/insight/model.json, aspects): [the question's pattern, each answer's mark]
+  INS.aspects = (d.aspects || []).map(a => ({ ask: new RegExp(a.ask, "i"), has: a.has, best: +a.best || 0, narrow: (a.narrow || []).map(([n, bits]) => ({ re: new RegExp(n, "i"), bits })), two: a.two || "" }));
   INS.about = d.about.map(xs => new Set(xs.map(k => d.slugs[k])));   // the drugs each answer is about
   // the names that name a drug in a question (build_index.py's names_table: the longest first), and the drugs each stands for
   INS.nameOf = new Map(d.names.map(([n, xs]) => [n, xs.map(k => d.slugs[k])]));
@@ -287,12 +289,17 @@ const INS_RE = {
     "\\b(?:is|are|'s|he'?s|she'?s|i'?m|am|friend|someone|they'?re)\\s+(?:\\w+\\s+)?having\\s+a\\s+(?:seizure|fit)\\b", "\\bseizing\\b",
     "\\b(?:is|am|are|i'?m|he'?s|she'?s|they'?re|might be|may be|could be)\\s+(?:\\w+\\s+)?overdosing\\b", "\\boverdosing\\s+(?:right\\s+)?now\\b", "\\bod'?ing\\b",
     "\\btoo high\\b", "\\bgreen(?:ing|ed)?\\s+out\\b", "\\bwhitey\\b", "\\bbad trip\\b.{0,24}\\bhelp\\b", "\\bhelp\\b.{0,24}\\bbad trip\\b", "\\bfreaking out\\b", "\\bturning blue\\b", "\\bblue lips\\b",
-    "\\bi think (?:i'?m|i am|he'?s|she'?s|they'?re) (?:dying|overdosing)\\b"].join("|"), "i"),
+    "\\bi think (?:i'?m|i am|he'?s|she'?s|they'?re) (?:dying|overdosing)\\b",
+    // (2.22) someone HAS overdosed ("how to help someone who overdosed" was told "Which drug do you mean?"; "how do i know if i overdosed" the same): the same route as "is overdosing"
+    "\\b(?:someone|somebody|friend|he|she|they|brother|sister|mom|mum|mother|dad|father|son|daughter|partner|boyfriend|girlfriend|husband|wife|roommate|flatmate|mate|buddy)\\b[^?.!]{0,24}\\b(?:overdosed|od'?e?d)\\b",
+    "\\b(?:i|i'?ve|we)\\s+(?:\\w+\\s+){0,3}(?:overdosed|od'?e?d)\\b"].join("|"), "i"),
   // "what do i do" is an emergency only beside a sign that something is happening now
   whatdo: /\bwhat (?:do|should|can|shall) (?:i|we) do\b/i,
   acute: /\b(?:just|right now|now|tonight|took|taken|ate|eaten|swallowed|drank|too much|too many|unwell|sick|shaking|sweating|overheat\w*|burning up|heart|chest|breath\w*|pass(?:ed|ing)? out|faint\w*|collaps\w*|seiz\w*|fitting|panic\w*|freak\w*|scared|terrified|bad trip|too high|overdos\w*|unconscious|unresponsive|blue|vomit\w*|throwing up|emergency|ambulance|help me)\b/i,
   // someone writing about ending their own life: the numbers, at once
-  self: /\b(?:i|i'?m|im|i am|i feel|feeling|me)\b[^?.!]{0,30}\bsuicid\w*|\bsuicid\w*\b[^?.!]{0,20}\b(?:myself|me|i)\b|\bkill(?:ing)? myself\b|\bwant(?:ing)? to die\b|\bend(?:ing)? my life\b|\bdon'?t want to (?:live|be alive|be here)\b/i,
+  // (2.22) also someone asking for the easiest or a painless WAY of dying. ("how can i die from ketamine", "how do you overdose on xanax" ask what the danger is: they are questions like any other)
+  self: new RegExp(["\\b(?:i|i'?m|im|i am|i feel|feeling|me)\\b[^?.!]{0,30}\\bsuicid\\w*", "\\bsuicid\\w*\\b[^?.!]{0,20}\\b(?:myself|me|i)\\b", "\\bkill(?:ing)? myself\\b", "\\bwant(?:ing)? to die\\b", "\\bend(?:ing)? my life\\b", "\\bdon'?t want to (?:live|be alive|be here)\\b",
+    "\\b(?:easiest|quickest|fastest|best|surest|simplest|painless)\\s+way\\s+to\\s+(?:die|go|kill\\s+(?:my|your)self|end\\s+(?:it|my\\s+life))\\b", "\\bpainless\\s+(?:death|suicide)\\b", "\\bend\\s+it\\s+all\\b"].join("|"), "i"),
   // a dose question: how much to take, which dose, an amount. Not a question about what a dose does ("what does one dose of
   // meth do", "after high doses of DXM"): those are answers the site has.
   dose: new RegExp([
@@ -440,7 +447,7 @@ function insWhere(mv, groups) {
   const m = X.meta[i], s = best[i]; if (m.none || s < X.near) return null;
   const one = groups.length === 1 && groups[0].length === 1 && subBySlug[groups[0][0]] ? groups[0][0] : null;
   if (m.part && one && INS_PART_T[m.part] && insPartHas(one, m.part)) return { kind: "part", icon: SEC_ICON[m.part] || m.icon, k: drugName(one), t: INS_PART_T[m.part](one), href: "#s-" + one + "/part-" + m.part, where: X.ids[i], s: +s.toFixed(4) };
-  return { kind: "go", icon: m.icon, k: m.k, t: m.t, href: m.href, where: X.ids[i], s: +s.toFixed(4) };
+  return Object.assign({ kind: "go", icon: m.icon, k: m.k, t: m.t, href: m.href, where: X.ids[i], s: +s.toFixed(4) }, m.topic ? { topic: true } : {});   // (2.22) topic: a part of the Big questions page
 }
 // the word of the glossary a question asks the meaning of ("what does tolerance mean", "define half-life", "bioavailability meaning"), or null
 function insTerm(q) {
@@ -661,7 +668,17 @@ function insJudge(f) {
   const J = INS.judge; let z = J.b; for (let i = 0; i < J.w.length; i++) z += J.w[i] * (f[i] - J.mu[i]) / J.sd[i];
   return 1 / (1 + Math.exp(-z));
 }
-function insTiers(sc, groups, X) {
+/* (2.22, 18 November 2026; the senior author: "it think it knows but it does not ... we have to make this function as accurate as it gets".) Measured that
+   evening: "can you die from nitrous oxide" got the answer on nerve damage as its best match with the judge at 0.93, "can you die from lsd" the answer on how
+   long LSD stays in the body. The judge sees how near an answer is and how far ahead of the next one, not WHAT is asked. So: where a question asks about
+   something that does harm when it is got wrong (dying: the index's aspects), an answer none of whose wordings speaks of it is never the best match. It
+   stays among the nearest answers, and the question is not answered. */
+// (and, for such a question: the judge's number at the aspect's own cut or more; no narrower case than the question names: an answer whose own question is about
+// withdrawal, touching, pregnancy or test strips, or about two drugs together, answers a question about dying only where the question says so too. ng: the drugs the question names)
+function insSpeaks(q, i, p, ng) {
+  return !q || !INS.aspects || INS.aspects.every(a => !a.ask.test(q) || (a.has.charAt(i) === "1" && p >= a.best && !a.narrow.some(n => n.bits.charAt(i) === "1" && !n.re.test(q)) && !(a.two && a.two.charAt(i) === "1" && ng < 2)));
+}
+function insTiers(sc, groups, X, q) {
   X = X || INS;
   const T = INS.t, wt = INS.wt, all = [];
   for (let i = 0; i < X.ids.length; i++) {
@@ -671,7 +688,7 @@ function insTiers(sc, groups, X) {
   all.sort((a, b) => b.key - a.key || a.i - b.i);
   const c = all[0]; let next = null; for (const x of all) if (x !== c && x.on && (next === null || x.by > next)) next = x.by;
   c.f = [sc.bw[c.i], Math.max(sc.bw2[c.i], 0), sc.sh[c.i], sc.lex[c.i], c.topic, c.by - (next === null ? 0 : next)]; c.p = insJudge(c.f);
-  const best = c.on && c.p >= INS.judge.best ? [c] : [];
+  const best = c.on && c.p >= INS.judge.best && (X !== INS || insSpeaks(q, c.i, c.p, groups.length)) ? [c] : [];
   return { first: c, best, related: all.filter(x => !best.includes(x) && x.plain >= T.related && x.topic >= T.near && x.some).slice(0, 3) };
 }
 /* 2.5 (15 November 2026; the senior author: "make the site understand on its own what the users want added in the website
@@ -921,11 +938,13 @@ async function insRank(query, ctx) {
   const answered = res.routes.some(r => r.kind !== "mix" && !r.loose), named = !res.drug && res.groups.length > 0, unf = insUnfinished(res.core, !!res.drug);
   if (!(whole && insWordsIn(res.core) < INS_WORDS)) {
     const drug = ctx && ctx.drug, tx = insTexts(res.core, drug), v = await insEmbed(tx.full), mv = tx.masked === tx.full ? v : await insEmbed(tx.masked);
-    const sc = insScore(v, mv, res.core), tiers = insTiers(sc, tx.groups);
+    const sc = insScore(v, mv, res.core), tiers = insTiers(sc, tx.groups, null, res.core);
     Object.defineProperty(res, "sc", { value: { bw: sc.bw, topic: sc.topic }, enumerable: false });   // (2.13) how near every answer is in meaning: for the word search's rows (insInject)
     const row = c => ({ id: INS.ids[c.i], page: insPageOf(INS.ids[c.i], tx.groups, drug), plain: +c.plain.toFixed(4), topic: +c.topic.toFixed(4), off: !c.on });
     res.best = tiers.best.map(row); res.related = res.emergency ? [] : tiers.related.map(row);   // an emergency gets its route and the answers that fit, nothing nearby
     res.judge = { id: INS.ids[tiers.first.i], p: tiers.first.p, f: tiers.first.f };              // (for the checks: the first candidate and the judge's number for it)
+    // (2.22) a best match the judge is not sure of (under judge.sure): it stands as the best match, and the page looks further by itself in case it is not what was asked (insAuto)
+    if (res.best.length && tiers.first.p < (INS.judge.sure || 0.8)) Object.defineProperty(res, "unsure", { value: true, enumerable: false, configurable: true, writable: true });
     // (2.15.2; the senior author, 17 November 2026, of his sent "is cocaethylene more dangerous than cocaine or alcohol alone?", hours on his
     // list: "will these be answered? ... this is disappointing". The site had the checked answer on cocaine with alcohol, which names
     // cocaethylene; the judge's number for it was under its cut, so it stood under "Related" and the page offered to send the question.)
@@ -966,7 +985,13 @@ async function insRank(query, ctx) {
     // a place to look under the line for a question we have not checked. A question that is not about drugs by its words is a question
     // about the site ("is my search private", "who checks this"): its place is the answer, in place of "not a question about drugs".
     if (res.where && !res.routes.some(r => r.href === res.where.href) && !(res.note === "other" && (INS_RE.greet.test(res.core) || INS_RE.about.test(res.core)))) {
-      const sure = !res.figMiss && (res.note === "other" || res.where.s >= INS.places.cut);   // (2.16.1: a count asked for a place we have no figure for is not answered by the statistics page)
+      /* (2.22, 18 November 2026. The senior author asked, in six words that name no drug, whether one sex uses more than the other, and was shown the part "Are women and men different?" as if it were the
+         answer, with nothing sent and nothing looked up, and wrote: "it think it knows but it does not".) A part of the Big questions page (topic) holds
+         several answers on a subject: it is never THE answer, however near; it is a place to look, and the question stays open: sent, and looked up. And
+         a question that names no drug and holds no drug word, but is nearest to such a part, is a question about drugs by its meaning (implied). */
+      const topic = !!res.where.topic;
+      if (topic && res.note === "other") { res.note = "none"; res.implied = true; }
+      const sure = !topic && !res.figMiss && (res.note === "other" || res.where.s >= INS.places.cut);   // (2.16.1: a count asked for a place we have no figure for is not answered by the statistics page)
       res.routes.push(sure ? res.where : Object.assign(res.where, { loose: true, way: true })); if (sure) res.note = ""; }
     if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); }
     else if (res.note === "none" && res.routes.some(r => r.named)) res.note = "";   // (2.11) a part of a drug's page asked for by name: the part is what we have
@@ -988,7 +1013,9 @@ async function insRank(query, ctx) {
 const insKey = (q, ctx) => insClean(q).toLowerCase() + "|" + ((ctx && ctx.drug) || "");
 function insAnswer(q, ctx) {
   const key = insKey(q, ctx), have = INS.cache.get(key); if (have) return Promise.resolve(have);
-  return insRank(q, ctx).then(res => { INS.cache.set(key, res); if (INS.cache.size > 60) INS.cache.delete(INS.cache.keys().next().value); return res; });
+  // (2.22) a question the reader said the page's answer does not answer: as long as that same answer is what the page would give, it is read as not answered
+  return insRank(q, ctx).then(res => { const x = insDeniedFor(res.q); if (x && insTaken(res) === x) res = insDenied(res);
+    INS.cache.set(key, res); if (INS.cache.size > 60) INS.cache.delete(INS.cache.keys().next().value); return res; });
 }
 // the page the reader is on: a drug's page (or its research page) makes a question about that drug
 function insCtx() {
@@ -1085,16 +1112,85 @@ function insRowHtml(x, best) {
   return '<a class="sr-ans sr-fit-a' + (best ? " sr-best" : "") + '" href="' + esc(answerAddr(x.id, x.page)) + '" data-insight="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(insQ(x.id, x.page)) +
     '</span><span class="a">' + (best ? cueNum(esc(sp.short)) : esc(glanceClause(sp.short))) + '</span><span class="m">' + meterHtml(c.grade.certainty, true) + "</span></a>";
 }
+/* ---------- When the site does not have the answer, and when it only thinks it has (site 2.22, 18 November 2026) ----------
+   The senior author, 22:15 Athens, with two pictures. Of a question whether one sex uses more than the other, shown a part of the Big questions page as if it were the answer:
+   "the user is asking something that the site does not understand! because it guessed wrong in this instance! it think it knows but it does not. the app
+   should understand that this is a question it does not know". Of a question how many people die from heroin in one country, told "No answer yet" with a figure for the EU
+   and related answers: "there should be instant searches available at least when the user is waiting for his/her answer! but then what would happen with
+   the relevant statistics or claims? should they hide under an arrow? what's the best design"; "what is the best design for when the app thinks it knows
+   but it does not? should it change to instant search results and pend the answer inside the website? and if yes, how can it change simply and perfectly
+   for the user"; "the users want to know fast we live in the day of scrolling and fast rewards".
+   One layout for every question the site has no answer of its own to, read from the top:
+     1. one line that says so, and that the question was sent (insNoneHtml);
+     2. the nearest things we HAVE CHECKED: the official figures first, then up to three answers ("Closest answers we have"). They are there at once and
+        they are checked, so they stand above what is only found;
+     3. the published research on the question, found at that moment (insAutoFind). It arrives a moment later, so it stands BELOW what is already on the
+        screen: nothing a reader has begun to read is pushed away;
+     4. the pages of official bodies about the drug (insOfficialHtml);
+     5. a place of the site to look in; the word search's own rows behind "More results".
+   Nothing is hidden behind an arrow: each block is short, and a longer list shows its first rows with a plain "Show all".
+   And under everything the page takes for THE answer (a best match, an official figure, a place found by meaning) stands the way out, one line: "Not what
+   you asked? Search wider". One tap and the same question is read as not answered: what stood there as the answer becomes the nearest thing we have, the
+   question is sent, and the research is looked up, all in place (insNotIt). */
+// is this a question the site has no answer of its own to, which is sent and looked up?
+const insOpen = res => !!res && (res.note === "none" || res.note === "want" || (res.note === "other" && !!res.stranger));
+// what the page takes for the answer: a best match's id, or the address of an official figure or of a place found by meaning; "" where it claims none
+function insTaken(res) {
+  if (!res || res.note || res.emergency) return "";
+  if (res.best && res.best.length) return res.best[0].id;
+  const r = (res.routes || []).find(x => !x.loose && !x.way && (x.kind === "figure" || (x.where && x.where !== "doses")));
+  return r ? r.href : "";
+}
+// the way out is offered for a whole question about drugs
+function insExitHtml(res, sheet) {
+  if (!insTaken(res) || insWordsIn(res.q) < INS_WORDS || !(res.drug || (res.groups && res.groups.length) || insScope(res.core || res.q))) return "";
+  return '<p class="' + (sheet ? "ins-exit" : "sr-exit") + '">Not what you asked? <button type="button" class="linklike" data-ins-notit>Search wider</button></p>';
+}
+// the same question, read as not answered: what was taken for the answer becomes the nearest thing we have (denied: what it was)
+function insDenied(res) {
+  const taken = insTaken(res); if (!taken) return res;
+  const r2 = Object.assign({}, res, { note: "none", denied: taken, best: [], related: res.best.concat(res.related).slice(0, 3),   // (unsure is not carried over: it is not enumerable)
+    routes: res.routes.map(r => (!r.loose && !r.way && (r.kind === "figure" || r.where)) ? Object.assign({}, r, { loose: true, way: true }) : r) });
+  delete r2.want;
+  if (res.sc) Object.defineProperty(r2, "sc", { value: res.sc, enumerable: false });
+  return r2;
+}
+// a question the reader has said the page's answer does not answer (kept with the question on the reader's own list): what that answer was, or ""
+function insDeniedFor(q) { const k = insClean(q).slice(0, 200).toLowerCase(), it = askedList().find(x => x.k === k && x.x); return it ? String(it.x) : ""; }
+const insWaysHtml = (h, rs, at) => (rs.length ? '<p class="sr-fit-h"' + (at ? ' data-at="' + at + '" data-n="' + rs.length + '"' : "") + ">" + h + "</p>" + rs.map(r => insRouteHtml(r, "sr-route sr-way")).join("") : "");
+/* (2.22) What stands below, named in one row under the line: "Figures 1", "Closest answers 3", "Research 5", "Official pages 7". Each leads to its block.
+   Nothing is hidden and nothing moves: the row only saves the scrolling, and says at a glance that there IS research and official pages further down
+   (they stand below the checked things, and arrive a moment later). Drawn from what is on the page (insJump), again whenever a block arrives. */
+function insJump(root) {
+  const row = root ? root.querySelector(".ins-jump") : null; if (!row) return;
+  const n = el => (el ? +el.dataset.n || 0 : 0), figs = root.querySelector('[data-at="figs"]'), near = root.querySelector('[data-at="near"]');
+  const found = root.querySelector('.ins-slot[data-slot="found"] .ins-found'), off = root.querySelector('.ins-slot[data-slot="official"] .ins-off');
+  const papers = found ? found.querySelectorAll(".ins-found-l li").length : 0, looking = !!found && !found.querySelector(".ins-found-l") && /Looking|Still looking/.test(found.textContent || "");
+  const parts = [];
+  if (figs) parts.push(["figs", "Figures", n(figs)]);
+  if (near) parts.push(["near", "Closest answers", n(near)]);
+  if (found && (papers || looking)) parts.push(["found", "Research", looking ? "\u2026" : papers]);
+  if (off) parts.push(["official", "Official pages", off.querySelectorAll(".ins-off-l li").length]);
+  row.hidden = parts.length < 2;
+  row.innerHTML = row.hidden ? "" : parts.map(([k, l, c]) => '<button type="button" class="chip" data-jump="' + k + '">' + l + ' <span class="ins-jump-n">' + c + "</span></button>").join("");
+}
+if (typeof document !== "undefined") document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button[data-jump]"); if (!b) return;
+  e.preventDefault(); e.stopPropagation(); const root = b.closest(".sr-fit, .ins"), k = b.dataset.jump; if (!root) return;
+  const el = k === "found" || k === "official" ? root.querySelector('.ins-slot[data-slot="' + k + '"]') : root.querySelector('[data-at="' + k + '"]'); if (!el) return;
+  const calm = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  el.scrollIntoView({ block: "start", behavior: calm ? "auto" : "smooth" });
+  const h = el.matches(".ins-slot") ? el.querySelector(".ins-found-h, .ins-found-n") || el : el; h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }, true);
 function insFitHtml(res) {
-  // (2.11) a place the question only points towards stands last, under its own small heading: the answers found come first
   const routes = res.routes.filter(r => !r.way).map(r => insRouteHtml(r, "sr-route")).join("") + (res.emergency ? insSosHtml("sr-sos") : "");
-  const ways = res.routes.filter(r => r.way).map(r => insRouteHtml(r, "sr-route sr-way")).join("");
+  // (2.16.1) a count asked for a place we hold no figure for: the figures from other places stand right under the line that says so.
+  // (2.11) a place the question only points towards stands last, under its own small heading
+  const ways = res.routes.filter(r => r.way), figs = ways.filter(r => r.kind === "figure"), look = ways.filter(r => r.kind !== "figure"), open = insOpen(res);
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
   const none = insNoneHtml(res, false);
-  const related = res.related.length ? '<p class="sr-fit-h">' + (res.note === "unfinished" ? "You may mean" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
-  // (2.16.1) a count asked for a place we hold no figure for: the figures from other places stand right under the line that says so
-  const far = ways ? '<p class="sr-fit-h">' + (res.figMiss ? "Figures we do have" : "A place to look") + "</p>" + ways : "";
-  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + none + (res.figMiss ? far + related : related + far) + '<button type="button" class="sr-fit-h sr-words" hidden aria-expanded="false">More results</button></div>';
+  const related = res.related.length ? '<p class="sr-fit-h"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + ">" + (res.note === "unfinished" ? "You may mean" : open ? "Closest answers we have" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
+  return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + insExitHtml(res, false) + none + (open ? '<p class="ins-jump" hidden></p>' : "") + insWaysHtml("Figures we do have", figs, open ? "figs" : "") + related +
+    (open || res.unsure ? '<div class="ins-slot" data-slot="found"></div><div class="ins-slot" data-slot="official"></div>' : "") + insWaysHtml("A place to look", look) +
+    '<button type="button" class="sr-fit-h sr-words" hidden aria-expanded="false">More results</button></div>';
 }
 // what a screen reader hears when the answers arrive: the route, the tier, the question matched
 function insSay(res) {
@@ -1140,7 +1236,7 @@ function insInject(box, res) {
     if (!words.hidden) { more.forEach(a => { a.hidden = true; }); words.textContent = "More results (" + more.length + ")"; words.setAttribute("aria-expanded", "false");
       words.onclick = e => { e.preventDefault(); e.stopPropagation(); const open = words.getAttribute("aria-expanded") !== "true"; more.forEach(a => { a.hidden = !open; }); words.setAttribute("aria-expanded", String(open)); words.textContent = (open ? "Fewer results" : "More results (" + more.length + ")"); }; } }
   const live = document.getElementById("search-count"); if (live) live.textContent = insSay(res);
-  insAuto(box.querySelector(".sr-fit"), res, false);   // (2.16.1) with no answer of ours: what is published on it, looked up by itself
+  insAuto(box.querySelector(".sr-fit"), res, !!res.now);   // (2.16.1) with no answer of ours: what is published on it, looked up by itself (2.22: at once where the reader pressed "Search wider")
   histSoon(res);                                              // (2.21) a question that stays in the box is kept among the reader's past searches, on this device
   // 2.5: a listed question that stays on the screen is counted once (wantCount), only where its card says so
   clearTimeout(INS.wantT);
@@ -1169,6 +1265,21 @@ function insShort(box, q) {
   if (note) note.insertAdjacentHTML("afterend", html); else box.insertAdjacentHTML("afterbegin", html);
   const live = document.getElementById("search-count"); if (live) live.textContent = insUnfinText(res).join(" ");
 }
+/* (2.22) "Not what you asked? Search wider": the reader says that what the page took for the answer is not what they asked. The same question is then read
+   as not answered, in place: what stood as the answer becomes the first of the nearest things we have, the question is sent (with what was denied, so that
+   the system learns which answer does not answer it), and the published research is looked up at once. Kept for this visit; and, with the question on the
+   reader's own list, for as long as that same answer is all the page would give. */
+function insNotIt(b) {
+  const sheet = b.closest("#evsheet");
+  if (sheet) { const v = INS.view; if (!v || v.kind !== "asked" || !insTaken(v.res)) return;
+    const r2 = insDenied(v.res); r2.now = true; INS.cache.set(insKey(r2.q, insCtx()), r2); insDraw({ kind: "asked", res: r2 }, EV.opener); return; }
+  const s = document.getElementById("search"), box = document.getElementById("search-results"); if (!s || !box || !b.closest(".sr-fit")) return;
+  const key = insKey(s.value, insCtx()), res = INS.cache.get(key); if (!res || !insTaken(res)) return;
+  const r2 = insDenied(res); r2.now = true; INS.cache.set(key, r2); INS.seq++; clearTimeout(INS.timer);
+  runSearch(s.value);
+  const line = box.querySelector(".sr-fit .sr-fit-none"); if (line) { line.setAttribute("tabindex", "-1"); line.focus({ preventScroll: true }); }
+}
+if (typeof document !== "undefined") document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button[data-ins-notit]"); if (!b) return; e.preventDefault(); e.stopPropagation(); insNotIt(b); }, true);
 // called by runSearch after the word search has drawn its results
 function insightAfterSearch(raw) {
   const box = document.getElementById("search-results"); if (!box || box.hidden) return;
@@ -1316,17 +1427,20 @@ function insHtml(v) {
     return insBar(icon(w.f.icon) + "<span>" + esc(w.name) + "</span>") + '<div class="ins' + (v.depth ? " ins-" + v.depth : "") + '"><h2 id="ev-title" tabindex="-1">' + esc(insQ(v.id, v.page)) + "</h2>" + (v.sos ? insSosHtml("dh-help ins-sos") : "") +
       '<div class="ins-ans">' + insBodyHtml(v.id, v.depth) + "</div>" + insPageLink(v.id, v.page) + insTailHtml([v.id], [v.id]) + "</div>";
   }
-  const res = v.res, away = r => !!(res.figMiss && r.way), routes = res.routes.filter(r => !away(r)).map(r => insRouteHtml(r, "ins-route")).join("") + (res.emergency ? insSosHtml("dh-help ins-sos") : "");
-  const ways = res.routes.filter(away).map(r => insRouteHtml(r, "ins-route")).join("");
+  // (2.22) the same order as in the list (insFitHtml): what answers; the line; the figures we have; the nearest answers; what is found; a place to look
+  const res = v.res, open = insOpen(res), figs = res.routes.filter(r => r.way && r.kind === "figure"), look = res.routes.filter(r => r.way && r.kind !== "figure");
+  const routes = res.routes.filter(r => !r.way).map(r => insRouteHtml(r, "ins-route")).join("") + (res.emergency ? insSosHtml("dh-help ins-sos") : "");
+  const ways = figs.map(r => insRouteHtml(r, "ins-route")).join(""), places = look.map(r => insRouteHtml(r, "ins-route")).join("");
   const best = res.best.map((x, n) => { const w = mfWhere(x.page);
     return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written by our system" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
   const none = insNoneHtml(res, true);
-  const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"><p class="rn-k">' + (res.note === "unfinished" ? "You may mean" : "Related") + '</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
+  const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + '><p class="rn-k">' + (res.note === "unfinished" ? "You may mean" : open ? "Closest answers we have" : "Related") + '</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
     return '<li><a href="' + esc(answerAddr(x.id, x.page)) + '" data-insight-next="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span><span class="ins-rel-k">' + esc(w.name) + "</span>" + esc(insQ(x.id, x.page)) + "</span>" + icon("arrow") + "</a></li>"; }).join("") + "</ul></div>" : "";
   const from = (res.best.length ? res.best : res.related).map(x => x.id), shown = res.best.concat(res.related).map(x => x.id);
   return insBar("<span>Your question</span>") + '<div class="ins ins-asked' + (res.depth ? " ins-" + res.depth : "") + '"><h2 id="ev-title" class="ins-yours" tabindex="-1">' + esc(insCap(res.q.length > 240 ? res.q.slice(0, 237) + "…" : res.q)) + "</h2>" +
-    insReadHtml(res, "ins-read") + routes + best + none + (ways ? '<p class="rn-k ins-ways-h">Figures we do have</p>' + ways : "") + related + insTailHtml(from, shown, res.groups) + "</div>";
+    insReadHtml(res, "ins-read") + routes + best + insExitHtml(res, true) + none + (open ? '<p class="ins-jump" hidden></p>' : "") + (ways ? '<p class="rn-k ins-ways-h"' + (open ? ' data-at="figs" data-n="' + figs.length + '"' : "") + ">Figures we do have</p>" + ways : "") + related +
+    (open || res.unsure ? '<div class="ins-slot" data-slot="found"></div><div class="ins-slot" data-slot="official"></div>' : "") + (places ? '<p class="rn-k ins-ways-h">A place to look</p>' + places : "") + insTailHtml(from, shown, res.groups) + "</div>";
 }
 function insDraw(v, opener) {
   const sh = document.getElementById("evsheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
@@ -1660,7 +1774,8 @@ async function askedCheck() {
     try { const res = await insRank(it.q, { drug: it.d && subBySlug[it.d] ? it.d : null });
       // (2.10.1) answered by a checked answer, or by a place on the site that is the answer ("are drugs legal in greece": Greece on the page of treaties)
       const rt = res.note ? null : res.routes.find(r => r.kind !== "mix" && !r.loose);
-      if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
+      if (it.x && insTaken(res) === it.x) { /* (2.22) the very answer the reader said is not theirs: the question still waits */ }
+      else if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
       else if (rt) { it.st = "ans"; it.h = rt.href; }
       else if (res.want && !it.w && it.sent) it.w = res.want.id;   // (2.9) sent, not answered yet, and now on our list: its row says so
       else if (!it.w && it.sent) { const pg = res.routes.find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;   // (2.15.2) about a drug whose page the system started: the question listed on that page is the one it waits for
@@ -1750,17 +1865,40 @@ const FIND_STOP = new Set(("what when where which while with would could should 
   // (2.21) a question that names no single drug is asked in everyday words that stand in no title: left out, so that the words that do are found
   "worry worries worried worrying whether likely more less most least really often sometimes always never kind sort lots little bigger smaller start starts started starting begin begins began " +
   // (2.21.2, after the twelfth trial: "why do some people get addicted and others don't" asked for papers that hold "others")
-  "others other another else everyone everybody anybody nobody somebody every").split(" "));
+  "others other another else everyone everybody anybody nobody somebody every " +
+  // (2.22) "is use more common among men than women": what is asked about is men and women
+  "among amongst common commonly " +
+  // (2.22) how often is no subject ("how many people die from it each year in greece" is about deaths, and Greece)
+  "each year years yearly annual annually per").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
 const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
   kids: "children|adolescents", kid: "children|adolescents", teens: "adolescents", teen: "adolescents", teenagers: "adolescents", teenager: "adolescents", teenage: "adolescents", moms: "maternal|mothers", mom: "maternal|mothers", mums: "maternal|mothers", mum: "maternal|mothers", mothers: "maternal", mother: "maternal", dads: "paternal|fathers", dad: "paternal|fathers", fathers: "paternal", father: "paternal", parents: "parental", parent: "parental", families: "family",
   creative: "creativity", lonely: "loneliness", poor: "poverty", genes: "genetic", inherited: "genetic", hereditary: "genetic", psychology: "psychological",
   pregnant: "pregnancy", baby: "infants", babies: "infants", breastfeeding: "lactation", breastfeed: "lactation",   // (2.21.2, after the twelfth trial)
+  // (2.22) dying and overdose, as papers say them (asked for by title only: FIND_DEATH); women and men
+  die: "mortality|deaths|fatal", dies: "mortality|deaths|fatal", died: "mortality|deaths|fatal", dying: "mortality|deaths|fatal", death: "mortality|deaths|fatal", deaths: "mortality|deaths|fatal", dead: "mortality|deaths|fatal", deadly: "mortality|deaths|fatal",
+  fatal: "mortality|deaths|fatal", fatally: "mortality|deaths|fatal", fatalities: "mortality|deaths|fatal", mortality: "mortality|deaths|fatal", overdose: "overdose|overdoses|poisoning", overdoses: "overdose|overdoses|poisoning", overdosed: "overdose|overdoses|poisoning", overdosing: "overdose|overdoses|poisoning",
+  avoid: "prevention|prevent", avoiding: "prevention|prevent", men: "men|male", man: "men|male", males: "men|male", male: "men|male", women: "women|female", woman: "women|female", females: "women|female", female: "women|female", boys: "boys|male", girls: "girls|female", gender: "gender|sex",
   hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
   horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "renal", kidney: "renal", lungs: "pulmonary", lung: "pulmonary", heart: "cardiac", liver: "hepatic", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover",
   eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite" };   // (2.19: short words that are the very thing asked about)
-// never looked up: dying, overdose, suicide, amounts
-const FIND_HELD = /\b(suicid\w*|self-?harm\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+// never looked up: suicide and self-harm, amounts (until 2.21.3 also every question with a word about dying or overdose: see FIND_DEATH)
+const FIND_HELD = /\b(suicid\w*|self-?harm\w*|lethal|ld50|dos(e|es|age|ing)|mg|mcg|milligrams?|grams?|micrograms?)\b/i;
+/* (2.22, 18 November 2026, 22:15 Athens. The senior author asked how many people die from heroin in one country, got "No answer yet" with a figure for the EU and
+   no research, and wrote: "in general for question it does not know there should be instant searches available at least when the user is waiting".)
+   A question of FACT about dying or overdose is looked up now, and its papers are listed BY TITLE ONLY, with no words of theirs (the rule that picks a
+   paper's own words shows nothing about dying: site/worker/_worker.js, rule 6; and the server shows none for such key words: noq).
+   Still never looked up (FIND_DEATH_NOT): ending one's own life or another's by one's own hand; a way of dying asked for on purpose ("painless", "the easiest
+   way", "on purpose"); an amount ("how much ... kills", "too much", "how many pills"). The page says in one line that it does not look such a question up,
+   with the way to the emergency numbers. "How can you die from ketamine" asks what the danger is: it is looked up like any question about dying. */
+const FIND_DEATH = /\b(kill\w*|die[sd]?|dying|deaths?|dead|deadly|mortalit\w*|overdos\w*|fatal\w*|ods?)\b/i;
+const FIND_DEATH_NOT = new RegExp(["\\b(?:my|your|him|her|them|our|one)sel(?:f|ves)\\b", "\\b(?:end|ending|ended|take|taking|took)\\s+(?:my|your|his|her|their|one'?s)\\s+(?:own\\s+)?li(?:fe|ves)\\b",
+  "\\bwant(?:s|ed|ing)?\\s+to\\s+die\\b", "\\bwish\\b[^?.!]{0,20}\\bdead\\b", "\\bpainless\\w*", "\\b(?:easiest|quickest|fastest|best|surest|simplest)\\s+way\\s+to\\s+(?:die|kill|overdose|od|end|go)\\b",
+  "\\b(?:on\\s+purpose|intentional\\w*|deliberate\\w*|purposely|without\\s+(?:pain|suffering|anyone\\s+knowing))\\b",
+  "\\btoo\\s+(?:much|many)\\b", "\\b(?:amounts?|quantit(?:y|ies))\\b", "\\bhow\\s+much\\b(?!\\s+(?:more|less|higher|lower|likelier|greater|bigger|smaller|of\\s+a)\\b)",
+  "\\bhow\\s+many\\s+(?:pills?|tablets?|tabs?|capsules?|caps|lines?|hits?|drops?|puffs?|bumps?|drinks?|beers?|shots?|joints?|bags?|units?)\\b"].join("|"), "i");
+// a word about dying where it is said of something else ("does alcohol kill brain cells", "kill the pain", "kills your appetite"): not a key word, and no word about dying
+const FIND_KILL_THING = /\bkill(?:s|ed|ing)?\s+(?!you\b|people\b|someone\b|somebody\b|anyone\b|anybody\b|a\s+person\b|persons\b|humans?\b|users?\b|me\b|him\b|her\b|them\b|us\b|kids?\b|children\b|teens?\b|adults?\b|men\b|women\b|patients?\b|more\b|most\b|many\b|so\b|[?.!]|$)/i;
 /* (2.21, 18 November 2026, 13:38 and 13:40 Athens. The senior author asked how mothers' psychology affects whether their children take drugs, got "No answer yet"
    with two related answers and no research, and wrote: "related questions are useful in this instance just not exactly what i was looking for ... so we have to
    give instant search on this instance too".) Two kinds of question that were not looked up before are looked up now, and for both the papers are listed BY TITLE
@@ -1778,8 +1916,11 @@ const FIND_GENERAL = /\b(?:drugs|substances|narcotics|getting high|get high|bein
    a question about drugs that names none we know, the first word that is no everyday word, nor one made from one ("addictive", "migraines").
    The key words: from the question with the drugs' names taken out by whatever name was used (insMask: "magic" of "magic mushrooms" is no key
    word), without the words that stand in every summary; an everyday word goes with the word papers use for it ("hungry": appetite). */
+const insFindShut = res => !res || !!res.emergency || FIND_HELD.test(res.q || "") || (res.routes || []).some(r => r.kind === "help" || r.kind === "dose" || r.kind === "mix" || r.where === "doses" || r.where === "mixing") ||
+  (FIND_DEATH.test(res.q || "") && FIND_DEATH_NOT.test(res.q || ""));   // (2.22) what is never looked up
 function insFindTerms(res) {
-  if (!res || res.emergency || FIND_HELD.test(res.q || "") || (res.routes || []).some(r => r.kind === "help" || r.kind === "dose" || r.kind === "mix")) return null;
+  if (insFindShut(res)) return null;
+  const death = FIND_DEATH.test(res.q || "") && !(/\bkill/i.test(res.q || "") && FIND_KILL_THING.test(res.q || "") && !FIND_DEATH.test(String(res.q || "").replace(/\bkill\w*/gi, " ")));   // (2.22) a question about dying or overdose: by title only
   const norm = s => String(s || "").toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim();
   // names: what the search is for. also: what the drug's page is called, where the reader named a drug of its own ("xanax": benzodiazepines), asked for by the
   // server only where the reader's own name finds too little. extra: a second drug named in the question, which is a key word of it
@@ -1800,8 +1941,13 @@ function insFindTerms(res) {
   if (sh) { add(names, sh.name); (sh.science || []).forEach(x => add(names, x.name)); }
   if (!names.length && res.stranger) add(names, res.stranger);
   // (2.21) a question about drugs in general: what research calls the subject stands in the place of a drug's name
-  const general = !names.length && res.note !== "other" && FIND_GENERAL.test(text);
+  // (2.22) also a question that names no drug and holds no drug word, but is about drugs by its meaning (insRank: implied: "is use more common among men than women")
+  // and one about who uses more or less, which the scope rule reads as drug talk ("do women use less than men")
+  const general = !names.length && res.note !== "other" && (FIND_GENERAL.test(text) || !!res.implied || /\b(?:use[sd]?|using|users?)\b/.test(text));
   if (general) (/\baddict|\bdependen|\bhooked\b/.test(text) ? ["addiction", "substance use disorder"] : ["drug use", "substance use"]).forEach(x => add(names, x));
+  // (2.22) overdose, with no drug named ("how many people overdose in greece", "how do i avoid an overdose"): what research calls it stands in the place of a name
+  const od = !names.length && res.note !== "other" && /\boverdos/.test(text);
+  if (od) ["drug overdose", "overdose"].forEach(x => add(names, x));
   // (2.21.2, after the twelfth trial: "does drinking while breastfeeding harm the baby" was looked up under the name "breastfeeding") drinking, with no drug named, is alcohol
   const DRINK = /^(?:drinking|drinks?|drunk|drank|booze|boozing)$/, drink = !names.length && res.note !== "other" && (text.match(/[a-z]+/g) || []).some(w => DRINK.test(w));
   if (drink) add(names, "alcohol");
@@ -1815,14 +1961,17 @@ function insFindTerms(res) {
   // every summary and is no key word; "help you study", "for studying", "with exams" is asked as what papers call it
   const acad = /\b(?:study(?:ing)?\s+(?:for|better|longer|harder|drugs?|aids?|pills?)|(?:you|me|us|them|people|students|i)\s+study(?:ing)?|(?:to|and)\s+study(?:ing)?\b(?!\s+(?:of|on|about|that|which|shows?|found|says?))|studying|exams?|finals|homework|revising|revision|grades)\b/.test(masked);
   if (acad) words.push("academic|cognitive|students");
-  for (const w0 of masked.match(/[a-z]{3,}/g) || []) { const say = FIND_SAY[w0];
+  for (const w0 of masked.match(/[a-z]{3,}/g) || []) { let say = FIND_SAY[w0];
+    if (/^kill/.test(w0)) { if (!death) continue; say = FIND_SAY.die; }                        // (2.22) "kill" said of people: asked as papers say it; said of a thing: no key word
+    if (od && /^overdos/.test(w0)) continue;                                                   // (2.22) the subject itself is no key word
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
     if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
     if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0))) continue;
     const e = say && say !== w0 ? say + "|" + w0 : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
     if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }
-  if (general && words.length > 3) words.length = 3;          // (2.21) a question in everyday words about drugs in general: its first three key words (every key word must stand in a paper)
+  if ((general || od) && words.length > 3) words.length = 3;   // (2.21) a question in everyday words about drugs in general: its first three key words (every key word must stand in a paper)
+  if (od && !words.length) return null;                       // (2.22) nothing to look for beyond "overdose" itself
   // (2.21.2) "why do people take drugs" has no key word of its own; the eleventh trial found the papers on it under what research calls the reasons
   if (general && !words.length && names[0] === "drug use" && /^\s*why\b/.test(text)) words.push("motives|reasons");
   if (general && !words.length) return null;                 // (2.21) nothing to look for beyond "drug use" itself
@@ -1831,7 +1980,7 @@ function insFindTerms(res) {
   if (!general && words.length > 2 && FIND_TITLES.test(res.q || "")) { const fam = words.filter(x => FIND_TITLES.test(x.replace(/\|/g, " "))), rest = words.filter(x => !fam.includes(x)); words.splice(0, words.length, ...fam.concat(rest).slice(0, 2)); }
   // (2.20) "what is X": the server then looks for the sentence that says what the drug is
   const def = !words.length && /^(?:so )?(?:what(?:'s| is| are| exactly is| the hell is)|whats|wtf is)\b/.test(text.trim());
-  return Object.assign({ names: names.slice(0, 6), words }, also.length ? { also: also.slice(0, 4) } : {}, def ? { def: 1 } : {}, general || FIND_TITLES.test(res.q || "") ? { t: 1 } : {});   // t: titles only
+  return Object.assign({ names: names.slice(0, 6), words }, also.length ? { also: also.slice(0, 4) } : {}, def ? { def: 1 } : {}, general || od || death || FIND_TITLES.test(res.q || "") ? { t: 1 } : {});   // t: titles only
 }
 // the name papers use for a name people use (a brand, a street name): asked for beside it
 const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clonazepam", ativan: "lorazepam", ambien: "zolpidem", adderall: "amphetamine", ritalin: "methylphenidate", concerta: "methylphenidate", vyvanse: "lisdexamfetamine",
@@ -1840,7 +1989,7 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
 /* (2.20) Each paper may come with at most 15 of its own words on the question, cut by fixed rules on the server from the end of its summary, where papers
    say what they found (site/worker/_worker.js, iaPick): no model reads or writes anything. They stand in quotation marks under the paper's title, so that
    they are read as that paper's and in its frame; where they are about animals or cells, the line says so. */
-function insFoundHtml(d) {
+function insFoundHtml(d, all) {
   if (!d || !d.ok || d.held) return "";
   /* (2.21.1, 18 November 2026, 15:40 Athens: Europe PMC took 25 seconds a search that afternoon, and the page, having asked three times in eleven seconds, said
      "nothing was found on these words" of a question with 78 papers.) "Nothing was found" is said only where the searches came back and found nothing. While
@@ -1850,10 +1999,13 @@ function insFoundHtml(d) {
     : d.late || d.down ? '<p class="ins-found-n">Europe PMC, the open index of medical research we search, did not answer just now, so we cannot say yet what is published on this. <button type="button" class="linklike" data-find-again>Look again</button></p>'
     : '<p class="ins-found-n">We looked in Europe PMC, an open index of medical research, just now: nothing was found on these words.</p>';
   const said = d.papers.some(p => typeof p.q === "string" && p.q);
-  return '<p class="ins-found-h">Published research on this, found just now</p><ul class="ins-found-l">' + d.papers.map(p => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
-    return '<li><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" · ")) + "</span>" +
+  // (2.22) a longer list shows its first four with a plain "Show all" (all: the reader has pressed it); a list is never cut for one paper
+  const cut = !all && d.papers.length > 5 ? 4 : d.papers.length;
+  return '<p class="ins-found-h">Published research on this, found just now</p><ul class="ins-found-l">' + d.papers.map((p, n) => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
+    return "<li" + (n >= cut ? " hidden" : "") + '><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" · ")) + "</span>" +
       (typeof p.q === "string" && p.q ? '<span class="pq">“' + esc(p.q) + '”' + (p.an === 1 ? '<span class="pq-an"> in animals or cells, not in people</span>' : p.an === 2 ? '<span class="pq-an"> its summary covers work in animals or cells too</span>' : "") + "</span>" : "") + "</li>"; }).join("") +
-    "</ul>" + (d.more ? '<p class="ins-found-n ins-found-w">Still looking for the most cited papers on this\u2026</p>' : "") + '<p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.' +
+    "</ul>" + (cut < d.papers.length ? '<p class="ins-found-n ins-all"><button type="button" class="linklike" data-show-all>Show all ' + d.papers.length + "</button></p>" : "") +
+    (d.more ? '<p class="ins-found-n ins-found-w">Still looking for the most cited papers on this\u2026</p>' : "") + '<p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.' +
     (said ? " The words in quotation marks are each paper’s own, from the end of its summary: a fixed rule picked them, not a person, and they are not an answer of ours." : "") +
     (d.titles && !said ? " For a question like this one we list the papers only, with no words from them." : "") +
     (d.late ? ' Europe PMC answered slowly just now, so this list may not be whole. <button type="button" class="linklike" data-find-again>Look again</button>' : "") + "</p>";
@@ -1894,22 +2046,61 @@ function insFindGet(terms, onMore) {
 }
 // what is looked up for a result: nothing when we have an answer of ours, or when the question is not one a drug's research can answer
 function insFindWanted(res) {
-  if (!res || (res.best && res.best.length) || !(res.note === "none" || res.note === "want" || (res.note === "other" && res.stranger))) return null;
+  if (!res) return null;
+  if (res.unsure) return res.note || res.emergency ? null : insFindTerms(res);   // (2.22) a best match the judge is not sure of: looked up too, in case it is not what was asked
+  if ((res.best && res.best.length) || !insOpen(res)) return null;
   return insFindTerms(res);
 }
 function insAuto(root, res, now) {
   clearTimeout(INS.findT); clearTimeout(INS.sendT);
-  const after = root && res ? root.querySelector(".sr-fit-none, .ins-none") : null; if (!after) return;
-  askProbe().then(() => { if (!after.isConnected) return; const found = insAutoFind(after, res, now); insAutoSend(after, res, now, found); });
+  if (!root || !res) return;
+  // (2.22) under a best match the judge is not sure of there is no line to stand under: what is found stands in its own place, and nothing is sent (the reader says so with "Search wider")
+  const after = root.querySelector(".sr-fit-none, .ins-none"), slot = root.querySelector('.ins-slot[data-slot="found"]'), at = after || (res.unsure ? slot : null); if (!at) return;
+  insOfficial(root, res);   // (2.22) the pages of official bodies about the drug: they are on the page already, so they stand there at once
+  askProbe().then(() => { if (!at.isConnected) return; const found = insAutoFind(at, res, now, slot); if (after) insAutoSend(after, res, now, found); });
 }
+/* (2.22, 18 November 2026; the senior author: "the site should include all valid drug websites worldwide for every site ... to give instant answers when it
+   does not have the answer ready".) The pages of official bodies about the drug a question names: health services, agencies and information services, from
+   the list our system reads for its own answers (data/auto/official/: 22 bodies, their pages' addresses and titles; the build picks each drug's pages:
+   site/build.js, OFFICIAL). They are links: the page opens on the body's own site, in its own tab. Nothing is sent anywhere for them, and nothing of them
+   is our text. The reader's own country's bodies stand first. Shown where we have no answer of our own; never with an emergency, a dose or a mixing route. */
+function insOfficialHtml(res) {
+  if (typeof OFFICIAL !== "object" || !OFFICIAL || !OFFICIAL.by || !(insOpen(res) || res.unsure) || res.emergency || (res.routes || []).some(r => r.kind === "help" || r.kind === "dose" || r.kind === "mix")) return "";
+  const g = (res.groups || [])[0], st = (res.routes || []).find(r => r.started), key = g && g.length === 1 ? g[0] : st ? "new:" + st.started : "";
+  const all = key && Array.isArray(OFFICIAL.by[key]) ? OFFICIAL.by[key] : []; if (!all.length) return "";
+  const src = OFFICIAL.src || {}, here = PREF_COUNTRY ? shortCtry(PREF_COUNTRY) : "";
+  // a body's own page about the drug is always offered; a page on a part of the subject only where its title holds a word of the question (its drug names taken out)
+  const words = [...new Set((String(typeof insMask === "function" ? insMask(res.core || res.q) : res.q).toLowerCase().match(/[a-z]{4,}/g) || []).filter(w => !FIND_STOP.has(w)))];
+  const same = (x, y) => { let n = 0; while (n < x.length && n < y.length && x[n] === y[n]) n++; return n >= Math.max(4, Math.min(x.length, y.length) - 1); };
+  const hits = r => { if (r[3]) return 0; const tw = String(r[2]).toLowerCase().match(/[a-z]{4,}/g) || []; return words.filter(w => tw.some(x => same(x, w))).length; };
+  const rows = all.map((r, n) => ({ r, n, h: hits(r), home: (src[r[0]] || [])[1] === here ? 1 : 0 })).filter(x => x.r[3] || x.h > 0).sort((a, b) => b.h - a.h || b.home - a.home || a.n - b.n).slice(0, 8).map(x => x.r);
+  if (!rows.length) return "";
+  const name = key.slice(0, 4) === "new:" ? String((typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[key.slice(4)]) || "it").replace(/\s*\(.*\)$/, "") : pageWord(key);
+  const li = (r, n) => { const s = src[r[0]] || [r[0], ""];
+    return "<li" + (n >= 3 ? " hidden" : "") + '><a href="' + esc(r[1]) + '" target="_blank" rel="noopener">' + (r[3] ? esc(s[0]) + " on " + esc(name) : esc(r[2])) + '</a><span class="m">' + esc(r[3] ? s[1] || "International" : s[0] + (s[1] ? " \u00b7 " + s[1] : "")) + "</span></li>"; };
+  return '<div class="ins-off"><p class="ins-found-h">Official pages about ' + esc(name) + '</p><ul class="ins-off-l">' + rows.map(li).join("") + "</ul>" +
+    (rows.length > 3 ? '<p class="ins-found-n ins-all"><button type="button" class="linklike" data-show-all>Show all ' + rows.length + "</button></p>" : "") +
+    '<p class="ins-found-n">Health services, agencies and information services, each on its own site. They are about ' + esc(name) + ", not about your question as you asked it, and we have not checked them.</p></div>";
+}
+function insOfficial(root, res) { const slot = root ? root.querySelector('.ins-slot[data-slot="official"]') : null; if (slot) slot.innerHTML = insOfficialHtml(res); insJump(root); }
+// "Show all": the rest of a short list, in place (no arrow, nothing folds away again)
+if (typeof document !== "undefined") document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button[data-show-all]"); if (!b) return;
+  e.preventDefault(); e.stopPropagation(); const box = b.closest(".ins-off, .ins-found"); if (!box) return;
+  box.querySelectorAll("li[hidden]").forEach(li => { li.hidden = false; }); box.dataset.all = "1"; const p = b.closest("p"); if (p) p.remove(); }, true);
 // the published research under the line; resolves with what was found (null when nothing is looked up)
-function insAutoFind(after, res, now) {
-  const terms = FIND_ON ? insFindWanted(res) : null; if (!terms) return Promise.resolve(null);
+function insAutoFind(after, res, now, slot) {
+  const terms = FIND_ON ? insFindWanted(res) : null;
+  // (2.22) a question we do not look up at all (an amount that kills, a way of dying): one line says so, where the list would stand
+  if (!terms) { if (slot && FIND_ON && insOpen(res) && !res.emergency && FIND_DEATH.test(res.q || "") && FIND_DEATH_NOT.test(res.q || "")) slot.innerHTML = '<div class="ins-found ins-shut"><p class="ins-found-n">We do not look up published research for a question like this one: not on amounts that kill, on ways of dying, or on ending a life.</p>' + insSosHtml("dh-help ins-shut-sos") + "</div>";
+    return Promise.resolve(null); }
   const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite");
-  const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };
-  const draw = d => { const html = insFoundHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
+  // (2.22) the list stands in its own place, under the nearest things we have checked (insFitHtml, insHtml); where a page has no such place, under the line
+  const put = () => { if (box.isConnected) return; if (slot && slot.isConnected) slot.appendChild(box); else if (after.isConnected) after.insertAdjacentElement("afterend", box); };
+  const jump = () => insJump(box.closest(".sr-fit, .ins") || after.closest(".sr-fit, .ins"));
+  const draw = d => { const html = insFoundHtml(d, box.dataset.all === "1"); if (!html) { box.remove(); jump(); return; } put();
+    box.innerHTML = (res.unsure ? '<p class="ins-found-n ins-lead">In case the answer above is not what you asked:</p>' : "") + html; jump(); };
   const redraw = d => { if (after.isConnected && box.isConnected) draw(d); };   // (the whole list, when a slow search has come in)
-  const go = () => { if (!after.isConnected) return Promise.resolve(null); put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; return insFindGet(terms, redraw).then(d => { if (after.isConnected) draw(d); return d; }); };
+  const go = () => { if (!after.isConnected) return Promise.resolve(null); put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; jump(); return insFindGet(terms, redraw).then(d => { if (after.isConnected) draw(d); return d; }); };
   // a paper opens in its own tab: the question and its results stay as they are. "Look again" (the index did not answer in time): what was kept of this question is forgotten and it is asked afresh
   box.addEventListener("click", e => { e.stopPropagation(); const b = e.target && e.target.closest ? e.target.closest("[data-find-again]") : null; if (b) { e.preventDefault(); FIND_MEM.delete(JSON.stringify(terms)); go(); } });
   const have = FIND_MEM.get(JSON.stringify(terms));
@@ -1958,10 +2149,10 @@ function insAutoSend(after, res, now, found) {
     return;
   }
   const stranger = res.note === "other" && !!res.stranger, q = res.q;
-  if (!autoSendOn() || !(res.note === "none" || stranger) || askedSentHas(q) || askedGone(q)) return;
+  if (!autoSendOn() || !(res.note === "none" || stranger) || (askedSentHas(q) && !(res.denied && !insDeniedFor(q))) || askedGone(q)) return;
   const drug = insCtx().drug || "";
   const send = async () => {
-    if (!still(q) || insAutoSend.busy === q || askedSentHas(q)) return;
+    if (!still(q) || insAutoSend.busy === q || (askedSentHas(q) && !(res.denied && !insDeniedFor(q)))) return;
     insAutoSend.busy = q;
     try {
       if (stranger) { let d = await found;
@@ -1969,12 +2160,13 @@ function insAutoSend(after, res, now, found) {
         if (!d || !d.papers || !d.papers.length || !still(q)) return; }
       const k = insClean(q).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k), it = askedAdd(q, drug); if (!it) return;
       let ok = false;
-      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION, a: 1 }) }); ok = r.ok; } catch (e) { ok = false; }
+      // (2.22) x: what the page had taken for the answer, where the reader said it is not ("Not what you asked?"): the system learns from it which answer does not answer this
+      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.assign({ q: it.q, d: it.d, v: SITE_VERSION, a: 1 }, res.denied ? { x: String(res.denied).slice(0, 80) } : {})) }); ok = r.ok; } catch (e) { ok = false; }
       if (!ok) {   // not taken (the day's room for such questions is used, or the connection failed): nothing is claimed; the way to send by hand stands
         if (!had) askedDrop(it.k);
         const slot = after.querySelector(".ask-auto"); if (slot) slot.outerHTML = insAskBtn(q, sheet ? "qz2-nb ins-askus" : "linklike");
         return; }
-      askedSet(it.k, { sent: 1, auto: 1 }); askedTidy(it.k); askedBox();
+      askedSet(it.k, Object.assign({ sent: 1, auto: 1 }, res.denied ? { x: String(res.denied).slice(0, 80), st: "wait" } : {})); askedTidy(it.k); askedBox();
       if (after.isConnected) insAutoSaid(after, AUTO_SENT);
     } finally { insAutoSend.busy = null; }
   };
