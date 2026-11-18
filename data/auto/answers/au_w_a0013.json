@@ -19,33 +19,34 @@
  "made": {
   "on": "2026-11-18",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-4-hydrogen",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-4-hydrogen",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3.8-flash"
+   "also1_else": "gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44314699045",
+  "run": "44335724989",
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
-   "official": 1
+   "official": 2
   },
-  "neurons": 84.9
+  "neurons": 0.0
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "waiting",
+ "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-4-hydrogen): it is worked on again by itself when that reader can be asked",
  "gates": {
-  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 6 of 6; gemini-4-hydrogen accepted 4 of 6",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.58, but 0.94, how1 0.71, how2 0.03, how3 0.35, how4 0.68",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-4-hydrogen; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.54, but 0.63, how1 0.02, how2 0.92, how3 0.32, how4 0.50",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-4-hydrogen; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "panel": "further readers, each of which must accept every sentence too: gemini-4-hydrogen could not be asked: gemini says the allowance is used up: [{ \"error\": { \"code\": 429, \"message\": \"You exceeded your current quota, please check your plan and billing details. For mo; gemini-3.8-flash could not be asked: gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try",
   "rules": "nothing against it",
   "checked": "set beside the checked claims of the same page: nothing against them"
  },
@@ -118,32 +119,24 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "The goal of this review is to describe kratom’s history of use, pharmacology, and early pre-clinical and observational research regarding its therapeutic potential in opioid use disorder, as well as alcohol, stimulant, and polysubstance use disorders",
-    "text": "A review describing kratom's history of use, pharmacology, and research regarding its therapeutic potential in substance use disorders."
+    "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+    "text": "Review article on kratom’s potential as a harm‑reduction agent for substance use disorders"
    },
    "findings": [
     {
-     "passage": 6,
-     "where": "Introduction › History and patterns of use",
-     "quote": "Small doses tend to be consumed for mild stimulant effects or to mitigate health-related symptoms, while larger doses produce more pronounced psychoactive effects.",
-     "text": "Small doses tend to be consumed for mild stimulant effects or to mitigate health-related symptoms, while larger doses produce more pronounced psychoactive effects.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+     "text": "Kratom can produce both opioid‑like and stimulant‑like psychoactive effects.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects",
-     "text": "Kratom is an herbal substance that can produce both opioid and stimulant-like effects.",
+     "passage": 6,
+     "where": "Introduction › History and patterns of use",
+     "quote": "Small doses tend to be consumed for mild stimulant effects or to mitigate health‑related symptoms, while larger doses produce more pronounced psychoactive effects.",
+     "text": "At small doses kratom produces mild stimulant effects, and at larger doses it produces more pronounced psychoactive effects.",
      "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 3,
-     "where": "Introduction",
-     "quote": "Kratom leaves represent a natural herbal substance that can produce both opioid and stimulant-like effects.",
-     "text": "Kratom leaves represent a natural herbal substance that can produce both opioid and stimulant-like effects.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -151,8 +144,8 @@
     {
      "passage": 26,
      "where": "Discussion and conclusion",
-     "quote": "Future controlled clinical trials are necessary to investigate the impact of kratom in managing SUDs in human subjects, since current research is limited to heterogenous preclinical studies, case reports, and self-reported observational data.",
-     "text": "Future controlled clinical trials are necessary to investigate the impact of kratom in managing SUDs in human subjects, since current research is limited to heterogenous preclinical studies, case reports, and self-reported observational data.",
+     "quote": "Future controlled clinical trials are necessary to investigate the impact of kratom in managing SUDs in human subjects, since current research is limited to heterogenous preclinical studies, case reports, and self‑reported observational data.",
+     "text": "The evidence for kratom’s psychoactive effects is based on heterogeneous preclinical studies, case reports, and self‑reported observational data, not on controlled clinical trials.",
      "id": "L1",
      "second_hand": ""
     }
@@ -160,95 +153,78 @@
    "tag": "A"
   },
   {
-   "read": "full",
+   "read": "page",
    "ref": {
-    "id": "eastlack_2020",
-    "type": "article-journal",
-    "title": "Kratom—pharmacology, clinical implications, and outlook: A comprehensive review",
+    "id": "nccih_kratom",
+    "type": "webpage",
+    "title": "Kratom",
     "author": [
      {
-      "family": "Eastlack",
-      "given": "Steven C."
-     },
-     {
-      "family": "Cornett",
-      "given": "Elyse M."
-     },
-     {
-      "family": "Kaye",
-      "given": "Alan D."
+      "literal": "National Center for Complementary and Integrative Health"
      }
     ],
-    "container-title": "Pain and Therapy",
     "issued": {
      "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.nccih.nih.gov/health/kratom",
+    "accessed": {
+     "date-parts": [
       [
-       2020
+       2026,
+       11,
+       18
       ]
      ]
     },
-    "DOI": "10.1007/s40122-020-00151-x",
     "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-18"
-     }
-    },
-    "volume": "9",
-    "issue": "1",
-    "page": "55-69",
-    "PMCID": "PMC7203303"
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-18"
+    }
    },
-   "doi": "10.1007/s40122-020-00151-x",
-   "pmcid": "PMC7203303",
-   "title": "Kratom-Pharmacology, Clinical Implications, and Outlook: A Comprehensive Review",
-   "year": 2020,
-   "journal": "Pain and therapy",
-   "kind": "review",
-   "people": false,
-   "near": 0.748,
-   "money": [
-    "AcknowledgementsFundingNo funding or sponsorship was received for this study or publication of this article.AuthorshipAll named authors meet the International Committee of Medical Journal Editors (ICMJE) criteria for authorship for this article, take responsibility for the integrity of the work as a whole, and have given their approval for this version to be published.DisclosuresSteven C. Eastlack and Elyse M. Cornett have nothing to disclose. Alan David Kaye is a member of the journal’s Editorial Board.Compliance with Ethics GuidelinesThis article is based on previously conducted studies and does not contain any studies with human participants or animals performed by any of the authors.Data AvailabilityData sharing is not applicable for this article, as no data sets were generated or analyzed during the current study."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This manuscript will discuss the most current epidemiology, pharmacology, toxicity, and management related to kratom, while seeking to provide a contemporary perspective on the issue and its role in the greater context of the opioid epidemic.",
-    "text": "a comprehensive review discussing epidemiology, pharmacology, toxicity, and management related to kratom"
-   },
+   "title": "Kratom",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.713,
+   "name": "National Center for Complementary and Integrative Health",
+   "short": "the US National Center for Complementary and Integrative Health",
+   "tier": 1,
+   "address": "https://www.nccih.nih.gov/health/kratom",
+   "money": [],
+   "label": false,
+   "design": null,
    "findings": [
     {
-     "passage": 11,
-     "where": "Pharmacology of Kratom and Prospects in Therapeutics and Research",
-     "quote": "Kratom does not denote a single, specific compound, but rather a cocktail of the psychoactive alkaloids occurring naturally in the plant.",
-     "text": "Kratom consists of a mixture of psychoactive alkaloids that occur naturally in the plant.",
+     "passage": 1,
+     "where": "Top of the page",
+     "quote": "Two compounds from kratom, mitragynine and 7-hydroxymitragynine, interact with opioid receptors in the brain.",
+     "text": "Two compounds from kratom, mitragynine and 7-hydroxymitragynine, interact with opioid receptors in the brain.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 11,
-     "where": "Pharmacology of Kratom and Prospects in Therapeutics and Research",
-     "quote": "the net physiological effect of the substance is complex, intermixing stimulant and opiate-like properties in a dose-dependent manner (primarily stimulant-like at low amounts, with opioid effects predominating at higher doses).",
-     "text": "The net physiological effect of kratom is complex, combining stimulant and opiate-like properties in a dose-dependent way.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
      "passage": 1,
-     "where": "Abstract",
-     "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
-     "text": "Kratom has physiological effects similar to opioids, including pain relief and euphoria, along with stimulant properties.",
-     "id": "F6",
+     "where": "Top of the page",
+     "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+     "text": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+     "id": "F5",
      "second_hand": ""
     }
    ],
-   "limits": [],
-   "tag": "B"
+   "limits": [
+    {
+     "passage": 2,
+     "where": "Top of the page",
+     "quote": "Research on kratom is in its early stages. Much remains to be learned about the short- and long-term effects of kratom in the body, its safety, and whether it may have therapeutic uses.",
+     "text": "Research on kratom is in its early stages, and much remains to be learned about its short- and long-term effects, safety, and therapeutic potential.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
   },
   {
    "read": "page",
@@ -298,76 +274,145 @@
     {
      "passage": 3,
      "where": "What is the science of Kratom?",
-     "quote": "meaning relatively large amounts of kratom needs to be consumed before a noticeable psychoactive effect occurs.",
-     "text": "Relatively large amounts of kratom need to be consumed before a noticeable psychoactive effect occurs.",
-     "id": "F8",
+     "quote": "Kratom (Mitrogyna Speciosa) is a tree indigenous to South East Asia, with leaves containing the psychoactive alkaloids mitragynine and 7-Hydroxymitrogynine.",
+     "text": "Kratom contains the psychoactive alkaloids mitragynine and 7‑hydroxymitragynine.",
+     "id": "F6",
      "second_hand": ""
     },
     {
      "passage": 6,
      "where": "How might the drug make you feel?",
-     "quote": "There is evidence that in smaller quantities, kratom can produce a mild stimulatory effect",
+     "quote": "There is evidence that in smaller quantities, kratom can produce a mild stimulatory effect, hence its traditional use as a aid with hard, physical labour.",
      "text": "In smaller quantities, kratom can produce a mild stimulatory effect.",
-     "id": "F9",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 6,
      "where": "How might the drug make you feel?",
      "quote": "In larger doses, it may have an analgesic quality, and also possess sedating and muscle-relaxing effects.",
-     "text": "In larger doses, kratom may have an analgesic quality, and also possess sedating and muscle-relaxing effects.",
-     "id": "F10",
+     "text": "In larger doses, kratom may have analgesic, sedating, and muscle‑relaxing effects.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 3,
+     "where": "What is the science of Kratom?",
+     "quote": "meaning relatively large amounts of kratom needs to be consumed before a noticeable psychoactive effect occurs.",
+     "text": "The low concentration of psychoactive compounds requires relatively large amounts of kratom to produce a noticeable psychoactive effect.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
    "tag": "D"
   }
  ],
  "parts": [
   {
    "part": "short",
-   "text": "Yes. Kratom can produce both stimulant and opioid-like effects. The mix depends on the dose, with stimulant effects at low amounts and opioid effects at higher doses.",
+   "text": "Yes. Kratom has psychoactive effects. It contains compounds that work on the brain and can cause stimulant or opioid-like feelings.",
    "uses": [
     "F5",
-    "F1"
+    "F1",
+    "F6"
    ],
    "rests_on": [
     {
      "label": "F5",
-     "ref": "eastlack_2020",
-     "where": "Pharmacology of Kratom and Prospects in Therapeutics and Research",
-     "quote": "the net physiological effect of the substance is complex, intermixing stimulant and opiate-like properties in a dose-dependent manner (primarily stimulant-like at low amounts, with opioid effects predominating at higher doses).",
-     "sha": "c056eee432878cea"
+     "ref": "nccih_kratom",
+     "where": "Top of the page",
+     "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+     "sha": "d2a63a4293f0b69f"
     },
     {
      "label": "F1",
      "ref": "green_2024",
-     "where": "Introduction › History and patterns of use",
-     "quote": "Small doses tend to be consumed for mild stimulant effects or to mitigate health-related symptoms, while larger doses produce more pronounced psychoactive effects.",
-     "sha": "714d857b410963c8"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "Relatively large amounts of kratom need to be consumed before a noticeable psychoactive effect occurs.",
-   "uses": [
-    "F8"
-   ],
-   "rests_on": [
+     "where": "Abstract",
+     "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+     "sha": "337182c1b461558c"
+    },
     {
-     "label": "F8",
+     "label": "F6",
      "ref": "drugscience_kratom",
      "where": "What is the science of Kratom?",
-     "quote": "meaning relatively large amounts of kratom needs to be consumed before a noticeable psychoactive effect occurs.",
+     "quote": "Kratom (Mitrogyna Speciosa) is a tree indigenous to South East Asia, with leaves containing the psychoactive alkaloids mitragynine and 7-Hydroxymitrogynine.",
      "sha": "0868d731638f054f"
     }
    ]
   },
   {
+   "part": "but",
+   "text": "Current research is limited to preclinical studies, case reports, and self-reported data, not controlled clinical trials.",
+   "uses": [
+    "L1"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "green_2024",
+     "where": "Discussion and conclusion",
+     "quote": "Future controlled clinical trials are necessary to investigate the impact of kratom in managing SUDs in human subjects, since current research is limited to heterogenous preclinical studies, case reports, and self‑reported observational data.",
+     "sha": "b990578ffdea4ab2"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "The same page says smaller quantities can produce a mild stimulatory effect, while larger doses may have sedating and muscle-relaxing effects.",
+   "uses": [
+    "F7",
+    "F8"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "drugscience_kratom",
+     "where": "How might the drug make you feel?",
+     "quote": "There is evidence that in smaller quantities, kratom can produce a mild stimulatory effect, hence its traditional use as a aid with hard, physical labour.",
+     "sha": "069187bdf27b452a"
+    },
+    {
+     "label": "F8",
+     "ref": "drugscience_kratom",
+     "where": "How might the drug make you feel?",
+     "quote": "In larger doses, it may have an analgesic quality, and also possess sedating and muscle-relaxing effects.",
+     "sha": "069187bdf27b452a"
+    }
+   ],
+   "quote": "There is evidence that in smaller quantities, kratom can produce a mild stimulatory effect",
+   "quote_ref": "drugscience_kratom"
+  },
+  {
    "part": "how3",
-   "text": "A 2024 review says small doses tend to be consumed for mild stimulant effects, while larger doses produce more pronounced psychoactive effects.",
+   "text": "The US National Center for Complementary and Integrative Health says people report increased energy and alertness, as well as relaxation and pain relief.",
+   "uses": [
+    "F5",
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "nccih_kratom",
+     "where": "Top of the page",
+     "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+     "sha": "d2a63a4293f0b69f"
+    },
+    {
+     "label": "F4",
+     "ref": "nccih_kratom",
+     "where": "Top of the page",
+     "quote": "Two compounds from kratom, mitragynine and 7-hydroxymitragynine, interact with opioid receptors in the brain.",
+     "sha": "d2a63a4293f0b69f"
+    }
+   ],
+   "quote": "effects like those of opioids and sedatives (relaxation, pain relief, confusion)",
+   "quote_ref": "nccih_kratom"
+  },
+  {
+   "part": "how4",
+   "text": "A 2024 review says kratom can produce both opioid-like and stimulant-like psychoactive effects, with larger doses causing more pronounced effects.",
    "uses": [
     "F1",
     "F2"
@@ -376,46 +421,20 @@
     {
      "label": "F1",
      "ref": "green_2024",
-     "where": "Introduction › History and patterns of use",
-     "quote": "Small doses tend to be consumed for mild stimulant effects or to mitigate health-related symptoms, while larger doses produce more pronounced psychoactive effects.",
-     "sha": "714d857b410963c8"
+     "where": "Abstract",
+     "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+     "sha": "337182c1b461558c"
     },
     {
      "label": "F2",
      "ref": "green_2024",
-     "where": "Abstract",
-     "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects",
-     "sha": "337182c1b461558c"
+     "where": "Introduction › History and patterns of use",
+     "quote": "Small doses tend to be consumed for mild stimulant effects or to mitigate health‑related symptoms, while larger doses produce more pronounced psychoactive effects.",
+     "sha": "714d857b410963c8"
     }
    ],
-   "quote": "stimulant effects or to mitigate health-related symptoms, while larger doses produce more pronounced psychoactive effects",
+   "quote": "can produce both opioid and stimulant-like effects, and its use in the US is growing",
    "quote_ref": "green_2024"
-  },
-  {
-   "part": "how4",
-   "text": "A 2020 review says kratom has physiological effects similar to opioids, including pain relief and euphoria, along with stimulant properties.",
-   "uses": [
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "eastlack_2020",
-     "where": "Pharmacology of Kratom and Prospects in Therapeutics and Research",
-     "quote": "the net physiological effect of the substance is complex, intermixing stimulant and opiate-like properties in a dose-dependent manner (primarily stimulant-like at low amounts, with opioid effects predominating at higher doses).",
-     "sha": "c056eee432878cea"
-    },
-    {
-     "label": "F6",
-     "ref": "eastlack_2020",
-     "where": "Abstract",
-     "quote": "Recent evidence has revealed that kratom has physiological effects similar to opioids, including pain relief and euphoria, as well as stimulant properties, which together raise potential concern for dependence and addiction.",
-     "sha": "ebd49b9d1775d58e"
-    }
-   ],
-   "quote": "the net physiological effect of the substance is complex, intermixing stimulant and opiate-like properties",
-   "quote_ref": "eastlack_2020"
   }
  ],
  "complete": true,
@@ -452,6 +471,14 @@
    "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.5-flash-lite, gemini-4-hydrogen): it waits until that reader, or the editor, has read it",
    "short": "Yes. Kratom leaves contain psychoactive alkaloids. A 2020 review says it has effects similar to opioids, like pain relief and euphoria, plus stimulant properties.",
    "complete": false
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Yes. Kratom can produce both stimulant and opioid-like effects. The mix depends on the dose, with stimulant effects at low amounts and opioid effects at higher doses.",
+   "complete": true
   }
  ],
  "looked": [
@@ -460,7 +487,7 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpubh.2024.1416689",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -468,19 +495,49 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40122-020-00151-x",
-   "kept": 3,
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Kratom: A Narrative Review of the Possible Clinical Uses and Dangers of This Opioid-Like Plant",
+   "read": "full",
+   "kind": "review",
+   "at": "10.7759/cureus.73058",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Clinical Assessment of the Drug Interaction Potential of the Psychotropic Natural Product Kratom",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1002/cpt.2891",
+   "kept": 1,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "",
-     "quote": "Given the diversity of alkaloids present in kratom extracts and the unique potential pharmacodynamic properties of each, the net physiological effect of the substance is complex, intermixing stimulant",
-     "why": "no sentence"
+     "kind": "text",
+     "text": "clinical pharmacology study assessing drug interaction potential of kratom in healthy adults",
+     "quote": "Oral formulations prepared from the leaves of the kratom (Mitragyna speciosa) plant are increasingly used for their opioid-like effects to self-manage opioid withdrawal and pain.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Kratom produces dose-dependent psychoactive effects: mild stimulation at 1–5 g and opioid-like effects at 5–15 g.",
+     "quote": "Consumption of kratom leaf preparations produces dose-dependent pharmacological effects. At lower doses (1–5 g), kratom produces a mild stimulating effect analogous to caffeine, whereas, at moderately",
+     "why": "it holds an amount or a time between uses"
     },
     {
      "kind": "limit",
-     "text": "",
-     "quote": "a major limitation of the preclinical literature is that many of the experiments were conducted using either chemically synthesized mitragynine or 7-OH-mitragynine rather than actual kratom",
-     "why": "no sentence"
+     "text": "The study only examined a single low dose of kratom (2 g), so effects at higher doses are unknown.",
+     "quote": "The extent of the observed pharmacokinetic kratom-midazolam interaction was modest with administration of a single low dose of kratom (2 g). That is, only orally administered drugs that undergo apprec",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study did not assess interactions with drugs primarily eliminated by CYP2D6, so potential effects remain uncertain.",
+     "quote": "In contrast, the interaction risk is low for drugs eliminated predominately via CYP2D6-mediated metabolism (e.g., several selective serotonin reuptake inhibitors, beta blockers, and opioids).",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -489,21 +546,8 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nccih.nih.gov/health/kratom",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "Research on kratom is in its early stages. Much remains to be learned about the short- and long-term effects of kratom in the body, its safety, and whether it may have therapeutic uses.",
-     "why": "no sentence"
-    },
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "Very little research in people has evaluated the health effects of kratom; additional research is currently in progress.",
-     "why": "no sentence"
-    }
-   ]
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "Kratom",
@@ -517,151 +561,341 @@
  "plan": {
   "short": [
    "F5",
-   "F1"
+   "F1",
+   "F6"
   ],
   "direct": "Yes",
   "but": [
-   "F8"
+   "L1"
   ],
   "how": [
    [
-    "F7"
+    "F6",
+    "F7",
+    "F8"
    ],
    [
-    "F8",
-    "F9"
+    "F5",
+    "F4"
    ],
    [
     "F1",
     "F2"
-   ],
-   [
-    "F5",
-    "F6"
    ]
   ],
   "unanswered": ""
  },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ],
-   "how3": [
-    true,
-    ""
-   ],
-   "how4": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-4-hydrogen": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    false,
-    "The passage does not state that the National Center for Complementary and Integrative Health is a US organization."
-   ],
-   "how2": [
-    false,
-    "The passages do not state that Drug Science is a UK charity of scientists."
-   ],
-   "how3": [
-    true,
-    ""
-   ],
-   "how4": [
-    true,
-    ""
-   ]
-  }
- },
- "panel_gap": [],
+ "panel_gap": [
+  "gemini-4-hydrogen"
+ ],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.5813,
-   "but": 0.9356,
-   "how1": 0.7056,
-   "how2": 0.0295,
-   "how3": 0.3457,
-   "how4": 0.6767
+   "short": 0.5352,
+   "but": 0.6251,
+   "how1": 0.0218,
+   "how2": 0.9235,
+   "how3": 0.3208,
+   "how4": 0.5013
   },
   "scores_quotes_alone": {
-   "short": 0.3761,
-   "but": 0.8118,
-   "how1": 0.3482,
-   "how2": 0.0217,
-   "how3": 0.3622,
-   "how4": 0.6843
+   "short": 0.2146,
+   "but": 0.711,
+   "how1": 0.0795,
+   "how2": 0.4303,
+   "how3": 0.0631,
+   "how4": 0.3113
   }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Kratom has psychoactive effects. It can act like a stimulant or an opioid, depending on the dose.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+       "sha": "d2a63a4293f0b69f"
+      },
+      {
+       "label": "F1",
+       "ref": "green_2024",
+       "where": "Abstract",
+       "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+       "sha": "337182c1b461558c"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_kratom",
+       "where": "What is the science of Kratom?",
+       "quote": "Kratom (Mitrogyna Speciosa) is a tree indigenous to South East Asia, with leaves containing the psychoactive alkaloids mitragynine and 7-Hydroxymitrogynine.",
+       "sha": "0868d731638f054f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Current research is limited to preclinical studies, case reports, and self-reported data, not controlled clinical trials.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "green_2024",
+       "where": "Discussion and conclusion",
+       "quote": "Future controlled clinical trials are necessary to investigate the impact of kratom in managing SUDs in human subjects, since current research is limited to heterogenous preclinical studies, case reports, and self‑reported observational data.",
+       "sha": "b990578ffdea4ab2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists, says kratom leaves contain psychoactive alkaloids called mitragynine and 7-hydroxymitragynine.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_kratom",
+       "where": "What is the science of Kratom?",
+       "quote": "Kratom (Mitrogyna Speciosa) is a tree indigenous to South East Asia, with leaves containing the psychoactive alkaloids mitragynine and 7-Hydroxymitrogynine.",
+       "sha": "0868d731638f054f"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science says kratom can produce a mild stimulatory effect in smaller quantities, and may have sedating effects in larger doses.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "drugscience_kratom",
+       "where": "How might the drug make you feel?",
+       "quote": "There is evidence that in smaller quantities, kratom can produce a mild stimulatory effect, hence its traditional use as a aid with hard, physical labour.",
+       "sha": "069187bdf27b452a"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_kratom",
+       "where": "How might the drug make you feel?",
+       "quote": "In larger doses, it may have an analgesic quality, and also possess sedating and muscle-relaxing effects.",
+       "sha": "069187bdf27b452a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The US National Center for Complementary and Integrative Health says people report stimulant-like and opioid-like effects. Two compounds interact with brain opioid receptors.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+       "sha": "d2a63a4293f0b69f"
+      },
+      {
+       "label": "F4",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "Two compounds from kratom, mitragynine and 7-hydroxymitragynine, interact with opioid receptors in the brain.",
+       "sha": "d2a63a4293f0b69f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2024 review says kratom can produce opioid-like and stimulant-like effects. Small doses tend to be mild stimulants; larger doses produce more pronounced effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "green_2024",
+       "where": "Abstract",
+       "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+       "sha": "337182c1b461558c"
+      },
+      {
+       "label": "F2",
+       "ref": "green_2024",
+       "where": "Introduction › History and patterns of use",
+       "quote": "Small doses tend to be consumed for mild stimulant effects or to mitigate health‑related symptoms, while larger doses produce more pronounced psychoactive effects.",
+       "sha": "714d857b410963c8"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Kratom contains psychoactive alkaloids. People who use it report stimulant-like effects and effects like those of opioids and sedatives.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+       "sha": "d2a63a4293f0b69f"
+      },
+      {
+       "label": "F1",
+       "ref": "green_2024",
+       "where": "Abstract",
+       "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+       "sha": "337182c1b461558c"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_kratom",
+       "where": "What is the science of Kratom?",
+       "quote": "Kratom (Mitrogyna Speciosa) is a tree indigenous to South East Asia, with leaves containing the psychoactive alkaloids mitragynine and 7-Hydroxymitrogynine.",
+       "sha": "0868d731638f054f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Current research is limited to preclinical studies, case reports, and self-reported observational data, not controlled clinical trials.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "green_2024",
+       "where": "Discussion and conclusion",
+       "quote": "Future controlled clinical trials are necessary to investigate the impact of kratom in managing SUDs in human subjects, since current research is limited to heterogenous preclinical studies, case reports, and self‑reported observational data.",
+       "sha": "b990578ffdea4ab2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists, says kratom leaves contain the psychoactive alkaloids mitragynine and 7-hydroxymitragynine.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "drugscience_kratom",
+       "where": "What is the science of Kratom?",
+       "quote": "Kratom (Mitrogyna Speciosa) is a tree indigenous to South East Asia, with leaves containing the psychoactive alkaloids mitragynine and 7-Hydroxymitrogynine.",
+       "sha": "0868d731638f054f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passage does not mention that Drug Science is a UK charity of scientists"
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science says in smaller quantities kratom can produce a mild stimulatory effect, and in larger doses it may have sedating effects.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "drugscience_kratom",
+       "where": "How might the drug make you feel?",
+       "quote": "There is evidence that in smaller quantities, kratom can produce a mild stimulatory effect, hence its traditional use as a aid with hard, physical labour.",
+       "sha": "069187bdf27b452a"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_kratom",
+       "where": "How might the drug make you feel?",
+       "quote": "In larger doses, it may have an analgesic quality, and also possess sedating and muscle-relaxing effects.",
+       "sha": "069187bdf27b452a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The US National Center for Complementary and Integrative Health says people report increased energy and relaxation. Two compounds interact with opioid receptors in the brain.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
+       "sha": "d2a63a4293f0b69f"
+      },
+      {
+       "label": "F4",
+       "ref": "nccih_kratom",
+       "where": "Top of the page",
+       "quote": "Two compounds from kratom, mitragynine and 7-hydroxymitragynine, interact with opioid receptors in the brain.",
+       "sha": "d2a63a4293f0b69f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2024 review says kratom can produce opioid-like and stimulant-like effects. Small doses produce mild stimulant effects, while larger doses produce more pronounced psychoactive effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "green_2024",
+       "where": "Abstract",
+       "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
+       "sha": "337182c1b461558c"
+      },
+      {
+       "label": "F2",
+       "ref": "green_2024",
+       "where": "Introduction › History and patterns of use",
+       "quote": "Small doses tend to be consumed for mild stimulant effects or to mitigate health‑related symptoms, while larger doses produce more pronounced psychoactive effects.",
+       "sha": "714d857b410963c8"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-4-hydrogen": "could not be asked: gemini says the allowance is used up: [{ \"error\": { \"code\": 429, \"message\": \"You exceeded your current quota, please check your plan and billing details. For mo",
+  "gemini:gemini-3.8-flash": "could not be asked: gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try"
  },
  "dropped": [
   {
-   "try": 1,
+   "try": 3,
    "part": "how1",
-   "text": "The US National Center for Complementary and Integrative Health says people who use kratom report increased energy, alertness, rapid heart rate, relaxation, pain relief, and confusion.",
+   "text": "Drug Science, a UK charity of scientists, says kratom leaves contain psychoactive alkaloids called mitragynine and 7-hydroxymitragynine.",
    "rests_on": [
     {
-     "label": "F7",
-     "ref": "nccih_kratom",
-     "where": "Top of the page",
-     "quote": "People who use kratom have reported both stimulant-like effects (increased energy, alertness, rapid heart rate) and effects like those of opioids and sedatives (relaxation, pain relief, confusion).",
-     "sha": "d2a63a4293f0b69f"
-    }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-4-hydrogen) did not accept it: The passage does not state that the National Center for Complementary and Integrative Health is a US organization."
-  },
-  {
-   "try": 1,
-   "part": "how2",
-   "text": "Drug Science, a UK charity of scientists says, in smaller quantities, kratom can produce a mild stimulatory effect.",
-   "rests_on": [
-    {
-     "label": "F8",
+     "label": "F6",
      "ref": "drugscience_kratom",
      "where": "What is the science of Kratom?",
-     "quote": "meaning relatively large amounts of kratom needs to be consumed before a noticeable psychoactive effect occurs.",
+     "quote": "Kratom (Mitrogyna Speciosa) is a tree indigenous to South East Asia, with leaves containing the psychoactive alkaloids mitragynine and 7-Hydroxymitrogynine.",
      "sha": "0868d731638f054f"
-    },
-    {
-     "label": "F9",
-     "ref": "drugscience_kratom",
-     "where": "How might the drug make you feel?",
-     "quote": "There is evidence that in smaller quantities, kratom can produce a mild stimulatory effect",
-     "sha": "069187bdf27b452a"
     }
    ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-4-hydrogen) did not accept it: The passages do not state that Drug Science is a UK charity of scientists."
+   "by": "the second reader",
+   "said": "the passages do not mention that Drug Science is a UK charity of scientists"
   }
  ],
  "with_checked": {
   "differs": [],
   "same": []
  },
+ "for": "again",
+ "soft": "a further reader could not be asked",
  "place": {
   "home": "kratom",
   "also": [],
