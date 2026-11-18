@@ -118,7 +118,8 @@ jobs:
         run: |
           set +e
           L="$RUNNER_TEMP/auto.log"; : > "$L"
-          step() { echo "== $1" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
+          # (18 November 2026) each step's note carries the time it began (UTC): where a run's minutes went must be readable from its notes
+          step() { echo "== $1 [$(date -u +%H:%M:%S)]" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
           if [ "$DO_SCOUT" = "true" ]; then
             step "build the page and Insight's index (the scout ranks a question as the page does)" node site/build.js
             step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json" --auto "$RUNNER_TEMP/auto-sent.json"
@@ -164,7 +165,7 @@ jobs:
             step "official pages for the questions people sent" python3 -I scripts/auto/official.py find --sent --max 4 --minutes 2
             step "papers for the questions people sent" python3 -I scripts/auto/papers.py find --sent --max 4 --minutes 3
             step "the lane writes: the questions people sent, first and alone" python3 -I scripts/auto/lane.py run --sent --max 2 --minutes 6
-            echo "== keep and publish what was written for them" >> "$L"; keep_now
+            echo "== keep and publish what was written for them [$(date -u +%H:%M:%S)]" >> "$L"; keep_now
             own "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run
             own "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 3
             own "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 4

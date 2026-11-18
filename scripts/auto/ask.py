@@ -69,7 +69,7 @@ def prompt(lead, also, drug_names):
             + "\n\nTASK. Write the same question as an encyclopedia would list it:\n"
             '- "question": one neutral question, 5 to 18 words, ending with a question mark. No "I", "my" or "me". No personal details (no ages, places, names, or amounts the person took). Keep the drug\'s name. Do not make it broader or narrower than what was asked.\n'
             '- "ways": six other ways people type this question into a search box (2 to 10 words each). Never the visitor\'s own sentence, nor a part of it word for word: other words.\n'
-            '- "terms": up to six words or short phrases that research papers use for its subject.\n'
+            '- "terms": up to six words or short phrases that research papers use for its subject. Never the name of the drug itself: the subject (for "does caffeine stunt growth": growth, height).\n'
             'JSON only, in this form: {"question": "...", "ways": ["...", "...", "...", "...", "...", "..."], "terms": ["...", "..."]}')
 
 
@@ -109,6 +109,10 @@ def accept(out, lead, drugs, R, names, also=()):
         if 2 <= len(words(w)) <= 12 and not SIGNS.search(w) and not not_answered(w) and not (set(re.findall(r"\d+", w)) - set(re.findall(r"\d+", lead))) and w.lower() != q.lower().rstrip("?") and w.lower() not in [x.lower() for x in ways] and not copied(w, [lead] + list(also)): ways.append(w)
     if len(ways) < 3: return None, "fewer than three other wordings"
     terms = [t for t in (re.sub(r"\s+", " ", str(t)).strip().lower() for t in (out.get("terms") or [])) if 1 <= len(words(t)) <= 4 and not SIGNS.search(t)][:8]
+    # (18 November 2026) a "term" that is the drug's own name is no word for the subject: with it the finder counted every paper on the drug as one on the question
+    one = lambda s: re.sub(r"s$", "", str(s).lower().strip()); its = set(drugs or []) | set(named)
+    dn = {one(nm) for nm, ss in names if set(ss) & its} | {one(d.replace("-", " ")) for d in its}
+    terms = [t for t in terms if one(t) not in dn]
     return {"q": q, "ways": ways[:6], "drugs": sorted(set(drugs) | set(named)) if (drugs or named) else [], "terms": terms}, ""
 
 
@@ -199,6 +203,7 @@ def selftest():
     assert copied("kanna anxiety", ["kanna anxiety"]) and not copied("kanna and anxiety", ["does kanna and anxiety go together"]) and not copied("do grandparents worry about grandchildren using cannabis", [typed]) and not copied("x", ["x"])
     fc, _ = accept(dict(good, ways=good["ways"][:5] + ["my nose is wrecked after 3 years of coke"]), "my nose is wrecked after 3 years of coke lol does cocaine do that", ["cocaine"], R(), names); assert fc and len(fc["ways"]) == 5 and not any("wrecked" in x for x in fc["ways"]), fc
     fc, _ = accept(dict(good, ways=good["ways"][:5] + ["is my septum gone for good"]), "x", ["cocaine"], R(), names, also=["honestly is my septum gone for good now"]); assert fc and len(fc["ways"]) == 5
+    ft, _ = accept(dict(good, terms=["Cocaine", "nasal septum", "cocaines", "septal perforation"]), "my nose is wrecked after 3 years of coke lol does cocaine do that", ["cocaine"], R(), names); assert ft and ft["terms"] == ["nasal septum", "septal perforation"], ft      # the drug's own names are no words for the subject
     f, why = accept(good, "my nose is wrecked after 3 years of coke lol does cocaine do that", ["cocaine"], R(), names); assert f and f["q"] == good["question"] and len(f["ways"]) == 6 and f["drugs"] == ["cocaine"], why
     class R9(R):                                                    # (site 2.9) a wording that is not a finished question is never listed
         def unfinished(self, q, on_page=False): return "ends" if q.rstrip("?").endswith(" from") else ""

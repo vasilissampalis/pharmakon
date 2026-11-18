@@ -1255,6 +1255,26 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     be asked, a run works on as before. The longest a new question now waits for a machine is one step of a
     working run (the lane's: eight minutes at most; a search: three or four), not the whole run. Checked: the
     counting, in the lane's own check; and against GitHub itself that evening ("1 run(s) waiting behind this one").
+    **The first question followed from the key to the end: 45 minutes, and no answer; why** (20:50 to 21:36 Athens).
+    Typed 20:50:06; run made 20:50:10; a machine at 20:55 (the clock's run was cut off at its forty minutes); listed
+    as `w_a0014`, "Does caffeine affect growth?"; what the lane wrote for it was kept at 21:34: "no source that can
+    be read gave a finding for this question". The run itself was cut off at forty minutes too. Read in its record:
+    the lane had read 23 sources (twelve reviews in full, eight official pages, three summaries) and kept nothing,
+    and every one of the twelve reviews was on caffeine and sport. The cause is in the searches: the "words papers
+    use for its subject", written by the model that words a visitor's question, began with "caffeine" itself, and
+    the finder asks for the drug AND any of those words, so every paper on caffeine counted as a paper on growth.
+    Six of the thirteen questions listed from visitors' questions had the drug's own name among those words (seven
+    of all 74 searched). **Mended:** the finder leaves a topic word out that IS a name of the drug (a phrase that
+    holds it, "opioid withdrawal", stays), and takes the question's own words where none is left; the item writer no
+    longer keeps such a word and is told so; a question whose searches the finder would make differently today is
+    searched again by itself (six are); and where the searches find fewer than four papers that can be read, every
+    open paper with the drug in its title is searched as well (a drug with few papers; "What is Mitragyna
+    javanica?"). The steps of a run now carry the time they began in the run's notes, so that the next slow run says
+    where its minutes went. `w_a0014` and `w_a0003` are asked for by name with new searches (`lane-0019f`). **What
+    this means for "minutes":** with the key the start is seconds; that evening the rest was slow for two reasons
+    that are ours to see apart: Europe PMC (25 seconds a request since the afternoon) and the free models (503s),
+    which pass; and a search that sent the lane to read 23 sources beside the question, which was a fault and is
+    mended. The time of a good run is still to be measured (next steps, b).
     **A visitor's own words stood in the public list** (found 17:05 Athens, while reading the site's index for
     another reason). The model that words a visitor's question (`scripts/auto/ask.py`) is asked for "six other ways
     people type this question". For the question about mothers it gave back, as two of them, the two sentences the

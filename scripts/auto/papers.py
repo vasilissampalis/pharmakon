@@ -313,7 +313,17 @@ def searches(question, ways, names, drugs=None, terms=None, extra=None):
     if drugs and len(drugs) > 1 and len(groups) > 1 and not drug_terms(question, names)[0]: groups = [[t for g in groups for t in g]]   # several drugs the question does not name one by one: any of them
     if extra and not groups: groups = [list(dict.fromkeys(str(n) for n in extra if n))]      # a drug that has no page yet: what papers call it comes with the question (scripts/auto/grow.py)
     pat = re.compile(r"(?<!\w)(" + "|".join(re.escape(n) for n, _ in names) + r")(?!\w)", re.I)
-    topics = list(terms)[:10] if terms else topic_terms([question] + list(ways or []), lambda t: pat.sub(" ", t))
+    own_words = lambda: topic_terms([question] + list(ways or []), lambda t: pat.sub(" ", t))
+    topics = list(terms)[:10] if terms else own_words()
+    # (18 November 2026) A topic word that IS the drug's name, or holds it, says nothing of the subject: with it, every paper on the drug counted as a paper on
+    # the question. The words for "Does caffeine affect growth?" (written by the model that words a visitor's question) began with "caffeine": the lane read 23
+    # sources on caffeine and sport, none on growth, for 39 minutes, and wrote that nothing readable had a finding. Seven of the 74 questions searched by then
+    # had such a word, six of them questions visitors had sent. Such words are left out; where none is left, the question's own words are the topic. (Only a
+    # word that IS a name of the drug: "opioid withdrawal" is a subject, and as one of several words it finds only papers that say exactly that.)
+    one = lambda w: re.sub(r"s$", "", str(w).lower().strip())
+    drugw = {one(x) for g in groups for x in g}
+    kept = [w for w in topics if str(w).startswith("(") or one(w) not in drugw]
+    if len(kept) != len(topics): topics = kept or [w for w in own_words() if one(w) not in drugw]
     drug = " AND ".join(field(g) for g in groups) if groups else field(FAMILY["drugs"])
     topic = field(topics) if topics else ""
     core = drug + (" AND " + topic if topic else "")
@@ -420,6 +430,21 @@ def find(item, names, enc, opener=None):
             if p["kind"] in ("retracted", "notice", "opinion") or not p["title"]: continue
             k = p["doi"] or p["epmc"]
             if k not in seen: seen[k] = p
+    # (18 November 2026) A drug with few papers, or a question that asks what a drug IS: the topic words find little, and what there is on the drug itself is
+    # the answer's material ("What is Mitragyna javanica?"). Where the searches above found fewer than four papers that can be read, every open paper with
+    # the drug in its title is searched as well; the ranking by meaning then picks.
+    if groups and not problems and sum(1 for p in seen.values() if p["oa"] and p["pmcid"]) < 4:
+        s = {"for": "any open paper with the drug in its title, whatever its topic (the searches above found few that can be read)",
+             "query": " AND ".join(field(g, True) for g in groups) + ' AND OPEN_ACCESS:y AND LANG:eng NOT PUB_TYPE:"retracted publication" NOT PUB_TYPE:"retraction of publication"'}
+        try:
+            got, hits = epmc_search(s["query"], opener=opener)
+            log.append({"for": s["for"], "query": s["query"], "found": hits, "read": len(got)})
+            for p in got:
+                if p["kind"] in ("retracted", "notice", "opinion") or not p["title"]: continue
+                k = p["doi"] or p["epmc"]
+                if k not in seen: seen[k] = p
+        except Refused as e: problems.append("Europe PMC said no: " + str(e))
+        except (IOError, ValueError) as e: problems.append("a search failed: " + str(e)[:200])
     # only papers that can be used are compared: the ones whose full text is open, and reviews (for the list of papers wanted)
     usable = [p for p in seen.values() if (p["oa"] and p["pmcid"]) or (p["doi"] and p["kind"] == "review")]
     ranked = rank(item["q"], list(item.get("ways") or [])[:5] + ([" ".join(item["terms"][:6])] if item.get("terms") else []), usable, enc)
@@ -463,6 +488,12 @@ def selftest():
     g2, _ = drug_terms("Do psychedelics help with crystal meth problems?", names); assert g2 == [["methamphetamine"], ["psychedelics", "hallucinogens", "psilocybin", "LSD"]], g2
     q3, g3, t3 = searches("What is a K-hole?", ["what does a k hole feel like"], names, ["ketamine"], ["k-hole", "dissociation"]); assert g3 == [["ketamine"]] and t3 == ["k-hole", "dissociation"] and 'ABSTRACT:"dissociation"' in q3[0]["query"], (g3, t3)
     q4, g4, _ = searches("Does LSD stay in your body forever?", [], [["lsd", ["lsd"]]], None, ["half-life"]); assert 'TITLE:"lysergide"' in q4[0]["query"] and '((TITLE:"LSD" OR ABSTRACT:"LSD") AND (ABSTRACT:"psychedelic"' in q4[0]["query"] and 'TITLE:"LSD" OR ABSTRACT:"LSD" OR' not in q4[0]["query"], q4[0]["query"]
+    # a topic word that is the drug's own name is left out (with it, every paper on the drug counted as a paper on the question); a phrase that holds it stays;
+    # where nothing is left, the question's own words are the topic
+    q5, g5, t5 = searches("Does caffeine affect growth?", ["can caffeine stunt growth", "caffeine and height growth"], [["caffeine", ["caffeine"]]], ["caffeine"], ["Caffeine", "growth", "height", "caffeine intake"])
+    assert t5 == ["growth", "height", "caffeine intake"] and '(TITLE:"growth" OR ABSTRACT:"growth" OR TITLE:"height"' in q5[0]["query"] and ' AND (TITLE:"caffeine" OR ABSTRACT:"caffeine" OR TITLE:"growth"' not in q5[0]["query"], (t5, q5[0]["query"])
+    q6, g6, t6 = searches("Does caffeine affect growth?", ["can caffeine stunt growth", "caffeine and height growth"], [["caffeine", ["caffeine"]]], ["caffeine"], ["caffeine", "coffee"])
+    assert "growth" in t6 and "caffeine" not in t6 and "coffee" not in t6, t6
     # a pretend service: two searches answer, the full text is offered for one paper, Crossref knows the DOIs
     core = lambda i, **k: dict({"id": str(100 + i), "source": "MED", "pmid": str(100 + i), "doi": f"10.1000/j.{i}", "title": f"Causes of death from alcohol: review number {i}.", "authorString": "Smith J, Jones K.",
                                "journalInfo": {"journal": {"title": "Addiction"}}, "pubYear": "2021", "abstractText": "<p>Alcohol can cause death by acute poisoning that stops breathing. Participants were adults in ten countries.</p>",
@@ -491,7 +522,8 @@ def selftest():
     out = find({"id": "w_0027", "q": "How can you die from alcohol?", "ways": ["can alcohol kill you", "alcohol death causes"]}, names, Enc2(), opener)
     assert out["found"] == 3 and [c["pmcid"] for c in out["can_read"]] == ["PMC111", "PMC444"] and out["can_read"][0]["kind"] == "review" and not out["can_read"][1]["people"], out["can_read"]
     assert len(out["wanted"]) == 1 and out["wanted"][0]["apa"].startswith("Smith, J. (2021). Causes of death from alcohol. Addiction, 1, 1–9. https://doi.org/10.1000/j.2") and out["wanted"][0]["file"].endswith(".pdf"), out["wanted"]
-    assert all("abstract" not in c for c in out["can_read"]) and len(out["searches"]) == 5 and out["searches"][0]["found"] == 57
+    # (two papers that can be read are fewer than four: every open paper with the drug in its title is searched as well, last)
+    assert all("abstract" not in c for c in out["can_read"]) and len(out["searches"]) == 6 and out["searches"][0]["found"] == 57 and out["searches"][5]["for"].startswith("any open paper with the drug in its title") and out["searches"][5]["query"].startswith('(TITLE:"alcohol" OR TITLE:"ethanol" OR TITLE:"alcohol drinking") AND OPEN_ACCESS:y'), out["searches"]
     print("papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)")
 
 
@@ -502,6 +534,8 @@ def main():
     opt = lambda k, d=None: arg[arg.index(k) + 1] if k in arg else d
     out = ROOT / opt("--out", "data/auto/papers"); out.mkdir(parents=True, exist_ok=True)
     items = listed()
+    import build_index as bi
+    names = bi.names_table()                                                   # (before old(), which asks what the finder would search today)
     ids = [x for x in (opt("--ids") or "").split(",") if x]; limit = int(opt("--max", "50")); t0 = time.time(); minutes = float(opt("--minutes", "0") or 0)
     def old(w):   # not searched yet, or searched by an older finder, or searched without the name of its drug (page_names: a drug without a page)
         f = out / (w["id"] + ".json")
@@ -509,6 +543,12 @@ def main():
         except (OSError, ValueError): return True
         if int(rec.get("finder") or 1) < FINDER: return True
         if rec.get("problems"): return True                                    # (18 November 2026) its searches did not all come back (the index was slow or said no): searched again, not kept as "searched"
+        try:                                                                   # (18 November 2026) the finder would ask something else today (its searches were mended since): searched again
+            extra = w.get("names") or (page_names(w) if not w.get("drugs") else [])
+            today = searches(w["q"], w.get("ways") or [], names, w.get("drugs"), w.get("terms"), extra)[0]
+            then = [s.get("query") for s in rec.get("searches") or []]
+            if then and today and then[0] != today[0]["query"]: return True
+        except Exception: pass
         return not rec.get("drugs_searched") and not w.get("drugs") and (bool(w.get("names")) or bool(page_names(w)))
     # --requests DIR: the requests waiting there (papers-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
     # A request is a file in the repository, written by the editor: it is read as data here and never reaches a command line.
@@ -527,8 +567,7 @@ def main():
     else: items = [w for w in items if old(w)]
     if "--sent" in arg: items = [w for w in items if w.get("from") == "a question visitors sent"]      # (18 November 2026) the first pass of a run: only the questions people sent
     items = sorted(items, key=lambda w: ((out / (w["id"] + ".json")).exists(), 0 if w.get("from") == "a question visitors sent" else 1))[:limit]     # a question never searched comes before one searched by an older finder; among those, one a person sent comes first (18 November 2026: it is answered in the same run)
-    import build_index as bi
-    names = bi.names_table(); enc = General(); done = 0
+    enc = General(); done = 0
     for w in items:
         if minutes and time.time() - t0 > minutes * 60: print(f"papers: the time for this run is up; {len(items) - done} questions are left for the next run"); break
         try: res = find(w, names, enc)

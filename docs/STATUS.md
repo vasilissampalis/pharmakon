@@ -1,6 +1,6 @@
 # Project status and work queue
 
-Updated 2026-11-18, 20:55 (site 2.21.3, protocol 0.5.8; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
+Updated 2026-11-18, 21:50 (site 2.21.3, protocol 0.5.8; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
 page states the same in public terms. The project's history is in the GitHub repository vasilissampalis/pharmakon (METHODS §11).
 
 ## Where things stand
@@ -8,6 +8,7 @@ page states the same in public terms. The project's history is in the GitHub rep
 - **18 November 2026, 20:55 (Athens): the key is there and works; the kratom answer is back.**
   - **The key (`GH_RUN_TOKEN`):** given by him at 20:34 ("done, no expiration"; GitHub token `pharmakon-start`, this repository only, Actions: read and write; a Secret of the Cloudflare Pages project `pharmakon`). **Tested at 20:50:** a new question typed on the live site started a run on GitHub four seconds later (`workflow_dispatch`); the server's note says GitHub said yes. A run started this way waits while another works. Every publishing's notes now say whether the key is there and what GitHub said last (`data/auto/deploy/_last-run.txt`, "a new question starts the work at once").
   - **What the test showed, and the mend:** the run the question started waited behind the clock's run, which was busy with the system's own questions for more than forty minutes (one run works, one waits). A working run now gives way before each step of its own questions when a run is waiting (`own`, `lane.py waiting`, `--give-way`).
+  - **The first question followed to the end (21:36): 45 minutes and no answer.** The lane read 23 sources on caffeine and sport for "Does caffeine affect growth?": the words for the subject, written by the model that words a visitor's question, began with "caffeine", so every paper on the drug counted. Six of the thirteen visitor questions had that fault. Mended in the finder and in the item writer; the six are searched again by themselves; `w_a0014` and `w_a0003` are asked for by name (`lane-0019f`). The run's notes now carry each step's time.
   - **Next:** measure the time from a question to its answer on the site (the test question, "does caffeine stunt your growth", is the first to measure: `data/auto/lane/state.json`, the newest `w_a…`), and only then let the page promise a time.
   - **Site 2.21.3 (on main, published with the next publishing):** the server says whether the key is there and what GitHub said to the last start; the publishing's check writes it down, so a key that has run out is seen.
   - **"Does kratom have psychoactive effects?"** was written again by the system at 17:51 with what the editor had found, and read again: it stays (the new rule stopped the old sentence at the second try).
