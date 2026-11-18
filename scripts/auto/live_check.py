@@ -17,7 +17,7 @@ words:
 
 Nothing here can fail a publishing: a server that does not answer is a line in the notes.
 """
-import sys, json, time, urllib.request, urllib.error
+import sys, re, json, time, pathlib, urllib.request, urllib.error
 
 BASE = "https://pharmakon.world"
 Q = {"names": ["kanna", "sceletium tortuosum"], "words": ["anxiety"]}
@@ -57,6 +57,27 @@ def start_line(d):
     return f"server: a new question starts the work at once: THE KEY IS THERE AND GITHUB DID NOT TAKE IT AT THE LAST START ({what}; so since {since} UTC): the senior author's to renew (401: the key has run out or was taken away; 403 or 404: it may not start this repository's workflows)"
 
 
+def newest_listed():
+    """The number of the newest question on the system's own list (data/auto/wanted-auto.json), to ask the server about; "" where there is none."""
+    try: items = json.load(open(pathlib.Path(__file__).resolve().parents[2] / "data" / "auto" / "wanted-auto.json", encoding="utf-8")).get("items") or []
+    except (OSError, ValueError): items = []
+    return next((str(w.get("id")) for w in reversed(items) if isinstance(w, dict) and re.fullmatch(r"w_[a-z0-9_]{1,40}", str(w.get("id") or ""))), "")
+
+
+def live_line(opener, base, d, wid=None):
+    """(site 2.23) Does the server say what our system is doing for a sent question? It reads one small file from the repository (data/auto/live.json): where
+    GitHub does not give it to the server, a reader who waits sees nothing new, and that must be SEEN in the publishing's notes."""
+    head = "server: says what our system is doing for a sent question: "
+    if d.get("live") is not True: return head + "no (this server does not have that yet)"
+    wid = wid if wid is not None else newest_listed()
+    if not wid: return head + "not asked (no question is on the system's own list)"
+    try: j = ask(opener, base, "/api/asked?w=" + wid)
+    except Exception as e: return head + "/api/asked did not answer (" + type(e).__name__ + ")"
+    if j.get("off") is True: return head + "NO: IT COULD NOT READ THE STATE FILE (data/auto/live.json of the repository: GitHub did not give it to the server)"
+    it = (j.get("w") or {}).get(wid)
+    return head + f"yes (the state file of {str(j.get('at') or '')[:19].replace('T', ' ')} UTC; {wid}: " + (str(it.get("st"))[:12] + (", with its answer" if it.get("ans") else "") if isinstance(it, dict) else "not in it") + ")"
+
+
 def lines(opener=urllib.request.urlopen, base=BASE):
     out, yes = [], lambda d, k: "yes" if d.get(k) is True else "no"
     try:
@@ -89,6 +110,7 @@ def lines(opener=urllib.request.urlopen, base=BASE):
     if times:
         s = sorted(times); out.append(f"server: {len(s)} questions nobody asked before: the middle one took {s[len(s) // 2]:.1f} s, three in four under {s[(len(s) * 3) // 4]:.1f} s, the slowest {s[-1]:.1f} s; {still} given without the most cited")
     out.append(starts)
+    out.append(live_line(opener, base, d))
     return out
 
 
@@ -101,7 +123,8 @@ def selftest():
     seen = []
     def opener(req, timeout=0):
         seen.append((req.get_method(), req.full_url, req.get_header("Origin"), req.data))
-        if "/api/ask" in req.full_url: return R({"ok": True, "find": True, "auto": True, "quick": False, "start": True, "started": {"what": "asked", "since": "2026-11-18T19:02:11.000Z"}})
+        if "/api/asked" in req.full_url: return R({"ok": True, "at": "2026-11-19T01:02:03+00:00", "q": {}, "w": {req.full_url.split("w=")[1]: {"id": "x", "st": "answered", "ans": {"q": "Q?"}}}})
+        if "/api/ask" in req.full_url: return R({"ok": True, "find": True, "auto": True, "quick": False, "live": True, "start": True, "started": {"what": "asked", "since": "2026-11-18T19:02:11.000Z"}})
         body = json.loads(req.data)
         if body.get("names") == ["mdma"]: return R({"ok": True, "more": 1, "ms": [None, 210, 480], "again": 2, "won": [None, 0, 1], "own": [None, 210, 130], "kept": 0, "papers": [{"t": "A trial", "kind": "Trial", "y": "2021", "q": "\u2026MDMA-assisted therapy is highly efficacious\u2026"}]})
         return R({"ok": True, "ms": [300, 200, 250], "again": 0, "won": [0, 0, 0], "own": [300, 200, 250], "kept": 0, "papers": [{"t": "A Chewable Cure", "kind": "Review", "y": "2021", "q": "\u2026the plant reduced anxiety", "an": 1}, {"t": "Another", "kind": "Study", "y": "2019"}]})
@@ -113,7 +136,10 @@ def selftest():
     assert L[15].startswith("server: kanna and anxiety once more: 2 papers in ") and L[16] == "server: 12 questions nobody asked before: the middle one took 0.0 s, three in four under 0.0 s, the slowest 0.0 s; 1 given without the most cited", L[15:]
     assert L[17] == "server: a new question starts the work at once: yes (GitHub said yes to the last start; so since 2026-11-18 19:02 UTC)" and seen[0][1].endswith("/api/ask?run=1"), L[17]
     assert start_line({"ok": True}).endswith("no (no key on the server: the work starts when GitHub's own clock does)") and "has not been asked yet" in start_line({"start": True}) and "DID NOT TAKE IT AT THE LAST START (refused 401;" in start_line({"start": True, "started": {"what": "refused 401", "since": "2026-11-19T08:00:00Z"}})
-    assert all(x.startswith("server:") for x in L) and len(L) == 18 and seen[0][0] == "GET" and seen[1][0] == "POST" and seen[1][2] == "https://x.test" and json.loads(seen[1][3]) == Q and len(seen) == 14
+    assert all(x.startswith("server:") for x in L) and len(L) == 19 and seen[0][0] == "GET" and seen[1][0] == "POST" and seen[1][2] == "https://x.test" and json.loads(seen[1][3]) == Q and len(seen) == (15 if newest_listed() else 14)
+    assert live_line(opener, "https://x.test", {"live": True}, "w_a0001") == "server: says what our system is doing for a sent question: yes (the state file of 2026-11-19 01:02:03 UTC; w_a0001: answered, with its answer)" and seen[-1][1].endswith("/api/asked?w=w_a0001")
+    assert live_line(opener, "https://x.test", {}, "w_a0001").endswith("no (this server does not have that yet)") and "COULD NOT READ THE STATE FILE" in live_line(lambda req, timeout=0: R({"ok": True, "off": True}), "https://x.test", {"live": True}, "w_a0001")
+    assert live_line(lambda req, timeout=0: R({"ok": True, "at": "x", "w": {}}), "https://x.test", {"live": True}, "w_a0001").endswith("w_a0001: not in it)")
     old = lines(lambda req, timeout=0: R({"ok": True, "find": True, "auto": True, "quick": True, "papers": []}), "https://x.test")
     assert "AND SAYS IT ASKS A MODEL" in old[0] and "0 papers" in old[1], old
     def down(req, timeout=0): raise urllib.error.URLError("no route")
