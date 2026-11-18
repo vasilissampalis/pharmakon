@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_a0009",
- "lane": 18,
+ "lane": 19,
  "kind": "answer",
  "from": "w_a0009",
  "question": "What drugs are associated with confident dancing?",
@@ -15,19 +15,20 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-17",
+  "on": "2026-11-18",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3.6-flash"
+   "also2": "gemini:gemini-3.8-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44184385722",
+  "run": "44347403947",
   "from": {
    "papers": 0,
    "summaries": 0,
@@ -36,9 +37,10 @@
   "neurons": 0.0
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question",
+ "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now: tried again in the next run)",
  "gates": {
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -68,7 +70,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-17",
+   "lane": 18,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Psychoactive Drugs-From Chemical Structure to Oxidative Stress Related to Dopaminergic Neurotransmission. A Review",
@@ -92,7 +103,14 @@
    "kind": "review",
    "at": "10.18773/austprescr.2019.070",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a research paper",
+     "quote": "Psychoactive drugs and driving (2019), Australian prescriber.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Representations of Psychoactive Drugs' Use in Mass Culture and Their Impact on Audiences",
@@ -108,7 +126,8 @@
    "kind": "review",
    "at": "10.3390/brainsci10100751",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "Driving under the influence of drugs: Correlation between blood psychoactive drug concentrations and cognitive impairment. A narrative review taking into account forensic issues",
@@ -148,14 +167,7 @@
    "kind": "review",
    "at": "10.1007/s00210-020-01918-x",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A proposal for a simple mechanistic terminology of psychoactive drugs",
-     "quote": "A simple mechanistic terminology of psychoactive drugs: a proposal (2020), Naunyn-Schmiedeberg's archives of pharmacology.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Adenosine A2AReceptors in Substance Use Disorders: A Focus on Cocaine",
@@ -163,14 +175,7 @@
    "kind": "review",
    "at": "10.3390/cells9061372",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "More research is needed to clearly assess the involvement of A2ARs in the motor effects associated with the use of other substances.",
-     "quote": "At the same time, more research is needed to clearly assess their involvement in the motor effects associated with the use of other substances.",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Exploring the link between recreational substances and physical activity in children and adolescents: insights from the Health Behavior in School-Aged Children study (2013-2019)",
@@ -234,14 +239,7 @@
    "kind": "review",
    "at": "10.1111/j.1369-1600.2006.00012.x",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "an overview of behavioural assessment of drug reinforcement and addictive features in rodents",
-     "quote": "Behavioural assessment of drug reinforcement and addictive features in rodents: an overview",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Set and setting, psychedelics and the placebo response: An extra-pharmacological perspective on psychopharmacology",
@@ -252,6 +250,7 @@
    "thrown": []
   }
  ],
+ "soft": "a source could not be fetched",
  "place": {
   "home": "facts",
   "also": [],
