@@ -1142,6 +1142,20 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     first line to "Look again", some forty seconds), the lane's own. **Not solved by this:** while Europe PMC is slow,
     the list is slow. A second index for such hours (PubMed's own interface, which gives summaries too) is the next
     step; its words would need a trial of their own.
+    **The first answer that went out under the stricter bar, read by the editor** (16:05 Athens; `au_w_a0011`, "Do
+    mothers worry about their children taking drugs?", his own question of 13:38 in our words; written by team L in
+    the run GitHub's clock started at 15:40, published 15:56; held to the bar because it is about children). "Yes,
+    the NHS says parents of people who use drugs may feel worried. One study found mother overprotection links to
+    youth substance use." The first sentence is the NHS page's own ("If you're the parent, partner, child or carer of
+    someone who uses drugs, you may feel worried, frustrated and alone"), said as the NHS's. The second is one study
+    of five in a scoping review, whose passage says that overprotection by mothers "correlates positively with all
+    substances and negatively with alcohol abuse": "links to" is true and thinner than the passage. The But is the
+    code's own and true (a nearer paper could not be fetched: Europe PMC, that afternoon). Nothing in it plays a
+    danger down or tells a reader what to do. It stays. Two things it showed: the line of "How do we know" for the
+    study was left out for a rule (the source's own word "abuse"), so the short answer's second sentence stands
+    without its line (the reference is there): a line that breaks a rule should be written again, not left out, where
+    the short answer rests on that source; and the reader that reads the sources was out of reach (503) and its
+    stand-in read on, as built.
     **Lane 19** (`scripts/auto/lane.py`). No gate is taken away. What code can mend is mended before a rule judges:
     a number of a sentence that stands in another item of a source the sentence already rests on puts that item
     under the sentence too, so that every reader reads the sentence beside it (`mend_uses`; never an item of another

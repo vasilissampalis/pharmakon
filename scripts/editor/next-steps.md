@@ -24,6 +24,10 @@ the way back in the bar).
    answer about ..."; `gates.stakes` in the record). Every one, sentence by sentence, against the words it rests on. If one plays a danger
    down or tells a reader what to do: hold it (`data/auto/held.json`, with "lane" and "say"), find which of the four looks let it through,
    and tighten that look; if two do in the first ten, set that kind back to "person" (`policy.json`, stakes) and tell him.
+   Read so far: `au_w_a0011` (mothers and their children's drug use; it stays; decision 32). What it showed, to mend: a "How do we know"
+   line that breaks a rule (the source's own word "abuse") is left out, and the short answer's sentence that rests on that source then
+   stands without its line: write such a line again (as the short answer is), and where it still cannot stand, take the sentence that rests
+   only on that source out of the short answer.
    (b) **Measure the times and only then let the page promise them.** For each question a person sent: when it arrived (the store's day is
    too coarse: use the run that first listed it), when its answer was kept, when it was published (`data/auto/deploy/`). `policy.loop` goes
    true, and the page says "usually within N minutes", only when twenty sent questions in a row kept that N. Until then the page promises
