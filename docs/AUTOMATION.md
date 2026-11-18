@@ -1233,6 +1233,17 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     (`scripts/auto/live_check.py`, `start_line`): "a new question starts the work at once: yes (GitHub said yes to
     the last start ...)", or in capitals that GitHub did not take the key. Checks: 151 server tests, the check's
     own.
+    **The key is there, and it works** (20:34 to 20:50 Athens). His word at 20:34: "done, no expiration". The
+    publishing of 20:34 had read it already ("a new question starts the work at once: yes, the key is there"). He
+    was asked to type one new question; none had come ten minutes later (the server's note was empty), so the editor
+    typed one on the live site in the app's browser, a real and harmless one the site has no answer to ("does
+    caffeine stunt your growth"). Typed at 20:50:06; the page sent it by itself after its two and a half seconds
+    and said so; GitHub made the run at 20:50:10 (`workflow_dispatch`), four seconds after the last key was typed;
+    the server's note reads "asked" since 20:50:11. The run waited behind the one GitHub's clock had started at
+    20:14, which was still working (Europe PMC and the free models were slow all evening): one run works, one
+    waits, as built. What is still to measure is the time from there to an answer on the site (next steps, b). What
+    the test left in the app's browser (that device's own list) was taken away again. Its list of papers, seen in
+    passing, was beside the question for two of four ("growth" as in tumours): one more for the next trial.
     **A visitor's own words stood in the public list** (found 17:05 Athens, while reading the site's index for
     another reason). The model that words a visitor's question (`scripts/auto/ask.py`) is asked for "six other ways
     people type this question". For the question about mothers it gave back, as two of them, the two sentences the
