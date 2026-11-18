@@ -120,9 +120,11 @@ jobs:
           L="$RUNNER_TEMP/auto.log"; : > "$L"
           # (18 November 2026) each step's note carries the time it began (UTC): where a run's minutes went must be readable from its notes
           step() { echo "== $1 [$(date -u +%H:%M:%S)]" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
+          # (19 November 2026, site 2.23) the store is read in every run that works, not only where the scout has something new: what the system is doing is
+          # written for each sent question by its key (scripts/auto/live.py), and the keys come from the store. The words stay in this run's own folder.
+          step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json" --auto "$RUNNER_TEMP/auto-sent.json"
           if [ "$DO_SCOUT" = "true" ]; then
             step "build the page and Insight's index (the scout ranks a question as the page does)" node site/build.js
-            step "read the question store" python3 -I scripts/auto/fetch_questions.py "$RUNNER_TEMP/questions.json" --auto "$RUNNER_TEMP/auto-sent.json"
             step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json" --unknown "$RUNNER_TEMP/unknown-names.json"
             # (17 November 2026, decision 27 step a) "hardcode is not enough our ai has to correct and update itself with all possible relevant
             # online searches": the unknown words of sent questions (never the questions) are looked up in open name lists that allow it
@@ -178,7 +180,7 @@ jobs:
           # step of the system's OWN questions it asks GitHub whether a run is waiting, and where one is it leaves the rest to that run, which reads the
           # new question first. Where GitHub cannot be asked, the run works on as before.
           own() { if python3 -I scripts/auto/lane.py waiting >> "$L" 2>&1; then echo "== left to the run that is waiting (a new question came): $1" >> "$L"; else step "$@"; fi; }
-          if [ "$DO_SCOUT" = "true" ]; then live_now "how each new question was read"; fi
+          live_now "how each question was read"
           if [ "$DO_LANE" = "true" ] || [ -f "$RUNNER_TEMP/new-items" ]; then   # (a question that was just listed is worked on in this same run)
             # (19 November 2026; the senior author, 18 November, 23:42 Athens: "like 5 minutes pass and i don't have an answer ... it should be answered almost
             # immediately") the two searches run at the same time (each writes its own files; 24 and 56 seconds one after the other on 18 November), and the

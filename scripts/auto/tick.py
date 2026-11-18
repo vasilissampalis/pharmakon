@@ -105,7 +105,10 @@ def plan():
     if token and account:
         try:
             ns = fq.find_namespace(urllib.request.urlopen, token, account, os.environ.get("KV_NAMESPACE") or "pharmakon-questions")
-            recs = fq.read_all(urllib.request.urlopen, token, account, ns) + [{"q": "w:" + w["id"], "n": w["n"]} for w in fq.read_wanted(urllib.request.urlopen, token, account, ns)] if ns else []
+            # (19 November 2026) the same records the scout signs when it has read them (look.py, --done: the questions people chose to send and the ones the page
+            # sent by itself). Until then this line signed other records (the counts of listed questions, and not the questions the page sent), so the two
+            # never agreed: every look said "the store has changed" and every look started the scout
+            recs = fq.read_all(urllib.request.urlopen, token, account, ns) + fq.read_auto(urllib.request.urlopen, token, account, ns) if ns else []
             sig = look.signature(recs); scout = bool(ns) and sig != st.get("done"); why["scout"] = "the store has changed" if scout else "the store is as the scout last read it"
         except Exception as e: why["scout"] = "the store could not be read (" + type(e).__name__ + ")"
     else: why["scout"] = "no key"
