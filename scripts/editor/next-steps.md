@@ -21,13 +21,15 @@ the way back in the bar).
    NO LANGUAGE MODEL anywhere in it (two trials with the real model and seven without: `data/auto/instant/`), and a list that comes within
    about a second although Europe PMC lets one request in three hang. Nothing waits on him for this: the Workers AI binding is not needed.
    Next, in this order:
-   (a) **Read the publishing's own lines** (`data/auto/deploy/_last-run.txt`, "server:", `scripts/auto/live_check.py`): six of our questions
-   on the real site, each with its time, each search's time at Europe PMC, how many were asked again, and whether the list was given with a
-   search still out; then the first question once more. If "once more" is not clearly quicker, Cloudflare is not keeping Europe PMC's replies
-   (`cf.cacheTtl` in `findPapers`): keep the whole reply instead, with the Cache API, under a key that holds the site's version.
-   (b) **Faster still, if he wants it.** Asking Europe PMC twice from the start (instead of again after 0.45 s) would bring the first list to
-   about 0.3 s at the median and leave fewer lists to complete; it costs two more requests to a public service for every question. Or let
-   the second asking come sooner while Europe PMC hangs often (the server can count that). Measure with a trial before and after.
+   (a) **Read the publishing's own lines after every publishing** (`data/auto/deploy/_last-run.txt`, "server:", `scripts/auto/live_check.py`):
+   twelve of our questions on the real site, each with its time, each search's time at Europe PMC, which asking answered, and whether the
+   list was given without the most cited; then the first question once more ("from what was kept"). With 2.20.1 (05:36): 0.3 to 1.2 s, the
+   middle one 0.9 s, about 0.3 s of it the publishing machine's own connection. If that drifts, the timings in `findPapers` (`FIND_A`,
+   `FIND_B`, `FIND_GRACE`, `FIND_SOON`) are the place, with a trial before and after.
+   (b) **Faster still, if he wants it.** What is left is Europe PMC's own time for a search nobody asked before (0.6 to 0.7 s from the
+   site). Two ways, each at a price: ask Europe PMC twice from the start (two more requests to a public service for every question); or
+   let the page ask 0.3 s after the last key instead of 0.7 s and show the list when the question still stands (more searches for
+   half-typed questions). Neither is done.
    (b2) **More papers with words, without saying more.** Most sentences are lost to the limit of 15 words (trial 8 holds the shapes of 157
    of them, never their text). What can still be mended is in those shapes: a run that ends before "and suggests that ..." without a comma;
    "X, daily use is also associated with ..." (a list at the start). One class at a time: a test, then a trial, then read every line.

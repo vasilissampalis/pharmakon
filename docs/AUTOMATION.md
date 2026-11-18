@@ -1037,6 +1037,17 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       search's address (checked before each asking). The reply now also says which asking answered and how long
       that asking took, and the publishing's check asks twelve questions, so that the next run shows what a
       search costs from the real site.
+      **What the real site gave with 2.20.1** (publishing of 05:36, `data/auto/deploy/`; twelve of our questions
+      that nobody had asked before, as timed from the publishing machine, which opens its own connection to the
+      site each time, about 0.3 s of every figure): 0.3 to 1.2 s each, the middle one 0.9 s, three in four under
+      1.0 s; a search itself 0.2 to 0.9 s, mostly 0.6 to 0.7 s (0.2 to 0.3 s where Europe PMC had been asked the
+      same not long before); the most cited needed their second asking about every other time and never their
+      third; no list was given without the most cited. A question asked a second time: its searches 0.0 s, "from
+      what was kept", 0.3 s in all. In a reader's browser, whose connection to the site is open, that is about
+      a tenth to nine tenths of a second after the page asks; while typing, the page asks 0.7 s after the last key.
+      The tenth trial (the same server on the trial machine): first list after 0.50 s at the median, 44 of 56
+      under a second, all under 2.1 s; 3 given without the most cited, whole after 2.5 to 2.9 s; 198 requests to
+      Europe PMC where the ninth made 265; 45 lines for 29 questions, the same lines as before.
       **What the trials gave in words** (lines shown, of papers listed; questions with at least one line):
       trial 3: 147 of 253, many of them pieces of sentences. Trial 4: 66 of 252. Trial 5: 54 of 236; 27 of 44.
       Trial 6: 55 of 234; 30 of 44; about fifteen of them beside the point or about something else. Trial 7: 48 of
