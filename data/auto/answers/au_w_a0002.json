@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_a0002",
- "lane": 18,
+ "lane": 19,
  "kind": "answer",
  "from": "w_a0002",
  "question": "Does kanna have psychoactive effects?",
@@ -15,36 +15,119 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-17",
+  "on": "2026-11-18",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "@cf/openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3.6-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44147983179",
+  "run": "44303193843",
   "from": {
    "papers": 2,
-   "summaries": 1,
+   "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0
+  "neurons": 72.9
  },
- "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "read": "6 findings kept from 3 sources (2 papers read in full, 0 official pages, 1 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 1 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8726) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 7982)"
+  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + DB (16)",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: its source says “subjective mood effects”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 3; gemini-3.6-flash accepted 3 of 3",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.78, but 0.46, how1 0.76",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; it also found that the short answer answers the question and that the But is about that answer",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "manganyi_2021",
+    "type": "article-journal",
+    "title": "A chewable cure “kanna”: Biological and pharmaceutical properties of sceletium tortuosum",
+    "author": [
+     {
+      "family": "Manganyi",
+      "given": "Madira Coutlyne"
+     },
+     {
+      "family": "Bezuidenhout",
+      "given": "Cornelius Carlos"
+     },
+     {
+      "family": "Regnier",
+      "given": "Thierry"
+     },
+     {
+      "family": "Ateba",
+      "given": "Collins Njie"
+     }
+    ],
+    "container-title": "Molecules",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.3390/molecules26092557",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-18",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-18"
+     }
+    },
+    "volume": "26",
+    "issue": "9",
+    "number": "2557",
+    "PMCID": "PMC8124331"
+   },
+   "doi": "10.3390/molecules26092557",
+   "pmcid": "PMC8124331",
+   "title": "A Chewable Cure \"Kanna\": Biological and Pharmaceutical Properties of Sceletium tortuosum",
+   "year": 2021,
+   "journal": "Molecules (Basel, Switzerland)",
+   "kind": "review",
+   "people": true,
+   "near": 0.653,
+   "money": [
+    "AcknowledgmentsThe authors acknowledge their respective universities or research niche, Department of Biological and Environmental Sciences, Walter Sisulu University (M.C.M.), the Unit for Environmental Sciences and Management, Faculty of Natural and Agricultural Sciences, North-West University (C.C.B.), the Department of Biotechnology and Food Technology, Tshwane University of Technology, (T.R.), and the Food Security and Safety Niche Area, Faculty of Natural and Agricultural Sciences, North-West University (C.N.A.)."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Thus, this review provides an extensive overview of the biological and p",
+    "text": "a review of the biological and pharmaceutical properties of Sceletium tortuosum"
+   },
+   "findings": [
+    {
+     "passage": 26,
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+     "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+     "text": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -99,10 +182,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-18",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-18"
      }
     },
     "volume": "38",
@@ -132,8 +215,8 @@
      "passage": 28,
      "where": "DISCUSSION",
      "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
-     "text": "Although general subjective mood effects were not observed, the findings reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum.",
-     "id": "F1",
+     "text": "General subjective mood effects were not observed, though the effects noted arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
@@ -141,207 +224,92 @@
     {
      "passage": 28,
      "where": "DISCUSSION",
-     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum (;;).",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
      "text": "General subjective mood effects were not observed in the study.",
      "id": "L1",
      "second_hand": ""
     }
    ],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "luo_2022",
-    "type": "article-journal",
-    "title": "A network pharmacology-based approach to explore the therapeutic potential of sceletium tortuosum in the treatment of neurodegenerative disorders",
-    "author": [
-     {
-      "family": "Luo",
-      "given": "Yangwen"
-     },
-     {
-      "family": "Shan",
-      "given": "Luchen"
-     },
-     {
-      "family": "Xu",
-      "given": "Lipeng"
-     },
-     {
-      "family": "Patnala",
-      "given": "Srinivas"
-     },
-     {
-      "family": "Kanfer",
-      "given": "Isadore"
-     },
-     {
-      "family": "Li",
-      "given": "Jiahao"
-     },
-     {
-      "family": "Yu",
-      "given": "Pei"
-     },
-     {
-      "family": "Jun",
-      "given": "Xu"
-     }
-    ],
-    "container-title": "PLOS ONE",
-    "issued": {
-     "date-parts": [
-      [
-       2022
-      ]
-     ]
-    },
-    "DOI": "10.1371/journal.pone.0273583",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-17"
-     }
-    },
-    "volume": "17",
-    "issue": "8",
-    "number": "e0273583",
-    "PMCID": "PMC9409587"
-   },
-   "doi": "10.1371/journal.pone.0273583",
-   "pmcid": "PMC9409587",
-   "title": "A network pharmacology-based approach to explore the therapeutic potential of Sceletium tortuosum in the treatment of neurodegenerative disorders",
-   "year": 2022,
-   "journal": "PloS one",
-   "kind": "other",
-   "people": true,
-   "near": 0.637,
-   "money": [
-    "The author(s) received no specific funding for this work."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Hence, this study investigated two aspects–firstly, the abilities of neuroprotective sub-fractions from SCT on scavenging radicals, inhibiting some usual targets relevant to Alzheimer’s disease (AD) or Parkinson’s disease (PD), and secondly utilizing the network pharmacology related methods to search probable mechanisms using Surflex-Dock program to show the key targets and corresponding SCT constituents.",
-    "text": "A network pharmacology study investigating neuroprotective sub-fractions and constituents of Sceletium tortuosum."
-   },
-   "findings": [
-    {
-     "passage": 32,
-     "where": "Results › SCT sub-fractions inhibit NMDAR",
-     "quote": "Compared to Zembrin®, the more potent neuroprotective P5 and E1 fractions (compared with P6 and E3 in our previous study) showed potent inhibiting effect on NMDAR-mediated current. However, this effect is not significant enough to be considered as main mechanism that elicits antidepressant action of SCT.",
-     "text": "Neuroprotective P5 and E1 fractions showed a potent inhibiting effect on NMDAR-mediated current, but this effect is not significant enough to be considered the main mechanism eliciting the antidepressant action of Sceletium tortuosum.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 42,
-     "where": "Discussion",
-     "quote": "Furthermore, P5 and E1 fractions SCT presented a non-significant inhibition of NMDAR-mediated current in hippocampal neurons of Sprague-Dawley neonatal rats, which was more potent than the effect of Zembrin® on NMDAR-mediated current and consistent with previous results.",
-     "text": "P5 and E1 fractions of Sceletium tortuosum presented a non-significant inhibition of NMDAR-mediated current in hippocampal neurons of Sprague-Dawley neonatal rats.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "However, it is still unclear which of the pharmacological mechanisms of SCT contribute to the therapeutic potential for neurodegenerative disorders.",
-     "text": "It is still unclear which of the pharmacological mechanisms of Sceletium tortuosum contribute to the therapeutic potential for neurodegenerative disorders.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
    "tag": "B"
-  },
-  {
-   "read": "summary",
-   "ref": {
-    "id": "krstenansky_2017",
-    "type": "article-journal",
-    "title": "Mesembrine alkaloids: Review of their occurrence, chemistry, and pharmacology",
-    "author": [
-     {
-      "family": "Krstenansky",
-      "given": "John L."
-     }
-    ],
-    "container-title": "Journal of Ethnopharmacology",
-    "issued": {
-     "date-parts": [
-      [
-       2017
-      ]
-     ]
-    },
-    "DOI": "10.1016/j.jep.2016.12.004",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-17"
-     }
-    },
-    "volume": "195",
-    "page": "10-19"
-   },
-   "doi": "10.1016/j.jep.2016.12.004",
-   "title": "Mesembrine alkaloids: Review of their occurrence, chemistry, and pharmacology",
-   "year": 2017,
-   "journal": "Journal of ethnopharmacology",
-   "kind": "review",
-   "people": false,
-   "near": 0.576,
-   "money": [],
-   "design": {
-    "passage": 2,
-    "where": "Summary",
-    "quote": "This review focuses on the chemistry, analysis, and pharmacology of the mesembrine alkaloids.",
-    "text": "A literature review on the chemistry, analysis, and pharmacology of mesembrine alkaloids from Sceletium tortuosum (kanna)"
-   },
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "Traditional regional use ranged from relieving thirst, mild analgesia, and alteration of mood.",
-     "text": "Traditional regional use of kanna ranged from relieving thirst, mild analgesia, and alteration of mood.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "Current interest has focused primarily on the antidepressant action of preparations based on the plant",
-     "text": "Current interest has focused primarily on the antidepressant action of preparations based on the plant.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "They are serotonin reuptake inhibitors, which provides a rationale for the plant's traditional use as an antidepressant",
-     "text": "They are serotonin reuptake inhibitors, which provides a rationale for the plant's traditional use as an antidepressant.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "C"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes, kanna has psychoactive compounds. In one study, it did not cause general mood changes, but it may reduce threat responses.",
+   "uses": [
+    "F1",
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "manganyi_2021",
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+     "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+     "sha": "23bc920c7b6a25cf"
+    },
+    {
+     "label": "F2",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "General subjective mood effects were not observed in the study of 16 healthy participants.",
+   "uses": [
+    "L1",
+    "DB"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    },
+    {
+     "label": "DB",
+     "ref": "terburg_2013",
+     "where": "Abstract",
+     "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+     "sha": "89076b899c033ad3"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2021 review of Sceletium tortuosum says its chemical profile includes psychoactive compounds.",
+   "uses": [
+    "DA",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "manganyi_2021",
+     "where": "Abstract",
+     "quote": "Thus, this review provides an extensive overview of the biological and p",
+     "sha": "926eab80cf3dad03"
+    },
+    {
+     "label": "F1",
+     "ref": "manganyi_2021",
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+     "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+     "sha": "23bc920c7b6a25cf"
+    }
+   ],
+   "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds",
+   "quote_ref": "manganyi_2021"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -383,6 +351,14 @@
    "why": "no source that can be read gave a finding for this question",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-17",
+   "lane": 18,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -391,15 +367,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules26092557",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "The phytochemical profile of Sceletium tortuosum has been isolated and has identified psychoactive compounds.",
-     "quote": "The phytochemical profile of Sceletium tortuosum has been isolated and has identified psychoactive compounds.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Acute effects of Sceletium tortuosum (Zembrin), a dual 5-HT reuptake and PDE4 inhibitor, in the human amygdala and its connection to the hypothalamus",
@@ -408,60 +377,12 @@
    "at": "10.1038/npp.2013.183",
    "kept": 1,
    "thrown": []
-  },
-  {
-   "title": "A network pharmacology-based approach to explore the therapeutic potential of Sceletium tortuosum in the treatment of neurodegenerative disorders",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1371/journal.pone.0273583",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "The overlapping targets of constituents and Alzheimer's disease or Parkinson's disease enriched in biological processes that mainly involved response to drug, chemical synaptic transmission, locomotor",
-     "quote": "The overlapping targets of constituents and AD/PD could enrich in more than 20 terms of biological processes (the terms of which P value < 0.001 were showed as), which mainly involved response to drug",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
-  },
-  {
-   "title": "Mesembrine alkaloids: Review of their occurrence, chemistry, and pharmacology",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.jep.2016.12.004",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "The two major active alkaloids mesembrine and mesembrenone are still in the process of being more fully characterized pharmacologically.",
-     "why": "no sentence"
-    }
-   ]
-  },
-  {
-   "title": "Biomedical analysis of New Psychoactive Substances (NPS) of natural origin",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.jpba.2019.112945",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "A review of commercially important African medicinal plants",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.jep.2015.10.031",
-   "kept": 0,
-   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F4",
-   "F5",
-   "F6",
-   "F1"
+   "F1",
+   "F2"
   ],
   "direct": "Yes",
   "but": [
@@ -469,17 +390,279 @@
   ],
   "how": [
    [
-    "DC",
-    "F4",
-    "F5",
-    "F6"
-   ],
-   [
     "DA",
     "F1"
+   ],
+   [
+    "DB",
+    "F2"
    ]
   ],
   "unanswered": ""
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "A 2013 study of 16 healthy people found no general mood effects, but possible reduced threat system activity.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "terburg_2013",
+     "where": "Abstract",
+     "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+     "sha": "89076b899c033ad3"
+    },
+    {
+     "label": "F2",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source says “subjective mood effects”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2013 study of 16 healthy people found no general mood effects, but possible reduced threat responses.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "terburg_2013",
+     "where": "Abstract",
+     "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+     "sha": "89076b899c033ad3"
+    },
+    {
+     "label": "F2",
+     "ref": "terburg_2013",
+     "where": "DISCUSSION",
+     "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+     "sha": "354d675da7f1d2e8"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source says “subjective mood effects”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.7805,
+   "but": 0.4605,
+   "how1": 0.7598
+  },
+  "scores_quotes_alone": {
+   "short": 0.5493,
+   "but": 0.9303,
+   "how1": 0.9309
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, kanna has psychoactive compounds. In one study, it did not cause general mood changes but may reduce threat responses.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+       "sha": "23bc920c7b6a25cf"
+      },
+      {
+       "label": "F2",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that the study did not observe 'general subjective mood effects', not that it 'did not cause general mood changes'."
+    },
+    {
+     "part": "but",
+     "text": "General subjective mood effects were not observed in the study of 16 healthy participants.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      },
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+       "sha": "89076b899c033ad3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of biological properties says kanna has identified psychoactive compounds.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Thus, this review provides an extensive overview of the biological and p",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+       "sha": "23bc920c7b6a25cf"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, kanna has psychoactive compounds. In one study, it did not cause general subjective mood effects, but may reduce threat system responsivity.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+       "sha": "23bc920c7b6a25cf"
+      },
+      {
+       "label": "F2",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that the researchers 'did not observe general subjective mood effects', which is not the same as stating the plant 'did not cause' them."
+    },
+    {
+     "part": "but",
+     "text": "General subjective mood effects were not observed in the study of 16 healthy participants.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      },
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+       "sha": "89076b899c033ad3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of Sceletium tortuosum says its phytochemical profile has identified psychoactive compounds.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Thus, this review provides an extensive overview of the biological and p",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "The phytochemical profile of S. tortuosum has been isolated and has identified psychoactive compounds.",
+       "sha": "23bc920c7b6a25cf"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2013 study of 16 healthy participants found no general subjective mood effects, but noted reduced threat system responsivity.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double-blind, placebo-controlled, cross-over design, 16 healthy participants were scanned during performance in a perceptual-load and an emotion-matching task.",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F2",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although we did not observe general subjective mood effects, the effects noted here arguably reflect a reduction of responsivity of the threat system related to the anxiolytic properties of S. tortuosum",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence states as fact that the study noted reduced threat system responsivity, whereas the passage states that the effects noted 'arguably reflect a reduction of responsivity of the threat system'."
+    }
+   ]
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
  },
  "place": {
   "home": "new:Kanna",
