@@ -20,38 +20,38 @@
  "made": {
   "on": "2026-11-18",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "gemini:gemma-4-31b-it",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.8-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "reader_first": "gemini:gemma-4-31b-it",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44377501480",
+  "run": "44419211999",
+  "read_seconds": 39,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 0.0
+  "neurons": 0.0,
+  "seconds": 177
  },
- "status": "waiting",
- "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.8-flash): it is worked on again by itself when that reader can be asked",
+ "status": "published",
+ "why": "passed every gate, and the stricter bar for an answer about dying",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 6 of 6; gemini-3.8-flash could not be asked: gemini could not be reached: The read operation timed out",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.98, but 0.36, how1 0.60, how2 0.98, how3 0.98, how4 0.68",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.8-flash; it also found that the short answer answers the question and that the But is about that answer",
-  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9483) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
+  "read": "8 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 4 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.74, but 0.98, how1 0.97, how2 0.79, how3 0.86",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash",
+  "but": "the writer's But was not accepted (the passage states that CE (cocaethylene) has low validity, not cocaethylene as a substance itself having low validity): the code wrote the But itself, from what this answer rests on",
   "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: met (an official page or a review read in full under the short answer; a further reader read it; no word that plays a danger down, by code and by every reader)"
  },
  "sources": [
   {
@@ -119,30 +119,30 @@
     "passage": 5,
     "where": "Introduction and background",
     "quote": "The goal of our narrative review is to present a clinically relevant overview of the cocaethylene metabolite.",
-    "text": "a narrative review of literature"
+    "text": "a narrative review of existing literature on the cocaethylene metabolite"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Cocaine is taken frequently together with ethanol and this combination produces a psychoactive metabolite called cocaethylene which has similar properties to the parent drug and may be more cardiotoxic.",
-     "text": "Cocaine combined with ethanol produces a psychoactive metabolite called cocaethylene that has similar properties to the parent drug and may be more cardiotoxic.",
+     "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol may experience a longer-lasting, as well as more intense, psychoactive effect.",
+     "text": "Cocaethylene has a longer half-life than cocaine, which can cause people who combine cocaine and ethanol to experience more intense and longer-lasting psychoactive effects.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 7,
-     "where": "Review",
-     "quote": "Compared to cocaine, cocaethylene had slower clearance, larger volume of distribution, and longer elimination half-life.",
-     "text": "Compared to cocaine, cocaethylene had slower clearance, a larger volume of distribution, and a longer elimination half-life.",
-     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 13,
      "where": "Review",
      "quote": "In terms of this central stimulatory effect, cocaine and cocaethylene appear to be equipotent, but cocaethylene’s longer half-life makes its effects more persistent.",
-     "text": "Cocaine and cocaethylene appear to be equipotent in terms of their central stimulatory effect, but cocaethylene's longer half-life makes its effects more persistent.",
+     "text": "Cocaine and cocaethylene appear to be equipotent in their central stimulatory effects, but the effects of cocaethylene are more persistent due to its longer half-life.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 14,
+     "where": "Review",
+     "quote": "Both cocaine and cocaethylene increase the post-synaptic neuronal activity in an equipotent fashion although the effects of cocaethylene are more enduring.",
+     "text": "Both cocaine and cocaethylene increase post-synaptic neuronal activity with equal potency, though the effects of cocaethylene last longer.",
      "id": "F3",
      "second_hand": ""
     }
@@ -151,8 +151,8 @@
     {
      "passage": 26,
      "where": "Conclusions",
-     "quote": "While the pharmacology of cocaethylene has been known for decades, its role in cocaine intoxication, cocaine-induced heart disease, and polysubstance use disorder has not been well studied.",
-     "text": "The role of cocaethylene in cocaine intoxication, cocaine-induced heart disease, and polysubstance use disorder has not been well studied.",
+     "quote": "Greater study is needed about the effects and metabolic pathways of cocaethylene in the body.",
+     "text": "More research is required regarding the metabolic pathways and effects of cocaethylene in the body.",
      "id": "L1",
      "second_hand": ""
     }
@@ -220,65 +220,127 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "A systematic review of human studies comparing the cardiovascular risk of co-used cocaine and alcohol with the use of cocaine alone.",
-    "text": "A systematic review of human studies comparing cardiovascular risk"
+    "text": "A systematic review of human studies comparing the cardiovascular risk of co-used cocaine and alcohol with the use of cocaine alone."
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "the presence of cocaethylene, a unique metabolite generated only via a pharmacokinetic interaction between alcohol and cocaine, carries an 18- to 25-fold increase over the absence of cocaethylene (cocaine-alone users) in the risk of sudden death",
-     "text": "The presence of cocaethylene carries an 18- to 25-fold increase over the absence of cocaethylene in the risk of sudden death.",
+     "text": "The presence of cocaethylene, a metabolite formed by the interaction of alcohol and cocaine, is associated with an 18- to 25-fold increase in the risk of sudden death compared to people who use cocaine alone.",
      "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 27,
      "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone, while in another study, CE was associated with a 25-fold increased risk of sudden cardiac death compared to cocaine alone.",
-     "text": "People with coronary artery disease, who had used cocaine-alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone, while in another study, CE was associated with a 25-fold increased risk of sudden cardiac death compared to cocaine alone.",
+     "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone",
+     "text": "People with coronary artery disease who used both cocaine and alcohol had a 21.5 times greater risk for sudden death than those who used cocaine alone.",
      "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 28,
-     "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "In summary, the combined use of cocaine and alcohol leads consistently to a higher mortality rate than the use of cocaine alone.",
-     "text": "The combined use of cocaine and alcohol leads consistently to a higher mortality rate than the use of cocaine alone.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "the co-use of cocaine and alcohol clearly leads to higher mortality.",
+     "text": "The combined use of cocaine and alcohol clearly leads to higher mortality than the use of cocaine alone.",
      "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 28,
-     "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "The cause of death and the role of confounders, in general, is poorly or not reported.",
-     "text": "The cause of death and the role of confounders, in general, is poorly or not reported.",
+     "passage": 36,
+     "where": "5. Limitations of the Study",
+     "quote": "Moreover, in some studies, CE has been found to have low validity considering its poor or inconsistent correlation with the level of cocaine (r = 0.02), even when subjects were stratified by alcohol level.",
+     "text": "In some studies, cocaethylene has been found to have low validity due to poor or inconsistent correlation with cocaine levels.",
      "id": "L2",
-     "second_hand": ""
+     "second_hand": "Moreover, in some studies, CE has been found to have low validity considering its poor or inconsistent correlation with the level of cocaine (r = 0."
     }
    ],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_health-risks",
+    "type": "webpage",
+    "title": "Health risks of alcohol",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       10,
+       7
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/health-risks.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       18
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-18"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "Health risks of alcohol",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.463,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/health-risks.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "How alcohol interacts with other substances",
+     "quote": "It can be dangerous to drink alcohol while taking other substances, such as: controlled and illegal drugs; cannabis; prescription medications, such as sleeping pills and antidepressants",
+     "text": "It can be dangerous to consume alcohol while taking other substances, including controlled and illegal drugs, cannabis, or prescription medications.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "How alcohol interacts with other substances",
+     "quote": "In some cases, the combination is dangerous and potentially fatal.",
+     "text": "Combining alcohol with other substances can be dangerous and potentially fatal in some cases.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
   }
  ],
  "parts": [
   {
    "part": "short",
-   "text": "Cocaethylene may be more dangerous to the heart than cocaine alone. People using cocaine and alcohol have a higher risk of sudden death than people using cocaine alone.",
+   "text": "Cocaethylene, formed when people use cocaine and alcohol, is linked to an 18- to 25-fold higher risk of sudden death than cocaine alone. Its effects can also last longer.",
    "uses": [
-    "F1",
     "F4",
-    "F5",
-    "F6"
+    "F6",
+    "F1"
    ],
    "rests_on": [
-    {
-     "label": "F1",
-     "ref": "pergolizzi_2022",
-     "where": "Abstract",
-     "quote": "Cocaine is taken frequently together with ethanol and this combination produces a psychoactive metabolite called cocaethylene which has similar properties to the parent drug and may be more cardiotoxic.",
-     "sha": "dc115d00694bd597"
-    },
     {
      "label": "F4",
      "ref": "vanamsterdam_2024",
@@ -287,43 +349,88 @@
      "sha": "3f0039e3ef657d6a"
     },
     {
-     "label": "F5",
-     "ref": "vanamsterdam_2024",
-     "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone, while in another study, CE was associated with a 25-fold increased risk of sudden cardiac death compared to cocaine alone.",
-     "sha": "12486eb5c2b0435d"
-    },
-    {
      "label": "F6",
      "ref": "vanamsterdam_2024",
-     "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "In summary, the combined use of cocaine and alcohol leads consistently to a higher mortality rate than the use of cocaine alone.",
-     "sha": "c771c09d30fe35b5"
+     "where": "Abstract",
+     "quote": "the co-use of cocaine and alcohol clearly leads to higher mortality.",
+     "sha": "3f0039e3ef657d6a"
+    },
+    {
+     "label": "F1",
+     "ref": "pergolizzi_2022",
+     "where": "Abstract",
+     "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol may experience a longer-lasting, as well as more intense, psychoactive effect.",
+     "sha": "dc115d00694bd597"
     }
    ]
   },
   {
    "part": "but",
-   "text": "The cause of death and the role of other factors are poorly or not reported in these studies.",
+   "text": "This rests on 2 reviews and 1 official page that our system could read. It has not read every study on this question.",
    "uses": [
-    "L2"
+    "DA",
+    "DB",
+    "F7"
    ],
+   "fixed": true,
    "rests_on": [
     {
-     "label": "L2",
+     "label": "DA",
+     "ref": "pergolizzi_2022",
+     "where": "Introduction and background",
+     "quote": "The goal of our narrative review is to present a clinically relevant overview of the cocaethylene metabolite.",
+     "sha": "abc25187ac538f5b"
+    },
+    {
+     "label": "DB",
      "ref": "vanamsterdam_2024",
-     "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "The cause of death and the role of confounders, in general, is poorly or not reported.",
-     "sha": "c771c09d30fe35b5"
+     "where": "Abstract",
+     "quote": "A systematic review of human studies comparing the cardiovascular risk of co-used cocaine and alcohol with the use of cocaine alone.",
+     "sha": "3f0039e3ef657d6a"
+    },
+    {
+     "label": "F7",
+     "ref": "healthcanada_health-risks",
+     "where": "How alcohol interacts with other substances",
+     "quote": "It can be dangerous to drink alcohol while taking other substances, such as: controlled and illegal drugs; cannabis; prescription medications, such as sleeping pills and antidepressants",
+     "sha": "10f3ed0e7e058502"
     }
    ]
   },
   {
    "part": "how1",
-   "text": "A 2024 review of human studies found that having cocaethylene is linked to an 18- to 25-fold increase in sudden death risk compared to cocaine alone.",
+   "text": "Health Canada says combining alcohol with other substances can be dangerous and potentially fatal in some cases.",
+   "uses": [
+    "F7",
+    "F8"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "healthcanada_health-risks",
+     "where": "How alcohol interacts with other substances",
+     "quote": "It can be dangerous to drink alcohol while taking other substances, such as: controlled and illegal drugs; cannabis; prescription medications, such as sleeping pills and antidepressants",
+     "sha": "10f3ed0e7e058502"
+    },
+    {
+     "label": "F8",
+     "ref": "healthcanada_health-risks",
+     "where": "How alcohol interacts with other substances",
+     "quote": "In some cases, the combination is dangerous and potentially fatal.",
+     "sha": "10f3ed0e7e058502"
+    }
+   ],
+   "quote": "It can be dangerous to drink alcohol while taking other substances, such as",
+   "quote_ref": "healthcanada_health-risks"
+  },
+  {
+   "part": "how2",
+   "text": "A 2024 review of human studies found that using cocaine and alcohol together leads to higher mortality than cocaine alone.",
    "uses": [
     "DB",
-    "F4"
+    "F4",
+    "F5",
+    "F6"
    ],
    "rests_on": [
     {
@@ -339,53 +446,33 @@
      "where": "Abstract",
      "quote": "the presence of cocaethylene, a unique metabolite generated only via a pharmacokinetic interaction between alcohol and cocaine, carries an 18- to 25-fold increase over the absence of cocaethylene (cocaine-alone users) in the risk of sudden death",
      "sha": "3f0039e3ef657d6a"
-    }
-   ],
-   "quote": "comparing the cardiovascular risk of co-used cocaine and alcohol with the use of cocaine alone",
-   "quote_ref": "vanamsterdam_2024"
-  },
-  {
-   "part": "how2",
-   "text": "In people with coronary artery disease, using cocaine and alcohol was linked to a 21.5 times greater risk of sudden death than cocaine alone.",
-   "uses": [
-    "F5"
-   ],
-   "rests_on": [
+    },
     {
      "label": "F5",
      "ref": "vanamsterdam_2024",
      "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone, while in another study, CE was associated with a 25-fold increased risk of sudden cardiac death compared to cocaine alone.",
+     "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone",
      "sha": "12486eb5c2b0435d"
+    },
+    {
+     "label": "F6",
+     "ref": "vanamsterdam_2024",
+     "where": "Abstract",
+     "quote": "the co-use of cocaine and alcohol clearly leads to higher mortality.",
+     "sha": "3f0039e3ef657d6a"
     }
    ],
-   "quote": "People with coronary artery disease, who had used cocaine-alcohol, had a 21.5 times greater risk",
+   "quote": "a unique metabolite generated only via a pharmacokinetic interaction between alcohol and cocaine",
    "quote_ref": "vanamsterdam_2024"
   },
   {
    "part": "how3",
-   "text": "The review says combined use of cocaine and alcohol leads consistently to a higher mortality rate than cocaine alone.",
-   "uses": [
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "vanamsterdam_2024",
-     "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-     "quote": "In summary, the combined use of cocaine and alcohol leads consistently to a higher mortality rate than the use of cocaine alone.",
-     "sha": "c771c09d30fe35b5"
-    }
-   ],
-   "quote": "alcohol leads consistently to a higher mortality rate than the use of cocaine alone",
-   "quote_ref": "vanamsterdam_2024"
-  },
-  {
-   "part": "how4",
-   "text": "A 2022 narrative review says cocaethylene has similar properties to cocaine and may be more cardiotoxic.",
+   "text": "A 2022 review notes cocaethylene has a longer half-life than cocaine, making its stimulatory effects more persistent.",
    "uses": [
     "DA",
-    "F1"
+    "F1",
+    "F2",
+    "F3"
    ],
    "rests_on": [
     {
@@ -399,11 +486,25 @@
      "label": "F1",
      "ref": "pergolizzi_2022",
      "where": "Abstract",
-     "quote": "Cocaine is taken frequently together with ethanol and this combination produces a psychoactive metabolite called cocaethylene which has similar properties to the parent drug and may be more cardiotoxic.",
+     "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol may experience a longer-lasting, as well as more intense, psychoactive effect.",
      "sha": "dc115d00694bd597"
+    },
+    {
+     "label": "F2",
+     "ref": "pergolizzi_2022",
+     "where": "Review",
+     "quote": "In terms of this central stimulatory effect, cocaine and cocaethylene appear to be equipotent, but cocaethylene’s longer half-life makes its effects more persistent.",
+     "sha": "40f7751d60d64746"
+    },
+    {
+     "label": "F3",
+     "ref": "pergolizzi_2022",
+     "where": "Review",
+     "quote": "Both cocaine and cocaethylene increase the post-synaptic neuronal activity in an equipotent fashion although the effects of cocaethylene are more enduring.",
+     "sha": "811bcc22473b4dcd"
     }
    ],
-   "quote": "called cocaethylene which has similar properties to the parent drug and may be more cardiotoxic",
+   "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol",
    "quote_ref": "pergolizzi_2022"
   }
  ],
@@ -449,6 +550,14 @@
    "why": "no draft passed: not accepted at try 2: a second reader did not accept short (the word it opens with (“Yes”) is not the answer the passages bear out). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "waiting",
+   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.8-flash): it is worked on again by itself when that reader can be asked",
+   "short": "Cocaethylene may be more dangerous to the heart than cocaine alone. People using cocaine and alcohol have a higher risk of sudden death than people using cocaine alone.",
+   "complete": true
   }
  ],
  "looked": [
@@ -468,9 +577,9 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "limit",
-     "text": "In some studies, CE has been found to have low validity considering its poor or inconsistent correlation with the level of cocaine, even when subjects were stratified by alcohol level.",
-     "quote": "moreover, in some studies, CE has been found to have low validity considering its poor or inconsistent correlation with the level of cocaine (r = 0.02), even when subjects were stratified by alcohol l",
+     "kind": "finding",
+     "text": "Cocaethylene is associated with myocardial injury and cardiac arrest, likely due to the inhibition of cardiac ion channels.",
+     "quote": "cocaethylene... is associated with myocardial injury and cardiac arrest, probably due to the inhibition of cardiac ion channels by cocaethylene.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -488,7 +597,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/health-risks.html",
-   "kept": 0,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -526,10 +635,9 @@
  ],
  "plan": {
   "short": [
-   "F5",
+   "F4",
    "F6",
-   "F1",
-   "F4"
+   "F1"
   ],
   "direct": "",
   "but": [
@@ -537,27 +645,33 @@
   ],
   "how": [
    [
+    "F7",
+    "F8"
+   ],
+   [
     "DB",
+    "F4",
     "F5",
-    "F6",
-    "F4"
+    "F6"
    ],
    [
     "DA",
-    "F1"
+    "F1",
+    "F2",
+    "F3"
    ]
   ],
   "unanswered": "comparison to alcohol alone"
  },
  "panel": {
-  "gemini:gemini-3.5-flash-lite": {
+  "gemini:gemini-3.6-flash": {
    "short": [
     true,
     ""
    ],
    "but": [
-    true,
-    ""
+    false,
+    "The passage notes that cocaethylene has low validity due to its poor or inconsistent correlation with cocaine levels, but it does not state that this may limit how well it predicts risk."
    ],
    "how1": [
     true,
@@ -570,35 +684,26 @@
    "how3": [
     true,
     ""
-   ],
-   "how4": [
-    true,
-    ""
    ]
-  },
-  "gemini:gemini-3.8-flash": "could not be asked: gemini could not be reached: The read operation timed out"
+  }
  },
- "panel_gap": [
-  "gemini-3.8-flash"
- ],
+ "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.9762,
-   "but": 0.3563,
-   "how1": 0.599,
-   "how2": 0.9839,
-   "how3": 0.9793,
-   "how4": 0.679
+   "short": 0.7417,
+   "but": 0.983,
+   "how1": 0.9681,
+   "how2": 0.7931,
+   "how3": 0.8643
   },
   "scores_quotes_alone": {
-   "short": 0.9063,
-   "but": 0.5741,
-   "how1": 0.55,
-   "how2": 0.9172,
-   "how3": 0.8952,
-   "how4": 0.8506
+   "short": 0.4266,
+   "but": 0.8913,
+   "how1": 0.8751,
+   "how2": 0.725,
+   "how3": 0.8201
   }
  },
  "tries": [
@@ -608,15 +713,8 @@
    "parts": [
     {
      "part": "short",
-     "text": "The combined use of cocaine and alcohol leads to a higher mortality rate than using cocaine alone. Cocaethylene may be more cardiotoxic and carries an 18- to 25-fold increase in the risk of sudden death.",
+     "text": "Cocaethylene, formed when people use cocaine and alcohol together, is linked to an 18- to 25-fold higher risk of sudden death than cocaine alone. Its effects can also last longer.",
      "rests_on": [
-      {
-       "label": "F1",
-       "ref": "pergolizzi_2022",
-       "where": "Abstract",
-       "quote": "Cocaine is taken frequently together with ethanol and this combination produces a psychoactive metabolite called cocaethylene which has similar properties to the parent drug and may be more cardiotoxic.",
-       "sha": "dc115d00694bd597"
-      },
       {
        "label": "F4",
        "ref": "vanamsterdam_2024",
@@ -625,41 +723,62 @@
        "sha": "3f0039e3ef657d6a"
       },
       {
-       "label": "F5",
-       "ref": "vanamsterdam_2024",
-       "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-       "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone, while in another study, CE was associated with a 25-fold increased risk of sudden cardiac death compared to cocaine alone.",
-       "sha": "12486eb5c2b0435d"
-      },
-      {
        "label": "F6",
        "ref": "vanamsterdam_2024",
-       "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-       "quote": "In summary, the combined use of cocaine and alcohol leads consistently to a higher mortality rate than the use of cocaine alone.",
-       "sha": "c771c09d30fe35b5"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that cocaethylene carries an 18- to 25-fold increase in the risk of sudden death (the passages attribute this increase to the presence of cocaethylene over cocaine-alone users or in people with coronary artery dise"
-    },
-    {
-     "part": "but",
-     "text": "The cause of death and the role of other factors are poorly or not reported.",
-     "rests_on": [
+       "where": "Abstract",
+       "quote": "the co-use of cocaine and alcohol clearly leads to higher mortality.",
+       "sha": "3f0039e3ef657d6a"
+      },
       {
-       "label": "L2",
-       "ref": "vanamsterdam_2024",
-       "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-       "quote": "The cause of death and the role of confounders, in general, is poorly or not reported.",
-       "sha": "c771c09d30fe35b5"
+       "label": "F1",
+       "ref": "pergolizzi_2022",
+       "where": "Abstract",
+       "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol may experience a longer-lasting, as well as more intense, psychoactive effect.",
+       "sha": "dc115d00694bd597"
       }
      ],
      "ok": true
     },
     {
+     "part": "but",
+     "text": "Some studies report that cocaethylene levels do not always match cocaine levels, which may limit how well it predicts risk.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "vanamsterdam_2024",
+       "where": "5. Limitations of the Study",
+       "quote": "Moreover, in some studies, CE has been found to have low validity considering its poor or inconsistent correlation with the level of cocaine (r = 0.02), even when subjects were stratified by alcohol level.",
+       "sha": "95aa28cf4b87128c"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage notes that cocaethylene has low validity due to its poor or inconsistent correlation with cocaine levels, but it does not state that this may limit how well it predicts risk."
+    },
+    {
      "part": "how1",
-     "text": "A systematic review of human studies found that combining cocaine and alcohol leads to a higher mortality rate than cocaine alone.",
+     "text": "Health Canada says combining alcohol with other substances can be dangerous and potentially fatal in some cases.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_health-risks",
+       "where": "How alcohol interacts with other substances",
+       "quote": "It can be dangerous to drink alcohol while taking other substances, such as: controlled and illegal drugs; cannabis; prescription medications, such as sleeping pills and antidepressants",
+       "sha": "10f3ed0e7e058502"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_health-risks",
+       "where": "How alcohol interacts with other substances",
+       "quote": "In some cases, the combination is dangerous and potentially fatal.",
+       "sha": "10f3ed0e7e058502"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review of human studies found that using cocaine and alcohol together leads to higher mortality than cocaine alone.",
      "rests_on": [
       {
        "label": "DB",
@@ -669,46 +788,32 @@
        "sha": "3f0039e3ef657d6a"
       },
       {
-       "label": "F6",
-       "ref": "vanamsterdam_2024",
-       "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-       "quote": "In summary, the combined use of cocaine and alcohol leads consistently to a higher mortality rate than the use of cocaine alone.",
-       "sha": "c771c09d30fe35b5"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "In people with coronary artery disease, the risk for sudden death was 21.5 times greater when using cocaine and alcohol compared to cocaine alone.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "vanamsterdam_2024",
-       "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
-       "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone, while in another study, CE was associated with a 25-fold increased risk of sudden cardiac death compared to cocaine alone.",
-       "sha": "12486eb5c2b0435d"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The presence of cocaethylene carries an 18- to 25-fold increase in the risk of sudden death compared to when it is absent.",
-     "rests_on": [
-      {
        "label": "F4",
        "ref": "vanamsterdam_2024",
        "where": "Abstract",
        "quote": "the presence of cocaethylene, a unique metabolite generated only via a pharmacokinetic interaction between alcohol and cocaine, carries an 18- to 25-fold increase over the absence of cocaethylene (cocaine-alone users) in the risk of sudden death",
+       "sha": "3f0039e3ef657d6a"
+      },
+      {
+       "label": "F5",
+       "ref": "vanamsterdam_2024",
+       "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
+       "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone",
+       "sha": "12486eb5c2b0435d"
+      },
+      {
+       "label": "F6",
+       "ref": "vanamsterdam_2024",
+       "where": "Abstract",
+       "quote": "the co-use of cocaine and alcohol clearly leads to higher mortality.",
        "sha": "3f0039e3ef657d6a"
       }
      ],
      "ok": true
     },
     {
-     "part": "how4",
-     "text": "A narrative review of literature says cocaethylene has similar properties to cocaine and may be more cardiotoxic.",
+     "part": "how3",
+     "text": "A 2022 review notes cocaethylene has a longer half-life than cocaine, making its stimulatory effects more persistent.",
      "rests_on": [
       {
        "label": "DA",
@@ -721,8 +826,156 @@
        "label": "F1",
        "ref": "pergolizzi_2022",
        "where": "Abstract",
-       "quote": "Cocaine is taken frequently together with ethanol and this combination produces a psychoactive metabolite called cocaethylene which has similar properties to the parent drug and may be more cardiotoxic.",
+       "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol may experience a longer-lasting, as well as more intense, psychoactive effect.",
        "sha": "dc115d00694bd597"
+      },
+      {
+       "label": "F2",
+       "ref": "pergolizzi_2022",
+       "where": "Review",
+       "quote": "In terms of this central stimulatory effect, cocaine and cocaethylene appear to be equipotent, but cocaethylene’s longer half-life makes its effects more persistent.",
+       "sha": "40f7751d60d64746"
+      },
+      {
+       "label": "F3",
+       "ref": "pergolizzi_2022",
+       "where": "Review",
+       "quote": "Both cocaine and cocaethylene increase the post-synaptic neuronal activity in an equipotent fashion although the effects of cocaethylene are more enduring.",
+       "sha": "811bcc22473b4dcd"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Cocaethylene can cause more intense and longer-lasting effects than cocaine. Its presence is linked to an 18- to 25-fold higher risk of sudden death than cocaine alone.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "pergolizzi_2022",
+       "where": "Abstract",
+       "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol may experience a longer-lasting, as well as more intense, psychoactive effect.",
+       "sha": "dc115d00694bd597"
+      },
+      {
+       "label": "F4",
+       "ref": "vanamsterdam_2024",
+       "where": "Abstract",
+       "quote": "the presence of cocaethylene, a unique metabolite generated only via a pharmacokinetic interaction between alcohol and cocaine, carries an 18- to 25-fold increase over the absence of cocaethylene (cocaine-alone users) in the risk of sudden death",
+       "sha": "3f0039e3ef657d6a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Some studies report that cocaethylene has low validity because it does not consistently match cocaine levels.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "vanamsterdam_2024",
+       "where": "5. Limitations of the Study",
+       "quote": "Moreover, in some studies, CE has been found to have low validity considering its poor or inconsistent correlation with the level of cocaine (r = 0.02), even when subjects were stratified by alcohol level.",
+       "sha": "95aa28cf4b87128c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says combining alcohol with other substances can be dangerous and potentially fatal in some cases.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_health-risks",
+       "where": "How alcohol interacts with other substances",
+       "quote": "It can be dangerous to drink alcohol while taking other substances, such as: controlled and illegal drugs; cannabis; prescription medications, such as sleeping pills and antidepressants",
+       "sha": "10f3ed0e7e058502"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_health-risks",
+       "where": "How alcohol interacts with other substances",
+       "quote": "In some cases, the combination is dangerous and potentially fatal.",
+       "sha": "10f3ed0e7e058502"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review of human studies found that using cocaine and alcohol together leads to higher mortality than cocaine alone.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "vanamsterdam_2024",
+       "where": "Abstract",
+       "quote": "A systematic review of human studies comparing the cardiovascular risk of co-used cocaine and alcohol with the use of cocaine alone.",
+       "sha": "3f0039e3ef657d6a"
+      },
+      {
+       "label": "F4",
+       "ref": "vanamsterdam_2024",
+       "where": "Abstract",
+       "quote": "the presence of cocaethylene, a unique metabolite generated only via a pharmacokinetic interaction between alcohol and cocaine, carries an 18- to 25-fold increase over the absence of cocaethylene (cocaine-alone users) in the risk of sudden death",
+       "sha": "3f0039e3ef657d6a"
+      },
+      {
+       "label": "F5",
+       "ref": "vanamsterdam_2024",
+       "where": "3. Results › 3.7. Cocaine-Related Mortality and the Role of Alcohol Co-Use",
+       "quote": "People with coronary artery disease, who had used cocaine–alcohol, had a 21.5 times greater risk for sudden death than those who had used cocaine alone",
+       "sha": "12486eb5c2b0435d"
+      },
+      {
+       "label": "F6",
+       "ref": "vanamsterdam_2024",
+       "where": "Abstract",
+       "quote": "the co-use of cocaine and alcohol clearly leads to higher mortality.",
+       "sha": "3f0039e3ef657d6a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2022 review says cocaethylene has a longer half-life than cocaine, making its stimulatory effects more persistent.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "pergolizzi_2022",
+       "where": "Introduction and background",
+       "quote": "The goal of our narrative review is to present a clinically relevant overview of the cocaethylene metabolite.",
+       "sha": "abc25187ac538f5b"
+      },
+      {
+       "label": "F1",
+       "ref": "pergolizzi_2022",
+       "where": "Abstract",
+       "quote": "Cocaethylene has a longer half-life than cocaine, so that people who combine cocaine and ethanol may experience a longer-lasting, as well as more intense, psychoactive effect.",
+       "sha": "dc115d00694bd597"
+      },
+      {
+       "label": "F2",
+       "ref": "pergolizzi_2022",
+       "where": "Review",
+       "quote": "In terms of this central stimulatory effect, cocaine and cocaethylene appear to be equipotent, but cocaethylene’s longer half-life makes its effects more persistent.",
+       "sha": "40f7751d60d64746"
+      },
+      {
+       "label": "F3",
+       "ref": "pergolizzi_2022",
+       "where": "Review",
+       "quote": "Both cocaine and cocaethylene increase the post-synaptic neuronal activity in an equipotent fashion although the effects of cocaethylene are more enduring.",
+       "sha": "811bcc22473b4dcd"
       }
      ],
      "ok": true
@@ -730,13 +983,29 @@
    ]
   }
  ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "In some studies, cocaethylene has low validity because it does not consistently match cocaine levels, even when alcohol levels are considered.",
+   "rests_on": [
+    {
+     "label": "L2",
+     "ref": "vanamsterdam_2024",
+     "where": "5. Limitations of the Study",
+     "quote": "Moreover, in some studies, CE has been found to have low validity considering its poor or inconsistent correlation with the level of cocaine (r = 0.02), even when subjects were stratified by alcohol level.",
+     "sha": "95aa28cf4b87128c"
+    }
+   ],
+   "by": "the second reader",
+   "said": "the passage states that CE (cocaethylene) has low validity, not cocaethylene as a substance itself having low validity"
+  }
+ ],
  "stakes": "dying",
  "with_checked": {
   "differs": [],
   "same": []
  },
- "for": "again",
- "soft": "a further reader could not be asked",
  "place": {
   "home": "cocaine",
   "also": [
