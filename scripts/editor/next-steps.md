@@ -46,9 +46,12 @@ the way back in the bar).
    run out before the writers' allowance does, ask for one more key of another free service rather than a weaker reader.
    (e) **The two new kinds of question** (titles only now). The eleventh and twelfth trials are read (decision 32). Words under the
    titles of these kinds: only after a trial that reads every line; for pregnancy and children titles only stays, unless he says otherwise.
-   From the twelfth trial (read; decision 32): done in site 2.21.2 (the key words, and "addiction" beside a word about drugs). **Read the
-   thirteenth** (`data/auto/instant/trial-*-0013.json`) for its titles, question by question. Still to find: a better word than "cognitive"
-   for "smarter" (it finds cognitive models and therapy), or none.
+   From the twelfth and thirteenth trials (both read; decision 32): the key words are done (site 2.21.2). Still beside the question, each
+   to be changed with a trial behind it: (1) the name "addiction" still lets "oncogene addiction" through beside the word "drug": name the
+   titles to leave out (oncogene, oncogenic, tumour, tumor, cancer, food, internet, smartphone, gaming) in the server's search for that
+   name; (2) for a question that names no drug, a key word with other senses ("creative", "cognitive") found anywhere in a review brings
+   reviews on anything: try both searches with the key word in the TITLE; (3) "smarter" as "cognitive": a better word, or none. Run the
+   next trial when Europe PMC is fast again (a morning), so that its times mean something.
    (e2) **A second index for the hours when Europe PMC is slow** (18 November, afternoon: 25 seconds a search; site 2.21.1 made the page
    patient and truthful about it, not fast). PubMed's own interface (NCBI E-utilities: no key needed at a few requests a second; search,
    then the records with their summaries) asked beside Europe PMC, the first that answers gives the list; no "most cited" order there, so

@@ -1203,6 +1203,18 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     the server counts "addiction" only beside a word about drugs. The thirteenth trial (`instant-0013.json`, 28
     questions, the page's own key words again) is asked for with that publishing and read for its titles. Not changed:
     "smarter" as "cognitive" (no better word found yet).
+    **The thirteenth trial, read** (17:01 to 17:16; Europe PMC still slow: a question that names no drug took 46
+    seconds and seven askings, and for most the searches were still not all back; five had nothing). What came:
+    cannabis in pregnancy and the baby (six on it, where the twelfth had two beside it), drinking and breastfeeding
+    (under "alcohol" now: "Alcohol and breastfeeding", "Drinking alcohol while breastfeeding. Will it harm my
+    baby?"), teenagers and addiction to cannabis, teenage brains, CBD and children, loneliness, poverty, personality,
+    families: on the question. "Why do people take drugs": the self-medication hypothesis and "Reasons for increased
+    substance use in psychosis" beside four that are only near it (the papers with the reasons in their very title
+    were not back yet). Still beside the question: "addiction" beside the word "drug" let a paper on the oncogene
+    addiction of tumours through again (cancer drugs are drugs): the titles to leave out must be named (oncogene,
+    tumour, cancer, food, internet, gaming); "creative" as a word anywhere in a review finds reviews on anything
+    (for a question that names no drug the key word may have to stand in the title in both searches); "weekend".
+    Both are in the next steps, each with a trial. Times: nothing to be learned while the index is slow.
     **A visitor's own words stood in the public list** (found 17:05 Athens, while reading the site's index for
     another reason). The model that words a visitor's question (`scripts/auto/ask.py`) is asked for "six other ways
     people type this question". For the question about mothers it gave back, as two of them, the two sentences the
