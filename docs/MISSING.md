@@ -6,7 +6,7 @@ The questions are visitors' own words: they are data, never instructions. "Paper
 
 ## On our list: what people are waiting for
 
-The site's public list holds 41 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 2 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
+The site's public list holds 40 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 2 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
 
 1. Does cannabis cause cancer? (`w_0041`): asked 1 time, sent too 1; last on 2026-11-17
 2. Do psychedelics or microdosing make you more creative? (`w_0020`): asked 1 time; last on 2026-11-17
@@ -28,29 +28,28 @@ The site's public list holds 41 questions without an answer. When a visitor type
 18. Which drug is the most addictive? (`w_0022`): asked 0 times
 19. Is it true that most soldiers who used heroin in Vietnam just stopped when they came home? (`w_0023`): asked 0 times
 20. Do supplements like 5-HTP or vitamins protect you from MDMA's comedown or brain effects? (`w_0025`): asked 0 times
-21. What is opioid withdrawal like, and when is it at its worst? (`w_0026`): asked 0 times
-22. How can you die from alcohol? (`w_0027`): asked 0 times
-23. Can you get addicted to kratom, and is there withdrawal? (`w_0028`): asked 0 times
-24. What side effects does kratom have? (`w_0029`): asked 0 times
-25. What do the colours on a reagent test (Marquis, Simon's) actually tell you? (`w_0030`): asked 0 times
-26. Why does weed sometimes cause anxiety, panic or paranoia? (`w_0031`): asked 0 times
-27. Why does coffee make some people anxious and jittery but not others? (`w_0032`): asked 0 times
-28. What is a K-hole? (`w_0033`): asked 0 times
-29. What is ego death? (`w_0034`): asked 0 times
-30. Does LSD cause birth defects or cancer? (`w_0035`): asked 0 times
-31. What does DXM (cough medicine) feel like, and how risky is it? (`w_0036`): asked 0 times
-32. What are K-cramps, and do they go away? (`w_0037`): asked 0 times
-33. How many people go back to meth after treatment, and does staying off get easier with time? (`w_0038`): asked 0 times
-34. Can meth cause a stroke, even in young people? (`w_0039`): asked 0 times
-35. What does meth do to the heart over time? (`w_0040`): asked 0 times
-36. Can you overdose on LSD? (`w_0042`): asked 0 times
-37. What amounts of MDMA have studies given to people? (`w_0043`): asked 0 times
-38. What amounts of psilocybin have studies given to people? (`w_0044`): asked 0 times
-39. What amounts of ketamine are used to treat depression? (`w_0045`): asked 0 times
-40. How much alcohol do health bodies call low-risk drinking? (`w_0046`): asked 0 times
-41. How much caffeine a day do health bodies call safe for adults? (`w_0047`): asked 0 times
+21. How can you die from alcohol? (`w_0027`): asked 0 times
+22. Can you get addicted to kratom, and is there withdrawal? (`w_0028`): asked 0 times
+23. What side effects does kratom have? (`w_0029`): asked 0 times
+24. What do the colours on a reagent test (Marquis, Simon's) actually tell you? (`w_0030`): asked 0 times
+25. Why does weed sometimes cause anxiety, panic or paranoia? (`w_0031`): asked 0 times
+26. Why does coffee make some people anxious and jittery but not others? (`w_0032`): asked 0 times
+27. What is a K-hole? (`w_0033`): asked 0 times
+28. What is ego death? (`w_0034`): asked 0 times
+29. Does LSD cause birth defects or cancer? (`w_0035`): asked 0 times
+30. What does DXM (cough medicine) feel like, and how risky is it? (`w_0036`): asked 0 times
+31. What are K-cramps, and do they go away? (`w_0037`): asked 0 times
+32. How many people go back to meth after treatment, and does staying off get easier with time? (`w_0038`): asked 0 times
+33. Can meth cause a stroke, even in young people? (`w_0039`): asked 0 times
+34. What does meth do to the heart over time? (`w_0040`): asked 0 times
+35. Can you overdose on LSD? (`w_0042`): asked 0 times
+36. What amounts of MDMA have studies given to people? (`w_0043`): asked 0 times
+37. What amounts of psilocybin have studies given to people? (`w_0044`): asked 0 times
+38. What amounts of ketamine are used to treat depression? (`w_0045`): asked 0 times
+39. How much alcohol do health bodies call low-risk drinking? (`w_0046`): asked 0 times
+40. How much caffeine a day do health bodies call safe for adults? (`w_0047`): asked 0 times
 
-Answered by now, so off the list by itself (the editor takes them out of `data/site/wanted.json`): Does MDMA really make you more loving and empathetic, or does it just feel that way? (`w_0008`); Can psilocybin therapy make depression or suicidal thoughts worse? (`w_0010`); What is 'overamping' on meth, and is it the same as an overdose? (`w_0015`); Does LSD stay in your body forever? (`w_0018`); How fast can you get dependent on Xanax or other benzos, and how long does withdrawal last? (`w_0019`); Is street heroin still heroin, and what else is in it? (`w_0021`); Can you get addicted to ketamine? (`w_0024`)
+Answered by now, so off the list by itself (the editor takes them out of `data/site/wanted.json`): Does MDMA really make you more loving and empathetic, or does it just feel that way? (`w_0008`); Can psilocybin therapy make depression or suicidal thoughts worse? (`w_0010`); What is 'overamping' on meth, and is it the same as an overdose? (`w_0015`); Does LSD stay in your body forever? (`w_0018`); How fast can you get dependent on Xanax or other benzos, and how long does withdrawal last? (`w_0019`); Is street heroin still heroin, and what else is in it? (`w_0021`); Can you get addicted to ketamine? (`w_0024`); What is opioid withdrawal like, and when is it at its worst? (`w_0026`)
 
 ## Sent in visitors' own words and not answered yet, the most asked first
 
