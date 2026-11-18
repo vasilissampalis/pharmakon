@@ -37,6 +37,10 @@ the way back in the bar).
    each measured on the lane's own sentences before it is switched on: an opening that PROMISES a benefit ("It can help", "Yes" to "does X
    help with Y") only where a source read in full studied people who have Y (the mirror of the rule for an opening that denies a danger); a
    But that speaks of a study must have that study's line beside it.
+   (b0) **Read first, 19 November:** `data/auto/lane/_last-auto-run.txt` now carries each step's time: where did a run's minutes go? And
+   `w_a0014` ("Does caffeine affect growth?", the first question that started a run by itself): written after the allowance came back? If it
+   is published, read it as the editor (it is about children's growth: the stricter bar). The six questions whose searches were mended are
+   searched again by themselves: look at what their new searches hold (`data/auto/papers/w_a00*.json`).
    (b) **Measure the times and only then let the page promise them.** For each question a person sent: when it arrived (the store's day is
    too coarse: use the run that first listed it), when its answer was kept, when it was published (`data/auto/deploy/`). `policy.loop` goes
    true, and the page says "usually within N minutes", only when twenty sent questions in a row kept that N. Until then the page promises

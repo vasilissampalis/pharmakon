@@ -1275,6 +1275,13 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     that are ours to see apart: Europe PMC (25 seconds a request since the afternoon) and the free models (503s),
     which pass; and a search that sent the lane to read 23 sources beside the question, which was a fault and is
     mended. The time of a good run is still to be measured (next steps, b).
+    **The two questions, searched anew that evening** (21:41 to 21:53). "Does caffeine affect growth?": the new
+    search holds papers on the question ("Caffeine, a Risk Factor for Osteoarthritis and Longitudinal Bone Growth
+    Inhibition", two reviews on caffeine in pregnancy and the fetus) beside the sport reviews that the wide search
+    for the drug itself still brings; the day's free allowance ran out before it could be written (8,901 of 9,000),
+    so it is marked to be tried again by itself when there is room. "What is Mitragyna javanica?": Europe PMC holds
+    no open paper that names it, in a title or a summary (the fallback search by title alone was widened to
+    summaries for it, and found none either): "nothing we can read is published on it" is true, and stays.
     **A visitor's own words stood in the public list** (found 17:05 Athens, while reading the site's index for
     another reason). The model that words a visitor's question (`scripts/auto/ask.py`) is asked for "six other ways
     people type this question". For the question about mothers it gave back, as two of them, the two sentences the
