@@ -16,7 +16,7 @@ What the file holds (data/auto/live.json), and what it never holds:
   q        {the store's own key of a sent question (20 hex of a SHA-256 of its words; the words themselves are NEVER here, nor anywhere in the
            repository): {"id": the listed question it became} or {"no": why our system did not list it, in our words}}
   items    {a listed question's id (every listed question: the editors' list and the system's own): {"q": OUR wording, "terms": the words research uses for its subject (our system's), "st": one word for what
-           has been done (new, found, trying, tried, nosource, editor, answered), "n": {"papers", "pages"} found, "say": one plain line,
+           has been done (new, found, trying, check, tried, nosource, editor, answered), "n": {"papers", "pages"} found, "say": one plain line,
            "at": when the lane last worked on it, "aid": the answer's id where it is shown}}
   answers  {an answer's id: the answer in the very form the page holds it}: only answers the site's own build shows (it passed every gate of
            the lane AND the build's last look: site/build.js, AUTO_SHOWN, read from site/dist/live-src.json), and only those written in the
@@ -54,6 +54,7 @@ SAY = {"new": "It is on our system's list. The search for papers and official pa
        "tried": "Answers were written, and none passed our checks. We do not show an answer that has not passed. It is tried again another day.",
        "nosource": "We searched. Nothing that can be read is published on this yet. Our system looks again by itself as new papers come out.",
        "editor": "An answer is written. It is one of the few kinds that a person reads before it is shown.",
+       "check": "An answer is written and has passed every check that could be made. One more checker has to read it, and it can be asked only so many times a day. It goes on by itself.",
        "answered": "Answered."}
 
 
@@ -97,6 +98,7 @@ def make(records, was, done, listed, state, src, working=None, room=None, t=None
         np_, searched_p = count(ROOT / "data" / "auto" / "papers" / (wid + ".json"), "can_read"); no_, searched_o = count(ROOT / "data" / "auto" / "official" / "found" / (wid + ".json"), "pages")
         word = "answered" if aid in shown else st_word.get(wid) or ("new" if not s else "trying")
         if word == "new" and (searched_p or searched_o) and np_ + no_ > 0: word = "found"
+        if word == "trying" and s.get("status") == "waiting" and s.get("for") == "again": word = "check"      # written, and passed every reader that could be asked: it waits for one reader only (lane 19: tried again by itself when that reader has room)
         it = {"q": str(w.get("q") or "")[:200], "st": word, "say": SAY.get(word, SAY["trying"]), "n": {"papers": np_, "pages": no_}}
         terms = [str(x)[:60] for x in (w.get("terms") or []) if isinstance(x, str) and 2 <= len(x) <= 60][:6]
         if terms: it["terms"] = terms
@@ -162,6 +164,8 @@ def selftest():
     # a run that could not read the store keeps what the run before it knew, and drops what is older than two weeks; an answer older than three days is not carried
     out2 = make([], dict(out, q=dict(out["q"], **{"0" * 20: {"id": "w_a0900", "seen": "2026-10-30"}})), done, listed, {"items": {}}, dict(src, auto={"au_w_a0901": {"q": "x", "made": "2026-11-10"}}), t=t)
     assert set(out2["q"]) == set(out["q"]) and out2["answers"] == {} and out2["items"]["w_a0901"]["st"] == "answered" and "working" not in out2 and "room" not in out2
+    out3 = make([], {}, done, listed, {"items": {"w_a0900": {"status": "waiting", "for": "again", "soft": "a further reader could not be asked"}}}, dict(src, state={"w_a0900": "trying"}), t=t)
+    assert out3["items"]["w_a0900"]["st"] == "check" and out3["items"]["w_a0900"]["say"].startswith("An answer is written and has passed every check that could be made"), out3["items"]["w_a0900"]
     assert decided("on the editors' list already: w_0031") == {"id": "w_0031"} and decided("our wording was not near the visitor's question (0.41): left for the editors")["no"] and decided("") is None
     print("live selftest: ok (a sent question is known by its key alone, never by its words; what was done is said in one word and one line; an answer the build shows is carried in the page's own form for three days; what a run could not read is kept from the run before)")
 

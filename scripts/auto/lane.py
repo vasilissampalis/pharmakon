@@ -2144,7 +2144,10 @@ def team(file=None, only=None, avoid=()):
                     also, lacking, rest = [], False, {}                   # (lane 10) further second readers: a team that names them is that team only with all of them
                     for a in (t.get("also") or []) if isinstance(t.get("also"), list) else []:
                         if isinstance(a, list):                               # one place, several models: the first that has a key and room today (the strong free models have 20 calls a day each)
-                            pick = next((x for x in a if isinstance(x, str) and x and llm.has(x.split("#")[0]) and x not in also and (llm.calls_fit({x.split("#")[0]: CALLS["also#marks" if x.endswith("#marks") else "also"]}) if llm.service_of(x)[0] else True)), None)
+                            # (19 November 2026) a model with a handful of free calls a day (Google's strong readers: 20) is asked once for an answer, seldom twice: it is
+                            # taken while it has ONE call left, not three. On 18 November two of them stood unused at 16 of 18 calls while answers waited for a strong reader
+                            few = lambda x: bool(llm.service_of(x)[0]) and 0 < llm.limits_of(x)["calls"] <= 20
+                            pick = next((x for x in a if isinstance(x, str) and x and llm.has(x.split("#")[0]) and x not in also and (llm.calls_fit({x.split("#")[0]: 1 if few(x.split("#")[0]) else CALLS["also#marks" if x.endswith("#marks") else "also"]}) if llm.service_of(x)[0] else True)), None)
                             if pick: also.append(pick); rest[len(also)] = [x for x in a[a.index(pick) + 1:] if isinstance(x, str) and x and llm.has(x.split("#")[0]) and base(x.split("#")[0]) not in (base(t.get("writer") or ""), base(checker or ""))]   # (lane 16) the others named for this place, asked in turn where the first cannot be
                             else: lacking = True
                         elif isinstance(a, str) and a: also.append(a)
@@ -2157,7 +2160,7 @@ def team(file=None, only=None, avoid=()):
                     for role, v in m.items():
                         kind = ("also#marks" if v.endswith("#marks") else "also") if role.startswith("also") else role; v = v.split("#")[0]
                         svc = llm.service_of(v)[0]
-                        if svc: calls[v] = calls.get(v, 0) + CALLS[kind]
+                        if svc: calls[v] = calls.get(v, 0) + (1 if kind == "also" and 0 < llm.limits_of(v)["calls"] <= 20 else CALLS[kind])      # (a strong reader with 20 calls a day: one call an answer, see above)
                         else: need[v] = need.get(v, 0) + NEED[kind][1 if v.startswith("groq:") else 0]
                     if sum(n for v, n in need.items() if not v.startswith("groq:")) > llm.left(): continue
                     if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
@@ -2604,6 +2607,9 @@ def selftest():
             used_up = {"gemini:gemini-4-hydrogen"}; llm.calls_fit = lambda by: not (set(by) & used_up)
             t = team(tf); assert t["team"] == "G" and t["also1"] == "gemini:gemini-3.5-flash-lite" and t["also2"] == "gemini:gemini-3.8-flash", t
             used_up.add("gemini:gemini-3.8-flash"); assert team(tf)["team"] == "E"
+            # (19 November 2026) a strong reader with 20 free calls a day is asked for one call an answer, so it serves while it has one left (three were asked for until then)
+            wanted_of = []; llm.calls_fit = lambda by: wanted_of.append(dict(by)) or True
+            assert team(tf)["also2"] == "gemini:gemini-4-hydrogen" and {"gemini:gemini-4-hydrogen": 1} in wanted_of and wanted_of[-1] == {"gemini:gemini-3.5-flash-lite": 3, "gemini:gemini-4-hydrogen": 1}, wanted_of
             # a reader asked for marks is named "<model>#marks": the key and the room are the model's, and it needs a call for every sentence; the second reader's own model may be asked that other way
             tf.write_text(json.dumps({"teams": [{"name": "M", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "gemini:gemini-3.5-flash-lite", "also": ["gemini:gemini-3.5-flash-lite#marks"]}]}), encoding="utf-8")
             asked_for = []; llm.calls_fit = lambda by: asked_for.append(dict(by)) or True

@@ -1816,6 +1816,7 @@ function liveHtml(it) {
     if (lv.st === "nosource") steps.push(["end", "It searched. Nothing that can be read is published on this yet. It looks again by itself as new papers come out."]);
     else if (lv.st === "editor") steps.push(["end", "An answer is written. It is one of the few kinds that a person reads before it is shown."]);
     else if (lv.st === "tried") steps.push(["end", "Answers were written, and none passed our checks. We do not show one that has not passed. It is tried again another day."]);
+    else if (lv.st === "check" && !lv.working) steps.push(["now", "An answer is written and has passed every check that could be made. One more checker has to read it, and it can be asked only so many times a day. It goes on by itself."]);
     else if (lv.working) steps.push(["now", (lv.st === "trying" ? "Writing again now. " : "Writing the answer now. ") + "Every sentence is tied to a source’s own words and checked. A few minutes."]);
     else if (lv.st === "trying") steps.push(["now", "A first try did not pass every check. Our system is working on it again by itself."]);
     else if (found) steps.push(["next", "Next: writing the answer"]);
@@ -1840,6 +1841,7 @@ function youHtml(list, hist) {
     if (it.lv && it.lv.reload) return "Answered. Open the site again to read it";
     if (it.lv && it.lv.working) return "Being written now";
     if (s === "found") return "Sources found. Writing is next";
+    if (s === "check") return "Written. One more check to pass";
     return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Working on it by itself" : s === "tried" ? "No answer passed our checks yet. It tries again" : s === "new" ? "In line. Not tried yet" : ""; };
   // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question that waits can be opened too:
   // it is asked again in the box, which shows what the site has on it so far

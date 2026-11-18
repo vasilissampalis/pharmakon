@@ -45,6 +45,19 @@ the way back in the bar).
    its page says it was retired on 30 July 2026 (read 18 November 2026). So more answers a day come only from the services already in use (their
    days turn at 02:00 Athens for Cloudflare, 10:00 for Google) or from a further free service whose key he makes. What the lane can do by itself:
    spend less a question (the reader took most of the neurons), and never lose a day to a stand-by (mended).
+   **Read on the services' own pages on 19 November 2026 (01:00 Athens), for the keys he could make:**
+   - **Mistral** (already wired: `llm.SERVICES`, the secret `MISTRAL_API_KEY`, in every workflow). Its help page: the "Experiment" plan is free, "No
+     credit card is required", "All you need is a verified phone number", and requests under it "may be used to train Mistral's models" (we send only
+     our own wording and passages of public papers and pages: never a visitor's words). Its documentation: "a free API tier with restrictive rate
+     limits"; the numbers stand in the console (console.mistral.ai/limits) and are his to read out, as he did for Google's table. No model of it may
+     work in the lane before it has sat the exam for its role (`scripts/auto/exam_models.py`; `data/auto/requests/exam-*.json`).
+   - **SambaNova** (not wired yet: an entry in `llm.SERVICES`, a secret, the workflows). Its documentation (docs.sambanova.ai, Rate Limits Policy): a
+     free tier that is "Applied when there is no payment method linked with your account": for each model 20 requests a minute, 20 requests a day and
+     200,000 tokens a day; among them `gpt-oss-120b` (the lane's best second reader: what runs out first every day), `DeepSeek-V3.1`,
+     `Meta-Llama-3.3-70B-Instruct`, and as previews `DeepSeek-V3.2` and `gemma-4-31B-it`. Twenty calls a day of gpt-oss-120b is the second reader
+     and the planner for four to six more answers; the DeepSeek models are candidates for the strong further reader's place, after an exam.
+   - **Cerebras: no.** Its own rate-limits page: access stays inactive until a verified payment method is added (a "Free Trial" with credits). That is
+     against his rule ("no billing, paid subscriptions, credit purchases or unexpected charges").
    (7) His question of 22:10 (`w_a0015`, deaths from heroin in one country): the finder now asks for the country; read what the next run finds. A
    figure for one country belongs to the statistics page, from the body that counts it: that needs readers ("use readers").
 
