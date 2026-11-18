@@ -524,7 +524,8 @@ def main():
         elif not again: items = [w for w in items if old(w)]
     elif ids: items = [w for w in items if w["id"] in ids]
     else: items = [w for w in items if old(w)]
-    items = sorted(items, key=lambda w: (out / (w["id"] + ".json")).exists())[:limit]     # a question never searched comes before one searched by an older finder
+    if "--sent" in arg: items = [w for w in items if w.get("from") == "a question visitors sent"]      # (18 November 2026) the first pass of a run: only the questions people sent
+    items = sorted(items, key=lambda w: ((out / (w["id"] + ".json")).exists(), 0 if w.get("from") == "a question visitors sent" else 1))[:limit]     # a question never searched comes before one searched by an older finder; among those, one a person sent comes first (18 November 2026: it is answered in the same run)
     import build_index as bi
     names = bi.names_table(); enc = General(); done = 0
     for w in items:

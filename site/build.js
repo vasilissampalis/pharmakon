@@ -246,24 +246,29 @@ const AUTO_LOOP = process.env.PK_AUTO_LOOP ? process.env.PK_AUTO_LOOP === "1" : 
 const AUTO_AMOUNTS = process.env.PK_AUTO_FIXTURE ? true : AUTO_POLICY.amounts === true;
 const startedPages = {};   // (2.8) {slug: name} of the pages the system started that have an answer to show
 // (2.15.2) what our system has done so far with each listed question, in one word, for the reader's own list of sent questions: "new"
-// (not tried yet), "tried" (no answer has passed the checks; it is tried again), "person" (written; a person has to check it first)
+// (not tried yet), "trying" (2.21, lane 19: a try gave no answer, or one that a reader could not yet read, and the system is trying again by itself today),
+// "tried" (no answer has passed the checks today; it is tried again another day), "nosource" (nothing that can be read is published on it),
+// "editor" (written; one of the few kinds an editor reads before it shows: an amount, suicide, what to do in an emergency, an answer that differs from a checked one)
 const AUTO_STATE = (() => {
   const out = {}; let st = {}, held = {};
   try { st = JSON.parse(fs.readFileSync(path.join(ROOT, "data/auto/lane/state.json"), "utf8")).items || {}; } catch (e) { st = {}; }
   try { held = JSON.parse(fs.readFileSync(path.join(ROOT, "data/auto/held.json"), "utf8")); } catch (e) { held = {}; }
-  const heldIds = new Set((Array.isArray(held.held) ? held.held.map(x => x && x.id) : Object.keys(held.held || {})).filter(Boolean).map(k => String(k).replace(/^au_/, "")));
-  const listed = [];
+  const listed = [], todayUTC = new Date().toISOString().slice(0, 10), newestLane = +((fs.readFileSync(path.join(ROOT, "scripts", "auto", "lane.py"), "utf8").match(/^LANE = (\d+)/m) || [])[1]) || Math.max(1, ...Object.values(st).map(s => +(s && s.lane) || 1));   // the lane as it is now (scripts/auto/lane.py, LANE)
   // how many sources the finders hold for a question (the papers that can be read, the official pages)
   const sources = id => { let n = 0; for (const [f, k] of [["data/auto/papers/" + id + ".json", "can_read"], ["data/auto/official/found/" + id + ".json", "pages"]]) { try { n += (JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8"))[k] || []).length; } catch (e) { /* not searched yet */ } } return n; };
   for (const f of ["data/site/wanted.json", "data/auto/wanted-auto.json"]) { try { listed.push(...(JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8")).items || [])); } catch (e) { /* no such list yet */ } }
   for (const w of listed) { if (!w || !/^w_[a-z0-9_]{1,40}$/.test(String(w.id))) continue; const s = st[w.id];
     const nothing = s && s.status === "none" && /no source that can be read/.test(String(s.why || "")) && !sources(w.id);
-    out[w.id] = heldIds.has(w.id) ? "person" : !s ? "new" : s.status === "waiting" ? "person" : nothing ? "nosource" : s.status === "none" ? "tried" : s.status === "published" ? "" : "new";
+    // (the lane tries a question again the same day by itself: at once after a fault that was not the answer's ("soft"), once or twice more with other models after an answer that did not pass ("n": tries today); an answer of an older lane is written again)
+    const again = s && (!!s.soft || s.for === "again" || (+s.lane || 1) < newestLane || (s.last === todayUTC && (+s.n || 1) < 2));
+    out[w.id] = !s ? "new" : s.status === "published" ? "" : s.status === "waiting" ? (s.for === "editor" ? "editor" : "trying") : nothing ? "nosource" : s.status === "none" ? (again ? "trying" : "tried") : "new";
     if (!out[w.id]) delete out[w.id]; }
   return out;
 })();
 const AUTO_SHOWN = (() => {
-  const heldFile = path.join(ROOT, "data", "auto", "held.json"), held = new Set(fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []).map(x => x.id || x) : []);
+  // (2.21) a hold is of the version the editor read ("lane"): an answer written again by a newer lane is judged afresh by the gates and is not held by that entry
+  const heldFile = path.join(ROOT, "data", "auto", "held.json"), heldOf = new Map((fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []) : []).map(x => [x && x.id || x, x]));
+  const held = { has: (id, lane) => { const h = heldOf.get(id); return !!h && (typeof h !== "object" || h.lane == null || (+lane || 1) <= +h.lane); } };
   const drugSlugs = new Set(site("substances.json").map(s => s.slug)), out = [], left = [];
   // an answer written by an older lane than data/auto/lane/policy.json allows is not shown (the lane writes it again)
   const minLane = +AUTO_POLICY.show_from_lane || 1; let older = 0, held_amounts = 0;
@@ -286,7 +291,7 @@ const AUTO_SHOWN = (() => {
   const timing = /\bre-?dos\w*|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\bsupplement\w*|\byou\s+(?:should|must|need to)\b/i;
   for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
     const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
-    if (a.status !== "published" || held.has(a.id)) continue;
+    if (a.status !== "published" || held.has(a.id, a.lane)) continue;
     if ((+a.lane || 1) < minLane) { older++; continue; }
     if (a.kind === "amounts" && !AUTO_AMOUNTS) { held_amounts++; continue; }
     const part = k => (a.parts || []).filter(p => p.part === k || (k === "how" && /^how\d+$/.test(p.part))).map(p => String(p.text || "").trim()).filter(Boolean);

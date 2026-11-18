@@ -8,7 +8,7 @@ automatically written and deployed to check whenever we want"; "if the automatic
 small discreet disclaimer". 21:07: "it should find more than one sources if they are relevant ... the algorithm has to
 mimick completely how claude writes answers".
 
-    python3 -I scripts/auto/lane.py run [--max N] [--ids w_0027,...] [--again]
+    python3 -I scripts/auto/lane.py run [--max N] [--minutes M] [--sent] [--ids w_0027,...] [--again]
     python3 -I scripts/auto/lane.py requests          (the requests waiting in data/auto/requests/lane-*.json)
     python3 -I scripts/auto/lane.py --selftest
 
@@ -39,9 +39,14 @@ is code (no model's opinion can open a gate the code has shut):
              of: a study in people, a review read in summary only, a page of a government-paid service (tier 2). Papers
              carry a Crossref record made by scripts/build_references.py, pages a reference made from the page itself;
              a retracted paper, or one under an expression of concern, is never used.
-  7 stakes   A question about dying, overdose, an emergency, mixing two drugs, pregnancy, children or suicide is written
-             and then WAITS FOR A PERSON: it is not published by the system (the editor's rule; emergency guidance is the
-             senior author's own domain). Everything else that passed is published with the label.
+  7 stakes   A question about dying, overdose, an emergency, mixing two drugs, pregnancy, children or suicide: what each
+             kind does is a setting (data/auto/lane/policy.json, "stakes"; lane 19, the senior author's words of 18 November
+             2026: "the questions should be automatically answered ... for every pending question"). "strict": published by
+             the system only where it meets a bar higher than every other answer's (strict_lacks: an official page or a
+             review read in full under the short answer; a further reader; no word that plays a danger down, by code and
+             by every reader); "person", or a kind the setting does not name: written, and it WAITS FOR AN EDITOR. What to
+             do in an emergency, an amount that kills and an answer that disagrees with a checked claim always wait
+             (emergency guidance is the senior author's own domain). Everything else that passed is published with the label.
 
 A question about AMOUNTS (the senior author's decisions of 15 November 2026, 22:40 and 22:46; decision 11) goes another way,
 with no writer: the reader copies each amount stated for people, with who received it and under what care; code keeps
@@ -81,7 +86,15 @@ MODELS = {"reader": "@cf/meta/llama-4-scout-17b-16e-instruct", "writer": "@cf/me
 LINES_FILE = ROOT / "data" / "auto" / "lane" / "lines.json"
 FOUND_OFFICIAL = ROOT / "data" / "auto" / "official" / "found"
 TRIAL = ROOT / "data" / "auto" / "trial"                                # (17 November 2026) questions that are not on the site's list, written to try the lane on what it has never seen: never shown, never placed
-LANE = 18               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+LANE = 19               # the lane's own number: an answer written by an older lane is not shown (data/auto/lane/policy.json) and is written again
+# Lane 19 (18 November 2026). The senior author, 13:34 Athens, of the questions he had sent: "this is a bug. and also the questions should be automatically
+# answered no 'Written. A person has to check it first' --- this should happen for every pending question not only the ones on the list"; "can the answers
+# get ... answered by themselves? ... one day or two is too ... much"; 13:36: "our ai becoming perfect is our first priority ... our site's answers have to be
+# given much faster". What the records showed (docs/AUTOMATION.md, decision 32): a question was tried once and then left for a day or two; a try was lost to
+# small faults that code can mend (a number that stood in another item of the same source; "male rats" read as a result for men; one writer's malformed
+# reply; a fault of the network); and finished answers were parked for a reader that could not be asked. Lane 19 mends what code can mend before a rule
+# judges, gives a writer that cannot keep the form a stand-in, asks the further readers that answer first, tries again by itself (the same day with another
+# team; at once after a fault that was not the answer's), and parks nothing for a reader: it asks that reader again. No gate is taken away.
 N_PAPERS = 2            # papers read in full for one answer (a third where the sources read are not yet enough)
 N_TO_WRITER = 3         # findings of one source that go to the writer: the nearest to the question (and one limit)
 N_OFFICIAL = 2          # official pages read for one answer (four for a question about amounts)
@@ -784,7 +797,7 @@ def make_plan(chat, model, question, sources, labels):
     return {"short": short, "direct": direct if DIRECT.search(direct) else "", "but": but, "how": how[:4], "unanswered": re.sub(r"\s+", " ", str(out.get("unanswered") or ""))[:160]}
 
 
-def writer_prompt(question, sources, examples, fix="", plan=None):
+def writer_prompt(question, sources, examples, fix="", plan=None, note=""):
     lines = []; chosen = set(plan["short"] + plan["but"] + [x for g in plan["how"] for x in g]) if plan else None
     if plan: sources = [dict(s, design=s.get("design") if "D" + s["tag"] in chosen else None, findings=[f for f in s["findings"] if f["id"] in chosen], limits=[l for l in s["limits"] if l["id"] in chosen]) for s in sources]
     if plan: sources = [s for s in sources if s.get("design") or s["findings"] or s["limits"]]
@@ -808,6 +821,7 @@ def writer_prompt(question, sources, examples, fix="", plan=None):
             '- "how": 2 to 4 lines, one for each source used, each at most 35 words: what kind of study and who was studied, or whose page it is, and what it found or says.\n'
             'For "short", for "but" and for every line of "how", give "uses": the labels of the items that sentence rests on (at least one).\n'
             '- "complete": true if the items answer the question, false if they answer only a part or a neighbouring question; "missing": in a few words, what is not answered.\n'
+            + (f"\nAN EDITOR READ AN EARLIER ANSWER TO THIS QUESTION AND DID NOT LET IT OUT. Mind what the editor found: {note}\n" if note else "")      # (lane 19) data/auto/held.json, \"say\": what the editor found goes to the writer, so that the answer is written again by itself
             + (f"\nYOUR LAST ANSWER BROKE THESE RULES, write it again without them: {fix}\n" if fix else "") +
             'JSON only, in this form: {"short": {"text": "...", "uses": ["F1"]}, "but": {"text": "...", "uses": ["L1"]}, "how": [{"text": "...", "uses": ["DA", "F1"]}], "complete": true, "missing": ""}')
 
@@ -849,7 +863,15 @@ def opener_of(text):
     return (m.group(1) or m.group(2)), rest[:1].upper() + rest[1:]
 
 
-def checker_prompt(parts, labels, question=None, each=None):
+def checker_prompt(parts, labels, question=None, each=None, risk=""):
+    # (lane 19) risk: the answer is about dying, overdose, mixing, pregnancy or children. Every reader is then also asked whether its first two sentences can be
+    # read as saying that a danger is small or absent ("plays_down"); the code publishes such an answer by itself only where every reader said no (strict_lacks)
+    more = ("\n\nThis answer is about " + risk + ", where a wrong word can hurt a reader. Add one more field to your JSON, beside \"verdicts\": \"plays_down\": true if sentence 1 or sentence 2 says or suggests that "
+            "something is safe or harmless, or that a danger is small, rare, unlikely or absent, or if it tells the reader what to do; false if they do neither.") if risk else ""
+    return _checker_prompt(parts, labels, question, each) + more
+
+
+def _checker_prompt(parts, labels, question=None, each=None):
     blocks = []; opening = ""
     for n, p in enumerate(parts, 1):
         ps = "\n".join(f"   PASSAGE ({labels[u]['paper']}; {labels[u]['where']}): {labels[u]['passage_text'][:PASSAGE_CHARS]}" for u in p["uses"])
@@ -1001,21 +1023,29 @@ def room_for(model, plain):
     """How many tokens a model may answer with. One that reasons before it writes needs room for both: on 16 November 2026
     gpt-oss-120b used all of 1,400 tokens reasoning and wrote nothing, three times for each of two questions; with 3,000 it
     reasoned for some 1,300 and then wrote its answer (data/auto/exam/writer-trial.json)."""
-    if llm.service_of(model)[0]: return plain + 1500                         # (a model of another service may reason before it writes: room for both until a trial says how much it needs)
+    svc, name = llm.service_of(model)
+    # (lane 19) Google's stronger models think before they write and their thinking is counted in the room: on 17 and 18 November 2026 Gemini 4 Hydrogen gave
+    # no verdict on 30 of 34 sentences asked together, and Gemini 3 Flash "no verdict, twice" on real answers, with some 2,000 tokens. Room costs nothing on a
+    # free plan that counts calls (20 a day for each of these models), a call that returns nothing costs one of them.
+    if svc == "gemini" and not re.search(r"flash-lite|gemma", name): return plain + 5000
+    if svc: return plain + 1500                         # (a model of another service may reason before it writes: room for both until a trial says how much it needs)
     return plain + (1200 if "gpt-oss-20b" in model else 2200 if "gpt-oss" in model else 0)      # (the small gpt-oss only reads, with little reasoning; qwen3 at Groq answers without reasoning: its free plan gives it 1,000 output tokens a minute)
 
 
-def check(chat, model, parts, labels, question=None, whole=None, each=None):
+def check(chat, model, parts, labels, question=None, whole=None, each=None, risk=""):
     """[(supported?, problem)] for the parts, in order. A sentence without a clear verdict is not supported. With a
     question, the second reader also says whether the short answer answers it and whether the But is about that answer
     (written into whole: "answers", "but_fits", "why"; None where it gave no clear word)."""
+    room = room_for(model, 120) + 90 * len(parts) + (80 if question else 0) + (40 if risk else 0)
     for attempt in range(2):
-        out = llm.as_json(chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels, question, each)}], room_for(model, 120) + 90 * len(parts) + (80 if question else 0)))
+        if attempt and llm.LAST.get("finish") == "length": room = min(2 * room, 12000)        # (lane 19) a reply that was cut off before its verdicts is asked for again with twice the room, not the same way
+        out = llm.as_json(chat(model, [{"role": "system", "content": CHECKER_SYS}, {"role": "user", "content": checker_prompt(parts, labels, question, each, risk)}], room))
         vs = {v.get("n"): v for v in (out or {}).get("verdicts") or [] if isinstance(v, dict)}
         # (lane 16) the opening word of the short answer was judged apart, as the answer to the question: its verdict must be there too
         opening = opener_of(parts[0]["text"])[0] if question and parts and not each and parts[0].get("part", "short") == "short" else ""
         if out is not None and all(isinstance(vs.get(n, {}).get("supported"), bool) for n in range(1, len(parts) + 1)) and (not opening or isinstance(out.get("opening"), bool)):
-            if whole is not None:
+            if whole is not None and risk: whole["plays_down"] = out.get("plays_down") if isinstance(out.get("plays_down"), bool) else None
+            if whole is not None and question:
                 whole.update(answers=out.get("answers_question") if isinstance(out.get("answers_question"), bool) else None, but_fits=out.get("but_fits") if isinstance(out.get("but_fits"), bool) else None, why=re.sub(r"\s+", " ", str(out.get("why") or ""))[:240])
                 if opening: whole["opening"] = [opening, out["opening"]]
             got = [(vs[n]["supported"] is True and not (each and vs[n].get("on_question") is False),
@@ -1142,6 +1172,10 @@ def ceiling_as_size(ours, src):
 ONE_SEX = [(re.compile(r"\b(?:men|males?)\b", re.I), re.compile(r"\b(?:women|females?|both sexes|men and women|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:men|males?)\b", re.I), "men"),
            (re.compile(r"\b(?:women|females?)\b", re.I), re.compile(r"\b(?:\bmen\b|\bmales?\b|both sexes|people|participants|adults|persons|individuals|volunteers|patients|users|students|respondents|subjects)\b", re.I), re.compile(r"\b(?:women|females?)\b", re.I), "women")]
 ANYBODY = re.compile(r"\b(?:people|everyone|anyone|adults|persons|those who|the public)\b", re.I)
+# (lane 19) "male Wistar rats", "female mice": the sex of animals is no result for men or for women. On 17 November 2026 an answer to a question the senior
+# author had sent (Does kanna help with anxiety?) was refused three times for "the source gives this for men" where the study was of 16 healthy participants
+# and the word "male" stood beside animals in the review's passage.
+ANIMAL_SEX = re.compile(r"\b(?:fe)?males?\s+(?:(?!and\b|or\b)[\w-]+\s+){0,3}?(?:rats?|mice|mouse|rodents?|animals?|monkeys?|macaques?|primates?|dogs?|pigs?|piglets?|rabbits?|zebrafish|hamsters?|gerbils?|guinea pigs?|offspring|pups?)\b|\b(?:rats?|mice|animals?|rodents?)\s+of\s+(?:both|either)\s+sex(?:es)?\b", re.I)
 
 
 def says_more_text(ours, src):
@@ -1157,8 +1191,9 @@ def says_more_text(ours, src):
     # for 2 wrong ones: "reported" stands near too many things. The second reader is asked about it instead.)
     c = ceiling_as_size(ours, src)
     if c: out.append(("a ceiling said as the size", c, f"the source says “{c}”: that is the most it found, not the size. Say “up to” or “as much as”, as the source does"))
+    people_src = ANIMAL_SEX.sub(" ", src)
     for only, others, in_ours, name in ONE_SEX:
-        if only.search(src) and not others.search(src) and ANYBODY.search(ours) and not in_ours.search(ours):
+        if only.search(people_src) and not others.search(people_src) and ANYBODY.search(ours) and not in_ours.search(ours):
             out.append((f"a result for {name}, said of people", "", f"the source gives this for {name}: say “{name}”, not people in general")); break
     return out
 
@@ -1221,6 +1256,24 @@ def own_but(sources, wanted_nearer):
     return f"This rests on {what} that our system could read. " + ("A paper that stands nearer the question could not be read." if wanted_nearer else "It has not read every study on this question.")
 
 
+def mend_uses(parts, labels, years=(), asked=()):
+    """(lane 19) What code can mend before a rule judges: a number that a sentence states and that stands, not in the items the writer named for it, but in
+    ANOTHER item of a source the sentence already rests on (the item that says what kind of study it was, most often: "16 healthy participants"). That item is
+    added to what the sentence rests on, so the second reader, the further readers and our own checker read the sentence beside it too. The rule itself stands:
+    every number of a sentence is in the words it rests on. Never an item of another source, never a year. Returns [(part, the item added, the number)].
+    (17 November 2026: the writer wrote "in 16 healthy people" three times over, named the finding and not the item that holds the 16, and a good answer to a
+    question the senior author had sent was thrown away.)"""
+    mended = []; skip = {str(y) for y in years} | {str(a) for a in asked}
+    for p in parts:
+        if p.get("fixed") or not p.get("uses"): continue
+        refs = {labels[u].get("ref") for u in p["uses"]} - {None}
+        for x in sorted(numbers(p["text"]) - skip):
+            if x in set().union(*[numbers(labels[u].get("quote") or "") for u in p["uses"]]): continue
+            more = sorted((u for u in labels if u not in p["uses"] and labels[u].get("ref") in refs and x in numbers(labels[u].get("quote") or "")), key=lambda u: (0 if u.startswith("D") else 1, u))
+            if more: p["uses"].append(more[0]); mended.append((p["part"], more[0], x))
+    return mended
+
+
 def rules(parts, labels, years=(), asked=()):
     """What the site's content rules have against a draft: [(part, what)]. Empty when nothing. years: the years the answer's
     sources were published. A sentence may name the year of a source IT rests on ("a 2022 review"), not another source's
@@ -1243,7 +1296,9 @@ def rules(parts, labels, years=(), asked=()):
         other = sorted(x for x in extra if x in all_years)
         if other: bad.append((p["part"], f"the year {', '.join(other)} belongs to another source: the source this sentence rests on is " + (f"of {', '.join(sorted(own))}" if own else "a page with no year") + ". Name the right one, or no year"))
         extra -= set(other)
-        if extra: bad.append((p["part"], "a number that is not in the paper's words it rests on (" + ", ".join(sorted(extra)) + ")"))
+        if extra:
+            at = sorted(u for u in labels if u not in p["uses"] and any(x in numbers(labels[u].get("quote") or "") for x in extra))[:3]      # (lane 19) the writer is told where the number does stand
+            bad.append((p["part"], "a number that is not in the paper's words it rests on (" + ", ".join(sorted(extra)) + ")" + (": it stands in " + ", ".join("[" + u + "]" for u in at) + "; name that item too among the ones this sentence rests on if the sentence is about that same study, or leave the number out" if at else "")))
     return bad
 
 
@@ -1261,6 +1316,52 @@ def stakes(question, parts):
     for what, rx in STAKES:
         if rx.search(question) or (what != "mixing drugs" and rx.search(text)): return what
     return ""
+
+
+# (lane 19) The senior author, 18 November 2026, 13:34 Athens: "the questions should be automatically answered no 'Written. A person has to check it first' ---
+# this should happen for every pending question"; "can the answers get ... answered by themselves?". Until that day every answer about dying, overdose, an
+# emergency, mixing, pregnancy, children or suicide waited for a person (the editor's rule of 15 November). What each kind does now is a setting, not code
+# (data/auto/lane/policy.json, "stakes": {kind: "strict" | "person"}; a kind that is not named there waits for a person, as before):
+#   "strict"  published by the system only where it meets a bar that is higher than every other answer's, all of it code (strict_lacks): its short answer
+#             rests on an official body's page or on a review read in full; a further reader read it (none was out of reach); no word of its first two
+#             sentences can be read as a promise of safety (plays_down), its opening word does not say that a danger is absent or that a thing may be done,
+#             and every reader, asked that very question, said that it does not play a danger down. An answer that does not meet the bar is not parked for a
+#             person: there is no answer yet, and the system tries again like for any other question.
+#   "person"  written, and it waits for an editor.
+# Whatever the setting says, three things never go out by themselves: an amount that kills (make_amounts), what to do in an emergency (NEVER_ALONE: emergency
+# guidance is the senior author's own text), and an answer that disagrees with a checked claim.
+NEVER_ALONE = re.compile(r"\bwhat\s+(?:should|do|can|must|to)\s+(?:(?:i|you|we|one|someone|somebody|a person|people)\s+)?(?:do|to do)\b|\bwhat to do\b|\bhow\s+(?:to|do\s+(?:i|you|we)|can\s+(?:i|you|we)|should\s+(?:i|you|we))\s+(?:help|treat|save|revive|respond|reverse|handle|deal with|wake|stop an?)\b|\bfirst[- ]aid\b|\bnaloxone\b|\bnarcan\b|\brecovery position\b|\bcpr\b", re.I)
+ASKS_LEAVE = re.compile(r"\b(?:safe|safely|ok|okay|fine|alright|all right|harmless|allowed)\b|^\s*(?:can|could|may|should)\s+(?:i|you|we|one|someone|people|a person|my\s+\w+|pregnant\s+\w+|kids|children|teens?|teenagers)\b(?![^?]*\b(?:die|dying|overdos\w*|od|addict\w*|hooked|harm\w*|hurt\w*|kill\w*|damag\w*|poison\w*|sick|ill|dangerous)\b)", re.I)   # a question that asks whether a thing may be done: there "Yes" is the word that reassures
+REASSURES = re.compile(r"\b(?:safe|safely|safer|safest|harmless|low[- ]risk|risk[- ]free|well[- ]tolerated|no\s+(?:known\s+|real\s+|serious\s+|major\s+|significant\s+|clear\s+)?(?:risks?|dangers?|harms?|deaths?|problems?|effects?|link|evidence)|not\s+(?:dangerous|harmful|risky|toxic|deadly|fatal|lethal|a\s+(?:risk|danger|problem|concern))|un(?:likely|common)|rare(?:ly)?(?!,?\s+but\b)|seldom|hardly|minimal|negligible|mild(?:ly)?|small\s+(?:risk|chance)|little\s+(?:risk|danger|harm|evidence)|cannot\s+(?:overdose|die|kill)|can'?t\s+(?:overdose|die|kill)|impossible|fine|okay|nothing\s+to\s+worry)\b", re.I)
+
+
+def plays_down(question, parts):
+    """(lane 19) Why the first two sentences of an answer can be read as saying that a danger is small or absent, by code; "" where the code sees nothing.
+    The words (REASSURES), and the word the answer opens with: "Yes" where the question asks whether a thing may be done or is safe, "No" where it asks
+    whether a thing harms. This is one of two looks; the readers are asked the same of the whole lead (checker_prompt, risk)."""
+    for p in parts:
+        if p["part"] not in ("short", "but") or p.get("fixed"): continue
+        m = REASSURES.search(p["text"])
+        if m: return f"its {p['part']} holds words that can be read as saying a danger is small or absent (“{m.group(0)}”)"
+    short = next((p["text"] for p in parts if p["part"] == "short"), "").strip()
+    m = re.match(r"(yes|no|not|unlikely|rarely|usually|often|mostly|probably|likely)\b", short, re.I); op = m.group(1).lower() if m else ""
+    if ASKS_LEAVE.search(question or ""):
+        if op in ("yes", "usually", "often", "mostly", "probably", "likely"): return f"the question asks whether a thing may be done, and the answer opens with “{m.group(1)}”"
+    elif op in ("no", "not", "unlikely", "rarely"): return f"the question asks about a danger, and the answer opens with “{m.group(1)}”"
+    return ""
+
+
+def strict_lacks(question, rec, parts, sources, labels, said):
+    """(lane 19) What an answer about dying, overdose, mixing, pregnancy or children lacks of the stricter bar ([] where it meets it). said: what each reader
+    answered when asked whether the lead plays a danger down (True, False, or None for no clear word)."""
+    lacks = []
+    refs = {labels[u].get("ref") for p in parts if p["part"] == "short" for u in p["uses"]}
+    if not any(s["ref"]["id"] in refs and ((s["read"] == "page" and s.get("tier", 1) == 1) or (s["read"] == "full" and s.get("kind") == "review")) for s in sources): lacks.append("its short answer rests on no official body's page and on no review read in full")
+    if rec.get("panel_gap") or not any(isinstance(v, dict) for v in (rec.get("panel") or {}).values()): lacks.append("no further reader read it")
+    code = plays_down(question, parts)
+    if code: lacks.append(code)
+    if not said or any(v is not False for v in said): lacks.append("a reader found that its lead can be read as saying a danger is small or absent" if any(v is True for v in said) else "a reader gave no clear word on whether its lead plays a danger down")
+    return lacks
 
 
 # ---------- one answer ----------
@@ -1359,7 +1460,7 @@ def with_checked(chat, model, enc, parts, claims, near=0.5, most=8):
     return differs, same
 
 
-def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None, own_check=None):
+def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None, own_check=None, stakes_how=None, note="", agreed=()):
     """One question through the lane. Returns the record (see the head of this file). official: the pages official.py found
     for it; page, summary, fulltext, crossref: how a page, a summary, a full text and a Crossref record are fetched (the
     selftest gives its own); before: the record this one replaces, whose state is kept in "history"."""
@@ -1495,14 +1596,31 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         rec["plan"] = plan or "the planner gave no plan that could be used: the writer chose the items itself"
         if plan and plan["unanswered"]: rec["missing"] = rec.get("missing") or plan["unanswered"]
     # 3 write, 5 rules (one more try when a rule is broken), 4 check (one more try for the short answer or the But)
-    fix, draft, verdicts = "", None, []
+    fix, draft, verdicts, downs = "", None, [], []      # (downs: what each reader said when asked whether the lead plays a danger down)
+    def other_writer(why):
+        """(lane 19) A writer that cannot be asked, or that twice gave no answer in the form asked for, must not cost the answer: the team's other writer
+        writes from there on, and the record says so. (18 November 2026: Gemma wrote 8,726 characters that were no JSON, twice, for a question the senior
+        author had sent, and there was no answer.) Never a model that is this answer's reader, second reader or further reader."""
+        alt = models.get("writer_2"); taken = {base(v.split("#")[0]) for k, v in models.items() if isinstance(v, str) and v and (k in ("reader", "checker") or re.fullmatch(r"also\d+", k))}
+        if not alt or alt == models["writer"] or base(alt) in taken: return False
+        rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" {base(models['writer'])} {why}: {base(alt)} wrote from there.").strip()
+        rec["made"]["models"].update(writer=alt, writer_first=models["writer"]); models["writer"], models["writer_2"] = alt, ""
+        return True
     for attempt in range(3):
-        out = llm.as_json(chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix, plan)}], room_for(models["writer"], 900)))
+        ask = lambda: chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix, plan, note)}], room_for(models["writer"], 900))
+        try: reply = ask()
+        except (llm.Unavailable, llm.Budget) as e:
+            if "larger than Groq's free plan allows" in str(e) or not other_writer("could not be asked (" + re.sub(r"\s+", " ", str(e))[:120] + ")"): raise
+            reply = ask()
+        out = llm.as_json(reply)
         draft, why = draft_of(out, labels)
         if not draft:
             rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" try {attempt + 1}: {why}" + (f" (how the reply ended: {llm.LAST.get('finish')}; reasoned {llm.LAST.get('reasoned')} characters, wrote {llm.LAST.get('wrote')})" if llm.LAST else "")).strip()
-            if fix.startswith("the form was wrong") and why == "no JSON": break       # the same call would fail the same way: not paid for a third time
+            if why == "no JSON" and other_writer("gave no answer in the form asked for"): continue      # the same question, to the other writer
+            if fix.startswith("the form was wrong") and why == "no JSON": rec["soft"] = "the writer's reply was not in the form asked for"; break       # the same call would fail the same way: not paid for a third time
             fix = "the form was wrong: " + why; continue
+        mended = mend_uses(draft["parts"], labels, [s["year"] for s in sources if s.get("year")], asked=sorted(numbers(item["q"])))
+        if mended: rec["gates"]["mended"] = "the item that holds a number of a sentence was added to what the sentence rests on: " + "; ".join(f"{p} + {u} ({x})" for p, u, x in mended)
         bad = rules(draft["parts"], labels, [s["year"] for s in sources if s.get("year")], asked=sorted(numbers(item["q"]))) + lead(item["q"], draft["parts"]) + hedges(draft["parts"], labels) + says_more(draft["parts"], labels)   # (a year a source was published in, or a number of the question itself, may be named)
         lines_bad = {p for p, _ in bad if p.startswith("how")}
         if bad and all(p.startswith("how") for p, _ in bad) and sum(p["part"].startswith("how") for p in draft["parts"]) > len(lines_bad):
@@ -1513,8 +1631,9 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         if bad:
             rec["gates"]["rules"] = "broken at try " + str(attempt + 1) + ": " + "; ".join(f"{p}: {w}" for p, w in bad); fix = "; ".join(f"in {p}: {w}" + (" (write “people who use it”, with the drug's name where it helps, even where the source says “users”)" if "not person-first" in w else "") for p, w in bad)
             keep_try(attempt + 1, draft["parts"], {q: "a rule: " + "; ".join(w for q2, w in bad if q2 == q) for q, _ in bad}, "a rule was broken: written again"); draft = None; continue
-        whole = {}
-        verdicts = check(chat, models["checker"], draft["parts"], labels, question=item["q"], whole=whole)
+        whole = {}; risk = stakes(item["q"], draft["parts"]); risk = risk if risk and str((stakes_how or {}).get(risk) or "") == "strict" and not NEVER_ALONE.search(item["q"]) else ""
+        verdicts = check(chat, models["checker"], draft["parts"], labels, question=item["q"], whole=whole, risk=risk)
+        downs = [whole.get("plays_down")] if risk else []
         # the second reader's word on the answer as a whole counts like its word on a sentence: a short answer that answers
         # another question, or a But about something else, is not accepted
         verdicts = [((v[0] and not (p["part"] == "short" and whole.get("answers") is False) and not (p["part"] == "but" and whole.get("but_fits") is False)),
@@ -1531,13 +1650,17 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             # Gemini 4 Hydrogen's were on 17 November 2026 for the senior author's own question), the next one named for that place is asked
             more = asked = None
             for mdl in [models[k]] + [x for x in str(models.get(k + "_else") or "").split("|") if x]:
-                try: more = check_marks(chat, mdl.split("#")[0], draft["parts"], labels) if mdl.endswith("#marks") else check(chat, mdl, draft["parts"], labels)
+                w2 = {}
+                try: more = check_marks(chat, mdl.split("#")[0], draft["parts"], labels) if mdl.endswith("#marks") else check(chat, mdl, draft["parts"], labels, whole=w2, risk=risk)
                 except (llm.Unavailable, llm.Budget) as e:                 # a free service that is busy or used up must not cost the answer: what the other judges said stands, and the answer waits for this reader
                     rec.setdefault("panel", {})[mdl] = "could not be asked: " + re.sub(r"\s+", " ", str(e))[:160]; more = None; continue
                 # (lane 17) a further reader whose reply held no verdict at all, asked twice, has not read the answer: on 17 November 2026 Gemini 3.8
                 # Flash answered so, and an answer that every other judge had accepted was thrown away as if it had refused every sentence
-                if more and all(not w[0] and w[1] == NO_VERDICT for w in more): rec.setdefault("panel", {})[mdl] = "could not be asked: its reply held no verdict, twice"; more = None; continue
-                asked = mdl; break
+                if more and all(not w[0] and w[1] == NO_VERDICT for w in more):
+                    rec.setdefault("panel", {})[mdl] = "could not be asked: its reply held no verdict, twice" + (f" (how the last reply ended: {llm.LAST.get('finish')}; it reasoned {llm.LAST.get('reasoned')} characters and wrote {llm.LAST.get('wrote')})" if llm.LAST else ""); more = None; continue
+                asked = mdl
+                if risk and not mdl.endswith("#marks"): downs.append(w2.get("plays_down"))
+                break
             if asked is None: gap.append(base(models[k])); continue
             rec.setdefault("panel", {})[asked] = {p["part"]: [bool(w[0]), w[1]] for p, w in zip(draft["parts"], more)}
             verdicts = [((v[0] and w[0]), v[1] if not v[0] else ("" if w[0] else f"a further reader ({base(asked)}) did not accept it: {w[1] or 'it gave no reason'}")) for v, w in zip(verdicts, more)]
@@ -1599,17 +1722,30 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     in_summary = [s for s in sources if s["read"] == "summary"]
     rec["complete"] = bool(draft["complete"]) and not in_summary and not best_wanted > best_read
     rec["missing"] = draft["missing"] if not draft["complete"] else (f"{len(in_summary)} paper(s) could be read in summary only" if in_summary else "a paper that stands nearer the question could not be read" if not rec["complete"] else "")
-    why = stakes(item["q"], parts)
-    if why: return done("waiting", "about " + why + ": written, and waiting for a person before it is published")
+    why = stakes(item["q"], parts); strict = False
+    if why:
+        rec["stakes"] = why
+        strict = str((stakes_how or {}).get(why) or "") == "strict" and not NEVER_ALONE.search(item["q"])
+        if not strict: rec["for"] = "editor"; return done("waiting", "about " + why + ": written, and waiting for a person before it is published")
     # 7 the checked claims of the same page (lane 10): an answer that cannot be true together with a checked claim waits for a person, and
     # the disagreement is written down for the editor; the claim itself is never touched
     if claims:
         differs, same = with_checked(chat, models["checker"], enc, parts, claims(rec["drugs"]))
-        rec["with_checked"] = {"differs": differs, "same": same}
+        # (lane 19) the editor's word on such a disagreement (data/auto/lane/agreed.json): where the editor has set this question's answer beside a checked claim and
+        # found that both can hold (the second reader called them apart for the wrong reason), that claim does not stop the next answer to the question
+        set_aside = [d for d in differs if d["claim"] in agreed]; differs = [d for d in differs if d["claim"] not in agreed]
+        rec["with_checked"] = {"differs": differs, "same": same, **({"editor_found_both_can_hold": set_aside} if set_aside else {})}
         rec["gates"]["checked"] = (f"{len(differs)} sentence(s) cannot be true together with a checked claim of the same page (" + "; ".join(f"{d['part']} against {d['claim']}: {d['why']}" for d in differs)[:400] + ")" if differs
                                    else f"set beside the checked claims of the same page: nothing against them" + (f"; {len(same)} sentence(s) say what a checked claim says" if same else ""))
-        if differs: return done("waiting", "it disagrees with a checked claim of the same page (" + ", ".join(sorted({d["claim"] for d in differs})) + "): waiting for a person; the claim is not changed")
-    if rec.get("panel_gap"): return done("waiting", "passed every reader that could be asked, but a further reader of its team could not be (" + ", ".join(rec["panel_gap"]) + "): it waits until that reader, or the editor, has read it")
+        if differs: rec["for"] = "editor"; return done("waiting", "it disagrees with a checked claim of the same page (" + ", ".join(sorted({d["claim"] for d in differs})) + "): waiting for a person; the claim is not changed")
+    # (lane 19) a further reader that could not be asked: nothing is parked for it. The answer is kept, not shown, and the question is worked on again in the
+    # next run, when that reader can be asked (run: "for": "again"). Until lane 18 it waited "until that reader, or the editor, has read it", and five did.
+    if rec.get("panel_gap"): rec["for"] = "again"; rec["soft"] = "a further reader could not be asked"; return done("waiting", "passed every reader that could be asked, but a further reader of its team could not be (" + ", ".join(rec["panel_gap"]) + "): it is worked on again by itself when that reader can be asked")
+    if strict:                                                         # the stricter bar of a question where a wrong word can hurt (see NEVER_ALONE above)
+        lacks = strict_lacks(item["q"], rec, parts, sources, labels, downs)
+        rec["gates"]["stakes"] = "about " + why + ": the stricter bar for such an answer: " + ("met (an official page or a review read in full under the short answer; a further reader read it; no word that plays a danger down, by code and by every reader)" if not lacks else "NOT met: " + "; ".join(lacks))
+        if lacks: return done("none", "about " + why + ": written, but it does not meet the stricter bar for such an answer (" + "; ".join(lacks) + "): no answer yet")
+        return done("published", "passed every gate, and the stricter bar for an answer about " + why)
     return done("published", "passed every gate")
 
 
@@ -1714,22 +1850,47 @@ def kept_for_sent(w):
     except Exception: return False
 
 
+SOFT_A_DAY, HARD_A_DAY, HARD_SENT_A_DAY = 6, 2, 3       # tries of one question in one day: after a fault that was not the answer's; after an answer that did not pass (the system's own question; one a person sent)
+
+
+def wait_days(tries):
+    """(lane 19) After a day's tries gave no answer: how many days until the next. Every day at first; then further apart, so that a question the sources
+    cannot answer yet does not take the free allowance from the questions that can be answered (new sources bring it back at once: turn 2)."""
+    return 1 if tries <= 4 else 2 if tries <= 8 else 4 if tries <= 14 else 7
+
+
 def turn_of(w, done):
-    """When a question's turn comes (the smaller, the sooner), or None when there is nothing to do for it: a question never
-    tried (0); one whose answer an older lane wrote (1); the second look: an answer that is not complete, or no answer, for
-    which the finders have found something since it was written (2); no answer for a week (3). done: the lane's state."""
+    """When a question's turn comes (the smaller, the sooner), or None when there is nothing to do for it now. done: the lane's state.
+      0    never tried
+      0.5  (lane 19) the last try was lost to a fault that was not the answer's (the writer's malformed reply, a fault of the network or of the lane, a
+           further reader that could not be asked): again in the next run, up to SOFT_A_DAY tries a day
+      1    written by an older lane and not shown: written again by the lane as it is
+      2    the second look: not complete, or no answer, and the finders have found something since
+      2.5  (lane 19) no answer passed today: once or twice more the same day, by another team of models (HARD_A_DAY; HARD_SENT_A_DAY for a question a person sent)
+      3    no answer, and the days of wait_days have passed since the last try
+      4    (lane 19) shown, and written by an older lane: its second look comes last (the answer that is shown stays shown if the second look does not pass)
+    An answer that waits for an editor (an amount; suicide; what to do in an emergency; one that disagrees with a checked claim) is not tried again."""
     s = done.get(w["id"]) or {}
     if not s: return 0
-    if int(s.get("lane") or 1) < LANE: return 1
+    st, last = s.get("status"), str(s.get("last") or "")
+    n = int(s.get("n") or 1) if last == TODAY else 0                      # tries today (a try noted before lane 19 has no count: one)
+    older = int(s.get("lane") or 1) < LANE
+    if st == "published" and older: return 4
+    if st == "waiting" and s.get("for") == "editor": return None        # an editor reads it; a newer lane does not write it again by itself
+    if older: return 1
+    if st == "waiting" and s.get("for") != "again": return None
     newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
-    if (s.get("status") == "none" or s.get("complete") is False) and newer > s.get("last", ""): return 2
+    if st == "published": return 2 if s.get("complete") is False and newer > last else None
+    if s.get("soft") or s.get("for") == "again": return 0.5 if n < SOFT_A_DAY else None
+    if newer > last: return 2
     # (17 November 2026, 20:10) the finders may find more on the very day the lane tried: kanna was tried at 17:36 UTC with nothing to read and
     # searched by its own name at 17:55 (12 papers that can be read). A day is too coarse: the lane notes how many sources it had ("had"), and a
     # question with no answer is looked at again as soon as the finders hold more. (A try noted before this rule: only where it had nothing to read.)
-    if s.get("status") == "none" or s.get("complete") is False:
-        n, had = found_now(w), s.get("had")
-        if (had is None and "no source that can be read" in str(s.get("why") or "") and n > 0) or (had is not None and n > int(had)): return 2
-    if s.get("status") == "none" and s.get("last", "") < (datetime.date.today() - datetime.timedelta(days=1)).isoformat(): return 3     # (17 November 2026: the next day, not the next week)
+    found, had = found_now(w), s.get("had")
+    if (had is None and "no source that can be read" in str(s.get("why") or "") and found > 0) or (had is not None and found > int(had)): return 2
+    nothing = "no source that can be read" in str(s.get("why") or "") or "not enough sources" in str(s.get("why") or "")      # nothing to write from: another try the same day would find the same (new sources bring it back at once, above)
+    if n and not nothing and n < (HARD_SENT_A_DAY if w.get("from") == "a question visitors sent" else HARD_A_DAY): return 2.5
+    if last <= (datetime.date.today() - datetime.timedelta(days=wait_days(int(s.get("tries") or 1)))).isoformat(): return 3
     return None
 
 
@@ -1757,7 +1918,7 @@ def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|g
 CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1, "also": 3, "also#marks": 15}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
 
 
-def team(file=None, only=None):
+def team(file=None, only=None, avoid=()):
     """The models for the next answer: the first team of data/auto/lane/models.json whose services have a key on this
     machine and room left today (two free services, each with its own day's allowance: Cloudflare Workers AI in neurons,
     Groq in tokens for each model). A team names a reader, a writer and a second reader; "reader_else" and "checker_else"
@@ -1765,7 +1926,9 @@ def team(file=None, only=None):
     reader's model and the second reader is not the writer's, on whichever service. None when no team has room."""
     try: mf = json.load(open(file or MODELS_FILE, encoding="utf-8"))
     except (OSError, ValueError): mf = {}
-    for t in mf.get("teams") or [{k: mf.get(k) or MODELS[k] for k in MODELS}]:
+    teams = mf.get("teams") or [{k: mf.get(k) or MODELS[k] for k in MODELS}]
+    teams = [t for t in teams if t.get("name") not in avoid] + [t for t in teams if t.get("name") in avoid]      # (lane 19) a question that got no answer today is tried by another team first: other models, another draft
+    for t in teams:
         if only and t.get("name") != only: continue                        # (a request may name its team: a new reader is tried on a question or two before it stands in the order)
         planners = [p for p in dict.fromkeys([t.get("planner"), t.get("planner_else")]) if isinstance(p, str) and p and base(p) != base(t.get("writer") or "")] or [None]
         for reader in dict.fromkeys([t.get("reader"), t.get("reader_else")]):
@@ -1795,7 +1958,10 @@ def team(file=None, only=None):
                     if any(v.startswith("groq:") and n > llm.groq_left(v[5:]) for v, n in need.items()): continue
                     if not llm.calls_fit(calls): continue                   # (each model of a call-counted service has its own free allowance: llm.limits_of)
                     other = next((r for r in (t.get("reader"), t.get("reader_else")) if isinstance(r, str) and r and r != m["reader"] and llm.has(r) and base(r) not in (base(m["writer"]), base(m["checker"]))), None)
-                    return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}), **{f"also{n}_else": "|".join(r) for n, r in rest.items() if r})
+                    # (lane 19) the writer's stand-in: the team's "writer_else", else the first of the writers we know that is another model than every other of this answer
+                    taken = {base(v.split("#")[0]) for v in m.values()}
+                    w2 = next((x for x in [t.get("writer_else"), "groq:qwen/qwen3.8-27b", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"] if isinstance(x, str) and x and llm.has(x) and base(x) not in taken), None)
+                    return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}), **({"writer_2": w2} if w2 else {}), **{f"also{n}_else": "|".join(r) for n, r in rest.items() if r})
     return None
 
 
@@ -1826,8 +1992,39 @@ def trial_items(raw):
     return out[:12]
 
 
-def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, trial=None):
-    models = dict(MODELS); real = chat is None
+def held_say(aid, lane=None):
+    """(lane 19) What the editor found in an answer it holds (data/auto/held.json, "say"), for the writer of the next one: "" where there is none. The editor's
+    reading goes back into the lane by itself: until lane 18 a held answer waited "to be written again" for a person to ask for it."""
+    try: held = json.load(open(ROOT / "data" / "auto" / "held.json", encoding="utf-8")).get("held") or []
+    except (OSError, ValueError): return ""
+    return next((re.sub(r"\s+", " ", str(h.get("say") or ""))[:600] for h in held if isinstance(h, dict) and h.get("id") == aid and h.get("say")), "")
+
+
+def shown_from():
+    """The oldest lane whose answers the site shows (data/auto/lane/policy.json, show_from_lane)."""
+    try: return int(json.load(open(ROOT / "data" / "auto" / "lane" / "policy.json", encoding="utf-8")).get("show_from_lane") or 1)
+    except (OSError, ValueError, TypeError): return 1
+
+
+def agreed_claims(wid):
+    """(lane 19) The checked claims the editor has found an answer to this question can stand beside (data/auto/lane/agreed.json: {"pairs": [{"question", "claim", "on", "why"}]})."""
+    try: pairs = json.load(open(ROOT / "data" / "auto" / "lane" / "agreed.json", encoding="utf-8")).get("pairs") or []
+    except (OSError, ValueError): return ()
+    return tuple(str(x.get("claim")) for x in pairs if isinstance(x, dict) and x.get("question") == wid and x.get("claim"))
+
+
+def stakes_policy():
+    """What each kind of question where a wrong word can hurt does (data/auto/lane/policy.json, "stakes"): {kind: "strict" | "person"}."""
+    try: p = json.load(open(ROOT / "data" / "auto" / "lane" / "policy.json", encoding="utf-8")).get("stakes")
+    except (OSError, ValueError): p = None
+    return {k: v for k, v in p.items() if v in ("strict", "person")} if isinstance(p, dict) else {}
+
+
+SOFT_FAULT = ("HTTPError", "URLError", "TimeoutError", "ConnectionError", "ConnectionResetError", "RemoteDisconnected", "IncompleteRead", "SSLError", "gaierror", "timeout")   # a fault of the network: the next try may not meet it
+
+
+def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, trial=None, minutes=None, only_sent=False):
+    models = dict(MODELS); real = chat is None; began = datetime.datetime.now()
     chat = fitting(chat or llm.chat)
     items = P.listed()
     st = load_state(); order = []
@@ -1842,6 +2039,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
     # (a stable sort: within one turn, the most asked first. 17 November 2026: a question a person sent comes before every question of the system's
     # own, whatever its turn: kanna, sent and waiting for its second look, would have stood behind 46 of the system's own that were never tried)
     if not ids and not again: order.sort(key=lambda w: (0 if w.get("from") == "a question visitors sent" else 1, turn(w)))
+    if only_sent: order = [w for w in order if w.get("from") == "a question visitors sent"]      # (lane 19) the first pass of a run: the questions people sent, alone, so that what is written for them is published before the system's own are begun
     if trial: order = list(trial); limit = max(limit, len(order))                  # (trial questions only: nothing of the site's list is worked on in such a run)
     enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []; out_of_room = 0
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
@@ -1856,9 +2054,18 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         if own_chk: print(f"lane: our own checker is {own_chk.e.get('name')} (from {own_chk.e.get('from')}), at least {own_chk.e.get('threshold')}")
         if own_err: print("lane: our own checker is in use and could NOT be run here: every answer of this run waits for the editor:", own_err)
     if real and not trial and not ids: order = [w for w in order if not kept_for_sent(w)] or order[:0]      # (what is left of the day is for the questions people send)
+    def note_try(w, status, why, **more):
+        """One try in the lane's state: when, how many today, by which teams, and whether the fault was the answer's ("soft": it was not)."""
+        was = st["items"].get(w["id"]) or {}; same_day = was.get("last") == TODAY
+        st["items"][w["id"]] = dict({"status": status, "why": why, "last": TODAY, "at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"), "lane": LANE, "kind": "", "complete": False,
+                                     "tries": int(was.get("tries") or 0) + 1, "n": (int(was.get("n") or 1) if same_day else 0) + 1, "teams": ((was.get("teams") or []) if same_day else []) + ([models.get("team")] if models.get("team") else []), "had": found_now(w)}, **more)
+        json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    cut = 0
     for w in order[:limit]:
+        if minutes and made and (datetime.datetime.now() - began).total_seconds() > 60 * minutes: print(f"lane: {minutes} minutes are over: the rest waits for the next run"); break      # (lane 19) a run is short, so that what it wrote is published soon
         if real:
-            models = team(only=only_team)
+            was = st["items"].get(w["id"]) or {}
+            models = team(only=only_team, avoid=tuple(was.get("teams") or []) if was.get("last") == TODAY else ())
             if not models: print(f"lane: no team of models has room left today (Cloudflare: {llm.left():.0f} neurons left): it goes on tomorrow"); break
             print(f"lane: {models.get('team') or 'the models'}: {models['reader']} reads, {models['writer']} writes, {models['checker']} is the second reader")   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
         pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
@@ -1874,8 +2081,9 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
             except (OSError, ValueError, KeyError): official = []               # (official.py has not searched for this question yet, or found nothing)
             try: before = json.load(open(af, encoding="utf-8"))
             except (OSError, ValueError): before = None
-            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk)
-            if own_err and rec.get("status") == "published": rec["status"] = "waiting"; rec["why"] = "our own checker is in use and could not be run in this run (" + own_err + "): waiting for the editor"
+            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk, stakes_how=stakes_policy() if real else None, note=held_say("au_" + w["id"]) if real else "", agreed=agreed_claims(w["id"]) if real else ())
+            if own_err and rec.get("status") == "published": rec["status"] = "waiting"; rec["for"] = "again"; rec["soft"] = "our own checker could not be run"; rec["why"] = "our own checker is in use and could not be run in this run (" + own_err + "): worked on again by itself in the next run"
+            cut = 0
         except llm.Budget as e:
             # an allowance ran out in the middle of an answer (our count was too low, or Groq said so itself and llm wrote that down): the next
             # question is begun with whichever team still has room; the question that was cut short keeps its turn for the next run
@@ -1885,13 +2093,20 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         except llm.Unavailable as e:
             print("lane: the models cannot be used now:", e)
             if "larger than Groq's free plan allows" in str(e): continue        # (this question's call was too large; the next question's may not be)
-            break
+            # (lane 19) a model that could not be reached in the middle of an answer: the question is tried again in the next run (not in a day or two), by
+            # another team first, and this run goes on with the next question; two such in a row, and the run stops
+            if not w.get("trial"): note_try(w, "none", "a model could not be reached in the middle of the answer (" + re.sub(r"\s+", " ", str(e))[:140] + ")", soft="a model could not be reached")
+            cut += 1
+            if cut >= 2: break
+            continue
         except P.Refused as e: print("lane: a source said no:", e); break
         except Exception as e:                                           # a fault of the lane itself on this question: written down, and the question is not tried again by this lane (it would fail the same way and spend the day's allowance)
             import traceback
             print(f"lane: {w['id']}: the lane itself failed ({type(e).__name__}: {str(e)[:200]})"); print("".join(traceback.format_exc().splitlines(True)[-6:]))
-            st["items"][w["id"]] = {"status": "none", "why": f"the lane itself failed on it ({type(e).__name__})", "last": TODAY, "lane": LANE, "kind": "", "complete": False, "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1, "had": found_now(w)}
-            json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); continue
+            # (lane 19) a fault of the network is not the question's: it is tried again in the next run. On 17 and 18 November 2026 three questions were left
+            # for a day or more as "the lane itself failed on it (HTTPError)".
+            if not w.get("trial"): note_try(w, "none", f"the lane itself failed on it ({type(e).__name__})", **({"soft": "a fault of the network"} if type(e).__name__ in SOFT_FAULT else {}))
+            continue
         if w.get("trial"):                                              # a trial: what the lane would have done is kept beside the record, and the record itself can never be shown
             rec["trial"] = {"would_be": rec["status"], "why": rec.get("why")}
             if rec["status"] == "published": rec["status"] = "waiting"; rec["held"] = "a trial question"; rec["why"] = (rec.get("why") or "") + "; a trial question: never shown"
@@ -1908,9 +2123,17 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
             if w.get("page") and rec["place"]["home"] != "new:" + w["page"]:        # a question the system asked for a page it should start (scripts/auto/grow.py) belongs on that page, whatever its words name first
                 rec["place"] = dict(rec["place"], home="new:" + w["page"], also=[h for h in dict.fromkeys([pl["home"]] + list(pl["also"])) if h and h != "new:" + w["page"]], why="asked by the system for the page it should start: " + w["page"])
         except Exception as e: rec["place"] = {"home": None, "why": "the place could not be worked out: " + str(e)[:120]}
+        if rec["status"] == "waiting" and not rec.get("for"): rec["for"] = "editor"      # (held for the editor's first reading of a kind: hold_new)
+        # (lane 19) the second look at an answer that is shown: if it does not pass, the answer that is shown stays, with a note of what the second look made of
+        # it (until lane 18 the answer was replaced by "no answer", and a reader lost what they had)
+        if before and before.get("status") == "published" and rec["status"] != "published" and int(before.get("lane") or 1) >= shown_from():
+            before["second_look"] = {"on": TODAY, "lane": LANE, "status": rec["status"], "why": rec["why"], "short": next((p.get("text") for p in rec.get("parts") or [] if p.get("part") == "short"), "")}
+            json.dump(before, open(OUT / (rec["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            note_try(w, "published", (before.get("why") or "") + f"; a second look by lane {LANE} did not pass ({rec['why'][:160]}): the answer of lane {before.get('lane')} stays", kind=before.get("kind") or "", complete=before.get("complete"))
+            made.append(rec); print(f"lane: {w['id']} {w['q'][:56]!r}: the second look did not pass ({rec['why'][:120]}); the answer that is shown stays"); continue
         json.dump(rec, open(OUT / (rec["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-        st["items"][w["id"]] = {"status": rec["status"], "why": rec["why"], "last": TODAY, "lane": LANE, "kind": rec["kind"], "complete": rec["complete"], "tries": int((st["items"].get(w["id"]) or {}).get("tries") or 0) + 1, "had": found_now(w)}
-        json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1); made.append(rec)
+        note_try(w, rec["status"], rec["why"], kind=rec["kind"], complete=rec["complete"], **({"soft": rec["soft"]} if rec.get("soft") else {}), **({"for": rec["for"]} if rec.get("for") else {}))
+        made.append(rec)
         f = rec["made"].get("from") or {}
         print(f"lane: {w['id']} {w['q'][:56]!r}: {rec['status']} ({rec['why']}); {f.get('papers', 0)} papers, {f.get('official', 0)} official pages, {f.get('summaries', 0)} summaries; {rec['made'].get('neurons', 0)} neurons")
     json.dump({"_note": "Papers the machine lane wants and cannot read (their full text is not open), with the questions they are wanted for. References from Crossref, made by scripts/build_references.py. For the senior author's list of papers to save.",
@@ -2062,19 +2285,21 @@ def selftest():
     keep = (llm.has, llm.left, llm.groq_left); cf = [9000]; gq = {"openai/gpt-oss-120b": 180000, "openai/gpt-oss-20b": 180000, "qwen/qwen3.8-27b": 180000}; keys = {"groq": True, "cf": True}
     llm.has = lambda m: keys["groq"] if m.startswith("groq:") else keys["cf"]; llm.left = lambda: cf[0]; llm.groq_left = lambda n: gq.get(n, 0)
     try:
-        assert team(tf) == {"reader": "@cf/r", "writer": "groq:openai/gpt-oss-120b", "checker": "groq:qwen/qwen3.8-27b", "team": "A", "reader_2": "groq:openai/gpt-oss-20b"}      # (lane 14: the team's other reader stands by)
+        T = lambda *a, **k: (lambda t: t and {x: y for x, y in t.items() if x != "writer_2"})(team(*a, **k))        # (the team without its writer's stand-in, which has its own test below)
+        assert T(tf) == {"reader": "@cf/r", "writer": "groq:openai/gpt-oss-120b", "checker": "groq:qwen/qwen3.8-27b", "team": "A", "reader_2": "groq:openai/gpt-oss-20b"}      # (lane 14: the team's other reader stands by)
+        assert team(tf)["writer_2"] == "@cf/meta/llama-3.3-70b-instruct-fp8-fast" and team(tf, avoid=("A",))["team"] == "B" and team(tf, avoid=("A", "B"))["team"] == "A"      # (lane 19) the writer's stand-in is another model than every other of the answer; a team that tried today comes after the others
         assert team(tf, only="B")["team"] == "B" and team(tf, only="Z") is None                                               # (a request may name its team)
         cf[0] = 100; assert team(tf)["reader"] == "groq:openai/gpt-oss-20b" and team(tf)["team"] == "A"                    # Cloudflare's day is used up: the reader works at Groq
         gq["qwen/qwen3.8-27b"] = 1000; assert team(tf) is None                                                             # team A's second reader has no room, and team B's writer is at Cloudflare, which has none
-        cf[0] = 9000; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "groq:openai/gpt-oss-120b", "team": "B", "reader_2": "groq:openai/gpt-oss-20b"}
-        keys["groq"] = False; assert team(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/openai/gpt-oss-120b", "team": "B"}   # no second service: every model at Cloudflare, as before
+        cf[0] = 9000; assert T(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "groq:openai/gpt-oss-120b", "team": "B", "reader_2": "groq:openai/gpt-oss-20b"}
+        keys["groq"] = False; assert T(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/openai/gpt-oss-120b", "team": "B"}   # no second service: every model at Cloudflare, as before
         cf[0] = 900; assert team(tf) is None
         assert base("groq:openai/gpt-oss-120b") == base("@cf/openai/gpt-oss-120b") == "gpt-oss-120b"
         # the planner has a second choice too: with little left of it at Groq, the plan is made at Cloudflare and the answer still gets one
         tf.write_text(json.dumps({"teams": [{"name": "C", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "checker_else": "@cf/openai/gpt-oss-120b",
                                              "planner": "groq:openai/gpt-oss-120b", "planner_else": "@cf/openai/gpt-oss-120b"}]}), encoding="utf-8")
         keys["groq"] = True; cf[0] = 9000; gq.update({"qwen/qwen3.8-27b": 180000, "openai/gpt-oss-120b": 180000})
-        assert {k: v for k, v in team(tf).items() if k != "reader_2"} == {"reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "planner": "groq:openai/gpt-oss-120b", "team": "C"}
+        assert {k: v for k, v in T(tf).items() if k != "reader_2"} == {"reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "planner": "groq:openai/gpt-oss-120b", "team": "C"}
         gq["openai/gpt-oss-120b"] = 20000; t = team(tf); assert t["checker"] == "groq:openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t      # room for the check (16,000) but not for the plan as well (7,000 more)
         gq["openai/gpt-oss-120b"] = 5000; t = team(tf); assert t["checker"] == "@cf/openai/gpt-oss-120b" and t["planner"] == "@cf/openai/gpt-oss-120b", t
         # a team with further second readers is that team only with all of them: each needs a key and room, and is another model than the writer and the second reader
@@ -2509,6 +2734,87 @@ def selftest():
     assert not rules([{"part": "how2", "text": "A 2026 review found a potential link between smoking marijuana and lung cancer. It cites an earlier analysis that linked long-term use over 10 years to testicular tumors.", "uses": ["F2", "F4"]}], L2, years=[2026])
     assert not rules([{"part": "how2", "text": "A 2026 review found a potential link between smoking marijuana and lung cancer.", "uses": ["F2"]}], L2, years=[2026]) and not rules([{"part": "short", "text": "In one study, long-term use was linked to testicular tumors.", "uses": ["F4"]}], L2)
     assert "IT REPORTS THIS FROM ANOTHER STUDY" in writer_prompt("Q?", [{"read": "full", "tag": "A", "title": "T", "year": 2026, "kind": "review", "design": None, "findings": [{"id": "F4", "text": "x", "quote": "y", "second_hand": True}, {"id": "F2", "text": "x", "quote": "y", "second_hand": False}], "limits": []}], ex).split("[F4]")[1].split("[F2]")[0]
+    # ---------- lane 19 ----------
+    # a number that stands in another item of the same source: the item is added to what the sentence rests on, and the answer is not lost for it
+    calls.clear(); script["writer"] = [W("Yes. In 2,405 people who used ketamine regularly, between 9% and 27% met criteria for dependence.")]; script["checker"] = [V(True, True, True, True)]
+    r = mk(); assert r["status"] == "published" and "short + DA (2405)" in r["gates"]["mended"] and [x["label"] for x in r["parts"][0]["rests_on"]] == ["F1", "DA"], (r["status"], r["why"], r["gates"])
+    assert "Across 12 studies of 2,405 people" in [c for c in calls if c[0] == "checker"][0][2].split("2. SENTENCE")[0]                    # the second reader reads the sentence beside that item too
+    Lm = {"F1": {"quote": "anxiety fell", "ref": "a"}, "DA": {"quote": "16 healthy participants were scanned", "ref": "a"}, "DB": {"quote": "a survey of 40 adults", "ref": "b"}}
+    pm = [{"part": "short", "text": "In 16 healthy people anxiety fell, as in 40 adults elsewhere.", "uses": ["F1"]}]
+    assert mend_uses(pm, Lm) == [("short", "DA", "16")] and pm[0]["uses"] == ["F1", "DA"]                                               # never an item of another source: the 40 stays against the rule
+    told = rules(pm, Lm); assert len(told) == 1 and "(40): it stands in [DB]; name that item too" in told[0][1], told
+    assert mend_uses([{"part": "short", "text": "A 2021 review found it in 16 people.", "uses": ["F1"]}], Lm, years=[2021]) == [("short", "DA", "16")]      # a year is not mended (the rule on years judges it)
+    # "male rats" is no result for men; a result for men still is
+    assert not [k for k, w, h in says_more_text("It reduced anxiety in healthy people.", "Sceletium reduced anxiety in male Wistar rats and in female mice. The extract promoted calmness.") if "said of people" in k]
+    assert [k for k, w, h in says_more_text("It reduced anxiety in healthy people.", "In 20 healthy men the extract reduced anxiety.") if "said of people" in k] == ["a result for men, said of people"]
+    assert ANIMAL_SEX.search("in male Sprague-Dawley rats") and ANIMAL_SEX.search("female mice") and not ANIMAL_SEX.search("male and female students") and not ANIMAL_SEX.search("in males aged 18 to 25")
+    # a writer that gives no answer in the form asked for: the team's other writer writes from there, and the record says so
+    def chat_w(model, messages, max_tokens=0):
+        if model == "gemini:gemma-4-26b-a4b-it": calls.append(("writer", model, "")); return "Let me think about this question at length. " * 40
+        return chat(model, messages, max_tokens)
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat_w, Enc(), dict(MODELS, writer="gemini:gemma-4-26b-a4b-it", writer_2="groq:qwen/qwen3.8-27b"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and r["made"]["models"]["writer"] == "groq:qwen/qwen3.8-27b" and r["made"]["models"]["writer_first"] == "gemini:gemma-4-26b-a4b-it" and "gave no answer in the form asked for: qwen3.8-27b wrote from there" in r["gates"]["writer"], (r["status"], r["why"], r["gates"])
+    assert [c[1] for c in calls if c[0] == "writer"] == ["gemini:gemma-4-26b-a4b-it", "groq:qwen/qwen3.8-27b"]
+    script["writer"] = []; r = make(item, found, chat_w, Enc(), dict(MODELS, writer="gemini:gemma-4-26b-a4b-it"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "none" and "no JSON" in r["why"] and r["soft"], (r["status"], r["why"], r.get("soft"))                         # no other writer: no answer, and the fault is noted as not the answer's (tried again in the next run)
+    def chat_down(model, messages, max_tokens=0):
+        if model == "groq:qwen/qwen3.8-27b" and messages[0]["content"].startswith("You write"): raise llm.Unavailable("groq answered 503")
+        return chat(model, messages, max_tokens)
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat_down, Enc(), dict(MODELS, writer="groq:qwen/qwen3.8-27b", writer_2=MODELS["writer"]), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "published" and "could not be asked (groq answered 503)" in r["gates"]["writer"], (r["status"], r["why"], r["gates"])
+    # a further reader that cannot be asked: the answer is kept, not shown, and marked to be worked on again by itself (not parked for a person)
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat_gap, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    assert r["status"] == "waiting" and r["for"] == "again" and r["soft"] and "worked on again by itself" in r["why"], (r["status"], r["why"], r.get("for"))
+    # the editor's note goes to the writer
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, note="say what people report, as reports")
+    assert r["status"] == "published" and "AN EDITOR READ AN EARLIER ANSWER" in [c for c in calls if c[0] == "writer"][0][2] and "say what people report, as reports" in [c for c in calls if c[0] == "writer"][0][2]
+    # a question where a wrong word can hurt. The setting decides (data/auto/lane/policy.json, "stakes"); with none, it waits for a person, as before
+    kq = {"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}; VD = lambda down: dict(V(True, True, True, True), plays_down=down)
+    strict = lambda models=None, q=kq, **k: make(q, found, chat, Enc(), models or dict(MODELS, also1="gemini:gemini-3.6-flash"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, stakes_how={"dying": "strict", "overdose or an emergency": "strict", "suicide or self-harm": "person"}, **k)
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [VD(False), VD(False)]
+    r = strict(); assert r["status"] == "published" and r["stakes"] == "dying" and "the stricter bar for such an answer: met" in r["gates"]["stakes"] and "stricter bar for an answer about dying" in r["why"], (r["status"], r["why"], r["gates"])
+    assert all("\"plays_down\": true if sentence 1 or sentence 2" in c[2] and "This answer is about dying" in c[2] for c in calls if c[0] == "checker") and len([c for c in calls if c[0] == "checker"]) == 2     # the second reader and the further reader are both asked
+    script["writer"] = [W(ok_short)]; script["checker"] = [VD(False), VD(True)]
+    r = strict(); assert r["status"] == "none" and "does not meet the stricter bar" in r["why"] and "a reader found that its lead can be read as saying a danger is small or absent" in r["why"] and r["parts"], (r["status"], r["why"])
+    script["writer"] = [W(ok_short)]; script["checker"] = [VD(False), V(True, True, True, True)]                                        # a reader that gave no word on it: not published by the system
+    r = strict(); assert r["status"] == "none" and "gave no clear word on whether its lead plays a danger down" in r["why"], (r["status"], r["why"])
+    script["writer"] = [W(ok_short)]; script["checker"] = [VD(False)]                                                                   # a team with no further reader: never by itself
+    r = strict(models=dict(MODELS)); assert r["status"] == "none" and "no further reader read it" in r["why"], (r["status"], r["why"])
+    script["writer"] = [W("No. In a review of studies, between 9% and 27% of people who used ketamine regularly met criteria for dependence.")]; script["checker"] = [VD(False), VD(False)]
+    r = strict(); assert r["status"] == "none" and "the question asks about a danger, and the answer opens with “No”" in r["why"], (r["status"], r["why"])
+    script["writer"] = [W(ok_short, but="Deaths are rare, and most studies were online surveys of volunteers.")]; script["checker"] = [VD(False), VD(False)]
+    r = strict(); assert r["status"] == "none" and "its but holds words that can be read as saying a danger is small or absent (“rare”)" in r["why"], (r["status"], r["why"])
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), V(True, True, True, True)]                         # what to do in an emergency is the senior author's own text: it waits, whatever the setting
+    r = strict(q={"id": "w_0031", "q": "What should I do if someone overdoses on ketamine?", "ways": []}); assert r["status"] == "waiting" and r["for"] == "editor" and "overdose or an emergency" in r["why"], (r["status"], r["why"])
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), V(True, True, True, True)]                         # a kind the setting gives to a person
+    r = strict(q={"id": "w_0032", "q": "Does ketamine help with suicidal thoughts?", "ways": []}); assert r["status"] == "waiting" and r["for"] == "editor" and "suicide" in r["why"], (r["status"], r["why"])
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), V(True, True, True, True)]                         # a kind the setting does not name (mixing): a person, as before
+    r = strict(q={"id": "w_0033", "q": "Can you mix ketamine and alcohol?", "ways": []}); assert r["status"] == "waiting" and "mixing drugs" in r["why"], (r["status"], r["why"])
+    assert plays_down("Is it safe to mix ketamine and alcohol?", [{"part": "short", "text": "Yes. Many people do."}]) and not plays_down("Is it safe to mix ketamine and alcohol?", [{"part": "short", "text": "No. Both slow breathing."}])
+    assert plays_down("Can I take ketamine with alcohol?", [{"part": "short", "text": "Yes, it has been done."}]) and plays_down("Can you die from ketamine?", [{"part": "short", "text": "No. It has not been reported."}]) and not plays_down("Can you die from ketamine?", [{"part": "short", "text": "Yes. Deaths have been reported."}])
+    assert plays_down("Can ketamine harm a baby?", [{"part": "short", "text": "It can. Studies in animals found harm."}, {"part": "but", "text": "The risk in people is unlikely to be large."}]) and not plays_down("x", [{"part": "how1", "text": "A review found deaths were rare."}])     # (the lead only: a line under How do we know reports what a source found)
+    assert not plays_down("What side effects does kratom have?", [{"part": "short", "text": "Reported side effects include nausea. Rare but serious effects include seizures."}]) and plays_down("x", [{"part": "short", "text": "Seizures are rare."}])     # a source's own "rare but serious" warns
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True), {"pairs": [{"n": 1, "is": "differs", "why": "x"}]}]
+    cl = lambda drugs: [{"id": "cl_ket_dependence", "drug": "ketamine", "plain": "People who use ketamine often can become dependent on it.", "statement": ""}]
+    r = make(dict(item, drugs=["ketamine"]), found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, claims=cl, agreed=("cl_ket_dependence",))
+    assert r["status"] == "published" and r["with_checked"]["differs"] == [] and r["with_checked"]["editor_found_both_can_hold"][0]["claim"] == "cl_ket_dependence", (r["status"], r["why"], r.get("with_checked"))     # the editor's word on a disagreement: that claim does not stop the answer
+    assert NEVER_ALONE.search("what to do if a friend overdoses") and NEVER_ALONE.search("How do I help someone who took too much GHB?") and NEVER_ALONE.search("does narcan work on fentanyl") and not NEVER_ALONE.search("Can you overdose on ketamine?")
+    # when a question's turn comes
+    yday = (datetime.date.today() - datetime.timedelta(days=1)).isoformat(); wk = (datetime.date.today() - datetime.timedelta(days=9)).isoformat()
+    sent, own_q = {"id": "w_a1", "from": "a question visitors sent"}, {"id": "w_1"}
+    S = lambda **k: {"w_a1": dict({"lane": LANE, "last": TODAY, "tries": 1, "n": 1, "had": 0}, **k), "w_1": dict({"lane": LANE, "last": TODAY, "tries": 1, "n": 1, "had": 0}, **k)}
+    assert turn_of(sent, {}) == 0 and turn_of(sent, S(status="none", why="x", soft="a fault of the network")) == 0.5 and turn_of(sent, S(status="none", why="x", soft="y", n=SOFT_A_DAY)) is None     # a fault that was not the answer's: again in the next run, six times a day at most
+    assert turn_of(sent, S(status="waiting", **{"for": "again"})) == 0.5 and turn_of(sent, S(status="waiting", **{"for": "editor"})) is None and turn_of(sent, S(status="waiting", **{"for": "editor"}, lane=LANE - 1)) is None
+    assert turn_of(sent, S(status="none", why="the second reader did not accept the answer")) == 2.5 and turn_of(sent, S(status="none", why="x", n=2)) == 2.5 and turn_of(sent, S(status="none", why="x", n=3)) is None      # the same day, by another team: three tries for a question a person sent
+    assert turn_of(own_q, S(status="none", why="x")) == 2.5 and turn_of(own_q, S(status="none", why="x", n=2)) is None                                                                                  # two for the system's own
+    assert turn_of(sent, S(status="none", why="no source that can be read gave a finding for this question")) is None and turn_of(sent, S(status="none", why="no source that can be read gave a finding", last=yday)) == 3
+    assert turn_of(sent, S(status="none", why="x", last=yday, tries=3)) == 3 and turn_of(sent, S(status="none", why="x", last=yday, tries=6)) is None and turn_of(sent, S(status="none", why="x", last=wk, tries=20)) == 3   # every day at first, then further apart
+    assert turn_of(sent, S(status="none", why="x", lane=LANE - 1)) == 1 and turn_of(sent, S(status="waiting", lane=LANE - 1)) == 1 and turn_of(sent, S(status="published", lane=LANE - 1)) == 4 and turn_of(sent, S(status="published", complete=True)) is None
+    assert [wait_days(n) for n in (1, 4, 5, 8, 9, 14, 15)] == [1, 1, 2, 2, 4, 4, 7]
     print("lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; "
           "a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; "
           "an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, "
@@ -2535,5 +2841,5 @@ if __name__ == "__main__":
         else: print("lane: no request waiting")
     elif len(sys.argv) > 1 and sys.argv[1] == "run":
         a = sys.argv[2:]; opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d
-        run(ids=[x for x in (opt("--ids") or "").split(",") if x] or None, limit=int(opt("--max", "3")), again="--again" in a)
+        run(ids=[x for x in (opt("--ids") or "").split(",") if x] or None, limit=int(opt("--max", "3")), again="--again" in a, minutes=float(opt("--minutes")) if opt("--minutes") else None, only_sent="--sent" in a)
     else: sys.exit(__doc__)

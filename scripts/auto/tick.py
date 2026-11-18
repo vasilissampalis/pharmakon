@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""tick.py: every half hour, what is there to do? (docs/AUTOMATION.md; .github/workflows/auto.yml)
+"""tick.py: every five minutes (until 18 November 2026: every half hour), what is there to do? (docs/AUTOMATION.md; .github/workflows/auto.yml)
 
 The senior author, 15 November 2026: "automatically deployed every 30 minutes"; "everything we can find automated and
 free ... every 30 minutes when github will be regenerated".
 
     python3 -I scripts/auto/tick.py plan       on the smallest machine: decides, writes $GITHUB_OUTPUT (scout, lane, deploy)
-    python3 -I scripts/auto/tick.py after      after the work: has what the site is built from changed? ($GITHUB_OUTPUT deploy)
+    python3 -I scripts/auto/tick.py after [--asked FILE]     after the work: has what the site is built from changed? ($GITHUB_OUTPUT deploy)
+    python3 -I scripts/auto/tick.py publish    asks GitHub to start the publishing run now (in the middle of a run, as soon as a sent question has its answer)
     python3 -I scripts/auto/tick.py inputs     prints the fingerprint of everything the site is built from
     python3 -I scripts/auto/tick.py did lane|deploy    counts one run of that kind today
     python3 -I scripts/auto/tick.py --selftest
@@ -32,7 +33,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 TICK = ROOT / "data" / "auto" / "tick.json"
 DEPLOYED = ROOT / "data" / "auto" / "deploy" / "deployed.json"
-LANE_A_DAY, DEPLOY_A_DAY = 24, 24    # (16 November 2026, 22:13: the senior author made the repository public, so GitHub's machine time is free and no longer limits a day. What limits it now is the models' free allowances: a writing run starts only when a team has room (lane.team), so this number is a ceiling, not a plan. Before that day: 4 and 8, for the paid machine time of a private repository.)
+LANE_A_DAY, DEPLOY_A_DAY = 240, 96    # (18 November 2026, lane 19: the look comes every five minutes and a writing run is short, so that a sent question is begun within minutes; what limits a day is the models' free allowances (lane.team) and, for publishing, one every quarter of an hour on average. Until that day: 24 and 24.)   # (16 November 2026, 22:13: the senior author made the repository public, so GitHub's machine time is free and no longer limits a day. What limits it now is the models' free allowances: a writing run starts only when a team has room (lane.team), so this number is a ceiling, not a plan. Before that day: 4 and 8, for the paid machine time of a private repository.)
 ROOM = 1200             # neurons one answer may take: the lane starts only when today's allowance has this much left
 RETRY_DAYS = 1     # (17 November 2026: a question without an answer is tried again the next day, not the next week: "this should be done as fast and good as possible")
 # everything the site is built from (site/build.js and site/build_public.py read these); the machine lane's answers are counted apart
@@ -72,13 +73,13 @@ def counts():
     return t
 
 
-def lane_has_work(state, items, ledger_left, t, paused=None):
+def lane_has_work(state, items, ledger_left, t, paused=None, kept=None):
     """(yes or no, why)"""
     if t["lane"] >= LANE_A_DAY: return False, f"{t['lane']} writing runs today already"
     if ledger_left < ROOM: return False, f"today's free model allowance has {ledger_left:.0f} neurons left: not enough for one answer"
     if (load(ROOT / "data" / "auto" / "lane" / "policy.json", {}).get("pause") if paused is None else paused): return False, "the editor has paused the lane (data/auto/lane/policy.json, pause)"
     import lane as L
-    todo = [w["id"] for w in items if L.turn_of(w, state.get("items") or {}) is not None]
+    todo = [w["id"] for w in items if L.turn_of(w, state.get("items") or {}) is not None and not (L.kept_for_sent if kept is None else kept)(w)]      # (what is left of a day's allowance is kept for the questions people send: lane.kept_for_sent)
     return (True, f"{len(todo)} listed questions are to be worked on") if todo else (False, "every listed question has been worked on")
 
 
@@ -111,7 +112,7 @@ def plan():
     import papers
     items = papers.listed()
     try:
-        import lane as L; room = max(llm.left(), ROOM if L.team() else 0)            # (16 November 2026) with a second free service the lane has room when any team of models has
+        import lane as L; room = ROOM if L.team() else 0            # (16 November 2026) with a second free service the lane has room when any team of models has; (18 November 2026) and only then: a run that finds no team writes nothing
     except Exception: room = llm.left()
     lane, why["lane"] = lane_has_work(load(ROOT / "data" / "auto" / "lane" / "state.json", {"items": {}}), items, room, t) if token and account else (False, "no key")
     dep, why["deploy"] = deploy_needed(t, inputs(), load(DEPLOYED, {}))
@@ -122,9 +123,25 @@ def plan():
     print("tick:", "; ".join(f"{k}: {v}" for k, v in why.items()))
 
 
-def after():
-    t = counts(); dep, why = deploy_needed(t, inputs(), load(DEPLOYED, {}))
+def after(asked=None):
+    """asked: a file that holds the fingerprint a publishing was already asked for in the middle of this run (auto.yml, keep_now): nothing more has changed
+    since, so the end of the run does not ask a second time."""
+    t = counts(); now = inputs(); dep, why = deploy_needed(t, now, load(DEPLOYED, {}))
+    try: already = bool(asked) and open(asked, encoding="utf-8").read().strip() == now
+    except OSError: already = False
+    if dep and already: dep, why = False, "a publishing of exactly this was asked for a few minutes ago, in the middle of this run"
     out(deploy=dep); print("tick, after the work:", why)
+
+
+def publish():
+    """Ask GitHub to start the publishing run (deploy.yml) now. The token is the run's own (GH_TOKEN); a push made by a run starts no workflow, a request does."""
+    import urllib.request
+    repo, token = (os.environ.get("GITHUB_REPOSITORY") or "").strip(), (os.environ.get("GH_TOKEN") or "").strip()
+    if not repo or not token: print("tick: no repository or no token here: a publishing cannot be asked for"); return
+    req = urllib.request.Request("https://api.github.com/repos/" + repo + "/actions/workflows/deploy.yml/dispatches", data=json.dumps({"ref": "main"}).encode(), method="POST",
+                                 headers={"Authorization": "Bearer " + token, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "pharmakon-auto"})
+    try: print("tick: the publishing run was asked for:", urllib.request.urlopen(req, timeout=30).status)
+    except Exception as e: print("tick: the publishing run could not be asked for (" + type(e).__name__ + "); the end of this run asks again")
 
 
 def did(kind):
@@ -139,14 +156,17 @@ def selftest():
     old = (datetime.date.today() - datetime.timedelta(days=8)).isoformat(); new = datetime.date.today().isoformat()
     import lane as L
     st = {"items": {"w_1": {"status": "published", "last": old, "lane": L.LANE}, "w_2": {"status": "none", "last": new, "lane": L.LANE}}}
-    assert lane_has_work(st, items, 5000, t, False) == (True, "1 listed questions are to be worked on")                    # w_3 was never tried
-    st["items"]["w_3"] = {"status": "waiting", "last": new, "lane": L.LANE}; assert lane_has_work(st, items, 5000, t, False)[0] is False      # tried, waiting or too recent
-    st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t, False)[0] is True                              # no answer a day or more ago: tried again
-    assert lane_has_work(st, items, 800, t, False)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=LANE_A_DAY), False)[0] is False  # no room in the allowance; the day's runs are used
-    st["items"]["w_2"] = {"status": "published", "last": new, "lane": L.LANE - 1}; assert lane_has_work(st, items, 5000, t, False)[0] is True         # written by an older lane: written again
+    st["items"]["w_2"]["n"] = 2                                                                                           # (lane 19) w_2 has had its two tries of today
+    assert lane_has_work(st, items, 5000, t, False, kept=lambda w: False) == (True, "1 listed questions are to be worked on")                    # w_3 was never tried
+    st["items"]["w_3"] = {"status": "waiting", "last": new, "lane": L.LANE, "for": "editor"}; assert lane_has_work(st, items, 5000, t, False, kept=lambda w: False)[0] is False      # tried twice today, or waiting for an editor
+    st["items"]["w_2"]["n"] = 1; assert lane_has_work(st, items, 5000, t, False, kept=lambda w: False)[0] is True                               # (lane 19) one try today gave no answer: once more the same day, by another team
+    st["items"]["w_3"]["for"] = "again"; st["items"]["w_2"]["n"] = 2; assert lane_has_work(st, items, 5000, t, False, kept=lambda w: False)[0] is True      # (lane 19) an answer that waits for a reader that could not be asked is worked on again by itself
+    st["items"]["w_3"]["for"] = "editor"; st["items"]["w_2"]["last"] = old; assert lane_has_work(st, items, 5000, t, False, kept=lambda w: False)[0] is True                              # no answer a day or more ago: tried again
+    assert lane_has_work(st, items, 800, t, False, kept=lambda w: False)[0] is False and lane_has_work(st, items, 5000, dict(t, lane=LANE_A_DAY), False, kept=lambda w: False)[0] is False  # no room in the allowance; the day's runs are used
+    st["items"]["w_2"] = {"status": "published", "last": new, "lane": L.LANE - 1}; assert lane_has_work(st, items, 5000, t, False, kept=lambda w: False)[0] is True         # written by an older lane: written again
     assert deploy_needed(t, "abc", {"inputs": "abc"})[0] is False and deploy_needed(t, "abd", {"inputs": "abc"})[0] is True and deploy_needed(dict(t, deploy=DEPLOY_A_DAY), "abd", {"inputs": "abc"})[0] is False
     a = inputs(); assert len(a) == 24 and a == inputs()
-    assert lane_has_work(st, items, 5000, t, "the editor's reason")[0] is False                                         # the editor's pause stops it
+    assert lane_has_work(st, items, 5000, t, "the editor's reason", kept=lambda w: False)[0] is False                                         # the editor's pause stops it
     print(f"tick selftest: ok (the lane starts for a question never tried, written by an older lane or without an answer since the day before, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
 
 
@@ -154,7 +174,8 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if "--selftest" in a: selftest()
     elif a[:1] == ["plan"]: plan()
-    elif a[:1] == ["after"]: after()
+    elif a[:1] == ["after"]: after(a[a.index("--asked") + 1] if "--asked" in a and a.index("--asked") + 1 < len(a) else None)
+    elif a[:1] == ["publish"]: publish()
     elif a[:1] == ["inputs"]: print(inputs())
     elif a[:1] == ["did"] and a[1:2] and a[1] in ("lane", "deploy"): did(a[1])
     else: sys.exit(__doc__)

@@ -876,7 +876,8 @@ def main():
         except (OSError, ValueError): return True
         if int(rec.get("official") or 0) < OFFICIAL: return True
         return not rec.get("drug_words") and not w.get("drugs") and (bool(w.get("names")) or bool(P.page_names(w)))
-    items = sorted([w for w in items if (w["id"] in ids if ids else old(w))], key=lambda w: (FOUND / (w["id"] + ".json")).exists())[:limit]     # a question never searched comes before one searched by an older finder
+    if "--sent" in arg: items = [w for w in items if w.get("from") == "a question visitors sent"]      # (18 November 2026) the first pass of a run: only the questions people sent
+    items = sorted([w for w in items if (w["id"] in ids if ids else old(w))], key=lambda w: ((FOUND / (w["id"] + ".json")).exists(), 0 if w.get("from") == "a question visitors sent" else 1))[:limit]     # a question never searched comes before one searched by an older finder; among those, one a person sent comes first (18 November 2026)
     FOUND.mkdir(parents=True, exist_ok=True); index = json.load(open(INDEX, encoding="utf-8"))["sources"]; done = 0
     for w in items:
         if minutes and time.time() - t0 > minutes * 60: print(f"official: the time for this run is up; {len(items) - done} questions are left for the next run"); break

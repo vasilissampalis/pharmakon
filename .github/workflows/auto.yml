@@ -1,4 +1,11 @@
-# Every half hour: is there work? (docs/AUTOMATION.md; scripts/auto/tick.py)
+# Every five minutes (until 18 November 2026: every half hour): is there work? (docs/AUTOMATION.md; scripts/auto/tick.py)
+#
+# The senior author, 18 November 2026, 13:34 Athens: "can the answers get ... answered by themselves? and can they get answered almost instantly? one day or two
+# is too ... much"; 13:36: "our site's answers have to be given much faster". What the run list showed that day: GitHub started this workflow, asked for at :07
+# and :37, about once in 60 to 85 minutes; a run that worked took 7 to 22 minutes; and a question that got no answer was left for a day or two. So: it is asked
+# for every five minutes (GitHub starts a scheduled run when it has a machine free: more chances, shorter waits); a question a person sent is worked on first and
+# alone, and what was written for it is kept and published at once, before the system's own questions; and the lane tries again by itself (lane 19).
+# The site's own server can start this workflow the moment a question is sent (workflow_dispatch), once the senior author has given it a key that may do only that.
 #
 # The senior author, 15 November 2026: "automatically deployed every 30 minutes"; "WE HAVE TO MAKE THE SITE EXPAND ON ITS OWN".
 #
@@ -19,7 +26,7 @@ name: Auto
 
 on:
   schedule:
-    - cron: "7,37 * * * *"   # every half hour, away from the full hour (GitHub starts scheduled runs late when many start at once)
+    - cron: "3-58/5 * * * *"   # every five minutes, away from the full hour (GitHub starts scheduled runs late when many start at once, and five minutes is the shortest it allows)
   workflow_dispatch:
   push:
     branches: [main]
@@ -90,6 +97,7 @@ jobs:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       DO_SCOUT: ${{ needs.tick.outputs.scout }}
       DO_LANE: ${{ needs.tick.outputs.lane }}
+      GH_TOKEN: ${{ github.token }}   # to ask for a publishing in the middle of the work, as soon as a sent question has its answer
     steps:
       - uses: actions/checkout@v6
         with:
@@ -132,14 +140,32 @@ jobs:
               if [ -s "$RUNNER_TEMP/private/report.json" ]; then step "they too become questions on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run --report "$RUNNER_TEMP/private/report.json" --marker "$RUNNER_TEMP/new-items"; fi
             fi
           fi
+          # (18 November 2026, lane 19) what was written so far is kept and, if the site is built from something new, published at once: a person who sent a
+          # question does not wait for the system's own questions. The fingerprint that was asked for is remembered, so that the end of the run asks again only
+          # if something more has changed.
+          keep_now() {
+            git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A data/auto >> "$L" 2>&1; git add -A docs/MISSING.md >> "$L" 2>&1 || true
+            if git diff --cached --quiet; then echo "   nothing new to keep yet" >> "$L"; return 0; fi
+            git commit -q -m "Auto: what the lane wrote for the questions people sent" >> "$L" 2>&1
+            git push -q >> "$L" 2>&1 || (git pull -q --rebase -X theirs && git push -q) >> "$L" 2>&1 || (sleep 7 && git pull -q --rebase -X theirs && git push -q) >> "$L" 2>&1
+            if GITHUB_OUTPUT=/dev/null python3 -I scripts/auto/tick.py after 2>> "$L" | grep -q "^deploy=true"; then
+              python3 -I scripts/auto/tick.py inputs > "$RUNNER_TEMP/asked-inputs" 2>> "$L"
+              step "ask for a publishing now" python3 -I scripts/auto/tick.py publish
+            fi
+          }
           if [ "$DO_LANE" = "true" ] || [ -f "$RUNNER_TEMP/new-items" ]; then   # (a question that was just listed is worked on in this same run)
+            step "official pages for the questions people sent" python3 -I scripts/auto/official.py find --sent --max 4 --minutes 2
+            step "papers for the questions people sent" python3 -I scripts/auto/papers.py find --sent --max 4 --minutes 3
+            step "the lane writes: the questions people sent, first and alone" python3 -I scripts/auto/lane.py run --sent --max 2 --minutes 6
+            echo "== keep and publish what was written for them" >> "$L"; keep_now
             step "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run
-            step "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 6
-            step "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 8
-            step "the lane writes" python3 -I scripts/auto/lane.py run --max 3
+            step "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 3
+            step "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 4
+            step "the lane writes" python3 -I scripts/auto/lane.py run --max 3 --minutes 8
             step "count this run" python3 -I scripts/auto/tick.py did lane
           fi
-          step "has what the site is built from changed?" python3 -I scripts/auto/tick.py after
+          step "has what the site is built from changed?" env GITHUB_OUTPUT=/dev/null python3 -I scripts/auto/tick.py after --asked "$RUNNER_TEMP/asked-inputs"
       - name: Keep the records
         if: always()
         run: |
@@ -163,7 +189,7 @@ jobs:
       - id: after
         name: Has what the site is built from changed?
         if: always()
-        run: python3 -I scripts/auto/tick.py after || echo "deploy=false" >> "$GITHUB_OUTPUT"
+        run: python3 -I scripts/auto/tick.py after --asked "$RUNNER_TEMP/asked-inputs" || echo "deploy=false" >> "$GITHUB_OUTPUT"
 
   # The publishing is a run of its own (deploy.yml: build, every gate, upload, proof), started through GitHub's API. (Calling
   # deploy.yml as a part of this workflow did not publish on 15 November 2026 at 21:58 UTC, and left no note to say why.)
