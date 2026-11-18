@@ -29,7 +29,9 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   17 November 2026; `docs/AUTOMATION.md`, decision 31). Nobody pressed anything to send it: its words never go into this
   repository. The server keeps it apart (`aq:`), the run that looks every five minutes reads it in its own temporary folder
   (it starts at once where the site's server holds the key for that, `GH_RUN_TOKEN`: his to give, never pasted to the
-  editor), and only OUR wording and a fingerprint are kept here. Never write, print or commit such a question's words.
+  editor; whether it is there and what GitHub said to the last start stands in every publishing's notes, "a new question
+  starts the work at once"), and only OUR wording and a fingerprint are kept here. Never write, print or commit such a
+  question's words (the model that words a question may not give them back as one of its "ways" either: `ask.py`, `copied`).
 
 ## Evidence rules (METHODS.md has the full protocol)
 

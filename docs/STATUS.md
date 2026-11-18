@@ -1,10 +1,15 @@
 # Project status and work queue
 
-Updated 2026-11-18, 17:00 (site 2.21.2, protocol 0.5.8; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
+Updated 2026-11-18, 20:40 (site 2.21.3, protocol 0.5.8; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
 page states the same in public terms. The project's history is in the GitHub repository vasilissampalis/pharmakon (METHODS §11).
 
 ## Where things stand
 
+- **18 November 2026, 20:40 (Athens): the key is his to give now; the kratom answer is back.**
+  - **The key (`GH_RUN_TOKEN`):** he asked for a prompt for ChatGPT (20:20) and has it: GitHub token `pharmakon-start` (this repository only, Actions: read and write), then the Cloudflare Pages project `pharmakon`, Settings, Variables and Secrets, Secret, Production. **When he says "done":** write the expiry he names into `scripts/editor/next-steps.md`, publish once (the secret is read from the next publishing on), read the line "a new question starts the work at once" in `data/auto/deploy/_last-run.txt`, then have him ask the site one new question and watch for an Auto run started by `workflow_dispatch` within seconds (`gh run list`).
+  - **Site 2.21.3 (on main, published with the next publishing):** the server says whether the key is there and what GitHub said to the last start; the publishing's check writes it down, so a key that has run out is seen.
+  - **"Does kratom have psychoactive effects?"** was written again by the system at 17:51 with what the editor had found, and read again: it stays (the new rule stopped the old sentence at the second try).
+  - **GitHub's own clock that evening:** a run about every hour (17:26, 18:27, 19:26, 20:14).
 - **18 November 2026, 16:45 (Athens): his list, an hour after lane 19 went live; two runs overwrote each other; one answer held.**
   - **Answered by the system that hour:** "Do mothers worry about their children taking drugs?" (the first under the stricter bar; read by the editor: it stays), "Does kanna help with anxiety?" (the fifth try, the first whose writer had been told what the readers said of the last; it stays; its opening "It can help" rests on little in people: a rule to come). With "Does kanna have psychoactive effects?" and the ibogaine one, four of his seven are answered.
   - **Held by the editor:** "Does kratom have psychoactive effects?": its But said how much it takes to feel the drug. A rule stops such a sentence now; the lane writes the answer again by itself.

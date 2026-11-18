@@ -1215,6 +1215,24 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     tumour, cancer, food, internet, gaming); "creative" as a word anywhere in a review finds reviews on anything
     (for a question that names no drug the key word may have to stand in the title in both searches); "weekend".
     Both are in the next steps, each with a trial. Times: nothing to be learned while the index is slow.
+    **The kratom answer, written again and read again** (written 17:51 Athens by the run of GitHub's clock, with what
+    the editor had found; read 20:25). "Yes. Kratom has psychoactive alkaloids. People who use it report
+    stimulant-like effects and effects like those of opioids and sedatives." Both sentences are their sources' own
+    (a health charity's page; the US centre for complementary health: "People who use kratom have reported ..."),
+    and the second is said as a report. The writer's first But was the old one again ("amounts of kratom must be
+    consumed before a noticeable effect"): the new rule stopped it at the second try and it was written again; the
+    But that stands is the code's own (which sources the answer rests on). It stays. The hold names the earlier
+    run, so this version is shown.
+    **The key, made visible** (site 2.21.3; his word at 20:20: "write the chagpt prompt and i will tell you when i
+    have done all the steps"; the prompt for ChatGPT, given in the conversation, walks him through the two parts,
+    GitHub then Cloudflare, one step at a time, and tells ChatGPT never to ask for the key). A key that runs out
+    would stop the start at once without anybody noticing: the work would fall back to GitHub's hourly clock. The
+    server now says whether the key is there (`start`, in what it can do: never the key) and keeps what GitHub said
+    to the last start in one small note in its store (`run:last`: "asked", or "refused 401"; written only when it
+    changes; no word of a question), and the publishing's own check writes a line of it into its notes
+    (`scripts/auto/live_check.py`, `start_line`): "a new question starts the work at once: yes (GitHub said yes to
+    the last start ...)", or in capitals that GitHub did not take the key. Checks: 151 server tests, the check's
+    own.
     **A visitor's own words stood in the public list** (found 17:05 Athens, while reading the site's index for
     another reason). The model that words a visitor's question (`scripts/auto/ask.py`) is asked for "six other ways
     people type this question". For the question about mothers it gave back, as two of them, the two sentences the

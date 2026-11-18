@@ -567,16 +567,21 @@ async function find(request, url, env, ctx) {
    At most one request in RUN_EVERY seconds from one of Cloudflare's places (a note in its cache, never in the store: no write is spent on it); the workflow
    itself lets one run wait behind the one that is working, so a question that arrives while a run works is read by the next. No word of the question
    leaves this server for it: the request names the workflow and the branch, nothing else. */
-const RUN_EVERY = 20, RUN_NOTE = "https://pharmakon.world/__run-asked";
-async function startWork(env) {
+const RUN_EVERY = 20, RUN_NOTE = "https://pharmakon.world/__run-asked", RUN_LAST = "run:last";
+async function startWork(env, store) {
   const token = String((env && env.GH_RUN_TOKEN) || "").trim(); if (!token) return "off";
+  let what = "failed";
   try {
     let cache = env.CACHE || null; if (!cache) { try { cache = (typeof caches !== "undefined" && caches.default) || null; } catch (e) { cache = null; } }
     if (cache) { if (await cache.match(RUN_NOTE)) return "lately"; await cache.put(RUN_NOTE, new Response("1", { headers: { "cache-control": "public, max-age=" + RUN_EVERY } })); }
     const r = await fetch("https://api.github.com/repos/vasilissampalis/pharmakon/actions/workflows/auto.yml/dispatches", { method: "POST", body: JSON.stringify({ ref: "main" }),
       headers: { authorization: "Bearer " + token, accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28", "user-agent": "pharmakon-site", "content-type": "application/json" } });
-    return r.status === 204 ? "asked" : "refused " + r.status;
-  } catch (e) { return "failed"; }
+    what = r.status === 204 ? "asked" : "refused " + r.status;
+  } catch (e) { what = "failed"; }
+  /* (2.21.3) What GitHub said to the last start is kept in one small note (run:last), written only when it changes, so that a key that has run out or was taken
+     away is SEEN: the publishing's own check reads it (GET /api/ask?run=1) and writes it into its notes. No word of any question is in it. */
+  try { if (store) { const had = await store.get(RUN_LAST, "json"); if (!had || had.what !== what) await store.put(RUN_LAST, JSON.stringify({ what, since: new Date().toISOString() })); } } catch (e) { /* the note is a convenience */ }
+  return what;
 }
 // one more person asked a question that is on the public list: the item's number, counted
 async function want(request, url, store) {
@@ -607,7 +612,11 @@ export default {
     if (at !== "/api/ask" && at !== "/api/want") return url.pathname.startsWith("/api/") ? json({ ok: false, error: "not found" }, 404) : env.ASSETS.fetch(request);
     const store = env.QUESTIONS;
     if (at === "/api/want") return want(request, url, store);
-    if (request.method === "GET") return json({ ok: !!store, find: true, auto: !!store, quick: false });   // 200 either way: a missing store is a state, not an error in the reader's console
+    if (request.method === "GET") {   // what this server can do. 200 either way: a missing store is a state, not an error in the reader's console
+      const can = { ok: !!store, find: true, auto: !!store, quick: false, start: !!String((env && env.GH_RUN_TOKEN) || "").trim() };   // (2.21.3) start: is the key there that starts the work when a question arrives (never the key itself)
+      if (store && url.searchParams.get("run") === "1") { try { const s = await store.get(RUN_LAST, "json"); if (s && s.what) can.started = { what: String(s.what).slice(0, 40), since: String(s.since || "").slice(0, 24) }; } catch (e) { /* no note */ } }   // asked for by the publishing's check only: a page's own look reads nothing from the store
+      return json(can);
+    }
     if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
     if (!store) return json({ ok: false, error: "no store" }, 503);
     // only this site's own pages may send
@@ -632,7 +641,7 @@ export default {
         await store.put(key, JSON.stringify(had), opts); return json({ ok: true, again: true });
       }
       await store.put(key, JSON.stringify(Object.assign({ q: r.q, d: r.d ? [r.d] : [], v: r.v, first: day, last: day, n: 1, dn: 1 }, auto ? { a: 1 } : {})), opts);
-      { const go = startWork(env).catch(() => "failed"); if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(go); }   // a new question: the system's work is started now (see startWork), behind the reply
+      { const go = startWork(env, store).catch(() => "failed"); if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(go); }   // a new question: the system's work is started now (see startWork), behind the reply
       return json({ ok: true });
     } catch (e) { return json({ ok: false, error: "store" }, 503); }
   }

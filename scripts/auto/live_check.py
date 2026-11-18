@@ -47,13 +47,24 @@ def how(f, took):
     return "; ".join(parts)
 
 
+def start_line(d):
+    """(site 2.21.3) Does a new question start the system's work at once? Only where the senior author has given the server its key (GH_RUN_TOKEN); and what
+    GitHub said to the last start, so that a key that has run out is SEEN in the publishing's notes and not found out weeks later."""
+    if d.get("start") is not True: return "server: a new question starts the work at once: no (no key on the server: the work starts when GitHub's own clock does)"
+    s = d.get("started") or {}; what, since = str(s.get("what") or "")[:40], str(s.get("since") or "")[:16].replace("T", " ")
+    if not what: return "server: a new question starts the work at once: yes, the key is there (no new question has come since: GitHub has not been asked yet)"
+    if what == "asked": return f"server: a new question starts the work at once: yes (GitHub said yes to the last start; so since {since} UTC)"
+    return f"server: a new question starts the work at once: THE KEY IS THERE AND GITHUB DID NOT TAKE IT AT THE LAST START ({what}; so since {since} UTC): the senior author's to renew (401: the key has run out or was taken away; 403 or 404: it may not start this repository's workflows)"
+
+
 def lines(opener=urllib.request.urlopen, base=BASE):
     out, yes = [], lambda d, k: "yes" if d.get(k) is True else "no"
     try:
-        d = ask(opener, base, "/api/ask")
+        d = ask(opener, base, "/api/ask?run=1")
         out.append(f"server: takes questions {yes(d, 'ok')}; looks research up {yes(d, 'find')}; takes questions the page sends by itself {yes(d, 'auto')}" + ("; AND SAYS IT ASKS A MODEL (it should not, since site 2.20)" if d.get("quick") is True else ""))
     except Exception as e:
         out.append("server: /api/ask did not answer (" + type(e).__name__ + ")"); return out
+    starts = start_line(d)
     times, still = [], 0
     try:
         t0 = time.time(); f = ask(opener, base, "/api/find", Q); took = time.time() - t0; ps = f.get("papers") or []; times.append(took); still += 1 if f.get("more") else 0
@@ -77,6 +88,7 @@ def lines(opener=urllib.request.urlopen, base=BASE):
         out.append("server: kanna and anxiety once more: no answer (" + type(e).__name__ + ")")
     if times:
         s = sorted(times); out.append(f"server: {len(s)} questions nobody asked before: the middle one took {s[len(s) // 2]:.1f} s, three in four under {s[(len(s) * 3) // 4]:.1f} s, the slowest {s[-1]:.1f} s; {still} given without the most cited")
+    out.append(starts)
     return out
 
 
@@ -89,7 +101,7 @@ def selftest():
     seen = []
     def opener(req, timeout=0):
         seen.append((req.get_method(), req.full_url, req.get_header("Origin"), req.data))
-        if req.full_url.endswith("/api/ask"): return R({"ok": True, "find": True, "auto": True, "quick": False})
+        if "/api/ask" in req.full_url: return R({"ok": True, "find": True, "auto": True, "quick": False, "start": True, "started": {"what": "asked", "since": "2026-11-18T19:02:11.000Z"}})
         body = json.loads(req.data)
         if body.get("names") == ["mdma"]: return R({"ok": True, "more": 1, "ms": [None, 210, 480], "again": 2, "won": [None, 0, 1], "own": [None, 210, 130], "kept": 0, "papers": [{"t": "A trial", "kind": "Trial", "y": "2021", "q": "\u2026MDMA-assisted therapy is highly efficacious\u2026"}]})
         return R({"ok": True, "ms": [300, 200, 250], "again": 0, "won": [0, 0, 0], "own": [300, 200, 250], "kept": 0, "papers": [{"t": "A Chewable Cure", "kind": "Review", "y": "2021", "q": "\u2026the plant reduced anxiety", "an": 1}, {"t": "Another", "kind": "Study", "y": "2019"}]})
@@ -99,7 +111,9 @@ def selftest():
     assert L[2] == "server: paper 1: A Chewable Cure (Review, 2021) | its own words: \u2026the plant reduced anxiety (in animals or cells)" and L[3] == "server: paper 2: Another (Study, 2019) | no words", L
     assert L[5] == "server: MDMA and PTSD: 1 papers in 0.0 s; searches not back, 0.2 s, 0.5 s by its second asking in 0.1 s; 2 asked again; given without the most cited, more to come; 1 with words: \u201C\u2026MDMA-assisted therapy is highly efficacious\u2026\u201D", L[5]
     assert L[15].startswith("server: kanna and anxiety once more: 2 papers in ") and L[16] == "server: 12 questions nobody asked before: the middle one took 0.0 s, three in four under 0.0 s, the slowest 0.0 s; 1 given without the most cited", L[15:]
-    assert all(x.startswith("server:") for x in L) and len(L) == 17 and seen[0][0] == "GET" and seen[1][0] == "POST" and seen[1][2] == "https://x.test" and json.loads(seen[1][3]) == Q and len(seen) == 14
+    assert L[17] == "server: a new question starts the work at once: yes (GitHub said yes to the last start; so since 2026-11-18 19:02 UTC)" and seen[0][1].endswith("/api/ask?run=1"), L[17]
+    assert start_line({"ok": True}).endswith("no (no key on the server: the work starts when GitHub's own clock does)") and "has not been asked yet" in start_line({"start": True}) and "DID NOT TAKE IT AT THE LAST START (refused 401;" in start_line({"start": True, "started": {"what": "refused 401", "since": "2026-11-19T08:00:00Z"}})
+    assert all(x.startswith("server:") for x in L) and len(L) == 18 and seen[0][0] == "GET" and seen[1][0] == "POST" and seen[1][2] == "https://x.test" and json.loads(seen[1][3]) == Q and len(seen) == 14
     old = lines(lambda req, timeout=0: R({"ok": True, "find": True, "auto": True, "quick": True, "papers": []}), "https://x.test")
     assert "AND SAYS IT ASKS A MODEL" in old[0] and "0 papers" in old[1], old
     def down(req, timeout=0): raise urllib.error.URLError("no route")

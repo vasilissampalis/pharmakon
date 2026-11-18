@@ -20,6 +20,10 @@ the way back in the bar).
    with a first pass for sent questions that is published in the middle of the run; the server's own start of the work (needs his key);
    "Your questions" behind one line, the panel, past searches kept by themselves; research by title for pregnancy, children and questions
    that name no single drug. Next, in this order:
+   (0) **The key, when he says "done"** (he has the ChatGPT prompt for it since 18 November, 20:20; `docs/STATUS.md` has the four things to
+   do then). Write here the day the key runs out, as he names it: ________ (a key that has run out shows in the publishing's notes as
+   "GITHUB DID NOT TAKE IT AT THE LAST START (refused 401)": then he makes a new one the same way, same names). Never ask him for the key,
+   never have it pasted anywhere but the Cloudflare field.
    (a) **Read the first real answers that went through the stricter bar** (the state says "passed every gate, and the stricter bar for an
    answer about ..."; `gates.stakes` in the record). Every one, sentence by sentence, against the words it rests on. If one plays a danger
    down or tells a reader what to do: hold it (`data/auto/held.json`, with "lane" and "say"), find which of the four looks let it through,

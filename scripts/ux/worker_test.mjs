@@ -42,9 +42,20 @@ const assets = { fetch: async () => new Response("the page", { status: 200 }) };
     ok("with the key: a new question is kept", await post(env, "can you get high from kanna") === 200);
     ok("and GitHub is asked once to start the work: the workflow and the branch, with the key, and no word of the question", sent.length === 1 && sent[0][0] === "https://api.github.com/repos/vasilissampalis/pharmakon/actions/workflows/auto.yml/dispatches" && sent[0][1].method === "POST" && sent[0][1].body === '{"ref":"main"}' && sent[0][1].headers.authorization === "Bearer tok_123" && !/kanna/.test(JSON.stringify(sent[0])), JSON.stringify(sent).slice(0, 300));
     await post(env, "does kanna help with anxiety", { a: 1 }); await post(env, "can you get high from kanna");
-    ok("a second new question within twenty seconds, and the same question again: no second request; the note lives twenty seconds in the cache, and the store holds only questions and the day's count", sent.length === 1 && note.get("https://pharmakon.world/__run-asked") === "public, max-age=20" && [...s.m.keys()].every(k => /^(a?q:[0-9a-f]{20}|count:\d{4}-\d\d-\d\d)$/.test(k)), JSON.stringify([...s.m.keys()]));
+    ok("a second new question within twenty seconds, and the same question again: no second request; the note lives twenty seconds in the cache, and the store holds only questions and the day's count", sent.length === 1 && note.get("https://pharmakon.world/__run-asked") === "public, max-age=20" && [...s.m.keys()].every(k => /^(a?q:[0-9a-f]{20}|count:\d{4}-\d\d-\d\d|run:last)$/.test(k)), JSON.stringify([...s.m.keys()]));
     note.clear(); await post(env, "what is mitragyna javanica", { a: 1 });
     ok("after that time a question the page sent by itself starts it again", sent.length === 2);
+    // (2.21.3) what GitHub said to the last start is kept in one note, written only when it changes; the publishing's check reads it, a page's own look does not
+    const probe = async (e, tail) => (await worker.fetch(new Request("https://pharmakon.world/api/ask" + (tail || "")), e, {})).json();
+    const last = () => JSON.parse(s.m.get("run:last")), first = last(), noKey = await probe({ ASSETS: assets, QUESTIONS: s0 }, "?run=1"), withKey = await probe(env), asked = await probe(env, "?run=1");
+    ok("the server says whether the key is there (never the key), and, asked by the publishing's check, what GitHub said to the last start", noKey.start === false && !("started" in noKey) && withKey.start === true && !("started" in withKey) && asked.start === true && asked.started.what === "asked" && asked.started.since === first.since && !/tok_123/.test(JSON.stringify([noKey, withKey, asked])), JSON.stringify([noKey, withKey, asked]));
+    let puts = 0; const put0 = s.put; s.put = async (k, v) => { if (k === "run:last") puts++; return put0(k, v); };
+    note.clear(); await post(env, "is salvia legal in greece", { a: 1 });
+    ok("the same word from GitHub again: the note is not written again", sent.length === 3 && puts === 0 && last().since === first.since, JSON.stringify([sent.length, puts]));
+    globalThis.fetch = async (u, o) => { sent.push([String(u), o]); return new Response("{}", { status: 401 }); }; note.clear(); await post(env, "what is kava", { a: 1 });
+    const bad = await probe(env, "?run=1");
+    ok("GitHub refuses the key (it ran out, or was taken away): the note says so, and the check can see it", puts === 1 && bad.started.what === "refused 401" && bad.start === true, JSON.stringify(bad));
+    s.put = put0;
     globalThis.fetch = async () => { throw new Error("no network"); }; note.clear();
     ok("GitHub out of reach: the question is kept all the same", await post(env, "is kratom addictive") === 200 && [...s.m.keys()].filter(k => k.startsWith("q:")).length === 2);
   } finally { globalThis.fetch = real; } }
