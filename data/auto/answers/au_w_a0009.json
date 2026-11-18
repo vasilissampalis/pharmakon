@@ -18,17 +18,16 @@
   "on": "2026-11-18",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.8-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "44347403947",
+  "run": "44358768289",
   "from": {
    "papers": 0,
    "summaries": 0,
@@ -39,8 +38,7 @@
  "status": "none",
  "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now: tried again in the next run)",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -78,6 +76,14 @@
    "why": "no source that can be read gave a finding for this question",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -95,7 +101,8 @@
    "kind": "review",
    "at": "10.1017/neu.2025.13",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "its full text could not be fetched (OSError)"
   },
   {
    "title": "Psychoactive drugs and driving",
@@ -103,14 +110,7 @@
    "kind": "review",
    "at": "10.18773/austprescr.2019.070",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "a research paper",
-     "quote": "Psychoactive drugs and driving (2019), Australian prescriber.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Representations of Psychoactive Drugs' Use in Mass Culture and Their Impact on Audiences",
@@ -126,8 +126,7 @@
    "kind": "review",
    "at": "10.3390/brainsci10100751",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Driving under the influence of drugs: Correlation between blood psychoactive drug concentrations and cognitive impairment. A narrative review taking into account forensic issues",
@@ -167,7 +166,14 @@
    "kind": "review",
    "at": "10.1007/s00210-020-01918-x",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A proposal for a simple mechanistic terminology of psychoactive drugs",
+     "quote": "A simple mechanistic terminology of psychoactive drugs: a proposal (2020), Naunyn-Schmiedeberg's archives of pharmacology.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Adenosine A2AReceptors in Substance Use Disorders: A Focus on Cocaine",
@@ -239,7 +245,14 @@
    "kind": "review",
    "at": "10.1111/j.1369-1600.2006.00012.x",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "an overview studying behavioural assessment in rodents",
+     "quote": "Behavioural assessment of drug reinforcement and addictive features in rodents: an overview",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Set and setting, psychedelics and the placebo response: An extra-pharmacological perspective on psychopharmacology",
@@ -247,7 +260,14 @@
    "kind": "review",
    "at": "10.1177/0269881116677852",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "not mentioned in the text",
+     "quote": "This paper examines how placebo theory and set and setting theory can complement and benefit each other, broadening our understanding of how non-biological factors shape response to drugs and other tr",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
  "soft": "a source could not be fetched",
