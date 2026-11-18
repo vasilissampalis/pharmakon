@@ -101,7 +101,7 @@ def plan():
     t = counts(); t["looks"] = t.get("looks", 0) + 1; why = {}
     # the question store
     token, account = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip(), (os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "").strip()
-    scout = False; st = load(look.STATE, {})
+    scout = False; st = load(look.STATE, {}); tell = False
     if token and account:
         try:
             ns = fq.find_namespace(urllib.request.urlopen, token, account, os.environ.get("KV_NAMESPACE") or "pharmakon-questions")
@@ -110,6 +110,15 @@ def plan():
             # never agreed: every look said "the store has changed" and every look started the scout
             recs = fq.read_all(urllib.request.urlopen, token, account, ns) + fq.read_auto(urllib.request.urlopen, token, account, ns) if ns else []
             sig = look.signature(recs); scout = bool(ns) and sig != st.get("done"); why["scout"] = "the store has changed" if scout else "the store is as the scout last read it"
+            # (19 November 2026, site 2.23) a sent question the system has decided on, whose key the state file for waiting readers does not hold yet
+            # (data/auto/live.json): a run writes the file, and nothing else, so that the reader's page can say what became of the question
+            try:
+                import live as LV
+                done = load(ROOT / "data" / "auto" / "asked.json", {}).get("done") or {}; known = load(LV.LIVE, {}).get("q") or {}
+                cut = (datetime.datetime.now(datetime.timezone.utc).date() - datetime.timedelta(days=LV.KEEP_DAYS)).isoformat()
+                lacks = [1 for r in recs if isinstance(r.get("q"), str) and str(r.get("last") or "9") >= cut and LV.decided((done.get(LV.finger(r["q"])) or {}).get("what")) and LV.key_of(r["q"]) not in known]
+                tell = bool(lacks); why["live"] = f"{len(lacks)} sent question(s) are not yet in the state file for the readers who wait" if tell else "every sent question the system has read is in the state file"
+            except Exception as e: why["live"] = "the state file could not be looked at (" + type(e).__name__ + ")"
         except Exception as e: why["scout"] = "the store could not be read (" + type(e).__name__ + ")"
     else: why["scout"] = "no key"
     import papers
@@ -122,7 +131,7 @@ def plan():
     t["last"] = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"); t["why"] = why
     TICK.parent.mkdir(parents=True, exist_ok=True); json.dump(t, open(TICK, "w", encoding="utf-8"), indent=1)
     # the look is kept in the repository when something is to be done, and once a day as a sign of life
-    out(scout=scout, lane=lane, work=scout or lane, deploy=dep and not (scout or lane), keep=(scout or lane or dep or t["looks"] == 1))
+    out(scout=scout, lane=lane, work=scout or lane or tell, deploy=dep and not (scout or lane), keep=(scout or lane or tell or dep or t["looks"] == 1))
     print("tick:", "; ".join(f"{k}: {v}" for k, v in why.items()))
 
 
