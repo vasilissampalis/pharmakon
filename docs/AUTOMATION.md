@@ -1244,6 +1244,17 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     waits, as built. What is still to measure is the time from there to an answer on the site (next steps, b). What
     the test left in the app's browser (that device's own list) was taken away again. Its list of papers, seen in
     passing, was beside the question for two of four ("growth" as in tumours): one more for the next trial.
+    **A working run gives way** (the same evening, after what the test showed). GitHub lets one run of the work
+    do its work and one wait; a run that a question started therefore waited behind the clock's run for as long as
+    that one was busy with the system's own questions (that evening: more than forty minutes). Two runs at once are
+    not the way while two runs can give two questions the same number (`ask.py` counts them). So the working run
+    gives way: before each step of the system's OWN questions (`own` in `.github/workflows/auto.yml`), and between
+    two of them in the lane (`--give-way`), it asks GitHub whether a run is waiting (`lane.py waiting`,
+    `runs_waiting`: the run's own token, nothing of ours leaves), and where one is it leaves the rest to that run,
+    which reads the new question first. The pass for the questions people sent never gives way. Where GitHub cannot
+    be asked, a run works on as before. The longest a new question now waits for a machine is one step of a
+    working run (the lane's: eight minutes at most; a search: three or four), not the whole run. Checked: the
+    counting, in the lane's own check; and against GitHub itself that evening ("1 run(s) waiting behind this one").
     **A visitor's own words stood in the public list** (found 17:05 Athens, while reading the site's index for
     another reason). The model that words a visitor's question (`scripts/auto/ask.py`) is asked for "six other ways
     people type this question". For the question about mothers it gave back, as two of them, the two sentences the

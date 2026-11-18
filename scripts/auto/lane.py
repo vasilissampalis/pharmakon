@@ -2115,7 +2115,20 @@ def stakes_policy():
 SOFT_FAULT = ("HTTPError", "URLError", "TimeoutError", "ConnectionError", "ConnectionResetError", "RemoteDisconnected", "IncompleteRead", "SSLError", "gaierror", "timeout")   # a fault of the network: the next try may not meet it
 
 
-def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, trial=None, minutes=None, only_sent=False):
+def runs_waiting(run=None):
+    """How many runs of the work (auto.yml) wait behind the one that is working: GitHub lets one run of it work and one wait. (18 November 2026, 20:50 Athens: the
+    first question that started a run by itself, four seconds after it was typed, then waited behind the clock's run, which was 36 minutes into the system's own
+    questions.) A run that works on the system's OWN questions gives way to a run that waits: that one was started by a new question, or reads one first. Asked
+    of GitHub with the run's own token (gh, which the runners have); 0 where it cannot be asked: a run then works on as before."""
+    import subprocess
+    try:
+        r = (run or subprocess.run)(["gh", "run", "list", "--workflow", "auto.yml", "--limit", "12", "--json", "status"], capture_output=True, text=True, timeout=30)
+        if r.returncode != 0: return 0
+        return sum(1 for x in json.loads(r.stdout or "[]") if isinstance(x, dict) and x.get("status") in ("queued", "pending", "waiting", "requested"))
+    except Exception: return 0
+
+
+def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, trial=None, minutes=None, only_sent=False, give_way=None):
     models = dict(MODELS); real = chat is None; began = datetime.datetime.now()
     chat = fitting(chat or llm.chat)
     items = P.listed()
@@ -2155,6 +2168,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
     cut = 0
     for w in order[:limit]:
         if minutes and made and (datetime.datetime.now() - began).total_seconds() > 60 * minutes: print(f"lane: {minutes} minutes are over: the rest waits for the next run"); break      # (lane 19) a run is short, so that what it wrote is published soon
+        if give_way and made and give_way(): print("lane: a run is waiting behind this one (a new question came): the rest is left to it"); break      # (between two of the system's own questions; never in the pass for the questions people sent)
         if real:
             was = st["items"].get(w["id"]) or {}
             models = team(only=only_team, avoid=tuple(was.get("teams") or []) if was.get("last") == TODAY else ())
@@ -2875,6 +2889,11 @@ def selftest():
     nf = lambda s: [w for _, w in rules([{"part": "but", "text": s, "uses": []}], {})]
     assert any(w.startswith("how much is needed for an effect") for w in nf("Relatively large amounts of kratom need to be consumed before a noticeable psychoactive effect occurs.")) and any(w.startswith("how much is needed") for w in nf("It takes a large amount to feel anything."))
     assert not nf("With tolerance, higher doses are needed to feel the same effect.") and not nf("The mix depends on the dose, with stimulant effects at low amounts and opioid effects at higher doses.") and not nf("Larger doses produce more pronounced psychoactive effects.")
+    # a run that waits behind this one: counted from what GitHub says; none where it cannot be asked
+    class GH:
+        def __init__(self, out, code=0): self.stdout, self.returncode = out, code
+    assert runs_waiting(lambda *a, **k: GH('[{"status":"in_progress"},{"status":"pending"},{"status":"completed"},{"status":"queued"}]')) == 2 and runs_waiting(lambda *a, **k: GH('[{"status":"in_progress"}]')) == 0
+    assert runs_waiting(lambda *a, **k: GH("", 1)) == 0 and runs_waiting(lambda *a, **k: GH("not json")) == 0 and runs_waiting(lambda *a, **k: (_ for _ in ()).throw(OSError("no gh"))) == 0
     # which version the editor holds: the one a named run wrote, or every version up to a lane
     hl = [{"id": "au_w_1", "lane": 19, "run": "77"}, {"id": "au_w_2", "lane": 18}, "au_w_3"]
     assert is_held({"id": "au_w_1", "lane": 19, "made": {"run": "77"}}, hl) and not is_held({"id": "au_w_1", "lane": 19, "made": {"run": "78"}}, hl) and is_held({"id": "au_w_2", "lane": 18, "made": {"run": "5"}}, hl)
@@ -2976,5 +2995,7 @@ if __name__ == "__main__":
         else: print("lane: no request waiting")
     elif len(sys.argv) > 1 and sys.argv[1] == "run":
         a = sys.argv[2:]; opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d
-        run(ids=[x for x in (opt("--ids") or "").split(",") if x] or None, limit=int(opt("--max", "3")), again="--again" in a, minutes=float(opt("--minutes")) if opt("--minutes") else None, only_sent="--sent" in a)
+        run(ids=[x for x in (opt("--ids") or "").split(",") if x] or None, limit=int(opt("--max", "3")), again="--again" in a, minutes=float(opt("--minutes")) if opt("--minutes") else None, only_sent="--sent" in a, give_way=runs_waiting if "--give-way" in a and "--sent" not in a else None)
+    elif len(sys.argv) > 1 and sys.argv[1] == "waiting":      # for the workflow: exit 0 where a run waits behind this one, 1 where none does (or it cannot be asked)
+        n = runs_waiting(); print(f"lane: {n} run(s) waiting behind this one"); sys.exit(0 if n else 1)
     else: sys.exit(__doc__)

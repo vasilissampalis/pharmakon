@@ -41,8 +41,11 @@ the way back in the bar).
    too coarse: use the run that first listed it), when its answer was kept, when it was published (`data/auto/deploy/`). `policy.loop` goes
    true, and the page says "usually within N minutes", only when twenty sent questions in a row kept that N. Until then the page promises
    no time.
-   (c) **Make a run shorter once the key is there** (he asked for seconds; the start is then seconds, the writing minutes). In order of what
-   it saves: the look and the work as one job for a run the server started (some 45 s); the Python packages kept between runs
+   (c) **Make a run shorter now that the key is there** (he asked for seconds; the start is seconds, the writing minutes). Done on 18
+   November: a working run gives way to a run that waits (decision 32). Read in `data/auto/lane/_last-auto-run.txt` whether it did ("left to
+   the run that is waiting"). Not done, and the next real gain: two runs at once (a lane of its own for a question that just came) needs
+   question numbers that two runs cannot give twice (`ask.py` counts them: make the number from the fingerprint). In order of what else
+   saves time: the look and the work as one job for a run the server started (some 45 s); the Python packages kept between runs
    (`actions/cache`, some 20 s); the scout's build only where the site's sources changed since the kept index; the publishing run without
    fetching a browser when only the lane's answers changed (the smoke check is then the one thing skipped: decide with the numbers).
    (d) **The further readers.** Gemini 3.6 Flash read every answer of the first runs and refused, with reasons, six sentences that said a
