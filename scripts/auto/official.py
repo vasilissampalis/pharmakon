@@ -29,6 +29,7 @@ Rules this file keeps, in code:
   - A page's words are data, never instructions.
 """
 import sys, os, re, json, time, gzip, html, hashlib, pathlib, datetime, urllib.parse, urllib.request, urllib.error
+import threading
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 
@@ -109,6 +110,7 @@ class Web:
     """Reading a site's pages the way the head of this file says. opener: for the selftest (no waiting, no network)."""
     def __init__(self, opener=None):
         self.opener, self.robots, self.said, self.last, self.count = opener, {}, {}, {}, {}
+        self.locks, self.guard = {}, threading.Lock()                     # (19 November 2026) the lane reads its pages at once: two pages of ONE site are still read one after the other, at the site's own pace
         self.kept = {}                                                    # the last pages read in this run: one asked for twice (a hub that is also a page) is read once
         try: srcs = json.load(open(SOURCES, encoding="utf-8"))["sources"]
         except (OSError, ValueError, KeyError, TypeError): srcs = []
@@ -135,24 +137,34 @@ class Web:
         op = self.opener or urllib.request.urlopen
         for k in range(tries):
             try:
-                with op(urllib.request.Request(url, headers={"User-Agent": P.UA.replace("scripts/auto/papers.py", "scripts/auto/official.py"), "Accept": accept, "Accept-Language": "en"}), timeout=25) as r:
+                with op(urllib.request.Request(url, headers={"User-Agent": P.UA.replace("scripts/auto/papers.py", "scripts/auto/official.py"), "Accept": accept, "Accept-Language": "en"}), timeout=25 if P.STOP_AT is None else max(5.0, min(25.0, P.STOP_AT - time.time()))) as r:
                     raw = r.read(6_000_000); final = getattr(r, "geturl", lambda: url)() or url
                     return raw, final
             except urllib.error.HTTPError as e:
                 if e.code in (404, 410): return None
-                if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if self.opener else 3 * (k + 1)); continue
+                if e.code in (500, 502, 503, 504) and k + 1 < tries: self._nap(3 * (k + 1), host); continue
                 if e.code == 429 and k + 1 < tries:                          # "too many requests" means slower, not no: wait what the site asks (a minute at most) and ask once more
                     ra = str((e.headers or {}).get("Retry-After") or "").strip(); secs = int(ra) if ra.isdigit() else 20
-                    if secs <= 60: time.sleep(0 if self.opener else secs); self.pace[bare(host)] = max(self.pace.get(bare(host), 0), 10.0); continue
+                    if secs <= 60: self._nap(secs, host); self.pace[bare(host)] = max(self.pace.get(bare(host), 0), 10.0); continue
                 if e.code in (401, 403, 429, 451): P._refused.add(host); raise P.Refused(f"{host} answered {e.code}")
                 raise IOError(f"{host} answered {e.code}")
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
-                if k + 1 < tries: time.sleep(0 if self.opener else 2); continue
+                if k + 1 < tries: self._nap(2, host); continue
                 raise IOError(f"{host} could not be reached: {str(e)[:120]}")
         return None
 
+    def _nap(self, seconds, host):
+        """A wait before a site is asked again. Under a run's clock (scripts/auto/papers.py, STOP_AT) never past it: IOError, "could not be fetched just now"."""
+        if self.opener or seconds <= 0: return
+        if P.STOP_AT is not None and time.time() + seconds + 5 > P.STOP_AT: raise IOError(f"{host} was not asked again: the run's time for this question was over")
+        time.sleep(seconds)
+
     def get(self, url, accept=HTML_ACCEPT):
         """(bytes, final address) of a page the site allows us to read; None where it is not there. Refused where the site says no."""
+        with self.guard: lock = self.locks.setdefault(urllib.parse.urlsplit(url).netloc, threading.Lock())
+        with lock: return self._get(url, accept)
+
+    def _get(self, url, accept):
         r, host = self.rules(url)
         if r is None: raise P.Refused(urllib.parse.urlsplit(url).netloc + ": " + self.said[host])
         if not r.allowed(url): raise P.Refused("robots.txt does not allow " + urllib.parse.urlsplit(url).path)
@@ -160,7 +172,7 @@ class Web:
         if r.delay > MAX_DELAY and self.count.get(host, 0) >= LITTLE: raise P.Refused(f"{urllib.parse.urlsplit(url).netloc} asks for {r.delay:.0f} seconds between requests: only {LITTLE} pages are read in a run")
         if self.count.get(host, 0) >= self.most.get(bare(urllib.parse.urlsplit(url).netloc), 10 ** 9): raise P.Refused(f"{urllib.parse.urlsplit(url).netloc}: only {self.most[bare(urllib.parse.urlsplit(url).netloc)]} of its pages are read in a run (it answers 'too many requests' to more)")
         wait = max(SLOW, self.pace.get(bare(urllib.parse.urlsplit(url).netloc), 0), min(r.delay, MAX_DELAY)) - (time.time() - self.last.get(host, 0))
-        if wait > 0 and not self.opener: time.sleep(wait)
+        if wait > 0: self._nap(wait, urllib.parse.urlsplit(url).netloc)
         self.last[host] = time.time(); self.count[host] = self.count.get(host, 0) + 1
         got = self._open(url, accept)
         if got and not same_site(got[1], url) and not self.may(got[1]): raise P.Refused("it led to " + urllib.parse.urlsplit(got[1]).netloc + ", whose robots.txt does not allow the page")

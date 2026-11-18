@@ -85,7 +85,7 @@ jobs:
     needs: tick
     if: needs.tick.outputs.work == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 40   # (a last stop only. 19 November 2026: every step has its own minutes: the sent questions 8 and a little, the system's own 3 + 4 + 8, and the lane's every call a clock)
     outputs:
       deploy: ${{ steps.after.outputs.deploy }}
     env:
@@ -162,14 +162,23 @@ jobs:
           # new question first. Where GitHub cannot be asked, the run works on as before.
           own() { if python3 -I scripts/auto/lane.py waiting >> "$L" 2>&1; then echo "== left to the run that is waiting (a new question came): $1" >> "$L"; else step "$@"; fi; }
           if [ "$DO_LANE" = "true" ] || [ -f "$RUNNER_TEMP/new-items" ]; then   # (a question that was just listed is worked on in this same run)
-            step "official pages for the questions people sent" python3 -I scripts/auto/official.py find --sent --max 4 --minutes 2
-            step "papers for the questions people sent" python3 -I scripts/auto/papers.py find --sent --max 4 --minutes 3
-            step "the lane writes: the questions people sent, first and alone" python3 -I scripts/auto/lane.py run --sent --max 2 --minutes 6
+            # (19 November 2026; the senior author, 18 November, 23:42 Athens: "like 5 minutes pass and i don't have an answer ... it should be answered almost
+            # immediately") the two searches run at the same time (each writes its own files; 24 and 56 seconds one after the other on 18 November), and the
+            # lane is on a clock: its sources are read at once, one question has seven minutes at most (scripts/auto/lane.py, QUESTION_SECONDS), and no step
+            # can sit until GitHub stops the run, as one did for 40 minutes that evening
+            echo "== official pages and papers for the questions people sent, at the same time [$(date -u +%H:%M:%S)]" >> "$L"
+            python3 -I scripts/auto/official.py find --sent --max 4 --minutes 2 > "$RUNNER_TEMP/find-official.log" 2>&1 & po=$!
+            python3 -I scripts/auto/papers.py find --sent --max 4 --minutes 3 > "$RUNNER_TEMP/find-papers.log" 2>&1 & pp=$!
+            wait $po; co=$?; wait $pp; cp=$?
+            cat "$RUNNER_TEMP/find-official.log" "$RUNNER_TEMP/find-papers.log" >> "$L"
+            if [ $co -ne 0 ]; then echo "!! the search for official pages failed ($co)" >> "$L"; fi
+            if [ $cp -ne 0 ]; then echo "!! the search for papers failed ($cp)" >> "$L"; fi
+            step "the lane writes: the questions people sent, first and alone" python3 -I -u scripts/auto/lane.py run --sent --max 3 --minutes 9
             echo "== keep and publish what was written for them [$(date -u +%H:%M:%S)]" >> "$L"; keep_now
             own "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run
             own "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 3
             own "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 4
-            own "the lane writes" python3 -I scripts/auto/lane.py run --max 3 --minutes 8 --give-way
+            own "the lane writes" python3 -I -u scripts/auto/lane.py run --max 3 --minutes 8 --give-way
             step "count this run" python3 -I scripts/auto/tick.py did lane
           fi
           step "has what the site is built from changed?" env GITHUB_OUTPUT=/dev/null python3 -I scripts/auto/tick.py after --asked "$RUNNER_TEMP/asked-inputs"

@@ -34,6 +34,11 @@ REPORT = ROOT / "data" / "auto" / "report.json"
 AUTO = ROOT / "data" / "auto" / "wanted-auto.json"
 STATE = ROOT / "data" / "auto" / "asked.json"
 MODEL = "@cf/meta/llama-4-scout-17b-16e-instruct"
+# (19 November 2026) A visitor's words go to Cloudflare alone, so this model is the only one that may word a new question; and the lane stops by itself at
+# llm.OUR_LIMIT (9,000 of Cloudflare's 10,000 free neurons a day). On 18 November that was reached in the evening: a question sent after it could not even be
+# listed until the day turned. A wording costs about 25 neurons, so this file may use what the lane leaves: up to 9,800. (This sets the limit for this
+# program alone: each of a run's programs is started by itself.)
+ASK_LIMIT = 9800
 NEAR_OWN = 0.50          # our wording must be this near the visitor's question in meaning
 SAME = 0.80              # as near as this to a listed question (or one of its wordings): the same question
 A_RUN = 6
@@ -243,6 +248,7 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if "--selftest" in a: selftest()
     elif a[:1] == ["run"]:
+        llm.OUR_LIMIT = ASK_LIMIT                                        # (see ASK_LIMIT: the wording of a new question may use what the lane leaves of the day)
         # (site 2.17) --report: the scout's report on the questions the page sent by itself, which lives in the run's temporary folder and never in
         # the repository. They become items exactly as the others do: OUR wording, and a fingerprint of the visitor's words in the state, never the words.
         res = run(limit=int(a[a.index("--max") + 1]) if "--max" in a else A_RUN, report=json.load(open(a[a.index("--report") + 1], encoding="utf-8")) if "--report" in a else None)

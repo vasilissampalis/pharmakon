@@ -50,26 +50,35 @@ class Refused(Exception):
 
 
 _last, _refused = {}, set()
+import threading
+_pace = threading.Lock()   # (19 November 2026) the lane fetches its sources at once: each request to one host still begins PAUSE after the one before
+STOP_AT = None             # a run's clock (scripts/auto/llm.py, STOP_AT): past this moment (time.time()) nothing is fetched or waited for; None: no clock
 
 
 def fetch(url, opener=None, accept="application/json", tries=3):
-    """The bytes at url, None for 'not there' (404). Waits between requests to one host; backs off on 429 and 503."""
+    """The bytes at url, None for 'not there' (404). Waits between requests to one host; backs off on 429 and 503. Under a run's clock (STOP_AT) a
+    request's own time limit ends with the clock, and nothing is tried again past it: IOError, which every caller takes as "could not be fetched just now"."""
     host = urllib.parse.urlparse(url).netloc
     if host in _refused: raise Refused(host)
-    opener = opener or urllib.request.urlopen
+    opener = opener or urllib.request.urlopen; real = opener is urllib.request.urlopen
+    def nap(seconds):
+        if not real: return
+        if STOP_AT is not None and time.time() + seconds + 5 > STOP_AT: raise IOError(f"{host} was not asked again: the run's time for this question was over")
+        time.sleep(seconds)
     for k in range(tries):
-        wait = PAUSE - (time.time() - _last.get(host, 0))
-        if wait > 0 and opener is urllib.request.urlopen: time.sleep(wait)
-        _last[host] = time.time()
+        with _pace:
+            start = max(time.time(), _last.get(host, 0) + PAUSE) if real else time.time(); _last[host] = start
+        if start > time.time(): nap(start - time.time())
+        if real and STOP_AT is not None and time.time() + 5 > STOP_AT: raise IOError(f"{host} was not asked: the run's time for this question was over")
         try:
-            with opener(urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept}), timeout=40) as r: return r.read()
+            with opener(urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept}), timeout=40 if STOP_AT is None else max(5.0, min(40.0, STOP_AT - time.time()))) as r: return r.read()
         except urllib.error.HTTPError as e:
             if e.code == 404: return None
-            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: time.sleep(3 * (k + 1) if opener is urllib.request.urlopen else 0); continue
+            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: nap(3 * (k + 1)); continue
             if e.code in (401, 403, 429): _refused.add(host); raise Refused(f"{host} answered {e.code}")
             raise
         except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
-            if k + 1 < tries: time.sleep(2 if opener is urllib.request.urlopen else 0); continue
+            if k + 1 < tries: nap(2); continue
             raise IOError(f"{host} could not be reached: {e}")
     return None
 

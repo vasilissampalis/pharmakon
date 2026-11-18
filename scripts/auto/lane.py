@@ -72,7 +72,7 @@ still wants (data/auto/papers-wanted.json, in APA 7), and data/auto/lane/state.j
 answers (site/build.js), each with "Written by our system from N papers. Not yet checked by a person." and, where papers
 were missing, "Not complete yet".
 """
-import sys, os, re, json, hashlib, pathlib, datetime, unicodedata
+import sys, os, re, json, time, hashlib, pathlib, datetime, unicodedata, threading
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent)); sys.path.insert(0, str(ROOT / "scripts" / "insight"))
@@ -102,6 +102,14 @@ N_ROWS = 30             # amounts of one answer that the second reader is asked 
 N_SUMMARIES = 2         # reviews behind a paywall read in summary, where the rest is not enough
 ROOM = 1100             # neurons that must be left of today's allowance before a question is begun
 N_PASSAGES = 7          # passages of a paper shown to the reader
+# A run's clock (19 November 2026; the senior author, 18 November, 23:42 Athens: "like 5 minutes pass and i don't have an answer ... it should be answered almost
+# immediately"; the notes of that evening's runs: 34 minutes on one question, and a run that sat on one step until GitHub stopped it after 40).
+AT_ONCE = 6             # sources fetched and read at the same time
+READ_SECONDS = 100      # what one question's reading may take: a source not read by then is written down as not read, and the answer is written from the rest
+QUESTION_SECONDS = 420  # what one question may take in all: past it no model is asked or waited for (llm.STOP_AT), and the question is tried again in the next run. (A last stop,
+                        # not what an answer takes: with the fast models about two minutes; where only Google's slower ones have room, four to six. On the clock a strong
+                        # further reader with 20 calls a day is waited for 80 seconds, not 170: one that does not answer is "could not be asked", as before.)
+BEGIN_WITH = 240        # a question is begun only where the pass still has this many seconds
 PASSAGE_CHARS = 1400    # a passage is shown up to this length
 TODAY = datetime.date.today().isoformat()
 
@@ -1507,7 +1515,31 @@ def with_checked(chat, model, enc, parts, claims, near=0.5, most=8):
     return differs, same
 
 
-def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None, own_check=None, stakes_how=None, note="", agreed=(), last=""):
+class Begun:
+    """Sources begun together (19 November 2026). With a semaphore: each job in a thread of its own, as many at a time as the semaphore lets; all() gives
+    their outcomes in the jobs' own order, and ("late",) for one that had not ended by `until` (a moment: time.time()). The threads are daemons: a job
+    stuck in a slow request ends with that request's own time limit and never holds the run. Without a semaphore nothing is begun before all() is asked,
+    which runs the jobs one after another (the selftest; a trial). A job's own error comes back as ("error", it): raised where the outcome is taken."""
+    def __init__(self, jobs, sem=None, until=None):
+        self.jobs, self.sem, self.until = list(jobs), sem, until
+        self.out = [("late",)] * len(self.jobs); self.done = [threading.Event() for _ in self.jobs]
+        if sem is not None:
+            for i in range(len(self.jobs)): threading.Thread(target=self._run, args=(i,), daemon=True).start()
+    def _one(self, i):
+        if self.until is not None and time.time() >= self.until: return ("late",)
+        try: return self.jobs[i]()
+        except llm.Late: return ("late",)
+        except BaseException as e: return ("error", e)
+    def _run(self, i):
+        with self.sem:
+            self.out[i] = self._one(i); self.done[i].set()
+    def all(self):
+        if self.sem is None: return [self._one(i) for i in range(len(self.jobs))]
+        for ev in self.done: ev.wait(None if self.until is None else max(0.0, self.until - time.time()))
+        return [o if ev.is_set() else ("late",) for o, ev in zip(list(self.out), self.done)]
+
+
+def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None, own_check=None, stakes_how=None, note="", agreed=(), last="", pool=None, at_once=1, read_secs=None):
     """One question through the lane. Returns the record (see the head of this file). official: the pages official.py found
     for it; page, summary, fulltext, crossref: how a page, a summary, a full text and a Crossref record are fetched (the
     selftest gives its own); before: the record this one replaces, whose state is kept in "history"."""
@@ -1520,40 +1552,75 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     if before and before.get("made"):
         was = next((p.get("text") for p in before.get("parts") or [] if p.get("part") == "short"), "")
         rec["history"] = (list(before.get("history") or []) + [{"on": before["made"].get("on"), "lane": before.get("lane"), "status": before.get("status"), "why": before.get("why"), "short": was, "complete": before.get("complete")}])[-6:]
-    spent = llm.ledger()["neurons"]
+    spent = llm.ledger()["neurons"]; t_began = time.time()
     def done(status, why):
-        rec["status"], rec["why"] = status, why; rec["made"]["neurons"] = round(llm.ledger()["neurons"] - spent, 1); return rec
+        rec["status"], rec["why"] = status, why; rec["made"]["neurons"] = round(llm.ledger()["neurons"] - spent, 1); rec["made"]["seconds"] = round(time.time() - t_began); return rec
     dwords = O.drug_words(item, names)[1] if names else [d.replace("-", " ") for d in item.get("drugs") or []]
     # 2 read: papers in full, then official pages, then (where that is not yet enough) reviews in summary
+    # (19 November 2026; the senior author, 18 November, 23:42 Athens: "the site is taking too long to answer my pending questions ... it should be answered
+    # almost immediately".) The sources are read AT ONCE. Until then each was fetched and read after the one before, each call waiting out its model's minute:
+    # a question none of whose sources answered it took 21 calls and 34 minutes. Now the nearest papers and the first official pages are fetched and read at
+    # the same time (at_once threads), by every model that may read (the team's reader and the readers of data/auto/lane/models.json, "readers": each has its
+    # own calls a minute), and what they found is KEPT IN THE SOURCES' OWN ORDER, exactly as if they had been read one after another: the two first papers
+    # that give a finding, then the two first pages. What was read ahead and is not needed is put aside (it serves if a third paper is wanted). The reading
+    # has its own time (read_secs): a source not read by then is written down as not read, and the answer is written from the rest. No gate changes: a reader
+    # only copies, and every quote it copies is checked by code against the passage. With at_once 1 (the selftest; a trial) nothing is read ahead.
     sources, tags, thrown, ref_ids = [], "ABCDEFGHIJKL" if amounts else "ABCDEFGH", 0, set()      # (lane 11) twelve sources at most for a question about amounts: six official pages have room beside the papers
     looked = rec["looked"] = []                                         # every source the reader was given, with what was thrown away and why (for the editor)
     QV = enc([item["q"]] + list(item.get("ways") or [])[:6])
+    threaded = at_once > 1; guard = threading.RLock(); enc_guard = threading.Lock()
+    read_until = (time.time() + read_secs) if read_secs else None
+    not_these = {base(v) for v in (models.get("writer"), models.get("writer_2"), models.get("checker")) if isinstance(v, str) and v}
+    extra = [m for m in (pool or []) if isinstance(m.get("model"), str) and m["model"] not in (models.get("reader"), models.get("reader_2")) and base(m["model"]) not in not_these]
+    mains = [models["reader"]] + [m["model"] for m in extra]            # the models that read side by side
+    by_turn = [m for m in [models.get("reader_2")] if m and m != models["reader"]]      # the reader that stands by: asked only where another could not be
+    takes = dict({m["model"]: float(m.get("secs") or 10) for m in extra}, **{models["reader"]: float(next((m.get("secs") for m in (pool or []) if m.get("model") == models["reader"]), 10) or 10)})
+    gone, read_by, busy = {}, {}, {}                                    # a reader that could not be asked, and why (it is not asked again for this answer); how many sources each model read; when each is free again
+    def between(m):
+        """Seconds between two reading calls of one model, as its free plan lets it take them (calls a minute; tokens a minute for a call of a reader's size)."""
+        try:
+            if m.startswith("groq:"): return max(2.2, 60.0 * (3600 + room_for(m, 900)) / llm.GROQ_FREE[m[5:]]["tpm"])
+            if llm.service_of(m)[0]: lim = llm.limits_of(m); return max(lim["gap"], 60.0 * (3600 + room_for(m, 900)) / (llm.OF_A_DAY * lim["tpm"]) if lim["tpm"] else 0)
+        except Exception: pass
+        return 0.5
+    def readers_for_one():
+        """The readers for the next source, the one that will have read it soonest first; then the others, then the one that stands by."""
+        with guard:
+            live = [m for m in mains if m not in gone]
+            if len(live) > 1:
+                now = time.time(); best = min(live, key=lambda m: max(now, busy.get(m, 0)) + takes.get(m, 10)); busy[best] = max(now, busy.get(best, 0)) + between(best)
+                live = [best] + [m for m in live if m != best]
+            return (live or mains[:1]) + by_turn
     def by_reader(fn, *a):
-        """(lane 14) The reader's call. A reader of a free service that is busy or used up must not cost the answer: the team's other reader
-        ("reader_2": a team's reader_else, or its reader) reads from there on, and the record says so."""
-        try: return fn(chat, models["reader"], *a)
-        except (llm.Unavailable, llm.Budget) as e:
-            alt = models.get("reader_2")
-            if not alt or alt == models["reader"] or "larger than Groq's free plan allows" in str(e): raise
-            first, why = models["reader"], re.sub(r'[ \t\n]+', ' ', str(e))[:140]
-            try: out = fn(chat, alt, *a)
-            except llm.Budget:
-                # (18 November 2026, 21:36 and 22:55 Athens: with questions people had sent still waiting, team L's reader could not read on, the reader that stands
-                # by (at Groq) had no tokens left, and that came up as "an allowance ran out in the middle of an answer": twice, and the run said "stopped for
-                # today" although the team's own models had room.) The stand-by without room is not the day's end: the answer is given up for THIS run, as when a
-                # model cannot be reached, with what the first reader said, and the question is tried again in the next run
-                models["reader_2"] = ""
-                raise llm.Unavailable(f"{base(first)} could not read on ({why}), and the reader that stands by ({base(alt)}) has no room left today")
-            rec["gates"]["reader"] = f"{base(first)} could not read on ({why}): {base(alt)} read from there"
-            rec["made"]["models"].update(reader=alt, reader_first=first); models["reader"], models["reader_2"] = alt, ""
-            return out
-    def read(src, picked):
+        """(lane 14) The reader's call. A reader of a free service that is busy or used up must not cost the answer: another reader reads this source, and
+        that one is not asked again for this answer. Returns (what the reader gave, the model that read)."""
+        order = readers_for_one(); last = None; tried = []
+        for m in order:
+            with guard:
+                if m in gone and len(order) > 1: continue
+            tried.append(m)
+            try: return fn(chat, m, *a), m
+            except llm.Late: raise
+            except (llm.Unavailable, llm.Budget) as e:
+                last = e
+                if "larger than Groq's free plan allows" in str(e) and len(order) > 1: continue        # (this call is too large for that model's minute: another reader takes this source; the model reads on)
+                with guard: gone.setdefault(m, re.sub(r'[ \t\n]+', ' ', str(e))[:140])
+                if len(order) == 1 or "larger than Groq's free plan allows" in str(e): raise
+        # (18 November 2026, 21:36 and 22:55 Athens: with questions people had sent still waiting, team L's reader could not read on, the reader that stands
+        # by (at Groq) had no tokens left, and that came up as "an allowance ran out in the middle of an answer": twice, and the run said "stopped for
+        # today" although the team's own models had room.) Readers without room are not the day's end: the answer is given up for THIS run, as when a
+        # model cannot be reached, with what the first reader said, and the question is tried again in the next run
+        if isinstance(last, llm.Budget) and len(tried) > 1: raise llm.Unavailable(f"{base(tried[0])} could not read on ({gone.get(tried[0], '')}), and the reader that stands by ({base(tried[-1])}) has no room left today")
+        raise last if last is not None else llm.Unavailable("no reader could be asked")
+    def keep(src, picked, got, by):
+        """What a reader gave for one source, taken into the answer (in the sources' own order): True when it gave something."""
         nonlocal thrown
-        if amounts: rows, dropped = by_reader(read_amounts, item["q"], src, picked, dwords); src["rows"] = rows; ok = bool(rows); src.update(design=None, findings=[], limits=[])
+        read_by[by] = read_by.get(by, 0) + 1
+        if amounts: rows, dropped = got; src["rows"] = rows; ok = bool(rows); src.update(design=None, findings=[], limits=[])
         else:
-            design, fs, ls, dropped = by_reader(read_source, item["q"], src, picked)
+            design, fs, ls, dropped = got
             if len(fs) > N_TO_WRITER:                                    # the nearest to the question, in the order they stand in the source
-                near = (enc([f["text"] for f in fs]) @ QV.T).max(1); keep = sorted(sorted(range(len(fs)), key=lambda i: -float(near[i]))[:N_TO_WRITER]); fs = [fs[i] for i in keep]
+                near = (enc([f["text"] for f in fs]) @ QV.T).max(1); keep_i = sorted(sorted(range(len(fs)), key=lambda i: -float(near[i]))[:N_TO_WRITER]); fs = [fs[i] for i in keep_i]
             if len(ls) > 1: ls = [ls[int((enc([l["text"] for l in ls]) @ QV.T).max(1).argmax())]]      # one limit: the one nearest the question
             src.update(design=design, findings=fs, limits=ls[:1]); ok = bool(fs)
         thrown += len(dropped)
@@ -1563,58 +1630,105 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         while ref["id"] in ref_ids: ref["id"] = ref["id"] + "b" if not re.search(r"[b-z]$", ref["id"]) else ref["id"][:-1] + chr(ord(ref["id"][-1]) + 1)
         ref_ids.add(ref["id"]); src["tag"] = tags[len(sources)]; src["_text"] = {p["n"]: p["text"] for p in picked}; sources.append(src)
         return True
+    def ask(src, picked):
+        """One source that is ready, through a reader: ("read", the source, its passages, what the reader gave, the model)."""
+        got, by = by_reader(read_amounts, item["q"], src, picked, dwords) if amounts else by_reader(read_source, item["q"], src, picked)
+        return ("read", src, picked, got, by)
     paper_ref = lambda doi, pmcid=None: (lambda cr: P.reference(doi, cr[0], pmcid) if cr[0] else None)(crossref(doi))
     def paper(c):
-        """One paper read in full: True when it gave something."""
-        if not c.get("doi"): return False
-        if c["kind"] not in ("review", "study", "case") and not c.get("people"): return False   # an editorial, an opinion, a paper on animals or cells alone: not a source for an answer
+        """One paper fetched and read in full (no word of it is kept here: `taken` does that, in the papers' own order)."""
+        if not c.get("doi"): return ("skip",)
+        if c["kind"] not in ("review", "study", "case") and not c.get("people"): return ("skip",)   # an editorial, an opinion, a paper on animals or cells alone: not a source for an answer
         ref = paper_ref(c["doi"], c.get("pmcid"))
-        if not ref or P.retraction(ref) in ("retracted", "concern"): return False      # GATE 6, first half: never a retracted paper
+        if not ref or P.retraction(ref) in ("retracted", "concern"): return ("skip",)      # GATE 6, first half: never a retracted paper
         try: xml = fulltext(c.get("pmcid"))
         except (P.Refused, IOError, ValueError) as e:                 # (lane 19, 18 November 2026) one paper whose full text the service fails on (Europe PMC answers 500 for some) cost a question every try it had: "the lane itself failed on it (HTTPError)". The paper is passed over and the record says so
-            looked.append({"title": c.get("title"), "read": "full", "kind": c.get("kind"), "at": c.get("doi"), "kept": 0, "thrown": [], "fault": f"its full text could not be fetched ({type(e).__name__})"})
-            return False
-        if not xml: return False
+            return ("fault", {"title": c.get("title"), "read": "full", "kind": c.get("kind"), "at": c.get("doi"), "kept": 0, "thrown": [], "fault": f"its full text could not be fetched ({type(e).__name__})"})
+        if not xml: return ("skip",)
         doc = P.jats_passages(xml)
-        if len(doc["passages"]) < 4: return False
-        picked = pick_passages(item["q"], item.get("ways"), doc["passages"], enc, c["kind"])
-        return read({"read": "full", "ref": ref, "doi": c["doi"], "pmcid": c.get("pmcid"), "title": c["title"], "year": c.get("year"), "journal": c.get("journal"), "kind": c["kind"], "people": bool(c.get("people")), "near": c.get("near"), "money": doc["money"][:3],
-                     "_abbr": abbreviations(" ".join(p["text"] for p in doc["passages"]))}, picked)
-    n = 0; later = []
-    bodies = amounts and bool(ASKS_BODIES.search(item["q"]))             # (lane 13) "How much ... do health bodies call ...?": the bodies' own pages answer it; a paper is read only where no page states an amount (lane 12 showed a review's retelling of a guideline beside the guideline, and spent half its reading on papers)
-    for c in found.get("can_read") or []:
-        if n >= N_PAPERS or bodies: later.append(c); continue
-        n += paper(c)
-    n = 0
-    for o in official or []:
-        if n >= (6 if amounts else N_OFFICIAL) or len(sources) >= len(tags) - 1: break          # (lane 11: six pages for a question about amounts; with four, the US bodies' pages on drinking were never opened)
-        if amounts and o.get("tier", 1) != 1: continue                                  # amounts only from a body of tier 1 or a medicine's label
+        if len(doc["passages"]) < 4: return ("skip",)
+        with enc_guard: picked = pick_passages(item["q"], item.get("ways"), doc["passages"], enc, c["kind"])
+        return ask({"read": "full", "ref": ref, "doi": c["doi"], "pmcid": c.get("pmcid"), "title": c["title"], "year": c.get("year"), "journal": c.get("journal"), "kind": c["kind"], "people": bool(c.get("people")), "near": c.get("near"), "money": doc["money"][:3],
+                    "_abbr": abbreviations(" ".join(p["text"] for p in doc["passages"]))}, picked)
+    def a_page(o):
+        """One official page fetched and read."""
         try: got = page(o)
-        except P.Refused: continue                                              # (a site that says no is not asked again and not gone around)
-        except (IOError, ValueError) as e: looked.append({"title": o.get("title") or o.get("name"), "read": "page", "kind": "official", "at": o.get("address"), "kept": 0, "thrown": [], "fault": f"the page could not be fetched ({type(e).__name__})"}); continue
-        if not got or len(got[0]["passages"]) < 2: continue
+        except P.Refused: return ("skip",)                                      # (a site that says no is not asked again and not gone around)
+        except (IOError, ValueError) as e: return ("fault", {"title": o.get("title") or o.get("name"), "read": "page", "kind": "official", "at": o.get("address"), "kept": 0, "thrown": [], "fault": f"the page could not be fetched ({type(e).__name__})"})
+        if not got or len(got[0]["passages"]) < 2: return ("skip",)
         pg, ref = got
-        picked = pick_passages(item["q"], item.get("ways"), [dict(p, n=p["n"] + 1, where=p["where"] or "Top of the page") for p in pg["passages"]], enc, "review", k=7)
-        n += read({"read": "page", "ref": ref, "title": pg["title"] or o.get("title") or "", "year": ((ref.get("issued") or {}).get("date-parts") or [[]])[0][:1] and ref["issued"]["date-parts"][0][0] or None, "kind": "official", "people": True,
-                   "near": o.get("near"), "name": o["name"], "short": o.get("short") or o["name"], "tier": o.get("tier", 1), "address": ref.get("URL"), "money": [], "label": bool(o.get("label")),
-                   "_abbr": abbreviations(" ".join(p["text"] for p in pg["passages"]))}, picked)
-    for c in later:                                                     # a third paper (and no more) where what was read is not yet enough to rest on
-        if (bool(sources) if amounts else sum(weight(s) for s in sources) >= 2) or len(sources) >= len(tags) - 1: break
-        if paper(c): break
-    if (amounts and not (bodies and sources)) or (not amounts and (sum(weight(s) for s in sources) < 2 or not any(s["kind"] == "review" for s in sources))):
-        n = 0
-        for w in found.get("wanted") or []:
-            if n >= N_SUMMARIES or len(sources) >= len(tags): break
-            if not w.get("doi"): continue
-            ref = paper_ref(w["doi"])
-            if not ref or P.retraction(ref) in ("retracted", "concern"): continue
-            try: got = summary(w["doi"])
-            except (P.Refused, IOError, ValueError) as e: looked.append({"title": "", "read": "summary", "kind": "review", "at": w.get("doi"), "kept": 0, "thrown": [], "fault": f"its summary could not be fetched ({type(e).__name__})"}); continue
-            if not got: continue
-            pp, passages = got
-            n += read({"read": "summary", "ref": ref, "doi": w["doi"], "title": pp["title"], "year": pp.get("year"), "journal": pp.get("journal"), "kind": pp["kind"] if pp.get("kind") in ("review", "study", "case") else "review",
-                       "people": bool(P.HUMAN.search(pp["title"] + " " + (pp.get("abstract") or ""))), "near": w.get("near"), "money": [],
-                       "_abbr": abbreviations(" ".join(p["text"] for p in passages))}, passages)
+        with enc_guard: picked = pick_passages(item["q"], item.get("ways"), [dict(p, n=p["n"] + 1, where=p["where"] or "Top of the page") for p in pg["passages"]], enc, "review", k=7)
+        return ask({"read": "page", "ref": ref, "title": pg["title"] or o.get("title") or "", "year": ((ref.get("issued") or {}).get("date-parts") or [[]])[0][:1] and ref["issued"]["date-parts"][0][0] or None, "kind": "official", "people": True,
+                    "near": o.get("near"), "name": o["name"], "short": o.get("short") or o["name"], "tier": o.get("tier", 1), "address": ref.get("URL"), "money": [], "label": bool(o.get("label")),
+                    "_abbr": abbreviations(" ".join(p["text"] for p in pg["passages"]))}, picked)
+    def a_summary(w):
+        """One review that cannot be read in full, read in its summary."""
+        if not w.get("doi"): return ("skip",)
+        ref = paper_ref(w["doi"])
+        if not ref or P.retraction(ref) in ("retracted", "concern"): return ("skip",)
+        try: got = summary(w["doi"])
+        except (P.Refused, IOError, ValueError) as e: return ("fault", {"title": "", "read": "summary", "kind": "review", "at": w.get("doi"), "kept": 0, "thrown": [], "fault": f"its summary could not be fetched ({type(e).__name__})"})
+        if not got: return ("skip",)
+        pp, passages = got
+        return ask({"read": "summary", "ref": ref, "doi": w["doi"], "title": pp["title"], "year": pp.get("year"), "journal": pp.get("journal"), "kind": pp["kind"] if pp.get("kind") in ("review", "study", "case") else "review",
+                    "people": bool(P.HUMAN.search(pp["title"] + " " + (pp.get("abstract") or ""))), "near": w.get("near"), "money": [],
+                    "_abbr": abbreviations(" ".join(p["text"] for p in passages))}, passages)
+    sem = threading.Semaphore(max(1, at_once))
+    def begin(fn, things):
+        """Sources begun now (each in a thread of its own, at_once at a time); with at_once 1 nothing is begun before it is asked for."""
+        return Begun([(lambda x=x: fn(x)) for x in things], sem if threaded else None, read_until)
+    late = 0
+    def taken(got, what=None):
+        """One source's outcome taken into the answer, in the sources' own order: True when it gave something."""
+        nonlocal late
+        if got[0] == "read": return keep(*got[1:])
+        if got[0] == "fault": looked.append(got[1])
+        elif got[0] == "late":
+            late += 1; looked.append(dict({"title": "", "read": "", "kind": "", "at": ""}, **(what or {}), kept=0, thrown=[], fault="it was not read: the time this run has for reading was over"))
+        elif got[0] == "error": raise got[1]
+        return False
+    in_time = lambda: not late and (read_until is None or time.time() < read_until)
+    said_of = {"paper": lambda c: {"title": c.get("title"), "read": "full", "kind": c.get("kind"), "at": c.get("doi")}, "page": lambda o: {"title": o.get("title") or o.get("name"), "read": "page", "kind": "official", "at": o.get("address")},
+               "summary": lambda w: {"title": "", "read": "summary", "kind": "review", "at": w.get("doi")}}
+    bodies = amounts and bool(ASKS_BODIES.search(item["q"]))             # (lane 13) "How much ... do health bodies call ...?": the bodies' own pages answer it; a paper is read only where no page states an amount (lane 12 showed a review's retelling of a guideline beside the guideline, and spent half its reading on papers)
+    cands = list(found.get("can_read") or [])
+    pages = [o for o in (official or []) if not (amounts and o.get("tier", 1) != 1)]                # amounts only from a body of tier 1 or a medicine's label
+    most_pages = 6 if amounts else N_OFFICIAL                                                       # (lane 11: six pages for a question about amounts; with four, the US bodies' pages on drinking were never opened)
+    wave_p = (N_PAPERS + 2) if threaded else 1; wave_o = (most_pages + 1) if threaded else 1
+    ahead = begin(a_page, pages[:wave_o]) if threaded and pages else None                          # the first pages are fetched and read while the papers are
+    n = 0; later = []; i = 0
+    while i < len(cands) and n < N_PAPERS and not bodies and in_time():
+        some = cands[i:i + wave_p]; i += len(some)
+        for c, got in zip(some, begin(paper, some).all()):
+            if n >= N_PAPERS: later.append((c, got)); continue                                       # read ahead and not needed now: put aside
+            n += taken(got, said_of["paper"](c))
+    later += [(c, None) for c in cands[i:]]
+    n = 0; i = 0
+    while i < len(pages) and n < most_pages and len(sources) < len(tags) - 1 and in_time():
+        some = pages[i:i + wave_o]; got_all = (ahead if (i == 0 and ahead is not None) else begin(a_page, some)).all(); i += len(some)
+        for o, got in zip(some, got_all):
+            if n >= most_pages or len(sources) >= len(tags) - 1: break
+            n += taken(got, said_of["page"](o))
+    for c, got in later:                                                # a third paper (and no more) where what was read is not yet enough to rest on
+        if (bool(sources) if amounts else sum(weight(s) for s in sources) >= 2) or len(sources) >= len(tags) - 1 or not in_time(): break
+        if taken(got if got is not None else begin(paper, [c]).all()[0], said_of["paper"](c)): break
+    if in_time() and ((amounts and not (bodies and sources)) or (not amounts and (sum(weight(s) for s in sources) < 2 or not any(s["kind"] == "review" for s in sources)))):
+        n = 0; ws = list(found.get("wanted") or []); i = 0; wave_s = (N_SUMMARIES + 1) if threaded else 1
+        while i < len(ws) and n < N_SUMMARIES and len(sources) < len(tags) and in_time():
+            some = ws[i:i + wave_s]; i += len(some)
+            for w, got in zip(some, begin(a_summary, some).all()):
+                if n >= N_SUMMARIES or len(sources) >= len(tags): break
+                n += taken(got, said_of["summary"](w))
+    # the reader that read, where the team's own could not (the record says so, as before lane 20); and every model that read, where more than one did
+    first = rec["made"]["models"].get("reader")
+    if first in gone and read_by:
+        alt = max(read_by, key=lambda m: (read_by[m], m != first))
+        if alt != first:
+            rec["gates"]["reader"] = f"{base(first)} could not read on ({gone[first]}): {base(alt)} read from there"
+            rec["made"]["models"].update(reader=alt, reader_first=first); models["reader"], models["reader_2"] = alt, ""
+    if len(read_by) > 1: rec["made"]["read_by"] = {base(m): k for m, k in sorted(read_by.items(), key=lambda x: -x[1])}
+    if late: rec["gates"]["time"] = f"{late} source(s) were not read: the time this run has for reading one question" + (f" ({read_secs:.0f} seconds)" if read_secs else "") + " was over"
+    rec["made"]["read_seconds"] = round(time.time() - t_began)
     cn = counts(sources); rec["made"]["from"] = {k: cn[k] for k in ("papers", "summaries", "official")}
     rec["gates"]["read"] = (f"{sum(len(s.get('rows') or []) for s in sources)} amounts" if amounts else f"{sum(len(s['findings']) for s in sources)} findings") + f" kept from {len(sources)} sources ({cn['papers']} papers read in full, {cn['official']} official pages, {cn['summaries']} papers read in summary); {thrown} thrown away (the quote was not in the passage, or a number was not in the quote)"
     def keep_sources():
@@ -1628,7 +1742,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         n = sum(1 for x in looked if x.get("fault")); lost = [str(x)[:80] for x in (found.get("problems") or [])]
         if not n and not lost: return ""
         rec["soft"] = "a source could not be fetched"
-        return " (" + "; ".join(([f"{n} source(s) could not be fetched just now"] if n else []) + (["the search for papers did not all come back"] if lost else [])) + ": tried again in the next run)"
+        return " (" + "; ".join(([f"{n} source(s) could not be fetched just now" + (f", {late} of them for want of time" if late else "")] if n else []) + (["the search for papers did not all come back"] if lost else [])) + ": tried again in the next run)"
     if not sources: return done("none", "no source that can be read " + ("states an amount for people" if amounts else "gave a finding") + " for this question" + out_of_reach())
     paper_name = lambda s: (f"{s['name']}: {s['title']}" if s["read"] == "page" else f"{s['title']} ({s['year']})")
     if amounts:
@@ -1670,8 +1784,8 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         """(lane 19) A writer that cannot be asked, or that twice gave no answer in the form asked for, must not cost the answer: the team's other writer
         writes from there on, and the record says so. (18 November 2026: Gemma wrote 8,726 characters that were no JSON, twice, for a question the senior
         author had sent, and there was no answer.) Never a model that is this answer's reader, second reader or further reader."""
-        alt = models.get("writer_2"); taken = {base(v.split("#")[0]) for k, v in models.items() if isinstance(v, str) and v and (k in ("reader", "checker") or re.fullmatch(r"also\d+", k))}
-        if not alt or alt == models["writer"] or base(alt) in taken: return False
+        alt = models.get("writer_2"); busy_with = {base(v.split("#")[0]) for k, v in models.items() if isinstance(v, str) and v and (k in ("reader", "checker") or re.fullmatch(r"also\d+", k))} | {base(m) for m in read_by}
+        if not alt or alt == models["writer"] or base(alt) in busy_with: return False
         rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" {base(models['writer'])} {why}: {base(alt)} wrote from there.").strip()
         rec["made"]["models"].update(writer=alt, writer_first=models["writer"]); models["writer"], models["writer_2"] = alt, ""
         return True
@@ -1990,6 +2104,25 @@ def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|g
 CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1, "also": 3, "also#marks": 15}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
 
 
+def reading_pool(file=None):
+    """(19 November 2026) The models that read sources side by side with a team's own reader: "readers" of data/auto/lane/models.json
+    ([{"model", "secs": how long one reading call takes it}]), each only where its service has a key on this machine and room left today. A reader only
+    copies, and every quote it copies is checked by code against the passage: which model reads changes how much is found, never what is true."""
+    try: mf = json.load(open(file or MODELS_FILE, encoding="utf-8"))
+    except (OSError, ValueError): mf = {}
+    out = []
+    for r in mf.get("readers") or []:
+        m = r.get("model") if isinstance(r, dict) else None
+        if not isinstance(m, str) or not m or not llm.has(m): continue
+        try:
+            if m.startswith("groq:"): ok = llm.groq_left(m[5:]) >= 2 * NEED["reader"][1] / CALLS["reader"]
+            elif llm.service_of(m)[0]: ok = llm.calls_left(m) >= 4
+            else: ok = llm.left() >= ROOM / 2
+        except Exception: ok = False
+        if ok: out.append({"model": m, "secs": float(r.get("secs") or 10)})
+    return out
+
+
 def team(file=None, only=None, avoid=()):
     """The models for the next answer: the first team of data/auto/lane/models.json whose services have a key on this
     machine and room left today (two free services, each with its own day's allowance: Cloudflare Workers AI in neurons,
@@ -2155,7 +2288,9 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
     if not ids and not again: order.sort(key=lambda w: (0 if w.get("from") == "a question visitors sent" else 1, turn(w)))
     if only_sent: order = [w for w in order if w.get("from") == "a question visitors sent"]      # (lane 19) the first pass of a run: the questions people sent, alone, so that what is written for them is published before the system's own are begun
     if trial: order = list(trial); limit = max(limit, len(order))                  # (trial questions only: nothing of the site's list is worked on in such a run)
-    enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []; out_of_room = 0
+    enc = enc or P.General(); import build_index as bi; names = bi.names_table(); made = []; out_of_room = 0; begun = 0
+    pool = reading_pool() if real else None
+    if pool: print("lane: sources are read at once, by " + ", ".join(base(m["model"]) for m in pool) + " beside the team's own reader")
     OUT.mkdir(parents=True, exist_ok=True); STATE.parent.mkdir(parents=True, exist_ok=True)
     # our own checker (decision 23), where one is in use (data/auto/own/models.json): the file that sat the exam, by its SHA-256. If it
     # is in use and cannot be run here, nothing is published by itself in this run: an answer it did not judge waits for the editor.
@@ -2176,7 +2311,12 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     cut = 0
     for w in order[:limit]:
-        if minutes and made and (datetime.datetime.now() - began).total_seconds() > 60 * minutes: print(f"lane: {minutes} minutes are over: the rest waits for the next run"); break      # (lane 19) a run is short, so that what it wrote is published soon
+        gone_by = (datetime.datetime.now() - began).total_seconds()
+        if minutes and begun and 60 * minutes - gone_by < BEGIN_WITH: print(f"lane: {minutes} minutes are nearly over: the rest waits for the next run"); break      # (lane 19) a run is short, so that what it wrote is published soon
+        # the clock for this question: what one question may take, and never much past the end of the pass
+        if real: llm.STOP_AT = P.STOP_AT = time.time() + (min(QUESTION_SECONDS, max(BEGIN_WITH, 60 * minutes - gone_by + 30)) if minutes else QUESTION_SECONDS)
+        if real: llm.GIVE_WAY = give_way if (give_way and w.get("from") != "a question visitors sent") else None; llm._gave[:] = [time.time(), False]      # one of the system's own gives way in the middle too (asked every 25 seconds)
+        begun += 1
         if give_way and made and give_way(): print("lane: a run is waiting behind this one (a new question came): the rest is left to it"); break      # (between two of the system's own questions; never in the pass for the questions people sent)
         if real:
             was = st["items"].get(w["id"]) or {}
@@ -2196,7 +2336,8 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
             except (OSError, ValueError, KeyError): official = []               # (official.py has not searched for this question yet, or found nothing)
             try: before = json.load(open(af, encoding="utf-8"))
             except (OSError, ValueError): before = None
-            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk, stakes_how=stakes_policy() if real else None, note=held_say("au_" + w["id"]) if real else "", agreed=agreed_claims(w["id"]) if real else (), last=last_refusal(before) if real else "")
+            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk, stakes_how=stakes_policy() if real else None, note=held_say("au_" + w["id"]) if real else "", agreed=agreed_claims(w["id"]) if real else (), last=last_refusal(before) if real else "",
+                       pool=pool, at_once=AT_ONCE if real else 1, read_secs=READ_SECONDS if real else None)
             if own_err and rec.get("status") == "published": rec["status"] = "waiting"; rec["for"] = "again"; rec["soft"] = "our own checker could not be run"; rec["why"] = "our own checker is in use and could not be run in this run (" + own_err + "): worked on again by itself in the next run"
             cut = 0
         except llm.Budget as e:
@@ -2204,6 +2345,14 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
             # question is begun with whichever team still has room; the question that was cut short keeps its turn for the next run
             out_of_room += 1; print("lane: an allowance ran out in the middle of an answer:", e)
             if out_of_room >= 2: print("lane: stopped for today"); break
+            continue
+        except llm.Late as e:
+            # (19 November 2026) the question's time was over in the middle of the answer: it is put down for this run and tried again in the next (a fault
+            # of the moment, not of the answer); the run goes on with the next question, which has its own time
+            way = "a run is waiting behind this one" in str(e)
+            print(f"lane: {w['id']}: " + ("left for the next run:" if way else "the time one question has was over:"), e)
+            if not w.get("trial"): note_try(w, "none", ("a new question came while this one was being worked on: left for the next run" if way else "the time a run has for one question was over (" + re.sub(r"\s+", " ", str(e))[:140] + "): tried again in the next run"), soft="a new question came" if way else "the time for one question was over")
+            if way: break
             continue
         except llm.Unavailable as e:
             print("lane: the models cannot be used now:", e)
@@ -2251,7 +2400,8 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         note_try(w, rec["status"], rec["why"], kind=rec["kind"], complete=rec["complete"], **({"soft": rec["soft"]} if rec.get("soft") else {}), **({"for": rec["for"]} if rec.get("for") else {}))
         made.append(rec)
         f = rec["made"].get("from") or {}
-        print(f"lane: {w['id']} {w['q'][:56]!r}: {rec['status']} ({rec['why']}); {f.get('papers', 0)} papers, {f.get('official', 0)} official pages, {f.get('summaries', 0)} summaries; {rec['made'].get('neurons', 0)} neurons")
+        print(f"lane: {w['id']} {w['q'][:56]!r}: {rec['status']} ({rec['why']}); {f.get('papers', 0)} papers, {f.get('official', 0)} official pages, {f.get('summaries', 0)} summaries; {rec['made'].get('neurons', 0)} neurons; {rec['made'].get('seconds', 0)} seconds, {rec['made'].get('read_seconds', 0)} of them reading" + (f" ({', '.join(f'{m} {k}' for m, k in rec['made']['read_by'].items())})" if rec["made"].get("read_by") else ""))
+    llm.STOP_AT = P.STOP_AT = None; llm.GIVE_WAY = None
     json.dump({"_note": "Papers the machine lane wants and cannot read (their full text is not open), with the questions they are wanted for. References from Crossref, made by scripts/build_references.py. For the senior author's list of papers to save.",
                "made_on": TODAY, "papers": wanted_list()}, open(WANTED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"lane: {len(made)} questions worked on: " + ", ".join(f"{k} {sum(r['status'] == k for r in made)}" for k in ("published", "waiting", "none")) + f"; today {llm.ledger()['neurons']:.0f} of {llm.OUR_LIMIT} neurons used")
@@ -2986,10 +3136,52 @@ def selftest():
     assert turn_of(sent, S(status="none", why="x", last=yday, tries=3)) == 3 and turn_of(sent, S(status="none", why="x", last=yday, tries=6)) is None and turn_of(sent, S(status="none", why="x", last=wk, tries=20)) == 3   # every day at first, then further apart
     assert turn_of(sent, S(status="none", why="x", lane=LANE - 1)) == 1 and turn_of(sent, S(status="waiting", lane=LANE - 1)) == 1 and turn_of(sent, S(status="published", lane=LANE - 1)) == 4 and turn_of(sent, S(status="published", complete=True)) is None
     assert [wait_days(n) for n in (1, 4, 5, 8, 9, 14, 15)] == [1, 1, 2, 2, 4, 4, 7]
+    # ---- 19 November 2026: sources read at once, kept in their own order; the clock ----
+    found4 = {"can_read": [{"doi": f"10.1000/k.{i}", "pmcid": f"PMC{i}", "title": f"Ketamine dependence: review {i}", "year": 2022, "journal": "Addiction", "kind": "review", "people": True, "near": 0.71 - i / 100} for i in (1, 2, 3, 4)], "wanted": []}
+    slow_first = lambda pmcid: (time.sleep(0.35) if pmcid == "PMC1" else None) or xml              # the nearest paper comes back last
+    answer = lambda **k: (script.update(writer=[W(ok_short)], checker=[V(True, True, True, True)]), calls.clear(), make(item, found4, chat, Enc(), MODELS, fulltext=slow_first, crossref=crossref, ex=ex, **k))[2]
+    one_by_one = answer(); n_one = sum(c[0] == "reader" for c in calls)
+    at_the_same_time = answer(at_once=4); n_same = sum(c[0] == "reader" for c in calls)
+    same = lambda r: (r["status"], [(s["doi"], s["tag"], s["ref"]["id"]) for s in r["sources"]], [p["text"] for p in r["parts"]], [x["at"] for x in r["looked"]])
+    assert one_by_one["status"] == "published" and same(one_by_one) == same(at_the_same_time), (same(one_by_one), same(at_the_same_time))      # the same answer, from the same sources in the same order
+    assert [x["at"] for x in at_the_same_time["looked"]] == ["10.1000/k.1", "10.1000/k.2"] and n_one == 2 and n_same == 4, (n_one, n_same)        # two more were read ahead and put aside: the record holds the two the answer needed
+    # a source that is not read in the time the reading has: written down as not read, and the answer is written from the rest
+    stuck = lambda pmcid: (time.sleep(3) if pmcid == "PMC2" else None) or xml
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]; t0 = time.time()
+    r = make(item, dict(found4, can_read=found4["can_read"][:2]), chat, Enc(), MODELS, fulltext=stuck, crossref=crossref, ex=ex, at_once=4, read_secs=0.6)
+    assert r["status"] == "published" and time.time() - t0 < 2.5 and [s["doi"] for s in r["sources"]] == ["10.1000/k.1"] and "1 source(s) were not read" in r["gates"]["time"], (r["status"], r["why"], r["gates"].get("time"), time.time() - t0)
+    assert [x.get("fault") for x in r["looked"]] == [None, "it was not read: the time this run has for reading was over"] and r["looked"][1]["at"] == "10.1000/k.2", r["looked"]
+    r = make(item, dict(found4, can_read=found4["can_read"][1:2]), chat, Enc(), MODELS, fulltext=stuck, crossref=crossref, ex=ex, at_once=4, read_secs=0.5, summary=lambda doi: None)
+    assert r["status"] == "none" and r["soft"] == "a source could not be fetched" and "1 of them for want of time" in r["why"], (r["status"], r["why"])            # nothing was read in time: not the answer's fault, tried again in the next run
+    # the readers of the pool read side by side with the team's own; never the model that writes or the second reader; one that cannot be asked costs nothing
+    pl = [{"model": "pool:one", "secs": 1}, {"model": MODELS["writer"], "secs": 1}, {"model": MODELS["checker"], "secs": 1}, {"model": "pool:down", "secs": 0.1}]
+    def chat_pool(model, messages, max_tokens=0):
+        if model == "pool:down": raise llm.Unavailable("pool answered 503")
+        return chat(model, messages, max_tokens)
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]; calls.clear()
+    r = make(item, found4, chat_pool, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, at_once=4, pool=pl)
+    who = {c[1] for c in calls if c[0] == "reader"}
+    assert r["status"] == "published" and who <= {MODELS["reader"], "pool:one"} and len(who) == 2 and set(r["made"]["read_by"]) == {base(MODELS["reader"]), "pool:one"} and "reader" not in r["gates"], (r["status"], r["why"], who, r["made"].get("read_by"))
+    assert same(r)[1:3] == same(one_by_one)[1:3]                                                                                                       # whoever read: the same sources in the same order, the same answer
+    # the clock: a model that cannot be asked in time ends the question for this run (Late), and nothing is waited for
+    def chat_late(model, messages, max_tokens=0):
+        if messages[0]["content"].startswith("You write"): raise llm.Late("the time for this question was over before the writer could be asked")
+        return chat(model, messages, max_tokens)
+    try: make(item, found4, chat_late, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, at_once=4); raise AssertionError("the writer was late, and the answer went on")
+    except llm.Late: pass
+    def chat_read_late(model, messages, max_tokens=0):
+        if messages[0]["content"].startswith("You read") and "review 2" in messages[1]["content"]: raise llm.Late("the time for this question was over before the reader could be asked")
+        return chat(model, messages, max_tokens)
+    script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, dict(found4, can_read=found4["can_read"][:2]), chat_read_late, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, at_once=4)
+    assert r["status"] == "published" and [s["doi"] for s in r["sources"]] == ["10.1000/k.1"] and r["looked"][1].get("fault", "").startswith("it was not read"), (r["status"], r["why"], r["looked"])
+    b1 = Begun([lambda: 1, lambda: (_ for _ in ()).throw(ValueError("x")), lambda: 3]); o = b1.all(); assert o[0] == 1 and o[1][0] == "error" and isinstance(o[1][1], ValueError) and o[2] == 3
+    b2 = Begun([lambda: time.sleep(2) or 1, lambda: 2], threading.Semaphore(2), time.time() + 0.3); assert b2.all() == [("late",), 2]
     print("lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; "
           "a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; "
           "an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, "
-          "with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)")
+          "with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history; "
+          "sources read at once give the same answer from the same sources in the same order; a source not read in time is written down and the answer is written from the rest; past its clock a question is put down for the next run)")
 
 
 if __name__ == "__main__":
@@ -2997,18 +3189,19 @@ if __name__ == "__main__":
     elif len(sys.argv) > 1 and sys.argv[1] == "requests":
         # the requests waiting in data/auto/requests (lane-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
         # A request is a file in the repository, written by the editor: read as data, never run.
-        ids, limit, again, any_req, only_team, trial = [], 3, False, False, None, []
+        ids, limit, again, any_req, only_team, trial, mins = [], 3, False, False, None, [], None
         for f in sorted((ROOT / "data" / "auto" / "requests").glob("lane-*.json")):
             try: r = json.load(open(f, encoding="utf-8"))
             except ValueError: r = {}
             any_req = True; ids += [x for x in (r.get("ids") or []) if isinstance(x, str) and re.fullmatch(r"w_[a-z0-9_]{1,40}", x)]
             if isinstance(r.get("max"), int): limit = max(1, min(20, r["max"]))
+            if isinstance(r.get("minutes"), (int, float)) and 1 <= r["minutes"] <= 40: mins = float(r["minutes"])      # ("minutes": 8: the pass is on the clock, as a run of the Auto workflow is)
             again = again or r.get("again") is True
             if isinstance(r.get("team"), str) and re.fullmatch(r"[A-Za-z0-9 ]{1,24}", r["team"]): only_team = r["team"]      # ("team": "team G": only that team of data/auto/lane/models.json)
             trial += trial_items(r.get("trial"))                              # ("trial": [{"id": "t_...", "q": "...", "drugs": ["lsd"]}]: questions that are not on the site's list; see trial_items)
             f.unlink()
-        if trial: run(limit=len(trial), only_team=only_team, trial=trial)
-        if any_req and (ids or not trial): run(ids=ids or None, limit=max(limit, len(ids)) if ids else limit, again=again, only_team=only_team)
+        if trial: run(limit=len(trial), only_team=only_team, trial=trial, minutes=mins)
+        if any_req and (ids or not trial): run(ids=ids or None, limit=max(limit, len(ids)) if ids else limit, again=again, only_team=only_team, minutes=mins)
         else: print("lane: no request waiting")
     elif len(sys.argv) > 1 and sys.argv[1] == "run":
         a = sys.argv[2:]; opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d

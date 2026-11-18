@@ -86,7 +86,7 @@ jobs:
             step "what it used, into the ledger" python3 -I scripts/auto/llm.py --spend "$RUNNER_TEMP/instant-usage.json"
             git rm -q data/auto/requests/instant-*.json >> "$L" 2>&1
           fi
-          step "write" python3 -I scripts/auto/lane.py requests
+          step "write" python3 -I -u scripts/auto/lane.py requests
           echo "What this run did is in data/auto/lane/_last-run.txt (cleaned of anything secret before it is kept)." >> "$GITHUB_STEP_SUMMARY"   # (16 November 2026) never the raw end of the notes
       - name: Keep the records
         if: always()

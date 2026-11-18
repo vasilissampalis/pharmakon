@@ -57,6 +57,74 @@ class Unavailable(Exception):
 import threading
 LOCK = threading.RLock()        # one writer of the count at a time (the lesson maker asks several models at once)
 
+# ---------- a run's clock (19 November 2026) ----------
+# The senior author, 18 November 2026, 23:42 Athens, of two questions he had sent: "the site is taking too long to answer my pending questions ... like 5 minutes
+# pass and i don't have an answer ... it should be answered almost immediately". What the runs' own notes showed: one question took 34 minutes, because a slow
+# free model read 21 sources one after another, each call waiting out its model's minute; another run sat on one step until GitHub stopped it after 40
+# minutes; and every question sent meanwhile waited behind it. Nothing in this file knew how long a run had. Now it does: STOP_AT is the moment (time.time())
+# after which no call is begun, waited for or tried again (Late is raised instead: the question is put down for this run and tried again in the next), and a
+# call's own time limit never reaches past it. None: no clock (the exams, the trials, the lesson maker).
+STOP_AT = None
+
+
+class Late(Unavailable):
+    """The time this run has for the question in hand is over: nothing more is asked or waited for."""
+
+
+def time_left():
+    """Seconds until STOP_AT (None where there is no clock)."""
+    return None if STOP_AT is None else STOP_AT - time.time()
+
+
+GIVE_WAY = None      # a question of the system's OWN that is being worked on: a function that says whether a run is waiting behind this one (a new question came). Asked every 25 seconds at most
+_gave = [0.0, False]
+
+
+def _in_time(wait=0.0, what="a model"):
+    """Late, where a call that must first wait `wait` seconds could not begin with a few seconds of its own before STOP_AT; and where this run should
+    give way to one that waits (GIVE_WAY): a person's new question is not kept waiting by one of the system's own."""
+    if GIVE_WAY is not None:
+        if time.time() - _gave[0] > 25:
+            _gave[0] = time.time()
+            try: _gave[1] = bool(GIVE_WAY())
+            except Exception: _gave[1] = False
+        if _gave[1]: raise Late("a run is waiting behind this one (a new question came): this question is left for the next run")
+    if STOP_AT is not None and time.time() + max(0.0, wait) + 6 > STOP_AT:
+        raise Late(f"the time for this question was over before {what} could be asked" + (f" (it would have waited {wait:.0f} seconds more for the room its free plan gives in a minute)" if wait >= 2 else ""))
+
+
+def _capped(seconds):
+    """A call's own time limit: never past STOP_AT."""
+    return seconds if STOP_AT is None else max(5.0, min(float(seconds), STOP_AT - time.time()))
+
+
+def _nap(seconds, real, what="a model"):
+    """The wait before a call is tried again (real: a real call; a pretend one in a test never waits). Never past STOP_AT: Late instead."""
+    if not real or seconds <= 0: return
+    _in_time(seconds, what); time.sleep(seconds)
+
+
+def _slot(key, gap, room, tokens, real=True):
+    """When the next call of one model may begin. (19 November 2026) The lane reads its sources at once, so several calls of one model are asked for in
+    the same second: each is given its own moment under the lock, `gap` seconds after the one before and, where the plan counts tokens a minute
+    (room > 0), not before the minute has room for it. Returns (seconds to wait, the entry kept for this call: [when, tokens, what stood before])."""
+    with LOCK:
+        now = time.time(); before = _last_call.get(key, 0); start = max(now, before + gap) if real else now
+        mine = _minute[key] = [e for e in _minute.get(key, []) if now - e[0] < 61]
+        while real and room:
+            inside = [e for e in mine if start - e[0] < 60]
+            if not inside or sum(e[1] for e in inside) + tokens <= room: break
+            start = min(e[0] for e in inside) + 61
+        entry = [start, tokens, before]; mine.append(entry); _last_call[key] = start
+        return max(0.0, start - now), entry
+
+
+def _give_back(key, entry):
+    """A moment that was kept for a call that is not made after all (the run's time was over): its room is free again."""
+    with LOCK:
+        entry[1] = 0
+        if _last_call.get(key) == entry[0]: _last_call[key] = entry[2]
+
 
 def today(): return datetime.datetime.now(datetime.timezone.utc).date().isoformat()   # the allowance resets at 00:00 UTC
 
@@ -73,10 +141,11 @@ def ledger():
 def spend(model, tokens_in, tokens_out, save=True):
     """Write one call into the ledger; returns the neurons it cost."""
     pi, po = PRICE.get(model, DEAR); n = tokens_in * pi / 1e6 + tokens_out * po / 1e6
-    d = ledger(); d["neurons"] = round(d["neurons"] + n, 2); d["calls"] += 1
-    m = d["by_model"].setdefault(model, {"calls": 0, "in": 0, "out": 0, "neurons": 0.0}); m["calls"] += 1; m["in"] += tokens_in; m["out"] += tokens_out; m["neurons"] = round(m["neurons"] + n, 2)
-    if save:
-        LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(d, open(LEDGER, "w", encoding="utf-8"), indent=1)
+    with LOCK:                                                               # (calls made at the same time: one writer of the count at a time)
+        d = ledger(); d["neurons"] = round(d["neurons"] + n, 2); d["calls"] += 1
+        m = d["by_model"].setdefault(model, {"calls": 0, "in": 0, "out": 0, "neurons": 0.0}); m["calls"] += 1; m["in"] += tokens_in; m["out"] += tokens_out; m["neurons"] = round(m["neurons"] + n, 2)
+        if save:
+            LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(d, open(LEDGER, "w", encoding="utf-8"), indent=1)
     return n
 
 
@@ -251,15 +320,15 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
     op = opener or urllib.request.urlopen; last = None; k = -1; again = 0; busy = 0
     while k + 1 < tries:
         k += 1
-        wait = lim["gap"] - (time.time() - _last_call.get(model, 0))                 # (each model has its own calls a minute)
-        if lim["tpm"]:                                                              # a plan that counts tokens a minute: this run's own calls of the last minute are counted before the next is sent
-            now = time.time(); mine = _minute[model] = [(w, n) for w, n in _minute.get(model, []) if now - w < 60]
-            if mine and sum(n for _, n in mine) + est_in + max_tokens > OF_A_DAY * lim["tpm"]: wait = max(wait, 60 - (now - mine[0][0]) + 1)
-        if wait > 0 and not opener: time.sleep(wait)
-        _last_call[model] = time.time(); _minute.setdefault(model, []).append((time.time(), est_in + max_tokens))
+        # (each model has its own calls a minute; a plan that counts tokens a minute: this run's own calls of the last minute are counted before the next is sent)
+        wait, kept = _slot(model, lim["gap"], OF_A_DAY * lim["tpm"] if lim["tpm"] else 0, est_in + max_tokens, real=not opener)
+        if not opener:
+            try: _in_time(wait, name)
+            except Late: _give_back(model, kept); raise
+            if wait > 0: time.sleep(wait)
         try:
             few = not S.get("paid") and 0 < lim["calls"] <= 20                 # a model with a handful of free calls a day (Google's strong readers): each call is dear
-            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=180 if S.get("paid") else 170 if few else 80) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it. 17 November 2026: a strong reader that thinks before it answers is given 170 seconds; Gemini 3.8 Flash did not answer six sentences in 80)
+            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=_capped(180 if S.get("paid") else (170 if STOP_AT is None else 80) if few else 80)) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it. 17 November 2026: a strong reader that thinks before it answers is given 170 seconds; Gemini 3.8 Flash did not answer six sentences in 80)
         except urllib.error.HTTPError as e:
             whole = e.read().decode("utf-8", "replace")[:6000] if hasattr(e, "read") else ""; detail = whole[:400]; last = f"{svc} answered {e.code}: {detail}"
             if e.code == 429 or (e.code == 529 and svc == "claude"):
@@ -270,10 +339,10 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                     raise Budget(f"{svc} says the allowance is used up: {detail[:160]}")
                 ra = str((e.headers or {}).get("Retry-After") or "").strip(); rd = re.search(r'"retryDelay":\s*"(\d+(?:\.\d+)?)s?"', whole)
                 secs = min(65, int(float(ra)) + 1) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else min(65, int(float(rd.group(1))) + 1) if rd else 25
-                if k + 1 < tries: time.sleep(0 if opener else secs); continue
+                if k + 1 < tries: _nap(secs, not opener, f"{name} again ({last[:120]})"); continue
             if e.code == 503 and not S.get("paid") and busy < 4 and re.search(r"high demand|overloaded|UNAVAILABLE|try again later", whole, re.I):     # a free model that many people are asking at once: waited out, up to about a minute in all
-                busy += 1; time.sleep(0 if opener else (6, 12, 20, 30)[busy - 1]); k -= 1; continue
-            if e.code in (500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 4 * (k + 1)); continue
+                busy += 1; _nap((6, 12, 20, 30)[busy - 1], not opener, f"{name} again ({last[:120]})"); k -= 1; continue
+            if e.code in (500, 502, 503, 504) and k + 1 < tries: _nap(4 * (k + 1), not opener, f"{name} again ({last[:120]})"); continue
             if e.code in (400, 404, 422) and svc != "claude" and again < 2:      # some open models take no system text, or no JSON mode: asked once more without, and remembered for this run
                 q = _quirks.setdefault(model, set()); new_q = None
                 if "no_system" not in q and re.search(r"developer instruction|system (?:instruction|prompt|role|message)s?\b[^.]{0,60}\bnot (?:enabled|supported|allowed)|does not support system", whole, re.I): new_q = "no_system"
@@ -288,7 +357,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                     L = ledger(); used = svc_used(svc, L); used["calls"] += 1; used.setdefault("models", {})[name] = int(used["models"].get(name) or 0) + 1; L.setdefault("svc", {})[svc] = used
                     LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
                 if few: break
-            if k + 1 < tries: time.sleep(0 if opener else 4); continue
+            if k + 1 < tries: _nap(4, not opener, f"{name} again ({last[:120]})"); continue
             break
         if svc == "claude":
             text = "".join(b.get("text", "") for b in d.get("content") or [] if b.get("type") == "text"); u = d.get("usage") or {}
@@ -346,11 +415,12 @@ def groq_left(name, now=None):
 def groq_count(name, used, calls=1, full=False):
     """Write a call at Groq into the ledger: the day's count (for the record) and the draining count (for what is left).
     full: Groq itself said the day's plan is used up, so the draining count is set to the whole allowance."""
-    L = ledger(); now = time.time(); lim = GROQ_FREE[name]
-    g = L.setdefault("groq", {}).setdefault(name, {"calls": 0, "tokens": 0}); g["calls"] += calls; g["tokens"] += used
-    tokens, n = groq_level(name, L, now)
-    L.setdefault("groq_rolling", {})[name] = {"at": round(now), "tokens": lim["tpd"] if full else round(tokens + used), "calls": round(n + calls, 2)}
-    LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+    with LOCK:                                                               # (calls made at the same time: one writer of the count at a time)
+        L = ledger(); now = time.time(); lim = GROQ_FREE[name]
+        g = L.setdefault("groq", {}).setdefault(name, {"calls": 0, "tokens": 0}); g["calls"] += calls; g["tokens"] += used
+        tokens, n = groq_level(name, L, now)
+        L.setdefault("groq_rolling", {})[name] = {"at": round(now), "tokens": lim["tpd"] if full else round(tokens + used), "calls": round(n + calls, 2)}
+        LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
 
 
 def chat_groq(model, messages, max_tokens, opener=None, tries=3):
@@ -361,11 +431,11 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     est = sum(rough_tokens(m["content"]) for m in messages) + max_tokens
     if est > lim["tpm"]: raise Unavailable(f"this call is larger than Groq's free plan allows in a minute ({est} of {lim['tpm']} tokens)")
     if est > groq_left(name): raise Budget(f"today's free tokens at Groq cannot hold this call for {name}")
-    now = time.time(); recent = [(t, n) for t, n in _minute.get(name, []) if now - t < 61]
-    while recent and sum(n for _, n in recent) + est > lim["tpm"]:                       # wait for the minute to have room
-        wait = 61 - (now - recent[0][0])
-        if opener is None and wait > 0: time.sleep(min(wait, 61))
-        recent = recent[1:]; now = time.time()
+    wait, kept = _slot(name, 2.2, lim["tpm"], est, real=opener is None)                  # wait for the minute to have room (and never more than 30 calls in one)
+    if opener is None:
+        try: _in_time(wait, name)
+        except Late: _give_back(name, kept); raise
+        if wait > 0: time.sleep(wait)
     body = {"model": name, "messages": messages, "max_completion_tokens": max_tokens, "temperature": 0}
     # how each model reasons at Groq (console.groq.com/docs/reasoning, read 16 November 2026): gpt-oss takes reasoning_effort low, medium or high and
     # returns its reasoning apart from its answer (reasoning_format is not for it); qwen3.8-27b does not reason unless an effort is set, and with
@@ -379,7 +449,7 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     for k in range(tries):
         req = urllib.request.Request(GROQ, data=json.dumps(body).encode("utf-8"), method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json", "User-Agent": "Pharmakon (https://pharmakon.world; mailto:contact@pharmakon.world)"})
         try:
-            with op(req, timeout=180) as r: d = json.loads(r.read().decode("utf-8"))
+            with op(req, timeout=_capped(180)) as r: d = json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             detail = ""
             try: detail = e.read().decode("utf-8", "replace")[:300]
@@ -387,15 +457,15 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
             if e.code == 429 and re.search(r"per day|TPD|RPD|daily", detail, re.I):
                 groq_count(name, 0, 0, full=True)                        # our count was too low: Groq's own word is taken, and the next team is chosen without this model
                 raise Budget("Groq says today's free plan is used up for " + name)
-            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: time.sleep(0 if opener else 20 * (k + 1)); continue
+            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: _nap(20 * (k + 1), opener is None, f"{name} again (Groq answered {e.code})"); continue
             raise Unavailable(f"Groq answered {e.code}" + (": " + re.sub(r"\s+", " ", detail) if detail else ""))
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
-            if k + 1 < tries: time.sleep(0 if opener else 3); continue
+            if k + 1 < tries: _nap(3, opener is None, f"{name} again (Groq could not be reached)"); continue
             raise Unavailable("Groq could not be reached: " + str(e)[:200])
         text = ((d.get("choices") or [{}])[0].get("message") or {}).get("content") or ""; u = d.get("usage") or {}
         used = int(u.get("total_tokens") or (int(u.get("prompt_tokens") or est - max_tokens) + int(u.get("completion_tokens") or rough_tokens(text))))
         groq_count(name, used)
-        _minute[name] = recent + [(time.time(), used)]
+        with LOCK: kept[1] = used                                           # what the call really took stands in the minute's count, not the estimate
         return clean(text)
     raise Unavailable("Groq gave no answer")
 
@@ -415,20 +485,21 @@ def chat(model, messages, max_tokens=700, opener=None, tries=3, extra=None):
     pi, po = PRICE.get(model, DEAR); est_in = sum(rough_tokens(m["content"]) for m in messages)
     if est_in * pi / 1e6 + max_tokens * po / 1e6 > left(): raise Budget(f"today's free allowance cannot hold this call ({ledger()['neurons']:.0f} of {OUR_LIMIT} neurons used)")
     body = json.dumps(dict({"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": 0}, **(extra or {}))).encode("utf-8")
-    opener = opener or urllib.request.urlopen
+    opener = opener or urllib.request.urlopen; real = opener is urllib.request.urlopen
     for k in range(tries):
+        if real: _in_time(0, model.split("/")[-1])
         req = urllib.request.Request(API.format(account=account), data=body, method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
         try:
-            with opener(req, timeout=180) as r: d = json.loads(r.read().decode("utf-8"))
+            with opener(req, timeout=_capped(180)) as r: d = json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             detail = ""
             try: detail = e.read().decode("utf-8", "replace")[:300]
             except Exception: pass
             if e.code == 429 and re.search(r"allocation|quota|neurons|daily", detail, re.I): raise Budget("Cloudflare says today's free allowance is used up")
-            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: time.sleep(4 * (k + 1) if opener is urllib.request.urlopen else 0); continue
+            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: _nap(4 * (k + 1), real, f"{model.split('/')[-1]} again (the service answered {e.code})"); continue
             raise Unavailable(f"the model service answered {e.code}" + (": " + re.sub(r"\s+", " ", detail) if detail else ""))
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
-            if k + 1 < tries: time.sleep(3 if opener is urllib.request.urlopen else 0); continue
+            if k + 1 < tries: _nap(3, real, f"{model.split('/')[-1]} again (the service could not be reached)"); continue
             raise Unavailable("the model service could not be reached: " + str(e)[:200])
         ch = (d.get("choices") or [{}])[0].get("message") or {}
         text = ch.get("content") or ""
@@ -614,11 +685,53 @@ def selftest():
     assert as_json(chat("gemini:gemma-4-26b-a4b-it", ms, 50, picky)) == {"ok": True} and len(bodies) == 3 and bodies[-1]["messages"] == [{"role": "user", "content": "JSON only\n\nthe question"}] and "response_format" not in bodies[-1]
     chat("gemini:gemma-4-26b-a4b-it", ms, 50, picky); assert len(bodies) == 4 and ms[0]["role"] == "system"          # the second call is asked the way that worked, at once; the caller's own messages are untouched
     _quirks.clear()
+    # ---- a run's clock (19 November 2026) ----
+    # calls of one model asked for at the same moment each get their own: the gap between calls, and the minute's tokens
+    global STOP_AT
+    _last_call.pop("m1", None); _minute.pop("m1", None)
+    w1, e1 = _slot("m1", 4.0, 0, 100); w2, e2 = _slot("m1", 4.0, 0, 100); w3, e3 = _slot("m1", 4.0, 0, 100)
+    assert w1 == 0 and 3.9 < w2 <= 4.0 and 7.9 < w3 <= 8.0, (w1, w2, w3)
+    _give_back("m1", e3); w4, _ = _slot("m1", 4.0, 0, 100); assert 7.9 < w4 <= 8.0, w4                    # a moment given back is free again
+    _last_call.pop("m2", None); _minute.pop("m2", None)
+    a1, _ = _slot("m2", 1.0, 10000, 6000); a2, _ = _slot("m2", 1.0, 10000, 6000); a3, _ = _slot("m2", 1.0, 10000, 3000)
+    assert a1 == 0 and 60 < a2 <= 61.1 and a2 < a3 <= a2 + 1.1, (a1, a2, a3)                                # 6,000 + 6,000 do not fit one minute of 10,000: the second waits for the first to be a minute old; the third fits beside the second
+    assert _slot("m3", 4.0, 10000, 6000, real=False)[0] == 0 and _slot("m3", 4.0, 10000, 6000, real=False)[0] == 0        # a pretend call never waits
+    # the clock: past STOP_AT nothing is asked (Late, which the lane takes as "tried again in the next run"); before it, a call's own limit ends with it
+    asked = []
+    def net(req, timeout=0): asked.append(timeout); return Resp({"choices": [{"message": {"content": "fine"}}], "usage": {"prompt_tokens": 10, "completion_tokens": 2}})
+    keep_open = urllib.request.urlopen; urllib.request.urlopen = net; os.environ["GEMINI_API_KEY"] = "K2"; had2 = os.environ.get("GROQ_API_KEY"); os.environ["GROQ_API_KEY"] = "G2"
+    had_cf = {k: os.environ.get(k) for k in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID")}; os.environ["CLOUDFLARE_API_TOKEN"] = "T"; os.environ["CLOUDFLARE_ACCOUNT_ID"] = "ACC"
+    L = ledger(); L.update(neurons=0.0, groq_rolling={}); L.setdefault("svc", {}).pop("gemini", None); json.dump(L, open(LEDGER, "w"))
+    json.dump({"gemini": {"models": [{"match": "^gemma-4-", "rpm": 600, "rpd": 14400}]}}, open(FREE, "w"))
+    try:
+        for mdl in ("@cf/meta/llama-4-scout-17b-16e-instruct", "gemini:gemma-4-31b-it", "groq:openai/gpt-oss-20b"):
+            _last_call.clear(); _minute.clear(); n0 = len(asked)
+            STOP_AT = time.time() + 3
+            try: chat(mdl, [{"role": "user", "content": "x"}], 50); raise AssertionError("a call was begun with three seconds left: " + mdl)
+            except Late as e: assert "the time for this question was over" in str(e) and len(asked) == n0, (mdl, str(e))
+            STOP_AT = time.time() + 40
+            assert chat(mdl, [{"role": "user", "content": "x"}], 50) == "fine" and len(asked) == n0 + 1 and 5 <= asked[-1] <= 40, (mdl, asked[-1:])
+            STOP_AT = None
+            assert chat(mdl, [{"role": "user", "content": "x"}], 50) == "fine" and asked[-1] >= 80, (mdl, asked[-1:])          # no clock: the call's own limit
+        assert issubclass(Late, Unavailable) and time_left() is None
+        # a model that must wait out its minute past the clock is not waited for: Late at once, and the moment it had been given is free again
+        _last_call.clear(); _minute.clear(); json.dump({"gemini": {"models": [{"match": "^gemma-4-", "rpm": 600, "rpd": 14400, "tpm": 1000}]}}, open(FREE, "w"))
+        chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 600); STOP_AT = time.time() + 30; t0 = time.time()
+        try: chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 600); raise AssertionError("a call that had to wait a minute was waited for with thirty seconds left")
+        except Late as e: assert time.time() - t0 < 2 and "would have waited" in str(e), str(e)
+        assert sum(e[1] for e in _minute["gemini:gemma-4-31b-it"]) < 1000
+    finally:
+        STOP_AT = None; urllib.request.urlopen = keep_open; _last_call.clear(); _minute.clear()
+        if had2: os.environ["GROQ_API_KEY"] = had2
+        else: del os.environ["GROQ_API_KEY"]
+        for k, v in had_cf.items():
+            if v is None: os.environ.pop(k, None)
+            else: os.environ[k] = v
     FREE = keep_free; del os.environ["GEMINI_API_KEY"]
     for k in ("MISTRAL_API_KEY", "OPENROUTER_API_KEY", "ANTHROPIC_API_KEY"): del os.environ[k]
     if had: os.environ["GROQ_API_KEY"] = had
     LEDGER = keep
-    print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it)")
+    print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it; calls made at once each get their own moment; past a run's clock nothing is asked or waited for)")
 
 
 if __name__ == "__main__":
