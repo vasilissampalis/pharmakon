@@ -4,12 +4,29 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)
-== the blind reader's own check
-blind: cl_x v0.5.2: 6 lines read by 1 of 3 readers; not supported by a reader: how2
-blind: cl_none: no such claim
-blind_lines selftest: ok (every plain line and every sentence of the plain summary is read against the claim's text; a reader is given nothing but the text and the lines; a reader that cannot be asked or gives no verdict twice is said so and decides nothing; what each reader said of each line is kept in its own words)
-== plain lines of checked answers, read again by readers who wrote none of them
-blind: cl_can_smoked_cancer v0.5.2: 9 lines read by 2 of 2 readers; every line supported by every reader that answered
-blind: 1 answer(s) read
+== the answer within seconds, tried with the real model on the editor's own questions
+instant trial: 1 request(s); the lane's ledger leaves 6000 neurons today
+instant trial: "does kanna help with anxiety": 1 sentence(s) kept, 2 refused, 17039 ms
+instant trial: "is tianeptine addictive": nothing shown (nothing passed the checks), 3 refused, 13260 ms
+instant trial: "does cannabis help with migraines": 3 sentence(s) kept, 15261 ms
+instant trial: "does modafinil improve memory": nothing shown (nothing passed the checks), 3 refused, 10646 ms
+instant trial: "what is phenibut": 2 sentence(s) kept, 1 refused, 5077 ms
+instant trial: "does mdma lower serotonin for a long time": 1 sentence(s) kept, 2 refused, 8979 ms
+instant trial: "does cocaine cause nosebleeds": 1 sentence(s) kept, 2 refused, 5321 ms
+instant trial: "do magic mushrooms help cluster headaches": 1 sentence(s) kept, 2 refused, 12082 ms
+instant trial: "is ghb the same as gbl": 2 sentence(s) kept, 6557 ms
+instant trial: "why does weed make you hungry": nothing shown (nothing passed the checks), 3 refused, 10510 ms
+instant trial: "does adderall help you study": 2 sentence(s) kept, 4498 ms
+instant trial: "is xanax addictive": 2 sentence(s) kept, 1 refused, 6072 ms
+instant trial: "does ketamine help with depression": nothing shown (nothing passed the checks), 3 refused, 5145 ms
+instant trial: "does ibogaine help with addiction": 1 sentence(s) kept, 2 refused, 13618 ms
+instant trial: "is kratom addictive": 1 sentence(s) kept, 2 refused, 10623 ms
+instant trial: "does psilocybin help with depression": nothing shown (nothing passed the checks), 3 refused, 4938 ms
+instant trial: "does lsd change your personality": 1 sentence(s) kept, 2 refused, 6837 ms
+instant trial: "does nicotine help you concentrate": nothing shown (nothing passed the checks), 3 refused, 4246 ms
+instant trial: written data/auto/instant/trial-20261118T0005-0001.json (1472 neurons so far)
+== what it used, into the ledger
+llm: 1471.5 neurons written into the ledger for @cf/meta/llama-3.3-70b-instruct-fp8-fast
+llm: today 1472 of 6000 neurons
 == write
 lane: no request waiting
