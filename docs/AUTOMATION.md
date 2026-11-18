@@ -1156,6 +1156,44 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     without its line (the reference is there): a line that breaks a rule should be written again, not left out, where
     the short answer rests on that source; and the reader that reads the sources was out of reach (503) and its
     stand-in read on, as built.
+    **Two runs, one answer: the published answer was overwritten** (found 16:20 Athens). A run asked for by name
+    (lane-0019d, 15:32 to 16:17, slow because Europe PMC was) and the run GitHub's clock started (15:40) both wrote
+    that question. The clock's run published it at 15:56; at 16:17 the other run kept its own draft, which had not
+    passed, over it ("what a run found wins a clash with another run's copy of the same file"), and the next
+    publishing would have taken the answer off the site. Put back by the editor from the commit that held it
+    (`def72c7`), with its line in the state. **`tick.py settle`**, before a run keeps its records
+    (`.github/workflows/lane.yml`, `auto.yml`): where another run has kept an answer on main since this run began,
+    an answer that is published is not replaced by a draft that is not, and where both published one the one already
+    on main stays; this run's own published answer is kept over another run's draft, as before. Tested in a real
+    repository with two clones (the tick's own check).
+    **The two other answers of his list that went out that hour, read by the editor** (16:30 Athens).
+    `au_w_a0010`, "Does kanna help with anxiety?" (the fifth try; the writer had been told what the checker said of
+    the fourth: `gates.told`): "It can help. Kanna is identified as a potent plant for anxiety. It showed anti-anxiety
+    effects in zebrafish and reduced stress in rats." with the But "The human study was in healthy people, not in
+    people with clinical anxiety." Each statement is its source's (a 2021 review: "one of the most potent medicinal
+    plants used globally for the treatment of anxiety-associated conditions"; the zebrafish and the rats are named as
+    such). It stays. What is weak in it, for the rules: "It can help" opens an answer whose evidence in people is one
+    study of 16 healthy volunteers (an opening that promises a benefit should need evidence in people who have the
+    problem, as an opening that denies a danger needs more than its absence in one study); and the But speaks of "the
+    human study" that no line describes (its line was dropped by a reader). `au_w_a0013`, "Does kratom have
+    psychoactive effects?": the short answer and both lines are the reviews' own (stimulant and opioid-like effects;
+    which stands out depends on the amount; no number). **Held**: its But, "Relatively large amounts of kratom need
+    to be consumed before a noticeable psychoactive effect occurs" (a health charity's own words), tells a reader how
+    much it takes to feel the drug, which the site says nowhere; no rule caught it because it holds no number. A rule
+    does now (`NEEDED_FOR`: of the 523 sentences the lane had written by then, shown, refused or dropped, it stops
+    this one and no other; what tolerance is, and what a drug does at low and at high amounts, pass). The hold is of
+    the one version that run wrote (`data/auto/held.json`, "run"; `site/build.js`; `is_held`): the lane writes it
+    again in its next run with what the editor found, and that version is judged afresh; a draft that does not pass
+    does not bring the held one back.
+    **The twelfth trial, read** (15:37; the page's own names and key words; Europe PMC slow, so its times say nothing
+    of the plan: five questions had nothing back when its three askings were over). Titles on the question: parenting
+    and teenagers' drug use, loneliness, poverty, personality, cannabis in pregnancy (reviews), ketamine in pregnancy
+    (animal studies, said in their titles), addiction and genes (five of six). Beside it: "addiction" in other senses
+    (oncogene addiction, food addiction, social networking), "cognitive" for "smarter" (cognitive models and
+    therapy), three key words where two would do ("smoking", "pregnant", "baby": two papers, neither on it), a key
+    word that only repeats the subject ("addicted" under "addiction") with "others" beside it (six papers, none on
+    it). What follows for the page's key words and the server's searches is written into the next steps; each change
+    gets a trial.
     **Lane 19** (`scripts/auto/lane.py`). No gate is taken away. What code can mend is mended before a rule judges:
     a number of a sentence that stands in another item of a source the sentence already rests on puts that item
     under the sentence too, so that every reader reads the sentence beside it (`mend_uses`; never an item of another

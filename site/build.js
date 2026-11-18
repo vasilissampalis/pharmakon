@@ -268,7 +268,8 @@ const AUTO_STATE = (() => {
 const AUTO_SHOWN = (() => {
   // (2.21) a hold is of the version the editor read ("lane"): an answer written again by a newer lane is judged afresh by the gates and is not held by that entry
   const heldFile = path.join(ROOT, "data", "auto", "held.json"), heldOf = new Map((fs.existsSync(heldFile) ? (JSON.parse(fs.readFileSync(heldFile, "utf8")).held || []) : []).map(x => [x && x.id || x, x]));
-  const held = { has: (id, lane) => { const h = heldOf.get(id); return !!h && (typeof h !== "object" || h.lane == null || (+lane || 1) <= +h.lane); } };
+  // (2.21.1) "run": the hold is of the one version that run wrote (made.run): an answer of the SAME lane written again with what the editor found is judged afresh and shown
+  const held = { has: (id, lane, run) => { const h = heldOf.get(id); if (!h) return false; if (typeof h === "object" && h.run != null) return String(run || "") === String(h.run); return typeof h !== "object" || h.lane == null || (+lane || 1) <= +h.lane; } };
   const drugSlugs = new Set(site("substances.json").map(s => s.slug)), out = [], left = [];
   // an answer written by an older lane than data/auto/lane/policy.json allows is not shown (the lane writes it again)
   const minLane = +AUTO_POLICY.show_from_lane || 1; let older = 0, held_amounts = 0;
@@ -291,7 +292,7 @@ const AUTO_SHOWN = (() => {
   const timing = /\bre-?dos\w*|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\bsupplement\w*|\byou\s+(?:should|must|need to)\b/i;
   for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
     const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
-    if (a.status !== "published" || held.has(a.id, a.lane)) continue;
+    if (a.status !== "published" || held.has(a.id, a.lane, a.made && a.made.run)) continue;
     if ((+a.lane || 1) < minLane) { older++; continue; }
     if (a.kind === "amounts" && !AUTO_AMOUNTS) { held_amounts++; continue; }
     const part = k => (a.parts || []).filter(p => p.part === k || (k === "how" && /^how\d+$/.test(p.part))).map(p => String(p.text || "").trim()).filter(Boolean);

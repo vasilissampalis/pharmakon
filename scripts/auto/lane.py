@@ -745,7 +745,7 @@ WRITER_SYS = ("You write one answer for Pharmakon, a free drug encyclopedia that
               "- Everyday words: 'addicted' or 'dependent', 'withdrawal symptoms', 'the heart', 'the gut', 'works', 'stopping'. Not 'abstinence symptoms', 'withdrawal syndrome', 'pharmacological', 'cardiovascular', 'efficacy', 'cessation'.\n"
               "- Say who was studied when the findings say it (how many people, where, or that it was animals or a laboratory).\n"
               "- Keep every number exactly as the finding has it. Never claim more than the findings do: a link is not a cause; one study is not proof.\n"
-              "- Never give amounts, doses, timing between uses, or ways of taking a drug. Never say how to make an effect stronger. No advice: never 'you should'. Never call anything 'safe'.\n"
+              "- Never give amounts, doses, timing between uses, or ways of taking a drug. Never say how to make an effect stronger, or how much is needed to feel an effect. No advice: never 'you should'. Never call anything 'safe'.\n"
               "- Person-first words: 'people who use cannabis', 'people with an alcohol use disorder'. Never 'users', 'addicts', 'abusers', 'abuse', 'alcoholics', 'clean'.\n"
               "- No quotation marks, no brackets with sources, no mention of 'findings', 'passages' or 'the paper says F1'. Never write 'Paper A': say what it is, for example 'A 2024 review of case reports' or 'A survey of 278 people'.\n"
               "- Write 'times', never the sign ×. Write 'people who microdose', 'people who smoke', 'people who drink', never 'microdosers', 'smokers', 'drinkers'. Write 'use' or 'use disorder', never 'abuse' or 'misuse'.\n"
@@ -1309,6 +1309,15 @@ def mend_uses(parts, labels, years=(), asked=()):
     return mended
 
 
+# (lane 19, 18 November 2026) "Relatively large amounts of kratom need to be consumed before a noticeable psychoactive effect occurs" was the But of a published
+# answer: a health charity's own words, with no number in them, and yet it tells a reader how much it takes to feel the drug. The site gives no such guidance
+# anywhere. Narrow by design: of the 523 sentences the lane had written by that day (shown, refused or dropped) it stops this one and no other; what tolerance
+# is (more is needed for the same effect) is a fact about dependence and is not stopped.
+NEEDED_FOR = re.compile(r"\b(?:amounts?|doses?|quantit(?:y|ies))\b[^.]{0,60}\b(?:needs?|needed|required|necessary|must|have to|has to)\b[^.]{0,40}\b(?:to be (?:consumed|taken|used|eaten|swallowed|smoked)|before|to (?:feel|get|notice|produce|have|reach|achieve|experience))\b[^.]{0,60}\b(?:effects?|high)\b"
+                        r"|\b(?:takes?|needs?|requires?)\s+(?:a\s+)?(?:relatively\s+|fairly\s+|quite\s+|very\s+)?(?:large|larger|high|higher|big|bigger)\s+(?:amounts?|doses?)\b[^.]{0,60}\b(?:to|before|for)\b[^.]{0,40}\b(?:effects?|high|feel\w*)\b", re.I)
+NEEDED_SKIP = re.compile(r"\btoleran\w*|\bsame effect\b", re.I)
+
+
 def rules(parts, labels, years=(), asked=()):
     """What the site's content rules have against a draft: [(part, what)]. Empty when nothing. years: the years the answer's
     sources were published. A sentence may name the year of a source IT rests on ("a 2022 review"), not another source's
@@ -1319,6 +1328,9 @@ def rules(parts, labels, years=(), asked=()):
         for what, rx in RULES:
             m = rx.search(p["text"])
             if m: bad.append((p["part"], f"{what} (“{m.group(0)}”)"))
+        for sent in re.split(r"(?<=[.!?])\s+", p["text"]):
+            m = NEEDED_FOR.search(sent)
+            if m and not NEEDED_SKIP.search(sent): bad.append((p["part"], f"how much is needed for an effect (“{m.group(0)}”): say what the drug does, never how much it takes to feel it")); break
         if words(p["text"]) > LIMITS.get(p["part"], 40): bad.append((p["part"], f"too long ({words(p['text'])} words)"))
         # (lane 16) what a source reports from another study is not what that source found
         cited = [u for u in p["uses"] if labels[u].get("second_hand")]; m = OWN_FIND.search(p["text"])
@@ -2051,6 +2063,19 @@ def held_say(aid, lane=None):
     return next((re.sub(r"\s+", " ", str(h.get("say") or ""))[:600] for h in held if isinstance(h, dict) and h.get("id") == aid and h.get("say")), "")
 
 
+def is_held(rec, held=None):
+    """Does the editor hold THIS version of an answer (data/auto/held.json)? By the run that wrote it where the hold names one ("run": site 2.21.1), else by its
+    lane (a hold of lane N holds every version written by lane N or older). The same test as site/build.js makes before it shows an answer."""
+    if held is None:
+        try: held = json.load(open(ROOT / "data" / "auto" / "held.json", encoding="utf-8")).get("held") or []
+        except (OSError, ValueError): return False
+    for h in held:
+        if isinstance(h, dict) and h.get("id") == (rec or {}).get("id"):
+            if h.get("run") is not None: return str(((rec or {}).get("made") or {}).get("run") or "") == str(h["run"])
+            return h.get("lane") is None or int((rec or {}).get("lane") or 1) <= int(h["lane"])
+    return False
+
+
 def last_refusal(before):
     """(lane 19, 18 November 2026) What the readers said of the last draft of an answer that was not accepted, for the writer of the next one: "" where there is
     none. A question that is tried again by itself was written afresh each time by a writer that knew nothing of why the last draft fell, and the same
@@ -2193,7 +2218,8 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         if rec["status"] == "waiting" and not rec.get("for"): rec["for"] = "editor"      # (held for the editor's first reading of a kind: hold_new)
         # (lane 19) the second look at an answer that is shown: if it does not pass, the answer that is shown stays, with a note of what the second look made of
         # it (until lane 18 the answer was replaced by "no answer", and a reader lost what they had)
-        if before and before.get("status") == "published" and rec["status"] != "published" and int(before.get("lane") or 1) >= shown_from():
+        # (not where the editor holds the version that is "shown": that one is not shown, and a draft that did not pass does not bring it back)
+        if before and before.get("status") == "published" and not is_held(before) and rec["status"] != "published" and int(before.get("lane") or 1) >= shown_from():
             before["second_look"] = {"on": TODAY, "lane": LANE, "status": rec["status"], "why": rec["why"], "short": next((p.get("text") for p in rec.get("parts") or [] if p.get("part") == "short"), "")}
             json.dump(before, open(OUT / (rec["id"] + ".json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
             note_try(w, "published", (before.get("why") or "") + f"; a second look by lane {LANE} did not pass ({rec['why'][:160]}): the answer of lane {before.get('lane')} stays", kind=before.get("kind") or "", complete=before.get("complete"))
@@ -2845,6 +2871,14 @@ def selftest():
     calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found, chat_gap, Enc(), M2, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
     assert r["status"] == "waiting" and r["for"] == "again" and r["soft"] and "worked on again by itself" in r["why"], (r["status"], r["why"], r.get("for"))
+    # how much is needed for an effect: refused as a rule, in any part; what tolerance is, and what a drug does at low and at high amounts, are not
+    nf = lambda s: [w for _, w in rules([{"part": "but", "text": s, "uses": []}], {})]
+    assert any(w.startswith("how much is needed for an effect") for w in nf("Relatively large amounts of kratom need to be consumed before a noticeable psychoactive effect occurs.")) and any(w.startswith("how much is needed") for w in nf("It takes a large amount to feel anything."))
+    assert not nf("With tolerance, higher doses are needed to feel the same effect.") and not nf("The mix depends on the dose, with stimulant effects at low amounts and opioid effects at higher doses.") and not nf("Larger doses produce more pronounced psychoactive effects.")
+    # which version the editor holds: the one a named run wrote, or every version up to a lane
+    hl = [{"id": "au_w_1", "lane": 19, "run": "77"}, {"id": "au_w_2", "lane": 18}, "au_w_3"]
+    assert is_held({"id": "au_w_1", "lane": 19, "made": {"run": "77"}}, hl) and not is_held({"id": "au_w_1", "lane": 19, "made": {"run": "78"}}, hl) and is_held({"id": "au_w_2", "lane": 18, "made": {"run": "5"}}, hl)
+    assert not is_held({"id": "au_w_2", "lane": 19}, hl) and not is_held({"id": "au_w_9", "lane": 1}, hl) and not is_held(None, hl)
     # the editor's note goes to the writer
     calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, note="say what people report, as reports")

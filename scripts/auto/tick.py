@@ -144,6 +144,52 @@ def publish():
     except Exception as e: print("tick: the publishing run could not be asked for (" + type(e).__name__ + "); the end of this run asks again")
 
 
+def settle_pick(ours, theirs, was):
+    """Whose record of an answer stays when two runs wrote the same answer at the same time: "ours" (this run's) or "theirs" (the one another run has kept on
+    main meanwhile). was: the record as it stood when this run began. (18 November 2026: a run asked for by name and the run of the clock both wrote "Do
+    mothers worry about their children taking drugs?". The clock's answer passed every gate and was published at 15:56; twenty minutes later the other run
+    kept its own failed draft over it, by the rule "what a run found wins", and the answer would have left the site.) The lane's rule for a second look holds
+    between runs too: an answer that is published is not replaced by a draft that is not; where both runs published one, the one already on main stays."""
+    if not isinstance(ours, dict) or not isinstance(theirs, dict) or theirs == was or theirs == ours: return "ours"      # nobody else wrote it meanwhile
+    if theirs.get("status") == "published" and int(theirs.get("lane") or 0) >= int(ours.get("lane") or 0): return "theirs"
+    return "ours"
+
+
+def settle(root=None):
+    """Before a run keeps its records: where another run has kept an answer on main since this run began, settle_pick says whose stays; theirs is put back as
+    it stands on main, with its line in the lane's state. Returns the questions put back. Never a reason for a run to fail: any fault leaves things as they were."""
+    root = pathlib.Path(root or ROOT); import re
+    git = lambda *a: subprocess.run(["git", *a], cwd=root, capture_output=True, text=True)
+    def show(rev, path):
+        r = git("show", f"{rev}:{path}")
+        try: return json.loads(r.stdout) if r.returncode == 0 and r.stdout.strip() else None
+        except ValueError: return None
+    back = []
+    try:
+        if git("fetch", "-q", "origin", "main").returncode != 0: print("settle: main could not be fetched; nothing settled"); return back
+        base = git("merge-base", "HEAD", "origin/main").stdout.strip()
+        if not base: print("settle: no common point with main; nothing settled"); return back
+        theirs_state = None
+        for path in git("diff", "--name-only", base, "origin/main", "--", "data/auto/answers").stdout.split():
+            if not re.fullmatch(r"data/auto/answers/au_w_[a-z0-9_]{1,40}\.json", path): continue
+            f = root / path
+            try: ours = json.load(open(f, encoding="utf-8"))
+            except (OSError, ValueError): continue                               # this run holds no record of it: main's comes with the pull
+            theirs = show("origin/main", path)
+            if settle_pick(ours, theirs, show(base, path)) != "theirs": continue
+            f.write_text(git("show", f"origin/main:{path}").stdout, encoding="utf-8")
+            wid = str(theirs.get("from") or path.rsplit("au_", 1)[1][:-5])
+            if theirs_state is None: theirs_state = (show("origin/main", "data/auto/lane/state.json") or {}).get("items") or {}
+            sf = root / "data" / "auto" / "lane" / "state.json"
+            try: st = json.load(open(sf, encoding="utf-8"))
+            except (OSError, ValueError): st = None
+            if st and wid in theirs_state: st.setdefault("items", {})[wid] = theirs_state[wid]; json.dump(st, open(sf, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            back.append(wid)
+    except Exception as e: print("settle: left as it was (" + type(e).__name__ + ")")
+    print("settle:", (", ".join(back) + ": another run published an answer meanwhile; it stays, and this run's draft is not kept over it") if back else "nothing to settle")
+    return back
+
+
 def did(kind):
     t = counts(); t[kind] = t.get(kind, 0) + 1; TICK.parent.mkdir(parents=True, exist_ok=True); json.dump(t, open(TICK, "w", encoding="utf-8"), indent=1)
     if kind == "deploy":
@@ -166,6 +212,29 @@ def selftest():
     st["items"]["w_2"] = {"status": "published", "last": new, "lane": L.LANE - 1}; assert lane_has_work(st, items, 5000, t, False, kept=lambda w: False)[0] is True         # written by an older lane: written again
     assert deploy_needed(t, "abc", {"inputs": "abc"})[0] is False and deploy_needed(t, "abd", {"inputs": "abc"})[0] is True and deploy_needed(dict(t, deploy=DEPLOY_A_DAY), "abd", {"inputs": "abc"})[0] is False
     a = inputs(); assert len(a) == 24 and a == inputs()
+    # two runs, one answer: a published answer on main is not replaced by this run's draft that is not; anything else is kept as this run found it
+    pub, non = {"status": "published", "lane": 19, "made": {"run": "1"}}, {"status": "none", "lane": 19, "made": {"run": "2"}}
+    assert settle_pick(non, pub, None) == "theirs" and settle_pick(non, pub, {"status": "waiting", "lane": 18}) == "theirs" and settle_pick(dict(pub, made={"run": "2"}), pub, None) == "theirs"
+    assert settle_pick(pub, non, None) == "ours" and settle_pick(non, dict(non, made={"run": "1"}), None) == "ours" and settle_pick(non, pub, pub) == "ours" and settle_pick(non, None, None) == "ours"
+    assert settle_pick(dict(non, lane=20), pub, None) == "ours"                                                                                  # a newer lane's word stands over an older lane's answer
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:                                      # the same in a real repository: main moves on while a run works
+        up, me, other = pathlib.Path(td) / "up.git", pathlib.Path(td) / "me", pathlib.Path(td) / "other"
+        g = lambda where, *a_: subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@example.org", "-c", "init.defaultBranch=main", *a_], cwd=where, capture_output=True, text=True, check=True)
+        subprocess.run(["git", "-c", "init.defaultBranch=main", "init", "-q", "--bare", str(up)], capture_output=True, check=True); g(td, "clone", "-q", str(up), str(me))
+        (me / "data/auto/answers").mkdir(parents=True); (me / "data/auto/lane").mkdir(parents=True)
+        wj = lambda where, rel, obj: (where / rel).write_text(json.dumps(obj, ensure_ascii=False, indent=1), encoding="utf-8")
+        wj(me, "data/auto/answers/au_w_a1.json", {"from": "w_a1", "status": "none", "lane": 19, "made": {"run": "0"}}); wj(me, "data/auto/answers/au_w_a2.json", {"from": "w_a2", "status": "none", "lane": 19, "made": {"run": "0"}})
+        wj(me, "data/auto/lane/state.json", {"items": {"w_a1": {"status": "none"}, "w_a2": {"status": "none"}}})
+        g(me, "checkout", "-q", "-b", "main"); g(me, "add", "-A"); g(me, "commit", "-q", "-m", "start"); g(me, "push", "-q", "-u", "origin", "main"); g(td, "clone", "-q", str(up), str(other))
+        wj(other, "data/auto/answers/au_w_a1.json", {"from": "w_a1", "status": "published", "lane": 19, "made": {"run": "1"}}); wj(other, "data/auto/lane/state.json", {"items": {"w_a1": {"status": "published", "why": "passed every gate"}, "w_a2": {"status": "none"}}})
+        g(other, "add", "-A"); g(other, "commit", "-q", "-m", "the other run published one"); g(other, "push", "-q")
+        wj(me, "data/auto/answers/au_w_a1.json", {"from": "w_a1", "status": "none", "lane": 19, "made": {"run": "2"}}); wj(me, "data/auto/answers/au_w_a2.json", {"from": "w_a2", "status": "published", "lane": 19, "made": {"run": "2"}})
+        wj(me, "data/auto/lane/state.json", {"items": {"w_a1": {"status": "none", "why": "no draft passed"}, "w_a2": {"status": "published"}}})
+        assert settle(me) == ["w_a1"]
+        st2 = json.load(open(me / "data/auto/lane/state.json", encoding="utf-8"))["items"]
+        assert json.load(open(me / "data/auto/answers/au_w_a1.json", encoding="utf-8"))["made"]["run"] == "1" and st2["w_a1"] == {"status": "published", "why": "passed every gate"} and st2["w_a2"] == {"status": "published"}
+        assert json.load(open(me / "data/auto/answers/au_w_a2.json", encoding="utf-8"))["status"] == "published" and settle(me) == []     # this run's own answer is kept; settled once, nothing more to settle
     assert lane_has_work(st, items, 5000, t, "the editor's reason", kept=lambda w: False)[0] is False                                         # the editor's pause stops it
     print(f"tick selftest: ok (the lane starts for a question never tried, written by an older lane or without an answer since the day before, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
 
@@ -176,6 +245,7 @@ if __name__ == "__main__":
     elif a[:1] == ["plan"]: plan()
     elif a[:1] == ["after"]: after(a[a.index("--asked") + 1] if "--asked" in a and a.index("--asked") + 1 < len(a) else None)
     elif a[:1] == ["publish"]: publish()
+    elif a[:1] == ["settle"]: settle()
     elif a[:1] == ["inputs"]: print(inputs())
     elif a[:1] == ["did"] and a[1:2] and a[1] in ("lane", "deploy"): did(a[1])
     else: sys.exit(__doc__)

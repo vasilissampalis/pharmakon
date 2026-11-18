@@ -28,6 +28,10 @@ the way back in the bar).
    line that breaks a rule (the source's own word "abuse") is left out, and the short answer's sentence that rests on that source then
    stands without its line: write such a line again (as the short answer is), and where it still cannot stand, take the sentence that rests
    only on that source out of the short answer.
+   Also read (decision 32): `au_w_a0010` (kanna and anxiety: stays) and `au_w_a0013` (kratom: held, written again). Rules they call for,
+   each measured on the lane's own sentences before it is switched on: an opening that PROMISES a benefit ("It can help", "Yes" to "does X
+   help with Y") only where a source read in full studied people who have Y (the mirror of the rule for an opening that denies a danger); a
+   But that speaks of a study must have that study's line beside it.
    (b) **Measure the times and only then let the page promise them.** For each question a person sent: when it arrived (the store's day is
    too coarse: use the run that first listed it), when its answer was kept, when it was published (`data/auto/deploy/`). `policy.loop` goes
    true, and the page says "usually within N minutes", only when twenty sent questions in a row kept that N. Until then the page promises
@@ -49,6 +53,10 @@ the way back in the bar).
    also asked as "pregnancy", nor "baby" as "infant"; "others", "another", "else" are no key words; a key word that only repeats the
    subject ("addicted" under "addiction") should not count as one. Words under the titles of these kinds: only after a trial that reads
    every line; for pregnancy and children titles only stays, unless he says otherwise.
+   From the twelfth trial (read; decision 32), each with a trial of its own: the name "addiction" needs a word beside it in the paper
+   (drug, substance, alcohol, opioid, nicotine, dependence: the server's FIND_CTX), or cancer's "oncogene addiction" and "food addiction"
+   come back; a question about pregnancy or children gets two key words at most, the ones about pregnancy or the child first; "smarter" as
+   "cognitive" finds cognitive models and therapy: find a better word or none.
    (e2) **A second index for the hours when Europe PMC is slow** (18 November, afternoon: 25 seconds a search; site 2.21.1 made the page
    patient and truthful about it, not fast). PubMed's own interface (NCBI E-utilities: no key needed at a few requests a second; search,
    then the records with their summaries) asked beside Europe PMC, the first that answers gives the list; no "most cited" order there, so

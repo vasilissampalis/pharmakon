@@ -105,6 +105,7 @@ jobs:
           t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)
           pathlib.Path("data/auto/lane/_last-run.txt").write_text(t[-12000:], encoding="utf-8")
           PY
+          python3 -I scripts/auto/tick.py settle || true   # (18 November 2026) an answer another run published meanwhile is not replaced by this run's draft that did not pass
           git add -A data/auto
           git diff --cached --quiet || git commit -q -m "Lane: what the system wrote, and what each gate said"
           git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)   # what a run found wins a clash with another run's copy of the same file
