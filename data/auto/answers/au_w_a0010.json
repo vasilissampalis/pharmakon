@@ -19,32 +19,33 @@
   "models": {
    "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team H",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3-flash-preview",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44305514291",
+  "run": "44307600013",
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 685.1
+  "neurons": 0.0
  },
  "status": "none",
- "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that kanna was identified as a potent anxiolytic plant 'in a lab'.",
+ "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure",
  "gates": {
+  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): gpt-oss-20b read from there",
   "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3.6-flash accepted 1 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.28, but 0.75, how1 0.45, how2 0.09",
-  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that kanna was identified as a potent anxiolytic plant 'in a lab'.; but: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage states the study was conducted on '16 healthy participants', but it does not state 'not people with clinical anxiety'.; how1: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage states the study scanned '16 healthy participants', not specifically '16 healthy adults'.; how2: accepted",
-  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + DB (16)"
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: short + DB (16)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.05, but 0.31, how1 0.09, how2 0.47",
+  "check": "short: NOT accepted: our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure; but: accepted; how1: accepted; how2: accepted",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3-flash-preview accepted 4 of 4"
  },
  "sources": [
   {
@@ -222,22 +223,22 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-    "text": "Double‑blind, placebo‑controlled, cross‑over fMRI study on 16 healthy adults"
+    "text": "Double‑blind, placebo‑controlled, cross‑over fMRI study of 16 healthy adults"
    },
    "findings": [
     {
      "passage": 21,
      "where": "RESULTS › PLT",
      "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-     "text": "Zembrin significantly reduces amygdala activity to fearful faces under low‑load conditions.",
+     "text": "Zembrin significantly reduced amygdala activity to fearful faces under low‑load conditions.",
      "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 27,
      "where": "DISCUSSION",
-     "quote": "Using two independent fMRI designs, we show that Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
-     "text": "Zembrin reduces amygdala–hypothalamus coupling.",
+     "quote": "Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
+     "text": "Zembrin reduced amygdala–hypothalamus coupling.",
      "id": "F5",
      "second_hand": ""
     },
@@ -256,7 +257,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "efficacy in diagnosed anxiety disorders",
+ "missing": "effectiveness in people with clinical anxiety",
  "wanted": [
   {
    "doi": "10.1016/j.jep.2016.12.004",
@@ -288,6 +289,14 @@
    "lane": 19,
    "status": "none",
    "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "none",
+   "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that kanna was identified as a potent anxiolytic plant 'in a lab'.",
    "short": "",
    "complete": false
   }
@@ -335,8 +344,8 @@
     },
     {
      "kind": "limit",
-     "text": "The study examined only a single acute dose of Zembrin, so long‑term effects are unknown.",
-     "quote": "Using two independent fMRI designs, we show that Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
+     "text": "The study examined only a single dose of Zembrin, so long‑term effects are unknown.",
+     "quote": "In this pharmaco‑fMRI study, we tested the effects of a single administration of Zembrin, a S. tortuosum extract that can be characterized as a dual PDE4 and 5‑HT reuptake inhibitor.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -344,83 +353,45 @@
  ],
  "plan": {
   "short": [
-   "F4",
    "F3",
    "F1",
-   "F2"
+   "F2",
+   "F4"
   ],
-  "direct": "It can",
+  "direct": "Yes",
   "but": [
    "F6"
   ],
   "how": [
    [
-    "DB",
-    "F4",
-    "F5"
-   ],
-   [
     "DA",
     "F3",
     "F1",
     "F2"
+   ],
+   [
+    "DB",
+    "F4",
+    "F5"
    ]
   ],
-  "unanswered": "efficacy in diagnosed anxiety disorders"
- },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    false,
-    "The passages do not state that kanna was identified as a potent anxiolytic plant 'in a lab'."
-   ],
-   "but": [
-    false,
-    "The passage states the study was conducted on '16 healthy participants', but it does not state 'not people with clinical anxiety'."
-   ],
-   "how1": [
-    false,
-    "The passage states the study scanned '16 healthy participants', not specifically '16 healthy adults'."
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  }
+  "unanswered": "effectiveness in people with clinical anxiety"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.2788,
-   "but": 0.749,
-   "how1": 0.4492,
-   "how2": 0.0877
+   "short": 0.0475,
+   "but": 0.3077,
+   "how1": 0.0872,
+   "how2": 0.4655
   },
   "scores_quotes_alone": {
-   "short": 0.4711,
-   "but": 0.7252,
-   "how1": 0.1503,
-   "how2": 0.0325
+   "short": 0.0716,
+   "but": 0.0578,
+   "how1": 0.0314,
+   "how2": 0.1501
   }
  },
  "tries": [
@@ -430,15 +401,8 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can help. In a lab, kanna was called a strong plant for anxiety. In a brain scan, it lowered fear reactions in healthy adults.",
+     "text": "Yes. Laboratory studies call kanna a potent anxiolytic. In zebrafish and rats, it showed anti-anxiety effects. In 16 healthy adults, it reduced brain activity linked to fear.",
      "rests_on": [
-      {
-       "label": "F4",
-       "ref": "terburg_2013",
-       "where": "RESULTS › PLT",
-       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-       "sha": "e3fbfd9512c94396"
-      },
       {
        "label": "F3",
        "ref": "manganyi_2021",
@@ -459,38 +423,6 @@
        "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
        "quote": "Behavior assessments showed reduced stress on lower dose Sceletium.",
        "sha": "f4eebcc792659366"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that kanna was called a strong plant for anxiety \"in a lab\"; they state it was identified as one of the most potent medicinal plants used globally."
-    },
-    {
-     "part": "but",
-     "text": "The brain scan study only looked at healthy people, not people with clinical anxiety.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Although clinically anxious individuals show such threat interference in general, healthy individuals can successfully ignore task‑irrelevant stimuli under high task demands.",
-       "sha": "354d675da7f1d2e8"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states the study used 16 healthy participants, but it does not state that the study \"only looked at healthy people, not people with clinical anxiety.\""
-    },
-    {
-     "part": "how1",
-     "text": "A 2013 brain scan study of 16 healthy adults found kanna lowered brain activity linked to fear and stress.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-       "sha": "89076b899c033ad3"
       },
       {
        "label": "F4",
@@ -500,86 +432,20 @@
        "sha": "e3fbfd9512c94396"
       },
       {
-       "label": "F5",
+       "label": "DB",
        "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Using two independent fMRI designs, we show that Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
-       "sha": "55ed486188e17ebe"
+       "where": "Abstract",
+       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
+       "sha": "89076b899c033ad3"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "Passages report lowered amygdala activity linked to fear, but do not mention stress; the claim of lowering activity linked to stress is not supported."
-    },
-    {
-     "part": "how2",
-     "text": "A 2021 review says kanna is a strong plant for anxiety. It showed anti-anxiety effects in fish and rats.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "manganyi_2021",
-       "where": "Abstract",
-       "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
-       "sha": "926eab80cf3dad03"
-      },
-      {
-       "label": "F3",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
-       "sha": "df732afa78c2969f"
-      },
-      {
-       "label": "F1",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-       "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
-       "sha": "eac5b4c9f6b450a2"
-      },
-      {
-       "label": "F2",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-       "quote": "Behavior assessments showed reduced stress on lower dose Sceletium.",
-       "sha": "f4eebcc792659366"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passages describe anti‑anxiety effects in zebrafish, but for rats they report anti‑stress effects, not anti‑anxiety effects."
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It can help. In a lab, kanna was identified as a potent plant for anxiety. In a brain scan study, it reduced activity in the fear center.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
-       "sha": "df732afa78c2969f"
-      },
-      {
-       "label": "F4",
-       "ref": "terburg_2013",
-       "where": "RESULTS › PLT",
-       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-       "sha": "e3fbfd9512c94396"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that kanna was identified as a potent plant for anxiety 'in a lab', nor do they identify the amygdala as the 'fear center'."
+     "said": "The passages state that 20 young healthy volunteers (not 16) were used in the clinical study mentioned in the review, and the 16 healthy patients/participants were part of a human study/fMRI study, not the zebrafish and rat studies."
     },
     {
      "part": "but",
-     "text": "The brain scan study was done on 16 healthy adults, not people with clinical anxiety.",
+     "text": "The human study only looked at healthy people, not people with clinical anxiety.",
      "rests_on": [
       {
        "label": "F6",
@@ -587,171 +453,13 @@
        "where": "DISCUSSION",
        "quote": "Although clinically anxious individuals show such threat interference in general, healthy individuals can successfully ignore task‑irrelevant stimuli under high task demands.",
        "sha": "354d675da7f1d2e8"
-      },
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-       "sha": "89076b899c033ad3"
       }
      ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages state that the study was done on '16 healthy participants', but do not state that they were 'adults' or explicitly specify 'not people with clinical anxiety'."
+     "ok": true
     },
     {
      "part": "how1",
-     "text": "A 2013 brain scan study of 16 healthy adults found kanna reduced activity in the amygdala and its link to the hypothalamus.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-       "sha": "89076b899c033ad3"
-      },
-      {
-       "label": "F4",
-       "ref": "terburg_2013",
-       "where": "RESULTS › PLT",
-       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-       "sha": "e3fbfd9512c94396"
-      },
-      {
-       "label": "F5",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Using two independent fMRI designs, we show that Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
-       "sha": "55ed486188e17ebe"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages describe the study subjects as '16 healthy participants', not '16 healthy adults'."
-    },
-    {
-     "part": "how2",
-     "text": "A 2021 review says kanna is a potent plant for anxiety. It showed anti-anxiety effects in zebrafish and reduced stress in rats.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "manganyi_2021",
-       "where": "Abstract",
-       "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
-       "sha": "926eab80cf3dad03"
-      },
-      {
-       "label": "F3",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
-       "sha": "df732afa78c2969f"
-      },
-      {
-       "label": "F1",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-       "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
-       "sha": "eac5b4c9f6b450a2"
-      },
-      {
-       "label": "F2",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-       "quote": "Behavior assessments showed reduced stress on lower dose Sceletium.",
-       "sha": "f4eebcc792659366"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention that the plant reduced stress in rats (they report that behavior assessments showed reduced stress on lower dose Sceletium and reduced stress-induced corticosterone concentrations, but do not specify the animal s"
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It can help. In a lab, kanna was identified as a potent anxiolytic plant. In a brain scan study, it reduced activity in the amygdala.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "manganyi_2021",
-       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
-       "sha": "df732afa78c2969f"
-      },
-      {
-       "label": "F4",
-       "ref": "terburg_2013",
-       "where": "RESULTS › PLT",
-       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-       "sha": "e3fbfd9512c94396"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that kanna was identified as a potent anxiolytic plant 'in a lab'."
-    },
-    {
-     "part": "but",
-     "text": "The brain scan study was done on 16 healthy participants, not people with clinical anxiety.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Although clinically anxious individuals show such threat interference in general, healthy individuals can successfully ignore task‑irrelevant stimuli under high task demands.",
-       "sha": "354d675da7f1d2e8"
-      },
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-       "sha": "89076b899c033ad3"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states the study was conducted on '16 healthy participants', but it does not state 'not people with clinical anxiety'."
-    },
-    {
-     "part": "how1",
-     "text": "A 2013 study scanned 16 healthy adults. It found kanna reduced amygdala activity to fearful faces and lowered amygdala-hypothalamus coupling.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "terburg_2013",
-       "where": "Abstract",
-       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-       "sha": "89076b899c033ad3"
-      },
-      {
-       "label": "F4",
-       "ref": "terburg_2013",
-       "where": "RESULTS › PLT",
-       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-       "sha": "e3fbfd9512c94396"
-      },
-      {
-       "label": "F5",
-       "ref": "terburg_2013",
-       "where": "DISCUSSION",
-       "quote": "Using two independent fMRI designs, we show that Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
-       "sha": "55ed486188e17ebe"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states the study scanned '16 healthy participants', not specifically '16 healthy adults'."
-    },
-    {
-     "part": "how2",
-     "text": "A 2021 review says kanna is a potent anxiolytic plant. It found anti-anxiety effects in zebrafish and reduced stress in rats.",
+     "text": "A 2021 review says kanna is a potent anxiolytic. In zebrafish, it showed anti-anxiety activity. In rats, lower doses reduced stress indicators.",
      "rests_on": [
       {
        "label": "DA",
@@ -783,42 +491,291 @@
       }
      ],
      "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2013 scan study of 16 healthy adults found kanna reduced amygdala activity to fearful faces and lowered amygdala-hypothalamus coupling.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F4",
+       "ref": "terburg_2013",
+       "where": "RESULTS › PLT",
+       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
+       "sha": "e3fbfd9512c94396"
+      },
+      {
+       "label": "F5",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
+       "sha": "55ed486188e17ebe"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Laboratory studies in zebrafish and rats found kanna reduced stress and anxiety signs. A human brain scan study found it lowered activity in the fear center.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
+       "sha": "df732afa78c2969f"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
+       "sha": "eac5b4c9f6b450a2"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
+       "quote": "Behavior assessments showed reduced stress on lower dose Sceletium.",
+       "sha": "f4eebcc792659366"
+      },
+      {
+       "label": "F4",
+       "ref": "terburg_2013",
+       "where": "RESULTS › PLT",
+       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
+       "sha": "e3fbfd9512c94396"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passages do not use the term 'fear center' (they refer to the amygdala, threat circuitry, or threat system). Additionally, the sentence attributes both reduced stress and anxiety signs to both zebrafish and rats, whereas the passages o"
+    },
+    {
+     "part": "but",
+     "text": "The human study only looked at healthy people, not people with clinical anxiety.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although clinically anxious individuals show such threat interference in general, healthy individuals can successfully ignore task‑irrelevant stimuli under high task demands.",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says kanna is a potent anxiolytic plant. It notes zebrafish showed anti-anxiety effects and rats had reduced stress at lower doses.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
+       "sha": "df732afa78c2969f"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
+       "sha": "eac5b4c9f6b450a2"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
+       "quote": "Behavior assessments showed reduced stress on lower dose Sceletium.",
+       "sha": "f4eebcc792659366"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2013 brain scan study of 16 healthy adults found kanna reduced activity in the amygdala and its link to the hypothalamus.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F4",
+       "ref": "terburg_2013",
+       "where": "RESULTS › PLT",
+       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
+       "sha": "e3fbfd9512c94396"
+      },
+      {
+       "label": "F5",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
+       "sha": "55ed486188e17ebe"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Laboratory studies call kanna a potent anxiolytic. It showed anti-anxiety activity in zebrafish and reduced stress indicators in rats.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
+       "sha": "df732afa78c2969f"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
+       "sha": "eac5b4c9f6b450a2"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
+       "quote": "Behavior assessments showed reduced stress on lower dose Sceletium.",
+       "sha": "f4eebcc792659366"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure"
+    },
+    {
+     "part": "but",
+     "text": "The human brain scan study was done in healthy adults, not in people with clinical anxiety.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Although clinically anxious individuals show such threat interference in general, healthy individuals can successfully ignore task‑irrelevant stimuli under high task demands.",
+       "sha": "354d675da7f1d2e8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says kanna is a potent anxiolytic. It found anti-anxiety activity in zebrafish and reduced stress in rats.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa, specifically to the native San and Khoikhoi tribes.",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "Sharma and co-workers identified S. tortuosum as one of the most potent medicinal plants used globally for the treatment of anxiety-associated conditions and anxiety.",
+       "sha": "df732afa78c2969f"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
+       "quote": "S. tortuosum displayed an anti-anxiety effect in zebrafish larvae.",
+       "sha": "eac5b4c9f6b450a2"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
+       "quote": "Behavior assessments showed reduced stress on lower dose Sceletium.",
+       "sha": "f4eebcc792659366"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2013 brain scan study of 16 healthy adults found kanna reduced amygdala activity to fearful faces and lowered amygdala-hypothalamus coupling.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "terburg_2013",
+       "where": "Abstract",
+       "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
+       "sha": "89076b899c033ad3"
+      },
+      {
+       "label": "F4",
+       "ref": "terburg_2013",
+       "where": "RESULTS › PLT",
+       "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
+       "sha": "e3fbfd9512c94396"
+      },
+      {
+       "label": "F5",
+       "ref": "terburg_2013",
+       "where": "DISCUSSION",
+       "quote": "Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
+       "sha": "55ed486188e17ebe"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A 2013 study scanned 16 healthy adults. It found kanna reduced amygdala activity to fearful faces and lowered amygdala-hypothalamus coupling.",
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "terburg_2013",
-     "where": "Abstract",
-     "quote": "In a double‑blind, placebo‑controlled, cross‑over design, 16 healthy participants were scanned during performance in a perceptual‑load and an emotion‑matching task.",
-     "sha": "89076b899c033ad3"
-    },
-    {
-     "label": "F4",
-     "ref": "terburg_2013",
-     "where": "RESULTS › PLT",
-     "quote": "As hypothesized, the three‑way interaction was due to a significant attenuation of amygdala activity after Zembrin administration on the contrast fear>neutral in the low‑load condition (F(1,14)=6.90, P=0.020, partial η2=0.33, see for the associated contrast estimates), which was non‑significant in the high‑load condition (F(1,14)=0.003, P=0.956).",
-     "sha": "e3fbfd9512c94396"
-    },
-    {
-     "label": "F5",
-     "ref": "terburg_2013",
-     "where": "DISCUSSION",
-     "quote": "Using two independent fMRI designs, we show that Zembrin compared with placebo administration reduces anxiety‑related amygdala reactivity and attenuates amygdala–hypothalamus coupling.",
-     "sha": "55ed486188e17ebe"
-    }
+ "panel": {
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    true,
+    ""
    ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states the study scanned '16 healthy participants', not specifically '16 healthy adults'."
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
   }
- ],
+ },
  "place": {
   "home": "new:Kanna",
   "also": [],

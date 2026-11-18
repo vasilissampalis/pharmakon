@@ -4,22 +4,11 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history)
-== the papers' own words on a question, tried with the real index of papers on the editor's own questions
-instant trial: 1 request(s); no model takes part
-instant trial: "how does a mother's psychology affect whether her children take drugs": 0 paper(s), 0 with their own words, first list after 3103 ms, the whole list after 11606 ms (3 askings) (the server's own share 1 ms)
-instant trial: "do parents worry about their kids taking drugs": 3 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 11410 ms (3 askings) (the server's own share 4.8 ms)
-instant trial: "does parenting affect whether teenagers use drugs": 6 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 3819 ms (2 askings) (the server's own share 4.6 ms)
-instant trial: "why do people take drugs": 6 paper(s), 0 with their own words, first list after 3002 ms, the whole list after 10638 ms (3 askings) (the server's own share 4.9 ms)
-instant trial: "are drugs bad for your brain": 6 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 10684 ms (3 askings) (the server's own share 2.8 ms)
-instant trial: "do drugs make you more creative": 6 paper(s), 0 with their own words, first list after 3000 ms, the whole list after 8509 ms (3 askings) (the server's own share 4.7 ms)
-instant trial: "do drugs cause mental illness": 2 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 11504 ms (3 askings) (the server's own share 1.7 ms)
-instant trial: "is addiction genetic": 1 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 11505 ms (3 askings) (the server's own share 1.7 ms)
-instant trial: "which drug is the most addictive": 6 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 10509 ms (3 askings) (the server's own share 5.6 ms)
-instant trial: "does drug use run in families": 6 paper(s), 1 with their own words, first list after 3003 ms, the whole list after 5735 ms (2 askings) (the server's own share 3.3 ms)
-instant trial: "do drugs help with loneliness": 4 paper(s), 2 with their own words, first list after 3001 ms, the whole list after 10507 ms (3 askings) (the server's own share 2.8 ms)
-instant trial: "does poverty lead to drug use": 5 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 10504 ms (3 askings) (the server's own share 2.6 ms)
-instant trial: written data/auto/instant/trial-20261118T1249-0011.json
-== what it used, into the ledger
-llm: today 8643 of 9000 neurons
 == write
-lane: no request waiting
+[0;93m2026-11-18 12:50:21.495701755 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+lane: our own checker is pharmakon-check-0 (from lytang/MiniCheck-RoBERTa-Large), at least 0.05
+lane: team L: gemini:gemma-4-31b-it reads, groq:qwen/qwen3.8-27b writes, gemini:gemini-3.5-flash-lite is the second reader
+lane: w_a0010 'Does kanna help with anxiety?': none (the answer was not accepted: our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure); 2 papers, 0 official pages, 0 summaries; 0.0 neurons
+lane: team L: gemini:gemma-4-31b-it reads, groq:qwen/qwen3.8-27b writes, gemini:gemini-3.5-flash-lite is the second reader
+lane: w_0048 'Does cannabis make sex better?': none (the answer was not accepted: a further reader (gemini-3-flash-preview) did not accept it: The sentence makes a general claim that people who use cannabis report less anxiety and better orgasms, but the passages only say it has the 'potential' to alleviate anxiety and that some users may actually experience a 'decreased ability t); 2 papers, 0 official pages, 0 summaries; 0.0 neurons
+lane: 2 questions worked on: published 0, waiting 0, none 2; today 8643 of 9000 neurons used
