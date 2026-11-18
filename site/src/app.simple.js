@@ -1228,7 +1228,11 @@ function evInline(a) {
 /* "The evidence" under an answer (site 2.15.3; the senior author, 17 November 2026: "when I click on 'see the evidence' I see the answer again and I
    have to scroll down to see the sources the sources should just come down and when I click on 'See the evidence' again they should hide. That way
    I would not feel lost"). The sources unfold under the answer, each in plain words first (the same cards as in the full view); a second tap folds
-   them away. The whole research view (the checked text, the debate, the certainty in full) is one link further, for those who want it. */
+   them away. The whole research view (the checked text, the debate, the certainty in full) is one link further, for those who want it.
+   (Site 2.22.1; the senior author, 18 November 2026, 23:50: that link, "All the scientific detail", opened the research view at its top, and the
+   scientific detail was a second fold far below: "should be the same button and i should only click on it once and the scientific detail should
+   immediately be shown without having to scroll down again". So the link bears the fold's own name, "Scientific detail", and opens the research
+   view AT that fold, already unfolded; the fold's own summary still folds it away.) */
 function askSources(a) {
   const id = a.getAttribute("href").slice(1), foot = a.closest(".ask-foot"); if (!foot || !claimById[id]) return;
   const was = foot.nextElementSibling && foot.nextElementSibling.classList.contains("ask-srcs") ? foot.nextElementSibling : null;
@@ -1237,7 +1241,7 @@ function askSources(a) {
   const draw = () => { const c = claimById[id], sp = (SIMPLE.claims || {})[id], refs = [...new Set(c.evidence.map(e => e.reference))].filter(r => refById[r]);
     box.innerHTML = '<p class="ask-srcs-h">' + (refs.length === 1 ? "The source" : "The " + refs.length + " sources") + '</p><ol class="ev-refs">' + refs.map(r => { const ref = refById[r];
       return '<li class="ev-src"><details><summary><span class="ev-src-who">' + esc(inTextLabel(ref, REFS)) + '</span><span class="ev-src-t">' + esc(String(ref.title || "").replace(/<[^>]+>/g, "")) + "</span>" + evSrcFund(c, r) + "</summary>" + evSrcBody(c, sp, r, false) + "</details></li>"; }).join("") +
-      '</ol><p class="ask-srcs-all"><a href="#' + esc(id) + '">All the scientific detail ' + icon("arrow") + "</a></p>"; };
+      '</ol><p class="ask-srcs-all"><a href="#' + esc(id) + '" data-focus-src="sci">Scientific detail ' + icon("arrow") + "</a></p>"; };
   if (fullReady([id])) draw(); else whenReady(() => needFull([id]), box, "The sources", () => { if (box.isConnected) draw(); });
 }
 function evHtml(id) {
@@ -1301,6 +1305,7 @@ function debateLine(c) {
 // open one source in the sheet: its place in the list, opened, briefly marked (or the debate box, for "debate")
 function focusEvSource(ref) {
   if (ref === "debate") { const box = document.getElementById("ev-debate"); if (box) { scrollToEl(box); const s = box.querySelector("summary"); if (s) s.focus({ preventScroll: true }); } return; }
+  if (ref === "sci") { const d = document.querySelector("#evsheet details.sf-sci"); if (d) { d.open = true; scrollToEl(d); const s = d.querySelector("summary"); if (s) s.focus({ preventScroll: true }); } return; }
   const li = document.getElementById("ev-src-" + ref); if (!li) return;
   const d = li.querySelector("details"); if (d) d.open = true;
   li.classList.remove("hit"); void li.offsetWidth; li.classList.add("hit");
@@ -1315,6 +1320,7 @@ function openEvidence(id, opener, focusRef) {
   const fill = () => {
     panel.innerHTML = evHtml(id); panel.scrollTop = 0;
     const b = panel.querySelector(".ev-back"); if (b) b.focus({ preventScroll: true });
+    if (focusRef === "sci") focusEvSource(focusRef);            // the scientific detail was asked for: it is open and in view in the same frame, never the top first
     if (focusRef) setTimeout(() => focusEvSource(focusRef), 60);
   };
   const ready = fullReady([id]);

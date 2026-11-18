@@ -491,9 +491,18 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     const srcs = await p.evaluate(() => { const b = document.querySelector("#evsheet .ins-ans .ask-srcs"); return { n: b ? b.querySelectorAll("li.ev-src").length : 0, ins: !!document.querySelector("#evsheet .ins .ins-ans"), exp: document.querySelector("#evsheet .ins-ans a.ask-ev").getAttribute("aria-expanded"), all: b ? (b.querySelector(".ask-srcs-all a") || {}).textContent : "" }; });
     await p.click("#evsheet .ins-ans a.ask-ev"); await p.waitForTimeout(200);
     const shut = await p.evaluate(() => !document.querySelector("#evsheet .ins-ans .ask-srcs"));
-    ok(w + ": “The evidence” unfolds the sources under the answer, which stays where it is; a second tap folds them away; the whole research view is one link further", srcs.n >= 1 && srcs.ins && srcs.exp === "true" && /All the scientific detail/.test(srcs.all || "") && shut, JSON.stringify([srcs, shut]));
+    ok(w + ": “The evidence” unfolds the sources under the answer, which stays where it is; a second tap folds them away; the whole research view is one link further", srcs.n >= 1 && srcs.ins && srcs.exp === "true" && /^Scientific detail/.test((srcs.all || "").trim()) && shut, JSON.stringify([srcs, shut]));
     await p.click("#evsheet .ins-ans a.ask-ev"); await p.waitForSelector("#evsheet .ins-ans .ask-srcs-all a", { timeout: 15000 }).catch(() => {});
     await p.click("#evsheet .ins-ans .ask-srcs-all a"); await p.waitForFunction(() => document.querySelector("#evsheet.open") && !document.querySelector("#evsheet .ins") && !document.querySelector("#evsheet .loading"), null, { timeout: 15000 }).catch(() => {});
+    // (2.22.1; the senior author, 18 November 2026, 23:50: "i should only click on it once and the scientific detail should immediately be shown without having to scroll down again")
+    await p.waitForTimeout(350);
+    const sci = await p.evaluate(() => { const d = document.querySelector("#evsheet details.sf-sci"), panel = document.querySelector("#evsheet .panel"); if (!d || !panel) return null;
+      const r = d.getBoundingClientRect(), pr = panel.getBoundingClientRect(), bar = panel.querySelector(".ev-bar").getBoundingClientRect(), body = d.querySelector(".ev-precise");
+      return { open: d.open, top: Math.round(r.top - pr.top), bar: Math.round(bar.height), h: Math.round(pr.height), seen: !!body && body.getBoundingClientRect().height > 0 && body.getBoundingClientRect().top < pr.bottom, scrolled: panel.scrollTop > 0 || r.top < pr.bottom }; });
+    ok(w + ": “Scientific detail” under the sources opens the research view AT the scientific detail, already unfolded and in view: one tap, no scrolling", !!sci && sci.open && sci.seen && sci.top >= 0 && sci.top < sci.h * 0.6, JSON.stringify(sci));
+    await p.click("#evsheet details.sf-sci > summary"); await p.waitForTimeout(150);
+    const sciShut = await p.evaluate(() => !document.querySelector("#evsheet details.sf-sci").open);
+    ok(w + ": its own line folds the scientific detail away again", sciShut, String(sciShut));
     await p.click("#evsheet .ev-back"); await p.waitForTimeout(300);
     const back = await p.evaluate(() => ({ open: !!document.querySelector("#evsheet.open"), ins: !!document.querySelector("#evsheet .ins .ins-ans"), title: (document.getElementById("ev-title") || {}).textContent }));
     ok(w + ": the whole research view opened from the answer comes back to it with Back", back.open && back.ins && back.title === Q0, JSON.stringify(back));
