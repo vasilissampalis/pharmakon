@@ -19,36 +19,34 @@
  "made": {
   "on": "2026-11-18",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "@cf/openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
+   "team": "team H",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44303193843",
+  "run": "44305514291",
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 335.2
+  "neurons": 279.6
  },
- "status": "waiting",
- "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.5-flash-lite): it is worked on again by itself when that reader can be asked",
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The sentence attributes the positive effects to \"people who use it\" and states it improves sexual desire, which are not explicitly reported in the passages.); but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
   "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "broken at try 1: but: it says “everyone”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out; written again, then nothing against it",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite could not be asked: its reply held no verdict, twice (how the last reply ended: stop; it reasoned 0 characters and wrote 186); gemini-3.6-flash accepted 2 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.92, but 0.19, how1 0.94, how2 0.98",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "but": "the writer's But was not accepted (a further reader (gemini-3.6-flash) did not accept it: The passage specifies that moderate doses improved female sexual function in domains such as orgasm, libi): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3.6-flash accepted 1 of 4",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.80, but 0.15, how1 0.65, how2 0.98",
+  "check": "not accepted at try 2: a second reader did not accept short (The sentence attributes the positive effects to \"people who use it\" and states it improves sexual desire, which are not explicitly reported in the passages.); but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: but: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
  },
  "sources": [
   {
@@ -119,14 +117,14 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction.",
-    "text": "a review of the current literature on the effects of cannabis on several sexual functions in humans"
+    "text": "Review paper on cannabis effects on human sexuality"
    },
    "findings": [
     {
      "passage": 17,
      "where": "General effects of cannabis on sexuality in humans",
-     "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women",
-     "text": "Cannabis has a bidirectional effect on sexual functioning and has been associated with positive outcomes such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women.",
+     "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women; conversely, cannabis use has been linked to negative effects, including erectile dysfunction, sterility, and reduced testosterone levels.",
+     "text": "Cannabis use can improve sexual desire, prolong intercourse, improve orgasm quality, and increase sexual satisfaction in both men and women, but it can also cause erectile dysfunction, sterility, and reduced testosterone levels.",
      "id": "F1",
      "second_hand": ""
     },
@@ -134,20 +132,29 @@
      "passage": 33,
      "where": "Effects of dose and frequency › Dosage",
      "quote": "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal. However, they also noted that high doses of cannabis may have negative effects on female sexual function.",
-     "text": "Moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal, whereas high doses may have negative effects on female sexual function.",
+     "text": "Moderate doses of cannabis improve female sexual function in orgasm, libido, and arousal, whereas high doses may have negative effects on female sexual function.",
      "id": "F2",
      "second_hand": "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal."
     },
     {
      "passage": 37,
      "where": "Discussion",
-     "quote": "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partners",
-     "text": "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partners.",
+     "quote": "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partners (Parent et al.). Furthermore, it has been associated with increased pleasure during masturbation and enhanced sensory experiences during sexual encounters (Moser et al.).",
+     "text": "Cannabis may enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, promote intimacy, increase pleasure during masturbation, and enhance sensory experiences during sexual encounters.",
      "id": "F3",
      "second_hand": "Reports suggest that cannabis has the potential to enhance sexual pleasure, reduce inhibitions, alleviate anxiety and shame, and promote intimacy and connection with sexual partner"
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 47,
+     "where": "Conclusion",
+     "quote": "Studies investigating the impact of cannabis use frequency on human sexuality have yielded diverse and occasionally conflicting findings, necessitating additional research with a focus on controlling for more covariates.",
+     "text": "The impact of cannabis use frequency on human sexuality is unclear due to diverse and conflicting findings, requiring further research with better control of covariates.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -214,125 +221,49 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
-    "text": "An online survey of a convenience sample of adults over 18 who previously used cannabis"
+    "text": "survey study of adults who use cannabis"
    },
    "findings": [
-    {
-     "passage": 59,
-     "where": "Conclusion",
-     "quote": "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure.",
-     "text": "Overall, cannabis use tends to have a positive influence on perceived sexual functioning and satisfaction for individuals despite gender or age and cannabis might help to decrease gender disparities in sexual pleasure.",
-     "id": "F4",
-     "second_hand": ""
-    },
     {
      "passage": 47,
      "where": "Discussion › Sexual functioning and satisfaction",
      "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
-     "text": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
-     "id": "F5",
+     "text": "People who use cannabis before sex report benefits to sexual functioning and satisfaction.",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 51,
      "where": "Discussion › Sexual functioning and satisfaction",
-     "quote": "Although duration and frequency of cannabis use were not significant predictors, the forms of wax and flower predicted increased sexual functioning and satisfaction.",
-     "text": "Although duration and frequency of cannabis use were not significant predictors, the forms of wax and flower predicted increased sexual functioning and satisfaction.",
+     "quote": "the forms of wax and flower predicted increased sexual functioning and satisfaction.",
+     "text": "People who use wax or flower forms of cannabis report increased sexual functioning and satisfaction.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 54,
+     "where": "Discussion › Implications",
+     "quote": "Women may be more likely to orgasm when using cannabis before sexual encounters, which could contribute to equity in the amount of sexual pleasure and satisfaction experienced by both women and men.",
+     "text": "Women who use cannabis before sex may experience higher orgasm rates, potentially reducing the orgasm inequality gap.",
      "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 58,
-     "where": "Discussion › Future research",
-     "quote": "Clinical research to study this would be most accurate due to the social desirability effect of self-report surveys.",
-     "text": "Self-report surveys have a social desirability effect.",
-     "id": "L1",
+     "passage": 2,
+     "where": "Abstract",
+     "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
+     "text": "The findings are based on a self-selected convenience sample and may not generalize to all cannabis users.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Sometimes. People who use cannabis report benefits like longer intercourse and better orgasms. Use has been linked to higher satisfaction in men and women.",
-   "uses": [
-    "F1",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "lissitsa_2024",
-     "where": "General effects of cannabis on sexuality in humans",
-     "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women",
-     "sha": "b225121dff11773c"
-    },
-    {
-     "label": "F5",
-     "ref": "moser_2023",
-     "where": "Discussion › Sexual functioning and satisfaction",
-     "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
-     "sha": "c341b8995ffcf21e"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review and 1 study in people that our system could read. It has not read every study on this question.",
-   "uses": [
-    "DA",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "lissitsa_2024",
-     "where": "Abstract",
-     "quote": "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction.",
-     "sha": "5502770c62bff8a2"
-    },
-    {
-     "label": "DB",
-     "ref": "moser_2023",
-     "where": "Abstract",
-     "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
-     "sha": "1a9585aacedd127b"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2024 review of literature found cannabis has a bidirectional effect on sexual functions in humans.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "lissitsa_2024",
-     "where": "Abstract",
-     "quote": "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction.",
-     "sha": "5502770c62bff8a2"
-    },
-    {
-     "label": "F1",
-     "ref": "lissitsa_2024",
-     "where": "General effects of cannabis on sexuality in humans",
-     "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women",
-     "sha": "b225121dff11773c"
-    }
-   ],
-   "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect",
-   "quote_ref": "lissitsa_2024"
-  }
- ],
- "complete": true,
+ "parts": [],
+ "complete": false,
  "missing": "",
  "wanted": [
   {
@@ -390,6 +321,14 @@
    "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.8-flash): it waits until that reader, or the editor, has read it",
    "short": "It can make sex feel better. People who use cannabis report longer intercourse, better orgasms, and more satisfaction.",
    "complete": true
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "waiting",
+   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.5-flash-lite): it is worked on again by itself when that reader can be asked",
+   "short": "Sometimes. People who use cannabis report benefits like longer intercourse and better orgasms. Use has been linked to higher satisfaction in men and women.",
+   "complete": true
   }
  ],
  "looked": [
@@ -399,20 +338,7 @@
    "kind": "review",
    "at": "10.1007/s00213-024-06643-4",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "Animal studies have provided valuable insights into the potential effects of cannabis on sexual behavior in both males and females, but further research, including human clinical trials, is essential ",
-     "why": "no sentence"
-    },
-    {
-     "kind": "limit",
-     "text": "",
-     "quote": "However, these findings are cast into doubt due to the unreliability of dosage measurement in most studies.",
-     "why": "no sentence"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The influence of cannabis on sexual functioning and satisfaction",
@@ -420,7 +346,20 @@
    "kind": "other",
    "at": "10.1186/s42238-022-00169-2",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "People who intentionally use cannabis before sex perceive greater sexual functioning and satisfaction than those who do not.",
+     "quote": "Those who reported intentionally using cannabis before sex had significantly higher scale scores than those who reported not intentionally using cannabis before sex.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study did not find duration or frequency of use to predict sexual outcomes, only the form of cannabis used.",
+     "quote": "Although duration and frequency of cannabis use were not significant predictors, the forms of wax and flower predicted increased sexual functioning and satisfaction.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "About Cannabis",
@@ -490,9 +429,9 @@
  "plan": {
   "short": [
    "F1",
-   "F5"
+   "F4"
   ],
-  "direct": "Sometimes",
+  "direct": "It can",
   "but": [
    "F2"
   ],
@@ -503,40 +442,97 @@
    ],
    [
     "DB",
-    "F5"
+    "F4"
    ]
   ],
-  "unanswered": "optimal dose and long‑term effects"
+  "unanswered": ""
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages state that cannabis is 'widely believed to enhance sexual desire', not that cannabis users report better desire."
+   ],
+   "but": [
+    false,
+    "The passages do not state that the survey was 'about their own experiences'."
+   ],
+   "how1": [
+    false,
+    "The passage states that cannabis is 'widely believed to enhance sexual desire', not that the review found cannabis use is linked to better desire."
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8026,
+   "but": 0.1481,
+   "how1": 0.6466,
+   "how2": 0.9805
+  },
+  "scores_quotes_alone": {
+   "short": 0.5197,
+   "but": 0.6009,
+   "how1": 0.434,
+   "how2": 0.9588
+  }
  },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes. People who use cannabis report better sex, and use is linked to longer intercourse and more satisfaction in men and women.",
+     "text": "It can improve sex for some. People who use cannabis report better desire and satisfaction, but use is also linked to erectile dysfunction.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "lissitsa_2024",
        "where": "General effects of cannabis on sexuality in humans",
-       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women",
+       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women; conversely, cannabis use has been linked to negative effects, including erectile dysfunction, sterility, and reduced testosterone levels.",
        "sha": "b225121dff11773c"
       },
       {
-       "label": "F5",
+       "label": "F4",
        "ref": "moser_2023",
        "where": "Discussion › Sexual functioning and satisfaction",
        "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
        "sha": "c341b8995ffcf21e"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages state that cannabis is 'widely believed to enhance sexual desire', not that cannabis users report better desire."
     },
     {
      "part": "but",
-     "text": "These reports come from people who chose to answer a survey, so they may not match what happens for everyone.",
+     "text": "These reports come from a self-selected group of adults who chose to answer an online survey about their own experiences.",
      "rests_on": [
       {
        "label": "DB",
@@ -547,12 +543,12 @@
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says “everyone”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the survey was 'about their own experiences'."
     },
     {
      "part": "how1",
-     "text": "A 2024 review of literature says cannabis use is linked to positive sexual outcomes in both men and women.",
+     "text": "A 2024 review says cannabis use is linked to better desire and satisfaction, but also to erectile dysfunction and lower testosterone.",
      "rests_on": [
       {
        "label": "DA",
@@ -565,15 +561,17 @@
        "label": "F1",
        "ref": "lissitsa_2024",
        "where": "General effects of cannabis on sexuality in humans",
-       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women",
+       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women; conversely, cannabis use has been linked to negative effects, including erectile dysfunction, sterility, and reduced testosterone levels.",
        "sha": "b225121dff11773c"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passages do not state that cannabis use is linked to better desire; they only note increased sexual satisfaction and a belief that desire may be enhanced."
     },
     {
      "part": "how2",
-     "text": "An online survey of adults who previously used cannabis found that men and women both see benefits from using it before sex.",
+     "text": "A 2023 online survey of adults who use cannabis found that men and women report benefits to sexual functioning and satisfaction.",
      "rests_on": [
       {
        "label": "DB",
@@ -583,7 +581,7 @@
        "sha": "1a9585aacedd127b"
       },
       {
-       "label": "F5",
+       "label": "F4",
        "ref": "moser_2023",
        "where": "Discussion › Sexual functioning and satisfaction",
        "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
@@ -600,17 +598,17 @@
    "parts": [
     {
      "part": "short",
-     "text": "Sometimes. People who use cannabis report better sex, and use is linked to longer intercourse and better orgasms in men and women.",
+     "text": "It can improve sexual desire and satisfaction, according to people who use it. But it can also cause erectile dysfunction and lower testosterone.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "lissitsa_2024",
        "where": "General effects of cannabis on sexuality in humans",
-       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women",
+       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women; conversely, cannabis use has been linked to negative effects, including erectile dysfunction, sterility, and reduced testosterone levels.",
        "sha": "b225121dff11773c"
       },
       {
-       "label": "F5",
+       "label": "F4",
        "ref": "moser_2023",
        "where": "Discussion › Sexual functioning and satisfaction",
        "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
@@ -618,26 +616,28 @@
       }
      ],
      "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that people who use cannabis report 'better sex'."
+     "by": "the second reader",
+     "said": "The sentence attributes the positive effects to \"people who use it\" and states it improves sexual desire, which are not explicitly reported in the passages."
     },
     {
      "part": "but",
-     "text": "High doses may have negative effects on female sexual function, while moderate doses improved it in some studies.",
+     "text": "The survey asked adults who chose to take part, so it only shows what those people reported.",
      "rests_on": [
       {
-       "label": "F2",
-       "ref": "lissitsa_2024",
-       "where": "Effects of dose and frequency › Dosage",
-       "quote": "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal. However, they also noted that high doses of cannabis may have negative effects on female sexual function.",
-       "sha": "d0878457eba8857a"
+       "label": "DB",
+       "ref": "moser_2023",
+       "where": "Abstract",
+       "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
+       "sha": "1a9585aacedd127b"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
     },
     {
      "part": "how1",
-     "text": "A 2024 review of literature found cannabis has a bidirectional effect on sexual functions in humans.",
+     "text": "A 2024 review says cannabis use is linked to better desire and satisfaction, but also erectile dysfunction and lower testosterone.",
      "rests_on": [
       {
        "label": "DA",
@@ -650,15 +650,17 @@
        "label": "F1",
        "ref": "lissitsa_2024",
        "where": "General effects of cannabis on sexuality in humans",
-       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women",
+       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women; conversely, cannabis use has been linked to negative effects, including erectile dysfunction, sterility, and reduced testosterone levels.",
        "sha": "b225121dff11773c"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not report a link between cannabis use and better sexual desire; they only note a belief that desire may be enhanced."
     },
     {
      "part": "how2",
-     "text": "An online survey of adults over 18 who previously used cannabis found both men and women see benefits.",
+     "text": "A 2023 survey of adults who use cannabis found that men and women report benefits from using it before sex.",
      "rests_on": [
       {
        "label": "DB",
@@ -668,107 +670,103 @@
        "sha": "1a9585aacedd127b"
       },
       {
-       "label": "F5",
+       "label": "F4",
        "ref": "moser_2023",
        "where": "Discussion › Sexual functioning and satisfaction",
        "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
        "sha": "c341b8995ffcf21e"
       }
      ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence omits that men and women see benefits specifically 'from using cannabis before sexual intercourse or masturbation'."
+     "ok": true
     }
    ]
-  }
- ],
- "panel": {
-  "gemini:gemini-3.5-flash-lite": "could not be asked: its reply held no verdict, twice (how the last reply ended: stop; it reasoned 0 characters and wrote 186)",
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    false,
-    "The passage specifies that moderate doses improved female sexual function in domains such as orgasm, libido, and arousal, but does not state that high doses have negative effects specifically on arousal and orgasm."
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    false,
-    "The sentence leaves out narrowing context from the passage, which specifies that men and women see benefits specifically \"from using cannabis before sexual intercourse or masturbation.\""
-   ]
-  }
- },
- "panel_gap": [
-  "gemini-3.5-flash-lite"
- ],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.9217,
-   "but": 0.1927,
-   "how1": 0.9373,
-   "how2": 0.978
-  },
-  "scores_quotes_alone": {
-   "short": 0.8585,
-   "but": 0.1889,
-   "how1": 0.9528,
-   "how2": 0.9683
-  }
- },
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "High doses may have negative effects on female sexual function, such as arousal and orgasm.",
-   "rests_on": [
-    {
-     "label": "F2",
-     "ref": "lissitsa_2024",
-     "where": "Effects of dose and frequency › Dosage",
-     "quote": "In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function in domains such as orgasm, libido, and arousal. However, they also noted that high doses of cannabis may have negative effects on female sexual function.",
-     "sha": "d0878457eba8857a"
-    }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies that moderate doses improved female sexual function in domains such as orgasm, libido, and arousal, but does not state that high doses have negative effects specifically on arousal and orgasm."
   },
   {
    "try": 3,
-   "part": "how2",
-   "text": "An online survey of adults over 18 who previously used cannabis found both men and women see benefits.",
-   "rests_on": [
+   "why": "a rule was broken: written again",
+   "parts": [
     {
-     "label": "DB",
-     "ref": "moser_2023",
-     "where": "Abstract",
-     "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
-     "sha": "1a9585aacedd127b"
+     "part": "short",
+     "text": "It can improve sexual desire and satisfaction, according to people who use it. But it can also cause erectile dysfunction and lower testosterone.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "lissitsa_2024",
+       "where": "General effects of cannabis on sexuality in humans",
+       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women; conversely, cannabis use has been linked to negative effects, including erectile dysfunction, sterility, and reduced testosterone levels.",
+       "sha": "b225121dff11773c"
+      },
+      {
+       "label": "F4",
+       "ref": "moser_2023",
+       "where": "Discussion › Sexual functioning and satisfaction",
+       "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
+       "sha": "c341b8995ffcf21e"
+      }
+     ],
+     "ok": true
     },
     {
-     "label": "F5",
-     "ref": "moser_2023",
-     "where": "Discussion › Sexual functioning and satisfaction",
-     "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
-     "sha": "c341b8995ffcf21e"
+     "part": "but",
+     "text": "The survey asked adults who chose to take part, so it may not show what happens to all people.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "moser_2023",
+       "where": "Abstract",
+       "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
+       "sha": "1a9585aacedd127b"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says cannabis use is linked to better desire and satisfaction, but also erectile dysfunction and lower testosterone.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "lissitsa_2024",
+       "where": "Abstract",
+       "quote": "This review aims to provide an overview of the current literature on the effects of cannabis on several sexual functions, including sexual desire, arousal, orgasm, and sexual satisfaction.",
+       "sha": "5502770c62bff8a2"
+      },
+      {
+       "label": "F1",
+       "ref": "lissitsa_2024",
+       "where": "General effects of cannabis on sexuality in humans",
+       "quote": "Cannabis, widely believed to enhance sexual desire, has been found to have a bidirectional effect on sexual functioning. On the one hand, cannabis use has been associated with positive outcomes, such as prolonged intercourse, improved orgasm quality, and increased sexual satisfaction in both men and women; conversely, cannabis use has been linked to negative effects, including erectile dysfunction, sterility, and reduced testosterone levels.",
+       "sha": "b225121dff11773c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 survey of adults who use cannabis found that men and women report benefits from using it before sex.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "moser_2023",
+       "where": "Abstract",
+       "quote": "Data were collected using the online survey tool “Qualtrics” from a self-selected, convenience sample of adults over the age of 18 who reported previous cannabis use.",
+       "sha": "1a9585aacedd127b"
+      },
+      {
+       "label": "F4",
+       "ref": "moser_2023",
+       "where": "Discussion › Sexual functioning and satisfaction",
+       "quote": "Results from this study indicated that both men and women see benefits from using cannabis before sexual intercourse or masturbation.",
+       "sha": "c341b8995ffcf21e"
+      }
+     ],
+     "ok": true
     }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence leaves out narrowing context from the passage, which specifies that men and women see benefits specifically \"from using cannabis before sexual intercourse or masturbation.\""
+   ]
   }
  ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
- "for": "again",
- "soft": "a further reader could not be asked",
  "place": {
   "home": "cannabis",
   "also": [],
