@@ -431,11 +431,12 @@ def find(item, names, enc, opener=None):
             k = p["doi"] or p["epmc"]
             if k not in seen: seen[k] = p
     # (18 November 2026) A drug with few papers, or a question that asks what a drug IS: the topic words find little, and what there is on the drug itself is
-    # the answer's material ("What is Mitragyna javanica?"). Where the searches above found fewer than four papers that can be read, every open paper with
-    # the drug in its title is searched as well; the ranking by meaning then picks.
+    # the answer's material ("What is Mitragyna javanica?"). Where the searches above found fewer than four papers that can be read, every open paper that
+    # names the drug in its title or its summary is searched as well (a rare plant is named in the summaries of papers on its better-known relatives: the
+    # title alone found none of them); the ranking by meaning then picks.
     if groups and not problems and sum(1 for p in seen.values() if p["oa"] and p["pmcid"]) < 4:
-        s = {"for": "any open paper with the drug in its title, whatever its topic (the searches above found few that can be read)",
-             "query": " AND ".join(field(g, True) for g in groups) + ' AND OPEN_ACCESS:y AND LANG:eng NOT PUB_TYPE:"retracted publication" NOT PUB_TYPE:"retraction of publication"'}
+        s = {"for": "any open paper that names the drug in its title or summary, whatever its topic (the searches above found few that can be read)",
+             "query": " AND ".join(field(g) for g in groups) + ' AND OPEN_ACCESS:y AND LANG:eng NOT PUB_TYPE:"retracted publication" NOT PUB_TYPE:"retraction of publication"'}
         try:
             got, hits = epmc_search(s["query"], opener=opener)
             log.append({"for": s["for"], "query": s["query"], "found": hits, "read": len(got)})
@@ -522,8 +523,8 @@ def selftest():
     out = find({"id": "w_0027", "q": "How can you die from alcohol?", "ways": ["can alcohol kill you", "alcohol death causes"]}, names, Enc2(), opener)
     assert out["found"] == 3 and [c["pmcid"] for c in out["can_read"]] == ["PMC111", "PMC444"] and out["can_read"][0]["kind"] == "review" and not out["can_read"][1]["people"], out["can_read"]
     assert len(out["wanted"]) == 1 and out["wanted"][0]["apa"].startswith("Smith, J. (2021). Causes of death from alcohol. Addiction, 1, 1–9. https://doi.org/10.1000/j.2") and out["wanted"][0]["file"].endswith(".pdf"), out["wanted"]
-    # (two papers that can be read are fewer than four: every open paper with the drug in its title is searched as well, last)
-    assert all("abstract" not in c for c in out["can_read"]) and len(out["searches"]) == 6 and out["searches"][0]["found"] == 57 and out["searches"][5]["for"].startswith("any open paper with the drug in its title") and out["searches"][5]["query"].startswith('(TITLE:"alcohol" OR TITLE:"ethanol" OR TITLE:"alcohol drinking") AND OPEN_ACCESS:y'), out["searches"]
+    # (two papers that can be read are fewer than four: every open paper that names the drug is searched as well, last)
+    assert all("abstract" not in c for c in out["can_read"]) and len(out["searches"]) == 6 and out["searches"][0]["found"] == 57 and out["searches"][5]["for"].startswith("any open paper that names the drug in its title or summary") and out["searches"][5]["query"].startswith('(TITLE:"alcohol" OR ABSTRACT:"alcohol" OR TITLE:"ethanol" OR ABSTRACT:"ethanol" OR TITLE:"alcohol drinking" OR ABSTRACT:"alcohol drinking") AND OPEN_ACCESS:y'), out["searches"]
     print("papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)")
 
 
