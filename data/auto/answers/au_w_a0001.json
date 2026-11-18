@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_a0001",
- "lane": 18,
+ "lane": 19,
  "kind": "answer",
  "from": "w_a0001",
  "question": "What is the legal status of drugs in Greece?",
@@ -15,174 +15,151 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-17",
+  "on": "2026-11-18",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.8-flash",
-   "team": "team H",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3-flash-preview",
+   "team": "team L",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-3.6-flash"
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44077621252",
+  "run": "44308921395",
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 240.2
+  "neurons": 0.0
  },
  "status": "none",
- "why": "no draft passed: broken at try 1: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 1: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
-  "writer": "try 2: short names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 166) try 3: short names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 166)"
+  "rules": "broken at try 1: but: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.91, but 0.30, how1 0.49",
+  "check": "short: NOT accepted: it does not answer the question itself (Sentence 1 is about risk assessments, not the legal status of drugs in Greece.); but: NOT accepted: not mentioned in the passage; how1: NOT accepted: the abstract does not mention the risk assessment details"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "henningfield_2022",
+    "id": "var_2020",
     "type": "article-journal",
-    "title": "Kratom abuse potential 2021: An updated eight factor analysis",
+    "title": "New psychoactive substances: Evolution in the exchange of information and innovative legal responses in the European union",
     "author": [
      {
-      "family": "Henningfield",
-      "given": "Jack E."
+      "family": "Varì",
+      "given": "Maria Rosaria"
      },
      {
-      "family": "Wang",
-      "given": "Daniel W."
+      "family": "Mannocchi",
+      "given": "Giulio"
      },
      {
-      "family": "Huestis",
-      "given": "Marilyn A."
+      "family": "Tittarelli",
+      "given": "Roberta"
+     },
+     {
+      "family": "Campanozzi",
+      "given": "Laura Leondina"
+     },
+     {
+      "family": "Nittari",
+      "given": "Giulio"
+     },
+     {
+      "family": "Feola",
+      "given": "Alessandro"
+     },
+     {
+      "family": "Umani Ronchi",
+      "given": "Federica"
+     },
+     {
+      "family": "Ricci",
+      "given": "Giovanna"
      }
     ],
-    "container-title": "Frontiers in Pharmacology",
+    "container-title": "International Journal of Environmental Research and Public Health",
     "issued": {
      "date-parts": [
       [
-       2022
+       2020
       ]
      ]
     },
-    "DOI": "10.3389/fphar.2021.775073",
+    "DOI": "10.3390/ijerph17228704",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-18",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-18"
      }
     },
-    "volume": "12",
-    "number": "775073",
-    "PMCID": "PMC8860177"
+    "volume": "17",
+    "issue": "22",
+    "number": "8704",
+    "PMCID": "PMC7709051"
    },
-   "doi": "10.3389/fphar.2021.775073",
-   "pmcid": "PMC8860177",
-   "title": "Kratom Abuse Potential 2021: An Updated Eight Factor Analysis",
-   "year": 2021,
-   "journal": "Frontiers in pharmacology",
+   "doi": "10.3390/ijerph17228704",
+   "pmcid": "PMC7709051",
+   "title": "New Psychoactive Substances: Evolution in the Exchange of Information and Innovative Legal Responses in the European Union",
+   "year": 2020,
+   "journal": "International journal of environmental research and public health",
    "kind": "review",
-   "people": true,
-   "near": 0.531,
+   "people": false,
+   "near": 0.534,
    "money": [
-    "This report is an update of the Henningfield et al., 2018 kratom abuse potential assessment review and comprises an annotated bibliography and review of kratom-related scientific studies published since January 1, 2018. The AKA and its affiliate, the Center for Plant Science and Health that funds new research into kratom, supported an earlier independent summary of kratom research that is posted on the AKA website. AKA did not support the preparation of this review article. The AKA did not have any input into approach, assessments or conclusions of the earlier summary postop on the AKA website or this article. Acknowledgement we are greatly appreciative of the efforts of our PinneyAssociates colleagues who contributed to this article: Yolanda Green; Rachel Beck, PhD; and August Buchhalter, PhD. We also acknowledge the thinking embodied in this document by our former colleague and co-author of earlier kratom abuse potential assessments, Reggie Fant, PhD. Dr. Fant died in September 2020 and we miss him dearly. See more about our team and Dr. Fant at."
+    "This research received no external funding.",
+    "There are no potential conflicts of interest or any financial or personal relationships with other people or organizations that could inappropriately bias conduct and findings of this study."
    ],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+    "text": "A research paper on new psychoactive substances and EU legal responses"
+   },
    "findings": [
     {
-     "passage": 3,
-     "where": "1 Introduction",
-     "quote": "Kratom and its alkaloids are not approved for any therapeutic use by the FDA, are not federally controlled in the US, nor in the International Drug Control Conventions; however some countries do control kratom and/or its two primary alkaloids, MG and 7-OH-MG (;;).",
-     "text": "Some countries control kratom and/or its two primary alkaloids, MG and 7-OH-MG.",
+     "passage": 15,
+     "where": "3. Results › 3.5. National Risk Assessment Procedures",
+     "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+     "text": "In Greece, no national risk assessment was carried out for new psychoactive substances.",
      "id": "F1",
      "second_hand": ""
-    },
-    {
-     "passage": 3,
-     "where": "1 Introduction",
-     "quote": "Six states in the US (Alabama, Arkansas, Indiana, Tennessee, Vermont and Wisconsin) have banned kratom, while five have passed consumer protection legislation to ensure consumer access to kratom with a framework for regulatory oversight (Arizona, Georgia, Nevada, Oklahoma and Utah).",
-     "text": "In the US, six states have banned kratom and five have passed consumer protection legislation.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 3,
-     "where": "1 Introduction",
-     "quote": "In 2021, Thailand decriminalized kratom farming, possession and sales.",
-     "text": "In 2021, Thailand decriminalized kratom farming, possession and sales.",
-     "id": "F3",
-     "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 74,
-     "where": "3 Results › 3.4 Factors 4, 5, and 6—History and Current Patterns of Abuse; the Scope, Significance and Duration of Abuse; what, if Any, Risk is There to the Public Health › 3.4.2 Factors 4, 5, and 6 Science Updates › 3.4.2.7 Comment on Therapeutic Use in Context of FDA Standards",
-     "quote": "None of this research meets FDA’s standard for therapeutic efficacy that is determined by evaluation of a New Drug Application (NDA).",
-     "text": "The research does not meet FDA’s standard for therapeutic efficacy.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
    "read": "full",
    "ref": {
-    "id": "tanguay_2015",
+    "id": "debruyne_2015",
     "type": "article-journal",
-    "title": "Facilitating a transition from compulsory detention of people who use drugs towards voluntary community-based drug dependence treatment and support services in Asia",
+    "title": "Emerging drugs of abuse: Current perspectives on synthetic cannabinoids",
     "author": [
      {
-      "family": "Tanguay",
-      "given": "Pascal"
+      "family": "Debruyne",
+      "given": "Daniele"
      },
      {
-      "family": "Kamarulzaman",
-      "given": "Adeeba"
-     },
-     {
-      "family": "Aramrattana",
-      "given": "Apinun"
-     },
-     {
-      "family": "Wodak",
-      "given": "Alex"
-     },
-     {
-      "family": "Thomson",
-      "given": "Nicholas"
-     },
-     {
-      "family": "Ali",
-      "given": "Robert"
-     },
-     {
-      "family": "Vumbaca",
-      "given": "Gino"
-     },
-     {
-      "family": "Lai",
-      "given": "Gloria"
-     },
-     {
-      "family": "Chabungbam",
-      "given": "Anand"
+      "family": "LE BOISSELIER",
+      "given": "Reynald"
      }
     ],
-    "container-title": "Harm Reduction Journal",
+    "container-title": "Substance Abuse and Rehabilitation",
     "issued": {
      "date-parts": [
       [
@@ -190,82 +167,61 @@
       ]
      ]
     },
-    "DOI": "10.1186/s12954-015-0071-0",
+    "DOI": "10.2147/sar.s73586",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-18",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-18"
      }
     },
-    "volume": "12",
-    "issue": "1",
-    "number": "31",
-    "PMCID": "PMC4608322"
+    "page": "113",
+    "PMCID": "PMC4622447"
    },
-   "doi": "10.1186/s12954-015-0071-0",
-   "pmcid": "PMC4608322",
-   "title": "Facilitating a transition from compulsory detention of people who use drugs towards voluntary community-based drug dependence treatment and support services in Asia",
+   "doi": "10.2147/sar.s73586",
+   "pmcid": "PMC4622447",
+   "title": "Emerging drugs of abuse: current perspectives on synthetic cannabinoids",
    "year": 2015,
-   "journal": "Harm reduction journal",
+   "journal": "Substance abuse and rehabilitation",
    "kind": "review",
    "people": true,
-   "near": 0.516,
-   "money": [
-    "AcknowledgementsWe thank Ms. Vladanka Andreeva, Ms. Brianna Harrison, and the Joint United Nations Programme on HIV/AIDS (UNAIDS) as well as Mr. Olivier Lermet and Ms. Karen Peters and United Nations Office on Drugs and Crime (UNODC), who provided logistical and financial support for data collection and development of the manuscript.The article processing charges for this article were funded by the Joint United Nations Programme on AIDS (UNAIDS) and the United Nations Office on Drugs and Crime (UNODC). The article has undergone the journal’s full standard peer review process.The article was developed based on the current draft of the expert discussion paper referenced in the text. The discussion paper was conceived in September 2014 and was developed under a similar process with more contact between the members of the working group and PT, both through email and skype as well as, where possible, face to face meetings."
-   ],
+   "near": 0.464,
+   "money": [],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Evidence indicates that detention of people who use drugs in compulsory centers in the name of treatment is common in Cambodia, China, Indonesia, Lao PDR, Malaysia, Myanmar, Philippines, Thailand, and Vietnam.",
-    "text": "research paper on drug detention and treatment"
+    "quote": "SCs have been emerging as recreational drugs because they mimic the euphoria effect of cannabis while still being legal.",
+    "text": "Review paper on synthetic cannabinoids and their legal status"
    },
    "findings": [
     {
-     "passage": 7,
-     "where": "Background",
-     "quote": "The exact number of people detained in the name of treatment in these countries is not known but unpublished data collected by the United Nations Office on Drugs and Crime (UNODC) indicates that almost half a million PWUD are detained in seven countries.",
-     "text": "almost half a million people who use drugs are detained in seven countries",
-     "id": "F4",
+     "passage": 46,
+     "where": "Availability and usage demographics › Legal status",
+     "quote": "SCs have a different legal status around the world.",
+     "text": "SCs have a different legal status around the world.",
+     "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 12,
-     "where": "Main text",
-     "quote": "To promote voluntary access to drug treatment and support services, policy approaches to drug use and drug dependence need to shift away from criminalization and punishment to health- and rights-based drug policy measures.",
-     "text": "policy approaches to drug use need to shift away from criminalization and punishment",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 15,
-     "where": "Main text",
-     "quote": "After all, drug dependence is recognized as a chronic relapsing and remitting health condition that warrants medical attention, irrespective of other normative imperatives.",
-     "text": "drug dependence is recognized as a chronic relapsing and remitting health condition",
-     "id": "F6",
+     "passage": 46,
+     "where": "Availability and usage demographics › Legal status",
+     "quote": "On the other hand, some countries, UK being the first, have adopted a generic control status that has the great advantage of eluding the “cat and mouse game” problem.",
+     "text": "Some countries, such as the UK, have adopted a generic control status to avoid the “cat and mouse game” problem.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 7,
-     "where": "Background",
-     "quote": "The exact number of people detained in the name of treatment in these countries is not known",
-     "text": "the exact number of people detained is not known",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "the general legal status of drugs in Greece",
  "wanted": [
   {
    "doi": "10.1093/phr/114.1.14",
@@ -290,36 +246,86 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-17",
+   "lane": 18,
+   "status": "none",
+   "why": "no draft passed: broken at try 1: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Kratom Abuse Potential 2021: An Updated Eight Factor Analysis",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fphar.2021.775073",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "research paper on kratom",
-     "quote": "An evaluation via the 8 factors of the CSA provides the comprehensive assessment required for permanent listing of new chemical entities and previously uncontrolled substances.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The paper's findings are based on a specific set of factors and may not be comprehensive.",
-     "quote": "By law, scheduling considers diverse evidence including chemistry and pharmacology, level of abuse potential, physiological dependence determined in animal and human studies, as well as assessment of ",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "Facilitating a transition from compulsory detention of people who use drugs towards voluntary community-based drug dependence treatment and support services in Asia",
    "read": "full",
    "kind": "review",
    "at": "10.1186/s12954-015-0071-0",
-   "kept": 3,
+   "kept": 0,
    "thrown": []
+  },
+  {
+   "title": "New Psychoactive Substances: Evolution in the Exchange of Information and Innovative Legal Responses in the European Union",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/ijerph17228704",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The paper does not provide details on how Greece’s reliance on international or European risk assessments affects its legal status.",
+     "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Translating Kratom-Drug Interactions: From Bedside to Bench and Back",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1124/dmd.122.001005",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Worldwide legislative challenges related to psychoactive drugs",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s40199-017-0180-2",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Evaluating the impact of Mexico's drug policy reforms on people who inject drugs in Tijuana, B.C., Mexico, and San Diego, CA, United States: a binational mixed methods research agenda",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1186/1477-7517-11-4",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Emerging drugs of abuse: current perspectives on synthetic cannabinoids",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2147/sar.s73586",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "Generic control postpones but does not fully solve the problem of regulating diverse cannabimimetics.",
+     "quote": "However, in the specific case of cannabimimetics that cover a large number of diversified chemical classes, it postpones the problem at one level but without solving it completely.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Canadian Drugs and Substances Strategy: Overview",
@@ -338,7 +344,20 @@
    "thrown": []
   }
  ],
- "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "",
+  "but": [],
+  "how": [
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "the general legal status of drugs in Greece"
+ },
  "tries": [
   {
    "try": 1,
@@ -346,105 +365,218 @@
    "parts": [
     {
      "part": "short",
-     "text": "The sources do not say what the legal status of drugs is in Greece. They only mention laws in the US, Thailand, and Asian countries.",
+     "text": "Greece has not carried out a national risk assessment for new psychoactive substances.",
      "rests_on": [
       {
        "label": "F1",
-       "ref": "henningfield_2022",
-       "where": "1 Introduction",
-       "quote": "Kratom and its alkaloids are not approved for any therapeutic use by the FDA, are not federally controlled in the US, nor in the International Drug Control Conventions; however some countries do control kratom and/or its two primary alkaloids, MG and 7-OH-MG (;;).",
-       "sha": "da0a354b3ed486a7"
-      },
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "This is from a review of legal responses, not a list of all Greek drug laws.",
+     "rests_on": [
       {
-       "label": "F2",
-       "ref": "henningfield_2022",
-       "where": "1 Introduction",
-       "quote": "Six states in the US (Alabama, Arkansas, Indiana, Tennessee, Vermont and Wisconsin) have banned kratom, while five have passed consumer protection legislation to ensure consumer access to kratom with a framework for regulatory oversight (Arizona, Georgia, Nevada, Oklahoma and Utah).",
-       "sha": "da0a354b3ed486a7"
-      },
-      {
-       "label": "F3",
-       "ref": "henningfield_2022",
-       "where": "1 Introduction",
-       "quote": "In 2021, Thailand decriminalized kratom farming, possession and sales.",
-       "sha": "da0a354b3ed486a7"
-      },
-      {
-       "label": "DB",
-       "ref": "tanguay_2015",
+       "label": "DA",
+       "ref": "var_2020",
        "where": "Abstract",
-       "quote": "Evidence indicates that detention of people who use drugs in compulsory centers in the name of treatment is common in Cambodia, China, Indonesia, Lao PDR, Malaysia, Myanmar, Philippines, Thailand, and Vietnam.",
-       "sha": "a9ffec9abc2881b3"
+       "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+       "sha": "2df08f9d2d17a723"
       }
      ],
      "ok": false,
      "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
-    },
-    {
-     "part": "but",
-     "text": "The provided research covers other regions, so it does not answer the question about Greece.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "henningfield_2022",
-       "where": "1 Introduction",
-       "quote": "Kratom and its alkaloids are not approved for any therapeutic use by the FDA, are not federally controlled in the US, nor in the International Drug Control Conventions; however some countries do control kratom and/or its two primary alkaloids, MG and 7-OH-MG (;;).",
-       "sha": "da0a354b3ed486a7"
-      },
-      {
-       "label": "F2",
-       "ref": "henningfield_2022",
-       "where": "1 Introduction",
-       "quote": "Six states in the US (Alabama, Arkansas, Indiana, Tennessee, Vermont and Wisconsin) have banned kratom, while five have passed consumer protection legislation to ensure consumer access to kratom with a framework for regulatory oversight (Arizona, Georgia, Nevada, Oklahoma and Utah).",
-       "sha": "da0a354b3ed486a7"
-      },
-      {
-       "label": "F3",
-       "ref": "henningfield_2022",
-       "where": "1 Introduction",
-       "quote": "In 2021, Thailand decriminalized kratom farming, possession and sales.",
-       "sha": "da0a354b3ed486a7"
-      },
-      {
-       "label": "DB",
-       "ref": "tanguay_2015",
-       "where": "Abstract",
-       "quote": "Evidence indicates that detention of people who use drugs in compulsory centers in the name of treatment is common in Cambodia, China, Indonesia, Lao PDR, Malaysia, Myanmar, Philippines, Thailand, and Vietnam.",
-       "sha": "a9ffec9abc2881b3"
-      }
-     ],
-     "ok": true
+     "said": "a rule: it says “all”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
     },
     {
      "part": "how1",
-     "text": "A 2021 review says some countries control kratom, but does not list Greece.",
+     "text": "A 2020 review of EU legal responses says Greece did not do a national risk assessment for new psychoactive substances.",
      "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+       "sha": "2df08f9d2d17a723"
+      },
       {
        "label": "F1",
-       "ref": "henningfield_2022",
-       "where": "1 Introduction",
-       "quote": "Kratom and its alkaloids are not approved for any therapeutic use by the FDA, are not federally controlled in the US, nor in the International Drug Control Conventions; however some countries do control kratom and/or its two primary alkaloids, MG and 7-OH-MG (;;).",
-       "sha": "da0a354b3ed486a7"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2015 review discusses drug detention in Asian countries, not Greece.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "tanguay_2015",
-       "where": "Abstract",
-       "quote": "Evidence indicates that detention of people who use drugs in compulsory centers in the name of treatment is common in Cambodia, China, Indonesia, Lao PDR, Malaysia, Myanmar, Philippines, Thailand, and Vietnam.",
-       "sha": "a9ffec9abc2881b3"
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+       "sha": "50b791a39be2a80d"
       }
      ],
      "ok": true
     }
    ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Greece has not carried out a national risk assessment for new psychoactive substances.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 is supported by the 3.5 section passage. Sentence 2 is not supported because its claim about a review versus Greek law is absent from the text. Sentence 3 is not supported because it attributes a 2008 study to a 2020 review's spe)"
+    },
+    {
+     "part": "but",
+     "text": "This is from a review of EU legal responses, not a statement from Greek law.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+       "sha": "2df08f9d2d17a723"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that this is from a review of EU legal responses rather than a statement from Greek law."
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of EU legal responses says Greece did not do a national risk assessment for new psychoactive substances.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+       "sha": "2df08f9d2d17a723"
+      },
+      {
+       "label": "F1",
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that a 2020 review says Greece did not do a national risk assessment (the study mentioned is from 2008)."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Greece has not carried out a national risk assessment for new psychoactive substances.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 is about risk assessments, not the legal status of drugs in Greece.)"
+    },
+    {
+     "part": "but",
+     "text": "This is from a review of EU legal responses, not a statement of Greek law.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+       "sha": "2df08f9d2d17a723"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "not mentioned in the passage"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of EU legal responses says Greece did not do a national risk assessment for new psychoactive substances.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+       "sha": "2df08f9d2d17a723"
+      },
+      {
+       "label": "F1",
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the abstract does not mention the risk assessment details"
+    }
+   ]
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9071,
+   "but": 0.3016,
+   "how1": 0.4886
+  },
+  "scores_quotes_alone": {
+   "short": 0.8088,
+   "but": 0.1896,
+   "how1": 0.5868
+  }
+ },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2020 review of EU legal responses says Greece did not do a national risk assessment for new psychoactive substances.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "var_2020",
+     "where": "Abstract",
+     "quote": "At the end of 2019, the European Monitoring Centre for Drugs and Drug Addiction was monitoring around 790 new psychoactive substances, more than twice the total number of controlled substances under the United Nations Conventions.",
+     "sha": "2df08f9d2d17a723"
+    },
+    {
+     "label": "F1",
+     "ref": "var_2020",
+     "where": "3. Results › 3.5. National Risk Assessment Procedures",
+     "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland).",
+     "sha": "50b791a39be2a80d"
+    }
+   ],
+   "by": "the second reader",
+   "said": "the abstract does not mention the risk assessment details"
   }
  ],
  "place": {
