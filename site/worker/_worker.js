@@ -24,7 +24,7 @@
    POST /api/want {id}      -> {"ok": true}  one more person asked a question that is on the site's public list of
                                questions not answered yet (site 2.5). Only the list item's number arrives ("w_0041"):
                                never the person's words. Kept: the number, a count, the last day.
-   POST /api/find {names, words, def} -> {"ok": true, "papers": [...]}  (site 2.16, 17 November 2026; the senior author: "answers take
+   POST /api/find {names, words, def} -> {"ok": true, "papers": [...], "more": 1 when a search was still out}  (site 2.16, 17 November 2026; the senior author: "answers take
                                too long to get responses and people are used to get responses instantly ... our ai should be able to
                                find answers almost instantly"). Published research on a drug, looked up at once in Europe PMC, the
                                open index of medical research (https://europepmc.org; its public search service, no key), and, since
@@ -84,11 +84,18 @@ export function readQuestion(body) {
    a drug read as answers: a meta-analysis on diabetes for "GHB", which is also glycated haemoglobin). Asked together: the most cited
    reviews of the drug that hold every key word; the most cited papers with the drug and every key word in their very title; the newest
    of those; and the papers that hold the drug and the key words anywhere. Wider only where that finds fewer than three.
+   How long (findPapers). Europe PMC answers most searches in a fifth of a second, but about one in three of the searches of a question
+   nobody asked before takes it two to ten seconds (trial 6). So nobody waits for a slow search: a search that is not back after 0.6 s
+   is asked a second time, and the first reply counts; the reader gets the list as soon as the most cited are back, and after one second
+   whatever at least three papers there are, with "more": 1 when a search is still out. That search finishes behind the reply, so that
+   Cloudflare keeps its answer, and the page asks once more a moment later and shows the whole list. "ms" and "again" in the reply say how
+   long each search took and how many were asked twice: numbers for the editors, nothing of a reader.
    Which words (iaPick, iaWindow). A paper gets words only where ALL of this holds:
      1. the sentence stands where papers say what they found: under a label for results or conclusions, or, in a summary without labels,
         in its later half; it is not a sentence about what the paper set out to do or how it was done;
      2. it holds a key word of the question (or a word papers use for it), and every key word stands in the sentence or the paper's title;
-     3. the paper is about the drug (its name in the title) or the sentence names the drug;
+     3. the sentence names the drug; or the paper is about the drug (its name in the title) and the sentence says "the extract", "this
+        compound", "its use". It does not point back to another sentence ("these effects", "in this context");
      4. it does not speak of animals or cells and of people at once (a part of it could be read as the other);
      5. there are at most 15 words of it, in a row and holding the key word, that leave out no word the sentence turns on: before them a
         "no" (not, never, without, fail, lack, non-significant, insufficient, little, few, only, contrary, myth ...), a question or an aim
@@ -199,6 +206,8 @@ export function iaParts(raw) {
 const IA_AMOUNT_UNIT = /^(?:mg|mcg|µg|μg|ug|g|kg|ml|iu|units?|milligrams?|micrograms?|grams?)$/;
 const IA_ANIMAL = /\b(?:rats?|mice|mouse|rodents?|zebrafish|in vitro|ex vivo|in silico|cell lines?|cultured (?:cells|neurons)|cell cultures?|animals?|murine|preclinical|horses?|equine|dogs?|canine|cats?|feline|pigs?|porcine|monkeys?|macaques?|primates?|rabbits?|sheep|hamsters?|guinea pigs?|drosophila|flies|worms?|elegans|veterinary|larvae|embryos?|organoids?|chicks?|chickens?|birds?|avian|pigeons?|frogs?|xenopus|oocytes?|synaptosom\w*|homogenates?|brain slices|transfected|transgenic|knockout|wild-type|vesicles)\b/i;
 const IA_PEOPLE = /\b(?:participants?|patients?|volunteers?|humans?|men|women|adults?|people|subjects|students|respondents|users|individuals|persons|adolescents|outpatients|inpatients)\b/i;
+// people for certain: "subjects", "individuals" and "adults" may be rats ("... in naive individuals", of a study in rats; "adult rats")
+const IA_SURE = /\b(?:participants?|patients?|volunteers?|humans?|men|women|people|persons|students|respondents|outpatients|inpatients|users|consumers|smokers|drinkers|veterans|workers|clinical|placebo|double-blind)\b/i;
 // a key word of a question, and the beginnings of the words papers use for the same thing
 const IA_NEAR = { addiction: "addict dependence dependency dependent misuse abuse withdrawal craving", addictive: "addict dependence dependency dependent misuse abuse withdrawal craving", depression: "depress antidepress", anxiety: "anxi panic",
   sleep: "sleep insomn somnolen wakeful", appetite: "appetit hunger hungry feeding orexigen", hungry: "appetit hunger hungry feeding orexigen", memory: "memor amnes recall cognit", attention: "attenti concentrat vigilan cognit",
@@ -206,16 +215,20 @@ const IA_NEAR = { addiction: "addict dependence dependency dependent misuse abus
   serotonin: "seroton 5-ht 5ht", dopamine: "dopamin", cardiac: "cardi heart myocard arrhythm", heart: "cardi heart myocard arrhythm", hepatic: "hepat liver", liver: "hepat liver", renal: "renal kidney nephro", kidney: "renal kidney nephro",
   kidneys: "renal kidney nephro", pulmonary: "pulmon lung respirat", lung: "pulmon lung respirat", lungs: "pulmon lung respirat", epistaxis: "epistax nosebleed", nosebleeds: "epistax nosebleed", psychosis: "psychos psychot schizophren",
   personality: "personalit trait", fatigue: "fatigu tired", paranoia: "paranoi", sexual: "sexual libido erectile", dental: "dental teeth tooth bruxism caries", tremor: "tremor shak", sweating: "sweat hyperhidro diaphore",
-  vomiting: "vomit emesis emetic nausea" };
+  vomiting: "vomit emesis emetic nausea", academic: "academ scholast exam grade learning", students: "student academ" };
 const iaStem = f => (f.length > 8 ? f.slice(0, f.length - 2) : f.length > 5 ? f.slice(0, f.length - 1) : f);
 export const iaNearStems = w => (IA_NEAR[w] ? IA_NEAR[w].split(" ") : [...new Set(findForms(w).map(iaStem))]);
 // a sentence about what the paper set out to do, or how it was done: not one that says what it found
 const IA_AIM = /\b(?:aims?|aimed|objectives?|purpose|goal) (?:of|was|were|is|are|to)\b|\bwe (?:aimed|sought|set out|hypothesi[sz]ed)\b|\b(?:this|the present|the current|our) (?:study|paper|article|review|report|trial|work|chapter|analysis|survey|meta-analysis|systematic review|scoping review|narrative review) (?:might|may|could|should|aim|seek|sought|investigat|examin|explor|assess|evaluat|review|summari|describ|discuss|present|provid|focus|address|compar|test|was designed|is intended|will|outlin|synthesi|collat|map)\w*|\bto (?:determine|investigate|examine|assess|evaluate|explore|test|compare|characteri[sz]e|describe|review|summari[sz]e|identify|study|establish|clarify|elucidate) (?:whether|if|the|how|a|an)\b|\b(?:was|were) to\b|\bwe (?:also |then |further |first |next |finally |here |therefore |thus |now |briefly )?(?:investigated|examined|explored|assessed|evaluated|tested|studied|conducted|performed|reviewed|searched|surveyed|recruited|measured|compared|analy[sz]ed|estimated|genotyped|sequenced|calculated|computed|quantified|collected|obtained|applied|employed|randomi[sz]ed|assigned|administered|enrolled|included|excluded|selected|screened|interviewed|used|describe|present|discuss|summari[sz]e|review|outline|highlight|report (?:a|an|the|on|two|three|four|\d))\b/i;
-const IA_HOW = /\b(?:manuscript|erratum|corrigendum|correction to|retract\w*|editors?|reviewers?|published online|interprofessional|this activity|continuing education)\b|\b(?:has|have) been (?:conducted|performed|reviewed|searched|summari[sz]ed|described|discussed|undertaken|carried out|collated|compiled)\b|\b(?:is|are) (?:also |then |further |briefly )?(?:reviewed|discussed|described|summari[sz]ed|presented|outlined|provided|highlighted|considered|addressed|explored)\b|\b(?:were|was) (?:recruited|enrolled|randomi[sz]ed|randomly|assigned|allocated|administered|collected|measured|assessed|evaluated|analy[sz]ed|performed|conducted|searched|included|extracted|screened|obtained|recorded|interviewed|surveyed|asked|quantified|monitored|calculated)\b|\bparticipants (?:completed|received|underwent)\b|\b(?:pubmed|medline|embase|scopus|web of science|psycinfo|cochrane (?:library|central)|prisma|prospero|clinicaltrials\.gov|inclusion criteria|exclusion criteria|search strateg\w*|trial registration|funded by|copyright|all rights reserved)\b/i;
+const IA_HOW = /\b(?:manuscript|erratum|corrigendum|correction to|retract\w*|editors?|reviewers?|published online|interprofessional|this activity|continuing education)\b|\b(?:has|have) been (?:conducted|performed|reviewed|searched|summari[sz]ed|described|discussed|undertaken|carried out|collated|compiled)\b|\b(?:is|are) (?:also |then |further |briefly )?(?:reviewed|discussed|described|summari[sz]ed|presented|outlined|provided|highlighted|considered|addressed|explored)\b|\b(?:were|was) (?:also |then |subsequently |additionally )?(?:undertaken|carried out|genotyped|recruited|enrolled|randomi[sz]ed|randomly|assigned|allocated|administered|collected|measured|assessed|evaluated|analy[sz]ed|performed|conducted|searched|included|extracted|screened|obtained|recorded|interviewed|surveyed|asked|quantified|monitored|calculated)\b|\bparticipants (?:completed|received|underwent)\b|\b(?:pubmed|medline|embase|scopus|web of science|psycinfo|cochrane (?:library|central)|prisma|prospero|clinicaltrials\.gov|inclusion criteria|exclusion criteria|search strateg\w*|trial registration|funded by|copyright|all rights reserved)\b/i;
 const IA_FOUND = /\b(?:found|show(?:s|ed|n)?|demonstrat\w*|reveal\w*|indicat\w*|suggest\w*|observ\w*|associat\w*|correlat\w*|linked|reduc\w*|increas\w*|decreas\w*|improv\w*|impair\w*|attenuat\w*|alleviat\w*|ameliorat\w*|worsen\w*|higher|lower|greater|fewer|significan\w*|conclud\w*|support\w*|confirm\w*|evidence|did not|does not|no (?:significant )?(?:difference|effect|evidence|association|change)s?|leads? to|led to|results? in|resulted in|caus\w*|produc\w*|induc\w*|yield\w*|prevent\w*|predict\w*|alter\w*|escalat\w*)\b/i;
-const IA_REFERS = /\b(?:extracts?|drugs?|compounds?|substances?|treatments?|treated|medications?|interventions?|agents?|users?|use|used|using|intake|consumption|consumers?|exposure|exposed|administration|administered|ingestion|supplement\w*|therapy|smokers?|drinkers?|drinking|smoking)\b/;
+// the drug, said without its name: "the extract", "this compound", "its use". (Never a bare "use" or "treatment": "Chronic METH use was ..." in a paper on MDMA
+// and methamphetamine is about the other drug, and "His epistaxis was successfully treated" about a patient.)
+const IA_REFERS = /\b(?:the|this|these|its|their|such) (?:[a-z-]+ )?(?:extracts?|drugs?|compounds?|substances?|plants?|herbs?|medications?|medicines?|supplements?)\b|\b(?:its|their) (?:[a-z-]+ )?(?:use|users?|consumption|intake|administration|ingestion|effects?)\b|\b(?:regular|chronic|long-term|short-term|heavy|daily|frequent|recreational|occasional|acute|repeated|prolonged|excessive|habitual|non-medical|illicit|continued|sustained|problematic) (?:use|users?|consumption|intake|administration|exposure)\b|^(?:use|users|consumption|intake|administration|exposure|withdrawal|dependence) /;
 // a sentence that asks for more research, or says what something "will" bring, does not say what was found: not taken
-const IA_MORE = /\b(?:further|more|future|additional|larger|longer) (?:\w+ ){0,2}(?:research|studies|study|work|trials?|investigations?|evidence|data)\b|\b(?:is|are|remains?) (?:needed|warranted|required|necessary)\b|\bwill (?:be|help|provide|allow|enable|require|need)\b|\bto be (?:determined|established|elucidated|clarified|confirmed)\b/i;
+// (after the sixth trial: "Research on ... may be warranted", "Clinical trials of ... are pending", "... understanding the impact on cognition is critical",
+// "findings highlight potential intervention targets": what should be done or looked at next, not what was found)
+const IA_MORE = /\b(?:further|more|future|additional|larger|longer) (?:\w+ ){0,2}(?:research|studies|study|work|trials?|investigations?|evidence|data)\b|\b(?:is|are|remains?|be) (?:needed|warranted|required|necessary|pending|ongoing|underway|planned)\b|\bwarrant(?:s|ed)?\b|\b(?:is|are|remains?) (?:critical|crucial|essential|vital|imperative|important)\b(?! (?:for|in) )|\bwill (?:be|help|provide|allow|enable|require|need)\b|\bto be (?:determined|established|elucidated|clarified|confirmed)\b|\b(?:highlight|underscore|underline|emphasi[sz]e|stress)(?:s|es|d|ed)? (?:the |a |an )?(?:\w+ )?(?:need|importance|necessity|urgency|potential)\b|\b(?:intervention|prevention|therapeutic|treatment) (?:targets?|strateg\w+|efforts?)\b|\b(?:implications?|recommendations?) for\b/i;
 /* Words on which a sentence turns. Left out of the words that are shown, they would let those words say more than their sentence does, or its
    opposite. */
 const IA_T_NEG = /^(?:no|not|never|without|neither|nor|none|lack\w*|fail\w*|absen\w*|cannot|unable|unlikely|\w+n't|non-?[a-z-]+|insignificant\w*|ineffective\w*|insufficient\w*|unsupported|unproven|unfounded|unchanged|unaffected|little|few|weak|rarely|seldom|hardly|scarcely|only|solely|contrary|refut\w*|disprov\w*|contradict\w*|doubt\w*|myths?|false|falsely|incorrect\w*|misconception\w*)$/;
@@ -232,6 +245,15 @@ const IA_W_ROUTE = /^(?:oral\w*|smok\w*|inject\w*|snort\w*|intranasal\w*|insuffl
 // words that only lead in to what a sentence says: a run of words may begin after them
 const IA_W_LIGHT = /^(?:we|it|they|there|this|these|those|the|our|a|an|in|conclusion|conclusions|summary|overall|thus|therefore|hence|together|taken|altogether|collectively|finally|moreover|furthermore|additionally|also|however|results?|findings?|data|study|studies|analysis|analyses|evidence|authors?|present|current|here|research|generally|largely|mostly|broadly|consistently|was|were|is|are|has|have|been|found|show(?:s|ed|n)?|indicat(?:e|es|ed)|demonstrat(?:e|es|ed)|conclud(?:e|es|ed)|report(?:s|ed)?|observ(?:e|ed)|reveal(?:s|ed)?|provid(?:e|es|ed)|support(?:s|ed)?|confirm(?:s|ed)?|that|of|for|to|some|further|strong|clear|new|first|direct|good|initial|growing|increasing|accumulating|emerging|converging|consistent|compelling|robust|substantial|considerable|ample)$/;
 const IA_W_HANG = /^(?:the|a|an|of|in|on|at|to|for|by|with|and|or|but|that|which|who|whose|as|than|from|into|onto|upon|over|under|between|among|across|during|after|before|about|against|within|through|via|per|versus|vs|when|where|while|because|since|its|their|this|these|those|is|are|was|were|be|been|has|have|had|not|no|more|less|very|both|any|some|all|each|every|many|most|several|other|another|such|same|certain|various|either|neither|two|three|four|five|six)$/, IA_W_LAME = /^(?:of|and|or|but|than|that|which|who|whose|as|to|is|are|was|were)$/;
+// the paper itself and the people or animals it studied ("this study", "these patients", "in this sample"); other things a "this" may stand before without
+// pointing at another sentence ("this drug", "at this time"); what may follow a "this" that is the subject ("This suggests that ...", "those who ...")
+const IA_W_SELF = /^(?:study|studies|trial|trials|review|reviews|analysis|analyses|reanalysis|meta-analysis|sample|samples|cohort|cohorts|survey|surveys|series|report|reports|paper|article|experiment|experiments|investigation|work|research|literature|case|cases|population|populations|data|dataset|findings|results|observations|evidence|group|groups|setting)$/;
+const IA_W_THING = /^(?:drug|drugs|compound|compounds|substance|substances|plant|plants|herb|herbs|extract|extracts|medication|medications|medicine|medicines|agent|agents|class|kind|type|time|point|stage|age)$/;
+const IA_W_AFTER_THIS = /^(?:with|who|whose|that|which|of|is|are|was|were|may|might|could|would|can|has|have|had|suggests?|suggested|indicates?|indicated|shows?|showed|demonstrates?|demonstrated|supports?|supported|confirms?|confirmed|implies|imply|means?|provides?|provided|highlights?|reveals?|revealed|raises?|adds?|extends?|led|leads?|makes?|made)$/;
+// how a part of a sentence begins that says when or of whom the rest holds ("When used daily, ...", "Among adults with ..., ..."), and words after "In", "On",
+// "By" that only join sentences ("In contrast, ...", "On the other hand, ...")
+const IA_W_WHEN = /^(?:when|where|under|at|unless|once|whenever|during|after|before|following|upon|until)$/, IA_W_WHOM = /^(?:in|among|amongst|for|within|across|with|by|on)$/;
+const IA_W_DISC = /^(?:addition|contrast|conclusion|conclusions|summary|general|particular|fact|brief|short|total|sum|turn|parallel|essence|other|all|part|line|keeping|agreement|accordance|support|example|instance|average|contrary|balance|regard|respect|terms|view|light|comparison|closing|practice|principle|theory|reality|recent|retrospect|response)$/;
 /* Which words of a sentence are shown: at most 15 in a row, holding toks[a..b] (the key word). Of all such runs, the one that reads best (from the
    start of the sentence or of a part of it, to its end; naming the drug) among those that the rules allow (points 5 and 6 above). Gives
    [first, last, how well it reads], or null where there is no such run: then nothing of the sentence is shown. opt: { stems, names } for what reads best. */
@@ -249,32 +271,60 @@ export function iaWindow(toks, a, b, opt) {
     || (/^(?:combin\w*|mix\w*|together)$/.test(low[i]) && low[i + 1] === "with") || (low[i] === "every" && i + 2 < n && num(i + 1) && /^(?:minutes?|hours?)$/.test(low[i + 2]));
   let route = false, than = false; for (let i = 0; i < n; i++) { if (never(i)) return null; if (IA_W_ROUTE.test(low[i])) route = true; if (IA_W_THAN.test(low[i])) than = true; }
   if (route && than) return null;
-  const cBad = cum(i => IA_W_SOFT.test(low[i]) || /https?:|www\.|\S@\S|[=<>±~]/i.test(toks[i]));   // (advice or a promise of safety, a link, statistics in signs: the shown words go around them)
+  // (numbers in brackets are statistics, "(SMD 0.5; 95% CI 0.1 to 0.9)", "(76.9%)": gone around like those in signs. A name is not: "(2C-B)", "(5-HT)")
+  const stat = new Array(n).fill(false); for (let i = 0; i < n; i++) { if (!/^[(\[]/.test(toks[i])) continue; let d = 0, j = i; for (; j < n; j++) { for (const ch of toks[j]) { if (ch === "(" || ch === "[") d++; else if (ch === ")" || ch === "]") d--; } if (d <= 0) break; }
+    j = Math.min(j, n - 1); let numeric = false; for (let k = i; k <= j; k++) if (/^[(\[]?[\d.,]+%?[)\];,.]*$/.test(toks[k])) numeric = true; if (numeric) for (let k = i; k <= j; k++) stat[k] = true; i = j; }
+  const cBad = cum(i => IA_W_SOFT.test(low[i]) || stat[i] || /https?:|www\.|\S@\S|[=<>±~]/i.test(toks[i]));   // (advice or a promise of safety, a link, statistics in signs or in brackets: the shown words go around them)
+  // (after the sixth trial: "In this context caffeine has been shown to increase anxiety", "... may be susceptible to these positive effects") Words that point
+  // back to another sentence ("these effects", "this context", "such cases") are not shown: what they point to is not there. Not meant: "this study", "these
+  // patients", "this drug", "those who ...", and a "This suggests that ...", after which a run may begin.
+  const cBack = cum(i => /^(?:this|these|those|such)$/.test(low[i]) && !(low[i] === "such" && low[i + 1] === "as") && !IA_W_AFTER_THIS.test(low[i + 1] || "")
+    && ![1, 2, 3].some(k => i + k < n && (IA_W_SELF.test(low[i + k]) || IA_W_THING.test(low[i + k]) || IA_PEOPLE.test(low[i + k]) || IA_SURE.test(low[i + k]) || IA_ANIMAL.test(low[i + k])) && !toks.slice(i + 1, i + k).some(t => /[,;:.]$/.test(t))));
   const cOpen = cum(i => /[(\[]/.test(toks[i])), cClose = cum(i => /[)\]]/.test(toks[i])), many = i => (toks[i].match(/[(\[]/g) || []).length !== (toks[i].match(/[)\]]/g) || []).length;
   const cUneven = cum(i => many(i)), paren = (s, e) => { let d = 0; for (let i = s; i <= e; i++) { for (const ch of toks[i]) { if (ch === "(" || ch === "[") d++; else if (ch === ")" || ch === "]") { d--; if (d < 0) return false; } } } return d === 0; };
   // (a word that most likely says what happened: "reduced", "was", "may", "did"; a run of words without one is a piece of a sentence, not a finding)
-  const cVerb = cum(i => /^(?:is|are|was|were|be|been|has|have|had|did|does|do|may|might|can|could|will|would|found|shows?|shown|suggests?|indicates?|reveals?|reports?|links?|leads?|led|results?|yields?|prevents?|predicts?|alters?|affects?|remains?|appears?|seems?|occurs?|differs?|rose|fell|lowers?|exerts?|supports?|confirms?|persists?|develops?|reduces?|increases?|decreases?|improves?|impairs?|causes?|produces?|induces?|changes?|raises?|[a-z]{3,}ed)$/.test(low[i]));
+  const cVerb = cum(i => /^(?:is|are|was|were|be|been|has|have|had|did|does|do|may|might|can|could|will|would|found|shows?|shown|suggests?|indicates?|reveals?|reports?|links?|leads?|led|results?|yields?|prevents?|predicts?|alters?|affects?|remains?|appears?|seems?|occurs?|differs?|rose|fell|lowers?|exerts?|supports?|confirms?|persists?|develops?|reduces?|increases?|decreases?|improves?|impairs?|causes?|produces?|induces?|changes?|raises?|declines?|drops?|falls?|rises?|lasts?|acts?|binds?|blocks?|releases?|depletes?|damages?|protects?|worsens?|eases?|relieves?|triggers?|poses?|plays?|carr(?:y|ies)|helps?|works?|makes?|gives?|takes?|provides?|exhibits?|displays?|possess(?:es)?|represents?|contributes?|mediates?|modulates?|enhances?|inhibits?|activates?|stimulates?|elevates?|disrupts?|promotes?|exacerbates?|mitigates?|facilitates?|[a-z]{3,}ed)$/.test(low[i]));
   const cKey = cum(i => { const parts = low[i].split(/[-/]/); return stems.some(st => (st.includes("-") ? low[i].startsWith(st) : parts.some(p => p.startsWith(st)))); }), cName = cum(i => names.includes(low[i]) || names.includes(low[i].replace(/'s$/, "")));
   // a clause that opens the sentence with "Although ..." does not govern what follows its comma
   let free = -1; if (/^(?:although|though|while|whereas|despite|notwithstanding)$/.test(low[0]) || (low[0] === "even" && low[1] === "though")) { for (let i = 1; i < n - 1; i++) if (/,$/.test(toks[i])) { free = i; break; } }
-  const edgeAt = i => i >= 0 && i < n && (/[,;:)\]]$/.test(toks[i]) || low[i] === "that" || (i > 0 && /[,;:]$/.test(toks[i - 1]) && /^(?:and|but|or)$/.test(low[i]) && /^(?:the|this|these|those|it|they|there|we|he|she|its|their|a|an|no)$/.test(low[i + 1] || "")));   // a part of the sentence ends with this word (", and the colour ..." begins a new part; ", and anxiety symptoms" is the last of a list)
+  const edgeAt = i => i >= 0 && i < n && (/[,;:]$/.test(toks[i]) || low[i] === "that" || (i > 0 && /[,;:]$/.test(toks[i - 1]) && /^(?:and|but|or)$/.test(low[i]) && /^(?:the|this|these|those|it|they|there|we|he|she|its|their|a|an|no)$/.test(low[i + 1] || "")));   // a part of the sentence ends with this word (", and the colour ..." begins a new part; ", and anxiety symptoms" is the last of a list; a closing bracket ends no part: "... in the catechol-O-methyltransferase (COMT) | gene moderated ...")
   /* (2.20, after the third trial) Whole parts of the sentence only. The run ENDS where the sentence ends or a part of it does (a comma, a semicolon, a closing
      bracket; before an opening one): "... revealed subjective anxiety levels | to be significantly lower" was shown without its last words and said nothing.
      It BEGINS where the sentence or a part of it begins; or after words that only lead in ("We found | no evidence that ...", "there was | no ..."): cut
      after anything else, the words would lose whom or what they are about ("Carriers of the allele were | most likely to ... if they used cannabis"). */
-  const startOk = new Array(n).fill(false); { let c = 0, light = true;
-    for (let i = 0; i < n; i++) { if (i === 0 || edgeAt(i - 1)) { c = i; light = true; } startOk[i] = i === c || light; if (!IA_W_LIGHT.test(low[i]) && !IA_ANIMAL.test(low[i])) light = false; } }   // (a word for animals or cells may be left before the run: the line itself then says "in animals or cells")
+  const startOk = new Array(n).fill(false), partOf = new Array(n).fill(0); { let c = 0, light = true;
+    for (let i = 0; i < n; i++) { if (i === 0 || edgeAt(i - 1)) { c = i; light = true; } partOf[i] = c; startOk[i] = i === c || light; if (!IA_W_LIGHT.test(low[i]) && !IA_ANIMAL.test(low[i])) light = false; } }   // (a word for animals or cells may be left before the run: the line itself then says "in animals or cells")
   // where a run may end before the sentence does: at a comma, semicolon or closing bracket after which the sentence only adds something (", with ...", ", which ...",
   // ", suggesting ...", "(p ..."), not where what follows is still needed ("Anxiety, which had been rated weekly, | fell ..."; a list: "anxiety, | depression and stress")
-  const adds = i => i < n && (/^[(\[]/.test(toks[i]) || /^(?:with|while|whereas|which|who|where|when|consistent|compared|particularly|especially|including|further|thereby|thus|possibly|probably|likely|as|although|though|but|however)$/.test(low[i]) || (/ing$/.test(low[i]) && low[i].length > 5)
-    || (/^(?:and|or)$/.test(low[i]) && /^(?:the|this|these|those|it|they|there|we|its|their|no|a|an)$/.test(low[i + 1] || "")));
+  const addsWord = i => /^(?:with|while|whereas|which|who|where|when|consistent|compared|particularly|especially|including|further|thereby|thus|possibly|probably|likely|as|although|though|but|however)$/.test(low[i]) || (/ing$/.test(low[i]) && low[i].length > 5)
+    || (/^(?:and|or)$/.test(low[i]) && /^(?:the|this|these|those|it|they|there|we|its|their|no|a|an|was|were|is|are|had|has|have|did|does|[a-z]{4,}ed)$/.test(low[i + 1] || ""));   // (", and reduced the sleep shifts": a second thing found)
+  // (after the sixth trial: "... accounting for 40/52 | (76.9%) of cases", "... number needed to treat | (NNT) of 3") What stands in brackets only adds where the
+  // sentence ends after the brackets, or a part of it does, or what follows them adds itself
+  const closeAt = k => { let d = 0; for (let j = k; j < n; j++) { for (const ch of toks[j]) { if (ch === "(" || ch === "[") d++; else if (ch === ")" || ch === "]") d--; } if (d <= 0) return j; } return n - 1; };
+  const adds = i => i < n && (/^[(\[]/.test(toks[i]) ? (j => j >= n - 1 || /[,;:.]$/.test(toks[j]) || adds(j + 1))(closeAt(i)) : addsWord(i));
   const endOk = e => e === n - 1 || o.head || ((/[,;:]$/.test(toks[e]) || (/[)\]]$/.test(toks[e]) && !/[(\[]/.test(toks[e])) || /^[(\[]/.test(toks[e + 1])) && adds(e + 1));   // (o.head: for what a drug is, the head of the sentence is enough)
+  /* (after the sixth trial: "... that among adults with treatment-resistant depression, | ketamine can produce rapid ... antidepressant effects") The part before
+     the run may say of whom or when the sentence holds: "Among adults with ..., ...", "When used daily, ...", "During withdrawal, ...". Cut after it, the words
+     would say it of everyone, always. So a run does not begin after such a part (it may begin with it). Not meant: the study itself ("In this randomized trial
+     of sixty adults, ...": the paper's title and kind say that); "In rats, ..." (the line's own mark says it); "In contrast, ..."; "After the drug, ..." (the
+     drug itself is what the question is about); and "Although ...,". */
+  const scopeAt = (k, e) => { if (k > e || !(IA_W_WHEN.test(low[k]) || IA_W_WHOM.test(low[k]))) return false; const rest = low.slice(k + 1, e + 1);
+    if (rest.some(w => IA_W_SELF.test(w))) return false;
+    if (rest.every(w => /^(?:the|this|a|an|its|their|of|drug|drugs|extract|compound|substance|plant|medication|administration|treatment|use|intake|ingestion|exposure|consumption)$/.test(w) || names.includes(w))) return false;   // ("After the drug, ...", "After kanna, ...": only the drug itself)
+    if (rest.some(w => IA_ANIMAL.test(w)) && !rest.some(w => /^(?:with|who|whose|those)$/.test(w))) return false;
+    return !(IA_W_WHOM.test(low[k]) && rest.slice(0, 2).some(w => IA_W_DISC.test(w))); };
+  const scoped = s => { let e = partOf[s] - 1;
+    while (e >= 0 && !/[;:]$/.test(toks[e])) { let c = e; while (c > 0 && !/[,;:]$/.test(toks[c - 1])) c--;   // the part [c..e] before the run, and the ones before it
+      if (scopeAt(/^(?:and|but|or)$/.test(low[c]) ? c + 1 : c, e)) return true;
+      for (let i = c; i < e; i++) if (low[i] === "that" && scopeAt(i + 1, e)) return true;   // ("We found that among adults with ..., | ...")
+      e = c - 1; }
+    return false; };
   const opener = /^(?:to|although|though|while|whereas|if|when|given|because|since|despite|as|in|by|with|after|before|during|for|among|across|based|using|following|considering|regarding|compared|unlike|like|notwithstanding)$/.test(low[0]);
   let first = n - 1; for (let i = 0; i < n; i++) if (/[,;:]$/.test(toks[i])) { first = i; break; }   // where the sentence's opening part ends
   let best = null, top = -1e9;
   for (let s = Math.max(0, b - 14); s <= a; s++) {
     const from = s > free ? free + 1 : 0;   // (what stands before this is not counted)
-    if (!startOk[s] || cPre[s] - cPre[from] > 0 || cBad[s] > 0) continue;   // (advice or a promise of safety before them: what follows is what is advised or promised, and is not shown)
+    if (!startOk[s] || cPre[s] - cPre[from] > 0 || cBad[s] > 0 || (s > 0 && (scoped(s) || cnt(cBack, partOf[s], s - 1) > 0))) continue;   // ("In this | context kanna has ...": not after words that point back)   // (advice or a promise of safety before them: what follows is what is advised or promised, and is not shown)
     // not with a word that hangs on what was cut ("which may also apply ...", "characterized by ...", "becoming ..."), and not with the items of a list ("..., | mood disorders, and withdrawal symptoms ...")
     if (s > 0 && (IA_W_LAME.test(low[s]) || /^(?:for|in|on|at|by|with|from|into|during|after|before|among|between|through|via|per|about|against|within|under|over)$/.test(low[s]) || (/(?:ing|ed)$/.test(low[s]) && low[s].length > 5)
       || (/[,;]$/.test(toks[s - 1]) && [0, 1, 2].some(k => s + k < n && /,$/.test(toks[s + k]))) || (low[s - 1] === "that" && cVerb[s + 1] - cVerb[s] > 0))) continue;   // ("affinities that | might augment ...": the words would lack what they are said of)
@@ -283,7 +333,7 @@ export function iaWindow(toks, a, b, opt) {
       if (!endOk(e) || e - s < 3) continue;
       if (s === 0 && opener && e <= first && e < n - 1) continue;   // (only the part that opens the sentence, "Despite its addictive properties, ...": it leads up to what is said, and says nothing yet)
       if (cPost[n] - cPost[e + 1] > 0 || cAsk[Math.min(n, nb[e] + 1)] - cAsk[e + 1] > 0) continue;   // after them: a "no" or a "but" anywhere; a question or an aim up to the next comma (", which should be examined in ..." adds, it does not take back)
-      if (cnt(cBad, s, e) > 0 || (preMay && cnt(cMay, s, e) === 0)) continue;
+      if (cnt(cBad, s, e) > 0 || cnt(cBack, s, e) > 0 || (preMay && cnt(cMay, s, e) === 0)) continue;
       if ((cnt(cOpen, s, e) > 0 || cnt(cClose, s, e) > 0) && (cnt(cUneven, s, e) > 0 || cnt(cOpen, s, e) !== cnt(cClose, s, e)) && !paren(s, e)) continue;
       if (cnt(cVerb, s, e) === 0) continue;   // (no word that says what happened: a piece of a sentence, not a finding)
       // what reads best: more of the sentence, from where a part of it begins, to the sentence's end above all (the last words carry what was found), with the
@@ -307,7 +357,7 @@ export function iaPick(p, groups, names, def, note) {
   if (!def && !G.length) { say("the question has no key word (only the drug's name)"); return null; }
   const has = (st, lowToks) => lowToks.some(t => (st.includes("-") ? t.startsWith(st) : t.split(/[-/]/).some(x => x.startsWith(st))));
   const lows = s => s.toLowerCase().replace(/[‐-―−]/g, "-").split(/\s+/).map(t => t.replace(/’/g, "'").replace(/[^a-z0-9'/-]/g, "").replace(/^['-]+|['-]+$/g, ""));
-  const flatT = iaFlat(p.t), titleLow = lows(p.t), titleNamed = nameRe.test(flatT), flatAll = iaFlat(p.t + ". " + parts.map(x => x.s).join(" ")), pa = IA_ANIMAL.test(flatAll), pp = IA_PEOPLE.test(flatAll);
+  const flatT = iaFlat(p.t), titleLow = lows(p.t), titleNamed = nameRe.test(flatT), flatAll = iaFlat(p.t + ". " + parts.map(x => x.s).join(" ")), pa = IA_ANIMAL.test(flatAll), pp = IA_PEOPLE.test(flatAll) || IA_SURE.test(flatAll), ta = IA_ANIMAL.test(flatT) && !IA_SURE.test(flatT);   // (ta: the title says animals or cells, and names no people)
   if (FIND_HELD.test(flatT)) { say("its title is about dying, overdose, amounts, pregnancy or children"); return null; }   // (the paper as a whole is about what waits for a person)
   const labelled = parts.some(x => x.sec), cands = [];
   const defRe = def && forms.length ? new RegExp("(?:^|[^a-z0-9])(?:" + forms.map(iaRe).join("|") + ")(?:[^a-z0-9][^.;:]{0,70}?)? (?:is|are) (?:a|an|the|one) ") : null;
@@ -324,14 +374,15 @@ export function iaPick(p, groups, names, def, note) {
     if (aim || IA_MORE.test(fs)) { why.aim++; return; }                                                   // it says what was found: not what was set out, how it was done, or that more research is needed
     if (!G.every(st => st.some(s => has(s, lt) || has(s, titleLow)))) { why.all++; return; }              // every key word stands in it or in the title
     const where = x.sec === "c" ? 6 : x.sec === "r" ? 4 : labelled ? -1 : i >= n - 2 ? 5 : i >= (n <= 4 ? 1 : Math.floor(n / 2)) ? 3 : -1; if (where < 0) { why.early++; return; }   // where papers say what they found (a summary of four sentences or fewer: anywhere after its first)
-    if (!titleNamed && !nameRe.test(fs)) { why.about++; return; }                                         // about the drug
-    if (where < 5 && !nameRe.test(fs) && !IA_REFERS.test(fs)) { why.about++; return; }                    // (a sentence of results says of what: the drug, or "the extract", "its use". "Vehicle chicks displayed ..." is about the comparison group)
+    // it names the drug; or the paper is about the drug (its name in the title) and the sentence says "the extract", "this compound", "its use". (After the sixth
+    // trial: of twelve sentences that named neither, ten were about something else: the other drug of a comparison, a patient, a method.)
+    if (!nameRe.test(fs) && !(titleNamed && IA_REFERS.test(fs))) { why.about++; return; }
     cands.push({ i, x, fs, lt, score: where + (hit.length - 1) * 3 + (IA_FOUND.test(fs) ? 2 : 0) + (nameRe.test(fs) ? 1 : 0) });
   });
-  if (!cands.length) say(def ? "no sentence at its start says what the drug is" : !why.key ? "no sentence holds a key word of the question" : "of " + why.key + " sentence(s) that hold a key word: " + [why.aim && why.aim + " say what was set out or how it was done", why.early && why.early + " stand before the results", why.all && why.all + " lack another key word (and the title does too)", why.about && why.about + " do not name the drug (and the title does not)"].filter(Boolean).join(", "));
+  if (!cands.length) say(def ? "no sentence at its start says what the drug is" : !why.key ? "no sentence holds a key word of the question" : "of " + why.key + " sentence(s) that hold a key word: " + [why.aim && why.aim + " say what was set out or how it was done", why.early && why.early + " stand before the results", why.all && why.all + " lack another key word (and the title does too)", why.about && why.about + " do not name the drug"].filter(Boolean).join(", "));
   cands.sort((u, v) => v.score - u.score || v.i - u.i);
   for (const c of cands.slice(0, 4)) {
-    const sa = IA_ANIMAL.test(c.fs), sp = IA_PEOPLE.test(c.fs) || /\b(?:clinical|placebo|double-blind)\b/.test(c.fs); if (sa && sp) { say("a sentence with the key word speaks of animals or cells and of people at once"); continue; }
+    const sa = IA_ANIMAL.test(c.fs), sp = IA_SURE.test(c.fs); if (sa && sp) { say("a sentence with the key word speaks of animals or cells and of people at once"); continue; }
     const toks = c.x.s.split(/\s+/), lt = c.lt, spans = []; if (lt.length !== toks.length) continue;
     if (def) { const first = forms.map(f => f.split(" ")[0]), k = lt.findIndex(t => first.includes(t) || first.includes(t.replace(/[^a-z0-9-].*$/, ""))); if (k >= 0) spans.push([k, k, 0]); }
     else { const firsts = []; for (const st of G) { const k = lt.findIndex(t => st.some(s => has(s, [t]))); if (k >= 0) firsts.push(k); }
@@ -340,51 +391,80 @@ export function iaPick(p, groups, names, def, note) {
     let w = null; for (const [a, b, more] of spans) { const got = iaWindow(toks, a, b, { stems: allStems, names, head: !!def }); if (got && (!w || got[2] + more > w[2])) w = [got[0], got[1], got[2] + more]; }
     if (!w) { say("a sentence with the key word (" + (c.x.sec || "no label") + ", " + toks.length + " words) has no 15 words in a row that pass the rules: a word it turns on, an amount, a held word"); continue; }
     const q = (w[0] > 0 ? "…" : "") + toks.slice(w[0], w[1] + 1).join(" ").replace(/^[,;:\s]+|[,;:.\s]+$/g, "") + (w[1] < toks.length - 1 ? "…" : "");
-    return { q, an: sa || (!sp && pa && !pp) ? 1 : !sp && pa && pp ? 2 : 0, i: c.i, n, sec: c.x.sec };
+    // animals or cells: where the sentence says so; where the title does and names no people ("... in naive and cocaine-experienced rats": its "naive individuals"
+    // are rats); where the whole summary does. 2: the summary covers both, and the sentence does not say which
+    return { q, an: sa ? 1 : ta ? (sp ? 2 : 1) : sp || !pa ? 0 : pp ? 2 : 1, i: c.i, n, sec: c.x.sec };
   }
   return null;
 }
-/* The papers on a drug and a question's key words, the best first, each with its own words on the question where the rules find them. Four
-   searches are asked together; wider ones only where they found too little. */
+/* The papers on a drug and a question's key words, the best first, each with its own words on the question where the rules find them.
+   Gives { papers, more, ms, again }: more: a search was still out when the list was given (the page asks once more a moment later); ms: how long each of the
+   three searches took (null: not back yet); again: how many were asked a second time. */
+const FIND_AGAIN = 600, FIND_FIRST = 250, FIND_SOON = 1000, FIND_LAST = 2600, FIND_ALL = 5200;
 async function findPapers(env, r, most, ctx) {
-  const get = env.FETCH || fetch;
-  /* One search. The fifth trial showed what makes a question slow: most searches come back in a fifth of a second, but ordering a large set by citations
-     can take Europe PMC four seconds and more. So nobody waits for a slow search: after `wait` the reader gets what the other searches found, and the slow
-     one is left to finish behind the reply (ctx.waitUntil), so that Cloudflare keeps its answer and the next reader with that question gets it at once. */
-  const ask = (q, sort, size, wait) => {
-    if (!q) return Promise.resolve([]);
-    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 20000);
-    const once = async order => {
-      const res = await get(EPMC + "?query=" + encodeURIComponent(q) + "&format=json&resultType=core&pageSize=" + size + (order ? "&sort=" + order : ""), { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal, cf: { cacheTtl: 86400, cacheEverything: true } });
-      if (!res.ok) return order ? once("") : null;   // (should the service not take the order asked for, it is asked once more without it)
+  const get = env.FETCH || fetch, began = Date.now(), left = () => FIND_ALL - (Date.now() - began);
+  /* One search, begun at once; nobody is made to wait for it. The sixth trial showed what makes a question slow: Europe PMC answers most searches in a fifth of
+     a second, but about one in three of the searches of a question nobody asked before took two to ten seconds, whatever was asked. So (1) a search that is
+     not back after FIND_AGAIN is asked a second time, and whichever reply comes first counts (written with its two first words the other way round, so that it
+     is a request of its own and does not wait behind the first); (2) the reader is given what is there (round, below), and a search that is still out is left
+     to finish behind the reply (ctx.waitUntil), so that Cloudflare keeps its answer for a day and the next request gets it at once. */
+  const start = (q, sort, size) => {
+    const s = { done: !q, v: q ? null : [], ms: null, again: 0, p: null };
+    if (!q) { s.p = Promise.resolve(s.v); return s; }
+    const t0 = Date.now(), ctl = new AbortController(), tries = [];
+    const once = async (order, second) => {
+      const res = await get(EPMC + (second ? "?format=json&query=" + encodeURIComponent(q) : "?query=" + encodeURIComponent(q) + "&format=json") + "&resultType=core&pageSize=" + size + (order ? "&sort=" + order : ""),
+        { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal, cf: { cacheTtl: 86400, cacheEverything: true } });
+      if (!res.ok) return order ? once("", second) : null;   // (should the service not take the order asked for, it is asked once more without it)
       const d = await res.json(); return ((d && d.resultList && d.resultList.result) || []).map(x => { const p = findPaper(x); return p ? Object.assign(p, { ab: String((x && x.abstractText) || "") }) : null; }).filter(Boolean);
     };
-    const whole = (async () => { try { return await once(sort); } catch (e) { return null; } finally { clearTimeout(timer); } })();
-    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(whole);
-    let t = null; const late = new Promise(done => { t = setTimeout(() => done(null), wait); });
-    return Promise.race([whole, late]).then(v => { clearTimeout(t); return v; });
+    const run = second => { const p = once(sort, second).catch(() => null); tries.push(p); return p; };
+    s.p = new Promise(done => {
+      let open = 0, fin = false, second = null; const kill = setTimeout(() => ctl.abort(), 20000);
+      const got = v => { open--; if (open === 0) clearTimeout(kill); if (fin || (v === null && open > 0)) return; fin = true; clearTimeout(second); s.v = v; s.done = true; s.ms = Date.now() - t0; done(v); };
+      open++; run(false).then(got);
+      second = setTimeout(() => { if (!fin) { open++; s.again = 1; run(true).then(got); } }, FIND_AGAIN);
+    });
+    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(s.p.then(() => Promise.all(tries)));
+    return s;
   };
-  const got = v => v || [];   // (null: the service refused, or was not in time)
+  const got = s => (s.done && s.v) || [];   // (not back yet, or refused: nothing)
   const seen = new Set(), out = [], add = list => { for (const p of list) { if (!p) continue; const k = p.doi || p.pmid; if (!seen.has(k)) { seen.add(k); out.push(p); } } };
   const all = r.names.concat(r.also || []), stems = r.groups.map(g => [...new Set(g.flatMap(iaNearStems))]);
   const onTopic = p => { const lt = iaFlat(p.t).split(/[^a-z0-9-]+/); return stems.every(st => st.some(s => lt.some(w => (s.includes("-") ? w.startsWith(s) : w.split("-").some(x => x.startsWith(s)))))); };
+  let more = false, ms = null, again = 0;
   /* Three searches are asked together: the most cited papers with the drug in their title that hold the key words (in the title, or as a review); the
      newest papers with drug and key words in the title; and, as what is there when those two are slow or find little, the papers that hold the drug and
-     the key words anywhere, in Europe PMC's own order. Of the most cited, those with the key words in their very title come first. */
+     the key words anywhere, in Europe PMC's own order. Of the most cited, those with the key words in their very title come first.
+     When the list is given: as soon as the most cited and the newest are back (and hold three papers, or the third search is back too); a quarter of a second
+     after the most cited, without the newest; after one second, whatever three papers there are; after 2.6 seconds, whatever there is. */
   const round = async names => { const Q = findQueries(names, r.groups);
-    let [a, c, w] = await Promise.all([ask(Q.cited, "CITED%20desc", 8, 2600), r.groups.length ? ask(Q.onTitle, "P_PDATE_D%20desc", 2, 2600) : [], ask(Q.wide || Q.anyTitle, "", 4, 3200)]);
-    if (a === null && !(c && c.length) && !(w && w.length)) a = await ask(Q.cited, "", 8, 2500);   // (nothing came in time: once more, without the order, which is what takes the time)
-    a = got(a); c = got(c); w = got(w);
+    const A = start(Q.cited, "CITED%20desc", 8), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2), W = start(Q.wide || Q.anyTitle, "", 4);
+    const known = (...ss) => new Set(ss.flatMap(got).map(p => p.doi || p.pmid)).size;
+    await new Promise(go => { let grace = false, soon = false, fin = false; const timers = [];
+      const look = last => { if (fin) return;
+        if (last || (A.done && C.done && (W.done || known(A, C) >= 3)) || (A.done && grace && known(A) >= 3) || (soon && known(A, C, W) >= 3)) { fin = true; timers.forEach(clearTimeout); go(); } };
+      A.p.then(() => { timers.push(setTimeout(() => { grace = true; look(); }, FIND_FIRST)); look(); }); C.p.then(() => look()); W.p.then(() => look());
+      timers.push(setTimeout(() => { soon = true; look(); }, FIND_SOON), setTimeout(() => look(true), Math.max(300, Math.min(FIND_LAST, left())))); });
+    const a = got(A), c = got(C), w = got(W);
     const first = stems.length ? a.filter(onTopic) : a, rest = stems.length ? a.filter(p => !onTopic(p)) : [];
     add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
-    if (out.length < 3) add(w); };
+    if (out.length < 3) add(w);
+    if (!A.done || !C.done || (out.length < 3 && !W.done)) more = true;
+    if (!ms) ms = [A, C, W].map(s => s.ms);
+    again += A.again + C.again + W.again; };
+  // one wider search, where the three found too little
+  const one = async (q, sort, size) => { if (!q || left() < 600) return []; const s = start(q, sort, size); let t = null;
+    await Promise.race([s.p, new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_LAST, left()))); })]); clearTimeout(t); if (!s.done) more = true; again += s.again; return got(s); };
   await round(r.names);
-  if (out.length < 3 && all.length > r.names.length) await round(all);   // (the name the reader wrote found too little: with what its page is called)
+  // wider, only where the searches are back and found too little (a search that is still out is not "too little": the page asks again)
+  if (!more && out.length < 3 && all.length > r.names.length && left() > 600) await round(all);   // (the name the reader wrote found too little: with what its page is called)
   const Q = findQueries(all, r.groups);
-  if (out.length < 3 && Q.loose) add(got(await ask(Q.loose, "CITED%20desc", 4, 2600)));
-  if (out.length < 2 && r.groups.length) add(got(await ask(Q.nameRev, "CITED%20desc", 4, 2600)));
-  return out.slice(0, most).map(p => { let pick = null; try { pick = r.noq ? null : iaPick(p, r.groups, all, r.def); } catch (e) { pick = null; }
+  if (!more && out.length < 3 && Q.loose) add(await one(Q.loose, "CITED%20desc", 4));
+  if (!more && out.length < 2 && r.groups.length) add(await one(Q.nameRev, "CITED%20desc", 4));
+  const papers = out.slice(0, most).map(p => { let pick = null; try { pick = r.noq ? null : iaPick(p, r.groups, all, r.def); } catch (e) { pick = null; }
     const o = { t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind }; if (pick) { o.q = pick.q; if (pick.an) o.an = pick.an; } return o; });
+  return { papers, more, ms: ms || [], again };
 }
 async function find(request, url, env, ctx) {
   if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
@@ -394,7 +474,7 @@ async function find(request, url, env, ctx) {
   try { const t = await request.text(); if (t.length > 2000) return json({ ok: false, error: "too long" }, 413); body = JSON.parse(t); } catch (e) { return json({ ok: false, error: "json" }, 400); }
   const r = readFind(body); if (r.error) return json({ ok: false, error: r.error }, 422);
   if (r.held) return json({ ok: true, held: true, papers: [] });
-  try { return json({ ok: true, papers: await findPapers(env, r, 6, ctx) }); }
+  try { const f = await findPapers(env, r, 6, ctx); return json(Object.assign({ ok: true, papers: f.papers }, f.more ? { more: 1 } : {}, { ms: f.ms, again: f.again })); }
   catch (e) { return json({ ok: false, error: "search" }, 502); }
 }
 // one more person asked a question that is on the public list: the item's number, counted

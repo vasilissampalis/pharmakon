@@ -11,6 +11,11 @@
 // What is written (OUT_DIR/trial-<time>.json), for each question: what Europe PMC was asked and how many papers each search gave; the
 // papers in the order a reader would see them (title, kind, year, journal) with the words shown for each, or why none were; the time it
 // took, and the server's own computing time for it (the same request run again from memory).
+// Time (after the sixth trial). The server no longer waits for a slow search: it gives the list it has and says "more"; the page then asks again
+// after 2.6 s, and once more after 6 s. The trial does the same: ms is when the first list came; more whether a search was still out then;
+// whole_ms when the whole list was there; asks how often the server was asked. As Cloudflare does on the site, the trial keeps each reply of
+// Europe PMC once it is complete, so that a search asked again is not made again. Each search is written under the question that began it,
+// with whether it was the second asking of a slow one (second) or was answered from what was kept (kept).
 // A paper's summary is never copied here (it is its publisher's). For each line shown, "around" gives only the SHAPE of the rest of its
 // sentence, so that the editor can see whether a word the sentence turns on was left outside the words shown: little words are written
 // out (no, not, may, but, only, than, in rats ...), every other word is a "_" and every number a "#".
@@ -28,12 +33,14 @@ console.log("instant trial: " + files.length + " request(s); no model takes part
 
 // what Europe PMC gave, kept in memory only: to work out "around", to say why a paper got no words, and to run the request again without the network
 const summaries = new Map(), replies = new Map(); let asked = [];
-const viaNet = async (u, o) => { const t0 = Date.now(), url = String(u); let r = null, text = "";
-  try { r = await fetch(u, o); text = await r.text(); } catch (e) { asked.push({ q: decodeURIComponent(url.split("?query=")[1] || "").slice(0, 600), failed: String(e && e.name) }); throw e; }
+const viaNet = async (u, o) => { const t0 = Date.now(), url = String(u), mine = asked, second = /search\?format=json&query=/.test(url), q = decodeURIComponent((url.split(/[?&]query=/)[1] || "").split("&")[0]).slice(0, 700), sort = (url.match(/&sort=([A-Z_]+)/) || [])[1] || "";
+  const kept = replies.get(url); if (kept && kept.status === 200) { mine.push({ q, sort, kept: true }); return new Response(kept.text, { status: 200, headers: { "content-type": "application/json" } }); }
+  let r = null, text = "";
+  try { r = await fetch(u, o); text = await r.text(); } catch (e) { mine.push(Object.assign({ q, sort, failed: String(e && e.name), ms: Date.now() - t0 }, second ? { second: true } : {})); throw e; }
   let list = []; try { list = ((JSON.parse(text).resultList || {}).result) || []; } catch (e) { list = []; }
   for (const x of list) { const ab = String(x.abstractText || ""); if (x.doi) summaries.set("doi:" + x.doi, ab); if (x.pmid) summaries.set("pmid:" + x.pmid, ab); }
   replies.set(url, { status: r.status, text });
-  asked.push({ q: decodeURIComponent(url.split("?query=")[1] || "").slice(0, 700), status: r.status, ms: Date.now() - t0, kb: Math.round(text.length / 1024), papers: list.map(x => String(x.pubYear || "") + " " + String(x.title || "").replace(/<[^>]+>/g, "").slice(0, 110)) });
+  mine.push(Object.assign({ q, sort, status: r.status, ms: Date.now() - t0, kb: Math.round(text.length / 1024), papers: list.map(x => String(x.pubYear || "") + " " + String(x.title || "").replace(/<[^>]+>/g, "").slice(0, 110)) }, second ? { second: true } : {}));
   return new Response(text, { status: r.status, headers: { "content-type": "application/json" } }); };
 const fromMemory = async u => { const r = replies.get(String(u)); return r ? new Response(r.text, { status: r.status, headers: { "content-type": "application/json" } }) : new Response("{}", { status: 200 }); };
 const LITTLE = new Set(("a an the of in on at to for from by with and or but that which who whom whose than as is are was were be been being it its their they this these those there into over under after before during while when where also both either neither nor not no none never without cannot " +
@@ -58,17 +65,23 @@ for (const f of files) {
   for (const q of Array.isArray(req.questions) ? req.questions.slice(0, 60) : []) {
     asked = []; const body = JSON.stringify(Object.assign({ names: q.names, words: q.words }, Array.isArray(q.also) && q.also.length ? { also: q.also } : {}, q.def ? { def: 1 } : {})), rf = readFind(JSON.parse(body));
     const post = env => worker.fetch(new Request("https://pharmakon.world/api/find", { method: "POST", headers: { "content-type": "application/json", origin: "https://pharmakon.world" }, body }), env);
-    const t0 = Date.now(); let reply = null, status = 0;
-    try { const r = await post({ ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: viaNet }); status = r.status; reply = await r.json(); } catch (e) { reply = { error: String(e && e.message).slice(0, 200) }; }
-    const ms = Date.now() - t0;
+    const t0 = Date.now(), mine = asked, live = { ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: viaNet }; let reply = null, status = 0;
+    try { const r = await post(live); status = r.status; reply = await r.json(); } catch (e) { reply = { error: String(e && e.message).slice(0, 200) }; }
+    const ms = Date.now() - t0, firstReply = reply; let asks = 1, wholeMs = ms;
+    // as the page does: where a search was still out, ask again after 2.6 s, and once more after 6 s; the newer list takes the place of the first
+    for (const wait of [2600, 6000]) { if (!(reply && reply.more)) break; await new Promise(r => setTimeout(r, wait)); let r2 = null; try { r2 = await (await post(live)).json(); } catch (e) { r2 = null; } asks++;
+      if (r2 && r2.ok && ((r2.papers || []).length || !((reply.papers || []).length))) { reply = r2; wholeMs = Date.now() - t0; } else break; }
+    const idOf = p => p.doi || p.pmid, firstIds = ((firstReply && firstReply.papers) || []).map(idOf);
     // the server's own computing time: the same request again, from memory (the middle one of five)
     const again = []; for (let i = 0; i < 5; i++) { const c0 = performance.now(); try { await (await post({ ASSETS: {}, FETCH: fromMemory })).json(); } catch (e) { /* not timed */ } again.push(performance.now() - c0); } again.sort((a, b) => a - b);
     const papers = ((reply && reply.papers) || []).map(p => Object.assign({ title: p.t, kind: p.kind, y: p.y, j: p.j, free: !!p.oa, id: p.doi || p.pmid }, p.q ? { shown: p.q, about: p.an === 1 ? "animals or cells" : p.an === 2 ? "its summary covers animals or cells too" : "", around: around(p) } : { shown: null, why: rf.error ? "" : whyNone(p, rf) }));
-    items.push({ q: q.q, names: q.names, also: q.also || [], words: q.words, def: !!q.def, status, ms, server_ms: Math.round(again[2] * 10) / 10, held: !!(reply && reply.held), papers, searches: asked });
+    items.push(Object.assign({ q: q.q, names: q.names, also: q.also || [], words: q.words, def: !!q.def, status, ms, more: !!(firstReply && firstReply.more), search_ms: (firstReply && firstReply.ms) || [], asked_twice: (firstReply && firstReply.again) || 0 },
+      firstReply && firstReply.more ? { asks, whole_ms: wholeMs, still_more: !!(reply && reply.more), first_list: firstIds.length, of_them_in_the_whole_list: firstIds.filter(i => ((reply && reply.papers) || []).some(p => idOf(p) === i)).length } : {},
+      { server_ms: Math.round(again[2] * 10) / 10, held: !!(reply && reply.held), papers, searches: mine }));
     await new Promise(r => setTimeout(r, 400));   // (one question after another, with a breath between: Europe PMC is a shared service)
-    console.log("instant trial: " + JSON.stringify(q.q) + ": " + papers.length + " paper(s), " + papers.filter(p => p.shown).length + " with their own words, " + ms + " ms (the server's own share " + (Math.round(again[2] * 10) / 10) + " ms)");
+    console.log("instant trial: " + JSON.stringify(q.q) + ": " + papers.length + " paper(s), " + papers.filter(p => p.shown).length + " with their own words, first list after " + ms + " ms" + (firstReply && firstReply.more ? ", the whole list after " + wholeMs + " ms (" + asks + " askings)" : "") + " (the server's own share " + (Math.round(again[2] * 10) / 10) + " ms)");
   }
   const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 13), outFile = path.join(outDir, "trial-" + stamp + "-" + f.replace(/^instant-|\.json$/g, "") + ".json");
-  fs.writeFileSync(outFile, JSON.stringify({ _note: "Made by scripts/auto/instant_trial.mjs: the papers' own words on a question (site/worker/_worker.js, /api/find) tried with the real index of papers on the editor's own questions. No model takes part. Nothing here is shown on the site. papers: in the order a reader would see them; shown: the paper's own words a reader would see under its title (null: none, with why); around: the shape of the rest of that sentence, little words only, every other word a '_' (a summary is never copied here); searches: what Europe PMC was asked, how long it took and what it gave; server_ms: the server's own computing time for the request.", made: new Date().toISOString(), why: String(req.why || "").slice(0, 300), v: 3, items }, null, 1));
+  fs.writeFileSync(outFile, JSON.stringify({ _note: "Made by scripts/auto/instant_trial.mjs: the papers' own words on a question (site/worker/_worker.js, /api/find) tried with the real index of papers on the editor's own questions. No model takes part. Nothing here is shown on the site. papers: in the order a reader would see them; shown: the paper's own words a reader would see under its title (null: none, with why); around: the shape of the rest of that sentence, little words only, every other word a '_' (a summary is never copied here); searches: what Europe PMC was asked, how long it took and what it gave (second: a slow search asked a second time; kept: answered from the reply kept before); ms: when the first list came; more: a search was still out then; whole_ms: when the whole list was there, the page asking again as it does; server_ms: the server's own computing time for the request.", made: new Date().toISOString(), why: String(req.why || "").slice(0, 300), v: 4, items }, null, 1));
   console.log("instant trial: written " + outFile);
 }
