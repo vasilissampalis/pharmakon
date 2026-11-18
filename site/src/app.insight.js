@@ -1672,11 +1672,14 @@ if (typeof document !== "undefined") askedBox();
 const FIND_API = "api/find";
 const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
-  "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus").split(" "));
+  "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus " +
+  // (2.19, after the first trial with the real index of papers) words for what a drug does to something, which say nothing about WHAT: every key word must now stand in a paper
+  "improve improves improved improving lower lowers lowered raise raises raised increase increases increased decrease decreases decreased reduce reduces reduced change changes changed changing affect affects affected").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
 const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
   hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
-  horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "kidney", lungs: "lung", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover" };
+  horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "kidney", lungs: "lung", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover",
+  eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite" };   // (2.19: short words that are the very thing asked about)
 const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)|infants?|teen\w*|minors?|suicid\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
 /* What is looked up for a result: the names of its drug and up to five key words; null when nothing is to be looked up.
    (2.18.2, after looking at what twenty real questions gave) The names: the name as the reader wrote it, when it is a name of its own and not an
@@ -1702,7 +1705,8 @@ function insFindTerms(res) {
   const inName = new Set(names.join(" ").split(/[^a-z0-9]+/)), words = [], masked = (typeof insMask === "function" ? String(insMask(text)) : text).toLowerCase();
   for (const w0 of masked.match(/[a-z]{3,}/g) || []) { const say = FIND_SAY[w0];
     if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0)) continue;
-    for (const w of say && say !== w0 ? [say, w0] : [w0]) { if (!words.includes(w) && words.length < 5) words.push(w); } }
+    const e = say && say !== w0 ? say + "|" + w0 : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
+    if (!words.includes(e) && !words.includes(say || w0) && words.length < 5) words.push(e); }
   return { names: names.slice(0, 6), words };
 }
 function insFoundHtml(d) {
@@ -1740,11 +1744,14 @@ function insAuto(root, res, now) {
 }
 /* (site 2.18, 18 November 2026. The senior author, 17 November: "people are used to get responses instantly. We have to make an ai which is able to do that
    for questions it does not know"; "we have to make instant as good as getting answers from a very good claude api. whatever it takes".)
-   The answer within seconds. Where the site's server has a language model bound to it (QUICK_ON), a question that is sent by itself is also answered at
-   once: one to three sentences from the SUMMARIES of the papers found, each with its paper's own words and its link (the server's code decides what
-   may be shown: site/worker/_worker.js, iaGate). It stands right under the line that says we have no answer of ours, above the list of papers, under
-   its own label: written by our system from the papers' summaries, the papers themselves not read, no person has checked it. It is never called an
-   answer of ours and nothing of it is kept on the page. Asked for a moment after the papers (QUICK_WAIT; at once on Enter), once per question per visit.
+   What the papers say, within seconds. Where the site's server has a language model bound to it (QUICK_ON), a question that is sent by itself also gets,
+   at once, what up to three of the papers found say on it IN THE PAPERS' OWN WORDS (at most 15 from each summary, with the paper's kind, year, journal and
+   link): the model chooses the sentence, the server's code cuts the words out and decides what may be shown (site/worker/_worker.js, iaCheck). Since 2.19
+   the model's own plain sentence is not shown: tried with the real model, about one in three said more than its paper; it is shown only once an exam
+   allows it (the server then sends it as "t", and it stands above the paper's words). The block stands right under the line that says we have no answer
+   of ours, above the list of papers, under its own label: chosen by our system from the papers' summaries, the papers themselves not read, no person has
+   checked the choice. It is never called an answer of ours and nothing of it is kept on the page. Asked for a moment after the papers (QUICK_WAIT; at once
+   on Enter), once per question per visit.
    Not asked for: a question about dying, overdose, amounts, pregnancy, children (insFindTerms gives nothing for these); anything, when the reader has
    switched the page's own doing off (then one quiet button asks for it). */
 const QUICK_API = "api/answer", QUICK_WAIT = 1200, QUICK_MEM = new Map();
@@ -1756,11 +1763,18 @@ function insQuickGet(body) {
   return m.p;
 }
 function insQuickHtml(d) {
-  const L = d && d.ok && d.answer && Array.isArray(d.answer.lines) ? d.answer.lines.filter(l => l && typeof l.t === "string" && typeof l.quote === "string" && (l.doi || l.pmid)).slice(0, 3) : []; if (!L.length) return "";
+  const L = d && d.ok && d.answer && Array.isArray(d.answer.lines) ? d.answer.lines.filter(l => l && typeof l.quote === "string" && l.quote && (l.doi || l.pmid)).slice(0, 3) : []; if (!L.length) return "";
   let when = "just now"; if (d.again && d.answer.at) { const t = new Date(d.answer.at); if (!isNaN(t)) when = "on " + t.getUTCDate() + " " + ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][t.getUTCMonth()]; }
-  return '<p class="ins-quick-h">In short, from the papers’ own summaries</p><ul class="ins-quick-l">' + L.map(l => { const href = l.doi ? "https://doi.org/" + l.doi : "https://europepmc.org/article/MED/" + l.pmid;
-    return '<li><p class="qk-t">' + esc(l.t) + '</p><p class="qk-m"><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc([l.kind, l.y, l.j].filter(Boolean).join(" \u00B7 ")) + '</a><span class="qk-q">The paper’s own words: \u201C' + esc(l.quote) + "\u201D</span></p></li>"; }).join("") +
-    '</ul><p class="ins-quick-n">Written ' + esc(when) + " by our system from the summaries of these papers. It has not read the papers themselves, and no person has checked it. Our own answer follows when it is ready.</p>";
+  // (2.19) What is shown is the paper's own words; a plain sentence of the system's stands above them only where the server sends one (it sends none
+  // until an exam of such sentences allows it: site/worker/_worker.js, IA.plain). "In animals or cells" is the server's own reading of the sentence
+  // and its summary; where a summary covers animals and people and the sentence does not say which, the line says so.
+  const wrote = L.some(l => typeof l.t === "string" && l.t);
+  return '<p class="ins-quick-h">' + (wrote ? "In short, from the papers’ own summaries" : "What the papers say, in their own words") + '</p><ul class="ins-quick-l">' + L.map(l => { const href = l.doi ? "https://doi.org/" + l.doi : "https://europepmc.org/article/MED/" + l.pmid;
+    const paper = '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc([l.kind, l.y, l.j].filter(Boolean).join(" \u00B7 ")) + "</a>" + (l.animal ? '<span class="qk-an"> \u00B7 in animals or cells, not in people</span>' : l.mixed ? '<span class="qk-an"> \u00B7 its summary covers work in animals or cells too</span>' : "");
+    return typeof l.t === "string" && l.t ? '<li><p class="qk-t">' + esc(l.t) + '</p><p class="qk-m">' + paper + '<span class="qk-q">The paper’s own words: \u201C' + esc(l.quote) + "\u201D</span></p></li>"
+      : '<li><p class="qk-w">\u201C' + esc(l.quote) + '\u201D</p><p class="qk-m">' + paper + "</p></li>"; }).join("") +
+    '</ul><p class="ins-quick-n">' + (wrote ? "Written " + esc(when) + " by our system from the summaries of these papers. It has not read the papers themselves, and no person has checked it."
+      : "Chosen " + esc(when) + " by our system from the summaries of these papers: the words are the papers’ own. It has not read the papers themselves, and no person has checked its choice.") + " Our own answer follows when it is ready.</p>";
 }
 function insAutoQuick(after, res, now) {
   if (!QUICK_ON || ASK_ON !== true || res.note !== "none" || (res.best && res.best.length)) return;
@@ -1772,8 +1786,8 @@ function insAutoQuick(after, res, now) {
   const draw = d => { const html = insQuickHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
   const have = QUICK_MEM.get(JSON.stringify(body));
   if (have && have.d) { draw(have.d); return; }
-  const go = () => { if (!after.isConnected) return; put(); box.innerHTML = '<p class="ins-quick-n ins-quick-w">Writing a short answer from the papers’ summaries\u2026</p>'; insQuickGet(body).then(d => { if (after.isConnected) draw(d); else box.remove(); }); };
-  if (!autoOn()) { put(); box.innerHTML = '<p class="ins-quick-n"><button type="button" class="linklike" data-quick-now>Get a short answer from the research, written by our system</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return; }
+  const go = () => { if (!after.isConnected) return; put(); box.innerHTML = '<p class="ins-quick-n ins-quick-w">Looking through the papers’ summaries for what they say on it\u2026</p>'; insQuickGet(body).then(d => { if (after.isConnected) draw(d); else box.remove(); }); };
+  if (!autoOn()) { put(); box.innerHTML = '<p class="ins-quick-n"><button type="button" class="linklike" data-quick-now>Show what the papers’ summaries say on it</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return; }
   if (askedGone(res.q)) return;
   if (now) go(); else INS.quickT = setTimeout(() => { const s = document.getElementById("search"), b = document.getElementById("search-results"); if (s && b && !b.hidden && insClean(s.value) === res.q) go(); }, QUICK_WAIT);
 }
