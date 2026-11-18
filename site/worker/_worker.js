@@ -204,7 +204,7 @@ export function iaParts(raw) {
   return out;
 }
 const IA_AMOUNT_UNIT = /^(?:mg|mcg|µg|μg|ug|g|kg|ml|iu|units?|milligrams?|micrograms?|grams?)$/;
-const IA_ANIMAL = /\b(?:rats?|mice|mouse|rodents?|zebrafish|in vitro|ex vivo|in silico|cell lines?|cultured (?:cells|neurons)|cell cultures?|animals?|murine|preclinical|horses?|equine|dogs?|canine|cats?|feline|pigs?|porcine|monkeys?|macaques?|primates?|rabbits?|sheep|hamsters?|guinea pigs?|drosophila|flies|worms?|elegans|veterinary|larvae|embryos?|organoids?|chicks?|chickens?|birds?|avian|pigeons?|frogs?|xenopus|oocytes?|synaptosom\w*|homogenates?|brain slices|transfected|transgenic|knockout|wild-type|vesicles)\b/i;
+const IA_ANIMAL = /\b(?:rats?|mice|mouse|rodents?|zebrafish|in vitro|ex vivo|in silico|cell lines?|cultured (?:cells|neurons)|cell cultures?|animals?|murine|pre-?clinical|horses?|equine|dogs?|canine|cats?|feline|pigs?|porcine|monkeys?|macaques?|primates?|rabbits?|sheep|hamsters?|guinea pigs?|drosophila|flies|worms?|elegans|veterinary|larvae|embryos?|organoids?|chicks?|chickens?|birds?|avian|pigeons?|frogs?|xenopus|oocytes?|synaptosom\w*|homogenates?|brain slices|transfected|transgenic|knockout|wild-type|vesicles)\b/i;
 const IA_PEOPLE = /\b(?:participants?|patients?|volunteers?|humans?|men|women|adults?|people|subjects|students|respondents|users|individuals|persons|adolescents|outpatients|inpatients)\b/i;
 // people for certain: "subjects", "individuals" and "adults" may be rats ("... in naive individuals", of a study in rats; "adult rats")
 const IA_SURE = /\b(?:participants?|patients?|volunteers?|humans?|men|women|people|persons|students|respondents|outpatients|inpatients|users|consumers|smokers|drinkers|veterans|workers|clinical|placebo|double-blind)\b/i;
@@ -268,6 +268,7 @@ export function iaWindow(toks, a, b, opt) {
   // condition or the people a finding is about ("at high doses", "in children", "together with alcohol"): cut around it, the rest would say more than
   // the sentence. So a sentence that holds one, or compares ways of taking, is not shown at all.
   const never = i => IA_W_NEVER.test(low[i]) || FIND_HELD.test(low[i]) || /dos(?:e|age|ing)/.test(low[i]) || /\d(?:mg|mcg|µg|μg|ug|kg|ml|iu)\b/i.test(toks[i]) || (i > 0 && num(i - 1) && IA_AMOUNT_UNIT.test(low[i]))
+    || /^(?:potenc(?:y|ies)|high-potency|low-potency|(?:high|low)-(?:thc|cbd)|(?:thc|cbd)-rich)$/.test(low[i]) || (/^(?:high|low|rich|higher|lower|richer)$/.test(low[i]) && low[i + 1] === "in")   // (how strong a product is: an amount in other words. "cannabis high in cannabidiol")
     || (/^(?:combin\w*|mix\w*|together)$/.test(low[i]) && low[i + 1] === "with") || (low[i] === "every" && i + 2 < n && num(i + 1) && /^(?:minutes?|hours?)$/.test(low[i + 2]));
   let route = false, than = false; for (let i = 0; i < n; i++) { if (never(i)) return null; if (IA_W_ROUTE.test(low[i])) route = true; if (IA_W_THAN.test(low[i])) than = true; }
   if (route && than) return null;
@@ -285,6 +286,12 @@ export function iaWindow(toks, a, b, opt) {
   // (a word that most likely says what happened: "reduced", "was", "may", "did"; a run of words without one is a piece of a sentence, not a finding)
   const cVerb = cum(i => /^(?:is|are|was|were|be|been|has|have|had|did|does|do|may|might|can|could|will|would|found|shows?|shown|suggests?|indicates?|reveals?|reports?|links?|leads?|led|results?|yields?|prevents?|predicts?|alters?|affects?|remains?|appears?|seems?|occurs?|differs?|rose|fell|lowers?|exerts?|supports?|confirms?|persists?|develops?|reduces?|increases?|decreases?|improves?|impairs?|causes?|produces?|induces?|changes?|raises?|declines?|drops?|falls?|rises?|lasts?|acts?|binds?|blocks?|releases?|depletes?|damages?|protects?|worsens?|eases?|relieves?|triggers?|poses?|plays?|carr(?:y|ies)|helps?|works?|makes?|gives?|takes?|provides?|exhibits?|displays?|possess(?:es)?|represents?|contributes?|mediates?|modulates?|enhances?|inhibits?|activates?|stimulates?|elevates?|disrupts?|promotes?|exacerbates?|mitigates?|facilitates?|[a-z]{3,}ed)$/.test(low[i]));
   const cKey = cum(i => { const parts = low[i].split(/[-/]/); return stems.some(st => (st.includes("-") ? low[i].startsWith(st) : parts.some(p => p.startsWith(st)))); }), cName = cum(i => names.includes(low[i]) || names.includes(low[i].replace(/'s$/, "")));
+  // where the sentence says the drug without its name: [where that begins, its noun] ("the extract", "this compound", "its use", "regular consumption"; "Use ..." at the start)
+  const refs = []; for (let i = 0; i < n; i++) { const p1 = low[i - 1] || "", p2 = low[i - 2] || "", det = /^(?:the|this|these|its|their|such)$/, own = /^(?:its|their)$/;
+    if (/^(?:extracts?|drugs?|compounds?|substances?|plants?|herbs?|medications?|medicines?|supplements?)$/.test(low[i])) { if (det.test(p1)) refs.push([i - 1, i]); else if (det.test(p2)) refs.push([i - 2, i]); }
+    else if (/^(?:use|users?|consumption|intake|administration|ingestion|exposure|effects?)$/.test(low[i])) { if (own.test(p1)) refs.push([i - 1, i]); else if (own.test(p2)) refs.push([i - 2, i]);
+      else if (low[i] !== "effects" && low[i] !== "effect" && (i === 0 || /^(?:regular|chronic|long-term|short-term|heavy|daily|frequent|recreational|occasional|acute|repeated|prolonged|excessive|habitual|non-medical|illicit|continued|sustained|problematic)$/.test(p1))) refs.push([Math.max(0, i - 1), i]); }
+    else if (i === 0 && /^(?:withdrawal|dependence)$/.test(low[i])) refs.push([0, 0]); }
   // a clause that opens the sentence with "Although ..." does not govern what follows its comma
   let free = -1; if (/^(?:although|though|while|whereas|despite|notwithstanding)$/.test(low[0]) || (low[0] === "even" && low[1] === "though")) { for (let i = 1; i < n - 1; i++) if (/,$/.test(toks[i])) { free = i; break; } }
   const edgeAt = i => i >= 0 && i < n && (/[,;:]$/.test(toks[i]) || low[i] === "that" || (i > 0 && /[,;:]$/.test(toks[i - 1]) && /^(?:and|but|or)$/.test(low[i]) && /^(?:the|this|these|those|it|they|there|we|he|she|its|their|a|an|no)$/.test(low[i + 1] || "")));   // a part of the sentence ends with this word (", and the colour ..." begins a new part; ", and anxiety symptoms" is the last of a list; a closing bracket ends no part: "... in the catechol-O-methyltransferase (COMT) | gene moderated ...")
@@ -296,8 +303,10 @@ export function iaWindow(toks, a, b, opt) {
     for (let i = 0; i < n; i++) { if (i === 0 || edgeAt(i - 1)) { c = i; light = true; } partOf[i] = c; startOk[i] = i === c || light; if (!IA_W_LIGHT.test(low[i]) && !IA_ANIMAL.test(low[i])) light = false; } }   // (a word for animals or cells may be left before the run: the line itself then says "in animals or cells")
   // where a run may end before the sentence does: at a comma, semicolon or closing bracket after which the sentence only adds something (", with ...", ", which ...",
   // ", suggesting ...", "(p ..."), not where what follows is still needed ("Anxiety, which had been rated weekly, | fell ..."; a list: "anxiety, | depression and stress")
-  const addsWord = i => /^(?:with|while|whereas|which|who|where|when|consistent|compared|particularly|especially|including|further|thereby|thus|possibly|probably|likely|as|although|though|but|however)$/.test(low[i]) || (/ing$/.test(low[i]) && low[i].length > 5)
-    || (/^(?:and|or)$/.test(low[i]) && /^(?:the|this|these|those|it|they|there|we|its|their|no|a|an|was|were|is|are|had|has|have|did|does|[a-z]{4,}ed)$/.test(low[i + 1] || ""));   // (", and reduced the sleep shifts": a second thing found)
+  // (after the seventh trial: "Negative changes in physical activity, sleep, | smoking and alcohol intake were ..." was cut inside a list: "smoking" is no "suggesting")
+  const addsWord = i => /^(?:with|while|whereas|which|who|where|when|consistent|compared|particularly|especially|including|further|thereby|thus|possibly|probably|likely|as|although|though|but|however|suggesting|indicating|demonstrating|showing|supporting|implying|highlighting|leading|resulting|reflecting|confirming|revealing|providing|raising|making|causing|producing|allowing|representing|accounting|ranging|underscoring|pointing|contributing)$/.test(low[i])
+    || (/^(?:and|or)$/.test(low[i]) && (/^(?:the|this|these|those|it|they|there|we|its|their|no|a|an|was|were|is|are|had|has|have|did|does|[a-z]{4,}ed)$/.test(low[i + 1] || "")   // (", and reduced the sleep shifts": a second thing found)
+      || /^(?:is|are|was|were|has|have|had|did|does|may|might|can|could|will|would|remains?|remained)$/.test(low[i + 2] || "")));   // (", and treatment is ...": a new clause)
   // (after the sixth trial: "... accounting for 40/52 | (76.9%) of cases", "... number needed to treat | (NNT) of 3") What stands in brackets only adds where the
   // sentence ends after the brackets, or a part of it does, or what follows them adds itself
   const closeAt = k => { let d = 0; for (let j = k; j < n; j++) { for (const ch of toks[j]) { if (ch === "(" || ch === "[") d++; else if (ch === ")" || ch === "]") d--; } if (d <= 0) return j; } return n - 1; };
@@ -324,7 +333,10 @@ export function iaWindow(toks, a, b, opt) {
   let best = null, top = -1e9;
   for (let s = Math.max(0, b - 14); s <= a; s++) {
     const from = s > free ? free + 1 : 0;   // (what stands before this is not counted)
-    if (!startOk[s] || cPre[s] - cPre[from] > 0 || cBad[s] > 0 || (s > 0 && (scoped(s) || cnt(cBack, partOf[s], s - 1) > 0))) continue;   // ("In this | context kanna has ...": not after words that point back)   // (advice or a promise of safety before them: what follows is what is advised or promised, and is not shown)
+    if (!startOk[s] || cPre[s] - cPre[from] > 0 || cBad[s] > 0 || (s > 0 && (scoped(s) || cnt(cBack, partOf[s], s - 1) > 0))) continue;   // ("In this | context kanna has ...": not after words that point back)
+    // (after the seventh trial: "..., and more effective than lidocaine with epinephrine, for | the prevention of epistaxis associated with nasotracheal intubation") A part
+    // that begins with a preposition, after a comma, hangs on what stands before it: a run that begins inside it says nothing by itself
+    if (partOf[s] > 0 && s > partOf[s] && /^(?:for|in|on|at|by|with|from|into|during|after|before|among|between|through|via|per|about|against|within|under|over|of|to|as|than|including|such)$/.test(low[partOf[s]])) continue;   // (advice or a promise of safety before them: what follows is what is advised or promised, and is not shown)
     // not with a word that hangs on what was cut ("which may also apply ...", "characterized by ...", "becoming ..."), and not with the items of a list ("..., | mood disorders, and withdrawal symptoms ...")
     if (s > 0 && (IA_W_LAME.test(low[s]) || /^(?:for|in|on|at|by|with|from|into|during|after|before|among|between|through|via|per|about|against|within|under|over)$/.test(low[s]) || (/(?:ing|ed)$/.test(low[s]) && low[s].length > 5)
       || (/[,;]$/.test(toks[s - 1]) && [0, 1, 2].some(k => s + k < n && /,$/.test(toks[s + k]))) || (low[s - 1] === "that" && cVerb[s + 1] - cVerb[s] > 0))) continue;   // ("affinities that | might augment ...": the words would lack what they are said of)
@@ -336,6 +348,9 @@ export function iaWindow(toks, a, b, opt) {
       if (cnt(cBad, s, e) > 0 || cnt(cBack, s, e) > 0 || (preMay && cnt(cMay, s, e) === 0)) continue;
       if ((cnt(cOpen, s, e) > 0 || cnt(cClose, s, e) > 0) && (cnt(cUneven, s, e) > 0 || cnt(cOpen, s, e) !== cnt(cClose, s, e)) && !paren(s, e)) continue;
       if (cnt(cVerb, s, e) === 0) continue;   // (no word that says what happened: a piece of a sentence, not a finding)
+      // (after the seventh trial: "Because caffeine is an adenosine receptor antagonist, these results suggest that | some panic disorder patients may have abnormalities in
+      // neuronal systems involving adenosine") The run itself names the drug or says "the extract", "its use": else it is about something else, even in a sentence that names the drug
+      if (names.length && !o.head && cnt(cName, s, e) === 0 && !refs.some(([from, at]) => from >= s - 1 && at <= e)) continue;
       // what reads best: more of the sentence, from where a part of it begins, to the sentence's end above all (the last words carry what was found), with the
       // key word and the drug's name in it
       const score = (e - s + 1) + (s === 0 || edgeAt(s - 1) ? 8 : 0) + (e === n - 1 ? 10 : endOk(e) && !o.head ? 4 : 0) + (cnt(cKey, s, e) > 0 ? 5 : 0) + (cnt(cName, s, e) > 0 ? 5 : 0) - (e < n - 1 && IA_W_HANG.test(low[e]) ? 8 : 0);
@@ -389,7 +404,7 @@ export function iaPick(p, groups, names, def, note) {
       if (firsts.length > 1 && Math.max(...firsts) - Math.min(...firsts) <= 14) spans.push([Math.min(...firsts), Math.max(...firsts), 3]);   // every key word of the question in one run, where they stand close enough
       lt.forEach((t, k) => { if (spans.length < 6 && allStems.some(s => has(s, [t]))) spans.push([k, k, 0]); }); }   // (a key word may stand more than once in the sentence)
     let w = null; for (const [a, b, more] of spans) { const got = iaWindow(toks, a, b, { stems: allStems, names, head: !!def }); if (got && (!w || got[2] + more > w[2])) w = [got[0], got[1], got[2] + more]; }
-    if (!w) { say("a sentence with the key word (" + (c.x.sec || "no label") + ", " + toks.length + " words) has no 15 words in a row that pass the rules: a word it turns on, an amount, a held word"); continue; }
+    if (!w) { say("a sentence with the key word (" + (c.x.sec || "no label") + ", " + toks.length + " words) has no 15 words in a row that pass the rules: a word it turns on, an amount, a held word", c.i); continue; }
     const q = (w[0] > 0 ? "…" : "") + toks.slice(w[0], w[1] + 1).join(" ").replace(/^[,;:\s]+|[,;:.\s]+$/g, "") + (w[1] < toks.length - 1 ? "…" : "");
     // animals or cells: where the sentence says so; where the title does and names no people ("... in naive and cocaine-experienced rats": its "naive individuals"
     // are rats); where the whole summary does. 2: the summary covers both, and the sentence does not say which
@@ -400,30 +415,31 @@ export function iaPick(p, groups, names, def, note) {
 /* The papers on a drug and a question's key words, the best first, each with its own words on the question where the rules find them.
    Gives { papers, more, ms, again }: more: a search was still out when the list was given (the page asks once more a moment later); ms: how long each of the
    three searches took (null: not back yet); again: how many were asked a second time. */
-const FIND_AGAIN = 600, FIND_FIRST = 250, FIND_SOON = 1000, FIND_LAST = 2600, FIND_ALL = 5200;
+const FIND_AGAIN = [450, 950], FIND_SOON = 1400, FIND_LAST = 2600, FIND_ALL = 5200;
 async function findPapers(env, r, most, ctx) {
   const get = env.FETCH || fetch, began = Date.now(), left = () => FIND_ALL - (Date.now() - began);
-  /* One search, begun at once; nobody is made to wait for it. The sixth trial showed what makes a question slow: Europe PMC answers most searches in a fifth of
-     a second, but about one in three of the searches of a question nobody asked before took two to ten seconds, whatever was asked. So (1) a search that is
-     not back after FIND_AGAIN is asked a second time, and whichever reply comes first counts (written with its two first words the other way round, so that it
-     is a request of its own and does not wait behind the first); (2) the reader is given what is there (round, below), and a search that is still out is left
-     to finish behind the reply (ctx.waitUntil), so that Cloudflare keeps its answer for a day and the next request gets it at once. */
+  /* One search, begun at once; nobody is made to wait for it. The sixth and seventh trials showed what makes a question slow: Europe PMC answers a search in a
+     fifth to a half of a second, but about one request in three hangs for two to ten seconds, whatever is asked; the same search asked again at that moment
+     comes back at once seven times in ten (trial 7: 39 of 54). So (1) a search that is not back after 0.45 s is asked a second time, and after 0.95 s a third,
+     and whichever reply comes first counts (each asking written with its first words in another order, so that it is a request of its own and does not wait
+     behind the one that hangs); (2) the reader is given what is there (round, below), and an asking that is still out is left to finish behind the reply
+     (ctx.waitUntil), so that Cloudflare keeps its answer for a day. */
   const start = (q, sort, size) => {
     const s = { done: !q, v: q ? null : [], ms: null, again: 0, p: null };
     if (!q) { s.p = Promise.resolve(s.v); return s; }
     const t0 = Date.now(), ctl = new AbortController(), tries = [];
-    const once = async (order, second) => {
-      const res = await get(EPMC + (second ? "?format=json&query=" + encodeURIComponent(q) : "?query=" + encodeURIComponent(q) + "&format=json") + "&resultType=core&pageSize=" + size + (order ? "&sort=" + order : ""),
+    const once = async (order, k) => { const qq = "query=" + encodeURIComponent(q);
+      const res = await get(EPMC + "?" + (k === 1 ? "format=json&" + qq + "&resultType=core" : k === 2 ? "resultType=core&format=json&" + qq : qq + "&format=json&resultType=core") + "&pageSize=" + size + (order ? "&sort=" + order : ""),
         { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal, cf: { cacheTtl: 86400, cacheEverything: true } });
-      if (!res.ok) return order ? once("", second) : null;   // (should the service not take the order asked for, it is asked once more without it)
+      if (!res.ok) return order ? once("", k) : null;   // (should the service not take the order asked for, it is asked once more without it)
       const d = await res.json(); return ((d && d.resultList && d.resultList.result) || []).map(x => { const p = findPaper(x); return p ? Object.assign(p, { ab: String((x && x.abstractText) || "") }) : null; }).filter(Boolean);
     };
-    const run = second => { const p = once(sort, second).catch(() => null); tries.push(p); return p; };
+    const run = k => { const p = once(sort, k).catch(() => null); tries.push(p); return p; };
     s.p = new Promise(done => {
-      let open = 0, fin = false, second = null; const kill = setTimeout(() => ctl.abort(), 20000);
-      const got = v => { open--; if (open === 0) clearTimeout(kill); if (fin || (v === null && open > 0)) return; fin = true; clearTimeout(second); s.v = v; s.done = true; s.ms = Date.now() - t0; done(v); };
-      open++; run(false).then(got);
-      second = setTimeout(() => { if (!fin) { open++; s.again = 1; run(true).then(got); } }, FIND_AGAIN);
+      let open = 0, fin = false, refused = false; const later = [], kill = setTimeout(() => ctl.abort(), 20000);
+      const got = v => { open--; if (v === null) refused = true; if (open === 0) clearTimeout(kill); if (fin || (v === null && open > 0)) return; fin = true; later.forEach(t => { clearTimeout(t.id); t.live = false; }); s.v = v; s.done = true; s.ms = Date.now() - t0; done(v); };
+      open++; run(0).then(got);
+      FIND_AGAIN.forEach((ms, k) => { const t = { live: true, id: 0 }; later.push(t); t.id = setTimeout(() => { t.live = false; if (fin) return; if (refused) { if (open === 0) { fin = true; s.done = true; s.ms = Date.now() - t0; done(null); } return; } open++; s.again++; run(k + 1).then(got); }, ms); });
     });
     if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(s.p.then(() => Promise.all(tries)));
     return s;
@@ -436,15 +452,15 @@ async function findPapers(env, r, most, ctx) {
   /* Three searches are asked together: the most cited papers with the drug in their title that hold the key words (in the title, or as a review); the
      newest papers with drug and key words in the title; and, as what is there when those two are slow or find little, the papers that hold the drug and
      the key words anywhere, in Europe PMC's own order. Of the most cited, those with the key words in their very title come first.
-     When the list is given: as soon as the most cited and the newest are back (and hold three papers, or the third search is back too); a quarter of a second
-     after the most cited, without the newest; after one second, whatever three papers there are; after 2.6 seconds, whatever there is. */
+     When the list is given: as soon as the most cited and the newest are back (and hold three papers, or the third search is back too); after 1.4 seconds,
+     whatever three papers there are (by then each search has been asked three times); after 2.6 seconds, whatever there is. */
   const round = async names => { const Q = findQueries(names, r.groups);
     const A = start(Q.cited, "CITED%20desc", 8), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2), W = start(Q.wide || Q.anyTitle, "", 4);
     const known = (...ss) => new Set(ss.flatMap(got).map(p => p.doi || p.pmid)).size;
-    await new Promise(go => { let grace = false, soon = false, fin = false; const timers = [];
+    await new Promise(go => { let soon = false, fin = false; const timers = [];
       const look = last => { if (fin) return;
-        if (last || (A.done && C.done && (W.done || known(A, C) >= 3)) || (A.done && grace && known(A) >= 3) || (soon && known(A, C, W) >= 3)) { fin = true; timers.forEach(clearTimeout); go(); } };
-      A.p.then(() => { timers.push(setTimeout(() => { grace = true; look(); }, FIND_FIRST)); look(); }); C.p.then(() => look()); W.p.then(() => look());
+        if (last || (A.done && C.done && (W.done || known(A, C) >= 3)) || (soon && known(A, C, W) >= 3)) { fin = true; timers.forEach(clearTimeout); go(); } };
+      A.p.then(() => look()); C.p.then(() => look()); W.p.then(() => look());
       timers.push(setTimeout(() => { soon = true; look(); }, FIND_SOON), setTimeout(() => look(true), Math.max(300, Math.min(FIND_LAST, left())))); });
     const a = got(A), c = got(C), w = got(W);
     const first = stems.length ? a.filter(onTopic) : a, rest = stems.length ? a.filter(p => !onTopic(p)) : [];
