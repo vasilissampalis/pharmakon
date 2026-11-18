@@ -84,12 +84,14 @@ export function readQuestion(body) {
    a drug read as answers: a meta-analysis on diabetes for "GHB", which is also glycated haemoglobin). Asked together: the most cited
    reviews of the drug that hold every key word; the most cited papers with the drug and every key word in their very title; the newest
    of those; and the papers that hold the drug and the key words anywhere. Wider only where that finds fewer than three.
-   How long (findPapers). Europe PMC answers most searches in a fifth of a second, but about one in three of the searches of a question
-   nobody asked before takes it two to ten seconds (trial 6). So nobody waits for a slow search: a search that is not back after 0.6 s
-   is asked a second time, and the first reply counts; the reader gets the list as soon as the most cited are back, and after one second
-   whatever at least three papers there are, with "more": 1 when a search is still out. That search finishes behind the reply, so that
-   Cloudflare keeps its answer, and the page asks once more a moment later and shows the whole list. "ms" and "again" in the reply say how
-   long each search took and how many were asked twice: numbers for the editors, nothing of a reader.
+   How long (findPapers). Europe PMC answers a search in a fraction of a second, but about one request in three hangs for two to ten
+   seconds, whatever is asked (trials 6 to 9), and the same search asked again at that moment mostly comes back at once. So nobody waits
+   for a search that hangs: the most cited are asked for again after 0.6 s and 1.3 s, and the first reply counts; the reader gets the
+   list as soon as the most cited are back (with the newest, if they come within three tenths of a second), and after two seconds
+   whatever three papers there are, with "more": 1: the page then asks once more a moment later and shows the whole list. A search that
+   is still out finishes behind the reply, and every reply of Europe PMC is kept for a day (Cloudflare's cache), so that the same search
+   is not made twice. "ms", "again", "won", "own" and "kept" in the reply are numbers for the editors: how long, how many askings,
+   which one answered, how many came from what was kept. Nothing of a reader.
    Which words (iaPick, iaWindow). A paper gets words only where ALL of this holds:
      1. the sentence stands where papers say what they found: under a label for results or conclusions, or, in a summary without labels,
         in its later half; it is not a sentence about what the paper set out to do or how it was done;
@@ -415,33 +417,43 @@ export function iaPick(p, groups, names, def, note) {
   return null;
 }
 /* The papers on a drug and a question's key words, the best first, each with its own words on the question where the rules find them.
-   Gives { papers, more, ms, again }: more: a search was still out when the list was given (the page asks once more a moment later); ms: how long each of the
-   three searches took (null: not back yet); again: how many were asked a second time. */
-const FIND_AGAIN = [450, 950], FIND_SOON = 1400, FIND_LAST = 2600, FIND_ALL = 5200;
+   Gives { papers, more, ms, again, won, own, kept }: more: the most cited were still out when the list was given (the page asks once more a moment later);
+   and, for the editors, numbers only: ms: when each of the three searches was in (null: not yet); again: how many askings were repeated; won: which asking
+   of each search answered (0 the first); own: how long that asking itself took; kept: how many searches were answered from what was kept. */
+const FIND_A = [600, 1300], FIND_B = [900, 1700], FIND_GRACE = 300, FIND_SOON = 2000, FIND_LAST = 3000, FIND_ALL = 5600;
 async function findPapers(env, r, most, ctx) {
   const get = env.FETCH || fetch, began = Date.now(), left = () => FIND_ALL - (Date.now() - began);
-  /* One search, begun at once; nobody is made to wait for it. The sixth and seventh trials showed what makes a question slow: Europe PMC answers a search in a
-     fifth to a half of a second, but about one request in three hangs for two to ten seconds, whatever is asked; the same search asked again at that moment
-     comes back at once seven times in ten (trial 7: 39 of 54). So (1) a search that is not back after 0.45 s is asked a second time, and after 0.95 s a third,
-     and whichever reply comes first counts (each asking written with its first words in another order, so that it is a request of its own and does not wait
-     behind the one that hangs); (2) the reader is given what is there (round, below), and an asking that is still out is left to finish behind the reply
-     (ctx.waitUntil), so that Cloudflare keeps its answer for a day. */
-  const start = (q, sort, size) => {
-    const s = { done: !q, v: q ? null : [], ms: null, again: 0, p: null };
+  // Europe PMC's replies are kept for a day where the site runs (Cloudflare's cache, by the search's address), so that the same search is not made twice:
+  // for the next reader with that question, and for this page when it asks again. (env.CACHE: a stand-in, in the tests and trials.)
+  let cache = env.CACHE || null; if (!cache) { try { cache = (typeof caches !== "undefined" && caches.default) || null; } catch (e) { cache = null; } }
+  /* One search, begun at once; nobody is made to wait for it. What makes a question slow (trials 6 to 9, and the site's own publishing runs): Europe PMC
+     answers a search in a fifth to a half of a second (from the site's own server, which opens a new connection each time, in a half to nine tenths), but
+     about one request in three hangs for two to ten seconds, whatever is asked; the same search asked again at that moment comes back at once seven times
+     in ten. So a search that is not back after a while is asked a second time, and later a third (`again`: after how long), and whichever reply comes first
+     counts; each asking is written with its first words in another order, so that it is a request of its own and does not wait behind the one that hangs.
+     An asking that is still out when the list is given is left to finish behind the reply (ctx.waitUntil), and its answer is kept. */
+  // live: { on } of the round that asks; once its list has gone out (on: false), a search that is still out may finish, and is kept, but is not asked again
+  const start = (q, sort, size, again, live) => {
+    const s = { done: !q, v: q ? null : [], ms: null, again: 0, won: null, own: null, kept: 0, p: null };
     if (!q) { s.p = Promise.resolve(s.v); return s; }
-    const t0 = Date.now(), ctl = new AbortController(), tries = [];
-    const once = async (order, k) => { const qq = "query=" + encodeURIComponent(q);
-      const res = await get(EPMC + "?" + (k === 1 ? "format=json&" + qq + "&resultType=core" : k === 2 ? "resultType=core&format=json&" + qq : qq + "&format=json&resultType=core") + "&pageSize=" + size + (order ? "&sort=" + order : ""),
-        { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal, cf: { cacheTtl: 86400, cacheEverything: true } });
+    const t0 = Date.now(), ctl = new AbortController(), tries = [], qq = "query=" + encodeURIComponent(q);
+    const read = text => { const d = JSON.parse(text); return ((d && d.resultList && d.resultList.result) || []).map(x => { const p = findPaper(x); return p ? Object.assign(p, { ab: String((x && x.abstractText) || "") }) : null; }).filter(Boolean); };
+    const once = async (order, k) => { const tail = "&pageSize=" + size + (order ? "&sort=" + order : ""), key = EPMC + "?" + qq + "&format=json&resultType=core" + tail, t1 = Date.now();
+      /* (also before a later asking: the first may have come in meanwhile, in this request or in the page's one before) */
+      if (cache) { let hit = null; try { hit = await cache.match(key); } catch (e) { hit = null; } if (hit) { const list = read(await hit.text()); s.kept = 1; return { list, k, own: Date.now() - t1 }; } }
+      const res = await get(k === 0 ? key : EPMC + "?" + (k === 1 ? "format=json&" + qq + "&resultType=core" : "resultType=core&format=json&" + qq) + tail, { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal });
       if (!res.ok) return order ? once("", k) : null;   // (should the service not take the order asked for, it is asked once more without it)
-      const d = await res.json(); return ((d && d.resultList && d.resultList.result) || []).map(x => { const p = findPaper(x); return p ? Object.assign(p, { ab: String((x && x.abstractText) || "") }) : null; }).filter(Boolean);
+      const text = await res.text(), list = read(text);
+      if (cache) { const put = Promise.resolve().then(() => cache.put(key, new Response(text, { headers: { "content-type": "application/json", "cache-control": "public, max-age=86400" } }))).catch(() => {}); if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(put); }
+      return { list, k, own: Date.now() - t1 };
     };
     const run = k => { const p = once(sort, k).catch(() => null); tries.push(p); return p; };
     s.p = new Promise(done => {
       let open = 0, fin = false, refused = false; const later = [], kill = setTimeout(() => ctl.abort(), 20000);
-      const got = v => { open--; if (v === null) refused = true; if (open === 0) clearTimeout(kill); if (fin || (v === null && open > 0)) return; fin = true; later.forEach(t => { clearTimeout(t.id); t.live = false; }); s.v = v; s.done = true; s.ms = Date.now() - t0; done(v); };
+      const end = v => { fin = true; later.forEach(t => clearTimeout(t)); s.v = v ? v.list : null; if (v) { s.won = v.k; s.own = v.own; } s.done = true; s.ms = Date.now() - t0; done(s.v); };
+      const got = v => { open--; if (v === null) refused = true; if (open === 0) clearTimeout(kill); if (fin || (v === null && open > 0)) return; end(v); };
       open++; run(0).then(got);
-      FIND_AGAIN.forEach((ms, k) => { const t = { live: true, id: 0 }; later.push(t); t.id = setTimeout(() => { t.live = false; if (fin) return; if (refused) { if (open === 0) { fin = true; s.done = true; s.ms = Date.now() - t0; done(null); } return; } open++; s.again++; run(k + 1).then(got); }, ms); });
+      (again || []).forEach((ms, k) => later.push(setTimeout(() => { if (fin || !live.on) return; if (refused) { if (open === 0) end(null); return; } open++; s.again++; run(k + 1).then(got); }, ms)));
     });
     if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(s.p.then(() => Promise.all(tries)));
     return s;
@@ -450,30 +462,32 @@ async function findPapers(env, r, most, ctx) {
   const seen = new Set(), out = [], add = list => { for (const p of list) { if (!p) continue; const k = p.doi || p.pmid; if (!seen.has(k)) { seen.add(k); out.push(p); } } };
   const all = r.names.concat(r.also || []), stems = r.groups.map(g => [...new Set(g.flatMap(iaNearStems))]);
   const onTopic = p => { const lt = iaFlat(p.t).split(/[^a-z0-9-]+/); return stems.every(st => st.some(s => lt.some(w => (s.includes("-") ? w.startsWith(s) : w.split("-").some(x => x.startsWith(s)))))); };
-  let more = false, ms = null, again = 0;
+  let more = false, ms = null, again = 0, won = [], own = [], kept = 0;
   /* Three searches are asked together: the most cited papers with the drug in their title that hold the key words (in the title, or as a review); the
      newest papers with drug and key words in the title; and, as what is there when those two are slow or find little, the papers that hold the drug and
      the key words anywhere, in Europe PMC's own order. Of the most cited, those with the key words in their very title come first.
-     When the list is given: as soon as the most cited and the newest are back (and hold three papers, or the third search is back too); after 1.4 seconds,
-     whatever three papers there are (by then each search has been asked three times); after 2.6 seconds, whatever there is. */
-  const round = async names => { const Q = findQueries(names, r.groups);
-    const A = start(Q.cited, "CITED%20desc", 8), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2), W = start(Q.wide || Q.anyTitle, "", 4);
+     When the list is given: as soon as the most cited are back, with the newest if they are back too or come within three tenths of a second (the newest are
+     one paper of the six: nobody waits for them longer, and the list is not changed for them afterwards; they are kept for the next reader); after two
+     seconds without the most cited, whatever three papers there are, and the reply says that more is to come; after three seconds, whatever there is. */
+  const round = async names => { const Q = findQueries(names, r.groups), live = { on: true };
+    const A = start(Q.cited, "CITED%20desc", 8, FIND_A, live), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2, FIND_B, live), W = start(Q.wide || Q.anyTitle, "", 4, FIND_B, live);
     const known = (...ss) => new Set(ss.flatMap(got).map(p => p.doi || p.pmid)).size;
-    await new Promise(go => { let soon = false, fin = false; const timers = [];
+    await new Promise(go => { let grace = false, soon = false, fin = false; const timers = [];
       const look = last => { if (fin) return;
-        if (last || (A.done && C.done && (W.done || known(A, C) >= 3)) || (soon && known(A, C, W) >= 3)) { fin = true; timers.forEach(clearTimeout); go(); } };
-      A.p.then(() => look()); C.p.then(() => look()); W.p.then(() => look());
+        if (last || (A.done && C.done && (W.done || known(A, C) >= 3)) || (A.done && grace && known(A, C) >= 3) || (soon && known(A, C, W) >= 3)) { fin = true; timers.forEach(clearTimeout); go(); } };
+      A.p.then(() => { timers.push(setTimeout(() => { grace = true; look(); }, FIND_GRACE)); look(); }); C.p.then(() => look()); W.p.then(() => look());
       timers.push(setTimeout(() => { soon = true; look(); }, FIND_SOON), setTimeout(() => look(true), Math.max(300, Math.min(FIND_LAST, left())))); });
+    live.on = false;
     const a = got(A), c = got(C), w = got(W);
     const first = stems.length ? a.filter(onTopic) : a, rest = stems.length ? a.filter(p => !onTopic(p)) : [];
     add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
     if (out.length < 3) add(w);
-    if (!A.done || !C.done || (out.length < 3 && !W.done)) more = true;
-    if (!ms) ms = [A, C, W].map(s => s.ms);
-    again += A.again + C.again + W.again; };
+    if (!A.done || (out.length < 3 && (!C.done || !W.done))) more = true;
+    if (!ms) { ms = [A, C, W].map(s => s.ms); won = [A, C, W].map(s => s.won); own = [A, C, W].map(s => s.own); }
+    again += A.again + C.again + W.again; kept += A.kept + C.kept + W.kept; };
   // one wider search, where the three found too little
-  const one = async (q, sort, size) => { if (!q || left() < 600) return []; const s = start(q, sort, size); let t = null;
-    await Promise.race([s.p, new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_LAST, left()))); })]); clearTimeout(t); if (!s.done) more = true; again += s.again; return got(s); };
+  const one = async (q, sort, size) => { if (!q || left() < 600) return []; const live = { on: true }, s = start(q, sort, size, FIND_B, live); let t = null;
+    await Promise.race([s.p, new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_LAST, left()))); })]); clearTimeout(t); live.on = false; if (!s.done) more = true; again += s.again; kept += s.kept; return got(s); };
   await round(r.names);
   // wider, only where the searches are back and found too little (a search that is still out is not "too little": the page asks again)
   if (!more && out.length < 3 && all.length > r.names.length && left() > 600) await round(all);   // (the name the reader wrote found too little: with what its page is called)
@@ -482,7 +496,7 @@ async function findPapers(env, r, most, ctx) {
   if (!more && out.length < 2 && r.groups.length) add(await one(Q.nameRev, "CITED%20desc", 4));
   const papers = out.slice(0, most).map(p => { let pick = null; try { pick = r.noq ? null : iaPick(p, r.groups, all, r.def); } catch (e) { pick = null; }
     const o = { t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind }; if (pick) { o.q = pick.q; if (pick.an) o.an = pick.an; } return o; });
-  return { papers, more, ms: ms || [], again };
+  return { papers, more, ms: ms || [], again, won, own, kept };
 }
 async function find(request, url, env, ctx) {
   if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
@@ -492,7 +506,7 @@ async function find(request, url, env, ctx) {
   try { const t = await request.text(); if (t.length > 2000) return json({ ok: false, error: "too long" }, 413); body = JSON.parse(t); } catch (e) { return json({ ok: false, error: "json" }, 400); }
   const r = readFind(body); if (r.error) return json({ ok: false, error: r.error }, 422);
   if (r.held) return json({ ok: true, held: true, papers: [] });
-  try { const f = await findPapers(env, r, 6, ctx); return json(Object.assign({ ok: true, papers: f.papers }, f.more ? { more: 1 } : {}, { ms: f.ms, again: f.again })); }
+  try { const f = await findPapers(env, r, 6, ctx); return json(Object.assign({ ok: true, papers: f.papers }, f.more ? { more: 1 } : {}, { ms: f.ms, again: f.again, won: f.won, own: f.own, kept: f.kept })); }
   catch (e) { return json({ ok: false, error: "search" }, 502); }
 }
 // one more person asked a question that is on the public list: the item's number, counted

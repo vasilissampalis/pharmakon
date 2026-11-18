@@ -1755,10 +1755,11 @@ function insFoundHtml(d) {
    the sheet (Enter) at once. What it found is kept for this visit (FIND_MEM): the same question is not asked twice.
    The reader can switch this off (About us, Privacy: AUTO_OFF); then one quiet button looks it up on a tap. */
 const FIND_WAIT = 700, FIND_MEM = new Map(), FIND_MORE = [500, 2000];
-/* (2.20, after the sixth and seventh trials) Europe PMC answers a search in a fifth to a half of a second, but about one request in three hangs for seconds.
-   The server does not wait: it asks a hanging search again (up to three times), gives the list it has after 1.4 seconds at the latest and says "more" when a
-   search was still out (about one question in twenty). The page then asks once more half a second later, and once again two seconds after that, and puts the
-   whole list in the place of the first. Until then a line under the list says that we are still looking. onMore: told the newer list (the box that shows it). */
+/* (2.20, after trials 6 to 9 and the first publishing) Europe PMC answers a search in a fraction of a second, but about one request in three hangs for
+   seconds. The server does not wait: it asks for the most cited papers again when they hang (after 0.6 s and 1.3 s), gives the list as soon as they are in,
+   and after two seconds gives what the other searches found and says "more" (seldom). The page then asks once more half a second later, and once again two
+   seconds after that, and puts the whole list in the place of the first. Until then a line under the list says that we are still looking. onMore: told the
+   newer list (the box that shows it). */
 function insFindGet(terms, onMore) {
   const key = JSON.stringify(terms); let m = FIND_MEM.get(key);
   if (m) { if (onMore && m.subs) m.subs.add(onMore); return m.p; }

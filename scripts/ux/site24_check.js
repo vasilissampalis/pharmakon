@@ -20,13 +20,13 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const kv = new Map(), store = { get: async (k, how) => { const v = kv.get(k); return v == null ? null : how === "json" ? JSON.parse(v) : v; }, put: async (k, v) => { kv.set(k, v); } };
     // (2.16) Europe PMC, stood in for: the worker asks it through env.FETCH here; what it was asked is kept for the check. (2.20) Two papers about the drug,
     // with summaries: the server takes each paper's own words on the question from them by rule
-    // (2.20, after the sixth trial) and a slow search, as Europe PMC has them: the most cited papers on ketamine take three seconds the first time they are asked
-    // for; after that their reply is there at once (on the site Cloudflare keeps it)
+    // (2.20, after the sixth trial) and a slow search, as Europe PMC has them: the most cited papers on ketamine take four and a half seconds the first time they are
+    // asked for; after that their reply is there at once (on the site Cloudflare keeps it)
     const SLOW = new Map(), K = (i, title) => ({ title, authorString: "Delta D.", journalTitle: "Journal of Tests", pubYear: String(2010 + i), pmid: String(900 + i), isOpenAccess: "N", pubType: "journal article", abstractText: "" });
     const epmc = async url => { ASKED_EPMC.push(decodeURIComponent(String(url)));
       const s = decodeURIComponent(String(url));
       if (/TITLE:"ketamine"/.test(s)) { const q = (s.split(/[?&]query=/)[1] || "").split("&")[0], cited = /sort=CITED/.test(s);
-        if (cited) { if (!SLOW.has(q)) SLOW.set(q, Date.now() + 3000); const wait = SLOW.get(q) - Date.now(); if (wait > 0) await new Promise(r => setTimeout(r, wait)); }
+        if (cited) { if (!SLOW.has(q)) SLOW.set(q, Date.now() + 4500); const wait = SLOW.get(q) - Date.now(); if (wait > 0) await new Promise(r => setTimeout(r, wait)); }
         const list = cited ? [K(1, "Ketamine and eye colour: the most cited paper"), K(2, "Ketamine and eye colour: a newer paper")] : /sort=P_PDATE_D/.test(s) ? [K(2, "Ketamine and eye colour: a newer paper")] : [K(2, "Ketamine and eye colour: a newer paper"), K(3, "A paper that mentions ketamine and eye colour"), K(4, "Another paper that mentions ketamine and eye colour")];
         return new Response(JSON.stringify({ resultList: { result: list } }), { status: 200, headers: { "content-type": "application/json" } }); }
       return new Response(JSON.stringify({ resultList: { result: [
@@ -632,8 +632,8 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const firstAt = Date.now() - t0, first = await look(); await shot(p, w + "-papers-still-looking");
     await p.waitForFunction(() => !document.querySelector("#search-results .ins-found-w") && document.querySelectorAll("#search-results .ins-found-l li").length === 4, null, { timeout: 15000 }).catch(() => {});
     const whole = await look(), finds = posts.filter(x => /^find \{"names":\["ketamine"\]/.test(x)).length;
-    ok(w + " px: a slow search is not waited for: the list comes within about two seconds of the last key, with a line that says we are still looking; a moment later the whole list stands in its place, the most cited first",
-      firstAt < 3000 && first.rows.length === 3 && first.rows[0] === "Ketamine and eye colour: a newer paper" && /^Still looking for the most cited papers on this/.test(first.wait) && whole.rows.length === 4 && whole.rows[0] === "Ketamine and eye colour: the most cited paper" && whole.wait === "" && finds === 2, JSON.stringify([firstAt, first, whole, finds]));
+    ok(w + " px: the most cited papers are not waited for longer than two seconds: the list comes with a line that says we are still looking; a moment later the whole list stands in its place, the most cited first",
+      firstAt < 3900 && first.rows.length === 3 && first.rows[0] === "Ketamine and eye colour: a newer paper" && /^Still looking for the most cited papers on this/.test(first.wait) && whole.rows.length === 4 && whole.rows[0] === "Ketamine and eye colour: the most cited paper" && whole.wait === "" && finds === 2, JSON.stringify([firstAt, first, whole, finds]));
     await p.context().close();
   }
   ok("no error in any page's console", errors.length === 0, errors.slice(0, 5).join(" || "));

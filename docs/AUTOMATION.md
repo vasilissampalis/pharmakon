@@ -1022,6 +1022,21 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       0.53 s; 47 of 56; 55 of 56; 3, whole after 1.9 to 2.5 s. Trial 9 (the same; Europe PMC hung more): 0.66 s;
       41 of 56; 54 of 56; 9, whole after 2.1 to 2.7 s (one 5.5 s). On top of it, while a reader types, the page
       waits 0.7 s after the last key before it asks (on Enter it asks at once).
+      **The first publishing, and 2.20.1 (05:23 to 06:00).** The publishing's own check asked the real site six of
+      our questions (`data/auto/deploy/`): 0.8 to 1.5 s each, the middle one 1.1 to 1.4 s, slower than the trials.
+      From the site's own server a search takes a half to nine tenths of a second where the trial machine took a
+      fifth to a half (it opens a new connection to Europe PMC each time), so the second asking at 0.45 s came
+      nearly always and for nothing ("3 asked again" of 3). And the question asked a second time still went to
+      Europe PMC (0.2 to 0.3 s a search): the setting that should have kept its replies did not. So, in 2.20.1:
+      the most cited papers are asked for again after 0.6 s and 1.3 s, the two other searches only after 0.9 s
+      and 1.7 s; the list is given as soon as the most cited are in, with the newest if they come within three
+      tenths of a second (the newest are one paper of the six: nobody waits for them longer, the list is not
+      changed for them afterwards, and they are kept for the next reader); after two seconds without the most
+      cited, what the other searches found, with "more"; a search is not asked again once its list has gone out;
+      and every reply of Europe PMC is kept for a day in Cloudflare's cache by the server itself, under the
+      search's address (checked before each asking). The reply now also says which asking answered and how long
+      that asking took, and the publishing's check asks twelve questions, so that the next run shows what a
+      search costs from the real site.
       **What the trials gave in words** (lines shown, of papers listed; questions with at least one line):
       trial 3: 147 of 253, many of them pieces of sentences. Trial 4: 66 of 252. Trial 5: 54 of 236; 27 of 44.
       Trial 6: 55 of 234; 30 of 44; about fifteen of them beside the point or about something else. Trial 7: 48 of
