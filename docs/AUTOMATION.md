@@ -1192,8 +1192,37 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     (oncogene addiction, food addiction, social networking), "cognitive" for "smarter" (cognitive models and
     therapy), three key words where two would do ("smoking", "pregnant", "baby": two papers, neither on it), a key
     word that only repeats the subject ("addicted" under "addiction") with "others" beside it (six papers, none on
-    it). What follows for the page's key words and the server's searches is written into the next steps; each change
-    gets a trial.
+    it). **What was changed for it the same afternoon** (site 2.21.2; the page's `insFindTerms`, the server's
+    `FIND_CTX`): "why do people take drugs" is asked as the reasons for drug use ("motives|reasons": the eleventh
+    trial found the papers under these words); a key word that only says the subject again ("addicted" where the
+    subject is addiction), and "others", "another", "else", "every", are no key words, so "why do some people get
+    addicted and others don't" is not looked up at all; a question about pregnancy or a child that names a drug gets
+    two key words at most, the ones about the pregnancy or the child first; "pregnant" is also asked as "pregnancy",
+    "baby" as "infants", "breastfeeding" as "lactation", "teenage" as "adolescents"; drinking with no drug named is
+    alcohol ("does drinking while breastfeeding harm the baby" had been looked up under the name "breastfeeding"); and
+    the server counts "addiction" only beside a word about drugs. The thirteenth trial (`instant-0013.json`, 28
+    questions, the page's own key words again) is asked for with that publishing and read for its titles. Not changed:
+    "smarter" as "cognitive" (no better word found yet).
+    **A visitor's own words stood in the public list** (found 17:05 Athens, while reading the site's index for
+    another reason). The model that words a visitor's question (`scripts/auto/ask.py`) is asked for "six other ways
+    people type this question". For the question about mothers it gave back, as two of them, the two sentences the
+    visitor had typed, word for word with their slip of grammar; `accept` checked many things of a wording and not
+    that. They stood in `data/auto/wanted-auto.json`, in the answer's record and in the site's index (the visitor
+    was the senior author, who had typed the same words to the editor that day; the rule is for everyone: a
+    question the page sends by itself never has its words written here). **Now:** a wording that is the whole of
+    what a visitor typed, or four or more words in a row of it, is not kept (`copied`; what other visitors typed for
+    the same question counts too); the model is told so; and every run takes such wordings out of the items listed
+    before, wherever it can still read what the visitors typed (the store keeps it; the repository never does).
+    Taken out by hand of that item and of its answer's record. They remain in the repository's history of that
+    afternoon, which is not rewritten (his rule); his to decide whether that matters. The other 24 items of the
+    list were read: short search wordings, none that reads as a person's own sentence; the next run checks them
+    against what was typed.
+    **Two checks that broke on the system's own growth** (2.21.2): the browser check typed a question about
+    parenting and teenagers and expected no answer of ours; that afternoon the system had answered a question near
+    enough to it. It now takes the first of five such questions that the page itself says it cannot answer. The
+    check of the next questions allowed three answers without any; a second answer on the page the system started
+    for kanna made four, because an answer by the system was never offered under another one. It is now (under a
+    checked answer it still never is), and the check counts what it must.
     **Lane 19** (`scripts/auto/lane.py`). No gate is taken away. What code can mend is mended before a rule judges:
     a number of a sentence that stands in another item of a source the sentence already rests on puts that item
     under the sentence too, so that every reader reads the sentence beside it (`mend_uses`; never an item of another

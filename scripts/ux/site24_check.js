@@ -606,11 +606,15 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const heldN = bodies.length; const hasAsk = await p.$("#search-results button[data-ask]"); if (hasAsk) { await hasAsk.click(); await p.waitForTimeout(900); }
     ok(w + " px: a question about dying is not looked up", bodies.length === heldN && !(await p.$("#search-results .ins-found")), JSON.stringify(bodies.slice(heldN)));
     // (2.21) a question about children, and one that names no single drug: looked up now, and listed by title only (no words of a paper)
-    await p.fill("#search", "does parenting affect whether teenagers use drugs"); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 20000 }).catch(() => {}); await p.waitForTimeout(700);
+    // (2.21.2: the system answers more every hour, and on 18 November it answered the question this check had typed) the first of these that the site has no
+    // answer to, by the page's own reading; what is sent must be what the page's key words say
+    const genQ = await p.evaluate(async qs => { for (const q of qs) { const t = insFindWanted(await insRank(q, {})); if (t && t.t === 1 && t.names.join() === "drug use,substance use" && /adolescents/.test(t.words.join())) return { q, words: t.words.join() }; } return null; },
+      ["does parenting affect whether teenagers use drugs", "does boredom make teenagers try drugs", "do strict schools keep teenagers off drugs", "does moving house make teenagers try drugs", "do teenagers in villages use drugs less"]);
+    await p.fill("#search", genQ ? genQ.q : "does boredom make teenagers try drugs"); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 20000 }).catch(() => {}); await p.waitForTimeout(700);
     const gen = await p.evaluate(() => ({ rows: document.querySelectorAll("#search-results .ins-found-l li").length, quotes: document.querySelectorAll("#search-results .ins-found-l .pq").length, note: [...document.querySelectorAll("#search-results .ins-found .ins-found-n")].map(e => e.textContent).join(" ") }));
     const genBody = bodies.length > heldN ? JSON.parse(bodies[bodies.length - 1]) : {};
     ok(w + " px (2.21): a question that names no single drug, about children, is looked up under what research calls the subject, and its papers are listed by title only",
-      (genBody.names || []).join() === "drug use,substance use" && genBody.t === 1 && (genBody.words || []).join() === "parenting,adolescents|teenagers" && gen.rows >= 1 && gen.quotes === 0 && /For a question like this one we list the papers only, with no words from them\.$/.test(gen.note), JSON.stringify([genBody, gen]));
+      !!genQ && (genBody.names || []).join() === "drug use,substance use" && genBody.t === 1 && (genBody.words || []).join() === genQ.words && gen.rows >= 1 && gen.quotes === 0 && /For a question like this one we list the papers only, with no words from them\.$/.test(gen.note), JSON.stringify([genBody, gen]));
     await p.fill("#search", ""); await p.evaluate(() => closeSearch()); const genN = bodies.length;
     // the reader's own switch (About us, Privacy): off, nothing is looked up by itself, and one quiet button looks it up
     await p.evaluate(() => localStorage.setItem("pk-auto", "0")); await p.fill("#search", "does lsd make your pupils bigger"); await p.waitForSelector("#search-results .sr-fit", { timeout: 20000 }); await p.waitForTimeout(1600);
@@ -676,6 +680,18 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
          papers.) The index says no: the page says that it did not answer, not that nothing was found. The index does not come back: the page says that it is
          still looking, then that the index is slow, asks on for some forty seconds, and then says that it did not answer, with a way to look again; "nothing
          was found" never stands there; "Look again" asks afresh and shows the list. */
+      // (2.21.2, after the twelfth trial) what the page asks the index for: the names and key words it makes for a question
+      const termsOf = q => p.evaluate(async q => insFindTerms(await insRank(q, {})), q), same = async (q, want) => { const got = await termsOf(q); return JSON.stringify(got) === JSON.stringify(want) ? "" : q + " -> " + JSON.stringify(got); };
+      const wrong = (await Promise.all([
+        same("why do people take drugs", { names: ["drug use", "substance use"], words: ["motives|reasons"], t: 1 }),
+        same("why do some people get addicted and others don't", null),
+        same("does trauma lead to addiction", { names: ["addiction", "substance use disorder"], words: ["trauma"], t: 1 }),
+        same("does smoking weed while pregnant harm the baby", { names: ["cannabis", "thc", "cbd"], words: ["pregnancy|pregnant", "infants|baby"], t: 1 }),
+        same("does drinking while breastfeeding harm the baby", { names: ["alcohol"], words: ["lactation|breastfeeding", "infants|baby"], t: 1 }),
+        same("can teenagers get addicted to weed faster", { names: ["cannabis", "thc", "cbd"], words: ["adolescents|teenagers", "addiction|addicted"], t: 1 }),
+        same("is tianeptine addictive", { names: ["tianeptine"], words: ["addiction|addictive"] }),
+        same("can you die from lsd", null)])).filter(Boolean);
+      ok("1280 px: the key words the page makes: 'why do people take drugs' is asked as the reasons for drug use; a key word that only says the subject again, and 'others', are none (nothing is looked up for 'why do some people get addicted and others don't'); a question about pregnancy or a child gets two key words, those about the pregnancy or the child first; drinking with no drug named is alcohol; a question about dying is not looked up", wrong.length === 0, wrong.join(" || "));
       const box = () => p.evaluate(() => { const b = document.querySelector("#search-results .ins-found"); return b ? b.textContent : ""; });
       await p.fill("#search", "does mescaline change your eye colour"); await p.waitForSelector("#search-results .ins-found [data-find-again]", { timeout: 15000 }).catch(() => {});
       const downTxt = await box();

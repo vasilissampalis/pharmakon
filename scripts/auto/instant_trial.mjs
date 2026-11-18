@@ -76,9 +76,10 @@ for (const f of files) {
     const t0 = Date.now(), mine = asked, live = { ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: viaNet, CACHE }; let reply = null, status = 0;
     try { const r = await post(live); status = r.status; reply = await r.json(); } catch (e) { reply = { error: String(e && e.message).slice(0, 200) }; }
     const ms = Date.now() - t0, firstReply = reply; let asks = 1, wholeMs = ms;
-    // as the page does: where a search was still out, ask again after half a second, and once more two seconds after that; the newer list takes the place of the first
-    for (const wait of [500, 2000]) { if (!(reply && reply.more)) break; await new Promise(r => setTimeout(r, wait)); let r2 = null; try { r2 = await (await post(live)).json(); } catch (e) { r2 = null; } asks++;
-      if (r2 && r2.ok && ((r2.papers || []).length || !((reply.papers || []).length))) { reply = r2; wholeMs = Date.now() - t0; } else break; }
+    // as the page does (since site 2.21.1: six more askings over some forty seconds): where a search is still out, ask again; the newer list takes the place of the
+    // first, a thinner one while searches are still out does not, and the asking goes on
+    for (const wait of [500, 2000, 3000, 4000, 5000, 6000]) { if (!(reply && reply.more)) break; await new Promise(r => setTimeout(r, wait)); let r2 = null; try { r2 = await (await post(live)).json(); } catch (e) { r2 = null; } asks++;
+      if (r2 && r2.ok && ((r2.papers || []).length || !((reply.papers || []).length))) { reply = r2; wholeMs = Date.now() - t0; } else if (!(r2 && r2.ok && r2.more)) break; }
     const idOf = p => p.doi || p.pmid, firstIds = ((firstReply && firstReply.papers) || []).map(idOf);
     // the server's own computing time: the same request again, from memory (the middle one of five)
     const again = []; for (let i = 0; i < 5; i++) { const c0 = performance.now(); try { await (await post({ ASSETS: {}, FETCH: fromMemory, CACHE })).json(); } catch (e) { /* not timed */ } again.push(performance.now() - c0); } again.sort((a, b) => a - b);

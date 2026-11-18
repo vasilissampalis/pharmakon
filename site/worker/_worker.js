@@ -164,6 +164,8 @@ const FIND_CTX = { lsd: "lysergic psychedelic psychedelics hallucinogen hallucin
   ghb: "hydroxybutyrate hydroxybutyric gbl butyrolactone oxybate", gbl: "butyrolactone ghb hydroxybutyrate", cbd: "cannabidiol cannabis cannabinoid cannabinoids", thc: "tetrahydrocannabinol cannabis cannabinoid cannabinoids",
   mda: "methylenedioxyamphetamine mdma ecstasy", dxm: "dextromethorphan", mxe: "methoxetamine", bzp: "benzylpiperazine", pma: "ecstasy mdma amphetamine", dph: "diphenhydramine", ket: "ketamine", meth: "methamphetamine", coke: "cocaine",
   crack: "cocaine", speed: "amphetamine amphetamines", ice: "methamphetamine", molly: "mdma ecstasy", acid: "lsd lysergic", weed: "cannabis marijuana", pot: "cannabis marijuana", spice: "cannabinoid cannabinoids",
+  // (2.21.2, after the twelfth trial: "is addiction genetic" read a paper on the "oncogene addiction" of tumours; "does trauma lead to addiction" read one on food addiction)
+  addiction: "drug drugs substance substances alcohol opioid opioids nicotine cocaine heroin cannabis dependence",
   salvia: "salvinorin divinorum", benzos: "benzodiazepine benzodiazepines", benzo: "benzodiazepine benzodiazepines", shrooms: "psilocybin psilocybe", mushrooms: "psilocybin psilocybe", poppers: "nitrite nitrites", ecstasy: "mdma methylenedioxymethamphetamine", nos: "nitrous" };
 /* What Europe PMC is asked (its own search words). groups: the question's key words, each an array of the ways it is said. Every key word must
    stand in a paper, not any one of them; the drug's name must stand in the paper's title, except in the widest search. */

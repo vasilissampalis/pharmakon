@@ -68,13 +68,27 @@ def prompt(lead, also, drug_names):
             + (f"\nDrugs the question names, by the names the site uses: {', '.join(drug_names)}." if drug_names else "")
             + "\n\nTASK. Write the same question as an encyclopedia would list it:\n"
             '- "question": one neutral question, 5 to 18 words, ending with a question mark. No "I", "my" or "me". No personal details (no ages, places, names, or amounts the person took). Keep the drug\'s name. Do not make it broader or narrower than what was asked.\n'
-            '- "ways": six other ways people type this question into a search box (2 to 10 words each).\n'
+            '- "ways": six other ways people type this question into a search box (2 to 10 words each). Never the visitor\'s own sentence, nor a part of it word for word: other words.\n'
             '- "terms": up to six words or short phrases that research papers use for its subject.\n'
             'JSON only, in this form: {"question": "...", "ways": ["...", "...", "...", "...", "...", "..."], "terms": ["...", "..."]}')
 
 
-def accept(out, lead, drugs, R, names):
-    """(item fields, "") when the model's wording may be listed, or (None, why not)."""
+def copied(way, texts):
+    """Is this wording a visitor's own words: the whole of what one of them typed, or four or more words in a row of it? (18 November 2026: the model that
+    words a question had given back, as two of its "other ways people type this", the two sentences a visitor had typed, word for word with their slip of
+    grammar, and they stood in the public list and in the site's index. A visitor's words are never kept: data/auto/wanted-auto.json says so itself.) A
+    short common wording that happens to stand in the visitor's text too ("kanna and anxiety": three words) is anybody's and is kept."""
+    norm = lambda s: re.sub(r"[^a-z0-9' ]+", " ", str(s).lower().replace("’", "'")).split()
+    ws = norm(way); n = len(ws)
+    if n < 2: return False
+    for t in texts:
+        L = norm(t)
+        if L == ws or (n >= 4 and any(L[i:i + n] == ws for i in range(len(L) - n + 1))): return True
+    return False
+
+
+def accept(out, lead, drugs, R, names, also=()):
+    """(item fields, "") when the model's wording may be listed, or (None, why not). also: what other visitors typed for the same question."""
     if not isinstance(out, dict): return None, "no JSON"
     q = re.sub(r"\s+", " ", str(out.get("question") or "")).strip()
     n = len(words(q))
@@ -92,7 +106,7 @@ def accept(out, lead, drugs, R, names):
     ways = []
     for w in out.get("ways") or []:
         w = re.sub(r"\s+", " ", str(w)).strip().rstrip("?").strip()
-        if 2 <= len(words(w)) <= 12 and not SIGNS.search(w) and not not_answered(w) and not (set(re.findall(r"\d+", w)) - set(re.findall(r"\d+", lead))) and w.lower() != q.lower().rstrip("?") and w.lower() not in [x.lower() for x in ways]: ways.append(w)
+        if 2 <= len(words(w)) <= 12 and not SIGNS.search(w) and not not_answered(w) and not (set(re.findall(r"\d+", w)) - set(re.findall(r"\d+", lead))) and w.lower() != q.lower().rstrip("?") and w.lower() not in [x.lower() for x in ways] and not copied(w, [lead] + list(also)): ways.append(w)
     if len(ways) < 3: return None, "fewer than three other wordings"
     terms = [t for t in (re.sub(r"\s+", " ", str(t)).strip().lower() for t in (out.get("terms") or [])) if 1 <= len(words(t)) <= 4 and not SIGNS.search(t)][:8]
     return {"q": q, "ways": ways[:6], "drugs": sorted(set(drugs) | set(named)) if (drugs or named) else [], "terms": terms}, ""
@@ -116,6 +130,15 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         for t in [w["q"]] + list(w.get("ways") or []): texts.append(t); owner.append(w["id"])
     L = enc(texts) if texts else None
     out, made = [], 0
+    # (18 November 2026) the items listed before the rule above: where this run can still read what the visitors typed, a wording that is theirs is taken out
+    by_id, cleaned = {w["id"]: w for w in auto["items"]}, 0
+    for g in report.get("groups") or []:
+        typed = [str(g.get("question") or "")] + [str(a) for a in g.get("also") or []]
+        m = re.match(r"(?:listed as|the same question as) (w_a\d+)", str((st["done"].get(finger(typed[0])) or {}).get("what") or "")); w = by_id.get(m.group(1)) if m else None
+        if not w: continue
+        keep = [x for x in w.get("ways") or [] if not copied(x, typed)]
+        if len(keep) != len(w.get("ways") or []): w["ways"] = keep; cleaned += 1
+    if cleaned: print(f"ask: {cleaned} listed question(s) held a wording that was a visitor's own words: taken out")
     for g in sorted(report.get("groups") or [], key=lambda g: -int(g.get("asked") or 0)):
         lead = str(g.get("question") or ""); key = finger(lead)
         # (2.9.3) a question once set aside as not about drugs is looked at again when the site has learned its drug's name since
@@ -140,7 +163,7 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         try: raw = chat(MODEL, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt(lead, [str(a) for a in g.get("also") or []], drug_names)}], 350)
         except llm.Budget as e: print("ask: stopped for today:", e); break
         except llm.Unavailable as e: print("ask: the model cannot be used now:", e); break
-        fields, why = accept(llm.as_json(raw), lead, drugs, R, names)
+        fields, why = accept(llm.as_json(raw), lead, drugs, R, names, [str(a) for a in g.get("also") or []])
         if not fields: decide("no wording of ours passed (" + why + "): left for the editors"); continue
         near = float((enc([fields["q"]]) @ qv.T)[0, 0])
         if near < NEAR_OWN: decide(f"our wording was not near the visitor's question ({near:.2f}): left for the editors"); continue
@@ -151,7 +174,7 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         st["next"] += 1; auto["items"].append(item); made += 1
         v = enc([item["q"]] + item["ways"]); L = v if L is None else __import__("numpy").vstack([L, v]); owner += [item["id"]] * len(v)
         decide("listed as " + item["id"], item)
-    if save and out:
+    if save and (out or cleaned):
         AUTO.parent.mkdir(parents=True, exist_ok=True)
         json.dump(auto, open(AUTO, "w", encoding="utf-8"), ensure_ascii=False, indent=1); json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"ask: {len(out)} groups looked at: " + (", ".join(f"{sum(1 for w, _ in out if w.startswith(k))} {k}" for k in ("listed as", "the same question", "on the editors' list", "not about drugs", "something the site does not answer", "no wording", "our wording was not near") if any(w.startswith(k) for w, _ in out)) or "nothing new"))
@@ -170,6 +193,12 @@ def selftest():
     assert not_answered("where can i buy ketamine") and not_answered("how to make mdma at home") and not_answered("how do i pass a drug test for weed") and not_answered("how to hide being high from my parents")
     assert not not_answered("does ketamine damage the bladder") and not not_answered("where can i get a test kit for mdma") and not not_answered("does cocaine make your heart race")
     good = {"question": "Does cocaine damage the inside of the nose?", "ways": ["cocaine nose damage", "can cocaine ruin your nose", "does coke hurt your nose", "cocaine and the septum", "nose problems from cocaine", "is snorting cocaine bad for the nose"], "terms": ["nasal septum perforation", "intranasal cocaine"]}
+    # a visitor's own words are never one of "the other ways people type this": the whole of what they typed, or four words in a row of it
+    typed = "do grandads fret when the grandkids try weed? how does a grandads' mood make grandkids try weed"      # (a made-up visitor: two sentences, the second with its slip)
+    assert copied("how does a grandads' mood make grandkids try weed", [typed]) and copied("do grandads fret when the grandkids try weed", [typed.replace("'", "’").capitalize()])
+    assert copied("kanna anxiety", ["kanna anxiety"]) and not copied("kanna and anxiety", ["does kanna and anxiety go together"]) and not copied("do grandparents worry about grandchildren using cannabis", [typed]) and not copied("x", ["x"])
+    fc, _ = accept(dict(good, ways=good["ways"][:5] + ["my nose is wrecked after 3 years of coke"]), "my nose is wrecked after 3 years of coke lol does cocaine do that", ["cocaine"], R(), names); assert fc and len(fc["ways"]) == 5 and not any("wrecked" in x for x in fc["ways"]), fc
+    fc, _ = accept(dict(good, ways=good["ways"][:5] + ["is my septum gone for good"]), "x", ["cocaine"], R(), names, also=["honestly is my septum gone for good now"]); assert fc and len(fc["ways"]) == 5
     f, why = accept(good, "my nose is wrecked after 3 years of coke lol does cocaine do that", ["cocaine"], R(), names); assert f and f["q"] == good["question"] and len(f["ways"]) == 6 and f["drugs"] == ["cocaine"], why
     class R9(R):                                                    # (site 2.9) a wording that is not a finished question is never listed
         def unfinished(self, q, on_page=False): return "ends" if q.rstrip("?").endswith(" from") else ""

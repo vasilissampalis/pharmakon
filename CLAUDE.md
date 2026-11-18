@@ -51,6 +51,8 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   whatever the setting: suicide and self-harm, what to do in an emergency (his own text), an amount that kills, an answer
   that disagrees with a checked claim, and every answer about amounts until the editor has read it. Never switch a kind
   from "person" to "strict" without his word. Never copy a machine-lane answer into the checked lane without the full checks.
+  The editor reads what the lane publishes and holds what is wrong (`data/auto/held.json`: "run" names the one version held,
+  "say" goes to the next writer); a run never keeps a draft over an answer another run published meanwhile (`tick.py settle`).
 - A second marked exception, his decision of 17 November 2026 (METHODS §12.2 point 15, `docs/AUTOMATION.md`, decision 31):
   each paper's own words, at once (`site/worker/_worker.js`, `/api/find`; site 2.20). For a question the site cannot answer the
   reader is shown the published papers on it from Europe PMC, and under a paper's title at most 15 of the PAPER'S OWN WORDS on
@@ -64,7 +66,11 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   instant search on this instance too"; words for them only after a trial of such questions). Before changing a rule, run a trial on
   our own questions (`data/auto/requests/instant-*.json`; `scripts/auto/instant_trial.mjs` on GitHub's machines) and read every
   line. A reader's sentence goes nowhere for this: the drug's names and key words go to this server and to Europe PMC only. A
-  paper's summary is never copied into the repository: trial files hold the words shown and the shape around them.
+  paper's summary is never copied into the repository: trial files hold the words shown and the shape around them. Europe PMC
+  can be slow for hours (18 November 2026: 25 seconds a search): the page says "nothing was found" ONLY where the searches came
+  back empty; while they are out it says it is still looking, and where the index did not answer it says that and offers to
+  look again (site 2.21.1). The same in the lane: a source that could not be fetched is a fault of the moment, never "nothing
+  is published".
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY.

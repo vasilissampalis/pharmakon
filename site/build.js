@@ -462,7 +462,8 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
         // 2.5: the questions on our list, as the index kept them (an item the site answers by now is left out there): [id, question]
         const wl = JSON.parse(fs.readFileSync(path.join(dataDir, "insight.json"), "utf8")).wanted, listed = wl ? wl.ids.map((id, i) => [id, wl.q[i]]) : [];
         // (2.6: a machine-lane answer is never offered as a next question of a checked answer; it keeps its own next questions)
-        const nx = JSON.parse(fs.readFileSync(nextFile, "utf8")); nx.next = nx.next.map(l => (l || []).filter(j => !/^au_/.test(nx.ids[j])));
+        // (2.21.2: but under another answer by the system it is: on a page the system started, kanna's two answers offered nothing, each being the other's only neighbour)
+        const nx = JSON.parse(fs.readFileSync(nextFile, "utf8")); nx.next = nx.next.map((l, i) => (l || []).filter(j => !/^au_/.test(nx.ids[j]) || /^au_/.test(nx.ids[i])));
         const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(nx) + ";\nconst WANTED = " + JSON.stringify(listed) + ";";
         if (page.split(mark).length === 2) fs.writeFileSync(pageFile, page.replace(mark, () => told + mark));
         else console.error("WARNING: the page's script has no place for what Insight tells it (const SITE_VERSION not found once): the search box answers by words only, and Read next falls back to the next questions of the topic");

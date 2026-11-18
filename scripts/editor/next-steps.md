@@ -44,19 +44,11 @@ the way back in the bar).
    little more than their source: it is the strong reader now (20 calls a day; 3 Flash stands behind it). Watch `panel` in the records for
    "could not be asked ... it began:" (the first 90 characters of a reply that could not be read are kept now). If the day's calls of both
    run out before the writers' allowance does, ask for one more key of another free service rather than a weaker reader.
-   (e) **The two new kinds of question** (titles only now). The eleventh trial is read (decision 32: titles mostly on the question, 3 to 11
-   seconds, hence the lighter plan `roundGen`). **Read the twelfth** (`data/auto/instant/trial-*-0012.json`: the page's own names and key
-   words): titles and times, question by question. Then, each as its own small change with a trial behind it, what the page's key words
-   showed on 18 November (`insFindTerms`, read off the built page): "why do people take drugs" has no key word and gets no list (the
-   eleventh trial found good titles for "motives|reasons": a rule for "why" + drug use in general, and only that); "drinking" with no drug
-   named is not read as alcohol, so "breastfeeding" became the name ("does drinking while breastfeeding harm the baby"); "pregnant" is not
-   also asked as "pregnancy", nor "baby" as "infant"; "others", "another", "else" are no key words; a key word that only repeats the
-   subject ("addicted" under "addiction") should not count as one. Words under the titles of these kinds: only after a trial that reads
-   every line; for pregnancy and children titles only stays, unless he says otherwise.
-   From the twelfth trial (read; decision 32), each with a trial of its own: the name "addiction" needs a word beside it in the paper
-   (drug, substance, alcohol, opioid, nicotine, dependence: the server's FIND_CTX), or cancer's "oncogene addiction" and "food addiction"
-   come back; a question about pregnancy or children gets two key words at most, the ones about pregnancy or the child first; "smarter" as
-   "cognitive" finds cognitive models and therapy: find a better word or none.
+   (e) **The two new kinds of question** (titles only now). The eleventh and twelfth trials are read (decision 32). Words under the
+   titles of these kinds: only after a trial that reads every line; for pregnancy and children titles only stays, unless he says otherwise.
+   From the twelfth trial (read; decision 32): done in site 2.21.2 (the key words, and "addiction" beside a word about drugs). **Read the
+   thirteenth** (`data/auto/instant/trial-*-0013.json`) for its titles, question by question. Still to find: a better word than "cognitive"
+   for "smarter" (it finds cognitive models and therapy), or none.
    (e2) **A second index for the hours when Europe PMC is slow** (18 November, afternoon: 25 seconds a search; site 2.21.1 made the page
    patient and truthful about it, not fast). PubMed's own interface (NCBI E-utilities: no key needed at a few requests a second; search,
    then the records with their summaries) asked beside Europe PMC, the first that answers gives the list; no "most cited" order there, so

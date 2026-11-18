@@ -1748,11 +1748,14 @@ const FIND_STOP = new Set(("what when where which while with would could should 
   // words about research itself, and for a drug as such ("what did the study on lsd find", "is ritalin a study drug")
   "find finds found finding findings show shows showed shown say says said prove proves proved proven research evidence science scientific scientists paper papers drug drugs medicine medication pill pills substance substances " +
   // (2.21) a question that names no single drug is asked in everyday words that stand in no title: left out, so that the words that do are found
-  "worry worries worried worrying whether likely more less most least really often sometimes always never kind sort lots little bigger smaller start starts started starting begin begins began").split(" "));
+  "worry worries worried worrying whether likely more less most least really often sometimes always never kind sort lots little bigger smaller start starts started starting begin begins began " +
+  // (2.21.2, after the twelfth trial: "why do some people get addicted and others don't" asked for papers that hold "others")
+  "others other another else everyone everybody anybody nobody somebody every").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
 const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
-  kids: "children|adolescents", kid: "children|adolescents", teens: "adolescents", teen: "adolescents", teenagers: "adolescents", teenager: "adolescents", moms: "maternal|mothers", mom: "maternal|mothers", mums: "maternal|mothers", mum: "maternal|mothers", mothers: "maternal", mother: "maternal", dads: "paternal|fathers", dad: "paternal|fathers", fathers: "paternal", father: "paternal", parents: "parental", parent: "parental", families: "family",
+  kids: "children|adolescents", kid: "children|adolescents", teens: "adolescents", teen: "adolescents", teenagers: "adolescents", teenager: "adolescents", teenage: "adolescents", moms: "maternal|mothers", mom: "maternal|mothers", mums: "maternal|mothers", mum: "maternal|mothers", mothers: "maternal", mother: "maternal", dads: "paternal|fathers", dad: "paternal|fathers", fathers: "paternal", father: "paternal", parents: "parental", parent: "parental", families: "family",
   creative: "creativity", lonely: "loneliness", poor: "poverty", genes: "genetic", inherited: "genetic", hereditary: "genetic", psychology: "psychological",
+  pregnant: "pregnancy", baby: "infants", babies: "infants", breastfeeding: "lactation", breastfeed: "lactation",   // (2.21.2, after the twelfth trial)
   hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
   horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "renal", kidney: "renal", lungs: "pulmonary", lung: "pulmonary", heart: "cardiac", liver: "hepatic", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover",
   eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite" };   // (2.19: short words that are the very thing asked about)
@@ -1799,6 +1802,9 @@ function insFindTerms(res) {
   // (2.21) a question about drugs in general: what research calls the subject stands in the place of a drug's name
   const general = !names.length && res.note !== "other" && FIND_GENERAL.test(text);
   if (general) (/\baddict|\bdependen|\bhooked\b/.test(text) ? ["addiction", "substance use disorder"] : ["drug use", "substance use"]).forEach(x => add(names, x));
+  // (2.21.2, after the twelfth trial: "does drinking while breastfeeding harm the baby" was looked up under the name "breastfeeding") drinking, with no drug named, is alcohol
+  const DRINK = /^(?:drinking|drinks?|drunk|drank|booze|boozing)$/, drink = !names.length && res.note !== "other" && (text.match(/[a-z]+/g) || []).some(w => DRINK.test(w));
+  if (drink) add(names, "alcohol");
   // a question about drugs that names none we know ("is tianeptine addictive", "what is kava"): the first word that is no everyday word is most likely the drug's name
   if (!names.length && res.note !== "other") { const known = w => INS.vocab.has(w) || FIND_STOP.has(w) || !!FIND_SAY[w],
       plain = w => known(w) || ["ies", "es", "s", "ed", "d", "ing", "ly", "ive", "al", "er", "est", "y", "ness", "ful"].some(suf => w.length > suf.length + 2 && w.endsWith(suf) && (known(w.slice(0, -suf.length)) || known(w.slice(0, -suf.length) + "e") || (suf === "ies" && known(w.slice(0, -3) + "y")) || (suf === "ive" && known(w.slice(0, -3) + "ion"))));
@@ -1810,12 +1816,19 @@ function insFindTerms(res) {
   const acad = /\b(?:study(?:ing)?\s+(?:for|better|longer|harder|drugs?|aids?|pills?)|(?:you|me|us|them|people|students|i)\s+study(?:ing)?|(?:to|and)\s+study(?:ing)?\b(?!\s+(?:of|on|about|that|which|shows?|found|says?))|studying|exams?|finals|homework|revising|revision|grades)\b/.test(masked);
   if (acad) words.push("academic|cognitive|students");
   for (const w0 of masked.match(/[a-z]{3,}/g) || []) { const say = FIND_SAY[w0];
+    // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
+    if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
     if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0))) continue;
     const e = say && say !== w0 ? say + "|" + w0 : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
     if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }
   if (general && words.length > 3) words.length = 3;          // (2.21) a question in everyday words about drugs in general: its first three key words (every key word must stand in a paper)
+  // (2.21.2) "why do people take drugs" has no key word of its own; the eleventh trial found the papers on it under what research calls the reasons
+  if (general && !words.length && names[0] === "drug use" && /^\s*why\b/.test(text)) words.push("motives|reasons");
   if (general && !words.length) return null;                 // (2.21) nothing to look for beyond "drug use" itself
+  // (2.21.2, after the twelfth trial: "smoking", "pregnant", "baby" found two papers, neither on the question) a question about pregnancy or children that names
+  // a drug: two key words at most, the ones about pregnancy or the child first
+  if (!general && words.length > 2 && FIND_TITLES.test(res.q || "")) { const fam = words.filter(x => FIND_TITLES.test(x.replace(/\|/g, " "))), rest = words.filter(x => !fam.includes(x)); words.splice(0, words.length, ...fam.concat(rest).slice(0, 2)); }
   // (2.20) "what is X": the server then looks for the sentence that says what the drug is
   const def = !words.length && /^(?:so )?(?:what(?:'s| is| are| exactly is| the hell is)|whats|wtf is)\b/.test(text.trim());
   return Object.assign({ names: names.slice(0, 6), words }, also.length ? { also: also.slice(0, 4) } : {}, def ? { def: 1 } : {}, general || FIND_TITLES.test(res.q || "") ? { t: 1 } : {});   // t: titles only
