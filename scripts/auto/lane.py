@@ -797,7 +797,7 @@ def make_plan(chat, model, question, sources, labels):
     return {"short": short, "direct": direct if DIRECT.search(direct) else "", "but": but, "how": how[:4], "unanswered": re.sub(r"\s+", " ", str(out.get("unanswered") or ""))[:160]}
 
 
-def writer_prompt(question, sources, examples, fix="", plan=None, note=""):
+def writer_prompt(question, sources, examples, fix="", plan=None, note="", last=""):
     lines = []; chosen = set(plan["short"] + plan["but"] + [x for g in plan["how"] for x in g]) if plan else None
     if plan: sources = [dict(s, design=s.get("design") if "D" + s["tag"] in chosen else None, findings=[f for f in s["findings"] if f["id"] in chosen], limits=[l for l in s["limits"] if l["id"] in chosen]) for s in sources]
     if plan: sources = [s for s in sources if s.get("design") or s["findings"] or s["limits"]]
@@ -822,6 +822,7 @@ def writer_prompt(question, sources, examples, fix="", plan=None, note=""):
             'For "short", for "but" and for every line of "how", give "uses": the labels of the items that sentence rests on (at least one).\n'
             '- "complete": true if the items answer the question, false if they answer only a part or a neighbouring question; "missing": in a few words, what is not answered.\n'
             + (f"\nAN EDITOR READ AN EARLIER ANSWER TO THIS QUESTION AND DID NOT LET IT OUT. Mind what the editor found: {note}\n" if note else "")      # (lane 19) data/auto/held.json, \"say\": what the editor found goes to the writer, so that the answer is written again by itself
+            + (f"\nAN ANSWER TO THIS QUESTION WAS WRITTEN BEFORE AND ITS READERS DID NOT ACCEPT IT. What they said of it: {last}\nDo not write those sentences again. Say only what the items say, in their own measure: what an item calls possible or reported, say as possible or reported; what it found in some people, say of some people.\n" if last else "")      # (lane 19) last_refusal: what the readers said of the draft that fell in the last run
             + (f"\nYOUR LAST ANSWER BROKE THESE RULES, write it again without them: {fix}\n" if fix else "") +
             'JSON only, in this form: {"short": {"text": "...", "uses": ["F1"]}, "but": {"text": "...", "uses": ["L1"]}, "how": [{"text": "...", "uses": ["DA", "F1"]}], "complete": true, "missing": ""}')
 
@@ -1494,7 +1495,7 @@ def with_checked(chat, model, enc, parts, claims, near=0.5, most=8):
     return differs, same
 
 
-def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None, own_check=None, stakes_how=None, note="", agreed=()):
+def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, official=None, page=None, summary=None, names=None, before=None, claims=None, own_check=None, stakes_how=None, note="", agreed=(), last=""):
     """One question through the lane. Returns the record (see the head of this file). official: the pages official.py found
     for it; page, summary, fulltext, crossref: how a page, a summary, a full text and a Crossref record are fetched (the
     selftest gives its own); before: the record this one replaces, whose state is kept in "history"."""
@@ -1632,6 +1633,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         plan = make_plan(chat, models["planner"], item["q"], sources, labels)
         rec["plan"] = plan or "the planner gave no plan that could be used: the writer chose the items itself"
         if plan and plan["unanswered"]: rec["missing"] = rec.get("missing") or plan["unanswered"]
+    if last: rec["gates"]["told"] = "the writer was told what the readers said of the last draft that was not accepted: " + last[:300]
     # 3 write, 5 rules (one more try when a rule is broken), 4 check (one more try for the short answer or the But)
     fix, draft, verdicts, downs = "", None, [], []      # (downs: what each reader said when asked whether the lead plays a danger down)
     def other_writer(why):
@@ -1644,7 +1646,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         rec["made"]["models"].update(writer=alt, writer_first=models["writer"]); models["writer"], models["writer_2"] = alt, ""
         return True
     for attempt in range(3):
-        ask = lambda: chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix, plan, note)}], room_for(models["writer"], 900))
+        ask = lambda: chat(models["writer"], [{"role": "system", "content": WRITER_SYS}, {"role": "user", "content": writer_prompt(item["q"], sources, ex, fix, plan, note, last)}], room_for(models["writer"], 900))
         try: reply = ask()
         except (llm.Unavailable, llm.Budget) as e:
             if "larger than Groq's free plan allows" in str(e) or not other_writer("could not be asked (" + re.sub(r"\s+", " ", str(e))[:120] + ")"): raise
@@ -2037,6 +2039,22 @@ def held_say(aid, lane=None):
     return next((re.sub(r"\s+", " ", str(h.get("say") or ""))[:600] for h in held if isinstance(h, dict) and h.get("id") == aid and h.get("say")), "")
 
 
+def last_refusal(before):
+    """(lane 19, 18 November 2026) What the readers said of the last draft of an answer that was not accepted, for the writer of the next one: "" where there is
+    none. A question that is tried again by itself was written afresh each time by a writer that knew nothing of why the last draft fell, and the same
+    sentence fell again (the senior author's own "is sex better with weed": three drafts that day said more than the 'potential' their source spoke of, each
+    refused by a reader, each written by a writer that had not been told). Only of an answer of THIS lane that ended with none, and only what a reader or our own
+    checker said of its short answer or its But (a rule's word is in the code and is told in the same run). The readers' words are data, cut short; the writer
+    stays bound by every rule and is read by every reader as before: no gate is touched."""
+    if not isinstance(before, dict) or before.get("status") != "none" or int(before.get("lane") or 0) != LANE: return ""
+    said = []
+    for x in (before.get("tries") or [])[-1:]:
+        for q in x.get("parts") or []:
+            if q.get("ok") is False and q.get("said") and q.get("part") in ("short", "but") and q.get("by") in ("the second reader", "a further reader", "our own checker"):
+                said.append(f'the {"short answer" if q["part"] == "short" else "But"} “{re.sub(r"[ \t\n]+", " ", str(q.get("text") or ""))[:220]}”: {re.sub(r"[ \t\n]+", " ", str(q["said"]))[:260]}')
+    return " | ".join(said)[:900]
+
+
 def shown_from():
     """The oldest lane whose answers the site shows (data/auto/lane/policy.json, show_from_lane)."""
     try: return int(json.load(open(ROOT / "data" / "auto" / "lane" / "policy.json", encoding="utf-8")).get("show_from_lane") or 1)
@@ -2118,7 +2136,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
             except (OSError, ValueError, KeyError): official = []               # (official.py has not searched for this question yet, or found nothing)
             try: before = json.load(open(af, encoding="utf-8"))
             except (OSError, ValueError): before = None
-            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk, stakes_how=stakes_policy() if real else None, note=held_say("au_" + w["id"]) if real else "", agreed=agreed_claims(w["id"]) if real else ())
+            rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk, stakes_how=stakes_policy() if real else None, note=held_say("au_" + w["id"]) if real else "", agreed=agreed_claims(w["id"]) if real else (), last=last_refusal(before) if real else "")
             if own_err and rec.get("status") == "published": rec["status"] = "waiting"; rec["for"] = "again"; rec["soft"] = "our own checker could not be run"; rec["why"] = "our own checker is in use and could not be run in this run (" + own_err + "): worked on again by itself in the next run"
             cut = 0
         except llm.Budget as e:
@@ -2814,6 +2832,20 @@ def selftest():
     calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, note="say what people report, as reports")
     assert r["status"] == "published" and "AN EDITOR READ AN EARLIER ANSWER" in [c for c in calls if c[0] == "writer"][0][2] and "say what people report, as reports" in [c for c in calls if c[0] == "writer"][0][2]
+    # what the readers said of the last draft that fell goes to the writer of the next one (only of this lane, only a reader's word on the short answer or the But)
+    fell = {"status": "none", "lane": LANE, "tries": [{"try": 1, "parts": [{"part": "short", "text": "Old.", "ok": False, "by": "a rule", "said": "a rule: x"}]},
+            {"try": 3, "why": "the last draft: no answer", "parts": [{"part": "short", "text": "People who use it report better sleep.", "ok": False, "by": "a further reader", "said": "a further reader (x) did not accept it: the passage says 'potential' only"},
+                                                                   {"part": "but", "text": "B.", "ok": True}, {"part": "how1", "text": "H.", "ok": False, "by": "the second reader", "said": "no"}]}]}
+    lr = last_refusal(fell)
+    assert lr.startswith("the short answer “People who use it report better sleep.”: a further reader (x) did not accept it") and "B." not in lr and "H." not in lr and "Old." not in lr, lr
+    assert last_refusal(dict(fell, lane=LANE - 1)) == "" and last_refusal(dict(fell, status="published")) == "" and last_refusal(None) == "" and last_refusal({"status": "none", "lane": LANE}) == ""
+    assert last_refusal({"status": "none", "lane": LANE, "tries": [{"parts": [{"part": "short", "text": "S.", "ok": False, "by": "a rule", "said": "a rule: an amount"}]}]}) == ""
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = make(item, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, last=lr)
+    wp = [c for c in calls if c[0] == "writer"][0][2]
+    assert r["status"] == "published" and "ITS READERS DID NOT ACCEPT IT" in wp and "the passage says 'potential' only" in wp and r["gates"]["told"].startswith("the writer was told"), (r["status"], r["gates"])
+    calls.clear(); script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
+    r = mk(); assert "ITS READERS DID NOT ACCEPT IT" not in [c for c in calls if c[0] == "writer"][0][2] and "told" not in r["gates"]
     # a question where a wrong word can hurt. The setting decides (data/auto/lane/policy.json, "stakes"); with none, it waits for a person, as before
     kq = {"id": "w_0027", "q": "Can ketamine kill you?", "ways": []}; VD = lambda down: dict(V(True, True, True, True), plays_down=down)
     strict = lambda models=None, q=kq, **k: make(q, found, chat, Enc(), models or dict(MODELS, also1="gemini:gemini-3.6-flash"), fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, stakes_how={"dying": "strict", "overdose or an emergency": "strict", "suicide or self-harm": "person"}, **k)

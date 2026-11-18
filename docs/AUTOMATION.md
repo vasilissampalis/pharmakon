@@ -1109,7 +1109,12 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     question lost every try it had to ONE paper whose full text Europe PMC failed to give (HTTP 500 on that paper,
     each time): the fetch of a full text was the one call of the lane that was not guarded ("the lane itself failed
     on it (HTTPError)"). Such a paper is now passed over, with a note in the record (`looked`, "fault"), and the
-    question is written from the other sources.
+    question is written from the other sources. (g) A question that was tried again was written afresh by a writer
+    that had not been told why the last draft fell, and the same kind of sentence fell again (his "is sex better with
+    weed": three drafts that day said more than the "potential" their source spoke of, each refused by a reader).
+    The writer of the next draft is now told what a reader or our own checker said of the last draft's short answer
+    or But (`last_refusal`: only of an answer of this lane that ended with none; the record says so under `gates`,
+    "told"); it stays bound by every rule and is read by every reader as before.
     **Lane 19** (`scripts/auto/lane.py`). No gate is taken away. What code can mend is mended before a rule judges:
     a number of a sentence that stands in another item of a source the sentence already rests on puts that item
     under the sentence too, so that every reader reads the sentence beside it (`mend_uses`; never an item of another
