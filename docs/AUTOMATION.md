@@ -868,6 +868,66 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       **Two small things with it.** "us heroin deaths": "us" is read as the country where it stands first or last in
       a few words that ask for a count ("how many of us use heroin" is not). The heading over the figures of other
       places is now "Figures we do have": for a country inside the EU, the EU's figure is not from another place.
+      **What the papers say, in their own words (site 2.19.0, 18 November 2026).** The first trial with the real
+      model ran at 02:05 (Athens) on 18 of the editor's own questions (`data/auto/instant/trial-20261118T0005-0001.json`:
+      1,472 neurons; 4 to 17 seconds a question, of which the model took 4 to 13). Read line by line by the editor:
+      (a) of 19 sentences that passed the rules of 2.18, about six said more than their paper: "may ameliorate
+      laboratory stress/anxiety responding" became "ameliorates anxiety"; "GHB/GBL" became "GHB and GBL are used
+      together"; a review of microdosing became "LSD caused no lasting personality benefits"; what a paper said of
+      one benzodiazepine was said of them all. That is the rate the lane's exam found for free models (decision 23),
+      and it is not one this site shows a reader, under any label;
+      (b) 18 of the 52 quotations were one to three words: copied words that prove nothing;
+      (c) the rule "bears on the question" refused true findings ("antidepressant" for depression, "dependence" for
+      addiction);
+      (d) the search was the weakest part: it asked for papers with ANY key word, the newest first, so "does
+      modafinil improve memory" read reviews of sleepiness and of stroke.
+      So 2.19 changes what the thing is. **The reader is shown the paper's own words, not the model's.** The model
+      chooses up to three papers and, in each, the sentence that carries the finding, and points to words in it. Code
+      then chooses at most 15 words of that sentence, in a row, that hold the words pointed to (`iaWindow`): from the
+      start of the sentence or of a part of it to its end where that fits, and never leaving out a word the sentence
+      turns on. "There was no evidence that the extract reduced anxiety" is shown with its "no evidence", or not at
+      all; the same holds for a question or an aim before the words ("we examined whether"), for what sellers say
+      ("is claimed to"), for a "may" that the 15 words do not hold themselves, and for a "no", a question or a "but"
+      after them. "No" is read widely: not, never, without, fail, lack, non-significant, insufficient, unproven,
+      little, few, weak, rarely, only, contrary, myth, false. Where 15 words cannot hold such a word together with
+      the words pointed to, nothing of that sentence is shown. A sentence is not cut after "vs.", "e.g." or "et al."
+      (cut there, a "no" could fall into another piece than the words it governs). No link is ever shown. Words that hold an amount, or dying, overdose, pregnancy or children, are never shown. A sentence that
+      speaks of animals and of people at once is not shown in part. A line says "in animals or cells, not in people"
+      where its sentence or its whole summary is about those, and "its summary covers work in animals or cells too"
+      where a summary covers both and the sentence does not say which. The label of a summary's section ("RESULTS:")
+      is not part of the paper's words.
+      **The model's own sentence** is still written, and kept beside the line (`plain`: the sentence, the code's
+      verdict, the reason; never given to the page), under a far stricter rule than 2.18's (`iaPlain`): every word of
+      it must stand in the very sentence it rests on or in the paper's title, a "may" is kept, a "no" is neither
+      gained nor lost. It is shown only where `IA.plain` is set, and that is set only after an exam: the editor reads
+      the sentences this rule calls sound, from trials with the real model, against the papers' words, and counts.
+      Until then the reader gets the papers' words, which cannot say more than the paper.
+      **The search** (`findQueries`, `findPapers`): every key word must stand in a paper's title or summary; a key
+      word and the word papers use for it are one thing asked two ways ("appetite|hungry"); a word is asked for in
+      its one and its many and in its other spelling ("colour", "color"; "-ise", "-ize"); the most cited reviews on
+      the very question come first, then the papers Europe PMC ranks first, then the other reviews; the wider
+      searches (any one key word; reviews of the drug itself) only where that found fewer than three papers. Words
+      every question holds are no key words ("improve", "lower", "change", "affect", "damage", "loss"); a few short
+      ones are ("eye", "gut", "eat"); an organ goes with the word papers use ("heart": cardiac; "kidneys": renal).
+      On a page that stands for several things ("Cannabis (THC, CBD)") the search is for the one the reader named
+      ("does cbd help with sleep" is about CBD), and for all of them where the reader named none ("weed"). "Bears on the question" is now asked of the paper: a key word, or a word papers use for it
+      (`IA_NEAR`), stands in the sentence, in the title or elsewhere in the summary; which of the three is kept, so
+      that the editor can read how the lines found by title or summary alone look.
+      **What a reader sees:** the heading "What the papers say, in their own words"; each line the paper's words in
+      quotation marks, and under them the kind of paper, its year and its journal as the link; then "Chosen just now
+      by our system from the summaries of these papers: the words are the papers' own. It has not read the papers
+      themselves, and no person has checked its choice. Our own answer follows when it is ready."
+      **Checks:** `scripts/ux/worker_test.mjs` (156: the choice of the 15 words on hard sentences, the model's
+      sentence one fault at a time, the search) and `scripts/ux/site24_check.js` (the page, with a stand-in model).
+      The trial script now writes, for each line, the shape of the rest of its sentence (little words only, every
+      other word a "_"), so that a turning word left outside the 15 can be seen without copying a summary into the
+      repository. A second trial follows this publishing (`data/auto/requests/instant-0002.json`).
+      **Said plainly to the senior author.** He asked for "instant as good as getting answers from a very good claude
+      api". For WRITTEN answers that is not reachable with free models at this site's bar: the trial measured it.
+      What is reachable, and built: within seconds the reader gets the most cited papers on the question and their
+      own words on it, with nothing of the system's said in between, and the written answer follows from the lane. A
+      fluent instant answer at the site's bar needs a strong model, and those are paid: his rule ("only free") stands
+      until he changes it.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

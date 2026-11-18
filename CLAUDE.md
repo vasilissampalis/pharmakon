@@ -44,13 +44,16 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   code and are not loosened to let more through; questions about dying, overdose, emergencies, mixing, pregnancy,
   children or suicide wait for a person. Never copy a machine-lane answer into the checked lane without the full checks.
 - A second marked exception, his decision of 17 November 2026 (METHODS §12.2 point 15, `docs/AUTOMATION.md`, decision 31):
-  the answer within seconds (`site/worker/_worker.js`, `/api/answer`, only where the Workers AI binding `AI` exists). One to
-  three sentences from the SUMMARIES of the papers Europe PMC finds, each with its paper's own words (at most 15) and link,
-  shown to the reader under its own label and never as an answer of ours: nothing of it enters `data/` or a page. Its gates
-  are code (`iaGate`) and are not loosened to let more through; dying, overdose, amounts, pregnancy, children and suicide
-  wait for a person there too. A reader's words go to Cloudflare Workers AI and to no other model service. It uses its own
-  share of the free day (`IA.neurons`) and the lane its own (`OUR_LIMIT`): together under Cloudflare's free 10,000, never a
-  paid service.
+  what the papers say, within seconds (`site/worker/_worker.js`, `/api/answer`, only where the Workers AI binding `AI` exists). A
+  model chooses up to three papers and a sentence in each, from the SUMMARIES Europe PMC holds; the reader is shown the PAPER'S
+  OWN WORDS (at most 15 in a row, chosen by code: `iaWindow`) with kind, year, journal and link, under its own label and never as
+  an answer of ours: nothing of it enters `data/` or a page. The model's own sentence is kept with the code's verdict and is NOT
+  shown (`IA.plain` is false, site 2.19: in the first trial about one in three said more than its paper). Set `IA.plain` only
+  after an exam of such sentences, written into `docs/AUTOMATION.md`. Its gates are code (`iaCheck`, `iaWindow`, `iaPlain`) and
+  are not loosened to let more through; dying, overdose, amounts, pregnancy, children and suicide wait for a person there too.
+  A reader's words go to Cloudflare Workers AI and to no other model service. It uses its own share of the free day
+  (`IA.neurons`) and the lane its own (`OUR_LIMIT`): together under Cloudflare's free 10,000, never a paid service. A paper's
+  summary is never copied into the repository: trial files hold the words shown and the shape around them.
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY.

@@ -9,11 +9,11 @@ run asks the server three things after it has published and writes down what cam
 It holds no key and prints none. The one question it asks is the editor's own fixed question, never a visitor's:
 
   1. GET  /api/ask      what the server can do: take questions, look research up, take questions the page sends by itself,
-                        write an answer within seconds (only where the senior author has bound a language model to the site).
+                        show what the papers say within seconds (only where the senior author has bound a language model to the site).
   2. POST /api/find     the published research on "kanna" and "anxiety": how many papers, and the first title.
-  3. POST /api/answer   the answer within seconds to "does kanna help with anxiety": every sentence that passed the
-                        server's own checks, with its paper's own words. (The server keeps an answer for 30 days, so this
-                        costs the free allowance once, not once a publishing.)
+  3. POST /api/answer   what the papers say on "does kanna help with anxiety": every line that passed the server's own
+                        checks: the paper's own words, its kind, year and journal. (The server keeps this for 30 days, so
+                        it costs the free allowance once, not once a publishing.)
 
 Nothing here can fail a publishing: a server that does not answer is a line in the notes.
 """
@@ -34,7 +34,7 @@ def lines(opener=urllib.request.urlopen, base=BASE):
     out, yes = [], lambda d, k: "yes" if d.get(k) is True else "no"
     try:
         d = ask(opener, base, "/api/ask")
-        out.append(f"server: takes questions {yes(d, 'ok')}; looks research up {yes(d, 'find')}; takes questions the page sends by itself {yes(d, 'auto')}; writes an answer within seconds {yes(d, 'quick')}")
+        out.append(f"server: takes questions {yes(d, 'ok')}; looks research up {yes(d, 'find')}; takes questions the page sends by itself {yes(d, 'auto')}; shows what the papers say within seconds {yes(d, 'quick')}")
     except Exception as e:
         out.append("server: /api/ask did not answer (" + type(e).__name__ + ")"); return out
     try:
@@ -44,15 +44,15 @@ def lines(opener=urllib.request.urlopen, base=BASE):
         out.append("server: /api/find did not answer (" + type(e).__name__ + ")")
     try:
         a = ask(opener, base, "/api/answer", Q)
-        if a.get("off"): out.append("server: the answer within seconds is off: no language model is bound to the site yet (the senior author's one step at Cloudflare)")
-        elif a.get("full"): out.append("server: the answer within seconds has used its share of today's free allowance")
-        elif a.get("held"): out.append("server: the answer within seconds held the test question back (it should not)")
-        elif a.get("none"): out.append("server: the answer within seconds showed nothing for the test question: " + str(a.get("why"))[:120])
+        if a.get("off"): out.append("server: what the papers say within seconds is off: no language model is bound to the site yet (the senior author's one step at Cloudflare)")
+        elif a.get("full"): out.append("server: what the papers say within seconds has used its share of today's free allowance")
+        elif a.get("held"): out.append("server: what the papers say within seconds held the test question back (it should not)")
+        elif a.get("none"): out.append("server: what the papers say within seconds showed nothing for the test question: " + str(a.get("why"))[:120])
         else:
             ls = ((a.get("answer") or {}).get("lines") or [])[:3]
-            out.append(f"server: the answer within seconds: {len(ls)} sentence(s) passed the checks" + (" (given again from the store)" if a.get("again") else ""))
+            out.append(f"server: what the papers say within seconds: {len(ls)} line(s) passed the checks" + (" (given again from the store)" if a.get("again") else ""))
             for i, l in enumerate(ls, 1):
-                out.append(f"server: sentence {i}: {str(l.get('t'))[:260]} | the paper's own words: {str(l.get('quote'))[:160]} | {l.get('kind')}, {l.get('y')}, {str(l.get('j'))[:60]}")
+                out.append(f"server: line {i}: the paper's own words: {str(l.get('quote'))[:200]} | {l.get('kind')}, {l.get('y')}, {str(l.get('j'))[:60]}" + (" | in animals or cells" if l.get("animal") else " | its summary covers animals or cells too" if l.get("mixed") else "") + (" | A SENTENCE OF THE MODEL'S WAS SENT (IA.plain is on): " + str(l.get("t"))[:260] if l.get("t") else ""))
     except Exception as e:
         out.append("server: /api/answer did not answer (" + type(e).__name__ + ")")
     return out
@@ -70,16 +70,16 @@ def selftest():
         seen.append((req.get_method(), req.full_url, req.get_header("Origin"), req.data))
         if req.full_url.endswith("/api/ask"): return R({"ok": True, "find": True, "auto": True, "quick": True})
         if req.full_url.endswith("/api/find"): return R({"ok": True, "papers": [{"t": "A Chewable Cure", "kind": "Review", "y": "2021"}, {"t": "Another"}]})
-        return R({"ok": True, "answer": {"lines": [{"t": "A 2021 review says something.", "quote": "the plant reduced anxiety", "kind": "Review", "y": "2021", "j": "Molecules"}]}})
+        return R({"ok": True, "answer": {"lines": [{"quote": "\u2026the plant reduced anxiety", "kind": "Review", "y": "2021", "j": "Molecules", "animal": True}]}})
     L = lines(opener, "https://x.test")
-    assert L[0] == "server: takes questions yes; looks research up yes; takes questions the page sends by itself yes; writes an answer within seconds yes", L[0]
-    assert L[1].startswith("server: research on kanna and anxiety: 2 papers: first, A Chewable Cure (Review, 2021)") and L[2] == "server: the answer within seconds: 1 sentence(s) passed the checks" and "the plant reduced anxiety" in L[3], L
+    assert L[0] == "server: takes questions yes; looks research up yes; takes questions the page sends by itself yes; shows what the papers say within seconds yes", L[0]
+    assert L[1].startswith("server: research on kanna and anxiety: 2 papers: first, A Chewable Cure (Review, 2021)") and L[2] == "server: what the papers say within seconds: 1 line(s) passed the checks" and "the plant reduced anxiety | Review, 2021, Molecules | in animals or cells" in L[3] and "MODEL" not in L[3], L
     assert all(x.startswith("server:") for x in L) and seen[0][0] == "GET" and seen[1][0] == "POST" and seen[1][2] == "https://x.test" and json.loads(seen[2][3])["q"] == Q["q"]
     off = lines(lambda req, timeout=0: R({"ok": True, "find": True, "auto": True, "quick": False, "off": True, "papers": []}), "https://x.test")
-    assert "writes an answer within seconds no" in off[0] and "0 papers" in off[1] and "is off: no language model is bound" in off[2], off
+    assert "shows what the papers say within seconds no" in off[0] and "0 papers" in off[1] and "is off: no language model is bound" in off[2], off
     def down(req, timeout=0): raise urllib.error.URLError("no route")
     assert lines(down, "https://x.test") == ["server: /api/ask did not answer (URLError)"]
-    print("live_check selftest: ok (what the server can do, the research found, every sentence that passed; a server without a model says so; a server that does not answer is one line)")
+    print("live_check selftest: ok (what the server can do, the research found, every line of papers' own words that passed; a server without a model says so; a server that does not answer is one line)")
 
 
 if __name__ == "__main__":

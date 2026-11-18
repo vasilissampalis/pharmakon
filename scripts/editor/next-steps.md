@@ -15,13 +15,21 @@ Done: places by meaning (2.13.0); figures by question (2.14.0); the lane's pause
 citation a link, a source in place, plain first, shorter cards, topics, the same Insight on every page, the place and
 the way back in the bar).
 
-000. **By itself, at once, understood (decision 31; sites 2.16.1, 2.17.0, 2.18.0, 18 November).** Done: research by itself; the place a count
+000. **By itself, at once, understood (decision 31; sites 2.16.1 to 2.19.0, 18 November).** Done: research by itself; the place a count
    names; the calm line while Insight starts and the warm start; "Insight" alone under the bar; the question sent by itself with the reader
-   told, its words kept out of the repository; the answer within seconds (server and page), which does nothing until he has bound Workers AI.
+   told, its words kept out of the repository; what the papers say within seconds, in their own words (server and page; 2.19.0 after the
+   first trial with the real model), which does nothing until he has bound Workers AI.
    Next, in this order:
+   (0) **Read the second trial** (`data/auto/instant/trial-*-0002.json`, asked for with 2.19.0). For every line: do the 15 words say what
+   their sentence says (`around` shows the little words left outside: a "no", "only", "than", "in rats" there is a fault of `iaWindow`: add
+   the word to its lists and a test)? Does the line bear on the question (count apart the ones found by title or summary alone: `plain[].rel`)?
+   Are the papers the right ones (`model[].given`: did the most cited reviews come first, or did the service refuse the order)? Then the
+   exam of the model's own sentences: read every `plain` entry with `ok: true` against its line; write the count into
+   `docs/AUTOMATION.md`. `IA.plain` is set only if none of at least 40 sound sentences says more than its paper's words; one that does is
+   a new rule in `iaPlain` and a test, and the count starts again.
    (a) **After his "done" (the `AI` binding):** ask for a publishing and read the lines that begin "server:" in
-   `data/auto/deploy/_last-run.txt` (`scripts/auto/live_check.py`): whether the model is bound, and the very sentences it wrote for "does kanna
-   help with anxiety" with the paper's own words. Read them against the summaries by eye. If the service answers in another shape than `iaParse`
+   `data/auto/deploy/_last-run.txt` (`scripts/auto/live_check.py`): whether the model is bound, and the papers' own words it chose for "does
+   kanna help with anxiety". Read them by eye. If the service answers in another shape than `iaParse`
    reads, or cannot keep to the form, that file says so ("no reply in the form asked for"): `iaParse` and the second, plain asking are the place.
    If a publishing run says the server did not answer `/api/answer` at all, the free plan's limit on a request's own computing time (10 ms) is
    the first suspect: ask Europe PMC for fewer results (`pageSize`), or for one query.

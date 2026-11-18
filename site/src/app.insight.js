@@ -1674,11 +1674,12 @@ const FIND_STOP = new Set(("what when where which while with would could should 
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
   "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus " +
   // (2.19, after the first trial with the real index of papers) words for what a drug does to something, which say nothing about WHAT: every key word must now stand in a paper
-  "improve improves improved improving lower lowers lowered raise raises raised increase increases increased decrease decreases decreased reduce reduces reduced change changes changed changing affect affects affected").split(" "));
+  "improve improves improved improving lower lowers lowered raise raises raised increase increases increased decrease decreases decreased reduce reduces reduced change changes changed changing affect affects affected " +
+  "damage damages damaged damaging loss lose loses losing lost hurt hurts harm harms problem problems issue issues worse").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
 const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
   hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
-  horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "kidney", lungs: "lung", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover",
+  horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "renal", kidney: "renal", lungs: "pulmonary", lung: "pulmonary", heart: "cardiac", liver: "hepatic", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover",
   eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite" };   // (2.19: short words that are the very thing asked about)
 const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)|infants?|teen\w*|minors?|suicid\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
 /* What is looked up for a result: the names of its drug and up to five key words; null when nothing is to be looked up.
@@ -1693,7 +1694,12 @@ function insFindTerms(res) {
   const names = [], add = s => { s = String(s || "").toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim(); if (s.length >= 3 && !names.includes(s)) names.push(s); };
   const text = String(res.core || res.q || "").toLowerCase();
   if ((res.groups || []).length && INS.nameRe) { INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(text))) { const a = String(m[1] || "").toLowerCase(); if (a.length >= 4 && !/\s/.test(a) && !INS.vocab.has(a)) add(a); if (m.index === INS.nameRe.lastIndex) INS.nameRe.lastIndex++; } INS.nameRe.lastIndex = 0; }
-  for (const g of res.groups || []) for (const slug of g.slice(0, 2)) { const s = subBySlug[slug]; if (s) String(s.name || "").split(/[(),/]| and | or /).forEach(add); }
+  // (2.19) a page that stands for several things ("Cannabis (THC, CBD)"): the ones the reader named, where they named any ("does cbd help with sleep" is
+  // about CBD); all of them where they named none ("weed")
+  for (const g of res.groups || []) for (const slug of g.slice(0, 2)) { const s = subBySlug[slug]; if (!s) continue;
+    const parts = String(s.name || "").split(/[(),/]| and | or /).map(x => x.toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim()).filter(x => x.length >= 3);
+    const typed = parts.filter(x => (" " + text.replace(/[^a-z0-9+-]+/g, " ") + " ").includes(" " + x + " "));
+    (typed.length ? typed : parts).forEach(add); }
   const pg = (res.routes || []).find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;
   if (sh) { add(sh.name); (sh.science || []).forEach(x => add(x.name)); }
   if (!names.length && res.stranger) add(res.stranger);

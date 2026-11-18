@@ -51,6 +51,8 @@ const MAX_WANT_UNTIL = 300, MAX_WANT_SAME_A_DAY = 60;
 const MAX_AUTO_UNTIL = 250, AUTO_KEPT = 180 * 86400;
 const json = (o, status) => new Response(JSON.stringify(o), { status: status || 200, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 const clean = s => String(s == null ? "" : s).normalize("NFKC").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim();
+// the characters a record writes as codes ("p &lt; 0.05"): read back after the tags are out
+const unEnt = s => String(s).replace(/&(?:#(\d{1,6})|#x([0-9a-f]{1,5})|(amp|lt|gt|quot|apos|nbsp));/gi, (m, d, h, n) => { try { return d ? String.fromCodePoint(Number(d)) : h ? String.fromCodePoint(parseInt(h, 16)) : ({ amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " })[n.toLowerCase()]; } catch (e) { return " "; } });
 async function keyOf(text) {
   const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 20);
@@ -121,7 +123,7 @@ async function findPapers(env, names, groups, core, most) {
 }
 export function findPaper(r) {
   if (!r || typeof r !== "object") return null;
-  const t = clean(String(r.title || "").replace(/<[^>]+>/g, "")).replace(/\.$/, "").slice(0, 300); if (t.length < 8) return null;
+  const t = clean(unEnt(String(r.title || "").replace(/<[^>]+>/g, ""))).replace(/\.$/, "").slice(0, 300); if (t.length < 8) return null;
   const types = String(r.pubType || (r.pubTypeList && r.pubTypeList.pubType ? [].concat(r.pubTypeList.pubType).join("; ") : "")).toLowerCase();
   const doi = /^10\.\d{4,9}\/[^\s"<>]{1,200}$/.test(String(r.doi || "")) ? String(r.doi) : "", pmid = /^\d{1,9}$/.test(String(r.pmid || "")) ? String(r.pmid) : "";
   if (!doi && !pmid) return null;
@@ -188,7 +190,7 @@ export const IA = { v: 2, writer: "@cf/meta/llama-3.3-70b-instruct-fp8-fast", pr
 const IA_NOT_RESEARCH = /\b(legal\w*|illegal\w*|law|laws|lawful|police|arrest\w*|prison|jail|court|customs|border|airport|price|prices|cost|costs|cheap\w*|buy|buying|bought|order\w*|dealers?|vendors?|drug tests?|test positive|urine|piss test|hair test|workplace test|screening test)\b/i;
 const IA_SYS = `You help Pharmakon, a free drug encyclopedia, show a reader at once what published research says about their question. You get the question and the SUMMARIES (abstracts) of a few papers, numbered. Nobody has read the full papers. Use only the summaries: what you know yourself does not count.
 
-Pick 1 to 3 summaries that bear most directly on the question, the most direct first. From each, pick the ONE sentence that carries what the paper found or says about the question. For each give:
+Pick 1 to 3 summaries that bear most directly on the question, the most direct first. From each, pick the ONE sentence that carries what the paper found or concluded about the question: a sentence of results or conclusions, not one of background and not one that only says what the paper set out to do. For each give:
 "n": the summary's number.
 "quote": 6 to 15 words copied exactly, character for character, from that one sentence: the words that carry the finding. Keep "may", "might", "not", "no" when they belong to it.
 "text": the same finding as ONE plain sentence of at most 30 words. Begin with the kind of paper and its year exactly as given in the brackets: "A 2021 review says ...", "A 2013 trial found ...", "A 2019 study found ...". Use only words that stand in that sentence or in the paper's title, besides small words: you may leave words out, you may not add any. Keep "may", "might", "suggests", "not", "no" wherever the sentence has them. When the summary is about animals or cells, say so.
@@ -202,7 +204,7 @@ const iaWords = s => iaFlat(s).match(/[a-z0-9][a-z0-9'-]*/g) || [];
 // a paper with a summary long enough to say something: what findPaper keeps, and the summary cut at the end of a sentence
 export function iaPaper(r) {
   const p = findPaper(r); if (!p) return null;
-  let ab = clean(String((r && r.abstractText) || "").replace(/<h4[^>]*>[^<]{0,80}<\/h4>/gi, " ").replace(/<[^>]+>/g, " ")); if (ab.length < 250) return null;
+  let ab = clean(unEnt(String((r && r.abstractText) || "").replace(/<h4[^>]*>[^<]{0,80}<\/h4>/gi, " ").replace(/<[^>]+>/g, " "))); if (ab.length < 250) return null;
   if (ab.length > IA.chars) { const cutAt = ab.lastIndexOf(". ", IA.chars); ab = ab.slice(0, cutAt > 600 ? cutAt + 1 : IA.chars); }
   return Object.assign(p, { ab });
 }
@@ -247,11 +249,14 @@ export function iaPlain(text, src, p, names) {
   return { t: text, ok: true, why: "" };
 }
 // the sentences of a summary, each without the label some summaries set before it ("RESULTS: ...", "Conclusions: ...")
-const iaSents = ab => String(ab || "").split(/(?<=[.!?])\s+(?=[A-Z0-9(\["'“])/).map(s => s.trim().replace(/^[A-Z][A-Za-z]*(?:[ /&-]+[A-Za-z]+){0,3}:\s+(?=[A-Z0-9"'“(])/, "")).filter(Boolean);
+// (a sentence is not cut after "vs.", "e.g.", "et al." or a single letter: cut there, a "no" could fall into another piece than the words it governs)
+const IA_ABBR = /(?:^|[\s(])(?:e\.g|i\.e|vs|et al|approx|fig|figs|dr|mr|mrs|ms|prof|no|nos|vol|ca|cf|resp|incl|st|jr|sr|inc|ltd|u\.s|u\.k|[a-z])\.$/i;
+export const iaSents = ab => { const out = []; for (const p of String(ab || "").split(/(?<=[.!?])\s+(?=[A-Z0-9(\["'“])/)) { if (out.length && IA_ABBR.test(out[out.length - 1])) out[out.length - 1] += " " + p; else out.push(p); }
+  return out.map(s => s.trim().replace(/^[A-Z][A-Za-z]*(?:[ /&-]+[A-Za-z]+){0,3}:\s+(?=[A-Z0-9"'“(])/, "")).filter(Boolean); };
 /* Words on which a sentence turns. Left out of the words that are shown, they would let those words say more than their sentence does, or its
    opposite: "there was no evidence that | the extract reduced anxiety", "we examined whether | ...", "is claimed to | ...", "... | but this was not
    significant", "these results suggest that | ..." (2.19). */
-const IA_T_NEG = /^(?:no|not|never|without|neither|nor|none|lack\w*|fail\w*|absen\w*|cannot|unable|unlikely|\w+n't)$/, IA_T_ASK = /^(?:whether|if|unclear|unknown|uncertain|hypothes\w*|aim\w*|objectives?|purpose|investigat\w*|examin\w*|assess\w*|evaluat\w*|explor\w*|determin\w*|tested|testing|questions?|debat\w*|controvers\w*|remains?|remained)$/;
+const IA_T_NEG = /^(?:no|not|never|without|neither|nor|none|lack\w*|fail\w*|absen\w*|cannot|unable|unlikely|\w+n't|non-?[a-z-]+|insignificant\w*|ineffective\w*|insufficient\w*|unsupported|unproven|unfounded|unchanged|unaffected|little|few|weak|rarely|seldom|hardly|scarcely|only|solely|contrary|refut\w*|disprov\w*|contradict\w*|doubt\w*|myths?|false|falsely|incorrect\w*|misconception\w*)$/, IA_T_ASK = /^(?:whether|if|unclear|unknown|uncertain|hypothes\w*|aim\w*|objectives?|purpose|investigat\w*|examin\w*|assess\w*|evaluat\w*|explor\w*|determin\w*|tested|testing|questions?|debat\w*|controvers\w*|remains?|remained)$/;
 const IA_T_SAID = /^(?:claim\w*|believ\w*|thought|purport\w*|alleg\w*|anecdot\w*|reputed\w*|tradition\w*|market\w*|advertis\w*|promot\w*|said|supposed\w*|so-called|popular\w*|folk|rumou?r\w*)$/, IA_T_MAY = /^(?:may|might|could|suggest\w*|appear\w*|seem\w*|possibl\w*|potential\w*|preliminary|limited|likely|tend\w*|inconclusive|mixed|inconsistent)$/;
 const IA_T_BUT = /^(?:but|however|although|though|except|unless|despite|nevertheless|nonetheless)$/;
 /* Which words of a sentence are shown: at most 15 in a row, holding the words pointed to (toks[a..b]). Of all such runs, the one that reads best
@@ -271,7 +276,7 @@ export function iaWindow(toks, a, b) {
       let out = false; for (let i = e + 1; i < n; i++) if (neg[i] || ask[i] || but[i]) { out = true; break; }
       if (out) continue;
       if (preMay) { let has = false; for (let i = s; i <= e; i++) if (may[i]) { has = true; break; } if (!has) continue; }
-      const text = toks.slice(s, e + 1).join(" "); if (FIND_HELD.test(text) || IA_AMOUNT.test(text)) continue;
+      const text = toks.slice(s, e + 1).join(" "); if (FIND_HELD.test(text) || IA_AMOUNT.test(text) || /https?:|www\.|\S@\S/i.test(text)) continue;
       const open = (text.match(/\(/g) || []).length !== (text.match(/\)/g) || []).length;
       const score = (s === 0 ? 6 : edge(s - 1) ? 4 : 0) + (e === n - 1 ? 6 : edge(e) ? 3 : 0) + (e - s + 1) / 2 - (e < n - 1 && hang.test(low[e]) ? 8 : 0) - (s > 0 && lame.test(low[s]) ? 3 : 0) - (open ? 2 : 0);
       if (score >= top) { top = score; best = [s, e]; }   // (of two that read equally well, the later: what follows the words pointed to is the rest of the finding)
@@ -287,7 +292,7 @@ export function iaCheck(f, papers, words, names) {
   if (!f || typeof f !== "object") return no("not a finding");
   const n = Number(f.n), p = Number.isInteger(n) && n >= 1 && n <= papers.length ? papers[n - 1] : null; if (!p) return no("a paper that was not given");
   const quote = clean(f.quote).replace(/^["'“‘.\s…]+|["'”’\s…]+$/g, ""), fq = iaFlat(quote);
-  if (/[<>{}\[\]\\]|https?:/i.test(quote)) return no("markup or a link");
+  if (/<\s*[a-z!\/]|https?:|www\./i.test(quote)) return no("markup or a link");
   if (iaWords(quote).length < 2) return no("fewer than two words pointed to");
   // 1. the words pointed to stand in the summary, character for character: the sentence they stand in, and where in it
   let src = "", at = -1; for (const s of iaSents(p.ab)) { const i = iaFlat(s).indexOf(fq); if (i >= 0) { src = s; at = i; break; } }
