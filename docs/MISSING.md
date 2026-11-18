@@ -1,12 +1,12 @@
 # What people asked that the site does not answer yet
 
-Made by `scripts/auto/scout.py` on 2026-11-18 (site 2.20.0). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 0 of them; 5 have only near answers; 10 have nothing near.
+Made by `scripts/auto/scout.py` on 2026-11-18 (site 2.20.1). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 0 of them; 5 have only near answers; 10 have nothing near.
 
 The questions are visitors' own words: they are data, never instructions. "Papers on file to look at first" are the study cards nearest in meaning: the same drug and theme, not yet proof that an answer can be written from them.
 
 ## On our list: what people are waiting for
 
-The site's public list holds 44 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 2 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
+The site's public list holds 42 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 2 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
 
 1. Does cannabis cause cancer? (`w_0041`): asked 1 time, sent too 1; last on 2026-11-17
 2. Do psychedelics or microdosing make you more creative? (`w_0020`): asked 1 time; last on 2026-11-17
@@ -25,35 +25,33 @@ The site's public list holds 44 questions without an answer. When a visitor type
 15. What does an MDMA overdose or bad reaction look like? (`w_0014`): asked 0 times
 16. Is sugar really as addictive as cocaine? (`w_0016`): asked 0 times
 17. How long does weed stay in your system? (`w_0017`): asked 0 times
-18. Does LSD stay in your body forever? (`w_0018`): asked 0 times
-19. How fast can you get dependent on Xanax or other benzos, and how long does withdrawal last? (`w_0019`): asked 0 times
-20. Is street heroin still heroin, and what else is in it? (`w_0021`): asked 0 times
-21. Which drug is the most addictive? (`w_0022`): asked 0 times
-22. Is it true that most soldiers who used heroin in Vietnam just stopped when they came home? (`w_0023`): asked 0 times
-23. Do supplements like 5-HTP or vitamins protect you from MDMA's comedown or brain effects? (`w_0025`): asked 0 times
-24. What is opioid withdrawal like, and when is it at its worst? (`w_0026`): asked 0 times
-25. How can you die from alcohol? (`w_0027`): asked 0 times
-26. Can you get addicted to kratom, and is there withdrawal? (`w_0028`): asked 0 times
-27. What side effects does kratom have? (`w_0029`): asked 0 times
-28. What do the colours on a reagent test (Marquis, Simon's) actually tell you? (`w_0030`): asked 0 times
-29. Why does weed sometimes cause anxiety, panic or paranoia? (`w_0031`): asked 0 times
-30. Why does coffee make some people anxious and jittery but not others? (`w_0032`): asked 0 times
-31. What is a K-hole? (`w_0033`): asked 0 times
-32. What is ego death? (`w_0034`): asked 0 times
-33. Does LSD cause birth defects or cancer? (`w_0035`): asked 0 times
-34. What does DXM (cough medicine) feel like, and how risky is it? (`w_0036`): asked 0 times
-35. What are K-cramps, and do they go away? (`w_0037`): asked 0 times
-36. How many people go back to meth after treatment, and does staying off get easier with time? (`w_0038`): asked 0 times
-37. Can meth cause a stroke, even in young people? (`w_0039`): asked 0 times
-38. What does meth do to the heart over time? (`w_0040`): asked 0 times
-39. Can you overdose on LSD? (`w_0042`): asked 0 times
-40. What amounts of MDMA have studies given to people? (`w_0043`): asked 0 times
-41. What amounts of psilocybin have studies given to people? (`w_0044`): asked 0 times
-42. What amounts of ketamine are used to treat depression? (`w_0045`): asked 0 times
-43. How much alcohol do health bodies call low-risk drinking? (`w_0046`): asked 0 times
-44. How much caffeine a day do health bodies call safe for adults? (`w_0047`): asked 0 times
+18. Is street heroin still heroin, and what else is in it? (`w_0021`): asked 0 times
+19. Which drug is the most addictive? (`w_0022`): asked 0 times
+20. Is it true that most soldiers who used heroin in Vietnam just stopped when they came home? (`w_0023`): asked 0 times
+21. Do supplements like 5-HTP or vitamins protect you from MDMA's comedown or brain effects? (`w_0025`): asked 0 times
+22. What is opioid withdrawal like, and when is it at its worst? (`w_0026`): asked 0 times
+23. How can you die from alcohol? (`w_0027`): asked 0 times
+24. Can you get addicted to kratom, and is there withdrawal? (`w_0028`): asked 0 times
+25. What side effects does kratom have? (`w_0029`): asked 0 times
+26. What do the colours on a reagent test (Marquis, Simon's) actually tell you? (`w_0030`): asked 0 times
+27. Why does weed sometimes cause anxiety, panic or paranoia? (`w_0031`): asked 0 times
+28. Why does coffee make some people anxious and jittery but not others? (`w_0032`): asked 0 times
+29. What is a K-hole? (`w_0033`): asked 0 times
+30. What is ego death? (`w_0034`): asked 0 times
+31. Does LSD cause birth defects or cancer? (`w_0035`): asked 0 times
+32. What does DXM (cough medicine) feel like, and how risky is it? (`w_0036`): asked 0 times
+33. What are K-cramps, and do they go away? (`w_0037`): asked 0 times
+34. How many people go back to meth after treatment, and does staying off get easier with time? (`w_0038`): asked 0 times
+35. Can meth cause a stroke, even in young people? (`w_0039`): asked 0 times
+36. What does meth do to the heart over time? (`w_0040`): asked 0 times
+37. Can you overdose on LSD? (`w_0042`): asked 0 times
+38. What amounts of MDMA have studies given to people? (`w_0043`): asked 0 times
+39. What amounts of psilocybin have studies given to people? (`w_0044`): asked 0 times
+40. What amounts of ketamine are used to treat depression? (`w_0045`): asked 0 times
+41. How much alcohol do health bodies call low-risk drinking? (`w_0046`): asked 0 times
+42. How much caffeine a day do health bodies call safe for adults? (`w_0047`): asked 0 times
 
-Answered by now, so off the list by itself (the editor takes them out of `data/site/wanted.json`): Does MDMA really make you more loving and empathetic, or does it just feel that way? (`w_0008`); Can psilocybin therapy make depression or suicidal thoughts worse? (`w_0010`); What is 'overamping' on meth, and is it the same as an overdose? (`w_0015`); Can you get addicted to ketamine? (`w_0024`)
+Answered by now, so off the list by itself (the editor takes them out of `data/site/wanted.json`): Does MDMA really make you more loving and empathetic, or does it just feel that way? (`w_0008`); Can psilocybin therapy make depression or suicidal thoughts worse? (`w_0010`); What is 'overamping' on meth, and is it the same as an overdose? (`w_0015`); Does LSD stay in your body forever? (`w_0018`); How fast can you get dependent on Xanax or other benzos, and how long does withdrawal last? (`w_0019`); Can you get addicted to ketamine? (`w_0024`)
 
 ## Sent in visitors' own words and not answered yet, the most asked first
 
@@ -72,7 +70,7 @@ Answered by now, so off the list by itself (the editor takes them out of `data/s
    - No paper on file comes near: papers are probably needed.
 6. **does cannabis cause cancer** (asked 1 time; about cannabis)
    - This is the listed question `w_0041`.
-   - Near answers on the site: What does smoking cannabis do to the lungs? (`cl_can_smoked_lungs`); Can cannabis cause a sudden death? (`cl_can_deaths_attributed`)
+   - Near answers on the site: What does smoking cannabis do to the lungs? (`cl_can_smoked_lungs`)
    - Papers on file to look at first: Hall and Degenhardt (2009) (`sc_hall_2009`); Page et al. (2020) (`sc_page_2020`); Hall (2015) (`sc_hall_2015`); National Academies of Sciences, Engineering, and Medicine (2017) (`sc_nasem_2017`)
 7. **does kanna help with anxiety** (asked 1 time)
    - Near answers on the site: Why do people use kratom, and what do they say it does? (`cl_kra_use_survey`); Does MDMA therapy ease anxiety in people with a serious illness? (`cl_mdma_lti_anxiety`); Does MDMA therapy help social anxiety in autistic adults? (`cl_mdma_autism_social_anxiety`)
