@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_a0004",
- "lane": 18,
+ "lane": 19,
  "kind": "answer",
  "from": "w_a0004",
  "question": "What is the mortality rate associated with heroin use?",
@@ -17,19 +17,20 @@
   "heroin"
  ],
  "made": {
-  "on": "2026-11-17",
+  "on": "2026-11-18",
   "models": {
    "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.8-flash",
-   "team": "team H",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-3.6-flash"
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-4-hydrogen",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44114276778",
+  "run": "44325398602",
   "from": {
    "papers": 2,
    "summaries": 0,
@@ -38,12 +39,13 @@
   "neurons": 0.0
  },
  "status": "none",
- "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure",
+ "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure",
  "gates": {
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.08, how1 0.34, how2 0.03",
-  "check": "short: NOT accepted: it does not answer the question itself (Sentence 1 provides absolute death counts, not a mortality rate per population, so it does not answer the asked question. Sentence 2 addresses the type of study underlying the rise in deaths, which is a limitation concerning the claim made ); but: NOT accepted: The passage does not state that the data are not from a randomized controlled trial.; how1: accepted; how2: NOT accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.05, but 0.08, how1 0.03, how2 0.84, how3 0.97",
+  "check": "short: NOT accepted: our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure; but: NOT accepted: it is about something else than the short answer; how1: NOT accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure; how2: accepted; how3: accepted"
  },
  "sources": [
   {
@@ -96,10 +98,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-18",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-18"
      }
     },
     "volume": "79",
@@ -119,7 +121,12 @@
     "No sources of funding were received for the preparation of this article.",
     "John Strang, through his university, is working with the pharmaceutical industry to identify new or improved treatments and his employer (King’s College London) has received grants, travel costs and/or consultancy payments; this includes investigation of new naloxone formulations and has included work with in the past 3 years, Martindale, Indivior and Mundipharma (all of whom have naloxone products). His employer (King’s College London) has also registered intellectual property on a novel buccal naloxone formulation, naming John Strang et al., and he was earlier named in a patent registration by a pharmaceutical company regarding a concentrated nasal naloxone spray. John Strang et al. have worked as consultants for the United Nations Office on Drugs and Crime, supporting them with a project introducing take-home naloxone to four central and western Asian countries as well as contributing to local take-home naloxone schemes. For a fuller account, see John Strang’s web-page at. Rebecca McDonald has undertaken an unpaid student industry placement with Mundipharma Research Ltd. and has received conference-related travel funding and an honorarium from IOTOD (Improving Opioid Outcomes in the Treatment of Opioid Dependence). Rebecca McDonald has been involved in the development of a tablet formulation on which the university (King’s College London) has registered intellectual property. Rebecca McDonald has worked as a consultant for the United Nations Office on Drugs and Crime. Gabrielle Campbell is supported by a National Health and Medical Research Council fellowship (No. 1119992). The National Drug and Alcohol Research Centre at the University of New South Wales is supported by funding from the Australian Government under the Substance Misuse Prevention and Service Improvements Grant Fund. Gabrielle Campbell has received investigator‐initiated untied educational grants from Reckitt Benckiser/Indivior for a study of opioid substitution therapy uptake among patients with chronic non-cancer pain. None of these are directly relevant to the current article. Louisa Degenhardt is supported by National Drug and Alcohol Research Centre research fellowships (No. 1109366 and No. 1041472/No. 1 135 991) and by the National Institutes of Health grant NIDA R01DA1104470. The National Drug and Alcohol Research Centre at the University of New South Wales is supported by funding from the Australian Government under the Drug and Alcohol Program. Louisa Degenhardt has received investigator-initiated untied educational grants from Reckitt Benckiser/Indivior for studies of buprenorphine‐naloxone, buprenorphine depot, naloxone, the development of an opioid‐related behaviour scale and a study of opioid substitution therapy uptake among patients with chronic non‐cancer pain. Louisa Degenhardt has received an untied educational grant from Seqirus for a post‐marketing study of tapentadol and an untied educational grant from Mundipharma for a post‐marketing study of oxycodone. These bodies had no involvement in or knowledge of the current article. Suzanne Nielsen has been a named investigator on untied educational grants from Indivior and Seqirus and has delivered training on opioid dependence for Indivior for which honoraria were paid to her institution. Suzanne Nielsen has participated in an advisory board meeting by Mundipharma relating to naloxone for which she declined a sitting fee. Suzanne Nielsen is a current recipient of a National Health and Medical Research Council Research Fellowship (No. 1163961). Alison Ritter is funded through a National Health and Medical Research Council Research Fellowship (GNT1136944). She has received no funding or untied educational grants from any pharmaceutical company in the last 15 years. This article covers (among others) a naloxone formulation that has been approved by 12 European countries from 16 June, 2018 under the name of Ventizolve® (Respinal® in Sweden), produced by Sanivo Pharma AS. The sponsor of this trial was AS Den Norske Eterfabrikk. Ola Dale was engaged by AS Den Norske Eterfabrikk as the principal investigator in this study, for which Ola Dale receives no personal honorarium. Ola Dale’s employer, the Norwegian University of Science and Technology and its subsidiary Technical Transfer Office have signed cooperation and licensing contracts with DNE PHARMA to seek commercialisation of this nasal naloxone formulation. This regulates potential royalties for Ola Dale through the Norwegian University of Science and Technology. DNE Pharma AS has compensated Ola Dale for business travel from Trondheim to Oslo."
    ],
-   "design": null,
+   "design": {
+    "passage": 2,
+    "where": "Introduction",
+    "quote": "With an increasing global problem of opioid use and dependence, the mortality rate from opioid overdose continues to rise, and there are more than 100,000 deaths globally per annum.",
+    "text": "Observational epidemiological study of opioid overdose mortality"
+   },
    "findings": [
     {
      "passage": 15,
@@ -133,14 +140,14 @@
      "passage": 2,
      "where": "Introduction",
      "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-     "text": "In 2015, 13,000 deaths in the USA were attributed to heroin.",
+     "text": "In 2015, 13,000 deaths from heroin were registered in the USA.",
      "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 22,
      "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-     "quote": "In 2015, there were 8440 drug overdose deaths (any substance; occurring most commonly in the UK, followed by Germany and Sweden) in the European Union (plus Turkey and Norway), a total that continues to rise. Most drug-related deaths (79%) involved opioids, predominantly heroin, though potent synthetic opioids such as fentanyl and its newer derivatives seem to play an increasing role.",
+     "quote": "In 2015, there were 8440 drug overdose deaths (any substance; occurring most commonly in the UK, followed by Germany and Sweden) in the European Union (plus Turkey and Norway), a total that continues to rise. Most drug-related deaths (79%) involved opioids, predominantly heroin",
      "text": "In 2015, 8,440 drug overdose deaths occurred in the EU, 79% of which involved opioids, predominantly heroin.",
      "id": "F3",
      "second_hand": ""
@@ -161,96 +168,104 @@
   {
    "read": "full",
    "ref": {
-    "id": "kiang_2019",
+    "id": "kravitzwirtz_2020",
     "type": "article-journal",
-    "title": "Assessment of changes in the geographical distribution of opioid-related mortality across the United States by opioid type, 1999-2016",
+    "title": "Association of Medicaid expansion with opioid overdose mortality in the United States",
     "author": [
      {
-      "family": "Kiang",
-      "given": "Mathew V."
+      "family": "Kravitz-Wirtz",
+      "given": "Nicole"
      },
      {
-      "family": "Basu",
-      "given": "Sanjay"
+      "family": "Davis",
+      "given": "Corey S."
      },
      {
-      "family": "Chen",
-      "given": "Jarvis"
+      "family": "Ponicki",
+      "given": "William R."
      },
      {
-      "family": "Alexander",
-      "given": "Monica J."
+      "family": "Rivera-Aguirre",
+      "given": "Ariadne"
+     },
+     {
+      "family": "Marshall",
+      "given": "Brandon D. L."
+     },
+     {
+      "family": "Martins",
+      "given": "Silvia S."
+     },
+     {
+      "family": "Cerdá",
+      "given": "Magdalena"
      }
     ],
     "container-title": "JAMA Network Open",
     "issued": {
      "date-parts": [
       [
-       2019
+       2020
       ]
      ]
     },
-    "DOI": "10.1001/jamanetworkopen.2019.0040",
+    "DOI": "10.1001/jamanetworkopen.2019.19066",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-18",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-18"
      }
     },
-    "volume": "2",
-    "issue": "2",
-    "number": "e190040",
-    "PMCID": "PMC6484620"
+    "volume": "3",
+    "issue": "1",
+    "number": "e1919066",
+    "PMCID": "PMC6991255"
    },
-   "doi": "10.1001/jamanetworkopen.2019.0040",
-   "pmcid": "PMC6484620",
-   "title": "Assessment of Changes in the Geographical Distribution of Opioid-Related Mortality Across the United States by Opioid Type, 1999-2016",
-   "year": 2019,
+   "doi": "10.1001/jamanetworkopen.2019.19066",
+   "pmcid": "PMC6991255",
+   "title": "Association of Medicaid Expansion With Opioid Overdose Mortality in the United States",
+   "year": 2020,
    "journal": "JAMA network open",
    "kind": "other",
    "people": true,
-   "near": 0.752,
+   "near": 0.749,
    "money": [],
-   "design": null,
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "In this serial cross-sectional study of 3109 counties within 49 states and the District of Columbia from 2001 to 2017",
+    "text": "serial cross-sectional study of U.S. counties"
+   },
    "findings": [
     {
-     "passage": 18,
+     "passage": 16,
      "where": "Results",
-     "quote": "In 2016, there were 42 249 opioid-related deaths (28 498 men and 13 751 women) in the United States.",
-     "text": "In 2016, 42 249 people in the United States died from opioid‑related causes.",
+     "quote": "The overall opioid mortality rate increased over time, from 2.49 deaths per 100 000 people in 2001 to 11.41 deaths per 100 000 in 2017",
+     "text": "The overall opioid mortality rate rose from 2.49 to 11.41 deaths per 100 000 people between 2001 and 2017.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 19,
+     "passage": 17,
      "where": "Results",
-     "quote": "the District of Columbia had a mortality rate from synthetic opioids of 18.8 (95% CI, 15.5-22.1) per 100 000 people in 2016",
-     "text": "In 2016, the District of Columbia had a synthetic‑opioid mortality rate of 18.8 per 100 000 people.",
+     "quote": "counties within states that expanded Medicaid had an 11% decreased rate of fatal heroin overdoses (RR, 0.89; 95% CrI, 0.84-0.94)",
+     "text": "After Medicaid expansion, the rate of fatal heroin overdoses decreased by 11% (RR = 0.89; 95% CrI = 0.84–0.94).",
      "id": "F5",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 23,
-     "where": "Discussion › Limitations",
-     "quote": "mortality rates from synthetic opioids are likely biased downward (ie, underreported), and the increase in deaths from synthetic opioids reported in recent years may be owing in part to increased detection during postmortem investigations.",
-     "text": "Mortality rates for synthetic opioids may be underestimated because of underreporting and may partly reflect increased postmortem detection rather than true incidence.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "specific per‑population mortality rate",
+ "missing": "the specific mortality rate per number of users",
  "wanted": [
   {
    "doi": "10.2105/ajph.2015.302843",
@@ -275,7 +290,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-17",
+   "lane": 18,
+   "status": "none",
+   "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Take-Home Naloxone for the Emergency Interim Management of Opioid Overdose: The Public Health Application of an Emergency Medicine",
@@ -283,20 +307,7 @@
    "kind": "review",
    "at": "10.1007/s40265-019-01154-5",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Observational epidemiological study of opioid overdose mortality",
-     "quote": "With an increasing global problem of opioid use and dependence, the mortality rate from opioid overdose continues to rise, and there are more than 100,000 deaths globally per annum. Heroin is the most",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "The proportion of deaths involving heroin is based on reported drug-related deaths, which may be influenced by variations in data collection across countries.",
-     "quote": "Most drug-related deaths (79%) involved opioids, predominantly heroin, though potent synthetic opioids such as fentanyl and its newer derivatives seem to play an increasing role.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Why have overdose deaths decreased? Widespread fentanyl saturation and decreased drug use among key drivers",
@@ -311,25 +322,42 @@
    "read": "full",
    "kind": "other",
    "at": "10.1001/jamanetworkopen.2019.0040",
-   "kept": 2,
+   "kept": 0,
    "thrown": [
     {
      "kind": "text",
      "text": "Observational study of opioid‑related mortality in the United States",
      "quote": "Assessment of Changes in the Geographical Distribution of Opioid-Related Mortality Across the United States by Opioid Type, 1999-2016 (2019), JAMA network open.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
+    }
+   ]
+  },
+  {
+   "title": "Trends in Deaths Involving Heroin and Synthetic Opioids Excluding Methadone, and Law Enforcement Drug Product Reports, by Census Region - United States, 2006-2015",
+   "read": "full",
+   "kind": "other",
+   "at": "10.15585/mmwr.mm6634a2",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Association of Medicaid Expansion With Opioid Overdose Mortality in the United States",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1001/jamanetworkopen.2019.19066",
+   "kept": 2,
+   "thrown": [
     {
      "kind": "finding",
-     "text": "In 2016, the age‑standardized opioid‑related mortality rate in the United States was 13.2 per 100 000 people.",
-     "quote": "age-standardized, opioid-related mortality rate of 13.2 (95% CI, 13.1-13.3)",
-     "why": "a number of the sentence is not in its quote"
+     "text": "Heroin accounted for 25.3% of all county‑year opioid overdose deaths.",
+     "quote": "overdoses involving heroin (25.3%)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     },
     {
      "kind": "limit",
-     "text": "The study assumes accurate death classification, but opioid‑related mortality may be underreported and the extent of underreporting may differ by region.",
-     "quote": "our analysis assumes the accurate classification of deaths; however, opioid-related mortality may be underreported, and this underreporting may vary geographically.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "The estimate of reduced heroin overdose mortality has a 95% credible interval of 0.84 to 0.94, indicating uncertainty.",
+     "quote": "RR, 0.89; 95% CrI, 0.84-0.94",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -400,8 +428,9 @@
  ],
  "plan": {
   "short": [
+   "F1",
    "F2",
-   "F1"
+   "F3"
   ],
   "direct": "",
   "but": [
@@ -409,27 +438,35 @@
   ],
   "how": [
    [
+    "DA",
+    "F1",
     "F2",
-    "F1"
+    "F3"
+   ],
+   [
+    "DB",
+    "F5"
    ]
   ],
-  "unanswered": "specific per‑population mortality rate"
+  "unanswered": "the specific mortality rate per number of users"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.0624,
+   "short": 0.0477,
    "but": 0.0779,
-   "how1": 0.3369,
-   "how2": 0.0346
+   "how1": 0.0311,
+   "how2": 0.8365,
+   "how3": 0.9667
   },
   "scores_quotes_alone": {
-   "short": 0.1716,
+   "short": 0.2761,
    "but": 0.0373,
-   "how1": 0.5274,
-   "how2": 0.1018
+   "how1": 0.197,
+   "how2": 0.7842,
+   "how3": 0.8166
   }
  },
  "tries": [
@@ -439,101 +476,26 @@
    "parts": [
     {
      "part": "short",
-     "text": "In the USA, 13,000 deaths were attributed to heroin in 2015. A population-based study reported heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
+     "text": "Heroin overdose deaths rose from 1,842 in 2000 to 10,574 in 2014. In 2015, 13,000 heroin deaths were registered in the USA.",
      "rests_on": [
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
       },
       {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 gives absolute numbers of heroin deaths, not a mortality rate per population, so it does not directly answer the question about mortality rate. Sentence 2 qualifies the source of the rise in deaths reported in sentence 1, acting )"
-    },
-    {
-     "part": "but",
-     "text": "The rise in deaths comes from a population-based study, not a randomized controlled trial.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that the rise in deaths is not from a randomized controlled trial."
-    },
-    {
-     "part": "how1",
-     "text": "A 2019 review notes that in the USA, 13,000 deaths from heroin were registered in 2015.",
-     "rests_on": [
-      {
        "label": "F2",
        "ref": "strang_2019",
        "where": "Introduction",
        "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
        "sha": "5b635b179a4657db"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The same review cites a population-based study reporting heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
       }
      ],
      "ok": false,
      "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In the USA, 13,000 people died from heroin in 2015. A population-based study reports deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      },
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 provides death counts but not a mortality rate per population, so it does not answer the asked question. Sentence 2 comments on the type of study underlying the rise in deaths, which is a limitation concerning the same claim made)"
+     "said": "our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure"
     },
     {
      "part": "but",
@@ -549,103 +511,19 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The sentence adds the claim that the data are \"not a randomized controlled trial,\" which is not mentioned in the passage."
+     "said": "it is about something else than the short answer"
     },
     {
      "part": "how1",
-     "text": "A 2019 review states that 13,000 deaths in the USA were attributed to heroin in 2015.",
+     "text": "A 2019 review reports a population-based study found heroin deaths rose from 1,842 in 2000 to 10,574 in 2014.",
      "rests_on": [
       {
-       "label": "F2",
+       "label": "DA",
        "ref": "strang_2019",
        "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not describe the source as a \"review,\" so attributing the statement to a 2019 review is not supported."
-    },
-    {
-     "part": "how2",
-     "text": "It cites a population-based study reporting heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In the USA, 13,000 deaths were attributed to heroin in 2015. A population-based study reported heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "quote": "With an increasing global problem of opioid use and dependence, the mortality rate from opioid overdose continues to rise, and there are more than 100,000 deaths globally per annum.",
        "sha": "5b635b179a4657db"
       },
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 provides absolute death counts, not a mortality rate per population, so it does not answer the asked question. Sentence 2 addresses the type of study underlying the rise in deaths, which is a limitation concerning the claim made )"
-    },
-    {
-     "part": "but",
-     "text": "The rise in deaths comes from a population-based study, not a randomized controlled trial.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that the data are not from a randomized controlled trial."
-    },
-    {
-     "part": "how1",
-     "text": "A 2019 review states that 13,000 deaths in the USA were attributed to heroin in 2015.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The review cites a population-based study reporting heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
       {
        "label": "F1",
        "ref": "strang_2019",
@@ -657,6 +535,256 @@
      "ok": false,
      "by": "our own checker",
      "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes 13,000 heroin deaths in the USA in 2015, and 8,440 drug overdose deaths in the EU.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      },
+      {
+       "label": "F3",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › Europe",
+       "quote": "In 2015, there were 8440 drug overdose deaths (any substance; occurring most commonly in the UK, followed by Germany and Sweden) in the European Union (plus Turkey and Norway), a total that continues to rise. Most drug-related deaths (79%) involved opioids, predominantly heroin",
+       "sha": "634f62d3b6ddb105"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that 8,440 is the number of drug overdose deaths in the EU specifically in a 'review notes', nor do they combine the US and EU claims into a single review context in that exact phrasing, though the EU total is from"
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 study of 3,109 US counties found fatal heroin overdose rates dropped 11% after Medicaid expansion.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "kravitzwirtz_2020",
+       "where": "Abstract",
+       "quote": "In this serial cross-sectional study of 3109 counties within 49 states and the District of Columbia from 2001 to 2017",
+       "sha": "8b04b390db9cff78"
+      },
+      {
+       "label": "F5",
+       "ref": "kravitzwirtz_2020",
+       "where": "Results",
+       "quote": "counties within states that expanded Medicaid had an 11% decreased rate of fatal heroin overdoses (RR, 0.89; 95% CrI, 0.84-0.94)",
+       "sha": "a4415432ebaaea94"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014. In 2015, 13,000 heroin deaths were registered in the USA.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      },
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "The rise in deaths comes from a population-based study, not a randomized controlled trial.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passage does not state that the data comes from a study that is not a randomized controlled trial"
+    },
+    {
+     "part": "how1",
+     "text": "A review reports a population-based study found heroin overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "With an increasing global problem of opioid use and dependence, the mortality rate from opioid overdose continues to rise, and there are more than 100,000 deaths globally per annum.",
+       "sha": "5b635b179a4657db"
+      },
+      {
+       "label": "F1",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes 13,000 heroin deaths were registered in the USA in 2015.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A study of 3,109 US counties found Medicaid expansion was linked to an 11% decrease in fatal heroin overdoses.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "kravitzwirtz_2020",
+       "where": "Abstract",
+       "quote": "In this serial cross-sectional study of 3109 counties within 49 states and the District of Columbia from 2001 to 2017",
+       "sha": "8b04b390db9cff78"
+      },
+      {
+       "label": "F5",
+       "ref": "kravitzwirtz_2020",
+       "where": "Results",
+       "quote": "counties within states that expanded Medicaid had an 11% decreased rate of fatal heroin overdoses (RR, 0.89; 95% CrI, 0.84-0.94)",
+       "sha": "a4415432ebaaea94"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Heroin overdose deaths rose from 1,842 in 2000 to 10,574 in 2014. In 2015, 13,000 heroin deaths were registered in the USA.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      },
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure"
+    },
+    {
+     "part": "but",
+     "text": "The rise in deaths comes from a population-based study, not a randomized controlled trial.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A review reports that a population-based study found heroin overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "With an increasing global problem of opioid use and dependence, the mortality rate from opioid overdose continues to rise, and there are more than 100,000 deaths globally per annum.",
+       "sha": "5b635b179a4657db"
+      },
+      {
+       "label": "F1",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "A population-based study reported that the prevalence of heroin use increased from 0.3% in 2001–2002 to 1.6% in 2012–2013, and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how2",
+     "text": "The same review says 13,000 heroin deaths were registered in the USA in 2015.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A study of 3,109 US counties found fatal heroin overdose rates dropped 11% after Medicaid expansion.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "kravitzwirtz_2020",
+       "where": "Abstract",
+       "quote": "In this serial cross-sectional study of 3109 counties within 49 states and the District of Columbia from 2001 to 2017",
+       "sha": "8b04b390db9cff78"
+      },
+      {
+       "label": "F5",
+       "ref": "kravitzwirtz_2020",
+       "where": "Results",
+       "quote": "counties within states that expanded Medicaid had an 11% decreased rate of fatal heroin overdoses (RR, 0.89; 95% CrI, 0.84-0.94)",
+       "sha": "a4415432ebaaea94"
+      }
+     ],
+     "ok": true
     }
    ]
   }
@@ -664,9 +792,16 @@
  "dropped": [
   {
    "try": 3,
-   "part": "how2",
-   "text": "The review cites a population-based study reporting heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
+   "part": "how1",
+   "text": "A review reports that a population-based study found heroin overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
    "rests_on": [
+    {
+     "label": "DA",
+     "ref": "strang_2019",
+     "where": "Introduction",
+     "quote": "With an increasing global problem of opioid use and dependence, the mortality rate from opioid overdose continues to rise, and there are more than 100,000 deaths globally per annum.",
+     "sha": "5b635b179a4657db"
+    },
     {
      "label": "F1",
      "ref": "strang_2019",
