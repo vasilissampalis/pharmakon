@@ -1,11 +1,11 @@
 # Project status and work queue
 
-Updated 2026-11-19, 00:30 (site 2.22.0, protocol 0.5.9; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
+Updated 2026-11-18, 23:50 (site 2.22.0, protocol 0.5.9; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
 page states the same in public terms. The project's history is in the GitHub repository vasilissampalis/pharmakon (METHODS §11).
 
 ## Where things stand
 
-- **18 November 2026, 22:15 to 19 November, 00:30 (Athens): when the site does not have the answer, and when it only thinks it has (site 2.22.0; `docs/AUTOMATION.md`, decision 33).**
+- **18 November 2026, 22:15 to 23:50 (Athens): when the site does not have the answer, and when it only thinks it has (site 2.22.0; `docs/AUTOMATION.md`, decision 33).**
   - **His words (22:15, 22:16):** a question the page answered with a part of the Big questions page: "it think it knows but it does not ... we have to make this function as accurate as it gets"; a question about deaths in one country that got no research: "there should be instant searches available at least when the user is waiting ... should they hide under an arrow? what's the best design"; "the site should include all valid drug websites worldwide ... and have access to all scientific paper platforms"; "still not answered... pathetic"; "the users want to know fast".
   - **Why his question was not answered that evening:** a run started for it by itself at 22:07; the free models' allowance of the day was used up at about 21:50 and turns at 02:00 Athens. The system did try it at 22:40 with what was left (`w_a0015`, our wording): the words it was searched under did not hold the country, so it read papers on other countries. Mended: the finder asks for the place a question names (`scripts/auto/papers.py`, `places_named`). And a reader that stands by without room no longer ends the day for a team that has room (`lane.py`, `by_reader`).
   - **Measured (the gold set, two readers):** of the 40 questions the page gave a best match, 24 were answered in full, 10 in part, 6 not; 147 of 1,810 near-miss questions got the answer they do not ask for; of 150 questions about dying (five wordings for each drug) 20 got a best match and 6 of those answers say nothing of dying.

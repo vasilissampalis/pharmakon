@@ -23,10 +23,17 @@ the way back in the bar).
    stand-by reader without room no longer ends the day; the finder asks for the place a question names. Next, in this order:
    (1) **Trial 14** (`data/auto/instant/`): read every line of the death questions' titles (are they about the question? is any title an
    instruction or an amount?) and of the general ones (women and men; overdose with no drug). Tighten key words where a list is off.
-   (2) **PubMed as a second index**, then OpenAlex: his words of 22:15 ("access to all scientific paper platforms"). Read NCBI's own page on
-   E-utilities first (requests a second without a key; what must be sent). Design: the page asks `/api/find` once per index (`src`), each request
-   with its own budget of fifty outgoing calls, the lists joined on the device by DOI or PMID as they come; titles only from a new index until a
-   trial of the words has been read; the Privacy text, the Methods text and the rule in CLAUDE.md name the index BEFORE it is asked.
+   (2) **PubMed as a second index**: his words of 22:15 ("access to all scientific paper platforms"). Read on 18 November 2026 on NCBI's own page
+   (https://www.ncbi.nlm.nih.gov/books/NBK25497/): without a key, three requests a second from one address (more gets an error, "API rate limit
+   exceeded"); with a key, ten; NCBI asks for `tool` and `email` on every request (the site's public address, contact@pharmakon.world) and blocks an
+   address that breaks its rules. The site's server shares its outgoing addresses with other sites, so "three a second" may be used up by others: a
+   refusal there is "the index did not answer", never "nothing found", and Europe PMC stays beside it. A key is free and would be his to make (a
+   secret at Cloudflare, never pasted to the editor); start without one. A search is two requests (esearch for the numbers, esummary for titles,
+   journals and years). Design: the page asks `/api/find` once per index (`src`), each request with its own budget of fifty outgoing calls, the
+   lists joined on the device by DOI or PMID as they come; titles only from a new index until a trial of the words has been read; the Privacy text,
+   the Methods text and the rule in CLAUDE.md name the index BEFORE it is asked.
+   **OpenAlex** (wider than medicine: social science, policy) needs a key since 13 February 2026, with a free daily allowance (read on its own
+   pages on 18 November 2026): his to make, like the others; only where its free plan can never bill. **Crossref** (free, no key) after PubMed.
    (3) **The scout reads `x`** (the answer a reader said is not theirs): such a question is not "answered" for the scout even where the judge says so;
    it gets an item of its own (our wording), and the item records which answer it is not. Then the page: a listed question that is nearer than the
    best match wins over it.
@@ -34,8 +41,10 @@ the way back in the bar).
    model reads the question against the nearest answers. Measure on the gold set what it adds; this is also how the pair model gets its examples.
    (5) **The pair model** (`scripts/insight/pair.py`): teach it first on an open set of questions that mean the same (on GitHub's machines), then on
    ours; ship only if, on the gold set, it keeps at least 20 of the 23 full best matches while taking away the partial and the wrong ones.
-   (6) **Free model calls that need no key**: read GitHub's own page on its Models service (may a workflow call it with its own token; how many calls
-   a day; how many tokens a call). If it holds: a team whose reader is there, tried by name on two questions.
+   (6) **Free model calls that need no key: none found.** GitHub's own Models service was the candidate (a workflow's own token, no key to make):
+   its page says it was retired on 30 July 2026 (read 18 November 2026). So more answers a day come only from the services already in use (their
+   days turn at 02:00 Athens for Cloudflare, 10:00 for Google) or from a further free service whose key he makes. What the lane can do by itself:
+   spend less a question (the reader took most of the neurons), and never lose a day to a stand-by (mended).
    (7) His question of 22:10 (`w_a0015`, deaths from heroin in one country): the finder now asks for the country; read what the next run finds. A
    figure for one country belongs to the statistics page, from the body that counts it: that needs readers ("use readers").
 

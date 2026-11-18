@@ -1527,7 +1527,9 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     Privacy text and the rule in CLAUDE.md name every index before it is asked. (2) *The system reads `x`*: a question
     sent with the answer that does not answer it becomes a question of its own on the list even where the judge would
     call it answered. (3) *The lane's allowance*: one reader without room must not end the day for teams that have
-    room; further free sources of model calls, read in their own documentation first. (4) The thirteenth point of
+    room (mended that night: `lane.py`, `by_reader`). A further free source of model calls that needs no key was looked
+    for: GitHub's own Models service, which a workflow could have called with its own token, was retired on 30 July
+    2026 (its own page, read that night). More answers a day need a further free service whose key he makes. (4) The thirteenth point of
     decision 32 stands: the time from a question to its answer on a healthy run is measured before the page promises
     any time.
     **Checks.** `scripts/ux/worker_test.mjs` (158: titles only for dying, what stays held, the answer a reader said is
