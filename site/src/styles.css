@@ -2708,3 +2708,30 @@ details.hist ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2
 .ins-shut .ins-shut-sos { margin-top: 8px; }
 .search-results .ins-found .ins-shut-sos a, .ins-found .ins-shut-sos a { display: inline; font-size: inherit; }
 .ins-found .ins-lead { margin: 0 0 6px; }
+
+/* Site 2.23 (19 November 2026): what our system is doing for a question the reader sent, as it happens (app.insight.js, liveHtml). A short list of
+   steps under the question: done (a full dot), now (a ring that breathes), next (an empty ring); and the answer's own card the moment it is written. */
+.ins-live { margin: 10px 0 0; }
+.search-results .ins-live { margin: 0; padding: 0 14px 12px; }
+.lv-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.lv-steps li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; align-items: start; font-size: 0.95rem; line-height: 1.4; }
+.lv-m { width: 10px; height: 10px; margin: 6px 4px 0; border-radius: 50%; border: 2px solid var(--line-strong); box-sizing: border-box; }
+.lv-steps li.lv-done .lv-m { background: var(--ok); border-color: var(--ok); }
+.lv-steps li.lv-now .lv-m { border-color: var(--accent); background: var(--accent-soft); animation: lv-breathe 1.6s ease-in-out infinite; }
+.lv-steps li.lv-now .lv-t { font-weight: 600; }
+.lv-steps li.lv-next .lv-t, .lv-steps li.lv-wait .lv-t { color: var(--muted); }
+.lv-steps li.lv-end .lv-m, .lv-steps li.lv-wait .lv-m { background: var(--line-strong); }
+.lv-t q { quotes: "\201C" "\201D"; font-weight: 600; }
+@keyframes lv-breathe { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.45); opacity: 0.55; } }
+@media (prefers-reduced-motion: reduce) { .lv-steps li.lv-now .lv-m { animation: none; } }
+.lv-card { display: grid; gap: 8px; justify-items: start; padding: 14px 16px; border-radius: 14px; background: var(--ok-soft); }
+.lv-card.lv-plain { background: var(--surface-2); }
+.lv-h { margin: 0; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--ok); }
+.lv-plain .lv-h { color: var(--fg); }
+.lv-h .ic { width: 18px; height: 18px; }
+.lv-q { margin: 0; font-weight: 700; font-size: 1.02rem; line-height: 1.35; }
+.lv-a { margin: 0; line-height: 1.45; }
+.lv-s { margin: 0; color: var(--muted); }
+.ins-live a.lv-open, .ins-live a.lv-open:hover { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-weight: 700; text-decoration: none; }
+.search-results .sr-fit-none[hidden] + .ins-live { padding-top: 12px; }
+.ins-none[hidden] + .ins-live { margin-top: 0; }

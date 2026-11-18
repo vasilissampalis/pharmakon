@@ -1,5 +1,5 @@
 // worker_test.mjs: the question endpoint (site/worker/_worker.js) against a store kept in memory. usage: node scripts/ux/worker_test.mjs
-import worker, { readQuestion } from "../../site/worker/_worker.js";
+import worker, { readQuestion, liveForget } from "../../site/worker/_worker.js";
 const kv = () => { const m = new Map(); return { m, get: async (k, how) => { const v = m.get(k); return v == null ? null : how === "json" ? JSON.parse(v) : v; }, put: async (k, v) => { m.set(k, v); } }; };
 let pass = 0, fail = 0; const ok = (name, cond, extra) => { if (cond) pass++; else { fail++; console.log("FAIL", name, extra || ""); } };
 const call = async (env, method, body, headers, path) => { const r = await worker.fetch(new Request("https://pharmakon.world" + (path || "/api/ask"), { method, headers: Object.assign({ "content-type": "application/json" }, headers || {}), body: body == null ? undefined : typeof body === "string" ? body : JSON.stringify(body) }), env); let j = null; try { j = await r.clone().json(); } catch (e) {} return { status: r.status, j, r }; };
@@ -295,4 +295,36 @@ ok("readQuestion keeps Greek", readQuestion({ q: "είναι ασφαλές το
   ok("rule: for “what is X” the sentence that says what the drug is, from the start of a summary of a paper about it", q(P("Phenibut (beta-phenyl-GABA): a tranquilizer and nootropic drug", "Phenibut is a glutamic acid derivative with activity on the GABA(B) receptor that was developed in the Soviet Union. It is used clinically there for anxiety and for sleep. This review summarises its pharmacology. Withdrawal has been described after regular use. More work is needed."), [], ["phenibut"], true) === "Phenibut is a glutamic acid derivative with activity on the GABA(B) receptor that was developed…" && q(P("Phenibut (beta-phenyl-GABA): a tranquilizer and nootropic drug", "Phenibut is a glutamic acid derivative. More work is needed."), [], ["phenibut"], false) === null);
   ok("rule: the choice of the words itself (first and last word of the run; nothing where a word the sentence turns on cannot be held)", JSON.stringify((iaWindow("The extract reduced anxiety".split(" "), 3, 3) || []).slice(0, 2)) === "[0,3]" && iaWindow("It did not at all in any way we could see or measure or think of ever reduce anxiety".split(" "), 17, 17) === null);
 }
+// (site 2.23) what the system is doing for a question a reader sent: read from the repository's small file, by the question's key and never by its words
+{ const K1 = "a".repeat(20), K2 = "b".repeat(20), K3 = "c".repeat(20), K4 = "d".repeat(20);
+  const FILE = { at: "2026-11-19T01:02:03+00:00", room: false, room_at: "2026-11-20T00:00:00+00:00", working: { ids: ["w_a0900"], since: "2026-11-19T01:01:00+00:00" },
+    q: { [K1]: { id: "w_a0900", seen: "2026-11-19" }, [K2]: { no: "Our system did not read this as a question about drugs." }, [K3]: { id: "w_a0901", seen: "2026-11-19" }, [K4]: { id: "w_gone" } },
+    items: { w_a0900: { q: "Does catnip give two cats the same dream?", st: "found", say: "The sources are found.", n: { papers: 12, pages: 4 }, terms: ["shared dreaming", 7, "x".repeat(90)] },
+             w_a0901: { q: "Is catnip addictive for cats?", st: "answered", say: "Answered.", n: { papers: 3, pages: 1 }, aid: "au_w_a0901", at: "2026-11-19T00:58:00+00:00" }, w_0031: { q: "A question of our list?", st: "trying", say: "Working on it." } },
+    answers: { au_w_a0901: { q: "Is catnip addictive for cats?", short: "No.", but: "It rests on one review.", how: ["A review says so."], refs: [], page: "general" } } };
+  const got = []; let fileNow = FILE, apiOk = true;
+  const LIVE_FETCH = async (u, o) => { got.push([String(u), (o && o.headers) || {}]); if (/api\.github\.com/.test(String(u)) && !apiOk) return new Response("no", { status: 403 }); return new Response(JSON.stringify(fileNow), { status: 200 }); };
+  const note = new Map(), CACHE = { match: async u => (note.has(String(u)) ? new Response(note.get(String(u))) : undefined), put: async (u, res) => { note.set(String(u), await res.text()); } };
+  const ask = async (env, qs) => { const r = await worker.fetch(new Request("https://pharmakon.world/api/asked" + qs), env, {}); return { status: r.status, j: await r.json(), cc: r.headers.get("cache-control") }; };
+  liveForget(); const env = { ASSETS: assets, GH_RUN_TOKEN: " tok_9 ", LIVE_FETCH, CACHE };
+  let x = await ask(env, "?h=" + [K1, K2, K3, K4, "e".repeat(20), "not-a-key"].join(","));
+  ok("asked: the file is read from GitHub with the key for starting the work, which is never in a reply", got.length === 1 && /api\.github\.com\/repos\/vasilissampalis\/pharmakon\/contents\/data\/auto\/live\.json/.test(got[0][0]) && got[0][1].authorization === "Bearer tok_9" && !JSON.stringify(x.j).includes("tok_9") && x.cc === "no-store", JSON.stringify(got));
+  ok("asked: a question that was listed comes back in OUR wording, with what was done, what was found, the words research uses, and that it is being written now", x.status === 200 && x.j.ok && x.j.q[K1].id === "w_a0900" && x.j.q[K1].our === "Does catnip give two cats the same dream?" && x.j.q[K1].st === "found" && x.j.q[K1].n.papers === 12 && x.j.q[K1].n.pages === 4 && x.j.q[K1].working === "2026-11-19T01:01:00+00:00" && JSON.stringify(x.j.q[K1].terms) === JSON.stringify(["shared dreaming", "x".repeat(60)]), JSON.stringify(x.j.q[K1]));
+  ok("asked: one that was not listed says why, in our words", x.j.q[K2].no.startsWith("Our system did not read this") && Object.keys(x.j.q[K2]).join() === "no");
+  ok("asked: one that is answered carries the answer in the page's own form", x.j.q[K3].st === "answered" && x.j.q[K3].aid === "au_w_a0901" && x.j.q[K3].ans.short === "No." && !x.j.q[K3].working, JSON.stringify(x.j.q[K3]));
+  ok("asked: a key the system does not know, one whose listed question is gone, and what is not a key bring nothing", Object.keys(x.j.q).sort().join() === [K1, K2, K3].join() && x.j.room === false && x.j.room_at === "2026-11-20T00:00:00+00:00");
+  x = await ask(env, "?w=w_0031,w_a0900,w_x!"); ok("asked: a question of our list that the reader keeps is asked for by its number", x.j.w.w_0031.st === "trying" && x.j.w.w_a0900.our && Object.keys(x.j.w).length === 2 && got.length === 1, JSON.stringify(x.j.w));
+  ok("asked: within a few seconds GitHub is not asked again (this copy remembers; and the place's cache holds the file)", got.length === 1 && note.size === 1);
+  liveForget(); x = await ask(env, "?h=" + K1); ok("asked: another copy of the server at the same place takes the file from the cache", got.length === 1 && x.j.q[K1].st === "found");
+  liveForget(); note.clear(); apiOk = false; fileNow = Object.assign({}, FILE, { at: "later" }); x = await ask(env, "?h=" + K1);
+  ok("asked: where GitHub's service says no, the plain copy everybody can read is taken", got.length === 3 && /raw\.githubusercontent\.com\/vasilissampalis\/pharmakon\/main\/data\/auto\/live\.json/.test(got[2][0]) && !got[2][1].authorization && x.j.at === "later", JSON.stringify(got.map(g => g[0])));
+  liveForget(); note.clear(); got.length = 0; x = await ask({ ASSETS: assets, LIVE_FETCH, CACHE }, "?h=" + K1); ok("asked: without the key the plain copy is read", got.length === 1 && /raw\.githubusercontent/.test(got[0][0]) && x.j.q[K1]);
+  liveForget(); note.clear(); x = await ask({ ASSETS: assets, CACHE, LIVE_FETCH: async () => new Response("<html>", { status: 200 }) }, "?h=" + K1); ok("asked: a file that cannot be read is said as off, never as an error", x.status === 200 && x.j.ok === true && x.j.off === true);
+  x = await ask(env, ""); ok("asked: nothing asked for is refused", x.status === 422);
+  x = await ask(env, "?h=" + K1 + "x"); ok("asked: what is not a key is refused", x.status === 422);
+  const r = await worker.fetch(new Request("https://pharmakon.world/api/asked?h=" + K1, { method: "POST" }), env, {}); ok("asked: only GET", r.status === 405);
+  { const s = kv(), e2 = { ASSETS: assets, QUESTIONS: s }; const p1 = await call(e2, "POST", { q: "Can catnip make a cat sleepy?", a: 1 }), p2 = await call(e2, "POST", { q: "can catnip make a cat sleepy?" , a: 1 }), g = await call(e2, "GET");
+    const kk = [...s.m.keys()].find(k => k.startsWith("aq:")).slice(3);
+    ok("the reply to a sent question carries the question's own key in the store (20 hex), the first time and again; and the server says it can tell what became of a question", p1.j.k === kk && /^[0-9a-f]{20}$/.test(kk) && p2.j.k === kk && p2.j.again === true && g.j.live === true, JSON.stringify([p1.j, p2.j, g.j])); }
+  liveForget(); }
 console.log(fail ? fail + " of " + (pass + fail) + " checks failed" : "All " + pass + " checks passed"); process.exit(fail ? 1 : 0);

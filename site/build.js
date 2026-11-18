@@ -423,7 +423,8 @@ const OFFICIAL = (() => {
   const n = Object.keys(by).length; if (n) console.log("official pages: " + n + " drugs and started pages have pages of " + Object.keys(src).length + " official bodies to link to (" + Object.values(by).reduce((a, r) => a + r.length, 0) + " pages)");
   return n ? { made: idx.made || "", src, by } : null;
 })();
-const data2 = data + "\nconst OFFICIAL = " + JSON.stringify(OFFICIAL) + ";\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
+const AUTO_OBJ = Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]));
+const data2 = data + "\nconst OFFICIAL = " + JSON.stringify(OFFICIAL) + ";\nconst AUTO = " + JSON.stringify(AUTO_OBJ) +
   ";\nconst AUTO_STATE = " + JSON.stringify(AUTO_STATE) + ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
@@ -445,6 +446,12 @@ let html = src("index.template.html").replace("/*__CSS__*/", () => src("styles.c
 if (/\{\{[A-Z_]+\}\}/.test(html)) console.error("WARNING: unreplaced {{…}} placeholder in the template");
 fs.mkdirSync(path.join(__dirname, "dist"), { recursive: true });
 fs.writeFileSync(path.join(__dirname, "dist", "index.html"), html);
+// (2.23) What the system's own state file is made from (scripts/auto/live.py; docs/AUTOMATION.md, decision 34): every answer written by the system
+// that this build shows, in the very form the page holds it (it passed the build's own look, above: the last gate), and the word for what the system
+// has done with each listed question. A run of the system reads this file right after it has written an answer, so that a reader who is waiting
+// for that answer is shown it at once, before the site's next publishing. It is not a part of the published site (site/build_public.py copies
+// folders it names, and this file is in none).
+fs.writeFileSync(path.join(__dirname, "dist", "live-src.json"), JSON.stringify({ built: SITE_BUILD, site: VERSION.site, auto: AUTO_OBJ, state: AUTO_STATE }));
 // the photo copies are published next to the page as supporting files (dist/img/<id>-m.webp, -t.webp)
 const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "dist", "img");
 { const dataDir = path.join(__dirname, "dist", "data"); fs.mkdirSync(dataDir, { recursive: true });

@@ -84,6 +84,14 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   any of it (`scripts/insight/build_index.py --eval`, `--places`); never make the judge laxer to answer more. Under the research the
   page lists the pages of official bodies about the drug (`OFFICIAL` in `site/build.js`, from `data/auto/official/`): links only, picked
   on the device, nothing of them our text. A new index of papers or a new body is named in the Privacy text before it is asked.
+- The lane on a clock, and the page that says what is being done (19 November 2026, his words of 18 November, 23:42: "like 5 minutes pass and i don't
+  have an answer ... it should be answered almost immediately"; `docs/AUTOMATION.md`, decision 34). One question has seven minutes at most
+  (`llm.STOP_AT`; `lane.py`, `QUESTION_SECONDS`): past it nothing is asked or waited for and the question is tried again in the next run; never a
+  call, a fetch or a wait without that clock in a run. Sources are read AT ONCE and kept in their own order (`lane.py`, `make`, `Begun`; the readers of
+  `data/auto/lane/models.json`): the selftest holds the two ways to the same record; keep it so. A run writes what it is doing for each sent question
+  into `data/auto/live.json` (`scripts/auto/live.py`: by the question's key in the store, NEVER its words; our wording; what was found; an answer only
+  where the run's own build shows it) and the page of the person who waits reads it through the server (`/api/asked`; site 2.23). The page never
+  promises a time the system has not kept; where the free models have no room it says so. No gate changed for any of this, and none may.
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY.

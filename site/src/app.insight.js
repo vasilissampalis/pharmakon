@@ -1639,6 +1639,8 @@ function askedWatch() {
 }
 // (2.16.1) FIND_ON: the site's server can look up published research (POST api/find). Learned by the same one question to the server
 let FIND_ON = (() => { try { return sessionStorage.getItem("pk-find-on") === "1"; } catch (e) { return false; } })();
+// (2.23) LIVE_ON: the server can say what our system is doing for a sent question (GET api/asked). Learned by the same one question to the server
+let LIVE_ON = false;
 // (2.17) AUTO_SRV: the server takes a question the page sends by itself (POST api/ask with a: 1), and keeps it apart
 let AUTO_SRV = (() => { try { return sessionStorage.getItem("pk-auto-on") === "1"; } catch (e) { return false; } })();
 let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); if (sessionStorage.getItem("pk-find-on") == null || sessionStorage.getItem("pk-auto-on") == null) return null; return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
@@ -1651,9 +1653,9 @@ function autoSendOn() { return ASK_ON === true && AUTO_SRV && autoOn(); }
 // go on believing yesterday's answer. Until its reply is in, the page starts from what the tab learned before.
 function askProbe() {
   if (askProbe.p) return askProbe.p;
-  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); AUTO_SRV = !!(j && j.auto === true); return !!(j && j.ok === true); }, () => { FIND_ON = false; AUTO_SRV = false; return false; })
+  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); AUTO_SRV = !!(j && j.auto === true); LIVE_ON = !!(j && j.live === true); return !!(j && j.ok === true); }, () => { FIND_ON = false; AUTO_SRV = false; LIVE_ON = false; return false; })
     .then(on => { const was = ASK_ON; ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); sessionStorage.setItem("pk-auto-on", AUTO_SRV ? "1" : "0"); sessionStorage.removeItem("pk-quick-on"); } catch (e) { /* this page only */ }   // (pk-quick-on: sites 2.18 and 2.19 kept it; it is cleared)
-      if (was !== on && typeof askedBox === "function") askedBox(); return on; }));
+      if (was !== on && typeof askedBox === "function") askedBox(); if (LIVE_ON && typeof liveKick === "function") liveKick(true); return on; }));
 }
 function askedList() { try { const x = JSON.parse(localStorage.getItem(ASK_KEY) || "[]"); return Array.isArray(x) ? x.filter(it => it && typeof it.q === "string" && it.k) : []; } catch (e) { return []; } }
 function askedSave(list) { try { localStorage.setItem(ASK_KEY, JSON.stringify(list.slice(-20))); } catch (e) { /* this visit only */ } }
@@ -1700,13 +1702,145 @@ function askedBox() {
   box.hidden = false;
   askedCheckSoon(); askedWatch();
 }
+/* ---------- (2.23, 19 November 2026) What our system is doing for a question the reader sent, as it happens ----------
+   The senior author, 18 November 2026, 23:42 Athens: "the site is taking too long to answer my pending questions... i persist on this like 5 minutes pass and
+   i don't have an answer from inside the website it should be answered almost immediately". Until this version a reader who had sent a question saw
+   "sent" and nothing more: the page learned of an answer only from a new version of the site, and only when the reader opened it again. Now, while a
+   question of this reader waits and the page is in view, the page asks the site's own server what became of it (GET api/asked: the question's key in
+   the server's store, or the number of a listed question the reader keeps; never any words), every few seconds at first and seldom later. Under the
+   question it says what our system has done: how it read the question (in OUR wording, so that a reader sees at once whether they were understood),
+   what it found, that it is writing now, or why there is no answer yet. And the moment an answer has passed every gate it is shown right there, in the
+   site's own form with its line "Written by our system ... Not yet checked by a person.", before the site's next publishing.
+   A reader who switched off what the page does by itself (About us, Privacy) is asked for nothing here either. */
+const LIVE = { timer: 0, busy: false, last: 0 };
+const liveKeyOf = j => (j && typeof j.k === "string" && /^[0-9a-f]{20}$/.test(j.k) ? j.k : "");
+// the key the server keeps a question under: the first 20 hex of the SHA-256 of its words as the server cleans them, in lower case (site/worker/_worker.js, clean, keyOf).
+// A question sent by an older version of the page has no key kept with it: worked out here, once
+async function liveKeyFor(q) {
+  try { const s = String(q == null ? "" : q).normalize("NFKC").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, 200).toLowerCase();
+    const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, "0")).join("").slice(0, 20); } catch (e) { return ""; }
+}
+const liveWaiting = () => (autoOn() ? askedList().filter(it => it.st === "wait" && ((it.sent && !it.kept) || it.w)) : []);
+// how often: every 7 seconds for the first five minutes after a question was sent, every 20 until half an hour, then every two minutes, then every ten
+function liveKick(soon) {
+  clearTimeout(LIVE.timer); LIVE.timer = 0;
+  if (!LIVE_ON || document.hidden) return;
+  const its = liveWaiting(); if (!its.length) return;
+  const age = Date.now() - Math.max(...its.map(it => it.ts || it.t || 0)), every = age < 5 * 60e3 ? 7000 : age < 30 * 60e3 ? 20000 : age < 6 * 3600e3 ? 120000 : 600000;
+  LIVE.timer = setTimeout(liveTick, soon ? Math.max(400, Math.min(every, 1500 - (Date.now() - LIVE.last))) : every);
+}
+// what the page may hold as an answer written by our system: the shape the build gives (AUTO), nothing else
+function liveAnswerOk(a) {
+  const str = x => typeof x === "string" && x.length > 0, arr = Array.isArray;
+  if (!a || typeof a !== "object" || !str(a.q) || !str(a.short) || !str(a.but) || !str(a.page) || !arr(a.how) || !a.how.every(x => typeof x === "string") || !arr(a.refs) || !a.refs.length) return false;
+  if (!a.refs.every(r => r && typeof r === "object" && str(r.id) && str(r.title) && arr(r.author) && r.author.length)) return false;
+  if (a.howq !== undefined && !(arr(a.howq) && a.howq.every(h => h === null || (h && str(h.q) && str(h.ref))))) return false;
+  if (a.from !== undefined && !(a.from && typeof a.from === "object")) return false;
+  if (a.kind === "amounts" && !(arr(a.rows) && a.rows.every(r => r && str(r.who) && str(r.what) && str(r.quote) && str(r.ref)))) return false;
+  return a.kind === undefined || a.kind === "amounts";
+}
+async function liveTick() {
+  LIVE.timer = 0;
+  if (!LIVE_ON || LIVE.busy || document.hidden) return;
+  // an answer this page was shown before its publishing, on a page opened again from a copy that does not hold it yet: it waits again, and is shown again
+  { const list = askedList(); let back = false; for (const it of list) if (it.st === "ans" && it.fresh && it.id && !it.h && !isAuto(it.id) && !claimById[it.id]) { it.st = "wait"; delete it.id; delete it.p; back = true; } if (back) askedSave(list); }
+  const its = liveWaiting().sort((a, b) => (b.ts || b.t || 0) - (a.ts || a.t || 0)); if (!its.length) return;
+  LIVE.busy = true; LIVE.last = Date.now();
+  try {
+    for (const it of its) if (!it.w && !it.sk && it.sent) { const k = await liveKeyFor(it.q); if (k) { it.sk = k; askedSet(it.k, { sk: k }); } }
+    const hs = [...new Set(its.map(it => it.sk).filter(Boolean))].slice(0, 8), ws = [...new Set(its.map(it => it.w).filter(Boolean))].slice(0, 8);
+    if (hs.length || ws.length) { const r = await fetch("api/asked?" + [hs.length ? "h=" + hs.join(",") : "", ws.length ? "w=" + ws.join(",") : ""].filter(Boolean).join("&"), { headers: { accept: "application/json" }, cache: "no-store" });
+      const j = r.ok ? await r.json().catch(() => null) : null; if (j && j.ok === true && !j.off) liveApply(j); }
+  } catch (e) { /* asked again on the next turn */ }
+  LIVE.busy = false; liveKick();
+}
+function liveApply(j) {
+  const list = askedList(); let changed = false;
+  for (const it of list) {
+    if (it.st !== "wait") continue;
+    const o = (it.sk && j.q && j.q[it.sk]) || (it.w && j.w && j.w[it.w]) || null; if (!o || typeof o !== "object") continue;
+    let lv;
+    if (typeof o.no === "string") lv = { no: o.no.slice(0, 300) };
+    else { lv = { st: String(o.st || "").slice(0, 12), our: String(o.our || "").slice(0, 200), id: String(o.id || "").slice(0, 44) };
+      if (o.n && typeof o.n === "object") lv.n = [+o.n.papers || 0, +o.n.pages || 0];
+      if (o.working) lv.working = 1;
+      if (Array.isArray(o.terms) && o.terms.length) lv.terms = o.terms.filter(x => typeof x === "string").slice(0, 6).map(x => x.slice(0, 60));
+      if (j.room === false && typeof j.room_at === "string") lv.room = j.room_at.slice(0, 25);
+      if (lv.st === "answered" && typeof o.aid === "string" && /^au_[a-z0-9_]{1,44}$/.test(o.aid)) {
+        if (!isAuto(o.aid) && liveAnswerOk(o.ans)) AUTO[o.aid] = Object.assign({}, o.ans, { live: 1 });   // the answer itself, in the form the build gives every such answer: shown before the site's next publishing
+        if (isAuto(o.aid)) { it.st = "ans"; it.id = o.aid; it.p = AUTO[o.aid].page; it.fresh = Date.now(); delete it.lv; changed = true; continue; }
+        lv.reload = 1; } }
+    if (JSON.stringify(it.lv || null) !== JSON.stringify(lv)) { it.lv = lv; changed = true; }
+  }
+  if (changed) { askedSave(list); askedBox(); liveDraw(); }
+}
+// the asked item a view of a question belongs to: the reader's own words, or the listed question the reader keeps
+function liveItemFor(res) {
+  if (!res || !res.q) return null;
+  const k = insClean(res.q).slice(0, 200).toLowerCase(), list = askedList();
+  return list.find(x => x.k === k && (x.sent || x.w || x.st === "ans")) || (res.note === "want" && res.want ? list.find(x => x.w === res.want.id) : null) || null;
+}
+function liveMount(after, res) {
+  if (!after || !after.parentNode) return;
+  const it = LIVE_ON && autoOn() ? liveItemFor(res) : null; let box = after.nextElementSibling && after.nextElementSibling.classList.contains("ins-live") ? after.nextElementSibling : null;
+  if (!it || (it.st === "ans" && !it.fresh)) { if (box) box.remove(); return; }
+  if (!box) { box = document.createElement("div"); box.className = "ins-live"; after.insertAdjacentElement("afterend", box); }
+  box.dataset.live = it.k; liveFill(box, it);
+  liveKick(true);
+}
+// the block's words; and the line above it ("We haven't checked exactly this yet ... sent") gives way once the answer stands there
+function liveFill(box, it) {
+  const h = liveHtml(it); if (box.innerHTML !== h) box.innerHTML = h;
+  const line = box.previousElementSibling; if (line && line.matches(".sr-fit-none, .ins-none")) line.hidden = it.st === "ans";
+}
+function liveDraw() {
+  const list = askedList();
+  document.querySelectorAll(".ins-live[data-live]").forEach(box => { const it = list.find(x => x.k === box.dataset.live); if (!it) { box.remove(); return; } liveFill(box, it); });
+}
+const liveCount = (n, one) => n + " " + (n === 1 ? one : one + "s");
+function liveHtml(it) {
+  const lv = it.lv || {};
+  // answered: the answer's question and short answer, and the way into it
+  if (it.st === "ans" && it.id && (isAuto(it.id) || claimById[it.id])) { const a = isAuto(it.id) ? AUTO[it.id] : null, q = a ? a.q : insQ(it.id, it.p), short = a ? a.short : ((SIMPLE.claims || {})[it.id] || {}).short || "";
+    return '<div class="lv lv-card" role="status"><p class="lv-h">' + icon("check") + "<span>Answered" + (it.fresh && Date.now() - it.fresh < 3600e3 ? " just now" : "") + '</span></p><p class="lv-q">' + esc(q) + "</p>" + (short ? '<p class="lv-a">' + esc(short) + "</p>" : "") +
+      '<a class="qz2-nb lv-open" href="' + (a ? "#auto/q-" + esc(it.id) : esc(answerAddr(it.id, it.p))) + '" data-you-live="' + esc(it.id) + '"' + (it.p ? ' data-page="' + esc(it.p) + '"' : "") + ">Read the answer</a></div>"; }
+  if (lv.no) return '<div class="lv lv-card lv-plain" role="status"><p class="lv-h"><span>Our system read your question and did not list it.</span></p><p class="lv-s">' + esc(lv.no) + "</p></div>";
+  if (lv.reload) return '<div class="lv lv-card" role="status"><p class="lv-h">' + icon("check") + '<span>Answered</span></p><p class="lv-s">The answer is in the newest version of the site. <button type="button" class="linklike" data-asked-reload>Load it</button></p></div>';
+  const n = lv.n || [0, 0], found = n[0] + n[1] > 0, at = lv.room ? new Date(lv.room) : null, hhmm = at && !isNaN(at) ? at.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
+  const steps = [];   // [done | now | next, the line]
+  if (!lv.our) steps.push(["now", "Our system is reading your question. It starts within a minute."]);
+  else {
+    steps.push(["done", "Our system read it as: <q>" + esc(lv.our) + "</q>"]);
+    if (found) steps.push(["done", "Found " + [n[0] ? liveCount(n[0], "paper") + " it can read" : "", n[1] ? liveCount(n[1], "official page") : ""].filter(Boolean).join(" and ")]);
+    else if (lv.st === "new") steps.push(["now", "Looking for papers and official pages"]);
+    if (lv.st === "nosource") steps.push(["end", "It searched. Nothing that can be read is published on this yet. It looks again by itself as new papers come out."]);
+    else if (lv.st === "editor") steps.push(["end", "An answer is written. It is one of the few kinds that a person reads before it is shown."]);
+    else if (lv.st === "tried") steps.push(["end", "Answers were written, and none passed our checks. We do not show one that has not passed. It is tried again another day."]);
+    else if (lv.working) steps.push(["now", (lv.st === "trying" ? "Writing again now. " : "Writing the answer now. ") + "Every sentence is tied to a source’s own words and checked. A few minutes."]);
+    else if (lv.st === "trying") steps.push(["now", "A first try did not pass every check. Our system is working on it again by itself."]);
+    else if (found) steps.push(["next", "Next: writing the answer"]);
+    if (hhmm && !lv.working && lv.st !== "nosource" && lv.st !== "editor") steps.push(["wait", "The free models our system writes with have used up today’s allowance. It goes on at " + esc(hhmm) + "."]);
+  }
+  const last = steps[steps.length - 1][0];
+  return '<div class="lv' + (last === "end" || last === "wait" ? " lv-rest" : " lv-on") + '" role="status" aria-live="polite"><ol class="lv-steps">' + steps.map(s => '<li class="lv-' + s[0] + '"><span class="lv-m" aria-hidden="true"></span><span class="lv-t">' + s[1] + "</span></li>").join("") + "</ol></div>";
+}
+if (typeof document !== "undefined") {
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) liveKick(true); else { clearTimeout(LIVE.timer); LIVE.timer = 0; } });
+  document.addEventListener("click", e => { const a = e.target.closest && e.target.closest("a[data-you-live]"); if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault(); e.stopPropagation(); const id = a.dataset.youLive, page = a.dataset.page || undefined; closeSearch(); openInsight(id, null, true, { page }); }, true);
+}
 // the panel: what waits or was answered, the past searches, and the way to delete them
 function youHtml(list, hist) {
   const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
   const byNew = (a, b) => (b.t || 0) - (a.t || 0);   // (2.9.2, the senior author) the newest first, the oldest last
   // (2.15.2) for a question on our list: what our system has done with it so far (AUTO_STATE, from the lane's own record). (2.21, lane 19) The system tries
   // again by itself, and the words say so; only a few kinds are read by an editor before they show.
-  const state = it => { const s = it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : ""; return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Working on it by itself" : s === "tried" ? "No answer passed our checks yet. It tries again" : s === "new" ? "In line. Not tried yet" : ""; };
+  const state = it => { const s = it.lv && it.lv.st ? it.lv.st : it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : "";   // (2.23) what the system said last, where the page has asked the server
+    if (it.lv && it.lv.no) return "Read by our system. Not listed";
+    if (it.lv && it.lv.reload) return "Answered. Open the site again to read it";
+    if (it.lv && it.lv.working) return "Being written now";
+    if (s === "found") return "Sources found. Writing is next";
+    return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Working on it by itself" : s === "tried" ? "No answer passed our checks yet. It tries again" : s === "new" ? "In line. Not tried yet" : ""; };
   // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question that waits can be opened too:
   // it is asked again in the box, which shows what the site has on it so far
   const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">' + icon("clock") + (state(it) || k) + (it.sent ? '<span class="aq-ago"> · ' + (it.kept ? "asked " : "sent ") + youAgo(it.t) + "</span>" : "") +
@@ -1811,8 +1945,9 @@ document.addEventListener("click", async e => {
   const sb = e.target.closest("button[data-asked-send]");
   if (sb) { e.preventDefault(); const it = askedList().find(x => x.k === sb.dataset.askedSend); if (!it) return; sb.disabled = true;
     if (await askProbe()) { let ok = false;
-      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
-      if (ok) { askedSet(it.k, { sent: 1 }); askedBox(); return; } }
+      let sk = "";
+      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; if (ok) sk = liveKeyOf(await r.json().catch(() => null)); } catch (err) { ok = false; }
+      if (ok) { askedSet(it.k, Object.assign({ sent: 1, ts: Date.now() }, sk ? { sk } : {})); askedBox(); liveKick(true); return; } }
     sb.disabled = false; youClose(false, () => openFeedback("feedback", location.hash, it.q)); return; }
   // 2.5: a question on our list: "Tell me when it is answered" keeps the LISTED question (never the words typed) in the
   // reader's own list; it turns green when a later version of the site answers it
@@ -1831,9 +1966,9 @@ document.addEventListener("click", async e => {
   const on = await askProbe();
   if (it.sent) { say("Already sent. It is under “Your questions” on the start page."); return; }
   if (on) {
-    let ok = false;
-    try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
-    if (ok) { askedSet(it.k, { sent: 1 }); say(ASK_SENT); askedBox(); return; }   // (the published research stands under it already: insAuto)
+    let ok = false, sk = "";
+    try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; if (ok) sk = liveKeyOf(await r.json().catch(() => null)); } catch (err) { ok = false; }
+    if (ok) { askedSet(it.k, Object.assign({ sent: 1, ts: Date.now() }, sk ? { sk } : {})); say(ASK_SENT); askedBox(); liveKick(true); return; }   // (the published research stands under it already: insAuto)
   }
   // the page cannot send it (the store is not switched on, or the connection failed): kept on this device, and the email form opens with it
   say("Not sent yet. It is kept on this device only, under “Your questions”. To send it to us, press Send by email in the form.");
@@ -2056,6 +2191,7 @@ function insAuto(root, res, now) {
   if (!root || !res) return;
   // (2.22) under a best match the judge is not sure of there is no line to stand under: what is found stands in its own place, and nothing is sent (the reader says so with "Search wider")
   const after = root.querySelector(".sr-fit-none, .ins-none"), slot = root.querySelector('.ins-slot[data-slot="found"]'), at = after || (res.unsure ? slot : null); if (!at) return;
+  if (after) liveMount(after, res);   // (2.23) a question this reader sent: what our system is doing for it, as it happens
   insOfficial(root, res);   // (2.22) the pages of official bodies about the drug: they are on the page already, so they stand there at once
   askProbe().then(() => { if (!at.isConnected) return; const found = insAutoFind(at, res, now, slot); if (after) insAutoSend(after, res, now, found); });
 }
@@ -2126,6 +2262,7 @@ function insAutoFind(after, res, now, slot) {
    - A question like one on our list: nothing of the reader's is sent (the device counts the listed question by its number, as before); the LISTED
      question is put on the reader's list by itself, so that they are told when it is answered. */
 const AUTO_WAIT = 2500, AUTO_SENT = "Sent to our system, so that it gets answered. It turns green under “Your questions” on the start page when it is.";
+const AUTO_SENT_LIVE = "Sent to our system. You can stay or come back: it is kept under “Your questions” on the start page.";   // (2.23) what the system is doing stands under this line, as it happens
 const insAutoSaidHtml = t => '<span class="ask-said ask-auto-said" role="status">' + esc(t) + ' <button type="button" class="linklike" data-auto-stop>Don’t send mine</button></span>';
 function insAutoSaid(after, text) {
   let slot = after.querySelector(".ask-auto");
@@ -2161,13 +2298,14 @@ function insAutoSend(after, res, now, found) {
       const k = insClean(q).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k), it = askedAdd(q, drug); if (!it) return;
       let ok = false;
       // (2.22) x: what the page had taken for the answer, where the reader said it is not ("Not what you asked?"): the system learns from it which answer does not answer this
-      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.assign({ q: it.q, d: it.d, v: SITE_VERSION, a: 1 }, res.denied ? { x: String(res.denied).slice(0, 80) } : {})) }); ok = r.ok; } catch (e) { ok = false; }
+      let sk = "";   // (2.23) the question's own key in the server's store: with it the page asks what became of the question
+      try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.assign({ q: it.q, d: it.d, v: SITE_VERSION, a: 1 }, res.denied ? { x: String(res.denied).slice(0, 80) } : {})) }); ok = r.ok; if (ok) sk = liveKeyOf(await r.json().catch(() => null)); } catch (e) { ok = false; }
       if (!ok) {   // not taken (the day's room for such questions is used, or the connection failed): nothing is claimed; the way to send by hand stands
         if (!had) askedDrop(it.k);
         const slot = after.querySelector(".ask-auto"); if (slot) slot.outerHTML = insAskBtn(q, sheet ? "qz2-nb ins-askus" : "linklike");
         return; }
-      askedSet(it.k, Object.assign({ sent: 1, auto: 1 }, res.denied ? { x: String(res.denied).slice(0, 80), st: "wait" } : {})); askedTidy(it.k); askedBox();
-      if (after.isConnected) insAutoSaid(after, AUTO_SENT);
+      askedSet(it.k, Object.assign({ sent: 1, auto: 1, ts: Date.now() }, sk ? { sk } : {}, res.denied ? { x: String(res.denied).slice(0, 80), st: "wait" } : {})); askedTidy(it.k); askedBox();
+      if (after.isConnected) { insAutoSaid(after, LIVE_ON ? AUTO_SENT_LIVE : AUTO_SENT); liveMount(after, res); }
     } finally { insAutoSend.busy = null; }
   };
   if (now) send(); else INS.sendT = setTimeout(send, AUTO_WAIT);

@@ -1540,6 +1540,86 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     `build_index.py --eval` and `--places`, the validator.
     **For him.** Unchanged and still his: "approve" (the checked answer on smoked cannabis and lung cancer, Section
     7), "use readers", "keep them private".
+34. **Answers that come fast: the lane on a clock, sources read at once, and the page that says what is being done**
+    (18 November 2026, 23:42 Athens, to 19 November; lane 19 as it is, no gate changed; sites 2.22.1 and 2.23.0, protocol
+    0.6.0). His words: "the site is taking too long to answer my pending questions... i persist on this like 5 minutes
+    pass and i don't have an answer from inside the website it should be answered almost immediately". And at 23:50, of
+    the two controls for an answer's scientific detail: "should be the same button and i should only click on it once".
+    **What the records showed.** The runs keep their own notes with the time of every step. His question about deaths
+    from heroin in one country: sent 22:07:41 Athens; begun 107 seconds later (it waited 71 seconds for the clock's run
+    to give way); worded in 17 seconds; official pages 24 seconds; papers 56 seconds; then the lane, ONE step, 34
+    minutes: team L's reader (Gemma at Google's free tier, about one reading a minute by its tokens a minute) read 21
+    sources one after another and none gave a finding (they were papers on another country: mended that evening, the
+    finder asks for the place). His next question, sent 22:36, waited 10 minutes behind that step, was worded and
+    searched in 90 seconds, and stopped after 8 minutes because the reader that stands by had no tokens left. The run
+    after it sat on the same step until GitHub stopped it at 40 minutes and left no note (the program's output was still
+    in memory). A third question, sent at 00:07, was written and passed every reader that could be asked, and is not
+    shown: the strong further reader of its team (Gemini 3.8 Flash) did not answer, and all four such models had used
+    their 20 calls of the day. From the lane's 41 records with a reading list: the first two papers and the first two
+    official pages give nearly every finding (papers at places 5 and later: 2 of 26 readings; pages at places 3 and
+    later: 4 of 85); a question that got no answer cost 10 readings on average, each a call made after the one before.
+    And the page: a reader who had sent a question saw "sent" and nothing else; it learned of an answer only from a new
+    version of the site, when the reader opened it again.
+    **Decided and built.**
+    (1) *A clock* (`scripts/auto/llm.py`: `STOP_AT`, `Late`; `lane.py`: `QUESTION_SECONDS` 420, `READ_SECONDS` 100,
+    `BEGIN_WITH` 240). Past a question's clock no model is asked, waited for or tried again; a request's own time limit
+    ends with the clock (so do the fetches of papers and pages: `papers.py`, `official.py`); the question is noted as
+    tried again in the next run. On the clock a strong further reader with 20 calls a day is waited for 80 seconds,
+    not 170. One of the system's own questions gives way in the middle when a run waits behind it (`llm.GIVE_WAY`,
+    asked every 25 seconds). The lane's notes are written as it works (`python3 -u`).
+    (2) *Sources read at once* (`lane.py`, `make`, `Begun`; `AT_ONCE` 6). The nearest four papers and the first three
+    official pages are fetched and read at the same time, the next ones only if those did not give enough, by every
+    model that may read (`data/auto/lane/models.json`, "readers": the two Flash-Lite models at Google, the reader at
+    Cloudflare, the small gpt-oss at Groq, Gemma; never the model that writes that answer or is its second reader). Each
+    model keeps its own calls and tokens a minute under a lock (`llm._slot`); a source goes to the reader that will have
+    read it soonest. What they find is kept in the sources' own order: the two first papers that give a finding, then
+    the two first pages, exactly as before. The lane's selftest makes the same answer both ways and compares the
+    records. No gate is touched: a reader only copies, and code checks every quote against the passage.
+    (3) *The run.* The two searches for a sent question go at the same time; the pass for sent questions takes up to
+    three in nine minutes. The wording of a new question (a visitor's words go to Cloudflare alone) may use what the
+    lane leaves of Cloudflare's day (9,800 of 10,000 neurons): on 18 November a question sent late could not even be
+    listed.
+    (4) *As it happens* (site 2.23.0; `scripts/auto/live.py`, `data/auto/live.json`; `site/worker/_worker.js`,
+    `/api/asked`; `site/src/app.insight.js`, `liveTick`, `liveHtml`). A run writes the small file three times as it
+    works (how each new question was read; what was found and which are being written; what was written) and pushes
+    it at once. In it a sent question stands under the key the server's store keeps it by, never its words; with it
+    our wording, the words research uses for its subject, what was found, one word for what has been done, and why a
+    question was not listed. An answer is carried only where the build made in that run shows it
+    (`site/dist/live-src.json`, written by `site/build.js` from AUTO_SHOWN: the build's last look), and for three
+    days. The server reads the file from the public repository (GitHub's service with the key it already holds for
+    starting the work, else the copy everyone can read) and keeps it six seconds. The page of a reader with a waiting
+    question asks the server every 7 seconds for five minutes, then every 20, then seldom, only while it is in view,
+    with the key alone (or the number of a listed question the reader keeps); it is asked for nothing where the
+    reader switched off what the page does by itself. Under the question it shows the steps (read as; found; writing
+    now; or why not yet, and when the free models have room again), and the moment the answer is there, the answer:
+    "Answered just now", our question, the short answer, and the way into it, which opens it as every answer written
+    by the system opens, with its line and without certainty bars. An answer whose shape is not the build's is never
+    taken into the page.
+    (5) *Scientific detail* (site 2.22.1): the link under an answer's sources bears the name of the fold it leads to
+    and opens the research view at that fold, unfolded.
+    **Not changed, and why.** No gate of the lane; no team's readers; the strong further reader still has to accept
+    an answer of a team that names one, and an answer it could not read still waits for it (the third question above).
+    Whether such an answer should be published where every other reader accepted it is his to decide: it would change
+    when a gate applies. No language model takes part in what the page shows at once: the wording and the answer come
+    from the lane, after its gates.
+    **Measured before it was published.** The lane's selftest (the same record read at once and one after another; a
+    source not read in time; the pool; the clock), the model client's (a moment for each call made at once; nothing
+    asked past the clock), `scripts/ux/worker_test.mjs` (173: the file read by key, never by words; what comes back;
+    what is refused), `scripts/ux/site24_check.js` (the steps, the wording, the answer shown and opened, an answer of
+    the wrong shape refused, nothing asked where it is switched off) and the rest of the chain.
+    **What it does not do.** It does not make the free models faster or give them more room: on the evening of 18
+    November every team was out of room by 00:30 Athens (Cloudflare 8,953 of 9,000 neurons; Groq's strongest model;
+    all four strong readers at Google), and no answer could be written until the day turned. More answers a day, and
+    answers late in the day, need more free model services: each needs a key that only he can make (decision 33,
+    point 3). The papers shown at once are still found by key words and are often not about the question (trial 14,
+    the editor's reading: about half of the titles shown for questions about dying; the page's own encoder tells them
+    apart poorly: 0.73 where 0.5 is chance); how much of a question its look-up words hold can be measured on the
+    device (0.07 for his question about two people's visions, where every trial question with real key words is above
+    0.36), and the system's own research words for a question now reach the page with the live state: the next step
+    is to look up by those.
+    **For him.** "approve", "use readers", "keep them private" as before; and two new ones he can answer with a word:
+    whether an answer that passed every reader that could be asked may be shown when its strong further reader could
+    not be asked that day; and which further free model services to add (the keys are his to make).
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

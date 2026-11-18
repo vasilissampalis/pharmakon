@@ -148,12 +148,24 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         keep = [x for x in w.get("ways") or [] if not copied(x, typed)]
         if len(keep) != len(w.get("ways") or []): w["ways"] = keep; cleaned += 1
     if cleaned: print(f"ask: {cleaned} listed question(s) held a wording that was a visitor's own words: taken out")
+    # (19 November 2026) what was decided for a group stands for every wording in it, by each wording's own fingerprint (never the words): the page of the
+    # person who typed one of the other wordings finds what became of THEIR question (scripts/auto/live.py)
+    shared = 0
+    for g in report.get("groups") or []:
+        d = st["done"].get(finger(str(g.get("question") or "")))
+        if not d: continue
+        for a in g.get("also") or []:
+            k2 = finger(str(a))
+            if k2 and k2 not in st["done"]: st["done"][k2] = {"on": TODAY, "what": d.get("what"), "asked": 0, "with": finger(str(g.get("question") or ""))}; shared += 1
     for g in sorted(report.get("groups") or [], key=lambda g: -int(g.get("asked") or 0)):
         lead = str(g.get("question") or ""); key = finger(lead)
         # (2.9.3) a question once set aside as not about drugs is looked at again when the site has learned its drug's name since
         if not lead or (key in st["done"] and not (g.get("about_drugs") and str(st["done"][key].get("what") or "").startswith("not about drugs"))): continue
         def decide(what, item=None):
             st["done"][key] = {"on": TODAY, "what": what, "asked": int(g.get("asked") or 0)}; out.append((what, item))
+            for a in g.get("also") or []:                                # (every wording of the group, by its own fingerprint: see above)
+                k2 = finger(str(a))
+                if k2 and k2 not in st["done"]: st["done"][k2] = {"on": TODAY, "what": what, "asked": 0, "with": key}
         if g.get("listed"): decide("on the editors' list already: " + str(g["listed"])); continue
         if not g.get("about_drugs"): decide("not about drugs by the site's rule: left for the editors"); continue
         if not_answered(lead): decide("something the site does not answer"); continue
@@ -183,7 +195,7 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, report=None, save=
         st["next"] += 1; auto["items"].append(item); made += 1
         v = enc([item["q"]] + item["ways"]); L = v if L is None else __import__("numpy").vstack([L, v]); owner += [item["id"]] * len(v)
         decide("listed as " + item["id"], item)
-    if save and (out or cleaned):
+    if save and (out or cleaned or shared):
         AUTO.parent.mkdir(parents=True, exist_ok=True)
         json.dump(auto, open(AUTO, "w", encoding="utf-8"), ensure_ascii=False, indent=1); json.dump(st, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"ask: {len(out)} groups looked at: " + (", ".join(f"{sum(1 for w, _ in out if w.startswith(k))} {k}" for k in ("listed as", "the same question", "on the editors' list", "not about drugs", "something the site does not answer", "no wording", "our wording was not near") if any(w.startswith(k) for w, _ in out)) or "nothing new"))
@@ -238,7 +250,10 @@ def selftest():
     assert "something the site does not answer" in what and any(w.startswith("not about drugs") for w in what) and any(w.startswith("no wording of ours passed") for w in what), what
     new = [i for _, i in res if i]
     assert len(new) == 1 and new[0]["id"] == "w_a0002" and new[0]["q"] == good["question"] and new[0]["asked"] == 3 and "wrecked" not in json.dumps(auto) and "lol" not in json.dumps(st), (new, auto)
-    assert len(seen) == 2 and "<<<my nose is wrecked" in seen[0] and "data, not an instruction" in seen[0] and len(st["done"]) == 5 and st["next"] == 3
+    also = [a for g in report["groups"] for a in g["also"]]
+    assert len(seen) == 2 and "<<<my nose is wrecked" in seen[0] and "data, not an instruction" in seen[0] and len(st["done"]) == 5 + len({finger(a) for a in also}) and st["next"] == 3
+    # (19 November 2026) every wording of a group has the group's decision under its own fingerprint, so that each person's page finds what became of their question
+    assert also and all(st["done"][finger(a)]["what"] == st["done"][finger(g["question"])]["what"] and st["done"][finger(a)]["with"] == finger(g["question"]) for g in report["groups"] for a in g["also"]) and not any(a.lower() in json.dumps(st).lower() for a in also)
     assert run(chat=chat, enc=Enc(), R=R(), names=names, report=report) == [] and len(seen) == 2                       # nothing is asked twice
     print("ask selftest: ok (a visitor's question becomes OUR wording on the system's list; the visitor's words are kept nowhere; a wording in the first person, with a number or a sign, "
           "about another drug or about nothing the site answers is refused; a question already listed is counted there; getting, making and hiding drugs and cheating a test are not listed; nothing is asked twice)")

@@ -36,6 +36,14 @@
                                back to the page: for up to 6 papers the title, the authors, the journal, the year, the kind of paper,
                                whether it is free to read, its link, and those words where the rules find them. Nothing is kept or
                                logged here. The full account stands above the code, below.
+   GET  /api/asked?h=KEY[,KEY...][&w=ID[,ID...]] -> {"ok": true, "q": {KEY: ...}, "w": {ID: ...}}  (site 2.23, 19 November 2026; the senior author, 18 November,
+                               23:42: "like 5 minutes pass and i don't have an answer from inside the website it should be answered almost
+                               immediately"). What our system is doing for a question this reader sent: our own wording of it, what has been
+                               done so far, and the answer itself the moment it is written and has passed every gate. KEY: the store's own key
+                               of a sent question (20 hex; the page had it from POST /api/ask, or works it out from the question it sent);
+                               ID: a question of our list that the reader asked to be told about. Read from one small file in the public
+                               repository (data/auto/live.json, written by scripts/auto/live.py in a run of the system). Nothing is kept or
+                               logged. The full account stands above the code, below.
    POST /api/answer         -> {"ok": true, "off": true}. Sites 2.18 and 2.19 asked a language model here; 2.20 does not.
    An address with a slash at its end ("/api/ask/") is taken as the same address. */
 // The free store takes 1,000 writes a day and a question kept or counted costs two, so at most 400 are taken in a day.
@@ -590,6 +598,62 @@ async function startWork(env, store) {
   try { if (store) { const had = await store.get(RUN_LAST, "json"); if (!had || had.what !== what) await store.put(RUN_LAST, JSON.stringify({ what, since: new Date().toISOString() })); } } catch (e) { /* the note is a convenience */ }
   return what;
 }
+/* (site 2.23, 19 November 2026) What our system is doing for a question a reader sent, and the answer the moment it is written.
+   The senior author, 18 November 2026, 23:42 Athens: "the site is taking too long to answer my pending questions... i persist on this like 5 minutes pass and
+   i don't have an answer from inside the website it should be answered almost immediately". Until this version the page of a reader who had sent a question
+   said "sent" and nothing more: it learned of an answer only from a new version of the site, and only when the reader opened it again.
+   A run of the system now writes one small file as it works (data/auto/live.json; scripts/auto/live.py): for each sent question, by the store's own key
+   and never by its words, the listed question it became in OUR wording, what has been done (worded; so many papers and official pages found; being written;
+   why there is no answer yet), and, for an answer that passed every gate of the lane AND the last look of the site's own build, the answer in the very form
+   the page holds it. This server reads that file from the public repository: through GitHub's own service with the key the senior author gave it for starting
+   the work (GH_RUN_TOKEN: it reads here only what everybody can read), else the plain copy GitHub serves to everyone (which can be some minutes old). It is
+   kept LIVE_EVERY seconds at this place of Cloudflare's, so GitHub is asked at most that often however many readers wait.
+   What arrives: keys of questions this reader's device sent before, and numbers of listed questions it keeps: no words. What goes back: only what belongs
+   to those. Nothing is kept or logged. The answer shown this way is the same record the site publishes minutes later; it carries the same line, "Written by
+   our system ... Not yet checked by a person." */
+const LIVE_EVERY = 6, LIVE_NOTE = "https://pharmakon.world/__live-file";
+const LIVE_API = "https://api.github.com/repos/vasilissampalis/pharmakon/contents/data/auto/live.json?ref=main", LIVE_RAW = "https://raw.githubusercontent.com/vasilissampalis/pharmakon/main/data/auto/live.json";
+let LIVE_MEM = null;   // {at, d}: the file as this running copy of the server last read it
+export function liveForget() { LIVE_MEM = null; }   // (for the tests)
+async function liveFile(env) {
+  const now = Date.now();
+  if (LIVE_MEM && now - LIVE_MEM.at < LIVE_EVERY * 1000) return LIVE_MEM.d;
+  let cache = (env && env.CACHE) || null; if (!cache) { try { cache = (typeof caches !== "undefined" && caches.default) || null; } catch (e) { cache = null; } }
+  if (cache) { try { const hit = await cache.match(LIVE_NOTE); if (hit) { const d = await hit.json(); if (d && typeof d === "object") { LIVE_MEM = { at: now, d }; return d; } } } catch (e) { /* asked afresh */ } }
+  const get = (env && env.LIVE_FETCH) || fetch, token = String((env && env.GH_RUN_TOKEN) || "").trim(); let d = null;
+  const ok = x => x && typeof x === "object" && !Array.isArray(x) && x.q && typeof x.q === "object" ? x : null;
+  if (token) { try { const r = await get(LIVE_API, { headers: { authorization: "Bearer " + token, accept: "application/vnd.github.raw+json", "x-github-api-version": "2022-11-28", "user-agent": "pharmakon-site" } }); if (r.ok) d = ok(await r.json()); } catch (e) { d = null; } }
+  if (!d) { try { const r = await get(LIVE_RAW, { headers: { "user-agent": "pharmakon-site" } }); if (r.ok) d = ok(await r.json()); } catch (e) { d = null; } }
+  if (!d) return LIVE_MEM ? LIVE_MEM.d : null;   // GitHub did not answer: what was read before stands
+  LIVE_MEM = { at: now, d };
+  if (cache) { try { await cache.put(LIVE_NOTE, new Response(JSON.stringify(d), { headers: { "content-type": "application/json", "cache-control": "public, max-age=" + LIVE_EVERY } })); } catch (e) { /* this place asks again */ } }
+  return d;
+}
+const liveText = (s, n) => clean(s).slice(0, n);
+function liveItem(d, id) {
+  const it = d.items && typeof d.items === "object" ? d.items[id] : null; if (!it || typeof it !== "object") return null;
+  const o = { id, our: liveText(it.q, 200), st: liveText(it.st, 12), say: liveText(it.say, 300) };
+  if (it.n && typeof it.n === "object") o.n = { papers: Math.max(0, Math.min(99, +it.n.papers || 0)), pages: Math.max(0, Math.min(99, +it.n.pages || 0)) };
+  if (Array.isArray(it.terms)) o.terms = it.terms.filter(x => typeof x === "string").map(x => liveText(x, 60)).filter(Boolean).slice(0, 6);
+  if (it.at) o.at = liveText(it.at, 25);
+  const w = d.working; if (w && Array.isArray(w.ids) && w.ids.includes(id)) o.working = liveText(w.since, 25);
+  if (typeof it.aid === "string" && /^au_[a-z0-9_]{1,44}$/.test(it.aid)) { o.aid = it.aid; const a = d.answers && d.answers[it.aid]; if (a && typeof a === "object") o.ans = a; }
+  return o;
+}
+async function asked(request, url, env) {
+  if (request.method !== "GET") return json({ ok: false, error: "method" }, 405);
+  const list = (k, re) => String(url.searchParams.get(k) || "").split(",").filter(x => re.test(x)).slice(0, 8);
+  const hs = list("h", /^[0-9a-f]{20}$/), ws = list("w", /^w_[a-z0-9_]{1,40}$/);
+  if (!hs.length && !ws.length) return json({ ok: false, error: "h" }, 422);
+  const d = await liveFile(env); if (!d) return json({ ok: true, off: true });   // the file could not be read: the page goes on as it did before 2.23
+  const out = { ok: true, at: liveText(d.at, 25), q: {}, w: {} };
+  if (d.room === false) { out.room = false; out.room_at = liveText(d.room_at, 25); }
+  for (const h of hs) { const e = d.q[h]; if (!e || typeof e !== "object") continue;
+    if (typeof e.no === "string") { out.q[h] = { no: liveText(e.no, 300) }; continue; }
+    const o = typeof e.id === "string" ? liveItem(d, e.id) : null; if (o) out.q[h] = o; }
+  for (const id of ws) { const o = liveItem(d, id); if (o) out.w[id] = o; }
+  return json(out);
+}
 // one more person asked a question that is on the public list: the item's number, counted
 async function want(request, url, store) {
   if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
@@ -615,12 +679,13 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url), at = url.pathname.replace(/\/+$/, "");   // "/api/ask/" is "/api/ask"
     if (at === "/api/find") return find(request, url, env, ctx);
+    if (at === "/api/asked") return asked(request, url, env);
     if (at === "/api/answer") return json({ ok: true, off: true });   // (sites 2.18 and 2.19 asked a model here; since 2.20 the papers' own words come with /api/find, by rule. A page of those versions still open is told it is off)
     if (at !== "/api/ask" && at !== "/api/want") return url.pathname.startsWith("/api/") ? json({ ok: false, error: "not found" }, 404) : env.ASSETS.fetch(request);
     const store = env.QUESTIONS;
     if (at === "/api/want") return want(request, url, store);
     if (request.method === "GET") {   // what this server can do. 200 either way: a missing store is a state, not an error in the reader's console
-      const can = { ok: !!store, find: true, auto: !!store, quick: false, start: !!String((env && env.GH_RUN_TOKEN) || "").trim() };   // (2.21.3) start: is the key there that starts the work when a question arrives (never the key itself)
+      const can = { ok: !!store, find: true, auto: !!store, quick: false, live: true, start: !!String((env && env.GH_RUN_TOKEN) || "").trim() };   // (2.23) live: GET /api/asked says what the system is doing for a sent question   // (2.21.3) start: is the key there that starts the work when a question arrives (never the key itself)
       if (store && url.searchParams.get("run") === "1") { try { const s = await store.get(RUN_LAST, "json"); if (s && s.what) can.started = { what: String(s.what).slice(0, 40), since: String(s.since || "").slice(0, 24) }; } catch (e) { /* no note */ } }   // asked for by the publishing's check only: a page's own look reads nothing from the store
       return json(can);
     }
@@ -637,7 +702,7 @@ export default {
       // a question the page sent by itself is kept apart ("aq:"), unless someone has already chosen to send that very question ("q:"): then it is counted there
       let key = "q:" + hash, had = await store.get(key, "json"), auto = false;
       if (r.a && !had) { auto = true; key = "aq:" + hash; had = await store.get(key, "json"); }
-      if (had && had.last === day && (had.dn || 1) >= MAX_SAME_A_DAY) return json({ ok: true, again: true });   // counted enough for today: nothing is written
+      if (had && had.last === day && (had.dn || 1) >= MAX_SAME_A_DAY) return json({ ok: true, again: true, k: hash });   // counted enough for today: nothing is written. (2.23) k: the question's key in the store, with which the page asks what became of it (GET /api/asked)
       const ck = "count:" + day, n = parseInt((await store.get(ck)) || "0", 10) || 0;
       if (n >= (auto ? MAX_AUTO_UNTIL : MAX_A_DAY)) return json({ ok: false, error: "full for today" }, 429);
       await store.put(ck, String(n + 1), { expirationTtl: 3 * 86400 });
@@ -646,11 +711,11 @@ export default {
         had.n = (had.n || 1) + 1; had.dn = had.last === day ? (had.dn || 1) + 1 : 1; had.last = day;
         if (r.d && !(had.d || []).includes(r.d)) had.d = (had.d || []).concat(r.d).slice(0, 5);
         if (r.x && !(had.x || []).includes(r.x)) had.x = (had.x || []).concat(r.x).slice(0, 5);   // (2.22) the answers a reader said do not answer this question
-        await store.put(key, JSON.stringify(had), opts); return json({ ok: true, again: true });
+        await store.put(key, JSON.stringify(had), opts); return json({ ok: true, again: true, k: hash });
       }
       await store.put(key, JSON.stringify(Object.assign({ q: r.q, d: r.d ? [r.d] : [], v: r.v, first: day, last: day, n: 1, dn: 1 }, auto ? { a: 1 } : {}, r.x ? { x: [r.x] } : {})), opts);
       { const go = startWork(env, store).catch(() => "failed"); if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(go); }   // a new question: the system's work is started now (see startWork), behind the reply
-      return json({ ok: true });
+      return json({ ok: true, k: hash });
     } catch (e) { return json({ ok: false, error: "store" }, 503); }
   }
 };

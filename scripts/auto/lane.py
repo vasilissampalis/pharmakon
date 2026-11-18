@@ -2270,6 +2270,16 @@ def runs_waiting(run=None):
     except Exception: return 0
 
 
+def next_up(limit=3):
+    """(19 November 2026) The questions people sent that the next pass of a run works on, in the order run() takes them (for scripts/auto/live.py: the page
+    of a person who waits says that their question is being written now)."""
+    items = P.listed(); st = load_state(); rep = ROOT / "data" / "auto" / "report.json"
+    asked = {w["id"]: w.get("asked", 0) + w.get("sent_too", 0) for w in (json.load(open(rep, encoding="utf-8")).get("wanted") or [])} if rep.exists() else {}
+    order = [w for w in sorted(items, key=lambda w: (-(asked.get(w["id"], 0) + int(w.get("asked") or 0)), w["id"])) if w.get("from") == "a question visitors sent" and turn_of(w, st["items"]) is not None]
+    order.sort(key=lambda w: turn_of(w, st["items"]))
+    return [w["id"] for w in order[:limit]]
+
+
 def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, trial=None, minutes=None, only_sent=False, give_way=None):
     models = dict(MODELS); real = chat is None; began = datetime.datetime.now()
     chat = fitting(chat or llm.chat)
