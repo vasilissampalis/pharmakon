@@ -7,6 +7,7 @@
 const http = require("http"), fs = require("fs"), path = require("path");
 const { chromium } = require("playwright");
 const ASKED_EPMC = [];   // (2.16) what the worker asked Europe PMC's stand-in
+const EPMC_BACK = { on: false };   // (2.21.1) the stand-in gives nothing on psilocybin until this is on: Europe PMC on an afternoon when it took 25 seconds a search
 const ROOT = path.join(__dirname, "..", "..", "site", "public");
 const SHOTS = process.argv.includes("--shots") ? process.argv[process.argv.indexOf("--shots") + 1] : null;
 const TYPES = { ".html": "text/html; charset=utf-8", ".json": "application/json", ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".css": "text/css", ".js": "text/javascript", ".mjs": "text/javascript", ".wasm": "application/wasm", ".txt": "text/plain; charset=utf-8", ".onnx": "application/octet-stream" };
@@ -25,6 +26,9 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const SLOW = new Map(), K = (i, title) => ({ title, authorString: "Delta D.", journalTitle: "Journal of Tests", pubYear: String(2010 + i), pmid: String(900 + i), isOpenAccess: "N", pubType: "journal article", abstractText: "" });
     const epmc = async url => { ASKED_EPMC.push(decodeURIComponent(String(url)));
       const s = decodeURIComponent(String(url));
+      if (/TITLE:"mescaline"/.test(s)) return new Response("busy", { status: 503 });   // (2.21.1) the index says no: that is not "nothing was found"
+      if (/TITLE:"psilocybin"/.test(s)) { while (!EPMC_BACK.on) await new Promise(r => setTimeout(r, 150));   // (2.21.1) a search that does not come back
+        return new Response(JSON.stringify({ resultList: { result: [K(5, "Psilocybin and eye colour: a paper that came late"), K(6, "Psilocybin and the eye: another paper that came late")] } }), { status: 200, headers: { "content-type": "application/json" } }); }
       if (/TITLE:"ketamine"/.test(s)) { const q = (s.split(/[?&]query=/)[1] || "").split("&")[0], cited = /sort=CITED/.test(s);
         if (cited) { if (!SLOW.has(q)) SLOW.set(q, Date.now() + 4500); const wait = SLOW.get(q) - Date.now(); if (wait > 0) await new Promise(r => setTimeout(r, wait)); }
         const list = cited ? [K(1, "Ketamine and eye colour: the most cited paper"), K(2, "Ketamine and eye colour: a newer paper")] : /sort=P_PDATE_D/.test(s) ? [K(2, "Ketamine and eye colour: a newer paper")] : [K(2, "Ketamine and eye colour: a newer paper"), K(3, "A paper that mentions ketamine and eye colour"), K(4, "Another paper that mentions ketamine and eye colour")];
@@ -667,6 +671,26 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const whole = await look(), finds = posts.filter(x => /^find \{"names":\["ketamine"\]/.test(x)).length;
     ok(w + " px: the most cited papers are not waited for longer than two seconds: the list comes with a line that says we are still looking; a moment later the whole list stands in its place, the most cited first",
       firstAt < 3900 && first.rows.length === 3 && first.rows[0] === "Ketamine and eye colour: a newer paper" && /^Still looking for the most cited papers on this/.test(first.wait) && whole.rows.length === 4 && whole.rows[0] === "Ketamine and eye colour: the most cited paper" && whole.wait === "" && finds === 2, JSON.stringify([firstAt, first, whole, finds]));
+    if (w === 1280) {
+      /* (2.21.1, 18 November 2026, 15:40 Athens: Europe PMC took 25 seconds a search, and the page said "nothing was found on these words" of a question with 78
+         papers.) The index says no: the page says that it did not answer, not that nothing was found. The index does not come back: the page says that it is
+         still looking, then that the index is slow, asks on for some forty seconds, and then says that it did not answer, with a way to look again; "nothing
+         was found" never stands there; "Look again" asks afresh and shows the list. */
+      const box = () => p.evaluate(() => { const b = document.querySelector("#search-results .ins-found"); return b ? b.textContent : ""; });
+      await p.fill("#search", "does mescaline change your eye colour"); await p.waitForSelector("#search-results .ins-found [data-find-again]", { timeout: 15000 }).catch(() => {});
+      const downTxt = await box();
+      ok("1280 px: where the index of papers says no, the page says that it did not answer just now and offers to look again; it does not say that nothing was found", /^Europe PMC, the open index of medical research we search, did not answer just now, so we cannot say yet what is published on this\. Look again$/.test(downTxt), downTxt);
+      EPMC_BACK.on = false; const seen = [], n0 = posts.length, t1 = Date.now();
+      await p.fill("#search", "does psilocybin change your eye colour");
+      let late = ""; while (Date.now() - t1 < 70000) { const x = await box(); if (x && seen[seen.length - 1] !== x) seen.push(x); if (/did not answer just now/.test(x)) { late = x; break; } await p.waitForTimeout(400); }
+      const took = Date.now() - t1, asks = posts.length - n0; await shot(p, "1280-papers-index-slow");
+      ok("1280 px: where the index does not come back, the page says that it is looking, then that the index is slow, asks on for some forty seconds (seven askings), and then says that it did not answer, with a way to look again; it never says that nothing was found",
+        seen[0] === "Looking for published research on it\u2026" && seen.some(x => /^Still looking\. Europe PMC, the open index of research we search, is answering slowly right now/.test(x)) && !seen.some(x => /nothing was found/.test(x)) && /Look again$/.test(late) && asks === 7 && took > 35000 && took < 60000, JSON.stringify([seen, asks, took]));
+      EPMC_BACK.on = true; await p.click("#search-results .ins-found [data-find-again]"); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 15000 }).catch(() => {});
+      const againRows = await p.evaluate(() => [...document.querySelectorAll("#search-results .ins-found-l li a")].map(a => a.textContent));
+      ok("1280 px: 'Look again' asks afresh, and the list stands there when the index answers", againRows.length === 2 && againRows[0] === "Psilocybin and eye colour: a paper that came late" && posts.length === n0 + 8, JSON.stringify([againRows, posts.length - n0]));
+    }
+    EPMC_BACK.on = true;
     await p.context().close();
   }
   ok("no error in any page's console", errors.length === 0, errors.slice(0, 5).join(" || "));

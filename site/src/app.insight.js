@@ -1829,14 +1829,21 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
    they are read as that paper's and in its frame; where they are about animals or cells, the line says so. */
 function insFoundHtml(d) {
   if (!d || !d.ok || d.held) return "";
-  if (!d.papers || !d.papers.length) return d.more ? '<p class="ins-found-n">Looking for published research on it\u2026</p>' : '<p class="ins-found-n">We looked in Europe PMC, an open index of medical research, just now: nothing was found on these words.</p>';
+  /* (2.21.1, 18 November 2026, 15:40 Athens: Europe PMC took 25 seconds a search that afternoon, and the page, having asked three times in eleven seconds, said
+     "nothing was found on these words" of a question with 78 papers.) "Nothing was found" is said only where the searches came back and found nothing. While
+     they are out the page says that it is still looking, and after a while that the index is slow; where it stops asking, or the index could not be reached,
+     it says that, with a way to look again. */
+  if (!d.papers || !d.papers.length) return d.more ? '<p class="ins-found-n">' + (d.n >= 1 ? "Still looking. Europe PMC, the open index of research we search, is answering slowly right now\u2026" : "Looking for published research on it\u2026") + "</p>"
+    : d.late || d.down ? '<p class="ins-found-n">Europe PMC, the open index of medical research we search, did not answer just now, so we cannot say yet what is published on this. <button type="button" class="linklike" data-find-again>Look again</button></p>'
+    : '<p class="ins-found-n">We looked in Europe PMC, an open index of medical research, just now: nothing was found on these words.</p>';
   const said = d.papers.some(p => typeof p.q === "string" && p.q);
   return '<p class="ins-found-h">Published research on this, found just now</p><ul class="ins-found-l">' + d.papers.map(p => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
     return '<li><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" · ")) + "</span>" +
       (typeof p.q === "string" && p.q ? '<span class="pq">“' + esc(p.q) + '”' + (p.an === 1 ? '<span class="pq-an"> in animals or cells, not in people</span>' : p.an === 2 ? '<span class="pq-an"> its summary covers work in animals or cells too</span>' : "") + "</span>" : "") + "</li>"; }).join("") +
     "</ul>" + (d.more ? '<p class="ins-found-n ins-found-w">Still looking for the most cited papers on this\u2026</p>' : "") + '<p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.' +
     (said ? " The words in quotation marks are each paper’s own, from the end of its summary: a fixed rule picked them, not a person, and they are not an answer of ours." : "") +
-    (d.titles && !said ? " For a question like this one we list the papers only, with no words from them." : "") + "</p>";
+    (d.titles && !said ? " For a question like this one we list the papers only, with no words from them." : "") +
+    (d.late ? ' Europe PMC answered slowly just now, so this list may not be whole. <button type="button" class="linklike" data-find-again>Look again</button>' : "") + "</p>";
 }
 /* (2.16.1, 17 November 2026, 23:19 and 23:20 Athens. The senior author, of the list that came only after he had pressed "Send": "it should
    automatically search the user should not even have to click it"; and, typing a question he had already sent: "now when i type it again the
@@ -1845,7 +1852,7 @@ function insFoundHtml(d) {
    it under the line that says so. In the results it waits a moment (FIND_WAIT) so that nothing is asked while the reader is still typing; in
    the sheet (Enter) at once. What it found is kept for this visit (FIND_MEM): the same question is not asked twice.
    The reader can switch this off (About us, Privacy: AUTO_OFF); then one quiet button looks it up on a tap. */
-const FIND_WAIT = 700, FIND_MEM = new Map(), FIND_MORE = [500, 2000];
+const FIND_WAIT = 700, FIND_MEM = new Map(), FIND_MORE = [500, 2000, 3000, 4000, 5000, 6000];
 /* (2.20, after trials 6 to 9 and the first publishing) Europe PMC answers a search in a fraction of a second, but about one request in three hangs for
    seconds. The server does not wait: it asks for the most cited papers again when they hang (after 0.6 s and 1.3 s), gives the list as soon as they are in,
    and after two seconds gives what the other searches found and says "more" (seldom). The page then asks once more half a second later, and once again two
@@ -1855,12 +1862,20 @@ function insFindGet(terms, onMore) {
   const key = JSON.stringify(terms); let m = FIND_MEM.get(key);
   if (m) { if (onMore && m.subs) m.subs.add(onMore); return m.p; }
   m = { d: undefined, subs: new Set(), n: 0 }; if (onMore) m.subs.add(onMore);
+  m.all = new Promise(ok => { m.end = ok; });   // (2.21.1) the list when nothing more is to come: whole, or what there was when the page stopped asking
   const ask = () => fetch(FIND_API, { method: "POST", headers: { "content-type": "application/json" }, body: key }).then(r => (r.ok ? r.json() : null)).catch(() => null);
-  const tell = () => { if (m.subs) m.subs.forEach(f => { try { f(m.d); } catch (e) { /* a box that is gone */ } }); if (!m.d || !m.d.more) m.subs = null; };
-  const again = () => { if (!m.d || !m.d.more) { m.subs = null; return; }
-    if (m.n >= FIND_MORE.length) { m.d = Object.assign({}, m.d, { more: 0 }); tell(); return; }
-    setTimeout(() => ask().then(d => { m.d = d && d.ok && !d.held && ((d.papers || []).length || !(m.d.papers || []).length) ? d : Object.assign({}, m.d, { more: 0 }); tell(); again(); }), FIND_MORE[m.n++]); };
-  m.p = ask().then(d => { m.d = d; if (!d) FIND_MEM.delete(key); else again(); return d; });
+  const stop = () => { m.subs = null; m.end(m.d); };
+  const tell = () => { if (m.subs) m.subs.forEach(f => { try { f(m.d); } catch (e) { /* a box that is gone */ } }); if (!m.d || !m.d.more) stop(); };
+  /* (2.21.1) While searches are out the page asks again, six times over some forty seconds (the server does not ask Europe PMC twice for a search that is
+     still out: it waits for the reply where it will be kept). Then it stops and says that the index did not answer in time (late): never "nothing was found". */
+  const again = () => { if (!m.d || !m.d.more) { stop(); return; }
+    if (m.n >= FIND_MORE.length) { m.d = Object.assign({}, m.d, { more: 0, late: 1 }); tell(); return; }
+    setTimeout(() => ask().then(d => { const n = m.n;
+      if (d && d.ok && !d.held && ((d.papers || []).length || !(m.d.papers || []).length)) m.d = Object.assign({}, d, { n });   // the newer list (never an empty one in the place of a list)
+      else if (d && d.ok && !d.held && d.more) m.d = Object.assign({}, m.d, { n });                                              // thinner, and searches still out: the list we have stays, and we ask on
+      else m.d = Object.assign({}, m.d, { more: 0, late: 1 });                                                                   // the server could not be asked: we stop, and say so
+      tell(); again(); }), FIND_MORE[m.n++]); };
+  m.p = ask().then(d => { m.d = d; if (!d) { FIND_MEM.delete(key); stop(); } else again(); return d; });
   FIND_MEM.set(key, m); if (FIND_MEM.size > 40) FIND_MEM.delete(FIND_MEM.keys().next().value);
   return m.p;
 }
@@ -1878,13 +1893,14 @@ function insAuto(root, res, now) {
 function insAutoFind(after, res, now) {
   const terms = FIND_ON ? insFindWanted(res) : null; if (!terms) return Promise.resolve(null);
   const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite");
-  box.addEventListener("click", e => e.stopPropagation());   // a paper opens in its own tab: the question and its results stay as they are
   const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };
   const draw = d => { const html = insFoundHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
   const redraw = d => { if (after.isConnected && box.isConnected) draw(d); };   // (the whole list, when a slow search has come in)
+  const go = () => { if (!after.isConnected) return Promise.resolve(null); put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; return insFindGet(terms, redraw).then(d => { if (after.isConnected) draw(d); return d; }); };
+  // a paper opens in its own tab: the question and its results stay as they are. "Look again" (the index did not answer in time): what was kept of this question is forgotten and it is asked afresh
+  box.addEventListener("click", e => { e.stopPropagation(); const b = e.target && e.target.closest ? e.target.closest("[data-find-again]") : null; if (b) { e.preventDefault(); FIND_MEM.delete(JSON.stringify(terms)); go(); } });
   const have = FIND_MEM.get(JSON.stringify(terms));
   if (have && have.d) { draw(have.d); if (have.d.more && have.subs) have.subs.add(redraw); return Promise.resolve(have.d); }
-  const go = () => { if (!after.isConnected) return Promise.resolve(null); put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; return insFindGet(terms, redraw).then(d => { if (after.isConnected) draw(d); return d; }); };
   if (!autoOn()) { put(); box.innerHTML = '<p class="ins-found-n"><button type="button" class="linklike" data-find-now>Look up published research on this</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return Promise.resolve(null); }
   if (now) return go();
   return new Promise(ok => { INS.findT = setTimeout(() => ok(go()), FIND_WAIT); });
@@ -1935,7 +1951,9 @@ function insAutoSend(after, res, now, found) {
     if (!still(q) || insAutoSend.busy === q || askedSentHas(q)) return;
     insAutoSend.busy = q;
     try {
-      if (stranger) { const d = await found; if (!d || !d.papers || !d.papers.length || !still(q)) return; }
+      if (stranger) { let d = await found;
+        if (d && d.more) { const t = insFindWanted(res), m = t ? FIND_MEM.get(JSON.stringify(t)) : null; if (m && m.all) d = await m.all; }   // (2.21.1) where the index is slow, the whole list decides, not the first thin one
+        if (!d || !d.papers || !d.papers.length || !still(q)) return; }
       const k = insClean(q).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k), it = askedAdd(q, drug); if (!it) return;
       let ok = false;
       try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION, a: 1 }) }); ok = r.ok; } catch (e) { ok = false; }

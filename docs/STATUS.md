@@ -1,10 +1,16 @@
 # Project status and work queue
 
-Updated 2026-11-18, 15:40 (site 2.21.0, protocol 0.5.8; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
+Updated 2026-11-18, 16:30 (site 2.21.1, protocol 0.5.8; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
 page states the same in public terms. The project's history is in the GitHub repository vasilissampalis/pharmakon (METHODS §11).
 
 ## Where things stand
 
+- **18 November 2026, 16:30 (Athens): the index of papers was slow, and the site said "nothing was found" (site 2.21.1). Decision 32.**
+  - **What happened:** from about 14:45 Europe PMC took some 25 seconds a search (measured from the senior author's own computer too; in the morning half a second). The page asked three times in eleven seconds and then said "nothing was found on these words" of a question with 78 papers. The server gave slow searches up after 20 seconds and asked them anew at every asking.
+  - **Now:** a search is left to finish (28 s) and kept; while it is out it is not asked twice; the page says it is still looking, then that the index is slow, asks on for some forty seconds, and then "Europe PMC ... did not answer just now ... Look again". "Nothing was found" only where the searches came back empty; an index that says no is told apart from one that found nothing.
+  - **In the lane:** a source that could not be fetched is a fault of the moment (tried again in the next run, not in a day), the finder searches again where its searches did not all come back, and the reader's list does not say "nothing is published" for it.
+  - **Not solved:** while Europe PMC is slow the quick list is slow. Next: a second index (PubMed) for such hours, with a trial of its own.
+  - **Checked:** 147 server tests, the site checks with three new ones for a slow index, 183 Insight checks, parity, smoke, the lane's own check.
 - **18 November 2026, 15:40 (Athens): answers go out by themselves and the system keeps trying (lane 19); "Your questions" behind one line; the look every five minutes, or at once with his key (site 2.21.0). Decision 32; protocol 0.5.8.**
   - **Why his questions waited** (his words, 13:34: "this is a bug ... the questions should be automatically answered ... for every pending question"): the look came about once in 60 to 85 minutes, not every 30; a question was tried once and then left for a day or two; tries were lost to faults that were not the answer's (a number cited from the wrong item of the right source, "male" beside animals read as "a result for men", one writer's reply that was no JSON, a network fault); and finished answers were parked for further readers that never answered (two never did at all; a third answered with a bare list that the lane did not read).
   - **Lane 19:** mends what code can mend before a rule judges; a stand-in for a writer that cannot keep the form; the further readers that answer first, with more room, read however they answer; tries again by itself (at once after a fault that was not the answer's, the same day with another team after an answer that did not pass, then daily, then further apart); parks nothing for a reader; the editor's finding goes to the writer of the next version. No gate removed.

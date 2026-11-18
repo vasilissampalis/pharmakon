@@ -1569,7 +1569,8 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         if n >= (6 if amounts else N_OFFICIAL) or len(sources) >= len(tags) - 1: break          # (lane 11: six pages for a question about amounts; with four, the US bodies' pages on drinking were never opened)
         if amounts and o.get("tier", 1) != 1: continue                                  # amounts only from a body of tier 1 or a medicine's label
         try: got = page(o)
-        except (P.Refused, IOError, ValueError): continue
+        except P.Refused: continue                                              # (a site that says no is not asked again and not gone around)
+        except (IOError, ValueError) as e: looked.append({"title": o.get("title") or o.get("name"), "read": "page", "kind": "official", "at": o.get("address"), "kept": 0, "thrown": [], "fault": f"the page could not be fetched ({type(e).__name__})"}); continue
         if not got or len(got[0]["passages"]) < 2: continue
         pg, ref = got
         picked = pick_passages(item["q"], item.get("ways"), [dict(p, n=p["n"] + 1, where=p["where"] or "Top of the page") for p in pg["passages"]], enc, "review", k=7)
@@ -1587,7 +1588,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             ref = paper_ref(w["doi"])
             if not ref or P.retraction(ref) in ("retracted", "concern"): continue
             try: got = summary(w["doi"])
-            except (P.Refused, IOError, ValueError): continue
+            except (P.Refused, IOError, ValueError) as e: looked.append({"title": "", "read": "summary", "kind": "review", "at": w.get("doi"), "kept": 0, "thrown": [], "fault": f"its summary could not be fetched ({type(e).__name__})"}); continue
             if not got: continue
             pp, passages = got
             n += read({"read": "summary", "ref": ref, "doi": w["doi"], "title": pp["title"], "year": pp.get("year"), "journal": pp.get("journal"), "kind": pp["kind"] if pp.get("kind") in ("review", "study", "case") else "review",
@@ -1599,7 +1600,15 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         rec["sources"] = [{k: v for k, v in s.items() if not k.startswith("_")} for s in sources]     # (what begins with _ is for the work only: the passages' text, the abbreviations a source writes out)
         cn = counts(sources); rec["made"]["from"] = {k: cn[k] for k in ("papers", "summaries", "official")}
     keep_sources()
-    if not sources: return done("none", "no source that can be read " + ("states an amount for people" if amounts else "gave a finding") + " for this question")
+    # (lane 19, 18 November 2026, the afternoon Europe PMC took 25 seconds a request and answered 500 for some) A source that could not be FETCHED is not a
+    # source that says nothing: where the answer falls for want of sources and one or more could not be fetched, or the finder's own searches did not all
+    # come back, the fault is not the answer's ("soft"): the question is tried again in the next run, not in a day, and its line says why.
+    def out_of_reach():
+        n = sum(1 for x in looked if x.get("fault")); lost = [str(x)[:80] for x in (found.get("problems") or [])]
+        if not n and not lost: return ""
+        rec["soft"] = "a source could not be fetched"
+        return " (" + "; ".join(([f"{n} source(s) could not be fetched just now"] if n else []) + (["the search for papers did not all come back"] if lost else [])) + ": tried again in the next run)"
+    if not sources: return done("none", "no source that can be read " + ("states an amount for people" if amounts else "gave a finding") + " for this question" + out_of_reach())
     paper_name = lambda s: (f"{s['name']}: {s['title']}" if s["read"] == "page" else f"{s['title']} ({s['year']})")
     if amounts:
         every = [r for s in sources for r in s["rows"]]                 # (lane 12) how near each amount stands to the question: where there are more than the second reader is asked about, the nearest are
@@ -1615,7 +1624,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; f["second_hand"] = second_hand(s["_text"][f["passage"]], f["quote"]); labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][f["passage"]])
         for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; l["second_hand"] = second_hand(s["_text"][l["passage"]], l["quote"]); labels[l["id"]] = dict(l, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][l["passage"]])
     keep_sources()
-    if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service")
+    if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service" + out_of_reach())
     ex = ex if ex is not None else examples()
     # (lane 11) What did not stand is kept too: every draft that was written again, with what each judge said of each sentence, and
     # every line that was dropped, with who dropped it. The editor reads those as well (was it rightly refused?), and each such
@@ -1889,6 +1898,7 @@ def kept_for_sent(w):
     except Exception: return False
 
 
+SOFT_FETCH_A_DAY, SOFT_FETCH_TRIES = 3, 6               # a source that could not be fetched: three tries a day; from the seventh try in all it is no fault of the moment, and the question waits as any other without an answer
 SOFT_A_DAY, HARD_A_DAY, HARD_SENT_A_DAY = 6, 2, 3       # tries of one question in one day: after a fault that was not the answer's; after an answer that did not pass (the system's own question; one a person sent)
 
 
@@ -1920,7 +1930,9 @@ def turn_of(w, done):
     if st == "waiting" and s.get("for") != "again": return None
     newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
     if st == "published": return 2 if s.get("complete") is False and newer > last else None
-    if s.get("soft") or s.get("for") == "again": return 0.5 if n < SOFT_A_DAY else None
+    if s.get("soft") or s.get("for") == "again":
+        fetch = s.get("soft") == "a source could not be fetched"           # (the index of papers slow or failing: an afternoon of it on 18 November 2026; one paper's full text may also fail for good)
+        if not (fetch and int(s.get("tries") or 1) > SOFT_FETCH_TRIES): return 0.5 if n < (SOFT_FETCH_A_DAY if fetch else SOFT_A_DAY) else None
     if newer > last: return 2
     # (17 November 2026, 20:10) the finders may find more on the very day the lane tried: kanna was tried at 17:36 UTC with nothing to read and
     # searched by its own name at 17:55 (12 papers that can be read). A day is too coarse: the lane notes how many sources it had ("had"), and a
@@ -2258,6 +2270,11 @@ def selftest():
     def broken(pmcid): raise urllib.error.HTTPError("https://example.org/" + str(pmcid) + "/fullTextXML", 500, "Internal Server Error", {}, None)
     r = make(item, dict(found, wanted=[]), chat, Enc(), MODELS, fulltext=broken, crossref=crossref, ex=ex, summary=lambda doi: None)
     assert r["status"] == "none" and "no source that can be read" in r["why"] and [x.get("fault") for x in r["looked"]] == ["its full text could not be fetched (HTTPError)"], (r["status"], r["why"], r["looked"])
+    assert r["soft"] == "a source could not be fetched" and "1 source(s) could not be fetched just now: tried again in the next run" in r["why"], (r.get("soft"), r["why"])      # not the answer's fault: tried again in the next run
+    r = make(item, dict(found, can_read=[], wanted=[], problems=["a search failed: timed out"]), chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, summary=lambda doi: None)
+    assert r["status"] == "none" and r["soft"] and "the search for papers did not all come back" in r["why"], (r["status"], r["why"])
+    r = make(item, dict(found, can_read=[], wanted=[]), chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex, summary=lambda doi: None)
+    assert r["status"] == "none" and not r.get("soft") and r["why"] == "no source that can be read gave a finding for this question", (r["status"], r["why"], r.get("soft"))   # nothing to read, and nothing failed: the answer's own
     # 1. the straight way: published; the retracted paper never read; two bad findings thrown away; not complete (a nearer paper... is not nearer: complete)
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk()
@@ -2889,6 +2906,9 @@ def selftest():
     sent, own_q = {"id": "w_a1", "from": "a question visitors sent"}, {"id": "w_1"}
     S = lambda **k: {"w_a1": dict({"lane": LANE, "last": TODAY, "tries": 1, "n": 1, "had": 0}, **k), "w_1": dict({"lane": LANE, "last": TODAY, "tries": 1, "n": 1, "had": 0}, **k)}
     assert turn_of(sent, {}) == 0 and turn_of(sent, S(status="none", why="x", soft="a fault of the network")) == 0.5 and turn_of(sent, S(status="none", why="x", soft="y", n=SOFT_A_DAY)) is None     # a fault that was not the answer's: again in the next run, six times a day at most
+    fs = "a source could not be fetched"; nf = "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now: tried again in the next run)"
+    assert turn_of(sent, S(status="none", why=nf, soft=fs)) == 0.5 and turn_of(sent, S(status="none", why=nf, soft=fs, n=SOFT_FETCH_A_DAY)) is None                   # the index did not answer: the next run, three times a day
+    assert turn_of(sent, S(status="none", why=nf, soft=fs, tries=SOFT_FETCH_TRIES + 1)) is None and turn_of(sent, S(status="none", why=nf, soft=fs, tries=SOFT_FETCH_TRIES + 1, last=wk)) == 3   # try after try: no fault of the moment any more
     assert turn_of(sent, S(status="waiting", **{"for": "again"})) == 0.5 and turn_of(sent, S(status="waiting", **{"for": "editor"})) is None and turn_of(sent, S(status="waiting", **{"for": "editor"}, lane=LANE - 1)) is None
     assert turn_of(sent, S(status="none", why="the second reader did not accept the answer")) == 2.5 and turn_of(sent, S(status="none", why="x", n=2)) == 2.5 and turn_of(sent, S(status="none", why="x", n=3)) is None      # the same day, by another team: three tries for a question a person sent
     assert turn_of(own_q, S(status="none", why="x")) == 2.5 and turn_of(own_q, S(status="none", why="x", n=2)) is None                                                                                  # two for the system's own

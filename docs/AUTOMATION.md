@@ -1115,6 +1115,33 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     The writer of the next draft is now told what a reader or our own checker said of the last draft's short answer
     or But (`last_refusal`: only of an answer of this lane that ended with none; the record says so under `gates`,
     "told"); it stays bound by every rule and is read by every reader as before.
+    **The index of papers was slow that afternoon, and the site said something false** (site 2.21.1, 15:40 to 16:30
+    Athens). The first publishing of 2.21.0 asked the live server twelve questions and none of the most cited came back
+    within three seconds. Asked from the senior author's own computer, Europe PMC took 24 to 27 seconds for every
+    search, sorted or not (a search with 78 papers; in the morning: half a second). What that did: (a) the site's
+    server gave a search up after 20 seconds, so no reply was ever kept, and each later asking of the page asked every
+    search anew, up to nine requests a question to a service that was struggling; (b) the page asked three times in
+    eleven seconds and then wrote "We looked in Europe PMC ... nothing was found on these words" of a question with
+    78 papers: a false statement; the same where Europe PMC says no or cannot be reached (the server called that
+    "found nothing"); (c) in the lane, one paper whose full text could not be fetched cost the try (above), and a
+    question whose sources could not be fetched would have been written down as "no source that can be read" and left
+    for a day, and on the reader's list as "Searched. Nothing we can read is published on it yet". **What is
+    different now.** The server lets a search finish for 28 seconds behind its reply (Cloudflare allows 30) and keeps
+    the reply; a later request does not ask Europe PMC again for a search that is still out but waits for the reply
+    where it will be kept (a note in the cache, read and written only for a question's first three searches:
+    Cloudflare counts every call to its cache with the requests, 50 in all for one request); a search that failed is
+    told apart from one that found nothing (`down`). The page asks on for some forty seconds (seven askings), says
+    "Still looking. Europe PMC ... is answering slowly right now", and where it stops, or the index said no: "Europe
+    PMC ... did not answer just now, so we cannot say yet what is published on this. Look again". "Nothing was found"
+    stands only where the searches came back empty. A word we do not know as a drug is sent to the system on the whole
+    list, not on a first thin one. In the lane a source that could not be FETCHED is no longer a source that says
+    nothing: such a try is a fault of the moment ("soft": the next run, three times a day; from the seventh try in all
+    the question waits as any other), the finder searches again a question whose searches did not all come back, and
+    the reader's list says "Working on it by itself" for it. Checks: 147 server tests (a search that is out is not
+    asked twice and is given when it is kept; the index says no), three more in the browser (the slow index from the
+    first line to "Look again", some forty seconds), the lane's own. **Not solved by this:** while Europe PMC is slow,
+    the list is slow. A second index for such hours (PubMed's own interface, which gives summaries too) is the next
+    step; its words would need a trial of their own.
     **Lane 19** (`scripts/auto/lane.py`). No gate is taken away. What code can mend is mended before a rule judges:
     a number of a sentence that stands in another item of a source the sentence already rests on puts that item
     under the sentence too, so that every reader reads the sentence beside it (`mend_uses`; never an item of another

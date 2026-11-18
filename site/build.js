@@ -258,7 +258,7 @@ const AUTO_STATE = (() => {
   const sources = id => { let n = 0; for (const [f, k] of [["data/auto/papers/" + id + ".json", "can_read"], ["data/auto/official/found/" + id + ".json", "pages"]]) { try { n += (JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8"))[k] || []).length; } catch (e) { /* not searched yet */ } } return n; };
   for (const f of ["data/site/wanted.json", "data/auto/wanted-auto.json"]) { try { listed.push(...(JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8")).items || [])); } catch (e) { /* no such list yet */ } }
   for (const w of listed) { if (!w || !/^w_[a-z0-9_]{1,40}$/.test(String(w.id))) continue; const s = st[w.id];
-    const nothing = s && s.status === "none" && /no source that can be read/.test(String(s.why || "")) && !sources(w.id);
+    const nothing = s && s.status === "none" && !s.soft && /no source that can be read/.test(String(s.why || "")) && !sources(w.id);   // (not where a source or a search could not be fetched: "soft": that is tried again, and the page must not say that nothing is published)
     // (the lane tries a question again the same day by itself: at once after a fault that was not the answer's ("soft"), once or twice more with other models after an answer that did not pass ("n": tries today); an answer of an older lane is written again)
     const again = s && (!!s.soft || s.for === "again" || (+s.lane || 1) < newestLane || (s.last === todayUTC && (+s.n || 1) < 2));
     out[w.id] = !s ? "new" : s.status === "published" ? "" : s.status === "waiting" ? (s.for === "editor" ? "editor" : "trying") : nothing ? "nosource" : s.status === "none" ? (again ? "trying" : "tried") : "new";

@@ -432,6 +432,9 @@ export function iaPick(p, groups, names, def, note) {
    and, for the editors, numbers only: ms: when each of the three searches was in (null: not yet); again: how many askings were repeated; won: which asking
    of each search answered (0 the first); own: how long that asking itself took; kept: how many searches were answered from what was kept. */
 const FIND_A = [600, 1300], FIND_B = [900, 1700], FIND_GRACE = 300, FIND_SOON = 2000, FIND_LAST = 3000, FIND_ALL = 5600, FIND_GEN = 5000;
+// (2.21.1) a search is left to finish for FIND_KILL ms behind the reply (Cloudflare lets a request work for 30 seconds after its reply); FIND_OUT: the end of the
+// address under which the cache holds the note that a search is out; FIND_STILL: what such a search gives a later request that waited for it in vain
+const FIND_KILL = 28000, FIND_OUT = "&out=1", FIND_STILL = { still: true };
 async function findPapers(env, r, most, ctx) {
   const get = env.FETCH || fetch, began = Date.now(), left = () => FIND_ALL - (Date.now() - began);
   // Europe PMC's replies are kept for a day where the site runs (Cloudflare's cache, by the search's address), so that the same search is not made twice:
@@ -442,16 +445,29 @@ async function findPapers(env, r, most, ctx) {
      about one request in three hangs for two to ten seconds, whatever is asked; the same search asked again at that moment comes back at once seven times
      in ten. So a search that is not back after a while is asked a second time, and later a third (`again`: after how long), and whichever reply comes first
      counts; each asking is written with its first words in another order, so that it is a request of its own and does not wait behind the one that hangs.
-     An asking that is still out when the list is given is left to finish behind the reply (ctx.waitUntil), and its answer is kept. */
+     An asking that is still out when the list is given is left to finish behind the reply (ctx.waitUntil), and its answer is kept.
+     (2.21.1, 18 November 2026, 15:40 Athens: Europe PMC took 24 to 27 seconds for every search, asked from the senior author's own computer too. The site's
+     server gave each search up after 20 seconds, so none was ever kept; and each later asking of the page asked every search anew, up to nine requests a
+     question to a service that was already struggling.) A search is now left to finish for 28 seconds, and while it is out it is not asked a second time by
+     a later request: a note in the cache says that it is out (FIND_OUT: half a minute at most, taken away at once when the search fails), and the later request waits
+     for the reply where it will be kept. Such a search counts as "still out" (the reply says more), never as "found nothing". */
   // live: { on } of the round that asks; once its list has gone out (on: false), a search that is still out may finish, and is kept, but is not asked again
-  const start = (q, sort, size, again, live) => {
-    const s = { done: !q, v: q ? null : [], ms: null, again: 0, won: null, own: null, kept: 0, p: null };
+  // noted: a search of the question's first round (the one the page's earlier request has certainly begun): only for those is the note that a search is out
+  // written and read (Cloudflare counts every call to its cache with the requests: 50 in all for one request on the free plan)
+  const start = (q, sort, size, again, live, noted) => {
+    const s = { done: !q, v: q ? null : [], ms: null, again: 0, won: null, own: null, kept: 0, p: null, wait: false, failed: false };
     if (!q) { s.p = Promise.resolve(s.v); return s; }
-    const t0 = Date.now(), ctl = new AbortController(), tries = [], qq = "query=" + encodeURIComponent(q);
+    const t0 = Date.now(), ctl = new AbortController(), tries = [], marks = [], qq = "query=" + encodeURIComponent(q);
     const read = text => { const d = JSON.parse(text); return ((d && d.resultList && d.resultList.result) || []).map(x => { const p = findPaper(x); return p ? Object.assign(p, { ab: String((x && x.abstractText) || "") }) : null; }).filter(Boolean); };
     const once = async (order, k) => { const tail = "&pageSize=" + size + (order ? "&sort=" + order : ""), key = EPMC + "?" + qq + "&format=json&resultType=core" + tail, t1 = Date.now();
       /* (also before a later asking: the first may have come in meanwhile, in this request or in the page's one before) */
-      if (cache) { let hit = null; try { hit = await cache.match(key); } catch (e) { hit = null; } if (hit) { const list = read(await hit.text()); s.kept = 1; return { list, k, own: Date.now() - t1 }; } }
+      if (cache) { let hit = null; try { hit = await cache.match(key); } catch (e) { hit = null; } if (hit) { const list = read(await hit.text()); s.kept = 1; return { list, k, own: Date.now() - t1 }; }
+        if (k === 0 && noted) { const mark = key + FIND_OUT; let out = null; try { out = await cache.match(mark); } catch (e) { out = null; }
+          if (out) { s.wait = true;   // (2.21.1) this very search is out already (asked by this page a moment ago): not asked again, awaited where its reply will be kept
+            for (let n = 0; n < 8 && live.on && Date.now() - began < FIND_ALL; n++) { await new Promise(d => setTimeout(d, 400)); try { hit = await cache.match(key); } catch (e) { hit = null; }
+              if (hit) { const list = read(await hit.text()); s.kept = 1; return { list, k, own: Date.now() - t1 }; } }
+            return FIND_STILL; }
+          const note = Promise.resolve().then(() => cache.put(mark, new Response("1", { headers: { "cache-control": "public, max-age=30" } }))).catch(() => {}); marks.push([mark, note]); if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(note); } }
       const res = await get(k === 0 ? key : EPMC + "?" + (k === 1 ? "format=json&" + qq + "&resultType=core" : "resultType=core&format=json&" + qq) + tail, { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal });
       if (!res.ok) return order ? once("", k) : null;   // (should the service not take the order asked for, it is asked once more without it)
       const text = await res.text(), list = read(text);
@@ -460,20 +476,24 @@ async function findPapers(env, r, most, ctx) {
     };
     const run = k => { const p = once(sort, k).catch(() => null); tries.push(p); return p; };
     s.p = new Promise(done => {
-      let open = 0, fin = false, refused = false; const later = [], kill = setTimeout(() => ctl.abort(), 20000);
-      const end = v => { fin = true; later.forEach(t => clearTimeout(t)); s.v = v ? v.list : null; if (v) { s.won = v.k; s.own = v.own; } s.done = true; s.ms = Date.now() - t0; done(s.v); };
-      const got = v => { open--; if (v === null) refused = true; if (open === 0) clearTimeout(kill); if (fin || (v === null && open > 0)) return; end(v); };
+      let open = 0, fin = false, refused = false; const later = [], kill = setTimeout(() => ctl.abort(), FIND_KILL);
+      const end = v => { fin = true; later.forEach(t => clearTimeout(t)); s.v = v ? v.list : null; if (v) { s.won = v.k; s.own = v.own; } else s.failed = true; s.done = true; s.ms = Date.now() - t0; done(s.v); };   // (failed: Europe PMC said no, or could not be reached: that is not "found nothing")
+      const got = v => { open--; if (open === 0) clearTimeout(kill);
+        if (v === FIND_STILL) { if (!fin) { fin = true; later.forEach(t => clearTimeout(t)); done(null); } return; }   // still out, asked by an earlier request: not done, not refused (the reply says more)
+        if (v === null) refused = true; if (fin || (v === null && open > 0)) return; end(v); };
       open++; run(0).then(got);
-      (again || []).forEach((ms, k) => later.push(setTimeout(() => { if (fin || !live.on) return; if (refused) { if (open === 0) end(null); return; } open++; s.again++; run(k + 1).then(got); }, ms)));
+      (again || []).forEach((ms, k) => later.push(setTimeout(() => { if (fin || !live.on || s.wait) return; if (refused) { if (open === 0) end(null); return; } open++; s.again++; run(k + 1).then(got); }, ms)));
     });
-    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(s.p.then(() => Promise.all(tries)));
+    // (behind the reply: every asking is left to finish)
+    const after = s.p.then(() => Promise.all(tries)).then(vs => Promise.all(marks.map(([m, put]) => (s.failed && cache && typeof cache.delete === "function" ? put.then(() => cache.delete(m)).catch(() => {}) : null))).then(() => vs));   // (a search that FAILED must not leave its note behind: the next request may ask it again at once. One that came back is kept, and its note is never read again; it goes by itself)
+    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(after); else after.catch(() => {});
     return s;
   };
   const got = s => (s.done && s.v) || [];   // (not back yet, or refused: nothing)
   const seen = new Set(), out = [], add = list => { for (const p of list) { if (!p) continue; const k = p.doi || p.pmid; if (!seen.has(k)) { seen.add(k); out.push(p); } } };
   const all = r.names.concat(r.also || []), stems = r.groups.map(g => [...new Set(g.flatMap(iaNearStems))]);
   const onTopic = p => { const lt = iaFlat(p.t).split(/[^a-z0-9-]+/); return stems.every(st => st.some(s => lt.some(w => (s.includes("-") ? w.startsWith(s) : w.split("-").some(x => x.startsWith(s)))))); };
-  let more = false, ms = null, again = 0, won = [], own = [], kept = 0;
+  let more = false, down = false, ms = null, again = 0, won = [], own = [], kept = 0;
   /* Three searches are asked together: the most cited papers with the drug in their title that hold the key words (in the title, or as a review); the
      newest papers with drug and key words in the title; and, as what is there when those two are slow or find little, the papers that hold the drug and
      the key words anywhere, in Europe PMC's own order. Of the most cited, those with the key words in their very title come first.
@@ -486,15 +506,16 @@ async function findPapers(env, r, most, ctx) {
      searches, each asked ONCE (the reviews with the subject in the title that hold every key word; the papers with subject and key words in the very title),
      both for the most cited, and one patient reply (FIND_GEN) in the place of a quick thin one. Titles only: readFind says so (noq). */
   const roundGen = async names => { const Q = findQueries(names, r.groups), live = { on: true };
-    const G = start(Q.genRev, "CITED%20desc", 6, [], live), T = start(Q.onTitle, "CITED%20desc", 6, [], live); let t = null;
+    const G = start(Q.genRev, "CITED%20desc", 6, [], live, true), T = start(Q.onTitle, "CITED%20desc", 6, [], live, true); let t = null;
     await Promise.race([Promise.all([G.p, T.p]), new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_GEN, left()))); })]); clearTimeout(t); live.on = false;
     const g = got(G), tt = got(T);
     add([tt[0], g[0], tt[1], g[1], tt[2], g[2]].concat(tt.slice(3), g.slice(3)));
     if (!G.done || !T.done) more = true;
+    if (G.failed || T.failed) down = true;
     if (!ms) { ms = [G.ms, T.ms, null]; won = [G.won, T.won, null]; own = [G.own, T.own, null]; }
     kept += G.kept + T.kept; };
-  const round = async names => { const Q = findQueries(names, r.groups), live = { on: true };
-    const A = start(Q.cited, "CITED%20desc", 8, FIND_A, live), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2, FIND_B, live), W = start(Q.wide || Q.anyTitle, "", 4, FIND_B, live);
+  const round = async (names, noted) => { const Q = findQueries(names, r.groups), live = { on: true };
+    const A = start(Q.cited, "CITED%20desc", 8, FIND_A, live, noted), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2, FIND_B, live, noted), W = start(Q.wide || Q.anyTitle, "", 4, FIND_B, live, noted);
     const known = (...ss) => new Set(ss.flatMap(got).map(p => p.doi || p.pmid)).size;
     await new Promise(go => { let grace = false, soon = false, fin = false; const timers = [];
       const look = last => { if (fin) return;
@@ -507,13 +528,14 @@ async function findPapers(env, r, most, ctx) {
     add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
     if (out.length < 3) add(w);
     if (!A.done || (out.length < 3 && (!C.done || !W.done))) more = true;
+    if (A.failed || (out.length < 3 && (C.failed || W.failed))) down = true;
     if (!ms) { ms = [A, C, W].map(s => s.ms); won = [A, C, W].map(s => s.won); own = [A, C, W].map(s => s.own); }
     again += A.again + C.again + W.again; kept += A.kept + C.kept + W.kept; };
   // one wider search, where the three found too little
   const one = async (q, sort, size) => { if (!q || left() < 600) return []; const live = { on: true }, s = start(q, sort, size, FIND_B, live); let t = null;
-    await Promise.race([s.p, new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_LAST, left()))); })]); clearTimeout(t); live.on = false; if (!s.done) more = true; again += s.again; kept += s.kept; return got(s); };
-  if (r.gen) { await roundGen(r.names); const papers = out.slice(0, most).map(p => ({ t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind })); return { papers, more, ms: ms || [], again, won, own, kept }; }
-  await round(r.names);
+    await Promise.race([s.p, new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_LAST, left()))); })]); clearTimeout(t); live.on = false; if (!s.done) more = true; if (s.failed) down = true; again += s.again; kept += s.kept; return got(s); };
+  if (r.gen) { await roundGen(r.names); const papers = out.slice(0, most).map(p => ({ t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind })); return { papers, more, down, ms: ms || [], again, won, own, kept }; }
+  await round(r.names, true);
   // wider, only where the searches are back and found too little (a search that is still out is not "too little": the page asks again)
   if (!more && out.length < 3 && all.length > r.names.length && left() > 600) await round(all);   // (the name the reader wrote found too little: with what its page is called)
   const Q = findQueries(all, r.groups);
@@ -521,7 +543,7 @@ async function findPapers(env, r, most, ctx) {
   if (!more && out.length < 2 && r.groups.length) add(await one(Q.nameRev, "CITED%20desc", 4));
   const papers = out.slice(0, most).map(p => { let pick = null; try { pick = r.noq ? null : iaPick(p, r.groups, all, r.def); } catch (e) { pick = null; }
     const o = { t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind }; if (pick) { o.q = pick.q; if (pick.an) o.an = pick.an; } return o; });
-  return { papers, more, ms: ms || [], again, won, own, kept };
+  return { papers, more, down, ms: ms || [], again, won, own, kept };
 }
 async function find(request, url, env, ctx) {
   if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
@@ -531,7 +553,7 @@ async function find(request, url, env, ctx) {
   try { const t = await request.text(); if (t.length > 2000) return json({ ok: false, error: "too long" }, 413); body = JSON.parse(t); } catch (e) { return json({ ok: false, error: "json" }, 400); }
   const r = readFind(body); if (r.error) return json({ ok: false, error: r.error }, 422);
   if (r.held) return json({ ok: true, held: true, papers: [] });
-  try { const f = await findPapers(env, r, 6, ctx); return json(Object.assign({ ok: true, papers: f.papers }, f.more ? { more: 1 } : {}, r.noq ? { titles: 1 } : {}, { ms: f.ms, again: f.again, won: f.won, own: f.own, kept: f.kept })); }
+  try { const f = await findPapers(env, r, 6, ctx); return json(Object.assign({ ok: true, papers: f.papers }, f.more ? { more: 1 } : {}, f.down ? { down: 1 } : {}, r.noq ? { titles: 1 } : {}, { ms: f.ms, again: f.again, won: f.won, own: f.own, kept: f.kept })); }
   catch (e) { return json({ ok: false, error: "search" }, 502); }
 }
 /* (site 2.21, 18 November 2026; the senior author, 13:34 Athens: "can the answers get ... answered by themselves? and can they get answered almost instantly?

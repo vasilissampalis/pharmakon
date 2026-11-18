@@ -45,6 +45,12 @@ the way back in the bar).
    also asked as "pregnancy", nor "baby" as "infant"; "others", "another", "else" are no key words; a key word that only repeats the
    subject ("addicted" under "addiction") should not count as one. Words under the titles of these kinds: only after a trial that reads
    every line; for pregnancy and children titles only stays, unless he says otherwise.
+   (e2) **A second index for the hours when Europe PMC is slow** (18 November, afternoon: 25 seconds a search; site 2.21.1 made the page
+   patient and truthful about it, not fast). PubMed's own interface (NCBI E-utilities: no key needed at a few requests a second; search,
+   then the records with their summaries) asked beside Europe PMC, the first that answers gives the list; no "most cited" order there, so
+   the order needs thought (reviews first, then PubMed's best match). The rule that picks a paper's own words reads the end of a summary:
+   PubMed's summaries have the same labelled parts, but a trial on our own questions comes before any word from them is shown
+   (`scripts/auto/instant_trial.mjs` takes a second source easily: it calls the worker). Read NCBI's usage rules first.
    (f) **His own question "Does cannabis cause cancer?"** waits on his word "approve" for `cl_can_smoked_cancer` (Section 7). Do not
    adjudicate that disagreement in `agreed.json`: the claim is under his gate.
    (g) **The exam of the lane's own sentences** has the six answers the editor read on 18 November and did not let out (the reasons are

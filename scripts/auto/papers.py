@@ -508,6 +508,7 @@ def main():
         try: rec = json.load(open(f, encoding="utf-8"))
         except (OSError, ValueError): return True
         if int(rec.get("finder") or 1) < FINDER: return True
+        if rec.get("problems"): return True                                    # (18 November 2026) its searches did not all come back (the index was slow or said no): searched again, not kept as "searched"
         return not rec.get("drugs_searched") and not w.get("drugs") and (bool(w.get("names")) or bool(page_names(w)))
     # --requests DIR: the requests waiting there (papers-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
     # A request is a file in the repository, written by the editor: it is read as data here and never reaches a command line.
