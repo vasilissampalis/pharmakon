@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_a0007",
- "lane": 18,
+ "lane": 19,
  "kind": "answer",
  "from": "w_a0007",
  "question": "How can someone participate in drug studies?",
@@ -15,19 +15,20 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-17",
+  "on": "2026-11-18",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3.6-flash"
+   "also2": "gemini:gemini-3.8-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44174081837",
+  "run": "44347403947",
   "from": {
    "papers": 1,
    "summaries": 0,
@@ -38,7 +39,8 @@
  "status": "none",
  "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
  "gates": {
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
@@ -100,10 +102,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-18",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-18"
      }
     },
     "volume": "9",
@@ -122,18 +124,48 @@
    "money": [
     "AcknowledgmentsThe authors thank the Expert Diversity Advisory Board for guiding the development of this project, the focus group participants for their critical perspectives, and Hayley Aramburu for administrative assistance."
    ],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This article details Phase 1 efforts to develop sustainable strategies to increase enrollment/recruitment of Black participants in clinical trials through an Innovative Development of Research Engagement Manual.",
+    "text": "Phase 1 efforts to develop sustainable strategies to increase enrollment/recruitment of Black participants in clinical trials through an Innovative Development of Research Engagement Manual"
+   },
    "findings": [
     {
      "passage": 28,
      "where": "Results",
      "quote": "The participants identified financial incentives, potential treatment options, and potential for improved awareness about substance abuse treatment as factors that determine retention in a study.",
-     "text": "Participants identified financial incentives, potential treatment options, and potential for improved awareness about substance abuse treatment as factors that determine retention in a study.",
+     "text": "The participants identified financial incentives, potential treatment options, and potential for improved awareness about substance abuse treatment as factors that determine retention in a study.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 28,
+     "where": "Results",
+     "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
+     "text": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 29,
+     "where": "Discussion",
+     "quote": "Survey responses indicated a positive view of research and a willingness to participate in research studies.",
+     "text": "Survey responses indicated a positive view of research and a willingness to participate in research studies.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
+     "text": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   }
  ],
@@ -142,22 +174,24 @@
  "missing": "",
  "wanted": [],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-17",
+   "lane": 18,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Innovative Development of Research Engagement Manual: Strategies to Enhance Recruitment and Retention of Black Individuals in Clinical Trials for Substance Use Disorders",
    "read": "full",
    "kind": "other",
    "at": "10.1177/24731242251362181",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Phase 1 of a 3-phase study involving a literature review, an Expert Diversity Advisory Board, and focus groups with 61 Black participants with a history of substance use disorders",
-     "quote": "Phase 1 involved a literature review and the establishment of an Expert Diversity Advisory Board, which identified barriers to Black individual participation in substance use disorder (SUD) research.",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Canadian Drugs and Substances Strategy: Overview",
