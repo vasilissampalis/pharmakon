@@ -65,6 +65,7 @@ for (const f of files) {
     const again = []; for (let i = 0; i < 5; i++) { const c0 = performance.now(); try { await (await post({ ASSETS: {}, FETCH: fromMemory })).json(); } catch (e) { /* not timed */ } again.push(performance.now() - c0); } again.sort((a, b) => a - b);
     const papers = ((reply && reply.papers) || []).map(p => Object.assign({ title: p.t, kind: p.kind, y: p.y, j: p.j, free: !!p.oa, id: p.doi || p.pmid }, p.q ? { shown: p.q, about: p.an === 1 ? "animals or cells" : p.an === 2 ? "its summary covers animals or cells too" : "", around: around(p) } : { shown: null, why: rf.error ? "" : whyNone(p, rf) }));
     items.push({ q: q.q, names: q.names, also: q.also || [], words: q.words, def: !!q.def, status, ms, server_ms: Math.round(again[2] * 10) / 10, held: !!(reply && reply.held), papers, searches: asked });
+    await new Promise(r => setTimeout(r, 400));   // (one question after another, with a breath between: Europe PMC is a shared service)
     console.log("instant trial: " + JSON.stringify(q.q) + ": " + papers.length + " paper(s), " + papers.filter(p => p.shown).length + " with their own words, " + ms + " ms (the server's own share " + (Math.round(again[2] * 10) / 10) + " ms)");
   }
   const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 13), outFile = path.join(outDir, "trial-" + stamp + "-" + f.replace(/^instant-|\.json$/g, "") + ".json");
