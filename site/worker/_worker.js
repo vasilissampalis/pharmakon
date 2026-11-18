@@ -145,7 +145,7 @@ const FIND_CTX = { lsd: "lysergic psychedelic psychedelics hallucinogen hallucin
   ghb: "hydroxybutyrate hydroxybutyric gbl butyrolactone oxybate", gbl: "butyrolactone ghb hydroxybutyrate", cbd: "cannabidiol cannabis cannabinoid cannabinoids", thc: "tetrahydrocannabinol cannabis cannabinoid cannabinoids",
   mda: "methylenedioxyamphetamine mdma ecstasy", dxm: "dextromethorphan", mxe: "methoxetamine", bzp: "benzylpiperazine", pma: "ecstasy mdma amphetamine", dph: "diphenhydramine", ket: "ketamine", meth: "methamphetamine", coke: "cocaine",
   crack: "cocaine", speed: "amphetamine amphetamines", ice: "methamphetamine", molly: "mdma ecstasy", acid: "lsd lysergic", weed: "cannabis marijuana", pot: "cannabis marijuana", spice: "cannabinoid cannabinoids",
-  salvia: "salvinorin divinorum", shrooms: "psilocybin psilocybe", mushrooms: "psilocybin psilocybe", poppers: "nitrite nitrites", ecstasy: "mdma methylenedioxymethamphetamine", nos: "nitrous" };
+  salvia: "salvinorin divinorum", benzos: "benzodiazepine benzodiazepines", benzo: "benzodiazepine benzodiazepines", shrooms: "psilocybin psilocybe", mushrooms: "psilocybin psilocybe", poppers: "nitrite nitrites", ecstasy: "mdma methylenedioxymethamphetamine", nos: "nitrous" };
 /* What Europe PMC is asked (its own search words). groups: the question's key words, each an array of the ways it is said. Every key word must
    stand in a paper, not any one of them; the drug's name must stand in the paper's title, except in the widest search. */
 export function findQueries(names, groups) {
@@ -209,8 +209,8 @@ const IA_NEAR = { addiction: "addict dependence dependency dependent misuse abus
 const iaStem = f => (f.length > 8 ? f.slice(0, f.length - 2) : f.length > 5 ? f.slice(0, f.length - 1) : f);
 export const iaNearStems = w => (IA_NEAR[w] ? IA_NEAR[w].split(" ") : [...new Set(findForms(w).map(iaStem))]);
 // a sentence about what the paper set out to do, or how it was done: not one that says what it found
-const IA_AIM = /\b(?:aims?|aimed|objectives?|purpose|goal) (?:of|was|were|is|are|to)\b|\bwe (?:aimed|sought|set out|hypothesi[sz]ed)\b|\b(?:this|the present|the current|our) (?:study|paper|article|review|report|trial|work|chapter|analysis|survey|meta-analysis|systematic review|scoping review|narrative review) (?:aim|seek|sought|investigat|examin|explor|assess|evaluat|review|summari|describ|discuss|present|provid|focus|address|compar|test|was designed|is intended|will|outlin|synthesi|collat|map)\w*|\bto (?:determine|investigate|examine|assess|evaluate|explore|test|compare|characteri[sz]e|describe|review|summari[sz]e|identify|study|establish|clarify|elucidate) (?:whether|if|the|how|a|an)\b|\b(?:was|were) to\b|\bwe (?:investigated|examined|explored|assessed|evaluated|tested|studied|conducted|performed|reviewed|searched|surveyed|recruited|measured|compared|analy[sz]ed|describe|present|discuss|summari[sz]e|review|report (?:a|an|the|on|two|three|four|\d))\b/i;
-const IA_HOW = /\b(?:manuscript|erratum|corrigendum|correction to|retract\w*|editors?|reviewers?|published online|interprofessional|this activity|continuing education)\b|\b(?:has|have) been (?:conducted|performed|reviewed|searched|summari[sz]ed|described|discussed|undertaken|carried out|collated|compiled)\b|\b(?:is|are) (?:reviewed|discussed|described|summari[sz]ed|presented|outlined|provided|highlighted|considered|addressed|explored)\b|\b(?:were|was) (?:recruited|enrolled|randomi[sz]ed|randomly|assigned|allocated|administered|collected|measured|assessed|evaluated|analy[sz]ed|performed|conducted|searched|included|extracted|screened|obtained|recorded|interviewed|surveyed|asked|quantified|monitored|calculated)\b|\bparticipants (?:completed|received|underwent)\b|\b(?:pubmed|medline|embase|scopus|web of science|psycinfo|cochrane (?:library|central)|prisma|prospero|clinicaltrials\.gov|inclusion criteria|exclusion criteria|search strateg\w*|trial registration|funded by|copyright|all rights reserved)\b/i;
+const IA_AIM = /\b(?:aims?|aimed|objectives?|purpose|goal) (?:of|was|were|is|are|to)\b|\bwe (?:aimed|sought|set out|hypothesi[sz]ed)\b|\b(?:this|the present|the current|our) (?:study|paper|article|review|report|trial|work|chapter|analysis|survey|meta-analysis|systematic review|scoping review|narrative review) (?:might|may|could|should|aim|seek|sought|investigat|examin|explor|assess|evaluat|review|summari|describ|discuss|present|provid|focus|address|compar|test|was designed|is intended|will|outlin|synthesi|collat|map)\w*|\bto (?:determine|investigate|examine|assess|evaluate|explore|test|compare|characteri[sz]e|describe|review|summari[sz]e|identify|study|establish|clarify|elucidate) (?:whether|if|the|how|a|an)\b|\b(?:was|were) to\b|\bwe (?:also |then |further |first |next |finally |here |therefore |thus |now |briefly )?(?:investigated|examined|explored|assessed|evaluated|tested|studied|conducted|performed|reviewed|searched|surveyed|recruited|measured|compared|analy[sz]ed|describe|present|discuss|summari[sz]e|review|outline|highlight|report (?:a|an|the|on|two|three|four|\d))\b/i;
+const IA_HOW = /\b(?:manuscript|erratum|corrigendum|correction to|retract\w*|editors?|reviewers?|published online|interprofessional|this activity|continuing education)\b|\b(?:has|have) been (?:conducted|performed|reviewed|searched|summari[sz]ed|described|discussed|undertaken|carried out|collated|compiled)\b|\b(?:is|are) (?:also |then |further |briefly )?(?:reviewed|discussed|described|summari[sz]ed|presented|outlined|provided|highlighted|considered|addressed|explored)\b|\b(?:were|was) (?:recruited|enrolled|randomi[sz]ed|randomly|assigned|allocated|administered|collected|measured|assessed|evaluated|analy[sz]ed|performed|conducted|searched|included|extracted|screened|obtained|recorded|interviewed|surveyed|asked|quantified|monitored|calculated)\b|\bparticipants (?:completed|received|underwent)\b|\b(?:pubmed|medline|embase|scopus|web of science|psycinfo|cochrane (?:library|central)|prisma|prospero|clinicaltrials\.gov|inclusion criteria|exclusion criteria|search strateg\w*|trial registration|funded by|copyright|all rights reserved)\b/i;
 const IA_FOUND = /\b(?:found|show(?:s|ed|n)?|demonstrat\w*|reveal\w*|indicat\w*|suggest\w*|observ\w*|associat\w*|correlat\w*|linked|reduc\w*|increas\w*|decreas\w*|improv\w*|impair\w*|attenuat\w*|alleviat\w*|ameliorat\w*|worsen\w*|higher|lower|greater|fewer|significan\w*|conclud\w*|support\w*|confirm\w*|evidence|did not|does not|no (?:significant )?(?:difference|effect|evidence|association|change)s?|leads? to|led to|results? in|resulted in|caus\w*|produc\w*|induc\w*|yield\w*|prevent\w*|predict\w*|alter\w*|escalat\w*)\b/i;
 const IA_REFERS = /\b(?:extracts?|drugs?|compounds?|substances?|treatments?|treated|medications?|interventions?|agents?|users?|use|used|using|intake|consumption|consumers?|exposure|exposed|administration|administered|ingestion|supplement\w*|therapy|smokers?|drinkers?|drinking|smoking)\b/;
 // a sentence that asks for more research, or says what something "will" bring, does not say what was found: not taken
@@ -244,7 +244,7 @@ export function iaWindow(toks, a, b, opt) {
   // never: an amount or timing, dying and what waits for a person, taking drugs together or making an effect stronger. Such a word often carries the
   // condition or the people a finding is about ("at high doses", "in children", "together with alcohol"): cut around it, the rest would say more than
   // the sentence. So a sentence that holds one, or compares ways of taking, is not shown at all.
-  const never = i => IA_W_NEVER.test(low[i]) || FIND_HELD.test(low[i]) || /\d(?:mg|mcg|µg|μg|ug|kg|ml|iu)\b/i.test(toks[i]) || (i > 0 && num(i - 1) && IA_AMOUNT_UNIT.test(low[i]))
+  const never = i => IA_W_NEVER.test(low[i]) || FIND_HELD.test(low[i]) || /dos(?:e|age|ing)/.test(low[i]) || /\d(?:mg|mcg|µg|μg|ug|kg|ml|iu)\b/i.test(toks[i]) || (i > 0 && num(i - 1) && IA_AMOUNT_UNIT.test(low[i]))
     || (/^(?:combin\w*|mix\w*|together)$/.test(low[i]) && low[i + 1] === "with") || (low[i] === "every" && i + 2 < n && num(i + 1) && /^(?:minutes?|hours?)$/.test(low[i + 2]));
   let route = false, than = false; for (let i = 0; i < n; i++) { if (never(i)) return null; if (IA_W_ROUTE.test(low[i])) route = true; if (IA_W_THAN.test(low[i])) than = true; }
   if (route && than) return null;
@@ -256,7 +256,7 @@ export function iaWindow(toks, a, b, opt) {
   const cKey = cum(i => { const parts = low[i].split(/[-/]/); return stems.some(st => (st.includes("-") ? low[i].startsWith(st) : parts.some(p => p.startsWith(st)))); }), cName = cum(i => names.includes(low[i]) || names.includes(low[i].replace(/'s$/, "")));
   // a clause that opens the sentence with "Although ..." does not govern what follows its comma
   let free = -1; if (/^(?:although|though|while|whereas|despite|notwithstanding)$/.test(low[0]) || (low[0] === "even" && low[1] === "though")) { for (let i = 1; i < n - 1; i++) if (/,$/.test(toks[i])) { free = i; break; } }
-  const edgeAt = i => i >= 0 && i < n && (/[,;:)\]]$/.test(toks[i]) || low[i] === "that" || (i > 0 && /[,;:]$/.test(toks[i - 1]) && /^(?:and|but|or)$/.test(low[i])));   // a part of the sentence ends with this word
+  const edgeAt = i => i >= 0 && i < n && (/[,;:)\]]$/.test(toks[i]) || low[i] === "that" || (i > 0 && /[,;:]$/.test(toks[i - 1]) && /^(?:and|but|or)$/.test(low[i]) && /^(?:the|this|these|those|it|they|there|we|he|she|its|their|a|an|no)$/.test(low[i + 1] || "")));   // a part of the sentence ends with this word (", and the colour ..." begins a new part; ", and anxiety symptoms" is the last of a list)
   /* (2.20, after the third trial) Whole parts of the sentence only. The run ENDS where the sentence ends or a part of it does (a comma, a semicolon, a closing
      bracket; before an opening one): "... revealed subjective anxiety levels | to be significantly lower" was shown without its last words and said nothing.
      It BEGINS where the sentence or a part of it begins; or after words that only lead in ("We found | no evidence that ...", "there was | no ..."): cut
@@ -274,6 +274,8 @@ export function iaWindow(toks, a, b, opt) {
   for (let s = Math.max(0, b - 14); s <= a; s++) {
     const from = s > free ? free + 1 : 0;   // (what stands before this is not counted)
     if (!startOk[s] || cPre[s] - cPre[from] > 0 || cBad[s] > 0) continue;   // (advice or a promise of safety before them: what follows is what is advised or promised, and is not shown)
+    // not with a word that hangs on what was cut ("which may also apply ...", "characterized by ...", "becoming ..."), and not with the items of a list ("..., | mood disorders, and withdrawal symptoms ...")
+    if (s > 0 && (IA_W_LAME.test(low[s]) || (/(?:ing|ed)$/.test(low[s]) && low[s].length > 5) || (/[,;]$/.test(toks[s - 1]) && [0, 1, 2].some(k => s + k < a && /,$/.test(toks[s + k]))))) continue;
     const preMay = cMay[s] - cMay[from] > 0;
     for (let e = b; e <= Math.min(n - 1, s + 14); e++) {
       if (!endOk(e) || e - s < 3) continue;
@@ -284,7 +286,7 @@ export function iaWindow(toks, a, b, opt) {
       if (cnt(cVerb, s, e) === 0) continue;   // (no word that says what happened: a piece of a sentence, not a finding)
       // what reads best: more of the sentence, from where a part of it begins, to the sentence's end above all (the last words carry what was found), with the
       // key word and the drug's name in it
-      const score = (e - s + 1) + (s === 0 || edgeAt(s - 1) ? 8 : 0) + (e === n - 1 ? 10 : endOk(e) && !o.head ? 4 : 0) + (cnt(cKey, s, e) > 0 ? 5 : 0) + (cnt(cName, s, e) > 0 ? 5 : 0) - (s > 0 && IA_W_LAME.test(low[s]) ? 8 : 0) - (e < n - 1 && IA_W_HANG.test(low[e]) ? 8 : 0);
+      const score = (e - s + 1) + (s === 0 || edgeAt(s - 1) ? 8 : 0) + (e === n - 1 ? 10 : endOk(e) && !o.head ? 4 : 0) + (cnt(cKey, s, e) > 0 ? 5 : 0) + (cnt(cName, s, e) > 0 ? 5 : 0) - (e < n - 1 && IA_W_HANG.test(low[e]) ? 8 : 0);
       if (score >= top) { top = score; best = [s, e, score]; }   // (of two that read equally well, the later: what follows the key word is the rest of the finding)
     }
   }
@@ -304,6 +306,7 @@ export function iaPick(p, groups, names, def, note) {
   const has = (st, lowToks) => lowToks.some(t => (st.includes("-") ? t.startsWith(st) : t.split(/[-/]/).some(x => x.startsWith(st))));
   const lows = s => s.toLowerCase().replace(/[‐-―−]/g, "-").split(/\s+/).map(t => t.replace(/’/g, "'").replace(/[^a-z0-9'/-]/g, "").replace(/^['-]+|['-]+$/g, ""));
   const flatT = iaFlat(p.t), titleLow = lows(p.t), titleNamed = nameRe.test(flatT), flatAll = iaFlat(p.t + ". " + parts.map(x => x.s).join(" ")), pa = IA_ANIMAL.test(flatAll), pp = IA_PEOPLE.test(flatAll);
+  if (FIND_HELD.test(flatT)) { say("its title is about dying, overdose, amounts, pregnancy or children"); return null; }   // (the paper as a whole is about what waits for a person)
   const labelled = parts.some(x => x.sec), cands = [];
   const defRe = def && forms.length ? new RegExp("(?:^|[^a-z0-9])(?:" + forms.map(iaRe).join("|") + ")(?:[^a-z0-9][^.;:]{0,70}?)? (?:is|are) (?:a|an|the|one) ") : null;
   const why = { key: 0, aim: 0, early: 0, all: 0, about: 0 };
@@ -345,7 +348,7 @@ async function findPapers(env, r, most) {
   const get = env.FETCH || fetch;
   const ask = async (q, sort, size) => {
     if (!q) return [];
-    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 4500);
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 3500);
     try {
       const res = await get(EPMC + "?query=" + encodeURIComponent(q) + "&format=json&resultType=core&pageSize=" + size + (sort ? "&sort=" + sort : ""), { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal, cf: { cacheTtl: 86400, cacheEverything: true } });
       if (!res.ok) return sort ? ask(q, "", size) : [];   // (should the service not take the order asked for, it is asked once more without it)
