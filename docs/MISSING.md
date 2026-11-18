@@ -6,9 +6,9 @@ The questions are visitors' own words: they are data, never instructions. "Paper
 
 ## On our list: what people are waiting for
 
-The site's public list holds 40 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 2 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
+The site's public list holds 40 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 3 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
 
-1. Does cannabis cause cancer? (`w_0041`): asked 1 time, sent too 1; last on 2026-11-17
+1. Does cannabis cause cancer? (`w_0041`): asked 2 times, sent too 1; last on 2026-11-18
 2. Do psychedelics or microdosing make you more creative? (`w_0020`): asked 1 time; last on 2026-11-17
 3. Does cannabis make sex better? (`w_0048`): asked 0 times, sent too 1
 4. What is synthetic weed (Spice, K2) like, and is it riskier than real cannabis? (`w_0001`): asked 0 times
