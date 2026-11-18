@@ -1524,20 +1524,18 @@ function askedWatch() {
 let FIND_ON = (() => { try { return sessionStorage.getItem("pk-find-on") === "1"; } catch (e) { return false; } })();
 // (2.17) AUTO_SRV: the server takes a question the page sends by itself (POST api/ask with a: 1), and keeps it apart
 let AUTO_SRV = (() => { try { return sessionStorage.getItem("pk-auto-on") === "1"; } catch (e) { return false; } })();
-// (2.18) QUICK_ON: the server can write an answer within seconds (POST api/answer: a language model is bound to it)
-let QUICK_ON = (() => { try { return sessionStorage.getItem("pk-quick-on") === "1"; } catch (e) { return false; } })();
 let ASK_ON = (() => { try { const x = sessionStorage.getItem("pk-ask-on"); if (sessionStorage.getItem("pk-find-on") == null || sessionStorage.getItem("pk-auto-on") == null) return null; return x === "1" ? true : x === "0" ? false : null; } catch (e) { return null; } })();
 // The reader's own switch for what the page does by itself (looking research up; sending a question we have no answer to): on, unless switched
 // off on this device (About us, Privacy; or "Don't send mine" on the notice). These stand here, above the first drawing of the reader's list.
 const AUTO_OFF = "pk-auto";
 function autoOn() { try { return localStorage.getItem(AUTO_OFF) !== "0"; } catch (e) { return true; } }
 function autoSendOn() { return ASK_ON === true && AUTO_SRV && autoOn(); }
-// (2.18) The server is asked once on every opening of the page, not once per tab: what it can do changes with a publishing (a model bound to it), and a
-// tab left open must not go on believing yesterday's answer. Until its reply is in, the page starts from what the tab learned before.
+// (2.18) The server is asked once on every opening of the page, not once per tab: what it can do changes with a publishing, and a tab left open must not
+// go on believing yesterday's answer. Until its reply is in, the page starts from what the tab learned before.
 function askProbe() {
   if (askProbe.p) return askProbe.p;
-  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); AUTO_SRV = !!(j && j.auto === true); QUICK_ON = !!(j && j.quick === true); return !!(j && j.ok === true); }, () => { FIND_ON = false; AUTO_SRV = false; QUICK_ON = false; return false; })
-    .then(on => { const was = ASK_ON; ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); sessionStorage.setItem("pk-auto-on", AUTO_SRV ? "1" : "0"); sessionStorage.setItem("pk-quick-on", QUICK_ON ? "1" : "0"); } catch (e) { /* this page only */ }
+  return (askProbe.p = fetch(ASK_API, { headers: { accept: "application/json" } }).then(r => r.ok ? r.json() : null).then(j => { FIND_ON = !!(j && j.find === true); AUTO_SRV = !!(j && j.auto === true); return !!(j && j.ok === true); }, () => { FIND_ON = false; AUTO_SRV = false; return false; })
+    .then(on => { const was = ASK_ON; ASK_ON = on; try { sessionStorage.setItem("pk-ask-on", on ? "1" : "0"); sessionStorage.setItem("pk-find-on", FIND_ON ? "1" : "0"); sessionStorage.setItem("pk-auto-on", AUTO_SRV ? "1" : "0"); sessionStorage.removeItem("pk-quick-on"); } catch (e) { /* this page only */ }   // (pk-quick-on: sites 2.18 and 2.19 kept it; it is cleared)
       if (was !== on && typeof askedBox === "function") askedBox(); return on; }));
 }
 function askedList() { try { const x = JSON.parse(localStorage.getItem(ASK_KEY) || "[]"); return Array.isArray(x) ? x.filter(it => it && typeof it.q === "string" && it.k) : []; } catch (e) { return []; } }
@@ -1675,7 +1673,11 @@ const FIND_STOP = new Set(("what when where which while with would could should 
   "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus " +
   // (2.19, after the first trial with the real index of papers) words for what a drug does to something, which say nothing about WHAT: every key word must now stand in a paper
   "improve improves improved improving lower lowers lowered raise raises raised increase increases increased decrease decreases decreased reduce reduces reduced change changes changed changing affect affects affected " +
-  "damage damages damaged damaging loss lose loses losing lost hurt hurts harm harms problem problems issue issues worse").split(" "));
+  "damage damages damaged damaging loss lose loses losing lost hurt hurts harm harms problem problems issue issues worse " +
+  // (2.20, after the sixth trial) more of them: "does nicotine suppress appetite" is about appetite; a paper may say "suppression", "anorectic", "reduces food intake"
+  "suppress suppresses suppressed suppressing boost boosts boosted boosting enhance enhances enhanced enhancing trigger triggers triggered worsen worsens worsened relieve relieves relieved ease eases eased prevent prevents prevented stop stops stopped treat treats treated treating cure cures cured induce induces induced lead leads " +
+  // words about research itself, and for a drug as such ("what did the study on lsd find", "is ritalin a study drug")
+  "find finds found finding findings show shows showed shown say says said prove proves proved proven research evidence science scientific scientists paper papers drug drugs medicine medication pill pills substance substances").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
 const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
   hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
@@ -1691,36 +1693,59 @@ const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)
    word), without the words that stand in every summary; an everyday word goes with the word papers use for it ("hungry": appetite). */
 function insFindTerms(res) {
   if (!res || res.emergency || FIND_HELD.test(res.q || "") || (res.routes || []).some(r => r.kind === "help" || r.kind === "dose" || r.kind === "mix")) return null;
-  const names = [], add = s => { s = String(s || "").toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim(); if (s.length >= 3 && !names.includes(s)) names.push(s); };
-  const text = String(res.core || res.q || "").toLowerCase();
-  if ((res.groups || []).length && INS.nameRe) { INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(text))) { const a = String(m[1] || "").toLowerCase(); if (a.length >= 4 && !/\s/.test(a) && !INS.vocab.has(a)) add(a); if (m.index === INS.nameRe.lastIndex) INS.nameRe.lastIndex++; } INS.nameRe.lastIndex = 0; }
-  // (2.19) a page that stands for several things ("Cannabis (THC, CBD)"): the ones the reader named, where they named any ("does cbd help with sleep" is
-  // about CBD); all of them where they named none ("weed")
-  for (const g of res.groups || []) for (const slug of g.slice(0, 2)) { const s = subBySlug[slug]; if (!s) continue;
-    const parts = String(s.name || "").split(/[(),/]| and | or /).map(x => x.toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim()).filter(x => x.length >= 3);
-    const typed = parts.filter(x => (" " + text.replace(/[^a-z0-9+-]+/g, " ") + " ").includes(" " + x + " "));
-    (typed.length ? typed : parts).forEach(add); }
+  const norm = s => String(s || "").toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim();
+  // names: what the search is for. also: what the drug's page is called, where the reader named a drug of its own ("xanax": benzodiazepines), asked for by the
+  // server only where the reader's own name finds too little. extra: a second drug named in the question, which is a key word of it
+  const names = [], also = [], extra = [], add = (list, s) => { s = norm(s); if (s.length >= 3 && !names.includes(s) && !list.includes(s)) list.push(s); };
+  const text = String(res.core || res.q || "").toLowerCase(), flat = " " + text.replace(/[^a-z0-9+-]+/g, " ") + " ";
+  const first = (res.groups || [])[0], firstKey = first ? first.join("|") : "";
+  // (2.20) the first drug the question names is what it is about; another one named beside it is a key word ("does kratom help with opioid withdrawal")
+  if (first && INS.nameRe) { INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(text))) { const a = String(m[1] || "").toLowerCase(), g = INS.nameOf.get(a) || [];
+      if (g.join("|") === firstKey) { if (a.length >= 4 && !/\s/.test(a) && (!INS.vocab.has(a) || first.length > 1)) { add(names, a); if (FIND_GENERIC[a]) add(names, FIND_GENERIC[a]); } }
+      else if (/^[a-z]{4,24}$/.test(a) && !INS.vocab.has(a) && !extra.includes(a)) extra.push(a);
+      if (m.index === INS.nameRe.lastIndex) INS.nameRe.lastIndex++; } INS.nameRe.lastIndex = 0; }
+  // what its page is called. A page that stands for several things ("Cannabis (THC, CBD)"): the ones the reader named, where they named any ("does cbd help
+  // with sleep" is about CBD); all of them where they named none ("weed"). A word for a whole class ("psychedelics") stands for itself, not for two of its pages
+  if (first && first.length === 1) { const s = subBySlug[first[0]];
+    if (s) { const parts = String(s.name || "").split(/[(),/]| and | or /).map(norm).filter(x => x.length >= 3), typed = parts.filter(x => flat.includes(" " + x + " ")), into = typed.length || !names.length ? names : also;
+      (typed.length ? typed : parts).forEach(x => add(into, x)); } }
   const pg = (res.routes || []).find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;
-  if (sh) { add(sh.name); (sh.science || []).forEach(x => add(x.name)); }
-  if (!names.length && res.stranger) add(res.stranger);
-  // a question about drugs that names none we know ("is tianeptine addictive"): the first word that is no everyday word is most likely the drug's name
+  if (sh) { add(names, sh.name); (sh.science || []).forEach(x => add(names, x.name)); }
+  if (!names.length && res.stranger) add(names, res.stranger);
+  // a question about drugs that names none we know ("is tianeptine addictive", "what is kava"): the first word that is no everyday word is most likely the drug's name
   if (!names.length && res.note !== "other") { const known = w => INS.vocab.has(w) || FIND_STOP.has(w) || !!FIND_SAY[w],
       plain = w => known(w) || ["ies", "es", "s", "ed", "d", "ing", "ly", "ive", "al", "er", "est", "y", "ness", "ful"].some(suf => w.length > suf.length + 2 && w.endsWith(suf) && (known(w.slice(0, -suf.length)) || known(w.slice(0, -suf.length) + "e") || (suf === "ies" && known(w.slice(0, -3) + "y")) || (suf === "ive" && known(w.slice(0, -3) + "ion"))));
-    const cand = (text.match(/[a-z]{5,}/g) || []).filter(w => !plain(w)); if (cand.length) add(cand[0]); }
+    const cand = (text.match(/[a-z]{4,}/g) || []).filter(w => !plain(w)); if (cand.length) add(names, cand[0]); }
   if (!names.length) return null;
-  const inName = new Set(names.join(" ").split(/[^a-z0-9]+/)), words = [], masked = (typeof insMask === "function" ? String(insMask(text)) : text).toLowerCase();
+  const inName = new Set(names.concat(also).join(" ").split(/[^a-z0-9]+/)), words = extra.filter(w => !inName.has(w)).slice(0, 2), masked = (typeof insMask === "function" ? String(insMask(text)) : text).toLowerCase();
+  // (2.20, after the sixth trial: "does adderall help you study" had no key word, and got the most cited papers on amphetamine in rats) "Study" stands in
+  // every summary and is no key word; "help you study", "for studying", "with exams" is asked as what papers call it
+  const acad = /\b(?:study(?:ing)?\s+(?:for|better|longer|harder|drugs?|aids?|pills?)|(?:you|me|us|them|people|students|i)\s+study(?:ing)?|(?:to|and)\s+study(?:ing)?\b(?!\s+(?:of|on|about|that|which|shows?|found|says?))|studying|exams?|finals|homework|revising|revision|grades)\b/.test(masked);
+  if (acad) words.push("academic|cognitive|students");
   for (const w0 of masked.match(/[a-z]{3,}/g) || []) { const say = FIND_SAY[w0];
-    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0)) continue;
+    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0))) continue;
     const e = say && say !== w0 ? say + "|" + w0 : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     if (!words.includes(e) && !words.includes(say || w0) && words.length < 5) words.push(e); }
-  return { names: names.slice(0, 6), words };
+  // (2.20) "what is X": the server then looks for the sentence that says what the drug is
+  const def = !words.length && /^(?:so )?(?:what(?:'s| is| are| exactly is| the hell is)|whats|wtf is)\b/.test(text.trim());
+  return Object.assign({ names: names.slice(0, 6), words }, also.length ? { also: also.slice(0, 4) } : {}, def ? { def: 1 } : {});
 }
+// the name papers use for a name people use (a brand, a street name): asked for beside it
+const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clonazepam", ativan: "lorazepam", ambien: "zolpidem", adderall: "amphetamine", ritalin: "methylphenidate", concerta: "methylphenidate", vyvanse: "lisdexamfetamine",
+  oxycontin: "oxycodone", percocet: "oxycodone", vicodin: "hydrocodone", suboxone: "buprenorphine", subutex: "buprenorphine", lyrica: "pregabalin", neurontin: "gabapentin", provigil: "modafinil", benzos: "benzodiazepines", benzo: "benzodiazepines",
+  shrooms: "psilocybin", molly: "mdma", ecstasy: "mdma", coke: "cocaine", meth: "methamphetamine", zembrin: "sceletium tortuosum", marijuana: "cannabis", lean: "codeine", poppers: "alkyl nitrites", whippets: "nitrous oxide", nangs: "nitrous oxide" };
+/* (2.20) Each paper may come with at most 15 of its own words on the question, cut by fixed rules on the server from the end of its summary, where papers
+   say what they found (site/worker/_worker.js, iaPick): no model reads or writes anything. They stand in quotation marks under the paper's title, so that
+   they are read as that paper's and in its frame; where they are about animals or cells, the line says so. */
 function insFoundHtml(d) {
   if (!d || !d.ok || d.held) return "";
-  if (!d.papers || !d.papers.length) return '<p class="ins-found-n">We looked in Europe PMC, an open index of medical research, just now: nothing was found on these words.</p>';
+  if (!d.papers || !d.papers.length) return d.more ? '<p class="ins-found-n">Looking for published research on it\u2026</p>' : '<p class="ins-found-n">We looked in Europe PMC, an open index of medical research, just now: nothing was found on these words.</p>';
+  const said = d.papers.some(p => typeof p.q === "string" && p.q);
   return '<p class="ins-found-h">Published research on this, found just now</p><ul class="ins-found-l">' + d.papers.map(p => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
-    return '<li><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" \u00B7 ")) + "</span></li>"; }).join("") +
-    '</ul><p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.</p>';
+    return '<li><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" · ")) + "</span>" +
+      (typeof p.q === "string" && p.q ? '<span class="pq">“' + esc(p.q) + '”' + (p.an === 1 ? '<span class="pq-an"> in animals or cells, not in people</span>' : p.an === 2 ? '<span class="pq-an"> its summary covers work in animals or cells too</span>' : "") + "</span>" : "") + "</li>"; }).join("") +
+    "</ul>" + (d.more ? '<p class="ins-found-n ins-found-w">Still looking for the most cited papers on this\u2026</p>' : "") + '<p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.' +
+    (said ? " The words in quotation marks are each paper’s own, from the end of its summary: a fixed rule picked them, not a person, and they are not an answer of ours." : "") + "</p>";
 }
 /* (2.16.1, 17 November 2026, 23:19 and 23:20 Athens. The senior author, of the list that came only after he had pressed "Send": "it should
    automatically search the user should not even have to click it"; and, typing a question he had already sent: "now when i type it again the
@@ -1729,11 +1754,21 @@ function insFoundHtml(d) {
    it under the line that says so. In the results it waits a moment (FIND_WAIT) so that nothing is asked while the reader is still typing; in
    the sheet (Enter) at once. What it found is kept for this visit (FIND_MEM): the same question is not asked twice.
    The reader can switch this off (About us, Privacy: AUTO_OFF); then one quiet button looks it up on a tap. */
-const FIND_WAIT = 700, FIND_MEM = new Map();
-function insFindGet(terms) {
-  const key = JSON.stringify(terms); let m = FIND_MEM.get(key); if (m) return m.p;
-  m = { d: undefined };
-  m.p = fetch(FIND_API, { method: "POST", headers: { "content-type": "application/json" }, body: key }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => { m.d = d; if (!d) FIND_MEM.delete(key); return d; });
+const FIND_WAIT = 700, FIND_MEM = new Map(), FIND_MORE = [500, 2000];
+/* (2.20, after the sixth and seventh trials) Europe PMC answers a search in a fifth to a half of a second, but about one request in three hangs for seconds.
+   The server does not wait: it asks a hanging search again (up to three times), gives the list it has after 1.4 seconds at the latest and says "more" when a
+   search was still out (about one question in twenty). The page then asks once more half a second later, and once again two seconds after that, and puts the
+   whole list in the place of the first. Until then a line under the list says that we are still looking. onMore: told the newer list (the box that shows it). */
+function insFindGet(terms, onMore) {
+  const key = JSON.stringify(terms); let m = FIND_MEM.get(key);
+  if (m) { if (onMore && m.subs) m.subs.add(onMore); return m.p; }
+  m = { d: undefined, subs: new Set(), n: 0 }; if (onMore) m.subs.add(onMore);
+  const ask = () => fetch(FIND_API, { method: "POST", headers: { "content-type": "application/json" }, body: key }).then(r => (r.ok ? r.json() : null)).catch(() => null);
+  const tell = () => { if (m.subs) m.subs.forEach(f => { try { f(m.d); } catch (e) { /* a box that is gone */ } }); if (!m.d || !m.d.more) m.subs = null; };
+  const again = () => { if (!m.d || !m.d.more) { m.subs = null; return; }
+    if (m.n >= FIND_MORE.length) { m.d = Object.assign({}, m.d, { more: 0 }); tell(); return; }
+    setTimeout(() => ask().then(d => { m.d = d && d.ok && !d.held && ((d.papers || []).length || !(m.d.papers || []).length) ? d : Object.assign({}, m.d, { more: 0 }); tell(); again(); }), FIND_MORE[m.n++]); };
+  m.p = ask().then(d => { m.d = d; if (!d) FIND_MEM.delete(key); else again(); return d; });
   FIND_MEM.set(key, m); if (FIND_MEM.size > 40) FIND_MEM.delete(FIND_MEM.keys().next().value);
   return m.p;
 }
@@ -1745,68 +1780,19 @@ function insFindWanted(res) {
 function insAuto(root, res, now) {
   clearTimeout(INS.findT); clearTimeout(INS.sendT);
   const after = root && res ? root.querySelector(".sr-fit-none, .ins-none") : null; if (!after) return;
-  clearTimeout(INS.quickT);
-  askProbe().then(() => { if (!after.isConnected) return; const found = insAutoFind(after, res, now); insAutoSend(after, res, now, found); insAutoQuick(after, res, now); });
-}
-/* (site 2.18, 18 November 2026. The senior author, 17 November: "people are used to get responses instantly. We have to make an ai which is able to do that
-   for questions it does not know"; "we have to make instant as good as getting answers from a very good claude api. whatever it takes".)
-   What the papers say, within seconds. Where the site's server has a language model bound to it (QUICK_ON), a question that is sent by itself also gets,
-   at once, what up to three of the papers found say on it IN THE PAPERS' OWN WORDS (at most 15 from each summary, with the paper's kind, year, journal and
-   link): the model chooses the sentence, the server's code cuts the words out and decides what may be shown (site/worker/_worker.js, iaCheck). Since 2.19
-   the model's own plain sentence is not shown: tried with the real model, about one in three said more than its paper; it is shown only once an exam
-   allows it (the server then sends it as "t", and it stands above the paper's words). The block stands right under the line that says we have no answer
-   of ours, above the list of papers, under its own label: chosen by our system from the papers' summaries, the papers themselves not read, no person has
-   checked the choice. It is never called an answer of ours and nothing of it is kept on the page. Asked for a moment after the papers (QUICK_WAIT; at once
-   on Enter), once per question per visit.
-   Not asked for: a question about dying, overdose, amounts, pregnancy, children (insFindTerms gives nothing for these); anything, when the reader has
-   switched the page's own doing off (then one quiet button asks for it). */
-const QUICK_API = "api/answer", QUICK_WAIT = 1200, QUICK_MEM = new Map();
-function insQuickGet(body) {
-  const key = JSON.stringify(body); let m = QUICK_MEM.get(key); if (m) return m.p;
-  m = { d: undefined };
-  m.p = fetch(QUICK_API, { method: "POST", headers: { "content-type": "application/json" }, body: key }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => { m.d = d; if (!d) QUICK_MEM.delete(key); return d; });
-  QUICK_MEM.set(key, m); if (QUICK_MEM.size > 40) QUICK_MEM.delete(QUICK_MEM.keys().next().value);
-  return m.p;
-}
-function insQuickHtml(d) {
-  const L = d && d.ok && d.answer && Array.isArray(d.answer.lines) ? d.answer.lines.filter(l => l && typeof l.quote === "string" && l.quote && (l.doi || l.pmid)).slice(0, 3) : []; if (!L.length) return "";
-  let when = "just now"; if (d.again && d.answer.at) { const t = new Date(d.answer.at); if (!isNaN(t)) when = "on " + t.getUTCDate() + " " + ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][t.getUTCMonth()]; }
-  // (2.19) What is shown is the paper's own words; a plain sentence of the system's stands above them only where the server sends one (it sends none
-  // until an exam of such sentences allows it: site/worker/_worker.js, IA.plain). "In animals or cells" is the server's own reading of the sentence
-  // and its summary; where a summary covers animals and people and the sentence does not say which, the line says so.
-  const wrote = L.some(l => typeof l.t === "string" && l.t);
-  return '<p class="ins-quick-h">' + (wrote ? "In short, from the papers’ own summaries" : "What the papers say, in their own words") + '</p><ul class="ins-quick-l">' + L.map(l => { const href = l.doi ? "https://doi.org/" + l.doi : "https://europepmc.org/article/MED/" + l.pmid;
-    const paper = '<a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc([l.kind, l.y, l.j].filter(Boolean).join(" \u00B7 ")) + "</a>" + (l.animal ? '<span class="qk-an"> \u00B7 in animals or cells, not in people</span>' : l.mixed ? '<span class="qk-an"> \u00B7 its summary covers work in animals or cells too</span>' : "");
-    return typeof l.t === "string" && l.t ? '<li><p class="qk-t">' + esc(l.t) + '</p><p class="qk-m">' + paper + '<span class="qk-q">The paper’s own words: \u201C' + esc(l.quote) + "\u201D</span></p></li>"
-      : '<li><p class="qk-w">\u201C' + esc(l.quote) + '\u201D</p><p class="qk-m">' + paper + "</p></li>"; }).join("") +
-    '</ul><p class="ins-quick-n">' + (wrote ? "Written " + esc(when) + " by our system from the summaries of these papers. It has not read the papers themselves, and no person has checked it."
-      : "Chosen " + esc(when) + " by our system from the summaries of these papers: the words are the papers’ own. It has not read the papers themselves, and no person has checked its choice.") + " Our own answer follows when it is ready.</p>";
-}
-function insAutoQuick(after, res, now) {
-  if (!QUICK_ON || ASK_ON !== true || res.note !== "none" || (res.best && res.best.length)) return;
-  const terms = insFindTerms(res); if (!terms) return;
-  const body = { q: res.q, names: terms.names, words: terms.words };
-  const box = document.createElement("div"); box.className = "ins-quick"; box.setAttribute("aria-live", "polite");
-  box.addEventListener("click", e => e.stopPropagation());
-  const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };   // (right under the line: above the papers)
-  const draw = d => { const html = insQuickHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
-  const have = QUICK_MEM.get(JSON.stringify(body));
-  if (have && have.d) { draw(have.d); return; }
-  const go = () => { if (!after.isConnected) return; put(); box.innerHTML = '<p class="ins-quick-n ins-quick-w">Looking through the papers’ summaries for what they say on it\u2026</p>'; insQuickGet(body).then(d => { if (after.isConnected) draw(d); else box.remove(); }); };
-  if (!autoOn()) { put(); box.innerHTML = '<p class="ins-quick-n"><button type="button" class="linklike" data-quick-now>Show what the papers’ summaries say on it</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return; }
-  if (askedGone(res.q)) return;
-  if (now) go(); else INS.quickT = setTimeout(() => { const s = document.getElementById("search"), b = document.getElementById("search-results"); if (s && b && !b.hidden && insClean(s.value) === res.q) go(); }, QUICK_WAIT);
+  askProbe().then(() => { if (!after.isConnected) return; const found = insAutoFind(after, res, now); insAutoSend(after, res, now, found); });
 }
 // the published research under the line; resolves with what was found (null when nothing is looked up)
 function insAutoFind(after, res, now) {
   const terms = FIND_ON ? insFindWanted(res) : null; if (!terms) return Promise.resolve(null);
   const box = document.createElement("div"); box.className = "ins-found"; box.setAttribute("aria-live", "polite");
   box.addEventListener("click", e => e.stopPropagation());   // a paper opens in its own tab: the question and its results stay as they are
-  const put = () => { if (box.isConnected || !after.isConnected) return; const q = after.nextElementSibling; (q && q.classList.contains("ins-quick") ? q : after).insertAdjacentElement("afterend", box); };   // (under the answer within seconds, when that is there)
+  const put = () => { if (!box.isConnected && after.isConnected) after.insertAdjacentElement("afterend", box); };
   const draw = d => { const html = insFoundHtml(d); if (!html) { box.remove(); return; } put(); box.innerHTML = html; };
+  const redraw = d => { if (after.isConnected && box.isConnected) draw(d); };   // (the whole list, when a slow search has come in)
   const have = FIND_MEM.get(JSON.stringify(terms));
-  if (have && have.d) { draw(have.d); return Promise.resolve(have.d); }
-  const go = () => { if (!after.isConnected) return Promise.resolve(null); put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; return insFindGet(terms).then(d => { if (after.isConnected) draw(d); return d; }); };
+  if (have && have.d) { draw(have.d); if (have.d.more && have.subs) have.subs.add(redraw); return Promise.resolve(have.d); }
+  const go = () => { if (!after.isConnected) return Promise.resolve(null); put(); box.innerHTML = '<p class="ins-found-n">Looking for published research on it\u2026</p>'; return insFindGet(terms, redraw).then(d => { if (after.isConnected) draw(d); return d; }); };
   if (!autoOn()) { put(); box.innerHTML = '<p class="ins-found-n"><button type="button" class="linklike" data-find-now>Look up published research on this</button></p>'; box.querySelector("button").addEventListener("click", e => { e.preventDefault(); go(); }); return Promise.resolve(null); }
   if (now) return go();
   return new Promise(ok => { INS.findT = setTimeout(() => ok(go()), FIND_WAIT); });

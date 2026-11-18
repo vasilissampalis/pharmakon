@@ -928,6 +928,125 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       own words on it, with nothing of the system's said in between, and the written answer follows from the lane. A
       fluent instant answer at the site's bar needs a strong model, and those are paid: his rule ("only free") stands
       until he changes it.
+      **No model: each paper's own words by fixed rule (site 2.20.0, 18 November 2026, 03:15 to 05:30).** The
+      second trial ran right after 2.19 was published (`data/auto/instant/trial-20261118T0112-0002.json`: 26 of the
+      editor's questions, the real model, 1,941 neurons, five seconds at the median). The paper's own words could no
+      longer say more than the paper; what the model added was still wrong:
+      (a) it chose sentences about aims and methods ("Comprehensive literature reviews of ... have been conducted"
+      was shown as "evidence supporting cannabis/cannabinoids in the treatment of pain") and lists of what a
+      questionnaire asked ("better able to concentrate ... after EC use") as if they were findings;
+      (b) words were cut loose from what they were about: under "does cocaine cause nosebleeds", "Bleeding occurred
+      in 32 patients receiving cocaine (60.4%)", from a trial of cocaine as a medicine against bleeding at
+      intubation; "improvements in appetite", from a case report on a horse;
+      (c) of its own 18 sentences that the strict rule of 2.19 called sound (every word in the source sentence), the
+      editor found eight that said more or other than their source ("Preclinical research has generally supported
+      anecdotal claims that ibogaine ..." became "A 2013 review says ibogaine attenuates withdrawal symptoms");
+      (d) the most cited papers that only MENTION a drug read as answers: for "GHB", a meta-analysis on diabetes
+      (GHb is glycated haemoglobin); for amphetamine, the phencyclidine model of schizophrenia.
+      So the model is taken out. **What a paper found stands at the end of its summary, in words that hold the
+      question's key word: a rule can find that**, in a fraction of a second, for nothing, the same every time, and
+      with the reader's sentence sent to nobody. `/api/find` now gives each paper with, where the rules find them,
+      at most 15 of its own words (`iaPick`, `iaWindow` in `site/worker/_worker.js`); `/api/answer` answers that it
+      is off; the page shows the words in quotation marks under the paper's title (so they are always read in their
+      paper's frame: the cocaine trial's words stand under "Cocaine versus xylometazoline to prevent epistaxis after
+      nasotracheal intubation"), and the separate block of 2.18 and 2.19 is gone.
+      **The rule, as it stands after seven trials without a model** (trials 3 to 9, on GitHub's machines with the
+      real Europe PMC, free; 44 and then 56 of the editor's own questions each; every line read, the rule mended,
+      a test written; `data/auto/instant/trial-*-0003.json` to `-0009.json`; `iaPick`, `iaWindow`):
+      which sentence: one under a label for results or conclusions, or, in a summary without labels, in its later
+      half; that holds a key word of the question or a word papers use for it (`IA_NEAR`: "5-HT" for serotonin,
+      "dependence" for addiction); with every key word in the sentence or the title; that NAMES THE DRUG, or, in a
+      paper about the drug, says "the extract", "this compound", "its use", "regular consumption" (trial 6: of
+      twelve shown sentences that named neither, ten were about something else: "Chronic METH use was ..." in a
+      paper on MDMA and methamphetamine, "His epistaxis was successfully treated", "Genetic testing ... was also
+      undertaken"). Never a sentence about aims or methods ("We also review ...", "We then estimated ..."), one
+      that says what should be looked at next ("may be warranted", "are pending", "is critical", "highlight
+      potential intervention targets"), an editors' note, or any sentence of a paper whose title is about what
+      waits for a person;
+      which words: a whole part of that sentence, at most 15 words. The run ends where the sentence ends, or at a
+      comma after which the sentence only adds something (", with ...", ", which ...", ", suggesting ...", a new
+      clause after ", and"), or before brackets after which it ends or only adds (never "... 40 of 52 | (76.9%) of
+      cases"); it begins where the sentence or a part of it begins (also after ", but"), or after words that only
+      lead in ("We found | no evidence that ...", "there was | no ..."), never after the words that say whom it is
+      about ("Carriers of the allele were | most likely to ... if they used cannabis"), never with a word that
+      hangs on what was cut ("which", "characterized by", a preposition) nor inside a part that begins with a
+      preposition ("..., for | the prevention of epistaxis ..."), never with the items of a list or cut inside
+      one, never after brackets in the middle of what the sentence is about. THE RUN ITSELF NAMES THE DRUG or
+      says "the extract" (trial 7: "... these results suggest that | some panic disorder patients may have
+      abnormalities in neuronal systems involving adenosine", of a sentence that named caffeine elsewhere); the
+      name counts inside a joined word ("MDMA-assisted therapy"). No word the sentence turns on is left outside
+      the run (as in 2.19, and the kind of evidence before it: "in case reports", "an open-label pilot"), nor the
+      part that says of whom or when the sentence holds ("Among adults with treatment-resistant depression, |
+      ...", "When used daily, | ...", "During withdrawal, | ..."; not the study itself, "In this trial of sixty
+      adults, ...", nor "After the drug, ..."), nor words that point back to another sentence ("these effects",
+      "in this context"). A clause that opens the sentence with "Although ..." does not govern what follows its
+      comma;
+      never shown: a sentence that holds an amount, a dose or timing, how strong a product is ("high in
+      cannabidiol", "potency"), dying, overdose, pregnancy, children, taking drugs together, making an effect
+      stronger, or ways of taking compared (such a word often carries the condition or the people a finding is
+      about: cut around it, the rest would say more); advice and promises of safety ("should", "avoid", "safe",
+      "well tolerated": the words go around them, and nothing after them is shown); links; statistics in signs or
+      in brackets; half a bracket;
+      animals: "in animals or cells, not in people" where the sentence says so, where the title does and names no
+      people (a study in rats writes "naive individuals"), or where the whole summary does; "its summary covers
+      work in animals or cells too" where it covers both and the sentence does not say which; a sentence that
+      names animals and people at once is not shown ("adult rats" is animals);
+      "what is X": the sentence that says what the drug is, from the start of a summary of a paper about it.
+      **The search**: the drug's name must stand in a paper's TITLE; a short name that means other things in
+      medicine counts only beside a word that settles it (`FIND_CTX`: "LSD" beside "lysergic" or "psychedelic",
+      "GHB" beside "hydroxybutyrate", "benzo" beside "benzodiazepine"); names in their one and their many. Three
+      searches are asked together: the most cited papers that hold every key word in their title, or are reviews
+      that hold it; the newest with drug and key words in the title; and the papers that hold both anywhere. Of
+      the most cited, those with the key words in their very title come first. The first drug a question names is
+      what it is about, a second one is a key word ("does kratom help with opioid withdrawal"); the name the reader
+      wrote is asked for first ("xanax", with "alprazolam"), and what its page is called ("benzodiazepines") only
+      where that finds fewer than three papers; a word for a whole class ("psychedelics") stands for itself. On
+      the page: "help you study", "for exams" is asked as what papers call it (academic, cognitive, students:
+      "study" stands in every summary); "suppress", "boost", "treat", "find", "drug" are no key words.
+      **Time (trials 6 to 9).** The server's own computing for a question is 2 to 4 thousandths of a second; the
+      time is Europe PMC's. It answers a search in a fifth to a half of a second, but about one request in three
+      HANGS for two to ten seconds, whatever is asked (trial 6: the median question waited 2.6 s; the publishing
+      of 04:41 showed the same from the real site: 2 papers for kanna and anxiety where there are 6). It is not
+      the search that is slow: the same search asked again at that moment came back at once 39 times of 54 (trial
+      7). So (`findPapers`):
+      a search that is not back after 0.45 s is asked a second time, and after 0.95 s a third (each asking with
+      its first words in another order, so that it is a request of its own); the first reply counts;
+      the list is given as soon as the most cited AND the newest are back; after 1.4 s whatever three papers
+      there are, with "more": 1 when a search is still out; after 2.6 s whatever there is;
+      a search that is still out finishes behind the reply (Cloudflare keeps Europe PMC's replies for a day);
+      the page, told "more", shows the list with "Still looking for the most cited papers on this…", asks once
+      more half a second later (and once again two seconds after that), and puts the whole list in its place.
+      What that gave, first list after (median; share under 1 s; under 1.5 s; lists given with a search still
+      out): trial 6 (waiting): 2.60 s; 8 of 44; 9 of 44; none said so. Trial 7 (second asking; the newest waited
+      for a quarter of a second): 0.36 s; 48 of 56; 54 of 56; 12. Trial 8 (three askings; the newest waited for):
+      0.53 s; 47 of 56; 55 of 56; 3, whole after 1.9 to 2.5 s. Trial 9 (the same; Europe PMC hung more): 0.66 s;
+      41 of 56; 54 of 56; 9, whole after 2.1 to 2.7 s (one 5.5 s). On top of it, while a reader types, the page
+      waits 0.7 s after the last key before it asks (on Enter it asks at once).
+      **What the trials gave in words** (lines shown, of papers listed; questions with at least one line):
+      trial 3: 147 of 253, many of them pieces of sentences. Trial 4: 66 of 252. Trial 5: 54 of 236; 27 of 44.
+      Trial 6: 55 of 234; 30 of 44; about fifteen of them beside the point or about something else. Trial 7: 48 of
+      323; 31 of 56. Trial 8: 41 of 323; 28 of 56. Trial 9: 46 of 323; 30 of 56; the editor found none that says
+      more or other than its paper, and a handful beside the reader's point but true ("The correct therapy for
+      cocaine cardiotoxicity is not known", under "does cocaine damage the heart"). Lines as they stand:
+      "Tianeptine misuse is associated with opioid-like dependence, withdrawal, and toxicity"; "…MDMA-assisted
+      therapy is highly efficacious in individuals with severe PTSD…"; "…using cannabis could increase their risk
+      of developing a psychotic illness later in life"; "Ketamine impaired attention, working memory, and delayed
+      recall"; "However, it is unclear if cannabis use increases the risk of developing long-lasting anxiety
+      disorders"; "Our results suggest that modafinil does not possess an addictive potential in naive
+      individuals" (in animals or cells, not in people). Most papers get no words: of 157 sentences that stood in
+      the right place and gave none (their shapes are in trial 8, never their text), most were lost to the limit
+      of 15 words, which is the site's rule for quoting. A paper without words is still listed with its title.
+      **What it is not.** Not an answer: a list of papers with a sentence each, picked by rule, unread by us, under
+      a line that says so. A rule cannot tell that a trial of cocaine as a medicine is beside the reader's point;
+      the title under which the words stand can, and the reader can. The written answer is the lane's, and the
+      checked one the editors'.
+      **For him.** Nothing to do at Cloudflare: the step he was asked for (binding Workers AI) is not needed. The
+      lane has its 9,000 neurons a day back (`OUR_LIMIT`). Open, his to say: asking Europe PMC twice from the
+      start would bring the first list to about 0.3 s at the median and leave fewer lists to complete, at the cost
+      of two more requests to a public service for every question; not done.
+      **Checks:** `scripts/ux/worker_test.mjs` (133), `scripts/ux/site24_check.js` (154: the list in two steps, in
+      a real browser), and before any change to a rule: a trial (`data/auto/requests/instant-*.json`), read line
+      by line.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

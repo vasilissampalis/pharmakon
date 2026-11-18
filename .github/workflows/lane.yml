@@ -25,7 +25,7 @@ on:
       - "data/auto/requests/trial-*.json"
       - "data/auto/requests/grow-*.json"   # (16 November 2026) the system lists its own questions (scripts/auto/grow.py) and the finders search for them
       - "data/auto/requests/blind-*.json"  # (17 November 2026) the plain lines of a checked answer read again by free models that wrote none of them (scripts/auto/blind_lines.py)
-      - "data/auto/requests/instant-*.json"  # (18 November 2026) the answer within seconds, tried with the real model on the editor's own questions (scripts/auto/instant_trial.mjs)
+      - "data/auto/requests/instant-*.json"  # (18 November 2026) the papers' own words on a question, tried with the real index of papers on the editor's own questions (scripts/auto/instant_trial.mjs; since site 2.20 no model takes part)
 
 permissions:
   contents: write
@@ -78,10 +78,10 @@ jobs:
             git rm -q data/auto/requests/blind-*.json >> "$L" 2>&1
           fi
           if ls data/auto/requests/instant-*.json >/dev/null 2>&1; then
-            # (18 November 2026) the site's own server code, run here with the real model and the real index of papers, on the editor's own questions;
-            # what it used is written into the lane's ledger, so that the free day is counted once
+            # (18 November 2026) the site's own server code, run here against the real index of papers, on the editor's own questions. Since site 2.20
+            # no model takes part: no key is used and the usage file it writes is empty (the next step then adds nothing to the ledger)
             export NEURONS_LEFT="$(python3 -I -c 'import sys; sys.path.insert(0, "scripts/auto"); import llm; print(int(llm.left()))' 2>/dev/null)"
-            step "the answer within seconds, tried with the real model on the editor's own questions" node scripts/auto/instant_trial.mjs data/auto/requests data/auto/instant "$RUNNER_TEMP/instant-usage.json"
+            step "the papers' own words on a question, tried with the real index of papers on the editor's own questions" node scripts/auto/instant_trial.mjs data/auto/requests data/auto/instant "$RUNNER_TEMP/instant-usage.json"
             step "what it used, into the ledger" python3 -I scripts/auto/llm.py --spend "$RUNNER_TEMP/instant-usage.json"
             git rm -q data/auto/requests/instant-*.json >> "$L" 2>&1
           fi

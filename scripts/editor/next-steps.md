@@ -15,38 +15,32 @@ Done: places by meaning (2.13.0); figures by question (2.14.0); the lane's pause
 citation a link, a source in place, plain first, shorter cards, topics, the same Insight on every page, the place and
 the way back in the bar).
 
-000. **By itself, at once, understood (decision 31; sites 2.16.1 to 2.19.0, 18 November).** Done: research by itself; the place a count
+000. **By itself, at once, understood (decision 31; sites 2.16.1 to 2.20.0, 18 November).** Done: research by itself; the place a count
    names; the calm line while Insight starts and the warm start; "Insight" alone under the bar; the question sent by itself with the reader
-   told, its words kept out of the repository; what the papers say within seconds, in their own words (server and page; 2.19.0 after the
-   first trial with the real model), which does nothing until he has bound Workers AI.
+   told, its words kept out of the repository; and, since 2.20.0, each paper's own words on the question by FIXED RULE under its title, with
+   NO LANGUAGE MODEL anywhere in it (two trials with the real model and seven without: `data/auto/instant/`), and a list that comes within
+   about a second although Europe PMC lets one request in three hang. Nothing waits on him for this: the Workers AI binding is not needed.
    Next, in this order:
-   (0) **Read the second trial** (`data/auto/instant/trial-*-0002.json`, asked for with 2.19.0). For every line: do the 15 words say what
-   their sentence says (`around` shows the little words left outside: a "no", "only", "than", "in rats" there is a fault of `iaWindow`: add
-   the word to its lists and a test)? Does the line bear on the question (count apart the ones found by title or summary alone: `plain[].rel`)?
-   Are the papers the right ones (`model[].given`: did the most cited reviews come first, or did the service refuse the order)? Then the
-   exam of the model's own sentences: read every `plain` entry with `ok: true` against its line; write the count into
-   `docs/AUTOMATION.md`. `IA.plain` is set only if none of at least 40 sound sentences says more than its paper's words; one that does is
-   a new rule in `iaPlain` and a test, and the count starts again.
-   (a) **After his "done" (the `AI` binding):** ask for a publishing and read the lines that begin "server:" in
-   `data/auto/deploy/_last-run.txt` (`scripts/auto/live_check.py`): whether the model is bound, and the papers' own words it chose for "does
-   kanna help with anxiety". Read them by eye. If the service answers in another shape than `iaParse`
-   reads, or cannot keep to the form, that file says so ("no reply in the form asked for"): `iaParse` and the second, plain asking are the place.
-   If a publishing run says the server did not answer `/api/answer` at all, the free plan's limit on a request's own computing time (10 ms) is
-   the first suspect: ask Europe PMC for fewer results (`pageSize`), or for one query.
-   (b) **Read everything the system wrote this way.** The server keeps each answer under `ia:` (the drug's names, key words, the sentences, the
-   model; never the reader's sentence). Let the half-hourly run read them like the questions (`fetch_questions.py`: one more prefix) into
-   `data/auto/instant/` and give them a page for the editors, and an exam of their own (good or bad by the blind checkers' standard), as the lane's
-   sentences have. Until that exists the gates have been tried only on the editor's own cases (`scripts/ux/worker_test.mjs`).
+   (a) **Read the publishing's own lines** (`data/auto/deploy/_last-run.txt`, "server:", `scripts/auto/live_check.py`): six of our questions
+   on the real site, each with its time, each search's time at Europe PMC, how many were asked again, and whether the list was given with a
+   search still out; then the first question once more. If "once more" is not clearly quicker, Cloudflare is not keeping Europe PMC's replies
+   (`cf.cacheTtl` in `findPapers`): keep the whole reply instead, with the Cache API, under a key that holds the site's version.
+   (b) **Faster still, if he wants it.** Asking Europe PMC twice from the start (instead of again after 0.45 s) would bring the first list to
+   about 0.3 s at the median and leave fewer lists to complete; it costs two more requests to a public service for every question. Or let
+   the second asking come sooner while Europe PMC hangs often (the server can count that). Measure with a trial before and after.
+   (b2) **More papers with words, without saying more.** Most sentences are lost to the limit of 15 words (trial 8 holds the shapes of 157
+   of them, never their text). What can still be mended is in those shapes: a run that ends before "and suggests that ..." without a comma;
+   "X, daily use is also associated with ..." (a list at the start). One class at a time: a test, then a trial, then read every line.
+   Never the limit itself, and never a gate (`CLAUDE.md`).
+   (b3) **The lines that are true and beside the point** ("The correct therapy for cocaine cardiotoxicity is not known", under "does
+   cocaine damage the heart"): a rule cannot tell. Count them in the next trial; if they are more than one in ten, show words only where
+   the paper's TITLE holds the question's key word.
    (c) **The United States' figures.** "how many heroin deaths in america" is now told the truth (no figure for the United States here), but the
    figures are still missing: the site's US file holds the household survey only. Deaths by drug are in the CDC's own tables (NCHS data briefs,
    CDC WONDER). They enter like every figure: read at the source by one reader, checked by another. That needs his "use readers", or the
    machine lane's official finder, which holds a question about dying for a person. Ask him.
-   (d) **One share of the free day, not two fixed ones.** The answer within seconds stops at 3,500 neurons and the lane at 6,000, whatever the
-   other used. Let the lane read the server's own count (`ian:<day>` in the store) and take what is left of 9,500.
-   (e) **The same on a started page and behind "See what we have so far"**: the papers and the few sentences for a question that waits.
-   (f) **A question like one on our list** gets the papers but no sentences yet (nothing of the reader's is sent for it): the listed question,
-   in our own words, could be the one asked of the server.
-   (g) The lane's writer gave "no JSON" for kanna twice on 17 November: read its raw reply in the answer's record and let the lane ask once more
+   (d) **The same on a started page and behind "See what we have so far"**: the papers, each with its own words, for a question that waits.
+   (e) The lane's writer gave "no JSON" for kanna twice on 17 November: read its raw reply in the answer's record and let the lane ask once more
    in the form.
 0. **His sent questions (19:38: "they are hours pending this is disappointing").** Kanna is first in line with 12 papers that can
    be read: read what the lane writes (`data/auto/answers/au_w_a0002.json`). *Mitragyna javanica*: nothing that can be read was

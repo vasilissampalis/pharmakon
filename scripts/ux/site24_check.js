@@ -16,21 +16,25 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
 (async () => {
   const worker = (await import("file://" + path.join(__dirname, "..", "..", "site", "worker", "_worker.js"))).default;
   // one server per state of the store: on (a store kept in memory) and off (no store bound: the worker answers 503)
-  const ASKED_AI = [];   // (2.18) what the stand-in for the server's language model was asked
-  const serve = (withStore, withModel) => new Promise(resolve => {
+  const serve = (withStore) => new Promise(resolve => {
     const kv = new Map(), store = { get: async (k, how) => { const v = kv.get(k); return v == null ? null : how === "json" ? JSON.parse(v) : v; }, put: async (k, v) => { kv.set(k, v); } };
-    // (2.16) Europe PMC, stood in for: the worker asks it through env.FETCH here; what it was asked is kept for the check
-    const epmc = async url => { ASKED_EPMC.push(decodeURIComponent(String(url))); return new Response(JSON.stringify({ resultList: { result: [
-      { title: "A review of <i>the drug</i> and the eye.", authorString: "Alpha A, Beta B.", journalTitle: "Journal of Tests", pubYear: "2021", doi: "10.1234/test.2021.1", pmid: "111", isOpenAccess: "Y", pubType: "review; journal article",
-        abstractText: "This review brings together what studies in people report about the drug and the eye. In the studies reviewed, the colour of the iris did not change in any of the volunteers who took the drug, while the pupils grew wider for several hours. Reports of lasting changes to the eye were not found. More work with careful measurement is needed before firm statements can be made." },
-      { title: "A trial in forty volunteers", authorString: "Gamma C.", journalTitle: "Trials Today", pubYear: "2013", pmid: "222", isOpenAccess: "N", pubType: "randomized controlled trial; journal article",
-        abstractText: "Forty healthy volunteers took part in a placebo-controlled trial with photographs of the eye taken before and after. After the drug, the pupils of the forty volunteers grew wider, and the colour of the eye stayed the same on every photograph. The size of the pupil returned to its starting value by the next morning in all who took part." }] } }), { status: 200, headers: { "content-type": "application/json" } }); };
-    // (2.18) the server's language model, stood in for: two findings that rest on those summaries, one sentence that says more than its summary (the server's own checks must drop it)
-    const model = { run: async (name, input) => { ASKED_AI.push({ name, user: input.messages[1].content }); return { usage: { prompt_tokens: 900, completion_tokens: 160 }, response: { enough: true, findings: [
-      { n: 1, quote: "the colour of the iris did not change in any of the volunteers", text: "A 2021 review says the colour of the iris did not change in any of the volunteers who took the drug." },
-      { n: 2, quote: "the colour of the eye stayed the same on every photograph", text: "A 2013 trial in forty volunteers found that the colour of the eye stayed the same on every photograph." },
-      { n: 2, quote: "the pupils of the forty volunteers grew wider", text: "A 2013 trial proves that the drug is safe for the colour of your eyes." }] } }; } };
-    const env = Object.assign({ ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: epmc }, withStore ? { QUESTIONS: store } : {}, withModel ? { AI: model } : {});
+    // (2.16) Europe PMC, stood in for: the worker asks it through env.FETCH here; what it was asked is kept for the check. (2.20) Two papers about the drug,
+    // with summaries: the server takes each paper's own words on the question from them by rule
+    // (2.20, after the sixth trial) and a slow search, as Europe PMC has them: the most cited papers on ketamine take three seconds the first time they are asked
+    // for; after that their reply is there at once (on the site Cloudflare keeps it)
+    const SLOW = new Map(), K = (i, title) => ({ title, authorString: "Delta D.", journalTitle: "Journal of Tests", pubYear: String(2010 + i), pmid: String(900 + i), isOpenAccess: "N", pubType: "journal article", abstractText: "" });
+    const epmc = async url => { ASKED_EPMC.push(decodeURIComponent(String(url)));
+      const s = decodeURIComponent(String(url));
+      if (/TITLE:"ketamine"/.test(s)) { const q = (s.split(/[?&]query=/)[1] || "").split("&")[0], cited = /sort=CITED/.test(s);
+        if (cited) { if (!SLOW.has(q)) SLOW.set(q, Date.now() + 3000); const wait = SLOW.get(q) - Date.now(); if (wait > 0) await new Promise(r => setTimeout(r, wait)); }
+        const list = cited ? [K(1, "Ketamine and eye colour: the most cited paper"), K(2, "Ketamine and eye colour: a newer paper")] : /sort=P_PDATE_D/.test(s) ? [K(2, "Ketamine and eye colour: a newer paper")] : [K(2, "Ketamine and eye colour: a newer paper"), K(3, "A paper that mentions ketamine and eye colour"), K(4, "Another paper that mentions ketamine and eye colour")];
+        return new Response(JSON.stringify({ resultList: { result: list } }), { status: 200, headers: { "content-type": "application/json" } }); }
+      return new Response(JSON.stringify({ resultList: { result: [
+      { title: "A review of <i>LSD</i> and the eye.", authorString: "Alpha A, Beta B.", journalTitle: "Journal of Tests", pubYear: "2021", doi: "10.1234/test.2021.1", pmid: "111", isOpenAccess: "Y", pubType: "review; journal article",
+        abstractText: "This review brings together what studies in people report about the drug and the eye. In the studies reviewed, the colour of the iris did not change in any volunteer given LSD, while the pupils grew wider for several hours. Reports of lasting changes to the eye were not found. More work with careful measurement is needed before firm statements can be made." },
+      { title: "LSD and the eye: a trial in forty volunteers", authorString: "Gamma C.", journalTitle: "Trials Today", pubYear: "2013", pmid: "222", isOpenAccess: "N", pubType: "randomized controlled trial; journal article",
+        abstractText: "Forty healthy volunteers took part in a placebo-controlled trial with photographs of the eye taken before and after. After the drug, the pupils of the forty volunteers grew wider, and the colour of the eye stayed the same after LSD on every photograph. The size of the pupil returned to its starting value by the next morning in all who took part." }] } }), { status: 200, headers: { "content-type": "application/json" } }); };
+    const env = Object.assign({ ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: epmc }, withStore ? { QUESTIONS: store } : {});
     const server = http.createServer(async (req, res) => {
       const p0 = decodeURIComponent(req.url.split("?")[0]);
       if (p0.startsWith("/api/")) {
@@ -44,7 +48,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     });
     server.listen(0, "127.0.0.1", () => resolve({ server, kv, base: "http://127.0.0.1:" + server.address().port + "/" }));
   });
-  const ON = await serve(true), OFF = await serve(false), QK = await serve(true, true);   // (QK: with a language model bound, as after the senior author's one step at Cloudflare)
+  const ON = await serve(true), OFF = await serve(false);
   const browser = await chromium.launch({ args: ["--no-proxy-server"] });
   const errors = [];
   const open = async (S, width, opts) => {
@@ -572,12 +576,14 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.fill("#search", ""); await p.waitForTimeout(200); await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results .sr-sent", { timeout: 20000 }).catch(() => {});
     const again = await p.evaluate(() => ({ sent: !!document.querySelector("#search-results .sr-sent"), rows: document.querySelectorAll("#search-results .ins-found-l li").length }));
     ok(w + " px: typed again after it was sent, the question shows the research again (and nothing is asked of the server twice)", again.sent && again.rows === 2 && bodies.length === 1, JSON.stringify(again) + " " + bodies.length);
-    const found = await p.evaluate(() => { const b = document.querySelector("#search-results .ins-found"); return b ? { h: (b.querySelector(".ins-found-h") || {}).textContent, rows: [...b.querySelectorAll(".ins-found-l li")].map(li => li.querySelector("a").textContent + " | " + li.querySelector("a").getAttribute("href") + " | " + li.querySelector(".m").textContent), note: [...b.querySelectorAll(".ins-found-n")].map(x => x.textContent).join(" ") } : null; });
+    const found = await p.evaluate(() => { const b = document.querySelector("#search-results .ins-found"); return b ? { h: (b.querySelector(".ins-found-h") || {}).textContent, rows: [...b.querySelectorAll(".ins-found-l li")].map(li => li.querySelector("a").textContent + " | " + li.querySelector("a").getAttribute("href") + " | " + li.querySelector(".m").textContent), quotes: [...b.querySelectorAll(".ins-found-l li")].map(li => (li.querySelector(".pq") || {}).textContent || ""), wide: document.documentElement.scrollWidth > innerWidth + 1, note: [...b.querySelectorAll(".ins-found-n")].map(x => x.textContent).join(" ") } : null; });
     const sentBody = bodies.length ? JSON.parse(bodies[0]) : {};
     ok(w + " px: the research found: title, kind, year, journal, free to read or not, and its link; and it says we have not read these",
-      found && found.h === "Published research on this, found just now" && found.rows.length === 2 && found.rows[0] === "A review of the drug and the eye | https://doi.org/10.1234/test.2021.1 | Review \u00B7 2021 \u00B7 Journal of Tests \u00B7 free to read" && found.rows[1] === "A trial in forty volunteers | https://europepmc.org/article/MED/222 | Trial \u00B7 2013 \u00B7 Trials Today" && /We have not read these yet, and a title is not a finding/.test(found.note), JSON.stringify(found));
+      found && found.h === "Published research on this, found just now" && found.rows.length === 2 && found.rows[0] === "A review of LSD and the eye | https://doi.org/10.1234/test.2021.1 | Review \u00B7 2021 \u00B7 Journal of Tests \u00B7 free to read" && found.rows[1] === "LSD and the eye: a trial in forty volunteers | https://europepmc.org/article/MED/222 | Trial \u00B7 2013 \u00B7 Trials Today" && /We have not read these yet, and a title is not a finding/.test(found.note), JSON.stringify(found));
+    ok(w + " px: under each paper's title stand its own words on the question, in quotation marks: at most 15, from the end of its summary, by rule; and the line under the list says whose words they are and that they are no answer of ours",
+      found && found.quotes.length === 2 && found.quotes[0] === "\u201C\u2026the colour of the iris did not change in any volunteer given LSD\u2026\u201D" && found.quotes[1] === "\u201C\u2026the colour of the eye stayed the same after LSD on every photograph\u201D" && /The words in quotation marks are each paper\u2019s own, from the end of its summary: a fixed rule picked them, not a person, and they are not an answer of ours\.$/.test(found.note) && !found.wide, JSON.stringify(found));
     ok(w + " px: for it only the drug's names and plain key words leave the device (never the sentence), and Europe PMC is asked for exactly those",
-      bodies.length === 1 && Object.keys(sentBody).sort().join() === "names,words" && sentBody.names.join() === "lsd" && sentBody.words.join() === "eye,colour" && ASKED_EPMC.length >= 2 && ASKED_EPMC.every(u => u.startsWith("https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=(TITLE:\"lsd\"")) && !ASKED_EPMC.some(u => /does lsd change/.test(u)), JSON.stringify([bodies, ASKED_EPMC.slice(0, 2)]));
+      bodies.length === 1 && Object.keys(sentBody).sort().join() === "names,words" && sentBody.names.join() === "lsd" && sentBody.words.join() === "eye,colour" && ASKED_EPMC.length >= 4 && ASKED_EPMC.every(u => u.startsWith("https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=(") && /TITLE:"lsd"/.test(u) && /resultType=core/.test(u)) && ASKED_EPMC.filter(u => /\(TITLE:"lsd" AND \(TITLE:"lysergic"/.test(u)).length >= 2 && !ASKED_EPMC.some(u => /does lsd change/.test(u)), JSON.stringify([ASKED_EPMC.length, ASKED_EPMC.map(u => u.slice(60, 110) + " … " + u.slice(-70)), bodies]));
     await p.fill("#search", "can lsd kill you"); await p.waitForTimeout(1800);
     const heldN = bodies.length; const hasAsk = await p.$("#search-results button[data-ask]"); if (hasAsk) { await hasAsk.click(); await p.waitForTimeout(900); }
     ok(w + " px: a question about dying is not looked up", bodies.length === heldN && !(await p.$("#search-results .ins-found")), JSON.stringify(bodies.slice(heldN)));
@@ -605,38 +611,33 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.context().close();
   }
 
-  /* ---- (site 2.18) the answer within seconds: where the server has a model bound to it ---- */
+  /* ---- (site 2.20) the papers' own words: in the sheet as in the results; no model is asked anywhere ---- */
   for (const w of [1280, 390]) {
-    const p = await open(QK, w), posts = []; p.on("request", r => { if (/\/api\/answer$/.test(r.url())) posts.push(r.postData() || ""); });
-    await p.evaluate(() => pkInsight.load()); await p.waitForFunction(() => pkInsight.state() === "ready", null, { timeout: 120000 }); await p.waitForTimeout(1200); ASKED_AI.length = 0;
-    await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results .ins-quick-l li", { timeout: 20000 }).catch(() => {}); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 10000 }).catch(() => {});
-    const qk = await p.evaluate(() => { const f = document.querySelector("#search-results .sr-fit"), b = f && f.querySelector(".ins-quick"); return { order: f ? [...f.children].map(e => e.className.split(" ")[0]).filter(c => /sr-fit-none|ins-quick|ins-found/.test(c)).join(">") : "",
-      h: b ? (b.querySelector(".ins-quick-h") || {}).textContent : "", lines: b ? [...b.querySelectorAll(".ins-quick-l li")].map(li => (li.querySelector(".qk-w") || {}).textContent + " | " + li.querySelector(".qk-m a").textContent + " | " + li.querySelector(".qk-m a").getAttribute("href")) : [], all: b ? b.textContent : "", note: b ? (b.querySelector(".ins-quick-n") || {}).textContent : "", wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
-    await shot(p, w + "-quick-answer");
-    ok(w + " px: with a model bound to the server, a question we cannot answer gets, within seconds, what the papers say on it in their own words, right under the line that says we have no answer and above the list of papers: each with its kind, year and link",
-      qk.order === "sr-fit-none>ins-quick>ins-found" && qk.h === "What the papers say, in their own words" && qk.lines.length === 2 && qk.lines[0] === "\u201C\u2026the colour of the iris did not change in any of the volunteers who took\u2026\u201D | Review \u00B7 2021 \u00B7 Journal of Tests | https://doi.org/10.1234/test.2021.1" &&
-        qk.lines[1] === "\u201C\u2026the colour of the eye stayed the same on every photograph\u201D | Trial \u00B7 2013 \u00B7 Trials Today | https://europepmc.org/article/MED/222" && !qk.wide, JSON.stringify(qk));
-    ok(w + " px: it says who chose the words and what was not read, and is never called an answer of ours; no sentence of the model's is on the page (not the sound ones, not the one that said “proves”, “safe”, “your”)",
-      /^Chosen (?:just now|on \d{1,2} [A-Z][a-z]+) by our system from the summaries of these papers: the words are the papers’ own\. It has not read the papers themselves, and no person has checked its choice\. Our own answer follows when it is ready\.$/.test(qk.note) && (w !== 1280 || /^Chosen just now/.test(qk.note)) && !/proves|safe|review says|trial in forty volunteers found/.test(qk.all) && !(await p.$("#search-results .sr-best")), qk.note);
-    const sentQ = posts.length ? JSON.parse(posts[0]) : {};
-    ok(w + " px: the server is asked once, with the question and the drug's names and key words; the model reads the summaries, with their kind and year",
-      posts.length === 1 && Object.keys(sentQ).sort().join() === "names,q,words" && sentQ.q === "does lsd change your eye colour" && sentQ.names.join() === "lsd" && (w === 1280 ? ASKED_AI.length === 1 && /QUESTION: does lsd change your eye colour/.test(ASKED_AI[0].user) && /\[1\] \(review, 2021, Journal of Tests\)/.test(ASKED_AI[0].user) : ASKED_AI.length === 0), JSON.stringify(posts) + " model asked " + ASKED_AI.length);   // (at 390 the answer comes from the store: no model is asked twice)
-    await p.keyboard.press("Enter"); await p.waitForSelector("#evsheet.open .ins-quick-l li", { timeout: 10000 }).catch(() => {});
-    const inSheet = await p.evaluate(() => { const s = document.querySelector("#evsheet .ins"); return s ? { order: [...s.children].map(e => e.className.split(" ")[0]).filter(c => /ins-none|ins-quick|ins-found/.test(c)).join(">"), lines: s.querySelectorAll(".ins-quick-l li").length } : null; });
-    ok(w + " px: Enter: the sheet shows the same answer in the same place, and the server is not asked again", inSheet && inSheet.order === "ins-none>ins-quick>ins-found" && inSheet.lines === 2 && posts.length === 1, JSON.stringify(inSheet) + " " + posts.length);
+    const p = await open(ON, w), posts = []; p.on("request", r => { if (/\/api\/(?:answer|find)$/.test(r.url())) posts.push(r.url().replace(/^.*\/api\//, "") + " " + (r.postData() || "")); });
+    await p.evaluate(() => pkInsight.load()); await p.waitForFunction(() => pkInsight.state() === "ready", null, { timeout: 120000 }); await p.waitForTimeout(1200);
+    await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results .ins-found-l li .pq", { timeout: 20000 }).catch(() => {});
+    const order = await p.evaluate(() => { const f = document.querySelector("#search-results .sr-fit"); return f ? [...f.children].map(e => e.className.split(" ")[0]).filter(c => /sr-fit-none|ins-quick|ins-found/.test(c)).join(">") : ""; });
+    await shot(p, w + "-papers-own-words");
+    await p.keyboard.press("Enter"); await p.waitForSelector("#evsheet.open .ins-found-l li .pq", { timeout: 10000 }).catch(() => {});
+    const inSheet = await p.evaluate(() => { const s = document.querySelector("#evsheet .ins"); return s ? { order: [...s.children].map(e => e.className.split(" ")[0]).filter(c => /ins-none|ins-quick|ins-found/.test(c)).join(">"), quotes: [...s.querySelectorAll(".ins-found-l .pq")].map(x => x.textContent) } : null; });
+    ok(w + " px: the papers stand right under the line that says we have no answer of ours, each with its own words; Enter: the sheet shows the same, and the server is asked once, for the papers only (no model anywhere)",
+      order === "sr-fit-none>ins-found" && inSheet && inSheet.order === "ins-none>ins-found" && inSheet.quotes.length === 2 && inSheet.quotes[1] === "\u201C\u2026the colour of the eye stayed the same after LSD on every photograph\u201D" && posts.length === 1 && /^find \{"names":\["lsd"\],"words":\["eye","colour"\]\}$/.test(posts[0]), JSON.stringify([order, inSheet, posts]));
     await p.keyboard.press("Escape"); await p.waitForTimeout(400);
-    await p.fill("#search", "can lsd kill you"); await p.waitForSelector("#search-results .sr-fit", { timeout: 20000 }); await p.waitForTimeout(2600);
-    ok(w + " px: a question about dying gets no answer within seconds (it waits for a person): the server is not even asked", posts.length === 1 && !(await p.$("#search-results .ins-quick")), String(posts.length));
-    await p.evaluate(() => localStorage.setItem("pk-auto", "0")); await p.fill("#search", "does lsd make your pupils bigger"); await p.waitForSelector("#search-results .sr-fit", { timeout: 20000 }); await p.waitForTimeout(2600);
-    const offN = posts.length, qb = await p.$("#search-results .ins-quick button[data-quick-now]");
-    if (qb) { await qb.click(); await p.waitForSelector("#search-results .ins-quick-l li", { timeout: 10000 }).catch(() => {}); }
-    ok(w + " px: with the reader's switch off nothing is asked by itself; one quiet button asks for the short answer", offN === 1 && !!qb && posts.length === 2, offN + " " + posts.length);
+    await p.fill("#search", "can lsd kill you"); await p.waitForSelector("#search-results .sr-fit", { timeout: 20000 }); await p.waitForTimeout(2200);
+    ok(w + " px: a question about dying gets no papers this way (it waits for a person): the server is not even asked", posts.length === 1 && !(await p.$("#search-results .ins-found-l")), String(posts.length));
+    // (2.20, after the sixth trial) nobody waits for a slow search: the list comes within about a second and says that we are still looking; the page asks
+    // once more a moment later, and the whole list stands in the place of the first, the most cited first
+    const look = () => p.evaluate(() => ({ rows: [...document.querySelectorAll("#search-results .ins-found-l li a")].map(a => a.textContent), wait: (document.querySelector("#search-results .ins-found-w") || {}).textContent || "" }));
+    const t0 = Date.now(); await p.fill("#search", w === 1280 ? "does ketamine change your eye colour" : "does ketamine change your eye color"); await p.waitForSelector("#search-results .ins-found-l li", { timeout: 15000 }).catch(() => {});   // (another spelling at the second width: another search, slow once more)
+    const firstAt = Date.now() - t0, first = await look(); await shot(p, w + "-papers-still-looking");
+    await p.waitForFunction(() => !document.querySelector("#search-results .ins-found-w") && document.querySelectorAll("#search-results .ins-found-l li").length === 4, null, { timeout: 15000 }).catch(() => {});
+    const whole = await look(), finds = posts.filter(x => /^find \{"names":\["ketamine"\]/.test(x)).length;
+    ok(w + " px: a slow search is not waited for: the list comes within about two seconds of the last key, with a line that says we are still looking; a moment later the whole list stands in its place, the most cited first",
+      firstAt < 3000 && first.rows.length === 3 && first.rows[0] === "Ketamine and eye colour: a newer paper" && /^Still looking for the most cited papers on this/.test(first.wait) && whole.rows.length === 4 && whole.rows[0] === "Ketamine and eye colour: the most cited paper" && whole.wait === "" && finds === 2, JSON.stringify([firstAt, first, whole, finds]));
     await p.context().close();
   }
-  const kept218 = [...QK.kv.entries()].filter(([k]) => k.startsWith("ia:")).map(([, v]) => JSON.parse(v));
-  ok("the server keeps what the system chose and wrote (the drug's names, key words, the papers' words shown, the model's own sentences with the code's verdict, the model) and never the reader's sentence", kept218.length >= 1 && kept218.every(r => Array.isArray(r.lines) && r.names && !/does lsd change your eye colour/.test(JSON.stringify(r))) && kept218.some(r => r.lines.length === 2 && r.v === 2 && r.plain.length === 2 && r.plain.every(x => typeof x.ok === "boolean" && x.t)), JSON.stringify(kept218).slice(0, 400));
   ok("no error in any page's console", errors.length === 0, errors.slice(0, 5).join(" || "));
-  await browser.close(); ON.server.close(); OFF.server.close(); QK.server.close();
+  await browser.close(); ON.server.close(); OFF.server.close();
   console.log(fail ? fail + " of " + (pass + fail) + " checks failed" : "All " + (pass + fail) + " checks passed");
   process.exit(fail ? 1 : 0);
 })();

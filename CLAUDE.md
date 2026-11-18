@@ -44,16 +44,17 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   code and are not loosened to let more through; questions about dying, overdose, emergencies, mixing, pregnancy,
   children or suicide wait for a person. Never copy a machine-lane answer into the checked lane without the full checks.
 - A second marked exception, his decision of 17 November 2026 (METHODS §12.2 point 15, `docs/AUTOMATION.md`, decision 31):
-  what the papers say, within seconds (`site/worker/_worker.js`, `/api/answer`, only where the Workers AI binding `AI` exists). A
-  model chooses up to three papers and a sentence in each, from the SUMMARIES Europe PMC holds; the reader is shown the PAPER'S
-  OWN WORDS (at most 15 in a row, chosen by code: `iaWindow`) with kind, year, journal and link, under its own label and never as
-  an answer of ours: nothing of it enters `data/` or a page. The model's own sentence is kept with the code's verdict and is NOT
-  shown (`IA.plain` is false, site 2.19: in the first trial about one in three said more than its paper). Set `IA.plain` only
-  after an exam of such sentences, written into `docs/AUTOMATION.md`. Its gates are code (`iaCheck`, `iaWindow`, `iaPlain`) and
-  are not loosened to let more through; dying, overdose, amounts, pregnancy, children and suicide wait for a person there too.
-  A reader's words go to Cloudflare Workers AI and to no other model service. It uses its own share of the free day
-  (`IA.neurons`) and the lane its own (`OUR_LIMIT`): together under Cloudflare's free 10,000, never a paid service. A paper's
-  summary is never copied into the repository: trial files hold the words shown and the shape around them.
+  each paper's own words, at once (`site/worker/_worker.js`, `/api/find`; site 2.20). For a question the site cannot answer the
+  reader is shown the published papers on it from Europe PMC, and under a paper's title at most 15 of the PAPER'S OWN WORDS on
+  the question, taken by FIXED RULES (`iaPick`, `iaWindow`) from the end of the SUMMARY Europe PMC holds, under their own line and
+  never as an answer of ours: nothing of it enters `data/` or a page. NO LANGUAGE MODEL takes part: two trials showed that a
+  model's sentences said more than their papers (one in three; four in ten under the strictest rule), and its choice of words was
+  worse than a rule's. Do not bring a model back into what a reader is shown at once without his word and an exam written into
+  `docs/AUTOMATION.md`. The rules are code and are not loosened to let more through: most papers get no words, and that is the
+  price; dying, overdose, amounts, pregnancy, children and suicide get no papers this way. Before changing a rule, run a trial on
+  our own questions (`data/auto/requests/instant-*.json`; `scripts/auto/instant_trial.mjs` on GitHub's machines) and read every
+  line. A reader's sentence goes nowhere for this: the drug's names and key words go to this server and to Europe PMC only. A
+  paper's summary is never copied into the repository: trial files hold the words shown and the shape around them.
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY.
