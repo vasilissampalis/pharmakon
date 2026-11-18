@@ -161,7 +161,8 @@ export function findQueries(names, groups) {
     onTitle: nm(true) + key(true) + tail,                                          // the drug and every key word in the very title (asked for the newest)
     wide: gs.length ? nm(false) + key(false) + tail : "",                          // the drug and every key word anywhere in title or summary (only where those found fewer than three)
     loose: gs.length > 1 ? nm(false) + " AND " + any([...new Set(gs.flat())]) + tail : "",   // any one key word (only where the others found fewer than three)
-    nameRev: nm(true) + " AND " + rev + tail };                                    // reviews of the drug itself (only where the others found fewer than two)
+    nameRev: nm(true) + " AND " + rev + tail,                                      // reviews of the drug itself (only where the others found fewer than two)
+    anyTitle: nm(true) + tail };                                                   // without key words: the drug in the title, in Europe PMC's own order (what is there when the most cited are slow)
 }
 export function findPaper(r) {
   if (!r || typeof r !== "object") return null;
@@ -209,7 +210,7 @@ const IA_NEAR = { addiction: "addict dependence dependency dependent misuse abus
 const iaStem = f => (f.length > 8 ? f.slice(0, f.length - 2) : f.length > 5 ? f.slice(0, f.length - 1) : f);
 export const iaNearStems = w => (IA_NEAR[w] ? IA_NEAR[w].split(" ") : [...new Set(findForms(w).map(iaStem))]);
 // a sentence about what the paper set out to do, or how it was done: not one that says what it found
-const IA_AIM = /\b(?:aims?|aimed|objectives?|purpose|goal) (?:of|was|were|is|are|to)\b|\bwe (?:aimed|sought|set out|hypothesi[sz]ed)\b|\b(?:this|the present|the current|our) (?:study|paper|article|review|report|trial|work|chapter|analysis|survey|meta-analysis|systematic review|scoping review|narrative review) (?:might|may|could|should|aim|seek|sought|investigat|examin|explor|assess|evaluat|review|summari|describ|discuss|present|provid|focus|address|compar|test|was designed|is intended|will|outlin|synthesi|collat|map)\w*|\bto (?:determine|investigate|examine|assess|evaluate|explore|test|compare|characteri[sz]e|describe|review|summari[sz]e|identify|study|establish|clarify|elucidate) (?:whether|if|the|how|a|an)\b|\b(?:was|were) to\b|\bwe (?:also |then |further |first |next |finally |here |therefore |thus |now |briefly )?(?:investigated|examined|explored|assessed|evaluated|tested|studied|conducted|performed|reviewed|searched|surveyed|recruited|measured|compared|analy[sz]ed|describe|present|discuss|summari[sz]e|review|outline|highlight|report (?:a|an|the|on|two|three|four|\d))\b/i;
+const IA_AIM = /\b(?:aims?|aimed|objectives?|purpose|goal) (?:of|was|were|is|are|to)\b|\bwe (?:aimed|sought|set out|hypothesi[sz]ed)\b|\b(?:this|the present|the current|our) (?:study|paper|article|review|report|trial|work|chapter|analysis|survey|meta-analysis|systematic review|scoping review|narrative review) (?:might|may|could|should|aim|seek|sought|investigat|examin|explor|assess|evaluat|review|summari|describ|discuss|present|provid|focus|address|compar|test|was designed|is intended|will|outlin|synthesi|collat|map)\w*|\bto (?:determine|investigate|examine|assess|evaluate|explore|test|compare|characteri[sz]e|describe|review|summari[sz]e|identify|study|establish|clarify|elucidate) (?:whether|if|the|how|a|an)\b|\b(?:was|were) to\b|\bwe (?:also |then |further |first |next |finally |here |therefore |thus |now |briefly )?(?:investigated|examined|explored|assessed|evaluated|tested|studied|conducted|performed|reviewed|searched|surveyed|recruited|measured|compared|analy[sz]ed|estimated|genotyped|sequenced|calculated|computed|quantified|collected|obtained|applied|employed|randomi[sz]ed|assigned|administered|enrolled|included|excluded|selected|screened|interviewed|used|describe|present|discuss|summari[sz]e|review|outline|highlight|report (?:a|an|the|on|two|three|four|\d))\b/i;
 const IA_HOW = /\b(?:manuscript|erratum|corrigendum|correction to|retract\w*|editors?|reviewers?|published online|interprofessional|this activity|continuing education)\b|\b(?:has|have) been (?:conducted|performed|reviewed|searched|summari[sz]ed|described|discussed|undertaken|carried out|collated|compiled)\b|\b(?:is|are) (?:also |then |further |briefly )?(?:reviewed|discussed|described|summari[sz]ed|presented|outlined|provided|highlighted|considered|addressed|explored)\b|\b(?:were|was) (?:recruited|enrolled|randomi[sz]ed|randomly|assigned|allocated|administered|collected|measured|assessed|evaluated|analy[sz]ed|performed|conducted|searched|included|extracted|screened|obtained|recorded|interviewed|surveyed|asked|quantified|monitored|calculated)\b|\bparticipants (?:completed|received|underwent)\b|\b(?:pubmed|medline|embase|scopus|web of science|psycinfo|cochrane (?:library|central)|prisma|prospero|clinicaltrials\.gov|inclusion criteria|exclusion criteria|search strateg\w*|trial registration|funded by|copyright|all rights reserved)\b/i;
 const IA_FOUND = /\b(?:found|show(?:s|ed|n)?|demonstrat\w*|reveal\w*|indicat\w*|suggest\w*|observ\w*|associat\w*|correlat\w*|linked|reduc\w*|increas\w*|decreas\w*|improv\w*|impair\w*|attenuat\w*|alleviat\w*|ameliorat\w*|worsen\w*|higher|lower|greater|fewer|significan\w*|conclud\w*|support\w*|confirm\w*|evidence|did not|does not|no (?:significant )?(?:difference|effect|evidence|association|change)s?|leads? to|led to|results? in|resulted in|caus\w*|produc\w*|induc\w*|yield\w*|prevent\w*|predict\w*|alter\w*|escalat\w*)\b/i;
 const IA_REFERS = /\b(?:extracts?|drugs?|compounds?|substances?|treatments?|treated|medications?|interventions?|agents?|users?|use|used|using|intake|consumption|consumers?|exposure|exposed|administration|administered|ingestion|supplement\w*|therapy|smokers?|drinkers?|drinking|smoking)\b/;
@@ -275,7 +276,8 @@ export function iaWindow(toks, a, b, opt) {
     const from = s > free ? free + 1 : 0;   // (what stands before this is not counted)
     if (!startOk[s] || cPre[s] - cPre[from] > 0 || cBad[s] > 0) continue;   // (advice or a promise of safety before them: what follows is what is advised or promised, and is not shown)
     // not with a word that hangs on what was cut ("which may also apply ...", "characterized by ...", "becoming ..."), and not with the items of a list ("..., | mood disorders, and withdrawal symptoms ...")
-    if (s > 0 && (IA_W_LAME.test(low[s]) || (/(?:ing|ed)$/.test(low[s]) && low[s].length > 5) || (/[,;]$/.test(toks[s - 1]) && [0, 1, 2].some(k => s + k < a && /,$/.test(toks[s + k]))))) continue;
+    if (s > 0 && (IA_W_LAME.test(low[s]) || /^(?:for|in|on|at|by|with|from|into|during|after|before|among|between|through|via|per|about|against|within|under|over)$/.test(low[s]) || (/(?:ing|ed)$/.test(low[s]) && low[s].length > 5)
+      || (/[,;]$/.test(toks[s - 1]) && [0, 1, 2].some(k => s + k < n && /,$/.test(toks[s + k]))) || (low[s - 1] === "that" && cVerb[s + 1] - cVerb[s] > 0))) continue;   // ("affinities that | might augment ...": the words would lack what they are said of)
     const preMay = cMay[s] - cMay[from] > 0;
     for (let e = b; e <= Math.min(n - 1, s + 14); e++) {
       if (!endOk(e) || e - s < 3) continue;
@@ -344,37 +346,47 @@ export function iaPick(p, groups, names, def, note) {
 }
 /* The papers on a drug and a question's key words, the best first, each with its own words on the question where the rules find them. Four
    searches are asked together; wider ones only where they found too little. */
-async function findPapers(env, r, most) {
+async function findPapers(env, r, most, ctx) {
   const get = env.FETCH || fetch;
-  const ask = async (q, sort, size) => {
-    if (!q) return [];
-    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 3500);
-    try {
-      const res = await get(EPMC + "?query=" + encodeURIComponent(q) + "&format=json&resultType=core&pageSize=" + size + (sort ? "&sort=" + sort : ""), { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal, cf: { cacheTtl: 86400, cacheEverything: true } });
-      if (!res.ok) return sort ? ask(q, "", size) : [];   // (should the service not take the order asked for, it is asked once more without it)
+  /* One search. The fifth trial showed what makes a question slow: most searches come back in a fifth of a second, but ordering a large set by citations
+     can take Europe PMC four seconds and more. So nobody waits for a slow search: after `wait` the reader gets what the other searches found, and the slow
+     one is left to finish behind the reply (ctx.waitUntil), so that Cloudflare keeps its answer and the next reader with that question gets it at once. */
+  const ask = (q, sort, size, wait) => {
+    if (!q) return Promise.resolve([]);
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 20000);
+    const once = async order => {
+      const res = await get(EPMC + "?query=" + encodeURIComponent(q) + "&format=json&resultType=core&pageSize=" + size + (order ? "&sort=" + order : ""), { headers: { accept: "application/json", "user-agent": "pharmakon.world (contact@pharmakon.world)" }, signal: ctl.signal, cf: { cacheTtl: 86400, cacheEverything: true } });
+      if (!res.ok) return order ? once("") : null;   // (should the service not take the order asked for, it is asked once more without it)
       const d = await res.json(); return ((d && d.resultList && d.resultList.result) || []).map(x => { const p = findPaper(x); return p ? Object.assign(p, { ab: String((x && x.abstractText) || "") }) : null; }).filter(Boolean);
-    } catch (e) { return []; } finally { clearTimeout(timer); }
+    };
+    const whole = (async () => { try { return await once(sort); } catch (e) { return null; } finally { clearTimeout(timer); } })();
+    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(whole);
+    let t = null; const late = new Promise(done => { t = setTimeout(() => done(null), wait); });
+    return Promise.race([whole, late]).then(v => { clearTimeout(t); return v; });
   };
+  const got = v => v || [];   // (null: the service refused, or was not in time)
   const seen = new Set(), out = [], add = list => { for (const p of list) { if (!p) continue; const k = p.doi || p.pmid; if (!seen.has(k)) { seen.add(k); out.push(p); } } };
   const all = r.names.concat(r.also || []), stems = r.groups.map(g => [...new Set(g.flatMap(iaNearStems))]);
   const onTopic = p => { const lt = iaFlat(p.t).split(/[^a-z0-9-]+/); return stems.every(st => st.some(s => lt.some(w => (s.includes("-") ? w.startsWith(s) : w.split("-").some(x => x.startsWith(s)))))); };
-  /* Two searches are asked together (in the third trial four at once were answered slowly by Europe PMC, some not at all within seven seconds): the most
-     cited papers with the drug in their title that hold the key words (in the title, or as a review), and the newest papers with drug and key words in the
-     title. Of the most cited, those with the key words in their very title come first. */
+  /* Three searches are asked together: the most cited papers with the drug in their title that hold the key words (in the title, or as a review); the
+     newest papers with drug and key words in the title; and, as what is there when those two are slow or find little, the papers that hold the drug and
+     the key words anywhere, in Europe PMC's own order. Of the most cited, those with the key words in their very title come first. */
   const round = async names => { const Q = findQueries(names, r.groups);
-    const [a, c] = await Promise.all([ask(Q.cited, "CITED%20desc", 8), r.groups.length ? ask(Q.onTitle, "P_PDATE_D%20desc", 2) : []]);
+    let [a, c, w] = await Promise.all([ask(Q.cited, "CITED%20desc", 8, 2600), r.groups.length ? ask(Q.onTitle, "P_PDATE_D%20desc", 2, 2600) : [], ask(Q.wide || Q.anyTitle, "", 4, 3200)]);
+    if (a === null && !(c && c.length) && !(w && w.length)) a = await ask(Q.cited, "", 8, 2500);   // (nothing came in time: once more, without the order, which is what takes the time)
+    a = got(a); c = got(c); w = got(w);
     const first = stems.length ? a.filter(onTopic) : a, rest = stems.length ? a.filter(p => !onTopic(p)) : [];
     add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
-    if (out.length < 3 && Q.wide) add(await ask(Q.wide, "", 4)); };
+    if (out.length < 3) add(w); };
   await round(r.names);
   if (out.length < 3 && all.length > r.names.length) await round(all);   // (the name the reader wrote found too little: with what its page is called)
   const Q = findQueries(all, r.groups);
-  if (out.length < 3 && Q.loose) add(await ask(Q.loose, "CITED%20desc", 4));
-  if (out.length < 2 && r.groups.length) add(await ask(Q.nameRev, "CITED%20desc", 4));
+  if (out.length < 3 && Q.loose) add(got(await ask(Q.loose, "CITED%20desc", 4, 2600)));
+  if (out.length < 2 && r.groups.length) add(got(await ask(Q.nameRev, "CITED%20desc", 4, 2600)));
   return out.slice(0, most).map(p => { let pick = null; try { pick = r.noq ? null : iaPick(p, r.groups, all, r.def); } catch (e) { pick = null; }
     const o = { t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind }; if (pick) { o.q = pick.q; if (pick.an) o.an = pick.an; } return o; });
 }
-async function find(request, url, env) {
+async function find(request, url, env, ctx) {
   if (request.method !== "POST") return json({ ok: false, error: "method" }, 405);
   const origin = request.headers.get("origin");
   if (origin) { let host = ""; try { host = new URL(origin).host; } catch (e) { host = ""; } if (host !== url.host) return json({ ok: false, error: "origin" }, 403); }
@@ -382,7 +394,7 @@ async function find(request, url, env) {
   try { const t = await request.text(); if (t.length > 2000) return json({ ok: false, error: "too long" }, 413); body = JSON.parse(t); } catch (e) { return json({ ok: false, error: "json" }, 400); }
   const r = readFind(body); if (r.error) return json({ ok: false, error: r.error }, 422);
   if (r.held) return json({ ok: true, held: true, papers: [] });
-  try { return json({ ok: true, papers: await findPapers(env, r, 6) }); }
+  try { return json({ ok: true, papers: await findPapers(env, r, 6, ctx) }); }
   catch (e) { return json({ ok: false, error: "search" }, 502); }
 }
 // one more person asked a question that is on the public list: the item's number, counted
@@ -407,9 +419,9 @@ async function want(request, url, store) {
   } catch (e) { return json({ ok: false, error: "store" }, 503); }
 }
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url), at = url.pathname.replace(/\/+$/, "");   // "/api/ask/" is "/api/ask"
-    if (at === "/api/find") return find(request, url, env);
+    if (at === "/api/find") return find(request, url, env, ctx);
     if (at === "/api/answer") return json({ ok: true, off: true });   // (sites 2.18 and 2.19 asked a model here; since 2.20 the papers' own words come with /api/find, by rule. A page of those versions still open is told it is off)
     if (at !== "/api/ask" && at !== "/api/want") return url.pathname.startsWith("/api/") ? json({ ok: false, error: "not found" }, 404) : env.ASSETS.fetch(request);
     const store = env.QUESTIONS;
