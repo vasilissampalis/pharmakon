@@ -6,7 +6,7 @@
 // Why: the editor's workspace cannot reach Europe PMC or the site. This runs the very code the site's server runs (the same file, imported)
 // against the real Europe PMC, so that what a reader would be shown is read by the editor before a reader meets it.
 // Since site 2.20 no model takes part: no key is used, nothing is spent, and USAGE.json (still written, for the workflow's step) is empty.
-// A request: {"questions": [{"q": "...", "names": ["..."], "words": ["..."], "also": ["..."], "def": 1}]}. The questions are the editor's own (never a
+// A request: {"questions": [{"q": "...", "names": ["..."], "words": ["..."], "also": ["..."], "def": 1, "t": 1}]}. The questions are the editor's own (never a
 // visitor's); "q" is only a label here: the server gets the names and the key words, as it does from the page.
 // What is written (OUT_DIR/trial-<time>.json), for each question: what Europe PMC was asked and how many papers each search gave; the
 // papers in the order a reader would see them (title, kind, year, journal) with the words shown for each, or why none were; the time it
@@ -58,7 +58,7 @@ const around = p => { const words = String(p.q).replace(/…/g, "").trim();
 // why a paper got no words, in the rule's own terms (worked out here from the summary in memory; nothing of the summary is written)
 // tried: for a sentence that stood in the right place and held the key word, yet gave no 15 words that pass: its SHAPE (little words; K a key word of the question,
 // D the drug's name, # a number, _ any other word), so that the editor can see which rule stopped it. Never the sentence.
-const whyNone = (p, r) => { const ab = abOf(p); if (!ab) return { why: "it has no summary in Europe PMC" }; if (r.noq) return { why: "the question is about the law, prices or drug tests" };
+const whyNone = (p, r) => { const ab = abOf(p); if (!ab) return { why: "it has no summary in Europe PMC" }; if (r.noq) return { why: r.gen ? "titles only: the question names no single drug" : "titles only: the question is about the law, prices or drug tests, about pregnancy or children, or the page asked for titles" };
   const parts = iaParts(ab), notes = [], at = [], all = r.names.concat(r.also || []); iaPick(Object.assign({}, p, { ab }), r.groups, all, r.def, (n, i) => { notes.push(n); if (typeof i === "number" && !at.includes(i)) at.push(i); });
   const stems = [...new Set(r.groups.flat().flatMap(iaNearStems))], names = all.flatMap(x => nameForms(x.split(" ")[0]));
   const mark = w => { const core = w.toLowerCase().replace(/[^a-z0-9'/-]/g, "").replace(/'s$/, ""), tail = (w.match(/[,;:.)]+$/) || [""])[0], head = (w.match(/^[(]+/) || [""])[0];
@@ -71,7 +71,7 @@ for (const f of files) {
   let req = null; try { req = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")); } catch (e) { console.log("instant trial: " + f + " is not JSON"); continue; }
   const items = [];
   for (const q of Array.isArray(req.questions) ? req.questions.slice(0, 60) : []) {
-    asked = []; const body = JSON.stringify(Object.assign({ names: q.names, words: q.words }, Array.isArray(q.also) && q.also.length ? { also: q.also } : {}, q.def ? { def: 1 } : {})), rf = readFind(JSON.parse(body));
+    asked = []; const body = JSON.stringify(Object.assign({ names: q.names, words: q.words }, Array.isArray(q.also) && q.also.length ? { also: q.also } : {}, q.def ? { def: 1 } : {}, q.t ? { t: 1 } : {})), rf = readFind(JSON.parse(body));   // (t: titles only, as the page asks for a question about pregnancy or children or one that names no single drug)
     const post = env => worker.fetch(new Request("https://pharmakon.world/api/find", { method: "POST", headers: { "content-type": "application/json", origin: "https://pharmakon.world" }, body }), env);
     const t0 = Date.now(), mine = asked, live = { ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: viaNet, CACHE }; let reply = null, status = 0;
     try { const r = await post(live); status = r.status; reply = await r.json(); } catch (e) { reply = { error: String(e && e.message).slice(0, 200) }; }
@@ -83,7 +83,7 @@ for (const f of files) {
     // the server's own computing time: the same request again, from memory (the middle one of five)
     const again = []; for (let i = 0; i < 5; i++) { const c0 = performance.now(); try { await (await post({ ASSETS: {}, FETCH: fromMemory, CACHE })).json(); } catch (e) { /* not timed */ } again.push(performance.now() - c0); } again.sort((a, b) => a - b);
     const papers = ((reply && reply.papers) || []).map(p => Object.assign({ title: p.t, kind: p.kind, y: p.y, j: p.j, free: !!p.oa, id: p.doi || p.pmid }, p.q ? { shown: p.q, about: p.an === 1 ? "animals or cells" : p.an === 2 ? "its summary covers animals or cells too" : "", around: around(p) } : Object.assign({ shown: null }, rf.error ? { why: "" } : whyNone(p, rf))));
-    items.push(Object.assign({ q: q.q, names: q.names, also: q.also || [], words: q.words, def: !!q.def, status, ms, more: !!(firstReply && firstReply.more), search_ms: (firstReply && firstReply.ms) || [], asked_twice: (firstReply && firstReply.again) || 0, which_asking_answered: (firstReply && firstReply.won) || [], its_own_ms: (firstReply && firstReply.own) || [], from_kept: (firstReply && firstReply.kept) || 0 },
+    items.push(Object.assign({ q: q.q, names: q.names, also: q.also || [], words: q.words, def: !!q.def, titles_only: !!(firstReply && firstReply.titles), status, ms, more: !!(firstReply && firstReply.more), search_ms: (firstReply && firstReply.ms) || [], asked_twice: (firstReply && firstReply.again) || 0, which_asking_answered: (firstReply && firstReply.won) || [], its_own_ms: (firstReply && firstReply.own) || [], from_kept: (firstReply && firstReply.kept) || 0 },
       firstReply && firstReply.more ? { asks, whole_ms: wholeMs, still_more: !!(reply && reply.more), first_list: firstIds.length, of_them_in_the_whole_list: firstIds.filter(i => ((reply && reply.papers) || []).some(p => idOf(p) === i)).length } : {},
       { server_ms: Math.round(again[2] * 10) / 10, held: !!(reply && reply.held), papers, searches: mine }));
     await new Promise(r => setTimeout(r, 400));   // (one question after another, with a breath between: Europe PMC is a shared service)

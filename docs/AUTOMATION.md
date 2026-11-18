@@ -1074,6 +1074,164 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
       a real browser), and before any change to a rule: a trial (`data/auto/requests/instant-*.json`), read line
       by line.
 
+32. **Answered by itself, within minutes, and tried again; the reader's own list behind one line** (18 November 2026,
+    13:34 to 13:40 Athens; lane 19; site 2.21.0). His words, in the order he wrote them, of the questions he had sent
+    ("Tried. No answer passed our checks yet · sent 14 hours ago", "Written. A person has to check it first · sent 3
+    days ago"): "why are these still pending and they have not been answered yet? ... this is a bug. and also the
+    questions should be automatically answered no 'Written. A person has to check it first' --- this should happen for
+    every pending question not only the ones on the list.... why is our ai not working"; of "Your past searches (0) ...
+    Nothing yet: a question is kept when you ask it": "this is bad design you should be able to see your past searches
+    in a discreet past searches history in your device that you can click on and return easily back. it should be below
+    the pending questions and it should be beautiful maybe ... a window gets open in the right ... (a similar format to
+    when you click on the evidence of a particular question, it has to be completely coherent to the rest of the
+    website) and their answers if we have answered them and not that ugly up and down arrow. and it should be easy and
+    clear that you can delete your search history"; "'and some then wait for a person.' this should be removed from the
+    landing page"; "can the answers get ... answered by themselves? and can they get answered almost instantly? one day
+    or two is too ... much and slow our ai is ... ancient this is bad people want answers now"; 13:35, with a picture
+    of the start page: "this format of questions is ugly you cannot even see the website"; 13:36: "our ai becoming
+    perfect is our first priority. i like the quick searches but our site's answers have to be given much faster";
+    13:38 and 13:40, of a question about mothers and their children's drug use that got two related answers and no
+    research: "related questions are useful in this instance just not exactly what i was looking for ... so we have to
+    give instant search on this instance too --- but a very big priority is still making our ai answer questions inside
+    the website much more efficiently and fast".
+    **What the records showed.** (a) GitHub started the half-hourly look about once in 60 to 85 minutes (asked for at
+    :07 and :37; its own run list of that day), and a run that worked took 7 to 22 minutes. (b) A question was tried
+    once and then left for a day or two (`turn_of`). (c) A try was lost to faults that were not the answer's: a number
+    that stood in another item of the same source ("16 healthy participants": the writer named the finding, not the
+    item that says who was studied), three drafts running; "the source gives this for men" where the word "male"
+    stood beside animals; one writer's reply that was no JSON, twice; "the lane itself failed on it (HTTPError)". (d)
+    Finished answers were parked: five for a further reader that "could not be asked", three answers about amounts
+    and others for the editor's reading, six for their topic, four for disagreeing with a checked claim. (e) Why the
+    further readers "could not be asked": the two that stood first never answered (Gemini 4 Hydrogen: no verdict on
+    30 of 34 sentences asked together; Gemini 3.8 Flash: nothing within 170 seconds), and, found in the first run of
+    lane 19, a reader that answers with the list of its verdicts alone (186 characters, ended in order) was read as
+    having given none, because the lane took the outermost braces of a reply. (f) Found in the afternoon's runs: a
+    question lost every try it had to ONE paper whose full text Europe PMC failed to give (HTTP 500 on that paper,
+    each time): the fetch of a full text was the one call of the lane that was not guarded ("the lane itself failed
+    on it (HTTPError)"). Such a paper is now passed over, with a note in the record (`looked`, "fault"), and the
+    question is written from the other sources.
+    **Lane 19** (`scripts/auto/lane.py`). No gate is taken away. What code can mend is mended before a rule judges:
+    a number of a sentence that stands in another item of a source the sentence already rests on puts that item
+    under the sentence too, so that every reader reads the sentence beside it (`mend_uses`; never an item of another
+    source, never a year); only the words "men" and "women" say that a result was for one sex (the exam's result is
+    the same before and after: 3 of 31 wrong cards caught, 5 of 287 good ones stopped). A writer that gives no answer
+    in the form asked for, or cannot be reached, has a stand-in (`writer_2`). The further readers that answer stand
+    first (Gemini 3.6 Flash, then 3 Flash), each with 5,000 tokens more room; a reply that was cut off is asked for
+    again with twice the room; a reader's verdicts are read however it gave them (`verdicts_json`); how a reply that
+    could not be read ended, and how it began, is written into the record. **It tries again by itself**
+    (`turn_of`): at once, in the next run, after a fault that was not the answer's (six times a day at most); the
+    same day with another team of models after an answer that did not pass (twice for the system's own question,
+    three times for one a person sent); then daily, then further apart (`wait_days`), and at once when the finders
+    hold more. Nothing is parked for a reader that could not be asked: such an answer is kept, not shown, and
+    worked on again in the next run. A second look at an answer that is shown leaves it shown if the second look
+    does not pass. What the editor finds in an answer it holds goes to the writer of the next one
+    (`data/auto/held.json`, "say"); the editor's word on a disagreement with a checked claim that the second
+    reader called for the wrong reason is kept in `data/auto/lane/agreed.json` and that claim no longer stops the
+    next answer to that question; a hold is of the version the editor read (`site/build.js`).
+    **Questions where a wrong word can hurt** (the editor's rule of 15 November made every one of them wait for a
+    person; his words above ask that none does). What each kind does is now a setting
+    (`data/auto/lane/policy.json`, "stakes"), in force from site 2.21.0, whose pages say what it does. Dying,
+    overdose or an emergency, mixing drugs, pregnancy or children: "strict": published by the system only where the
+    answer meets a bar higher than every other answer's, all of it code (`strict_lacks`): its short answer rests on
+    an official body's page (tier 1) or on a review read in full; a further reader read it and none was out of
+    reach; no word of its first two sentences can be read as a promise of safety (`REASSURES`: safe, harmless,
+    unlikely, rare unless "rare but", no risk, well tolerated ...); its opening word does not say that a danger is
+    absent ("No" to a question about a danger) or that a thing may be done ("Yes" to "can I", "is it safe"); and the
+    second reader and every further reader, each asked that very question ("plays_down"), said that it does not play
+    a danger down (no clear word counts as yes). An answer that does not meet the bar is not parked: there is no
+    answer yet and the system tries again. Under every such answer the page shows the way to the emergency numbers,
+    in the words the footer has always had. **Still waiting for an editor, whatever the setting:** suicide and
+    self-harm ("person"); what to do in an emergency (`NEVER_ALONE`: emergency guidance is the senior author's own
+    text); an amount that kills; an answer that disagrees with a checked claim; and every answer about amounts
+    (`hold_new.amounts`: on the exam of the lane's own rows 9 of 90 were not good). He can change any of it in that
+    file. Tested in the lane's own check with a scripted team; no real answer has gone through the stricter bar yet:
+    the editor reads the first ones in the next session.
+    **The editor's reading of everything that waited** (14:13 Athens, sentence by sentence against the sources' words
+    in the records). Let out: `au_w_0030`, `au_w_0031` (they waited only for a reader that could not be asked) and
+    `au_w_0046` (amounts: eight rows, each a health body's own words for the people it names; `amounts` is true from
+    now on so that it shows; new ones stay held). Not let out, written again by themselves with what was found:
+    `au_w_0004` and `au_w_0005` (damage to nerve cells said as a fact about people where the review's findings are
+    from laboratory animals; both rightly stopped by the comparison with the checked claims), `au_w_0009` ("combined
+    with psychotherapy" left out), `au_w_0017` (the half-lives of two young children given as how long cannabis
+    stays in an adult), `au_w_0044` (an amount an analysis worked out), `au_w_0047` ("except pregnant women" left
+    out of who an amount is for), `au_w_0048` (as before). `au_w_0008`: the disagreement was a false alarm (what
+    happens while the drug acts, beside a difference found in people who had used it many times): written into
+    `agreed.json`, and written again. Not the editor's to let out, and left for him: `au_w_0041` (Does cannabis cause
+    cancer?: it disagrees with `cl_can_smoked_cancer`, a claim of Section 7 that waits for his word), `au_w_0012`
+    (after naloxone), `au_w_0010` (suicidal thoughts).
+    **The first runs of lane 19** (14:21 and 14:36 Athens, the three questions of his list that an answer could be
+    written for). "Does kanna have psychoactive effects?": published, read by the second reader and by both further
+    readers. "Does cannabis make sex better?": written as the editor's note asked ("People who use cannabis report
+    benefits like longer intercourse and better orgasms. Use has been linked to higher satisfaction in men and
+    women."), accepted by the second reader and by Gemini 3.6 Flash, kept back only for the list of verdicts that was
+    not read (mended the same hour). "Does kanna help with anxiety?": refused twice more for "men" (mended the same
+    hour). Gemini 3.6 Flash read all three and refused, with its reason, six sentences that said a little more than
+    their source.
+    **The look** (`.github/workflows/auto.yml`, `scripts/auto/tick.py`). Asked for every five minutes (the shortest
+    GitHub allows; it starts a scheduled run when it has a machine free). A question a person sent is searched and
+    written first and alone (`--sent`), and what was written for it is kept and published in the middle of the run,
+    before the system's own questions (`keep_now`, `tick.py publish`); a lane request publishes at once
+    (`lane.yml`). Ceilings: 240 writing runs and 96 publishings a day; what limits a day is the models' free
+    allowances (some fifteen answers). **At once, with his key** (`site/worker/_worker.js`, `startWork`): where the
+    site's server holds a key that may only start workflows of this one repository (`GH_RUN_TOKEN`), a NEW question
+    starts the work the moment it arrives: at most once in twenty seconds from one of Cloudflare's places, with no
+    word of the question (the request names the workflow and the branch). Without the key nothing runs. His words
+    when told of the five minutes (14:44): "if it can be every minute or 30 seconds or even a few seconds it would be
+    even better. if it can be better than 5 minutes it's okay, whatever is best". What is best is not a faster clock
+    but no clock: GitHub starts no scheduled run more often than every five minutes, and in the first hour after the
+    five minutes were asked for (14:21 to 15:21 Athens) its clock started no run at all (every run of that hour was
+    asked for by the editor); a run that kept looking every few seconds would hold one of GitHub's machines all day
+    to look at nothing, and GitHub's terms for Actions speak against that use ("don't use Actions ... as part of a
+    serverless application"; read on 18 November 2026:
+    https://docs.github.com/en/site-policy/github-terms/github-terms-for-additional-products-and-features). A start
+    by the question itself is seconds, and costs nothing while nobody asks. Until the key is there the look comes when GitHub's clock does (about hourly on
+    that day). The page still promises no time (`loop` stays false until the times have been measured on questions
+    people sent).
+    **The reader's list** (site 2.21.0; `site/src/app.insight.js`, askedBox, youHtml). The start page shows one quiet
+    line, "Your questions", with how many were answered and how many are in progress, and no question's own words;
+    it turns green when one is answered. A tap opens a panel at the right, in the frame of the evidence of an answer
+    (the same sheet, bar and Back button; the phone's Back closes it): the questions that wait or were answered, each
+    with what the system has done with it ("Working on it by itself", "No answer passed our checks yet. It tries
+    again", "Searched. Nothing we can read is published on it yet", "Written. An editor reads this kind first"),
+    then the past searches. **Past searches** are kept by themselves on the device (a question that stays in the box
+    for two and a half seconds with its result, or Enter), the last thirty, each with the answer the site gave;
+    until 2.20 they were off until switched on and were kept only on Enter, so the list said 0. One plain button,
+    "Delete my search history", clears them; "Don't keep my searches" clears them and stops it, and the same switch
+    stands on About us, Privacy, which says what is kept. An open page looks every minute whether a newer site
+    exists while a question waits.
+    **Research at once for two more kinds of question** (`insFindTerms`; the server's `FIND_TITLES`, `noq`). A
+    question about pregnancy or children, and a question about drugs that names no single drug (its "name" is what
+    research calls the subject: "drug use", "substance use"; "addiction" where it is about that; at least one key
+    word is needed), are looked up now and listed BY TITLE ONLY: no words of a paper are shown for them. Until 2.20
+    neither was looked up. The rule that picks a paper's own words is unchanged, and it was tried on questions that
+    name a drug; words for these wait for a trial of their own. Dying, overdose, suicide and amounts are still not
+    looked up. **The eleventh trial** (14:49, twelve questions that name no single drug, the key words written by the
+    editor, the plan of 2.20): the titles were on the question for most ("Parental and peer influences on the risk of
+    adolescent drug use", "Understanding reasons for drug use amongst young people: a functional perspective",
+    "Familial transmission of substance use disorders"); beside the point where the key word has another sense
+    ("creative" teaching, "potential" candidates) or stood far from the subject (poverty in a paper about pregnancy);
+    one question with three key words found nothing; and it was slow: the first list after 3.0 s every time, the
+    whole list after 3.8 to 11.6 s, because "drug use" in a title is a very large set and Europe PMC orders it slowly.
+    **The plan for such a question since then** (`roundGen`): two searches, each asked once, both for the most cited:
+    reviews with the subject in the title that hold every key word, and papers with the subject and every key word in
+    the very title; one reply within five seconds in the place of a quick thin one; at most three key words; titles
+    only. **The twelfth trial** (asked for with this publishing, `instant-0012.json`): the same questions and ten
+    more, among them five about pregnancy or children that name a drug, this time with the names and key words the
+    page itself makes for them (`insFindTerms`, read off the built page), to be read for its titles and its times.
+    **Checks:** the lane's own (the mends, the stand-in, the retry rules, the stricter bar and what never goes out
+    alone, the verdicts in every form, a paper that cannot be fetched), `scripts/ux/worker_test.mjs` (143: the start
+    of the work with and without the key and not twice in twenty seconds; a question about suicide not looked up;
+    titles only for pregnancy and for a question that names no drug, with two searches asked once each),
+    `scripts/ux/site24_check.js` (162, in a real browser: the line, the panel, Back, past searches kept and deleted
+    and still there after a reload, the general lookup), `scripts/ux/auto_check.js` (96), `scripts/ux/insight_check.js`
+    (183; its check of what the device keeps now says what the Privacy text says: past searches, whole questions the
+    reader typed, thirty at most), parity, smoke, the tick's, the finders', the validator.
+    **For him.** (1) One word for his own question "Does cannabis cause cancer?": "approve" shows the checked answer
+    on smoked cannabis and lung cancer (Section 7), and the system's own answer can then stand beside it. (2) If he
+    wants the work to start the second a question is sent: one key, made at GitHub and pasted at Cloudflare, never
+    to the editor (steps in the editor's message of that day). (3) Unchanged: "use readers" (CDC death figures),
+    "keep them private" (the questions people chose to send).
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

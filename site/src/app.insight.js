@@ -1141,6 +1141,7 @@ function insInject(box, res) {
       words.onclick = e => { e.preventDefault(); e.stopPropagation(); const open = words.getAttribute("aria-expanded") !== "true"; more.forEach(a => { a.hidden = !open; }); words.setAttribute("aria-expanded", String(open)); words.textContent = (open ? "Fewer results" : "More results (" + more.length + ")"); }; } }
   const live = document.getElementById("search-count"); if (live) live.textContent = insSay(res);
   insAuto(box.querySelector(".sr-fit"), res, false);   // (2.16.1) with no answer of ours: what is published on it, looked up by itself
+  histSoon(res);                                              // (2.21) a question that stays in the box is kept among the reader's past searches, on this device
   // 2.5: a listed question that stays on the screen is counted once (wantCount), only where its card says so
   clearTimeout(INS.wantT);
   if (res.note === "want") INS.wantT = setTimeout(() => { const b = document.getElementById("search-results"), s = document.getElementById("search");
@@ -1500,16 +1501,18 @@ document.addEventListener("click", e => {
      per new version, on this device). Reading an answered question, or the cross beside any, takes it off the list.
    Reading the list back is how a person without an account, an address or a cookie hears that their question was answered. ---------- */
 const ASK_KEY = "pk-asked", ASK_API = "api/ask";
+// the reader's past searches (2.15.3; kept by themselves since 2.21: see histAdd, below). Named here because the reader's list, which shows how many there are, is drawn before the part of the script that keeps them has run
+const HIST_KEY = "pk-hist", HIST_ON = "pk-hist-on", HIST_MAX = 30, HIST_WAIT = 2500;
 // (2.6) the site publishes itself, with new answers, without a new version number: a kept question is asked again once per
 // BUILD (the build's own stamp), and while a question waits an open page looks every few minutes whether a newer site exists
 // (a small fixed file, data/build.json: nothing about the reader is sent) and then offers to load it
-const ASK_BUILD = typeof SITE_BUILD === "string" ? SITE_BUILD : SITE_VERSION, ASK_LOOK = 5 * 60 * 1000;
+const ASK_BUILD = typeof SITE_BUILD === "string" ? SITE_BUILD : SITE_VERSION, ASK_LOOK = 60 * 1000;   // (2.21: every minute while a question waits; the system now writes within minutes, and the look is one small fixed file)
 let ASK_NEWER = false;
 // what the page says once a question is sent. The promise of an answer within the hour is made only by a site whose half-hourly
 // run is on and has been seen to keep it (AUTO_LOOP, from data/auto/lane/policy.json at build time); until then: the plain truth
 const ASK_SENT = (typeof AUTO_LOOP !== "undefined" && AUTO_LOOP)
   ? "Sent. Our system starts on it within half an hour. If it finds research it can read, the answer is usually here within the hour: your question then turns green under “Your questions” on the start page."
-  : "Sent. Our own answer usually takes a day or two; some wait for a person. It turns green under “Your questions” on the start page.";
+  : "Sent. Our system works on it by itself and keeps trying until an answer passes its checks. It turns green under “Your questions” on the start page.";
 function askedLook() {   // one look: is the site on the server newer than this page?
   if (ASK_NEWER) return Promise.resolve(true);
   return fetch("data/build.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => { if (j && typeof j.build === "string" && j.build !== ASK_BUILD) { ASK_NEWER = true; if (askedWatch.t) clearInterval(askedWatch.t); askedBox(); } return ASK_NEWER; }).catch(() => false);
@@ -1555,32 +1558,98 @@ function askedGoneAdd(k) { const s = askedGoneSet(); s.add(String(k)); try { ses
 const askedGone = q => askedGoneSet().has(insClean(q).slice(0, 200).toLowerCase());
 // a question sent by the page a moment ago that was only the beginning of this one ("does kanna help" before "does kanna help with anxiety") leaves the list
 function askedTidy(k) { const now = Date.now(), list = askedList(), keep = list.filter(x => x.k === k || !(x.auto && !x.w && now - (x.t || 0) < 180000 && k.length > x.k.length && k.indexOf(x.k) === 0)); if (keep.length !== list.length) askedSave(keep); }
+/* ---------- Your questions, behind one quiet line (site 2.21, 18 November 2026) ----------
+   The senior author, 13:34 and 13:35 Athens, with a picture of the start page: "this format of questions is ugly you cannot even see the website"; of the
+   past searches: "this is bad design you should be able to see your past searches in a discreet past searches history in your device that you can click on
+   and return easily back. it should be below the pending questions and it should be beautiful maybe have the format of every question answered where a
+   window gets open in the right ... (a similar format to when you click on the evidence of a particular question, it has to be completely coherent to the
+   rest of the website) and their answers if we have answered them and not that ugly up and down arrow. and it should be easy and clear that you can delete
+   your search history".
+   So the start page shows one line, "Your questions", with what it holds in a few words and no question's own words (a phone is often shared). A tap opens
+   a panel at the right, built like the evidence of an answer (the same sheet, bar and Back): the questions that wait or were answered, then the past
+   searches, newest first, each with its answer where the site has one, and under them one plain button, "Delete my search history". ---------- */
+const YOU = { open: false, opener: null, pushed: false };
+const youAgo = t => { const h = (Date.now() - (t || Date.now())) / 3600000; return h < 1 ? "less than an hour ago" : h < 36 ? Math.round(h) + (Math.round(h) === 1 ? " hour ago" : " hours ago") : Math.round(h / 24) + " days ago"; };
+const youAnswer = x => { const id = x && x.id; if (!id) return null; if (isAuto(id)) return { id, q: AUTO[id].q, short: AUTO[id].short, href: "#auto/q-" + id }; if (!claimById[id]) return null; const sp = (SIMPLE.claims || {})[id]; return { id, q: anyQuestion(id) || "", short: sp ? sp.short : "", href: answerAddr(id, x.p) }; };
 function askedBox() {
   const box = document.getElementById("home-asked"); if (!box) return;
   { const all = askedList(), keep = all.filter(it => !it.u && !it.gone); if (keep.length !== all.length) askedSave(keep); }   // (2.15.2) rows kept by an older page as "Not a whole question" leave the list
-  const list = askedList().filter(it => it.st !== "ans" || it.h || claimById[it.id] || isAuto(it.id));
-  if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
-  const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
-  const byNew = (a, b) => (b.t || 0) - (a.t || 0);   // (2.9.2, the senior author) the newest first, the oldest last
-  // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question
-  // that waits can be opened too: it is asked again in the box above, which shows what the site has on it so far
-  // (2.15.2) how long ago, and for a question on our list what our system has done with it so far (AUTO_STATE, from the lane's own record)
-  const ago = it => { const h = (Date.now() - (it.t || Date.now())) / 3600000; return h < 1 ? "less than an hour ago" : h < 36 ? Math.round(h) + (Math.round(h) === 1 ? " hour ago" : " hours ago") : Math.round(h / 24) + " days ago"; };
-  const state = it => { const s = it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : ""; return s === "editor" || s === "person" ? "Written. An editor reads this kind before it shows" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Working on it. It tries again by itself" : s === "tried" ? "No answer passed our checks today. It tries again" : s === "new" ? "In line. Not tried yet" : ""; };
-  const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-k">' + icon("clock") + (state(it) || k) + (it.sent ? '<span class="aq-ago"> · ' + (it.kept ? "asked " : "sent ") + ago(it) + "</span>" : "") + '</span><span class="aq-q">' + esc(it.q) +
-    '</span><span class="aq-go">See what we have so far ' + icon("arrow") + "</span></button>" + x(it) + "</li>";
-  const row = it => it.st === "ans"
-    ? '<li class="aq ans"><a class="aq-a" href="' + esc(it.h ? it.h : isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '"' + (it.h ? "" : ' data-sheet="' + esc(it.id) + '"') + ' data-asked-open="' + esc(it.k) + '"><span class="aq-k">' + icon("check") + 'Answered</span><span class="aq-q">' + esc(it.q) + '</span><span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
-    : it.w ? look(it, "On our list")
-    : it.sent ? look(it, "Sent. We are checking")
-    : '<li class="aq unsent"><span class="aq-a"><span class="aq-k">Not sent</span><span class="aq-q">' + esc(it.q) + '</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
-  // (the senior author, 15 November, seeing his own unsent question listed: "does the site know what the user asked ... even if he
-  // didn't send the email? ... the user should be informed": the list says where it is kept, and each row whether it was sent)
+  const list = askedList().filter(it => it.st !== "ans" || it.h || claimById[it.id] || isAuto(it.id)), hist = histOn() ? histList() : [];
+  const panel = document.querySelector("#yousheet .panel");
+  if (panel) { const top = panel.scrollTop; panel.innerHTML = youHtml(list, hist); panel.scrollTop = top; }
+  if (!list.length && !hist.length) { box.hidden = true; box.innerHTML = ""; return; }
+  const nAns = list.filter(it => it.st === "ans").length, nWait = list.filter(it => it.st !== "ans" && (it.sent || it.w)).length, nNot = list.length - nAns - nWait;
+  const said = [nAns ? nAns + " answered" : "", nWait ? nWait + " in progress" : "", nNot ? nNot + " not sent" : ""].filter(Boolean).join(" · ") || (hist.length + (hist.length === 1 ? " past search" : " past searches"));
+  // (the senior author, 15 November: "the user should be informed" what is kept. The line says that something is kept and how much; the panel says what and where)
   const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
-  box.innerHTML = '<h2 class="aq-h">Your questions</h2><p class="aq-note">' + (autoSendOn() ? "This list is kept on this device only. A question we had no answer to is sent to our system by itself (About us, Privacy switches that off). It works on them by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered."
-    : "This list is kept on this device only. We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first: most take a day or two, and some then wait for a person. A question turns green here when it is answered.") + "</p>" + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>";
+  box.innerHTML = '<button type="button" class="you-bar' + (nAns ? " has-ans" : "") + '" data-you-open aria-haspopup="dialog" aria-controls="yousheet">' + icon(nAns ? "check" : "clock") + '<span class="you-t">Your questions</span><span class="you-n">' + esc(said) + "</span>" + icon("arrow", "you-go") + "</button>" + newer;
   box.hidden = false;
   askedCheckSoon(); askedWatch();
+}
+// the panel: what waits or was answered, the past searches, and the way to delete them
+function youHtml(list, hist) {
+  const x = it => '<button type="button" class="aq-x" data-asked-x="' + esc(it.k) + '" aria-label="Take this question off the list">' + icon("x") + "</button>";
+  const byNew = (a, b) => (b.t || 0) - (a.t || 0);   // (2.9.2, the senior author) the newest first, the oldest last
+  // (2.15.2) for a question on our list: what our system has done with it so far (AUTO_STATE, from the lane's own record). (2.21, lane 19) The system tries
+  // again by itself, and the words say so; only a few kinds are read by an editor before they show.
+  const state = it => { const s = it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : ""; return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Working on it by itself" : s === "tried" ? "No answer passed our checks yet. It tries again" : s === "new" ? "In line. Not tried yet" : ""; };
+  // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question that waits can be opened too:
+  // it is asked again in the box, which shows what the site has on it so far
+  const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">' + icon("clock") + (state(it) || k) + (it.sent ? '<span class="aq-ago"> · ' + (it.kept ? "asked " : "sent ") + youAgo(it.t) + "</span>" : "") +
+    '</span>\u00A0<span class="aq-go"><span class="aq-go-t">See what we have so far </span>' + icon("arrow") + "</span></button>" + x(it) + "</li>";
+  const row = it => it.st === "ans"
+    ? '<li class="aq ans"><a class="aq-a" href="' + esc(it.h ? it.h : isAuto(it.id) ? "#auto/q-" + it.id : answerAddr(it.id, it.p)) + '"' + (it.h ? "" : ' data-you-ans="' + esc(it.id) + '"' + (it.p ? ' data-page="' + esc(it.p) + '"' : "")) + ' data-asked-open="' + esc(it.k) + '"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">' + icon("check") + 'Answered</span> <span class="aq-go">Read the answer ' + icon("arrow") + "</span></a>" + x(it) + "</li>"
+    : it.w ? look(it, "On our list")
+    : it.sent ? look(it, "Sent. We are checking")
+    : '<li class="aq unsent"><span class="aq-a"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">Not sent</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
+  const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
+  const note = autoSendOn() ? "A question we had no answer to is sent to our system by itself (About us, Privacy switches that off). It works on them by itself, the ones people sent first, and keeps trying until an answer passes its checks. A question turns green here when it is answered."
+    : "We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first, and keeps trying until an answer passes its checks. A question turns green here when it is answered.";
+  const mine = list.length ? '<p class="aq-note">' + note + "</p>" + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>"
+    : '<p class="aq-note">No question of yours is waiting. When the site has no answer to a question, it is listed here until it is answered.</p>';
+  // the past searches: the question, when it was asked, and the site's answer in a line where it has one
+  const past = !histOn() ? '<p class="aq-note">Your searches are not kept on this device. <button type="button" class="linklike" data-hist-on>Keep my past searches here</button></p>'
+    : !hist.length ? '<p class="aq-note">Nothing yet. A question you ask is kept here, on this device only, so that you can come back to it.</p><p class="you-acts"><button type="button" class="linklike" data-hist-off>Don’t keep my searches</button></p>'
+    : '<p class="aq-note">What you asked here, newest first. Tap one to ask it again.</p><ul class="you-hist">' + hist.map(h => { const a = youAnswer(h);
+        return '<li><button type="button" class="hist-q" data-hist="' + esc(h.q) + '"><span class="you-hq">' + esc(h.q) + '</span><span class="you-ha">' + (a && a.short ? '<span class="you-ok">' + icon("check") + "Answered</span> " + esc(a.short.length > 120 ? a.short.slice(0, 118).replace(/\s+\S*$/, "") + "…" : a.short) : a ? '<span class="you-ok">' + icon("check") + "Answered</span>" : esc(youAgo(h.t))) + "</span></button></li>"; }).join("") +
+      '</ul><p class="you-acts"><button type="button" class="you-del" data-hist-clear>' + icon("x") + 'Delete my search history</button><button type="button" class="linklike" data-hist-off>Don’t keep my searches</button></p>';
+  return '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye">Kept on this device only</span></div>' +
+    '<h2 id="you-title" tabindex="-1">Your questions</h2>' + mine + '<h3 class="ev-h you-h" id="you-past">Past searches</h3>' + past;
+}
+function youOpen(opener) {
+  const sh = document.getElementById("yousheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
+  if (!YOU.open) { YOU.opener = opener || document.activeElement; try { history.pushState({ pkYou: 1, pk: NAV_CUR }, ""); YOU.pushed = true; } catch (e) { YOU.pushed = false; } }   // the phone's Back button closes the panel instead of leaving the page
+  YOU.open = true; sh.classList.add("open"); document.documentElement.classList.add("sheet-open"); hidePop(); closeSearch();
+  askedBox(); panel.scrollTop = 0;
+  const f = panel.querySelector(".ev-back"); if (f) f.focus({ preventScroll: true });
+  return true;
+}
+// then: what to do once the panel is closed and the browser's history is back where it was (an answer to open, a question to ask again, a place to go to)
+function youClose(fromHistory, then) {
+  if (!YOU.open) { if (then) then(); return; }
+  YOU.open = false; document.getElementById("yousheet").classList.remove("open"); document.documentElement.classList.remove("sheet-open");
+  const back = YOU.pushed && !fromHistory; YOU.pushed = false;
+  if (back) { if (then) { const go = () => { window.removeEventListener("popstate", go); clearTimeout(t); then(); }, t = setTimeout(go, 400); window.addEventListener("popstate", go); } history.back(); }
+  else if (then) then();
+  if (!then && YOU.opener && YOU.opener.focus && document.contains(YOU.opener)) YOU.opener.focus({ preventScroll: true });
+}
+if (typeof window !== "undefined") {
+  window.addEventListener("popstate", () => { if (YOU.open) youClose(true); });
+  document.addEventListener("click", e => { if (!e.target.closest) return;
+    const ob = e.target.closest("button[data-you-open]"); if (ob) { e.preventDefault(); youOpen(ob); return; }
+    if (e.target.closest("#yousheet .ev-back") || e.target.closest("#yousheet > .scrim")) { e.preventDefault(); youClose(); return; }
+    // an answered question: the panel closes and the answer opens over the page, as it does from everywhere else
+    const an = e.target.closest("#yousheet a[data-you-ans]"); if (an) { e.preventDefault(); e.stopPropagation(); const id = an.dataset.youAns, page = an.dataset.page || undefined; if (an.dataset.askedOpen) askedDrop(an.dataset.askedOpen); youClose(false, () => { openInsight(id, null, true, { page }); askedBox(); }); return; }
+    const pl = e.target.closest("#yousheet a.aq-a[href]"); if (pl) { e.preventDefault(); e.stopPropagation(); const href = pl.getAttribute("href"); if (pl.dataset.askedOpen) askedDrop(pl.dataset.askedOpen); youClose(false, () => { location.hash = href; askedBox(); }); return; }
+  }, true);
+  document.addEventListener("keydown", e => {
+    if (!YOU.open) return;
+    if (e.key === "Escape") { if (!(typeof EV !== "undefined" && EV.open)) { e.preventDefault(); youClose(); } return; }
+    if (e.key !== "Tab") return;   // the keyboard stays inside the open panel
+    const f = [...document.querySelectorAll("#yousheet .panel button, #yousheet .panel a[href]")].filter(x => x.offsetParent !== null);
+    if (!f.length) return; const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
 }
 // a kept question is asked again once per new version of the site: a best match now means it has been answered
 async function askedCheck() {
@@ -1613,8 +1682,7 @@ function askedCheckSoon() {
 document.addEventListener("click", async e => {
   if (!e.target.closest) return;
   if (e.target.closest("button[data-asked-reload]")) { location.reload(); return; }
-  const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedGoneAdd(xb.dataset.askedX); askedDrop(xb.dataset.askedX); askedBox(); const h = document.querySelector("#home-asked .aq-h") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
-  const op = e.target.closest("a[data-asked-open]"); if (op) { askedDrop(op.dataset.askedOpen); return; }   // read: it leaves the list (the sheet opens by its data-sheet)
+  const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedGoneAdd(xb.dataset.askedX); askedDrop(xb.dataset.askedX); askedBox(); const h = document.getElementById("you-title") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   // (2.10) a thing to try under the capsule: put in the box and asked
   const tr = e.target.closest("button[data-try]");
   if (tr) { e.preventDefault(); const s = document.getElementById("search"); if (!s) return; s.value = tr.dataset.try;
@@ -1622,15 +1690,15 @@ document.addEventListener("click", async e => {
   // (2.9) a question that waits: asked again in the box, which shows what the site has on it so far
   const lk = e.target.closest("button[data-asked-look]");
   if (lk) { e.preventDefault(); const it = askedList().find(x => x.k === lk.dataset.askedLook), s = document.getElementById("search"); if (!it || !s) return;
-    s.value = it.q; if (s.scrollIntoView) s.scrollIntoView({ block: "center" });
-    setTimeout(() => { s.focus({ preventScroll: true }); runSearch(it.q); }, 0); return; }   // after this click has run its course (the page closes the results on a click outside them)
+    youClose(false, () => { if (!document.getElementById("view-home").classList.contains("active")) location.hash = "#home";
+      setTimeout(() => { s.value = it.q; window.scrollTo(0, 0); s.focus({ preventScroll: true }); runSearch(it.q); }, 60); }); return; }   // after this click has run its course (the page closes the results on a click outside them)
   // a question in the list that was not sent: one tap sends it where the site can send; elsewhere the email form opens with it
   const sb = e.target.closest("button[data-asked-send]");
   if (sb) { e.preventDefault(); const it = askedList().find(x => x.k === sb.dataset.askedSend); if (!it) return; sb.disabled = true;
     if (await askProbe()) { let ok = false;
       try { const r = await fetch(ASK_API, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ q: it.q, d: it.d, v: SITE_VERSION }) }); ok = r.ok; } catch (err) { ok = false; }
       if (ok) { askedSet(it.k, { sent: 1 }); askedBox(); return; } }
-    sb.disabled = false; openFeedback("feedback", location.hash, it.q); return; }
+    sb.disabled = false; youClose(false, () => openFeedback("feedback", location.hash, it.q)); return; }
   // 2.5: a question on our list: "Tell me when it is answered" keeps the LISTED question (never the words typed) in the
   // reader's own list; it turns green when a later version of the site answers it
   const wk = e.target.closest("button[data-want-keep]");
@@ -1666,7 +1734,8 @@ if (typeof document !== "undefined") askedBox();
    medical research, and shows them: title, kind of paper, year, journal, whether it is free to read, and its link (2.16.0: when a reader sent
    the question; since 2.16.1 by itself, whenever we have no answer of ours: insAuto, below). Said plainly with them: we have not read these
    yet, and a title is not a finding. What leaves the device for this: the drug's names and up to five plain key words, never the sentence.
-   Not looked up: a question about dying, overdose, amounts, pregnancy, children or an emergency, and a question that names no drug. */
+   Not looked up: a question about dying, overdose, suicide, amounts or an emergency. (Until 2.20 also pregnancy, children and a question that names no
+   drug: since 2.21 those are looked up and listed by title only, see FIND_TITLES below.) */
 const FIND_API = "api/find";
 const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
@@ -1677,13 +1746,28 @@ const FIND_STOP = new Set(("what when where which while with would could should 
   // (2.20, after the sixth trial) more of them: "does nicotine suppress appetite" is about appetite; a paper may say "suppression", "anorectic", "reduces food intake"
   "suppress suppresses suppressed suppressing boost boosts boosted boosting enhance enhances enhanced enhancing trigger triggers triggered worsen worsens worsened relieve relieves relieved ease eases eased prevent prevents prevented stop stops stopped treat treats treated treating cure cures cured induce induces induced lead leads " +
   // words about research itself, and for a drug as such ("what did the study on lsd find", "is ritalin a study drug")
-  "find finds found finding findings show shows showed shown say says said prove proves proved proven research evidence science scientific scientists paper papers drug drugs medicine medication pill pills substance substances").split(" "));
+  "find finds found finding findings show shows showed shown say says said prove proves proved proven research evidence science scientific scientists paper papers drug drugs medicine medication pill pills substance substances " +
+  // (2.21) a question that names no single drug is asked in everyday words that stand in no title: left out, so that the words that do are found
+  "worry worries worried worrying whether likely more less most least really often sometimes always never kind sort lots little bigger smaller start starts started starting begin begins began").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
 const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
+  kids: "children|adolescents", kid: "children|adolescents", teens: "adolescents", teen: "adolescents", teenagers: "adolescents", teenager: "adolescents", moms: "maternal|mothers", mom: "maternal|mothers", mums: "maternal|mothers", mum: "maternal|mothers", mothers: "maternal", mother: "maternal", dads: "paternal|fathers", dad: "paternal|fathers", fathers: "paternal", father: "paternal", parents: "parental", parent: "parental", families: "family",
+  creative: "creativity", lonely: "loneliness", poor: "poverty", genes: "genetic", inherited: "genetic", hereditary: "genetic", psychology: "psychological",
   hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
   horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "renal", kidney: "renal", lungs: "pulmonary", lung: "pulmonary", heart: "cardiac", liver: "hepatic", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover",
   eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite" };   // (2.19: short words that are the very thing asked about)
-const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)|infants?|teen\w*|minors?|suicid\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+// never looked up: dying, overdose, suicide, amounts
+const FIND_HELD = /\b(suicid\w*|self-?harm\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+/* (2.21, 18 November 2026, 13:38 and 13:40 Athens. The senior author asked how mothers' psychology affects whether their children take drugs, got "No answer yet"
+   with two related answers and no research, and wrote: "related questions are useful in this instance just not exactly what i was looking for ... so we have to
+   give instant search on this instance too".) Two kinds of question that were not looked up before are looked up now, and for both the papers are listed BY TITLE
+   ONLY, with no words of theirs (the server shows none for them: site/worker/_worker.js, noq):
+     - a question about pregnancy or children (FIND_TITLES): until 2.20 it was not looked up at all;
+     - a question about drugs that names no single drug (FIND_GENERAL: "do drugs make you creative"): what research calls the subject stands in the place of
+       a drug's name ("drug use", "substance use"; "addiction" where the question is about that), and at least one key word is needed.
+   The rule that picks a paper's own words was tried on questions that name a drug; it shows no words for these until a trial of their own has been read. */
+const FIND_TITLES = /\b(pregnan\w*|breast-?feed\w*|child|children|childhood|kids?|bab(y|ies)|infants?|newborns?|toddlers?|teen\w*|adolescen\w*|minors?|youths?|underage|school\w*|f(?:o)?etus|f(?:o)?etal|maternal|mothers?|moms?|mums?|paternal|fathers?|dads?|parent\w*)\b/i;
+const FIND_GENERAL = /\b(?:drugs|substances|narcotics|getting high|get high|being high|addiction|addictions|addicts?|addicted|drug (?:use|users?|taking|abuse|misuse|addiction|problems?|habits?|policy|policies|education|prevention|treatment|testing|war|laws?|trade|dealing|culture|scene)|substance (?:use|abuse|misuse))\b/i;
 /* What is looked up for a result: the names of its drug and up to five key words; null when nothing is to be looked up.
    (2.18.2, after looking at what twenty real questions gave) The names: the name as the reader wrote it, when it is a name of its own and not an
    everyday word ("xanax", on the page about benzodiazepines; "weed", "acid", "speed", "ice" are everyday words and would find every paper that
@@ -1712,6 +1796,9 @@ function insFindTerms(res) {
   const pg = (res.routes || []).find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;
   if (sh) { add(names, sh.name); (sh.science || []).forEach(x => add(names, x.name)); }
   if (!names.length && res.stranger) add(names, res.stranger);
+  // (2.21) a question about drugs in general: what research calls the subject stands in the place of a drug's name
+  const general = !names.length && res.note !== "other" && FIND_GENERAL.test(text);
+  if (general) (/\baddict|\bdependen|\bhooked\b/.test(text) ? ["addiction", "substance use disorder"] : ["drug use", "substance use"]).forEach(x => add(names, x));
   // a question about drugs that names none we know ("is tianeptine addictive", "what is kava"): the first word that is no everyday word is most likely the drug's name
   if (!names.length && res.note !== "other") { const known = w => INS.vocab.has(w) || FIND_STOP.has(w) || !!FIND_SAY[w],
       plain = w => known(w) || ["ies", "es", "s", "ed", "d", "ing", "ly", "ive", "al", "er", "est", "y", "ness", "ful"].some(suf => w.length > suf.length + 2 && w.endsWith(suf) && (known(w.slice(0, -suf.length)) || known(w.slice(0, -suf.length) + "e") || (suf === "ies" && known(w.slice(0, -3) + "y")) || (suf === "ive" && known(w.slice(0, -3) + "ion"))));
@@ -1725,10 +1812,13 @@ function insFindTerms(res) {
   for (const w0 of masked.match(/[a-z]{3,}/g) || []) { const say = FIND_SAY[w0];
     if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0))) continue;
     const e = say && say !== w0 ? say + "|" + w0 : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
-    if (!words.includes(e) && !words.includes(say || w0) && words.length < 5) words.push(e); }
+    // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
+    if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }
+  if (general && words.length > 3) words.length = 3;          // (2.21) a question in everyday words about drugs in general: its first three key words (every key word must stand in a paper)
+  if (general && !words.length) return null;                 // (2.21) nothing to look for beyond "drug use" itself
   // (2.20) "what is X": the server then looks for the sentence that says what the drug is
   const def = !words.length && /^(?:so )?(?:what(?:'s| is| are| exactly is| the hell is)|whats|wtf is)\b/.test(text.trim());
-  return Object.assign({ names: names.slice(0, 6), words }, also.length ? { also: also.slice(0, 4) } : {}, def ? { def: 1 } : {});
+  return Object.assign({ names: names.slice(0, 6), words }, also.length ? { also: also.slice(0, 4) } : {}, def ? { def: 1 } : {}, general || FIND_TITLES.test(res.q || "") ? { t: 1 } : {});   // t: titles only
 }
 // the name papers use for a name people use (a brand, a street name): asked for beside it
 const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clonazepam", ativan: "lorazepam", ambien: "zolpidem", adderall: "amphetamine", ritalin: "methylphenidate", concerta: "methylphenidate", vyvanse: "lisdexamfetamine",
@@ -1745,7 +1835,8 @@ function insFoundHtml(d) {
     return '<li><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" · ")) + "</span>" +
       (typeof p.q === "string" && p.q ? '<span class="pq">“' + esc(p.q) + '”' + (p.an === 1 ? '<span class="pq-an"> in animals or cells, not in people</span>' : p.an === 2 ? '<span class="pq-an"> its summary covers work in animals or cells too</span>' : "") + "</span>" : "") + "</li>"; }).join("") +
     "</ul>" + (d.more ? '<p class="ins-found-n ins-found-w">Still looking for the most cited papers on this\u2026</p>' : "") + '<p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.' +
-    (said ? " The words in quotation marks are each paper’s own, from the end of its summary: a fixed rule picked them, not a person, and they are not an answer of ours." : "") + "</p>";
+    (said ? " The words in quotation marks are each paper’s own, from the end of its summary: a fixed rule picked them, not a person, and they are not an answer of ours." : "") +
+    (d.titles && !said ? " For a question like this one we list the papers only, with no words from them." : "") + "</p>";
 }
 /* (2.16.1, 17 November 2026, 23:19 and 23:20 Athens. The senior author, of the list that came only after he had pressed "Send": "it should
    automatically search the user should not even have to click it"; and, typing a question he had already sent: "now when i type it again the
@@ -1866,36 +1957,48 @@ if (typeof document !== "undefined") document.addEventListener("click", e => {  
   askedBox();
 }, true);
 /* (2.15.3; the senior author, 17 November 2026: "I may want to read the history of questions I made somewhere although it has to be discreet".)
-   The questions a reader asked, the last thirty, kept on this device only and shown folded under "Your questions" on the start page. A tap asks
-   one again. Kept when a question is asked with Enter, when one of its results is opened, and when it is sent. Nothing of it leaves the device.
-   It is OFF until the reader turns it on, with one quiet line on the start page: the site's promise stands that nothing typed is kept unless the
-   reader chooses so, and a phone is often shared (a list of questions about drugs is not for everyone who picks it up). Turning it off clears it. */
-const HIST_KEY = "pk-hist", HIST_ON = "pk-hist-on", HIST_MAX = 30;
-function histOn() { try { return localStorage.getItem(HIST_ON) === "1"; } catch (e) { return false; } }
+   The questions a reader asked, the last thirty, kept on this device only. A tap asks one again. Nothing of it leaves the device.
+   (2.21, 18 November 2026; the senior author, of "Your past searches (0) ... Nothing yet: a question is kept when you ask it": "this is bad design you should
+   be able to see your past searches ... and their answers if we have answered them ... and it should be easy and clear that you can delete your search
+   history".) Until 2.20 it was off until switched on, and it kept a question only on Enter, on opening a result or on sending: but the page answers while
+   one types, so most searches were never kept and the list said 0. Now a question is kept by itself once it has stood in the box for a moment with its
+   result (HIST_WAIT), or at once on Enter; with it, the answer the site gave, if it had one. The list lives in the panel "Your questions", under the
+   questions that wait: the start page shows only how many there are, never their words. "Delete my search history" clears it; "Don't keep my searches"
+   clears it and stops it (About us, Privacy has the same switch). */
+// (HIST_KEY, HIST_ON, HIST_MAX and HIST_WAIT stand above, beside ASK_KEY: the reader's list is drawn once before this part of the script has run)
+function histOn() { try { return localStorage.getItem(HIST_ON) !== "0"; } catch (e) { return false; } }
 function histList() { try { const a = JSON.parse(localStorage.getItem(HIST_KEY) || "[]"); return Array.isArray(a) ? a.filter(x => x && typeof x.q === "string").slice(0, HIST_MAX) : []; } catch (e) { return []; } }
-function histAdd(q) {
+// res: what Insight made of the question, where it is known: a beginning, or what the site does not answer, is not kept; an answer of ours is kept with it
+function histAdd(q, res) {
   if (!histOn()) return;
   q = insClean(q); if (insWordsIn(q) < 2 || q.length > 160) return;
-  try { const k = q.toLowerCase(), a = histList().filter(x => x.q.toLowerCase() !== k); a.unshift({ q, t: Date.now() }); localStorage.setItem(HIST_KEY, JSON.stringify(a.slice(0, HIST_MAX))); } catch (e) { /* no storage: no history */ }
-  histBox();
+  if (res && (res.note === "unfinished" || res.note === "blocked" || res.note === "hello" || res.emergency)) return;
+  const best = res && res.best && res.best.length ? res.best[0] : null;
+  try { const k = q.toLowerCase(), old = histList(), was = old.find(x => x.q.toLowerCase() === k), a = old.filter(x => x.q.toLowerCase() !== k);
+    a.unshift(Object.assign({ q, t: Date.now() }, best ? { id: best.id, p: best.page || "" } : was && was.id && !res ? { id: was.id, p: was.p || "" } : {}));
+    localStorage.setItem(HIST_KEY, JSON.stringify(a.slice(0, HIST_MAX))); } catch (e) { /* no storage: no history */ }
+  askedBox();
 }
-function histBox() {
-  const box = document.getElementById("home-hist"); if (!box) return; box.hidden = false;
-  if (!histOn()) { box.innerHTML = '<p class="hist-off"><button type="button" class="linklike" data-hist-on>Keep my past searches on this device</button></p>'; return; }
-  const a = histList(), was = box.querySelector("details"), open = was && was.open;
-  box.innerHTML = '<details class="hist"' + (open ? " open" : "") + '><summary>Your past searches (' + a.length + ')</summary><p class="hist-n">Kept on this device only. ' + (a.length ? "" : "Nothing yet: a question is kept when you ask it. ") + '</p><ul>' +
-    a.map(x => '<li><button type="button" class="hist-q" data-hist="' + esc(x.q) + '">' + esc(x.q) + "</button></li>").join("") + '</ul><p class="hist-c"><button type="button" class="linklike" data-hist-clear>Stop keeping them and clear this list</button></p></details>';
+// a result that stays on the screen: its question is kept once the reader has stopped typing
+function histSoon(res) {
+  clearTimeout(histSoon.t); if (!res || !res.q || !histOn()) return;
+  histSoon.t = setTimeout(() => { const s = document.getElementById("search"), b = document.getElementById("search-results"); if (s && b && !b.hidden && insClean(s.value) === res.q) histAdd(res.q, res); }, HIST_WAIT);
 }
 if (typeof document !== "undefined") {
-  histBox();
   document.addEventListener("click", e => { if (!e.target.closest) return;
-    const hq = e.target.closest("button[data-hist]"); if (hq) { const s = document.getElementById("search"); if (!s) return; s.value = hq.dataset.hist; window.scrollTo(0, 0); setTimeout(() => { s.focus({ preventScroll: true }); runSearch(s.value); }, 0); return; }
-    if (e.target.closest("button[data-hist-clear]")) { try { localStorage.removeItem(HIST_KEY); localStorage.removeItem(HIST_ON); } catch (err) { /* nothing kept */ } histBox(); return; }
-    if (e.target.closest("button[data-hist-on]")) { try { localStorage.setItem(HIST_ON, "1"); } catch (err) { /* no storage: it stays off */ } histBox(); const d = document.querySelector("#home-hist details"); if (d) d.open = true; return; }
-    if (e.target.closest("#search-results a, #search-results button[data-ask]")) { const s = document.getElementById("search"); if (s && s.value) histAdd(s.value); }
+    const hq = e.target.closest("button[data-hist]"); if (hq) { const s = document.getElementById("search"); if (!s) return; const q = hq.dataset.hist;
+      youClose(false, () => { if (!document.getElementById("view-home").classList.contains("active")) location.hash = "#home"; setTimeout(() => { s.value = q; window.scrollTo(0, 0); s.focus({ preventScroll: true }); runSearch(q); }, 60); }); return; }
+    if (e.target.closest("button[data-hist-clear]")) { try { localStorage.removeItem(HIST_KEY); } catch (err) { /* nothing kept */ } askedBox(); const h = document.getElementById("you-past"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
+    if (e.target.closest("button[data-hist-off]")) { try { localStorage.removeItem(HIST_KEY); localStorage.setItem(HIST_ON, "0"); } catch (err) { /* nothing kept */ } askedBox(); histSwitch(); return; }
+    if (e.target.closest("button[data-hist-on]")) { try { localStorage.removeItem(HIST_ON); } catch (err) { /* no storage: it stays off */ } askedBox(); histSwitch(); return; }
+    if (e.target.closest("#search-results a, #search-results button[data-ask]")) { const s = document.getElementById("search"); if (s && s.value) histAdd(s.value, INS.cache ? INS.cache.get(insKey(s.value, insCtx())) : null); }
   }, true);
-  document.addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing && e.target && e.target.id === "search" && e.target.value) histAdd(e.target.value); }, true);
+  document.addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing && e.target && e.target.id === "search" && e.target.value) histAdd(e.target.value, INS.cache ? INS.cache.get(insKey(e.target.value, insCtx())) : null); }, true);
+  // the same switch on About us, Privacy
+  document.addEventListener("change", e => { const c = e.target; if (!c || c.id !== "hist-switch") return; try { if (c.checked) localStorage.removeItem(HIST_ON); else { localStorage.removeItem(HIST_KEY); localStorage.setItem(HIST_ON, "0"); } } catch (err) { /* this page only */ } askedBox(); histSwitch(); });
 }
+function histSwitch() { const c = document.getElementById("hist-switch"), s = document.getElementById("hist-state"); if (c) c.checked = histOn(); if (s) s.textContent = histOn() ? "On: kept on this device only." : "Off: nothing is kept, and what was kept is deleted."; }
+if (typeof document !== "undefined") histSwitch();
 if (typeof window !== "undefined") { if (window.requestIdleCallback) requestIdleCallback(() => askProbe(), { timeout: 3000 }); else setTimeout(askProbe, 1200); }
 
 /* ---------- Written by our system (site 2.6, 15 November 2026). The senior author: machine-written answers "should be published
@@ -1919,7 +2022,10 @@ function autoFrom(a) {
   return bits.length > 1 ? bits.slice(0, -1).join(", ") + " and " + bits[bits.length - 1] : bits[0] || "0 papers";
 }
 function autoLabel(a) {
-  return '<p class="auto-l">Written by our system from ' + autoFrom(a) + ". Not yet checked by a person." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
+  // (2.21, lane 19) an answer about dying, overdose, mixing, pregnancy or children now goes out by itself where it meets a stricter bar: under it, always, the
+  // way to the emergency numbers, in the words the site's own footer has had since it began
+  return (a.risk ? '<p class="auto-sos">In an emergency call your <a href="#emergency">local emergency number</a>.</p>' : "") +
+    '<p class="auto-l">Written by our system from ' + autoFrom(a) + ". Not yet checked by a person." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
 }
 function autoBodyHtml(id) {
   const a = AUTO[id];

@@ -1548,7 +1548,10 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         if c["kind"] not in ("review", "study", "case") and not c.get("people"): return False   # an editorial, an opinion, a paper on animals or cells alone: not a source for an answer
         ref = paper_ref(c["doi"], c.get("pmcid"))
         if not ref or P.retraction(ref) in ("retracted", "concern"): return False      # GATE 6, first half: never a retracted paper
-        xml = fulltext(c.get("pmcid"))
+        try: xml = fulltext(c.get("pmcid"))
+        except (P.Refused, IOError, ValueError) as e:                 # (lane 19, 18 November 2026) one paper whose full text the service fails on (Europe PMC answers 500 for some) cost a question every try it had: "the lane itself failed on it (HTTPError)". The paper is passed over and the record says so
+            looked.append({"title": c.get("title"), "read": "full", "kind": c.get("kind"), "at": c.get("doi"), "kept": 0, "thrown": [], "fault": f"its full text could not be fetched ({type(e).__name__})"})
+            return False
         if not xml: return False
         doc = P.jats_passages(xml)
         if len(doc["passages"]) < 4: return False
@@ -2232,6 +2235,11 @@ def selftest():
     item = {"id": "w_0024", "q": "Can you get addicted to ketamine?", "ways": ["is ketamine addictive"]}
     ex = [{"q": "Q?", "short": "S.", "but": "B.", "how": ["H1.", "H2."]}] * 3
     mk = lambda it=item: make(it, found, chat, Enc(), MODELS, fulltext=lambda pmcid: xml, crossref=crossref, ex=ex)
+    # (lane 19, 18 November 2026) a paper whose full text the service fails on: passed over with a note, and the question keeps its try (it was "the lane itself failed on it (HTTPError)" on every try before)
+    import urllib.error
+    def broken(pmcid): raise urllib.error.HTTPError("https://example.org/" + str(pmcid) + "/fullTextXML", 500, "Internal Server Error", {}, None)
+    r = make(item, dict(found, wanted=[]), chat, Enc(), MODELS, fulltext=broken, crossref=crossref, ex=ex, summary=lambda doi: None)
+    assert r["status"] == "none" and "no source that can be read" in r["why"] and [x.get("fault") for x in r["looked"]] == ["its full text could not be fetched (HTTPError)"], (r["status"], r["why"], r["looked"])
     # 1. the straight way: published; the retracted paper never read; two bad findings thrown away; not complete (a nearer paper... is not nearer: complete)
     script["writer"] = [W(ok_short)]; script["checker"] = [V(True, True, True, True)]
     r = mk()

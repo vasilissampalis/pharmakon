@@ -15,6 +15,41 @@ Done: places by meaning (2.13.0); figures by question (2.14.0); the lane's pause
 citation a link, a source in place, plain first, shorter cards, topics, the same Insight on every page, the place and
 the way back in the bar).
 
+0000. **Answered by itself, within minutes (decision 32; lane 19; site 2.21.0, 18 November).** Done: the lane tries again by itself and parks
+   nothing for a reader; the stricter bar for questions where a wrong word can hurt, in the place of a person; the look every five minutes
+   with a first pass for sent questions that is published in the middle of the run; the server's own start of the work (needs his key);
+   "Your questions" behind one line, the panel, past searches kept by themselves; research by title for pregnancy, children and questions
+   that name no single drug. Next, in this order:
+   (a) **Read the first real answers that went through the stricter bar** (the state says "passed every gate, and the stricter bar for an
+   answer about ..."; `gates.stakes` in the record). Every one, sentence by sentence, against the words it rests on. If one plays a danger
+   down or tells a reader what to do: hold it (`data/auto/held.json`, with "lane" and "say"), find which of the four looks let it through,
+   and tighten that look; if two do in the first ten, set that kind back to "person" (`policy.json`, stakes) and tell him.
+   (b) **Measure the times and only then let the page promise them.** For each question a person sent: when it arrived (the store's day is
+   too coarse: use the run that first listed it), when its answer was kept, when it was published (`data/auto/deploy/`). `policy.loop` goes
+   true, and the page says "usually within N minutes", only when twenty sent questions in a row kept that N. Until then the page promises
+   no time.
+   (c) **Make a run shorter once the key is there** (he asked for seconds; the start is then seconds, the writing minutes). In order of what
+   it saves: the look and the work as one job for a run the server started (some 45 s); the Python packages kept between runs
+   (`actions/cache`, some 20 s); the scout's build only where the site's sources changed since the kept index; the publishing run without
+   fetching a browser when only the lane's answers changed (the smoke check is then the one thing skipped: decide with the numbers).
+   (d) **The further readers.** Gemini 3.6 Flash read every answer of the first runs and refused, with reasons, six sentences that said a
+   little more than their source: it is the strong reader now (20 calls a day; 3 Flash stands behind it). Watch `panel` in the records for
+   "could not be asked ... it began:" (the first 90 characters of a reply that could not be read are kept now). If the day's calls of both
+   run out before the writers' allowance does, ask for one more key of another free service rather than a weaker reader.
+   (e) **The two new kinds of question** (titles only now). The eleventh trial is read (decision 32: titles mostly on the question, 3 to 11
+   seconds, hence the lighter plan `roundGen`). **Read the twelfth** (`data/auto/instant/trial-*-0012.json`: the page's own names and key
+   words): titles and times, question by question. Then, each as its own small change with a trial behind it, what the page's key words
+   showed on 18 November (`insFindTerms`, read off the built page): "why do people take drugs" has no key word and gets no list (the
+   eleventh trial found good titles for "motives|reasons": a rule for "why" + drug use in general, and only that); "drinking" with no drug
+   named is not read as alcohol, so "breastfeeding" became the name ("does drinking while breastfeeding harm the baby"); "pregnant" is not
+   also asked as "pregnancy", nor "baby" as "infant"; "others", "another", "else" are no key words; a key word that only repeats the
+   subject ("addicted" under "addiction") should not count as one. Words under the titles of these kinds: only after a trial that reads
+   every line; for pregnancy and children titles only stays, unless he says otherwise.
+   (f) **His own question "Does cannabis cause cancer?"** waits on his word "approve" for `cl_can_smoked_cancer` (Section 7). Do not
+   adjudicate that disagreement in `agreed.json`: the claim is under his gate.
+   (g) **The exam of the lane's own sentences** has the six answers the editor read on 18 November and did not let out (the reasons are
+   in `held.json`): judge their sentences in `scripts/editor/label_auto.py` so that the rate of lane 18 is on file before lane 19's.
+
 000. **By itself, at once, understood (decision 31; sites 2.16.1 to 2.20.0, 18 November).** Done: research by itself; the place a count
    names; the calm line while Insight starts and the warm start; "Insight" alone under the bar; the question sent by itself with the reader
    told, its words kept out of the repository; and, since 2.20.0, each paper's own words on the question by FIXED RULE under its title, with

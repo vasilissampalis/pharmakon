@@ -214,10 +214,10 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const wl = await p.evaluate(() => ({ ids: WANTED.map(x => x[0]), text: document.getElementById("wanted-list").textContent }));
     ok(w + "the questions the system answered have left “On our list”", !wl.ids.includes("w_0024") && !wl.ids.includes("w_0007") && !/Can you get addicted to ketamine\?/.test(wl.text) && wl.ids.length >= 30, wl.ids.length + " listed");
     await p.evaluate(() => { localStorage.setItem("pk-asked", JSON.stringify([{ k: "can you get addicted to ketamine?", q: "Can you get addicted to ketamine?", d: "", t: Date.now() - 864e5, cv: "0.0.1", st: "wait", sent: 1, w: "w_0024" }])); });
-    await go(p, "#home", 300); await p.reload(); await p.waitForSelector("#home-asked .aq.ans", { timeout: 120000 });
-    const an = await p.evaluate(() => { const r = document.querySelector("#home-asked .aq.ans"); return { k: r.querySelector(".aq-k").textContent, q: r.querySelector(".aq-q").textContent, href: r.querySelector("a.aq-a").getAttribute("href") }; });
+    await go(p, "#home", 300); await p.reload(); await p.waitForSelector("#yousheet .aq.ans", { state: "attached", timeout: 120000 });
+    const an = await p.evaluate(() => { const r = document.querySelector("#yousheet .aq.ans"); return { k: r.querySelector(".aq-k").textContent, q: r.querySelector(".aq-q").textContent, href: r.querySelector("a.aq-a").getAttribute("href") }; });
     ok(w + "a question the reader asked to be told about turns “Answered” when the system has answered it, and leads to that answer", an.k === "Answered" && an.q === "Can you get addicted to ketamine?" && an.href === "#auto/q-au_fixture_ketamine", JSON.stringify(an));
-    await p.click("#home-asked .aq.ans a.aq-a"); await p.waitForTimeout(700);
+    await p.click("#home-asked .you-bar"); await p.waitForTimeout(400); await p.click("#yousheet .aq.ans a.aq-a"); await p.waitForTimeout(1100);
     const s5 = await sheet(p); ok(w + "reading it opens the answer with its line", s5 && s5.line === LINE2, s5 && s5.line);
     await p.context().close();
   }
@@ -229,7 +229,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok("a site whose half-hourly run is on says so to a reader who sends a question (this build has the switch on)", pg.loop === true && /^Sent\. Our system starts on it within half an hour\. If it finds research it can read, the answer is usually here within the hour: your question then turns green/.test(pg.sent), pg.sent);
     await p.evaluate(() => localStorage.setItem("pk-asked", JSON.stringify([{ k: "what is the capital of mongolia", q: "what is the capital of mongolia", d: "", t: Date.now(), cv: SITE_BUILD, st: "wait", sent: 1 }])));
     await p.reload(); await p.waitForTimeout(900);
-    const quiet = await p.evaluate(async () => ({ rows: document.querySelectorAll("#home-asked .aq.wait").length, newer: !!document.querySelector("#home-asked .aq-new"), look: await askedLook() }));
+    const quiet = await p.evaluate(async () => ({ rows: document.querySelectorAll("#yousheet .aq.wait").length, newer: !!document.querySelector("#home-asked .aq-new"), look: await askedLook() }));
     ok("a question that waits: nothing is said while the site on the server is this one", quiet.rows === 1 && !quiet.newer && quiet.look === false, JSON.stringify(quiet));
     await p.route("**/data/build.json", r => r.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ build: "209901010000", site: "9.9.9" }) }));
     const told = await p.evaluate(async () => { const n = await askedLook(), el = document.querySelector("#home-asked .aq-new"); return { n, text: el ? el.textContent : "", btn: !!document.querySelector("#home-asked button[data-asked-reload]"), wide: document.documentElement.scrollWidth > innerWidth }; });
@@ -237,7 +237,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await shot(p, "390-newer-site");
     await p.unroute("**/data/build.json");
     await Promise.all([p.waitForNavigation({ timeout: 20000 }).catch(() => null), p.click("#home-asked button[data-asked-reload]")]); await p.waitForTimeout(900);
-    ok("Load them loads the page again; the question still waits and the line is gone", await p.evaluate(() => document.querySelectorAll("#home-asked .aq.wait").length === 1 && !document.querySelector("#home-asked .aq-new")));
+    ok("Load them loads the page again; the question still waits and the line is gone", await p.evaluate(() => document.querySelectorAll("#yousheet .aq.wait").length === 1 && !document.querySelector("#home-asked .aq-new")));
     await p.context().close();
   }
   ok("no error in any page's console", !errors.length, errors.slice(0, 3).join(" | "));

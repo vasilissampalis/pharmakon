@@ -31,6 +31,23 @@ const assets = { fetch: async () => new Response("the page", { status: 200 }) };
   s.m.set("count:" + new Date().toISOString().slice(0, 10), "400"); x = await call(env, "POST", { q: "a brand new question about ketamine" }); ok("the daily cap holds for a new question", x.status === 429);
   x = await call(env, "POST", { q: "is it safe to mix alcohol and ghb" }); ok("and for one asked before", x.status === 429);
   ok("no key holds anything but questions and the day's count", [...s.m.keys()].every(k => /^(q:[0-9a-f]{20}|count:\d{4}-\d\d-\d\d)$/.test(k))); }
+// (site 2.21) a new question starts the system's work at once: only with the key for it, at most once in twenty seconds, with no word of the question, and no write to the store
+{ const real = globalThis.fetch, sent = []; globalThis.fetch = async (u, o) => { sent.push([String(u), o]); return new Response(null, { status: 204 }); };
+  const note = new Map(), CACHE = { match: async u => (note.has(String(u)) ? new Response(note.get(String(u))) : undefined), put: async (u, res) => { note.set(String(u), res.headers.get("cache-control")); } };
+  const post = async (env, q, extra) => { const waits = []; const r = await worker.fetch(new Request("https://pharmakon.world/api/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.assign({ q }, extra || {})) }), env, { waitUntil: p => waits.push(p) }); await Promise.all(waits); return r.status; };
+  try {
+    const s0 = kv(); await post({ ASSETS: assets, QUESTIONS: s0, CACHE }, "can you get high from kanna");
+    ok("no key for it: a new question starts nothing and leaves no note", sent.length === 0 && note.size === 0);
+    const s = kv(), env = { ASSETS: assets, QUESTIONS: s, CACHE, GH_RUN_TOKEN: " tok_123 " };
+    ok("with the key: a new question is kept", await post(env, "can you get high from kanna") === 200);
+    ok("and GitHub is asked once to start the work: the workflow and the branch, with the key, and no word of the question", sent.length === 1 && sent[0][0] === "https://api.github.com/repos/vasilissampalis/pharmakon/actions/workflows/auto.yml/dispatches" && sent[0][1].method === "POST" && sent[0][1].body === '{"ref":"main"}' && sent[0][1].headers.authorization === "Bearer tok_123" && !/kanna/.test(JSON.stringify(sent[0])), JSON.stringify(sent).slice(0, 300));
+    await post(env, "does kanna help with anxiety", { a: 1 }); await post(env, "can you get high from kanna");
+    ok("a second new question within twenty seconds, and the same question again: no second request; the note lives twenty seconds in the cache, and the store holds only questions and the day's count", sent.length === 1 && note.get("https://pharmakon.world/__run-asked") === "public, max-age=20" && [...s.m.keys()].every(k => /^(a?q:[0-9a-f]{20}|count:\d{4}-\d\d-\d\d)$/.test(k)), JSON.stringify([...s.m.keys()]));
+    note.clear(); await post(env, "what is mitragyna javanica", { a: 1 });
+    ok("after that time a question the page sent by itself starts it again", sent.length === 2);
+    globalThis.fetch = async () => { throw new Error("no network"); }; note.clear();
+    ok("GitHub out of reach: the question is kept all the same", await post(env, "is kratom addictive") === 200 && [...s.m.keys()].filter(k => k.startsWith("q:")).length === 2);
+  } finally { globalThis.fetch = real; } }
 // an address with a slash at its end is the same address (the senior author's first check of the live site met "not found")
 { const s = kv(), env = { ASSETS: assets, QUESTIONS: s }; let x = await call(env, "GET", null, null, "/api/ask/"); ok("GET /api/ask/ (a slash at the end) answers as /api/ask", x.status === 200 && x.j.ok === true);
   x = await call(env, "POST", { q: "can you overdose on lsd" }, null, "/api/ask//"); ok("POST with slashes at the end keeps the question", x.status === 200 && x.j.ok === true); }
@@ -131,10 +148,18 @@ ok("readQuestion keeps Greek", readQuestion({ q: "είναι ασφαλές το
     ok("find: a reply of Europe PMC is kept for a day under the search's address, and the same search is then not made again: the second time the list is the same and Europe PMC is not asked", n1 === 3 && kept.size === 3 && [...kept.keys()].every(k => k.startsWith("https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=")) && log2.length === 3 && j1.kept === 0 && j2.kept === 3 && JSON.stringify(j2.papers) === JSON.stringify(j1.papers) && j2.papers.length === 6, JSON.stringify([n1, kept.size, log2.length, j1.kept, j2.kept])); }
   const n0 = asked.length;
   x = await post(envF, { names: ["heroin"], words: ["overdose"] }); ok("find: words about dying, overdose or amounts are not looked up", x.status === 200 && x.j.held === true && x.j.papers.length === 0 && asked.length === n0);
-  x = await post(envF, { names: ["mdma"], words: ["pregnancy"] }); ok("find: nor words about pregnancy or children", x.j.held === true && asked.length === n0);
+  x = await post(envF, { names: ["heroin"], words: ["suicide"] }); ok("find: nor words about suicide", x.j.held === true && asked.length === n0);
   x = await post(envF, { names: [], words: ["anxiety"] }); ok("find: without a drug's name nothing is looked up", x.status === 422 && asked.length === n0);
   x = await post(envF, { names: ['kanna" OR TITLE:"x', "a", "<b>"], words: ["two words", "x", "ok123"] }); ok("find: a name or word that is not plain is dropped; none left: nothing is looked up", x.status === 422 && asked.length === n0, JSON.stringify(x));
   x = await post(envF, { names: ["kanna"], words: [] }, "https://evil.example"); ok("find: another site's page may not ask", x.status === 403 && asked.length === n0);
+  // (2.21) pregnancy and children: looked up, and listed by title only: no word of a paper is shown
+  x = await post(envF, { names: ["kanna"], words: ["pregnancy"] }); ok("find (2.21): a question about pregnancy or children is looked up, and its papers are listed by title only: no words of theirs", x.status === 200 && !x.j.held && x.j.titles === 1 && x.j.papers.length > 0 && x.j.papers.every(p => p.t && !("q" in p)) && asked.length > n0, JSON.stringify(x.j).slice(0, 300));
+  // (2.21) a question that names no single drug: two plain searches, each asked once, the most cited; titles only
+  { const n1 = asked.length; x = await post(envF, { names: ["drug use", "substance use"], words: ["parenting", "adolescents|teenagers"], t: 1 }); const mine = asked.slice(n1).map(u => decodeURIComponent(String(u)));
+    ok("find (2.21): a question that names no single drug asks two searches once each (reviews with the subject in the title that hold every key word; subject and key words in the title), the most cited, and lists titles only",
+      x.status === 200 && x.j.titles === 1 && mine.length === 2 && mine.every(u => /sort=CITED desc/.test(u) && /\(TITLE:"drug use" OR TITLE:"substance use"\)/.test(u)) && mine.some(u => /PUB_TYPE:"review"/.test(u) && /TITLE:"parenting" OR ABSTRACT:"parenting"/.test(u)) && mine.some(u => !/PUB_TYPE:"review"/.test(u) && /AND \(TITLE:"parenting"\)/.test(u)) && x.j.papers.every(p => !("q" in p)), JSON.stringify([x.status, x.j && x.j.titles, mine.map(u => u.slice(60, 260))]).slice(0, 900)); }
+  { const rfT = readFind({ names: ["drug use", "substance use"], words: ["maternal|mothers", "adolescents"], t: 1 }), rfK = readFind({ names: ["kanna"], words: ["anxiety"] }), rfP = readFind({ names: ["cannabis"], words: ["teenagers"] });
+    ok("find (2.21): the page may ask for titles only (a question that names no single drug); words about children ask for it by themselves; a plain question does not", rfT.noq === true && rfT.held === false && rfT.names.join() === "drug use,substance use" && rfK.noq === false && rfP.noq === true && rfP.held === false && readFind({ names: ["cannabis"], words: ["overdose"] }).held === true); }
   x = await post({ ASSETS: assets, FETCH: async () => { throw new Error("down"); } }, { names: ["kanna"], words: [] }); ok("find: when Europe PMC cannot be reached the reply is an empty list, not an error on the reader's page", x.status === 200 && x.j.ok && x.j.papers.length === 0);
   const g = await W.default.fetch(new Request("https://pharmakon.world/api/find"), envF); ok("find: only POST", g.status === 405);
   ok("find: nothing is written to the store", sF.m.size === 0);

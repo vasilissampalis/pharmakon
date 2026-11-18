@@ -326,7 +326,7 @@ const AUTO_SHOWN = (() => {
       page = "new:" + pageSlug(name); startedPages[pageSlug(name)] = name; }
     else if (!drugs.length && drugSlugs.has(home)) page = home;
     else if (!drugs.length && GEN_HOMES[home]) page = GEN_HOMES[home];
-    out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, howq, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page },
+    out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, howq, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page, risk: typeof a.stakes === "string" && /^[a-z ,-]{3,40}$/.test(a.stakes) ? a.stakes : "" },   // (2.21, lane 19) risk: the answer is about dying, overdose, mixing, pregnancy or children: the page puts the way to the emergency numbers under it
       amounts ? { kind: "amounts", first, rows: rows.map(r => ({ who: r.who, what: r.what, quote: r.quote, ref: r.ref, read: r.read })) } : {}));
   }
   if (left.length) console.error("WARNING: machine-lane answers left out of the site: " + left.join("; "));
@@ -379,7 +379,7 @@ const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {};
   const fresh = Object.keys(AUTO_SHELL).filter(k => !AUTO_SHOWN.some(a => a.page === "new:" + k));
   if (fresh.length) console.log("machine lane: " + fresh.length + " pages people asked about are shown as started, with no answer yet (" + Object.keys(AUTO_PICS).length + " pages have pictures the system found): " + fresh.map(k => AUTO_SHELL[k].name).join("; "));
 }
-const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
+const data2 = data + "\nconst AUTO = " + JSON.stringify(Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]))) +
   ";\nconst AUTO_STATE = " + JSON.stringify(AUTO_STATE) + ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).

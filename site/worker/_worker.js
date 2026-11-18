@@ -15,6 +15,7 @@
                                "find": true: this server can look up published research (POST /api/find, below)
    POST /api/ask {q, d, v}  -> {"ok": true}  the question is kept (or counted again when it was already there);
                                503 without the store
+   (site 2.21) A NEW question also starts the system's work at once, where the senior author has given this server the key for that (startWork, below).
    POST /api/ask {q, d, v, a: 1} -> the same for a question the page sent by itself. It is kept apart (keys "aq:"), for
                                180 days, and its words are never written into the public repository: the scout reads such
                                questions in a run's own memory and keeps only OUR wording of what was asked
@@ -111,18 +112,27 @@ export function readQuestion(body) {
    A line says "in animals or cells, not in people" where its sentence or its whole summary is about those, and that the summary covers
    such work too where it covers both and the sentence does not say which.
    For "what is X" the rule takes the sentence that says what the drug is ("X is a ...") from the start of a summary instead.
-   Not looked up at all: words about dying, overdose, amounts, pregnancy or children (FIND_HELD: such questions wait for a person). Papers
-   are listed but no words are shown for what research summaries cannot settle for a reader (the law, prices, drug tests).
+   Not looked up at all: words about dying, overdose, suicide or amounts (FIND_NEVER). Papers are listed but NO WORDS of them are shown (titles
+   only) for what research summaries cannot settle for a reader (the law, prices, drug tests), and, since site 2.21, for a question about pregnancy or
+   children (FIND_TITLES) and for a question that names no single drug (the page says so: titles). The senior author, 18 November 2026, 13:38 and 13:40
+   Athens, of a question about mothers and their children's drug use that got no research: "we have to give instant search on this instance too". Until
+   that day such a question was not looked up at all. What the rule may show of a paper's own words is unchanged: FIND_HELD stands in it as it did.
    What arrives: the names of a drug (up to 6) and plain key words (up to 6), chosen on the reader's device; never the reader's sentence.
    What goes out to Europe PMC: those names and words, from this server (the reader's address is not passed on). Nothing is kept or logged
    here; Cloudflare keeps Europe PMC's reply for a day so that the same search is not asked twice. */
 const EPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest/search";
 export const FIND_HELD = /\b(pregnan\w*|breast-?feed\w*|child|children|kids?|bab(y|ies)|infants?|teen\w*|minors?|suicid\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|mortalit\w*|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+// (2.21) never looked up: dying, overdose, suicide, amounts. Looked up and listed by title only: pregnancy and children
+export const FIND_NEVER = /\b(suicid\w*|self-?harm\w*|kill\w*|die[sd]?|dying|deaths?|dead|deadly|mortalit\w*|overdos\w*|lethal|fatal\w*|dos(e|es|age|ing)|mg|milligrams?|grams?|micrograms?)\b/i;
+export const FIND_TITLES = /\b(pregnan\w*|breast-?feed\w*|lactat\w*|child|children|childhood|kids?|bab(y|ies)|infants?|newborns?|toddlers?|teen\w*|adolescen\w*|minors?|youths?|underage|school\w*|f(?:o)?etus|f(?:o)?etal|prenatal|perinatal|maternal|mothers?|paternal|fathers?|parent\w*|p(?:a)?ediatric\w*)\b/i;
+// (2.21) what research calls the subject of a question that names no single drug: these stand in the place of a drug's name (the page sends them)
+const FIND_GEN_NAMES = new Set(["drug use", "substance use", "addiction", "substance use disorder"]);
 const FIND_NOT_RESEARCH = /^(?:legal\w*|illegal\w*|law|laws|lawful|police|arrest\w*|prison|jail|court|customs|border|airport|price|prices|cost|costs|cheap\w*|buy|buying|bought|order\w*|dealers?|vendors?|urine|test|tests|tested|testing|screen\w*|detect\w*)$/i;
 const findName = s => { s = clean(s).toLowerCase(); return /^[a-z0-9][a-z0-9 ,.'+()\-]{1,58}[a-z0-9)]$/.test(s) && !/["\\:]/.test(s) ? s : ""; };
 const findWord = s => { s = clean(s).toLowerCase(); return /^[a-z]{3,24}$/.test(s) ? s : ""; };
 // a key word may come with the word papers use for it, as one entry: "appetite|hungry". The two are one thing asked for, in two ways.
-// def: the question asks what the drug is ("what is phenibut"); noq: its key words are about the law, prices or drug tests (papers are listed, no words shown)
+// def: the question asks what the drug is ("what is phenibut"); noq: papers are listed and no words of them are shown: its key words are about the law, prices or
+// drug tests, or about pregnancy or children, or the page asked for titles only (t: 1: a question that names no single drug)
 // also: what the drug's page is called, where the reader named a drug of its own ("xanax": benzodiazepines; "tramadol": prescription opioids): asked for
 // only where the reader's own name finds fewer than three papers
 export function readFind(body) {
@@ -132,7 +142,7 @@ export function readFind(body) {
   const groups = (Array.isArray(body && body.words) ? body.words : []).slice(0, 12).map(e => uniq(String(e == null ? "" : e).split("|").slice(0, 3).map(findWord)).filter(w => !names.includes(w))).filter(g => g.length).slice(0, 6);
   const words = uniq(groups.flat());
   if (!names.length) return { error: "no name" };
-  return { names, also, words, groups, def: !!(body && (body.def === 1 || body.def === true)) && !groups.length, noq: words.some(w => FIND_NOT_RESEARCH.test(w)), held: names.concat(also, words).some(t => FIND_HELD.test(t)) };
+  return { names, also, words, groups, def: !!(body && (body.def === 1 || body.def === true)) && !groups.length, gen: names.every(n => FIND_GEN_NAMES.has(n)), noq: !!(body && (body.t === 1 || body.t === true)) || names.every(n => FIND_GEN_NAMES.has(n)) || words.some(w => FIND_NOT_RESEARCH.test(w)) || names.concat(also, words).some(t => FIND_TITLES.test(t)), held: names.concat(also, words).some(t => FIND_NEVER.test(t)) };
 }
 const FIND_SPELL = "colour color|behaviour behavior|tumour tumor|flavour flavor|odour odor|labour labor|vapour vapor|anaemia anemia|anaesthesia anesthesia|anaesthetic anesthetic|haemorrhage hemorrhage|oedema edema|diarrhoea diarrhea|oestrogen estrogen|ageing aging|centre center|fibre fiber|analogue analog|programme program|grey gray|sulphate sulfate|leukaemia leukemia".split("|").map(p => p.split(" "));
 // a word as papers may write it: its one and its many ("migraines", "migraine") and its other spelling ("colour", "color"; "-ise", "-ize")
@@ -170,6 +180,7 @@ export function findQueries(names, groups) {
     onTitle: nm(true) + key(true) + tail,                                          // the drug and every key word in the very title (asked for the newest)
     wide: gs.length ? nm(false) + key(false) + tail : "",                          // the drug and every key word anywhere in title or summary (only where those found fewer than three)
     loose: gs.length > 1 ? nm(false) + " AND " + any([...new Set(gs.flat())]) + tail : "",   // any one key word (only where the others found fewer than three)
+    genRev: gs.length ? nm(true) + key(false) + " AND " + rev + tail : "",          // (2.21) reviews with the subject in the title that hold every key word (a question that names no single drug)
     nameRev: nm(true) + " AND " + rev + tail,                                      // reviews of the drug itself (only where the others found fewer than two)
     anyTitle: nm(true) + tail };                                                   // without key words: the drug in the title, in Europe PMC's own order (what is there when the most cited are slow)
 }
@@ -420,7 +431,7 @@ export function iaPick(p, groups, names, def, note) {
    Gives { papers, more, ms, again, won, own, kept }: more: the most cited were still out when the list was given (the page asks once more a moment later);
    and, for the editors, numbers only: ms: when each of the three searches was in (null: not yet); again: how many askings were repeated; won: which asking
    of each search answered (0 the first); own: how long that asking itself took; kept: how many searches were answered from what was kept. */
-const FIND_A = [600, 1300], FIND_B = [900, 1700], FIND_GRACE = 300, FIND_SOON = 2000, FIND_LAST = 3000, FIND_ALL = 5600;
+const FIND_A = [600, 1300], FIND_B = [900, 1700], FIND_GRACE = 300, FIND_SOON = 2000, FIND_LAST = 3000, FIND_ALL = 5600, FIND_GEN = 5000;
 async function findPapers(env, r, most, ctx) {
   const get = env.FETCH || fetch, began = Date.now(), left = () => FIND_ALL - (Date.now() - began);
   // Europe PMC's replies are kept for a day where the site runs (Cloudflare's cache, by the search's address), so that the same search is not made twice:
@@ -469,6 +480,19 @@ async function findPapers(env, r, most, ctx) {
      When the list is given: as soon as the most cited are back, with the newest if they are back too or come within three tenths of a second (the newest are
      one paper of the six: nobody waits for them longer, and the list is not changed for them afterwards; they are kept for the next reader); after two
      seconds without the most cited, whatever three papers there are, and the reply says that more is to come; after three seconds, whatever there is. */
+  /* (2.21) A question that names no single drug ("drug use", "substance use" in the place of a name). The eleventh trial asked such questions the way a drug's
+     are asked and found the right papers for most, but each of the three searches took two to ten seconds at Europe PMC (the subject stands in hundreds of
+     thousands of papers), the second and third askings doubled that load, and a question with five key words found nothing. So for these: two plain
+     searches, each asked ONCE (the reviews with the subject in the title that hold every key word; the papers with subject and key words in the very title),
+     both for the most cited, and one patient reply (FIND_GEN) in the place of a quick thin one. Titles only: readFind says so (noq). */
+  const roundGen = async names => { const Q = findQueries(names, r.groups), live = { on: true };
+    const G = start(Q.genRev, "CITED%20desc", 6, [], live), T = start(Q.onTitle, "CITED%20desc", 6, [], live); let t = null;
+    await Promise.race([Promise.all([G.p, T.p]), new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_GEN, left()))); })]); clearTimeout(t); live.on = false;
+    const g = got(G), tt = got(T);
+    add([tt[0], g[0], tt[1], g[1], tt[2], g[2]].concat(tt.slice(3), g.slice(3)));
+    if (!G.done || !T.done) more = true;
+    if (!ms) { ms = [G.ms, T.ms, null]; won = [G.won, T.won, null]; own = [G.own, T.own, null]; }
+    kept += G.kept + T.kept; };
   const round = async names => { const Q = findQueries(names, r.groups), live = { on: true };
     const A = start(Q.cited, "CITED%20desc", 8, FIND_A, live), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2, FIND_B, live), W = start(Q.wide || Q.anyTitle, "", 4, FIND_B, live);
     const known = (...ss) => new Set(ss.flatMap(got).map(p => p.doi || p.pmid)).size;
@@ -488,6 +512,7 @@ async function findPapers(env, r, most, ctx) {
   // one wider search, where the three found too little
   const one = async (q, sort, size) => { if (!q || left() < 600) return []; const live = { on: true }, s = start(q, sort, size, FIND_B, live); let t = null;
     await Promise.race([s.p, new Promise(d => { t = setTimeout(d, Math.max(300, Math.min(FIND_LAST, left()))); })]); clearTimeout(t); live.on = false; if (!s.done) more = true; again += s.again; kept += s.kept; return got(s); };
+  if (r.gen) { await roundGen(r.names); const papers = out.slice(0, most).map(p => ({ t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind })); return { papers, more, ms: ms || [], again, won, own, kept }; }
   await round(r.names);
   // wider, only where the searches are back and found too little (a search that is still out is not "too little": the page asks again)
   if (!more && out.length < 3 && all.length > r.names.length && left() > 600) await round(all);   // (the name the reader wrote found too little: with what its page is called)
@@ -506,8 +531,28 @@ async function find(request, url, env, ctx) {
   try { const t = await request.text(); if (t.length > 2000) return json({ ok: false, error: "too long" }, 413); body = JSON.parse(t); } catch (e) { return json({ ok: false, error: "json" }, 400); }
   const r = readFind(body); if (r.error) return json({ ok: false, error: r.error }, 422);
   if (r.held) return json({ ok: true, held: true, papers: [] });
-  try { const f = await findPapers(env, r, 6, ctx); return json(Object.assign({ ok: true, papers: f.papers }, f.more ? { more: 1 } : {}, { ms: f.ms, again: f.again, won: f.won, own: f.own, kept: f.kept })); }
+  try { const f = await findPapers(env, r, 6, ctx); return json(Object.assign({ ok: true, papers: f.papers }, f.more ? { more: 1 } : {}, r.noq ? { titles: 1 } : {}, { ms: f.ms, again: f.again, won: f.won, own: f.own, kept: f.kept })); }
   catch (e) { return json({ ok: false, error: "search" }, 502); }
+}
+/* (site 2.21, 18 November 2026; the senior author, 13:34 Athens: "can the answers get ... answered by themselves? and can they get answered almost instantly?
+   one day or two is too ... much"; 14:44, of the look that was to come every five minutes: "if it can be every minute or 30 seconds or even a few seconds it
+   would be even better ... whatever is best".) Best is no clock at all: a NEW question starts the system's work the moment it arrives. GitHub is asked to
+   start the workflow that reads the store and writes the answer (.github/workflows/auto.yml); its own clock comes every five minutes at best and often much
+   later (on 18 November it did not come for 25 minutes). This runs only where the senior author has given this server a key that may do exactly that and
+   nothing else (env.GH_RUN_TOKEN: a fine-grained token for this one repository, "Actions: read and write"); without the key nothing here runs.
+   At most one request in RUN_EVERY seconds from one of Cloudflare's places (a note in its cache, never in the store: no write is spent on it); the workflow
+   itself lets one run wait behind the one that is working, so a question that arrives while a run works is read by the next. No word of the question
+   leaves this server for it: the request names the workflow and the branch, nothing else. */
+const RUN_EVERY = 20, RUN_NOTE = "https://pharmakon.world/__run-asked";
+async function startWork(env) {
+  const token = String((env && env.GH_RUN_TOKEN) || "").trim(); if (!token) return "off";
+  try {
+    let cache = env.CACHE || null; if (!cache) { try { cache = (typeof caches !== "undefined" && caches.default) || null; } catch (e) { cache = null; } }
+    if (cache) { if (await cache.match(RUN_NOTE)) return "lately"; await cache.put(RUN_NOTE, new Response("1", { headers: { "cache-control": "public, max-age=" + RUN_EVERY } })); }
+    const r = await fetch("https://api.github.com/repos/vasilissampalis/pharmakon/actions/workflows/auto.yml/dispatches", { method: "POST", body: JSON.stringify({ ref: "main" }),
+      headers: { authorization: "Bearer " + token, accept: "application/vnd.github+json", "x-github-api-version": "2022-11-28", "user-agent": "pharmakon-site", "content-type": "application/json" } });
+    return r.status === 204 ? "asked" : "refused " + r.status;
+  } catch (e) { return "failed"; }
 }
 // one more person asked a question that is on the public list: the item's number, counted
 async function want(request, url, store) {
@@ -563,6 +608,7 @@ export default {
         await store.put(key, JSON.stringify(had), opts); return json({ ok: true, again: true });
       }
       await store.put(key, JSON.stringify(Object.assign({ q: r.q, d: r.d ? [r.d] : [], v: r.v, first: day, last: day, n: 1, dn: 1 }, auto ? { a: 1 } : {})), opts);
+      { const go = startWork(env).catch(() => "failed"); if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(go); }   // a new question: the system's work is started now (see startWork), behind the reply
       return json({ ok: true });
     } catch (e) { return json({ ok: false, error: "store" }, 503); }
   }
