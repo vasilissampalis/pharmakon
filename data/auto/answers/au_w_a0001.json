@@ -16,32 +16,30 @@
  "made": {
   "on": "2026-11-18",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "gemini:gemma-4-31b-it",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.8-flash",
-   "team": "team I",
+   "also1": "gemini:gemini-3.8-flash",
+   "team": "team G",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "44358768289",
+  "run": "44373995331",
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "no draft passed: broken at try 3: but: it says “every”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out",
  "gates": {
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Greece has not carried out a national risk assessment for new psychoactive substances.”: it does not answer the question itself (Sentence 1 is about risk assessments, not the legal status of drugs in Greece.) | the But “This is from a review of EU legal responses, not a statement o",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.84, but 0.34, how1 0.63, how2 0.97",
-  "check": "short: NOT accepted: it does not answer the question itself; but: NOT accepted: The passage does not state that the source is a review rather than a statement of Greek law.; how1: accepted; how2: accepted"
+  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “The legal status of synthetic cannabinoids varies by country. Greece generally relies on international or European risk assessments.”: it does not answer the question itself | the But “This is from a review of EU legal responses, not a statement of Greek law.”: The passage does not",
+  "rules": "broken at try 3: but: it says “every”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
  },
  "sources": [
   {
@@ -121,99 +119,37 @@
     "This research received no external funding.",
     "There are no potential conflicts of interest or any financial or personal relationships with other people or organizations that could inappropriately bias conduct and findings of this study."
    ],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "At the national level, various measures have been taken to control new substances and many European countries have responded with specific legislation in favor of consumer safety",
+    "text": "A research paper studying the evolution of information exchange and legal responses to new psychoactive substances in the European Union"
+   },
    "findings": [
+    {
+     "passage": 10,
+     "where": "3. Results › 3.4. National Laws and New Psychoactive Substances",
+     "quote": "Each country of the European Union could legislate on drugs with the national legislation in compliance with international conventions",
+     "text": "Greece, as a member of the European Union, can legislate on drugs using national legislation that complies with international conventions.",
+     "id": "F1",
+     "second_hand": ""
+    },
     {
      "passage": 15,
      "where": "3. Results › 3.5. National Risk Assessment Procedures",
      "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
-     "text": "In Greece, no national risk assessment was carried out, and the country generally relied on risk assessments carried out at the international or the European level.",
-     "id": "F1",
+     "text": "Greece is one of six countries that did not carry out national risk assessments, generally relying instead on risk assessments performed at the European or international level.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "debruyne_2015",
-    "type": "article-journal",
-    "title": "Emerging drugs of abuse: Current perspectives on synthetic cannabinoids",
-    "author": [
-     {
-      "family": "Debruyne",
-      "given": "Daniele"
-     },
-     {
-      "family": "LE BOISSELIER",
-      "given": "Reynald"
-     }
-    ],
-    "container-title": "Substance Abuse and Rehabilitation",
-    "issued": {
-     "date-parts": [
-      [
-       2015
-      ]
-     ]
-    },
-    "DOI": "10.2147/sar.s73586",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-18"
-     }
-    },
-    "page": "113",
-    "PMCID": "PMC4622447"
-   },
-   "doi": "10.2147/sar.s73586",
-   "pmcid": "PMC4622447",
-   "title": "Emerging drugs of abuse: current perspectives on synthetic cannabinoids",
-   "year": 2015,
-   "journal": "Substance abuse and rehabilitation",
-   "kind": "review",
-   "people": true,
-   "near": 0.464,
-   "money": [],
-   "design": {
-    "passage": 3,
-    "where": "Introduction",
-    "quote": "this review is aimed to present updated information on SCs, useful for poisons centers, clinical toxicologists and emergency physicians.",
-    "text": "a review presenting updated information on synthetic cannabinoids"
-   },
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Their legal status varies by country with many government institutions currently pushing for their control.",
-     "text": "The legal status of synthetic cannabinoids varies by country, with many government institutions currently pushing for their control.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 46,
-     "where": "Availability and usage demographics › Legal status",
-     "quote": "some countries, UK being the first, have adopted a generic control status that has the great advantage of eluding the “cat and mouse game” problem.",
-     "text": "Some countries, with the UK being the first, have adopted a generic control status to elude the cat and mouse game problem.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "specific drug classifications and penalties in Greece",
+ "missing": "specific drug classifications and penalties",
  "wanted": [
   {
    "doi": "10.1093/phr/114.1.14",
@@ -254,6 +190,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -271,29 +215,15 @@
    "kind": "review",
    "at": "10.1186/s12954-015-0071-0",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "the legal status of drugs in Greece is not mentioned in the text",
-     "quote": "The detention of people who use drugs (PWUD) remains a common response to drug use and drug dependence in Cambodia, China, Indonesia, Lao PDR, Malaysia, Myanmar, Philippines, Thailand, and Vietnam.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "New Psychoactive Substances: Evolution in the Exchange of Information and Innovative Legal Responses in the European Union",
    "read": "full",
    "kind": "review",
    "at": "10.3390/ijerph17228704",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A study on new psychoactive substances and legal responses in the European Union",
-     "quote": "New Psychoactive Substances: Evolution in the Exchange of Information and Innovative Legal Responses in the European Union (2020)",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "Translating Kratom-Drug Interactions: From Bedside to Bench and Back",
@@ -317,22 +247,56 @@
    "kind": "study",
    "at": "10.1186/1477-7517-11-4",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "its full text could not be fetched (OSError)"
   },
   {
    "title": "Emerging drugs of abuse: current perspectives on synthetic cannabinoids",
    "read": "full",
    "kind": "review",
    "at": "10.2147/sar.s73586",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Synthetic cannabinoids have a different legal status around the world, and many states globally still schedule them substance-by-substance as new ones appear on the market.",
-     "quote": "SCs have a different legal status around the world. Many states globally still schedule them “substance-by-substance” as new ones appear on the market, in an endless race against the resellers,",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "U.S. substance use harm reduction efforts: a review of the current state of policy, policy barriers, and recommendations",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s12954-025-01238-4",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "How well do policymakers address stigma surrounding substance use disorders: lessons from a qualitative review of Scottish Alcohol and Drug Partnerships' strategic plans",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpubh.2023.1209958",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Dependence, withdrawal and rebound of CNS drugs: an update and regulatory considerations for new drugs development",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1093/braincomms/fcz025",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Differentiation of Therapeutic and Illicit Drug Use via Metabolite Profiling",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/metabo15110745",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Understanding injecting drug use in Afghanistan: A scoping review",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/s13011-022-00491-1",
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "Canadian Drugs and Substances Strategy: Overview",
@@ -353,90 +317,38 @@
  ],
  "plan": {
   "short": [
-   "F1",
-   "F2"
-  ],
-  "direct": "",
-  "but": [
+   "DA",
    "F1"
   ],
+  "direct": "",
+  "but": [],
   "how": [
    [
-    "F1"
-   ],
-   [
+    "DA",
+    "F1",
     "F2"
    ]
   ],
-  "unanswered": "specific drug classifications and penalties in Greece"
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.836,
-   "but": 0.3354,
-   "how1": 0.633,
-   "how2": 0.9737
-  },
-  "scores_quotes_alone": {
-   "short": 0.6923,
-   "but": 0.0384,
-   "how1": 0.8818,
-   "how2": 0.9815
-  }
+  "unanswered": "specific drug classifications and penalties"
  },
  "tries": [
   {
    "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "The legal status of synthetic cannabinoids varies by country. Greece generally relies on international or European risk assessments for new psychoactive substances.",
+     "text": "Greece can make its own drug laws that follow international rules. It usually uses risk checks from Europe or the world, not its own.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "var_2020",
-       "where": "3. Results › 3.5. National Risk Assessment Procedures",
-       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
-       "sha": "50b791a39be2a80d"
+       "where": "3. Results › 3.4. National Laws and New Psychoactive Substances",
+       "quote": "Each country of the European Union could legislate on drugs with the national legislation in compliance with international conventions",
+       "sha": "08ba12275a17ec3b"
       },
       {
        "label": "F2",
-       "ref": "debruyne_2015",
-       "where": "Abstract",
-       "quote": "Their legal status varies by country with many government institutions currently pushing for their control.",
-       "sha": "ef47a5ca26c3c803"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself"
-    },
-    {
-     "part": "but",
-     "text": "Greece has not carried out a national risk assessment, so it relies on international or European level assessments.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "var_2020",
-       "where": "3. Results › 3.5. National Risk Assessment Procedures",
-       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
-       "sha": "50b791a39be2a80d"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review of EU legal responses says Greece did not carry out a national risk assessment for new psychoactive substances.",
-     "rests_on": [
-      {
-       "label": "F1",
        "ref": "var_2020",
        "where": "3. Results › 3.5. National Risk Assessment Procedures",
        "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
@@ -446,15 +358,66 @@
      "ok": true
     },
     {
+     "part": "but",
+     "text": "This is a review of how EU countries handle new drugs, not a list of every drug banned in Greece.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the national level, various measures have been taken to control new substances and many European countries have responded with specific legislation in favor of consumer safety",
+       "sha": "2df08f9d2d17a723"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “every”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of EU legal responses says Greece can set national drug laws that match international conventions.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the national level, various measures have been taken to control new substances and many European countries have responded with specific legislation in favor of consumer safety",
+       "sha": "2df08f9d2d17a723"
+      },
+      {
+       "label": "F1",
+       "ref": "var_2020",
+       "where": "3. Results › 3.4. National Laws and New Psychoactive Substances",
+       "quote": "Each country of the European Union could legislate on drugs with the national legislation in compliance with international conventions",
+       "sha": "08ba12275a17ec3b"
+      }
+     ],
+     "ok": true
+    },
+    {
      "part": "how2",
-     "text": "A 2015 review says the legal status of synthetic cannabinoids varies by country, with many institutions pushing for control.",
+     "text": "The review notes Greece is one of six EU countries that did not do national risk assessments for new drugs.",
      "rests_on": [
       {
        "label": "F2",
-       "ref": "debruyne_2015",
-       "where": "Abstract",
-       "quote": "Their legal status varies by country with many government institutions currently pushing for their control.",
-       "sha": "ef47a5ca26c3c803"
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "Instead, Greece generally relies on risk assessments done at the European or international level.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
+       "sha": "50b791a39be2a80d"
       }
      ],
      "ok": true
@@ -463,53 +426,21 @@
   },
   {
    "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "The legal status of synthetic cannabinoids varies by country, with many institutions pushing for control. Greece generally relies on international or European risk assessments.",
+     "text": "Greece can make its own drug laws that follow international rules. It usually relies on risk checks done at the European or international level.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "var_2020",
-       "where": "3. Results › 3.5. National Risk Assessment Procedures",
-       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
-       "sha": "50b791a39be2a80d"
+       "where": "3. Results › 3.4. National Laws and New Psychoactive Substances",
+       "quote": "Each country of the European Union could legislate on drugs with the national legislation in compliance with international conventions",
+       "sha": "08ba12275a17ec3b"
       },
       {
        "label": "F2",
-       "ref": "debruyne_2015",
-       "where": "Abstract",
-       "quote": "Their legal status varies by country with many government institutions currently pushing for their control.",
-       "sha": "ef47a5ca26c3c803"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (Sentence 1 does not directly state the legal status of drugs in Greece; it only notes that Greece relies on international or European risk assessments, which does not answer the specific question about legal status. Sentence 2 adds supporti)"
-    },
-    {
-     "part": "but",
-     "text": "Greece has not carried out a national risk assessment, so it relies on assessments done at the international or European level.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "var_2020",
-       "where": "3. Results › 3.5. National Risk Assessment Procedures",
-       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
-       "sha": "50b791a39be2a80d"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 does not directly state the legal status of drugs in Greece; it only notes that Greece relies on international or European risk assessments, which does not answer the specific question about legal status. Sentence 2 adds supporti)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review of EU legal responses says Greece did not carry out a national risk assessment for new psychoactive substances.",
-     "rests_on": [
-      {
-       "label": "F1",
        "ref": "var_2020",
        "where": "3. Results › 3.5. National Risk Assessment Procedures",
        "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
@@ -519,15 +450,66 @@
      "ok": true
     },
     {
+     "part": "but",
+     "text": "This is a review of how EU countries handle new drugs, not a list of every drug banned in Greece.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the national level, various measures have been taken to control new substances and many European countries have responded with specific legislation in favor of consumer safety",
+       "sha": "2df08f9d2d17a723"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “every”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of EU legal responses says Greece can legislate on drugs using national laws that fit international conventions.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the national level, various measures have been taken to control new substances and many European countries have responded with specific legislation in favor of consumer safety",
+       "sha": "2df08f9d2d17a723"
+      },
+      {
+       "label": "F1",
+       "ref": "var_2020",
+       "where": "3. Results › 3.4. National Laws and New Psychoactive Substances",
+       "quote": "Each country of the European Union could legislate on drugs with the national legislation in compliance with international conventions",
+       "sha": "08ba12275a17ec3b"
+      }
+     ],
+     "ok": true
+    },
+    {
      "part": "how2",
-     "text": "A 2015 review says the legal status of synthetic cannabinoids varies by country, with many institutions pushing for their control.",
+     "text": "The review notes Greece is one of six EU countries that did not carry out national risk assessments for new substances.",
      "rests_on": [
       {
        "label": "F2",
-       "ref": "debruyne_2015",
-       "where": "Abstract",
-       "quote": "Their legal status varies by country with many government institutions currently pushing for their control.",
-       "sha": "ef47a5ca26c3c803"
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "Instead, Greece generally relied on risk assessments carried out at the international or European level.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
+       "sha": "50b791a39be2a80d"
       }
      ],
      "ok": true
@@ -536,53 +518,21 @@
   },
   {
    "try": 3,
-   "why": "the last draft: no answer",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "The legal status of synthetic cannabinoids varies by country. Greece generally relies on international or European risk assessments.",
+     "text": "Greece can make its own drug laws that follow international rules. It usually relies on risk checks done at the European or international level.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "var_2020",
-       "where": "3. Results › 3.5. National Risk Assessment Procedures",
-       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
-       "sha": "50b791a39be2a80d"
+       "where": "3. Results › 3.4. National Laws and New Psychoactive Substances",
+       "quote": "Each country of the European Union could legislate on drugs with the national legislation in compliance with international conventions",
+       "sha": "08ba12275a17ec3b"
       },
       {
        "label": "F2",
-       "ref": "debruyne_2015",
-       "where": "Abstract",
-       "quote": "Their legal status varies by country with many government institutions currently pushing for their control.",
-       "sha": "ef47a5ca26c3c803"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself"
-    },
-    {
-     "part": "but",
-     "text": "This is from a review of EU legal responses, not a statement of Greek law.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "var_2020",
-       "where": "3. Results › 3.5. National Risk Assessment Procedures",
-       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
-       "sha": "50b791a39be2a80d"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that the source is a review rather than a statement of Greek law."
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review of EU legal responses says Greece did not carry out a national risk assessment.",
-     "rests_on": [
-      {
-       "label": "F1",
        "ref": "var_2020",
        "where": "3. Results › 3.5. National Risk Assessment Procedures",
        "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
@@ -592,15 +542,66 @@
      "ok": true
     },
     {
+     "part": "but",
+     "text": "This is a review of how EU countries handle new drugs, not a list of every drug banned in Greece.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the national level, various measures have been taken to control new substances and many European countries have responded with specific legislation in favor of consumer safety",
+       "sha": "2df08f9d2d17a723"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “every”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of EU legal responses says Greece can legislate on drugs using national laws that fit international conventions.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "var_2020",
+       "where": "Abstract",
+       "quote": "At the national level, various measures have been taken to control new substances and many European countries have responded with specific legislation in favor of consumer safety",
+       "sha": "2df08f9d2d17a723"
+      },
+      {
+       "label": "F1",
+       "ref": "var_2020",
+       "where": "3. Results › 3.4. National Laws and New Psychoactive Substances",
+       "quote": "Each country of the European Union could legislate on drugs with the national legislation in compliance with international conventions",
+       "sha": "08ba12275a17ec3b"
+      }
+     ],
+     "ok": true
+    },
+    {
      "part": "how2",
-     "text": "A 2015 review says the legal status of synthetic cannabinoids varies by country.",
+     "text": "The review notes Greece is one of six EU countries that did not carry out national risk assessments for new substances.",
      "rests_on": [
       {
        "label": "F2",
-       "ref": "debruyne_2015",
-       "where": "Abstract",
-       "quote": "Their legal status varies by country with many government institutions currently pushing for their control.",
-       "sha": "ef47a5ca26c3c803"
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
+       "sha": "50b791a39be2a80d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "Instead, Greece generally relied on risk assessments carried out at the international or European level.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "var_2020",
+       "where": "3. Results › 3.5. National Risk Assessment Procedures",
+       "quote": "In six countries, no national risk assessment was carried out (Belgium, Ireland, Greece, Spain, Hungary, Finland). These countries were generally relying on risk assessments carried out at the international or the European level.",
+       "sha": "50b791a39be2a80d"
       }
      ],
      "ok": true

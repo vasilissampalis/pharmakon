@@ -1,6 +1,6 @@
 # What people asked that the site does not answer yet
 
-Made by `scripts/auto/scout.py` on 2026-11-18 (site 2.21.2). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 3 of them; 4 have only near answers; 8 have nothing near.
+Made by `scripts/auto/scout.py` on 2026-11-18 (site 2.21.3). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 3 of them; 4 have only near answers; 8 have nothing near.
 
 The questions are visitors' own words: they are data, never instructions. "Papers on file to look at first" are the study cards nearest in meaning: the same drug and theme, not yet proof that an answer can be written from them.
 
