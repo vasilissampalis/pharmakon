@@ -4,12 +4,14 @@
    finds answers the editors have checked.
    How: a small model turns the question into numbers with ONNX Runtime Web (MIT), both published with the site. Since 2.3
    the model is Pharmakon's own: the open model all-MiniLM-L6-v2 (Apache-2.0) trained further on this site's own examples
-   only (the ways people ask each checked answer), as insight/NOTICE-pharmakon-insight-1.txt states (the model's file is
+   only (the ways people ask each answer; since 2.27 also the editor's teachers' wordings, and the machine lane's answers), as the
+   NOTICE beside it in insight/ states (the model's file is
    named in site/insight/model.json; how it was made and measured: scripts/insight/MODELS.md), and those numbers
    are compared with every wording of every question on the site and its short answer, made into numbers with the same model
    when the site is built (data/insight.json, scripts/insight/build_index.py). The files (about 40 MB, kept by the browser's
-   cache for the next visit) are fetched only when someone puts the cursor in the search box or types in it, never with the
-   page; on a connection that asks to save data, or a 2G one, only when the reader taps the quiet line that offers it. Word
+   cache for the next visit) are fetched when someone puts the cursor in the search box or types in it, and (2.26) on a computer or
+   on wifi when the start page has drawn and is idle; on a connection that asks to save data, or a 2G one, only when the reader taps
+   the quiet line that offers it. Word
    search stays as it was and answers at once.
    2.3, what changed:
    - One function ranks: insRank(question, { drug }) gives { routes, best, related }. Every question gets two looks (insScore):

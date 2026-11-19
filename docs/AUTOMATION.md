@@ -1842,6 +1842,12 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     the start page fetches and starts Insight by itself once the page has drawn and is idle, so a first question is read at
     once; never on a mobile network, a slow line or where data is saved, and never before the page's first paint
     (`insFastLine`, `insWarm`; `insight_check.js`, `speed_check.js`).
+    **The first pupil on the page (site 2.27.0).** all-MiniLM-L6-v2 taught with every answer and the editor's 3,001 teachers'
+    wordings, half and half with the original (pharmakon-insight-2): held out, it finds the answer for 86.8% of the readers'
+    wordings of answers it never saw (85.3% without the teachers); on the gold set with the page's rule its best match is wrong
+    no more often (6 of 41; insight-1: 6 of 40), and what Insight shows helps 138 of the 400 questions (133) and misleads 58
+    (60); one full answer fewer as best match (23; 24). It knows the machine lane's answers too. Two trials were not shipped:
+    the teachers' wordings in the index (a better order, more wrong best matches) and a judge taught them too (the same).
 
 ## The machine lane: what must be true before a machine-written claim is shown
 
