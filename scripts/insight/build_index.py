@@ -51,7 +51,7 @@ import numpy as np
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 VENDOR = ROOT / "site/insight/vendor"
-CONFIG = json.load(open(ROOT / "site/insight/model.json", encoding="utf-8"))   # the model's file name, the weights, the tiers
+CONFIG = json.load(open(os.environ.get("PK_INSIGHT_MODEL_JSON") or (ROOT / "site/insight/model.json"), encoding="utf-8"))   # the model's file name, the weights, the tiers (PK_INSIGHT_MODEL_JSON: another copy, for scripts/insight/candidate.py only)
 MODEL = CONFIG["file"]
 MODEL_SHA256 = hashlib.sha256((VENDOR / MODEL).read_bytes()).hexdigest() if (VENDOR / MODEL).exists() else "missing"
 CACHE = ROOT / "site/insight/.cache" / ("vectors-" + MODEL_SHA256[:16] + ".npz")   # made by the page's runtime, one text at a time (see embed_all)

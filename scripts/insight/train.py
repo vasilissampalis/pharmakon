@@ -329,7 +329,8 @@ def main():
             return self.m(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids).last_hidden_state
 
     G = gold(); idx_std = [list(dict.fromkeys(list(a["wordings"]) + [w for w in R[i] if w])) for i, a in enumerate(A)]
-    idx_tea = [list(dict.fromkeys(idx_std[i] + T[i])) for i in range(len(A))]
+    T_all = teacher_wordings()   # (for the second measure, whether or not this model learned from them: would they help in the index?)
+    idx_tea = [list(dict.fromkeys(idx_std[i] + [w for w in T_all.get(a["id"], []) if w not in idx_std[i]])) for i, a in enumerate(A)]
     record["gold"] = {}; per_q = {}
     if SITE_MODEL.exists():
         enc = OnnxEncoder(SITE_MODEL); r1, p1 = gold_eval(enc, A, idx_std, G); r2, _ = gold_eval(enc, A, idx_tea, G)
