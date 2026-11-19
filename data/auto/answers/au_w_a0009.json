@@ -18,37 +18,135 @@
   "on": "2026-11-19",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "@cf/openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
+   "team": "team B",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "writer_2": "groq:qwen/qwen3.8-27b"
   },
   "run": "44426312410",
   "read_by": {
-   "gemini-3.5-flash-lite": 11,
-   "gemini-3.1-flash-lite": 8
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 3,
+   "llama-4-scout-17b-16e-instruct": 1
   },
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 645.2,
+  "seconds": 165
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.87, but 0.93, how1 0.94",
+  "check": "short: NOT accepted: it does not answer the question itself (Sentence 1 does not address the asked question about drugs linked to confident dancing. Sentence 2 does not serve as a limitation or doubt on Sentence 1; it concerns a different methodological detail.); but: NOT accepted: it is about something else than the short answer (Sentence 1 does not address the asked question about drugs linked to confident dancing. Sentence 2 does not serve as a limitation or doubt on Sentence 1; it concerns a different methodological detail.); how1: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "morenomontoya_2025",
+    "type": "article-journal",
+    "title": "Dependence of psychopharmacological drug effects on early social stress experience: An analysis aligned with the research domain criteria framework",
+    "author": [
+     {
+      "family": "Moreno-Montoya",
+      "given": "Margarita"
+     },
+     {
+      "family": "Martín-González",
+      "given": "Elena"
+     },
+     {
+      "family": "Dalley",
+      "given": "Jeffrey W."
+     }
+    ],
+    "container-title": "The Journal of Pharmacology and Experimental Therapeutics",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1016/j.jpet.2025.103710",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-19",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-19"
+     }
+    },
+    "volume": "392",
+    "issue": "10",
+    "number": "103710",
+    "PMCID": "PMC12799552"
+   },
+   "doi": "10.1016/j.jpet.2025.103710",
+   "pmcid": "PMC12799552",
+   "title": "Dependence of psychopharmacological drug effects on early social stress experience: An analysis aligned with the research domain criteria framework",
+   "year": 2025,
+   "journal": "The Journal of pharmacology and experimental therapeutics",
+   "kind": "review",
+   "people": true,
+   "near": 0.479,
+   "money": [
+    "The authors declare no conflicts of interest.",
+    "Financial supportJeffrey Dalley acknowledges funding from the 10.13039/100010269Wellcome Trust [Award reference: 226776/Z/22/Z] in collaboration with Rebecca Lawson, Tim Dalgleish, Stephanie Archer, Anna Bevan, Camilla Nord, and Chris Mathys. Margarita Moreno-Montoya acknowledges funding from National Grant PID2022-139286NB-I00 Proyectos Generación de Conocimiento PGC, MCIN/AEI/10.13039/501100011033, Government of Spain and FEDER Funds.Data availabilityThis article contains no datasets generated or analyzed during the current study.CRediT authorship contribution statementMargarita Moreno-Monotoya: Conceptualization, Writing – Review and editing. Elena Martin Gonzalez: Writing – original draft. Jeffrey Dalley: Conceptualization, Writing – Review and editing."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Early life stress (ELS) refers to maltreatment, deprivation, and other traumatic events experienced early in life.",
+    "text": "research paper on effects of early life stress on psychopharmacological drug effects in rodents"
+   },
+   "findings": [
+    {
+     "passage": 18,
+     "where": "Effects of ELS on the positive valence system › Reward learning",
+     "quote": "Animals subjected to early MS and LBN stress show higher rates of methamphetamine self-administration and faster acquisition of cocaine self-administration compared with control animals.",
+     "text": "In rats, early life stress leads to higher rates of methamphetamine and cocaine self-administration.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 43,
+     "where": "Cannabinoid interventions",
+     "quote": "Administration of the cannabinoid receptor subtype 1/2 (CB1/2) agonist WIN55,212-2 during late adolescence (P45–60) prevented impairments in short-term memory caused by ELS.",
+     "text": "In rats, WIN55,212-2 administration during late adolescence prevents memory impairments caused by early life stress.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 34,
+     "where": "ELS and psychopharmacological interventions",
+     "quote": "However, in some of these studies, nonstressed control animals only received a vehicle injection rather than the active pharmacological agent.",
+     "text": "Some studies only used a vehicle injection in control animals, not the active pharmacological agent.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "specific link to confident dancing",
  "wanted": [
   {
    "doi": "10.1016/j.biopsych.2024.09.006",
@@ -103,6 +201,14 @@
    "lane": 19,
    "status": "none",
    "why": "no source that can be read gave a finding for this question (8 source(s) could not be fetched just now: tried again in the next run)",
+   "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
   }
@@ -169,8 +275,27 @@
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.jpet.2025.103710",
-   "kept": 0,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In rats, escitalopram administration affects spatial memory in those with early life stress.",
+     "quote": "escitalopram administration in MS rats significantly increased the time spent in the target quadrant of the MWM.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "In rats, early life stress may affect decisional impulsivity.",
+     "quote": "effects of MS stress may be limited to more cognitive (decisional) forms of impulsive behavior rather than motor control per se.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "It is unclear if reported effects were dependent on early life stress.",
+     "quote": "Thus, it remains an open question whether the reported effects in these studies were dependent on ELS.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Experimental Evidence on Age-related Differential Outcomes Associated With Substance Abuse",
@@ -178,7 +303,8 @@
    "kind": "review",
    "at": "10.32598/bcn.2023.587.1",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "A simple mechanistic terminology of psychoactive drugs: a proposal",
@@ -186,7 +312,8 @@
    "kind": "review",
    "at": "10.1007/s00210-020-01918-x",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Adenosine A2AReceptors in Substance Use Disorders: A Focus on Cocaine",
@@ -194,7 +321,8 @@
    "kind": "review",
    "at": "10.3390/cells9061372",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Exploring the link between recreational substances and physical activity in children and adolescents: insights from the Health Behavior in School-Aged Children study (2013-2019)",
@@ -202,75 +330,234 @@
    "kind": "other",
    "at": "10.1186/s12889-025-25448-4",
    "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Controlled and illegal drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Mixing alcohol with medicines or drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Canadian Drugs and Substances Strategy: Overview",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/canadian-drugs-substances-strategy.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "2C drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/2c",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Social Homeostasis and Psychoactive Drugs: What Can We Learn From Opioid and Amphetamine Drug Challenge Studies in Humans?",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.biopsych.2024.09.006",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1111/j.1369-1600.2006.00012.x",
-   "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Set and setting, psychedelics and the placebo response: An extra-pharmacological perspective on psychopharmacology",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1177/0269881116677852",
-   "kept": 0,
-   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "Not known",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "specific link to confident dancing"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.869,
+   "but": 0.9276,
+   "how1": 0.9405
+  },
+  "scores_quotes_alone": {
+   "short": 0.463,
+   "but": 0.9871,
+   "how1": 0.0992
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known what drugs are associated with confident dancing.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "morenomontoya_2025",
+       "where": "Effects of ELS on the positive valence system › Reward learning",
+       "quote": "Animals subjected to early MS and LBN stress show higher rates of methamphetamine self-administration and faster acquisition of cocaine self-administration compared with control animals.",
+       "sha": "84d69bb47422ff6a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passages do not mention confident dancing or any drugs associated with it."
+    },
+    {
+     "part": "but",
+     "text": "Some studies only used a vehicle injection in control animals.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "morenomontoya_2025",
+       "where": "ELS and psychopharmacological interventions",
+       "quote": "However, in some of these studies, nonstressed control animals only received a vehicle injection rather than the active pharmacological agent.",
+       "sha": "c45f51c3edd30dc1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 is unrelated to the content of the passages, so it is not supported and does not correctly answer the asked question. Sentence 2 accurately reflects a statement in its passage. Sentences 3 and 4 are directly supported by the abst)"
+    },
+    {
+     "part": "how1",
+     "text": "A review of effects of early life stress on psychopharmacological drug effects in rodents.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "morenomontoya_2025",
+       "where": "Abstract",
+       "quote": "Early life stress (ELS) refers to maltreatment, deprivation, and other traumatic events experienced early in life.",
+       "sha": "a55e6de2f7d23043"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Rats with early life stress had higher rates of methamphetamine and cocaine self-administration.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "morenomontoya_2025",
+       "where": "Effects of ELS on the positive valence system › Reward learning",
+       "quote": "Animals subjected to early MS and LBN stress show higher rates of methamphetamine self-administration and faster acquisition of cocaine self-administration compared with control animals.",
+       "sha": "84d69bb47422ff6a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "morenomontoya_2025",
+       "where": "Effects of ELS on the positive valence system › Reward learning",
+       "quote": "Animals subjected to early MS and LBN stress show higher rates of methamphetamine self-administration and faster acquisition of cocaine self-administration compared with control animals.",
+       "sha": "84d69bb47422ff6a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence \"Not known\" is not substantiated by the passage; the passage does not state that anything is unknown."
+    },
+    {
+     "part": "but",
+     "text": "Some studies only used a vehicle injection in control animals",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "morenomontoya_2025",
+       "where": "ELS and psychopharmacological interventions",
+       "quote": "However, in some of these studies, nonstressed control animals only received a vehicle injection rather than the active pharmacological agent.",
+       "sha": "c45f51c3edd30dc1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 does not provide an answer to the question about drugs linked to confident dancing, and the passage gives no information on that topic. Sentence 2 accurately reflects the passage’s statement about some studies using only a vehicl)"
+    },
+    {
+     "part": "how1",
+     "text": "A review of effects of early life stress on psychopharmacological drug effects in rodents",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "morenomontoya_2025",
+       "where": "Abstract",
+       "quote": "Early life stress (ELS) refers to maltreatment, deprivation, and other traumatic events experienced early in life.",
+       "sha": "a55e6de2f7d23043"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Rats with early life stress had higher rates of methamphetamine and cocaine self-administration",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "morenomontoya_2025",
+       "where": "Effects of ELS on the positive valence system › Reward learning",
+       "quote": "Animals subjected to early MS and LBN stress show higher rates of methamphetamine self-administration and faster acquisition of cocaine self-administration compared with control animals.",
+       "sha": "84d69bb47422ff6a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Methamphetamine and cocaine are linked to self-administration in rats.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "morenomontoya_2025",
+       "where": "Effects of ELS on the positive valence system › Reward learning",
+       "quote": "Animals subjected to early MS and LBN stress show higher rates of methamphetamine self-administration and faster acquisition of cocaine self-administration compared with control animals.",
+       "sha": "84d69bb47422ff6a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 does not address the asked question about drugs linked to confident dancing. Sentence 2 does not serve as a limitation or doubt on Sentence 1; it concerns a different methodological detail.)"
+    },
+    {
+     "part": "but",
+     "text": "Some studies only used a vehicle injection in control animals.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "morenomontoya_2025",
+       "where": "ELS and psychopharmacological interventions",
+       "quote": "However, in some of these studies, nonstressed control animals only received a vehicle injection rather than the active pharmacological agent.",
+       "sha": "c45f51c3edd30dc1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 does not address the asked question about drugs linked to confident dancing. Sentence 2 does not serve as a limitation or doubt on Sentence 1; it concerns a different methodological detail.)"
+    },
+    {
+     "part": "how1",
+     "text": "A review of rodent studies found methamphetamine and cocaine self-administration.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "morenomontoya_2025",
+       "where": "Abstract",
+       "quote": "Early life stress (ELS) refers to maltreatment, deprivation, and other traumatic events experienced early in life.",
+       "sha": "a55e6de2f7d23043"
+      },
+      {
+       "label": "F1",
+       "ref": "morenomontoya_2025",
+       "where": "Effects of ELS on the positive valence system › Reward learning",
+       "quote": "Animals subjected to early MS and LBN stress show higher rates of methamphetamine self-administration and faster acquisition of cocaine self-administration compared with control animals.",
+       "sha": "84d69bb47422ff6a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "facts",
   "also": [],
