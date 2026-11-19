@@ -1855,6 +1855,18 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     automatically"; About and How we check facts say "language models" where they said "AI". Nothing else changed: the gates,
     the sources, the editor's holds. (The editor is not a lawyer; the senior author decides.)
 
+43. **Reading what was meant: the last question of a pasted text, nitrous oxide as a drug, purity; a hold that starts a new
+    try (20 November 2026, 00:59 to 01:50 Athens; site 2.26.4).** His words, 00:59: "it confused nitrous oxide with the
+    nitrogen on earth. our ai should understand human language like another human would". The instant research: a paper on
+    nitrous oxide counts only where it is about its use as a drug or its harm to people (`FIND_CTX`; trials 16 and 17 read
+    line by line: with the words of anaesthesia came operating-room air and hospital gas pipes). Purity, nerves, "cut with",
+    "cut down", "come down" and "how long ... last" are asked as papers say them. A longer text whose last sentence is a
+    question is read as that question (`insLastAsk`); that part is matched, looked up and sent. A purity aspect
+    (`site/insight/model.json`): measured on the gold set and the near-miss questions, unchanged, so the judge is not laxer.
+    The lane: an answer the editor held while it waited for the editor was never written again (`turn_of` returned nothing
+    for it before it asked whether the editor held it); now it is, with what the editor found. A draft in the wrong form twice
+    goes to the team's other writer for its third try. The self-test of the reserve no longer depends on Google's room.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

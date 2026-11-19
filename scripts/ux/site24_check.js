@@ -934,12 +934,12 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
         same("is tianeptine addictive", { names: ["tianeptine"], words: ["addiction|addictive"] }),
         // (2.22) a question of fact about dying or overdose: looked up under the words papers use, by title only; an amount that kills, a way of dying asked for on purpose, and ending a life are not
         same("can you die from lsd", { names: ["lsd"], words: ["mortality|deaths|fatal|die"], t: 1 }),
-        same("how many people overdose on heroin each year in greece", { names: ["heroin"], words: ["overdose|overdoses|poisoning|overdose", "greece"], t: 1 }),
+        same("how many people overdose on heroin each year in greece", { names: ["heroin"], words: ["overdose|overdoses|poisoning", "greece"], t: 1 }),   // (2.26.4) a word papers use is not asked twice
         same("how do people avoid an overdose", { names: ["drug overdose", "overdose"], words: ["prevention|prevent|avoid"], t: 1 }),
         same("does alcohol kill brain cells", { names: ["alcohol"], words: ["brain", "cells"] }),   // ("kill" said of a thing: no word about dying, no key word)
         same("how much lsd kills you", null), same("what is a painless way to die from pills", null), same("can cocaine make you kill yourself", null), same("how many pills of xanax is deadly", null),
         // (2.22) who uses more or less, with no drug word: drug use, by the words papers use for men and women
-        same("do women use less than men", { names: ["drug use", "substance use"], words: ["women|female|women", "men|male|men"], t: 1 })])).filter(Boolean);
+        same("do women use less than men", { names: ["drug use", "substance use"], words: ["women|female", "men|male"], t: 1 })])).filter(Boolean);
       ok("1280 px: the key words the page makes: 'why do people take drugs' is asked as the reasons for drug use; a key word that only says the subject again, and 'others', are none (nothing is looked up for 'why do some people get addicted and others don't'); a question about pregnancy or a child gets two key words, those about the pregnancy or the child first; drinking with no drug named is alcohol; (2.22) a question of fact about dying or overdose is asked under the words papers use, by title only, and an amount that kills or a way of dying is not looked up; who uses more is drug use", wrong.length === 0, wrong.join(" || "));
       const box = () => p.evaluate(() => { const b = document.querySelector("#search-results .ins-found"); return b ? b.textContent : ""; });
       await p.fill("#search", "does mescaline change your eye colour"); await p.waitForSelector("#search-results .ins-found [data-find-again]", { timeout: 15000 }).catch(() => {});

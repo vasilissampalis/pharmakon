@@ -1803,6 +1803,9 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             rec["gates"]["writer"] = (rec["gates"].get("writer", "") + f" try {attempt + 1}: {why}" + (f" (how the reply ended: {llm.LAST.get('finish')}; reasoned {llm.LAST.get('reasoned')} characters, wrote {llm.LAST.get('wrote')})" if llm.LAST else "")).strip()
             if why == "no JSON" and other_writer("gave no answer in the form asked for"): continue      # the same question, to the other writer
             if fix.startswith("the form was wrong") and why == "no JSON": rec["soft"] = "the writer's reply was not in the form asked for"; break       # the same call would fail the same way: not paid for a third time
+            # (20 November 2026) a draft in the wrong form twice ("but names no item it rests on": the senior author's own question on LSD fell so, try after try):
+            # the third try goes to the team's other writer, told what was wrong. No gate is touched: the form asked for is the same
+            if fix.startswith("the form was wrong") and other_writer("twice wrote a draft in the wrong form (" + why + ")"): fix = "the form was wrong: " + why; continue
             fix = "the form was wrong: " + why; continue
         mended = mend_uses(draft["parts"], labels, [s["year"] for s in sources if s.get("year")], asked=sorted(numbers(item["q"])))
         if mended: rec["gates"]["mended"] = "the item that holds a number of a sentence was added to what the sentence rests on: " + "; ".join(f"{p} + {u} ({x})" for p, u, x in mended)
@@ -2086,7 +2089,12 @@ def turn_of(w, done):
     n = int(s.get("n") or 1) if last == TODAY else 0                      # tries today (a try noted before lane 19 has no count: one)
     older = int(s.get("lane") or 1) < LANE
     if st == "published" and older: return 4
-    if st == "waiting" and s.get("for") == "editor": return None        # an editor reads it; a newer lane does not write it again by itself
+    if st == "waiting" and s.get("for") == "editor":                    # an editor reads it; a newer lane does not write it again by itself,
+        # (20 November 2026) unless the editor has read it and held it (data/auto/held.json): then it is written again by itself, with what the editor found (held_say).
+        # Until now such a hold stopped nothing and started nothing: five answers the editor held on 18 November had waited two days, never written again.
+        try: rec = json.load(open(OUT / ("au_" + str(w["id"]) + ".json"), encoding="utf-8"))
+        except (OSError, ValueError): rec = None
+        return 1 if rec and is_held(rec) else None
     if older: return 1
     if st == "waiting" and s.get("for") != "again": return None
     newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
@@ -2450,15 +2458,17 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
 
 
 def _reserve_selftest():
-    keep = (llm.left, llm.groq_left)
+    keep = (llm.left, llm.groq_left, llm.has)
     try:
+        # (20 November 2026) without Google's models: on GitHub's machines, where the key is there, their room decided this test, and it failed whenever they had room
+        llm.has = lambda m: False
         llm.left = lambda: 5000; llm.groq_left = lambda n: 10000
         assert not kept_for_sent({"id": "w_1"}) and not kept_for_sent({"id": "w_a1", "from": "a question visitors sent"})          # room at Cloudflare: every question is worked on
         llm.left = lambda: 800
         assert kept_for_sent({"id": "w_1"}) and kept_for_sent({"id": "w_g1", "from": "the system's own question"}) and not kept_for_sent({"id": "w_a1", "from": "a question visitors sent"}) and not kept_for_sent({"id": "t_1", "trial": True})
         llm.groq_left = lambda n: 90000
         assert not kept_for_sent({"id": "w_1"})                                                                                    # room at Groq: the system's own go on
-    finally: llm.left, llm.groq_left = keep
+    finally: llm.left, llm.groq_left, llm.has = keep
 
 
 def selftest():
