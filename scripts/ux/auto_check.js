@@ -46,7 +46,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await p.goto(base + "#home"); await p.waitForTimeout(700); return p; };
   const go = async (p, hash, ms) => { await p.evaluate(h => { location.hash = h; }, hash); await p.waitForTimeout(ms || 500); };
   const shot = async (p, name) => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await p.screenshot({ path: path.join(SHOTS, name + ".png") }); } };
-  const LINE2 = "Written with AI from 2 papers. Not complete yet.", LINE1 = "Written with AI from 1 paper.";
+  const LINE2 = "Drafted automatically from 2 papers. Not complete yet.", LINE1 = "Drafted automatically from 1 paper.";
   // what the open sheet shows of an answer
   const sheet = p => p.evaluate(() => { const s = document.querySelector("#evsheet.open .panel .ins"); if (!s) return null; const a = s.querySelector(".ins-ans") || s;
     return { title: document.getElementById("ev-title").textContent, eye: (document.querySelector("#evsheet .ins-eye") || {}).textContent || "", short: (a.querySelector(".ask-short") || {}).textContent || "", but: (a.querySelector(".ask-but") || {}).textContent || "",
@@ -61,7 +61,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const pg = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-auto h1").textContent, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", rows: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent),
       how: !!document.querySelector("#view-auto details.auto-how"), foot: [...document.querySelectorAll('footer.site a[href="#auto"]')].map(a => a.textContent).join(), wide: document.documentElement.scrollWidth > innerWidth + 1 }));
     ok(w + "the page “Written with AI” lists every such answer with its page, its number of papers, its day and “not complete yet” where that is so; one name in the tab, on the page and in the footer",
-      pg.title === "Written with AI · Pharmakon" && pg.h1 === "Written with AI" && pg.foot === "Written with AI" && pg.n === "6 answers, the newest first." && pg.rows.length === 6 && pg.how && !pg.wide && pg.rows[0] === "How much pretend drinking do pretend bodies call low-risk in the checks? | Alcohol · 1 official page · 16 November 2026 · not complete yet" &&
+      pg.title === "New answers · Pharmakon" && pg.h1 === "New answers" && pg.foot === "New answers" && pg.n === "6 answers, the newest first." && pg.rows.length === 6 && pg.how && !pg.wide && pg.rows[0] === "How much pretend drinking do pretend bodies call low-risk in the checks? | Alcohol · 1 official page · 16 November 2026 · not complete yet" &&
         pg.rows.includes("Can you get addicted to ketamine? | Ketamine · 2 papers · 15 November 2026 · not complete yet") && pg.rows.some(r => /^Do police crackdowns cut drug use, or just move it somewhere else\? \| .+ · 1 paper · 15 November 2026$/.test(r)), JSON.stringify(pg));
     await shot(p, width + "-auto-page");
     // ---- (2.8) a page the system started: listed on this page and under the drugs, with an address of its own and its label
@@ -76,8 +76,8 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
       rows: [...pg.querySelectorAll(".auto-i .wl-q")].map(e => e.textContent), back: (pg.querySelector('.auto-back a[href="#auto"]') || {}).textContent || "", ask: (pg.querySelector("button[data-ask-fill]") || {}).textContent || "",
       active: document.getElementById("view-auto").classList.contains("active"), wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
     ok(w + "a started page has an address of its own and the form of a drug's page: its name as the heading and in the tab, a first line that says why it was started, its answers, a way to ask, and the way back; it shows no class nobody checked",
-      kp.active && kp.title === "Kava · Pharmakon" && kp.h1 === "Kava" && kp.head && kp.shown && kp.main && kp.top === "People asked about kava, so this page was started. Its answers are written with AI from the sources each one shows." &&
-        kp.secs.join("|") === "Written with AI" && kp.rows.join() === "Is kava addictive?" && kp.back === "All answers written with AI" && kp.ask === "Ask a question" && kp.cls === 0 && !kp.wide, JSON.stringify(kp));
+      kp.active && kp.title === "Kava · Pharmakon" && kp.h1 === "Kava" && kp.head && kp.shown && kp.main && kp.top === "People asked about kava, so this page was started. Its answers are drafted automatically from the sources each one shows." &&
+        kp.secs.join("|") === "New answers" && kp.rows.join() === "Is kava addictive?" && kp.back === "All new answers" && kp.ask === "Ask a question" && kp.cls === 0 && !kp.wide, JSON.stringify(kp));
     await shot(p, width + "-started-page");
     await p.click('#auto-page button[data-ask-fill]'); await p.waitForTimeout(300);
     ok(w + "“Ask a question” there puts the page's name in the box and the cursor after it", await p.evaluate(() => { const s = document.getElementById("search"); return s.value === "kava " && document.activeElement === s; }));
@@ -88,7 +88,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await go(p, "#auto", 400);
     const back = await p.evaluate(() => ({ h1: document.querySelector("#view-auto h1").textContent, how: document.querySelector("#view-auto .auto-how").hidden, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", pg: document.getElementById("auto-page").hidden, main: document.getElementById("auto-main").hidden }));
-    ok(w + "back on the list page, its own heading and lines are there again", back.h1 === "Written with AI" && back.how === false && back.n === "6 answers, the newest first." && back.pg && !back.main, JSON.stringify(back));
+    ok(w + "back on the list page, its own heading and lines are there again", back.h1 === "New answers" && back.how === false && back.n === "6 answers, the newest first." && back.pg && !back.main, JSON.stringify(back));
     // ---- (2.12) the pages people asked about, shown before there is an answer: whatever pages the build shows today
     const shells = await p.evaluate(() => Object.keys(AUTO_SHELL).map(k => ({ k, name: AUTO_PAGES[k], asked: AUTO_SHELL[k].asked.map(a => a.id), pics: (AUTO_PICS[k] || []).length, ans: Object.keys(AUTO).filter(id => AUTO[id].page === "new:" + k).length, kind: (AUTO_SHELL[k].science[0] || {}).kind || "" })));
     const look = shells.filter(s => s.pics).slice(0, 2).concat(shells.filter(s => !s.pics && !s.ans).slice(0, 2));
@@ -141,7 +141,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "it carries its quiet line, with “Not complete yet.”, and no evidence bars and no link to an evidence page it does not have", s1 && s1.line === LINE2 && s1.bars === 0 && s1.evLink === 0, s1 && s1.line + " | bars " + s1.bars + " | evidence links " + s1.evLink);
     ok(w + "its sources are APA 7 references with the journal in italics and the DOI as a link", s1 && s1.srcSummary === "Sources (2)" && s1.refs.length === 2 && s1.refs[0].text === "Fixture, A. B., & Sample, C. (2022). A pretend review of ketamine dependence for the checks. Journal of Checks, 11(2), 300–312. https://doi.org/10.0000/fixture.1" &&
       s1.refs[0].italic === "Journal of Checks, 11" && s1.refs[0].link === "https://doi.org/10.0000/fixture.1", s1 && JSON.stringify(s1.refs));
-    ok(w + "it offers a way to report a mistake, the way to every answer the system wrote, and next questions from the checked answers", s1 && s1.report === "Report a mistake in this answer" && /^All answers written with AI/.test(s1.all) && s1.next >= 1 && !s1.wide, s1 && s1.report + " | " + s1.all + " | next " + s1.next);
+    ok(w + "it offers a way to report a mistake, the way to every answer the system wrote, and next questions from the checked answers", s1 && s1.report === "Report a mistake in this answer" && /^All new answers/.test(s1.all) && s1.next >= 1 && !s1.wide, s1 && s1.report + " | " + s1.all + " | next " + s1.next);
     await shot(p, width + "-auto-sheet");
     await p.click("#evsheet button[data-auto-report]"); await p.waitForTimeout(400);
     const fb = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), mode: (document.querySelector('.fb-opt[aria-pressed="true"]') || { dataset: {} }).dataset.mode, sheet: document.getElementById("evsheet").classList.contains("open") }));
@@ -154,19 +154,19 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const row = await p.evaluate(() => { const a = document.querySelector("#search-results .sr-fit a.sr-best"); return a ? { auto: a.classList.contains("sr-auto"), id: a.dataset.insight, k: a.querySelector(".k").textContent, t: a.querySelector(".t").textContent, a: a.querySelector(".a").textContent, m: a.querySelector(".m").textContent, bars: a.querySelectorAll(".meter").length,
       head: (document.querySelector("#search-results .sr-fit .sr-fit-h") || {}).textContent || "", live: document.getElementById("search-count").textContent, want: !!document.querySelector("#search-results .sr-want") } : null; });
     ok(w + "the search box finds it by a question in other words, as the best match, and says before it is opened that it is written with AI", row && row.auto && row.id === "au_fixture_ketamine" && row.k === "Ketamine" && row.t === "Can you get addicted to ketamine?" && /^FIXTURE\. Yes/.test(row.a) &&
-      row.m === "Written with AI" && row.bars === 0 && row.head === "Best match" && /^Best match: Can you get addicted to ketamine\?/.test(row.live) && !row.want, JSON.stringify(row));
+      row.m === "Drafted automatically" && row.bars === 0 && row.head === "Best match" && /^Best match: Can you get addicted to ketamine\?/.test(row.live) && !row.want, JSON.stringify(row));
     await shot(p, width + "-auto-search");
     await p.keyboard.press("Enter"); await p.waitForTimeout(700);
     const s2 = await sheet(p);
-    ok(w + "Enter opens the reader's own question with the answer under it, labelled as written with AI", s2 && s2.title === "Is ketamine addictive" && s2.label === "Written with AI · Ketamine" && s2.line === LINE2 && s2.bars === 0 && s2.refs.length === 2, s2 && s2.title + " | " + s2.label + " | " + s2.line);
+    ok(w + "Enter opens the reader's own question with the answer under it, labelled as written with AI", s2 && s2.title === "Is ketamine addictive" && s2.label === "New answer · Ketamine" && s2.line === LINE2 && s2.bars === 0 && s2.refs.length === 2, s2 && s2.title + " | " + s2.label + " | " + s2.line);
     await p.keyboard.press("Escape"); await p.waitForTimeout(300); await p.fill("#search", ""); await p.keyboard.press("Escape");
     // ---- its drug's page
     await go(p, "#s-ketamine", 700);
     const sec = await p.evaluate(() => { const b = document.getElementById("sm-d-auto"); return b ? { name: b.querySelector(".sm-n").textContent, n: (b.querySelector(".sm-c") || {}).textContent || "", line: (b.querySelector(".sm-l") || {}).textContent || "", among: [...document.querySelectorAll("#drug2 details.ask[data-cid]")].some(d => /^au_/.test(d.dataset.cid)) } : null; });
-    ok(w + "the ketamine page lists it in a section of its own, “Written with AI”, never among the checked answers", sec && sec.name === "Written with AI" && sec.n === "1 answer" && sec.line === "From research papers" && !sec.among, JSON.stringify(sec));
+    ok(w + "the ketamine page lists it in a section of its own, “Written with AI”, never among the checked answers", sec && sec.name === "New answers" && sec.n === "1 answer" && sec.line === "From research papers" && !sec.among, JSON.stringify(sec));
     await p.click("#sm-d-auto"); await p.waitForTimeout(500);
     const inSec = await p.evaluate(() => { const s = document.getElementById("d-auto"); return s ? { note: (s.querySelector(".auto-sec") || {}).textContent || "", rows: [...s.querySelectorAll(".auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent), hash: location.hash } : null; });
-    ok(w + "the section says what these are, and lists the answer", inSec && /^Written with AI from research papers\. Each shows its sources\.$/.test(inSec.note) && inSec.rows.join() === "Can you get addicted to ketamine? | 2 papers · 15 November 2026 · not complete yet" && inSec.hash === "#s-ketamine/part-d-auto", JSON.stringify(inSec));
+    ok(w + "the section says what these are, and lists the answer", inSec && /^Drafted automatically from research papers\. Each shows its sources\.$/.test(inSec.note) && inSec.rows.join() === "Can you get addicted to ketamine? | 2 papers · 15 November 2026 · not complete yet" && inSec.hash === "#s-ketamine/part-d-auto", JSON.stringify(inSec));
     await shot(p, width + "-auto-drug-page");
     await p.click('#d-auto a[data-sheet="au_fixture_ketamine"]'); await p.waitForTimeout(600);
     const s3 = await sheet(p); ok(w + "from the drug's page it opens over the page, and Back returns to the section", s3 && s3.line === LINE2 && (await p.evaluate(() => location.hash)) === "#s-ketamine/part-d-auto", s3 && s3.line);
@@ -181,7 +181,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await go(p, "#auto/q-au_fixture_caffeine", 900);
     const s6 = await sheet(p);
     ok(w + "an answer that read a paper, a summary and an official page says so in its line; the page's reference is APA 7 for a web page, with its exact date, its title in italics and its address as a link",
-      s6 && s6.line === "Written with AI from 1 paper, the summary of 1 paper and 1 official page. Not complete yet." && s6.srcSummary === "Sources (3)" && s6.how.length === 3 &&
+      s6 && s6.line === "Drafted automatically from 1 paper, the summary of 1 paper and 1 official page. Not complete yet." && s6.srcSummary === "Sources (3)" && s6.how.length === 3 &&
         s6.refs.some(r => r.text === "Pretend Health Service. (2025, March 2). A pretend page about caffeine for the checks. https://example.org/pretend-caffeine" && r.italic === "A pretend page about caffeine for the checks" && r.link === "https://example.org/pretend-caffeine"), s6 && s6.line + " | " + JSON.stringify(s6.refs));
     const hq = await p.evaluate(() => { const d = document.querySelector("#evsheet.open .ask-how"); if (d) d.open = true; return [...document.querySelectorAll("#evsheet.open .ask-howl li")].map(li => ({ q: (li.querySelector(".how-q q") || {}).textContent || "", src: (li.querySelector(".how-src") || {}).textContent || "" })); });
     ok(w + "under a How-do-we-know line stand its source's own words, 15 at most, with whose they are; words that are not in the source are never shown", hq.length === 3 && hq[0].q === "pretend words of a pretend trial" && hq[0].src === "Fixture, 2023" && hq[1].q === "" && hq[2].q === "" && !(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)), JSON.stringify(hq));
@@ -196,7 +196,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "an answer about amounts opens with the line about tolerance (an opioid), then the two lines the code writes: none of them a model's", am && am.first === LINES.first.opioids.text && am.firstFirst && am.short === LINES.amounts && am.but === LINES.amounts_but, JSON.stringify(am).slice(0, 400));
     ok(w + "each amount stands in its source's own words, 15 at most, with who received it, under what care, and whose words they are; a paper read in summary says so", am && am.rows.length === 2 && am.rows.every(r => r.q.split(/\s+/).length <= 15 && /\d/.test(r.q)) &&
       am.rows[0].who === "FIXTURE. People starting pretend treatment, under supervision; the first amount on a pretend label." && am.rows[0].q === "the pretend first amount should not exceed 30 mg" && am.rows[0].src === "Pretend Maker, n.d." && am.rows[1].src === "Fixture, 2021, read in summary only", am && JSON.stringify(am.rows));
-    ok(w + "it has no “How do we know?” of a writer, no bars, its quiet line, and its label's reference with the day it was read (a page without a date)", am && !am.how && am.bars === 0 && !am.wide && am.line === "Written with AI from the summary of 1 paper and 1 official page. Not complete yet." &&
+    ok(w + "it has no “How do we know?” of a writer, no bars, its quiet line, and its label's reference with the day it was read (a page without a date)", am && !am.how && am.bars === 0 && !am.wide && am.line === "Drafted automatically from the summary of 1 paper and 1 official page. Not complete yet." &&
       am.refs.includes("Pretend Maker. (n.d.). A pretend label for the checks [Drug label]. DailyMed. Retrieved November 15, 2026, from https://example.org/pretend-label"), am && am.line + " | " + JSON.stringify(am.refs));
     await shot(p, width + "-auto-amounts");
     // ---- 2.7.2: amounts that are an official body's guidance: the But written for that, and a count of drinks written as a word

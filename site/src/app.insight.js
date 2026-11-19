@@ -456,7 +456,7 @@ const INS_PLACES = [
     p: "privacy|privacy policy|cookies|my data|do you (?:track|record|log|store|keep|save)(?: me| my (?:data|questions|searches))?|what do you (?:keep|store|know|save)(?: about me)?|is (?:this|it) (?:anonymous|private)|are my (?:questions|searches) (?:private|anonymous|saved|stored)" },
   { href: "#wanted", icon: "message", k: "On our list", t: "Questions the site does not answer yet, and how many people wait for each",
     p: "on (?:our|your) list|not answered yet|unanswered questions|questions? (?:without|with no) (?:an )?answers?|what (?:are )?people (?:waiting|asking) for" },
-  { href: "#auto", icon: "book", k: "Written with AI", t: "Answers written with AI from research papers and official health pages",
+  { href: "#auto", icon: "book", k: "New answers", t: "Answers drafted automatically from research papers and official health pages",
     p: "written by (?:your|the|our) system|machine[- ]written(?: answers)?|ai[- ]written(?: answers)?|system(?:'s)? answers|answers (?:by|from) (?:the |your |an )?(?:ai|machine|system)" },
   { href: "#home", el: "home-asked", icon: "message", k: "Your questions", t: "The questions you asked us, kept on this device", p: "my questions|your questions|questions i (?:asked|sent)|what (?:did|have) i (?:ask|asked|sent)" },
   { href: "#about", fb: "issue", icon: "message", k: "Report a mistake", t: "Tell us what is wrong: opens the form",
@@ -646,7 +646,7 @@ function insStarted(q) {
   const base = { kind: "page", icon: kind === "fungus" ? "mushroom" : kind === "plant" ? "leaf" : "book", k: "New page", href: "#auto/p-" + k, started: k };
   if (pics.length && INS_LOOKS.test(q)) return Object.assign(base, { href: base.href + (pics.length > 1 || n || (sh && sh.asked.length) ? "/part-p-looks" : ""),
     t: insCap(autoLow(k)) + ": " + pics.length + (pics.length === 1 ? " picture" : " pictures") });
-  const has = [pics.length ? "pictures" : "", n ? n + (n === 1 ? " answer" : " answers") + " written with AI" : "", sh && sh.asked.length ? "what people ask" : ""].filter(Boolean);
+  const has = [pics.length ? "pictures" : "", n ? n + (n === 1 ? " answer" : " answers") + " drafted automatically" : "", sh && sh.asked.length ? "what people ask" : ""].filter(Boolean);
   return Object.assign(base, { t: name + (has.length ? ": " + andList(has) : ""), loose: true });
 }
 function insRoutes(q, groups, drug) {
@@ -1487,7 +1487,7 @@ function insBodyHtml(id, depth) {
 }
 const insPageLink = (id, page) => { if (isAuto(id)) { const p = AUTO[id].page, k = typeof p === "string" && p.slice(0, 4) === "new:" ? p.slice(4) : "";      // (2.8) an answer on a page the system started links to that page
     return k && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[k] ? '<p class="ins-page"><a class="qz2-ev" href="#auto/p-' + esc(k) + '">' + esc(AUTO_PAGES[k]) + ": its page " + icon("arrow") + "</a></p>"
-      : '<p class="ins-page"><a class="qz2-ev" href="#auto">All answers written with AI ' + icon("arrow") + "</a></p>"; }
+      : '<p class="ins-page"><a class="qz2-ev" href="#auto">All new answers ' + icon("arrow") + "</a></p>"; }
   const addr = answerAddr(id, page), w = mfWhere(page), pl = sharedPlace(page || "", id);
   return '<p class="ins-page">' + (/^#cl_/.test(addr) ? '<a class="qz2-ev" href="' + esc(pl.href) + '">' + esc(pl.more) + " " + icon("arrow") + "</a>" : '<a class="qz2-ev" href="' + esc(addr) + '">See it on the ' + esc(w.name) + " page " + icon("arrow") + "</a>") + "</p>"; };
 const insBar = eye => '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye ins-eye">' + eye + "</span></div>";
@@ -1505,7 +1505,7 @@ function insHtml(v) {
   const routes = res.routes.filter(r => !r.way).map(r => insRouteHtml(r, "ins-route")).join("") + (res.emergency ? insSosHtml("dh-help ins-sos") : "");
   const ways = figs.map(r => insRouteHtml(r, "ins-route")).join(""), places = look.map(r => insRouteHtml(r, "ins-route")).join("");
   const best = res.best.map((x, n) => { const w = mfWhere(x.page);
-    return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written with AI" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
+    return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "New answer" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
   const none = insNoneHtml(res, true);
   const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + '><p class="rn-k">' + (res.note === "unfinished" || res.note === "said" ? "You may mean" : open ? "Closest answers we have" : "Related") + '</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
@@ -2590,7 +2590,7 @@ function autoLabel(a) {
   // (2.21, lane 19) an answer about dying, overdose, mixing, pregnancy or children now goes out by itself where it meets a stricter bar: under it, always, the
   // way to the emergency numbers, in the words the site's own footer has had since it began
   return (a.risk ? '<p class="auto-sos">In an emergency call your <a href="#emergency">local emergency number</a>.</p>' : "") +
-    '<p class="auto-l">Written with AI from ' + autoFrom(a) + "." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
+    '<p class="auto-l">Drafted automatically from ' + autoFrom(a) + "." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
 }
 function autoBodyHtml(id) {
   const a = AUTO[id];
@@ -2609,7 +2609,7 @@ function autoBodyHtml(id) {
 function autoRowHtml(x, best) {
   const a = AUTO[x.id], w = mfWhere(a.page);
   return '<a class="sr-ans sr-fit-a sr-auto' + (best ? " sr-best" : "") + '" href="#auto/q-' + esc(x.id) + '" data-insight="' + esc(x.id) + '" data-page="' + esc(a.page) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(a.q) +
-    '</span><span class="a">' + esc(best ? a.short : glanceClause(a.short)) + '</span><span class="m auto-m">Written with AI</span></a>';
+    '</span><span class="a">' + esc(best ? a.short : glanceClause(a.short)) + '</span><span class="m auto-m">Drafted automatically</span></a>';
 }
 // a list of such answers as links that open each over the page (a drug's page, and the page that lists them all)
 function autoListHtml(ids, withPage) {
@@ -2687,20 +2687,20 @@ function autoPageHtml(k) {
   if (pics.length) secs.push({ id: "p-looks", name: "What does it look like?", chip: "Looks", icon: "eye", n: pics.length + (pics.length === 1 ? " picture" : " pictures"), line: "Examples", body: autoLooksHtml(k) });
   if (sh.asked.length) secs.push({ id: "p-asked", name: "What people ask", chip: "Questions", icon: "message", n: sh.asked.length + (sh.asked.length === 1 ? " question" : " questions"),
     line: !open ? "Answered" : open === sh.asked.length ? "Not answered yet" : open + " not answered yet", body: autoAskedHtml(k) });
-  if (ids.length) secs.push({ id: "p-auto", name: "Written with AI", chip: "With AI", icon: "book", n: ids.length + (ids.length === 1 ? " answer" : " answers"), line: "From research papers and official pages",
-    body: '<p class="auto-sec">Written with AI from research papers and official health pages. Each shows its sources.</p>' + autoListHtml(ids, false) });
+  if (ids.length) secs.push({ id: "p-auto", name: "New answers", chip: "New", icon: "book", n: ids.length + (ids.length === 1 ? " answer" : " answers"), line: "From research papers and official pages",
+    body: '<p class="auto-sec">Drafted automatically from research papers and official health pages. Each shows its sources.</p>' + autoListHtml(ids, false) });
   const aka = sh.science.filter(s => norm(s.name) !== norm(name));
   const head = '<header class="dh' + (ph ? " hasph" : "") + (name.length > 24 ? " long" : "") + '">' + (ph ? '<figure class="dh-ph">' + autoPicImg(ph, "m", autoPicAlt(ph), false) + (pics.length > 1 ? '<a class="dh-forms" href="#' + base + '/part-p-looks">See all ' + pics.length + " pictures</a>" : "") + "</figure>" : "") +
     '<div class="dh-t">' + (kind ? '<p class="dh-fam">' + icon(kind === "fungus" ? "mushroom" : "leaf") + (kind === "fungus" ? "Fungus" : "Plant") + "</p>" : "") + "<h1>" + esc(name) + "</h1>" +
     (aka.length ? '<p class="dh-aka">' + aka.map(s => "<i>" + esc(s.name) + "</i>").join(", ") + "</p>" : "") + "</div></header>";
   const top = '<p class="auto-top" role="note">' + icon("bulb") + "<span>People asked about " + esc(low) + ", so this page was started." +
-    (ids.length ? " Its answers are written with AI from the sources each one shows." : " Its answers are on the way.") + "</span></p>";
+    (ids.length ? " Its answers are drafted automatically from the sources each one shows." : " Its answers are on the way.") + "</span></p>";
   // one part is shown at once; two or more are behind the menu, as on a drug's page
   const body = secs.length > 1 ? secPageHtml(name.replace(/\s*\(.*\)$/, ""), secs, "")
     : secs.map(x => '<section class="sec auto-one" id="' + x.id + '" aria-labelledby="' + x.id + '-h"><h2 id="' + x.id + '-h" tabindex="-1"><span class="sec-ic">' + icon(x.icon) + "</span>" + esc(x.name) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("");
   const ask = '<section class="sec fbline" aria-label="Ask or report"><p><b>Ask about ' + esc(low) + ".</b> Type your question in the box at the top. If the site cannot answer it yet, you can send it to us with one tap.</p><div class=\"fb-two\">" +
     '<button type="button" data-ask-fill="' + esc(low) + '">' + icon("search") + 'Ask a question</button><button type="button" data-fb="issue">' + icon("flag") + "Report a mistake</button></div></section>";
-  return head + top + body + ask + '<p class="auto-back"><a class="go" href="#auto">All answers written with AI</a></p>';
+  return head + top + body + ask + '<p class="auto-back"><a class="go" href="#auto">All new answers</a></p>';
 }
 function autoPage(started) {
   const box = document.getElementById("auto-list"); if (!box) return;
@@ -2712,8 +2712,8 @@ function autoPage(started) {
   }
   if (pg) { pg.hidden = true; pg.innerHTML = ""; delete pg.dataset.base; }
   if (main) main.hidden = false;
-  if (head) head.textContent = "Written with AI";
-  if (lede) lede.textContent = "Answers written with AI from research papers and official health pages. Each one says so and shows its sources.";
+  if (head) head.textContent = "New answers";
+  if (lede) lede.textContent = "Answers drafted automatically from research papers and official health pages. Each one says so and shows its sources.";
   if (how) how.hidden = false;
   const ids = typeof AUTO === "object" && AUTO ? Object.keys(AUTO).sort((a, b) => (AUTO[b].made || "").localeCompare(AUTO[a].made || "") || a.localeCompare(b)) : [];
   const st = autoStartedListHtml();

@@ -41,9 +41,12 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
 - One marked exception, the senior author's decision of 15 November 2026 (METHODS §12.2, `docs/AUTOMATION.md`): the machine
   lane. Answers written by the system (`scripts/auto/lane.py`, on GitHub's machines with free models) are published before
   a person has checked them, always with their label, never in `data/claims`, never with certainty bars. The label is one short line,
-  "Written with AI from …" (his words of 19 November 2026, 17:48: "cut all that throughout the whole website no system unverified etc just
-  publish everything with its claims and evidence"; decision 36): no "our system", no "not checked by a person" anywhere; the one line stays
-  because the EU AI Act (art. 50, since 2 August 2026) asks AI-written text that informs the public and that no person reviewed to say so. It reads papers,
+  "Drafted automatically from …" (his words of 19 November 2026, 17:48: "cut all that throughout the whole website no system unverified etc just
+  publish everything with its claims and evidence"; decision 36; and of 20 November, 00:38 and 00:43: no "Written with AI", no "with AI": "it reduces
+  credibility"; decision 42): no "our system", no "not checked by a person", no "AI" on a question or an answer; their section and page are "New
+  answers". The one line stays because the EU AI Act (art. 50(4), since 2 August 2026; the Commission's own guidance: such text must be "clearly
+  labelled" unless a natural person reviewed it or an editorial body controls it) asks it of AI-written text that informs the public; he asked
+  whether a note on the Methods page alone would do, and by that guidance it would not. It reads papers,
   the summaries of papers behind a paywall, and the pages of official bodies (`data/auto/official/sources.json`) only where
   a site's robots.txt allows it: a refusal is never gone around. It may rewrite or take down its own answers; it never
   edits a checked claim (it writes the conflict down, and the claim changes through the checks). Its gates are

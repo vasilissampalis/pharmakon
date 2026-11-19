@@ -1843,6 +1843,18 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     once; never on a mobile network, a slow line or where data is saved, and never before the page's first paint
     (`insFastLine`, `insWarm`; `insight_check.js`, `speed_check.js`).
 
+42. **No "AI" on a question or an answer; the line that the law asks for stays, in plain words (20 November 2026, 00:38 to
+    00:55 Athens; site 2.26.3).** His words: "this 'Written with AI' should be removed from our website i don't want questions
+    to have this written on them it reduces credibility" (00:38); "or 'with AI'" (00:43). Asked whether a note on the Methods
+    page alone would be legal: the EU AI Act, art. 50(4) (since 2 August 2026), asks the deployer to disclose that text which
+    informs the public was artificially generated, and the Commission's guidance says such text must be "clearly labelled",
+    unless it has undergone human review (by one or more natural persons) or editorial control by a responsible editorial
+    body, with a person holding editorial responsibility; a note elsewhere is not a label on the text. So each answer the
+    system writes keeps one plain line, "Drafted automatically from N papers ..." (where "Written with AI from" stood), at its
+    end with its sources; their section, page, menu entry and back link are "New answers"; the search box's row says "Drafted
+    automatically"; About and How we check facts say "language models" where they said "AI". Nothing else changed: the gates,
+    the sources, the editor's holds. (The editor is not a lawyer; the senior author decides.)
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
