@@ -66,7 +66,7 @@ The senior author, 18 October 2026, asked for real photos of the drugs instead o
 | Depth | Who it is for | What it holds |
 |---|---|---|
 | 1. Quick answer | everyone | the short answer, its "But", a picture of the numbers, the evidence bars, the sources |
-| 2. How we know | the curious | two to four short points, written from the plain sentence of the claim |
+| 2. What the research found (until 20 November 2026: “How we know”) | the curious | two to four short points, written from the plain sentence of the claim |
 | 3. Full evidence | scientists, checkers | the precise statement, anchors with page numbers, study cards, GRADE reasons |
 
 A shallower depth never says more than a deeper one. The short answer is written from the claim, never beyond it.
@@ -101,7 +101,7 @@ writes by itself (`docs/AUTOMATION.md`, decision 29):
 4. **Numbers as counts out of 100** ("11 in 100"), with a picture of 100 dots when a share or a risk is the point; a rare risk is shown out of 1,000 so it is not made to look bigger. Comparisons use the same "out of". Absolute numbers come before relative ones.
 5. **Evidence bars** in words (Strong, Moderate, Limited, Very limited evidence) and **who found it** (several teams, one team, one study).
 6. **Sources you can see**: a chip "Author Year" with a book icon. Pointing at it shows the full APA 7 reference; clicking opens the article. Every in-text citation carries the same book mark.
-7. **How we know**: two to four short points, one tap away (target: grade 8 or below).
+7. **What the research found** (until 20 November 2026 “How we know”; the senior author: the old label was “too vague”): two to four short points, one tap away (target: grade 8 or below).
 8. **Full evidence**: one more tap, in a sheet over the page; Back, Escape or the close button return the reader to the same spot (26 October).
 9. **Test yourself** (26 October): one question at a time, in a new random order on every visit, unanswered ones first (kept on the reader's device only). Every question is built from checked data, so its answer is right by construction: true or false and multiple choice written for checked answers; "Which is the answer?" (a page's question and three short answers, two from other topics); "Which has stronger evidence?" (two checked answers rated differently); street names two sources agree on; drug families. On the home page, on every drug page (that drug first) and on its own page.
 10. **Small rewards for exploring**: a tick marks each answer the reader has opened, a bar shows how many of a page's answers they have opened, and the home page offers to go back to the last drug page (1 November). All of it is kept only in the reader's own browser; nothing is sent anywhere, and there are no streak warnings, reminders or prizes.

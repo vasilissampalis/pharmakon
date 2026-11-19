@@ -523,7 +523,7 @@ function qaHtml(c, q) {
     (sp ? '<p class="short">' + esc(sp.short) + '</p><p class="but"><b>But</b> ' + esc(sp.but) + "</p>" + freqHtml(sp.freq) : '<p>' + esc(claimText(c)) + "</p>") +
     currencyHtml(c, true) +
     '<div class="qmeta"><span class="badge ' + c.status + '">' + esc(statusLabel(c.status)) + "</span>" + (c.verification.status === "draft" ? '<span class="badge early" title="' + esc(LADDER_WORDS.draft) + '">early draft: ' + esc(draftWhy(c)) + "</span>" : "") + srcChips(c) + "</div>" +
-    (sp ? '<details class="how"><summary>How we know</summary>' + (sp.how && sp.how.length ? '<ul class="howlist">' + sp.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul>" : "<p>" + esc(claimText(c)) + "</p>") + "</details>" : "") +
+    (sp ? '<details class="how"><summary>What the research found</summary>' + (sp.how && sp.how.length ? '<ul class="howlist">' + sp.how.map(t => "<li>" + esc(t) + "</li>").join("") + "</ul>" : "<p>" + esc(claimText(c)) + "</p>") + "</details>" : "") +
     debateLine(c) + '<a class="see" href="#' + c.id + '">Full evidence ' + icon("arrow") + "</a></div></details>";
 }
 /* Other drugs in the same family, one tap away */

@@ -254,6 +254,20 @@ function insSaid(core) {
 }
 // (2.25.2) a feeling said first and the question after it ("i really like lsd, is it safe?", "weed is life but does it hurt your lungs"): the question is what is
 // matched, with the drug of the first part carried into it where the question says "it". Otherwise the words as they are.
+/* (2.26.4; the senior author, 20 November 2026, 00:59: he pasted a question, its answer and his own follow-up, "- yes but was the laughing gas laced and not
+   pure?", and the whole text was read as the question) A longer text whose last sentence is a question is read as that question; the drug it is about
+   comes along from the text before it where the last sentence names none. A short question is read whole. */
+function insLastAsk(core) {
+  const t = String(core || "");
+  if (t.length < 70) return t;
+  const parts = t.replace(/([.?!])\s+/g, "$1\n").split(/\n|\s+[-\u2013\u2014]+\s+/).map(x => x.replace(/^[\s\-\u2013\u2014*\u2022>]+/, "").trim()).filter(x => x.length >= 6);
+  if (parts.length < 2) return t;
+  const last = parts[parts.length - 1], ask = /\?\s*$/.test(last) || INS_SAID.asks.test(last.toLowerCase().replace(/[\u2018\u2019']/g, ""));
+  if (!ask || last.split(/\s+/).length < 3) return t;
+  if (!INS.nameRe || insNamed(last).length) return last;
+  const before = insNamed(parts.slice(0, -1).join(" "));
+  return before.length === 1 && before[0].length === 1 && INS.canon.has(before[0][0]) ? last + " (" + INS.canon.get(before[0][0]) + ")" : last;
+}
 function insFocus(core) {
   const t = String(core || ""), m = t.match(/^(.{4,80}?)(?:\s*[,;:]\s*|\s+(?:but|so|and)\s+)(.{6,}?)$/i);
   if (!m || !insSaid(m[1]) || insSaid(m[2]) || !INS_SAID.asks.test(m[2].toLowerCase().replace(/[\u2018\u2019']/g, ""))) return t;
@@ -971,7 +985,7 @@ async function insRank(query, ctx) {
   // the drugs' Greek names), and gives no verdict
   if (insForeign(res.q) && !res.emergency) { res.note = "language"; res.greek = /\p{Script=Greek}/u.test(res.q); res.routes = res.routes.filter(r => r.kind === "help"); res.ms = performance.now() - t0; return res; }
   // (2.25.2) a feeling said first and the question after it: the question part is what is read, its routes too (the drug of the first part carried into it)
-  const core = res.emergency ? res.core : insFocus(res.core);
+  const core = res.emergency ? res.core : insFocus(insLastAsk(res.core));   // (2.26.4) a longer text: its last question
   if (core !== res.core) { Object.defineProperty(res, "focus", { value: core, enumerable: false }); const nm = insNamed(core); res.routes = insRoutes(core, nm.length ? nm : res.groups, res.drug); res.emergency = res.routes.some(r => r.kind === "help"); }
   // (2.14) a question that asks for a count: the official figures are fetched (once) and the ones that answer it are routes of their own
   const ck = insCountKind(core);
@@ -2184,6 +2198,7 @@ if (typeof document !== "undefined") askedBox();
 const FIND_API = "api/find";
 const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
   "together same both each other others another everyone everybody somebody anybody something anything stuff kind sort guys " +   // (2.26.2, trial 15: "together" was taken for a key word)
+  "linked link links linking associated association connected connection related relation could have been usually often normally typically commonly generally mostly " +   // (2.26.4, trial 16: "is nitrous oxide linked to nerve damage" had "linked" for a key word)
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
   "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus " +
   // (2.19, after the first trial with the real index of papers) words for what a drug does to something, which say nothing about WHAT: every key word must now stand in a paper
@@ -2215,7 +2230,13 @@ const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addi
   eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite",   // (2.19: short words that are the very thing asked about)
   // (2.26.2, trial 15) seeing things, as papers say it ("do people on lsd see the same things" was looked up by "together")
   see: "visual|hallucinations|imagery|see", seeing: "visual|hallucinations|imagery|see", sees: "visual|hallucinations|imagery|see", saw: "visual|hallucinations|imagery|see", visions: "hallucinations|visual|imagery", visuals: "visual|hallucinations",
-  hallucinate: "hallucinations", hallucinating: "hallucinations", hallucination: "hallucinations", hallucinations: "hallucinations" };
+  hallucinate: "hallucinations", hallucinating: "hallucinations", hallucination: "hallucinations", hallucinations: "hallucinations",
+  // (2.26.4, trial 16) what was in it, as papers say it ("was the laughing gas laced and not pure?")
+  laced: "adulterants|adulteration|contaminants|impurities|purity|laced", adulterated: "adulterants|adulteration|contaminants|impurities|purity", impure: "adulterants|adulteration|contaminants|impurities|purity",
+  contaminated: "adulterants|adulteration|contaminants|impurities|purity|contaminated", pure: "purity|adulterants|adulteration|impurities", purity: "purity|adulterants|adulteration|impurities",
+  // (2.26.4, trial 16) nerves as papers say it
+  nerve: "neuropathy|neurological|nerve", nerves: "neuropathy|neurological|nerve", numb: "numbness|paresthesia|neuropathy", numbness: "numbness|paresthesia|neuropathy", tingling: "paresthesia|tingling|neuropathy",
+  legs: "limbs|legs", arms: "limbs|arms", feet: "feet|limbs", contain: "contaminants|contents|impurities", contains: "contaminants|contents|impurities" };
 // never looked up: suicide and self-harm, amounts (until 2.21.3 also every question with a word about dying or overdose: see FIND_DEATH)
 const FIND_HELD = /\b(suicid\w*|self-?harm\w*|lethal|ld50|dos(e|es|age|ing)|mg|mcg|milligrams?|grams?|micrograms?)\b/i;
 /* (2.22, 18 November 2026, 22:15 Athens. The senior author asked how many people die from heroin in one country, got "No answer yet" with a figure for the EU and
@@ -2254,13 +2275,14 @@ const insFindShut = res => !res || !!res.emergency || FIND_HELD.test(res.q || ""
   (FIND_DEATH.test(res.q || "") && FIND_DEATH_NOT.test(res.q || ""));   // (2.22) what is never looked up
 function insFindTerms(res) {
   if (insFindShut(res)) return null;
-  const death = FIND_DEATH.test(res.q || "") && !(/\bkill/i.test(res.q || "") && FIND_KILL_THING.test(res.q || "") && !FIND_DEATH.test(String(res.q || "").replace(/\bkill\w*/gi, " ")));   // (2.22) a question about dying or overdose: by title only
+  const asked = res.focus || res.q || "";   // (2.26.4) where the page read a part of the text as the question (insLastAsk, insFocus), that part is what is looked up
+  const death = FIND_DEATH.test(asked) && !(/\bkill/i.test(asked) && FIND_KILL_THING.test(asked) && !FIND_DEATH.test(String(asked).replace(/\bkill\w*/gi, " ")));   // (2.22) a question about dying or overdose: by title only
   const norm = s => String(s || "").toLowerCase().replace(/[^a-z0-9 ,.'+()-]/g, " ").replace(/\s+/g, " ").trim();
   // names: what the search is for. also: what the drug's page is called, where the reader named a drug of its own ("xanax": benzodiazepines), asked for by the
   // server only where the reader's own name finds too little. extra: a second drug named in the question, which is a key word of it
   const names = [], also = [], extra = [], add = (list, s) => { s = norm(s); if (s.length >= 3 && !names.includes(s) && !list.includes(s)) list.push(s); };
-  const text = String(res.core || res.q || "").toLowerCase(), flat = " " + text.replace(/[^a-z0-9+-]+/g, " ") + " ";
-  const first = (res.groups || [])[0], firstKey = first ? first.join("|") : "";
+  const text = String(res.focus || res.core || res.q || "").toLowerCase(), flat = " " + text.replace(/[^a-z0-9+-]+/g, " ") + " ";
+  const fg = res.focus && INS.nameRe ? insNamed(res.focus) : [], first = (fg.length ? fg : res.groups || [])[0], firstKey = first ? first.join("|") : "";
   // (2.20) the first drug the question names is what it is about; another one named beside it is a key word ("does kratom help with opioid withdrawal")
   if (first && INS.nameRe) { INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(text))) { const a = String(m[1] || "").toLowerCase(), g = INS.nameOf.get(a) || [];
       if (g.join("|") === firstKey) { if (a.length >= 4 && !/\s/.test(a) && (!INS.vocab.has(a) || first.length > 1)) { add(names, a); if (FIND_GENERIC[a]) add(names, FIND_GENERIC[a]); } }
@@ -2295,13 +2317,18 @@ function insFindTerms(res) {
   // every summary and is no key word; "help you study", "for studying", "with exams" is asked as what papers call it
   const acad = /\b(?:study(?:ing)?\s+(?:for|better|longer|harder|drugs?|aids?|pills?)|(?:you|me|us|them|people|students|i)\s+study(?:ing)?|(?:to|and)\s+study(?:ing)?\b(?!\s+(?:of|on|about|that|which|shows?|found|says?))|studying|exams?|finals|homework|revising|revision|grades)\b/.test(masked);
   if (acad) words.push("academic|cognitive|students");
+  const cutw = /\bcut\s+(?:with|by)\b|\bwhat\s+(?:is|are|was|were|s)\s+(?:\w+\s+){0,3}cut\b/.test(masked);   // (2.26.4, trial 16) what a drug is cut with, as papers say it; "cut down" is no such question
+  if (cutw) words.push("adulterants|adulteration|cutting agents");
+  const less = /\bcut(?:ting)?\s+(?:down|back)\b/.test(masked), comed = /\bcom(?:e|es|ing)\s+down\b/.test(masked);   // (2.26.4) "cut down", "coming down": what papers call them
+  if (less) words.push("reduction|reducing|cutting down"); if (comed) words.push("comedown|come down|after-effects");
   for (const w0 of masked.match(/[a-z]{3,}/g) || []) { let say = FIND_SAY[w0];
     if (/^kill/.test(w0)) { if (!death) continue; say = FIND_SAY.die; }                        // (2.22) "kill" said of people: asked as papers say it; said of a thing: no key word
+    if (/^lasts?$/.test(w0)) { if (!/\bhow\s+long\b/.test(masked)) continue; say = "duration"; }   // (2.26.4, trial 16) "how long does it last": papers say duration; "the last year" is no key word
     if (od && /^overdos/.test(w0)) continue;                                                   // (2.22) the subject itself is no key word
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
     if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
-    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0))) continue;
-    const e = say && say !== w0 ? say + "|" + w0 : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
+    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0))) continue;
+    const e = say && say !== w0 ? (say.split("|").includes(w0) ? say : say + "|" + w0) : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
     if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }
   if ((general || od) && words.length > 3) words.length = 3;   // (2.21) a question in everyday words about drugs in general: its first three key words (every key word must stand in a paper)
@@ -2489,17 +2516,18 @@ function insAutoSend(after, res, now, found) {
     if (now) keep(); else INS.sendT = setTimeout(keep, AUTO_WAIT);
     return;
   }
-  const stranger = res.note === "other" && !!res.stranger, q = res.q;
-  if (!autoSendOn() || !(res.note === "none" || stranger) || (askedSentHas(q) && !(res.denied && !insDeniedFor(q))) || askedGone(q)) return;
+  // (2.26.4) where the page read a part of a longer text as the question (its last question; a question after a feeling), that part is what is sent and kept
+  const stranger = res.note === "other" && !!res.stranger, q = res.q, sq = res.focus && res.focus.length >= 12 ? res.focus : q;
+  if (!autoSendOn() || !(res.note === "none" || stranger) || (askedSentHas(sq) && !(res.denied && !insDeniedFor(q))) || askedGone(sq)) return;
   const drug = insCtx().drug || "";
   const send = async () => {
-    if (!still(q) || insAutoSend.busy === q || (askedSentHas(q) && !(res.denied && !insDeniedFor(q)))) return;
+    if (!still(q) || insAutoSend.busy === q || (askedSentHas(sq) && !(res.denied && !insDeniedFor(q)))) return;
     insAutoSend.busy = q;
     try {
       if (stranger) { let d = await found;
         if (d && d.more) { const t = insFindWanted(res), m = t ? FIND_MEM.get(JSON.stringify(t)) : null; if (m && m.all) d = await m.all; }   // (2.21.1) where the index is slow, the whole list decides, not the first thin one
         if (!d || !d.papers || !d.papers.length || !still(q)) return; }
-      const k = insClean(q).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k || askedSame(x.k, k)), it = askedAdd(q, drug); if (!it) return;
+      const k = insClean(sq).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k || askedSame(x.k, k)), it = askedAdd(sq, drug); if (!it) return;
       let ok = false;
       // (2.22) x: what the page had taken for the answer, where the reader said it is not ("Not what you asked?"): the system learns from it which answer does not answer this
       let sk = "";   // (2.23) the question's own key in the server's store: with it the page asks what became of the question
@@ -2602,7 +2630,7 @@ function autoBodyHtml(id) {
     '<ul class="auto-rows">' + a.rows.map(r => { const ref = a.refs.find(x => x.id === r.ref);
       return '<li class="ar"><span class="ar-who">' + esc(r.who) + "; " + esc(r.what) + '.</span> <q class="ar-q">' + esc(r.quote) + '</q> <span class="ar-src">' + (ref ? esc(inTextLabel(ref, a.refs)) : "") + (r.read === "summary" ? ", read in summary only" : "") + "</span></li>"; }).join("") + "</ul>" + tail;
   return '<p class="ask-short">' + esc(a.short) + '</p><p class="ask-but"><b>But</b> ' + esc(a.but.replace(/^but[,:]?\s+/i, "")) + "</p>" +
-    '<details class="ask-how"><summary>How do we know?</summary><ul class="ask-howl">' + a.how.map((t, i) => { const hq = a.howq && a.howq[i], ref = hq && a.refs.find(x => x.id === hq.ref);
+    '<details class="ask-how"><summary>' + (a.from && a.from.official ? "What the sources found" : "What the research found") + '</summary><ul class="ask-howl">' + a.how.map((t, i) => { const hq = a.howq && a.howq[i], ref = hq && a.refs.find(x => x.id === hq.ref);
       // (2.7.1) the source's own words under the line, 15 at most: what the system wrote can be compared with what the source says
       return "<li>" + esc(t) + (hq && ref ? '<span class="how-q"><q>' + esc(hq.q) + '</q> <span class="how-src">' + esc(inTextLabel(ref, a.refs)) + "</span></span>" : "") + "</li>"; }).join("") + "</ul></details>" + tail;
 }

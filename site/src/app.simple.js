@@ -85,7 +85,8 @@ function answerBody(id, c, sp, card) {
   const how = sp.how && sp.how.length ? '<ul class="ask-howl">' + sp.how.map((t, i) => "<li>" + esc(t) + howSrcHtml(sp, i, false, id) + "</li>").join("") + "</ul>" : "";
   return (card ? "" : '<p class="ask-short">' + cueNum(esc(sp.short)) + "</p>") + (sp.but ? '<p class="ask-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") + (sp.freq ? freqHtml(sp.freq, card) : dotPicHtml(sp.short)) +
     (flags ? '<p class="ask-flags">' + flags + "</p>" : "") +
-    (how ? (card ? '<div class="ask-how"><p class="ask-howk">How do we know?</p>' + how + "</div>" : '<details class="ask-how"><summary>How do we know?</summary>' + how + "</details>") : "") +
+    // (2.26.4; the senior author, 20 November 2026, 01:06: "How do we know?" was "too vague and you don't know what it is unless you click on it") the label says what is under it
+    (how ? (card ? '<div class="ask-how"><p class="ask-howk">What the research found</p>' + how + "</div>" : '<details class="ask-how"><summary>What the research found</summary>' + how + "</details>") : "") +
     '<div class="ask-foot">' + (card ? "" : meterHtml(c.grade.certainty, true)) + '<span class="ask-acts"><button type="button" class="ask-share" data-share="' + esc(id) + '" aria-label="Share this answer">' + icon("share") + '<span class="ask-share-t">Share</span></button><a class="ask-ev" href="#' + id + '">The evidence ' + icon("arrow") + "</a></span></div>" + helpLine(sp);
 }
 /* Numbers as pictures (redesign 2): a short answer that says "N in 100" (a whole number from 1 to 99, never a range such as
@@ -1265,7 +1266,7 @@ function evHtml(id) {
     '<h2 id="ev-title">' + esc(q || c.plain || c.statement) + "</h2>" +
     (sp ? '<p class="ask-short">' + esc(sp.short) + "</p>" + (sp.but ? '<p class="ask-but"><b>But</b> ' + esc(butText(sp.but)) + "</p>" : "") + freqHtml(sp.freq) + helpLine(sp) : '<p class="ask-short">' + esc(c.plain || c.statement) + "</p>") +
     '<div class="ev-cert"><p class="ev-k">How sure the research is</p>' + meterHtml(c.grade.certainty) + whyRating(c, sp, refs) + "</div>" +
-    (sp && sp.how && sp.how.length ? '<h3 class="ev-h">How we know</h3><ul class="ev-how">' + sp.how.map((t, i) => "<li>" + esc(t) + howSrcHtml(sp, i, true, id) + "</li>").join("") + "</ul>" : "") +
+    (sp && sp.how && sp.how.length ? '<h3 class="ev-h">What the research found</h3><ul class="ev-how">' + sp.how.map((t, i) => "<li>" + esc(t) + howSrcHtml(sp, i, true, id) + "</li>").join("") + "</ul>" : "") +
     evDebateHtml(c, refs, sp) +
     '<h3 class="ev-h">' + (refs.length === 1 ? "The source" : "The " + refs.length + " sources") + '</h3><p class="ev-sub small muted">Tap a source to see what it adds to this answer.</p><ul class="ev-refs">' + studies + "</ul>" +
     // the researchers' text, one quiet tap away and in short pieces (senior author, 13 November: "too overwhelming, nobody will read it")
@@ -1309,7 +1310,11 @@ function debateLine(c) {
 }
 // open one source in the sheet: its place in the list, opened, briefly marked (or the debate box, for "debate")
 function focusEvSource(ref) {
-  if (ref === "debate") { const box = document.getElementById("ev-debate"); if (box) { scrollToEl(box); const s = box.querySelector("summary"); if (s) s.focus({ preventScroll: true }); } return; }
+  // (2.26.4; the senior author, 20 November 2026, 01:05: "Researchers disagree: read both sides" showed one line, "Studies point different ways", with the sides
+  // folded away, and the points above it in view, so it looked as if "How do we know?" had opened) both sides are open when the reader came for them: the two
+  // lines in plain words where they are written, otherwise the strongest evidence for each side, in full
+  if (ref === "debate") { const box = document.getElementById("ev-debate"); if (box) { if (!box.querySelector(".evd-sides")) { const full = box.querySelector("details.evd-full"); if (full) { full.open = true; full.querySelectorAll("details.evd-part.yes, details.evd-part.no").forEach(d => { d.open = true; }); } }
+    scrollToEl(box); const h = box.querySelector("#ev-debate-h"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } } return; }
   if (ref === "sci") { const d = document.querySelector("#evsheet details.sf-sci"); if (d) { d.open = true; scrollToEl(d); const s = d.querySelector("summary"); if (s) s.focus({ preventScroll: true }); } return; }
   const li = document.getElementById("ev-src-" + ref); if (!li) return;
   const d = li.querySelector("details"); if (d) d.open = true;
