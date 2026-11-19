@@ -17,21 +17,21 @@
  "made": {
   "on": "2026-11-19",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
+   "planner": "@cf/openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "team": "team H",
+   "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
   "run": "44515206213",
   "read_by": {
-   "gemini-3.1-flash-lite": 2,
-   "gemini-3.5-flash-lite": 2
+   "gemini-3.5-flash-lite": 2,
+   "gemini-3.1-flash-lite": 1
   },
   "read_seconds": 100,
   "from": {
@@ -39,16 +39,17 @@
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 230
+  "neurons": 90.4,
+  "seconds": 254
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.05, but 0.11, how1 0.25",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known. A 2022 review notes the UN highlights opioid overdose deaths in the USA and HIV in Eastern Europe, but does not compare total drug-related death rates.”: the checker gave no clear verdict | the But “The review says calling the US approach law-enforcement and Europe's pub",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.05, but 0.11, how1 0.30",
   "check": "short: NOT accepted: the checker gave no clear verdict; but: NOT accepted: the checker gave no clear verdict; how1: NOT accepted: the checker gave no clear verdict"
  },
  "sources": [
@@ -148,7 +149,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "direct comparison of death rates",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1097/yco.0b013e328360eafd",
@@ -173,7 +174,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "The global movement towards a public health approach to substance use disorders",
@@ -205,7 +215,8 @@
    "kind": "other",
    "at": "10.3390/jcm9010180",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "Unemployment and Substance Use: An Updated Review of Studies from North America and Europe",
@@ -214,7 +225,7 @@
    "at": "10.3390/healthcare11081182",
    "kept": 0,
    "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "Using physiological biomarkers in forensic psychiatry: a scoping review",
@@ -244,21 +255,7 @@
    "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": {
-  "short": [
-   "F1"
-  ],
-  "direct": "Not known",
-  "but": [
-   "L1"
-  ],
-  "how": [
-   [
-    "F1"
-   ]
-  ],
-  "unanswered": "direct comparison of death rates"
- },
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
@@ -266,12 +263,12 @@
   "scores": {
    "short": 0.0526,
    "but": 0.1054,
-   "how1": 0.2535
+   "how1": 0.3032
   },
   "scores_quotes_alone": {
    "short": 0.0237,
    "but": 0.4335,
-   "how1": 0.1383
+   "how1": 0.038
   }
  },
  "tries": [
@@ -281,7 +278,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. A 2022 review notes the UN highlights opioid overdose deaths in the USA and HIV in Eastern Europe, but does not compare total death rates.",
+     "text": "Not known. A 2022 review notes the UN highlights opioid overdose deaths in the USA and HIV in Eastern Europe, but does not compare total drug-related death rates.",
      "rests_on": [
       {
        "label": "F1",
@@ -297,7 +294,7 @@
     },
     {
      "part": "but",
-     "text": "The review says calling one approach European and the other American is an oversimplification, as both regions use elements of both.",
+     "text": "The review says calling the US approach law-enforcement and Europe's public health is an oversimplification, as both use elements of both.",
      "rests_on": [
       {
        "label": "L1",
@@ -313,8 +310,15 @@
     },
     {
      "part": "how1",
-     "text": "A 2022 review cites a 2021 UN report that identifies specific drug problems in different regions, such as opioid deaths in the USA.",
+     "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
      "rests_on": [
+      {
+       "label": "DA",
+       "ref": "johnson_2022",
+       "where": "Abstract",
+       "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
+       "sha": "33c14dc313296827"
+      },
       {
        "label": "F1",
        "ref": "johnson_2022",
@@ -347,7 +351,7 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage does not state that the review does not compare total drug‑related death rates; that claim is added by the sentence."
+     "said": "the checker gave no clear verdict"
     },
     {
      "part": "but",
@@ -363,12 +367,19 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (The passages show the review does not provide a comparison of overall drug‑related death rates between the USA and Europe, so stating \"Not known\" is a fair response to the question of whether deaths are more common in America.)"
+     "said": "the checker gave no clear verdict"
     },
     {
      "part": "how1",
-     "text": "A 2022 review of the public health approach cites a 2021 UN report that identifies specific drug problems in different regions.",
+     "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
      "rests_on": [
+      {
+       "label": "DA",
+       "ref": "johnson_2022",
+       "where": "Abstract",
+       "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
+       "sha": "33c14dc313296827"
+      },
       {
        "label": "F1",
        "ref": "johnson_2022",
@@ -377,21 +388,9 @@
        "sha": "ca2c6a19ffa11a58"
       }
      ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The UN report highlights opioid overdose deaths in the USA and injection drug related HIV transmission in Eastern Europe.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "johnson_2022",
-       "where": "Introduction",
-       "quote": "The United Nations Office on Drugs and Crime (UNODC) 2021 report highlights the differences such as opioid overdose deaths in the USA, injection drug related HIV transmission in Eastern Europe",
-       "sha": "ca2c6a19ffa11a58"
-      }
-     ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "the checker gave no clear verdict"
     }
    ]
   },
@@ -433,8 +432,15 @@
     },
     {
      "part": "how1",
-     "text": "A 2022 review cites the 2021 UN report, which identifies opioid overdose deaths in the USA and injection drug related HIV in Eastern Europe.",
+     "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
      "rests_on": [
+      {
+       "label": "DA",
+       "ref": "johnson_2022",
+       "where": "Abstract",
+       "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
+       "sha": "33c14dc313296827"
+      },
       {
        "label": "F1",
        "ref": "johnson_2022",
@@ -454,8 +460,15 @@
   {
    "try": 3,
    "part": "how1",
-   "text": "A 2022 review cites the 2021 UN report, which identifies opioid overdose deaths in the USA and injection drug related HIV in Eastern Europe.",
+   "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
    "rests_on": [
+    {
+     "label": "DA",
+     "ref": "johnson_2022",
+     "where": "Abstract",
+     "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
+     "sha": "33c14dc313296827"
+    },
     {
      "label": "F1",
      "ref": "johnson_2022",
