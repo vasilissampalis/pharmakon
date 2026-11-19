@@ -18,35 +18,181 @@
   "on": "2026-11-19",
   "models": {
    "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44634958465",
-  "read_seconds": 100,
+  "run": "44638098821",
+  "read_seconds": 34,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 328
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that two studies found magnesium did not fix heart rhythm problems; they only report that two studies covered magnesium/sodium and saline suppletion and that most of the other clinical interventions were not effect",
  "gates": {
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.23, but 0.91, how1 0.67, how2 0.34",
+  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that two studies found magnesium did not fix heart rhythm problems; they only report that two studies covered magnesium/sodium and saline suppletion and that most of the other clinical interventions were not effect; but: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage states that \"most of the other clinical interventions treatments were not effective\", but it does not state that magnesium specifically was one of the ineffective interventions.; how1: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage specifies continuous cardiac monitoring \"during administration\" rather than heart monitoring \"before use\", and it discusses over-the-counter status specifically in the context of Japan.; how2: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage states that two studies reported on \"magnesium/sodium and saline suppletion\" and that \"most of the other clinical interventions treatments were not effective\", which does not definitively establish that magnesium did not work.",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 0 of 4"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "brunt_2026",
+    "type": "article-journal",
+    "title": "Rare but relevant: Ibogaine and cardiovascular complications—prolonged QT interval and ventricular arrhythmias",
+    "author": [
+     {
+      "family": "Brunt",
+      "given": "Tibor Markus"
+     }
+    ],
+    "container-title": "Addiction",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1111/add.70319",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-19",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-19"
+     }
+    },
+    "volume": "121",
+    "issue": "6",
+    "page": "1616-1621",
+    "PMCID": "PMC13155281"
+   },
+   "doi": "10.1111/add.70319",
+   "pmcid": "PMC13155281",
+   "title": "Rare but relevant: Ibogaine and cardiovascular complications-prolonged QT interval and ventricular arrhythmias",
+   "year": 2026,
+   "journal": "Addiction (Abingdon, England)",
+   "kind": "review",
+   "people": true,
+   "near": 0.713,
+   "money": [
+    "None."
+   ],
+   "design": {
+    "passage": 15,
+    "where": "Text",
+    "quote": "Rare but relevant: Ibogaine and cardiovascular complications—prolonged QT interval and ventricular arrhythmias. Addiction. 2026;121(6):1616–1621.",
+    "text": "a review of cardiovascular complications associated with ibogaine use"
+   },
+   "findings": [
+    {
+     "passage": 11,
+     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+     "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+     "text": "Two studies reported on magnesium, sodium, and saline supplementation after ibogaine treatment to manage adverse cardiac events, but most clinical interventions were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+     "id": "F1",
+     "second_hand": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events."
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "raffa_2026",
+    "type": "article-journal",
+    "title": "Implications of potential US FDA approval of psychedelics or psychedelic-adjacents such as ibogaine for pharmacy in Japan",
+    "author": [
+     {
+      "family": "Raffa",
+      "given": "Robert B"
+     }
+    ],
+    "container-title": "Cureus",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.7759/cureus.116178",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-19",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-19"
+     }
+    },
+    "PMCID": "PMC13571759"
+   },
+   "doi": "10.7759/cureus.116178",
+   "pmcid": "PMC13571759",
+   "title": "Implications of Potential US FDA Approval of Psychedelics or Psychedelic-Adjacents Such as Ibogaine for Pharmacy in Japan",
+   "year": 2026,
+   "journal": "Cureus",
+   "kind": "review",
+   "people": true,
+   "near": 0.578,
+   "money": [
+    "Conflicts of interest: In compliance with the ICMJE uniform disclosure form, all authors declare the following:",
+    "Payment/services info: All authors have declared that no financial support was received from any organization for the submitted work.",
+    "Financial relationships: Raffa declare(s) personal fees and Co-founder from Enalare Therapeutics."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This narrative review was prepared from published peer-reviewed literature in the English and Japanese languages identified through PubMed/MEDLINE, with supplemental journal searches, federal surveillance data, and published analyses of the Japanese Pharmaceuticals and Medical Devices Agency (PMDA).",
+    "text": "a narrative review of literature regarding the potential implications of ibogaine approval for pharmacy in Japan"
+   },
+   "findings": [
+    {
+     "passage": 22,
+     "where": "Review",
+     "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+     "text": "Ibogaine requires pre-administration Mg2+ and other clinical assessments, meaning it cannot be safely dispensed over-the-counter.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 30,
+     "where": "Conclusions",
+     "quote": "Rapid approval of ibogaine in Japan is currently highly unlikely under a foreseeable regulatory framework; its cardiac and pharmacogenomic requirements demand a level of pre-administration clinical assessment that exceeds the infrastructure of many pharmacy settings.",
+     "text": "The infrastructure of many pharmacy settings is currently insufficient to meet the clinical assessment requirements for ibogaine.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "specifically regarding heart attack risk",
  "wanted": [
   {
    "doi": "10.3109/15563650.2016.1138226",
@@ -64,7 +210,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "The anti-addiction drug ibogaine and the heart: a delicate relation",
@@ -74,10 +229,10 @@
    "kept": 0,
    "thrown": [
     {
-     "kind": "text",
-     "text": "Review paper on ibogaine’s cardiac effects",
-     "quote": "The aim of this review is to recapitulate the current knowledge about ibogaine’s effects on the heart and the cardiovascular system, and to assess the cardiac risks associated with the use of this dru",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "limit",
+     "text": "The paper identifies abnormal electrolyte levels as a risk factor for drug-induced arrhythmias, but does not state whether magnesium specifically lowers heart attack risk.",
+     "quote": "prior to ibogaine application one should carefully consider additional risk factors for drug-induced TdP arrhythmias in a patient including female gender, a prolonged baseline QT interval, bradycardia",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -86,9 +241,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.1111/add.70319",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Ibogaine/Noribogaine in the Treatment of Substance Use Disorders: A Systematic Review of the Current Literature",
@@ -96,8 +250,14 @@
    "kind": "review",
    "at": "10.2174/1570159x21666221017085612",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The absence of sufficient controlled clinical trials prevents a definitive conclusion regarding the safety of ibogaine.",
+     "quote": "The lack of adequate controlled clinical trials does not allow a definitive answer about the therapeutic efficacy of ibogaine and its safety.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Ibogaine and addiction in the animal model, a systematic review and meta-analysis",
@@ -105,17 +265,396 @@
    "kind": "review",
    "at": "10.1038/tp.2016.71",
    "kept": 0,
-   "thrown": [
+   "thrown": []
+  },
+  {
+   "title": "Implications of Potential US FDA Approval of Psychedelics or Psychedelic-Adjacents Such as Ibogaine for Pharmacy in Japan",
+   "read": "full",
+   "kind": "review",
+   "at": "10.7759/cureus.116178",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Ibogaine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/ibogaine",
+   "kept": 0,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F2",
+   "F1"
+  ],
+  "direct": "Not known",
+  "but": [
+   "F1"
+  ],
+  "how": [
+   [
+    "DB",
+    "F2"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "specifically regarding heart attack risk"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.2264,
+   "but": 0.9073,
+   "how1": 0.673,
+   "how2": 0.338
+  },
+  "scores_quotes_alone": {
+   "short": 0.0611,
+   "but": 0.5534,
+   "how1": 0.4752,
+   "how2": 0.1715
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
     {
-     "kind": "text",
-     "text": "Systematic review and meta‑analysis of animal studies on ibogaine",
-     "quote": "Ibogaine is a naturally occurring substance which has been increasingly used in the lay‑scene to reduce craving and relapse in patients with substance use disorders (SUDs).",
-     "why": "the sentence is not carried by its quote and passage"
+     "part": "short",
+     "text": "Not known. Ibogaine needs magnesium checks before use, but two studies found magnesium did not fix heart rhythm problems.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "raffa_2026",
+       "where": "Review",
+       "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+       "sha": "6895e50968746f61"
+      },
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that two studies found magnesium did not fix heart rhythm problems; they state that two studies reported on magnesium/sodium and saline suppletion, and separately that most clinical interventions were not effective"
+    },
+    {
+     "part": "but",
+     "text": "Most clinical interventions, including magnesium, were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review of pharmacy implications says ibogaine requires pre-administration magnesium and heart checks.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "raffa_2026",
+       "where": "Abstract",
+       "quote": "This narrative review was prepared from published peer-reviewed literature in the English and Japanese languages identified through PubMed/MEDLINE, with supplemental journal searches, federal surveillance data, and published analyses of the Japanese Pharmaceuticals and Medical Devices Agency (PMDA).",
+       "sha": "ed78bb58db0f3ae1"
+      },
+      {
+       "label": "F2",
+       "ref": "raffa_2026",
+       "where": "Review",
+       "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+       "sha": "6895e50968746f61"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2026 review reports two studies found magnesium and saline did not resolve heart rhythm issues after ibogaine.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "brunt_2026",
+       "where": "Text",
+       "quote": "Rare but relevant: Ibogaine and cardiovascular complications—prolonged QT interval and ventricular arrhythmias. Addiction. 2026;121(6):1616–1621.",
+       "sha": "f03d4f089f18645d"
+      },
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that the two studies found magnesium and saline did not resolve heart rhythm issues; the text says two studies reported on suppletion, and later states most clinical interventions were not effective."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. A review says ibogaine needs magnesium checks before use, but does not say if it lowers heart attack risk.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "raffa_2026",
+       "where": "Review",
+       "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+       "sha": "6895e50968746f61"
+      },
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Two studies reported on magnesium use after ibogaine to manage cardiac events, but most interventions did not fix arrhythmias.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review of pharmacy implications says ibogaine requires pre-administration magnesium and ECG checks.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "raffa_2026",
+       "where": "Abstract",
+       "quote": "This narrative review was prepared from published peer-reviewed literature in the English and Japanese languages identified through PubMed/MEDLINE, with supplemental journal searches, federal surveillance data, and published analyses of the Japanese Pharmaceuticals and Medical Devices Agency (PMDA).",
+       "sha": "ed78bb58db0f3ae1"
+      },
+      {
+       "label": "F2",
+       "ref": "raffa_2026",
+       "where": "Review",
+       "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+       "sha": "6895e50968746f61"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2026 review of cardiovascular complications reports two studies on magnesium use after ibogaine for cardiac events.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "brunt_2026",
+       "where": "Text",
+       "quote": "Rare but relevant: Ibogaine and cardiovascular complications—prolonged QT interval and ventricular arrhythmias. Addiction. 2026;121(6):1616–1621.",
+       "sha": "f03d4f089f18645d"
+      },
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. Ibogaine needs magnesium checks before use, but two studies found magnesium did not fix heart rhythm problems.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      },
+      {
+       "label": "F2",
+       "ref": "raffa_2026",
+       "where": "Review",
+       "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+       "sha": "6895e50968746f61"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that two studies found magnesium did not fix heart rhythm problems; they only report that two studies covered magnesium/sodium and saline suppletion and that most of the other clinical interventions were not effect"
+    },
+    {
+     "part": "but",
+     "text": "Most clinical interventions, including magnesium, were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that \"most of the other clinical interventions treatments were not effective\", but it does not state that magnesium specifically was one of the ineffective interventions."
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review says ibogaine requires magnesium checks and heart monitoring before use, so it cannot be sold over-the-counter.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "raffa_2026",
+       "where": "Abstract",
+       "quote": "This narrative review was prepared from published peer-reviewed literature in the English and Japanese languages identified through PubMed/MEDLINE, with supplemental journal searches, federal surveillance data, and published analyses of the Japanese Pharmaceuticals and Medical Devices Agency (PMDA).",
+       "sha": "ed78bb58db0f3ae1"
+      },
+      {
+       "label": "F2",
+       "ref": "raffa_2026",
+       "where": "Review",
+       "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+       "sha": "6895e50968746f61"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies continuous cardiac monitoring \"during administration\" rather than heart monitoring \"before use\", and it discusses over-the-counter status specifically in the context of Japan."
+    },
+    {
+     "part": "how2",
+     "text": "A 2026 review reports two studies where magnesium was given after ibogaine to manage heart events, but it did not work.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "brunt_2026",
+       "where": "Text",
+       "quote": "Rare but relevant: Ibogaine and cardiovascular complications—prolonged QT interval and ventricular arrhythmias. Addiction. 2026;121(6):1616–1621.",
+       "sha": "f03d4f089f18645d"
+      },
+      {
+       "label": "F1",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that two studies reported on \"magnesium/sodium and saline suppletion\" and that \"most of the other clinical interventions treatments were not effective\", which does not definitively establish that magnesium did not work."
     }
    ]
   }
  ],
- "soft": "a source could not be fetched",
+ "panel": {
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages do not state that two studies found magnesium did not fix heart rhythm problems; they only report that two studies covered magnesium/sodium and saline suppletion and that most of the other clinical interventions were not effect"
+   ],
+   "but": [
+    false,
+    "The passage states that \"most of the other clinical interventions treatments were not effective\", but it does not state that magnesium specifically was one of the ineffective interventions."
+   ],
+   "how1": [
+    false,
+    "The passage specifies continuous cardiac monitoring \"during administration\" rather than heart monitoring \"before use\", and it discusses over-the-counter status specifically in the context of Japan."
+   ],
+   "how2": [
+    false,
+    "The passage states that two studies reported on \"magnesium/sodium and saline suppletion\" and that \"most of the other clinical interventions treatments were not effective\", which does not definitively establish that magnesium did not work."
+   ]
+  }
+ },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2026 review says ibogaine requires magnesium checks and heart monitoring before use, so it cannot be sold over-the-counter.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "raffa_2026",
+     "where": "Abstract",
+     "quote": "This narrative review was prepared from published peer-reviewed literature in the English and Japanese languages identified through PubMed/MEDLINE, with supplemental journal searches, federal surveillance data, and published analyses of the Japanese Pharmaceuticals and Medical Devices Agency (PMDA).",
+     "sha": "ed78bb58db0f3ae1"
+    },
+    {
+     "label": "F2",
+     "ref": "raffa_2026",
+     "where": "Review",
+     "quote": "A drug requiring pre-administration CYP2D6 genotyping, 12-lead ECG assessment, electrolyte measurement, Mg2+, and continuous cardiac monitoring during administration cannot be safely dispensed OTC under any drug classification framework.",
+     "sha": "6895e50968746f61"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies continuous cardiac monitoring \"during administration\" rather than heart monitoring \"before use\", and it discusses over-the-counter status specifically in the context of Japan."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2026 review reports two studies where magnesium was given after ibogaine to manage heart events, but it did not work.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "brunt_2026",
+     "where": "Text",
+     "quote": "Rare but relevant: Ibogaine and cardiovascular complications—prolonged QT interval and ventricular arrhythmias. Addiction. 2026;121(6):1616–1621.",
+     "sha": "f03d4f089f18645d"
+    },
+    {
+     "label": "F1",
+     "ref": "brunt_2026",
+     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+     "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events. However, aside from placing the pacemaker in some patients to reduce ventricular arrhythmias, most of the other clinical interventions treatments were not effective in resolving ventricular arrhythmias or Torsades des pointes.",
+     "sha": "1122b5e36debc63f"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that two studies reported on \"magnesium/sodium and saline suppletion\" and that \"most of the other clinical interventions treatments were not effective\", which does not definitively establish that magnesium did not work."
+  }
+ ],
  "place": {
   "home": "new:Ibogaine",
   "also": [],

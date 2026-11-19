@@ -19,31 +19,40 @@
   "models": {
    "reader": "gemini:gemma-4-31b-it",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44634958465",
-  "read_seconds": 98,
+  "run": "44638098821",
+  "read_by": {
+   "gemini-3.1-flash-lite": 6,
+   "gpt-oss-20b": 1
+  },
+  "read_seconds": 100,
   "from": {
    "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 248
+  "seconds": 225
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.03, but 0.01, how1 0.97, how2 0.96",
-  "check": "short: NOT accepted: The passage does not state that the review 'does not say if usage rates change'.; but: NOT accepted: The passage does not state that the review cannot show a clear link.; how1: accepted; how2: accepted"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known. A 2026 review found only nine studies on cannabis decriminalization, so it does not say if usage rates change.”: The passage does not state that the review 'does not say if usage rates change'. | the But “Only nine studies used this method, so the review cannot show a cl",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.01, but 0.03, how1 0.90",
+  "check": "short: NOT accepted: The passage does not state that the sources do not report what the nine studies found about usage rates.; but: NOT accepted: The passage does not state that the sources do not describe the results of the nine studies.; how1: accepted",
+  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9574) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there."
  },
  "sources": [
   {
@@ -174,7 +183,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Impacts of Global Cannabis Policy Changes on Substance Use: A Systematic Review of Quasi-Experimental Studies",
@@ -236,7 +254,8 @@
    "kind": "review",
    "at": "10.3389/fncel.2026.1899553",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Substance use outcomes in first- and second- generation of immigrants: Systematic review and meta-analysis",
@@ -253,93 +272,6 @@
    "at": "10.1016/j.abrep.2026.100748",
    "kept": 0,
    "thrown": []
-  },
-  {
-   "title": "Substance use disorder in forensic hospitals: A scoping review of practices and interventions",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1016/j.dadr.2026.100465",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Systematic Review and Meta-Analysis of the Prevalence of Substance Use Among Adolescents in South Africa",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1111/dar.70143",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "a systematic review and meta-analysis of substance use prevalence among adolescents under 19 years of age in South Africa",
-     "quote": "We conducted a systematic review and meta‐analysis following PRISMA guidelines. Searches were run across PubMed, PsycINFO, Web of Science and Scielo. Studies reporting original SA prevalence data in c",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
-  },
-  {
-   "title": "Coalitions as Prevention Infrastructure for Youth Substance Use: Coordinated, Local Relevance, and Sustainability",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1097/phh.0000000000002471",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Urban-Rural and Demographic Differences in Substance Use Among High School Students - Youth Risk Behavior Survey, United States, 2025",
-   "read": "full",
-   "kind": "other",
-   "at": "10.15585/mmwr.su7501a6",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Canadian Drugs and Substances Strategy: Overview",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/canadian-drugs-substances-strategy.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Know the Risks of Using Drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.samhsa.gov/substance-use/learn/risks",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "About substance use",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/about-substance-use.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Mixing alcohol with medicines or drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Why It's Important To Talk To Your Child About Alcohol and Other Drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.samhsa.gov/substance-use/prevention/talk-they-hear-you/parent-resources/talk-with-your-child",
-   "kept": 0,
-   "thrown": []
   }
  ],
  "plan": "the planner gave no plan that could be used: the writer chose the items itself",
@@ -348,16 +280,14 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.034,
-   "but": 0.0137,
-   "how1": 0.9722,
-   "how2": 0.958
+   "short": 0.0118,
+   "but": 0.0252,
+   "how1": 0.8959
   },
   "scores_quotes_alone": {
-   "short": 0.0486,
-   "but": 0.0184,
-   "how1": 0.8758,
-   "how2": 0.9571
+   "short": 0.0258,
+   "but": 0.0407,
+   "how1": 0.8772
   }
  },
  "tries": [
@@ -367,7 +297,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. A review found only nine studies on cannabis decriminalization, so there is not enough evidence to say if usage rates change.",
+     "text": "Not known. A 2026 systematic review of quasi-experimental studies found only 9 studies that examined cannabis decriminalization.",
      "rests_on": [
       {
        "label": "F1",
@@ -379,11 +309,11 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage does not state that there is not enough evidence to say if usage rates change."
+     "said": "it does not answer the question itself (The passages only report the number and methodology of studies; they do not provide any findings on the effect of decriminalization on usage rates. Therefore stating \"Not known\" is a fair answer to the question about effect, but the answer )"
     },
     {
      "part": "but",
-     "text": "Only nine studies looked at this, all using a specific math method, so the picture is very small.",
+     "text": "Only 9 studies used a difference-in-differences approach to look at cannabis decriminalization.",
      "rests_on": [
       {
        "label": "F1",
@@ -395,11 +325,11 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage does not state that the picture is very small."
+     "said": "it is about something else than the short answer (The passages only report the number and methodology of studies; they do not provide any findings on the effect of decriminalization on usage rates. Therefore stating \"Not known\" is a fair answer to the question about effect, but the answer )"
     },
     {
      "part": "how1",
-     "text": "A 2026 review of global cannabis policies found that only nine studies examined decriminalization.",
+     "text": "A 2026 systematic review of quasi-experimental studies looked at the impacts of global cannabis policies on cannabis and other substance use.",
      "rests_on": [
       {
        "label": "DA",
@@ -407,73 +337,14 @@
        "where": "Discussion",
        "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi-experimental studies.",
        "sha": "635f0d8f6d6ee2ec"
-      },
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
       }
      ],
      "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. A review found only nine studies on cannabis decriminalization, so the effect on usage rates is not clear.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the passages do not state that the effect on usage rates is not clear"
     },
     {
-     "part": "but",
-     "text": "The review only looked at cannabis, not other drugs, and used studies that compare changes over time.",
+     "part": "how2",
+     "text": "In this review, 9 studies examined cannabis decriminalization using a difference-in-differences approach.",
      "rests_on": [
-      {
-       "label": "DA",
-       "ref": "windle_2026",
-       "where": "Discussion",
-       "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi-experimental studies.",
-       "sha": "635f0d8f6d6ee2ec"
-      },
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the passages state the review was designed to provide an overview of cannabis and other substance use, contradicting the claim that it only looked at cannabis"
-    },
-    {
-     "part": "how1",
-     "text": "A 2026 review of quasi-experimental studies found nine studies on cannabis decriminalization using a difference-in-differences approach.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "windle_2026",
-       "where": "Discussion",
-       "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi-experimental studies.",
-       "sha": "635f0d8f6d6ee2ec"
-      },
       {
        "label": "F1",
        "ref": "windle_2026",
@@ -492,7 +363,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. A 2026 review found only nine studies on cannabis decriminalization, so it does not say if usage rates change.",
+     "text": "Not known. The sources only say nine studies looked at cannabis decriminalization; they do not report what those studies found about usage rates.",
      "rests_on": [
       {
        "label": "F1",
@@ -504,11 +375,11 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage does not state that the review 'does not say if usage rates change'."
+     "said": "The passage does not state that the sources do not report what the nine studies found about usage rates."
     },
     {
      "part": "but",
-     "text": "Only nine studies used this method, so the review cannot show a clear link between decriminalization and usage rates.",
+     "text": "The sources do not describe the results of the nine studies, so the effect on usage rates is not stated.",
      "rests_on": [
       {
        "label": "F1",
@@ -520,11 +391,11 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage does not state that the review cannot show a clear link."
+     "said": "The passage does not state that the sources do not describe the results of the nine studies."
     },
     {
      "part": "how1",
-     "text": "A 2026 systematic review of quasi-experimental studies looked at global cannabis policies and their impact on substance use.",
+     "text": "A 2026 systematic review of quasi-experimental studies found nine studies on cannabis decriminalization, all using a difference-in-differences approach.",
      "rests_on": [
       {
        "label": "DA",
@@ -532,14 +403,7 @@
        "where": "Discussion",
        "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi-experimental studies.",
        "sha": "635f0d8f6d6ee2ec"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "It found that relatively few studies, specifically nine, examined cannabis decriminalization using a difference-in-differences approach.",
-     "rests_on": [
+      },
       {
        "label": "F1",
        "ref": "windle_2026",
