@@ -1,0 +1,13 @@
+train: base {"file": "model.onnx", "sha256": "759c3cd2b7fe7e93933ad23c4c9181b7396442a2ed746ec7c1d46192c469c46e", "bytes": 90387606}
+train: 391 answers; 6160 wordings as anchors (2973 of them the teachers'); 1810 near-miss questions; held out 57
+train: before: held-out wordings find their answer 75.6%, wording vs near-miss AUC 0.778
+train: pass 1: loss 1.507 | held out (now trained on): finds its answer 82.6%, AUC 0.909 | 151s
+train: pass 2: loss 0.822 | held out (now trained on): finds its answer 85.9%, AUC 0.937 | 301s
+train: pass 3: loss 0.643 | held out (now trained on): finds its answer 87.4%, AUC 0.954 | 446s
+train: pass 4: loss 0.514 | held out (now trained on): finds its answer 89.1%, AUC 0.958 | 591s
+train: pass 5: loss 0.494 | held out (now trained on): finds its answer 90.3%, AUC 0.963 | 740s
+train: pass 6: loss 0.448 | held out (now trained on): finds its answer 90.5%, AUC 0.965 | 886s
+train: site model: {"strict_top1": 0.595, "strict_top3": 0.81, "lenient_top1": 0.515, "lenient_top3": 0.701, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.78, "seconds": 9.1}
+train: minilm-teach-mix50 {"strict_top1": 0.608, "strict_top3": 0.797, "lenient_top1": 0.504, "lenient_top3": 0.723, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.785, "seconds": 9.3} | with the teachers' wordings in the index: {"strict_top1": 0.608, "strict_top3": 0.823, "lenient_top1": 0.526, "lenient_top3": 0.759, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.793, "seconds": 13.6}
+train: minilm-teach-mix100 {"strict_top1": 0.582, "strict_top3": 0.848, "lenient_top1": 0.482, "lenient_top3": 0.719, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.71, "seconds": 9.5} | with the teachers' wordings in the index: {"strict_top1": 0.57, "strict_top3": 0.848, "lenient_top1": 0.46, "lenient_top3": 0.774, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.711, "seconds": 14.0}
+train: done: /tmp/claude-0/-home-claude/26a1fab4-6c74-5648-a9fc-9f33a45fba6c/scratchpad/tr-all-teach/train.json

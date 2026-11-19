@@ -7,7 +7,8 @@
 // 0.994 to 1 against the page; scripts/insight/parity.js reports both).
 const fs = require("fs"), path = require("path");
 const VENDOR = path.resolve(__dirname, "..", "..", "site", "insight", "vendor");
-const MODEL = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "site", "insight", "model.json"), "utf8")).file;   // the one place that names the model's file
+// the one place that names the model's file; PK_INSIGHT_MODEL_JSON: another copy, for scripts/insight/candidate.py only (as build_index.py reads it)
+const MODEL = JSON.parse(fs.readFileSync(process.env.PK_INSIGHT_MODEL_JSON || path.resolve(__dirname, "..", "..", "site", "insight", "model.json"), "utf8")).file;
 (async () => {
   const [inp, out] = process.argv.slice(2);
   const ids = JSON.parse(fs.readFileSync(inp, "utf8")).ids;
