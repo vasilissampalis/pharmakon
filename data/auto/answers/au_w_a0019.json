@@ -19,38 +19,37 @@
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team H",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team H2",
    "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44515206213",
+  "run": "44519103189",
   "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "gemini-3.1-flash-lite": 1
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 3,
+   "llama-4-scout-17b-16e-instruct": 3
   },
-  "read_seconds": 100,
+  "read_seconds": 77,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 90.4,
-  "seconds": 254
+  "neurons": 695.7,
+  "seconds": 180
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
   "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known. A 2022 review notes the UN highlights opioid overdose deaths in the USA and HIV in Eastern Europe, but does not compare total drug-related death rates.”: the checker gave no clear verdict | the But “The review says calling the US approach law-enforcement and Europe's pub",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.05, but 0.11, how1 0.30",
-  "check": "short: NOT accepted: the checker gave no clear verdict; but: NOT accepted: the checker gave no clear verdict; how1: NOT accepted: the checker gave no clear verdict"
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.02, but 0.11, how1 0.61, how2 0.25",
+  "check": "short: NOT accepted: The passage does not state that the review does not compare total drug‑related death rates; it simply does not mention such a comparison.; but: NOT accepted: it is about something else than the short answer; how1: accepted; how2: accepted"
  },
  "sources": [
   {
@@ -145,11 +144,144 @@
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "cox_2020",
+    "type": "article-journal",
+    "title": "Genome-wide association study of opioid cessation",
+    "author": [
+     {
+      "family": "Cox",
+      "given": "Jiayi W."
+     },
+     {
+      "family": "Sherva",
+      "given": "Richard M."
+     },
+     {
+      "family": "Lunetta",
+      "given": "Kathryn L."
+     },
+     {
+      "family": "Johnson",
+      "given": "Emma C."
+     },
+     {
+      "family": "Martin",
+      "given": "Nicholas G."
+     },
+     {
+      "family": "Degenhardt",
+      "given": "Louisa"
+     },
+     {
+      "family": "Agrawal",
+      "given": "Arpana"
+     },
+     {
+      "family": "Nelson",
+      "given": "Elliot C."
+     },
+     {
+      "family": "Kranzler",
+      "given": "Henry R."
+     },
+     {
+      "family": "Gelernter",
+      "given": "Joel"
+     },
+     {
+      "family": "Farrer",
+      "given": "Lindsay A."
+     }
+    ],
+    "container-title": "Journal of Clinical Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.3390/jcm9010180",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-19",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-19"
+     }
+    },
+    "volume": "9",
+    "issue": "1",
+    "number": "180",
+    "PMCID": "PMC7019731"
+   },
+   "doi": "10.3390/jcm9010180",
+   "pmcid": "PMC7019731",
+   "title": "Genome-Wide Association Study of Opioid Cessation",
+   "year": 2020,
+   "journal": "Journal of clinical medicine",
+   "kind": "other",
+   "people": true,
+   "near": 0.561,
+   "money": [
+    "This was supported by the National Institutes of Health grants RC2, R01 DA12690, R01 DA12849, R01 DA18432, R01 AA11330, R01 AA017535, 2P50, and by the VA Connecticut Healthcare Center and Philadelphia VA MIRECCS.",
+    "H.R.K. is a member of the American Society of Clinical Psychopharmacology’s Alcohol Clinical Trials Initiative, which was supported for the last three years by AbbVie, Alkermes, Ethypharm, Indivior, Lilly, Lundbeck, Otsuka, Pfizer, Arbor, and Amygdala Neurosciences. Drs. Kranzler and Gelernter are named as inventors on PCT patent application #15/878,640 entitled: \"Genotype-guided dosing of opioid agonists,\" filed January 24, 2018. The funders had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript; or in the decision to publish the results."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+    "text": "Genome-Wide Association Study of Opioid Cessation"
+   },
+   "findings": [
+    {
+     "passage": 3,
+     "where": "1. Introduction",
+     "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+     "text": "More than 33,000 Americans died of an opioid overdose in 2015.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "1. Introduction",
+     "quote": "The US Department of Health and Human Services declared a public health emergency in 2017",
+     "text": "The US Department of Health and Human Services declared a public health emergency in 2017.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
+     "text": "The United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 5,
+     "where": "2. Materials and Methods › 2.1. Participants and Diagnostic Procedures",
+     "quote": "Persons who had recent suicidal intent or psychosis were excluded",
+     "text": "People with recent suicidal intent or psychosis were excluded from the study.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "direct comparison of death rates between America and Europe",
  "wanted": [
   {
    "doi": "10.1097/yco.0b013e328360eafd",
@@ -175,6 +307,14 @@
  ],
  "person": null,
  "history": [
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
+  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -214,61 +354,94 @@
    "read": "full",
    "kind": "other",
    "at": "10.3390/jcm9010180",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "Unemployment and Substance Use: An Updated Review of Studies from North America and Europe",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/healthcare11081182",
+   "title": "Canada's overdose crisis and the toxic illegal drug supply",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/opioids/overdose-crisis-toxic-illegal-drug-supply.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
-   "title": "Using physiological biomarkers in forensic psychiatry: a scoping review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fpsyt.2025.1580615",
+   "title": "Facts About U.S. Deaths from Excessive Alcohol Use",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/facts-stats/index.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Psychedelic substitution: altered substance use patterns following psychedelic use in a global survey",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyt.2024.1349565",
+   "title": "Shareable Graphics",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/graphics/index.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Genome-wide meta-analyses of cross substance use disorders in diverse populations",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1038/s41380-025-03294-5",
+   "title": "About the Good Samaritan Drug Overdose Act",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/opioids/about-good-samaritan-drug-overdose-act.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "2C drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/2c",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "European Mistletoe",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/european-mistletoe",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "plan": {
+  "short": [
+   "F2",
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DB",
+    "F2"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "direct comparison of death rates between America and Europe"
+ },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.0526,
+   "short": 0.0218,
    "but": 0.1054,
-   "how1": 0.3032
+   "how1": 0.6088,
+   "how2": 0.253
   },
   "scores_quotes_alone": {
-   "short": 0.0237,
+   "short": 0.0173,
    "but": 0.4335,
-   "how1": 0.038
+   "how1": 0.4464,
+   "how2": 0.0563
   }
  },
  "tries": [
@@ -286,11 +459,18 @@
        "where": "Introduction",
        "quote": "The United Nations Office on Drugs and Crime (UNODC) 2021 report highlights the differences such as opioid overdose deaths in the USA, injection drug related HIV transmission in Eastern Europe",
        "sha": "ca2c6a19ffa11a58"
+      },
+      {
+       "label": "F2",
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "said": "The passage does not explicitly state that the review does not compare total drug‑related death rates."
     },
     {
      "part": "but",
@@ -306,11 +486,32 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "said": "it is about something else than the short answer"
     },
     {
      "part": "how1",
-     "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
+     "text": "A 2020 study of opioid cessation notes that more than 33,000 Americans died of an opioid overdose in 2015.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
+      },
+      {
+       "label": "F2",
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2022 review of four countries says the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
      "rests_on": [
       {
        "label": "DA",
@@ -327,9 +528,7 @@
        "sha": "ca2c6a19ffa11a58"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "ok": true
     }
    ]
   },
@@ -339,7 +538,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. A 2022 review notes the UN highlights opioid overdose deaths in the USA and HIV in Eastern Europe, but does not compare total drug-related death rates.",
+     "text": "Not known. A 2022 review notes the UN highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
      "rests_on": [
       {
        "label": "F1",
@@ -349,9 +548,7 @@
        "sha": "ca2c6a19ffa11a58"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "ok": true
     },
     {
      "part": "but",
@@ -367,11 +564,32 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "said": "it is about something else than the short answer"
     },
     {
      "part": "how1",
-     "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
+     "text": "A 2020 study of opioid cessation notes that more than 33,000 Americans died of an opioid overdose in 2015.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
+      },
+      {
+       "label": "F2",
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2022 review of four countries says the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
      "rests_on": [
       {
        "label": "DA",
@@ -388,9 +606,7 @@
        "sha": "ca2c6a19ffa11a58"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "ok": true
     }
    ]
   },
@@ -408,11 +624,18 @@
        "where": "Introduction",
        "quote": "The United Nations Office on Drugs and Crime (UNODC) 2021 report highlights the differences such as opioid overdose deaths in the USA, injection drug related HIV transmission in Eastern Europe",
        "sha": "ca2c6a19ffa11a58"
+      },
+      {
+       "label": "F2",
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "said": "The passage does not state that the review does not compare total drug‑related death rates; it simply does not mention such a comparison."
     },
     {
      "part": "but",
@@ -428,11 +651,32 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "said": "it is about something else than the short answer"
     },
     {
      "part": "how1",
-     "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
+     "text": "A 2020 study of opioid cessation notes that more than 33,000 Americans died of an opioid overdose in 2015.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
+      },
+      {
+       "label": "F2",
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2022 review of four countries says the UN report highlights opioid overdose deaths in the USA and injection drug related HIV in Eastern Europe.",
      "rests_on": [
       {
        "label": "DA",
@@ -449,36 +693,9 @@
        "sha": "ca2c6a19ffa11a58"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the checker gave no clear verdict"
+     "ok": true
     }
    ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A 2022 review of four countries (Ukraine, Philippines, Nigeria, Peru) notes the UN report highlights opioid overdose deaths in the USA and HIV in Eastern Europe.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "johnson_2022",
-     "where": "Abstract",
-     "quote": "This article provides four case examples, Ukraine, Philippines, Nigeria and Peru, where there is movement to develop addiction public health infrastructure.",
-     "sha": "33c14dc313296827"
-    },
-    {
-     "label": "F1",
-     "ref": "johnson_2022",
-     "where": "Introduction",
-     "quote": "The United Nations Office on Drugs and Crime (UNODC) 2021 report highlights the differences such as opioid overdose deaths in the USA, injection drug related HIV transmission in Eastern Europe",
-     "sha": "ca2c6a19ffa11a58"
-    }
-   ],
-   "by": "the second reader",
-   "said": "the checker gave no clear verdict"
   }
  ],
  "place": {
