@@ -49,7 +49,13 @@ def parse(text):
     return out
 
 
+INPUT_SHA = []
+
+
 def run(cmd, env=None):
+    sha = hashlib.sha256(INPUT.read_bytes()).hexdigest()
+    if INPUT_SHA and sha != INPUT_SHA[0]: raise SystemExit("candidate: site/insight/.cache/index-input.json changed during the trial (another build ran): run it again alone")
+    INPUT_SHA[:1] = [sha]
     r = subprocess.run(cmd, cwd=ROOT, env=dict(os.environ, **(env or {})), capture_output=True, text=True)
     if r.returncode != 0: raise SystemExit(f"candidate: {' '.join(map(str, cmd[:4]))} failed:\n{r.stderr[-2000:]}")
     return r.stdout + r.stderr
