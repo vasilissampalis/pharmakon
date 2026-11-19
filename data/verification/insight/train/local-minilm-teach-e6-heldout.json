@@ -1,0 +1,157 @@
+{
+ "base": "minilm",
+ "licence": "Apache-2.0",
+ "teacher": true,
+ "masked": 0.0,
+ "epochs": 6,
+ "lr": 2e-05,
+ "seed": 7,
+ "batch": 32,
+ "max_tokens": 48,
+ "all_answers": false,
+ "mix": [
+  0.5,
+  1.0
+ ],
+ "began": "2026-11-19T20:23:38Z",
+ "source": {
+  "file": "model.onnx",
+  "sha256": "759c3cd2b7fe7e93933ad23c4c9181b7396442a2ed746ec7c1d46192c469c46e",
+  "bytes": 90387606
+ },
+ "answers": 391,
+ "held_out_answers": 57,
+ "anchors": 5251,
+ "readers_wordings": 3187,
+ "teachers_wordings": 2979,
+ "near_miss": 1810,
+ "before": {
+  "held_out_finds_answer": 0.7563,
+  "held_out_auc": 0.7785
+ },
+ "passes": [
+  {
+   "pass": 1,
+   "loss": 1.5535,
+   "held_out_finds_answer": 0.8109,
+   "held_out_auc": 0.8964,
+   "seconds": 131
+  },
+  {
+   "pass": 2,
+   "loss": 0.8466,
+   "held_out_finds_answer": 0.834,
+   "held_out_auc": 0.92,
+   "seconds": 261
+  },
+  {
+   "pass": 3,
+   "loss": 0.6894,
+   "held_out_finds_answer": 0.855,
+   "held_out_auc": 0.9269,
+   "seconds": 431
+  },
+  {
+   "pass": 4,
+   "loss": 0.5634,
+   "held_out_finds_answer": 0.8634,
+   "held_out_auc": 0.9322,
+   "seconds": 599
+  },
+  {
+   "pass": 5,
+   "loss": 0.512,
+   "held_out_finds_answer": 0.8676,
+   "held_out_auc": 0.9308,
+   "seconds": 756
+  },
+  {
+   "pass": 6,
+   "loss": 0.451,
+   "held_out_finds_answer": 0.8613,
+   "held_out_auc": 0.9327,
+   "seconds": 965
+  }
+ ],
+ "kept_pass": 5,
+ "gold": {
+  "pharmakon-insight-1 (on the site)": {
+   "index": {
+    "strict_top1": 0.595,
+    "strict_top3": 0.81,
+    "lenient_top1": 0.518,
+    "lenient_top3": 0.704,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.78,
+    "seconds": 14.2
+   },
+   "index_with_teachers_wordings": {
+    "strict_top1": 0.62,
+    "strict_top3": 0.81,
+    "lenient_top1": 0.518,
+    "lenient_top3": 0.752,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.791,
+    "seconds": 17.0
+   },
+   "sha256": "4f5059c16139f1d93e5b78df2a4ee7c5728452e46d93d663cca31e23d1c2c2f5"
+  },
+  "minilm-teach-mix50": {
+   "index": {
+    "strict_top1": 0.62,
+    "strict_top3": 0.823,
+    "lenient_top1": 0.511,
+    "lenient_top3": 0.726,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.785,
+    "seconds": 11.8
+   },
+   "index_with_teachers_wordings": {
+    "strict_top1": 0.658,
+    "strict_top3": 0.81,
+    "lenient_top1": 0.529,
+    "lenient_top3": 0.755,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.793,
+    "seconds": 16.6
+   },
+   "share_trained": 0.5,
+   "int8_vs_trained_cosine_min": 0.9739,
+   "file": "minilm-teach-mix50-q8.onnx",
+   "bytes": 22911759,
+   "sha256": "de3388bb4e86353242c16a4eb5189ff3f2231e145f94e21e4defc64ee98567b5"
+  },
+  "minilm-teach-mix100": {
+   "index": {
+    "strict_top1": 0.633,
+    "strict_top3": 0.823,
+    "lenient_top1": 0.493,
+    "lenient_top3": 0.708,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.717,
+    "seconds": 15.0
+   },
+   "index_with_teachers_wordings": {
+    "strict_top1": 0.633,
+    "strict_top3": 0.835,
+    "lenient_top1": 0.471,
+    "lenient_top3": 0.755,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.718,
+    "seconds": 21.2
+   },
+   "share_trained": 1.0,
+   "int8_vs_trained_cosine_min": 0.9677,
+   "file": "minilm-teach-mix100-q8.onnx",
+   "bytes": 22911759,
+   "sha256": "30bd43096e289b6926ee412c9c1131ce4990dd7d3529933e6548938789b22a9a"
+  }
+ },
+ "ended": "2026-11-19T20:41:33Z"
+}

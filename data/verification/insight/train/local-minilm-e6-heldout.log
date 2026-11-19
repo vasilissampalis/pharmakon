@@ -1,0 +1,13 @@
+train: base {"file": "model.onnx", "sha256": "759c3cd2b7fe7e93933ad23c4c9181b7396442a2ed746ec7c1d46192c469c46e", "bytes": 90387606}
+train: 391 answers; 2711 wordings as anchors (0 of them the teachers'); 1810 near-miss questions; held out 57
+train: before: held-out wordings find their answer 75.6%, wording vs near-miss AUC 0.778
+train: pass 1: loss 1.478 | held out: finds its answer 81.3%, AUC 0.865 | 72s
+train: pass 2: loss 0.855 | held out: finds its answer 83.4%, AUC 0.898 | 142s
+train: pass 3: loss 0.703 | held out: finds its answer 83.2%, AUC 0.909 | 213s
+train: pass 4: loss 0.593 | held out: finds its answer 84.0%, AUC 0.913 | 284s
+train: pass 5: loss 0.544 | held out: finds its answer 85.3%, AUC 0.915 | 354s
+train: pass 6: loss 0.510 | held out: finds its answer 85.1%, AUC 0.917 | 425s
+train: site model: {"strict_top1": 0.595, "strict_top3": 0.81, "lenient_top1": 0.518, "lenient_top3": 0.704, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.78, "seconds": 9.6}
+train: minilm-mix50 {"strict_top1": 0.57, "strict_top3": 0.759, "lenient_top1": 0.5, "lenient_top3": 0.708, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.783, "seconds": 9.7} | with the teachers' wordings in the index: {"strict_top1": 0.57, "strict_top3": 0.759, "lenient_top1": 0.5, "lenient_top3": 0.708, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.783, "seconds": 9.6}
+train: minilm-mix100 {"strict_top1": 0.57, "strict_top3": 0.81, "lenient_top1": 0.434, "lenient_top3": 0.701, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.696, "seconds": 9.4} | with the teachers' wordings in the index: {"strict_top1": 0.57, "strict_top3": 0.81, "lenient_top1": 0.434, "lenient_top3": 0.701, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.696, "seconds": 9.7}
+train: done: /tmp/claude-0/-home-claude/26a1fab4-6c74-5648-a9fc-9f33a45fba6c/scratchpad/tr-ho-plain/train.json
