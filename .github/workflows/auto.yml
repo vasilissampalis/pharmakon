@@ -199,6 +199,10 @@ jobs:
             step "the lane writes: the questions people sent, first and alone" python3 -I -u scripts/auto/lane.py run --sent --max 3 --minutes 9
             echo "== keep and publish what was written for them [$(date -u +%H:%M:%S)]" >> "$L"; keep_now
             own "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run
+            # (19 November 2026, decision 40; his words, 21:34: "always producing answers and answer questions instantly"; 21:44: "it has to work by itself") the real questions
+            # people ask on the forums that the site does not answer yet, listed a few at a time, the most viewed first; worded by the editor or by a free model held to ask.py's checks
+            own "the system lists the questions people ask on the forums, before they ask them here" python3 -I scripts/auto/backlog.py run
+            own "how near the free models come to the editor's wordings (once a day)" python3 -I scripts/auto/backlog.py exam --n 12 --daily
             own "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 3
             own "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 4
             own "the lane writes" python3 -I -u scripts/auto/lane.py run --max 3 --minutes 8 --give-way

@@ -1789,6 +1789,30 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     calls for help that look like statements, none. `insight_check.js` holds the cases. It is a rule of words, a floor:
     the model of our own (decision 37) will learn it from many more examples, and is measured against it.
 
+40. **Answers before people ask: the forum backlog, listed by the system itself (19 November 2026, 21:34 to 22:30 Athens).**
+    His words: "we have to make our ai unstoppable always producing answers and answer questions instantly ... in a
+    completely coherent format with the rest of the website" (21:34); "we don't want you to generate the answers always
+    ... we have to teach our ai to work like an llm and do what you do as perfect as possible it has to work by itself
+    perfectly all the time autonomously" (21:44). The keys for two more services could not be made without payment
+    details (he added none), so the lane's room is Google's, Groq's, Cloudflare's and our own machines' (decision 38).
+    **Why this.** An answer is instant only where it was written before the question came. Of 1,077 forum questions
+    harvested on 14 November with each thread's views, 799 had no answer covering them; the gold set says the same from
+    the other side (79 of 400 real questions have a full answer). So the lane must always have real questions to answer.
+    **Built** (`scripts/auto/backlog.py`, every Auto run, after the system's own questions). The forum questions no
+    answer covers, most viewed first; never what the site does not answer (getting, making, taking or hiding a drug,
+    amounts, timing, making an effect stronger, tapering: `NOT_HERE` and `ask.not_answered`), never one already listed or
+    answered (0.80 in meaning). Six a run, and none while 30 of its own wait for the lane; ids `w_f0001` on. The editor
+    (Claude) worded the 144 most viewed of the 505 that are left after the rules and the duplicates (`data/auto/backlog.json`:
+    our wording, six ways people ask, the drugs or the page to start, the words research uses; 32.9 million views in all);
+    every other one is worded by a free model (Gemma 4 31B first, at Google's free tier), shown three of the editor's
+    as examples and held in code to the checks of `ask.py`; where it goes is the site's own filing (`place.py`).
+    **Taught and measured.** `backlog.py exam` (once a day): the free models word questions the editor worded too
+    (never their examples) and the record says how near they come (their question to the editor's in meaning; the
+    research words they share; how many pass the checks): `data/auto/exam/backlog-wording.json`. The editor's wordings
+    are the examples the models learn from in every call, and the measure of how far they have come.
+    **What it does not do.** It writes no answer: the lane writes them, from papers' and official pages' own words,
+    through every gate, as for any listed question. Listing publishes nothing.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
