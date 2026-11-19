@@ -37,11 +37,14 @@ def parse(text):
     for l in text.splitlines():
         m = re.match(r"gold, (\w+)", l)
         if m: split = m.group(1); continue
-        if split and "<- model.json" in l:
+        cut = re.search(r"judge >= ([\d.]+) \(and about the drugs named\)", l)
+        if split and cut:
             g = LINE.search(l)
             if g:
                 b, n, f, p, w, u, nu = map(int, g.groups())
-                out[split] = {"best": b, "of": n, "full": f, "partial": p, "wrong": w, "unanswerable_given_one": u, "unanswerable": nu}
+                row = {"best": b, "of": n, "full": f, "partial": p, "wrong": w, "unanswerable_given_one": u, "unanswerable": nu}
+                out.setdefault("cuts", {}).setdefault(split, {})[cut.group(1)] = row
+                if "<- model.json" in l: out[split] = row
         m = re.search(r"a full answer first ([\d.]+)%, in the first three ([\d.]+)%", l)
         if m: out["order"] = {"full_first": float(m.group(1)), "full_in_three": float(m.group(2))}
         m = re.search(r"near-miss questions given the answer they do not get as best match, judge >= ([\d.]+): (\d+) of (\d+)", l)
@@ -52,19 +55,41 @@ def parse(text):
 INPUT_SHA = []
 
 
+def inputs_sha():
+    """The build's input and every file of wordings an index is made from: a trial is only fair if none of them changes while it runs."""
+    h = hashlib.sha256(INPUT.read_bytes())
+    for f in sorted((ROOT / "data" / "verification" / "insight").glob("*.json")) + [ROOT / "data" / "auto" / "insight" / "teachers.json"]:
+        if f.exists() and (f.name.startswith(("variants_", "nearmiss_")) or f.name == "teachers.json"): h.update(f.name.encode() + f.read_bytes())
+    return h.hexdigest()
+
+
 def run(cmd, env=None):
-    sha = hashlib.sha256(INPUT.read_bytes()).hexdigest()
-    if INPUT_SHA and sha != INPUT_SHA[0]: raise SystemExit("candidate: site/insight/.cache/index-input.json changed during the trial (another build ran): run it again alone")
+    sha = inputs_sha()
+    if INPUT_SHA and sha != INPUT_SHA[0]: raise SystemExit("candidate: the build's input or a file of wordings changed during the trial (another build or a pull ran): run it again alone")
     INPUT_SHA[:1] = [sha]
     r = subprocess.run(cmd, cwd=ROOT, env=dict(os.environ, **(env or {})), capture_output=True, text=True)
     if r.returncode != 0: raise SystemExit(f"candidate: {' '.join(map(str, cmd[:4]))} failed:\n{r.stderr[-2000:]}")
     return r.stdout + r.stderr
 
 
-def verdict(cand, site):
-    a, b = cand.get("all") or {}, site.get("all") or {}
+def rate(x): return x["wrong"] / max(1, x["best"])
+
+
+def dev_cut(cand, site):
+    """A judge trained for another model or index weighs its numbers otherwise, so its cut is chosen afresh, on the dev half alone (the odd-numbered
+    gold questions): of the cuts measured, the one with the most full answers as best match whose best matches are wrong no more often than the
+    site's are on the dev half, and that gives a question nobody can answer one no more often (the fewer wrong, where two give as many full).
+    None where no cut does so."""
+    sd = site.get("dev") or {}; cd = (cand.get("cuts") or {}).get("dev") or {}
+    ok = [(c, r) for c, r in cd.items() if sd and rate(r) <= rate(sd) + 1e-9 and r["unanswerable_given_one"] <= sd["unanswerable_given_one"]]
+    if not ok: return None
+    return max(ok, key=lambda cr: (cr[1]["full"], -cr[1]["wrong"], -float(cr[0])))[0]
+
+
+def verdict(cand, site, cut=None):
+    a = ((cand.get("cuts") or {}).get("all") or {}).get(cut) if cut else cand.get("all")
+    b = site.get("all") or {}
     if not a or not b: return "not measured"
-    rate = lambda x: x["wrong"] / max(1, x["best"])
     ok = rate(a) <= rate(b) + 1e-9 and a["unanswerable_given_one"] <= b["unanswerable_given_one"] and (a["full"] > b["full"] or (a["full"] == b["full"] and a["wrong"] < b["wrong"]))
     return "better" if ok else "not better"
 
@@ -83,6 +108,13 @@ def selftest():
     assert verdict({"all": dict(p["all"], full=26, best=40, wrong=3)}, site) == "not better"          # more wrong, as a share
     assert verdict({"all": dict(p["all"], unanswerable_given_one=1, full=30, best=42)}, site) == "not better"
     assert verdict({"all": dict(p["all"])}, site) == "not better" and verdict({}, site) == "not measured"
+    # the cut chosen on the dev half (19 November 2026: the site's model with the teachers' wordings in its index)
+    R = lambda b, f, p_, w, u: {"best": b, "full": f, "partial": p_, "wrong": w, "unanswerable_given_one": u, "unanswerable": 63}
+    S = {"dev": R(25, 14, 6, 5, 2), "all": R(40, 24, 10, 6, 2)}
+    C = {"cuts": {"dev": {"0.5": R(35, 16, 10, 9, 3), "0.6": R(31, 16, 8, 7, 1), "0.7": R(22, 15, 4, 3, 1), "0.8": R(14, 13, 0, 1, 1)},
+                  "all": {"0.7": R(36, 23, 9, 4, 1)}}}
+    assert dev_cut(C, S) == "0.7" and verdict(C, S, "0.7") == "not better"     # fewer wrong, but one full answer fewer
+    C["cuts"]["all"]["0.7"] = R(37, 25, 8, 4, 1); assert verdict(C, S, "0.7") == "better"
     print("candidate selftest: ok")
 
 
@@ -114,17 +146,21 @@ def main():
         print("candidate: ... and the model on the site", flush=True)
         s_log = run(["python3", "-I", "scripts/insight/build_index.py", str(INPUT), str(tmp / "index-site.json"), "--eval"])
         C, S = parse(c_log), parse(s_log)
+        cut = dev_cut(C, S); v_same = verdict(C, S); v_dev = verdict(C, S, cut) if cut else "not better"
+        if v_dev == "better": cfg["judge"]["best"] = float(cut)          # (where only the site's cut makes it better, that cut stays)
         res = {"_note": "scripts/insight/candidate.py: a trained model on the gold set with the page's own rule (its own judge; model.json's weights, tiers, cut and aspects), beside the model on the site. Nothing shipped.",
                "candidate": {"file": name, "sha256": hashlib.sha256(src.read_bytes()).hexdigest(), "bytes": src.stat().st_size, "gold": C},
-               "site": {"file": json.load(open(MODEL_JSON, encoding="utf-8"))["file"], "gold": S}, "verdict": verdict(C, S),
+               "site": {"file": json.load(open(MODEL_JSON, encoding="utf-8"))["file"], "gold": S},
+               "verdict": "better" if "better" in (v_same, v_dev) else "not better",
+               "verdict_at_the_site_cut": v_same, "cut_chosen_on_dev": cut, "verdict_at_the_dev_cut": v_dev,
                "judge_for_the_candidate": {k: cfg["judge"][k] for k in ("mu", "sd", "w", "b")}, "judge_log": [l for l in jlog.splitlines() if l.startswith(("our own examples", "judge weights", "model "))][:6]}
         json.dump(res, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         json.dump(cfg, open(out.with_suffix(".model.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         (out.with_suffix(".eval.txt")).write_text("== candidate\n" + c_log[-12000:] + "\n== site\n" + s_log[-12000:], encoding="utf-8")
-        for who, g in (("candidate", C), ("site", S)):
-            a = g.get("all") or {}; o = g.get("order") or {}
-            print(f"candidate: {who:9s} best matches {a.get('best')}: full {a.get('full')}, partial {a.get('partial')}, wrong {a.get('wrong')}; unanswerable given one {a.get('unanswerable_given_one')} of {a.get('unanswerable')}; full answer first {o.get('full_first')}%, in three {o.get('full_in_three')}%")
-        print("candidate: verdict:", res["verdict"], "->", out)
+        for who, g, a in (("candidate", C, C.get("all") or {}), (f"cand.@{cut}", C, ((C.get("cuts") or {}).get("all") or {}).get(cut) or {}), ("site", S, S.get("all") or {})):
+            o = g.get("order") or {}
+            print(f"candidate: {who:12s} best matches {a.get('best')}: full {a.get('full')}, partial {a.get('partial')}, wrong {a.get('wrong')}; unanswerable given one {a.get('unanswerable_given_one')} of {a.get('unanswerable')}; full answer first {o.get('full_first')}%, in three {o.get('full_in_three')}%")
+        print(f"candidate: verdict: {res['verdict']} (at the site's cut: {v_same}; at the cut chosen on the dev half, {cut}: {v_dev}) ->", out)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
         if placed and "--keep" not in sys.argv: dst.unlink(missing_ok=True)
