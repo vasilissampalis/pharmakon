@@ -17,38 +17,40 @@
   "methamphetamine"
  ],
  "made": {
-  "on": "2026-11-18",
+  "on": "2026-11-19",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3-flash-preview",
-   "team": "team L",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "44419644787",
-  "read_seconds": 36,
+  "run": "44426312410",
+  "read_by": {
+   "gemini-3.5-flash-lite": 3,
+   "gemini-3.1-flash-lite": 2
+  },
+  "read_seconds": 42,
   "from": {
    "papers": 1,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 196
+  "neurons": 562.0,
+  "seconds": 181
  },
- "status": "waiting",
- "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3-flash-preview): it is worked on again by itself when that reader can be asked",
+ "status": "none",
+ "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
  "gates": {
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "broken at try 1: but: it says “each”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out; written again, then nothing against it",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3-flash-preview could not be asked: gemini: today's calls for gemini-3-flash-preview are used (18 is where we stop); gemini-4-hydrogen could not be asked: gemini: today's calls for gemini-4-hydrogen are used (18 is where we stop); gemini-3.8-flash could not be asked: gemini: today's calls for gemini-3.8-flash are used (18 is where we stop)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.63, but 0.88, how1 0.97, how2 0.53, how3 0.50",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3-flash-preview; it also found that the short answer answers the question and that the But is about that answer",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.68, but 0.71, how1 0.96, how2 0.81",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: NOT met: no further reader read it"
  },
  "sources": [
   {
@@ -93,10 +95,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
+     "verified_on": "2026-11-19",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-18"
+      "checked_on": "2026-11-19"
      }
     },
     "volume": "22",
@@ -114,30 +116,39 @@
    "near": 0.857,
    "money": [],
    "design": {
-    "passage": 4,
-    "where": "Introduction",
-    "quote": "This review aims to revisit the pharmacological properties of methamphetamine along with its neurotoxic, cardiovascular, hepatotoxic and ophthalmologic effects in clinical populations and preclinical models.",
-    "text": "a mechanistic review of methamphetamine toxicity"
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+    "text": "A mechanistic review on toxicity effects of methamphetamine"
    },
    "findings": [
-    {
-     "passage": 4,
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "text": "Polysubstance use is one of the various factors that can modify the risk of methamphetamine toxicity.",
-     "id": "F1",
-     "second_hand": ""
-    },
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-     "text": "The extent of methamphetamine toxicity depends on pharmacological factors including polysubstance use.",
+     "text": "The extent of methamphetamine toxicity depends on pharmacological factors including polysubstance abuse.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "Introduction",
+     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+     "text": "Polysubstance abuse is among the various factors that can modify the risk of methamphetamine toxicity.",
      "id": "F2",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 39,
+     "where": "Toxicity effects › Hepatotoxicity",
+     "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+     "text": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -162,14 +173,14 @@
       [
        2026,
        11,
-       18
+       19
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-18"
+     "verified_on": "2026-11-19"
     }
    },
    "title": "Methamphetamine",
@@ -189,7 +200,7 @@
      "passage": 5,
      "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
      "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-     "text": "Mixing methamphetamine with alcohol can have serious consequences because the effects interact unpredictably, which can increase the risk of harm or death.",
+     "text": "Mixing methamphetamine with alcohol can have serious consequences because the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
      "id": "F6",
      "second_hand": ""
     },
@@ -197,8 +208,16 @@
      "passage": 5,
      "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
      "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-     "text": "New synthetic opioids and heroin are considered dangerous combinations with methamphetamine.",
+     "text": "Dangerous combinations include new synthetic opioids and heroin.",
      "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 11,
+     "where": "Mixing methamphetamine with other drugs / What is methamphetamine cut with?",
+     "quote": "It’s not unusual for drugs to have things added to them to increase the weight and the dealer’s profits. They can be cut with other amphetamines (like speed, caffeine, ephedrine, sugars (like glucose), starch powder, laxatives, talcum powder, paracetamol and other drugs with some similar effects.",
+     "text": "Drugs can have things added to them to increase weight and dealer profits, and can be cut with other amphetamines, caffeine, ephedrine, sugars, starch powder, laxatives, talcum powder, paracetamol, and other drugs with similar effects.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
@@ -231,14 +250,14 @@
       [
        2026,
        11,
-       18
+       19
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-18"
+     "verified_on": "2026-11-19"
     },
     "publisher": "DailyMed",
     "genre": "Drug label"
@@ -261,7 +280,7 @@
      "where": "Warnings and precautions",
      "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
      "text": "Serotonin syndrome, which is a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
-     "id": "F8",
+     "id": "F9",
      "second_hand": ""
     }
    ],
@@ -272,11 +291,10 @@
  "parts": [
   {
    "part": "short",
-   "text": "No. FRANK says mixing methamphetamine with alcohol or heroin can be dangerous. The US label says serotonin syndrome may occur with other drugs.",
+   "text": "No. FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death. The US label says serotonin syndrome may occur with other drugs.",
    "uses": [
     "F6",
-    "F7",
-    "F8"
+    "F9"
    ],
    "rests_on": [
     {
@@ -287,14 +305,7 @@
      "sha": "910aa7002e05b72a"
     },
     {
-     "label": "F7",
-     "ref": "frank_methamphetamine",
-     "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-     "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-     "sha": "910aa7002e05b72a"
-    },
-    {
-     "label": "F8",
+     "label": "F9",
      "ref": "label_methamphetamine-hydrochloride",
      "where": "Warnings and precautions",
      "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
@@ -304,13 +315,13 @@
   },
   {
    "part": "but",
-   "text": "The extent of toxicity depends on factors like route of administration, dose, and polysubstance use.",
+   "text": "A 2025 review says the extent of toxicity depends on factors including polysubstance use.",
    "uses": [
-    "F2"
+    "F1"
    ],
    "rests_on": [
     {
-     "label": "F2",
+     "label": "F1",
      "ref": "ramli_2025",
      "where": "Abstract",
      "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
@@ -320,13 +331,13 @@
   },
   {
    "part": "how1",
-   "text": "The US label for methamphetamine says serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used with other drugs.",
+   "text": "The US label for methamphetamine says serotonin syndrome, a potentially life-threatening reaction, may occur when used with other drugs affecting serotonin.",
    "uses": [
-    "F8"
+    "F9"
    ],
    "rests_on": [
     {
-     "label": "F8",
+     "label": "F9",
      "ref": "label_methamphetamine-hydrochloride",
      "where": "Warnings and precautions",
      "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
@@ -338,10 +349,9 @@
   },
   {
    "part": "how2",
-   "text": "FRANK says mixing methamphetamine with alcohol can have serious consequences because effects interact unpredictably. It lists new synthetic opioids and heroin as dangerous combinations.",
+   "text": "FRANK says mixing methamphetamine with alcohol can have serious consequences because their effects interact unpredictably, increasing the risk of harm or death.",
    "uses": [
-    "F6",
-    "F7"
+    "F6"
    ],
    "rests_on": [
     {
@@ -350,43 +360,10 @@
      "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
      "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
      "sha": "910aa7002e05b72a"
-    },
-    {
-     "label": "F7",
-     "ref": "frank_methamphetamine",
-     "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-     "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-     "sha": "910aa7002e05b72a"
     }
    ],
    "quote": "Mixing methamphetamine with alcohol can have serious consequences - as the stimulant effects of methamphetamine",
    "quote_ref": "frank_methamphetamine"
-  },
-  {
-   "part": "how3",
-   "text": "A 2025 review of clinical and preclinical models says polysubstance use is one factor that can modify the risk of methamphetamine toxicity.",
-   "uses": [
-    "DA",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "This review aims to revisit the pharmacological properties of methamphetamine along with its neurotoxic, cardiovascular, hepatotoxic and ophthalmologic effects in clinical populations and preclinical models.",
-     "sha": "1201e7e17351d730"
-    },
-    {
-     "label": "F1",
-     "ref": "ramli_2025",
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "sha": "1201e7e17351d730"
-    }
-   ],
-   "quote": "cardiovascular, hepatotoxic and ophthalmologic effects in clinical populations and preclinical models",
-   "quote_ref": "ramli_2025"
   }
  ],
  "complete": true,
@@ -423,6 +400,14 @@
    "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.8-flash): it is worked on again by itself when that reader can be asked",
    "short": "No. FRANK says mixing methamphetamine with alcohol or heroin can be dangerous. The US label says it may cause a life-threatening reaction with other drugs.",
    "complete": true
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "waiting",
+   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3-flash-preview): it is worked on again by itself when that reader can be asked",
+   "short": "No. FRANK says mixing methamphetamine with alcohol or heroin can be dangerous. The US label says serotonin syndrome may occur with other drugs.",
+   "complete": true
   }
  ],
  "looked": [
@@ -432,14 +417,7 @@
    "kind": "review",
    "at": "10.7150/ijms.99159",
    "kept": 2,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The exact mechanisms of how methamphetamine causes liver damage are not yet clear.",
-     "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The Main Molecular Mechanisms Underlying Methamphetamine- Induced Neurotoxicity and Implications for Pharmacological Treatment",
@@ -469,7 +447,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.talktofrank.com/drug/methamphetamine",
-   "kept": 2,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -484,38 +462,47 @@
  "plan": {
   "short": [
    "F6",
-   "F7",
-   "F8",
-   "F1"
+   "F9"
   ],
   "direct": "No",
   "but": [
-   "F2"
+   "F1"
   ],
   "how": [
    [
-    "F8"
+    "F9"
    ],
    [
-    "F6",
-    "F7"
-   ],
-   [
-    "DA",
-    "F1",
-    "F2"
+    "F6"
    ]
   ],
   "unanswered": ""
  },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6847,
+   "but": 0.7064,
+   "how1": 0.9624,
+   "how2": 0.8095
+  },
+  "scores_quotes_alone": {
+   "short": 0.6456,
+   "but": 0.8347,
+   "how1": 0.6322,
+   "how2": 0.7716
+  }
+ },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "No. FRANK says mixing methamphetamine with alcohol or heroin can be dangerous. The US label says serotonin syndrome may occur with other drugs.",
+     "text": "No. FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death. The US label says serotonin syndrome may occur with other drugs.",
      "rests_on": [
       {
        "label": "F6",
@@ -525,35 +512,21 @@
        "sha": "910aa7002e05b72a"
       },
       {
-       "label": "F7",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F8",
+       "label": "F9",
        "ref": "label_methamphetamine-hydrochloride",
        "where": "Warnings and precautions",
        "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
        "sha": "7dc7b2b59a688173"
-      },
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Introduction",
-       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-       "sha": "1201e7e17351d730"
       }
      ],
      "ok": true
     },
     {
      "part": "but",
-     "text": "The extent of toxicity depends on factors like dose and route of administration, which vary for each person.",
+     "text": "A 2025 review says the extent of toxicity depends on factors like polysubstance use, but does not specify how often or under what conditions this happens.",
      "rests_on": [
       {
-       "label": "F2",
+       "label": "F1",
        "ref": "ramli_2025",
        "where": "Abstract",
        "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
@@ -561,15 +534,15 @@
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says “each”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+     "by": "the second reader",
+     "said": "The sentence adds that the review does not specify frequency or conditions, which is not explicitly stated in the passage."
     },
     {
      "part": "how1",
-     "text": "The US label for methamphetamine says serotonin syndrome, a potentially life-threatening reaction, may occur when used with other drugs affecting serotonin.",
+     "text": "The US label for methamphetamine says serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used with other drugs affecting serotonin.",
      "rests_on": [
       {
-       "label": "F8",
+       "label": "F9",
        "ref": "label_methamphetamine-hydrochloride",
        "where": "Warnings and precautions",
        "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
@@ -580,7 +553,7 @@
     },
     {
      "part": "how2",
-     "text": "FRANK says mixing methamphetamine with alcohol can have serious consequences because effects interact unpredictably. It lists new synthetic opioids and heroin as dangerous combinations.",
+     "text": "FRANK says mixing methamphetamine with alcohol can have serious consequences because their effects interact unpredictably, increasing the risk of harm or death.",
      "rests_on": [
       {
        "label": "F6",
@@ -588,41 +561,6 @@
        "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
        "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
        "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F7",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Dangerous combinations: + New Synthetic opioids; + Heroin",
-       "sha": "910aa7002e05b72a"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2025 review of clinical and preclinical models says polysubstance use is one factor that can modify the risk of methamphetamine toxicity.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "ramli_2025",
-       "where": "Introduction",
-       "quote": "This review aims to revisit the pharmacological properties of methamphetamine along with its neurotoxic, cardiovascular, hepatotoxic and ophthalmologic effects in clinical populations and preclinical models.",
-       "sha": "1201e7e17351d730"
-      },
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Introduction",
-       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-       "sha": "1201e7e17351d730"
-      },
-      {
-       "label": "F2",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
       }
      ],
      "ok": true
@@ -630,38 +568,11 @@
    ]
   }
  ],
- "panel": {
-  "gemini:gemini-3-flash-preview": "could not be asked: gemini: today's calls for gemini-3-flash-preview are used (18 is where we stop)",
-  "gemini:gemini-4-hydrogen": "could not be asked: gemini: today's calls for gemini-4-hydrogen are used (18 is where we stop)",
-  "gemini:gemini-3.8-flash": "could not be asked: gemini: today's calls for gemini-3.8-flash are used (18 is where we stop)"
- },
- "panel_gap": [
-  "gemini-3-flash-preview"
- ],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.6299,
-   "but": 0.8847,
-   "how1": 0.9686,
-   "how2": 0.5346,
-   "how3": 0.4954
-  },
-  "scores_quotes_alone": {
-   "short": 0.4655,
-   "but": 0.9302,
-   "how1": 0.6299,
-   "how2": 0.4201,
-   "how3": 0.3064
-  }
- },
+ "stakes": "dying",
  "with_checked": {
   "differs": [],
   "same": []
  },
- "for": "again",
- "soft": "a further reader could not be asked",
  "place": {
   "home": "methamphetamine",
   "also": [
