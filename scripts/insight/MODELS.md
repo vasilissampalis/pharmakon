@@ -294,3 +294,37 @@ build; `python3 -I scripts/insight/judge2.py site/insight/.cache/index-input.jso
 site/insight/.cache/index-input.json site/dist/data/insight.json` and check the tiers still sit where the counts turn;
 build; `build_index.py --eval`, `node scripts/insight/parity.js`, `node scripts/ux/insight_check.js`. A new model is
 published only if its best match on the gold set is wrong no more often than the one it replaces.
+
+## Teachers and a pupil: the model learns by itself (decision 41, 19 November 2026)
+
+The senior author, 21:44: "we have to teach our ai to work like an llm and do what you do as perfect as possible it has to
+work by itself perfectly all the time autonomously". A small encoder learns a language from examples, so the examples are
+made every day and the model is taught again every week, by itself, and measured each time against the model on the site.
+
+**The teachers** (`teachers.py`). Round 0 is the editor's: up to eight ways a person might type each answer's question,
+for all 391 answers (`data/verification/insight/variants_teacher.json`, 3,001 kept), written from the answers' own
+questions without the gold set or any visitor's words in view; a wording that shares 70% of its words with a gold question
+was left out (11), and so was a wording the answer already had (116). From then on, in every Auto run, a free model
+(Gemma 4 31B at Google's free tier first) writes ten more for the answers that have the fewest (a new answer first),
+shown the answer's question, the ways it is already asked and three answers' worth of the editor's examples; a model of
+another family (gpt-oss-120b on Groq first) keeps only those that ask exactly the same question; code keeps the drug,
+drops copies of any answer's wordings and anything near a gold question; sixteen per answer at most
+(`data/auto/insight/teachers.json`, each with its writer, its checker and its day).
+
+**The pupil** (`train.py`, `.github/workflows/insight.yml`). As `finetune.py`, with the answers as the site has them now
+(the machine lane's included), the teachers' wordings added (`--teacher`), and a choice of base among the open encoders
+that read with the page's own vocabulary and pooling (all-MiniLM-L6-v2; gte-small, MIT). Each pass is checked on the
+readers' wordings of the 15% of the answers it never saw (never the teachers': every model is tested on the same
+questions); `--all` trains on every answer. Each share of the trained weights asked for (`--mix 0.5,1.0`) is written as
+the page's ONNX file and as int8 (checked against the trained model: cosine 0.98 or more), and measured on the gold set as
+`encoders.py` measures (the page's first look), with the index as it is and with the teachers' wordings added to it.
+The GitHub workflow runs up to eight such trainings at once, one machine each, every Sunday and on request; its records
+are in `data/verification/insight/train/`, its models among the release files (`own-models`), each with its SHA-256.
+
+**The measured path in one go** (`candidate.py MODEL.onnx`): the candidate's index (every text embedded again by the
+page's own runtime), its own judge (`judge2.py --six --save`), and the gold set ranked with the page's rule for the
+candidate and for the model on the site, side by side; "better" only where its best match is wrong no more often, a
+question nobody can answer gets one no more often, and more questions get their full answer as best match (or as many,
+with fewer wrong). The real `model.json` is not touched (`PK_INSIGHT_MODEL_JSON`). A model that is better is shipped by
+the editor with its NOTICE, the tiers swept for it (`sweep_related.py`), a build and every check.
+
