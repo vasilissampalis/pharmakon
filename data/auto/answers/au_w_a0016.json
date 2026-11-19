@@ -17,35 +17,36 @@
   "lsd"
  ],
  "made": {
-  "on": "2026-11-18",
+  "on": "2026-11-19",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.8-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "reader_first": "gemini:gemma-4-31b-it",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "44400791091",
+  "run": "44434987433",
+  "read_by": {
+   "gemini-3.5-flash-lite": 9,
+   "gemini-3.1-flash-lite": 7
+  },
+  "read_seconds": 91,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 1
   },
-  "neurons": 0.0
+  "neurons": 0.0,
+  "seconds": 97
  },
  "status": "none",
  "why": "no draft passed: the form was wrong: but names no item it rests on",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "1 findings kept from 1 sources (0 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "1 findings kept from 1 sources (0 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9033) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there. try 2: but names no item it rests on (how the reply ended: length; reasoned 0 characters, wrote 9033) try 3: but names no item it rests on (how the reply ended: length; reasoned 0 characters, wrote 9033)"
+  "writer": "try 1: but names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 36) try 2: but names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 36) try 3: but names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 36)"
  },
  "sources": [
   {
@@ -70,14 +71,14 @@
       [
        2026,
        11,
-       18
+       19
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-18"
+     "verified_on": "2026-11-19"
     }
    },
    "title": "LSD",
@@ -97,7 +98,7 @@
      "passage": 6,
      "where": "Mixing LSD with other drugs / How does it make you feel?",
      "quote": "LSD feeds off your imagination so every person’s experience is unique.",
-     "text": "LSD feeds off your imagination, making every person’s experience unique.",
+     "text": "Every person's experience is unique because LSD feeds off your imagination.",
      "id": "F1",
      "second_hand": ""
     }
@@ -111,7 +112,16 @@
  "missing": "",
  "wanted": [],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: but names no item it rests on",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Clinical Research on Lysergic Acid Diethylamide (LSD) in Psychiatry and Neuroscience",
@@ -130,9 +140,9 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "There are no studies available in the dose range from 20 to 50 μg, which results in an overestimation of the curves slope at their onset.",
-     "quote": "there are no studies available in the dose range from 20 to 50 μg, resulting in an overestimation of the curves slope at their onset.",
-     "why": "it holds an amount or a time between uses"
+     "text": "The study notes that non-pharmacological factors contribute to significant variability in the subjective experiences reported by participants.",
+     "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -190,7 +200,14 @@
    "kind": "review",
    "at": "10.1177/02698811251412012",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A systematic review of 32 placebo-controlled studies on the effects of LSD, DMT, and psilocybin on cognitive and psychological functions in healthy volunteers.",
+     "quote": "We carried out a systematic review of modern-era (1990–2025) placebo-controlled studies assessing the acute and post-acute effects of lysergic acid diethylamide, dimethyltryptamine and psilocybin on c",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "Synergistic, multi-level understanding of psychedelics: three systematic reviews and meta-analyses of their pharmacology, neuroimaging and phenomenology",
