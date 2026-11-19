@@ -457,8 +457,9 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const off = await p.evaluate(() => ({ stored: localStorage.getItem("pk-count"), state: document.getElementById("count-state").textContent, checked: document.getElementById("count-switch").checked }));
     ok("switching it off is kept on the device", off.stored === "0" && off.state === "Off on this device." && !off.checked, JSON.stringify(off));
     const nBefore = reqs.filter(x => /api\/want/.test(x)).length;
-    await go(p, "#home", 400); await typeW(p, "what is a k hole"); const c2 = await card(p); await p.waitForTimeout(3000);
-    ok("with counting switched off: the card still helps, says nothing about counting, and nothing is sent", c2 && !c2.count && !c2.note && c2.q === "What is a K-hole?" && reqs.filter(x => /api\/want/.test(x)).length === nBefore, JSON.stringify(c2));
+    // (a listed question about dying, which waits for a person and so stays listed: "What is a K-hole?" was answered by the lane on 19 November)
+    await go(p, "#home", 400); await typeW(p, "how does an opioid overdose kill you"); const c2 = await card(p); await p.waitForTimeout(3000);
+    ok("with counting switched off: the card still helps, says nothing about counting, and nothing is sent", c2 && !c2.count && !c2.note && c2.q === "How does an opioid overdose actually kill you?" && reqs.filter(x => /api\/want/.test(x)).length === nBefore, JSON.stringify(c2));
     await p.context().close();
     // a browser that asks sites not to track (Global Privacy Control): nothing is counted, and the switch says why
     const g = await browser.newContext({ viewport: { width: 390, height: 844 } }); await g.addInitScript(() => { Object.defineProperty(Navigator.prototype, "globalPrivacyControl", { get: () => true, configurable: true }); });
