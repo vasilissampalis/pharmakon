@@ -34,7 +34,8 @@ INPUT = ROOT / "site" / "insight" / ".cache" / "index-input.json"
 TARGET, A_RUN, ASK = 16, 8, 10
 NEAR_TARGET, NEAR_ASK = 6, 6          # near-miss questions per answer: questions that sound close and that the answer does not answer
 ROOM = {"groq": 100000, "cf": 4000, "google": 200}   # what is left of each free allowance today before the teachers stop asking it: the lane's room comes first
-WRITERS = ["gemini:gemma-4-31b-it", "groq:openai/gpt-oss-120b", "gemini:gemini-3.5-flash-lite", "@cf/meta/llama-4-scout-17b-16e-instruct"]
+WRITERS = ["gemini:gemma-4-26b-a4b-it", "gemini:gemma-4-31b-it", "groq:openai/gpt-oss-120b", "@cf/meta/llama-4-scout-17b-16e-instruct"]   # (the first a quick one: 4B at work of 26B)
+ROOM_TOKENS = 3000   # Google's Gemma thinks before it writes: with 700 tokens of room its thought filled them and it wrote nothing (the Auto run of 19 November, 20:31 UTC)
 CHECKERS = ["groq:openai/gpt-oss-120b", "gemini:gemini-3.5-flash-lite", "@cf/meta/llama-4-scout-17b-16e-instruct", "gemini:gemma-4-31b-it"]
 TODAY = datetime.date.today().isoformat()
 norm = lambda t: re.sub(r"[^a-z0-9]+", " ", (t or "").lower()).strip()
@@ -158,7 +159,24 @@ def keep(ways, a, taken, G, names):
     return kept, out
 
 
-def ask_model(models, messages, chat, avoid=None, tokens=700):
+def listed(raw, key):
+    """The list of strings a model gave under key: {"key": [...]} as asked, or a bare JSON list, or numbered or bulleted lines."""
+    import llm
+    d = llm.as_json(raw) or {}
+    got = d.get(key) if isinstance(d, dict) else None
+    if isinstance(got, list): return [w for w in got if isinstance(w, str)]
+    text = raw or ""
+    a, b = text.find("["), text.rfind("]")
+    if 0 <= a < b:
+        try:
+            v = json.loads(text[a:b + 1])
+            if isinstance(v, list) and all(isinstance(w, str) for w in v): return v
+        except ValueError: pass
+    lines = [re.sub(r"^\s*(?:[-*\u2022]|\d+[.)])\s*", "", l).strip().strip("\"',") for l in text.splitlines()]
+    return [l for l in lines if l and not l.startswith(("{", "}", "[", "]", "JSON", "QUESTION", "Here")) and len(l.split()) >= 2][:ASK + 4]
+
+
+def ask_model(models, messages, chat, avoid=None, tokens=ROOM_TOKENS):
     """(answer, model) from the first model with a key and room, not of the family to avoid; (None, why) otherwise."""
     import llm
     why = "no model with a key and room"
@@ -217,7 +235,8 @@ def run(limit=A_RUN, chat=None, A=None, names=None, save=True, show=False, minut
             raw, wm = ask_model(WRITERS, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt(target, ex)}], chat)
             if raw is None:
                 print("teachers: stopped for now:", wm); break
-            got = (llm.as_json(raw) or {}).get("ways") or []
+            got = listed(raw, "ways")
+            if not got: print(f"teachers: {a['id']}: nothing could be read in what {wm} wrote: {re.sub(chr(10), ' ', (raw or '')[:160])!r}")
             kept, left = keep([w for w in got if isinstance(w, str)][:ASK + 4], a, taken, G, names)
             space = TARGET - len(T.get(a["id"], []))
             cm = None
@@ -236,7 +255,7 @@ def run(limit=A_RUN, chat=None, A=None, names=None, save=True, show=False, minut
             raw, wm = ask_model(WRITERS, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": near_prompt(target, ex)}], chat)
             if raw is None: print("teachers: stopped for now:", wm); stopped = True
             else:
-                got = [re.sub(r"\s+", " ", str(w or "")).strip() for w in ((llm.as_json(raw) or {}).get("near") or []) if isinstance(w, str)][:NEAR_ASK + 2]
+                got = [re.sub(r"\s+", " ", str(w or "")).strip() for w in listed(raw, "near")][:NEAR_ASK + 2]
                 cand = []
                 for w in got:
                     n_ = norm(w); k = len(n_.split())
@@ -287,6 +306,8 @@ def selftest():
     saved = json.load(open(AUTO)); assert saved["variants"]["x_meth"][0]["by"] == WRITERS[0] and family(saved["variants"]["x_meth"][0]["ok"]) != family(WRITERS[0])
     assert all(family(c) != "google" for c in calls[1::2]), calls
     assert family("gemini:gemma-4-31b-it") == family("gemini:gemini-3.5-flash-lite") == "google" and family("groq:openai/gpt-oss-120b") == "gpt-oss"
+    assert listed('{"ways": ["a b", "c d"]}', "ways") == ["a b", "c d"] and listed('Sure: ["is weed bad", "weed risks"]', "ways") == ["is weed bad", "weed risks"]
+    assert listed("1. is weed bad for you\n2) weed risks\n- pot dangers", "ways") == ["is weed bad for you", "weed risks", "pot dangers"] and listed("", "ways") == []
     assert near_gold("what is serotonin syndrome", [words("What is serotonin syndrome?")]) and not near_gold("weed and memory", [words("what is serotonin syndrome")])
     # a second run: the teachers' wordings now count, and the same answers are not worded again first
     T = teachers_of(load(SEED, {}), load(AUTO, {}))

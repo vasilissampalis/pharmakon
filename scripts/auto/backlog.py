@@ -94,7 +94,7 @@ def word(lead, chat, examples, R, names, drugs, P=None):
     why = "no model with a key and room"
     for m in WORDERS:
         if not llm.has(m): continue
-        try: raw = chat(m, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt(lead, examples)}], 500)
+        try: raw = chat(m, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt(lead, examples)}], 3000)   # (Gemma thinks first: with 500 tokens it wrote nothing)
         except llm.Budget as e: why = f"{m}: {e}"; continue
         except llm.Unavailable as e: why = f"{m}: {e}"; continue
         fields, why = ask.accept(llm.as_json(raw), lead, drugs, R, names)
@@ -171,7 +171,7 @@ def exam(n=20, chat=None, enc=None, R=None, names=None):
     for s in held:
         fields, model, why = word(s["src"], chat, shown, R, names, s.get("drugs") or [])
         if not fields: rows.append({"src": s["src"], "passed": False, "why": why[:200]}); continue
-        near = float(enc([fields["q"]]) @ enc([s["q"]]).T)
+        near = float((enc([fields["q"]]) @ enc([s["q"]]).T)[0, 0])
         a, b = words(fields["terms"]), words(s["terms"]); share = len(a & b) / max(1, len(a | b))
         rows.append({"src": s["src"], "passed": True, "model": model, "question": fields["q"], "editor": s["q"], "near": round(near, 3), "terms_shared": round(share, 3), "ways": len(fields["ways"])})
     ok = [r for r in rows if r["passed"]]
