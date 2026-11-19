@@ -3,9 +3,27 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 == the finder's own check
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
-lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history; sources read at once give the same answer from the same sources in the same order; a source not read in time is written down and the answer is written from the rest; past its clock a question is put down for the next run)
+Traceback (most recent call last):
+  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/lane.py", line 3232, in <module>
+    if "--selftest" in sys.argv: selftest()
+                                 ~~~~~~~~^^
+  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/lane.py", line 2465, in selftest
+    _reserve_selftest()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/lane.py", line 2458, in _reserve_selftest
+    assert kept_for_sent({"id": "w_1"}) and kept_for_sent({"id": "w_g1", "from": "the system's own question"}) and not kept_for_sent({"id": "w_a1", "from": "a question visitors sent"}) and not kept_for_sent({"id": "t_1", "trial": True})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+!! this step failed (1)
 == write
-lane: sources are read at once, by gemini-3.5-flash-lite, gemini-3.1-flash-lite, gpt-oss-20b, gemma-4-31b-it beside the team's own reader
+lane: sources are read at once, by gemini-3.5-flash-lite, gemini-3.1-flash-lite, llama-4-scout-17b-16e-instruct, gpt-oss-20b, gemma-4-31b-it beside the team's own reader
 lane: our own checker is pharmakon-check-0 (from lytang/MiniCheck-RoBERTa-Large), at least 0.05
-lane: no team of models has room left today (Cloudflare: 47 neurons left): it goes on tomorrow
-lane: 0 questions worked on: published 0, waiting 0, none 0; today 8953 of 9000 neurons used
+lane: team I: gemini:gemini-3.5-flash-lite reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0016 'Does LSD cause shared hallucinations among users?': none (no source that can be read gave a finding for this question); 0 papers, 0 official pages, 0 summaries; 0.0 neurons; 98 seconds, 98 of them reading (gemini-3.5-flash-lite 9, gemini-3.1-flash-lite 7, gpt-oss-20b 3)
+lane: team H: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0018 'Are DMT entities a real phenomenon?': published (passed every gate); 1 papers, 0 official pages, 0 summaries; 166.2 neurons; 169 seconds, 100 of them reading (gemini-3.5-flash-lite 2, gemini-3.1-flash-lite 1)
+lane: team C: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0020 'What is the favourite drug among people?': none (not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)); 1 papers, 0 official pages, 0 summaries; 74.3 neurons; 100 seconds, 100 of them reading (gemini-3.5-flash-lite 7, gemini-3.1-flash-lite 3, llama-4-scout-17b-16e-instruct 1)
+lane: team H: @cf/meta/llama-4-scout-17b-16e-instruct reads, groq:qwen/qwen3.8-27b writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0033 'What is a K-hole?': published (passed every gate); 1 papers, 2 official pages, 0 summaries; 78.6 neurons; 208 seconds, 80 of them reading (gemini-3.5-flash-lite 4, gemini-3.1-flash-lite 1, llama-4-scout-17b-16e-instruct 1)
+lane: 4 questions worked on: published 2, waiting 0, none 2; today 8310 of 9000 neurons used

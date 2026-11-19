@@ -19,35 +19,64 @@
  "made": {
   "on": "2026-11-19",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44443346996",
-  "read_seconds": 100,
+  "run": "44608341137",
+  "read_by": {
+   "gemini-3.5-flash-lite": 9,
+   "gemini-3.1-flash-lite": 7,
+   "gpt-oss-20b": 3
+  },
+  "read_seconds": 98,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 98
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
  "complete": false,
  "missing": "",
- "wanted": [],
+ "wanted": [
+  {
+   "doi": "10.1177/2045125316640440",
+   "apa": "Das, S., Barnwal, P., Ramasamy, A., Sen, S., & Mondal, S. (2016). Lysergic acid diethylamide: A drug of ‘use’? Therapeutic Advances in Psychopharmacology, 6(3), 214–228. https://doi.org/10.1177/2045125316640440",
+   "near": 0.646,
+   "why": "a review or meta-analysis in people; nearness to the question 0.65; cited 30 times; its full text is not open",
+   "file": "das_2016_2045125316640440.pdf"
+  },
+  {
+   "doi": "10.1177/28314425261455416",
+   "apa": "Zaher, I., & Richard, J. K. (2026). What about psycholytic therapy? A historical revisiting of psychedelics assisting psychotherapy. Psychedelic Medicine, Article 28314425261455416. https://doi.org/10.1177/28314425261455416",
+   "near": 0.572,
+   "why": "a review or meta-analysis in people; nearness to the question 0.57; cited 0 times; its full text is not open",
+   "file": "zaher_2026_28314425261455416.pdf"
+  },
+  {
+   "doi": "10.1016/bs.apha.2021.10.003",
+   "apa": "Elsevier. (2022). Human behavioral pharmacology of psychedelics. Advances in Pharmacology, 105–132. https://doi.org/10.1016/bs.apha.2021.10.003",
+   "near": 0.543,
+   "why": "a review or meta-analysis; nearness to the question 0.54; cited 7 times; its full text is not open",
+   "file": "anon_2022_bs_apha_2021_10_003.pdf"
+  }
+ ],
  "person": null,
  "history": [
   {
@@ -73,6 +102,14 @@
    "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -90,6 +127,29 @@
    "kind": "review",
    "at": "10.1038/s41386-023-01588-2",
    "kept": 0,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The study notes that non-pharmacological factors contribute to significant variability in the subjective experiences reported by participants.",
+     "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Alterations of consciousness and mystical-type experiences after acute LSD in humans",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1007/s00213-016-4453-0",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "LSD Acutely Impairs Fear Recognition and Enhances Emotional Empathy and Sociality",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1038/npp.2016.82",
+   "kept": 0,
    "thrown": []
   },
   {
@@ -97,6 +157,30 @@
    "read": "full",
    "kind": "review",
    "at": "10.1002/brb3.71187",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Role of the 5-HT2A Receptor in Acute Effects of LSD on Empathy and Circulating Oxytocin",
+   "read": "full",
+   "kind": "other",
+   "at": "10.3389/fphar.2021.711255",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "The effects of Lysergic Acid Diethylamide (LSD) on the Positive Valence Systems: A Research Domain Criteria (RDoC)-Informed Systematic Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s40263-023-01044-1",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Effects of classical psychedelics on implicit and explicit emotional empathy and cognitive empathy: a meta-analysis of MET task",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1038/s41598-024-74810-w",
    "kept": 0,
    "thrown": []
   },
@@ -109,43 +193,93 @@
    "thrown": []
   },
   {
-   "title": "What fMRI studies say about the nature of the psychedelic effect: a scoping review",
+   "title": "Effects of LSD, DMT and psilocybin on cognitive and psychological functions: A systematic review of the literature",
    "read": "full",
    "kind": "review",
-   "at": "10.3389/fnins.2025.1606798",
+   "at": "10.1177/02698811251412012",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "The effects of Lysergic Acid Diethylamide (LSD) on the Positive Valence Systems: A Research Domain Criteria (RDoC)-Informed Systematic Review",
+   "title": "Synergistic, multi-level understanding of psychedelics: three systematic reviews and meta-analyses of their pharmacology, neuroimaging and phenomenology",
    "read": "full",
    "kind": "review",
-   "at": "10.1007/s40263-023-01044-1",
+   "at": "10.1038/s41398-024-03187-1",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Psychedelic-Assisted Therapy: Potential Benefits and Challenges in Mental Health Treatment",
+   "title": "Lysergic Acid Diethylamide (LSD) and the Heart: Exploring the Potential Impacts of LSD on Cardiovascular Function",
    "read": "full",
    "kind": "review",
-   "at": "10.12659/msm.948302",
+   "at": "10.7759/cureus.87356",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Self-medication with psychedelics: a scoping review and narrative synthesis of review-level evidence",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1016/j.rcsop.2026.100709",
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/lsd",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/lsd.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/lsd",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/lsd/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Lysergic acid diethylamide: a drug of 'use'?",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1177/2045125316640440",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "What About Psycholytic Therapy? A Historical Revisiting of Psychedelics Assisting Psychotherapy",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1177/28314425261455416",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "historical review of psycholytic therapy studies",
+     "quote": "It provides an overview of treatment protocols, procedures, and reported outcomes.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Human behavioral pharmacology of psychedelics",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/bs.apha.2021.10.003",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
  "place": {
   "home": "lsd",
   "also": [],

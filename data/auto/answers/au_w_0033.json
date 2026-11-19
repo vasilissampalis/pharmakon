@@ -19,123 +19,44 @@
  "made": {
   "on": "2026-11-19",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "team": "team H",
+   "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44502331044",
+  "run": "44608341137",
   "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "gemini-3.1-flash-lite": 1
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 1,
+   "llama-4-scout-17b-16e-instruct": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 80,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 325
+  "neurons": 78.6,
+  "seconds": 208
  },
  "status": "published",
  "why": "passed every gate",
  "gates": {
-  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.55, but 0.47, how1 0.14, how2 0.11",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; it also found that the short answer answers the question and that the But is about that answer",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3.6-flash could not be asked: gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try; gemini-3-flash-preview accepted 4 of 4",
+  "read": "7 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.93, but 0.98, how1 0.03, how2 0.02, how3 0.95, how4 0.42",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 6; gemini-3.6-flash accepted 4 of 6",
   "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them; 1 sentence(s) say what a checked claim says"
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "quintero_2025",
-    "type": "article-journal",
-    "title": "Ketamine in clinical practice: Transitioning from anesthetic agent to psychiatric therapeutic",
-    "author": [
-     {
-      "family": "Quintero",
-      "given": "Jose Manuel"
-     },
-     {
-      "family": "Bustos",
-      "given": "Rosa Helena"
-     },
-     {
-      "family": "Lechtig-Wassermann",
-      "given": "Sharon"
-     },
-     {
-      "family": "Beltran",
-      "given": "Stephania"
-     },
-     {
-      "family": "Zarate",
-      "given": "Carlos A.",
-      "suffix": "Jr."
-     }
-    ],
-    "container-title": "CNS Spectrums",
-    "issued": {
-     "date-parts": [
-      [
-       2025
-      ]
-     ]
-    },
-    "DOI": "10.1017/s1092852925100333",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-19"
-     }
-    },
-    "volume": "30",
-    "issue": "1",
-    "number": "e51",
-    "PMCID": "PMC13064737"
-   },
-   "doi": "10.1017/s1092852925100333",
-   "pmcid": "PMC13064737",
-   "title": "Ketamine in clinical practice: transitioning from anesthetic agent to psychiatric therapeutic",
-   "year": 2025,
-   "journal": "CNS spectrums",
-   "kind": "review",
-   "people": false,
-   "near": 0.671,
-   "money": [
-    "This manuscript was funded by grants from the Universidad de La Sabana MED-296-2020.",
-    "Dr. Zarate is listed as a coinventor on a patent for the use of ketamine in major depression and suicidal ideation; as a coinventor on a patent for the use of (2R,6R)-hydroxynorketamine, (S)-dehydronorketamine, and other stereoisomeric dehydroxylated and hydroxylated metabolites of (R,S)-ketamine in the treatment of depression and neuropathic pain; and as a coinventor on a patent application for the use of (2R,6R)-hydroxynorketamine and (2S,6S)-hydroxynorketamine in the treatment of depression, anxiety, anhedonia, suicidal ideation, and post-traumatic stress disorder. He has assigned his patent rights to the U.S. government but will share a percentage of any royalties that may be received by the government. The remaining authors have no relevant affiliations or financial involvement with any organization or entity with a financial interest in or financial conflict with the subject matter or materials discussed in the manuscript. This includes employment, consultancies, honoraria, stock ownership or options, expert testimony, grants, or patents received or pending, or royalties."
-   ],
-   "design": null,
-   "findings": [
-    {
-     "passage": 61,
-     "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
-     "text": "When the dissociative effects of ketamine are severe, people who use ketamine can experience a phenomenon known as the K-hole, which is characterized by symptoms resembling schizophrenia, including perceived perceptions entirely separate from reality such as near-death experiences.",
-     "id": "F1",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "A"
-  },
   {
    "read": "full",
    "ref": {
@@ -206,37 +127,185 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This article provides a concise exploration of the historical use of ketamine and its two enantiomers in anesthesia and psychiatry, while also delving into potential future directions for their application in these fields.",
-    "text": "A historical review of ketamine and its enantiomers in anesthesiology and psychiatry."
+    "text": "A historical review of ketamine and its two enantiomers in anesthesiology and psychiatry"
    },
    "findings": [
     {
      "passage": 11,
      "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
      "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-     "text": "At sufficiently high doses, people who use ketamine may experience a K-hole, which is characterized by profound dissociation accompanied by visual and auditory hallucinations.",
+     "text": "At sufficiently high doses, people who use ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
      "id": "F2",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_ketamine",
+    "type": "webpage",
+    "title": "Ketamine",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/ketamine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       19
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-19"
+    }
+   },
+   "title": "Ketamine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.705,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/ketamine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 10,
+     "where": "How might the drug make you feel?",
+     "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+     "text": "At higher doses, you may enter a state of profoundly altered consciousness known as a k-hole where your experience of reality is almost completely detached from what is happening around you.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Myths and Misconceptions",
+     "quote": "Whilst a k-hole is entirely possible, it is not always going to happen every time you take ketamine. A k-hole more often happens at high doses of ketamine.",
+     "text": "A k-hole is entirely possible but does not always happen every time you take ketamine, and more often occurs at high doses.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "thelevel_ketamine",
+    "type": "webpage",
+    "title": "Ketamine",
+    "author": [
+     {
+      "literal": "NZ Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://thelevel.org.nz/drug-information/ketamine",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       19
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-19"
+    },
+    "publisher": "The Level"
+   },
+   "title": "Ketamine",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.661,
+   "name": "NZ Drug Foundation",
+   "short": "the NZ Drug Foundation",
+   "tier": 2,
+   "address": "https://thelevel.org.nz/drug-information/ketamine",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Key things to know",
+     "quote": "If you take a large amount of ketamine it can put you in a ‘k-hole’, where you can’t move or speak.",
+     "text": "Taking a large amount of ketamine can put people who use ketamine in a ‘k-hole’, where they can’t move or speak.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "What to expect / How does ketamine make you feel?",
+     "quote": "Some people take a large dose of ketamine to go into a ‘k-hole’ which is a state where people cannot move or speak.",
+     "text": "Some people who use ketamine take a large dose to go into a ‘k-hole’, a state where they cannot move or speak.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "How to stay safer / How can you be safer when using ketamine?",
+     "quote": "If you aren’t prepared to go into a k-hole, it can be an upsetting experience.",
+     "text": "Not being prepared to go into a k-hole can be an upsetting experience for people who use ketamine.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 7,
+     "where": "How to stay safer / How can you be safer when using ketamine?",
+     "quote": "While there is no specific dose that will cause a k-hole, it can be helpful to research your doses and start smaller at first, visit tripsit for information on dosing ketamine.",
+     "text": "There is no specific dose of ketamine that will cause a k-hole.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
   }
  ],
  "parts": [
   {
    "part": "short",
-   "text": "A K-hole is a state of deep separation from reality. It can include seeing or hearing things that are not there.",
+   "text": "A K-hole is a state of profound dissociation where reality feels detached, with visual and auditory hallucinations. It can happen at high doses of ketamine.",
    "uses": [
-    "F1",
+    "F3",
     "F2"
    ],
    "rests_on": [
     {
-     "label": "F1",
-     "ref": "quintero_2025",
-     "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
-     "sha": "92826f81d5b40fdb"
+     "label": "F3",
+     "ref": "drugscience_ketamine",
+     "where": "How might the drug make you feel?",
+     "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+     "sha": "5c782a872c35fd47"
     },
     {
      "label": "F2",
@@ -249,55 +318,55 @@
   },
   {
    "part": "but",
-   "text": "This happens at sufficiently high doses or when the effects are severe.",
+   "text": "There is no specific dose of ketamine that will cause a K-hole.",
    "uses": [
-    "F2"
+    "L1"
    ],
    "rests_on": [
     {
-     "label": "F2",
-     "ref": "hashimoto_2024",
-     "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
-     "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-     "sha": "faef2339d4741d52"
+     "label": "L1",
+     "ref": "thelevel_ketamine",
+     "where": "How to stay safer / How can you be safer when using ketamine?",
+     "quote": "While there is no specific dose that will cause a k-hole, it can be helpful to research your doses and start smaller at first, visit tripsit for information on dosing ketamine.",
+     "sha": "a8b65ab6e5847cbf"
     }
    ]
   },
   {
-   "part": "how1",
-   "text": "A 2025 review says it feels like schizophrenia, with perceptions separate from reality.",
+   "part": "how3",
+   "text": "The NZ Drug Foundation says taking a large amount of ketamine can put people in a K-hole, where they cannot move or speak.",
    "uses": [
-    "F1"
+    "F5"
    ],
    "rests_on": [
     {
-     "label": "F1",
-     "ref": "quintero_2025",
-     "where": "Tolerability and safety › Adverse psychiatric effects",
-     "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
-     "sha": "92826f81d5b40fdb"
+     "label": "F5",
+     "ref": "thelevel_ketamine",
+     "where": "Key things to know",
+     "quote": "If you take a large amount of ketamine it can put you in a ‘k-hole’, where you can’t move or speak.",
+     "sha": "5869293ab001831f"
     }
    ],
-   "quote": "resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences)",
-   "quote_ref": "quintero_2025"
+   "quote": "large amount of ketamine it can put you in a 'k-hole', where you can't move",
+   "quote_ref": "thelevel_ketamine"
   },
   {
-   "part": "how2",
-   "text": "A 2024 review says it involves deep dissociation with visual and auditory hallucinations.",
+   "part": "how4",
+   "text": "The NZ Drug Foundation says some people take a large dose to go into a K-hole, a state where they cannot move or speak.",
    "uses": [
-    "F2"
+    "F6"
    ],
    "rests_on": [
     {
-     "label": "F2",
-     "ref": "hashimoto_2024",
-     "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
-     "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-     "sha": "faef2339d4741d52"
+     "label": "F6",
+     "ref": "thelevel_ketamine",
+     "where": "What to expect / How does ketamine make you feel?",
+     "quote": "Some people take a large dose of ketamine to go into a ‘k-hole’ which is a state where people cannot move or speak.",
+     "sha": "b80649b5a24ebac4"
     }
    ],
-   "quote": "characterized by profound dissociation accompanied by visual and auditory hallucinations",
-   "quote_ref": "hashimoto_2024"
+   "quote": "go into a 'k-hole' which is a state where people cannot move or speak",
+   "quote_ref": "thelevel_ketamine"
   }
  ],
  "complete": false,
@@ -314,19 +383,28 @@
    "doi": "10.1007/bf03011442",
    "apa": "Reich, D. L., & Silvay, G. (1989). Ketamine: An update on the first twenty-five years of clinical experience. Canadian Journal of Anaesthesia, 36(2), 186–197. https://doi.org/10.1007/bf03011442",
    "near": 0.7,
-   "why": "a review or meta-analysis in people; nearness to the question 0.70; cited 395 times; its full text is not open",
+   "why": "a review or meta-analysis in people; nearness to the question 0.70; cited 396 times; its full text is not open",
    "file": "reich_1989_bf03011442.pdf"
   },
   {
    "doi": "10.1007/s11916-025-01437-5",
    "apa": "Kaye, A. D., Wolf, M. C., Dufour, S. I., Haynes, A. T., Potharaju, P., Shekoohi, S., & Ahmadzadeh, S. (2026). Efficacy of ketamine infusion for treatment of opioid use disorder in patients with chronic pain: A narrative review. Current Pain and Headache Reports, 30(1), Article 9. https://doi.org/10.1007/s11916-025-01437-5",
-   "near": 0.69,
+   "near": 0.688,
    "why": "a review or meta-analysis in people; nearness to the question 0.69; cited 2 times; its full text is not open",
    "file": "kaye_2026_s11916_025_01437_5.pdf"
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "A K-hole is a state of deep separation from reality. It can include seeing or hearing things that are not there.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Clinical Benefits and Challenges of Esketamine in Elderly Patients During the Perioperative Period",
@@ -342,14 +420,7 @@
    "kind": "review",
    "at": "10.1017/s1092852925100333",
    "kept": 1,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A research paper reviewing ketamine in clinical practice",
-     "quote": "Ketamine, originally synthesized in 1962, has gained increasing attention due to its rapid and sustained antidepressant effects in treatment-resistant depression (TRD).",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Ketamine and its two enantiomers in anesthesiology and psychiatry: A historical review and future directions",
@@ -358,18 +429,57 @@
    "at": "10.1016/j.jatmed.2024.07.001",
    "kept": 1,
    "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/ketamine",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ketamine.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Ketamine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/ketamine",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The experiences of people who use ketamine can vary widely, as illustrated by one Reddit user’s experience of taking ketamine to try and reach a ‘k-hole’.",
+     "quote": "A Reddit user talks about taking ketamine to try and reach a ‘k-hole’: “I was in another world, I won't say it was exhilarating or good or bad, I had a lot of introspective thought, I wondered how I c",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F2",
-   "F1"
+   "F3",
+   "F2"
   ],
   "direct": "",
   "but": [
-   "F2"
+   "L1"
   ],
   "how": [
+   [
+    "F3",
+    "F4"
+   ],
+   [
+    "F5",
+    "F6"
+   ],
    [
     "F1"
    ],
@@ -384,16 +494,20 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.5541,
-   "but": 0.4696,
-   "how1": 0.1423,
-   "how2": 0.1127
+   "short": 0.9254,
+   "but": 0.981,
+   "how1": 0.0321,
+   "how2": 0.0215,
+   "how3": 0.9491,
+   "how4": 0.4192
   },
   "scores_quotes_alone": {
-   "short": 0.394,
-   "but": 0.315,
-   "how1": 0.3058,
-   "how2": 0.282
+   "short": 0.7978,
+   "but": 0.713,
+   "how1": 0.0384,
+   "how2": 0.0374,
+   "how3": 0.8631,
+   "how4": 0.7725
   }
  },
  "tries": [
@@ -403,14 +517,14 @@
    "parts": [
     {
      "part": "short",
-     "text": "A K-hole is a state of deep separation from reality. It can include seeing or hearing things that are not there.",
+     "text": "A K-hole is a state of profound dissociation where reality feels detached. It may include visual and auditory hallucinations.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "quintero_2025",
-       "where": "Tolerability and safety › Adverse psychiatric effects",
-       "quote": "When the dissociative effects of ketamine are severe, the individual may experience a phenomenon known as the K-hole, which is characterized by symptoms that resemble schizophrenia, such as perceived perceptions that are completely separate from reality (e.g., near-death experiences).",
-       "sha": "92826f81d5b40fdb"
+       "label": "F3",
+       "ref": "drugscience_ketamine",
+       "where": "How might the drug make you feel?",
+       "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+       "sha": "5c782a872c35fd47"
       },
       {
        "label": "F2",
@@ -424,23 +538,53 @@
     },
     {
      "part": "but",
-     "text": "This happens at sufficiently high doses. It is not known how often this occurs in people who use ketamine.",
+     "text": "There is no specific dose of ketamine that will cause a K-hole.",
      "rests_on": [
       {
-       "label": "F2",
-       "ref": "hashimoto_2024",
-       "where": "Pharmacology of ketamine enantiomers › Use of ketamine and its two enantiomers in psychiatry › Antidepressant effects of ketamine in humans",
-       "quote": "At sufficiently high doses, users of ketamine may experience what is known as the \"K-hole\", characterized by profound dissociation accompanied by visual and auditory hallucinations.",
-       "sha": "faef2339d4741d52"
+       "label": "L1",
+       "ref": "thelevel_ketamine",
+       "where": "How to stay safer / How can you be safer when using ketamine?",
+       "quote": "While there is no specific dose that will cause a k-hole, it can be helpful to research your doses and start smaller at first, visit tripsit for information on dosing ketamine.",
+       "sha": "a8b65ab6e5847cbf"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passages do not state that the frequency of K‑hole occurrence is unknown."
+     "said": "it is about something else than the short answer (Sentence 1 correctly defines a K‑hole as described in the passages; sentence 2 accurately reflects the NZ Drug Foundation statement about no specific dose; sentence 3 adds information about Drug Science being a UK charity, which is not in t)"
     },
     {
      "part": "how1",
-     "text": "A 2025 review says severe dissociation can cause a K-hole. It describes symptoms like schizophrenia and near-death experiences.",
+     "text": "Drug Science, a UK charity of scientists says a K-hole is a state where experience of reality is almost completely detached from surroundings.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "drugscience_ketamine",
+       "where": "How might the drug make you feel?",
+       "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+       "sha": "5c782a872c35fd47"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "adds attribution 'a UK charity of scientists' not present in the passage"
+    },
+    {
+     "part": "how2",
+     "text": "The NZ Drug Foundation says taking a large amount of ketamine can put people in a K-hole where they cannot move or speak.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_ketamine",
+       "where": "Key things to know",
+       "quote": "If you take a large amount of ketamine it can put you in a ‘k-hole’, where you can’t move or speak.",
+       "sha": "5869293ab001831f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review says severe dissociative effects may cause a K-hole with symptoms that resemble schizophrenia, such as near-death experiences.",
      "rests_on": [
       {
        "label": "F1",
@@ -450,13 +594,11 @@
        "sha": "92826f81d5b40fdb"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence uses a causal claim (“can cause”) that is not supported; the passage only reports an association."
+     "ok": true
     },
     {
-     "part": "how2",
-     "text": "A 2024 review says high doses may cause a K-hole. It describes deep dissociation with visual and auditory hallucinations.",
+     "part": "how4",
+     "text": "A 2024 review says at sufficiently high doses, people may experience a K-hole characterized by profound dissociation and hallucinations.",
      "rests_on": [
       {
        "label": "F2",
@@ -466,9 +608,7 @@
        "sha": "faef2339d4741d52"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence uses a causal phrasing (“may cause”) not directly supported; the passage only reports that high doses may lead to experiencing a K‑hole."
+     "ok": true
     }
    ]
   }
@@ -484,16 +624,23 @@
     ""
    ],
    "how1": [
-    true,
-    ""
+    false,
+    "The passages do not mention that Drug Science is a UK charity of scientists."
    ],
    "how2": [
     true,
     ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
    ]
   },
-  "gemini:gemini-3.6-flash": "could not be asked: gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try",
-  "gemini:gemini-3-flash-preview": {
+  "gemini:gemini-3.6-flash": {
    "short": [
     true,
     ""
@@ -503,23 +650,60 @@
     ""
    ],
    "how1": [
+    false,
+    "The passage does not state that Drug Science is a \"UK charity of scientists\"."
+   ],
+   "how2": [
+    false,
+    "The passage does not state that Drug Science is a \"UK charity of scientists\"."
+   ],
+   "how3": [
     true,
     ""
    ],
-   "how2": [
+   "how4": [
     true,
     ""
    ]
   }
  },
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says a K-hole is a state where your experience of reality is almost completely detached from what is happening around you.",
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "drugscience_ketamine",
+     "where": "How might the drug make you feel?",
+     "quote": "At higher doses still, you may enter a state of profoundly altered consciousness known as a ‘k-hole’, in which your experience of reality is almost completely detached from what is actually going on around you.",
+     "sha": "5c782a872c35fd47"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention that Drug Science is a UK charity of scientists."
+  },
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "Drug Science, a UK charity of scientists says a K-hole is possible but does not always happen every time, and more often occurs at high doses.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "drugscience_ketamine",
+     "where": "Myths and Misconceptions",
+     "quote": "Whilst a k-hole is entirely possible, it is not always going to happen every time you take ketamine. A k-hole more often happens at high doses of ketamine.",
+     "sha": "0e2d98f88ca1c986"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage does not state that Drug Science is a \"UK charity of scientists\"."
+  }
+ ],
  "with_checked": {
   "differs": [],
-  "same": [
-   {
-    "part": "how1",
-    "claim": "cl_ket_schizophrenia_challenge"
-   }
-  ]
+  "same": []
  },
  "place": {
   "home": "ketamine",
