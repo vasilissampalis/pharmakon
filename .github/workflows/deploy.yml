@@ -41,7 +41,7 @@ jobs:
         with:
           ref: main
       - name: The vectors made before (so that only new texts are embedded)
-        uses: actions/cache@v6
+        uses: actions/cache/restore@v6   # (20 November 2026) restore only: a cache saved here lacked the study cards' vectors, and the next Auto run spent 2 minutes 42 seconds making them again before it read a person's question
         with:
           path: site/insight/.cache
           key: insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-${{ github.run_id }}

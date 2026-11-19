@@ -162,6 +162,13 @@ def main():
 
     # 1. each question as the page reads it (on the drug page it was asked on, when it names no drug itself)
     rows, vecs = [], []
+    # (20 November 2026, 00:35 Athens; the senior author: "it should be read and written almost immediately") every question's two texts are embedded in ONE
+    # pass of the page's runtime before the loop: one at a time, each started the runtime anew, and 15 questions took 2 minutes 42 seconds that night
+    pre = []
+    for r in qs:
+        drug = next((d for d in r["d"] if d in R.canon), None); q0 = R.correct(r["q"])[0] if hasattr(R, "correct") else r["q"]
+        full, masked, _ = R.texts(q0, drug); pre += [full, masked]
+    if pre: bi.embed_all(pre, quiet=True)
     for r in qs:
         drug = next((d for d in r["d"] if d in R.canon), None)
         # (2.9.3) read as the page reads it: a drug's name with a letter wrong, or what people typed for a name the system

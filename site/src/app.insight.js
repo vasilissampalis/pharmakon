@@ -146,7 +146,7 @@ function insPrepare(d, vocabText) {
   // 2.13: the places of the site, found by the meaning of a question (site/insight/places.json through the index: insWhere)
   { const PL = d.places; INS.places = PL && PL.ids && PL.ids.length ? { ids: PL.ids, rows: PL.rows, meta: PL.meta, cut: PL.cut, near: PL.near, W: insRows(PL.W, d.dim) } : null; }
   INS.list = L && L.ids.length ? Object.assign({ ids: L.ids, q: L.q, rows: L.rows, cut: L.cut, near: L.near || [0, 0], W: insRows(L.W, d.dim), M: insRows(L.M, d.dim), S: insRows(L.S, d.dim),
-    about: L.about.map(xs => new Set(xs.map(k => d.slugs[k]))) }, insWords(L.docs)) : null;
+    about: L.about.map(xs => new Set(xs.map(k => d.slugs[k]))), terms: Array.isArray(L.terms) ? L.terms : null }, insWords(L.docs)) : null;   // (2.26.2) terms: each item's research words
   // vocab.txt: one token a line, its line number its id (as the tokenizers library reads it)
   const lines = vocabText.split("\n"); if (lines.length && lines[lines.length - 1] === "") lines.pop();
   INS.vocab = new Map(); lines.forEach((t, i) => INS.vocab.set(t.trimEnd(), i));
@@ -758,7 +758,7 @@ function insTiers(sc, groups, X, q) {
 function insWant(v, mv, q, groups) {
   const X = INS.list; if (!X) return null;
   const c = insTiers(insScore(v, mv, q, X), groups, X).first;
-  return c.on && c.p >= X.cut && c.f[0] >= X.near[0] && c.f[4] >= X.near[1] ? { id: X.ids[c.i], q: X.q[c.i], p: +c.p.toFixed(5) } : null;
+  return c.on && c.p >= X.cut && c.f[0] >= X.near[0] && c.f[4] >= X.near[1] ? Object.assign({ id: X.ids[c.i], q: X.q[c.i], p: +c.p.toFixed(5) }, X.terms && X.terms[c.i] && X.terms[c.i].length ? { terms: X.terms[c.i] } : {}) : null;
 }
 /* 2.5 (the senior author, of "can i die from mosquito bites" being offered "Ask us to check it": "pharmakon insight should
    understand trolling ... this is a drug website there should be no mistakes"). Is this a question about drugs? By its
@@ -1067,7 +1067,7 @@ async function insRank(query, ctx) {
   if (st && st.loose) { if (res.note === "other") { res.note = "none"; delete res.stranger; }
     // the very question that page lists (the same words): not answered yet, and on our list
     if (res.note === "none") { const sh = autoShell(st.started), flat = insStartedFlat(res.core), hit = sh && sh.asked.find(a => !(a.answer && isAuto(a.answer)) && insStartedFlat(a.q) === flat);
-      if (hit) { res.note = "want"; res.want = { id: hit.id, q: hit.q, started: st.started }; } }
+      if (hit) { res.note = "want"; res.want = { id: hit.id, q: hit.q, started: st.started }; const X = INS.list, i = X ? X.ids.indexOf(hit.id) : -1; if (i >= 0 && X.terms && X.terms[i] && X.terms[i].length) res.want.terms = X.terms[i]; } }
     res.routes.push(Object.assign(st, res.best.length || res.routes.length ? { way: true } : {})); }
   res.ms = performance.now() - t0; INS.times.push(res.ms);
   return res;
@@ -1990,7 +1990,7 @@ function liveHtml(it) {
   if (lv.reload) return '<div class="lv lv-card" role="status"><p class="lv-h">' + icon("check") + '<span>Answered</span></p><p class="lv-s">The answer is in the newest version of the site. <button type="button" class="linklike" data-asked-reload>Load it</button></p></div>';
   const n = lv.n || [0, 0], found = n[0] + n[1] > 0, at = lv.room ? new Date(lv.room) : null, hhmm = at && !isNaN(at) ? at.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
   const steps = [];   // [done | now | next, the line]
-  if (!lv.our) steps.push(["now", "In line to be read. Reading a question takes a few minutes."]);   // (2.26.1; "This starts within a minute" was not kept: 23:40, five minutes)
+  if (!lv.our) steps.push(["now", "Reading your question now."]);   // (2.26.2) the run reads the questions the page sent first of all (auto.yml); no time is promised
   else {
     steps.push(["done", "Read as: <q>" + esc(lv.our) + "</q>"]);
     if (found) steps.push(["done", "Found " + [n[0] ? liveCount(n[0], "paper") + " it can read" : "", n[1] ? liveCount(n[1], "official page") : ""].filter(Boolean).join(" and ")]);
@@ -2183,6 +2183,7 @@ if (typeof document !== "undefined") askedBox();
    drug: since 2.21 those are looked up and listed by title only, see FIND_TITLES below.) */
 const FIND_API = "api/find";
 const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
+  "together same both each other others another everyone everybody somebody anybody something anything stuff kind sort guys " +   // (2.26.2, trial 15: "together" was taken for a key word)
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
   "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus " +
   // (2.19, after the first trial with the real index of papers) words for what a drug does to something, which say nothing about WHAT: every key word must now stand in a paper
@@ -2211,7 +2212,10 @@ const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addi
   avoid: "prevention|prevent", avoiding: "prevention|prevent", men: "men|male", man: "men|male", males: "men|male", male: "men|male", women: "women|female", woman: "women|female", females: "women|female", female: "women|female", boys: "boys|male", girls: "girls|female", gender: "gender|sex",
   hungry: "appetite", hunger: "appetite", munchies: "appetite", nosebleed: "epistaxis", nosebleeds: "epistaxis", concentrate: "attention", concentration: "attention", focus: "attention", focused: "attention", smarter: "cognitive", smart: "cognitive", tired: "fatigue", paranoid: "paranoia",
   horny: "sexual", sex: "sexual", teeth: "dental", tooth: "dental", kidneys: "renal", kidney: "renal", lungs: "pulmonary", lung: "pulmonary", heart: "cardiac", liver: "hepatic", forget: "memory", forgetful: "memory", remember: "memory", shaky: "tremor", shakes: "tremor", sweat: "sweating", sweaty: "sweating", puke: "vomiting", vomit: "vomiting", throwing: "vomiting", comedown: "comedown", hangover: "hangover",
-  eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite" };   // (2.19: short words that are the very thing asked about)
+  eye: "eye", eyes: "eye", ear: "ear", ears: "ear", gut: "gut", fat: "fat", ocd: "ocd", ibs: "ibs", hiv: "hiv", eat: "appetite", eating: "appetite",   // (2.19: short words that are the very thing asked about)
+  // (2.26.2, trial 15) seeing things, as papers say it ("do people on lsd see the same things" was looked up by "together")
+  see: "visual|hallucinations|imagery|see", seeing: "visual|hallucinations|imagery|see", sees: "visual|hallucinations|imagery|see", saw: "visual|hallucinations|imagery|see", visions: "hallucinations|visual|imagery", visuals: "visual|hallucinations",
+  hallucinate: "hallucinations", hallucinating: "hallucinations", hallucination: "hallucinations", hallucinations: "hallucinations" };
 // never looked up: suicide and self-harm, amounts (until 2.21.3 also every question with a word about dying or overdose: see FIND_DEATH)
 const FIND_HELD = /\b(suicid\w*|self-?harm\w*|lethal|ld50|dos(e|es|age|ing)|mg|mcg|milligrams?|grams?|micrograms?)\b/i;
 /* (2.22, 18 November 2026, 22:15 Athens. The senior author asked how many people die from heroin in one country, got "No answer yet" with a figure for the EU and
@@ -2308,6 +2312,11 @@ function insFindTerms(res) {
   // (2.21.2, after the twelfth trial: "smoking", "pregnant", "baby" found two papers, neither on the question) a question about pregnancy or children that names
   // a drug: two key words at most, the ones about pregnancy or the child first
   if (!general && words.length > 2 && FIND_TITLES.test(res.q || "")) { const fam = words.filter(x => FIND_TITLES.test(x.replace(/\|/g, " "))), rest = words.filter(x => !fam.includes(x)); words.splice(0, words.length, ...fam.concat(rest).slice(0, 2)); }
+  /* (2.26.2; the senior author, 19 November 2026, 23:37: his question got papers on finding LSD in a laboratory sample, looked up by the word "together";
+     trial 15) A question with no key word of its own that is like one of our list's is looked up by the words research uses for that listed question (the
+     editor's research words for it, data/site/wanted.json: the words the system's finders search by): any of them, beside the drug's name. Only where it has
+     none of its own: the list's match may be a neighbouring question ("why do people take drugs" is asked as the reasons, not as the list's pleasure). */
+  if (!words.length && res.note === "want" && res.want && Array.isArray(res.want.terms) && res.want.terms.length && !death && !FIND_TITLES.test(res.q || "")) words.push(res.want.terms.slice(0, 6).map(norm).filter(Boolean).join("|"));
   // (2.20) "what is X": the server then looks for the sentence that says what the drug is
   const def = !words.length && /^(?:so )?(?:what(?:'s| is| are| exactly is| the hell is)|whats|wtf is)\b/.test(text.trim());
   return Object.assign({ names: names.slice(0, 6), words }, also.length ? { also: also.slice(0, 4) } : {}, def ? { def: 1 } : {}, general || od || death || FIND_TITLES.test(res.q || "") ? { t: 1 } : {});   // t: titles only

@@ -997,7 +997,9 @@ def wanted_index(items, out, names, pat, at):
         for m in pat.finditer(w["q"]): ab |= set(name_of.get(m.group(1).lower(), []))
         about.append(sorted(at[s] for s in ab if s in at))
     print(f"insight: {len(items)} questions on the list of those not answered yet, {len(W_txt)} wordings", file=sys.stderr)
-    return {"ids": [w["id"] for w in items], "q": shorts, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": [" ".join(dict.fromkeys([w["q"]] + (w.get("ways") or []))) for w in items], "about": about, "cut": WANT_CUT, "near": WANT_NEAR}
+    # (2.26.2) each item's research words (the words papers use for its subject: the editor's or the system's), for the page's own look-up of published research
+    terms = [[str(t)[:60] for t in (w.get("terms") or []) if isinstance(t, str) and t.strip()][:6] for w in items]
+    return {"ids": [w["id"] for w in items], "q": shorts, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": [" ".join(dict.fromkeys([w["q"]] + (w.get("ways") or []))) for w in items], "about": about, "cut": WANT_CUT, "near": WANT_NEAR, "terms": terms}
 
 
 def evaluate(D, near=None):

@@ -521,7 +521,7 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
       AUTO_SHOWN.forEach(a => answers.push({ id: a.id, substance: a.page, section: 0, pages: [a.page], about: a.drugs.slice().sort(), wordings: [...new Set([a.q].concat(a.ways))], short: a.short }));
       const input = path.join(__dirname, "insight", ".cache", "index-input.json"), nextFile = path.join(__dirname, "insight", ".cache", "next.json");
       // 2.5: the questions not answered yet (data/site/wanted.json), for the page's second look when no answer fits
-      const wanted = (fileOr("wanted.json", { items: [] }).items || []).map(w => ({ id: w.id, q: w.q, ways: w.ways || [], drugs: w.drugs || [] }));
+      const wanted = (fileOr("wanted.json", { items: [] }).items || []).map(w => ({ id: w.id, q: w.q, ways: w.ways || [], drugs: w.drugs || [], terms: w.terms || [] }));   // (2.26.2) terms: the research words a listed question is looked up by
       fs.mkdirSync(path.dirname(input), { recursive: true }); fs.writeFileSync(input, JSON.stringify({ answers, wanted }));
       if (fs.existsSync(nextFile)) fs.unlinkSync(nextFile);
       const r = require("child_process").spawnSync("python3", ["-I", path.join(ROOT, "scripts", "insight", "build_index.py"), input, path.join(dataDir, "insight.json"), nextFile], { stdio: ["ignore", "inherit", "inherit"], env: Object.assign({}, process.env, { PK_NODE: process.execPath }) });
