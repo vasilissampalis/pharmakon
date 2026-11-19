@@ -349,23 +349,35 @@ const AUTO_SHOWN = (() => {
 // looked at it ("looked_by_editor") against the site's rules for photos (docs/WRITING-RULES.md, "Photos": never people or hands,
 // the thing itself, nothing else that takes the eye); one the editor holds ("hold") is not shown. No program can judge that yet.
 // AUTO_NAMES: the names that lead to such a page ({name: slug}): the page's own, the filing's, the learned ones, the species'.
-const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {};
+// AUTO_FORMS (2.23.1, decision 35): for a form of a checked drug page that has no photo of its own, the first picture the system found
+// for it (data/auto/pictures.json, "forms"; Wikimedia Commons) that the editor looked at, under the same rules; a checked photo always wins.
+const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {}, AUTO_FORMS = {};
 { const rj = (...p) => { const f = path.join(ROOT, ...p); try { return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : null; } catch (e) { return null; } };
   const pageSlug = n => String(n).toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
   const web = u => (/^https:\/\/[^\s"'<>]+$/.test(String(u || "")) ? String(u) : ""), kindOf = k => (k === "fungus" ? "fungus" : "plant");
   const wq = {}; [rj("data", "site", "wanted.json"), rj("data", "auto", "wanted-auto.json")].forEach(d => ((d || {}).items || []).forEach(w => { wq[w.id] = w.q; }));
   const shown = new Set(AUTO_SHOWN.map(a => a.id)), picDir = path.join(__dirname, "photos-auto"), pics = {}, science = {};
-  for (const [slug, e] of Object.entries(((rj("data", "auto", "pictures.json") || {}).pages) || {})) {
+  // a picture a page may show: its web copies made, looked at by the editor, not held, public domain, CC0 or CC BY (a maker named for CC BY)
+  const okPic = p => !!p && !!p.file && /^[a-z0-9-]+$/.test(p.file) && !!p.sizes && !p.hold && /^\d{4}-\d{2}-\d{2}$/.test(p.looked_by_editor || "") && /^(?:CC0 1\.0|CC BY (?:[1-4]\.0|2\.5)|Public domain)$/.test(p.licence || "") &&
+    (!/^CC BY/.test(p.licence) || !!p.maker) && fs.existsSync(path.join(picDir, p.file + "-m.webp")) && fs.existsSync(path.join(picDir, p.file + "-t.webp"));
+  const picOf = (p, more) => Object.assign({ file: p.file, m: p.sizes.m.slice(0, 2), t: p.sizes.t.slice(0, 2), maker: String(p.maker || ""), licence: p.licence,
+    licence_url: web(String(p.licence_url || "").replace(/^http:\/\//, "https://")), page: web(p.page) || web(p.record), src: p.source === "commons" ? "commons" : "gbif" }, more);
+  const picDoc = rj("data", "auto", "pictures.json") || {};
+  for (const [slug, e] of Object.entries(picDoc.pages || {})) {
     const list = [];
     for (const s of Object.values((e || {}).species || {})) {
-      if (!s || !s.gbif || !s.name) continue;
-      (science[slug] = science[slug] || []).push({ name: String(s.name), kind: kindOf(s.kind), gbif: +s.gbif });
-      for (const p of s.pictures || []) {
-        if (!p.file || !/^[a-z0-9-]+$/.test(p.file) || !p.sizes || p.hold || !/^\d{4}-\d{2}-\d{2}$/.test(p.looked_by_editor || "") || !/^(?:CC0 1\.0|CC BY [1-4]\.0)$/.test(p.licence || "") || (p.licence !== "CC0 1.0" && !p.maker)) continue;
-        if (!fs.existsSync(path.join(picDir, p.file + "-m.webp")) || !fs.existsSync(path.join(picDir, p.file + "-t.webp"))) continue;
-        list.push({ file: p.file, m: p.sizes.m.slice(0, 2), t: p.sizes.t.slice(0, 2), species: String(s.name), kind: kindOf(s.kind), maker: String(p.maker || ""), licence: p.licence,
-          licence_url: web(String(p.licence_url || "").replace(/^http:\/\//, "https://")), page: web(p.page) || web(p.record), country: String(p.country || "") }); } }
+      if (!s || !s.name) continue;
+      if (s.gbif) (science[slug] = science[slug] || []).push({ name: String(s.name), kind: kindOf(s.kind), gbif: +s.gbif });
+      // (a picture from a Commons category that is not a species shows the page itself: "thing")
+      for (const p of s.pictures || []) if (okPic(p)) list.push(picOf(p, { species: String(s.kind === "thing" ? (e.name || slug) : s.name), kind: s.kind === "thing" ? "thing" : kindOf(s.kind), country: String(p.country || "") }));
+    }
     if (list.length) pics[slug] = list; }
+  { const forms = site("forms.json"), have = new Set(site("photos.json").photos.filter(p => !p.hold).map(p => p.id));
+    for (const e of Object.values(picDoc.forms || {})) {
+      const f = e && Array.isArray(forms[e.drug]) ? forms[e.drug].find(x => x && x.id === e.form) : null;
+      if (!f || (f.photos || []).some(id => have.has(id))) continue;
+      const p = (e.pictures || []).find(okPic); if (p) (AUTO_FORMS[e.drug] = AUTO_FORMS[e.drug] || {})[e.form] = picOf(p, {}); }
+    const nf = Object.values(AUTO_FORMS).reduce((n, x) => n + Object.keys(x).length, 0); if (nf) console.log("forms with a picture the system found (looked at by the editor): " + nf); }
   const learned = ((rj("data", "auto", "names", "learned.json") || {}).names) || {};
   for (const e of Object.values(learned)) { const slug = e && e.drug === true && e.source === "gbif" && /^\d+$/.test(String(e.id || "")) && (e.kind === "plant" || e.kind === "fungus") ? pageSlug(e.name) : "";
     if (slug && !science[slug]) science[slug] = [{ name: String(e.name), kind: e.kind, gbif: +e.id }]; }
@@ -425,7 +437,7 @@ const OFFICIAL = (() => {
 })();
 const AUTO_OBJ = Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]));
 const data2 = data + "\nconst OFFICIAL = " + JSON.stringify(OFFICIAL) + ";\nconst AUTO = " + JSON.stringify(AUTO_OBJ) +
-  ";\nconst AUTO_STATE = " + JSON.stringify(AUTO_STATE) + ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
+  ";\nconst AUTO_STATE = " + JSON.stringify(AUTO_STATE) + ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_FORMS = " + JSON.stringify(AUTO_FORMS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
 // Refuse to build a page whose script does not parse (a syntax error would blank the site at runtime).
 try { new Function(js); } catch (e) { console.error("SYNTAX ERROR in the page script: " + e.message); process.exit(1); }
@@ -523,7 +535,7 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
   console.log("wrote", Object.keys(full).length, "substance files to dist/data (largest " + Object.keys(full).map(s => "full-" + s + ".json").sort((a, b) => fs.statSync(path.join(dataDir, b)).size - fs.statSync(path.join(dataDir, a)).size).slice(0, 3).map(f => f + " " + kb(f)).join(", ") + "), refs.json " + kb("refs.json") + ", figures.json " + kb("figures.json")); }
 // (2.12) the pictures the system found for the pages it started: only the ones a page shows are published (dist/img/auto/)
 { const from = path.join(__dirname, "photos-auto"), to = path.join(__dirname, "dist", "img", "auto"); if (fs.existsSync(to)) fs.rmSync(to, { recursive: true, force: true });
-  const files = Object.values(AUTO_PICS).flat().flatMap(p => [p.file + "-m.webp", p.file + "-t.webp"]);
+  const files = Object.values(AUTO_PICS).flat().concat(Object.values(AUTO_FORMS).flatMap(x => Object.values(x))).flatMap(p => [p.file + "-m.webp", p.file + "-t.webp"]);
   if (files.length) { fs.mkdirSync(to, { recursive: true }); files.forEach(f => fs.copyFileSync(path.join(from, f), path.join(to, f))); console.log("copied", files.length, "files of pictures the system found to dist/img/auto"); } }
 if (fs.existsSync(photoDir)) { fs.mkdirSync(imgDir, { recursive: true }); const n = fs.readdirSync(photoDir).filter(f => f.endsWith(".webp")).map(f => fs.copyFileSync(path.join(photoDir, f), path.join(imgDir, f))).length; console.log("copied", n, "photo files to dist/img"); }
 console.log("built dist/index.html", (html.length / 1024).toFixed(1) + " KB;", refs.length, "refs,", Object.keys(cards).length, "cards,", claims.length, "claims; evidence maps:", Object.keys(maps).length);

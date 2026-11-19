@@ -1620,6 +1620,50 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     **For him.** "approve", "use readers", "keep them private" as before; and two new ones he can answer with a word:
     whether an answer that passed every reader that could be asked may be shown when its strong further reader could
     not be asked that day; and which further free model services to add (the keys are his to make).
+35. **Pictures found by themselves: Wikimedia Commons for the pages the system starts and for the forms that have no
+    photo** (19 November 2026; site 2.24.0, protocol 0.6.1). His words, 10:21 Athens: "the site should always
+    automatically find pictures for new substances it is adding --- the same should happen if pictures are missing for
+    different forms of the same substances".
+    **What was there.** `scripts/auto/pictures.py` (decision 27, step b) looked only in GBIF, for plants and fungi, and only
+    when asked. GBIF has no picture with a licence the site takes for akuamma, iboga or Mitragyna javanica, and none of any
+    pill, powder or blotter. Eighteen forms of the checked drug pages had no photo.
+    **What may be read.** Wikimedia Commons' robots.txt does not allow its search, `/w/` or its API, and does allow its
+    category and file pages (`/wiki/`); upload.wikimedia.org allows its pictures (not `/wikipedia/commons/archive/`). So
+    the system reads a category page (the files in it, the first 200, and its subcategories; a category that redirects is
+    followed once) and a file's own page (its licence lines, its maker, its size, its categories, and its description,
+    which is read only to see whether it names the thing and is not kept). Nothing else of Commons is asked.
+    **The rules (code).** The site's rule for photos holds unchanged: public domain, CC0 or CC BY only; never CC BY-SA,
+    NC, ND or GFDL alone (a file that also carries one of the open licences is taken under it); a maker named for CC BY;
+    photographs only (.jpg, at least 600 px on the short side); nothing whose name or categories speak of people, hands,
+    drawings, structures, maps, posters, coins, labels or amounts. A file must name the thing (in its name, its
+    categories or its description); a form's picture must name that form and no other form of the drug that is missing
+    (its name's words that no other form uses, and the words it puts in quotes: "window panes"; "pill" for "tablet",
+    "gel" for "gelatine"), and the drug too. Forms that are a use, a medicine or a mixture are not looked for (5 of the
+    18). A wide original is fetched at 1280 px, one of Commons' usual sizes, on the same host. As with GBIF, a fetched
+    picture is shown only once the editor has looked at it against the rules for photos (never people or hands, the
+    thing itself as people meet it, nothing that takes the eye, no writing over it), with its maker, licence and file
+    page one tap away and a line that our system found it and no person has checked it; a picture the editor holds is
+    replaced by the next one. A checked photo always wins: a form shows the system's picture only while it has none.
+    **When.** Every day by the clock (`.github/workflows/official.yml`: `pictures.py daily`): GBIF for the plants and fungi
+    of the started pages, then Commons for every started page with fewer than three pictures it could show (the pages
+    people asked about first), and for the forms with no photo (in the categories of the drug's own photos on Commons,
+    the category of its name, and their subcategories that name a missing form), at most 80 Commons pages a run, one at
+    a time at the site's pace; then the web copies of what was found, twelve at most. A look that found nothing is made
+    again after 30 days.
+    **What it cannot do.** Most photos on Commons are CC BY-SA, which the site's rule does not take: in the editor's look
+    of 19 November (in the built-in browser, at the site's pace) all twelve photos of Picralima nitida (akuamma) and every
+    photo of Tabernanthe iboga large enough were CC BY-SA, and Mitragyna javanica has no category; 13 of 30 photos looked
+    at for areca nut had an open licence, most of street scenes. Those pages stay without pictures while the rule stands.
+    Whether photos under CC BY-SA may be shown (with their maker and licence, the web copy under the same licence, the
+    site's own text untouched) is his to decide. And no program judges what a picture shows: until a free model that can
+    see pictures has been measured on the editor's looks (an exam first), a fetched picture waits for the editor's look.
+    **Measured.** `pictures.py --selftest`: only category and file pages are read (no search, no API, no Special:); the
+    licence lines (CC BY-SA with GFDL refused; CC BY 2.5 taken; CC0 above CC BY; public domain without a maker); a CC BY
+    picture with no maker refused; names that say people or structures refused without reading their page; a form's
+    words (the gel tabs' "squares" is the blotters' word too, so it is not theirs); a picture of another drug refused; a
+    redirect followed; a wide original asked for at 1280 px; the forms' web copies and the editor's marks.
+    `scripts/ux/site24_check.js`: a form with no photo draws the system's picture with its line and credit, the others
+    as before; a started page's picture from Commons that is not a species is "An example", credited to its file page.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

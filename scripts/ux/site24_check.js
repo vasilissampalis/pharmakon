@@ -573,14 +573,35 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     // the top bar: the same Insight on every page, where the reader is, and the way back once the Back line is out of sight
     await go(p, "#home"); await go(p, "#s-cannabis", 700); await go(p, "#s-heroin/part-d-risk", 900);
     await p.mouse.move(Math.round(w / 2), 400); await p.mouse.wheel(0, -6000); await p.waitForTimeout(500);   // (a reader's own scroll: a jump is kept in place until the reader moves)
-    const bar0 = await p.evaluate(() => ({ y: Math.round(window.scrollY), here: document.getElementById("here").textContent, hereSeen: document.getElementById("here").getClientRects().length > 0, back: document.getElementById("barback").hidden, crumb: document.getElementById("crumb").textContent.trim(),
+    const bar0 = await p.evaluate(() => ({ y: Math.round(window.scrollY), here: document.getElementById("here").textContent, hereSeen: document.getElementById("here").getClientRects().length > 0 && getComputedStyle(document.getElementById("here")).visibility !== "hidden", back: document.getElementById("barback").hidden, crumb: document.getElementById("crumb").textContent.trim(),
       pill: getComputedStyle(document.querySelector("#bar-search .sicon .ic-pill")).display, glass: getComputedStyle(document.querySelector("#bar-search .sicon .ic")).display, ph: document.getElementById("search").placeholder }));
     await p.mouse.wheel(0, 1200); await p.waitForTimeout(500);
-    const bar1 = await p.evaluate(() => { const s = document.getElementById("search").getBoundingClientRect(), b = document.getElementById("barback"); return { boxTop: Math.round(s.top), boxSeen: s.top >= 0 && s.bottom <= 90 && s.width > 150, back: b.hidden, label: b.getAttribute("aria-label"), backSeen: b.getClientRects().length > 0 && b.getBoundingClientRect().top >= 0 }; });
-    ok(w + " px: on every page the box is Insight's capsule and says so (“Ask Insight about heroin”), and the bar says where the reader is (“Heroin › Risks”)", bar0.pill === "block" && bar0.glass === "none" && bar0.ph === "Ask Insight about heroin" && bar0.here === "Heroin › Risks" && bar0.hereSeen, JSON.stringify(bar0));
+    const bar1 = await p.evaluate(() => { const s = document.getElementById("search").getBoundingClientRect(), b = document.getElementById("barback"), h = document.getElementById("here"); return { boxTop: Math.round(s.top), boxSeen: s.top >= 0 && s.bottom <= 90 && s.width > 150, back: b.hidden, label: b.getAttribute("aria-label"), backSeen: b.getClientRects().length > 0 && b.getBoundingClientRect().top >= 0, here: h.textContent, hereSeen: h.getClientRects().length > 0 && getComputedStyle(h).visibility !== "hidden" }; });
+    // (2.23.1; the senior author, 19 November 2026, 10:21: the page's name is not said twice: in the bar only once the page's own title is out of sight)
+    ok(w + " px: on every page the box is Insight's capsule and says so (“Ask Insight about heroin”); at the top of a page the bar does not repeat the page's own title, and further down it says where the reader is (“Heroin › Risks”)",
+      bar0.pill === "block" && bar0.glass === "none" && bar0.ph === "Ask Insight about heroin" && bar0.here === "Heroin › Risks" && !bar0.hereSeen && bar1.here === "Heroin › Risks" && (bar1.hereSeen || w < 600), JSON.stringify([bar0, bar1.here, bar1.hereSeen]));
     ok(w + " px: at the top of a page the Back line is the way back (no second Back beside it); further down, Insight is still in view and the bar holds the way back, named", bar0.back === true && /^Back to Cannabis/.test(bar0.crumb) && bar1.boxSeen && bar1.back === false && bar1.backSeen && /^Back to Cannabis/.test(bar1.label || ""), JSON.stringify([bar0.back, bar0.crumb, bar1]));
     await p.click("#barback"); await p.waitForTimeout(700);
     ok(w + " px: the bar's Back leads back", (await p.evaluate(() => location.hash)) === "#s-cannabis");
+    // (2.23.1, decision 35) a form with no photo of its own shows the picture our system found for it (once the editor looked at it), with its line and its credit
+    // (the picture here is one of kanna's, which the site publishes: only the drawing is tested)
+    await p.evaluate(() => { AUTO_FORMS.lsd = { gel: { file: "kanna-1", m: [800, 600], t: [400, 300], maker: "Ann Lee", licence: "CC BY 4.0", licence_url: "https://creativecommons.org/licenses/by/4.0/", page: "https://commons.wikimedia.org/wiki/File:Window_pane_LSD.jpg", src: "commons" } }; });
+    await go(p, "#home"); await go(p, "#s-lsd/part-d-looks", 900);
+    const fa = await p.evaluate(() => { const li = [...document.querySelectorAll("#d-looks li.look")], g = li.find(x => /Gelatine squares/.test(x.textContent)), b = li.find(x => /Blotters/.test(x.textContent)), m = li.find(x => /Microdots/.test(x.textContent)), cr = document.querySelector("#d-looks details.look-credits");
+      return { img: g && g.querySelector("img") ? g.querySelector("img").getAttribute("src") + " | " + g.querySelector("img").alt : "", line: g ? (g.querySelector(".look-auto-t") || {}).textContent || "" : "", blotLine: b ? !!b.querySelector(".look-auto-t") : null,
+        micro: m ? !!m.querySelector("img") : null, credit: cr ? cr.textContent.replace(/\s+/g, " ") : "", links: cr ? [...cr.querySelectorAll("a")].map(a => a.href) : [] }; });
+    ok(w + " px (2.23.1): a form with no photo of its own (LSD's gelatine squares) shows the picture our system found for it, with a line under its words that a person has not checked it, and its maker, licence and file page among the credits; a form with its own photo, or with none found, is as before",
+      fa.img === "img/auto/kanna-1-t.webp | Gelatine squares: an example our system found" && fa.line === "Picture found by our system. A person has not checked it yet." && fa.blotLine === false && fa.micro === false &&
+        /Gelatine squares, Ann Lee, CC BY 4\.0, via Wikimedia Commons/.test(fa.credit) && fa.links.includes("https://commons.wikimedia.org/wiki/File:Window_pane_LSD.jpg") && fa.links.includes("https://creativecommons.org/licenses/by/4.0/"), JSON.stringify(fa));
+    await p.evaluate(() => { delete AUTO_FORMS.lsd; });
+    // (2.23.1) on a page the system started, a picture from a Commons category that is not a species: an example of the drug, said to come from Wikimedia Commons
+    const th = await p.evaluate(() => { AUTO_PICS["zz-test"] = [{ file: "kanna-1", m: [800, 600], t: [400, 300], species: "Anabolic steroids", kind: "thing", maker: "", licence: "Public domain", licence_url: "", page: "https://commons.wikimedia.org/wiki/File:X.jpg", src: "commons", country: "" }];
+      const d = document.createElement("div"); d.innerHTML = autoLooksHtml("zz-test"); delete AUTO_PICS["zz-test"];
+      return { t: (d.querySelector(".look-t") || {}).textContent || "", alt: (d.querySelector("img") || {}).alt || "", credit: ((d.querySelector(".look-credits p") || {}).textContent || ""), href: (d.querySelector(".look-credits a") || {}).href || "", note: (d.querySelector(".auto-picnote") || {}).textContent || "" }; });
+    ok(w + " px (2.23.1): a started page's picture from Wikimedia Commons that shows the drug itself is “An example”, credited to its file page (public domain, so no licence link), and the note says where it comes from",
+      th.t === "An exampleAnabolic steroids" && th.alt === "An example of Anabolic steroids" && th.credit === "Photo 1: Wikimedia Commons, public domain." && th.href === "https://commons.wikimedia.org/wiki/File:X.jpg" &&
+        /They come from Wikimedia Commons, a library of pictures that people share under open licences\. A person here has not checked them yet\. They are examples: the same drug can look different, and different drugs can look the same\./.test(th.note), JSON.stringify(th));
+    await go(p, "#home"); await go(p, "#s-cannabis", 900);   // (back where the next check begins)
     // the empty box on a drug's page offers what people ask most about that drug
     await p.click("#search"); await p.waitForTimeout(600);
     const sug = await p.evaluate(() => ({ hint: (document.querySelector("#search-results .sr-hint") || {}).textContent || "", hrefs: [...document.querySelectorAll("#search-results a.sr-sug")].map(a => a.getAttribute("href")) }));
@@ -780,6 +801,46 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const n2 = askedReqs.length; await p.evaluate(() => { localStorage.setItem("pk-auto", "0"); liveKick(true); }); await p.waitForTimeout(2500);
     ok(w + " px (2.23): a reader who switched off what the page does by itself is asked for nothing here either", askedReqs.length === n2, String(askedReqs.length - n2));
     await p.evaluate(() => { localStorage.removeItem("pk-auto"); localStorage.removeItem("pk-asked"); }); liveSet(null);
+    // ---- (2.23.1) the reader is told only of an answer to a question of THEIR OWN, wherever they are on the site; and not when it stands before them ----
+    { const K5 = "5".repeat(20), Q5 = "Does modafinil make you sweat?";
+      await p.evaluate(([Q5, K5]) => { localStorage.setItem("pk-asked", JSON.stringify([{ k: Q5.toLowerCase(), q: Q5, d: "", t: Date.now(), ts: Date.now(), cv: SITE_BUILD, st: "wait", sent: 1, auto: 1, sk: K5 }])); location.hash = "#home"; askedBox(); }, [Q5, K5]);
+      await p.waitForTimeout(400);
+      const a5 = { q: "Does modafinil make people sweat more?", short: "Some people who took it in studies did.", but: "This rests on 1 review that our system could read. It has not read every study on this question.", how: ["A review lists sweating among the unwanted effects people reported."],
+        refs: [{ id: "tester_2020", type: "article-journal", title: "Modafinil: a review", author: [{ family: "Tester", given: "T." }], issued: { "date-parts": [[2020]] }, "container-title": "Journal of Tests", volume: "4", page: "1-9", DOI: "10.1234/test.2020.4" }], from: { papers: 1, summaries: 0, official: 0 }, made: "2026-11-19", complete: false, wanted: 0, drugs: [], page: "general" };
+      liveSet({ at: "t", q: { [K5]: { id: "w_a0905" } }, items: { w_a0905: { q: a5.q, st: "answered", say: "", aid: "au_w_a0905" } }, answers: { au_w_a0905: a5 } });
+      await p.evaluate(() => liveKick(true)); await p.waitForSelector("#you-tell", { timeout: 15000 }).catch(() => {}); await shot(p, w + "-told-own-answer");
+      const T1 = await p.evaluate(() => { const b = document.getElementById("you-tell"); if (!b) return null; const r = b.getBoundingClientRect(), sos = document.querySelector(".sos-pill"), sr = sos && sos.offsetParent ? sos.getBoundingClientRect() : null;
+        return { h: b.querySelector(".you-tell-h").textContent, q: (b.querySelector(".you-tell-q") || {}).textContent, btn: (b.querySelector("a[data-you-live]") || {}).textContent, x: !!b.querySelector("button[data-you-told-x]"), inView: r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth, coversSos: !!sr && !(sr.bottom <= r.top || sr.top >= r.bottom || sr.right <= r.left || sr.left >= r.right) }; });
+      ok(w + " px (2.23.1): an answer to the reader's OWN question, while they are elsewhere on the site, is told in a small note: that their question has an answer, our question, and the way in; never over the way to the emergency numbers",
+        !!T1 && T1.h === "Your question has an answer" && T1.q === a5.q && T1.btn === "Read the answer" && T1.x && T1.inView && !T1.coversSos, JSON.stringify(T1));
+      await p.click("#you-tell a[data-you-live]"); await p.waitForSelector("#evsheet.open .auto-l", { timeout: 10000 }).catch(() => {});
+      const T2 = await p.evaluate(() => ({ title: (document.getElementById("ev-title") || {}).textContent, gone: !document.getElementById("you-tell"), news: JSON.parse(localStorage.getItem("pk-asked") || "[]").some(x => x.news) }));
+      ok(w + " px (2.23.1): the note opens the answer, and goes; it does not come back", T2.title === a5.q && T2.gone && !T2.news, JSON.stringify(T2));
+      await p.evaluate(() => { if (EV.open) closeEvidence(); }); await p.waitForTimeout(300);
+      // the general word is gone: a newer site on the server makes the page say nothing
+      await p.evaluate(() => { localStorage.setItem("pk-asked", JSON.stringify([{ k: "does modafinil make teeth yellow", q: "does modafinil make teeth yellow", d: "", t: Date.now(), cv: SITE_BUILD, st: "wait", sent: 1, sk: "6".repeat(20) }])); ASK_NEWER = true; askedBox(); });
+      const T3 = await p.evaluate(() => ({ newer: !!document.querySelector(".aq-new"), told: !!document.getElementById("you-tell"), text: document.body.innerText.includes("see whether yours is among them") }));
+      ok(w + " px (2.23.1): a newer site with answers to other people's questions is not told at all", !T3.newer && !T3.told && !T3.text, JSON.stringify(T3));
+      await p.evaluate(() => { ASK_NEWER = false; localStorage.removeItem("pk-asked"); askedBox(); }); liveSet(null); }
+    // ---- (2.23.1) one question asked twice with a slip of the keyboard is one question: one row, sent once; two different questions stay two ----
+    { const sends = []; p.on("request", r => { if (/\/api\/ask$/.test(r.url()) && r.method() === "POST") sends.push(JSON.parse(r.postData() || "{}").q); });
+      await p.evaluate(() => { const now = Date.now(); localStorage.setItem("pk-asked", JSON.stringify([
+        { k: "is kratom the same as kava", q: "is kratom the same as kava", d: "", t: now - 60000, ts: now - 60000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1, sk: "7".repeat(20) },
+        { k: "is kratom the same as kavva", q: "is kratom the same as kavva", d: "", t: now - 30000, ts: now - 30000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1, sk: "8".repeat(20) },
+        { k: "is mdma safe for the heart", q: "is mdma safe for the heart", d: "", t: now - 20000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "is mdea safe for the heart", q: "is mdea safe for the heart", d: "", t: now - 10000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "does kratom help with pain", q: "does kratom help with pain", d: "", t: now - 9000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "does kratom help with gain", q: "does kratom help with gain", d: "", t: now - 8000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 }])); askedBox(); });
+      await p.evaluate(() => insightLoad && insightLoad()); await p.waitForFunction(() => INS.state === "ready", null, { timeout: 60000 }).catch(() => {}); await p.evaluate(() => askedCheck()); await p.waitForTimeout(400);
+      const S1 = await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked") || "[]").map(x => x.q));
+      ok(w + " px (2.23.1): “is kratom the same as kava” and “… kavva” are one question: one row, the one sent first; “mdma” and “mdea”, “pain” and “gain” stay two questions each",
+        JSON.stringify(S1) === JSON.stringify(["is kratom the same as kava", "is mdma safe for the heart", "is mdea safe for the heart", "does kratom help with pain", "does kratom help with gain"]), JSON.stringify(S1));
+      await p.evaluate(() => { const l = JSON.parse(localStorage.getItem("pk-asked")); localStorage.setItem("pk-asked", JSON.stringify(l.slice(0, 1))); askedBox(); });
+      const n0 = sends.length; await typeQ(p, "Is kratom the same as kavva?"); await p.waitForTimeout(4500);
+      const S2 = await p.evaluate(() => ({ line: ((document.querySelector("#search-results .sr-fit-none") || {}).textContent || "").slice(0, 40), rows: JSON.parse(localStorage.getItem("pk-asked") || "[]").length }));
+      ok(w + " px (2.23.1): asking it again with the slip is not a new question: nothing is sent again, the page says it was sent, and the list keeps one row",
+        sends.length === n0 && /^You sent us this question/.test(S2.line) && S2.rows === 1, JSON.stringify([sends.slice(n0), S2]));
+      await p.evaluate(() => { localStorage.removeItem("pk-asked"); closeSearch(); }); }
     await p.context().close();
   }
 

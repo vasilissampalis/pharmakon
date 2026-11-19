@@ -9,7 +9,7 @@ name: Official
 on:
   workflow_dispatch:
   schedule:
-    - cron: "23 3 * * *"   # (17 November 2026, decision 28) every day: the school (scripts/auto/language.py). The senior author: "it has to always improve by itself"; "it should not depend on us to get better"
+    - cron: "23 3 * * *"   # (17 November 2026, decision 28) every day: the school (scripts/auto/language.py). The senior author: "it has to always improve by itself"; "it should not depend on us to get better". (19 November 2026, decision 35) and the pictures (scripts/auto/pictures.py daily)
   push:
     branches: [main]
     paths:
@@ -63,6 +63,13 @@ jobs:
             python3 -I scripts/auto/pictures.py --selftest >> "$L" 2>&1 || echo "!! the pictures selftest failed ($?)" >> "$L"
             python3 -I scripts/auto/pictures.py --requests data/auto/requests >> "$L" 2>&1 || echo "!! the pictures failed ($?)" >> "$L"
             git rm -q --ignore-unmatch data/auto/requests/pictures-*.json >> "$L" 2>&1
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            # (19 November 2026, decision 35) pictures every day by the clock, without being asked: GBIF and Wikimedia Commons for the pages the system
+            # started, Commons for the forms of the checked pages that have no photo, then the web copies. The senior author: "the site should always
+            # automatically find pictures for new substances it is adding". Nothing is shown before the editor has looked at it (site/build.js, AUTO_PICS, AUTO_FORMS).
+            if python3 -I scripts/auto/pictures.py --selftest >> "$L" 2>&1; then
+              python3 -I scripts/auto/pictures.py daily --max 80 >> "$L" 2>&1 || echo "!! the daily pictures failed ($?)" >> "$L"
+            else echo "!! the pictures selftest failed: no pictures were looked for today" >> "$L"; fi
           fi
           # (decision 28) the school: every day by the clock, or when asked. It needs no key; what it fetches is read as data, counted and forgotten.
           if [ "${{ github.event_name }}" = "schedule" ] || ls data/auto/requests/language-*.json >/dev/null 2>&1; then

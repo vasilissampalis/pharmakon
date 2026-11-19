@@ -126,10 +126,20 @@ function navCrumb() {
 function navHere(home, prev) {
   const here = document.getElementById("here"), back = document.getElementById("barback"); if (!here || !back) return;
   const t = home ? "" : navTitle().replace(/: /, " \u203A ");
-  here.textContent = t; here.hidden = !t;
+  here.textContent = t; here.dataset.on = t ? "1" : ""; navHereShow();
   const can = !home && prev && prev.h != null && prev.t;
   back.dataset.on = can ? "1" : ""; if (can) { back.setAttribute("aria-label", "Back to " + prev.t); back.title = "Back to " + prev.t; }
-  [0, 120, 500].forEach(ms => setTimeout(navBackShow, ms));   // (after the Back line itself is drawn, and again when the page has settled)
+  [0, 120, 500].forEach(ms => setTimeout(() => { navBackShow(); navHereShow(); }, ms));   // (after the Back line itself is drawn, and again when the page has settled)
+}
+// (2.23.1; the senior author, 19 November 2026, 10:21, with a picture of a page whose name stood twice, small and grey in the bar and large on the page:
+// "the drug name should not be in the top with gray letters because it's in the middle of the page with white letters!") The bar says where the reader is
+// only once the page's own title has gone out of sight under it, as the way back does; while the title is in view, the title says it
+function navHereShow() {
+  const here = document.getElementById("here"), top = document.querySelector(".topbar"); if (!here) return;
+  const h = document.querySelector(".view.active h1");
+  const seen = !!h && !!top && h.getClientRects().length > 0 && h.getBoundingClientRect().bottom > top.getBoundingClientRect().bottom + 4;
+  const on = here.dataset.on === "1"; if (here.hidden === on) here.hidden = !on;
+  here.classList.toggle("here-off", on && seen);   // (it keeps its place in the bar, so that nothing in the bar moves while the reader scrolls)
 }
 function navBackShow() {
   const back = document.getElementById("barback"), crumb = document.getElementById("crumb"), top = document.querySelector(".topbar"); if (!back) return;
@@ -156,7 +166,7 @@ function navAfter() {
   NAV_TRAVERSE = false; navStore();
 }
 if (typeof window !== "undefined") {
-  window.addEventListener("scroll", () => { clearTimeout(navLeave._t); navLeave._t = setTimeout(navLeave, 250); if (!navBackShow._f) navBackShow._f = requestAnimationFrame(() => { navBackShow._f = 0; navBackShow(); }); }, { passive: true });
+  window.addEventListener("scroll", () => { clearTimeout(navLeave._t); navLeave._t = setTimeout(navLeave, 250); if (!navBackShow._f) navBackShow._f = requestAnimationFrame(() => { navBackShow._f = 0; navBackShow(); navHereShow(); }); }, { passive: true });
   window.addEventListener("pagehide", navLeave);
   ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => window.addEventListener(t, () => { NAV_MOVED = true; }, { passive: true, capture: true }));
   document.addEventListener("click", ev => {

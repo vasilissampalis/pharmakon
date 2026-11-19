@@ -106,8 +106,8 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
         await p.evaluate(() => document.querySelectorAll("#p-looks img").forEach(i => i.scrollIntoView())); await p.waitForTimeout(500);
         const lk = await p.evaluate(() => { const sec = document.getElementById("p-looks"); const cr = sec.querySelector("details.look-credits"); return { shown: !sec.hidden, imgs: [...sec.querySelectorAll(".look img")].map(i => i.complete && i.naturalWidth > 0 && !!i.alt && /^img\/auto\/[a-z0-9-]+-t\.webp$/.test(i.getAttribute("src"))),
           credits: cr ? [...cr.querySelectorAll("a")].map(a => a.href) : [], creditText: cr ? cr.textContent : "", note: (sec.querySelector(".auto-picnote") || {}).textContent || "", wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
-        ok(w + "its pictures: each one loads and says what it shows, each has its maker and its licence (CC0 or CC BY, nothing else) one tap away, and a small line says that our system found them and that no person has checked them",
-          lk.shown && lk.imgs.length === s.pics && lk.imgs.every(Boolean) && lk.credits.filter(h => /^https:\/\/creativecommons\.org\/(?:publicdomain\/zero\/1\.0|licenses\/by\/[1-4]\.0)\/$/.test(h)).length === s.pics && lk.credits.length >= 2 * s.pics - 1 && !/\b(?:NC|ND|SA)\b/.test(lk.creditText) &&
+        ok(w + "its pictures: each one loads and says what it shows, each has its maker and its licence (public domain, CC0 or CC BY, nothing else) one tap away, and a small line says that our system found them and that no person has checked them",
+          lk.shown && lk.imgs.length === s.pics && lk.imgs.every(Boolean) && lk.credits.filter(h => /^https:\/\/creativecommons\.org\/(?:publicdomain\/zero\/1\.0|licenses\/by\/(?:[1-4]\.0|2\.5))\/$/.test(h)).length + (lk.creditText.match(/public domain/g) || []).length === s.pics && lk.credits.length >= 2 * s.pics - 1 && !/\b(?:NC|ND|SA)\b/.test(lk.creditText) &&
             /^Our system found these pictures by itself\..+A person here has not checked them yet\./.test(lk.note) && !lk.wide, JSON.stringify(lk));
         await shot(p, width + "-started-looks");
       }
@@ -233,11 +233,15 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok("a question that waits: nothing is said while the site on the server is this one", quiet.rows === 1 && !quiet.newer && quiet.look === false, JSON.stringify(quiet));
     await p.route("**/data/build.json", r => r.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ build: "209901010000", site: "9.9.9" }) }));
     const told = await p.evaluate(async () => { const n = await askedLook(), el = document.querySelector("#home-asked .aq-new"); return { n, text: el ? el.textContent : "", btn: !!document.querySelector("#home-asked button[data-asked-reload]"), wide: document.documentElement.scrollWidth > innerWidth }; });
-    ok("when a newer site is on the server, the list says so once and offers to load it", told.n === true && told.text === "The site has new answers. Load them to see whether yours is among them." && told.btn && !told.wide, JSON.stringify(told));
-    await shot(p, "390-newer-site");
+    // (2.23.1; the senior author, 19 November 2026, 09:58: a reader is not told that the site has answers in general, only that a question of their own has one)
+    ok("when a newer site is on the server, nothing is said about answers in general (the senior author, 19 November 2026)", told.n === true && told.text === "" && !told.btn && !told.wide, JSON.stringify(told));
     await p.unroute("**/data/build.json");
+    await p.evaluate(() => { const l = JSON.parse(localStorage.getItem("pk-asked")); l[0].lv = { reload: 1 }; localStorage.setItem("pk-asked", JSON.stringify(l)); askedBox(); });
+    const own = await p.evaluate(() => { const el = document.querySelector("#home-asked .aq-new"); return { text: el ? el.textContent : "", btn: !!document.querySelector("#home-asked button[data-asked-reload]"), wide: document.documentElement.scrollWidth > innerWidth }; });
+    ok("where a question of the reader's own has an answer in the newest version, the list says so and offers to load it", own.text === "Your question has an answer in the newest version of the site. Load it" && own.btn && !own.wide, JSON.stringify(own));
+    await shot(p, "390-own-answer-newer");
     await Promise.all([p.waitForNavigation({ timeout: 20000 }).catch(() => null), p.click("#home-asked button[data-asked-reload]")]); await p.waitForTimeout(900);
-    ok("Load them loads the page again; the question still waits and the line is gone", await p.evaluate(() => document.querySelectorAll("#yousheet .aq.wait").length === 1 && !document.querySelector("#home-asked .aq-new")));
+    ok("Load it loads the page again; the question is still on the list", await p.evaluate(() => document.querySelectorAll("#yousheet .aq").length === 1 || JSON.parse(localStorage.getItem("pk-asked")).length === 1));
     await p.context().close();
   }
   ok("no error in any page's console", !errors.length, errors.slice(0, 3).join(" | "));

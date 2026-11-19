@@ -229,22 +229,27 @@ document.addEventListener("click", e => {
 });
 
 /* Photo credits for a set of forms in one short paragraph: which form, then its photo's author, licence and source */
-function looksCredits(fl, byId) {
+function looksCredits(fl, byId, autos) {
   const groups = new Map();
   fl.forEach(f => { const p = (f.photos || []).map(id => byId[id]).find(Boolean); if (!p) return;
     const k = photoCredit(p).replace(/^<span class="phcredit">Photo: /, "").replace(/<\/span>$/, ""); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(f.name); });
+  // (2.23.1) a picture the system found for a form: its maker, licence and file page, as on the pages it started
+  const more = (autos || []).map(([f, a]) => esc(f.name) + ", " + autoPicCredit(a));
   // the credits every licence asks for, one tap away instead of a long paragraph under the photos
-  return groups.size ? '<details class="look-credits"><summary>Photo credits</summary><p>' + [...groups].map(([k, names]) => esc(andList(names)) + ", " + k).join("; ") + ".</p></details>" : "";
+  return groups.size || more.length ? '<details class="look-credits"><summary>Photo credits</summary><p>' + [...groups].map(([k, names]) => esc(andList(names)) + ", " + k).concat(more).join("; ") + ".</p></details>" : "";
 }
+// (2.23.1, decision 35) a form of a checked page with no photo of its own: the picture our system found for it (Wikimedia Commons), once the editor looked at it
+function formAutoPic(slug, f) { return typeof AUTO_FORMS === "object" && AUTO_FORMS && AUTO_FORMS[slug] && AUTO_FORMS[slug][f.id] || null; }
 /* What it looks like: every form, photo first */
 function formsHtml(slug) {
   const fl = (FORMS[slug] || []).filter(f => f.name); if (!fl.length) return "";
   const byId = Object.fromEntries(PHOTOS.map(p => [p.id, p]));
   const ident = IDENTITY.find(d => d.substance === slug) || { sources: [] };
-  return '<ul class="looks">' + fl.map(f => { const p = (f.photos || []).map(id => byId[id]).find(Boolean);
-    return '<li class="look' + (p ? " hasph" : "") + '">' + (p ? '<span class="look-ph">' + photoImg(p, "t", p.alt, true) + "</span>" : '<span class="look-ic">' + icon(f.icon || "molecule") + "</span>") +
-      '<span class="look-t"><b>' + esc(f.name) + "</b><span>" + esc(f.what || "") + "</span></span></li>"; }).join("") + "</ul>" +
-    looksCredits(fl, byId) + '<p class="look-note">Looks don’t tell you what’s inside: the same drug can look different, and different drugs can look the same. ' + phToggle() + "</p>";
+  const autos = [];
+  return '<ul class="looks">' + fl.map(f => { const p = (f.photos || []).map(id => byId[id]).find(Boolean), a = p ? null : formAutoPic(slug, f); if (a) autos.push([f, a]);
+    return '<li class="look' + (p || a ? " hasph" : "") + (a ? " look-auto" : "") + '">' + (p ? '<span class="look-ph">' + photoImg(p, "t", p.alt, true) + "</span>" : a ? '<span class="look-ph">' + autoPicImg(a, "t", f.name + ": an example our system found", true) + "</span>" : '<span class="look-ic">' + icon(f.icon || "molecule") + "</span>") +
+      '<span class="look-t"><b>' + esc(f.name) + "</b><span>" + esc(f.what || "") + "</span>" + (a ? '<span class="look-auto-t">Picture found by our system. A person has not checked it yet.</span>' : "") + "</span></li>"; }).join("") + "</ul>" +
+    looksCredits(fl, byId, autos) + '<p class="look-note">Looks don’t tell you what’s inside: the same drug can look different, and different drugs can look the same. ' + phToggle() + "</p>";
 }
 
 /* Your country: the law, the emergency number and drug checking where you are. Asked once, in the place it is needed,
@@ -1396,8 +1401,7 @@ function qzSame(why, but) { if (!why) return false; const w = t => new Set(norm(
 /* ---------- Myth or fact? (redesign 2, 13 November; the senior author: the site "has so much info it is like the user gets
    tested in school", and a visitor would use it a little and leave). The first thing under the search box on the home page:
    a deck of 10 cards from the checked true-or-false statements (data/site/simple.json tf: only the ones the quiz may ask, so
-   written for the claim's current version), in a new order on every visit, short statements (20 words or fewer) first,
-   and among them the ones on what people ask about most (DEMAND, highest first), about as many myths as facts, one card
+   written for the claim's current version), each drawn at random when it is reached (site 2.23.1: see mfDraw), one card
    per answer. Tap Myth or Fact and the card turns over where it is: the verdict, the statement, its why line, the answer's
    "But" (the reveal always carries it, as in the quiz, unless the why line already says it), the evidence bars and the way
    to the answer on its page. Then Next; after ten, Another 10. A plain count, no score,
@@ -1415,25 +1419,25 @@ function mfPool() {
       i: typeof x.i === "number" ? x.i : -1 }); }));   // i: how interesting readers of the cards rated it (data/site/tf-interest.json); -1 without a score
   return (MF_POOL = out);
 }
-// n new cards: none asked this visit or dealt in this deck before. With interest scores (site 2.3, data/site/tf-interest.json):
-// the cards never answered on this device first, then those missed last time, then the rest; within each of these the most
-// interesting first, then the short ones (20 words or fewer), then the statements whose answers people ask about most
-// (DEMAND), equals in a new order every time. Without scores, as before: short ones first, and of each length those never
-// answered first, then those missed, then the rest, each by DEMAND. A full deck takes about as many myths as facts, and is
-// laid out with its most interesting card first (equal cards as dealt).
-function mfDeal(st, n) {
-  const asked = new Set(QZS.claims), seen = qzSeen(), again = qzAgain();
-  let pool = st.pool.filter(x => !asked.has(x.claim) && !st.used.has(x.claim));
-  if (!pool.length && n > 1) { st.used = new Set(); pool = st.pool; }   // every statement has been dealt: all of them again, in a new order
-  const scored = st.pool.some(x => x.i >= 0), state = x => !seen.has(x.key) ? 0 : again.has(x.key) ? 1 : 2;
-  const tier = x => scored ? state(x) : (x.long ? 3 : 0) + state(x), one = new Set();
-  const order = [0, 1, 2, 3, 4, 5].flatMap(t => shuffle(pool.filter(x => tier(x) === t)).sort((a, b) => b.i - a.i || (scored ? a.long - b.long : 0) || demandOf(b.claim) - demandOf(a.claim))).filter(x => !one.has(x.claim) && one.add(x.claim));
-  let deck = n > 1 ? order.filter(x => !x.fact).slice(0, n / 2).concat(order.filter(x => x.fact).slice(0, n / 2)) : order.slice(0, n);
-  deck = deck.concat(order.filter(x => !deck.includes(x)).slice(0, n - deck.length));
-  deck = qzSpread(shuffle(deck), "page").map((x, k) => [x, k]).sort((a, b) => b[0].i - a[0].i || a[1] - b[1]).map(p => p[0]);
-  deck.forEach(x => st.used.add(x.claim));
-  return deck;
+/* Each card is drawn at random, at the moment it is needed (site 2.23.1; the senior author, 19 November 2026, 10:08 and 10:09: "the Myth or Fact
+   questions should be in complete random order because now whenever i get into the website from different devices i answer the same first questions";
+   "when you complete a question by clicking "Myth" or "Fact" the next question should not be predetermined but appear completely randomly"). Until then a
+   deck of ten was dealt at once, the most interesting cards first, so every new device began with the same cards. Now the first card is drawn when the
+   deck is shown and each next one when the reader moves on, at random from the cards at or above the interest cut (data/site/tf-interest.json, at build
+   time): first those never answered on this device and not yet asked in this visit; when every card has been answered here, all of them again. Never a
+   card whose answer is already in this deck, and not two from the same page in a row where the pool allows it. pos: the place the card is drawn for. */
+function mfDraw(st, pos) {
+  const asked = new Set(QZS.claims), seen = qzSeen(), inDeck = new Set(st.cards.filter((x, k) => x && k !== pos).map(x => x.claim)), last = pos > 0 ? st.cards[pos - 1] : null;
+  let pool = st.pool.filter(x => !asked.has(x.claim) && !st.used.has(x.claim) && !inDeck.has(x.claim));
+  if (!pool.length) { st.used = new Set(inDeck); pool = st.pool.filter(x => !inDeck.has(x.claim)); }   // every card has been dealt: all of them again
+  if (!pool.length) return null;
+  const fresh = pool.filter(x => !seen.has(x.key)); if (fresh.length) pool = fresh;                      // never answered on this device first
+  const other = last ? pool.filter(x => x.page !== last.page) : pool; if (other.length) pool = other;     // not two from one page in a row
+  const x = pool[Math.floor(Math.random() * pool.length)]; st.used.add(x.claim);
+  return x;
 }
+// a deck's first card (a new deck, or Another 10)
+function mfFresh(st) { st.cards = []; st.picks = []; st.pos = 0; const x = mfDraw(st, 0); if (x) st.cards[0] = x; }
 // the statements of one page (a drug page: its own answers, the mixing answers and the test-kit answers it shows; the facts
 // page: the general answers), each leading to the answer on that page where it is there; or (no page) every statement
 function mfPagePool(page) {
@@ -1467,8 +1471,10 @@ function mfMain() {
     const byKey = new Map(pool.map(x => [x.key, x])); let pos = -1;
     saved.keys.forEach((k, i) => { const x = byKey.get(k); if (!x) return; if (i === saved.pos) pos = st.cards.length; st.cards.push(x); st.picks.push(saved.picks[i] == null ? undefined : { ok: !!saved.picks[i] }); st.used.add(x.claim); });
     st.pos = pos >= 0 ? pos : Math.max(0, Math.min(st.cards.length - 1, st.picks.findIndex(p => !p) < 0 ? st.cards.length - 1 : st.picks.findIndex(p => !p)));
+    // (2.23.1) a deck kept by an older page was dealt ten at once: the cards after the one in view were never shown, and are drawn afresh when reached
+    st.cards = st.cards.slice(0, st.pos + 1); st.picks = st.picks.slice(0, st.pos + 1); st.used = new Set(st.cards.map(x => x.claim));
   }
-  if (!st.cards.length) { st.cards = mfDeal(st, st.n); st.picks = []; st.pos = 0; }
+  if (!st.cards.length) mfFresh(st);
   return (MF_MAIN = st);
 }
 // a deck of 10 (fewer where a page has fewer statements); page: only that page's statements. The start page's deck ("tf")
@@ -1477,7 +1483,7 @@ function mfStart(boxId, page) {
   if (!document.getElementById(boxId)) return;
   if (!page && (boxId === "tf" || boxId === "quizpage")) { MF[boxId] = mfMain(); mfRender(boxId); return; }
   const pool = mfPagePool(page), st = MF[boxId] = { pool, n: Math.min(10, mfCount(pool)), used: new Set(), cards: [], picks: [], pos: 0 };
-  st.cards = mfDeal(st, st.n); mfRender(boxId);
+  mfFresh(st); mfRender(boxId);
 }
 // the Myth or fact? page: the main deck, or the deck of the drug chosen there; the chooser and the count of cards answered
 function mfQuizPage() {
@@ -1515,8 +1521,8 @@ function mfWhere(page) {
   return { f: { k: "oth", icon: page === GEN ? "book" : page === DC ? "flask" : page === "interactions" ? "mix" : "molecule" }, name: PAGE_TITLES[page === GEN ? "facts" : page === DC ? "checking" : "interactions"] || "" };
 }
 function mfCardHtml(boxId, st) {
-  const x = st.cards[st.pos], p = st.picks[st.pos], c = claimById[x.claim], sp = SIMPLE.claims[x.claim], w = mfWhere(x.page), left = st.cards.length - 1 - st.pos;
-  const top = '<div class="qz2-top"><span class="qz2-k">' + icon(w.f.icon) + "<span>" + esc(w.name) + '</span></span><span class="qz2-score">' + (st.pos + 1) + " of " + st.cards.length + "</span></div>";
+  const x = st.cards[st.pos], p = st.picks[st.pos], c = claimById[x.claim], sp = SIMPLE.claims[x.claim], w = mfWhere(x.page), left = st.n - 1 - st.pos;
+  const top = '<div class="qz2-top"><span class="qz2-k">' + icon(w.f.icon) + "<span>" + esc(w.name) + '</span></span><span class="qz2-score">' + (st.pos + 1) + " of " + st.n + "</span></div>";
   const opt = (v, t) => '<button type="button" class="qz2-o" data-v="' + v + '"' + (p ? " disabled" : "") + ">" + t + "</button>";
   // the card already answered (going back to it) shows turned, without turning again
   return '<div class="mf-card f-' + w.f.k + (p ? " flipped" : "") + (left > 1 ? " l2" : left ? " l1" : "") + '"><div class="mf-in">' +
@@ -1528,15 +1534,16 @@ function mfCardHtml(boxId, st) {
       // 2.3 insight: data-sheet: the answer opens over the deck (app.insight.js), and Back returns to this card
       '<div class="qz2-row">' + meterHtml(c.grade.certainty, true) + '<a class="qz2-ev" href="' + esc(answerAddr(x.claim, x.page)) + '" data-sheet="' + esc(x.claim) + '">Read the answer ' + icon("arrow") + "</a></div></div></div></div>";
 }
-const mfNavHtml = st => { const last = st.pos === st.cards.length - 1 && st.picks[st.pos], right = st.picks.filter(p => p && p.ok).length;
+const mfNavHtml = st => { const last = st.pos === st.n - 1 && st.picks[st.pos], right = st.picks.filter(p => p && p.ok).length;
   return '<div class="mf-nav">' + (st.pos > 0 ? '<button type="button" class="qz2-prev">' + icon("arrow") + "<span>Previous</span></button>" : "") +
-    (last && st.cards.length > 2 ? '<span class="mf-res">' + right + " of " + st.cards.length + " right</span>" : "") +
-    (st.picks[st.pos] ? '<button type="button" class="qz2-nb">' + (st.pos < st.cards.length - 1 ? "Next" : st.n === 10 ? "Another 10" : "Again, in a new order") + "</button>" : "") + "</div>"; };
+    (last && st.n > 2 ? '<span class="mf-res">' + right + " of " + st.n + " right</span>" : "") +
+    (st.picks[st.pos] ? '<button type="button" class="qz2-nb">' + (st.pos < st.n - 1 ? "Next" : st.n === 10 ? "Another 10" : "Again, in a new order") + "</button>" : "") + "</div>"; };
 function mfRender(boxId) {
   const st = MF[boxId], box = document.getElementById(boxId); if (!st || !box) return;
   // a card dealt earlier whose answer has since been asked in the quiz gives way to a fresh one
-  if (!st.picks[st.pos] && st.cards[st.pos] && QZS.claims.includes(st.cards[st.pos].claim)) { const y = mfDeal(st, 1)[0]; if (y) { st.cards[st.pos] = y; if (st.main) mfMainSave(); } }
-  box.hidden = !st.cards.length; if (!st.cards.length) return;
+  if (!st.picks[st.pos] && st.cards[st.pos] && QZS.claims.includes(st.cards[st.pos].claim)) { const y = mfDraw(st, st.pos); if (y) { st.cards[st.pos] = y; if (st.main) mfMainSave(); } }
+  if (!st.cards[st.pos]) { const y = mfDraw(st, st.pos); if (y) { st.cards[st.pos] = y; if (st.main) mfMainSave(); } }   // (2.23.1) the card for this place is drawn when it is reached
+  box.hidden = !st.cards[st.pos]; if (!st.cards[st.pos]) return;
   box.innerHTML = mfCardHtml(boxId, st) + mfNavHtml(st);
 }
 // back on a page whose deck is the main deck: it is drawn again as it stands now (it may have moved on on the other page);
@@ -1567,8 +1574,8 @@ document.addEventListener("click", e => {
     return;
   }
   if (b.classList.contains("qz2-prev")) st.pos = Math.max(0, st.pos - 1);
-  else if (st.pos < st.cards.length - 1) st.pos++;
-  else { st.cards = mfDeal(st, st.n); st.picks = []; st.pos = 0; }   // Another 10
+  else if (st.pos < st.n - 1) { st.pos++; if (!st.cards[st.pos]) { const y = mfDraw(st, st.pos); if (y) st.cards[st.pos] = y; else st.pos--; } }   // (2.23.1) the next card is drawn now, at random
+  else mfFresh(st);   // Another 10
   if (st.main) mfMainSave();
   mfRender(box.id);
   const f = box.querySelector(st.picks[st.pos] ? ".mf-v" : ".mf-q"); if (f) f.focus({ preventScroll: true });

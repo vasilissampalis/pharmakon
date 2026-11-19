@@ -1156,7 +1156,7 @@ function insDenied(res) {
   return r2;
 }
 // a question the reader has said the page's answer does not answer (kept with the question on the reader's own list): what that answer was, or ""
-function insDeniedFor(q) { const k = insClean(q).slice(0, 200).toLowerCase(), it = askedList().find(x => x.k === k && x.x); return it ? String(it.x) : ""; }
+function insDeniedFor(q) { const k = insClean(q).slice(0, 200).toLowerCase(), it = askedList().find(x => x.x && (x.k === k || askedSame(x.k, k))); return it ? String(it.x) : ""; }
 const insWaysHtml = (h, rs, at) => (rs.length ? '<p class="sr-fit-h"' + (at ? ' data-at="' + at + '" data-n="' + rs.length + '"' : "") + ">" + h + "</p>" + rs.map(r => insRouteHtml(r, "sr-route sr-way")).join("") : "");
 /* (2.22) What stands below, named in one row under the line: "Figures 1", "Closest answers 3", "Research 5", "Official pages 7". Each leads to its block.
    Nothing is hidden and nothing moves: the row only saves the scrolling, and says at a glance that there IS research and official pages further down
@@ -1629,13 +1629,7 @@ const ASK_SENT = (typeof AUTO_LOOP !== "undefined" && AUTO_LOOP)
   : "Sent. Our system works on it by itself and keeps trying until an answer passes its checks. It turns green under “Your questions” on the start page.";
 function askedLook() {   // one look: is the site on the server newer than this page?
   if (ASK_NEWER) return Promise.resolve(true);
-  return fetch("data/build.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => { if (j && typeof j.build === "string" && j.build !== ASK_BUILD) { ASK_NEWER = true; if (askedWatch.t) clearInterval(askedWatch.t); askedBox(); } return ASK_NEWER; }).catch(() => false);
-}
-function askedWatch() {
-  if (askedWatch.on || ASK_NEWER || !askedList().some(it => it.st === "wait")) return; askedWatch.on = true;
-  askedWatch.t = setInterval(() => { if (!document.hidden && askedList().some(it => it.st === "wait")) askedLook(); }, ASK_LOOK);
-  // and when the reader comes back to the tab after a while
-  document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() - (askedWatch.at || 0) > ASK_LOOK && askedList().some(it => it.st === "wait")) { askedWatch.at = Date.now(); askedLook(); } });
+  return fetch("data/build.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => { if (j && typeof j.build === "string" && j.build !== ASK_BUILD) ASK_NEWER = true; return ASK_NEWER; }).catch(() => false);   // (2.23.1: it no longer makes the page say anything)
 }
 // (2.16.1) FIND_ON: the site's server can look up published research (POST api/find). Learned by the same one question to the server
 let FIND_ON = (() => { try { return sessionStorage.getItem("pk-find-on") === "1"; } catch (e) { return false; } })();
@@ -1659,13 +1653,68 @@ function askProbe() {
 }
 function askedList() { try { const x = JSON.parse(localStorage.getItem(ASK_KEY) || "[]"); return Array.isArray(x) ? x.filter(it => it && typeof it.q === "string" && it.k) : []; } catch (e) { return []; } }
 function askedSave(list) { try { localStorage.setItem(ASK_KEY, JSON.stringify(list.slice(-20))); } catch (e) { /* this visit only */ } }
+/* (2.23.1) One question, asked twice with a slip of the keyboard, is ONE question. The senior author, 19 November 2026, 09:58, of two rows of his list that
+   differed only by a drug's name with one letter missing: "the system thought this was two different questions". Two askings are the same question where their
+   words are the same but for at most two words, and each of those is a slip of the other: a drug's name mistyped ("vallium", "heroine"; never two different
+   drugs, "mdma" and "mdea"), or, in an ordinary word, one letter wrong where the word that results is not a word at all ("cuase"; never "pain" and "gain",
+   which are two questions). A short word allows only a doubled or a swapped letter; a word with a digit allows nothing ("100mg" is not "200mg"). */
+const askedWordsOf = k => String(k).toLowerCase().replace(/[’'`]/g, "").match(/[\p{L}\p{N}]+/gu) || [];
+function askedOsa(a, b) {   // the fewest letters added, taken away, changed or swapped to make one word of the other (optimal string alignment)
+  const m = a.length, n = b.length, d = Array.from({ length: m + 1 }, (_, i) => [i].concat(new Array(n).fill(0)));
+  for (let j = 1; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) {
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+  }
+  return d[m][n];
+}
+function askedEasySlip(x, y) {   // a doubled letter more or less ("valium", "vallium"), or two letters side by side swapped ("waht")
+  if (Math.abs(x.length - y.length) === 1) { const [lo, sh] = x.length > y.length ? [x, y] : [y, x];
+    for (let i = 1; i < lo.length; i++) if (lo[i] === lo[i - 1] && lo.slice(0, i) + lo.slice(i + 1) === sh) return true; return false; }
+  if (x.length !== y.length) return false;
+  const at = [...x].map((c, i) => c !== y[i] ? i : -1).filter(i => i >= 0);
+  return at.length === 2 && at[1] === at[0] + 1 && x[at[0]] === y[at[1]] && x[at[1]] === y[at[0]];
+}
+function askedSlip(x, y) {
+  if (x === y) return true;
+  if (/\d/.test(x + y)) return false;
+  const nx = INS.nameOf ? INS.nameOf.get(x) : null, ny = INS.nameOf ? INS.nameOf.get(y) : null, n = Math.min(x.length, y.length);
+  if (nx && ny) return n >= 4 && nx.join("|") === ny.join("|") && askedOsa(x, y) <= (n >= 9 ? 2 : 1);   // two names of one drug, mistyped; two drugs are two questions
+  const word = w => !!INS.vocab && INS.vocab.has(w);
+  if (n < 4) return !!(nx || ny) && !!INS.vocab && !word(nx ? y : x) && askedEasySlip(x, y);         // "lds" for "lsd": only with a name, and where the other is no word at all
+  const d = askedOsa(x, y);
+  if (n < 6 ? !(d === 1 && askedEasySlip(x, y)) : d > (n >= 9 ? 2 : 1)) return false;
+  if (nx || ny) return true;                                                                           // a drug's name, mistyped
+  return !!INS.vocab && !(word(x) && word(y));                                                         // two words that both exist are two questions
+}
+function askedSame(a, b) {
+  if (a === b) return true;
+  const A = askedWordsOf(a), B = askedWordsOf(b);
+  if (!A.length || A.length !== B.length) return false;
+  let diff = 0;
+  for (let i = 0; i < A.length; i++) if (A[i] !== B[i] && (++diff > 2 || !askedSlip(A[i], B[i]))) return false;
+  return true;
+}
+const askedFindIn = (list, k) => list.find(x => x.k === k) || list.find(x => askedSame(x.k, k));
+// rows of one question kept twice (by a page before 2.23.1): the one kept first stays, with what the other knew
+function askedMerged(list) {
+  const out = [];
+  for (const it of list) {
+    const same = out.find(x => askedSame(x.k, it.k));
+    if (!same) { out.push(it); continue; }
+    if (it.st === "ans" && same.st !== "ans") { same.st = "ans"; same.id = it.id; same.p = it.p; same.h = it.h; same.fresh = it.fresh; same.news = it.news; }
+    same.t = Math.max(same.t || 0, it.t || 0);
+    for (const f of ["sent", "auto", "sk", "ts", "w", "x", "d", "lv"]) if (!same[f] && it[f]) same[f] = it[f];
+  }
+  return out;
+}
 function askedAdd(q, drug) {
   const text = insClean(q).slice(0, 200), k = text.toLowerCase(); if (k.length < 3) return null;
-  const list = askedList(); let it = list.find(x => x.k === k);
+  const list = askedList(); let it = askedFindIn(list, k);
   if (!it) { it = { k, q: text, d: drug || "", t: Date.now(), cv: ASK_BUILD, st: "wait", sent: 0 }; list.push(it); askedSave(list); }
   return it;
 }
-const askedSentHas = q => { const k = insClean(q).slice(0, 200).toLowerCase(); return askedList().some(it => it.k === k && it.sent); };
+const askedSentHas = q => { const k = insClean(q).slice(0, 200).toLowerCase(); return askedList().some(it => it.sent && (it.k === k || askedSame(it.k, k))); };
 function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k === k); if (!it) return; Object.assign(it, patch); askedSave(list); }
 function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
 // (2.17) a question the reader took off the list is not put back by the page in this visit (kept until the tab closes: its key only)
@@ -1689,7 +1738,7 @@ const youAgo = t => { const h = (Date.now() - (t || Date.now())) / 3600000; retu
 const youAnswer = x => { const id = x && x.id; if (!id) return null; if (isAuto(id)) return { id, q: AUTO[id].q, short: AUTO[id].short, href: "#auto/q-" + id }; if (!claimById[id]) return null; const sp = (SIMPLE.claims || {})[id]; return { id, q: anyQuestion(id) || "", short: sp ? sp.short : "", href: answerAddr(id, x.p) }; };
 function askedBox() {
   const box = document.getElementById("home-asked"); if (!box) return;
-  { const all = askedList(), keep = all.filter(it => !it.u && !it.gone); if (keep.length !== all.length) askedSave(keep); }   // (2.15.2) rows kept by an older page as "Not a whole question" leave the list
+  { const all = askedList(), keep = askedMerged(all.filter(it => !it.u && !it.gone)); if (keep.length !== all.length) askedSave(keep); }   // (2.15.2) rows kept by an older page as "Not a whole question" leave the list; (2.23.1) one question kept twice is one row
   const list = askedList().filter(it => it.st !== "ans" || it.h || claimById[it.id] || isAuto(it.id)), hist = histOn() ? histList() : [];
   const panel = document.querySelector("#yousheet .panel");
   if (panel) { const top = panel.scrollTop; panel.innerHTML = youHtml(list, hist); panel.scrollTop = top; }
@@ -1697,10 +1746,13 @@ function askedBox() {
   const nAns = list.filter(it => it.st === "ans").length, nWait = list.filter(it => it.st !== "ans" && (it.sent || it.w)).length, nNot = list.length - nAns - nWait;
   const said = [nAns ? nAns + " answered" : "", nWait ? nWait + " in progress" : "", nNot ? nNot + " not sent" : ""].filter(Boolean).join(" · ") || (hist.length + (hist.length === 1 ? " past search" : " past searches"));
   // (the senior author, 15 November: "the user should be informed" what is kept. The line says that something is kept and how much; the panel says what and where)
-  const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
+  // (2.23.1; the senior author, 19 November 2026, 09:58: a reader whose own question has no answer yet has no reason to hear that the site answered
+  // someone else's) the page no longer says "The site has new answers ... see whether yours is among them". It says only that a question of THIS
+  // reader has an answer: here, in the list, and in a small note wherever the reader is (youTell)
+  const newer = list.some(it => it.st !== "ans" && it.lv && it.lv.reload) ? '<p class="aq-new" role="status">Your question has an answer in the newest version of the site. <button type="button" class="aq-reload" data-asked-reload>Load it</button></p>' : "";
   box.innerHTML = '<button type="button" class="you-bar' + (nAns ? " has-ans" : "") + '" data-you-open aria-haspopup="dialog" aria-controls="yousheet">' + icon(nAns ? "check" : "clock") + '<span class="you-t">Your questions</span><span class="you-n">' + esc(said) + "</span>" + icon("arrow", "you-go") + "</button>" + newer;
   box.hidden = false;
-  askedCheckSoon(); askedWatch();
+  askedCheckSoon(); youTell();
 }
 /* ---------- (2.23, 19 November 2026) What our system is doing for a question the reader sent, as it happens ----------
    The senior author, 18 November 2026, 23:42 Athens: "the site is taking too long to answer my pending questions... i persist on this like 5 minutes pass and
@@ -1768,17 +1820,47 @@ function liveApply(j) {
       if (j.room === false && typeof j.room_at === "string") lv.room = j.room_at.slice(0, 25);
       if (lv.st === "answered" && typeof o.aid === "string" && /^au_[a-z0-9_]{1,44}$/.test(o.aid)) {
         if (!isAuto(o.aid) && liveAnswerOk(o.ans)) AUTO[o.aid] = Object.assign({}, o.ans, { live: 1 });   // the answer itself, in the form the build gives every such answer: shown before the site's next publishing
-        if (isAuto(o.aid)) { it.st = "ans"; it.id = o.aid; it.p = AUTO[o.aid].page; it.fresh = Date.now(); delete it.lv; changed = true; continue; }
-        lv.reload = 1; } }
+        if (isAuto(o.aid)) { it.st = "ans"; it.id = o.aid; it.p = AUTO[o.aid].page; it.fresh = Date.now(); delete it.lv; if (!liveInView(it.k)) it.news = 1; changed = true; continue; }
+        lv.reload = 1; if (!(it.lv && it.lv.reload) && !liveInView(it.k)) it.news = 1; } }
     if (JSON.stringify(it.lv || null) !== JSON.stringify(lv)) { it.lv = lv; changed = true; }
   }
   if (changed) { askedSave(list); askedBox(); liveDraw(); }
 }
+// is the reader looking at this question's own block right now? (then the answer stands before them, and no note is needed)
+function liveInView(k) {
+  if (document.hidden) return false;
+  for (const b of document.querySelectorAll(".ins-live[data-live]")) { if (b.dataset.live !== k) continue; const r = b.getBoundingClientRect(); if (r.height && r.bottom > 0 && r.top < innerHeight) return true; }
+  return false;
+}
+/* (2.23.1) A small note, wherever the reader is on the site, when a question of THEIR OWN has an answer: never about anyone else's (the senior author,
+   19 November 2026, 09:58). It stays until the reader opens the answer or closes the note; opening "Your questions" counts as seen. */
+function youTell() {
+  const news = askedList().filter(it => it.news && ((it.st === "ans" && youAnswer(it)) || (it.st !== "ans" && it.lv && it.lv.reload) || (it.st === "ans" && it.h)));
+  let box = document.getElementById("you-tell");
+  if (!news.length || YOU.open) { if (box) box.remove(); return; }
+  if (!box) { box = document.createElement("div"); box.id = "you-tell"; box.className = "you-tell"; box.setAttribute("role", "status"); box.setAttribute("aria-live", "polite"); document.body.appendChild(box); }
+  const it = news[0], a = news.length === 1 && it.st === "ans" ? youAnswer(it) : null;
+  const go = news.length > 1 ? '<button type="button" class="qz2-nb" data-you-open data-you-told="*">See them</button>'
+    : it.st !== "ans" ? '<button type="button" class="qz2-nb" data-asked-reload>Load it</button>'
+    : a ? '<a class="qz2-nb" href="' + esc(a.href) + '" data-you-live="' + esc(a.id) + '"' + (it.p ? ' data-page="' + esc(it.p) + '"' : "") + ' data-you-told="' + esc(it.k) + '">Read the answer</a>'
+    : '<a class="qz2-nb" href="' + esc(it.h) + '" data-you-told="' + esc(it.k) + '">See the answer</a>';
+  const h = news.length > 1 ? news.length + " of your questions have answers" : "Your question has an answer";
+  const html = '<p class="you-tell-h">' + icon("check") + "<span>" + h + '</span></p><p class="you-tell-q">' + esc(news.length > 1 ? "" : a ? a.q : it.q) + '</p><div class="you-tell-b">' + go +
+    '<button type="button" class="you-tell-x" data-you-told-x aria-label="Close this note">' + icon("x") + "</button></div>";
+  if (box.innerHTML !== html) box.innerHTML = html;
+  const q = box.querySelector(".you-tell-q"); if (q && !q.textContent) q.remove();
+}
+function youTold(k) { const list = askedList(); let c = false; for (const it of list) if (it.news && (k === "*" || it.k === k)) { delete it.news; c = true; } if (c) askedSave(list); const b = document.getElementById("you-tell"); if (b && !askedList().some(it => it.news)) b.remove(); }
+if (typeof document !== "undefined") document.addEventListener("click", e => {
+  if (!e.target.closest) return;
+  const x = e.target.closest("button[data-you-told-x]"); if (x) { e.preventDefault(); youTold("*"); return; }
+  const g = e.target.closest("[data-you-told]"); if (g) youTold(g.dataset.youTold);   // (the answer itself is opened by its own handler)
+}, true);
 // the asked item a view of a question belongs to: the reader's own words, or the listed question the reader keeps
 function liveItemFor(res) {
   if (!res || !res.q) return null;
   const k = insClean(res.q).slice(0, 200).toLowerCase(), list = askedList();
-  return list.find(x => x.k === k && (x.sent || x.w || x.st === "ans")) || (res.note === "want" && res.want ? list.find(x => x.w === res.want.id) : null) || null;
+  return list.find(x => (x.k === k || askedSame(x.k, k)) && (x.sent || x.w || x.st === "ans")) || (res.note === "want" && res.want ? list.find(x => x.w === res.want.id) : null) || null;
 }
 function liveMount(after, res) {
   if (!after || !after.parentNode) return;
@@ -1852,7 +1934,7 @@ function youHtml(list, hist) {
     : it.w ? look(it, "On our list")
     : it.sent ? look(it, "Sent. We are checking")
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">Not sent</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
-  const newer = ASK_NEWER ? '<p class="aq-new" role="status">The site has new answers. <button type="button" class="aq-reload" data-asked-reload>Load them</button> to see whether yours is among them.</p>' : "";
+  const newer = list.some(it => it.st !== "ans" && it.lv && it.lv.reload) ? '<p class="aq-new" role="status">Your question has an answer in the newest version of the site. <button type="button" class="aq-reload" data-asked-reload>Load it</button></p>' : "";   // (2.23.1: only for the reader's own)
   const note = autoSendOn() ? "A question we had no answer to is sent to our system by itself (About us, Privacy switches that off). It works on them by itself, the ones people sent first, and keeps trying until an answer passes its checks. A question turns green here when it is answered."
     : "We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first, and keeps trying until an answer passes its checks. A question turns green here when it is answered.";
   const mine = list.length ? '<p class="aq-note">' + note + "</p>" + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>"
@@ -1870,7 +1952,7 @@ function youOpen(opener) {
   const sh = document.getElementById("yousheet"), panel = sh && sh.querySelector(".panel"); if (!panel) return false;
   if (!YOU.open) { YOU.opener = opener || document.activeElement; try { history.pushState({ pkYou: 1, pk: NAV_CUR }, ""); YOU.pushed = true; } catch (e) { YOU.pushed = false; } }   // the phone's Back button closes the panel instead of leaving the page
   YOU.open = true; sh.classList.add("open"); document.documentElement.classList.add("sheet-open"); hidePop(); closeSearch();
-  askedBox(); panel.scrollTop = 0;
+  youTold("*"); askedBox(); panel.scrollTop = 0;   // (2.23.1) the list is before the reader: the note about their answer has been seen
   const f = panel.querySelector(".ev-back"); if (f) f.focus({ preventScroll: true });
   return true;
 }
@@ -1904,6 +1986,7 @@ if (typeof window !== "undefined") {
 // a kept question is asked again once per new version of the site: a best match now means it has been answered
 async function askedCheck() {
   if (INS.state !== "ready") return;
+  { const all = askedList(), m = askedMerged(all); if (m.length !== all.length) { askedSave(m); askedBox(); } }   // (2.23.1) now that the names and the words are known: one question kept twice becomes one row
   const list = askedList(); let changed = false;
   for (const it of list) {
     if (it.st !== "wait" || it.cv === ASK_BUILD) continue;
@@ -1911,8 +1994,8 @@ async function askedCheck() {
       // (2.10.1) answered by a checked answer, or by a place on the site that is the answer ("are drugs legal in greece": Greece on the page of treaties)
       const rt = res.note ? null : res.routes.find(r => r.kind !== "mix" && !r.loose);
       if (it.x && insTaken(res) === it.x) { /* (2.22) the very answer the reader said is not theirs: the question still waits */ }
-      else if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; }
-      else if (rt) { it.st = "ans"; it.h = rt.href; }
+      else if (res.best.length) { it.st = "ans"; it.id = res.best[0].id; it.p = res.best[0].page; if (it.sent || it.w) it.news = 1; }
+      else if (rt) { it.st = "ans"; it.h = rt.href; if (it.sent || it.w) it.news = 1; }
       else if (res.want && !it.w && it.sent) it.w = res.want.id;   // (2.9) sent, not answered yet, and now on our list: its row says so
       else if (!it.w && it.sent) { const pg = res.routes.find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;   // (2.15.2) about a drug whose page the system started: the question listed on that page is the one it waits for
         if (sh && sh.asked && sh.asked.length) it.w = sh.asked[0].id; }
@@ -2297,7 +2380,7 @@ function insAutoSend(after, res, now, found) {
       if (stranger) { let d = await found;
         if (d && d.more) { const t = insFindWanted(res), m = t ? FIND_MEM.get(JSON.stringify(t)) : null; if (m && m.all) d = await m.all; }   // (2.21.1) where the index is slow, the whole list decides, not the first thin one
         if (!d || !d.papers || !d.papers.length || !still(q)) return; }
-      const k = insClean(q).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k), it = askedAdd(q, drug); if (!it) return;
+      const k = insClean(q).slice(0, 200).toLowerCase(), had = askedList().some(x => x.k === k || askedSame(x.k, k)), it = askedAdd(q, drug); if (!it) return;
       let ok = false;
       // (2.22) x: what the page had taken for the answer, where the reader said it is not ("Not what you asked?"): the system learns from it which answer does not answer this
       let sk = "";   // (2.23) the question's own key in the server's store: with it the page asks what became of the question
@@ -2443,23 +2526,30 @@ function autoAskedQ(id) { if (typeof AUTO_SHELL !== "object" || !AUTO_SHELL) ret
 // the page's name inside a sentence: "kanna", "anabolic steroids and other body-building drugs"; a species' name and a name in capitals as written
 function autoLow(k) { const n = String(AUTO_PAGES[k]).replace(/\s*\(.*\)$/, ""), sh = autoShell(k); return (sh && sh.science.some(s => norm(s.name) === norm(n))) || !/^[A-Z][a-z]+\b/.test(n) ? n : n.charAt(0).toLowerCase() + n.slice(1); }
 function autoKindWord(kind) { return kind === "fungus" ? "fungus" : "plant"; }
-function autoPicAlt(p) { return p.species + ", the " + autoKindWord(p.kind) + (p.country ? ", seen in " + inCtry(p.country) : ""); }
+// (2.23.1, decision 35) a picture from a Wikimedia Commons category that is not a species shows the drug itself ("thing"): an example, with the page's name
+function autoPicAlt(p) { return p.kind === "thing" ? "An example of " + p.species : p.species + ", the " + autoKindWord(p.kind) + (p.country ? ", seen in " + inCtry(p.country) : ""); }
 function autoPicImg(p, size, alt, lazy) { const d = p[size]; return '<img class="ph" src="img/auto/' + esc(p.file) + "-" + size + '.webp" width="' + d[0] + '" height="' + d[1] + '" alt="' + esc(alt) + '"' + (lazy ? ' loading="lazy" decoding="async"' : "") + ">"; }
 // who made a picture, its licence, and where it is kept (the licences ask for this)
 function autoPicCredit(p) {
-  const inat = /^https:\/\/www\.inaturalist\.org\//.test(p.page), who = p.maker || (inat ? "iNaturalist" : "its record");
+  const inat = /^https:\/\/www\.inaturalist\.org\//.test(p.page), wc = p.src === "commons", who = p.maker || (inat ? "iNaturalist" : wc ? "Wikimedia Commons" : "its record");
   return (p.page ? '<a href="' + esc(p.page) + '" target="_blank" rel="noopener">' + esc(who) + "</a>" : esc(who)) + ", " +
-    (p.licence_url ? '<a href="' + esc(p.licence_url) + '" target="_blank" rel="noopener">' + esc(p.licence) + "</a>" : esc(p.licence)) + (p.maker && inat ? ", via iNaturalist" : "");
+    (p.licence_url ? '<a href="' + esc(p.licence_url) + '" target="_blank" rel="noopener">' + esc(p.licence) + "</a>" : esc(p.licence === "Public domain" ? "public domain" : p.licence)) + (p.maker && inat ? ", via iNaturalist" : p.maker && wc ? ", via Wikimedia Commons" : "");
+}
+// where the system's pictures come from, in one sentence (GBIF, Wikimedia Commons or both)
+function autoPicFrom(pics) {
+  const s = new Set(pics.map(p => p.src || "gbif")), gbif = "GBIF, an open record of plants and fungi that people saw and named", wc = "Wikimedia Commons, a library of pictures that people share under open licences";
+  return "They come from " + (s.size > 1 ? gbif + ", and from " + wc : s.has("commons") ? wc : gbif) + ".";
 }
 function autoLooksHtml(k) {
   const pics = autoPics(k); if (!pics.length) return "";
   const kinds = [...new Set(pics.map(p => p.kind))];
-  return '<ul class="looks auto-looks">' + pics.map(p => '<li class="look hasph"><span class="look-ph">' + autoPicImg(p, "t", autoPicAlt(p), true) + '</span><span class="look-t"><b>The ' + autoKindWord(p.kind) + "</b><span><i>" + esc(p.species) + "</i>" +
-      (p.country ? ". Seen in " + esc(inCtry(p.country)) + "." : "") + "</span></span></li>").join("") + "</ul>" +
+  return '<ul class="looks auto-looks">' + pics.map(p => '<li class="look hasph"><span class="look-ph">' + autoPicImg(p, "t", autoPicAlt(p), true) + '</span><span class="look-t">' +
+      (p.kind === "thing" ? "<b>An example</b><span>" + esc(p.species) + "</span>" : "<b>The " + autoKindWord(p.kind) + "</b><span><i>" + esc(p.species) + "</i>" + (p.country ? ". Seen in " + esc(inCtry(p.country)) + "." : "") + "</span>") + "</span></li>").join("") + "</ul>" +
     '<details class="look-credits"><summary>Photo credits</summary><p>' + pics.map((p, i) => "Photo " + (i + 1) + ": " + autoPicCredit(p)).join("; ") + ".</p></details>" +
     // (the site's rule for every gallery, docs/WRITING-RULES.md: it shows examples; the same thing can look different and different things the same)
-    '<p class="look-note auto-picnote">Our system found these pictures by itself. They come from GBIF, an open record of plants and fungi that people saw and named. A person here has not checked them yet. They are examples: ' +
-      (kinds.length === 1 && kinds[0] === "fungus" ? "the same fungus can look different, and different fungi can look the same" : kinds.length === 1 ? "the same plant can look different, and different plants can look the same" : "the same species can look different, and different species can look the same") +
+    '<p class="look-note auto-picnote">Our system found these pictures by itself. ' + autoPicFrom(pics) + " A person here has not checked them yet. They are examples: " +
+      (kinds.length === 1 && kinds[0] === "fungus" ? "the same fungus can look different, and different fungi can look the same" : kinds.length === 1 && kinds[0] === "plant" ? "the same plant can look different, and different plants can look the same" :
+        kinds.length === 1 && kinds[0] === "thing" ? "the same drug can look different, and different drugs can look the same" : "the same thing can look different, and different things can look the same") +
       ". A picture cannot tell you what you have. " + phToggle() + "</p>";
 }
 // the listed questions a reader keeps on this device (the list under "Your questions": the key is ASK_KEY's, read here because this may be drawn before that constant exists)

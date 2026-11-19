@@ -360,16 +360,17 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     await s.go("home"); await s.shot("home");
     if (w === 390) await s.shot("home-full", null, true);
     await s.p.$eval("#mf-h", h => h.scrollIntoView({ block: "start" })); await s.p.waitForTimeout(200); await s.shot("deck-card1-front");
-    const first = await s.p.evaluate(() => { const h = document.getElementById("mf-h"), b = [...document.querySelectorAll("#mf-h ~ *")].map(e => e.className); let pv = h.previousElementSibling; while (pv && pv.hidden) pv = pv.previousElementSibling; return { heading: h.textContent, prev: pv ? pv.id : "", order: b.slice(0, 3).join(" | ") }; });
+    const first = await s.p.evaluate(() => { const h = document.getElementById("mf-h"), b = [...document.querySelectorAll("#mf-h ~ *")].map(e => e.className); let pv = h.previousElementSibling; while (pv && pv.hidden) pv = pv.previousElementSibling; return { heading: h.textContent, prev: pv ? pv.id : "", holds: !!(pv && pv.querySelector("#home-search")), order: b.slice(0, 3).join(" | ") }; });
     const doors = await s.p.evaluate(() => ({ home: document.querySelectorAll("#view-home a.do, #view-home a[href='#checking'], #view-home a[href='#emergency']").length, menu: document.querySelectorAll("#menu a.do, #menu a[href='#checking'], #menu a[href='#emergency']").length,
       foot: ["#emergency", "#checking"].map(h => document.querySelectorAll('footer.site a[href="' + h + '"]').length).join() }));
     ok(w + ": home shows Myth or fact? first under the search box (the reader's own questions, when there are any, stand between them); no door to drug checking or the emergency numbers on the start page or in the menu; both pages are in the footer",
-      first.heading === "Myth or fact?" && first.prev === "home-search" && /qz2 mf/.test(first.order) && doors.home === 0 && doors.menu === 0 && doors.foot === "1,1", first.prev + " | " + first.order + " | " + JSON.stringify(doors));
-    // ---- the deck: turns over, counts, Previous, Another 10; the most interesting cards first, none under the cut
+      first.heading === "Myth or fact?" && first.prev === "insight-hero" && first.holds && /qz2 mf/.test(first.order) && doors.home === 0 && doors.menu === 0 && doors.foot === "1,1", first.prev + " | " + first.order + " | " + JSON.stringify(doors));
+    // ---- the deck: turns over, counts, Previous, Another 10; each card drawn at random when it is reached (2.23.1), none under the cut
     const deck = [], verdicts = [], counts = [];
-    const dealt = await s.p.evaluate(() => ({ i: MF.tf.cards.map(x => x.i), min: Math.min(...mfPool().map(x => x.i)), scored: mfPool().filter(x => x.i >= 0).length, pool: mfPool().length, best: Math.max(...mfPool().map(x => x.i)) }));
-    if (TFI) ok(w + ": the deck deals the most interesting cards first and never a card under the cut (data/site/tf-interest.json: interest " + TFI.cut.interest + ", clear " + TFI.cut.clear + ")",
-      dealt.scored === dealt.pool && dealt.min >= TFI.cut.interest && dealt.i.every((v, k) => !k || dealt.i[k - 1] >= v) && dealt.i[0] === dealt.best, "pool " + dealt.pool + " cards, lowest interest " + dealt.min + "; first deck " + dealt.i.join(" "));
+    const dealt = await s.p.evaluate(() => { const firsts = new Set(); for (let k = 0; k < 12; k++) { const st = { pool: mfPool(), n: 10, used: new Set(), cards: [], picks: [], pos: 0 }; mfFresh(st); firsts.add(st.cards[0].key); }
+      return { firsts: firsts.size, drawn: MF.tf.cards.filter(Boolean).length, min: Math.min(...mfPool().map(x => x.i)), scored: mfPool().filter(x => x.i >= 0).length, pool: mfPool().length }; });
+    if (TFI) ok(w + ": the deck draws each card at random when it is reached (the senior author, 19 November 2026: twelve new decks begin with many different cards; one card drawn at the start), never a card under the cut (data/site/tf-interest.json: interest " + TFI.cut.interest + ", clear " + TFI.cut.clear + ")",
+      dealt.scored === dealt.pool && dealt.min >= TFI.cut.interest && dealt.firsts >= 8 && dealt.drawn === 1, JSON.stringify(dealt));
     let turned = true, during = true;
     for (let k = 1; k <= 10; k++) {
       deck.push(await s.p.$eval("#tf .mf-q", e => e.textContent)); counts.push(await s.p.$eval("#tf .qz2-score", e => e.textContent));
@@ -392,7 +393,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     }
     ok(w + ": deck card turns over (verdict, why, bars, link) and turns with motion allowed", turned && during);
     ok(w + ": deck counts 1 of 10 to 10 of 10", counts.join(",") === Array.from({ length: 10 }, (_, i) => (i + 1) + " of 10").join(","), counts[0] + " ... " + counts[9]);
-    ok(w + ": deck: 10 different statements, 5 myths and 5 facts", new Set(deck).size === 10 && verdicts.filter(v => v === "Myth").length === 5, verdicts.filter(v => v === "Myth").length + " myths");
+    ok(w + ": deck: 10 different statements, drawn at random", new Set(deck).size === 10, verdicts.filter(v => v === "Myth").length + " myths this time");
     await s.p.click("#tf .qz2-nb"); await s.p.waitForTimeout(300);
     const another = await s.p.evaluate(() => [document.querySelector("#tf .qz2-score").textContent, document.querySelector("#tf .mf-q").textContent]);
     ok(w + ": Another 10 deals new cards", another[0] === "1 of 10" && !deck.includes(another[1]), another[0]);
@@ -430,7 +431,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     s = await session();
     await s.go("s-cannabis", 1300);
     const dk = await s.p.evaluate(() => { const st = MF["qz-drug"], mine = new Set(mfPagePool("cannabis").map(x => x.claim)), row = document.getElementById("sm-d-quiz");
-      return { box: !!document.querySelector("#d-quiz #qz-drug.mf .mf-card"), row: row ? row.querySelector(".sm-c").textContent : "", n: st ? st.cards.length : 0, own: st ? st.cards.every(x => mine.has(x.claim)) : false, pool: mine.size }; });
+      return { box: !!document.querySelector("#d-quiz #qz-drug.mf .mf-card"), row: row ? row.querySelector(".sm-c").textContent : "", n: st ? st.n : 0, own: st ? st.cards.every(x => mine.has(x.claim)) : false, pool: mine.size }; });
     await s.p.click("#sm-d-quiz"); await s.p.waitForTimeout(900); await s.p.click("#qz-drug .qz2-o >> nth=1"); await s.p.waitForTimeout(T);
     dk.turned = await s.p.evaluate(() => document.querySelector("#qz-drug .mf-card").classList.contains("flipped"));
     await s.shot("drug-page-myth-or-fact");
@@ -440,7 +441,7 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
       const none = await s.p.evaluate(() => !document.querySelector("#d-quiz") && !document.getElementById("sm-d-quiz"));
       ok(w + ": a drug page with fewer than 3 statements has no Myth or fact? section (" + few + ")", none); }
     await s.go("facts", 1000);
-    const fk = await s.p.evaluate(() => { const st = MF["qz-facts"], mine = new Set(mfPagePool(GEN).map(x => x.claim)); return { box: !!document.querySelector("#qz-facts.mf .mf-card"), own: st ? st.cards.every(x => mine.has(x.claim)) : false, n: st ? st.cards.length : 0 }; });
+    const fk = await s.p.evaluate(() => { const st = MF["qz-facts"], mine = new Set(mfPagePool(GEN).map(x => x.claim)); return { box: !!document.querySelector("#qz-facts.mf .mf-card"), own: st ? st.cards.every(x => mine.has(x.claim)) : false, n: st ? st.n : 0 }; });
     ok(w + ": the facts page ends with its own Myth or fact? deck", fk.box && fk.own && fk.n >= 3, JSON.stringify(fk));
 
     // ---- an open answer: the closed card's parts, the dots for "N in 100", Read next on the page and to another page
@@ -493,13 +494,15 @@ const good = m => m && !m.missing && m.gap >= 0 && (m.gap <= 40 || m.end);
     await s.shot("focus-section-menu-row");
     await s.p.keyboard.press("Enter"); await s.p.waitForTimeout(900);
     const f6 = await s.p.evaluate(() => [document.activeElement.id, openSec(), document.querySelector('#secmenu .sm-b[aria-expanded="true"]').dataset.sec]);
-    await s.p.keyboard.press("Tab"); await s.p.waitForTimeout(150);
+    // the section's topic jumps (its groups of questions) come first, each with its focus visible; then the first question
+    const passed = []; for (let k = 0; k < 60; k++) { await s.p.keyboard.press("Tab"); await s.p.waitForTimeout(80);
+      const a = await s.p.evaluate(() => [document.activeElement.className, !!document.activeElement.closest("#d-risk details.ask"), getComputedStyle(document.activeElement).outlineStyle]); if (a[1]) break; passed.push(a[0] + ":" + a[2]); }
     const f7 = await s.p.evaluate(() => [document.activeElement.tagName, !!document.activeElement.closest("#d-risk details.ask"), getComputedStyle(document.activeElement).outlineStyle]);
     await s.p.keyboard.press("Enter"); await s.p.waitForTimeout(900);
     const f8 = await s.p.evaluate(() => [document.activeElement.tagName, document.activeElement.parentElement.open]);
     await s.shot("focus-answer-opened-from-keyboard");
-    ok(w + ": keyboard: a row of the section menu takes focus visibly, Enter opens its section and the focus moves to its heading; Tab reaches the first question and Enter opens it",
-      f5[0] === "sm-d-risk" && f5[1] === "solid" && f5[2] === "false" && f6.join() === "d-risk-h,d-risk,d-risk" && f7[0] === "SUMMARY" && f7[1] && f7[2] === "solid" && f8[0] === "SUMMARY" && f8[1], f5.join(" ") + " > " + f6.join(" ") + " > " + f7.join(" ") + " > " + f8.join(" "));
+    ok(w + ": keyboard: a row of the section menu takes focus visibly, Enter opens its section and the focus moves to its heading; Tab goes through the section's topic jumps (focus visible) to the first question, and Enter opens it",
+      f5[0] === "sm-d-risk" && f5[1] === "solid" && f5[2] === "false" && f6.join() === "d-risk-h,d-risk,d-risk" && passed.every(x => x === "tpj-b:solid") && f7[0] === "SUMMARY" && f7[1] && f7[2] === "solid" && f8[0] === "SUMMARY" && f8[1], f5.join(" ") + " > " + f6.join(" ") + " > " + passed.length + " topic jumps " + [...new Set(passed)].join() + " > " + f7.join(" ") + " > " + f8.join(" "));
     await s.go("s-cannabis/q-cl_can_dependence_how_many", 1300);
     await s.p.$eval("#ask-cl_can_dependence_how_many .ask-ev", a => a.focus()); await s.p.keyboard.press("Tab"); await s.p.waitForTimeout(150);
     await s.p.evaluate(() => document.activeElement.scrollIntoView({ block: "center" })); await s.p.waitForTimeout(150);
