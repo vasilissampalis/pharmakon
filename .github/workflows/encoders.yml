@@ -1,0 +1,64 @@
+# Open text encoders tried on our own gold set, on GitHub's machines (scripts/insight/encoders.py; docs/AUTOMATION.md, decision 37, stage one).
+#
+# The senior author, 19 November 2026: "our search engine has to understand human language like an LLM" (17:57); "our ai is FUCKING STUPID it does
+# not understand human language well" (20:52). Insight reads questions on the reader's own device with a small open encoder; newer ones of the same
+# size read better on public benchmarks. A request file (data/auto/requests/encoders-*.json: {"models": [...]}, or {} for all) starts this run: the
+# site is built (for the answers' wordings), each candidate is fetched from the model hub and measured on the 400 forum questions of the gold set,
+# and data/verification/insight/encoders.json keeps the table. Nothing here reaches the site.
+name: Encoders
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/encoders-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: encoders
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: The vectors made before (so that only new texts are embedded)
+        uses: actions/cache@v6
+        with:
+          path: site/insight/.cache
+          key: insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-${{ github.run_id }}
+          restore-keys: |
+            insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-
+      - name: Python packages
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q numpy tokenizers onnxruntime huggingface_hub==2.4.0
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+      - name: Build (the answers and their wordings), then measure
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          set +e
+          L="data/verification/insight/_encoders-last-run.txt"; mkdir -p "$(dirname "$L")"; : > "$L"
+          node site/build.js > "$RUNNER_TEMP/build.log" 2>&1 || { echo "!! the build failed" >> "$L"; tail -5 "$RUNNER_TEMP/build.log" >> "$L"; }
+          for f in data/auto/requests/encoders-*.json; do
+            [ -f "$f" ] || continue
+            echo "== $f [$(date -u +%H:%M:%S)]" >> "$L"
+            python3 -I -u scripts/insight/encoders.py --request "$f" >> "$L" 2>&1 || echo "!! the measure failed ($?)" >> "$L"
+            git rm -q "$f" 2>/dev/null || rm -f "$f"
+          done
+      - name: Keep the results
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/verification/insight data/auto/requests 2>/dev/null || true
+          git diff --cached --quiet || git commit -q -m "Encoders: open text encoders on our own gold set"
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)

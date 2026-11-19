@@ -298,7 +298,7 @@ if __name__ == "__main__":
             f.unlink()
             # "how": "pieces", "one verdict", or a list of both (the same cards each way, so that the two can be compared); "most": cards in this sitting; "effort": low, medium or high
             hows = r.get("how") if isinstance(r.get("how"), list) else [r.get("how")]
-            for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:|mistral:|gemini:|openrouter:)[A-Za-z0-9._/:-]{3,90}", m)][:4]:
+            for m in [m for m in (r.get("models") or []) if isinstance(m, str) and re.fullmatch(r"(?:@cf/|groq:|mistral:|gemini:|openrouter:|sambanova:|local:)[A-Za-z0-9._/:-]{3,90}", m)][:4]:
                 if not llm.has(m): print(f"exam: {m}: no key for its service on this machine (or it is not a free model): not sat"); continue
                 which = r.get("exam") if r.get("exam") in ("cards", "lane", "lines", "both", "all") else "cards"
                 opts = dict(until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None, most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None,

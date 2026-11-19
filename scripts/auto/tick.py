@@ -156,6 +156,45 @@ def publish():
     except Exception as e: print("tick: the publishing run could not be asked for (" + type(e).__name__ + "); the end of this run asks again")
 
 
+AGAIN_AN_HOUR = 12      # runs started one after another in one hour at most: one every five minutes, what GitHub's clock is asked for and does not give
+
+
+def again_decide(state, items, room, t, since, sent_now, now=None):
+    """(yes or no, why, the hour's count) for again(). Pure, for the selftest. since: when this run began (ISO, UTC); sent_now: a question a person sent
+    whose turn is now (never tried, or a fault of the moment). A run that worked on nothing starts no other, unless such a question waits."""
+    now = now or datetime.datetime.now(datetime.timezone.utc); hour = now.strftime("%Y-%m-%dT%H")
+    a = t.get("again") if isinstance(t.get("again"), dict) and t["again"].get("hour") == hour else {"hour": hour, "n": 0}
+    go, why = lane_has_work(state, items, room, t)
+    if not go: return False, why, a
+    worked = any(str((s or {}).get("at") or "") >= since for s in (state.get("items") or {}).values()) if since else True
+    if not worked and not sent_now: return False, "this run worked on no question: the next look decides", a
+    if a["n"] >= AGAIN_AN_HOUR: return False, f"{a['n']} runs were started one after another this hour already: GitHub's clock starts the next", a
+    return True, why, a
+
+
+def again(since=""):
+    """(19 November 2026; his words, 20:20: "our ai has to be unstoppable and always working"; 20:50: "NOTHING NEVER UNSTOPPABLY runs out") At the end of a
+    run that worked: where a listed question's turn has come and a team of models has room, the next run is started at once (deploy.yml's way: a request
+    through GitHub's API, with the run's own token), instead of waiting for GitHub's clock, which is asked for every five minutes and starts about once an
+    hour (the run list of 19 November: 17:37, 18:30). GitHub lets one run work and one wait, so the next begins when this one ends."""
+    import urllib.request, papers, lane as L
+    t = counts(); items = papers.listed(); state = load(ROOT / "data" / "auto" / "lane" / "state.json", {"items": {}})
+    try: room = ROOM if L.team() else 0
+    except Exception: room = 0
+    sent_now = any(w.get("from") == "a question visitors sent" and L.turn_of(w, state.get("items") or {}) in (0, 0.5) for w in items)
+    go, why, a = again_decide(state, items, room, t, since, sent_now)
+    if go:
+        repo, token = (os.environ.get("GITHUB_REPOSITORY") or "").strip(), (os.environ.get("GH_TOKEN") or "").strip()
+        if not repo or not token: go, why = False, "no repository or no token here"
+        else:
+            req = urllib.request.Request("https://api.github.com/repos/" + repo + "/actions/workflows/auto.yml/dispatches", data=json.dumps({"ref": "main"}).encode(), method="POST",
+                                         headers={"Authorization": "Bearer " + token, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "pharmakon-auto"})
+            try: urllib.request.urlopen(req, timeout=30); a["n"] += 1
+            except Exception as e: go, why = False, "GitHub could not be asked (" + type(e).__name__ + ")"
+    t["again"] = a; TICK.parent.mkdir(parents=True, exist_ok=True); json.dump(t, open(TICK, "w", encoding="utf-8"), indent=1)
+    print("tick, again:", ("the next run is started now: " if go else "no next run now: ") + why)
+
+
 def settle_pick(ours, theirs, was):
     """Whose record of an answer stays when two runs wrote the same answer at the same time: "ours" (this run's) or "theirs" (the one another run has kept on
     main meanwhile). was: the record as it stood when this run began. (18 November 2026: a run asked for by name and the run of the clock both wrote "Do
@@ -248,7 +287,25 @@ def selftest():
         assert json.load(open(me / "data/auto/answers/au_w_a1.json", encoding="utf-8"))["made"]["run"] == "1" and st2["w_a1"] == {"status": "published", "why": "passed every gate"} and st2["w_a2"] == {"status": "published"}
         assert json.load(open(me / "data/auto/answers/au_w_a2.json", encoding="utf-8"))["status"] == "published" and settle(me) == []     # this run's own answer is kept; settled once, nothing more to settle
     assert lane_has_work(st, items, 5000, t, "the editor's reason", kept=lambda w: False)[0] is False                                         # the editor's pause stops it
-    print(f"tick selftest: ok (the lane starts for a question never tried, written by an older lane or without an answer since the day before, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
+    # (19 November 2026) the next run is started at once where work is left and a team has room; not by a run that worked on nothing (unless a sent
+    # question waits), not where no team has room, and not more than AGAIN_AN_HOUR times in one hour
+    at = datetime.datetime(2026, 11, 19, 19, 0, tzinfo=datetime.timezone.utc); s0 = "2026-11-19T18:50:00+00:00"
+    st3 = {"items": {"w_1": {"status": "none", "last": "2026-11-19", "lane": L.LANE, "n": 1, "at": "2026-11-19T18:55:00+00:00"}}}
+    pol = {"pause": False}
+    orig_load = globals()["load"]
+    try:
+        globals()["load"] = lambda p, d: pol if str(p).endswith("policy.json") else orig_load(p, d)
+        import lane as L2; keep = L2.kept_for_sent; L2.kept_for_sent = lambda w: False
+        try:
+            assert again_decide(st3, [{"id": "w_1"}, {"id": "w_9"}], 5000, t, s0, False, now=at)[0] is True                                     # worked this run, and w_9 was never tried
+            assert again_decide(st3, [{"id": "w_1"}, {"id": "w_9"}], 0, t, s0, False, now=at)[0] is False                                       # no team has room
+            assert again_decide(st3, [{"id": "w_1"}, {"id": "w_9"}], 5000, t, "2026-11-19T18:58:00+00:00", False, now=at)[0] is False           # this run worked on nothing
+            assert again_decide(st3, [{"id": "w_1"}, {"id": "w_9"}], 5000, t, "2026-11-19T18:58:00+00:00", True, now=at)[0] is True             # ... but a sent question waits
+            assert again_decide(st3, [{"id": "w_1"}, {"id": "w_9"}], 5000, dict(t, again={"hour": "2026-11-19T19", "n": AGAIN_AN_HOUR}), s0, True, now=at)[0] is False   # the hour's runs are used
+            assert again_decide(st3, [{"id": "w_1"}, {"id": "w_9"}], 5000, dict(t, again={"hour": "2026-11-19T18", "n": AGAIN_AN_HOUR}), s0, True, now=at)[0] is True    # a new hour
+        finally: L2.kept_for_sent = keep
+    finally: globals()["load"] = orig_load
+    print(f"tick selftest: ok (the next run starts at once while work is left and a team has room, {AGAIN_AN_HOUR} an hour at most; the lane starts for a question never tried, written by an older lane or without an answer since the day before, with room in the allowance and fewer than {LANE_A_DAY} runs today; the site is published when what it is built from has changed, {DEPLOY_A_DAY} times a day at most)")
 
 
 if __name__ == "__main__":
@@ -257,6 +314,7 @@ if __name__ == "__main__":
     elif a[:1] == ["plan"]: plan()
     elif a[:1] == ["after"]: after(a[a.index("--asked") + 1] if "--asked" in a and a.index("--asked") + 1 < len(a) else None)
     elif a[:1] == ["publish"]: publish()
+    elif a[:1] == ["again"]: again(a[a.index("--since") + 1] if "--since" in a and a.index("--since") + 1 < len(a) else "")
     elif a[:1] == ["settle"]: settle()
     elif a[:1] == ["inputs"]: print(inputs())
     elif a[:1] == ["did"] and a[1:2] and a[1] in ("lane", "deploy"): did(a[1])

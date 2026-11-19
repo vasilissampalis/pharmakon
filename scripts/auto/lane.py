@@ -2023,7 +2023,7 @@ def _searched(path):
     except (OSError, ValueError): return ""
 
 
-RESERVE = {"neurons": 2400, "groq": 50000}
+RESERVE = {"neurons": 2400, "groq": 50000, "google": 60}     # google: calls of the two Flash-Lite models together (team Z's second readers: five an answer)
 def kept_for_sent(w):
     """(17 November 2026; the senior author, of the questions he had sent: "they are hours pending this is disappointing".) On that day
     the system's own questions had used the whole free allowance by 16:15 UTC, and a question a person sent in the evening could not be
@@ -2031,7 +2031,13 @@ def kept_for_sent(w):
     RESERVE["neurons"] left AND Groq's strongest model fewer than RESERVE["groq"] tokens (room for three or four answers), the system's
     own questions wait for the next day, and a sent question is still worked on at once. True: this question waits."""
     if w.get("from") == "a question visitors sent" or w.get("trial"): return False
-    try: return llm.left() < RESERVE["neurons"] and llm.groq_left("openai/gpt-oss-120b") < RESERVE["groq"]
+    try:
+        low = llm.left() < RESERVE["neurons"] and llm.groq_left("openai/gpt-oss-120b") < RESERVE["groq"]
+        # (19 November 2026, team Z) where Google's models still have room the lane writes on with them, and the end of THEIR day is kept for the
+        # questions people send: the two Flash-Lite models, which read second in team Z, together fewer than RESERVE["google"] calls
+        if low and llm.has("gemini:gemini-3.5-flash-lite"):
+            low = llm.calls_left("gemini:gemini-3.5-flash-lite") + llm.calls_left("gemini:gemini-3.1-flash-lite") < RESERVE["google"]
+        return low
     except Exception: return False
 
 
@@ -2120,7 +2126,7 @@ def wanted_list():
 NEED = {"reader": (600, 22000), "writer": (350, 16000), "checker": (500, 16000), "planner": (250, 7000), "also": (350, 9000), "also#marks": (900, 24000)}     # what one answer may take of a day's free allowance, by role: (Cloudflare neurons, Groq tokens)
 
 
-def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|gemini:|openrouter:|claude:)", "", model or "")).split("/")[-1]       # the model itself, whichever service runs it
+def base(model): return re.sub(r":free$", "", re.sub(r"^(?:groq:|@cf/|mistral:|gemini:|openrouter:|sambanova:|local:|claude:)", "", model or "")).split("/")[-1]       # the model itself, whichever service runs it
 CALLS = {"reader": 6, "writer": 3, "checker": 5, "planner": 1, "also": 3, "also#marks": 15}       # for a service that counts calls (llm.SERVICES): how many one answer may need of each role
 
 

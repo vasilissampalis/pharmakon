@@ -257,11 +257,22 @@ const AUTO_STATE = (() => {
   // how many sources the finders hold for a question (the papers that can be read, the official pages)
   const sources = id => { let n = 0; for (const [f, k] of [["data/auto/papers/" + id + ".json", "can_read"], ["data/auto/official/found/" + id + ".json", "pages"]]) { try { n += (JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8"))[k] || []).length; } catch (e) { /* not searched yet */ } } return n; };
   for (const f of ["data/site/wanted.json", "data/auto/wanted-auto.json"]) { try { listed.push(...(JSON.parse(fs.readFileSync(path.join(ROOT, f), "utf8")).items || [])); } catch (e) { /* no such list yet */ } }
+  // (2.25.2; his words of 19 November 2026, 20:22: "still the same ... problem": his question had been tried three times that day and would not be tried again
+  // before the next, while the page said "Writing again") the word says what the lane WILL do, by the lane's own numbers (scripts/auto/lane.py, turn_of):
+  // "trying" only where it writes again today, "rereading" where sources could not be read in time and are read again today, "nofind" where the sources
+  // found so far say nothing on the question (looked at again as new ones come out, and on another day)
+  const laneSrc = (() => { try { return fs.readFileSync(path.join(ROOT, "scripts", "auto", "lane.py"), "utf8"); } catch (e) { return ""; } })();
+  const caps = (laneSrc.match(/^SOFT_FETCH_A_DAY, SOFT_FETCH_TRIES = (\d+), (\d+)/m) || [0, 3, 6]).slice(1).map(Number).concat((laneSrc.match(/^SOFT_A_DAY, HARD_A_DAY, HARD_SENT_A_DAY = (\d+), (\d+), (\d+)/m) || [0, 6, 2, 3]).slice(1).map(Number));
+  const [FETCH_A_DAY, FETCH_TRIES, SOFT_DAY, HARD_DAY, HARD_SENT_DAY] = caps;
   for (const w of listed) { if (!w || !/^w_[a-z0-9_]{1,40}$/.test(String(w.id))) continue; const s = st[w.id];
     const nothing = s && s.status === "none" && !s.soft && /no source that can be read/.test(String(s.why || "")) && !sources(w.id);   // (not where a source or a search could not be fetched: "soft": that is tried again, and the page must not say that nothing is published)
-    // (the lane tries a question again the same day by itself: at once after a fault that was not the answer's ("soft"), once or twice more with other models after an answer that did not pass ("n": tries today); an answer of an older lane is written again)
-    const again = s && (!!s.soft || s.for === "again" || (+s.lane || 1) < newestLane || (s.last === todayUTC && (+s.n || 1) < 2));
-    out[w.id] = !s ? "new" : s.status === "published" ? "" : s.status === "waiting" ? (s.for === "editor" ? "editor" : "trying") : nothing ? "nosource" : s.status === "none" ? (again ? "trying" : "tried") : "new";
+    const n = s && s.last === todayUTC ? (+s.n || 1) : 0, fetch = s && s.soft === "a source could not be fetched";
+    const soft = s && s.soft && !(fetch && (+s.tries || 1) > FETCH_TRIES) && n < (fetch ? FETCH_A_DAY : SOFT_DAY);     // a fault of the moment, tried again today
+    const noFind = s && /no source that can be read gave a finding|not enough sources/.test(String(s.why || ""));
+    const hard = s && n > 0 && !noFind && n < (w.from === "a question visitors sent" ? HARD_SENT_DAY : HARD_DAY);      // an answer that did not pass: once or twice more today, by another team
+    const person = s && s.status === "waiting" && (s.for === "editor" || (s.for !== "again" && /waiting for a person|held until|disagrees with a checked claim/.test(String(s.why || ""))));   // (an older lane wrote no "for": its reason says it)
+    out[w.id] = !s ? "new" : s.status === "published" ? "" : s.status === "waiting" ? (person ? "editor" : "trying") : nothing ? "nosource"
+      : s.status !== "none" ? "new" : (+s.lane || 1) < newestLane ? "trying" : soft ? (fetch ? "rereading" : "trying") : noFind ? "nofind" : hard ? "trying" : "tried";
     if (!out[w.id]) delete out[w.id]; }
   return out;
 })();

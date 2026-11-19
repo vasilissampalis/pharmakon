@@ -69,6 +69,7 @@ jobs:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}       # three more services with a free plan (16 November 2026); each is empty until the senior author adds its key
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}   # (19 November 2026) SambaNova Cloud's free tier; empty until the senior author adds its key
         run: |
           git rm -q --ignore-unmatch data/auto/requests/tick-*.json || true
           python3 -I scripts/auto/tick.py plan || { echo "work=false" >> "$GITHUB_OUTPUT"; echo "deploy=false" >> "$GITHUB_OUTPUT"; echo "keep=true" >> "$GITHUB_OUTPUT"; echo "the look itself failed" > data/auto/tick-failed.txt; }
@@ -95,6 +96,7 @@ jobs:
       MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}       # three more services with a free plan (16 November 2026); each is empty until the senior author adds its key
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}   # (19 November 2026) SambaNova Cloud's free tier; empty until the senior author adds its key
       DO_SCOUT: ${{ needs.tick.outputs.scout }}
       DO_LANE: ${{ needs.tick.outputs.lane }}
       GH_TOKEN: ${{ github.token }}   # to ask for a publishing in the middle of the work, as soon as a sent question has its answer
@@ -117,7 +119,7 @@ jobs:
       - name: Work, with notes
         run: |
           set +e
-          L="$RUNNER_TEMP/auto.log"; : > "$L"
+          L="$RUNNER_TEMP/auto.log"; : > "$L"; RUN_BEGAN="$(date -u +%Y-%m-%dT%H:%M:%S+00:00)"
           # (18 November 2026) each step's note carries the time it began (UTC): where a run's minutes went must be readable from its notes
           step() { echo "== $1 [$(date -u +%H:%M:%S)]" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
           # (19 November 2026, site 2.23) the store is read in every run that works, not only where the scout has something new: what the system is doing is
@@ -201,6 +203,9 @@ jobs:
             own "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 4
             own "the lane writes" python3 -I -u scripts/auto/lane.py run --max 3 --minutes 8 --give-way
             step "count this run" python3 -I scripts/auto/tick.py did lane
+            # (19 November 2026; his words, 20:20: "our ai has to be unstoppable and always working") GitHub's clock is asked for every five minutes and starts
+            # about once an hour: where work is left and a team of models has room, this run starts the next one itself (it begins when this one ends)
+            step "start the next run at once, if work is left" python3 -I scripts/auto/tick.py again --since "$RUN_BEGAN"
           fi
           step "has what the site is built from changed?" env GITHUB_OUTPUT=/dev/null python3 -I scripts/auto/tick.py after --asked "$RUNNER_TEMP/asked-inputs"
       - name: Keep the records
@@ -213,7 +218,7 @@ jobs:
           import os, re, pathlib
           src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "auto.log"
           t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
-          for k in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "GROQ_API_KEY", "MISTRAL_API_KEY", "GEMINI_API_KEY", "OPENROUTER_API_KEY"):
+          for k in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "GROQ_API_KEY", "MISTRAL_API_KEY", "GEMINI_API_KEY", "OPENROUTER_API_KEY", "SAMBANOVA_API_KEY"):
               v = (os.environ.get(k) or "").strip()
               if len(v) >= 6: t = t.replace(v, "***")
           t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)

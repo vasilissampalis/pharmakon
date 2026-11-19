@@ -32,5 +32,20 @@
    "rpm": 1,
    "rpd": 0
   }
+ },
+ "sambanova": {
+  "read": "SambaNova Cloud's own page of rate limits (docs.sambanova.ai/docs/en/models/rate-limits), read on 19 November 2026, 21:00 Athens: the free tier, which applies when no payment method is linked to the account, gives each model 20 calls a minute, 20 calls a day and 200,000 tokens a day (DeepSeek-V3.1, Meta-Llama-3.3-70B-Instruct, gpt-oss-120b; in preview DeepSeek-V3.2 and gemma-4-31B-it).",
+  "models": [
+   {
+    "match": "^(?:DeepSeek-V3\\.[12]|Meta-Llama-3\\.3-70B-Instruct|gpt-oss-120b|gemma-4-31B-it)$",
+    "rpm": 20,
+    "rpd": 20,
+    "tpm": 50000
+   }
+  ],
+  "else": {
+   "rpm": 1,
+   "rpd": 0
+  }
  }
 }

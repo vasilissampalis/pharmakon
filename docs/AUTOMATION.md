@@ -1725,6 +1725,69 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     about the question; our answers stay in the site's own form.
     Each stage is measured on our own questions before it goes live (the exams of decisions 31 and 33), and goes live
     only where it does better than what runs now.
+38. **The lane that never stops (19 November 2026, 20:20 to 21:30 Athens; site 2.25.2; no gate changed).** His words,
+    20:20, of his question that waited: "this should never happen what can we do to fix this? our ai has to be
+    unstoppable and always working"; 20:22: "still the same ... problem"; 20:50, of a model of our own on GitHub's
+    machines: "yes it has to work like an LLM ... so NOTHING NEVER UNSTOPPABLY runs out".
+    **What the records showed.** His question (in our words, "Does LSD cause shared hallucinations among users?") had
+    been tried three times that morning: 16 sources found, 12 read, none said anything on it, 4 not read for want of
+    time; by the lane's own rule (`turn_of`: three tries a day where a source could not be fetched) it waited for the
+    next day, while the page said "A first try did not pass the checks. Writing again". GitHub's clock, asked for
+    every five minutes, started the work about once an hour (17:37, 18:30); the run of 18:30 found no team of models
+    with room: Groq's two strongest models and Cloudflare's day were used up, and every team needed one of them.
+    **Built.** (1) *Team Z*, last in the order (`data/auto/lane/models.json`): only models the lane already uses in
+    the same roles, at Google's free tier, which allows many calls a day: Gemma 4 26B writes (14,400 a day), Gemma 4
+    31B reads and plans (14,400), Gemini 3.5 Flash-Lite is the second reader and 3.1 Flash-Lite a further one (500 each;
+    on the lane's exam each caught 3 of 9 bad sentences and stopped 1 of 20 good ones), so every sentence is still read
+    by two readers that are not the writer, besides the code's gates and our own checker. Simulated with every other
+    allowance used up, the lane chooses team Z; where one Flash-Lite has no room the other reads second and Gemma 4 31B
+    further (`lane.team`: a further reader is never the writer's or the second reader's own model). What is left of
+    Google's day is kept for the questions people send (`kept_for_sent`, `RESERVE["google"]` 60 calls).
+    (2) *Runs one after another* (`tick.py again`, `auto.yml`): at the end of a run that worked, where a listed
+    question's turn has come and a team has room, the next run is started at once through GitHub's API (twelve an hour
+    at most; never by a run that worked on nothing, unless a sent question waits).
+    (3) *The page says what will happen* (`site/build.js`, AUTO_STATE, by the lane's own numbers): "Writing again" only
+    where the lane writes again today; "Some sources could not be read in time. Reading them again" (rereading);
+    "Searched: the papers and official pages found so far say nothing on this yet. It is looked at again as new ones
+    come out, and tried again another day" (nofind; his LSD question); an answer an older lane wrote that waits for a
+    person says so (editor); and where no team has room, that the day's allowance is used up and when it comes back
+    (`lane.room_note`, `data/auto/lane/room.json`).
+    (4) *More free services, ready for their keys* (his to create; the ChatGPT prompt of that evening guides him, and
+    no key is ever pasted to anyone): Mistral's free Experiment plan (no card; a phone number; 1 call a second,
+    500,000 tokens a minute, a billion a month, by Mistral's own help page; the data-training switch turned off) and
+    SambaNova Cloud's free tier (no payment method; 20 calls a minute and a day for each model: DeepSeek V3.1 and V3.2,
+    gpt-oss-120b, Llama 3.3 70B, Gemma 4 31B). `llm.SERVICES`, `free-limits.json`, the workflows' secrets
+    (`MISTRAL_API_KEY`, `SAMBANOVA_API_KEY`). Each model sits the exam before a team names it. Set aside, with their
+    reasons: Cerebras (its free trial now needs a card), NVIDIA's catalogue (its free use is for prototyping only, not
+    a live site), GitHub's own models (retired on 30 July 2026), OpenRouter's larger free allowance (needs a purchase).
+    (5) *Models of our own on GitHub's machines* (`scripts/auto/local_llm.py`, `.github/workflows/local.yml`, `llm.py`
+    service `local`): open models whose licence allows any use (Qwen3 4B Instruct, Phi-4 mini, Qwen3 30B-A3B, gpt-oss
+    20b), fetched once from the model hub and run by the run itself with llama-cpp-python 0.3.36 (checked against
+    PyPI's own fingerprint, built for every GitHub machine). They have no allowance; their only limit is the machine
+    (four cores, 16 GB, no graphics card). The first run measures how fast each reads and writes there and sits the
+    lane's exam as its checker (`data/auto/exam/local-bench.json`); a team of them is named only after that, and only
+    where its answers fit the lane's clock.
+39. **What someone says is not always a question (19 November 2026, 20:52 Athens; site 2.25.2).** His words, of a
+    feeling about drugs that he had typed, which the page sent as a question and looked up as research on "love": "our
+    ai is FUCKING STUPID it does not understand human language well". (The words he typed are not written here: such a
+    question was sent, and its words stay out of the repository.)
+    **Built** (`site/src/app.insight.js`: `insSaid`, `insFocus`). A feeling or an opinion ("i really like drugs", "weed
+    is life"), or something one did or is ("i took 2 tabs of acid", "im high"), is a statement: nothing is sent and
+    nothing is looked up; the page says what it read ("That sounds like how you feel, not a question") and offers what
+    can be asked: the questions people ask most about the drug it names, or three example questions; beside something
+    one did, the emergency numbers. Never where the words ask anything (a question mark, a question word at the start or
+    after a comma, a helper verb before its subject: "did i", "will my"), seek help or tell of a worry (quit, addicted, worried, scared,
+    help, "still feel weird", pain, being sick) or say something may be happening now (the emergency's own words, "too much", "just"): those go on as
+    questions or to the emergency route. A feeling said first and the question after it ("i really like weed but does
+    it hurt your lungs") is read as the question, with the drug carried into it: it finds "What does smoking cannabis
+    do to the lungs?". And a question whose words alone did not show what it is about ("why does being high feel
+    good", until now "Which drug do you mean?") is finished when it is a question on our list by its meaning; "Why do
+    drugs feel so good?" is on the editors' list now (w_0049, his feeling read as this question, in our words).
+    **Measured** (a check script on the built page): of the 400 real questions of the gold set, none is read as a
+    statement; of 2,255 rewordings and questions not about drugs, none; of 14 feelings and opinions, 14; of 7 things
+    one did, 6 (the seventh says "just", which may mean now: it goes on as a question, on purpose); of 22 questions and
+    calls for help that look like statements, none. `insight_check.js` holds the cases. It is a rule of words, a floor:
+    the model of our own (decision 37) will learn it from many more examples, and is measured against it.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

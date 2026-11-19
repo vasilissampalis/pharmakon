@@ -95,6 +95,12 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   into `data/auto/live.json` (`scripts/auto/live.py`: by the question's key in the store, NEVER its words; our wording; what was found; an answer only
   where the run's own build shows it) and the page of the person who waits reads it through the server (`/api/asked`; site 2.23). The page never
   promises a time the system has not kept; where the free models have no room it says so. No gate changed for any of this, and none may.
+- The lane never stops (19 November 2026, decision 38; his words, 20:20: "our ai has to be unstoppable and always working"): team Z (Google's
+  models that allow many calls a day) is last in the order; a run that worked starts the next itself while work is left and a team has room
+  (`tick.py again`, twelve an hour at most); the page's word for a question says what the lane WILL do (`site/build.js`, AUTO_STATE, by the lane's
+  own numbers). More free services wait for keys only he makes (Mistral, SambaNova); open models of our own run on GitHub's machines
+  (`local_llm.py`) and are named in a team only after their exam. A feeling or something one did is not a question (decision 39, `insSaid`):
+  nothing is sent or looked up for it; measure on the gold set before changing that rule.
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY; CC BY-SA only where nothing more open exists, marked

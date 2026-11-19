@@ -60,7 +60,12 @@ const CIRC = [["do gay people", "Go on.", /Finish your question and we will look
   ["είναι ασφαλές το MDMA", "Pharmakon reads questions in English for now.", /Please ask in English\. Προς το παρόν διαβάζουμε ερωτήσεις μόνο στα αγγλικά\./, false],
   ["является ли кокаин опасным", "Pharmakon reads questions in English for now.", /Please ask in English\.$/, false],
   ["who are you", "This is Pharmakon Insight.", /finds the answer on this site\. No person and no chatbot replies to you\. Ask about a drug: for example, “is ketamine addictive\?” About us$/, false], ["are you an ai", "This is Pharmakon Insight.", /reads your question on your own device/, false],
-  ["hello there pharmakon", "Hello.", /Ask a question about a drug and Insight will look: for example, “is ketamine addictive\?”$/, false]];
+  ["hello there pharmakon", "Hello.", /Ask a question about a drug and Insight will look: for example, “is ketamine addictive\?”$/, false],
+  // (2.25.2; his words of 19 November 2026, 20:52, of a feeling he had typed: "our ai is FUCKING STUPID it does not understand human language well") a feeling or an
+  // opinion, and something one did, are not questions: nothing is sent or looked up, the page says what it read and offers what can be asked
+  ["honestly i really like drugs", "That sounds like how you feel, not a question.", /Nothing was sent or looked up\. Ask what you want to know about it, for example:/, false],
+  ["weed is life", "That sounds like how you feel, not a question.", /Nothing was sent or looked up\. Ask what you want to know about it, for example:/, false],
+  ["i took 2 tabs of acid", "That sounds like something you did, not a question.", /Nothing was sent or looked up\. What do you want to know about it\? For example:[\s\S]*Emergency numbers by country/, false]];
 const MIX = "can i mix molly and alcohol", DOSE = "how much mdma should i take", HELP = "my friend took ketamine and is not breathing what do i do", TEST = "how do i test my mdma", BUY = "where can i buy mdma online";
 // Each route has its test: questions that must take it, and questions close to it that must not ("" = no route). A third
 // item is the drug page the question is asked on.
@@ -257,6 +262,12 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     for (const [q, line, re, send] of CIRC) { const r = await ask(q);
       if (!(r.none === line && re.test(r.text.replace(/\s+/g, " ").trim()) && !!r.askBtn === send && !r.best.length && !r.wordAsk)) cbad.push("“" + q + "”: " + r.none + " | " + r.text.replace(/\s+/g, " ").slice(0, 150) + " | send: " + r.askBtn); }
     await shot("list-go-on");
+    // (2.25.2) a feeling is neither sent nor looked up, and what it offers are questions of ours that lead to their answers; a question in the same words is still a question
+    { const before = sent.length; const r = await ask("i love lsd"); await p.waitForTimeout(2500);
+      const out = sent.slice(before).filter(u => /\/api\/(?:ask|find)\b/.test(u)), ways = await p.evaluate(() => [...document.querySelectorAll("#search-results .said-ways a")].map(a => a.getAttribute("href")));
+      const q = await ask("i love lsd, is it safe?");
+      ok(w + ": “i love lsd” is read as a feeling: nothing is sent or looked up, and it offers what people ask most about LSD, each a way to its answer; “i love lsd, is it safe?” is a question",
+        r.none === "That sounds like how you feel, not a question." && !out.length && ways.length >= 2 && ways.every(h => /^#s-lsd\/q-cl_/.test(h)) && q.none !== r.none, r.none + " | sent: " + out.join(", ") + " | " + ways.join(" ") + " | then: " + q.none); }
     // (2.9.3) a name the system learned by looking it up: what people typed for it is read as the name (when the table holds it)
     let learned = {}; try { learned = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "..", "data", "auto", "names", "learned.json"), "utf8")).names || {}; } catch (e) { learned = {}; }
     const lk = Object.keys(learned).find(k => learned[k].drug === true && (learned[k].typed || []).length);

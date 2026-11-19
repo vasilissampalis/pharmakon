@@ -218,6 +218,49 @@ function insEmbed(text) {
 // one run at a time on the session
 function insRun(fn) { const p = INS.queue.then(fn, fn); INS.queue = p.catch(() => {}); return p; }
 
+/* (2.25.2; the senior author, 19 November 2026, 20:52, of a feeling he had typed, which was sent as a question and looked up as research on "love": "our ai is
+   FUCKING STUPID it does not understand human language well") What someone SAYS is not always a question. A feeling or an opinion ("i really like drugs",
+   "weed is life", "i hate cocaine"), or something one did or is ("i took two tabs", "im high"), is not sent, and nothing is looked up for it: the page
+   says what it read and offers what can be asked. Never where the words ask anything ("?", a question word, "should i", "is it safe"), where they seek
+   help ("quit", "addicted", "worried", "help"), or where something may be happening now (the emergency's own words, "too much", "scared"): those go on
+   as questions, or to the emergency route. Measured on the 400 real questions of the gold set: none is read as a statement (scripts/ux/insight_check.js). */
+const INS_SAID = {
+  asks: /\?|^(?:what|whats|how|hows|why|when|where|which|who|whom|whose|is|are|am|was|were|can|could|do|does|did|will|would|should|shall|may|might|must|has|have|had|isnt|arent|dont|doesnt|didnt|wont|wouldnt|shouldnt|cant|tell|explain|describe|list|compare|give|show|define|any|anyone|anybody|pls|please|plz|difference|effects?|risks?|dangers?|signs?|symptoms?|side)\b|\b(?:want(?:ed)? to know|wanna know|need to know|like to know|wonder(?:ing)?|curious|question|is it|are they|is that|should i|can i|could i|will i|would i|do i|am i|how (?:much|many|long|to|do|does|can|is|are|bad)|what (?:is|are|does|do|happens|if|about)|why (?:do|does|is|are|am)|tell me|explain|or not|vs|versus)\b|[,;:]\s*(?:what|how|why|when|where|which|who|is|are|am|was|were|can|could|do|does|did|will|would|should|shall|may|might|must|has|have|had|isnt|arent|dont|doesnt|didnt|wont|wouldnt|shouldnt|cant)\b|\b(?:will|would|could|can|should|shall|does|did|do|is|are|am|was|were|has|have|had|might|may|must)\s+(?:i|my|it|he|she|they|we|you|this|that|there|your|his|her|their|our)\b/,
+  help: /\b(?:quit|quitting|stop|stopping|cut(?:ting)? (?:down|back)|get(?:ting)? (?:off|clean|sober|help)|recover\w*|rehab|help|worried|worry|scared|afraid|panic\w*|addict\w*|hooked|dependen\w*|withdraw\w*|craving|relapse\w*|too (?:much|many|high)|overdos\w*|od|dying|die|suicid\w*|hurt\w*|not ok|depress\w*|anxious|alone|still (?:feel\w*|high|tripping|seeing|hearing)|feel(?:s|ing)? (?:weird|strange|off|funny|bad|sick|wrong|different|numb|empty|dizzy|faint)|not (?:feel(?:ing)? )?(?:right|myself|normal)|(?:hasnt|havent|didnt|wont|doesnt) (?:worn off|wear off|go away|stop)|cant (?:sleep|stop|breathe|think)|headache|pain|ache\w*|vomit\w*|throw(?:ing)? up|nause\w*|bleed\w*|blood)\b/,
+  feel: /^(?:(?:honestly|tbh|lol|lmao|man|dude|bro|yo|ngl|omg|wow|damn|fuck|fucking|i mean|ok|okay|well)[ ,!.]+)*(?:i|we)(?: (?:just|really|truly|honestly|kinda|kind of|so|fucking|seriously|absolutely|totally|still|do|actually|lowkey|highkey|genuinely))* (?:love|luv|like|adore|enjoy|hate|despise|miss|crave)\b/,
+  opinion: /^(?:drugs?|it|they|getting high|being high|tripping|rolling|partying|psychedelics|stimulants|opioids|weed|pot)(?: (?:is|are|r|=)) (?:(?:so|the|my|really|fucking|very|just|pretty|totally|absolutely) )*(?:life|great|amazing|awesome|best|fun|good|bad|evil|terrible|horrible|worst|favou?rite|everything|cool|lit|dope|fire|bliss|heaven|love|the shit|shit|trash|overrated|underrated)\b/,
+  did: /^(?:(?:so|well|ok|okay|lol|um|yo|soo+)[ ,!.]+)*(?:(?:i|we|my (?:friend|mate|bf|gf|boyfriend|girlfriend|partner|brother|sister|roommate))(?: (?:just|already|finally|once|recently|basically|kinda|have|ve|had|first))* (?:took|tried|smoked|ate|drank|snorted|injected|dropped|popped|did|used|vaped|microdosed|bought|got)\b|(?:i'?m|im|i am) (?:so |very |really |kinda |pretty |super |fucking )?(?:high|stoned|baked|drunk|tripping|rolling|wasted|faded|sober|clean|on (?:it|drugs?|something|mushrooms|acid|molly)))\b/
+};
+// "feel" (a feeling or an opinion), "did" (something one did or is), or "" (a question, or words to leave to the rest of Insight)
+function insSaid(core) {
+  const t = String(core || "").toLowerCase().replace(/[‘’']/g, "").replace(/\s+/g, " ").trim(), m = insMask(t).replace(/\s+/g, " ").trim();
+  if (insWordsIn(t) < 2 || insWordsIn(t) > 16 || INS_SAID.asks.test(t) || INS_SAID.help.test(t)) return "";
+  if (INS_RE.help.test(t) || (INS_RE.whatdo.test(t) && INS_RE.acute.test(t))) return "";
+  if (INS_SAID.feel.test(t) || INS_SAID.opinion.test(t) || INS_SAID.opinion.test(m)) return "feel";
+  if (INS_SAID.did.test(t)) return INS_RE.acute.test(t.replace(/\b(?:took|taken|ate|eaten|drank)\b/g, " ")) ? "" : "did";
+  return "";
+}
+// (2.25.2) a feeling said first and the question after it ("i really like lsd, is it safe?", "weed is life but does it hurt your lungs"): the question is what is
+// matched, with the drug of the first part carried into it where the question says "it". Otherwise the words as they are.
+function insFocus(core) {
+  const t = String(core || ""), m = t.match(/^(.{4,80}?)(?:\s*[,;:]\s*|\s+(?:but|so|and)\s+)(.{6,}?)$/i);
+  if (!m || !insSaid(m[1]) || insSaid(m[2]) || !INS_SAID.asks.test(m[2].toLowerCase().replace(/[\u2018\u2019']/g, ""))) return t;
+  const before = insNamed(m[1]), after = insNamed(m[2]);
+  if (after.length || before.length !== 1 || before[0].length !== 1 || !INS.canon.has(before[0][0])) return m[2];
+  const name = INS.canon.get(before[0][0]), q = m[2].replace(/\b(?:it|this|that|them|they)\b/i, name);
+  return q === m[2] ? m[2] + " (" + name + ")" : q;
+}
+// what it can lead to: the questions people ask most about the drug it names, else three of the example questions
+function insSaidWays(res) {
+  const ok = ([id, q]) => claimById[id] && claimById[id].verification.status !== "draft" && (SIMPLE.claims || {})[id] && q.split(" ").length <= 12;
+  const one = res.groups && res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
+  if (one && subBySlug[one]) return byDemand(drugQuestions(one).filter(ok)).slice(0, 3).map(x => ["#s-" + one + "/q-" + x[0], x[1]]);
+  const draw = typeof suggestDraw === "function" ? suggestDraw(ok).slice(0, 3) : [];
+  return draw.map(({ sl, x }) => ["#s-" + sl + "/q-" + x[0], x[1]]);
+}
+const insSaidText = kind => kind === "did" ? ["That sounds like something you did, not a question.", "Nothing was sent or looked up. What do you want to know about it? For example:"]
+  : ["That sounds like how you feel, not a question.", "Nothing was sent or looked up. Ask what you want to know about it, for example:"];
+
 /* ---------- Reading the question (2.3) ---------- */
 const insClean = raw => String(raw == null ? "" : raw).trim().replace(/\s+/g, " ");
 const insWordsIn = q => (q.match(/[\p{L}\p{N}]+/gu) || []).length;
@@ -915,8 +958,11 @@ async function insRank(query, ctx) {
   // Pharmakon reads English for now: the page says so, keeps the emergency route and the rows the word search found (it knows
   // the drugs' Greek names), and gives no verdict
   if (insForeign(res.q) && !res.emergency) { res.note = "language"; res.greek = /\p{Script=Greek}/u.test(res.q); res.routes = res.routes.filter(r => r.kind === "help"); res.ms = performance.now() - t0; return res; }
+  // (2.25.2) a feeling said first and the question after it: the question part is what is read, its routes too (the drug of the first part carried into it)
+  const core = res.emergency ? res.core : insFocus(res.core);
+  if (core !== res.core) { Object.defineProperty(res, "focus", { value: core, enumerable: false }); const nm = insNamed(core); res.routes = insRoutes(core, nm.length ? nm : res.groups, res.drug); res.emergency = res.routes.some(r => r.kind === "help"); }
   // (2.14) a question that asks for a count: the official figures are fetched (once) and the ones that answer it are routes of their own
-  const ck = insCountKind(res.core);
+  const ck = insCountKind(core);
   if (ck && !res.emergency && res.groups.length <= 1 && !res.routes.some(r => r.kind === "dose") && !INS_COUNT_NOT.test(res.core)) {
     if (!FIGURES_DONE) { try { await Promise.race([loadFigures(), new Promise(ok => setTimeout(ok, 2500))]); } catch (e) { /* the statistics page is still pointed to */ } }
     const place = insFigPlace(res.core), all = insFigures(ck, res.groups, /\b(?:tried|ever|lifetime|in their li(?:fe|ves))\b/i.test(res.core), place), one = res.groups.length === 1 && res.groups[0].length === 1 ? res.groups[0][0] : null;
@@ -935,10 +981,11 @@ async function insRank(query, ctx) {
   if (lr && !legalReady(lr.slug)) { try { await Promise.race([loadFull(lr.slug), new Promise(ok => setTimeout(ok, 2500))]); } catch (e) { /* the row keeps its plain words */ } }
   if (lr && legalReady(lr.slug)) lr.t = lawPlain(lr.slug, lr.country);
   // a route is the answer to what was asked, except the mixing tool and a route that only points the way (loose)
-  const answered = res.routes.some(r => r.kind !== "mix" && !r.loose), named = !res.drug && res.groups.length > 0, unf = insUnfinished(res.core, !!res.drug);
+  const answered = res.routes.some(r => r.kind !== "mix" && !r.loose), named = !res.drug && res.groups.length > 0; let unf = insUnfinished(core, !!res.drug);
   if (!(whole && insWordsIn(res.core) < INS_WORDS)) {
-    const drug = ctx && ctx.drug, tx = insTexts(res.core, drug), v = await insEmbed(tx.full), mv = tx.masked === tx.full ? v : await insEmbed(tx.masked);
-    const sc = insScore(v, mv, res.core), tiers = insTiers(sc, tx.groups, null, res.core);
+    const drug = ctx && ctx.drug, tx = insTexts(core, drug), v = await insEmbed(tx.full), mv = tx.masked === tx.full ? v : await insEmbed(tx.masked);
+    if (core !== res.core && !tx.groups.length && res.groups.length) tx.groups = res.groups;   // (the drugs of the whole, where the question part names none)
+    const sc = insScore(v, mv, core), tiers = insTiers(sc, tx.groups, null, core);
     Object.defineProperty(res, "sc", { value: { bw: sc.bw, topic: sc.topic }, enumerable: false });   // (2.13) how near every answer is in meaning: for the word search's rows (insInject)
     const row = c => ({ id: INS.ids[c.i], page: insPageOf(INS.ids[c.i], tx.groups, drug), plain: +c.plain.toFixed(4), topic: +c.topic.toFixed(4), off: !c.on });
     res.best = tiers.best.map(row); res.related = res.emergency ? [] : tiers.related.map(row);   // an emergency gets its route and the answers that fit, nothing nearby
@@ -967,8 +1014,11 @@ async function insRank(query, ctx) {
         const got = new Set(res.best.map(x => x.id)); res.related = res.related.filter(x => !got.has(x.id)); res.pair = true; }
     }
     // 2.9: a question that is not finished and names no drug has no "best match": the answers found are ways to go on
+    // (2.25.2) the rule could not see what a question is about ("why does being high feel good": every word one that any question may hold), and the question is one
+    // on our list by its meaning: it is finished, and it is that question (its subject was there; the rule only reads words)
+    if (unf === "which" && !named && !answered && !res.best.length) { const w0 = insWant(v, mv, core, tx.groups); if (w0) { res.want = w0; unf = ""; } }
     if (unf && !named && !answered && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
-    if (!res.best.length && !answered && !unf) res.want = insWant(v, mv, res.core, tx.groups);   // 2.5: is it on our list?
+    if (!res.best.length && !answered && !unf && !res.want) res.want = insWant(v, mv, core, tx.groups);   // 2.5: is it on our list?
     // (2.13) nothing answers it yet: a place of the site that holds what is asked, found by meaning
     if (!res.best.length && !answered && !unf && !res.want && !res.routes.some(r => r.named)) res.where = insWhere(mv, tx.groups);
   }
@@ -995,6 +1045,7 @@ async function insRank(query, ctx) {
       res.routes.push(sure ? res.where : Object.assign(res.where, { loose: true, way: true })); if (sure) res.note = ""; }
     if (unf) { res.unf = unf; if (!res.groups.length) res.cue = insUnfCue(res.core); }
     else if (res.note === "none" && res.routes.some(r => r.named)) res.note = "";   // (2.11) a part of a drug's page asked for by name: the part is what we have
+    else if (res.note === "none" && !res.emergency && !res.routes.some(r => !r.way) && (res.said = insSaid(res.core))) res.note = "said";   // (2.25.2) a feeling, or something one did: not a question
     else if (res.note === "other" && INS_RE.greet.test(res.core)) res.note = "hello";
     else if (res.note === "other" && INS_RE.about.test(res.core)) res.note = "about";
     else if (res.note === "other") res.stranger = insStranger(res.core);
@@ -1069,6 +1120,11 @@ function insNoneHtml(res, sheet) {
     return sheet ? '<div class="ins-none ins-want"' + at + '><p class="ins-none-t">Not answered yet. A question like yours is on our list.</p><p class="want-q">' + esc(w.q) + "</p>" + keep + other + note + '<a class="want-all" href="' + esc(list) + '">' + (w.started ? "See its page " : "See the whole list ") + icon("arrow") + "</a></div>"
       : '<div class="sr-fit-none sr-want"' + at + '><p class="want-t"><b>Not answered yet.</b> A question like yours is <a href="' + esc(list) + '">on our list</a>:</p><p class="want-q">' + esc(w.q) + '</p><p class="want-a">' + keep + other + "</p>" + note + "</div>";
   }
+  // (2.25.2) a feeling or something one did: what the page read, nothing sent, and what can be asked (with the emergency numbers beside something one did)
+  if (res.note === "said") { const t = insSaidText(res.said), ways = insSaidWays(res);
+    const list = ways.length ? '<ul class="said-ways">' + ways.map(([h, q]) => '<li><a href="' + esc(h) + '">' + esc(q) + "</a></li>").join("") + "</ul>" : "", sos = res.said === "did" ? insSosHtml("sr-sos said-sos") : "";
+    return sheet ? '<div class="ins-none ins-said"><p class="ins-none-t">' + esc(t[0]) + '</p><p class="ins-none-s">' + esc(t[1]) + "</p>" + list + sos + "</div>"
+      : '<div class="sr-fit-none sr-said"><p><b>' + esc(t[0]) + "</b> " + esc(t[1]) + "</p>" + list + sos + "</div>"; }
   // (2.10.2) a greeting, and a question about the site itself
   if (res.note === "hello" || res.note === "about") { const t = insHelloText(res.note);
     return sheet ? '<div class="ins-none ins-hello"><p class="ins-none-t">' + esc(t[0]) + '</p><p class="ins-none-s">' + esc(t[1]) + (res.note === "about" ? ' <a href="#about">About us</a>' : "") + "</p></div>"
@@ -1191,7 +1247,7 @@ function insFitHtml(res) {
   const ways = res.routes.filter(r => r.way), figs = ways.filter(r => r.kind === "figure"), look = ways.filter(r => r.kind !== "figure"), open = insOpen(res);
   const best = res.best.length ? '<p class="sr-fit-h">Best match</p>' + res.best.map(x => insRowHtml(x, true)).join("") : "";
   const none = insNoneHtml(res, false);
-  const related = res.related.length ? '<p class="sr-fit-h"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + ">" + (res.note === "unfinished" ? "You may mean" : open ? "Closest answers we have" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
+  const related = res.related.length ? '<p class="sr-fit-h"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + ">" + (res.note === "unfinished" || res.note === "said" ? "You may mean" : open ? "Closest answers we have" : "Related") + "</p>" + res.related.map(x => insRowHtml(x, false)).join("") : "";
   return '<div class="sr-fit" data-q="' + esc(res.q) + '">' + insReadHtml(res, "sr-read") + routes + best + insExitHtml(res, false) + none + (open ? '<p class="ins-jump" hidden></p>' : "") + insWaysHtml("Figures we do have", figs, open ? "figs" : "") + related +
     (open || res.unsure ? '<div class="ins-slot" data-slot="found"></div><div class="ins-slot" data-slot="official"></div>' : "") + insWaysHtml("A place to look", look) +
     '<button type="button" class="sr-fit-h sr-words" hidden aria-expanded="false">More results</button></div>';
@@ -1204,6 +1260,7 @@ function insSay(res) {
   else if (res.note === "unfinished") parts.push(insUnfinText(res).join(" ").replace(/\.$/, ""));
   else if (res.note === "language") parts.push("Pharmakon reads questions in English for now. Please ask in English");
   else if (res.note === "hello" || res.note === "about") parts.push(insHelloText(res.note).join(" "));
+  else if (res.note === "said") parts.push(insSaidText(res.said)[0].replace(/\.$/, "") + ". Nothing was sent or looked up");
   else if ((res.note === "none" || res.note === "other") && askedSentHas(res.q)) parts.push("You sent us this question. No answer yet");
   else if (res.note === "other") parts.push(res.stranger ? "We do not know \u201c" + res.stranger + "\u201d as a drug. If it is one, you can send us your question" : "This does not look like a question about drugs. Pharmakon answers questions about drugs");
   else if (res.note) parts.push(insNoneLine(res).replace(/\.$/, ""));
@@ -1228,7 +1285,7 @@ function insInject(box, res) {
   if (none) none.remove();                                     // Insight has its own line for a question with no checked answer
   if (ask && (res.note || !box.querySelector(":scope > a"))) ask.remove();   // one way to ask us, not two (and none for what we do not answer)
   if (res.note === "blocked") box.querySelectorAll(":scope > a").forEach(a => { if (!/^#s-[a-z0-9-]+$/.test(a.getAttribute("href") || "")) a.remove(); });
-  if (res.note === "other" || res.note === "hello" || res.note === "about") box.querySelectorAll(":scope > a").forEach(a => a.remove());   // 2.5: not about drugs by its words: one calm line, no rows found by a stray word
+  if (res.note === "other" || res.note === "hello" || res.note === "about" || res.note === "said") box.querySelectorAll(":scope > a").forEach(a => a.remove());   // 2.5: not about drugs by its words: one calm line, no rows found by a stray word
   const note = box.querySelector(":scope > .sr-note");
   if (note) note.insertAdjacentHTML("afterend", insFitHtml(res)); else box.insertAdjacentHTML("afterbegin", insFitHtml(res));
   // the word search's own rows follow under a quiet label, so that none reads as part of the best match or the related answers
@@ -1439,7 +1496,7 @@ function insHtml(v) {
     return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written with AI" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
   const none = insNoneHtml(res, true);
-  const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + '><p class="rn-k">' + (res.note === "unfinished" ? "You may mean" : open ? "Closest answers we have" : "Related") + '</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
+  const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + '><p class="rn-k">' + (res.note === "unfinished" || res.note === "said" ? "You may mean" : open ? "Closest answers we have" : "Related") + '</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
     return '<li><a href="' + esc(answerAddr(x.id, x.page)) + '" data-insight-next="' + esc(x.id) + '" data-page="' + esc(x.page) + '"><span><span class="ins-rel-k">' + esc(w.name) + "</span>" + esc(insQ(x.id, x.page)) + "</span>" + icon("arrow") + "</a></li>"; }).join("") + "</ul></div>" : "";
   const from = (res.best.length ? res.best : res.related).map(x => x.id), shown = res.best.concat(res.related).map(x => x.id);
   return insBar("<span>Your question</span>") + '<div class="ins ins-asked' + (res.depth ? " ins-" + res.depth : "") + '"><h2 id="ev-title" class="ins-yours" tabindex="-1">' + esc(insCap(res.q.length > 240 ? res.q.slice(0, 237) + "…" : res.q)) + "</h2>" +
@@ -1900,13 +1957,15 @@ function liveHtml(it) {
     if (found) steps.push(["done", "Found " + [n[0] ? liveCount(n[0], "paper") + " it can read" : "", n[1] ? liveCount(n[1], "official page") : ""].filter(Boolean).join(" and ")]);
     else if (lv.st === "new") steps.push(["now", "Looking for papers and official pages"]);
     if (lv.st === "nosource") steps.push(["end", "Searched: nothing that can be read is published on this yet. It is looked for again as new papers come out."]);
+    else if (lv.st === "nofind" && !lv.working) steps.push(["end", "Searched: the papers and official pages found so far say nothing on this yet. It is looked at again as new ones come out, and tried again another day."]);
+    else if (lv.st === "rereading" && !lv.working) steps.push(["now", "Some sources could not be read in time. Reading them again."]);
     else if (lv.st === "editor") steps.push(["end", "An answer is written. It is one of the few kinds that a person reads before it is shown."]);
     else if (lv.st === "tried") steps.push(["end", "No answer has passed the checks yet. It is tried again another day."]);
     else if (lv.st === "check" && !lv.working) steps.push(["now", "Written and checked. One last check is waiting for its turn today."]);
     else if (lv.working) steps.push(["now", (lv.st === "trying" ? "Writing again now. " : "Writing the answer now. ") + "Every sentence is tied to a source’s own words and checked. A few minutes."]);
     else if (lv.st === "trying") steps.push(["now", "A first try did not pass the checks. Writing again."]);
     else if (found) steps.push(["next", "Next: writing the answer"]);
-    if (hhmm && !lv.working && lv.st !== "nosource" && lv.st !== "editor") steps.push(["wait", "Today’s writing allowance is used up. It goes on at " + esc(hhmm) + "."]);
+    if (hhmm && !lv.working && lv.st !== "nosource" && lv.st !== "nofind" && lv.st !== "editor") steps.push(["wait", "Today’s writing allowance is used up. It goes on at " + esc(hhmm) + "."]);
   }
   const last = steps[steps.length - 1][0];
   return '<div class="lv' + (last === "end" || last === "wait" ? " lv-rest" : " lv-on") + '" role="status" aria-live="polite"><ol class="lv-steps">' + steps.map(s => '<li class="lv-' + s[0] + '"><span class="lv-m" aria-hidden="true"></span><span class="lv-t">' + s[1] + "</span></li>").join("") + "</ol></div>";
@@ -1928,7 +1987,7 @@ function youHtml(list, hist) {
     if (it.lv && it.lv.working) return "Being written now";
     if (s === "found") return "Sources found. Writing is next";
     if (s === "check") return "Written. One more check to pass";
-    return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Being answered" : s === "tried" ? "No answer passed the checks yet. Trying again" : s === "new" ? "In line. Not tried yet" : ""; };
+    return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "nofind" ? "Searched. What is published says nothing on it yet" : s === "trying" || s === "rereading" ? "Being answered" : s === "tried" ? "No answer passed the checks yet. Trying again" : s === "new" ? "In line. Not tried yet" : ""; };
   // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question that waits can be opened too:
   // it is asked again in the box, which shows what the site has on it so far
   const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">' + icon("clock") + (state(it) || k) + (it.sent ? '<span class="aq-ago"> · ' + (it.kept ? "asked " : "sent ") + youAgo(it.t) + "</span>" : "") +
@@ -2430,7 +2489,7 @@ function histList() { try { const a = JSON.parse(localStorage.getItem(HIST_KEY) 
 function histAdd(q, res) {
   if (!histOn()) return;
   q = insClean(q); if (insWordsIn(q) < 2 || q.length > 160) return;
-  if (res && (res.note === "unfinished" || res.note === "blocked" || res.note === "hello" || res.emergency)) return;
+  if (res && (res.note === "unfinished" || res.note === "blocked" || res.note === "hello" || res.note === "said" || res.emergency)) return;
   const best = res && res.best && res.best.length ? res.best[0] : null;
   try { const k = q.toLowerCase(), old = histList(), was = old.find(x => x.q.toLowerCase() === k), a = old.filter(x => x.q.toLowerCase() !== k);
     a.unshift(Object.assign({ q, t: Date.now() }, best ? { id: best.id, p: best.page || "" } : was && was.id && !res ? { id: was.id, p: was.p || "" } : {}));

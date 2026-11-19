@@ -51,6 +51,8 @@ NO = [("not about drugs", "This was not read as a question about drugs. If it is
 SAY = {"new": "It is on the list. The search for papers and official pages comes first.",
        "found": "The sources are found. The writing is next: every sentence is tied to a source's own words and read by two or more checkers.",
        "trying": "A first try did not pass the checks. Writing again.",
+       "rereading": "Some sources could not be read in time. Reading them again.",
+       "nofind": "Searched: the papers and official pages found so far say nothing on this yet. It is looked at again as new ones come out, and tried again another day.",
        "tried": "No answer has passed the checks yet. It is tried again another day.",
        "nosource": "Searched: nothing that can be read is published on this yet. It is looked for again as new papers come out.",
        "editor": "An answer is written. It is one of the few kinds that a person reads before it is shown.",
@@ -173,6 +175,8 @@ def selftest():
     assert set(out2["q"]) == set(out["q"]) and out2["answers"] == {} and out2["items"]["w_a0901"]["st"] == "answered" and "working" not in out2 and "room" not in out2
     out3 = make([], {}, done, listed, {"items": {"w_a0900": {"status": "waiting", "for": "again", "soft": "a further reader could not be asked"}}}, dict(src, state={"w_a0900": "trying"}), t=t)
     assert out3["items"]["w_a0900"]["st"] == "check" and out3["items"]["w_a0900"]["say"] == "Written and checked. One last check is waiting for its turn today.", out3["items"]["w_a0900"]
+    out4 = make([], {}, done, listed, {"items": {"w_a0900": {"status": "none", "soft": "a source could not be fetched"}}}, dict(src, state={"w_a0900": "nofind"}), t=t)      # (2.25.2) the build's word is said as it is
+    assert out4["items"]["w_a0900"]["st"] == "nofind" and out4["items"]["w_a0900"]["say"].startswith("Searched: the papers and official pages found so far say nothing on this yet"), out4["items"]["w_a0900"]
     assert decided("on the editors' list already: w_0031") == {"id": "w_0031"} and decided("our wording was not near the visitor's question (0.41): left for the editors")["no"] and decided("") is None
     print("live selftest: ok (a sent question is known by its key alone, never by its words; what was done is said in one word and one line; an answer the build shows is carried in the page's own form for three days; what a run could not read is kept from the run before)")
 

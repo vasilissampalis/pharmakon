@@ -178,6 +178,14 @@ SERVICES = {
     "mistral": {"url": "https://api.mistral.ai/v1/chat/completions", "models": "https://api.mistral.ai/v1/models", "key": "MISTRAL_API_KEY", "gap": 1.5, "calls": 1500, "json": True},
     "gemini": {"url": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", "models": "https://generativelanguage.googleapis.com/v1beta/openai/models", "key": "GEMINI_API_KEY", "gap": 7.0, "calls": 180, "json": True},
     "openrouter": {"url": "https://openrouter.ai/api/v1/chat/completions", "models": "https://openrouter.ai/api/v1/models", "key": "OPENROUTER_API_KEY", "gap": 3.5, "calls": 45, "json": False},
+    # (19 November 2026; his words, 20:50: "we have to connect it to every platform ... so NOTHING NEVER UNSTOPPABLY runs out") SambaNova Cloud's free tier: it applies only to an
+    # account with no payment method (its own page, docs.sambanova.ai, rate limits, read that evening): each model 20 calls a minute, 20 calls a day and 200,000 tokens a day.
+    # Strong models (DeepSeek V3.1 and V3.2, gpt-oss-120b, Llama 3.3 70B, Gemma 4 31B): a few strong readings a day, like Google's strong models. Off until the key exists.
+    "sambanova": {"url": "https://api.sambanova.ai/v1/chat/completions", "models": "https://api.sambanova.ai/v1/models", "key": "SAMBANOVA_API_KEY", "gap": 3.5, "calls": 18, "json": False},
+    # (19 November 2026; his words, 20:50: "A model of our own on GitHub's machines, used when the free allowances run out ... yes it has to work like an LLM")
+    # an open model run by the run itself (scripts/auto/local_llm.py starts it on the machine; LOCAL_LLM_KEY says it is up, LOCAL_LLM_PORTS which port serves
+    # which model). Nothing leaves the machine, nothing is counted against anyone's allowance: its only limit is the machine's speed (timeout: a call may take minutes).
+    "local": {"url": "http://127.0.0.1:8088/v1/chat/completions", "models": "http://127.0.0.1:8088/v1/models", "key": "LOCAL_LLM_KEY", "gap": 0.0, "calls": 1000000, "json": True, "timeout": 900},
     "claude": {"url": "https://api.anthropic.com/v1/messages", "models": "https://api.anthropic.com/v1/models", "key": "ANTHROPIC_API_KEY", "gap": 0.4, "calls": 4000, "paid": True},
 }
 PRICES = ROOT / "data" / "auto" / "lane" / "prices.json"      # what a paid model costs, as read from its maker's own page, and the most that may be spent in a day and in a month
@@ -186,6 +194,13 @@ OF_A_DAY = 0.9                                                 # where we stop b
 _last_call = {}
 _minute = {}                                                   # model -> [(when, tokens)] of this run's calls in the last minute (for a plan that counts tokens a minute)
 _quirks = {}                                                   # model -> {"no_system", "no_json"}: what a model refused once in this run, so that it is not asked that way again
+
+
+def local_url(name, what="url"):
+    """The address of the server that runs one local model (LOCAL_LLM_PORTS: {"its name": port}; else the first server's)."""
+    try: port = int((json.loads(os.environ.get("LOCAL_LLM_PORTS") or "{}") or {}).get(name) or 8088)
+    except (ValueError, TypeError, AttributeError): port = 8088
+    return f"http://127.0.0.1:{port}/v1/" + ("chat/completions" if what == "url" else "models")
 
 
 def service_of(model):
@@ -328,7 +343,9 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
             if wait > 0: time.sleep(wait)
         try:
             few = not S.get("paid") and 0 < lim["calls"] <= 20                 # a model with a handful of free calls a day (Google's strong readers): each call is dear
-            with op(urllib.request.Request(S["url"], data=json.dumps(body).encode("utf-8"), headers=headers), timeout=_capped(180 if S.get("paid") else (170 if STOP_AT is None else 80) if few else 80)) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it. 17 November 2026: a strong reader that thinks before it answers is given 170 seconds; Gemini 3.8 Flash did not answer six sentences in 80)
+            url = local_url(name) if svc == "local" else S["url"]
+            limit = S["timeout"] if S.get("timeout") else 180 if S.get("paid") else (170 if STOP_AT is None else 80) if few else 80
+            with op(urllib.request.Request(url, data=json.dumps(body).encode("utf-8"), headers=headers), timeout=_capped(limit)) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it. 17 November 2026: a strong reader that thinks before it answers is given 170 seconds; Gemini 3.8 Flash did not answer six sentences in 80)
         except urllib.error.HTTPError as e:
             whole = e.read().decode("utf-8", "replace")[:6000] if hasattr(e, "read") else ""; detail = whole[:400]; last = f"{svc} answered {e.code}: {detail}"
             if e.code == 429 or (e.code == 529 and svc == "claude"):

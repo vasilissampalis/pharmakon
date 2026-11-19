@@ -1,0 +1,86 @@
+# Open models of our own, on GitHub's machines: how fast they are there, and their exam (scripts/auto/local_llm.py; docs/AUTOMATION.md, decision 38).
+#
+# The senior author, 19 November 2026, 20:50 Athens, of "a model of our own on GitHub's machines, used when the free allowances run out":
+# "yes it has to work like an LLM ... so NOTHING NEVER UNSTOPPABLY runs out". The repository is public: GitHub's machines cost nothing and have
+# no daily allowance. A request file (data/auto/requests/local-*.json: {"models": ["qwen3-4b", "phi4-mini"], "exam": true, "minutes": 300})
+# starts this run; it fetches each model once (GitHub's cache keeps it), measures it, sits the lane's own exam as its checker, and keeps the results
+# in data/auto/exam/ (local-bench.json, model-local-*-lane.json). Nothing here reaches the site: the lane uses a local model only after this.
+name: Local models
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/local-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: local
+  cancel-in-progress: false
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Room on the disk (the larger models need it)
+        run: |
+          df -h / | tail -1
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL 2>/dev/null || true
+          df -h / | tail -1
+      - name: The models fetched before
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/pharmakon-models
+          key: local-models-${{ hashFiles('scripts/auto/local_llm.py') }}-${{ github.run_id }}
+          restore-keys: |
+            local-models-${{ hashFiles('scripts/auto/local_llm.py') }}-
+            local-models-
+      - name: The program that runs them, built before
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/llama-wheel
+          key: local-llama-wheel-0.3.36-avx2-${{ runner.os }}
+      - name: Python packages (llama-cpp-python 0.3.36 of 1 October 2026, checked against PyPI's own fingerprint and built once for every GitHub machine; huggingface_hub 2.4.0)
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q --upgrade pip
+          W="$HOME/.cache/llama-wheel"; mkdir -p "$W"
+          if ! ls "$W"/llama_cpp_python-0.3.36-*.whl >/dev/null 2>&1; then
+            .venv/bin/pip download -q --no-deps --no-binary :all: -d "$RUNNER_TEMP/sdist" llama-cpp-python==0.3.36
+            echo "832db0699007f1be95a7e41ef12e88926b02ba836461e36a36372db2760c1a2e  $(ls $RUNNER_TEMP/sdist/llama_cpp_python-0.3.36.tar.gz)" | sha256sum -c - || exit 1
+            # (built for what every GitHub machine has, AVX2, not for this one machine: a kept build must run on the next machine too)
+            CMAKE_ARGS="-DGGML_NATIVE=OFF -DGGML_AVX2=ON -DGGML_FMA=ON -DGGML_F16C=ON" .venv/bin/pip wheel -q --no-deps -w "$W" "$(ls $RUNNER_TEMP/sdist/llama_cpp_python-0.3.36.tar.gz)"
+          fi
+          .venv/bin/pip install -q "$(ls "$W"/llama_cpp_python-0.3.36-*.whl)[server]" huggingface_hub==2.4.0 numpy
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+      - name: Measure, and sit the exam
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: |
+          set +e
+          mkdir -p data/auto/exam
+          L="data/auto/exam/_local-last-run.txt"; : > "$L"
+          python3 -I scripts/auto/local_llm.py find >> "$L" 2>&1
+          for f in data/auto/requests/local-*.json; do
+            [ -f "$f" ] || continue
+            echo "== $f [$(date -u +%H:%M:%S)]" >> "$L"
+            python3 -I -u scripts/auto/local_llm.py bench --request "$f" >> "$L" 2>&1 || echo "!! the bench failed ($?)" >> "$L"
+            git rm -q "$f" 2>/dev/null || rm -f "$f"
+          done
+          if ! ls data/auto/requests/local-*.json >/dev/null 2>&1 && [ ! -s "$L" ]; then python3 -I -u scripts/auto/local_llm.py bench >> "$L" 2>&1; fi
+          tail -c 12000 "$L" > "$L.tmp" && mv "$L.tmp" "$L"
+      - name: Keep the results
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/auto/exam data/auto/requests 2>/dev/null || true
+          git diff --cached --quiet || git commit -q -m "Local models: how fast they are on GitHub's machine, and their exam"
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)

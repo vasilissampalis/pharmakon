@@ -46,6 +46,7 @@ jobs:
       MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}       # three more services with a free plan (16 November 2026); each is empty until the senior author adds its key
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}   # (19 November 2026) SambaNova Cloud's free tier; empty until the senior author adds its key
     steps:
       - uses: actions/checkout@v6
         with:
@@ -99,7 +100,7 @@ jobs:
           src = pathlib.Path(os.environ["RUNNER_TEMP"]) / "lane.log"
           t = src.read_text(encoding="utf-8", errors="replace") if src.exists() else "no notes were written\n"
           import re
-          for k in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "GROQ_API_KEY", "MISTRAL_API_KEY", "GEMINI_API_KEY", "OPENROUTER_API_KEY"):
+          for k in ("CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID", "GROQ_API_KEY", "MISTRAL_API_KEY", "GEMINI_API_KEY", "OPENROUTER_API_KEY", "SAMBANOVA_API_KEY"):
               v = (os.environ.get(k) or "").strip()
               if len(v) >= 6: t = t.replace(v, "***")
           t = re.sub(r"(accounts/)[0-9a-fA-F]{32}", r"\1***", t)
