@@ -86,10 +86,29 @@ def look(q, drug=None, drop=None):
 texts = []
 people = [(k, int(rows[k]), w) for k, w in enumerate(W_txt) if w not in site[rows[k]]]
 nm = [(q, idx[a]) for a, qs in sorted(near.items()) if a in idx for q in qs]
-learn([w for _, _, w in people] + [q for q, _ in nm])
+# --teachers (19 November 2026, decision 41): the teachers' ways of asking that are NOT in the index, as more examples of a question and the answer
+# it asks for. The encoder never learned them and the index does not hold them, so the judge sees the numbers a new way of asking really gets (our
+# own wordings, which the encoder learned, look easier than a stranger's question does); and their near-miss questions, as more of those.
+extra, extra_nm = [], []
+if "--teachers" in sys.argv:
+    have = set(W_txt)
+    for f in (ROOT / "data/verification/insight/variants_teacher.json", ROOT / "data/auto/insight/teachers.json"):
+        try: d = json.load(open(f, encoding="utf-8"))
+        except (OSError, ValueError): continue
+        for a, ws in (d.get("variants") or {}).items():
+            if a in idx: extra += [(idx[a], w) for w in ((x.get("w") if isinstance(x, dict) else x) for x in ws) if isinstance(w, str) and w.strip() and w not in have]
+        for a, ws in (d.get("near") or {}).items():
+            if a in idx: extra_nm += [(w, idx[a]) for w in ((x.get("w") if isinstance(x, dict) else x) for x in ws) if isinstance(w, str) and w.strip()]
+    extra = list(dict.fromkeys(extra)); nm = nm + [x for x in dict.fromkeys(extra_nm) if x not in set(nm)]
+learn([w for _, _, w in people] + [q for q, _ in nm] + [w for _, w in extra])
 X, y, grp, kind = [], [], [], []
 for k, i, w in people:
     L = look(w, drop=k)
+    X.append(L["feats"](i)); y.append(1); grp.append(i); kind.append("wording")
+    for j in [int(j) for j in np.argsort(-L["key"], kind="stable") if j != i][:3]:
+        X.append(L["feats"](j)); y.append(0); grp.append(i); kind.append("other answer")
+for i, w in extra:
+    L = look(w)
     X.append(L["feats"](i)); y.append(1); grp.append(i); kind.append("wording")
     for j in [int(j) for j in np.argsort(-L["key"], kind="stable") if j != i][:3]:
         X.append(L["feats"](j)); y.append(0); grp.append(i); kind.append("other answer")

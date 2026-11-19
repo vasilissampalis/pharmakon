@@ -12,6 +12,7 @@ of scripts/insight/MODELS.md in one go, beside the model on the site, with the p
      comes in the candidates' order; and how often a near-miss question gets the answer it does not have.
   --index-teachers N: the candidate's index also holds N of the teachers' ways of asking for each answer (model.json, "index_teachers"); the
   candidate may then be the site's own model file, to measure the index alone.
+  --judge-teachers: its judge also learns from the teachers' ways of asking that the index does not hold (judge2.py --teachers).
   VERDICT: "better" only where the candidate's best match is wrong no more often than the site's (the rule of MODELS.md), it gives a question nobody
   can answer a best match no more often, and it gives more full answers as best match or the same number with fewer wrong; else "not better".
   Nothing is shipped by this: the candidate's file is taken out of vendor/ again unless --keep, and the model.json it used is written beside the
@@ -87,11 +88,18 @@ def dev_cut(cand, site):
 
 
 def verdict(cand, site, cut=None):
+    """MODELS.md's rule first: its best match is wrong no more often, and a question nobody can answer gets one no more often. Then it must do
+    better where it counts for the reader: more questions get their full answer as best match (or as many, with fewer wrong); or, at the judge's
+    own cut, what Insight shows (the best match and the related rows, sweep_related.py at the tiers now) helps more questions and misleads no
+    more (help up, junk not up; or junk down, help not down)."""
     a = ((cand.get("cuts") or {}).get("all") or {}).get(cut) if cut else cand.get("all")
     b = site.get("all") or {}
     if not a or not b: return "not measured"
-    ok = rate(a) <= rate(b) + 1e-9 and a["unanswerable_given_one"] <= b["unanswerable_given_one"] and (a["full"] > b["full"] or (a["full"] == b["full"] and a["wrong"] < b["wrong"]))
-    return "better" if ok else "not better"
+    if not (rate(a) <= rate(b) + 1e-9 and a["unanswerable_given_one"] <= b["unanswerable_given_one"]): return "not better"
+    if a["full"] > b["full"] or (a["full"] == b["full"] and a["wrong"] < b["wrong"]): return "better"
+    ra, rb = cand.get("related_now"), site.get("related_now")
+    if cut is None and ra and rb and ((ra["help"] > rb["help"] and ra["junk"] <= rb["junk"]) or (ra["junk"] < rb["junk"] and ra["help"] >= rb["help"])) and a["full"] >= b["full"] - 1: return "better"
+    return "not better"
 
 
 def selftest():
@@ -115,6 +123,11 @@ def selftest():
                   "all": {"0.7": R(36, 23, 9, 4, 1)}}}
     assert dev_cut(C, S) == "0.7" and verdict(C, S, "0.7") == "not better"     # fewer wrong, but one full answer fewer
     C["cuts"]["all"]["0.7"] = R(37, 25, 8, 4, 1); assert verdict(C, S, "0.7") == "better"
+    # what is shown when there is no best match counts too (19 November 2026: the model taught with the teachers' wordings)
+    S2 = {"all": R(40, 24, 10, 6, 2), "related_now": {"help": 133, "junk": 60}}
+    C2 = {"all": R(41, 23, 12, 6, 2), "related_now": {"help": 138, "junk": 58}}
+    assert verdict(C2, S2) == "better" and verdict(dict(C2, related_now={"help": 138, "junk": 61}), S2) == "not better"
+    assert verdict(dict(C2, all=R(41, 22, 13, 6, 2)), S2) == "not better" and verdict(dict(C2, all=R(42, 23, 12, 7, 2)), S2) == "not better"
     print("candidate selftest: ok")
 
 
@@ -138,7 +151,7 @@ def main():
         print("candidate: the index with the candidate (every text embedded again) ...", flush=True)
         run(["python3", "-I", "scripts/insight/build_index.py", str(INPUT), str(tmp / "index0.json")], env)
         print("candidate: its judge, trained on our own wordings and near-miss questions ...", flush=True)
-        jlog = run(["python3", "-I", "scripts/insight/judge2.py", str(INPUT), str(tmp / "index0.json"), "--six", "--save", str(tmp / "judge.json")], env)
+        jlog = run(["python3", "-I", "scripts/insight/judge2.py", str(INPUT), str(tmp / "index0.json"), "--six", "--save", str(tmp / "judge.json")] + (["--teachers"] if "--judge-teachers" in sys.argv else []), env)
         j = json.load(open(tmp / "judge.json", encoding="utf-8"))
         cfg["judge"] = dict(cfg["judge"], **{k: j[k] for k in ("features", "mu", "sd", "w", "b")}); json.dump(cfg, open(mj, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print("candidate: the gold set with the page's rule, the candidate ...", flush=True)
@@ -146,6 +159,13 @@ def main():
         print("candidate: ... and the model on the site", flush=True)
         s_log = run(["python3", "-I", "scripts/insight/build_index.py", str(INPUT), str(tmp / "index-site.json"), "--eval"])
         C, S = parse(c_log), parse(s_log)
+        # what is shown when there is no best match, at the tiers model.json has: help (a full or partial answer among the rows), junk, miss, rows
+        rel_re = re.compile(r"\| all\s+help\s+(\d+) junk\s+(\d+) miss\s+(\d+) ok\s+(\d+) \| seen\s+(\d+) of (\d+) \|\s+(\d+) rows,\s+(\d+)% answers \| unanswerable with rows\s+(\d+) of (\d+)")
+        def related(index, e):
+            out_ = run(["python3", "-I", "scripts/insight/sweep_related.py", str(INPUT), str(index)], e)
+            m = rel_re.search(out_.split("related 0.44")[0])
+            return dict(zip(("help", "junk", "miss", "ok", "seen", "with_full", "rows", "answers_pct", "unanswerable_with_rows", "unanswerable"), map(int, m.groups()))) if m else None
+        C["related_now"] = related(tmp / "index1.json", env); S["related_now"] = related(tmp / "index-site.json", None)
         cut = dev_cut(C, S); v_same = verdict(C, S); v_dev = verdict(C, S, cut) if cut else "not better"
         if v_dev == "better": cfg["judge"]["best"] = float(cut)          # (where only the site's cut makes it better, that cut stays)
         res = {"_note": "scripts/insight/candidate.py: a trained model on the gold set with the page's own rule (its own judge; model.json's weights, tiers, cut and aspects), beside the model on the site. Nothing shipped.",
@@ -157,6 +177,7 @@ def main():
         json.dump(res, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         json.dump(cfg, open(out.with_suffix(".model.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         (out.with_suffix(".eval.txt")).write_text("== candidate\n" + c_log[-12000:] + "\n== site\n" + s_log[-12000:], encoding="utf-8")
+        for who, g in (("candidate", C), ("site", S)): print(f"candidate: {who:12s} when there is no best match, at the tiers now: {g.get('related_now')}")
         for who, g, a in (("candidate", C, C.get("all") or {}), (f"cand.@{cut}", C, ((C.get("cuts") or {}).get("all") or {}).get(cut) or {}), ("site", S, S.get("all") or {})):
             o = g.get("order") or {}
             print(f"candidate: {who:12s} best matches {a.get('best')}: full {a.get('full')}, partial {a.get('partial')}, wrong {a.get('wrong')}; unanswerable given one {a.get('unanswerable_given_one')} of {a.get('unanswerable')}; full answer first {o.get('full_first')}%, in three {o.get('full_in_three')}%")

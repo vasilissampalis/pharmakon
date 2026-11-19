@@ -1,0 +1,73 @@
+== candidate
+model pharmakon-insight-1-q8.onnx; gold questions: 400; 79 with a full answer, 126 unanswerable; candidates in order of first look + weights.topic x topic: a full answer first 60.8%, in the first three 73.4%
+judge weights (on standardized numbers): {'best wording': 1.2, 'second wording': 0.14, 'short answer': -0.2, 'word overlap': 0.09, 'topic': -0.01, 'lead over the next answer': 1.73} bias -2.32 ; a best match from 0.6
+gold, dev (odd-numbered): 200 questions
+  judge >= 0.5 (and about the drugs named)       best match for  40 of 200: full  16 ( 40%), partial  14 ( 35%), wrong  10 ( 25%); unanswerable given one 4 of 63; questions with a full answer that get it as best match 16 of 43; related: 124 rows for 72 questions, 41% full or partial, 8 of 63 unanswerable questions get some; no best match but a full answer under Related 13
+  judge >= 0.6 (and about the drugs named) <- model.json best match for  33 of 200: full  14 ( 42%), partial  11 ( 33%), wrong   8 ( 24%); unanswerable given one 2 of 63; questions with a full answer that get it as best match 14 of 43; related: 129 rows for 77 questions, 43% full or partial, 9 of 63 unanswerable questions get some; no best match but a full answer under Related 15
+  judge >= 0.7 (and about the drugs named)       best match for  22 of 200: full  14 ( 64%), partial   3 ( 14%), wrong   5 ( 23%); unanswerable given one 1 of 63; questions with a full answer that get it as best match 14 of 43; related: 138 rows for 84 questions, 45% full or partial, 10 of 63 unanswerable questions get some; no best match but a full answer under Related 15
+  judge >= 0.8 (and about the drugs named)       best match for  15 of 200: full  12 ( 80%), partial   1 (  7%), wrong   2 ( 13%); unanswerable given one 1 of 63; questions with a full answer that get it as best match 12 of 43; related: 143 rows for 87 questions, 45% full or partial, 10 of 63 unanswerable questions get some; no best match but a full answer under Related 18
+gold, test (even-numbered): 200 questions
+  judge >= 0.5 (and about the drugs named)       best match for  30 of 200: full  13 ( 43%), partial  15 ( 50%), wrong   2 (  7%); unanswerable given one 1 of 63; questions with a full answer that get it as best match 13 of 36; related: 134 rows for 75 questions, 44% full or partial, 13 of 63 unanswerable questions get some; no best match but a full answer under Related 6
+  judge >= 0.6 (and about the drugs named) <- model.json best match for  18 of 200: full  10 ( 56%), partial   7 ( 39%), wrong   1 (  6%); unanswerable given one 0 of 63; questions with a full answer that get it as best match 10 of 36; related: 143 rows for 82 questions, 48% full or partial, 14 of 63 unanswerable questions get some; no best match but a full answer under Related 9
+  judge >= 0.7 (and about the drugs named)       best match for  15 of 200: full   9 ( 60%), partial   5 ( 33%), wrong   1 (  7%); unanswerable given one 0 of 63; questions with a full answer that get it as best match 9 of 36; related: 146 rows for 84 questions, 49% full or partial, 14 of 63 unanswerable questions get some; no best match but a full answer under Related 10
+  judge >= 0.8 (and about the drugs named)       best match for  10 of 200: full   7 ( 70%), partial   2 ( 20%), wrong   1 ( 10%); unanswerable given one 0 of 63; questions with a full answer that get it as best match 7 of 36; related: 150 rows for 86 questions, 51% full or partial, 14 of 63 unanswerable questions get some; no best match but a full answer under Related 13
+gold, all: 400 questions
+  judge >= 0.5 (and about the drugs named)       best match for  70 of 400: full  29 ( 41%), partial  29 ( 41%), wrong  12 ( 17%); unanswerable given one 5 of 126; questions with a full answer that get it as best match 29 of 79; related: 258 rows for 147 questions, 43% full or partial, 21 of 126 unanswerable questions get some; no best match but a full answer under Related 19
+  judge >= 0.6 (and about the drugs named) <- model.json best match for  51 of 400: full  24 ( 47%), partial  18 ( 35%), wrong   9 ( 18%); unanswerable given one 2 of 126; questions with a full answer that get it as best match 24 of 79; related: 272 rows for 159 questions, 45% full or partial, 23 of 126 unanswerable questions get some; no best match but a full answer under Related 24
+  judge >= 0.7 (and about the drugs named)       best match for  37 of 400: full  23 ( 62%), partial   8 ( 22%), wrong   6 ( 16%); unanswerable given one 1 of 126; questions with a full answer that get it as best match 23 of 79; related: 284 rows for 168 questions, 47% full or partial, 24 of 126 unanswerable questions get some; no best match but a full answer under Related 25
+  judge >= 0.8 (and about the drugs named)       best match for  25 of 400: full  19 ( 76%), partial   3 ( 12%), wrong   3 ( 12%); unanswerable given one 1 of 126; questions with a full answer that get it as best match 19 of 79; related: 293 rows for 173 questions, 48% full or partial, 24 of 126 unanswerable questions get some; no best match but a full answer under Related 31
+scope (words only): forum questions taken as about drugs 400 of 400; questions that are not about drugs taken as about drugs 0 of 165
+  forum questions not taken as about drugs: []
+  other questions taken as about drugs: []
+near-miss questions given the answer they do not get as best match, judge >= 0.5: 256 of 1810 (14.1%)
+near-miss questions given the answer they do not get as best match, judge >= 0.6: 197 of 1810 (10.9%)
+near-miss questions given the answer they do not get as best match, judge >= 0.7: 139 of 1810 (7.7%)
+near-miss questions given the answer they do not get as best match, judge >= 0.8: 98 of 1810 (5.4%)
+insight: 7777 texts embedded (0 new)
+insight: 14 listed questions are answered by now and left off the list: w_0008 by cl_mdma_empathy, w_0010 by cl_psi_depression, w_0015 by cl_meth_acute_toxicity, w_0018 by au_w_0018, w_0019 by au_w_0019, w_0021 by au_w_0021, w_0024 by au_w_0024, w_0026 by au_w_0026, w_0030 by au_w_0030, w_0031 by au_w_0031, w_0032 by au_w_0032, w_0033 by au_w_0033, w_0037 by au_w_0037, w_0046 by au_w_0046
+insight: 525 texts embedded (0 new)
+insight: 35 questions on the list of those not answered yet, 245 wordings
+insight: 344 texts embedded (0 new)
+insight: 28 places of the site can be found by the meaning of a question (344 ways of asking; 4 entries say what is not a place)
+insight: model pharmakon-insight-1-q8.onnx (SHA-256 4f5059c16139…); 391 answers, 3693 wordings (2076 from the phrasings writer, 1194 hurried ones from the near-miss readers; 2773 name a drug), 191 names, 4466 KB
+insight: 27 answers have only the site's own questions to be found by (no wordings written for them yet): cl_meth_pk_intranasal_timecourse, cl_meth_pk_bioavailability_route, cl_mdma_tolerance_acute, cl_mdma_redose_cardiovascular, cl_mdma_nonlinear, cl_ket_bioavailability_oral_im, cl_ket_bioavailability_other_routes, cl_can_thc_pk_route, cl_coc_pk_route, au_w_0018, au_w_0019, au_w_0021, au_w_0024, au_w_0026, au_w_0030, au_w_0031, au_w_0032, au_w_0033, au_w_0037, au_w_0046, au_w_a0002, au_w_a0005, au_w_a0010, au_w_a0011, au_w_a0012, au_w_a0013, au_w_a0018
+insight: next questions for 389 answers (3993 in all)
+insight: 800 texts embedded (0 new)
+insight: 3620 texts embedded (0 new)
+
+== site
+model pharmakon-insight-1-q8.onnx; gold questions: 400; 79 with a full answer, 126 unanswerable; candidates in order of first look + weights.topic x topic: a full answer first 60.8%, in the first three 73.4%
+judge weights (on standardized numbers): {'best wording': 0.92, 'second wording': 0.8, 'short answer': -0.0, 'word overlap': 0.05, 'topic': -0.04, 'lead over the next answer': 1.58} bias -2.68 ; a best match from 0.6
+gold, dev (odd-numbered): 200 questions
+  judge >= 0.5 (and about the drugs named)       best match for  31 of 200: full  14 ( 45%), partial  10 ( 32%), wrong   7 ( 23%); unanswerable given one 3 of 63; questions with a full answer that get it as best match 14 of 43; related: 130 rows for 78 questions, 43% full or partial, 8 of 63 unanswerable questions get some; no best match but a full answer under Related 15
+  judge >= 0.6 (and about the drugs named) <- model.json best match for  25 of 200: full  14 ( 56%), partial   6 ( 24%), wrong   5 ( 20%); unanswerable given one 2 of 63; questions with a full answer that get it as best match 14 of 43; related: 134 rows for 82 questions, 44% full or partial, 9 of 63 unanswerable questions get some; no best match but a full answer under Related 16
+  judge >= 0.7 (and about the drugs named)       best match for  17 of 200: full  13 ( 76%), partial   1 (  6%), wrong   3 ( 18%); unanswerable given one 1 of 63; questions with a full answer that get it as best match 13 of 43; related: 142 rows for 87 questions, 46% full or partial, 10 of 63 unanswerable questions get some; no best match but a full answer under Related 17
+  judge >= 0.8 (and about the drugs named)       best match for  13 of 200: full  11 ( 85%), partial   0 (  0%), wrong   2 ( 15%); unanswerable given one 1 of 63; questions with a full answer that get it as best match 11 of 43; related: 145 rows for 88 questions, 46% full or partial, 10 of 63 unanswerable questions get some; no best match but a full answer under Related 19
+gold, test (even-numbered): 200 questions
+  judge >= 0.5 (and about the drugs named)       best match for  19 of 200: full  10 ( 53%), partial   7 ( 37%), wrong   2 ( 11%); unanswerable given one 1 of 63; questions with a full answer that get it as best match 10 of 36; related: 143 rows for 82 questions, 48% full or partial, 13 of 63 unanswerable questions get some; no best match but a full answer under Related 9
+  judge >= 0.6 (and about the drugs named) <- model.json best match for  15 of 200: full  10 ( 67%), partial   4 ( 27%), wrong   1 (  7%); unanswerable given one 0 of 63; questions with a full answer that get it as best match 10 of 36; related: 145 rows for 84 questions, 49% full or partial, 14 of 63 unanswerable questions get some; no best match but a full answer under Related 10
+  judge >= 0.7 (and about the drugs named)       best match for  11 of 200: full   6 ( 55%), partial   4 ( 36%), wrong   1 (  9%); unanswerable given one 0 of 63; questions with a full answer that get it as best match 6 of 36; related: 149 rows for 86 questions, 50% full or partial, 14 of 63 unanswerable questions get some; no best match but a full answer under Related 14
+  judge >= 0.8 (and about the drugs named)       best match for   8 of 200: full   5 ( 62%), partial   2 ( 25%), wrong   1 ( 12%); unanswerable given one 0 of 63; questions with a full answer that get it as best match 5 of 36; related: 152 rows for 88 questions, 51% full or partial, 14 of 63 unanswerable questions get some; no best match but a full answer under Related 15
+gold, all: 400 questions
+  judge >= 0.5 (and about the drugs named)       best match for  50 of 400: full  24 ( 48%), partial  17 ( 34%), wrong   9 ( 18%); unanswerable given one 4 of 126; questions with a full answer that get it as best match 24 of 79; related: 273 rows for 160 questions, 46% full or partial, 21 of 126 unanswerable questions get some; no best match but a full answer under Related 24
+  judge >= 0.6 (and about the drugs named) <- model.json best match for  40 of 400: full  24 ( 60%), partial  10 ( 25%), wrong   6 ( 15%); unanswerable given one 2 of 126; questions with a full answer that get it as best match 24 of 79; related: 279 rows for 166 questions, 47% full or partial, 23 of 126 unanswerable questions get some; no best match but a full answer under Related 26
+  judge >= 0.7 (and about the drugs named)       best match for  28 of 400: full  19 ( 68%), partial   5 ( 18%), wrong   4 ( 14%); unanswerable given one 1 of 126; questions with a full answer that get it as best match 19 of 79; related: 291 rows for 173 questions, 48% full or partial, 24 of 126 unanswerable questions get some; no best match but a full answer under Related 31
+  judge >= 0.8 (and about the drugs named)       best match for  21 of 400: full  16 ( 76%), partial   2 ( 10%), wrong   3 ( 14%); unanswerable given one 1 of 126; questions with a full answer that get it as best match 16 of 79; related: 297 rows for 176 questions, 49% full or partial, 24 of 126 unanswerable questions get some; no best match but a full answer under Related 34
+scope (words only): forum questions taken as about drugs 400 of 400; questions that are not about drugs taken as about drugs 0 of 165
+  forum questions not taken as about drugs: []
+  other questions taken as about drugs: []
+near-miss questions given the answer they do not get as best match, judge >= 0.5: 184 of 1810 (10.2%)
+near-miss questions given the answer they do not get as best match, judge >= 0.6: 144 of 1810 (8.0%)
+near-miss questions given the answer they do not get as best match, judge >= 0.7: 97 of 1810 (5.4%)
+near-miss questions given the answer they do not get as best match, judge >= 0.8: 66 of 1810 (3.6%)
+insight: 7777 texts embedded (0 new)
+insight: 14 listed questions are answered by now and left off the list: w_0008 by cl_mdma_empathy, w_0010 by cl_psi_depression, w_0015 by cl_meth_acute_toxicity, w_0018 by au_w_0018, w_0019 by au_w_0019, w_0021 by au_w_0021, w_0024 by au_w_0024, w_0026 by au_w_0026, w_0030 by au_w_0030, w_0031 by au_w_0031, w_0032 by au_w_0032, w_0033 by au_w_0033, w_0037 by au_w_0037, w_0046 by au_w_0046
+insight: 525 texts embedded (0 new)
+insight: 35 questions on the list of those not answered yet, 245 wordings
+insight: 344 texts embedded (0 new)
+insight: 28 places of the site can be found by the meaning of a question (344 ways of asking; 4 entries say what is not a place)
+insight: model pharmakon-insight-1-q8.onnx (SHA-256 4f5059c16139…); 391 answers, 3693 wordings (2076 from the phrasings writer, 1194 hurried ones from the near-miss readers; 2773 name a drug), 191 names, 4466 KB
+insight: 27 answers have only the site's own questions to be found by (no wordings written for them yet): cl_meth_pk_intranasal_timecourse, cl_meth_pk_bioavailability_route, cl_mdma_tolerance_acute, cl_mdma_redose_cardiovascular, cl_mdma_nonlinear, cl_ket_bioavailability_oral_im, cl_ket_bioavailability_other_routes, cl_can_thc_pk_route, cl_coc_pk_route, au_w_0018, au_w_0019, au_w_0021, au_w_0024, au_w_0026, au_w_0030, au_w_0031, au_w_0032, au_w_0033, au_w_0037, au_w_0046, au_w_a0002, au_w_a0005, au_w_a0010, au_w_a0011, au_w_a0012, au_w_a0013, au_w_a0018
+insight: next questions for 389 answers (3993 in all)
+insight: 800 texts embedded (0 new)
+insight: 3620 texts embedded (0 new)

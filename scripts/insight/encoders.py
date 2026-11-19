@@ -26,7 +26,7 @@ VENDOR = ROOT / "site" / "insight" / "vendor"
 
 # name: repo, onnx file, pooling ("mean" or "cls"), query prefix, text prefix, licence. Only models whose licence allows any use.
 MODELS = {
-    "pharmakon-insight-1 (now on the site)": {"local": "pharmakon-insight-1-q8.onnx", "pool": "mean", "licence": "Apache-2.0"},
+    "Pharmakon's own model (on the site)": {"local": json.load(open(ROOT / "site" / "insight" / "model.json", encoding="utf-8"))["file"], "pool": "mean", "licence": "Apache-2.0"},
     "all-MiniLM-L6-v2": {"repo": "Xenova/all-MiniLM-L6-v2", "file": "onnx/model_quantized.onnx", "pool": "mean", "licence": "Apache-2.0"},
     "multi-qa-MiniLM-L6-cos-v1": {"repo": "Xenova/multi-qa-MiniLM-L6-cos-v1", "file": "onnx/model_quantized.onnx", "pool": "mean", "licence": "Apache-2.0"},
     "gte-small": {"repo": "Xenova/gte-small", "file": "onnx/model_quantized.onnx", "pool": "mean", "licence": "MIT"},

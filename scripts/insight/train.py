@@ -34,7 +34,7 @@ V = ROOT / "data" / "verification" / "insight"
 INPUT = ROOT / "site" / "insight" / ".cache" / "index-input.json"
 VENDOR = ROOT / "site" / "insight" / "vendor"
 VOCAB = VENDOR / "vocab.txt"
-SITE_MODEL = VENDOR / "pharmakon-insight-1-q8.onnx"
+SITE_MODEL = VENDOR / json.load(open(ROOT / "site" / "insight" / "model.json", encoding="utf-8"))["file"]   # the model on the site, whatever its name
 
 # Open encoders that read as the page reads: the page's vocabulary (BERT uncased), mean pooling, 384 numbers. Licences allow any use.
 BASES = {
