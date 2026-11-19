@@ -2039,6 +2039,24 @@ SOFT_FETCH_A_DAY, SOFT_FETCH_TRIES = 3, 6               # a source that could no
 SOFT_A_DAY, HARD_A_DAY, HARD_SENT_A_DAY = 6, 2, 3       # tries of one question in one day: after a fault that was not the answer's; after an answer that did not pass (the system's own question; one a person sent)
 
 
+ROOM_FILE = ROOT / "data" / "auto" / "lane" / "room.json"
+
+
+def room_note(room):
+    """(19 November 2026; his words, 20:22: "still the same ... problem") what the lane itself found when it chose a team: room, or none until the next day
+    (00:00 UTC, when Cloudflare's and Groq's days turn). The page of a reader who waits reads it (scripts/auto/live.py): it never says that an answer is
+    being written while no team can write one. Only a real run writes it; a check or a trial does not."""
+    if os.environ.get("LANE_NO_ROOM_NOTE"): return
+    now = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        was = json.load(open(ROOM_FILE, encoding="utf-8")) if ROOM_FILE.exists() else {}
+        out = {"_note": "Written by scripts/auto/lane.py when it chose a team for an answer: room (true) or no team with room until 'until' (false).", "room": bool(room), "at": now.isoformat(timespec="seconds"),
+               "until": None if room else (datetime.datetime.combine(now.date() + datetime.timedelta(days=1), datetime.time(0, 0), datetime.timezone.utc)).isoformat(timespec="seconds")}
+        if was.get("room") == out["room"] and was.get("until") == out["until"]: return          # (nothing new: the file is not written again)
+        ROOM_FILE.parent.mkdir(parents=True, exist_ok=True); json.dump(out, open(ROOM_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    except (OSError, ValueError): pass
+
+
 def wait_days(tries):
     """(lane 19) After a day's tries gave no answer: how many days until the next. Every day at first; then further apart, so that a question the sources
     cannot answer yet does not take the free allowance from the questions that can be answered (new sources bring it back at once: turn 2)."""
@@ -2149,7 +2167,8 @@ def team(file=None, only=None, avoid=()):
                             # (19 November 2026) a model with a handful of free calls a day (Google's strong readers: 20) is asked once for an answer, seldom twice: it is
                             # taken while it has ONE call left, not three. On 18 November two of them stood unused at 16 of 18 calls while answers waited for a strong reader
                             few = lambda x: bool(llm.service_of(x)[0]) and 0 < llm.limits_of(x)["calls"] <= 20
-                            pick = next((x for x in a if isinstance(x, str) and x and llm.has(x.split("#")[0]) and x not in also and (llm.calls_fit({x.split("#")[0]: 1 if few(x.split("#")[0]) else CALLS["also#marks" if x.endswith("#marks") else "also"]}) if llm.service_of(x)[0] else True)), None)
+                            # (19 November 2026, team Z) never the writer's or the second reader's own model: the next one named for the place is taken instead
+                            pick = next((x for x in a if isinstance(x, str) and x and llm.has(x.split("#")[0]) and x not in also and base(x.split("#")[0]) not in (base(t.get("writer") or ""), base(checker or "")) and (llm.calls_fit({x.split("#")[0]: 1 if few(x.split("#")[0]) else CALLS["also#marks" if x.endswith("#marks") else "also"]}) if llm.service_of(x)[0] else True)), None)
                             if pick: also.append(pick); rest[len(also)] = [x for x in a[a.index(pick) + 1:] if isinstance(x, str) and x and llm.has(x.split("#")[0]) and base(x.split("#")[0]) not in (base(t.get("writer") or ""), base(checker or ""))]   # (lane 16) the others named for this place, asked in turn where the first cannot be
                             else: lacking = True
                         elif isinstance(a, str) and a: also.append(a)
@@ -2336,7 +2355,8 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         if real:
             was = st["items"].get(w["id"]) or {}
             models = team(only=only_team, avoid=tuple(was.get("teams") or []) if was.get("last") == TODAY else ())
-            if not models: print(f"lane: no team of models has room left today (Cloudflare: {llm.left():.0f} neurons left): it goes on tomorrow"); break
+            if not models: print(f"lane: no team of models has room left today (Cloudflare: {llm.left():.0f} neurons left): it goes on tomorrow"); room_note(False); break
+            room_note(True)
             print(f"lane: {models.get('team') or 'the models'}: {models['reader']} reads, {models['writer']} writes, {models['checker']} is the second reader")   # (an answer begun and not finished is lost, and its neurons with it: on 15 November 563 went that way)
         pf = ROOT / "data" / "auto" / "papers" / (w["id"] + ".json"); of = FOUND_OFFICIAL / (w["id"] + ".json"); af = OUT / ("au_" + w["id"] + ".json")
         if w.get("trial"): pf = TRIAL / "papers" / (w["id"] + ".json"); of = TRIAL / "official" / (w["id"] + ".json"); af = TRIAL / "answers" / ("au_" + w["id"] + ".json")

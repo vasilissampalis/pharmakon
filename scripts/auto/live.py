@@ -138,6 +138,13 @@ def write(argv):
             if "--working" in argv: working = L.next_up()
             if "--no-room-check" not in argv: room = bool(L.team())
         except Exception as e: print("live: the lane could not be asked (" + type(e).__name__ + ": " + str(e)[:100] + ")")
+    # (19 November 2026) what the lane itself found the last time it chose a team counts first: where it found no team with room, until its day turns,
+    # the page says that the day's allowance is used up, never that an answer is being written (data/auto/lane/room.json, lane.room_note)
+    note = load(ROOT / "data" / "auto" / "lane" / "room.json", {})
+    if isinstance(note, dict) and note.get("room") is False and note.get("until"):
+        try:
+            if datetime.datetime.now(datetime.timezone.utc) < datetime.datetime.fromisoformat(note["until"]): room = False
+        except ValueError: pass
     out = make(records, load(LIVE, {}), done, listed, state, src, working=working, room=room)
     LIVE.parent.mkdir(parents=True, exist_ok=True); json.dump(out, open(LIVE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"live: {len(out['q'])} sent questions known by their keys, {len(out['items'])} listed questions with their state ({', '.join(f'{k} {sum(1 for x in out['items'].values() if x['st'] == k)}' for k in sorted({x['st'] for x in out['items'].values()})) or 'none'}), "

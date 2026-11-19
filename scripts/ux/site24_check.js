@@ -148,8 +148,9 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     h3 = await card("#tf");
     ok("after a reload the deck is where it was", h3.n === "2 of 10" && h3.q === home2.q && h3.flipped, JSON.stringify(h3));
     await go(p, "#quiz"); await p.click('#mf-pick [data-mfp="cannabis"]'); await p.waitForTimeout(500);
-    const can = await p.evaluate(() => { const q = (document.querySelector("#quizpage .mf-front .mf-q") || {}).textContent || ""; return { n: document.querySelector("#quizpage .mf-front .qz2-score").textContent, k: document.querySelector("#quizpage .qz2-k").textContent, mine: (SIMPLE.tf.cannabis || []).some(x => x.statement === q), pressed: document.querySelector('#mf-pick [data-mfp="cannabis"]').getAttribute("aria-pressed") }; });
-    ok("Myth or fact? page: a drug can be chosen, and its own deck starts (its cards drawn at random since 2.23.1: the first is one of that drug's)", /^1 of \d+$/.test(can.n) && can.mine && can.pressed === "true", JSON.stringify(can));
+    const can = await p.evaluate(() => { const q = (document.querySelector("#quizpage .mf-front .mf-q") || {}).textContent || ""; return { n: document.querySelector("#quizpage .mf-front .qz2-score").textContent, k: document.querySelector("#quizpage .qz2-k").textContent, mine: mfPagePool("cannabis").some(x => x.q === q), pressed: document.querySelector('#mf-pick [data-mfp="cannabis"]').getAttribute("aria-pressed") }; });
+    // (the cannabis deck is the cards of the cannabis page: its own answers, and the mixing and test-kit answers that page shows: mfPagePool)
+    ok("Myth or fact? page: a drug can be chosen, and its own deck starts (its cards drawn at random since 2.23.1: the first is one of that drug's page)", /^1 of \d+$/.test(can.n) && can.mine && can.pressed === "true", JSON.stringify(can));
     await p.click('#mf-pick [data-mfp=""]'); await p.waitForTimeout(400);
     q2 = await card("#quizpage");
     ok("and All drugs brings the kept deck back", q2.n === "2 of 10" && q2.q === home2.q, JSON.stringify(q2));

@@ -1058,8 +1058,8 @@ function suggestDraw(ok) {
   const last = new Set((SUGGEST || []).map(s => s.x[0])), seen = sugSeen();
   let pool = SUG_POOL.filter(s => !seen.has(s.x[0]) && !last.has(s.x[0]));
   if (new Set(pool.map(s => s.sl)).size < 5) { seen.clear(); pool = SUG_POOL.filter(s => !last.has(s.x[0])); }   // (every one was shown on this device: start again)
-  const out = [], drugs = new Set();
-  for (const s of shuffle(pool.slice())) { if (drugs.has(s.sl)) continue; drugs.add(s.sl); out.push(s); if (out.length === 5) break; }
+  const out = [], drugs = new Set(), ids = new Set();   // (a question listed under two drugs is offered once)
+  for (const s of shuffle(pool.slice())) { if (drugs.has(s.sl) || ids.has(s.x[0])) continue; drugs.add(s.sl); ids.add(s.x[0]); out.push(s); if (out.length === 5) break; }
   sugKeep([...seen, ...out.map(s => s.x[0])]);
   return out;
 }
