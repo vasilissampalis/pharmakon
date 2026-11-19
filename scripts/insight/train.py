@@ -218,7 +218,12 @@ def main():
         wf = hf_hub_download(repo, weights, revision=info.sha)
         kw = {"revision": info.sha, "attn_implementation": "eager"}   # plain attention: it is written to ONNX as the page's file is
         model = AutoModel.from_pretrained(repo, add_pooling_layer=False, **kw) if "bert" in str((info.config or {}).get("model_type", "bert")) else AutoModel.from_pretrained(repo, **kw)
-        record["source"] = {"repo": repo, "commit": info.sha, "weights": weights, "sha256": hashlib.sha256(open(wf, "rb").read()).hexdigest(), "bytes": os.path.getsize(wf)}
+        record["source"] = {"repo": repo, "commit": info.sha, "weights": weights, "sha256": hashlib.sha256(open(wf, "rb").read()).hexdigest(), "bytes": os.path.getsize(wf),
+                            "licence_on_the_hub": getattr(getattr(info, "card_data", None), "license", None)}
+        for f in ("LICENSE", "LICENSE.txt", "README.md"):   # the base's own licence and card, kept beside the model for its NOTICE
+            if f in files:
+                try: OUT.joinpath("base-" + f.replace(".md", ".txt").replace("LICENSE.txt", "LICENSE")).write_bytes(open(hf_hub_download(repo, f, revision=info.sha), "rb").read()[:200000])
+                except Exception as e_: log(f"{f} of the base could not be kept: {e_}")
     log("base", json.dumps(record["source"]))
 
     def encode(texts, grad=False, bs=64):

@@ -130,6 +130,7 @@ jobs:
             out/train.json
             out/gold-first.json
             out/log.txt
+            out/base-*
             out/*-q8.onnx
           retention-days: 7
           if-no-files-found: warn
@@ -162,6 +163,7 @@ jobs:
             [ -f "$dir/log.txt" ] && tail -c 6000 "$dir/log.txt" | sed -E 's/(hf_|gh[pousr]_|sk-)[A-Za-z0-9_-]{8,}/[key]/g' > "$D/$label.log"
             if ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$dir/train.json" 2>/dev/null; then echo "!! no record (the run did not finish)" >> "$L"; continue; fi
             cp "$dir/train.json" "$D/$label.json"; [ -f "$dir/gold-first.json" ] && cp "$dir/gold-first.json" "$D/$label.first.json"
+            for b in "$dir"/base-*; do [ -f "$b" ] && head -c 200000 "$b" > "$D/$label.$(basename "$b")"; done
             for f in "$dir"/*-q8.onnx; do
               [ -f "$f" ] || continue
               name="$(basename "$f")"; sum="$(sha256sum "$f" | cut -d' ' -f1)"
