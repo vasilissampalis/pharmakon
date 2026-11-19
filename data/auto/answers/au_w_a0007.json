@@ -15,33 +15,38 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-18",
+  "on": "2026-11-19",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.8-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "44347403947",
+  "run": "44449513078",
+  "read_by": {
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 2,
+   "llama-4-scout-17b-16e-instruct": 1
+  },
+  "read_seconds": 80,
   "from": {
    "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 0.0
+  "neurons": 369.9,
+  "seconds": 149
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "4 findings kept from 2 sources (1 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.94, but 0.98, how1 0.97",
+  "check": "short: NOT accepted: The passage describes recruitment methods but does not state they were obtained via a survey.; but: NOT accepted: it is about something else than the short answer (Sentence 1 provides ways to join drug studies, answering the question. Sentence 2 discusses overall participation rates, which is unrelated to the recruitment methods described in sentence 1, so it does not serve as a limit or doubt about s); how1: accepted"
  },
  "sources": [
   {
@@ -102,10 +107,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
+     "verified_on": "2026-11-19",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-18"
+      "checked_on": "2026-11-19"
      }
     },
     "volume": "9",
@@ -124,35 +129,14 @@
    "money": [
     "AcknowledgmentsThe authors thank the Expert Diversity Advisory Board for guiding the development of this project, the focus group participants for their critical perspectives, and Hayley Aramburu for administrative assistance."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This article details Phase 1 efforts to develop sustainable strategies to increase enrollment/recruitment of Black participants in clinical trials through an Innovative Development of Research Engagement Manual.",
-    "text": "Phase 1 efforts to develop sustainable strategies to increase enrollment/recruitment of Black participants in clinical trials through an Innovative Development of Research Engagement Manual"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 28,
-     "where": "Results",
-     "quote": "The participants identified financial incentives, potential treatment options, and potential for improved awareness about substance abuse treatment as factors that determine retention in a study.",
-     "text": "The participants identified financial incentives, potential treatment options, and potential for improved awareness about substance abuse treatment as factors that determine retention in a study.",
+     "passage": 18,
+     "where": "Methods › Participants › Focus groups",
+     "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+     "text": "In one survey, participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 28,
-     "where": "Results",
-     "quote": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-     "text": "The focus groups considered compensation, research benefits, study duration, privacy, safety, and side effects, equally important information to know before participation.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 29,
-     "where": "Discussion",
-     "quote": "Survey responses indicated a positive view of research and a willingness to participate in research studies.",
-     "text": "Survey responses indicated a positive view of research and a willingness to participate in research studies.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -167,17 +151,107 @@
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "hse_mixing-alcohol-with-medicines-or-drugs",
+    "type": "webpage",
+    "title": "Mixing alcohol with medicines or drugs",
+    "author": [
+     {
+      "literal": "Health Service Executive"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       19
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-19"
+    }
+   },
+   "title": "Mixing alcohol with medicines or drugs",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.415,
+   "name": "Health Service Executive",
+   "short": "Ireland's health service (HSE)",
+   "tier": 1,
+   "address": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 7,
+     "where": "Mixing alcohol with illegal drugs",
+     "quote": "There are risks involved in taking drugs. But the risks are often higher if you take drugs along with alcohol.",
+     "text": "The risks of taking drugs are often higher if you take drugs along with alcohol.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Top of the page",
+     "quote": "Always check with your GP or pharmacist about your specific medicine.",
+     "text": "You should check with your GP or pharmacist about your specific medicine.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 11,
+     "where": "Mixing alcohol with illegal drugs / Get help with problem drugs and alcohol use",
+     "quote": "Freephone 1800 459 459 for confidential advice Find a drug service - drugsandalcohol.ie Find alcohol services and supports",
+     "text": "You can find a drug service or alcohol services and supports.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 7,
+     "where": "Mixing alcohol with illegal drugs",
+     "quote": "Interactions between cannabis and alcohol are unpredictable.",
+     "text": "The interactions between cannabis and alcohol are unpredictable.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "eligibility criteria, consent process, and where to find study listings",
  "wanted": [],
  "person": null,
  "history": [
   {
    "on": "2026-11-17",
    "lane": 18,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
+   "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
    "status": "none",
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
    "short": "",
@@ -190,8 +264,15 @@
    "read": "full",
    "kind": "other",
    "at": "10.1177/24731242251362181",
-   "kept": 3,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Phase 1 of a research engagement manual development study focusing on Black individuals with substance use disorders",
+     "quote": "The I-DREM study involved three phases, consisting of six steps to identify barriers, brainstorm all potential solutions, develop a manual, control quality, and revise the manual based on feedback and",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "Canadian Drugs and Substances Strategy: Overview",
@@ -238,8 +319,194 @@
    "read": "page",
    "kind": "official",
    "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": "eligibility criteria, consent process, and where to find study listings"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9382,
+   "but": 0.978,
+   "how1": 0.9663
+  },
+  "scores_quotes_alone": {
+   "short": 0.9218,
+   "but": 0.7844,
+   "how1": 0.9128
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "In one study, people joined drug trials through flyers, referrals from other participants, or referrals from local groups.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "obel_2025",
+       "where": "Methods › Participants › Focus groups",
+       "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+       "sha": "82aa73ac7618a914"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage describes recruitment for focus groups, not joining drug trials; the sentence claims participants joined drug trials."
+    },
+    {
+     "part": "but",
+     "text": "Participation by Black individuals in these trials remains lower than for other racial and ethnic groups.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "obel_2025",
+       "where": "Abstract",
+       "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
+       "sha": "a8e8968c3101ee81"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 provides ways to join (flyers, referrals, local groups) which answers the question. Sentence 2 discusses lower overall participation of Black individuals, which is not a direct limitation on the recruitment methods described in s)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 study on recruiting Black people in Dallas/Fort Worth found participants came via flyers, current participants, or local non-profits.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "obel_2025",
+       "where": "Methods › Participants › Focus groups",
+       "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+       "sha": "82aa73ac7618a914"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "In one study, people joined through flyers, referrals from other participants, or local non-profit groups.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "obel_2025",
+       "where": "Methods › Participants › Focus groups",
+       "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+       "sha": "82aa73ac7618a914"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "This was one study in Dallas/Fort Worth; Black people join clinical trials less than other groups.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "obel_2025",
+       "where": "Abstract",
+       "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
+       "sha": "a8e8968c3101ee81"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.00): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 study in Dallas/Fort Worth found people joined via flyers, referrals, or local groups.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "obel_2025",
+       "where": "Methods › Participants › Focus groups",
+       "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+       "sha": "82aa73ac7618a914"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "In one survey, people joined drug studies through flyers, referrals from other participants, or referrals from local groups.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "obel_2025",
+       "where": "Methods › Participants › Focus groups",
+       "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+       "sha": "82aa73ac7618a914"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage describes recruitment methods but does not state they were obtained via a survey."
+    },
+    {
+     "part": "but",
+     "text": "Participation by Black individuals in these trials remains lower than that of other racial and ethnic groups.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "obel_2025",
+       "where": "Abstract",
+       "quote": "The participation of Black individuals in clinical trials remains lower than that of other racial and ethnic groups.",
+       "sha": "a8e8968c3101ee81"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 provides ways to join drug studies, answering the question. Sentence 2 discusses overall participation rates, which is unrelated to the recruitment methods described in sentence 1, so it does not serve as a limit or doubt about s)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 study on recruiting Black individuals in Dallas/Fort Worth found people joined via flyers, referrals, or non-profits.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "obel_2025",
+       "where": "Methods › Participants › Focus groups",
+       "quote": "Participants were recruited via flyers distributed in the Dallas/Fort Worth region, direct referrals from current research participants, referrals from the EDAB, and referrals from regional non-profit organizations.",
+       "sha": "82aa73ac7618a914"
+      }
+     ],
+     "ok": true
+    }
+   ]
   }
  ],
  "place": {

@@ -18,21 +18,21 @@
   "on": "2026-11-19",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "@cf/openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
+   "team": "team B",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "writer_2": "groq:qwen/qwen3.8-27b"
   },
   "run": "44449513078",
   "read_by": {
-   "gemini-3.5-flash-lite": 6,
-   "gemini-3.1-flash-lite": 4
+   "gemini-3.5-flash-lite": 2,
+   "gemini-3.1-flash-lite": 1
   },
   "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 0,
    "summaries": 0,
    "official": 0
   },
@@ -40,130 +40,12 @@
   "seconds": 100
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
   "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
- "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "franke_2013",
-    "type": "article-journal",
-    "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
-    "author": [
-     {
-      "family": "Franke",
-      "given": "Andreas G"
-     },
-     {
-      "family": "Bagusat",
-      "given": "Christiana"
-     },
-     {
-      "family": "Dietz",
-      "given": "Pavel"
-     },
-     {
-      "family": "Hoffmann",
-      "given": "Isabell"
-     },
-     {
-      "family": "Simon",
-      "given": "Perikles"
-     },
-     {
-      "family": "Ulrich",
-      "given": "Rolf"
-     },
-     {
-      "family": "Lieb",
-      "given": "Klaus"
-     }
-    ],
-    "container-title": "BMC Medicine",
-    "issued": {
-     "date-parts": [
-      [
-       2013
-      ]
-     ]
-    },
-    "DOI": "10.1186/1741-7015-11-102",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-19"
-     }
-    },
-    "volume": "11",
-    "issue": "1",
-    "number": "102",
-    "PMCID": "PMC3635891"
-   },
-   "doi": "10.1186/1741-7015-11-102",
-   "pmcid": "PMC3635891",
-   "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
-   "year": 2013,
-   "journal": "BMC medicine",
-   "kind": "other",
-   "people": true,
-   "near": 0.528,
-   "money": [
-    "The authors declare that they have no competing interests."
-   ],
-   "design": {
-    "passage": 2,
-    "where": "Abstract",
-    "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
-    "text": "survey of surgeons attending international conferences"
-   },
-   "findings": [
-    {
-     "passage": 39,
-     "where": "Discussion",
-     "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-     "text": "According to randomized controlled trials, reviews, and meta-analyses, there are almost no pro-cognitive effects on simple and higher cognitive domains in normal healthy non-sleep-deprived subjects.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 40,
-     "where": "Discussion",
-     "quote": "Nevertheless, stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-     "text": "Stimulants and modafinil have enhancing effects on simple cognitive domains like fatigue, vigilance, psychomotor skills, and reaction time in sleep-deprived subjects, along with slightly pro-cognitive effects on higher cognitive domains.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 48,
-     "where": "Conclusions",
-     "quote": "However, pro-cognitive effects on higher cognitive domains are very limited.",
-     "text": "Pro-cognitive effects on higher cognitive domains are very limited.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "The prevalence of surgeons taking pharmacological cognitive enhancement (CE) or mood enhancement (ME) drugs has not been systematically assessed so far.",
-     "text": "The prevalence of surgeons taking pharmacological cognitive enhancement or mood enhancement drugs had not been systematically assessed so far.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  }
- ],
+ "sources": [],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -207,6 +89,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -216,7 +106,8 @@
    "kind": "other",
    "at": "10.1371/journal.pone.0129805",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "A survey of substance use for cognitive enhancement by university students in the Netherlands",
@@ -241,83 +132,6 @@
    "at": "10.1177/1455072518778493",
    "kept": 0,
    "thrown": []
-  },
-  {
-   "title": "Cognitive Training Effectiveness on Memory, Executive Functioning, and Processing Speed in Individuals With Substance Use Disorders: A Systematic Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fpsyg.2021.730165",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "A Systematic Review and Narrative Synthesis of Cognitive Training in the Treatment of Mental Illness and Substance Use Disorder",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/jcm13154348",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cognitive Enhancement Therapy Improves Frontolimbic Regulation of Emotion in Alcohol and/or Cannabis Misusing Schizophrenia: A Preliminary Study",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyt.2015.00186",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/1741-7015-11-102",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "Researchers can only speculate about the reasons why surgeons use these prescription and illicit drugs for cognitive enhancement.",
-     "quote": "We can only speculate about the reasons.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "To dope or not to dope: neuroenhancement with prescription drugs and drugs of abuse among Swiss university students",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1371/journal.pone.0077967",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Gaming under the influence: An exploratory study",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1556/2006.7.2018.27",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The study is exploratory and has limited contextual data, which prevents testing the hypothesis regarding self-medication for mood management.",
-     "quote": "Due to the exploratory nature of this study and limited contextual data, we cannot test this hypothesis.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "More focused research is required to examine the hypotheses regarding the risks of gaming problems and the use of stimulants and medicines.",
-     "quote": "To examine these hypotheses would, though, require more focused research.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "Drugs As Instruments: Describing and Testing a Behavioral Approach to the Study of Neuroenhancement",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyg.2016.01226",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "soft": "a source could not be fetched",
