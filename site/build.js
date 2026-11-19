@@ -368,8 +368,8 @@ const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {}, AUTO_FORMS = {};
     for (const s of Object.values((e || {}).species || {})) {
       if (!s || !s.name) continue;
       if (s.gbif) (science[slug] = science[slug] || []).push({ name: String(s.name), kind: kindOf(s.kind), gbif: +s.gbif });
-      // (a picture from a Commons category that is not a species shows the page itself: "thing")
-      for (const p of s.pictures || []) if (okPic(p)) list.push(picOf(p, { species: String(s.kind === "thing" ? (e.name || slug) : s.name), kind: s.kind === "thing" ? "thing" : kindOf(s.kind), country: String(p.country || "") }));
+      // (a picture from a Commons category that is not a species is "an example" of what the category names: "Piracetam" on the page of nootropics)
+      for (const p of s.pictures || []) if (okPic(p)) list.push(picOf(p, { species: String(s.name || e.name || slug), kind: s.kind === "thing" ? "thing" : kindOf(s.kind), country: String(p.country || "") }));
     }
     if (list.length) pics[slug] = list; }
   { const forms = site("forms.json"), have = new Set(site("photos.json").photos.filter(p => !p.hold).map(p => p.id));
