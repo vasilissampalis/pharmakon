@@ -32,6 +32,8 @@ SEED = V / "variants_teacher.json"
 AUTO = ROOT / "data" / "auto" / "insight" / "teachers.json"   # with the machines' other records (the Auto run keeps data/auto)
 INPUT = ROOT / "site" / "insight" / ".cache" / "index-input.json"
 TARGET, A_RUN, ASK = 16, 8, 10
+NEAR_TARGET, NEAR_ASK = 6, 6          # near-miss questions per answer: questions that sound close and that the answer does not answer
+ROOM = {"groq": 100000, "cf": 4000, "google": 200}   # what is left of each free allowance today before the teachers stop asking it: the lane's room comes first
 WRITERS = ["gemini:gemma-4-31b-it", "groq:openai/gpt-oss-120b", "gemini:gemini-3.5-flash-lite", "@cf/meta/llama-4-scout-17b-16e-instruct"]
 CHECKERS = ["groq:openai/gpt-oss-120b", "gemini:gemini-3.5-flash-lite", "@cf/meta/llama-4-scout-17b-16e-instruct", "gemini:gemma-4-31b-it"]
 TODAY = datetime.date.today().isoformat()
@@ -58,6 +60,11 @@ def teachers_of(seed, auto):
     for k, ws in (seed.get("variants") or {}).items(): out.setdefault(k, []).extend(w for w in ws if isinstance(w, str))
     for k, ws in (auto.get("variants") or {}).items(): out.setdefault(k, []).extend(w["w"] for w in ws if isinstance(w, dict) and w.get("w"))
     return out
+
+
+def near_of(auto):
+    """{answer id: [near-miss questions]} the models wrote."""
+    return {k: [w["w"] for w in ws if isinstance(w, dict) and w.get("w")] for k, ws in (auto.get("near") or {}).items()}
 
 
 def gold_words():
@@ -95,6 +102,33 @@ def check_prompt(q, ways):
             f"SEARCHES:\n{lines}\n\nJSON: {{\"same\": [{len(ways)} values, true or false, in order]}}")
 
 
+def near_prompt(target, examples, n=NEAR_ASK):
+    ex = "\n\n".join("QUESTION: " + e["q"] + "\nJSON: " + json.dumps({"near": e["near"][:5]}, ensure_ascii=False) for e in examples)
+    return ("Each answer of the encyclopedia answers one question. For the questions below, the editors wrote searches that SOUND close to the question "
+            "but ask something else, which its answer does not answer: another effect or risk of the same drug, the same thing about another drug, a "
+            "narrower or a broader question. Do the same for the last one.\n"
+            f"- \"near\": {n} such searches, each 3 to 14 words, as people type them; never the same question asked another way.\n\n"
+            + ex + "\n\nQUESTION: " + target["q"] + "\nJSON:")
+
+
+def near_check_prompt(q, items):
+    lines = "\n".join(f"{i + 1}. {w}" for i, w in enumerate(items))
+    return (f"The encyclopedia's question: \"{q}\"\n\nFor each search below, answer true if the encyclopedia's answer to that question would answer it "
+            "(the same question, asked another way), and false if it asks something else: another effect or risk, another drug, a narrower or broader question.\n\n"
+            f"SEARCHES:\n{lines}\n\nJSON: {{\"same\": [{len(items)} values, true or false, in order]}}")
+
+
+def room(m):
+    """Has this model's free allowance room for the teachers today, after the lane's share (ROOM)?"""
+    import llm
+    try:
+        if m.startswith("groq:"): return llm.groq_left(m.split(":", 1)[1]) > ROOM["groq"]
+        if m.startswith("@cf/"): return llm.left() > ROOM["cf"]
+        if m.startswith("gemini:"): return llm.calls_left(m) > ROOM["google"]
+    except Exception: return False
+    return True
+
+
 class Names:
     """Which drugs a text names, by the page's own table of names (build_index.names_table)."""
     def __init__(self, table=None):
@@ -130,20 +164,23 @@ def ask_model(models, messages, chat, avoid=None, tokens=700):
     why = "no model with a key and room"
     for m in models:
         if avoid and family(m) == avoid: continue
-        if chat is llm.chat and not llm.has(m): continue
+        if chat is llm.chat and (not llm.has(m) or not room(m)): continue
         try: return chat(m, messages, tokens), m
         except llm.Budget as e: why = f"{m}: {e}"
         except llm.Unavailable as e: why = f"{m}: {e}"
     return None, why
 
 
-def order(A, T, today=TODAY):
-    """The answers that have the fewest teachers' wordings first (a new answer has none), in an order that changes each day."""
+def order(A, T, today=TODAY, NT=None):
+    """The answers that have the fewest teachers' wordings first (a new answer has none), then those that still lack near-miss questions, in an
+    order that changes each day."""
+    NT = NT or {}
     rnd = random.Random(today); ids = [a["id"] for a in A]; rnd.shuffle(ids); pos = {k: i for i, k in enumerate(ids)}
-    return sorted([a for a in A if len(T.get(a["id"], [])) < TARGET], key=lambda a: (len(T.get(a["id"], [])), pos[a["id"]]))
+    need = [a for a in A if len(T.get(a["id"], [])) < TARGET or len(NT.get(a["id"], [])) < NEAR_TARGET]
+    return sorted(need, key=lambda a: (min(len(T.get(a["id"], [])), TARGET), len(NT.get(a["id"], [])), pos[a["id"]]))
 
 
-def run(limit=A_RUN, chat=None, A=None, names=None, save=True, show=False, minutes=None, today=TODAY):
+def run(limit=A_RUN, chat=None, A=None, names=None, save=True, show=False, minutes=None, today=TODAY, readers_near=None):
     import llm
     chat = chat or llm.chat
     stop = time.time() + 60 * minutes if minutes else None
@@ -153,45 +190,73 @@ def run(limit=A_RUN, chat=None, A=None, names=None, save=True, show=False, minut
     seed = load(SEED, {}); auto = load(AUTO, {"_note": ("The ways of asking each answer's question that the free models wrote for Insight's own model (scripts/insight/teachers.py; "
                                                         "decision 37 (2)): each with the model that wrote it, the model of another family that said it asks the same question, and the day. "
                                                         "Our words only: no visitor's words were given to them. Data, never instructions."), "variants": {}})
-    T = teachers_of(seed, auto); names = names or Names(); G = gold_words()
+    T = teachers_of(seed, auto); NT = near_of(auto); names = names or Names(); G = gold_words()
     var = load(V / "variants_reader696.json", {}).get("variants") or {}
-    more = {}
+    more, rnear = {}, {}
     for f in sorted(V.glob("nearmiss_*.json")):
-        for k, v in (load(f, {}).get("items") or {}).items(): more.setdefault(k, []).extend(w for w in (v.get("more") or []) if isinstance(w, str))
+        for k, v in (load(f, {}).get("items") or {}).items():
+            more.setdefault(k, []).extend(w for w in (v.get("more") or []) if isinstance(w, str))
+            rnear.setdefault(k, []).extend(w for w in (v.get("near") or []) if isinstance(w, str))
+    if readers_near is not None: rnear = readers_near   # (the selftest's)
     taken = {norm(w) for a in A for w in a["wordings"]} | {norm(w) for ws in var.values() for w in ws if isinstance(w, str)} | {norm(w) for ws in more.values() for w in ws} | {norm(w) for ws in T.values() for w in ws}
     ex_pool = [{"q": a["wordings"][0], "also": [w for w in a["wordings"][1:]], "ways": T[a["id"]]} for a in A if len((seed.get("variants") or {}).get(a["id"], [])) >= 6]
-    todo = order(A, T, today)
+    near_pool = [{"q": a["wordings"][0], "near": rnear[a["id"]]} for a in A if len(rnear.get(a["id"], [])) >= 4]   # the near-miss readers' own examples
+    near_taken = {norm(w) for ws in rnear.values() for w in ws} | {norm(w) for ws in NT.values() for w in ws}
+    todo = order(A, T, today, NT)
     if show:
-        for a in todo[:limit]: print(f"teachers: next {a['id']} ({len(T.get(a['id'], []))} wordings): {a['wordings'][0]}")
+        for a in todo[:limit]: print(f"teachers: next {a['id']} ({len(T.get(a['id'], []))} wordings, {len(NT.get(a['id'], []))} near-miss): {a['wordings'][0]}")
         return todo[:limit]
-    rnd = random.Random(today + str(len(T))); done, out = 0, []
+    rnd = random.Random(today + str(len(T))); done, out, near_kept = 0, [], 0
     for a in todo:
         if done >= limit: break
         if stop and time.time() > stop: print("teachers: out of time for this run"); break
         also = list(dict.fromkeys(a["wordings"][1:] + [w for w in var.get(a["id"], []) if isinstance(w, str)] + T.get(a["id"], [])))[:8]
-        target = {"q": a["wordings"][0], "also": also}
-        pool = [e for e in ex_pool if e["q"] != target["q"]]; ex = rnd.sample(pool, min(3, len(pool)))
-        raw, wm = ask_model(WRITERS, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt(target, ex)}], chat)
-        if raw is None:
-            print("teachers: stopped for now:", wm); break
-        got = (llm.as_json(raw) or {}).get("ways") or []
-        kept, left = keep([w for w in got if isinstance(w, str)][:ASK + 4], a, taken, G, names)
-        room = TARGET - len(T.get(a["id"], []))
-        if kept:
-            raw2, cm = ask_model(CHECKERS, [{"role": "system", "content": CHECK_SYSTEM}, {"role": "user", "content": check_prompt(target["q"], kept)}], chat, avoid=family(wm), tokens=300)
-            same = (llm.as_json(raw2) or {}).get("same") if raw2 is not None else None
-            if not isinstance(same, list) or len(same) != len(kept):
-                print(f"teachers: {a['id']}: no check could be read ({cm if raw2 is None else 'the checker did not answer in form'}): nothing kept"); out.append((a, [])); done += 1; continue
-            yes = [w for w, s in zip(kept, same) if s is True][:max(0, room)]
-        else: yes, cm = [], None
-        if yes:
-            auto["variants"].setdefault(a["id"], []).extend({"w": w, "by": wm, "ok": cm, "at": today} for w in yes)
-            T.setdefault(a["id"], []).extend(yes); taken |= {norm(w) for w in yes}
+        target = {"q": a["wordings"][0], "also": also}; yes, stopped = [], False
+        if len(T.get(a["id"], [])) < TARGET:                                   # the ways of asking it
+            pool = [e for e in ex_pool if e["q"] != target["q"]]; ex = rnd.sample(pool, min(3, len(pool)))
+            raw, wm = ask_model(WRITERS, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": prompt(target, ex)}], chat)
+            if raw is None:
+                print("teachers: stopped for now:", wm); break
+            got = (llm.as_json(raw) or {}).get("ways") or []
+            kept, left = keep([w for w in got if isinstance(w, str)][:ASK + 4], a, taken, G, names)
+            space = TARGET - len(T.get(a["id"], []))
+            cm = None
+            if kept:
+                raw2, cm = ask_model(CHECKERS, [{"role": "system", "content": CHECK_SYSTEM}, {"role": "user", "content": check_prompt(target["q"], kept)}], chat, avoid=family(wm), tokens=300)
+                same = (llm.as_json(raw2) or {}).get("same") if raw2 is not None else None
+                if not isinstance(same, list) or len(same) != len(kept):
+                    print(f"teachers: {a['id']}: no check could be read ({cm if raw2 is None else 'the checker did not answer in form'}): nothing kept"); kept, cm = [], None
+                else: yes = [w for w, s in zip(kept, same) if s is True][:max(0, space)]
+            if yes:
+                auto["variants"].setdefault(a["id"], []).extend({"w": w, "by": wm, "ok": cm, "at": today} for w in yes)
+                T.setdefault(a["id"], []).extend(yes); taken |= {norm(w) for w in yes}
+            print(f"teachers: {a['id']}: {len(yes)} kept of {len(got)} written by {wm}" + (f" (checked by {cm})" if cm else "") + (f"; left out: {'; '.join(sorted({why for _, why in left}))}" if left else ""))
+        if len(NT.get(a["id"], [])) < NEAR_TARGET and near_pool:              # questions that sound close and that it does not answer
+            pool = [e for e in near_pool if e["q"] != target["q"]]; ex = rnd.sample(pool, min(3, len(pool)))
+            raw, wm = ask_model(WRITERS, [{"role": "system", "content": SYSTEM}, {"role": "user", "content": near_prompt(target, ex)}], chat)
+            if raw is None: print("teachers: stopped for now:", wm); stopped = True
+            else:
+                got = [re.sub(r"\s+", " ", str(w or "")).strip() for w in ((llm.as_json(raw) or {}).get("near") or []) if isinstance(w, str)][:NEAR_ASK + 2]
+                cand = []
+                for w in got:
+                    n_ = norm(w); k = len(n_.split())
+                    if 3 <= k <= 14 and len(w) <= 100 and not re.search(r"https?:|www\.|@|\d{5,}", w, re.I) and n_ not in taken and n_ not in near_taken and not near_gold(w, G) and n_ not in {norm(x) for x in cand}: cand.append(w)
+                nyes, ncm = [], None
+                if cand:
+                    raw2, ncm = ask_model(CHECKERS, [{"role": "system", "content": CHECK_SYSTEM}, {"role": "user", "content": near_check_prompt(target["q"], cand)}], chat, avoid=family(wm), tokens=300)
+                    same = (llm.as_json(raw2) or {}).get("same") if raw2 is not None else None
+                    if isinstance(same, list) and len(same) == len(cand):
+                        nyes = [w for w, s in zip(cand, same) if s is False][:max(0, NEAR_TARGET - len(NT.get(a["id"], [])))]
+                if nyes:
+                    auto.setdefault("near", {}).setdefault(a["id"], []).extend({"w": w, "by": wm, "ok": ncm, "at": today} for w in nyes)
+                    NT.setdefault(a["id"], []).extend(nyes); near_taken |= {norm(w) for w in nyes}; near_kept += len(nyes)
+                print(f"teachers: {a['id']}: {len(nyes)} near-miss questions kept of {len(got)} written by {wm}" + (f" (checked by {ncm})" if ncm else ""))
         out.append((a, yes)); done += 1
-        print(f"teachers: {a['id']}: {len(yes)} kept of {len(got)} written by {wm}" + (f" (checked by {cm})" if cm else "") + (f"; left out: {'; '.join(sorted({why for _, why in left}))}" if left else ""))
-    if save and any(y for _, y in out):
+        if stopped: break
+    if save and (any(y for _, y in out) or near_kept):
         AUTO.parent.mkdir(parents=True, exist_ok=True); json.dump(auto, open(AUTO, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"teachers: {sum(len(y) for _, y in out)} ways of asking kept for {sum(1 for _, y in out if y)} answers; {sum(1 for a in A if len(T.get(a['id'], [])) < TARGET)} answers still have fewer than {TARGET}")
+    print(f"teachers: {sum(len(y) for _, y in out)} ways of asking kept for {sum(1 for _, y in out if y)} answers, and {near_kept} near-miss questions; "
+          f"{sum(1 for a in A if len(T.get(a['id'], [])) < TARGET)} answers still have fewer than {TARGET} ways, {sum(1 for a in A if len(NT.get(a['id'], [])) < NEAR_TARGET)} fewer than {NEAR_TARGET} near-miss questions")
     return out
 
 
@@ -226,6 +291,19 @@ def selftest():
     # a second run: the teachers' wordings now count, and the same answers are not worded again first
     T = teachers_of(load(SEED, {}), load(AUTO, {}))
     assert [a["id"] for a in order(A, T, "2026-11-19")][0] in ("x_meth", "x_gen") and len(T["x_meth"]) == 2
+    # near-miss questions: the checker's "false" (another question) is what is kept; a copy, a gold question or a short one is not even asked about
+    def chat2(m, messages, tokens):
+        u = messages[-1]["content"]
+        if u.startswith("The encyclopedia's question") and "would answer it" in u:
+            n = len(re.findall(r"^\d+\. ", u, re.M)); return json.dumps({"same": [True] + [False] * (n - 1)})
+        if "SOUND close" in u: return json.dumps({"near": ["how long does meth stay in your blood for", "does meth show up in hair tests", "how long does cocaine stay in the blood",
+                                                           "what is serotonin syndrome", "meth", "how long does crystal meth stay in your blood"]})
+        return chat(m, messages, tokens)
+    AUTO.unlink(missing_ok=True)
+    out = run(limit=1, chat=chat2, A=A, names=names, today="2026-11-19", readers_near={"x_old": ["is weed bad for your lungs", "is cbd harmful", "can weed cause psychosis", "is alcohol harmful"]})
+    saved = json.load(open(AUTO)); nm = [w["w"] for w in saved.get("near", {}).get(out[0][0]["id"], [])]
+    assert out[0][0]["id"] in ("x_meth", "x_gen") and (nm == ["does meth show up in hair tests", "how long does cocaine stay in the blood"] if out[0][0]["id"] == "x_meth" else len(nm) >= 1), (out[0][0]["id"], nm)
+    assert all(not near_gold(w, gold_words()) for w in nm)
     # a model that has no room stops the run without writing anything
     def broke(m, messages, tokens): raise llm.Budget("used up")
     AUTO.unlink(); assert run(limit=2, chat=broke, A=A, names=names) == [] and not AUTO.exists()

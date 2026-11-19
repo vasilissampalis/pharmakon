@@ -81,6 +81,10 @@ def examples(use_teacher):
             more.setdefault(k, []).extend(w for w in (v.get("more") or []) if isinstance(w, str) and w.strip())
             near.setdefault(k, []).extend(w for w in (v.get("near") or []) if isinstance(w, str) and w.strip())
     tea = teacher_wordings() if use_teacher else {}
+    if use_teacher:   # the near-miss questions the free models wrote (scripts/insight/teachers.py; a model of another family said each asks something else)
+        try: tn = json.load(open(ROOT / "data" / "auto" / "insight" / "teachers.json", encoding="utf-8")).get("near") or {}
+        except (OSError, ValueError): tn = {}
+        for k, ws in tn.items(): near.setdefault(k, []).extend(w["w"] for w in ws if isinstance(w, dict) and w.get("w"))
     P, N, R, T = [], [], [], []
     for a in A:
         readers = list(dict.fromkeys([w for w in var.get(a["id"], []) if isinstance(w, str) and w.strip()] + more.get(a["id"], [])))
