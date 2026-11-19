@@ -183,9 +183,10 @@ const FIND_CTX = { lsd: "lysergic psychedelic psychedelics hallucinogen hallucin
   addiction: "drug drugs substance substances alcohol opioid opioids nicotine cocaine heroin cannabis dependence",
   salvia: "salvinorin divinorum", benzos: "benzodiazepine benzodiazepines", benzo: "benzodiazepine benzodiazepines", shrooms: "psilocybin psilocybe", mushrooms: "psilocybin psilocybe", poppers: "nitrite nitrites", ecstasy: "mdma methylenedioxymethamphetamine", nos: "nitrous",
   // (2.26.4; the senior author, 20 November 2026, 00:59: "it confused nitrous oxide with the nitrogen on earth": a question on laughing gas and nerve damage got papers on
-  // the nitrogen cycle, nitrate in seawater and bacteria in soils) nitrous oxide is also a gas of the atmosphere and of soils: a paper counts only where it is about people
-  "nitrous oxide": "recreational misuse abuse inhalant inhalants inhalation neuropathy myelopathy myeloneuropathy neurological neurologic cobalamin b12 whippets nangs balloons laughing anaesthesia anesthesia analgesia dental patients patient intoxication",
-  nitrous: "recreational misuse abuse inhalant inhalants inhalation neuropathy myelopathy myeloneuropathy neurological neurologic cobalamin b12 whippets nangs balloons laughing anaesthesia anesthesia analgesia dental patients patient intoxication" };
+  // the nitrogen cycle, nitrate in seawater and bacteria in soils) nitrous oxide is also a gas of the atmosphere and of soils: a paper counts only where it is about its use
+  // as a drug or its harm to people (trial 16: with the words of anaesthesia, operating-room air and hospital gas pipes came in, and trials of anaesthesia for "is nos bad for you")
+  "nitrous oxide": "recreational misuse abuse abusers inhalant inhalants neuropathy myelopathy myeloneuropathy neurological neurologic cobalamin b12 whippets nangs balloons laughing intoxication",
+  nitrous: "recreational misuse abuse abusers inhalant inhalants neuropathy myelopathy myeloneuropathy neurological neurologic cobalamin b12 whippets nangs balloons laughing intoxication" };
 /* What Europe PMC is asked (its own search words). groups: the question's key words, each an array of the ways it is said. Every key word must
    stand in a paper, not any one of them; the drug's name must stand in the paper's title, except in the widest search. */
 export function findQueries(names, groups) {
