@@ -1763,17 +1763,44 @@ function askedSlip(x, y) {
 function askedSame(a, b) {
   if (a === b) return true;
   const A = askedWordsOf(a), B = askedWordsOf(b);
-  if (!A.length || A.length !== B.length) return false;
+  if (!A.length || !B.length) return false;
+  if (A.length !== B.length) return askedOneMore(A, B);
   let diff = 0;
   for (let i = 0; i < A.length; i++) if (A[i] !== B[i] && (++diff > 2 || !askedSlip(A[i], B[i]))) return false;
   return true;
+}
+/* (2.26.1; the senior author, 19 November 2026, 23:42: two rows of his list, the same question but for one word, "were different ... questions. when they
+   get saved as pending questions if they are almost the same they should be merged and not appear more than one times") One question is the other with
+   one word more ("together", "really", "actually"), the rest the same and in the same order, of five words or more: one question. Never where the word
+   changes what is asked: a no or a not, a word that joins two things (and, or, with, vs), or a drug's name. */
+const ASK_KEEP = /^(?:no|not|never|nor|without|non|dont|doesnt|isnt|arent|cant|wont|and|or|with|vs|versus|plus|mixed|mixing|mix|together|combined)$/;
+let ASK_NAMES = null;
+function askedIsName(w) {   // a drug's name or street name: Insight's table where it is loaded, else the drugs' own names and street names the page carries
+  if (INS.nameOf && INS.nameOf.has(w)) return true;
+  if (!ASK_NAMES) { ASK_NAMES = new Set(); (typeof SUBSTANCES !== "undefined" ? SUBSTANCES : []).forEach(s => { ASK_NAMES.add(s.slug.replace(/-/g, " "));
+    s.name.split(/[()\/,;]| and /).forEach(x => { x = x.trim().toLowerCase(); if (x) ASK_NAMES.add(x); }); ((typeof ALIASES !== "undefined" && ALIASES[s.slug]) || []).forEach(a => ASK_NAMES.add(String(a).toLowerCase())); }); }
+  return ASK_NAMES.has(w);
+}
+function askedOneMore(A, B) {
+  const [lo, sh] = A.length > B.length ? [A, B] : [B, A];
+  if (lo.length !== sh.length + 1 || sh.length < 5) return false;
+  for (let i = 0; i < lo.length; i++) {
+    if (lo.slice(0, i).concat(lo.slice(i + 1)).join(" ") !== sh.join(" ")) continue;
+    const w = lo[i];
+    if (ASK_KEEP.test(w) && w !== "together") return false;
+    if (askedIsName(w)) return false;
+    return true;
+  }
+  return false;
 }
 const askedFindIn = (list, k) => list.find(x => x.k === k) || list.find(x => askedSame(x.k, k));
 // rows of one question kept twice (by a page before 2.23.1): the one kept first stays, with what the other knew
 function askedMerged(list) {
   const out = [];
+  // (2.26.1) two rows that the system read as ONE question of its list (the same listed question, or the same wording of ours) are one row too
+  const one = (x, it) => askedSame(x.k, it.k) || (x.st !== "ans" && it.st !== "ans" && ((x.w && x.w === it.w) || (x.lv && it.lv && x.lv.our && x.lv.our === it.lv.our)));
   for (const it of list) {
-    const same = out.find(x => askedSame(x.k, it.k));
+    const same = out.find(x => one(x, it));
     if (!same) { out.push(it); continue; }
     if (it.st === "ans" && same.st !== "ans") { same.st = "ans"; same.id = it.id; same.p = it.p; same.h = it.h; same.fresh = it.fresh; same.news = it.news; }
     same.t = Math.max(same.t || 0, it.t || 0);
@@ -1963,7 +1990,7 @@ function liveHtml(it) {
   if (lv.reload) return '<div class="lv lv-card" role="status"><p class="lv-h">' + icon("check") + '<span>Answered</span></p><p class="lv-s">The answer is in the newest version of the site. <button type="button" class="linklike" data-asked-reload>Load it</button></p></div>';
   const n = lv.n || [0, 0], found = n[0] + n[1] > 0, at = lv.room ? new Date(lv.room) : null, hhmm = at && !isNaN(at) ? at.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
   const steps = [];   // [done | now | next, the line]
-  if (!lv.our) steps.push(["now", "Reading your question. This starts within a minute."]);
+  if (!lv.our) steps.push(["now", "In line to be read. Reading a question takes a few minutes."]);   // (2.26.1; "This starts within a minute" was not kept: 23:40, five minutes)
   else {
     steps.push(["done", "Read as: <q>" + esc(lv.our) + "</q>"]);
     if (found) steps.push(["done", "Found " + [n[0] ? liveCount(n[0], "paper") + " it can read" : "", n[1] ? liveCount(n[1], "official page") : ""].filter(Boolean).join(" and ")]);

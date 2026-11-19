@@ -771,7 +771,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const L0 = await p.evaluate(() => { const f = document.querySelector("#search-results .sr-fit"), b = f.querySelector(".ins-live"), it = JSON.parse(localStorage.getItem("pk-asked") || "[]")[0] || {};
       return { said: (f.querySelector(".ask-auto-said") || {}).textContent || "", prev: b && b.previousElementSibling ? b.previousElementSibling.className : "", steps: b ? [...b.querySelectorAll("li")].map(x => x.className + "|" + x.textContent) : [], sk: it.sk || "", ts: !!it.ts, live: b ? b.querySelector("[aria-live]") !== null : false }; });
     ok(w + " px (2.23): a question sent by the page keeps its key from the server's reply, and under the line stands what our system is doing: at first, that it is reading the question",
-      /^Sent\. You can stay or come back/.test(L0.said) && /sr-fit-none/.test(L0.prev) && L0.steps.length === 1 && /^lv-now\|Reading your question/.test(L0.steps[0]) && L0.sk === K && L0.ts && L0.live, JSON.stringify(L0));
+      /^Sent\. You can stay or come back/.test(L0.said) && /sr-fit-none/.test(L0.prev) && L0.steps.length === 1 && /^lv-now\|In line to be read\. Reading a question takes a few minutes\.$/.test(L0.steps[0]) && L0.sk === K && L0.ts && L0.live, JSON.stringify(L0));
     await p.waitForTimeout(1800);
     ok(w + " px (2.23): the page asks the server what became of it by the question's key alone: no word of the question is in the address", askedReqs.length >= 1 && askedReqs.every(u => /^asked\?h=[0-9a-f]{20}$/.test(u)) && askedReqs[0] === "asked?h=" + K, JSON.stringify(askedReqs.slice(0, 3)));
     const item = (st, more) => ({ at: "2026-11-19T01:00:00+00:00", q: { [K]: { id: "w_a0900" } }, items: { w_a0900: Object.assign({ q: "Does modafinil stain the teeth?", st, say: "", n: { papers: 0, pages: 0 }, terms: ["tooth discoloration"] }, more || {}) }, answers: {} });
@@ -859,6 +859,22 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
       ok(w + " px (2.23.1): asking it again with the slip is not a new question: nothing is sent again, the page says it was sent, and the list keeps one row",
         sends.length === n0 && /^You sent us this question/.test(S2.line) && S2.rows === 1, JSON.stringify([sends.slice(n0), S2]));
       await p.evaluate(() => { localStorage.removeItem("pk-asked"); closeSearch(); }); }
+    // ---- (2.26.1; his words of 19 November, 23:42: two rows a word apart "were different ... questions ... they should be merged") one question, one row:
+    // the same question with one word more ("together"), and two questions the system read as one question of its list; never a "not" or a second drug ----
+    { await p.evaluate(() => { const now = Date.now(); localStorage.setItem("pk-asked", JSON.stringify([
+        { k: "do people on mescaline really see the same patterns", q: "do people on mescaline really see the same patterns", d: "", t: now - 50000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "do people on mescaline see the same patterns", q: "do people on mescaline see the same patterns", d: "", t: now - 40000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "can kratom be mixed with alcohol safely", q: "can kratom be mixed with alcohol safely", d: "", t: now - 30000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "can kratom be mixed with alcohol and kava safely", q: "can kratom be mixed with alcohol and kava safely", d: "", t: now - 25000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "is ketamine addictive for most people", q: "is ketamine addictive for most people", d: "", t: now - 20000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "is ketamine not addictive for most people", q: "is ketamine not addictive for most people", d: "", t: now - 15000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 },
+        { k: "does kava make you sleepy the next day", q: "does kava make you sleepy the next day", d: "", t: now - 9000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1, w: "w_test1" },
+        { k: "kava next day drowsiness", q: "kava next day drowsiness", d: "", t: now - 8000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1, w: "w_test1" }])); askedBox(); });
+      await p.evaluate(() => askedCheck()); await p.waitForTimeout(400);
+      const M1 = await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked") || "[]").map(x => x.q));
+      ok(w + " px (2.26.1): a question with one word more is the same question (one row); two rows the system read as one listed question are one row; a “not” and a second drug keep two",
+        JSON.stringify(M1) === JSON.stringify(["do people on mescaline really see the same patterns", "can kratom be mixed with alcohol safely", "can kratom be mixed with alcohol and kava safely", "is ketamine addictive for most people", "is ketamine not addictive for most people", "does kava make you sleepy the next day"]), JSON.stringify(M1));
+      await p.evaluate(() => { localStorage.removeItem("pk-asked"); askedBox(); }); }
     // ---- (2.25.0; his words of 19 November, 17:49: "i want to be able to delete all my questions at once if i want") one tap, then a yes ----
     { await p.evaluate(() => { const now = Date.now(); localStorage.setItem("pk-asked", JSON.stringify(["sleep", "pain", "anxiety"].map((w, i) => ({ k: "does kanna help with " + w, q: "does kanna help with " + w, d: "", t: now - (i + 1) * 1000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 })))); askedBox(); if (typeof youOpen === "function") youOpen(); });
       await p.waitForTimeout(300);
