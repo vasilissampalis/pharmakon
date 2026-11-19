@@ -20,39 +20,35 @@
   "on": "2026-11-19",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "@cf/openai/gpt-oss-120b",
    "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team C",
+   "team": "team B",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "writer_2": "groq:qwen/qwen3.8-27b"
   },
   "run": "44443346996",
   "read_by": {
    "gemini-3.5-flash-lite": 3,
-   "gemini-3.1-flash-lite": 1
+   "llama-4-scout-17b-16e-instruct": 1
   },
-  "read_seconds": 78,
+  "read_seconds": 87,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 110.0,
-  "seconds": 279
+  "neurons": 1455.6,
+  "seconds": 208
  },
  "status": "none",
- "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “FRANK says the risk of death from heroin is high. For people who inject heroin, one in 200 dies within two weeks of leaving prison.”: it does not answer the question itself (Sentence 1 gives a high‑risk statement and a specific prison‑release statistic, which does not provide an ov",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.80, but 0.98, how1 0.55, how2 0.67, how3 0.95",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b); 2 How-do-we-know line(s) dropped",
-  "but": "the writer's But was not accepted (it is about something else than the short answer (Sentence 1 provides mortality information, directly addressing the question; sentence 2 is unrelated to senten): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them",
-  "stakes": "about dying: the stricter bar for such an answer: NOT met: no further reader read it"
+  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “FRANK says the risk of death from heroin is high. For people who inject heroin, one in 200 dies within two weeks of leaving prison.”: it does not answer the question itself | the But “Comparisons across different countries are difficult because data collection methods differ.”: it ",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.91, but 0.98, how1 0.96, how2 0.23, how3 0.86, how4 0.98",
+  "check": "short: NOT accepted: it does not answer the question itself (Sentence 2 adds a limitation about users' knowledge of heroin strength, which relates to the overdose risk mentioned in sentence 1.); but: NOT accepted: Passage says users *rarely* know the actual strength, not that it is *often* unknown.; how1: NOT accepted: The passage reports the finding but does not describe it as coming from a review; the source is a study, not a review.; how2: accepted; how3: accepted; how4: accepted"
  },
  "sources": [
   {
@@ -131,25 +127,135 @@
    "design": null,
    "findings": [
     {
+     "passage": 2,
+     "where": "Introduction",
+     "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+     "text": "In the USA, 13,000 deaths from heroin were registered in 2015 alone.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+     "quote": "heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+     "text": "Heroin-related overdose increased from 1,842 deaths in 2000 to 10,574 deaths in 2014.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
      "passage": 26,
      "where": "Clusters of Deaths and Crucial At-Risk Populations",
      "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-     "text": "For people who use heroin by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths caused by opioid overdose.",
-     "id": "F1",
+     "text": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 22,
-     "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-     "quote": "Comparisons across different countries are hampered by differences in data collection",
-     "text": "Differences in data collection make comparisons across different countries difficult.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "dowell_2025",
+    "type": "article-journal",
+    "title": "Why have overdose deaths decreased? Widespread fentanyl saturation and decreased drug use among key drivers",
+    "author": [
+     {
+      "family": "Dowell",
+      "given": "Deborah"
+     },
+     {
+      "family": "Nataraj",
+      "given": "Nisha"
+     },
+     {
+      "family": "Rikard",
+      "given": "Michaela"
+     },
+     {
+      "family": "Park",
+      "given": "Joohyun"
+     },
+     {
+      "family": "Zhang",
+      "given": "Kun"
+     },
+     {
+      "family": "Baldwin",
+      "given": "Grant"
+     }
+    ],
+    "container-title": "The Lancet Regional Health - Americas",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1016/j.lana.2025.101226",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-19",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-19"
+     }
+    },
+    "volume": "51",
+    "number": "101226",
+    "PMCID": "PMC12664646"
+   },
+   "doi": "10.1016/j.lana.2025.101226",
+   "pmcid": "PMC12664646",
+   "title": "Why have overdose deaths decreased? Widespread fentanyl saturation and decreased drug use among key drivers",
+   "year": 2025,
+   "journal": "Lancet regional health. Americas",
+   "kind": "review",
+   "people": true,
+   "near": 0.714,
+   "money": [
+    "The authors declare no competing interests.",
+    "The views expressed in this article are those of the authors and do not necessarily represent the official position of the Centers for Disease Control and Prevention."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We estimated overdose deaths and counterfactual scenarios from 2016 to 2023.",
+    "text": "Estimation of overdose deaths and counterfactual scenarios in the United States from 2016 to 2023"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Reductions since 2015 in the population exposed to overdose risk through drug use may have until recently been offset by an increased per-person mortality risk, driven by replacement of heroin with fentanyl in the drug supply.",
+     "text": "Reductions since 2015 in the population exposed to overdose risk through drug use may have until recently been offset by an increased per-person mortality risk, driven by replacement of heroin with fentanyl in the drug supply.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "Widespread fentanyl saturation and decreased drug use among key drivers",
+     "quote": "Starting in 2013, fentanyl began replacing heroin in the Eastern U.S. and spread Westward, driving profound increases in overdose deaths, with the rate of increase accelerating during 2020 and 2021, coincident with, and likely related to, the COVID-19 pandemic emergency.",
+     "text": "Starting in 2013, fentanyl began replacing heroin in the Eastern U.S. and spread Westward, driving profound increases in overdose deaths, with the rate of increase accelerating during 2020 and 2021, coincident with, and likely related to, the COVID-19 pandemic emergency.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "Exploration of key drivers and counterfactual scenarios",
+     "quote": "For example, increased drug supply potency (e.g., replacement of heroin with fentanyl) increases both number of overdoses and proportion of overdoses that are fatal, while prevention efforts can reduce the number of people who use drugs and naloxone can reduce the chances that an overdose is fatal.",
+     "text": "Increased drug supply potency, such as the replacement of heroin with fentanyl, increases both the number of overdoses and the proportion of overdoses that are fatal.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
   },
   {
    "read": "page",
@@ -202,31 +308,40 @@
    "design": null,
    "findings": [
     {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "An overdose can be fatal.",
-     "text": "An overdose of heroin can be fatal.",
-     "id": "F5",
+     "passage": 11,
+     "where": "Risks related to heroin use",
+     "quote": "In large enough quantities heroin can stop your breathing. This can be fatal.",
+     "text": "Heroin can be fatal in large enough quantities.",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 11,
      "where": "Risks related to heroin use",
-     "quote": "In large enough quantities heroin can stop your breathing. This can be fatal.",
-     "text": "Heroin in large enough quantities can stop breathing, which can be fatal.",
-     "id": "F6",
+     "quote": "Overdose is more likely if you take heroin with other depressant drugs, such as: alcohol; benzodiazepines; other kinds of opioids like methadone",
+     "text": "Overdose is more likely if heroin is taken with other depressant drugs.",
+     "id": "F8",
      "second_hand": ""
     },
     {
-     "passage": 10,
-     "where": "Long-term effects of heroin / Physical effects",
-     "quote": "Using heroin during pregnancy can harm your unborn child. It is associated with: low birth weight; premature delivery; high infant mortality",
-     "text": "Using heroin during pregnancy is associated with high infant mortality.",
-     "id": "F7",
+     "passage": 14,
+     "where": "Substance use disorders and withdrawal",
+     "quote": "Mortality most often results from overdose, accidents or infections.",
+     "text": "Mortality most often results from overdose, accidents or infections.",
+     "id": "F9",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 11,
+     "where": "Risks related to heroin use",
+     "quote": "Users rarely know the actual strength of the drug they are taking.",
+     "text": "The actual strength of the drug is often unknown to people who use heroin.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "C"
   },
   {
@@ -279,23 +394,23 @@
      "where": "Mixing heroin with other drugs / Physical health risks",
      "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
      "text": "Heroin kills far more people in the UK than any other illegal drug.",
-     "id": "F8",
+     "id": "F10",
      "second_hand": ""
     },
     {
      "passage": 6,
      "where": "Common risks",
      "quote": "Risk of overdose and death is high.",
-     "text": "The risk of overdose and death from heroin is high.",
-     "id": "F9",
+     "text": "The risk of overdose and death is high.",
+     "id": "F11",
      "second_hand": ""
     },
     {
      "passage": 13,
      "where": "Mixing heroin with other drugs / Physical health risks",
      "quote": "If your breathing slows too much you could die.",
-     "text": "If breathing slows too much from a heroin overdose, a person could die.",
-     "id": "F10",
+     "text": "If breathing slows too much from an overdose, a person could die.",
+     "id": "F12",
      "second_hand": ""
     }
    ],
@@ -303,93 +418,9 @@
    "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "FRANK says the risk of death from heroin is high. For people who inject heroin, one in 200 dies within two weeks of leaving prison.",
-   "uses": [
-    "F9",
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F9",
-     "ref": "frank_heroin",
-     "where": "Common risks",
-     "quote": "Risk of overdose and death is high.",
-     "sha": "76f968bff87d0dd5"
-    },
-    {
-     "label": "F1",
-     "ref": "strang_2019",
-     "where": "Clusters of Deaths and Crucial At-Risk Populations",
-     "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-     "sha": "a4ac9b23bd0228d3"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review and 2 official pages that our system could read. A paper that stands nearer the question could not be read.",
-   "uses": [
-    "F1",
-    "F5",
-    "F8"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "strang_2019",
-     "where": "Clusters of Deaths and Crucial At-Risk Populations",
-     "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-     "sha": "a4ac9b23bd0228d3"
-    },
-    {
-     "label": "F5",
-     "ref": "healthcanada_heroin",
-     "where": "Top of the page",
-     "quote": "An overdose can be fatal.",
-     "sha": "d81cd05d3b808043"
-    },
-    {
-     "label": "F8",
-     "ref": "frank_heroin",
-     "where": "Mixing heroin with other drugs / Physical health risks",
-     "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
-     "sha": "bdf83e7c599454b2"
-    }
-   ]
-  },
-  {
-   "part": "how3",
-   "text": "Health Canada says an overdose of heroin can be fatal, and large amounts can stop breathing, which can be fatal.",
-   "uses": [
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "healthcanada_heroin",
-     "where": "Top of the page",
-     "quote": "An overdose can be fatal.",
-     "sha": "d81cd05d3b808043"
-    },
-    {
-     "label": "F6",
-     "ref": "healthcanada_heroin",
-     "where": "Risks related to heroin use",
-     "quote": "In large enough quantities heroin can stop your breathing. This can be fatal.",
-     "sha": "3bfcd664320467b6"
-    }
-   ],
-   "quote": "An overdose can be fatal",
-   "quote_ref": "healthcanada_heroin"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "Overall mortality rate for all heroin use",
+ "missing": "exact per‑user mortality rate (deaths per user)",
  "wanted": [
   {
    "doi": "10.2105/ajph.2015.302843",
@@ -438,6 +469,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+   "short": "FRANK says the risk of death from heroin is high. For people who inject heroin, one in 200 dies within two weeks of leaving prison.",
+   "complete": false
   }
  ],
  "looked": [
@@ -446,13 +485,19 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40265-019-01154-5",
-   "kept": 1,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "A review of take-home naloxone for opioid overdose management.",
+     "text": "a research paper studying opioid overdose and take-home naloxone",
      "quote": "Take-Home Naloxone for the Emergency Interim Management of Opioid Overdose: The Public Health Application of an Emergency Medicine",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Comparisons across different countries are hampered by differences in data collection",
+     "why": "no sentence"
     }
    ]
   },
@@ -465,9 +510,15 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "Consistent data on numbers of people at risk of overdose in the U.S. over time are limited.",
-     "quote": "While consistent data on numbers of people at risk of overdose in the U.S. over time are limited, National Survey on Drug Use and Health (NSDUH) data show estimated prevalence of OUD (including prescr",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "",
+     "quote": "While consistent data on numbers of people at risk of overdose in the U.S. over time are limited, National Survey on Drug Use and Health (NSDUH) data show estimated prevalence of OUD...",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "It is unclear whether fentanyl's recent plateau and decline are due to saturation or other factors, such as replacement of fentanyl with xylazine and other drugs, possibly indicating reduced fentanyl ",
+     "why": "no sentence"
     }
    ]
   },
@@ -477,7 +528,14 @@
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/heroin.html",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The long-term outcomes of people treated for opioid use disorder are not fully known.",
+     "quote": "About 20 to 30% of patients treated for opioid use disorder achieve long-term abstinence.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Heroin",
@@ -491,8 +549,8 @@
  "plan": {
   "short": [
    "F1",
-   "F9",
-   "F5"
+   "F2",
+   "F10"
   ],
   "direct": "",
   "but": [
@@ -500,35 +558,46 @@
   ],
   "how": [
    [
-    "F1"
+    "F4",
+    "F5",
+    "F6"
    ],
    [
+    "F1",
+    "F2"
+   ],
+   [
+    "F7",
+    "F8",
     "F9"
    ],
    [
-    "F5",
-    "F6"
+    "F10",
+    "F11",
+    "F12"
    ]
   ],
-  "unanswered": "overall mortality rate for heroin users in general"
+  "unanswered": "exact per‑user mortality rate (deaths per user)"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7969,
-   "but": 0.9834,
-   "how1": 0.5505,
-   "how2": 0.6742,
-   "how3": 0.9466
+   "short": 0.9073,
+   "but": 0.9763,
+   "how1": 0.956,
+   "how2": 0.233,
+   "how3": 0.8619,
+   "how4": 0.977
   },
   "scores_quotes_alone": {
-   "short": 0.6513,
-   "but": 0.9454,
-   "how1": 0.5445,
-   "how2": 0.0975,
-   "how3": 0.7591
+   "short": 0.7007,
+   "but": 0.9643,
+   "how1": 0.9668,
+   "how2": 0.2162,
+   "how3": 0.9237,
+   "how4": 0.9657
   }
  },
  "tries": [
@@ -538,90 +607,153 @@
    "parts": [
     {
      "part": "short",
-     "text": "FRANK says the risk of death from heroin is high. For people who inject heroin, one in 200 dies within two weeks of leaving prison.",
+     "text": "It can be fatal. 13,000 deaths from heroin were registered in the USA in 2015. Heroin kills more people in the UK than any other illegal drug.",
      "rests_on": [
-      {
-       "label": "F9",
-       "ref": "frank_heroin",
-       "where": "Common risks",
-       "quote": "Risk of overdose and death is high.",
-       "sha": "76f968bff87d0dd5"
-      },
       {
        "label": "F1",
        "ref": "strang_2019",
-       "where": "Clusters of Deaths and Crucial At-Risk Populations",
-       "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-       "sha": "a4ac9b23bd0228d3"
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      },
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      },
+      {
+       "label": "F10",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 is fully supported by the cited passages, but it does not provide a mortality rate, only absolute numbers, so it does not directly answer the question about mortality rate. Sentence 2 misrepresents the frequency described in the )"
+    },
+    {
+     "part": "but",
+     "text": "The actual strength of the drug is often unknown to people who use heroin.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Users rarely know the actual strength of the drug they are taking.",
+       "sha": "3bfcd664320467b6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage says users rarely know the actual strength, not that it is often unknown."
+    },
+    {
+     "part": "how1",
+     "text": "A review found increased per-person mortality risk driven by replacement of heroin with fentanyl.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dowell_2025",
+       "where": "Abstract",
+       "quote": "Reductions since 2015 in the population exposed to overdose risk through drug use may have until recently been offset by an increased per-person mortality risk, driven by replacement of heroin with fentanyl in the drug supply.",
+       "sha": "d62fb96201887755"
+      },
+      {
+       "label": "F5",
+       "ref": "dowell_2025",
+       "where": "Widespread fentanyl saturation and decreased drug use among key drivers",
+       "quote": "Starting in 2013, fentanyl began replacing heroin in the Eastern U.S. and spread Westward, driving profound increases in overdose deaths, with the rate of increase accelerating during 2020 and 2021, coincident with, and likely related to, the COVID-19 pandemic emergency.",
+       "sha": "62371e0e6ab48027"
+      },
+      {
+       "label": "F6",
+       "ref": "dowell_2025",
+       "where": "Exploration of key drivers and counterfactual scenarios",
+       "quote": "For example, increased drug supply potency (e.g., replacement of heroin with fentanyl) increases both number of overdoses and proportion of overdoses that are fatal, while prevention efforts can reduce the number of people who use drugs and naloxone can reduce the chances that an overdose is fatal.",
+       "sha": "38c04488fd226e26"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage reports the finding but does not describe it as a review."
+    },
+    {
+     "part": "how2",
+     "text": "In the USA, 13,000 deaths from heroin were registered in 2015, and heroin-related overdose increased from 1,842 deaths in 2000 to 10,574 deaths in 2014.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      },
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
       }
      ],
      "ok": true
     },
     {
-     "part": "but",
-     "text": "Differences in data collection make comparisons across different countries difficult.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-       "quote": "Comparisons across different countries are hampered by differences in data collection",
-       "sha": "634f62d3b6ddb105"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 accurately reflects both FRANK's statement on high risk and the specific prison‑release mortality figure. Sentence 2 directly quotes the note about data‑collection differences. Sentence 3 mislabels the source as a review, which t)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2019 review found that for prisoners with a history of injecting heroin, one in 200 dies within a fortnight of release, mostly from overdose.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Clusters of Deaths and Crucial At-Risk Populations",
-       "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-       "sha": "a4ac9b23bd0228d3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not describe the source as a review."
-    },
-    {
-     "part": "how2",
-     "text": "FRANK, a public health body, states that the risk of overdose and death from heroin is high.",
-     "rests_on": [
-      {
-       "label": "F9",
-       "ref": "frank_heroin",
-       "where": "Common risks",
-       "quote": "Risk of overdose and death is high.",
-       "sha": "76f968bff87d0dd5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that FRANK is a public health body."
-    },
-    {
      "part": "how3",
-     "text": "Health Canada says an overdose of heroin can be fatal, and large amounts can stop breathing, which can be fatal.",
+     "text": "Health Canada says heroin can be fatal, overdose is more likely with other depressant drugs, and mortality often results from overdose, accidents or infections.",
      "rests_on": [
       {
-       "label": "F5",
-       "ref": "healthcanada_heroin",
-       "where": "Top of the page",
-       "quote": "An overdose can be fatal.",
-       "sha": "d81cd05d3b808043"
-      },
-      {
-       "label": "F6",
+       "label": "F7",
        "ref": "healthcanada_heroin",
        "where": "Risks related to heroin use",
        "quote": "In large enough quantities heroin can stop your breathing. This can be fatal.",
        "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Overdose is more likely if you take heroin with other depressant drugs, such as: alcohol; benzodiazepines; other kinds of opioids like methadone",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F9",
+       "ref": "healthcanada_heroin",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "Mortality most often results from overdose, accidents or infections.",
+       "sha": "40ba76220c324de9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "FRANK says heroin kills more people in the UK than any other illegal drug, and the risk of overdose and death is high.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      },
+      {
+       "label": "F11",
+       "ref": "frank_heroin",
+       "where": "Common risks",
+       "quote": "Risk of overdose and death is high.",
+       "sha": "76f968bff87d0dd5"
+      },
+      {
+       "label": "F12",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "If your breathing slows too much you could die.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": true
@@ -634,92 +766,305 @@
    "parts": [
     {
      "part": "short",
-     "text": "FRANK says the risk of death from heroin is high. For people who inject heroin, one in 200 dies within two weeks of leaving prison.",
+     "text": "It can be fatal, 13,000 deaths in the USA in 2015, and heroin kills more people in the UK than any other illegal drug.",
      "rests_on": [
-      {
-       "label": "F9",
-       "ref": "frank_heroin",
-       "where": "Common risks",
-       "quote": "Risk of overdose and death is high.",
-       "sha": "76f968bff87d0dd5"
-      },
       {
        "label": "F1",
        "ref": "strang_2019",
-       "where": "Clusters of Deaths and Crucial At-Risk Populations",
-       "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-       "sha": "a4ac9b23bd0228d3"
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      },
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      },
+      {
+       "label": "F10",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it does not answer the question itself"
+     "said": "it does not answer the question itself (Sentence 1 provides absolute death numbers and a UK comparison, which are supported by the cited passages, but it does not give a mortality rate, so it does not answer the specific question about mortality rate. Sentence 2 discusses unknown)"
     },
     {
      "part": "but",
-     "text": "Comparisons across different countries are difficult because data collection methods differ.",
+     "text": "The actual strength of the drug is often unknown to people who use heroin.",
      "rests_on": [
       {
        "label": "L1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-       "quote": "Comparisons across different countries are hampered by differences in data collection",
-       "sha": "634f62d3b6ddb105"
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Users rarely know the actual strength of the drug they are taking.",
+       "sha": "3bfcd664320467b6"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer"
+     "said": "it is about something else than the short answer (Sentence 1 provides absolute death numbers and a UK comparison, which are supported by the cited passages, but it does not give a mortality rate, so it does not answer the specific question about mortality rate. Sentence 2 discusses unknown)"
     },
     {
      "part": "how1",
-     "text": "A 2019 review notes that for prisoners with a history of injecting heroin, one in 200 dies within a fortnight of release.",
+     "text": "A review found increased per-person mortality risk driven by replacement of heroin with fentanyl.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dowell_2025",
+       "where": "Abstract",
+       "quote": "Reductions since 2015 in the population exposed to overdose risk through drug use may have until recently been offset by an increased per-person mortality risk, driven by replacement of heroin with fentanyl in the drug supply.",
+       "sha": "d62fb96201887755"
+      },
+      {
+       "label": "F5",
+       "ref": "dowell_2025",
+       "where": "Widespread fentanyl saturation and decreased drug use among key drivers",
+       "quote": "Starting in 2013, fentanyl began replacing heroin in the Eastern U.S. and spread Westward, driving profound increases in overdose deaths, with the rate of increase accelerating during 2020 and 2021, coincident with, and likely related to, the COVID-19 pandemic emergency.",
+       "sha": "62371e0e6ab48027"
+      },
+      {
+       "label": "F6",
+       "ref": "dowell_2025",
+       "where": "Exploration of key drivers and counterfactual scenarios",
+       "quote": "For example, increased drug supply potency (e.g., replacement of heroin with fentanyl) increases both number of overdoses and proportion of overdoses that are fatal, while prevention efforts can reduce the number of people who use drugs and naloxone can reduce the chances that an overdose is fatal.",
+       "sha": "38c04488fd226e26"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not describe a review; it reports study findings, so the claim \"A review found\" is not supported."
+    },
+    {
+     "part": "how2",
+     "text": "In the USA, 13,000 deaths from heroin were registered in 2015, and heroin-related overdose increased from 1,842 deaths in 2000 to 10,574 deaths in 2014.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "strang_2019",
-       "where": "Clusters of Deaths and Crucial At-Risk Populations",
-       "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-       "sha": "a4ac9b23bd0228d3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not describe the source as a \"review\"; it reports data from a study."
-    },
-    {
-     "part": "how2",
-     "text": "FRANK, a public health body, states that the risk of overdose and death from heroin is high.",
-     "rests_on": [
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      },
       {
-       "label": "F9",
-       "ref": "frank_heroin",
-       "where": "Common risks",
-       "quote": "Risk of overdose and death is high.",
-       "sha": "76f968bff87d0dd5"
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that FRANK is a public health body."
+     "ok": true
     },
     {
      "part": "how3",
-     "text": "Health Canada says an overdose of heroin can be fatal, and large amounts can stop breathing.",
+     "text": "Health Canada says mortality most often results from overdose, accidents or infections.",
      "rests_on": [
       {
-       "label": "F5",
-       "ref": "healthcanada_heroin",
-       "where": "Top of the page",
-       "quote": "An overdose can be fatal.",
-       "sha": "d81cd05d3b808043"
-      },
-      {
-       "label": "F6",
+       "label": "F7",
        "ref": "healthcanada_heroin",
        "where": "Risks related to heroin use",
        "quote": "In large enough quantities heroin can stop your breathing. This can be fatal.",
        "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Overdose is more likely if you take heroin with other depressant drugs, such as: alcohol; benzodiazepines; other kinds of opioids like methadone",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F9",
+       "ref": "healthcanada_heroin",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "Mortality most often results from overdose, accidents or infections.",
+       "sha": "40ba76220c324de9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "FRANK says heroin kills far more people in the UK than any other illegal drug, and the risk of overdose and death is high.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      },
+      {
+       "label": "F11",
+       "ref": "frank_heroin",
+       "where": "Common risks",
+       "quote": "Risk of overdose and death is high.",
+       "sha": "76f968bff87d0dd5"
+      },
+      {
+       "label": "F12",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "If your breathing slows too much you could die.",
+       "sha": "bdf83e7c599454b2"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can be fatal in large enough quantities. Heroin kills far more people in the UK than any other illegal drug.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In large enough quantities heroin can stop your breathing. This can be fatal.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F10",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 2 adds a limitation about users' knowledge of heroin strength, which relates to the overdose risk mentioned in sentence 1.)"
+    },
+    {
+     "part": "but",
+     "text": "The actual strength of the drug is often unknown to people who use heroin.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Users rarely know the actual strength of the drug they are taking.",
+       "sha": "3bfcd664320467b6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage says users *rarely* know the actual strength, not that it is *often* unknown."
+    },
+    {
+     "part": "how1",
+     "text": "A review found increased per-person mortality risk driven by replacement of heroin with fentanyl.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dowell_2025",
+       "where": "Abstract",
+       "quote": "Reductions since 2015 in the population exposed to overdose risk through drug use may have until recently been offset by an increased per-person mortality risk, driven by replacement of heroin with fentanyl in the drug supply.",
+       "sha": "d62fb96201887755"
+      },
+      {
+       "label": "F5",
+       "ref": "dowell_2025",
+       "where": "Widespread fentanyl saturation and decreased drug use among key drivers",
+       "quote": "Starting in 2013, fentanyl began replacing heroin in the Eastern U.S. and spread Westward, driving profound increases in overdose deaths, with the rate of increase accelerating during 2020 and 2021, coincident with, and likely related to, the COVID-19 pandemic emergency.",
+       "sha": "62371e0e6ab48027"
+      },
+      {
+       "label": "F6",
+       "ref": "dowell_2025",
+       "where": "Exploration of key drivers and counterfactual scenarios",
+       "quote": "For example, increased drug supply potency (e.g., replacement of heroin with fentanyl) increases both number of overdoses and proportion of overdoses that are fatal, while prevention efforts can reduce the number of people who use drugs and naloxone can reduce the chances that an overdose is fatal.",
+       "sha": "38c04488fd226e26"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports the finding but does not describe it as coming from a review; the source is a study, not a review."
+    },
+    {
+     "part": "how2",
+     "text": "In the USA, 13,000 deaths from heroin were registered in 2015 alone, and heroin-related overdose increased from 1,842 deaths in 2000 to 10,574 deaths in 2014.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "strang_2019",
+       "where": "Introduction",
+       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
+       "sha": "5b635b179a4657db"
+      },
+      {
+       "label": "F2",
+       "ref": "strang_2019",
+       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
+       "quote": "heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
+       "sha": "c8f1683567fa5c34"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "Health Canada says mortality most often results from overdose, accidents or infections.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In large enough quantities heroin can stop your breathing. This can be fatal.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Overdose is more likely if you take heroin with other depressant drugs, such as: alcohol; benzodiazepines; other kinds of opioids like methadone",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F9",
+       "ref": "healthcanada_heroin",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "Mortality most often results from overdose, accidents or infections.",
+       "sha": "40ba76220c324de9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "FRANK says the risk of overdose and death is high.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "It’s very easy to overdose from heroin, which kills far more people in the UK than any other illegal drug.",
+       "sha": "bdf83e7c599454b2"
+      },
+      {
+       "label": "F11",
+       "ref": "frank_heroin",
+       "where": "Common risks",
+       "quote": "Risk of overdose and death is high.",
+       "sha": "76f968bff87d0dd5"
+      },
+      {
+       "label": "F12",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "If your breathing slows too much you could die.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": true
@@ -730,58 +1075,35 @@
  "dropped": [
   {
    "try": 3,
-   "part": "but",
-   "text": "Differences in data collection make comparisons across different countries difficult.",
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "strang_2019",
-     "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-     "quote": "Comparisons across different countries are hampered by differences in data collection",
-     "sha": "634f62d3b6ddb105"
-    }
-   ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer (Sentence 1 provides mortality information, directly addressing the question; sentence 2 is unrelated to sentence 1, so it does not serve as a limiting comment; no sentence downplays the danger.)"
-  },
-  {
-   "try": 3,
    "part": "how1",
-   "text": "A 2019 review found that for prisoners with a history of injecting heroin, one in 200 dies within a fortnight of release, mostly from overdose.",
+   "text": "A review found increased per-person mortality risk driven by replacement of heroin with fentanyl.",
    "rests_on": [
     {
-     "label": "F1",
-     "ref": "strang_2019",
-     "where": "Clusters of Deaths and Crucial At-Risk Populations",
-     "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-     "sha": "a4ac9b23bd0228d3"
+     "label": "F4",
+     "ref": "dowell_2025",
+     "where": "Abstract",
+     "quote": "Reductions since 2015 in the population exposed to overdose risk through drug use may have until recently been offset by an increased per-person mortality risk, driven by replacement of heroin with fentanyl in the drug supply.",
+     "sha": "d62fb96201887755"
+    },
+    {
+     "label": "F5",
+     "ref": "dowell_2025",
+     "where": "Widespread fentanyl saturation and decreased drug use among key drivers",
+     "quote": "Starting in 2013, fentanyl began replacing heroin in the Eastern U.S. and spread Westward, driving profound increases in overdose deaths, with the rate of increase accelerating during 2020 and 2021, coincident with, and likely related to, the COVID-19 pandemic emergency.",
+     "sha": "62371e0e6ab48027"
+    },
+    {
+     "label": "F6",
+     "ref": "dowell_2025",
+     "where": "Exploration of key drivers and counterfactual scenarios",
+     "quote": "For example, increased drug supply potency (e.g., replacement of heroin with fentanyl) increases both number of overdoses and proportion of overdoses that are fatal, while prevention efforts can reduce the number of people who use drugs and naloxone can reduce the chances that an overdose is fatal.",
+     "sha": "38c04488fd226e26"
     }
    ],
    "by": "the second reader",
-   "said": "The passage does not describe the source as a review; it is a study article."
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "FRANK, a public health body, states that the risk of overdose and death from heroin is high.",
-   "rests_on": [
-    {
-     "label": "F9",
-     "ref": "frank_heroin",
-     "where": "Common risks",
-     "quote": "Risk of overdose and death is high.",
-     "sha": "76f968bff87d0dd5"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passage does not identify FRANK as a public health body."
+   "said": "The passage reports the finding but does not describe it as coming from a review; the source is a study, not a review."
   }
  ],
- "stakes": "dying",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "heroin",
   "also": [],
