@@ -590,6 +590,17 @@ def people_wordings():
         for k, v in items.items():
             more.setdefault(k, []).extend(w for w in (v.get("more") or []) if isinstance(w, str) and w.strip())
             near.setdefault(k, []).extend(w for w in (v.get("near") or []) if isinstance(w, str) and w.strip())
+    # (2.26, decision 41) the teachers' ways of asking, where model.json says how many of them an answer is indexed with ("index_teachers"; none
+    # when it is not set): the editor's round 0 first (data/verification/insight/variants_teacher.json), then the free models' (data/auto/insight/teachers.json)
+    n_t = int(CONFIG.get("index_teachers") or 0)
+    if n_t > 0:
+        tea = {}
+        for f in (NEARMISS / "variants_teacher.json", ROOT / "data" / "auto" / "insight" / "teachers.json"):
+            try: d = json.load(open(f, encoding="utf-8"))
+            except (OSError, ValueError): continue
+            for k, ws in (d.get("variants") or {}).items():
+                tea.setdefault(k, []).extend((w.get("w") if isinstance(w, dict) else w) for w in ws if (isinstance(w, str) and w.strip()) or (isinstance(w, dict) and w.get("w")))
+        for k, ws in tea.items(): more.setdefault(k, []).extend(list(dict.fromkeys(ws))[:n_t])
     return var, more, near
 
 

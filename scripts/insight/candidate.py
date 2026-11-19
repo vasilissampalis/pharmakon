@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""candidate.py MODEL.onnx [--name FILE] [--keep] [--out RESULT.json]: a model made by scripts/insight/train.py, walked through the measured path
+"""candidate.py MODEL.onnx [--name FILE] [--keep] [--out RESULT.json] [--index-teachers N]: a model made by scripts/insight/train.py, walked through the measured path
 of scripts/insight/MODELS.md in one go, beside the model on the site, with the page's own rule (decision 41; 19 November 2026).
 
   1. the candidate is put in site/insight/vendor/ (as FILE; default: its own file name) and named in a COPY of site/insight/model.json (the real
@@ -10,6 +10,8 @@ of scripts/insight/MODELS.md in one go, beside the model on the site, with the p
   3. the gold set is ranked with the page's rule for the candidate and for the model on the site (build_index.py --eval), and the two are set side
      by side: how many best matches, how many of them full, partial, wrong; how often a question nobody can answer gets one; where the full answer
      comes in the candidates' order; and how often a near-miss question gets the answer it does not have.
+  --index-teachers N: the candidate's index also holds N of the teachers' ways of asking for each answer (model.json, "index_teachers"); the
+  candidate may then be the site's own model file, to measure the index alone.
   VERDICT: "better" only where the candidate's best match is wrong no more often than the site's (the rule of MODELS.md), it gives a question nobody
   can answer a best match no more often, and it gives more full answers as best match or the same number with fewer wrong; else "not better".
   Nothing is shipped by this: the candidate's file is taken out of vendor/ again unless --keep, and the model.json it used is written beside the
@@ -80,7 +82,7 @@ def selftest():
 
 def main():
     if "--selftest" in sys.argv: return selftest()
-    args = [a for a in sys.argv[1:] if not a.startswith("--") and a not in (arg("--name"), arg("--out"))]
+    args = [a for a in sys.argv[1:] if not a.startswith("--") and a not in (arg("--name"), arg("--out"), arg("--index-teachers"))]
     if not args: print(__doc__); return
     src = pathlib.Path(args[0]).resolve(); name = arg("--name", src.name); assert re.fullmatch(r"[A-Za-z0-9._-]+\.onnx", name), "the file name must be plain"
     if not INPUT.exists(): raise SystemExit("candidate: no site/insight/.cache/index-input.json: run node site/build.js first")
@@ -93,6 +95,7 @@ def main():
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="pk-candidate-"))
     try:
         cfg = json.load(open(MODEL_JSON, encoding="utf-8")); cfg["file"] = name
+        if arg("--index-teachers") is not None: cfg["index_teachers"] = int(arg("--index-teachers"))   # the teachers' ways of asking in the index too (that many an answer)
         mj = tmp / "model.json"; json.dump(cfg, open(mj, "w", encoding="utf-8"), ensure_ascii=False, indent=1); env = {"PK_INSIGHT_MODEL_JSON": str(mj)}
         print("candidate: the index with the candidate (every text embedded again) ...", flush=True)
         run(["python3", "-I", "scripts/insight/build_index.py", str(INPUT), str(tmp / "index0.json")], env)
