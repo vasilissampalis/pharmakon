@@ -1,0 +1,9 @@
+{"_note": "The first lessons of Insight's own model (decision 37, stage two): two open encoders, with and without the teachers' wordings, every answer; one held-out run to see how many passes help; one with the drug names taken out in a third of the batches.",
+ "runs": [
+  {"base": "gte-small", "teacher": true, "all": true, "epochs": 6, "mix": "0.5,1.0"},
+  {"base": "gte-small", "teacher": false, "all": true, "epochs": 6, "mix": "0.5,1.0"},
+  {"base": "minilm", "teacher": true, "all": true, "epochs": 6, "mix": "0.5,1.0"},
+  {"base": "minilm", "teacher": false, "all": true, "epochs": 6, "mix": "0.5,1.0"},
+  {"base": "gte-small", "teacher": true, "all": false, "epochs": 8, "mix": "1.0"},
+  {"base": "minilm", "teacher": true, "masked": 0.3, "all": true, "epochs": 6, "mix": "0.5,1.0"}
+ ]}

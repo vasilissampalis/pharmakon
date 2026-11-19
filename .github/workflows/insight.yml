@@ -1,0 +1,196 @@
+# Insight's own model, taught on GitHub's machines (scripts/insight/train.py; docs/AUTOMATION.md, decision 37, stage two).
+#
+# The senior author, 19 November 2026, 21:44: "we have to teach our ai to work like an llm and do what you do as perfect as possible it has to
+# work by itself perfectly all the time autonomously". Insight reads every question on the reader's own device with a small open encoder. This
+# teaches such encoders the site's questions with our own examples and the teachers' wordings (data/verification/insight/variants_teacher.json, the
+# editor's; data/auto/insight/teachers.json, the free models', written every day by scripts/insight/teachers.py in the Auto run), several at once
+# (one machine each), and measures each on the 400 forum questions of the gold set beside the model on the site.
+#
+# A request file starts it: data/auto/requests/insight-*.json  {"runs": [{"base": "gte-small", "teacher": true, "masked": 0, "epochs": 6,
+# "all": true, "mix": "0.5,1.0"}, ...]} (at most eight runs; bases: minilm, gte-small). On Sundays it runs by itself with the teachers'
+# wordings of the week (the two bases, every answer), so that the model keeps learning the answers the site gains.
+#
+# Two kinds of job, on purpose, as in the Workshop: "make" fetches packages and models from outside and runs them; it may only READ the
+# repository and is given no key. "keep" runs nothing from outside: it takes the plain files "make" left (records, and the models as files of
+# numbers whose SHA-256 the record names) and puts them where they belong: the records in data/verification/insight/train/, the models among
+# the repository's release files (own-models). Nothing here reaches the site: a model goes to the page only with its own judge, tiers, build
+# and checks (scripts/insight/MODELS.md).
+name: Insight model
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/auto/requests/insight-*.json"
+  schedule:
+    - cron: "17 2 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: insight-model
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      runs: ${{ steps.p.outputs.runs }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - id: p
+        name: What to train
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import json, glob, os, re
+          runs = []
+          for f in sorted(glob.glob("data/auto/requests/insight-*.json")):
+              try: d = json.load(open(f))
+              except ValueError: continue
+              for r in d.get("runs") or []:
+                  if r.get("base") not in ("minilm", "gte-small"): continue
+                  runs.append({"base": r["base"], "teacher": bool(r.get("teacher")), "masked": round(min(max(float(r.get("masked") or 0), 0), 0.9), 2),
+                               "epochs": min(max(int(r.get("epochs") or 6), 1), 12), "all": bool(r.get("all")),
+                               "mix": re.sub(r"[^0-9.,]", "", str(r.get("mix") or "0.5,1.0"))[:20] or "0.5,1.0"})
+          if not runs and os.environ.get("EVENT") == "schedule":
+              runs = [{"base": b, "teacher": True, "masked": 0, "epochs": 6, "all": True, "mix": "0.5,1.0"} for b in ("minilm", "gte-small")]
+          for i, r in enumerate(runs): r["label"] = f"{i:02d}-{r['base']}{'-teach' if r['teacher'] else ''}{'-masked' if r['masked'] else ''}-e{r['epochs']}{'-all' if r['all'] else '-heldout'}"
+          print("runs=" + json.dumps(runs[:8]))
+          EOF
+
+  make:
+    needs: plan
+    if: needs.plan.outputs.runs != '[]' && needs.plan.outputs.runs != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        run: ${{ fromJSON(needs.plan.outputs.runs) }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - name: The vectors made before (so that only new texts are embedded)
+        uses: actions/cache/restore@v6
+        with:
+          path: site/insight/.cache
+          key: insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-x
+          restore-keys: |
+            insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-
+      - name: The models fetched before
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/huggingface
+          key: insight-bases-${{ matrix.run.base }}-v1
+      - name: Python packages
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+          .venv/bin/pip install -q transformers huggingface_hub safetensors numpy tokenizers onnx onnxruntime
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+      - name: Build (the answers and their wordings), then train and measure
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+          BASE: ${{ matrix.run.base }}
+          TEACH: ${{ matrix.run.teacher }}
+          MASKED: ${{ matrix.run.masked }}
+          EPOCHS: ${{ matrix.run.epochs }}
+          ALL: ${{ matrix.run.all }}
+          MIX: ${{ matrix.run.mix }}
+        run: |
+          set +e
+          mkdir -p out; L="out/log.txt"; : > "$L"
+          echo "== build [$(date -u +%H:%M:%S)]" >> "$L"
+          node site/build.js > "$RUNNER_TEMP/build.log" 2>&1 || { echo "!! the build failed" >> "$L"; tail -5 "$RUNNER_TEMP/build.log" >> "$L"; exit 0; }
+          a=(--base "$BASE" --out out --epochs "$EPOCHS" --mix "$MIX" --masked "$MASKED" --max-minutes 300)
+          [ "$TEACH" = "true" ] && a+=(--teacher)
+          [ "$ALL" = "true" ] && a+=(--all)
+          echo "== train ${a[*]} [$(date -u +%H:%M:%S)]" >> "$L"
+          python3 -I -u scripts/insight/train.py "${a[@]}" 2>&1 | grep -v -i "warning" >> "$L"
+          echo "== end [$(date -u +%H:%M:%S)]" >> "$L"
+          rm -f out/best.pt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: insight-${{ matrix.run.label }}
+          path: |
+            out/train.json
+            out/gold-first.json
+            out/log.txt
+            out/*-q8.onnx
+          retention-days: 7
+          if-no-files-found: warn
+
+  keep:
+    needs: [plan, make]
+    if: always() && needs.plan.outputs.runs != '[]' && needs.plan.outputs.runs != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          path: art
+          pattern: insight-*
+      - name: Keep the records, and the models among the release files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          D="data/verification/insight/train"; mkdir -p "$D"; L="$D/_last-run.txt"; : > "$L"
+          for dir in art/insight-*; do
+            [ -d "$dir" ] || continue
+            label="${dir#art/insight-}"; label="$(printf '%s' "$label" | tr -cd 'A-Za-z0-9._-')"
+            echo "== $label" >> "$L"
+            [ -f "$dir/log.txt" ] && tail -c 6000 "$dir/log.txt" | sed -E 's/(hf_|gh[pousr]_|sk-)[A-Za-z0-9_-]{8,}/[key]/g' > "$D/$label.log"
+            if ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$dir/train.json" 2>/dev/null; then echo "!! no record (the run did not finish)" >> "$L"; continue; fi
+            cp "$dir/train.json" "$D/$label.json"; [ -f "$dir/gold-first.json" ] && cp "$dir/gold-first.json" "$D/$label.first.json"
+            for f in "$dir"/*-q8.onnx; do
+              [ -f "$f" ] || continue
+              name="$(basename "$f")"; sum="$(sha256sum "$f" | cut -d' ' -f1)"
+              if python3 - "$dir/train.json" "$name" "$sum" <<'EOF'
+          import json, sys
+          r = json.load(open(sys.argv[1]))
+          ok = any(v.get("file") == sys.argv[2] and v.get("sha256") == sys.argv[3] for v in (r.get("gold") or {}).values())
+          sys.exit(0 if ok else 1)
+          EOF
+              then
+                rel="insight-${label}-${name}"
+                cp "$f" "$RUNNER_TEMP/$rel"
+                gh release view own-models >/dev/null 2>&1 || gh release create own-models --title "Models of our own" --notes "The files of the models Pharmakon runs by itself. Each is named, with its SHA-256 and its numbers on the exam, in the repository (data/auto/own/, data/verification/insight/train/). See NOTICE.md."
+                gh release upload own-models "$RUNNER_TEMP/$rel" --clobber && echo "model kept: $rel ($sum)" >> "$L" || echo "!! the model could not be kept among the release files: $rel" >> "$L"
+              else
+                echo "!! $name is not the file its record names: not kept" >> "$L"
+              fi
+            done
+            python3 - "$D/$label.json" >> "$L" <<'EOF'
+          import json, sys
+          r = json.load(open(sys.argv[1]))
+          for k, v in (r.get("gold") or {}).items():
+              i = v.get("index") or {}
+              print(f"{k}: strict top-1 {i.get('strict_top1')}, top-3 {i.get('strict_top3')}, lenient top-3 {i.get('lenient_top3')}, AUC {i.get('answerable_vs_not_auc')}")
+          EOF
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -q --ignore-unmatch data/auto/requests/insight-*.json
+          git add -A "$D" data/auto/requests 2>/dev/null
+          git diff --cached --quiet || git commit -q -m "Insight model: what our own encoders learned, and how they read the gold set"
+          git push -q || (git pull -q --rebase -X theirs && git push -q) || (sleep 7 && git pull -q --rebase -X theirs && git push -q)
