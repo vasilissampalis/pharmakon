@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
     p.on("pageerror", e => errors.push(w + " page error: " + String(e).slice(0, 200)));
     p.on("console", m => { if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(w + " console error: " + m.text().slice(0, 200)); });
     const fetched = []; p.on("request", r => { const u = r.url(); if (/\/data\/(full-|refs|figures|cards-)/.test(u)) fetched.push(u.replace(/^.*\/data\//, "")); });
-    // Insight's files (site 2.2.0) are fetched only once someone uses the search box, never with a page
+    // Insight's files (site 2.2.0) are fetched only once someone uses the search box; (2.26) on a computer, also once the start page has drawn and is idle
     const insightFetched = []; p.on("request", r => { const u = r.url(); if (/\/data\/insight\.json|\/insight\//.test(u)) insightFetched.push(u.replace(/^.*\//, "")); });
     const shot = async (name, sel, noScroll) => { const [sw, cw] = await p.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]); if (sw > cw && !noScroll) errors.push(w + " horizontal scroll at " + name); if (!SHOTS) return;
       await p.mouse.move(2, 300); const f = path.join(SHOTS, w + "-" + name + ".png"); if (sel) await (await p.$(sel)).screenshot({ path: f }); else await p.screenshot({ path: f }); };
@@ -41,7 +41,10 @@ const server = http.createServer((req, res) => {
 
     // the start page: drawn by the script, and nothing on-demand fetched
     await go("home", 2500); await shot("home");
-    ok(w + ": start page draws without fetching any on-demand file", (await p.$$("#dgrid a.dcard")).length > 5 && !fetched.length && !insightFetched.length, fetched.concat(insightFetched).join(", ") || "none fetched");
+    // (2.26) on a computer Insight gets ready by itself once the start page has drawn and is idle: its files never come before the page's first paint
+    const insAfter = await p.evaluate(() => { const fcp = (performance.getEntriesByName("first-contentful-paint")[0] || { startTime: 0 }).startTime;
+      return performance.getEntriesByType("resource").filter(e => /\/data\/insight\.json|\/insight\//.test(e.name)).every(e => e.startTime > fcp); });
+    ok(w + ": start page draws without fetching any on-demand file (Insight's, on a computer, only after the page has drawn)", (await p.$$("#dgrid a.dcard")).length > 5 && !fetched.length && insAfter, fetched.concat(insightFetched).join(", ") || "none fetched");
     // a drug page: drawn at once; its own file fetched ahead once it settles, and the law part draws for a chosen country
     // (the country is read when the page loads, so the page is loaded afresh after it is saved)
     await p.evaluate(() => { try { localStorage.setItem("pk-country", "Greece"); } catch (e) {} }); await p.goto("about:blank");

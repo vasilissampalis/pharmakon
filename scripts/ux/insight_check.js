@@ -1,7 +1,8 @@
 // Insight (site 2.3, 15 November 2026), checked in a real browser at 390 x 844 and 1280 x 800, with the site served as
 // Cloudflare Pages serves it (the file types, revalidated caching, and the security policy of site/public/_headers).
 // What must hold (the 2.3 brief, scripts/insight/BRIEF-2.3-insight.md):
-// - every published file is under 25 MiB; the start page fetches none of Insight's files; the cursor in the search box fetches
+// - every published file is under 25 MiB; the start page fetches none of Insight's files on a phone (2.26: on a computer it gets Insight
+//   ready by itself once the page has drawn and is idle); the cursor in the search box fetches
 //   them, from the site itself only, the model being the one the index names; a second visit downloads nothing again; on a
 //   connection that saves data nothing is fetched until the reader taps the line that offers it;
 // - honest tiers: a question the site answers in so many words ("is weed addictive") has its answer as "Best match", the short
@@ -185,9 +186,16 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     const uiText = () => p.evaluate(() => [...document.querySelectorAll(".sr-note, .sr-fit-h, .sr-fit-none, .sr-route, .sr-sos, .sr-get, .ins-route, .ins-l-k, .ins-none, .ins-end, .ins-next .rn-k, .ins-rel .rn-k, .ins-eye, .ins-sos, .ins-page")].map(e => e.textContent).join(" | "));
     let ui = "";
 
-    // ---- the start page: nothing of Insight's fetched
+    // ---- the start page: on a phone nothing of Insight's is fetched; (2.26) on a computer Insight gets ready by itself once the page is idle
     await p.goto(BASE + "home"); await p.waitForTimeout(2500);
-    ok(w + ": the start page fetches none of Insight's files", !reqs.some(ins), reqs.filter(ins).join(", ") || "none");
+    if (w < 700) ok(w + ": the start page, on a phone that does not say it is on wifi, fetches none of Insight's files", !reqs.some(ins), reqs.filter(ins).join(", ") || "none");
+    else {
+      const self = await p.waitForFunction(() => window.pkInsight && pkInsight.state() === "ready", null, { timeout: 120000 }).then(() => true, () => false);
+      const st = await p.evaluate(() => { const fcp = (performance.getEntriesByName("first-contentful-paint")[0] || { startTime: 0 }).startTime;
+        const ins = performance.getEntriesByType("resource").filter(e => /\/data\/insight\.json|\/insight\//.test(e.name));
+        return { fcp: Math.round(fcp), first: ins.length ? Math.round(Math.min(...ins.map(e => e.startTime))) : -1, n: ins.length, focus: document.activeElement && document.activeElement.id === "search" }; });
+      ok(w + ": the start page, on a computer, gets Insight ready by itself after the page has drawn (the box untouched; the site's own files)", self && st.n >= 4 && st.first > st.fcp && !st.focus && !reqs.filter(ins).some(u => !u.startsWith(ORIGIN)), JSON.stringify(st));
+    }
     // the cursor in the search box: the files come, from the site itself, and the quiet line shows once ready
     const t0 = Date.now(); await p.focus("#search");
     const ready = await whenReady(); const loadMs = Date.now() - t0; await p.waitForTimeout(300);

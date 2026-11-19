@@ -75,9 +75,21 @@ function insightLoad() {
    data only when asked). Two: while it is getting ready, a whole question gets one calm line and no rows found by a word in common
    (insightAfterSearch); when it cannot start, the page says so and offers to try again. */
 const INS_HAD = "pk-ins-had", INS_SLOW = 8000;
+/* (2.26; the senior author, 19 November 2026, 20:51: "the site to be OPTIMALLY SMART AND FUCKING FAST INSTANTLY") On a first visit Insight was
+   fetched only when the box was used, and a quick first question waited for its files. Now the start page, whose first thing is the box, gets
+   Insight ready by itself once the page has drawn and is idle, on a computer or on wifi: where the browser says it is on wifi or a cable, or,
+   where it does not say, on a device with a fine pointer (a computer). Never on a mobile network, a slow line or where data is saved; a phone
+   that does not say it is on wifi waits for its reader to use the box, as before. Only the site's own files; nothing is sent. */
+function insFastLine() {
+  const c = navigator.connection;
+  if (c && (c.saveData || c.type === "cellular" || /^(slow-2g|2g|3g)$/.test(c.effectiveType || ""))) return false;
+  if (c && (c.type === "wifi" || c.type === "ethernet")) return true;
+  return !!(window.matchMedia && window.matchMedia("(pointer: fine)").matches);
+}
 function insWarm() {
   let had = false; try { had = localStorage.getItem(INS_HAD) === "1"; } catch (e) { had = false; }
-  if (had && INS.state === "idle" && !insSaver()) insightLoad();
+  const home = !location.hash || location.hash === "#" || location.hash === "#home";
+  if (INS.state === "idle" && !insSaver() && (had || (home && insFastLine()))) insightLoad();
 }
 function insightFailed() {
   const s = document.getElementById("search"), box = document.getElementById("search-results");

@@ -7,7 +7,9 @@ const http = require("http"), fs = require("fs"), path = require("path");
 const { chromium } = require("playwright");
 const ROOT = path.resolve(__dirname, "..", "..", "site", "public");
 const PORT = +((process.argv.indexOf("--port") > 0 && process.argv[process.argv.indexOf("--port") + 1]) || 0);
-const TYPES = { ".html": "text/html; charset=utf-8", ".json": "application/json", ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".css": "text/css" };
+// the file types as Cloudflare Pages serves them (2.26: on a computer the start page now gets Insight ready by itself, so its runtime is fetched here too)
+const TYPES = { ".html": "text/html; charset=utf-8", ".json": "application/json", ".webp": "image/webp", ".png": "image/png", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".css": "text/css",
+  ".js": "text/javascript", ".mjs": "text/javascript", ".wasm": "application/wasm", ".txt": "text/plain; charset=utf-8", ".onnx": "application/octet-stream" };
 const results = [], errors = [];
 const ok = (name, pass, detail) => { results.push(!!pass); console.log((pass ? "PASS " : "FAIL ") + name + (detail ? "  (" + detail + ")" : "")); };
 const server = http.createServer((req, res) => {

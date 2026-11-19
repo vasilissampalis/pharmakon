@@ -1813,6 +1813,36 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     **What it does not do.** It writes no answer: the lane writes them, from papers' and official pages' own words,
     through every gate, as for any listed question. Listing publishes nothing.
 
+41. **Insight's own model learns by itself: teachers, a pupil, and a start page that gets it ready (19 November 2026, 21:44 to
+    23:30 Athens; decision 37, stages two and three).** His words, 21:44: "we don't want you to generate the answers always
+    ... we have to teach our ai to work like an llm and do what you do as perfect as possible it has to work by itself
+    perfectly all the time autonomously"; 20:51: "the site to be OPTIMALLY SMART AND FUCKING FAST INSTANTLY".
+    **The teachers.** A small model learns language from examples: many ways of asking each answer's question. Round 0:
+    the editor (Claude) wrote up to eight for each of the 391 answers, in the words people type (slang, short searches,
+    typos, chatty phrasing), from the answers' own questions, without the gold set or any visitor's words in view
+    (`data/verification/insight/variants_teacher.json`: 3,001 kept; 11 left out because 70% of their words or more are a
+    gold question's, 116 because the answer already had them). From then on `scripts/insight/teachers.py` runs in every
+    Auto run: for the answers with the fewest (a new answer has none, so it comes first), Gemma 4 31B at Google's free tier
+    writes ten, shown the answer's question, the ways it is already asked and three answers' worth of the editor's
+    examples; a model of another family (gpt-oss-120b on Groq first) keeps only those that ask exactly the same question;
+    code keeps the drug named (one of its names or street names), drops copies of any answer's wordings, anything near a
+    gold question, and any address, link or long number; sixteen per answer at most
+    (`data/auto/insight/teachers.json`, each with the model that wrote it, the one that checked it, and the day).
+    **The pupil.** `scripts/insight/train.py` teaches an open encoder that reads with the page's own vocabulary and pooling
+    (all-MiniLM-L6-v2, Apache-2.0, as before; or gte-small, MIT) with every way of asking (the site's, the readers', the
+    teachers'), pushed away from the near-miss questions (multiple-negatives loss, as `finetune.py`); writes it as the
+    page's ONNX file and as int8; and measures it on the 400 forum questions of the gold set beside the model on the site
+    (the page's first look, as `encoders.py`). `.github/workflows/insight.yml` runs up to eight trainings at once on
+    GitHub's machines (a request `data/auto/requests/insight-*.json`, and every Sunday by itself with the week's teachers'
+    wordings): "make" fetches and runs, with no key and read-only; "keep" keeps the records
+    (`data/verification/insight/train/`) and the models among the release files (`own-models`), each named with its
+    SHA-256. A model reaches the page only through the measured path of `scripts/insight/MODELS.md` (its own judge,
+    tiers, build and checks), and only where it is wrong no more often than the model it replaces.
+    **The start page gets Insight ready (site 2.26).** On a computer, or where the browser says it is on wifi or a cable,
+    the start page fetches and starts Insight by itself once the page has drawn and is idle, so a first question is read at
+    once; never on a mobile network, a slow line or where data is saved, and never before the page's first paint
+    (`insFastLine`, `insWarm`; `insight_check.js`, `speed_check.js`).
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

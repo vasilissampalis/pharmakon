@@ -101,6 +101,12 @@ co-editor decides and he reviews. Site version and protocol version: `data/site/
   own numbers). More free services wait for keys only he makes (Mistral, SambaNova); open models of our own run on GitHub's machines
   (`local_llm.py`) and are named in a team only after their exam. A feeling or something one did is not a question (decision 39, `insSaid`):
   nothing is sent or looked up for it; measure on the gold set before changing that rule.
+- Insight's own model learns by itself (19 November 2026, decision 41; his words, 21:44: "it has to work by itself perfectly all the time
+  autonomously"): the teachers (`scripts/insight/teachers.py`, every Auto run) are given OUR words only (an answer's question and the ways it is
+  asked), never a visitor's; a wording near a gold question (70% of its words) is never kept, so the gold set stays a fair test; a model of
+  another family checks each one. `scripts/insight/train.py` (`insight.yml`, GitHub's machines, Sundays and on request) trains and measures; a
+  trained model reaches the page only through `scripts/insight/MODELS.md`'s measured path, wrong no more often than the one it replaces. On a
+  computer or on wifi the start page gets Insight ready by itself after its first paint; never on a mobile network, a slow line or where data is saved.
 - APA 7; Crossref records for reference metadata, never typed by hand (overrides need a cited source).
 - Simple language; Carl Hart's critical eye; practical safety first; a safe, non-judging space; person-first language.
 - Quotations at most 15 words, at most one per claim. No copyrighted content. Photos: public domain, CC0 or CC BY; CC BY-SA only where nothing more open exists, marked
