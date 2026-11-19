@@ -15,147 +15,38 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-18",
+  "on": "2026-11-19",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-4-hydrogen",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3.8-flash"
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "44325398602",
+  "run": "44449513078",
+  "read_by": {
+   "gemini-3.5-flash-lite": 6,
+   "gemini-3.1-flash-lite": 4
+  },
+  "read_seconds": 100,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 85.6
+  "neurons": 24.5,
+  "seconds": 100
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-4-hydrogen accepted 2 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.14, but 0.02, how1 0.93, how2 0.30",
-  "check": "short: NOT accepted: Passage does not mention wisdom; sentence makes claim about wisdom not covered.; but: NOT accepted: Passage does not state that studies did not examine wisdom.; how1: accepted; how2: accepted"
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "schelle_2015",
-    "type": "article-journal",
-    "title": "A survey of substance use for cognitive enhancement by university students in the Netherlands",
-    "author": [
-     {
-      "family": "Schelle",
-      "given": "Kimberly J."
-     },
-     {
-      "family": "Olthof",
-      "given": "Bas M. J."
-     },
-     {
-      "family": "Reintjes",
-      "given": "Wesley"
-     },
-     {
-      "family": "Bundt",
-      "given": "Carsten"
-     },
-     {
-      "family": "Gusman-Vermeer",
-      "given": "Joyce"
-     },
-     {
-      "family": "van Mil",
-      "given": "Anke C. C. M."
-     }
-    ],
-    "container-title": "Frontiers in Systems Neuroscience",
-    "issued": {
-     "date-parts": [
-      [
-       2015
-      ]
-     ]
-    },
-    "DOI": "10.3389/fnsys.2015.00010",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-18"
-     }
-    },
-    "volume": "9",
-    "PMCID": "PMC4330699"
-   },
-   "doi": "10.3389/fnsys.2015.00010",
-   "pmcid": "PMC4330699",
-   "title": "A survey of substance use for cognitive enhancement by university students in the Netherlands",
-   "year": 2015,
-   "journal": "Frontiers in systems neuroscience",
-   "kind": "other",
-   "people": true,
-   "near": 0.692,
-   "money": [
-    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
-   ],
-   "design": {
-    "passage": 2,
-    "where": "Abstract",
-    "quote": "A nationwide survey was conducted among 1572 student respondents of all government supported Dutch universities.",
-    "text": "A nationwide survey of substance use for cognitive enhancement among 1572 university student respondents in the Netherlands"
-   },
-   "findings": [
-    {
-     "passage": 54,
-     "where": "Conclusion",
-     "quote": "To sum up, the present study indicates that the use of prescription drugs and illicit drugs to increase cognitive performance among students in Dutch universities is rather low compared to other European countries",
-     "text": "The use of prescription drugs and illicit drugs to increase cognitive performance among students in Dutch universities is rather low compared to other European countries.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 54,
-     "where": "Conclusion",
-     "quote": "while the use of lifestyle drugs for cognitive enhancement fits the European context better.",
-     "text": "The use of lifestyle drugs for cognitive enhancement fits the European context better.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 54,
-     "where": "Conclusion",
-     "quote": "We have found further evidence of polydrug use in relation to cognitive enhancement, while previous findings of the relation between cognitive enhancement drug use and stress have not been confirmed consistently.",
-     "text": "There is further evidence of polydrug use in relation to cognitive enhancement, while previous findings of the relation between cognitive enhancement drug use and stress have not been confirmed consistently.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 40,
-     "where": "Discussion",
-     "quote": "It might be suggested that our numbers are lower due to their timeframe being based on “during respondent's university studies” instead of lifetime prevalence.",
-     "text": "The numbers might be lower due to their timeframe being based on during respondent's university studies instead of lifetime prevalence.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
   {
    "read": "full",
    "ref": {
@@ -206,10 +97,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
+     "verified_on": "2026-11-19",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-18"
+      "checked_on": "2026-11-19"
      }
     },
     "volume": "11",
@@ -232,25 +123,50 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
-    "text": "A survey of surgeons attending five international conferences"
+    "text": "survey of surgeons attending international conferences"
    },
    "findings": [
     {
      "passage": 39,
      "where": "Discussion",
      "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-     "text": "According to randomized controlled trials, reviews, and meta-analyses, normal healthy non-sleep-deprived subjects experience almost no pro-cognitive effects on simple and higher cognitive domains.",
-     "id": "F4",
+     "text": "According to randomized controlled trials, reviews, and meta-analyses, there are almost no pro-cognitive effects on simple and higher cognitive domains in normal healthy non-sleep-deprived subjects.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 40,
+     "where": "Discussion",
+     "quote": "Nevertheless, stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
+     "text": "Stimulants and modafinil have enhancing effects on simple cognitive domains like fatigue, vigilance, psychomotor skills, and reaction time in sleep-deprived subjects, along with slightly pro-cognitive effects on higher cognitive domains.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 48,
+     "where": "Conclusions",
+     "quote": "However, pro-cognitive effects on higher cognitive domains are very limited.",
+     "text": "Pro-cognitive effects on higher cognitive domains are very limited.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
-   "tag": "B"
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The prevalence of surgeons taking pharmacological cognitive enhancement (CE) or mood enhancement (ME) drugs has not been systematically assessed so far.",
+     "text": "The prevalence of surgeons taking pharmacological cognitive enhancement or mood enhancement drugs had not been systematically assessed so far.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "wisdom not specifically studied",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1007/s00406-014-0537-1",
@@ -283,6 +199,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-18",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -299,7 +223,7 @@
    "read": "full",
    "kind": "other",
    "at": "10.3389/fnsys.2015.00010",
-   "kept": 3,
+   "kept": 0,
    "thrown": []
   },
   {
@@ -347,348 +271,56 @@
    "read": "full",
    "kind": "other",
    "at": "10.1186/1741-7015-11-102",
-   "kept": 1,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "Stimulants have slightly pro-cognitive effects on higher cognitive domains and subjective pro-effects.",
-     "quote": "Furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "limit",
+     "text": "Researchers can only speculate about the reasons why surgeons use these prescription and illicit drugs for cognitive enhancement.",
+     "quote": "We can only speculate about the reasons.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "To dope or not to dope: neuroenhancement with prescription drugs and drugs of abuse among Swiss university students",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1371/journal.pone.0077967",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Gaming under the influence: An exploratory study",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1556/2006.7.2018.27",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The study is exploratory and has limited contextual data, which prevents testing the hypothesis regarding self-medication for mood management.",
+     "quote": "Due to the exploratory nature of this study and limited contextual data, we cannot test this hypothesis.",
+     "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "",
-     "quote": "The prevalence of surgeons taking pharmacological cognitive enhancement (CE) or mood enhancement (ME) drugs has not been systematically assessed so far.",
-     "why": "no sentence"
+     "text": "More focused research is required to examine the hypotheses regarding the risks of gaming problems and the use of stimulants and medicines.",
+     "quote": "To examine these hypotheses would, though, require more focused research.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
   {
-   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
+   "title": "Drugs As Instruments: Describing and Testing a Behavioral Approach to the Study of Neuroenhancement",
+   "read": "full",
+   "kind": "other",
+   "at": "10.3389/fpsyg.2016.01226",
    "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Ecstasy",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.talktofrank.com/drug/ecstasy",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Advice for families of people who use drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nhs.uk/live-well/addiction-support/advice-for-the-families-of-drug-users/",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Mixing Medications and Dietary Supplements Can Endanger Your Health",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.fda.gov/consumers/consumer-updates/mixing-medications-and-dietary-supplements-can-endanger-your-health",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Substances used and prevalence rates of pharmacological cognitive enhancement among healthy subjects",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1007/s00406-014-0537-1",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Cognitive enhancers in the treatment of substance use disorders: clinical evidence",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.pbb.2011.04.017",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Transcranial direct current stimulation in psychiatric disorders",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.5498/wjp.v5.i1.88",
-   "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": {
-  "short": [
-   "F4"
-  ],
-  "direct": "No",
-  "but": [
-   "F4"
-  ],
-  "how": [
-   [
-    "DB",
-    "F4"
-   ]
-  ],
-  "unanswered": "wisdom not specifically studied"
- },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-4-hydrogen": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    false,
-    "The sentence uses 'This' without specifying what it refers to, so it cannot be verified from the passage what applies to normal healthy non-sleep-deprived people."
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    false,
-    "The passage cites randomized controlled trials (RCTs), reviews, and meta-analyses separately, not specifically 'reviews of trials'."
-   ]
-  }
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.1355,
-   "but": 0.0234,
-   "how1": 0.9331,
-   "how2": 0.3032
-  },
-  "scores_quotes_alone": {
-   "short": 0.1443,
-   "but": 0.0172,
-   "how1": 0.9687,
-   "how2": 0.662
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "No. Research says normal healthy people who are not sleep-deprived experience almost no cognitive benefits from drugs.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "This applies to normal healthy people who are not sleep-deprived, based on trials and reviews.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-4-hydrogen) did not accept it: The sentence uses 'This' without specifying what it refers to, so it cannot be verified from the passage what applies to normal healthy non-sleep-deprived people."
-    },
-    {
-     "part": "how1",
-     "text": "A survey of surgeons at five international conferences in 2011 asked about drug use for mood or thinking.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "franke_2013",
-       "where": "Abstract",
-       "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
-       "sha": "6cf6d1e066beced4"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Reviews of trials say normal healthy, non-sleep-deprived people see almost no boost in simple or higher thinking.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-4-hydrogen) did not accept it: The passage cites randomized controlled trials (RCTs), reviews, and meta-analyses separately, not specifically 'reviews of trials'."
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "No. Randomized controlled trials, reviews, and meta-analyses say normal healthy non-sleep-deprived people experience almost no pro-cognitive effects from drugs.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“No”) is not the answer the passages bear out: The passages address the (lack of) pro‑cognitive effects of drugs in healthy, non‑sleep‑deprived people, not the concept of wisdom; therefore the opening word “No” does "
-    },
-    {
-     "part": "but",
-     "text": "This applies to normal healthy non-sleep-deprived people on simple and higher cognitive domains.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A survey of surgeons at five international conferences in 2011 asked about drug use for cognitive or mood enhancement.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "franke_2013",
-       "where": "Abstract",
-       "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
-       "sha": "6cf6d1e066beced4"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Randomized controlled trials, reviews, and meta-analyses found almost no pro-cognitive effects in normal healthy non-sleep-deprived subjects.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. Research on drugs and thinking does not say if they increase wisdom.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passage does not mention wisdom; sentence makes claim about wisdom not covered."
-    },
-    {
-     "part": "but",
-     "text": "The studies looked at simple thinking skills in healthy people, not wisdom.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passage does not state that studies did not examine wisdom."
-    },
-    {
-     "part": "how1",
-     "text": "A survey of surgeons asked about using drugs to boost thinking or mood.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "franke_2013",
-       "where": "Abstract",
-       "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
-       "sha": "6cf6d1e066beced4"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Reviews say healthy, well-rested people see almost no boost in simple or higher thinking from drugs.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
-       "sha": "8ddb050c72852e72"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
+ "soft": "a source could not be fetched",
  "place": {
   "home": "facts",
   "also": [],
