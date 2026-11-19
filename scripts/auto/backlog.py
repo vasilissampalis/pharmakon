@@ -135,7 +135,7 @@ def run(limit=A_RUN, chat=None, enc=None, R=None, names=None, save=True, show=Fa
             ex = rnd.sample([s for s in seed if s.get("src")], min(3, len([s for s in seed if s.get("src")])))
             fields, model, why = word(c["q"], chat, ex, R, names, [d for d in c["drugs"] if "(" not in d and d != "general"])
             if not fields:
-                if why.startswith("no model") or "allowance" in why or "Budget" in why: print("backlog: stopped for now:", why); break
+                if why.startswith("no model") or "allowance" in why or "Budget" in why or "waiting behind" in why or "was over before" in why: print("backlog: stopped for now:", why); break   # (a clock or a waiting run: tried again later, not set aside)
                 st["done"][key] = {"on": TODAY, "what": "no wording passed (" + why[:160] + ")"}; out.append((c, None)); continue
         if L is not None:
             sim = enc([fields["q"]] + list(fields["ways"])) @ L.T; near = float(sim.max())
@@ -228,8 +228,17 @@ def selftest():
     print("backlog selftest: ok (what the site does not answer is never listed; the editor's own wordings first, then a model's held to ask.py's checks; never twice)")
 
 
+def on_clock(minutes):
+    """(19 November 2026, 23:40 Athens: the daily exam held a run for 30 minutes, and a person's question waited behind it) the system's own work
+    has a clock, and gives way the moment a run started by a person's question waits behind this one: no call is begun past either."""
+    import time, llm, lane
+    if minutes: llm.STOP_AT = time.time() + 60 * float(minutes)
+    llm.GIVE_WAY = lambda: lane.runs_waiting() > 0; llm._gave[:] = [0.0, False]
+
+
 if __name__ == "__main__":
     a = sys.argv[1:]; opt = lambda k, d=None: a[a.index(k) + 1] if k in a and a.index(k) + 1 < len(a) else d
+    if ("run" in a[:1] or "exam" in a[:1]) and "--selftest" not in a: on_clock(opt("--minutes", "3"))
     if "--selftest" in a: selftest()
     elif "--list" in a: run(limit=int(opt("--max", "12")), show=True, save=False)
     elif a[:1] == ["run"]: run(limit=int(opt("--max", str(A_RUN))))

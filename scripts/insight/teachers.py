@@ -338,7 +338,11 @@ def main():
     lim = int(a[a.index("--max") + 1]) if "--max" in a else A_RUN
     mins = float(a[a.index("--minutes") + 1]) if "--minutes" in a else None
     if "--list" in a: run(limit=lim, show=True); return
-    if a and a[0] == "run": run(limit=min(lim, A_RUN), minutes=mins); return
+    if a and a[0] == "run":
+        import llm, lane                       # a clock for every call, and the way given to a run that a person's question started
+        if mins: llm.STOP_AT = time.time() + 60 * mins
+        llm.GIVE_WAY = lambda: lane.runs_waiting() > 0; llm._gave[:] = [0.0, False]
+        run(limit=min(lim, A_RUN), minutes=mins); return
     print(__doc__)
 
 

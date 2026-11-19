@@ -201,8 +201,8 @@ jobs:
             own "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run
             # (19 November 2026, decision 40; his words, 21:34: "always producing answers and answer questions instantly"; 21:44: "it has to work by itself") the real questions
             # people ask on the forums that the site does not answer yet, listed a few at a time, the most viewed first; worded by the editor or by a free model held to ask.py's checks
-            own "the system lists the questions people ask on the forums, before they ask them here" python3 -I scripts/auto/backlog.py run
-            own "how near the free models come to the editor's wordings (once a day)" python3 -I scripts/auto/backlog.py exam --n 12 --daily
+            own "the system lists the questions people ask on the forums, before they ask them here" python3 -I scripts/auto/backlog.py run --minutes 2
+            # (19 November 2026, 23:40 Athens) the backlog's exam is no longer sat in this run: with no clock it held one run for 30 minutes while a person's question waited
             own "the teachers write how people type each answer's question (for Insight's own model)" python3 -I scripts/insight/teachers.py run --max 8 --minutes 3
             own "official pages for the questions not yet searched" python3 -I scripts/auto/official.py find --max 12 --minutes 3
             own "papers for the questions not yet searched" python3 -I scripts/auto/papers.py find --max 12 --minutes 4
