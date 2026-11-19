@@ -247,8 +247,8 @@ function formsHtml(slug) {
   const ident = IDENTITY.find(d => d.substance === slug) || { sources: [] };
   const autos = [];
   return '<ul class="looks">' + fl.map(f => { const p = (f.photos || []).map(id => byId[id]).find(Boolean), a = p ? null : formAutoPic(slug, f); if (a) autos.push([f, a]);
-    return '<li class="look' + (p || a ? " hasph" : "") + (a ? " look-auto" : "") + '">' + (p ? '<span class="look-ph">' + photoImg(p, "t", p.alt, true) + "</span>" : a ? '<span class="look-ph">' + autoPicImg(a, "t", f.name + ": an example our system found", true) + "</span>" : '<span class="look-ic">' + icon(f.icon || "molecule") + "</span>") +
-      '<span class="look-t"><b>' + esc(f.name) + "</b><span>" + esc(f.what || "") + "</span>" + (a ? '<span class="look-auto-t">Picture found by our system. A person has not checked it yet.</span>' : "") + "</span></li>"; }).join("") + "</ul>" +
+    return '<li class="look' + (p || a ? " hasph" : "") + (a ? " look-auto" : "") + '">' + (p ? '<span class="look-ph">' + photoImg(p, "t", p.alt, true) + "</span>" : a ? '<span class="look-ph">' + autoPicImg(a, "t", f.name + ": an example", true) + "</span>" : '<span class="look-ic">' + icon(f.icon || "molecule") + "</span>") +
+      '<span class="look-t"><b>' + esc(f.name) + "</b><span>" + esc(f.what || "") + "</span>" + "</span></li>"; }).join("") + "</ul>" +
     looksCredits(fl, byId, autos) + '<p class="look-note">Looks don’t tell you what’s inside: the same drug can look different, and different drugs can look the same. ' + phToggle() + "</p>";
 }
 
@@ -870,7 +870,7 @@ function renderDrug(slug) {
   asks("d-med", medAs ? (medTx ? "As a medicine, and treatment" : "Is it used as a medicine?") : "What can treatment do?", medAs ? "Medicine" : "Treatment", med, "med");
   asks("d-feel", "What does it feel like?", "Feels", zone("feel"), "feel");
   // (2.6) the answers the system wrote about this drug, in a section of their own: never among the checked ones
-  { const au = autoFor(slug); if (au.length) add("d-auto", "Written by our system", "By our system", '<p class="auto-sec">Our system wrote these by itself from research papers it found and read. A person has not checked them yet.</p>' + autoListHtml(au, false), nAns(au.length), "Not yet checked by a person"); }
+  { const au = autoFor(slug); if (au.length) add("d-auto", "Written with AI", "With AI", '<p class="auto-sec">Written with AI from research papers. Each shows its sources.</p>' + autoListHtml(au, false), nAns(au.length), "From research papers"); }
   // what it looks like: photos first, and looks do not tell you what is inside
   if (forms.length) add("d-looks", "What does it look like?", "Looks", formsHtml(slug), forms.length + (forms.length === 1 ? " form" : " forms"), forms.slice(0, 3).map(x => x.name).join(" · ") + (forms.length > 3 ? " · more" : ""));
   if (LEGAL.some(d => d.substance === slug)) add("d-law", "Is it legal where I am?", "Law", lawHtml(slug), "", "What the law says in your country");

@@ -59,7 +59,7 @@ const META_SOURCE = { crossref: "Crossref", publisher: "publisher's page", pubme
 
 /* ---------- Routing ---------- */
 const PAGE_VIEWS = ["home", "substances", "drug", "shared", "numbers", "interactions", "checking", "facts", "emergency", "law", "methods", "about", "glossary", "howto", "wanted", "auto", "review", "quiz", "notfound"];
-const PAGE_TITLES = { home: "", shared: "Shared answer", facts: "Big questions about drugs", substances: "All drugs", numbers: "Statistics", interactions: "Is it safe to mix?", emergency: "Emergency numbers", checking: "Drug checking", law: "Drug treaties by country", methods: "How we check facts", about: "About us", glossary: "Words explained", howto: "How to read this site", wanted: "On our list", auto: "Written by our system", review: "Review queue", quiz: "Myth or fact?", notfound: "Page not found" };
+const PAGE_TITLES = { home: "", shared: "Shared answer", facts: "Big questions about drugs", substances: "All drugs", numbers: "Statistics", interactions: "Is it safe to mix?", emergency: "Emergency numbers", checking: "Drug checking", law: "Drug treaties by country", methods: "How we check facts", about: "About us", glossary: "Words explained", howto: "How to read this site", wanted: "On our list", auto: "Written with AI", review: "Review queue", quiz: "Myth or fact?", notfound: "Page not found" };
 let currentSlug = MONO.slug;   // the drug page last shown (the review queue lists its claims)
 function setTitle(t) { document.title = t ? t + " · Pharmakon" : "Pharmakon: what the research says about drugs"; }
 // after a page change, keyboard and screen-reader users start at the page heading
@@ -991,7 +991,7 @@ function buildIndex() {
   // (2.12) the pages our system started for drugs people asked about that had no page: found by their names like any drug
   if (typeof AUTO_PAGES === "object" && AUTO_PAGES) Object.keys(AUTO_PAGES).forEach(k => {
     const names = [AUTO_PAGES[k]].concat(typeof AUTO_NAMES === "object" && AUTO_NAMES ? Object.keys(AUTO_NAMES).filter(n => AUTO_NAMES[n] === k) : []).map(norm).filter(Boolean);
-    INDEX.push({ type: "drug", kind: "A page our system started", title: AUTO_PAGES[k], prime: new Set(names), names: [...new Set(names)], text: "", href: "#auto/p-" + k });
+    INDEX.push({ type: "drug", kind: "New page", title: AUTO_PAGES[k], prime: new Set(names), names: [...new Set(names)], text: "", href: "#auto/p-" + k });
   });
   const asked = buildAnswerIndex();
   CLAIMS.filter(c => !asked.has(c.id)).forEach(c => INDEX.push({ type: "claim", kind: "Finding · " + (subBySlug[c.substance] ? subBySlug[c.substance].name : c.substance), title: claimText(c), t: norm(claimText(c)), text: norm(c.statement + " " + c.outcome + " " + c.exposure), href: "#" + c.id, badge: editorApproved(c) ? "Approved" : readerStamp(c.verification.status).split(":")[0], badgeCls: editorApproved(c) ? "ok" : "draft" }));
@@ -1002,7 +1002,7 @@ function buildIndex() {
   Object.keys(dcBy).forEach(c => INDEX.push({ type: "country", kind: "Drug checking · " + dcBy[c] + " service" + (dcBy[c] === 1 ? "" : "s"), title: c, names: [norm(c)], href: "#checking/c-" + encodeURIComponent(c), order: 1 }));
   WL_COUNTRIES.forEach(c => INDEX.push({ type: "country", kind: "Drug treaties", title: ctryName(c.name), names: [norm(c.name), norm(ctryName(c.name))], href: "#law/c-" + encodeURIComponent(ctryName(c.name)), order: 2 }));
   Object.keys(PLANNED_QUESTIONS).forEach(slug => PLANNED_QUESTIONS[slug].forEach(q => INDEX.push({ type: "question", kind: "Open question · " + (subBySlug[slug] ? subBySlug[slug].name : slug), title: q, t: norm(q), text: norm(slug), href: "#s-" + slug, badge: "Not answered yet", badgeCls: "planned" })));
-  [["Emergency numbers, country by country", "emergency", "emergency numbers overdose ambulance help poison centre support lines 112 911 999 000"], ["Drug checking services, country by country", "checking", "drug checking pill testing testing service analysis what is in my drug test kit"], ["Drug treaties by country", "law", "law legal treaties conventions un country illegal legal status"], ["Statistics: official figures", "numbers", "statistics numbers prevalence figures euda unodc nsduh world europe countries deaths treatment seizures"], ["How to read this site", "howto", "claims certainty dots status evidence study card plain precise"], ["Is it safe to mix? What happens when drugs are combined", "interactions", "combinations mixing interactions combos opioids benzodiazepines benzos alcohol gabapentin pregabalin methadone buprenorphine"], ["Words explained", "glossary", "glossary terms definitions words meaning"], ["How we check facts", "methods", "methods protocol search risk of bias grade verification corrections"], ["About us", "about", "about who we are ai statement name pharmakon"], ["On our list", "wanted", "questions not answered yet waiting list requests asked coming soon"], ["Written by our system", "auto", "machine written automatic answers not yet checked by a person ai system new"]].forEach(p => INDEX.push({ type: "page", kind: "Page", title: p[0], t: norm(p[0]), text: norm(p[2]), href: "#" + p[1], id: p[1] }));
+  [["Emergency numbers, country by country", "emergency", "emergency numbers overdose ambulance help poison centre support lines 112 911 999 000"], ["Drug checking services, country by country", "checking", "drug checking pill testing testing service analysis what is in my drug test kit"], ["Drug treaties by country", "law", "law legal treaties conventions un country illegal legal status"], ["Statistics: official figures", "numbers", "statistics numbers prevalence figures euda unodc nsduh world europe countries deaths treatment seizures"], ["How to read this site", "howto", "claims certainty dots status evidence study card plain precise"], ["Is it safe to mix? What happens when drugs are combined", "interactions", "combinations mixing interactions combos opioids benzodiazepines benzos alcohol gabapentin pregabalin methadone buprenorphine"], ["Words explained", "glossary", "glossary terms definitions words meaning"], ["How we check facts", "methods", "methods protocol search risk of bias grade verification corrections"], ["About us", "about", "about who we are ai statement name pharmakon"], ["On our list", "wanted", "questions not answered yet waiting list requests asked coming soon"], ["Written with AI", "auto", "written with ai machine written automatic answers new our system"]].forEach(p => INDEX.push({ type: "page", kind: "Page", title: p[0], t: norm(p[0]), text: norm(p[2]), href: "#" + p[1], id: p[1] }));
 }
 function scoreItem(it, q, words, emergency, ctx) {
   if (it.type === "answer") return [ctx ? scoreAnswer(it, ctx) : 0, false];
@@ -1046,26 +1046,38 @@ function scoreItem(it, q, words, emergency, ctx) {
   return [sc, false];
 }
 let searchHits = [];
-// a few real questions to try: for the most-looked-up drugs, the first checked question of a topic (the ones In short shows),
-// one per drug, a new set on each visit; short ones only, and none that only makes sense after another ("What about…")
-let SUGGEST = null;
-function suggestHtml() {
+// a few real questions to try (2.24.1; the senior author, 19 November 2026, 17:46: "the questions should be in random order and always new ones
+// should appear"): each time the box opens, a new draw at random, questions this device has not been shown first, one per drug, from what
+// people ask most about each drug (its first twelve by demand); short ones only, and none that only makes sense after another ("What about…")
+let SUGGEST = null, SUG_POOL = null;
+const SUG_KEY = "pk-sug-seen";
+function sugSeen() { try { return new Set(JSON.parse(localStorage.getItem(SUG_KEY) || "[]")); } catch (e) { return new Set(); } }
+function sugKeep(ids) { try { localStorage.setItem(SUG_KEY, JSON.stringify(ids.slice(-600))); } catch (e) {} }
+function suggestDraw(ok) {
+  if (!SUG_POOL) SUG_POOL = Object.keys(subBySlug).flatMap(sl => byDemand(drugQuestions(sl).filter(ok)).slice(0, 12).map(x => ({ sl, x })));
+  const last = new Set((SUGGEST || []).map(s => s.x[0])), seen = sugSeen();
+  let pool = SUG_POOL.filter(s => !seen.has(s.x[0]) && !last.has(s.x[0]));
+  if (new Set(pool.map(s => s.sl)).size < 5) { seen.clear(); pool = SUG_POOL.filter(s => !last.has(s.x[0])); }   // (every one was shown on this device: start again)
+  const out = [], drugs = new Set();
+  for (const s of shuffle(pool.slice())) { if (drugs.has(s.sl)) continue; drugs.add(s.sl); out.push(s); if (out.length === 5) break; }
+  sugKeep([...seen, ...out.map(s => s.x[0])]);
+  return out;
+}
+function suggestHtml(fresh) {
   const ok = ([id, q]) => claimById[id] && claimById[id].verification.status !== "draft" && (SIMPLE.claims || {})[id] && q.split(" ").length <= 10 && !/^(what about|and |or |but )/i.test(q);
   // (2.15: "the search engine should be more consistent throughout the website") on a drug's page the box is about that drug
   // ("Ask Insight about cannabis"), so what it offers before a word is typed is what people ask most about that drug, not about others
   const here = typeof insCtx === "function" ? insCtx().drug : null;
   if (here) { const top = byDemand(drugQuestions(here).filter(ok)).slice(0, 5);
     if (top.length) return '<p class="sr-hint">Most asked about ' + esc(pageWord(here)) + "</p>" + top.map(x => '<a class="sr-ans sr-sug" href="#s-' + here + "/q-" + esc(x[0]) + '"><span class="t">' + esc(x[1]) + "</span></a>").join(""); }
-  if (!SUGGEST) {
-    SUGGEST = shuffle(POPULAR.filter(sl => subBySlug[sl]).map(sl => { const top = roundRobin(drugQuestions(sl).filter(ok)).slice(0, 3); return top.length ? { sl, x: top[Math.floor(Math.random() * top.length)] } : null; }).filter(Boolean)).slice(0, 5);
-  }
+  if (!SUGGEST || fresh) SUGGEST = suggestDraw(ok);
   return SUGGEST.length ? '<p class="sr-hint">Try a question like these</p>' + SUGGEST.map(({ sl, x }) => '<a class="sr-ans sr-sug" href="#s-' + sl + "/q-" + esc(x[0]) + '"><span class="k">' + esc(drugName(sl)) + '</span><span class="t">' + esc(x[1]) + "</span></a>").join("") : "";
 }
 function runSearch(raw) {
   const box = document.getElementById("search-results"); const live = document.getElementById("search-count");
   const q = norm(raw);
   // an empty box with the cursor in it shows a few real questions to try (recognition, not recall); otherwise it closes
-  if (!q) { const sug = document.activeElement === document.getElementById("search") ? suggestHtml() : ""; box.innerHTML = sug; box.hidden = !sug; if (live) live.textContent = sug ? "Some questions you can ask" : ""; insightAfterSearch(raw); return; }
+  if (!q) { const sug = document.activeElement === document.getElementById("search") ? suggestHtml(box.hidden || !box.querySelector("a.sr-sug")) : "";   /* (a new draw each time they come into view) */ box.innerHTML = sug; box.hidden = !sug; if (live) live.textContent = sug ? "Some questions you can ask" : ""; insightAfterSearch(raw); return; }
   const words = q.split(" ");
   // "help" or "breathing" inside a longer question is a question, not an emergency
   const emergency = EMERGENCY_TERMS.some(e => e === q || (q.length >= 3 && e.startsWith(q)) || (e.length >= 4 && wordStart(q, e) && (words.length <= 3 || !["help", "breathing", "crisis", "helpline"].includes(e))));

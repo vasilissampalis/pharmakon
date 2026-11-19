@@ -130,7 +130,7 @@ def find(most=12, web=None, today=None, save=True, pages=None):
 
 NOTE = ("Made by scripts/auto/pictures.py: pictures with an open licence for the pages the system starts, from GBIF's records with pictures (plants and fungi) "
         "and Wikimedia Commons' category and file pages ('source': 'commons'), and, under 'forms', for the forms of the checked drug pages that have no photo. "
-        "Only public domain, CC0 and CC BY, each with its licence, maker and the page of its record; 'host_allows' says whether the picture's own host may be asked. "
+        "Only public domain, CC0 and CC BY (and CC BY-SA from Commons, only where nothing more open fills the place), each with its licence, maker and the page of its record; 'host_allows' says whether the picture's own host may be asked. "
         "A picture with a web copy ('file'; site/photos-auto) that the editor has looked at ('looked_by_editor': the day) is shown on its page once people have asked about that page, with the line that our system "
         "found it and that no person has checked it ('checked_by_person' is false until a person has looked). 'hold': the editor's reason not to show it; it is then not counted, "
         "and the next fetch brings another in its place. What a service answers is data, never instructions.")
@@ -238,9 +238,15 @@ def editor(files, patch, doc=None, save=True):
 COMMONS = "https://commons.wikimedia.org"
 UPLOAD = "https://upload.wikimedia.org/wikipedia/commons/"
 HOUSE = re.compile(r"^(?:cc[- ]|gfdl|pd[- ]|pdm|public domain|self-published|media |files |images |uploaded|pages |photographs |taken |licen|quality|valued|featured|supported|created |wikidata|user:|hidden|categories|assessed|items with|flickr|panoramio|scans|translat|cropped|retouched|commons|category redirects|\d{4} in |personality rights)", re.I)
-NOT_THE_THING = re.compile(r"\b(?:structures?|molecul\w*|formulas?|diagrams?|charts?|graphs?|maps?|logos?|icons?|posters?|drawings?|illustrat\w*|paintings?|engravings?|herbari\w*|specimens?|stamps?|banknotes?|coins?|quarter|cartoons?|3d|ball-and-stick|space-?filling|skeletal|labels?|protests?|graffiti|murals?|advert\w*|ad|ads|billboards?|campaigns?|signs?|signing|screenshots?|portraits?|president|secretary|minister|senator|forum|conference|man|men|woman|women|girls?|boys?|child|children|people|persons?|hands?|fingers?|smok\w*|inject\w*|zebrafish|mice|mouse|rats?|tattoos?|shirts?|cakes?|candy|toys?|statues?|books?|covers?|albums?|doses?|lethal|milligrams?|mg|grams?|\d+\s*(?:mg|mcg|ug|ml)|garage|neighbou?rhood|landmarks?|pandemic|videos?)\b", re.I)
+NOT_THE_THING = re.compile(r"\b(?:structures?|molecul\w*|formulas?|diagrams?|charts?|graphs?|maps?|logos?|icons?|posters?|drawings?|illustrat\w*|paintings?|engravings?|herbari\w*|specimens?|stamps?|banknotes?|coins?|quarter|cartoons?|3d|ball-and-stick|space-?filling|skeletal|labels?|protests?|graffiti|murals?|advert\w*|ad|ads|billboards?|campaigns?|signs?|signing|screenshots?|portraits?|president|secretary|minister|senator|forum|conference|man|men|woman|women|girls?|boys?|child|children|people|persons?|hands?|fingers?|smok\w*|inject\w*|zebrafish|mice|mouse|rats?|tattoos?|shirts?|cakes?|candy|toys?|statues?|books?|covers?|albums?|doses?|lethal|milligrams?|mg|grams?|\d+\s*(?:mg|mcg|ug|ml)|garage|neighbou?rhood|landmarks?|pandemic|videos?|police|raids?|arrest\w*|evidence)\b", re.I)
 PHOTO = re.compile(r"\.jpe?g$", re.I)
 SHORT_SIDE, PER_FORM, AGAIN_DAYS, LOOK_AT = 600, 3, 30, 24      # LOOK_AT: file pages read in one category, at most
+# The licence rule (docs/WRITING-RULES.md, "Licences": "Public domain, CC0 or CC BY only (CC BY-SA only if nothing else exists, marked)").
+# The senior author, 19 November 2026, 17:44, asked whether pictures under CC BY-SA may be shown (most photos on Commons carry it): "do
+# whatever is best. if that's best, do it". So, as for the checked photos: CC BY-SA too, with its maker and licence shown, only where no picture
+# under a more open licence fills the place. A look made under an older rule is made again once (RULE).
+RULE = "2026-11-19: CC BY-SA only where nothing more open exists"
+SA = re.compile(r"^CC BY-SA ")
 SKIP_FORM = re.compile(r"\b(?:medicines?|uses|mixtures?)\b", re.I)      # a form that is a use, a medicine or a mixture: no picture of its own to look for
 SYN = {"tablet": ["pill"], "gelatin": ["gel"], "microdot": ["micro dot"]}
 
@@ -340,16 +346,26 @@ def commons_category(web, name, follow=True):
 
 
 def free_licence(shorts):
-    """The licence the site takes a file under, from its page's licence lines: 'Public domain', 'CC0 1.0' or 'CC BY x.y', the most open one
-    it carries; None where none is open enough (CC BY-SA, GFDL, NC, ND, or none)."""
-    best = None
+    """The licence the site takes a file under, from its page's licence lines: 'Public domain', 'CC0 1.0', 'CC BY x.y' or 'CC BY-SA x.y' (a
+    country's version keeps its two letters: 'CC BY-SA 2.0 FR'), the most open one it carries; None where none is open enough (GFDL alone,
+    NC, ND, or none)."""
+    best, rank = None, 9
     for s in shorts:
         s = re.sub(r"\s+", " ", s).strip()
         if re.fullmatch(r"(?i)public domain|pdm", s): return "Public domain"
-        if re.fullmatch(r"(?i)cc0(?: 1\.0)?", s): best = "CC0 1.0"
-        m = re.fullmatch(r"(?i)cc[ -]by ([1-4]\.0|2\.5)", s)
-        if m and not best: best = "CC BY " + m.group(1)
+        if re.fullmatch(r"(?i)cc0(?: 1\.0)?", s) and rank > 1: best, rank = "CC0 1.0", 1
+        m = re.fullmatch(r"(?i)cc[ -]by ([1-4]\.0|2\.5)( [a-z]{2})?", s)
+        if m and rank > 2: best, rank = "CC BY " + m.group(1) + (m.group(2) or "").upper(), 2
+        m = re.fullmatch(r"(?i)cc[ -]by-sa ([1-4]\.0|2\.5)( [a-z]{2})?", s)
+        if m and rank > 3: best, rank = "CC BY-SA " + m.group(1) + (m.group(2) or "").upper(), 3
     return best
+
+
+def licence_url(lic):
+    """The licence's own page: CC0's, or a CC BY or CC BY-SA version (a country's version under its two letters); none for public domain."""
+    if lic == "CC0 1.0": return "https://creativecommons.org/publicdomain/zero/1.0/"
+    m = re.fullmatch(r"CC BY(-SA)? ([1-4]\.0|2\.5)(?: ([A-Z]{2}))?", lic)
+    return "https://creativecommons.org/licenses/by" + (m.group(1) or "").lower() + "/" + m.group(2) + "/" + ((m.group(3).lower() + "/") if m.group(3) else "") if m else ""
 
 
 def commons_picture(web, f, words, also=None):
@@ -369,7 +385,7 @@ def commons_picture(web, f, words, also=None):
     said = (r.out.get("licensetpl_attr") or [""])[0].strip() or (r.out.get("aut") or [""])[0]
     maker = re.sub(r"\s+", " ", next((x for x in said.split("\n") if x.strip()), "")).strip(" .;,")              # (a creator's card holds more lines: the first is the name)
     if re.fullmatch(r"(?i)(?:unknown|anonymous|unknown author|author unknown)?", maker): maker = ""
-    if lic.startswith("CC BY") and not maker: return None, "CC BY with no maker named"
+    if lic.startswith("CC BY") and not maker: return None, "CC BY with no maker named"                        # (CC BY-SA too)
     hit = names_in(words, title + " " + " ".join(cats) + " " + " ".join(r.out.get("desc") or []))
     if not hit: return None, "it does not name the thing"
     if also and not names_in(also, title + " " + " ".join(cats) + " " + " ".join(r.out.get("desc") or [])): return None, "it does not name the drug"
@@ -378,14 +394,15 @@ def commons_picture(web, f, words, also=None):
     w, h = (int(m.group(1).replace(",", "")), int(m.group(2).replace(",", ""))) if m else (f["w"], f["h"])
     try: rules, _ = web.rules(r.orig); may = bool(rules) and bool(rules.allowed(r.orig))
     except Exception: may = False
-    url = "https://creativecommons.org/publicdomain/zero/1.0/" if lic == "CC0 1.0" else "https://creativecommons.org/licenses/by/" + lic[6:] + "/" if lic.startswith("CC BY ") else ""
-    return {"url": r.orig, "licence": lic, "licence_url": url, "maker": maker[:120], "record": COMMONS + f["href"], "page": COMMONS + f["href"], "host": "upload.wikimedia.org",
+    return {"url": r.orig, "licence": lic, "licence_url": licence_url(lic), "maker": maker[:120], "record": COMMONS + f["href"], "page": COMMONS + f["href"], "host": "upload.wikimedia.org",
             "host_allows": may, "country": "", "day": "", "source": "commons", "title": title[:160], "w": w, "h": h, "matched": hit[:4]}, ""
 
 
 def stale(e, today, days=AGAIN_DAYS):
     """A look that should be made again: none yet, or one more than 'days' old that left nothing to show."""
     if not e or not e.get("found_on"): return True
+    if e.get("source") == "commons" or "words" in e:                                          # (a look at Commons; a form's look)
+        if e.get("rule") != RULE: return True
     if any(not p.get("hold") and not p.get("failed") for p in e.get("pictures") or []): return False
     try: return (datetime.date.fromisoformat(today) - datetime.date.fromisoformat(e["found_on"])).days >= days
     except ValueError: return True
@@ -417,14 +434,17 @@ def commons_pages(web, doc, most, today, pages=None):
             if read >= most: return read
             cat = commons_category(web, n); read += 1
             if cat is None or "said" in cat:
-                e["species"][key] = {"name": n, "kind": "thing", "source": "commons", "commons": n, "found_on": today if cat is None else "", "said": "Commons has no category of this name" if cat is None else cat["said"]}; continue
+                e["species"][key] = {"name": n, "kind": "thing", "source": "commons", "commons": n, "found_on": today if cat is None else "", "rule": RULE, "said": "Commons has no category of this name" if cat is None else cat["said"]}; continue
             kind = kinds.get(n) or "thing"; pics = [p for p in (e["species"].get(key) or {}).get("pictures") or [] if p.get("file") or p.get("hold")]; urls = {p["url"] for p in pics}
             ranked = sorted([f for f in cat["files"] if PHOTO.search(f["t"]) and min(f["w"], f["h"]) >= SHORT_SIDE and not NOT_THE_THING.search(f["t"])], key=lambda f: (not names_in(words, f["t"]), -min(f["w"], f["h"])))
+            new = []
             for f in ranked[:LOOK_AT]:
-                if len([p for p in pics if not p.get("hold")]) >= PER_SPECIES or read >= most: break
+                if sum(1 for p in pics + new if not p.get("hold") and not SA.match(p["licence"])) >= PER_SPECIES or read >= most: break      # (enough under open licences)
                 read += 1; p, _ = commons_picture(web, f, words)
-                if p and p["url"] not in urls: pics.append(p); urls.add(p["url"])
-            e["species"][key] = {"name": cat["name"], "kind": kind, "source": "commons", "commons": n, "found_on": today, "files_in_category": len(cat["files"]), "pictures": pics}
+                if p and p["url"] not in urls: new.append(p); urls.add(p["url"])
+            new.sort(key=lambda p: bool(SA.match(p["licence"])))                                  # open licences first; CC BY-SA only for the places left
+            pics += new[:max(0, PER_SPECIES - sum(1 for p in pics if not p.get("hold")))]
+            e["species"][key] = {"name": cat["name"], "kind": kind, "source": "commons", "commons": n, "found_on": today, "rule": RULE, "files_in_category": len(cat["files"]), "pictures": pics}
             print(f"pictures: {page}: Commons, {cat['name']}: {sum(1 for p in pics if not p.get('file'))} new pictures with an open licence among {len(cat['files'])} files")
     return read
 
@@ -463,11 +483,13 @@ def commons_forms(web, doc, most, today, forms=None, photos=None, subs=None, ali
             for fi in got["files"]:
                 if fi["t"] in seen or not PHOTO.search(fi["t"]) or min(fi["w"], fi["h"]) < SHORT_SIDE or NOT_THE_THING.search(fi["t"]): continue
                 fits = [f for f in want if names_in(W[f["id"]], fi["t"] + " " + got["name"])]
-                if len(fits) != 1 or len([p for p in found[fits[0]["id"]] if not p.get("hold")]) >= PER_FORM or read >= most: continue
+                if len(fits) != 1 or sum(1 for p in found[fits[0]["id"]] if not p.get("hold") and not SA.match(p["licence"])) >= PER_FORM or read >= most: continue
                 seen.add(fi["t"]); read += 1; p, _ = commons_picture(web, fi, W[fits[0]["id"]], also=D)
                 if p and p["url"] not in {q["url"] for q in found[fits[0]["id"]]}: found[fits[0]["id"]].append(p)
         for f in want:
-            FM[drug + "/" + f["id"]] = {"drug": drug, "form": f["id"], "name": f["name"], "words": W[f["id"]], "categories": done, "found_on": today, "pictures": found[f["id"]]}
+            old = [p for p in found[f["id"]] if p.get("file") or p.get("hold")]; new = sorted([p for p in found[f["id"]] if not (p.get("file") or p.get("hold"))], key=lambda p: bool(SA.match(p["licence"])))
+            found[f["id"]] = old + new[:max(0, PER_FORM - sum(1 for p in old if not p.get("hold")))]           # open licences first; CC BY-SA only for the places left
+            FM[drug + "/" + f["id"]] = {"drug": drug, "form": f["id"], "name": f["name"], "words": W[f["id"]], "categories": done, "found_on": today, "rule": RULE, "pictures": found[f["id"]]}
             print(f"pictures: {drug}, {f['name']}: {sum(1 for p in found[f['id']] if not p.get('file'))} new pictures with an open licence (words: {', '.join(W[f['id']])}; categories read: {len(done)})")
     return read
 
@@ -490,7 +512,7 @@ def requests(folder):
         except (OSError, ValueError): print("pictures: a request that is not JSON:", f.name); continue
         if isinstance(req, dict) and req.get("do") == "find": find(most=max(1, min(40, int(req.get("max") or 12)))); done += 1
         elif isinstance(req, dict) and req.get("do") == "fetch": fetch(most=max(1, min(40, int(req.get("max") or 12)))); done += 1
-        elif isinstance(req, dict) and req.get("do") == "daily": daily(most=max(1, min(200, int(req.get("max") or 80)))); done += 1
+        elif isinstance(req, dict) and req.get("do") == "daily": daily(most=max(1, min(200, int(req.get("max") or 80))), fetch_most=max(1, min(40, int(req.get("fetch") or 12)))); done += 1
         else: print("pictures: a request that asks for nothing this script does:", f.name)
     print(f"pictures: {done} request(s) done")
 
@@ -608,12 +630,16 @@ def selftest_commons(Page):
             n = url[len(COMMONS + "/wiki/File:"):].replace("_", " ")
             if n in FILE: return Page(FILE[n].encode(), req.full_url)
             raise urllib.error.HTTPError(req.full_url, 404, "Not Found", {}, None)
-        if url.startswith(UPLOAD) and "/thumb/" in url and url.endswith("/1280px-LSD_microdots_on_a_tray.jpg"): return Page(jpg, req.full_url)
+        if url.startswith(UPLOAD) and "/thumb/" in url and (url.endswith("/1280px-LSD_microdots_on_a_tray.jpg") or url.endswith("/1280px-Microdots_share_alike.jpg")): return Page(jpg, req.full_url)
         if url.startswith(UPLOAD) and url.endswith("/Window_pane_LSD.jpg"): return Page(jpg, req.full_url)
         raise AssertionError("not expected: " + url)
     web = O.Web(opener=opener)
     # the rules, one by one
-    assert free_licence(["CC BY-SA 4.0 ", "GFDL"]) is None and free_licence(["GFDL", "CC BY 2.5"]) == "CC BY 2.5" and free_licence(["CC BY 4.0", "CC0"]) == "CC0 1.0" and free_licence(["PDM"]) == "Public domain" and free_licence([]) is None
+    assert free_licence(["CC BY-SA 4.0 ", "GFDL"]) == "CC BY-SA 4.0" and free_licence(["GFDL"]) is None and free_licence(["CC BY-NC-SA 2.0"]) is None and free_licence(["CC BY-ND 4.0"]) is None
+    assert free_licence(["CC BY-SA 3.0", "CC BY 2.0"]) == "CC BY 2.0" and free_licence(["cc by-sa 2.0 fr"]) == "CC BY-SA 2.0 FR" and free_licence(["GFDL", "CC BY 2.5"]) == "CC BY 2.5" and free_licence(["CC BY 4.0", "CC0"]) == "CC0 1.0"
+    assert free_licence(["PDM"]) == "Public domain" and free_licence([]) is None
+    assert licence_url("CC BY-SA 2.0 FR") == "https://creativecommons.org/licenses/by-sa/2.0/fr/" and licence_url("CC BY 4.0") == "https://creativecommons.org/licenses/by/4.0/" and licence_url("Public domain") == ""
+    assert stale({"source": "commons", "found_on": "2026-11-19", "pictures": [{"url": "x"}]}, "2026-11-20")              # a look under an older rule is made again
     two = [{"name": "Blotters", "what": "Small squares of absorbent paper"}, {"name": "Gelatine squares", "what": "Thin squares of gelatine ('window panes')."}]
     assert form_words(two, two[1]) == ["gelatin", "gel", "window pane"]                                                    # "squares" names the blotters too: not a word of the gel tabs
     lsd = [{"id": "blotters", "name": "Blotters", "what": "Small squares of absorbent paper, often printed with designs.", "photos": ["lsd-blotter"]},
@@ -631,7 +657,7 @@ def selftest_commons(Page):
     F = doc["forms"]
     assert sorted(F) == ["lsd/gel", "lsd/microdots"], sorted(F)
     m, g = F["lsd/microdots"]["pictures"], F["lsd/gel"]["pictures"]
-    assert [x["title"] for x in m] == ["LSD microdots on a tray.jpg"] and m[0]["licence"] == "CC BY 4.0" and m[0]["maker"] == "Ann Lee" and m[0]["licence_url"] == "https://creativecommons.org/licenses/by/4.0/" and m[0]["host_allows"] is True, m
+    assert [x["title"] for x in m] == ["LSD microdots on a tray.jpg", "Microdots share alike.jpg"] and m[1]["licence"] == "CC BY-SA 4.0" and m[1]["licence_url"] == "https://creativecommons.org/licenses/by-sa/4.0/" and m[0]["licence"] == "CC BY 4.0" and m[0]["maker"] == "Ann Lee" and m[0]["licence_url"] == "https://creativecommons.org/licenses/by/4.0/" and m[0]["host_allows"] is True, m
     assert [x["title"] for x in g] == ["Window pane LSD.jpg"] and g[0]["licence"] == "Public domain" and g[0]["maker"] == "" and g[0]["w"] == 1200 and g[0]["matched"] == ["gelatin", "gel", "window pane"], g
     assert F["lsd/gel"]["categories"] == ["Lysergic acid diethylamide", "LSD", "LSD gel tabs"], F["lsd/gel"]["categories"]       # "Blotter art" names no drug; "LSD in art" names no missing form
     bad = [u for u in asked if re.search(r"/w/|/api/|Special:|molecule|Man_holding|small\.jpg|Blotter_squares", u)]
@@ -641,16 +667,16 @@ def selftest_commons(Page):
     d2 = {"pages": {"betel-nut-areca": {"name": "Betel nut (areca)", "species": {"Areca catechu": {"gbif": 1, "name": "Areca catechu", "kind": "plant", "pictures": []}}}}}
     commons_pages(web, d2, 40, "2026-11-19", pages={"Betel nut (areca)": ["Areca nut", "Areca catechu"]})
     sp = d2["pages"]["betel-nut-areca"]["species"]
-    assert [x["title"] for x in sp["commons:Areca nut"]["pictures"]] == ["Areca nuts on a plate.jpg", "Palm infructescence.jpg"] and sp["commons:Areca nut"]["kind"] == "thing", sp["commons:Areca nut"]
+    assert [x["title"] for x in sp["commons:Areca nut"]["pictures"]] == ["Areca nuts on a plate.jpg", "Palm infructescence.jpg", "Betel quid with leaf.jpg"] and sp["commons:Areca nut"]["kind"] == "thing", sp["commons:Areca nut"]   # (CC BY-SA last)
     assert sp["commons:Areca catechu"]["said"] == "Commons has no category of this name" and sp["commons:Areca catechu"]["found_on"] == "2026-11-19" and sp["commons:Areca nut"]["pictures"][1]["licence"] == "CC BY 2.5"
     assert not stale(sp["commons:Areca nut"], "2026-12-30") and stale(sp["commons:Areca catechu"], "2026-12-30") and not stale(sp["commons:Areca catechu"], "2026-11-30")
     # fetching: a wide original is asked for at 1280 px; a form's copies are named f-<drug>-<form>-<n>; the editor's marks reach them
     with tempfile.TemporaryDirectory() as tmp:
         fetch(web=web, today="2026-11-19", save=False, doc={"forms": F}, out_dir=tmp)
-        assert m[0]["file"] == "f-lsd-microdots-1" and m[0]["fetched_from"].endswith("/thumb/a/ab/LSD_microdots_on_a_tray.jpg/1280px-LSD_microdots_on_a_tray.jpg") and g[0]["file"] == "f-lsd-gel-1" and g[0]["fetched_from"].endswith("/a/ab/Window_pane_LSD.jpg"), (m, g)
+        assert m[1]["file"] == "f-lsd-microdots-2" and m[0]["file"] == "f-lsd-microdots-1" and m[0]["fetched_from"].endswith("/thumb/a/ab/LSD_microdots_on_a_tray.jpg/1280px-LSD_microdots_on_a_tray.jpg") and g[0]["file"] == "f-lsd-gel-1" and g[0]["fetched_from"].endswith("/a/ab/Window_pane_LSD.jpg"), (m, g)
         assert Image.open(pathlib.Path(tmp) / "f-lsd-gel-1-m.webp").size == (800, 600)
         assert editor(["f-lsd-gel-1"], {"looked_by_editor": "2026-11-19"}, doc={"forms": F}, save=False) == ["f-lsd-gel-1"] and g[0]["looked_by_editor"] == "2026-11-19" and g[0]["checked_by_person"] is False
-    print("pictures selftest (Commons): ok (only category and file pages are read, never its search or API; public domain, CC0 and CC BY only, CC BY with its maker; share-alike and GFDL are not taken; "
+    print("pictures selftest (Commons): ok (only category and file pages are read, never its search or API; public domain, CC0 and CC BY, and CC BY-SA only for the places they leave, each with its maker; GFDL alone, NC and ND are not taken; "
           "no drawings, structures, people or small pictures; a form's picture names that form and its drug; a category that redirects is followed; a wide original is fetched at 1280 px)")
 
 

@@ -148,8 +148,8 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     h3 = await card("#tf");
     ok("after a reload the deck is where it was", h3.n === "2 of 10" && h3.q === home2.q && h3.flipped, JSON.stringify(h3));
     await go(p, "#quiz"); await p.click('#mf-pick [data-mfp="cannabis"]'); await p.waitForTimeout(500);
-    const can = await p.evaluate(() => ({ n: document.querySelector("#quizpage .mf-front .qz2-score").textContent, k: document.querySelector("#quizpage .qz2-k").textContent, pressed: document.querySelector('#mf-pick [data-mfp="cannabis"]').getAttribute("aria-pressed") }));
-    ok("Myth or fact? page: a drug can be chosen, and its own deck starts", /^1 of \d+$/.test(can.n) && /Cannabis/.test(can.k) && can.pressed === "true", JSON.stringify(can));
+    const can = await p.evaluate(() => { const q = (document.querySelector("#quizpage .mf-front .mf-q") || {}).textContent || ""; return { n: document.querySelector("#quizpage .mf-front .qz2-score").textContent, k: document.querySelector("#quizpage .qz2-k").textContent, mine: (SIMPLE.tf.cannabis || []).some(x => x.statement === q), pressed: document.querySelector('#mf-pick [data-mfp="cannabis"]').getAttribute("aria-pressed") }; });
+    ok("Myth or fact? page: a drug can be chosen, and its own deck starts (its cards drawn at random since 2.23.1: the first is one of that drug's)", /^1 of \d+$/.test(can.n) && can.mine && can.pressed === "true", JSON.stringify(can));
     await p.click('#mf-pick [data-mfp=""]'); await p.waitForTimeout(400);
     q2 = await card("#quizpage");
     ok("and All drugs brings the kept deck back", q2.n === "2 of 10" && q2.q === home2.q, JSON.stringify(q2));
@@ -291,18 +291,18 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     // (site 2.17; the senior author: "it should send the question immediately in every instance and the user should be notified") a question the site
     // has no answer to is sent by itself, and the page says so in the same place; nothing is pressed
     const before = await p.evaluate(() => ({ none: (document.querySelector(".sr-fit-none") || {}).textContent || "", btn: !!document.querySelector(".sr-fit button[data-ask]"), insNote: (document.querySelector(".sr-note") || {}).textContent || "" }));
-    ok("with the store on: no button to press, and the line at the head of the results says that a question we cannot answer is sent by itself", /We haven.t checked exactly this yet/.test(before.none) && !before.btn && /^Runs on your (phone|computer)\. A question we have no answer to is sent to our system by itself, so that it gets answered: no name, no address\.$/.test(before.insNote.trim()), JSON.stringify(before));
+    ok("with the store on: no button to press, and the line at the head of the results says that a question we cannot answer is sent by itself", /We haven.t checked exactly this yet/.test(before.none) && !before.btn && /^Runs on your (phone|computer)\. A question we have no answer to is sent on by itself, so that it gets answered: no name, no address\.$/.test(before.insNote.trim()), JSON.stringify(before));
     const early = [...ON.kv.keys()].filter(k => /^a?q:/.test(k)).length;
     await p.waitForSelector(".sr-fit .ask-auto-said", { timeout: 9000 }).catch(() => {});
     const said = await p.evaluate(() => (document.querySelector(".sr-fit .ask-auto-said") || {}).textContent || "");
-    ok("after a moment (not while it is being typed) the question is sent by itself, and the page says so in the same place, with a way to stop it", early === 0 && said === "Sent to our system. You can stay or come back: it is kept under “Your questions” on the start page. Don’t send mine", early + " | " + said);   // (2.23: what the system is doing stands under this line, so the line itself is shorter)
+    ok("after a moment (not while it is being typed) the question is sent by itself, and the page says so in the same place, with a way to stop it", early === 0 && said === "Sent. You can stay or come back: it is kept under “Your questions” on the start page. Don’t send mine", early + " | " + said);   // (2.23: what the system is doing stands under this line, so the line itself is shorter)
     const kept = [...ON.kv.entries()].filter(([k]) => k.startsWith("aq:")).map(([, v]) => JSON.parse(v));
     ok("the store holds it apart, marked as sent by the page: the question's words, its page, the site version, the day and a count, and nothing else", kept.length === 1 && kept[0].q === "is modafinil safe" && kept[0].a === 1 && Object.keys(kept[0]).sort().join() === "a,d,dn,first,last,n,q,v" && /^\d+\.\d+\.\d+$/.test(kept[0].v) && ![...ON.kv.keys()].some(k => k.startsWith("q:")), JSON.stringify(kept));
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     let list = await p.evaluate(() => { const b = document.getElementById("home-asked"); return { hidden: b.hidden, bar: (b.querySelector(".you-bar") || {}).textContent || "", words: /modafinil/.test(b.textContent), rows: [...document.querySelectorAll("#yousheet .aq")].map(r => r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent) }; });
     ok("start page (2.21): one quiet line, Your questions, with how many are in progress and no question's own words", !list.hidden && list.bar === "Your questions1 in progress" && !list.words, JSON.stringify(list));
     ok("its panel lists the question as sent and being checked", list.rows.length === 1 && /wait \| Sent\. We are checking · sent less than an hour ago \| is modafinil safe/.test(list.rows[0]), JSON.stringify(list));   // (2.15.2: a row says how long ago it was sent)
-    ok("the list says where it is kept, and that a question we had no answer to is sent by itself (and where that is switched off)", await p.evaluate(() => (document.querySelector("#yousheet .ev-eye") || {}).textContent === "Kept on this device only" && (document.querySelector("#yousheet .aq-note") || {}).textContent === "A question we had no answer to is sent to our system by itself (About us, Privacy switches that off). It works on them by itself, the ones people sent first, and keeps trying until an answer passes its checks. A question turns green here when it is answered."));
+    ok("the list says where it is kept, and that a question we had no answer to is sent by itself (and where that is switched off)", await p.evaluate(() => (document.querySelector("#yousheet .ev-eye") || {}).textContent === "Kept on this device only" && (document.querySelector("#yousheet .aq-note") || {}).textContent === "A question we had no answer to is sent on by itself to be answered (About us, Privacy switches that off). It turns green here when it is answered."));
     // (2.21) the line opens the panel at the right, built like the evidence of an answer: the same sheet, a Back button, a title; Back and the phone's Back close it
     await p.click("#home-asked .you-bar"); await p.waitForTimeout(400);
     const pan = await p.evaluate(() => { const s = document.getElementById("yousheet"), pn = s.querySelector(".panel"), r = pn.getBoundingClientRect(); return { open: s.classList.contains("open") && YOU.open, cls: s.className, back: (pn.querySelector(".ev-bar .ev-back") || {}).textContent || "", h: (pn.querySelector("#you-title") || {}).textContent, past: (pn.querySelector("#you-past") || {}).textContent, right: Math.round(innerWidth - r.right), focus: document.activeElement === pn.querySelector(".ev-back"), wide: document.documentElement.scrollWidth > innerWidth }; });
@@ -324,7 +324,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     // Enter sends at once (the sheet); "Don't send mine" turns it off on this device, and the way to send by hand is back
     await typeQ(p, "does modafinil cause hair loss"); await p.keyboard.press("Enter"); await p.waitForSelector("#evsheet.open .ins-none .ask-auto-said", { timeout: 6000 }).catch(() => {});
     const atOnce = await p.evaluate(() => ({ said: (document.querySelector("#evsheet .ins-none .ask-auto-said") || {}).textContent || "", btn: !!document.querySelector("#evsheet .ins-none button[data-ask]") }));
-    ok("Enter: the sheet sends the question at once and says so", /^Sent to our system\./.test(atOnce.said) && !atOnce.btn && [...ON.kv.keys()].filter(k => k.startsWith("aq:")).length === 4, JSON.stringify(atOnce));
+    ok("Enter: the sheet sends the question at once and says so", /^Sent\. /.test(atOnce.said) && !atOnce.btn && [...ON.kv.keys()].filter(k => k.startsWith("aq:")).length === 4, JSON.stringify(atOnce));
     await p.click("#evsheet .ins-none button[data-auto-stop]"); await p.waitForTimeout(200);
     const stopped = await p.evaluate(() => ({ text: (document.querySelector("#evsheet .ins-none .ask-auto-said") || {}).textContent || "", off: localStorage.getItem("pk-auto") }));
     await p.keyboard.press("Escape"); await p.waitForTimeout(400); await p.fill("#search", ""); await p.waitForTimeout(100);
@@ -335,7 +335,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.click(".sr-fit button[data-ask]"); await p.waitForTimeout(900);
     const saidHand = await p.evaluate(() => (document.querySelector(".sr-fit .ask-said") || {}).textContent || ""), keptHand = [...ON.kv.entries()].filter(([k]) => k.startsWith("q:")).map(([, v]) => JSON.parse(v));
     ok("sent by hand: the page says it was sent, promises only what is true (no answer within the hour until the half-hourly run keeps it), and the store keeps it among the questions people chose to send",
-      saidHand === "Sent. Our system works on it by itself and keeps trying until an answer passes its checks. It turns green under “Your questions” on the start page." && await p.evaluate(() => AUTO_LOOP === false) && keptHand.length === 1 && keptHand[0].q === "does modafinil make you smarter" && Object.keys(keptHand[0]).sort().join() === "d,dn,first,last,n,q,v", saidHand + " " + JSON.stringify(keptHand));
+      saidHand === "Sent. It is worked on until an answer passes the checks. It turns green under “Your questions” on the start page." && await p.evaluate(() => AUTO_LOOP === false) && keptHand.length === 1 && keptHand[0].q === "does modafinil make you smarter" && Object.keys(keptHand[0]).sort().join() === "d,dn,first,last,n,q,v", saidHand + " " + JSON.stringify(keptHand));
     await p.evaluate(() => { localStorage.removeItem("pk-auto"); const a = JSON.parse(localStorage.getItem("pk-asked") || "[]").filter(x => /modafinil safe|for the liver/.test(x.q)); localStorage.setItem("pk-asked", JSON.stringify(a)); });
     await p.reload(); await p.waitForTimeout(900);
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
@@ -420,7 +420,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.fill("#search", ""); await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     const row = await p.evaluate(() => { const r = document.querySelector("#yousheet .aq"); return r ? r.className + " | " + r.querySelector(".aq-k").textContent + " | " + r.querySelector(".aq-q").textContent : ""; });
     ok("a listed question goes on the reader's own list by itself: Your questions keeps the LISTED question (never the words typed), as On our list, and the card says so in place of its button",
-      /onlist \| (?:In line\. Not tried yet|Working on it by itself|No answer passed our checks yet\. It tries again|Written\. An editor reads this kind first) · asked less than an hour ago \| How can you die from alcohol\?$/.test(row) && !onCard.btn && onCard.said === "It is on your list: we will tell you on this device when it is answered." && (await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked")).map(x => x.q).join("|"))) === "How can you die from alcohol?" && !reqs.some(x => /POST api\/ask/.test(x)), row + " " + JSON.stringify(onCard));   // (2.15.2: what our system has done with it so far, and since when)
+      /onlist \| (?:In line\. Not tried yet|Being answered|No answer passed the checks yet\. Trying again|Written\. An editor reads this kind first) · asked less than an hour ago \| How can you die from alcohol\?$/.test(row) && !onCard.btn && onCard.said === "It is on your list: we will tell you on this device when it is answered." && (await p.evaluate(() => JSON.parse(localStorage.getItem("pk-asked")).map(x => x.q).join("|"))) === "How can you die from alcohol?" && !reqs.some(x => /POST api\/ask/.test(x)), row + " " + JSON.stringify(onCard));   // (2.15.2: what our system has done with it so far, and since when)
     await shot(p, "390-home-onlist");
     // its own words instead
     await typeW(p, "does weed cause cancer"); await p.click("#search-results .sr-want .want-other"); await p.waitForTimeout(900);
@@ -590,22 +590,35 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const fa = await p.evaluate(() => { const li = [...document.querySelectorAll("#d-looks li.look")], g = li.find(x => /Gelatine squares/.test(x.textContent)), b = li.find(x => /Blotters/.test(x.textContent)), m = li.find(x => /Microdots/.test(x.textContent)), cr = document.querySelector("#d-looks details.look-credits");
       return { img: g && g.querySelector("img") ? g.querySelector("img").getAttribute("src") + " | " + g.querySelector("img").alt : "", line: g ? (g.querySelector(".look-auto-t") || {}).textContent || "" : "", blotLine: b ? !!b.querySelector(".look-auto-t") : null,
         micro: m ? !!m.querySelector("img") : null, credit: cr ? cr.textContent.replace(/\s+/g, " ") : "", links: cr ? [...cr.querySelectorAll("a")].map(a => a.href) : [] }; });
-    ok(w + " px (2.23.1): a form with no photo of its own (LSD's gelatine squares) shows the picture our system found for it, with a line under its words that a person has not checked it, and its maker, licence and file page among the credits; a form with its own photo, or with none found, is as before",
-      fa.img === "img/auto/kanna-1-t.webp | Gelatine squares: an example our system found" && fa.line === "Picture found by our system. A person has not checked it yet." && fa.blotLine === false && fa.micro === false &&
+    ok(w + " px (2.23.1): a form with no photo of its own (LSD's gelatine squares) shows the picture found for it, and its maker, licence and file page among the credits; a form with its own photo, or with none found, is as before",
+      fa.img === "img/auto/kanna-1-t.webp | Gelatine squares: an example" && fa.line === "" && fa.blotLine === false && fa.micro === false &&
         /Gelatine squares, Ann Lee, CC BY 4\.0, via Wikimedia Commons/.test(fa.credit) && fa.links.includes("https://commons.wikimedia.org/wiki/File:Window_pane_LSD.jpg") && fa.links.includes("https://creativecommons.org/licenses/by/4.0/"), JSON.stringify(fa));
     await p.evaluate(() => { delete AUTO_FORMS.lsd; });
     // (2.23.1) on a page the system started, a picture from a Commons category that is not a species: an example of the drug, said to come from Wikimedia Commons
     const th = await p.evaluate(() => { AUTO_PICS["zz-test"] = [{ file: "kanna-1", m: [800, 600], t: [400, 300], species: "Anabolic steroids", kind: "thing", maker: "", licence: "Public domain", licence_url: "", page: "https://commons.wikimedia.org/wiki/File:X.jpg", src: "commons", country: "" }];
       const d = document.createElement("div"); d.innerHTML = autoLooksHtml("zz-test"); delete AUTO_PICS["zz-test"];
       return { t: (d.querySelector(".look-t") || {}).textContent || "", alt: (d.querySelector("img") || {}).alt || "", credit: ((d.querySelector(".look-credits p") || {}).textContent || ""), href: (d.querySelector(".look-credits a") || {}).href || "", note: (d.querySelector(".auto-picnote") || {}).textContent || "" }; });
-    ok(w + " px (2.23.1): a started page's picture from Wikimedia Commons that shows the drug itself is “An example”, credited to its file page (public domain, so no licence link), and the note says where it comes from",
+    ok(w + " px (2.23.1): a started page's picture from Wikimedia Commons that shows the drug itself is “An example”, credited to its file page (public domain, so no licence link), and the note says only where it comes from",
       th.t === "An exampleAnabolic steroids" && th.alt === "An example of Anabolic steroids" && th.credit === "Photo 1: Wikimedia Commons, public domain." && th.href === "https://commons.wikimedia.org/wiki/File:X.jpg" &&
-        /They come from Wikimedia Commons, a library of pictures that people share under open licences\. A person here has not checked them yet\. They are examples: the same drug can look different, and different drugs can look the same\./.test(th.note), JSON.stringify(th));
+        /^From Wikimedia Commons\. They are examples: the same drug can look different, and different drugs can look the same\./.test(th.note) && !/our system|checked/i.test(th.note), JSON.stringify(th));
     await go(p, "#home"); await go(p, "#s-cannabis", 900);   // (back where the next check begins)
     // the empty box on a drug's page offers what people ask most about that drug
     await p.click("#search"); await p.waitForTimeout(600);
     const sug = await p.evaluate(() => ({ hint: (document.querySelector("#search-results .sr-hint") || {}).textContent || "", hrefs: [...document.querySelectorAll("#search-results a.sr-sug")].map(a => a.getAttribute("href")) }));
     ok(w + " px: before a word is typed, the box on the cannabis page offers what people ask most about cannabis", sug.hint === "Most asked about cannabis" && sug.hrefs.length >= 3 && sug.hrefs.every(h => h.startsWith("#s-cannabis/q-")), JSON.stringify(sug));
+    // (2.24.1; his words of 19 November, 17:46: "the questions should be in random order and always new ones should appear") elsewhere the box offers a
+    // new draw each time it opens: five questions of five drugs, none this device was shown before (until all were), kept on the device by number only
+    await go(p, "#home", 600); const draws = [];
+    for (let k = 0; k < 6; k++) {
+      await p.evaluate(() => { const s = document.getElementById("search"); s.blur(); if (typeof closeSearch === "function") closeSearch(); }); await p.waitForTimeout(150);
+      await p.click("#search"); await p.waitForTimeout(350);
+      draws.push(await p.evaluate(() => ({ hint: (document.querySelector("#search-results .sr-hint") || {}).textContent || "", hrefs: [...document.querySelectorAll("#search-results a.sr-sug")].map(a => a.getAttribute("href")) })));
+    }
+    const ids = draws.flatMap(d => d.hrefs.map(h => h.replace(/^.*\/q-/, ""))), kept = await p.evaluate(() => JSON.parse(localStorage.getItem("pk-sug-seen") || "[]"));
+    ok(w + " px (2.24.1): each time the box opens on the start page it offers a new draw: five questions of five different drugs, none shown before on this device, the numbers kept on the device",
+      draws.every(d => d.hint === "Try a question like these" && d.hrefs.length === 5 && new Set(d.hrefs.map(h => h.split("/")[0])).size === 5) && new Set(ids).size === 30 && ids.every(i => kept.includes(i)) && kept.every(i => /^cl_[a-z0-9_]+$/.test(i)),
+      draws.map(d => d.hrefs.map(h => h.replace(/^#s-/, "")).join(" ")).join(" || "));
+    await p.evaluate(() => { document.getElementById("search").blur(); if (typeof closeSearch === "function") closeSearch(); });
     // (2.16, 2.16.1) a question we have no answer to gets published research at once and BY ITSELF (no tap): the papers on its drug and key words,
     // from Europe PMC through the site's own server; only the drug's names and plain key words leave the device for it, never the sentence;
     // it stands there again when the question is typed again, sent or not; a question about dying is not looked up
@@ -672,9 +685,12 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
       await p.click("#search-results .ins-off [data-show-all]"); await p.waitForTimeout(200); const L2 = await read();
       ok(w + " px (2.22): “Show all” shows the rest in place, and its button is gone", !!L2 && L2.offSeen === L2.off.length && L2.all === "", JSON.stringify(L2 && [L2.offSeen, L2.off.length, L2.all]));
       // a jump leads to its block
-      const y0 = await p.evaluate(() => { const b = document.querySelector('#search-results .ins-jump [data-jump="official"]'); b.click(); return 1; }); await p.waitForTimeout(900);
-      const jumped = await p.evaluate(() => { const s = document.querySelector('#search-results .ins-slot[data-slot="official"]'), r = s.getBoundingClientRect(), a = document.activeElement; return { top: Math.round(r.top), h: innerHeight, focus: !!(a && s.contains(a)) }; });
-      ok(w + " px (2.22): a jump leads to its block and puts the reader there", y0 === 1 && jumped.top >= -4 && jumped.top < jumped.h * 0.75 && jumped.focus, JSON.stringify(jumped));
+      const y0 = await p.evaluate(() => { const y = Math.round(scrollY); const b = document.querySelector('#search-results .ins-jump [data-jump="official"]'); b.click(); return y; }); await p.waitForTimeout(900);
+      const jumped = await p.evaluate(() => { const s = document.querySelector('#search-results .ins-slot[data-slot="official"]'), r = s.getBoundingClientRect(), a = document.activeElement, box = document.getElementById("search-results"), bt = box.getBoundingClientRect().top;
+        return { top: Math.round(r.top), inBox: Math.round(r.top - bt), h: innerHeight, focus: !!(a && s.contains(a)), y: Math.round(scrollY), boxScroll: Math.round(box.scrollTop), scrolls: box.scrollHeight > box.clientHeight + 1, end: box.scrollTop + box.clientHeight >= box.scrollHeight - 2, boxH: box.clientHeight }; });
+      // (2.25.0; his words of 17:57: "the site has to get stationary and scroll down only in the dropdown") where the results box scrolls, only it moves
+      ok(w + " px (2.22, 2.25.0): a jump leads to its block and puts the reader there; where the results scroll in their own box, only that box moves, never the page", jumped.top >= -4 && jumped.top < jumped.h * 0.75 && jumped.focus &&
+        (!jumped.scrolls || (jumped.y === y0 && jumped.boxScroll > 0 && jumped.inBox >= -4 && (jumped.inBox < 60 || (jumped.end && jumped.inBox < jumped.boxH * 0.75)))), JSON.stringify([y0, jumped]));
       // the reader's own country's bodies first
       await p.evaluate(() => { PREF_COUNTRY = "Canada"; }); await p.fill("#search", ""); await p.fill("#search", "does lsd change your eye colour"); await p.waitForSelector("#search-results .ins-off .ins-off-l li", { timeout: 15000 }).catch(() => {}); await p.waitForTimeout(300);
       const L3 = await read(); await p.evaluate(() => { PREF_COUNTRY = ""; });
@@ -699,7 +715,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
         return { best: !!f.querySelector("a.sr-best"), line: (f.querySelector(".sr-fit-none") || {}).textContent || "", first: rows[0] ? rows[0].dataset.insight : "", h: [...f.querySelectorAll(".sr-fit-h")].map(x => x.textContent), rows: f.querySelectorAll(".ins-found-l li").length, exit: !!f.querySelector(".sr-exit"), kept: it ? [it.q, it.x, it.sent] : null }; }, pick && pick.id);
       const rec = [...ON.kv.entries()].filter(([k]) => k.startsWith("aq:")).map(([, v]) => JSON.parse(v)).find(v => pick && v.q === pick.q);
       ok(w + " px (2.22): one tap, and the same question is read as not answered, in place: the line, sent at once; what stood as the answer is the first of the closest answers we have; the research is there",
-        !!pick && !after.best && /^We haven’t checked exactly this yet\./.test(after.line) && /Sent to our system|You sent us this question/.test(after.line) && after.first === pick.id && after.h[0] === "Closest answers we have" && after.rows >= 1 && !after.exit && bodies.length === n0 + 1, JSON.stringify([after, bodies.length - n0]));
+        !!pick && !after.best && /^We haven’t checked exactly this yet\./.test(after.line) && /Sent\b|You sent us this question/.test(after.line) && after.first === pick.id && after.h[0] === "Closest answers we have" && after.rows >= 1 && !after.exit && bodies.length === n0 + 1, JSON.stringify([after, bodies.length - n0]));
       ok(w + " px (2.22): it is sent with which answer it was, so that the system learns which answer does not answer it; the reader's own list keeps that too", !!rec && rec.a === 1 && Array.isArray(rec.x) && rec.x.includes(pick.id) && !!after.kept && after.kept[0] === pick.q && after.kept[1] === pick.id && after.kept[2] === 1, JSON.stringify([rec, after.kept]));
       await p.fill("#search", ""); await p.fill("#search", pick ? pick.q : ""); await p.waitForSelector("#search-results .sr-fit", { timeout: 15000 }).catch(() => {}); await p.waitForTimeout(700);
       const again = await p.evaluate(() => { const f = document.querySelector("#search-results .sr-fit"); return { best: !!f.querySelector("a.sr-best"), sent: !!f.querySelector(".sr-sent"), h: [...f.querySelectorAll(".sr-fit-h")].map(x => x.textContent)[0] }; });
@@ -753,14 +769,14 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     const L0 = await p.evaluate(() => { const f = document.querySelector("#search-results .sr-fit"), b = f.querySelector(".ins-live"), it = JSON.parse(localStorage.getItem("pk-asked") || "[]")[0] || {};
       return { said: (f.querySelector(".ask-auto-said") || {}).textContent || "", prev: b && b.previousElementSibling ? b.previousElementSibling.className : "", steps: b ? [...b.querySelectorAll("li")].map(x => x.className + "|" + x.textContent) : [], sk: it.sk || "", ts: !!it.ts, live: b ? b.querySelector("[aria-live]") !== null : false }; });
     ok(w + " px (2.23): a question sent by the page keeps its key from the server's reply, and under the line stands what our system is doing: at first, that it is reading the question",
-      /^Sent to our system\. You can stay or come back/.test(L0.said) && /sr-fit-none/.test(L0.prev) && L0.steps.length === 1 && /^lv-now\|Our system is reading your question/.test(L0.steps[0]) && L0.sk === K && L0.ts && L0.live, JSON.stringify(L0));
+      /^Sent\. You can stay or come back/.test(L0.said) && /sr-fit-none/.test(L0.prev) && L0.steps.length === 1 && /^lv-now\|Reading your question/.test(L0.steps[0]) && L0.sk === K && L0.ts && L0.live, JSON.stringify(L0));
     await p.waitForTimeout(1800);
     ok(w + " px (2.23): the page asks the server what became of it by the question's key alone: no word of the question is in the address", askedReqs.length >= 1 && askedReqs.every(u => /^asked\?h=[0-9a-f]{20}$/.test(u)) && askedReqs[0] === "asked?h=" + K, JSON.stringify(askedReqs.slice(0, 3)));
     const item = (st, more) => ({ at: "2026-11-19T01:00:00+00:00", q: { [K]: { id: "w_a0900" } }, items: { w_a0900: Object.assign({ q: "Does modafinil stain the teeth?", st, say: "", n: { papers: 0, pages: 0 }, terms: ["tooth discoloration"] }, more || {}) }, answers: {} });
     liveSet(item("new")); await p.waitForFunction(() => /read it as/.test((document.querySelector("#search-results .ins-live") || {}).textContent || ""), null, { timeout: 15000 }).catch(() => {});
     const L1 = await p.evaluate(() => [...document.querySelectorAll("#search-results .ins-live li")].map(x => x.className + "|" + x.textContent));
     ok(w + " px (2.23): once our system has read it, the page shows how: in OUR wording, so that the reader sees whether they were understood; then that the search is on",
-      L1.length === 2 && L1[0] === "lv-done|Our system read it as: Does modafinil stain the teeth?" && L1[1] === "lv-now|Looking for papers and official pages", JSON.stringify(L1));
+      L1.length === 2 && L1[0] === "lv-done|Read as: Does modafinil stain the teeth?" && L1[1] === "lv-now|Looking for papers and official pages", JSON.stringify(L1));
     liveSet(Object.assign(item("found", { n: { papers: 12, pages: 4 } }), { working: { ids: ["w_a0900"], since: "2026-11-19T01:01:00+00:00" } }));
     await p.waitForFunction(() => /Writing the answer now/.test((document.querySelector("#search-results .ins-live") || {}).textContent || ""), null, { timeout: 15000 }).catch(() => {}); await shot(p, w + "-live-writing");
     const L2 = await p.evaluate(() => [...document.querySelectorAll("#search-results .ins-live li")].map(x => x.className + "|" + x.textContent));
@@ -769,9 +785,9 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await p.waitForFunction(() => /used up today/.test((document.querySelector("#search-results .ins-live") || {}).textContent || ""), null, { timeout: 15000 }).catch(() => {});
     const L3 = await p.evaluate(() => [...document.querySelectorAll("#search-results .ins-live li")].map(x => x.className + "|" + x.textContent));
     ok(w + " px (2.23): where the free models have no room left today the page says so, and when it goes on: nothing is promised that the system cannot keep",
-      L3.length === 4 && L3[2] === "lv-next|Next: writing the answer" && /^lv-wait\|The free models our system writes with have used up today’s allowance\. It goes on at \d/.test(L3[3]), JSON.stringify(L3));
+      L3.length === 4 && L3[2] === "lv-next|Next: writing the answer" && /^lv-wait\|Today’s writing allowance is used up\. It goes on at \d/.test(L3[3]), JSON.stringify(L3));
     // the answer, the moment it is written: in the page's own form, with its line; the list of the reader's questions turns green; nothing was published in between
-    const ans = { q: "Does modafinil stain the teeth?", short: "No study that our system could read reports it.", but: "This rests on 1 review that our system could read. It has not read every study on this question.", how: ["A 2019 review of modafinil’s unwanted effects does not list any change to the teeth."],
+    const ans = { q: "Does modafinil stain the teeth?", short: "No study read reports it.", but: "This rests on 1 review. It has not read every study on this question.", how: ["A 2019 review of modafinil’s unwanted effects does not list any change to the teeth."],
       refs: [{ id: "tester_2019", type: "article-journal", title: "Unwanted effects of modafinil: a review", author: [{ family: "Tester", given: "T." }], issued: { "date-parts": [[2019]] }, "container-title": "Journal of Tests", volume: "3", page: "1-9", DOI: "10.1234/test.2019.9" }],
       from: { papers: 1, summaries: 0, official: 0 }, made: "2026-11-19", complete: false, wanted: 0, drugs: [], page: "general" };
     liveSet(Object.assign(item("answered", { n: { papers: 12, pages: 4 }, aid: "au_w_a0900" }), { answers: { au_w_a0900: ans } }));
@@ -783,19 +799,19 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
       L4.h === "Answered just now" && L4.q === ans.q && L4.a === ans.short && L4.btn === "Read the answer" && L4.bh >= 44 && L4.lineHidden && L4.st === "ans" && L4.id === "au_w_a0900" && /1 answered/.test(L4.bar) && L4.known, JSON.stringify(L4));
     await p.click("#search-results .ins-live a[data-you-live]"); await p.waitForSelector("#evsheet.open .auto-l", { timeout: 10000 }).catch(() => {}); await shot(p, w + "-live-answer-open");
     const L5 = await p.evaluate(() => { const s = document.querySelector("#evsheet.open"); return s ? { title: (document.getElementById("ev-title") || {}).textContent, short: (s.querySelector(".ask-short") || {}).textContent, label: (s.querySelector(".auto-l") || {}).textContent, bars: !!s.querySelector(".ev-cert, .meter"), refs: s.querySelectorAll(".auto-refs li").length } : null; });
-    ok(w + " px (2.23): it opens as every answer written by our system does: its question, its short answer, its line “Written by our system … Not yet checked by a person.”, its sources, and no certainty bars",
-      !!L5 && L5.title === ans.q && L5.short === ans.short && /^Written by our system from 1 paper\. Not yet checked by a person\. Not complete yet\.$/.test(L5.label) && !L5.bars && L5.refs === 1, JSON.stringify(L5));
+    ok(w + " px (2.23): it opens as every answer written by our system does: its question, its short answer, its line “Written with AI …”, its sources, and no certainty bars",
+      !!L5 && L5.title === ans.q && L5.short === ans.short && /^Written with AI from 1 paper\. Not complete yet\.$/.test(L5.label) && !L5.bars && L5.refs === 1, JSON.stringify(L5));
     await p.evaluate(() => { if (EV.open) closeEvidence(); closeSearch(); }); await p.waitForTimeout(300);
     // an answer whose shape is not the build's is never taken; a question our system did not list says why; a listed question the reader keeps is asked for by its number
     await p.evaluate(() => { localStorage.setItem("pk-asked", JSON.stringify([{ k: "is modafinil a vitamin", q: "is modafinil a vitamin", d: "", t: Date.now(), ts: Date.now(), cv: "x", st: "wait", sent: 1, auto: 1, sk: "1".repeat(20) }, { k: "why is the sky blue on modafinil", q: "why is the sky blue on modafinil", d: "", t: Date.now() - 1000, ts: Date.now() - 1000, cv: "x", st: "wait", sent: 1, auto: 1, sk: "2".repeat(20) },
       { k: "does modafinil help with jet lag?", q: "Does modafinil help with jet lag?", d: "", t: Date.now() - 2000, cv: "x", st: "wait", sent: 1, kept: 1, w: "w_0031" }])); askedBox(); });
     const n1 = askedReqs.length;
-    liveSet({ at: "t", q: { ["1".repeat(20)]: { id: "w_a0901" }, ["2".repeat(20)]: { no: "Our system did not read this as a question about drugs. If it is one, ask it again with the drug's name in it." } },
+    liveSet({ at: "t", q: { ["1".repeat(20)]: { id: "w_a0901" }, ["2".repeat(20)]: { no: "This was not read as a question about drugs. If it is one, ask it again with the drug's name in it." } },
       items: { w_a0901: { q: "Is modafinil a vitamin?", st: "answered", say: "", aid: "au_w_a0901" }, w_0031: { q: "Does modafinil help with jet lag?", st: "tried", say: "" } }, answers: { au_w_a0901: { q: "Is modafinil a vitamin?", short: "<img src=x onerror=alert(1)>", how: "not a list", refs: [] } } });
     await p.evaluate(() => liveKick(true)); await p.waitForFunction(() => { const l = JSON.parse(localStorage.getItem("pk-asked") || "[]"); return l.length === 3 && l.every(x => x.lv); }, null, { timeout: 15000 }).catch(() => {});
     const L6 = await p.evaluate(() => { const l = JSON.parse(localStorage.getItem("pk-asked") || "[]"); document.querySelector("#home-asked .you-bar").click(); return { lv: l.map(x => [x.st, x.lv && (x.lv.no ? "no" : x.lv.reload ? "reload" : x.lv.st)]), known: isAuto("au_w_a0901"), rows: [...document.querySelectorAll("#yousheet .aq .aq-k")].map(x => x.textContent.replace(/\s*·.*$/, "")) }; });
     ok(w + " px (2.23): an answer that does not have the build's shape is never taken into the page (the row says it is answered and to open the site again); a question our system did not list says so; a listed question the reader keeps is asked for by its number, and says what was done",
-      !L6.known && JSON.stringify(L6.lv) === JSON.stringify([["wait", "reload"], ["wait", "no"], ["wait", "tried"]]) && L6.rows.join("|") === "Answered. Open the site again to read it|Read by our system. Not listed|No answer passed our checks yet. It tries again" && askedReqs.slice(n1).some(u => /^asked\?h=1{20},2{20}&w=w_0031$/.test(u)), JSON.stringify([L6, askedReqs.slice(n1)]));
+      !L6.known && JSON.stringify(L6.lv) === JSON.stringify([["wait", "reload"], ["wait", "no"], ["wait", "tried"]]) && L6.rows.join("|") === "Answered. Open the site again to read it|Read. Not listed|No answer passed the checks yet. Trying again" && askedReqs.slice(n1).some(u => /^asked\?h=1{20},2{20}&w=w_0031$/.test(u)), JSON.stringify([L6, askedReqs.slice(n1)]));
     await p.evaluate(() => { if (YOU.open) youClose(); }); await p.waitForTimeout(300);
     // switched off: nothing is asked
     const n2 = askedReqs.length; await p.evaluate(() => { localStorage.setItem("pk-auto", "0"); liveKick(true); }); await p.waitForTimeout(2500);
@@ -805,7 +821,7 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     { const K5 = "5".repeat(20), Q5 = "Does modafinil make you sweat?";
       await p.evaluate(([Q5, K5]) => { localStorage.setItem("pk-asked", JSON.stringify([{ k: Q5.toLowerCase(), q: Q5, d: "", t: Date.now(), ts: Date.now(), cv: SITE_BUILD, st: "wait", sent: 1, auto: 1, sk: K5 }])); location.hash = "#home"; askedBox(); }, [Q5, K5]);
       await p.waitForTimeout(400);
-      const a5 = { q: "Does modafinil make people sweat more?", short: "Some people who took it in studies did.", but: "This rests on 1 review that our system could read. It has not read every study on this question.", how: ["A review lists sweating among the unwanted effects people reported."],
+      const a5 = { q: "Does modafinil make people sweat more?", short: "Some people who took it in studies did.", but: "This rests on 1 review.", how: ["A review lists sweating among the unwanted effects people reported."],
         refs: [{ id: "tester_2020", type: "article-journal", title: "Modafinil: a review", author: [{ family: "Tester", given: "T." }], issued: { "date-parts": [[2020]] }, "container-title": "Journal of Tests", volume: "4", page: "1-9", DOI: "10.1234/test.2020.4" }], from: { papers: 1, summaries: 0, official: 0 }, made: "2026-11-19", complete: false, wanted: 0, drugs: [], page: "general" };
       liveSet({ at: "t", q: { [K5]: { id: "w_a0905" } }, items: { w_a0905: { q: a5.q, st: "answered", say: "", aid: "au_w_a0905" } }, answers: { au_w_a0905: a5 } });
       await p.evaluate(() => liveKick(true)); await p.waitForSelector("#you-tell", { timeout: 15000 }).catch(() => {}); await shot(p, w + "-told-own-answer");
@@ -841,6 +857,21 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
       ok(w + " px (2.23.1): asking it again with the slip is not a new question: nothing is sent again, the page says it was sent, and the list keeps one row",
         sends.length === n0 && /^You sent us this question/.test(S2.line) && S2.rows === 1, JSON.stringify([sends.slice(n0), S2]));
       await p.evaluate(() => { localStorage.removeItem("pk-asked"); closeSearch(); }); }
+    // ---- (2.25.0; his words of 19 November, 17:49: "i want to be able to delete all my questions at once if i want") one tap, then a yes ----
+    { await p.evaluate(() => { const now = Date.now(); localStorage.setItem("pk-asked", JSON.stringify(["sleep", "pain", "anxiety"].map((w, i) => ({ k: "does kanna help with " + w, q: "does kanna help with " + w, d: "", t: now - (i + 1) * 1000, cv: SITE_BUILD, st: "wait", sent: 1, auto: 1 })))); askedBox(); if (typeof youOpen === "function") youOpen(); });
+      await p.waitForTimeout(300);
+      const D0 = await p.evaluate(() => ({ btn: ((document.querySelector("#yousheet button[data-asked-clear]") || {}).textContent || ""), rows: document.querySelectorAll("#yousheet .aq-l > li").length }));
+      await p.evaluate(() => document.querySelector("#yousheet button[data-asked-clear]").click()); await p.waitForTimeout(150);
+      const D1 = await p.evaluate(() => ({ sure: ((document.querySelector("#yousheet .aq-sure") || {}).textContent || ""), yes: ((document.querySelector("#yousheet [data-asked-clear-yes]") || {}).textContent || ""), focus: document.activeElement && document.activeElement.hasAttribute("data-asked-clear-yes"), kept: JSON.parse(localStorage.getItem("pk-asked") || "[]").length }));
+      await p.evaluate(() => document.querySelector("#yousheet [data-asked-clear-no]").click()); await p.waitForTimeout(150);
+      const D2 = await p.evaluate(() => ({ rows: document.querySelectorAll("#yousheet .aq-l > li").length, kept: JSON.parse(localStorage.getItem("pk-asked") || "[]").length }));
+      await p.evaluate(() => document.querySelector("#yousheet button[data-asked-clear]").click()); await p.waitForTimeout(150);
+      await p.evaluate(() => document.querySelector("#yousheet [data-asked-clear-yes]").click()); await p.waitForTimeout(250);
+      const D3 = await p.evaluate(() => ({ rows: document.querySelectorAll("#yousheet .aq-l > li").length, kept: JSON.parse(localStorage.getItem("pk-asked") || "[]").length, note: ((document.querySelector("#yousheet .aq-note") || {}).textContent || ""), bar: (document.getElementById("home-asked") || {}).hidden }));
+      ok(w + " px (2.25.0): under the list, “Delete all my questions”; one tap asks first (“Delete all 3 questions from this device?”), “Keep them” keeps them, “Delete all” empties the list on this device",
+        /Delete all my questions$/.test(D0.btn) && D0.rows === 3 && D1.sure === "Delete all 3 questions from this device?" && /Delete all$/.test(D1.yes) && D1.focus && D1.kept === 3 && D2.rows === 3 && D2.kept === 3 &&
+          D3.rows === 0 && D3.kept === 0 && /^No question of yours is waiting/.test(D3.note), JSON.stringify([D0, D1, D2, D3]));
+      await p.evaluate(() => { const b = document.querySelector("#yousheet [data-ev-close], #yousheet .ev-back"); if (b) b.click(); }); await p.waitForTimeout(200); }
     await p.context().close();
   }
 

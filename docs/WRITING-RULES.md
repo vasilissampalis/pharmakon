@@ -58,7 +58,7 @@ The senior author, 18 October 2026, asked for real photos of the drugs instead o
 - **Never** people, hands, drugs being taken, or kit in use. Drug cues raise craving in people dependent on a drug, strongly (Carter & Tiffany 1999), and such photos could read as instructions.
 - **Hide switch.** One tap hides every drug photo and brings the form symbols back; the choice is kept on the reader's device only.
 - **No decoration.** A photo goes only where it helps a real decision (recognising a form, a naloxone kit, a test). A picture with nothing to explain it waits for its text (the naloxone kit waits for the Emergency page). Interesting extras that do not carry the answer reduce learning (Rey 2012; Sundararajan & Adesope 2020).
-- **Licences.** Public domain, CC0 or CC BY only (CC BY-SA only if nothing else exists, marked). Each photo's credit and licence show under it and in About; crops are marked; metadata (EXIF, GPS) is removed from the web copies. No AI images.
+- **Licences.** Public domain, CC0 or CC BY only (CC BY-SA only if nothing else exists, marked; the same for the pictures the system finds: decision 35, his word of 19 November 2026, 17:44). Each photo's credit and licence show under it and in About; crops are marked; metadata (EXIF, GPS) is removed from the web copies. No AI images.
 - **Captions describe the photo.** A fact about the drug goes through a checked claim, never through a caption.
 
 ## One page, three depths

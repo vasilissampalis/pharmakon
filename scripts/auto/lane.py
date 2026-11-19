@@ -1296,7 +1296,9 @@ def own_but(sources, wanted_nearer):
                          n(cn["case reports"], "case report", "case reports") if cn["case reports"] else "", n(cn["official"], "official page", "official pages") if cn["official"] else "",
                          ("the summary of " + n(cn["summaries"], "paper", "papers")) if cn["summaries"] else "") if x]
     what = kinds[0] if len(kinds) == 1 else ", ".join(kinds[:-1]) + " and " + kinds[-1]
-    return f"This rests on {what} that our system could read. " + ("A paper that stands nearer the question could not be read." if wanted_nearer else "It has not read every study on this question.")
+    # (2.25.0; the senior author, 19 November 2026, 17:48: "we should not always say 'our system' ... it creates unecessary words") the claims and
+    # their evidence, nothing about the system: what the answer rests on
+    return f"This rests on {what}."
 
 
 def mend_uses(parts, labels, years=(), asked=()):
@@ -2559,12 +2561,12 @@ def selftest():
     # the second reader also judges the answer as a whole. A But about something else, three times: the code writes the But from what the answer rests on, and the answer stands
     off = dict(V(True, True, True, True), answers_question=True, but_fits=False, why="it is about a treatment")
     calls.clear(); script["writer"] = [W(ok_short)] * 3; script["checker"] = [off] * 3
-    r = mk(); assert r["status"] == "published" and r["parts"][1]["text"] == "This rests on 1 review that our system could read. It has not read every study on this question." and r["parts"][1]["rests_on"] and "the code wrote the But itself" in r["gates"]["but"], (r["status"], r["why"], r["parts"][1:2], r["gates"])
+    r = mk(); assert r["status"] == "published" and r["parts"][1]["text"] == "This rests on 1 review." and r["parts"][1]["rests_on"] and "the code wrote the But itself" in r["gates"]["but"], (r["status"], r["why"], r["parts"][1:2], r["gates"])
     assert "QUESTION that was asked: Can you get addicted to ketamine?" in [c for c in calls if c[0] == "checker"][0][2] and "a second reader did not accept but (it is about something else than the short answer" in [c for c in calls if c[0] == "writer"][1][2]
     # a short answer that answers another question, three times: no answer
     script["writer"] = [W(ok_short)] * 3; script["checker"] = [dict(V(True, True, True, True), answers_question=False, but_fits=True, why="it says how it is treated")] * 3
     r = mk(); assert r["status"] == "none" and "it does not answer the question itself" in r["gates"]["check"], (r["status"], r["why"], r["gates"])
-    assert own_but([{"read": "full", "kind": "review", "people": True}, {"read": "full", "kind": "study", "people": True}, {"read": "page", "kind": "official", "people": True}, {"read": "page", "kind": "official", "people": True}], True) == "This rests on 1 review, 1 study in people and 2 official pages that our system could read. A paper that stands nearer the question could not be read."
+    assert own_but([{"read": "full", "kind": "review", "people": True}, {"read": "full", "kind": "study", "people": True}, {"read": "page", "kind": "official", "people": True}, {"read": "page", "kind": "official", "people": True}], True) == "This rests on 1 review, 1 study in people and 2 official pages."
     # the choice of a team of models across two free services: keys, room, and never the same model twice in a row
     import tempfile
     tf = pathlib.Path(tempfile.mkdtemp()) / "models.json"

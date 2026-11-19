@@ -46,7 +46,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await p.goto(base + "#home"); await p.waitForTimeout(700); return p; };
   const go = async (p, hash, ms) => { await p.evaluate(h => { location.hash = h; }, hash); await p.waitForTimeout(ms || 500); };
   const shot = async (p, name) => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await p.screenshot({ path: path.join(SHOTS, name + ".png") }); } };
-  const LINE2 = "Written by our system from 2 papers. Not yet checked by a person. Not complete yet.", LINE1 = "Written by our system from 1 paper. Not yet checked by a person.";
+  const LINE2 = "Written with AI from 2 papers. Not complete yet.", LINE1 = "Written with AI from 1 paper.";
   // what the open sheet shows of an answer
   const sheet = p => p.evaluate(() => { const s = document.querySelector("#evsheet.open .panel .ins"); if (!s) return null; const a = s.querySelector(".ins-ans") || s;
     return { title: document.getElementById("ev-title").textContent, eye: (document.querySelector("#evsheet .ins-eye") || {}).textContent || "", short: (a.querySelector(".ask-short") || {}).textContent || "", but: (a.querySelector(".ask-but") || {}).textContent || "",
@@ -60,35 +60,35 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await go(p, "#auto", 600);
     const pg = await p.evaluate(() => ({ title: document.title, h1: document.querySelector("#view-auto h1").textContent, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", rows: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent),
       how: !!document.querySelector("#view-auto details.auto-how"), foot: [...document.querySelectorAll('footer.site a[href="#auto"]')].map(a => a.textContent).join(), wide: document.documentElement.scrollWidth > innerWidth + 1 }));
-    ok(w + "the page “Written by our system” lists every such answer with its page, its number of papers, its day and “not complete yet” where that is so; one name in the tab, on the page and in the footer",
-      pg.title === "Written by our system · Pharmakon" && pg.h1 === "Written by our system" && pg.foot === "Written by our system" && pg.n === "6 answers, the newest first." && pg.rows.length === 6 && pg.how && !pg.wide && pg.rows[0] === "How much pretend drinking do pretend bodies call low-risk in the checks? | Alcohol · 1 official page · 16 November 2026 · not complete yet" &&
+    ok(w + "the page “Written with AI” lists every such answer with its page, its number of papers, its day and “not complete yet” where that is so; one name in the tab, on the page and in the footer",
+      pg.title === "Written with AI · Pharmakon" && pg.h1 === "Written with AI" && pg.foot === "Written with AI" && pg.n === "6 answers, the newest first." && pg.rows.length === 6 && pg.how && !pg.wide && pg.rows[0] === "How much pretend drinking do pretend bodies call low-risk in the checks? | Alcohol · 1 official page · 16 November 2026 · not complete yet" &&
         pg.rows.includes("Can you get addicted to ketamine? | Ketamine · 2 papers · 15 November 2026 · not complete yet") && pg.rows.some(r => /^Do police crackdowns cut drug use, or just move it somewhere else\? \| .+ · 1 paper · 15 November 2026$/.test(r)), JSON.stringify(pg));
     await shot(p, width + "-auto-page");
     // ---- (2.8) a page the system started: listed on this page and under the drugs, with an address of its own and its label
     const st = await p.evaluate(() => ({ h: [...document.querySelectorAll("#auto-list .auto-h")].map(e => e.textContent), pages: [...document.querySelectorAll("#auto-list .auto-pages a")].map(a => a.getAttribute("href") + " | " + a.textContent),
       row: [...document.querySelectorAll("#auto-list .auto-i")].map(r => r.textContent).find(t => /^Is kava addictive\?/.test(t)) || "" }));
-    ok(w + "the list page names the pages our system started, each with its number of answers and its label, before every answer; an answer on such a page names the page",
-      st.h.join("|") === "Pages our system started|Every answer" && st.pages.includes("#auto/p-kava | Kava1 answer") && /^Is kava addictive\?Kava · 1 paper/.test(st.row), JSON.stringify(st));
+    ok(w + "the list page names the new pages, each with its number of answers and its label, before every answer; an answer on such a page names the page",
+      st.h.join("|") === "New pages|Every answer" && st.pages.includes("#auto/p-kava | Kava1 answer") && /^Is kava addictive\?Kava · 1 paper/.test(st.row), JSON.stringify(st));
     await go(p, "#auto/p-kava", 600);
     // (2.12) in the form of a drug's page: a drug page's header with the name, the line that says who made it, and its parts
     const kp = await p.evaluate(() => { const pg = document.getElementById("auto-page"); return { title: document.title, h1: document.querySelector("#view-auto h1").textContent, head: !!pg.querySelector("header.dh h1"), top: (pg.querySelector(".auto-top") || {}).textContent || "",
       main: document.getElementById("auto-main").hidden, shown: !pg.hidden, secs: [...pg.querySelectorAll("section.sec > h2")].map(e => e.textContent), cls: pg.querySelectorAll(".dh-fam").length,
       rows: [...pg.querySelectorAll(".auto-i .wl-q")].map(e => e.textContent), back: (pg.querySelector('.auto-back a[href="#auto"]') || {}).textContent || "", ask: (pg.querySelector("button[data-ask-fill]") || {}).textContent || "",
       active: document.getElementById("view-auto").classList.contains("active"), wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
-    ok(w + "a started page has an address of its own and the form of a drug's page: its name as the heading and in the tab, a first line that says our system started it and that nobody has checked it, its answers, a way to ask, and the way back; it shows no class nobody checked",
-      kp.active && kp.title === "Kava · Pharmakon" && kp.h1 === "Kava" && kp.head && kp.shown && kp.main && kp.top === "People asked about kava, and the site had no page. Our system started this one by itself and wrote what is on it. A person has not checked it yet." &&
-        kp.secs.join("|") === "Written by our system" && kp.rows.join() === "Is kava addictive?" && kp.back === "Everything written by our system" && kp.ask === "Ask a question" && kp.cls === 0 && !kp.wide, JSON.stringify(kp));
+    ok(w + "a started page has an address of its own and the form of a drug's page: its name as the heading and in the tab, a first line that says why it was started, its answers, a way to ask, and the way back; it shows no class nobody checked",
+      kp.active && kp.title === "Kava · Pharmakon" && kp.h1 === "Kava" && kp.head && kp.shown && kp.main && kp.top === "People asked about kava, so this page was started. Its answers are written with AI from the sources each one shows." &&
+        kp.secs.join("|") === "Written with AI" && kp.rows.join() === "Is kava addictive?" && kp.back === "All answers written with AI" && kp.ask === "Ask a question" && kp.cls === 0 && !kp.wide, JSON.stringify(kp));
     await shot(p, width + "-started-page");
     await p.click('#auto-page button[data-ask-fill]'); await p.waitForTimeout(300);
     ok(w + "“Ask a question” there puts the page's name in the box and the cursor after it", await p.evaluate(() => { const s = document.getElementById("search"); return s.value === "kava " && document.activeElement === s; }));
     await p.fill("#search", ""); await p.keyboard.press("Escape");
     await p.click('#auto-page a[data-sheet="au_fixture_kava"]'); await p.waitForTimeout(600);
     const sk = await p.evaluate(() => { const s = document.querySelector("#evsheet.open .panel .ins"); return s ? { title: document.getElementById("ev-title").textContent, line: (s.querySelector(".auto-l") || {}).textContent || "", link: (s.querySelector(".ins-page a") || {}).getAttribute("href") || "", linkText: (s.querySelector(".ins-page a") || {}).textContent || "" } : null; });
-    ok(w + "its answer opens over the page with its line, and leads back to the page our system started", sk && sk.title === "Is kava addictive?" && sk.line === LINE1 && sk.link === "#auto/p-kava" && /^Kava: the page our system started/.test(sk.linkText), JSON.stringify(sk));
+    ok(w + "its answer opens over the page with its line, and leads back to its page", sk && sk.title === "Is kava addictive?" && sk.line === LINE1 && sk.link === "#auto/p-kava" && /^Kava: its page/.test(sk.linkText), JSON.stringify(sk));
     await p.keyboard.press("Escape"); await p.waitForTimeout(300);
     await go(p, "#auto", 400);
     const back = await p.evaluate(() => ({ h1: document.querySelector("#view-auto h1").textContent, how: document.querySelector("#view-auto .auto-how").hidden, n: (document.querySelector("#auto-list .auto-n") || {}).textContent || "", pg: document.getElementById("auto-page").hidden, main: document.getElementById("auto-main").hidden }));
-    ok(w + "back on the list page, its own heading and lines are there again", back.h1 === "Written by our system" && back.how === false && back.n === "6 answers, the newest first." && back.pg && !back.main, JSON.stringify(back));
+    ok(w + "back on the list page, its own heading and lines are there again", back.h1 === "Written with AI" && back.how === false && back.n === "6 answers, the newest first." && back.pg && !back.main, JSON.stringify(back));
     // ---- (2.12) the pages people asked about, shown before there is an answer: whatever pages the build shows today
     const shells = await p.evaluate(() => Object.keys(AUTO_SHELL).map(k => ({ k, name: AUTO_PAGES[k], asked: AUTO_SHELL[k].asked.map(a => a.id), pics: (AUTO_PICS[k] || []).length, ans: Object.keys(AUTO).filter(id => AUTO[id].page === "new:" + k).length, kind: (AUTO_SHELL[k].science[0] || {}).kind || "" })));
     const look = shells.filter(s => s.pics).slice(0, 2).concat(shells.filter(s => !s.pics && !s.ans).slice(0, 2));
@@ -98,24 +98,24 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
       const parts = (s.pics ? 1 : 0) + (s.asked.length ? 1 : 0) + (s.ans ? 1 : 0);
       const sp = await p.evaluate(() => { const pg = document.getElementById("auto-page"), img = pg.querySelector("header.dh .dh-ph img"); return { h1: (pg.querySelector("header.dh h1") || {}).textContent || "", top: (pg.querySelector(".auto-top") || {}).textContent || "", fam: (pg.querySelector(".dh-fam") || {}).textContent || "",
         menu: [...pg.querySelectorAll(".secmenu .sm-b .sm-n")].map(e => e.textContent), one: [...pg.querySelectorAll("section.auto-one > h2")].map(e => e.textContent), head: img ? img.complete && img.naturalWidth > 0 && !!img.alt : null, title: document.title, wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
-      ok(w + "“" + s.name + "”, a page people asked about: a drug page's header with its name, a line that says our system started it and that nobody has checked it, " + (parts > 1 ? "a menu of its " + parts + " parts" : "its one part shown at once") + (s.pics ? ", its picture at the top" : "") + "; the only word above the name is what the open list of species says it is",
-        sp.h1 === s.name && sp.title === s.name + " · Pharmakon" && /Our system started this one by itself/.test(sp.top) && /A person has not checked/.test(sp.top) && (parts > 1 ? sp.menu.length === parts && !sp.one.length : sp.one.length === parts && !sp.menu.length) &&
+      ok(w + "“" + s.name + "”, a page people asked about: a drug page's header with its name, a line that says why it was started, " + (parts > 1 ? "a menu of its " + parts + " parts" : "its one part shown at once") + (s.pics ? ", its picture at the top" : "") + "; the only word above the name is what the open list of species says it is",
+        sp.h1 === s.name && sp.title === s.name + " · Pharmakon" && /, so this page was started\./.test(sp.top) && !/our system|checked/i.test(sp.top) && (parts > 1 ? sp.menu.length === parts && !sp.one.length : sp.one.length === parts && !sp.menu.length) &&
           (s.pics ? sp.head === true : sp.head === null) && sp.fam === (s.kind === "plant" ? "Plant" : s.kind === "fungus" ? "Fungus" : "") && !sp.wide, JSON.stringify(sp));
       if (s.pics) {
         await go(p, "#auto/p-" + s.k + (parts > 1 ? "/part-p-looks" : ""), 700);
         await p.evaluate(() => document.querySelectorAll("#p-looks img").forEach(i => i.scrollIntoView())); await p.waitForTimeout(500);
         const lk = await p.evaluate(() => { const sec = document.getElementById("p-looks"); const cr = sec.querySelector("details.look-credits"); return { shown: !sec.hidden, imgs: [...sec.querySelectorAll(".look img")].map(i => i.complete && i.naturalWidth > 0 && !!i.alt && /^img\/auto\/[a-z0-9-]+-t\.webp$/.test(i.getAttribute("src"))),
           credits: cr ? [...cr.querySelectorAll("a")].map(a => a.href) : [], creditText: cr ? cr.textContent : "", note: (sec.querySelector(".auto-picnote") || {}).textContent || "", wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
-        ok(w + "its pictures: each one loads and says what it shows, each has its maker and its licence (public domain, CC0 or CC BY, nothing else) one tap away, and a small line says that our system found them and that no person has checked them",
-          lk.shown && lk.imgs.length === s.pics && lk.imgs.every(Boolean) && lk.credits.filter(h => /^https:\/\/creativecommons\.org\/(?:publicdomain\/zero\/1\.0|licenses\/by\/(?:[1-4]\.0|2\.5))\/$/.test(h)).length + (lk.creditText.match(/public domain/g) || []).length === s.pics && lk.credits.length >= 2 * s.pics - 1 && !/\b(?:NC|ND|SA)\b/.test(lk.creditText) &&
-            /^Our system found these pictures by itself\..+A person here has not checked them yet\./.test(lk.note) && !lk.wide, JSON.stringify(lk));
+        ok(w + "its pictures: each one loads and says what it shows, each has its maker and its licence (public domain, CC0, CC BY or CC BY-SA, nothing else) one tap away, and a small line says where they come from and that they are examples",
+          lk.shown && lk.imgs.length === s.pics && lk.imgs.every(Boolean) && lk.credits.filter(h => /^https:\/\/creativecommons\.org\/(?:publicdomain\/zero\/1\.0|licenses\/by(?:-sa)?\/(?:[1-4]\.0|2\.5)(?:\/[a-z]{2})?)\/$/.test(h)).length + (lk.creditText.match(/public domain/g) || []).length === s.pics && lk.credits.length >= 2 * s.pics - 1 && !/\b(?:NC|ND|SA)\b/.test(lk.creditText) &&
+            /^From (?:GBIF|Wikimedia Commons|GBIF and Wikimedia Commons)\b.*They are examples: /.test(lk.note) && !/our system|checked/i.test(lk.note) && !lk.wide, JSON.stringify(lk));
         await shot(p, width + "-started-looks");
       }
       if (s.asked.length) {
         await go(p, "#auto/p-" + s.k + (parts > 1 ? "/part-p-asked" : ""), 600);
         const before = await p.evaluate(() => localStorage.getItem("pk-asked"));
         const aq = await p.evaluate(() => { const sec = document.getElementById("p-asked"); return { shown: !sec.hidden, rows: [...sec.querySelectorAll(".wl-i")].map(li => ({ q: li.querySelector(".wl-q").textContent, open: !!li.querySelector(".wl-n"), keep: (li.querySelector("button[data-want-keep]") || {}).dataset ? li.querySelector("button[data-want-keep]").dataset.wantKeep : "", link: (li.querySelector("a.wl-b") || {}).href || "" })) }; });
-        ok(w + "what people asked about it: every listed question in our words, each “Not answered yet” with the way to be told, or with the way to what our system wrote",
+        ok(w + "what people asked about it: every listed question in our words, each “Not answered yet” with the way to be told, or with the way to its answer",
           aq.shown && aq.rows.length === s.asked.length && aq.rows.every(r => r.q.length > 8 && (r.open ? s.asked.includes(r.keep) : /#auto\/q-au_/.test(r.link))), JSON.stringify(aq));
         const first = aq.rows.find(r => r.keep);
         if (first) { await p.click('#p-asked button[data-want-keep="' + first.keep + '"]'); await p.waitForTimeout(300);
@@ -128,7 +128,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await go(p, "#auto", 400);
     await go(p, "#substances", 600);
     const sub = await p.evaluate(() => ({ h: (document.querySelector("#sub-started .auto-h") || {}).textContent || "", a: [...document.querySelectorAll("#sub-started .auto-pages a")].map(a => a.getAttribute("href") + " | " + a.querySelector(".wl-q").textContent), cards: document.querySelectorAll("#subgrid > *").length, wide: document.documentElement.scrollWidth > innerWidth + 1 }));
-    ok(w + "under the drugs, “All drugs” lists the pages our system started, apart from the 30 checked pages", sub.h === "Pages our system started" && sub.a.includes("#auto/p-kava | Kava") && sub.cards === 30 && !sub.wide, JSON.stringify(sub));
+    ok(w + "under the drugs, “All drugs” lists the new pages, apart from the 30 checked pages", sub.h === "New pages" && sub.a.includes("#auto/p-kava | Kava") && sub.cards === 30 && !sub.wide, JSON.stringify(sub));
     await p.click('#filters .chip:nth-child(2)'); await p.waitForTimeout(300);
     ok(w + "a family chosen shows that family's checked pages only", await p.evaluate(() => !document.querySelector("#sub-started .auto-pages") && document.querySelectorAll("#subgrid > *").length < 30));
     await p.click('#filters .chip:nth-child(1)'); await p.waitForTimeout(200);
@@ -141,7 +141,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "it carries its quiet line, with “Not complete yet.”, and no evidence bars and no link to an evidence page it does not have", s1 && s1.line === LINE2 && s1.bars === 0 && s1.evLink === 0, s1 && s1.line + " | bars " + s1.bars + " | evidence links " + s1.evLink);
     ok(w + "its sources are APA 7 references with the journal in italics and the DOI as a link", s1 && s1.srcSummary === "Sources (2)" && s1.refs.length === 2 && s1.refs[0].text === "Fixture, A. B., & Sample, C. (2022). A pretend review of ketamine dependence for the checks. Journal of Checks, 11(2), 300–312. https://doi.org/10.0000/fixture.1" &&
       s1.refs[0].italic === "Journal of Checks, 11" && s1.refs[0].link === "https://doi.org/10.0000/fixture.1", s1 && JSON.stringify(s1.refs));
-    ok(w + "it offers a way to report a mistake, the way to every answer the system wrote, and next questions from the checked answers", s1 && s1.report === "Report a mistake in this answer" && /^Everything written by our system/.test(s1.all) && s1.next >= 1 && !s1.wide, s1 && s1.report + " | " + s1.all + " | next " + s1.next);
+    ok(w + "it offers a way to report a mistake, the way to every answer the system wrote, and next questions from the checked answers", s1 && s1.report === "Report a mistake in this answer" && /^All answers written with AI/.test(s1.all) && s1.next >= 1 && !s1.wide, s1 && s1.report + " | " + s1.all + " | next " + s1.next);
     await shot(p, width + "-auto-sheet");
     await p.click("#evsheet button[data-auto-report]"); await p.waitForTimeout(400);
     const fb = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), mode: (document.querySelector('.fb-opt[aria-pressed="true"]') || { dataset: {} }).dataset.mode, sheet: document.getElementById("evsheet").classList.contains("open") }));
@@ -153,20 +153,20 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await p.waitForFunction(() => { const b = document.querySelector("#search-results > .sr-fit"); return b && b.dataset.q === "is ketamine addictive"; }, null, { timeout: 20000 }); await p.waitForTimeout(200);
     const row = await p.evaluate(() => { const a = document.querySelector("#search-results .sr-fit a.sr-best"); return a ? { auto: a.classList.contains("sr-auto"), id: a.dataset.insight, k: a.querySelector(".k").textContent, t: a.querySelector(".t").textContent, a: a.querySelector(".a").textContent, m: a.querySelector(".m").textContent, bars: a.querySelectorAll(".meter").length,
       head: (document.querySelector("#search-results .sr-fit .sr-fit-h") || {}).textContent || "", live: document.getElementById("search-count").textContent, want: !!document.querySelector("#search-results .sr-want") } : null; });
-    ok(w + "the search box finds it by a question in other words, as the best match, and says before it is opened that our system wrote it and that a person has not checked it", row && row.auto && row.id === "au_fixture_ketamine" && row.k === "Ketamine" && row.t === "Can you get addicted to ketamine?" && /^FIXTURE\. Yes/.test(row.a) &&
-      row.m === "Written by our system · not yet checked by a person" && row.bars === 0 && row.head === "Best match" && /^Best match: Can you get addicted to ketamine\?/.test(row.live) && !row.want, JSON.stringify(row));
+    ok(w + "the search box finds it by a question in other words, as the best match, and says before it is opened that it is written with AI", row && row.auto && row.id === "au_fixture_ketamine" && row.k === "Ketamine" && row.t === "Can you get addicted to ketamine?" && /^FIXTURE\. Yes/.test(row.a) &&
+      row.m === "Written with AI" && row.bars === 0 && row.head === "Best match" && /^Best match: Can you get addicted to ketamine\?/.test(row.live) && !row.want, JSON.stringify(row));
     await shot(p, width + "-auto-search");
     await p.keyboard.press("Enter"); await p.waitForTimeout(700);
     const s2 = await sheet(p);
-    ok(w + "Enter opens the reader's own question with the answer under it, labelled as written by our system", s2 && s2.title === "Is ketamine addictive" && s2.label === "Written by our system · Ketamine" && s2.line === LINE2 && s2.bars === 0 && s2.refs.length === 2, s2 && s2.title + " | " + s2.label + " | " + s2.line);
+    ok(w + "Enter opens the reader's own question with the answer under it, labelled as written with AI", s2 && s2.title === "Is ketamine addictive" && s2.label === "Written with AI · Ketamine" && s2.line === LINE2 && s2.bars === 0 && s2.refs.length === 2, s2 && s2.title + " | " + s2.label + " | " + s2.line);
     await p.keyboard.press("Escape"); await p.waitForTimeout(300); await p.fill("#search", ""); await p.keyboard.press("Escape");
     // ---- its drug's page
     await go(p, "#s-ketamine", 700);
     const sec = await p.evaluate(() => { const b = document.getElementById("sm-d-auto"); return b ? { name: b.querySelector(".sm-n").textContent, n: (b.querySelector(".sm-c") || {}).textContent || "", line: (b.querySelector(".sm-l") || {}).textContent || "", among: [...document.querySelectorAll("#drug2 details.ask[data-cid]")].some(d => /^au_/.test(d.dataset.cid)) } : null; });
-    ok(w + "the ketamine page lists it in a section of its own, “Written by our system”, never among the checked answers", sec && sec.name === "Written by our system" && sec.n === "1 answer" && sec.line === "Not yet checked by a person" && !sec.among, JSON.stringify(sec));
+    ok(w + "the ketamine page lists it in a section of its own, “Written with AI”, never among the checked answers", sec && sec.name === "Written with AI" && sec.n === "1 answer" && sec.line === "From research papers" && !sec.among, JSON.stringify(sec));
     await p.click("#sm-d-auto"); await p.waitForTimeout(500);
     const inSec = await p.evaluate(() => { const s = document.getElementById("d-auto"); return s ? { note: (s.querySelector(".auto-sec") || {}).textContent || "", rows: [...s.querySelectorAll(".auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent), hash: location.hash } : null; });
-    ok(w + "the section says what these are, and lists the answer", inSec && /A person has not checked them yet\.$/.test(inSec.note) && inSec.rows.join() === "Can you get addicted to ketamine? | 2 papers · 15 November 2026 · not complete yet" && inSec.hash === "#s-ketamine/part-d-auto", JSON.stringify(inSec));
+    ok(w + "the section says what these are, and lists the answer", inSec && /^Written with AI from research papers\. Each shows its sources\.$/.test(inSec.note) && inSec.rows.join() === "Can you get addicted to ketamine? | 2 papers · 15 November 2026 · not complete yet" && inSec.hash === "#s-ketamine/part-d-auto", JSON.stringify(inSec));
     await shot(p, width + "-auto-drug-page");
     await p.click('#d-auto a[data-sheet="au_fixture_ketamine"]'); await p.waitForTimeout(600);
     const s3 = await sheet(p); ok(w + "from the drug's page it opens over the page, and Back returns to the section", s3 && s3.line === LINE2 && (await p.evaluate(() => location.hash)) === "#s-ketamine/part-d-auto", s3 && s3.line);
@@ -181,7 +181,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await go(p, "#auto/q-au_fixture_caffeine", 900);
     const s6 = await sheet(p);
     ok(w + "an answer that read a paper, a summary and an official page says so in its line; the page's reference is APA 7 for a web page, with its exact date, its title in italics and its address as a link",
-      s6 && s6.line === "Written by our system from 1 paper, the summary of 1 paper and 1 official page. Not yet checked by a person. Not complete yet." && s6.srcSummary === "Sources (3)" && s6.how.length === 3 &&
+      s6 && s6.line === "Written with AI from 1 paper, the summary of 1 paper and 1 official page. Not complete yet." && s6.srcSummary === "Sources (3)" && s6.how.length === 3 &&
         s6.refs.some(r => r.text === "Pretend Health Service. (2025, March 2). A pretend page about caffeine for the checks. https://example.org/pretend-caffeine" && r.italic === "A pretend page about caffeine for the checks" && r.link === "https://example.org/pretend-caffeine"), s6 && s6.line + " | " + JSON.stringify(s6.refs));
     const hq = await p.evaluate(() => { const d = document.querySelector("#evsheet.open .ask-how"); if (d) d.open = true; return [...document.querySelectorAll("#evsheet.open .ask-howl li")].map(li => ({ q: (li.querySelector(".how-q q") || {}).textContent || "", src: (li.querySelector(".how-src") || {}).textContent || "" })); });
     ok(w + "under a How-do-we-know line stand its source's own words, 15 at most, with whose they are; words that are not in the source are never shown", hq.length === 3 && hq[0].q === "pretend words of a pretend trial" && hq[0].src === "Fixture, 2023" && hq[1].q === "" && hq[2].q === "" && !(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)), JSON.stringify(hq));
@@ -196,7 +196,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "an answer about amounts opens with the line about tolerance (an opioid), then the two lines the code writes: none of them a model's", am && am.first === LINES.first.opioids.text && am.firstFirst && am.short === LINES.amounts && am.but === LINES.amounts_but, JSON.stringify(am).slice(0, 400));
     ok(w + "each amount stands in its source's own words, 15 at most, with who received it, under what care, and whose words they are; a paper read in summary says so", am && am.rows.length === 2 && am.rows.every(r => r.q.split(/\s+/).length <= 15 && /\d/.test(r.q)) &&
       am.rows[0].who === "FIXTURE. People starting pretend treatment, under supervision; the first amount on a pretend label." && am.rows[0].q === "the pretend first amount should not exceed 30 mg" && am.rows[0].src === "Pretend Maker, n.d." && am.rows[1].src === "Fixture, 2021, read in summary only", am && JSON.stringify(am.rows));
-    ok(w + "it has no “How do we know?” of a writer, no bars, its quiet line, and its label's reference with the day it was read (a page without a date)", am && !am.how && am.bars === 0 && !am.wide && am.line === "Written by our system from the summary of 1 paper and 1 official page. Not yet checked by a person. Not complete yet." &&
+    ok(w + "it has no “How do we know?” of a writer, no bars, its quiet line, and its label's reference with the day it was read (a page without a date)", am && !am.how && am.bars === 0 && !am.wide && am.line === "Written with AI from the summary of 1 paper and 1 official page. Not complete yet." &&
       am.refs.includes("Pretend Maker. (n.d.). A pretend label for the checks [Drug label]. DailyMed. Retrieved November 15, 2026, from https://example.org/pretend-label"), am && am.line + " | " + JSON.stringify(am.refs));
     await shot(p, width + "-auto-amounts");
     // ---- 2.7.2: amounts that are an official body's guidance: the But written for that, and a count of drinks written as a word
@@ -226,7 +226,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     const p = await open(390), stamp = JSON.parse(fs.readFileSync(path.join(ROOT, "data", "build.json"), "utf8"));
     const pg = await p.evaluate(() => ({ build: SITE_BUILD, loop: AUTO_LOOP, sent: ASK_SENT }));
     ok("the build has a stamp of its own, in the page and in a small file beside it", /^\d{12}$/.test(pg.build) && stamp.build === pg.build && stamp.site === (await p.evaluate(() => SITE_VERSION)), JSON.stringify(stamp) + " / " + pg.build);
-    ok("a site whose half-hourly run is on says so to a reader who sends a question (this build has the switch on)", pg.loop === true && /^Sent\. Our system starts on it within half an hour\. If it finds research it can read, the answer is usually here within the hour: your question then turns green/.test(pg.sent), pg.sent);
+    ok("a site whose half-hourly run is on says so to a reader who sends a question (this build has the switch on)", pg.loop === true && /^Sent\. Work on it starts within half an hour\. Where research on it can be read, the answer is usually here within the hour: your question then turns green/.test(pg.sent), pg.sent);
     await p.evaluate(() => localStorage.setItem("pk-asked", JSON.stringify([{ k: "what is the capital of mongolia", q: "what is the capital of mongolia", d: "", t: Date.now(), cv: SITE_BUILD, st: "wait", sent: 1 }])));
     await p.reload(); await p.waitForTimeout(900);
     const quiet = await p.evaluate(async () => ({ rows: document.querySelectorAll("#yousheet .aq.wait").length, newer: !!document.querySelector("#home-asked .aq-new"), look: await askedLook() }));

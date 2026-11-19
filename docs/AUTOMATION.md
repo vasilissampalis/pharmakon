@@ -1664,6 +1664,67 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     redirect followed; a wide original asked for at 1280 px; the forms' web copies and the editor's marks.
     `scripts/ux/site24_check.js`: a form with no photo draws the system's picture with its line and credit, the others
     as before; a started page's picture from Commons that is not a species is "An example", credited to its file page.
+    **First run (19 November, 17:05 Athens; `pictures-0005`).** 76 Commons pages read; 7 new pictures, and 3 older ones from
+    GBIF, waited for the editor's look: 3 shown (piracetam tablets, a damiana plant, yopo seed pods), 7 held, each with its
+    reason (a banknote, bags, a scale, a ruler, writing over the picture and a watermark, a brand's printing, a blur).
+    **CC BY-SA (his word, 17:44).** Asked whether pictures under CC BY-SA may be shown, he wrote: "do whatever is best. if
+    that's best, do it". The writing rules already allow it for the checked photos ("CC BY-SA only if nothing else exists,
+    marked"; four checked photos carry it), and showing a picture, resized, with its maker and licence, makes nothing of
+    the site's own text share-alike. So the system follows the same rule (site 2.24.1, protocol 0.6.2): it takes CC BY-SA
+    with its maker named, reads on in a category for a picture under a more open licence, and lets CC BY-SA fill only the
+    places the open ones leave (`pictures.py`, RULE; every look made under the older rule is made again once). GFDL alone,
+    NC and ND are still not taken.
+36. **Claims and evidence, without words about the system; delete all questions at once; new example questions each time**
+    (19 November 2026; site 2.25.0, protocol 0.6.2). His words, 17:48: "we should not always say 'our system' etc we reduce
+    the users' confidence in what they read and also it creates unecessary words, everything the system writes is verified
+    so cut all that throughout the whole website no system unverified etc just publish everything with its claims and
+    evidence simple as that"; 17:49: "i want to be able to delete all my questions at once if i want"; 17:46, of the
+    example questions under the search box: "the questions should be in random order and always new ones should appear".
+    **Done.** Every line that spoke of "our system", of a person who had not checked, of what "could not be read" or of
+    what the system does "by itself" (except where it says that a question is SENT by itself: that is a fact about the
+    reader's own words, and Privacy holds it) is gone or plain: "Written by our system" is "Written with AI"; "Pages our
+    system started" is "New pages", whose top line says why the page was started; the pictures say where they come from
+    and that they are examples; the waiting steps say what is being done ("Read as: ...", "Writing the answer now"). The
+    code-written But (`lane.py`, `own_but`) says what the answer rests on and nothing else ("This rests on 1 review and 2
+    studies in people."), and the nine published answers and the live record that held the older words were brought to
+    it. The live record's own sentences (`live.py`, NO and SAY) likewise.
+    **What stays, and why.** One short line on every answer written with AI that no person has read: "Written with AI from
+    N papers." The EU AI Act (Regulation 2024/1689, art. 50(4), in force since 2 August 2026) asks a deployer who publishes
+    AI-generated text to inform the public on matters of public interest to disclose that it is AI-generated, unless a
+    person has reviewed it and someone holds editorial responsibility. The editor is not a lawyer; the line is the least
+    that meets that rule, and it says nothing against the answer. The answers keep no evidence bars (nobody rated them),
+    and their sources stand under them as before. If the senior author reads such answers and takes editorial
+    responsibility for them, the line can go.
+    **Delete all.** Under the list of the reader's questions: "Delete all my questions"; one tap asks first ("Delete all 3
+    questions from this device?"), "Keep them" or "Delete all". It empties the list on the device, as one × does for one
+    question; what the server keeps is as Privacy says (180 days, never in the reader's words).
+    **Example questions.** Each time the box opens, a new draw: five questions of five drugs, from the first twelve by
+    demand of each drug, at random, the ones this device has not been shown first (`app.views.js`, `suggestDraw`; their
+    numbers kept on the device only). A drug's own page still offers what people ask most about that drug.
+37. **Insight's own model: understanding without limits, on the reader's device (a plan; 19 November 2026).** His words,
+    17:57: "our search engine has to understand human language like an LLM ... make instant searches completely relevant ...
+    give me the absolute best idea for what to connect and how to make this work and do it"; 18:10: "it should not be
+    limited it should be able to answer to endless questions every day"; 18:11: "the answers should be completely coherent
+    with the rest of the website". A free model service was weighed first and set aside: Groq's free plan, read on its own
+    page on 19 November, allows each model 1,000 calls and 200,000 tokens a day, shared with the lane (which used about
+    half of that on two models that day); Google's free Gemma allows more but may use what it is sent to improve its
+    products; Cloudflare's own allowance is the lane's and was used up that day. Training a large model from nothing is
+    out of reach and would be worse than the open ones. So:
+    (1) *Our own small model, on each reader's device*: an open embedding model and an open reranker (permissive
+    licences), trained further on our own material and shipped with the site, so that every phone and computer reads
+    questions itself: no limit, no wait, nothing of the question leaves the device for it. It replaces the encoder Insight
+    runs now (24 of 40 best matches answered in full; trial 14: 53 of 112 titles about the question).
+    (2) *The big free models as teachers*, on GitHub's machines, within their free limits each day: they write the
+    questions of our list again as people type them (slang, typos, odd phrasing) and say which papers and which of our
+    answers truly answer which question; the small model learns from that, every day. Only our own wording is used,
+    never a reader's.
+    (3) *Open word lists*: MeSH and RxNorm (US National Library of Medicine), Wikidata and PubChem, for the words research
+    uses and every name of a drug, street names too.
+    (4) *Free indexes of papers*: Europe PMC and PubMed (its Best Match order is learned by a model); PubMed is named in
+    the Privacy text before it is asked. The device ranks what they return by the small model and shows only what is
+    about the question; our answers stay in the site's own form.
+    Each stage is measured on our own questions before it goes live (the exams of decisions 31 and 33), and goes live
+    only where it does better than what runs now.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

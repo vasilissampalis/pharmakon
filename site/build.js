@@ -357,8 +357,9 @@ const AUTO_SHELL = {}, AUTO_PICS = {}, AUTO_NAMES = {}, AUTO_FORMS = {};
   const web = u => (/^https:\/\/[^\s"'<>]+$/.test(String(u || "")) ? String(u) : ""), kindOf = k => (k === "fungus" ? "fungus" : "plant");
   const wq = {}; [rj("data", "site", "wanted.json"), rj("data", "auto", "wanted-auto.json")].forEach(d => ((d || {}).items || []).forEach(w => { wq[w.id] = w.q; }));
   const shown = new Set(AUTO_SHOWN.map(a => a.id)), picDir = path.join(__dirname, "photos-auto"), pics = {}, science = {};
-  // a picture a page may show: its web copies made, looked at by the editor, not held, public domain, CC0 or CC BY (a maker named for CC BY)
-  const okPic = p => !!p && !!p.file && /^[a-z0-9-]+$/.test(p.file) && !!p.sizes && !p.hold && /^\d{4}-\d{2}-\d{2}$/.test(p.looked_by_editor || "") && /^(?:CC0 1\.0|CC BY (?:[1-4]\.0|2\.5)|Public domain)$/.test(p.licence || "") &&
+  // a picture a page may show: its web copies made, looked at by the editor, not held, public domain, CC0, CC BY or (where nothing more open exists:
+  // scripts/auto/pictures.py, RULE; his word of 19 November, 17:44) CC BY-SA, a maker named for CC BY and CC BY-SA
+  const okPic = p => !!p && !!p.file && /^[a-z0-9-]+$/.test(p.file) && !!p.sizes && !p.hold && /^\d{4}-\d{2}-\d{2}$/.test(p.looked_by_editor || "") && /^(?:CC0 1\.0|CC BY(?:-SA)? (?:[1-4]\.0|2\.5)(?: [A-Z]{2})?|Public domain)$/.test(p.licence || "") &&
     (!/^CC BY/.test(p.licence) || !!p.maker) && fs.existsSync(path.join(picDir, p.file + "-m.webp")) && fs.existsSync(path.join(picDir, p.file + "-t.webp"));
   const picOf = (p, more) => Object.assign({ file: p.file, m: p.sizes.m.slice(0, 2), t: p.sizes.t.slice(0, 2), maker: String(p.maker || ""), licence: p.licence,
     licence_url: web(String(p.licence_url || "").replace(/^http:\/\//, "https://")), page: web(p.page) || web(p.record), src: p.source === "commons" ? "commons" : "gbif" }, more);

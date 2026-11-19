@@ -401,7 +401,7 @@ const INS_PLACES = [
     p: "privacy|privacy policy|cookies|my data|do you (?:track|record|log|store|keep|save)(?: me| my (?:data|questions|searches))?|what do you (?:keep|store|know|save)(?: about me)?|is (?:this|it) (?:anonymous|private)|are my (?:questions|searches) (?:private|anonymous|saved|stored)" },
   { href: "#wanted", icon: "message", k: "On our list", t: "Questions the site does not answer yet, and how many people wait for each",
     p: "on (?:our|your) list|not answered yet|unanswered questions|questions? (?:without|with no) (?:an )?answers?|what (?:are )?people (?:waiting|asking) for" },
-  { href: "#auto", icon: "book", k: "Written by our system", t: "Answers our system wrote by itself, not yet checked by a person",
+  { href: "#auto", icon: "book", k: "Written with AI", t: "Answers written with AI from research papers and official health pages",
     p: "written by (?:your|the|our) system|machine[- ]written(?: answers)?|ai[- ]written(?: answers)?|system(?:'s)? answers|answers (?:by|from) (?:the |your |an )?(?:ai|machine|system)" },
   { href: "#home", el: "home-asked", icon: "message", k: "Your questions", t: "The questions you asked us, kept on this device", p: "my questions|your questions|questions i (?:asked|sent)|what (?:did|have) i (?:ask|asked|sent)" },
   { href: "#about", fb: "issue", icon: "message", k: "Report a mistake", t: "Tell us what is wrong: opens the form",
@@ -588,10 +588,10 @@ function insStarted(q) {
   const hit = insStartedNames().find(([n]) => t.includes(" " + n + " ") || t.includes(" " + n + "s ") || (n.length >= 5 && n.endsWith("s") && t.includes(" " + n.slice(0, -1) + " ")));
   if (!hit) return null;
   const k = hit[1], name = AUTO_PAGES[k], sh = autoShell(k), pics = autoPics(k), n = autoFor("new:" + k).length, kind = sh && sh.science.length ? sh.science[0].kind : "";
-  const base = { kind: "page", icon: kind === "fungus" ? "mushroom" : kind === "plant" ? "leaf" : "book", k: "A page our system started", href: "#auto/p-" + k, started: k };
+  const base = { kind: "page", icon: kind === "fungus" ? "mushroom" : kind === "plant" ? "leaf" : "book", k: "New page", href: "#auto/p-" + k, started: k };
   if (pics.length && INS_LOOKS.test(q)) return Object.assign(base, { href: base.href + (pics.length > 1 || n || (sh && sh.asked.length) ? "/part-p-looks" : ""),
-    t: insCap(autoLow(k)) + ": " + pics.length + (pics.length === 1 ? " picture" : " pictures") + " our system found, not yet checked by a person" });
-  const has = [pics.length ? "pictures" : "", n ? n + (n === 1 ? " answer" : " answers") + " by our system" : "", sh && sh.asked.length ? "what people ask" : ""].filter(Boolean);
+    t: insCap(autoLow(k)) + ": " + pics.length + (pics.length === 1 ? " picture" : " pictures") });
+  const has = [pics.length ? "pictures" : "", n ? n + (n === 1 ? " answer" : " answers") + " written with AI" : "", sh && sh.asked.length ? "what people ask" : ""].filter(Boolean);
   return Object.assign(base, { t: name + (has.length ? ": " + andList(has) : ""), loose: true });
 }
 function insRoutes(q, groups, drug) {
@@ -1036,7 +1036,7 @@ function insPlaceholder() {
 /* ---------- In the search results ---------- */
 const insQ = (id, page) => isAuto(id) ? AUTO[id].q : (page && sharedQuestion(page, id)) || anyQuestion(id) || ((SIMPLE.claims || {})[id] || {}).q || claimText(claimById[id]);
 const insNoteText = () => "Runs on your " + (window.matchMedia && window.matchMedia("(pointer: coarse)").matches ? "phone" : "computer") +
-  (autoSendOn() ? ". A question we have no answer to is sent to our system by itself, so that it gets answered: no name, no address."
+  (autoSendOn() ? ". A question we have no answer to is sent on by itself, so that it gets answered: no name, no address."
     : FIND_ON && autoOn() ? ". With no answer of ours, only the drug’s name and a few key words go out, to look up research." + (ASK_ON ? " Your question is sent only if you send it." : "")
     : ASK_ON ? ". What you type stays on it, unless you ask us to check a question." : ". Nothing you type leaves it.");
 const INS_ICON = { help: "heart", mix: "mix", dose: "book", test: "flask", page: "molecule", law: "scale", numbers: "phone" };
@@ -1178,7 +1178,11 @@ if (typeof document !== "undefined") document.addEventListener("click", e => { c
   e.preventDefault(); e.stopPropagation(); const root = b.closest(".sr-fit, .ins"), k = b.dataset.jump; if (!root) return;
   const el = k === "found" || k === "official" ? root.querySelector('.ins-slot[data-slot="' + k + '"]') : root.querySelector('[data-at="' + k + '"]'); if (!el) return;
   const calm = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  el.scrollIntoView({ block: "start", behavior: calm ? "auto" : "smooth" });
+  // (2.25.0; the senior author, 19 November 2026, 17:57: "there is a bug which scrolls down a bit ... the site has to get stationary and scroll down only
+  // in the dropdown") only the box that holds the results scrolls; the page stays where it is (scrollIntoView moved every box around it, the page too)
+  const box = (() => { for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) { const o = getComputedStyle(n).overflowY; if ((o === "auto" || o === "scroll") && n.scrollHeight > n.clientHeight + 1) return n; } return null; })();
+  if (box) box.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 8), behavior: calm ? "auto" : "smooth" });
+  else el.scrollIntoView({ block: "start", behavior: calm ? "auto" : "smooth" });
   const h = el.matches(".ins-slot") ? el.querySelector(".ins-found-h, .ins-found-n") || el : el; h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }, true);
 function insFitHtml(res) {
   const routes = res.routes.filter(r => !r.way).map(r => insRouteHtml(r, "sr-route")).join("") + (res.emergency ? insSosHtml("sr-sos") : "");
@@ -1413,8 +1417,8 @@ function insBodyHtml(id, depth) {
   return depth === "full" ? body.replace('<details class="ask-how">', '<details class="ask-how" open>') : body;
 }
 const insPageLink = (id, page) => { if (isAuto(id)) { const p = AUTO[id].page, k = typeof p === "string" && p.slice(0, 4) === "new:" ? p.slice(4) : "";      // (2.8) an answer on a page the system started links to that page
-    return k && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[k] ? '<p class="ins-page"><a class="qz2-ev" href="#auto/p-' + esc(k) + '">' + esc(AUTO_PAGES[k]) + ": the page our system started " + icon("arrow") + "</a></p>"
-      : '<p class="ins-page"><a class="qz2-ev" href="#auto">Everything written by our system ' + icon("arrow") + "</a></p>"; }
+    return k && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[k] ? '<p class="ins-page"><a class="qz2-ev" href="#auto/p-' + esc(k) + '">' + esc(AUTO_PAGES[k]) + ": its page " + icon("arrow") + "</a></p>"
+      : '<p class="ins-page"><a class="qz2-ev" href="#auto">All answers written with AI ' + icon("arrow") + "</a></p>"; }
   const addr = answerAddr(id, page), w = mfWhere(page), pl = sharedPlace(page || "", id);
   return '<p class="ins-page">' + (/^#cl_/.test(addr) ? '<a class="qz2-ev" href="' + esc(pl.href) + '">' + esc(pl.more) + " " + icon("arrow") + "</a>" : '<a class="qz2-ev" href="' + esc(addr) + '">See it on the ' + esc(w.name) + " page " + icon("arrow") + "</a>") + "</p>"; };
 const insBar = eye => '<div class="ev-bar"><button type="button" class="ev-back">' + icon("arrow") + '<span>Back</span></button><span class="ev-eye ins-eye">' + eye + "</span></div>";
@@ -1432,7 +1436,7 @@ function insHtml(v) {
   const routes = res.routes.filter(r => !r.way).map(r => insRouteHtml(r, "ins-route")).join("") + (res.emergency ? insSosHtml("dh-help ins-sos") : "");
   const ways = figs.map(r => insRouteHtml(r, "ins-route")).join(""), places = look.map(r => insRouteHtml(r, "ins-route")).join("");
   const best = res.best.map((x, n) => { const w = mfWhere(x.page);
-    return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written by our system" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
+    return '<section class="ins-one" aria-labelledby="ins-l' + n + '"><p class="ins-l" id="ins-l' + n + '"><span class="ins-l-k">' + icon(w.f.icon) + "<span>" + (isAuto(x.id) ? "Written with AI" : "Checked answer") + " · " + esc(w.name) + '</span></span><span class="ins-l-q">' + esc(insQ(x.id, x.page)) + "</span></p>" +
       '<div class="ins-ans">' + insBodyHtml(x.id, res.depth) + "</div>" + insPageLink(x.id, x.page) + "</section>"; }).join("");
   const none = insNoneHtml(res, true);
   const related = !res.best.length && res.related.length ? '<div class="rn ins-rel"' + (open ? ' data-at="near" data-n="' + res.related.length + '"' : "") + '><p class="rn-k">' + (res.note === "unfinished" ? "You may mean" : open ? "Closest answers we have" : "Related") + '</p><ul class="rn-l">' + res.related.map(x => { const w = mfWhere(x.page);
@@ -1625,8 +1629,8 @@ let ASK_NEWER = false;
 // what the page says once a question is sent. The promise of an answer within the hour is made only by a site whose half-hourly
 // run is on and has been seen to keep it (AUTO_LOOP, from data/auto/lane/policy.json at build time); until then: the plain truth
 const ASK_SENT = (typeof AUTO_LOOP !== "undefined" && AUTO_LOOP)
-  ? "Sent. Our system starts on it within half an hour. If it finds research it can read, the answer is usually here within the hour: your question then turns green under “Your questions” on the start page."
-  : "Sent. Our system works on it by itself and keeps trying until an answer passes its checks. It turns green under “Your questions” on the start page.";
+  ? "Sent. Work on it starts within half an hour. Where research on it can be read, the answer is usually here within the hour: your question then turns green under “Your questions” on the start page."
+  : "Sent. It is worked on until an answer passes the checks. It turns green under “Your questions” on the start page.";
 function askedLook() {   // one look: is the site on the server newer than this page?
   if (ASK_NEWER) return Promise.resolve(true);
   return fetch("data/build.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => { if (j && typeof j.build === "string" && j.build !== ASK_BUILD) ASK_NEWER = true; return ASK_NEWER; }).catch(() => false);   // (2.23.1: it no longer makes the page say anything)
@@ -1719,7 +1723,7 @@ function askedSet(k, patch) { const list = askedList(), it = list.find(x => x.k 
 function askedDrop(k) { askedSave(askedList().filter(x => x.k !== k)); }
 // (2.17) a question the reader took off the list is not put back by the page in this visit (kept until the tab closes: its key only)
 function askedGoneSet() { try { const a = JSON.parse(sessionStorage.getItem("pk-asked-x") || "[]"); return new Set(Array.isArray(a) ? a : []); } catch (e) { return askedGoneSet.mem || (askedGoneSet.mem = new Set()); } }
-function askedGoneAdd(k) { const s = askedGoneSet(); s.add(String(k)); try { sessionStorage.setItem("pk-asked-x", JSON.stringify([...s].slice(-40))); } catch (e) { askedGoneSet.mem = s; } }
+function askedGoneAdd(k) { const s = askedGoneSet(); s.add(String(k)); try { sessionStorage.setItem("pk-asked-x", JSON.stringify([...s].slice(-300))); } catch (e) { askedGoneSet.mem = s; } }
 const askedGone = q => askedGoneSet().has(insClean(q).slice(0, 200).toLowerCase());
 // a question sent by the page a moment ago that was only the beginning of this one ("does kanna help" before "does kanna help with anxiety") leaves the list
 function askedTidy(k) { const now = Date.now(), list = askedList(), keep = list.filter(x => x.k === k || !(x.auto && !x.w && now - (x.t || 0) < 180000 && k.length > x.k.length && k.indexOf(x.k) === 0)); if (keep.length !== list.length) askedSave(keep); }
@@ -1886,23 +1890,23 @@ function liveHtml(it) {
   if (it.st === "ans" && it.id && (isAuto(it.id) || claimById[it.id])) { const a = isAuto(it.id) ? AUTO[it.id] : null, q = a ? a.q : insQ(it.id, it.p), short = a ? a.short : ((SIMPLE.claims || {})[it.id] || {}).short || "";
     return '<div class="lv lv-card" role="status"><p class="lv-h">' + icon("check") + "<span>Answered" + (it.fresh && Date.now() - it.fresh < 3600e3 ? " just now" : "") + '</span></p><p class="lv-q">' + esc(q) + "</p>" + (short ? '<p class="lv-a">' + esc(short) + "</p>" : "") +
       '<a class="qz2-nb lv-open" href="' + (a ? "#auto/q-" + esc(it.id) : esc(answerAddr(it.id, it.p))) + '" data-you-live="' + esc(it.id) + '"' + (it.p ? ' data-page="' + esc(it.p) + '"' : "") + ">Read the answer</a></div>"; }
-  if (lv.no) return '<div class="lv lv-card lv-plain" role="status"><p class="lv-h"><span>Our system read your question and did not list it.</span></p><p class="lv-s">' + esc(lv.no) + "</p></div>";
+  if (lv.no) return '<div class="lv lv-card lv-plain" role="status"><p class="lv-h"><span>Your question was read and not listed.</span></p><p class="lv-s">' + esc(lv.no) + "</p></div>";
   if (lv.reload) return '<div class="lv lv-card" role="status"><p class="lv-h">' + icon("check") + '<span>Answered</span></p><p class="lv-s">The answer is in the newest version of the site. <button type="button" class="linklike" data-asked-reload>Load it</button></p></div>';
   const n = lv.n || [0, 0], found = n[0] + n[1] > 0, at = lv.room ? new Date(lv.room) : null, hhmm = at && !isNaN(at) ? at.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
   const steps = [];   // [done | now | next, the line]
-  if (!lv.our) steps.push(["now", "Our system is reading your question. It starts within a minute."]);
+  if (!lv.our) steps.push(["now", "Reading your question. This starts within a minute."]);
   else {
-    steps.push(["done", "Our system read it as: <q>" + esc(lv.our) + "</q>"]);
+    steps.push(["done", "Read as: <q>" + esc(lv.our) + "</q>"]);
     if (found) steps.push(["done", "Found " + [n[0] ? liveCount(n[0], "paper") + " it can read" : "", n[1] ? liveCount(n[1], "official page") : ""].filter(Boolean).join(" and ")]);
     else if (lv.st === "new") steps.push(["now", "Looking for papers and official pages"]);
-    if (lv.st === "nosource") steps.push(["end", "It searched. Nothing that can be read is published on this yet. It looks again by itself as new papers come out."]);
+    if (lv.st === "nosource") steps.push(["end", "Searched: nothing that can be read is published on this yet. It is looked for again as new papers come out."]);
     else if (lv.st === "editor") steps.push(["end", "An answer is written. It is one of the few kinds that a person reads before it is shown."]);
-    else if (lv.st === "tried") steps.push(["end", "Answers were written, and none passed our checks. We do not show one that has not passed. It is tried again another day."]);
-    else if (lv.st === "check" && !lv.working) steps.push(["now", "An answer is written and has passed every check that could be made. One more checker has to read it, and it can be asked only so many times a day. It goes on by itself."]);
+    else if (lv.st === "tried") steps.push(["end", "No answer has passed the checks yet. It is tried again another day."]);
+    else if (lv.st === "check" && !lv.working) steps.push(["now", "Written and checked. One last check is waiting for its turn today."]);
     else if (lv.working) steps.push(["now", (lv.st === "trying" ? "Writing again now. " : "Writing the answer now. ") + "Every sentence is tied to a source’s own words and checked. A few minutes."]);
-    else if (lv.st === "trying") steps.push(["now", "A first try did not pass every check. Our system is working on it again by itself."]);
+    else if (lv.st === "trying") steps.push(["now", "A first try did not pass the checks. Writing again."]);
     else if (found) steps.push(["next", "Next: writing the answer"]);
-    if (hhmm && !lv.working && lv.st !== "nosource" && lv.st !== "editor") steps.push(["wait", "The free models our system writes with have used up today’s allowance. It goes on at " + esc(hhmm) + "."]);
+    if (hhmm && !lv.working && lv.st !== "nosource" && lv.st !== "editor") steps.push(["wait", "Today’s writing allowance is used up. It goes on at " + esc(hhmm) + "."]);
   }
   const last = steps[steps.length - 1][0];
   return '<div class="lv' + (last === "end" || last === "wait" ? " lv-rest" : " lv-on") + '" role="status" aria-live="polite"><ol class="lv-steps">' + steps.map(s => '<li class="lv-' + s[0] + '"><span class="lv-m" aria-hidden="true"></span><span class="lv-t">' + s[1] + "</span></li>").join("") + "</ol></div>";
@@ -1919,12 +1923,12 @@ function youHtml(list, hist) {
   // (2.15.2) for a question on our list: what our system has done with it so far (AUTO_STATE, from the lane's own record). (2.21, lane 19) The system tries
   // again by itself, and the words say so; only a few kinds are read by an editor before they show.
   const state = it => { const s = it.lv && it.lv.st ? it.lv.st : it.w && typeof AUTO_STATE !== "undefined" ? AUTO_STATE[it.w] : "";   // (2.23) what the system said last, where the page has asked the server
-    if (it.lv && it.lv.no) return "Read by our system. Not listed";
+    if (it.lv && it.lv.no) return "Read. Not listed";
     if (it.lv && it.lv.reload) return "Answered. Open the site again to read it";
     if (it.lv && it.lv.working) return "Being written now";
     if (s === "found") return "Sources found. Writing is next";
     if (s === "check") return "Written. One more check to pass";
-    return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Working on it by itself" : s === "tried" ? "No answer passed our checks yet. It tries again" : s === "new" ? "In line. Not tried yet" : ""; };
+    return s === "editor" || s === "person" ? "Written. An editor reads this kind first" : s === "nosource" ? "Searched. Nothing we can read is published on it yet" : s === "trying" ? "Being answered" : s === "tried" ? "No answer passed the checks yet. Trying again" : s === "new" ? "In line. Not tried yet" : ""; };
   // (2.9; the senior author, 17 November, of his two sent questions: "i cannot click on them to see the answer") a question that waits can be opened too:
   // it is asked again in the box, which shows what the site has on it so far
   const look = (it, k) => '<li class="aq wait' + (it.w ? " onlist" : "") + '"><button type="button" class="aq-a aq-look" data-asked-look="' + esc(it.k) + '"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">' + icon("clock") + (state(it) || k) + (it.sent ? '<span class="aq-ago"> · ' + (it.kept ? "asked " : "sent ") + youAgo(it.t) + "</span>" : "") +
@@ -1935,9 +1939,11 @@ function youHtml(list, hist) {
     : it.sent ? look(it, "Sent. We are checking")
     : '<li class="aq unsent"><span class="aq-a"><span class="aq-q">' + esc(it.q) + '</span><span class="aq-k">Not sent</span><button type="button" class="aq-send" data-asked-send="' + esc(it.k) + '">Send it to us</button></span>' + x(it) + "</li>";
   const newer = list.some(it => it.st !== "ans" && it.lv && it.lv.reload) ? '<p class="aq-new" role="status">Your question has an answer in the newest version of the site. <button type="button" class="aq-reload" data-asked-reload>Load it</button></p>' : "";   // (2.23.1: only for the reader's own)
-  const note = autoSendOn() ? "A question we had no answer to is sent to our system by itself (About us, Privacy switches that off). It works on them by itself, the ones people sent first, and keeps trying until an answer passes its checks. A question turns green here when it is answered."
-    : "We see a question only if you send it. Our system works on sent questions by itself, the ones people sent first, and keeps trying until an answer passes its checks. A question turns green here when it is answered.";
-  const mine = list.length ? '<p class="aq-note">' + note + "</p>" + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>"
+  const note = autoSendOn() ? "A question we had no answer to is sent on by itself to be answered (About us, Privacy switches that off). It turns green here when it is answered."
+    : "We see a question only if you send it. A sent question turns green here when it is answered.";
+  const mine = list.length ? '<p class="aq-note">' + note + "</p>" + newer + '<ul class="aq-l">' + list.filter(it => it.st === "ans").sort(byNew).concat(list.filter(it => it.st !== "ans").sort(byNew)).map(row).join("") + "</ul>" +
+      // (2.25.0; the senior author, 19 November 2026, 17:49: "i want to be able to delete all my questions at once if i want") one tap, then a yes
+      '<p class="you-acts aq-acts"><button type="button" class="you-del" data-asked-clear>' + icon("x") + "Delete all my questions</button></p>"
     : '<p class="aq-note">No question of yours is waiting. When the site has no answer to a question, it is listed here until it is answered.</p>';
   // the past searches: the question, when it was asked, and the site's answer in a line where it has one
   const past = !histOn() ? '<p class="aq-note">Your searches are not kept on this device. <button type="button" class="linklike" data-hist-on>Keep my past searches here</button></p>'
@@ -2016,6 +2022,12 @@ function askedCheckSoon() {
 document.addEventListener("click", async e => {
   if (!e.target.closest) return;
   if (e.target.closest("button[data-asked-reload]")) { location.reload(); return; }
+  if (e.target.closest("button[data-asked-clear]")) { const row = e.target.closest(".aq-acts"), n = askedList().length; if (!row) return;
+    row.innerHTML = '<span class="aq-sure">Delete all ' + n + (n === 1 ? " question" : " questions") + ' from this device?</span><button type="button" class="you-del" data-asked-clear-yes>' + icon("x") + 'Delete all</button><button type="button" class="linklike" data-asked-clear-no>Keep them</button>';
+    const y = row.querySelector("[data-asked-clear-yes]"); if (y) y.focus({ preventScroll: true }); return; }
+  if (e.target.closest("button[data-asked-clear-no]")) { askedBox(); const b = document.querySelector("button[data-asked-clear]"); if (b) b.focus({ preventScroll: true }); return; }
+  if (e.target.closest("button[data-asked-clear-yes]")) { askedList().forEach(it => askedGoneAdd(it.k)); askedSave([]); askedBox(); youTell();
+    const h = document.getElementById("you-title") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   const xb = e.target.closest("button[data-asked-x]"); if (xb) { askedGoneAdd(xb.dataset.askedX); askedDrop(xb.dataset.askedX); askedBox(); const h = document.getElementById("you-title") || document.getElementById("search"); if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); } return; }
   // (2.10) a thing to try under the capsule: put in the box and asked
   const tr = e.target.closest("button[data-try]");
@@ -2346,8 +2358,8 @@ function insAutoFind(after, res, now, slot) {
      above found papers): then it is most likely a drug we have yet to learn, not a slip of the keyboard.
    - A question like one on our list: nothing of the reader's is sent (the device counts the listed question by its number, as before); the LISTED
      question is put on the reader's list by itself, so that they are told when it is answered. */
-const AUTO_WAIT = 2500, AUTO_SENT = "Sent to our system, so that it gets answered. It turns green under “Your questions” on the start page when it is.";
-const AUTO_SENT_LIVE = "Sent to our system. You can stay or come back: it is kept under “Your questions” on the start page.";   // (2.23) what the system is doing stands under this line, as it happens
+const AUTO_WAIT = 2500, AUTO_SENT = "Sent, so that it gets answered. It turns green under “Your questions” on the start page when it is.";
+const AUTO_SENT_LIVE = "Sent. You can stay or come back: it is kept under “Your questions” on the start page.";   // (2.23) what the system is doing stands under this line, as it happens
 const insAutoSaidHtml = t => '<span class="ask-said ask-auto-said" role="status">' + esc(t) + ' <button type="button" class="linklike" data-auto-stop>Don’t send mine</button></span>';
 function insAutoSaid(after, text) {
   let slot = after.querySelector(".ask-auto");
@@ -2471,7 +2483,7 @@ function autoLabel(a) {
   // (2.21, lane 19) an answer about dying, overdose, mixing, pregnancy or children now goes out by itself where it meets a stricter bar: under it, always, the
   // way to the emergency numbers, in the words the site's own footer has had since it began
   return (a.risk ? '<p class="auto-sos">In an emergency call your <a href="#emergency">local emergency number</a>.</p>' : "") +
-    '<p class="auto-l">Written by our system from ' + autoFrom(a) + ". Not yet checked by a person." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
+    '<p class="auto-l">Written with AI from ' + autoFrom(a) + "." + (a.complete ? "" : ' <span class="auto-inc">Not complete yet.</span>') + "</p>";
 }
 function autoBodyHtml(id) {
   const a = AUTO[id];
@@ -2490,7 +2502,7 @@ function autoBodyHtml(id) {
 function autoRowHtml(x, best) {
   const a = AUTO[x.id], w = mfWhere(a.page);
   return '<a class="sr-ans sr-fit-a sr-auto' + (best ? " sr-best" : "") + '" href="#auto/q-' + esc(x.id) + '" data-insight="' + esc(x.id) + '" data-page="' + esc(a.page) + '"><span class="k">' + esc(w.name) + '</span><span class="t">' + esc(a.q) +
-    '</span><span class="a">' + esc(best ? a.short : glanceClause(a.short)) + '</span><span class="m auto-m">Written by our system · not yet checked by a person</span></a>';
+    '</span><span class="a">' + esc(best ? a.short : glanceClause(a.short)) + '</span><span class="m auto-m">Written with AI</span></a>';
 }
 // a list of such answers as links that open each over the page (a drug's page, and the page that lists them all)
 function autoListHtml(ids, withPage) {
@@ -2506,7 +2518,7 @@ function autoStartedListHtml() {
   const ks = autoStarted(); if (!ks.length) return "";
   const meta = k => { const n = autoFor("new:" + k).length, p = autoPics(k).length, sh = autoShell(k), q = sh ? sh.asked.length : 0;
     return [n ? n + (n === 1 ? " answer" : " answers") : "No answer yet", p ? p + (p === 1 ? " picture" : " pictures") : "", q ? q + (q === 1 ? " question asked" : " questions asked") : ""].filter(Boolean).join(" · "); };
-  return '<h2 class="auto-h">Pages our system started</h2><p class="auto-sec">Drugs and medicines people ask about that had no page here. Our system started these by itself. A person has not checked them yet.</p><ul class="wl auto-pages">' +
+  return '<h2 class="auto-h">New pages</h2><p class="auto-sec">Drugs and medicines people ask about that had no page here.</p><ul class="wl auto-pages">' +
     ks.map(k => { const ph = autoPics(k)[0]; return '<li class="wl-i"><a class="auto-a' + (ph ? " hasth" : "") + '" href="#auto/p-' + esc(k) + '">' + (ph ? '<span class="auto-th">' + autoPicImg(ph, "t", "", true) + "</span>" : "") +
       '<span class="wl-q">' + esc(AUTO_PAGES[k]) + '</span><span class="auto-meta">' + meta(k) + "</span></a></li>"; }).join("") + "</ul>";
 }
@@ -2537,8 +2549,8 @@ function autoPicCredit(p) {
 }
 // where the system's pictures come from, in one sentence (GBIF, Wikimedia Commons or both)
 function autoPicFrom(pics) {
-  const s = new Set(pics.map(p => p.src || "gbif")), gbif = "GBIF, an open record of plants and fungi that people saw and named", wc = "Wikimedia Commons, a library of pictures that people share under open licences";
-  return "They come from " + (s.size > 1 ? gbif + ", and from " + wc : s.has("commons") ? wc : gbif) + ".";
+  const s = new Set(pics.map(p => p.src || "gbif"));
+  return s.size > 1 ? "From GBIF and Wikimedia Commons." : s.has("commons") ? "From Wikimedia Commons." : "From GBIF, an open record of what people saw and named.";
 }
 function autoLooksHtml(k) {
   const pics = autoPics(k); if (!pics.length) return "";
@@ -2547,7 +2559,7 @@ function autoLooksHtml(k) {
       (p.kind === "thing" ? "<b>An example</b><span>" + esc(p.species) + "</span>" : "<b>The " + autoKindWord(p.kind) + "</b><span><i>" + esc(p.species) + "</i>" + (p.country ? ". Seen in " + esc(inCtry(p.country)) + "." : "") + "</span>") + "</span></li>").join("") + "</ul>" +
     '<details class="look-credits"><summary>Photo credits</summary><p>' + pics.map((p, i) => "Photo " + (i + 1) + ": " + autoPicCredit(p)).join("; ") + ".</p></details>" +
     // (the site's rule for every gallery, docs/WRITING-RULES.md: it shows examples; the same thing can look different and different things the same)
-    '<p class="look-note auto-picnote">Our system found these pictures by itself. ' + autoPicFrom(pics) + " A person here has not checked them yet. They are examples: " +
+    '<p class="look-note auto-picnote">' + autoPicFrom(pics) + " They are examples: " +
       (kinds.length === 1 && kinds[0] === "fungus" ? "the same fungus can look different, and different fungi can look the same" : kinds.length === 1 && kinds[0] === "plant" ? "the same plant can look different, and different plants can look the same" :
         kinds.length === 1 && kinds[0] === "thing" ? "the same drug can look different, and different drugs can look the same" : "the same thing can look different, and different things can look the same") +
       ". A picture cannot tell you what you have. " + phToggle() + "</p>";
@@ -2558,30 +2570,30 @@ function autoAskedHtml(k) {
   const sh = autoShell(k), asked = sh ? sh.asked : []; if (!asked.length) return "";
   const kept = autoKept();
   return '<ul class="wl auto-asked">' + asked.map(a => '<li class="wl-i"><span class="wl-q">' + esc(a.q) + "</span>" +
-    (a.answer && isAuto(a.answer) ? '<a class="wl-b" href="#auto/q-' + esc(a.answer) + '" data-sheet="' + esc(a.answer) + '">Read what our system wrote</a>'
+    (a.answer && isAuto(a.answer) ? '<a class="wl-b" href="#auto/q-' + esc(a.answer) + '" data-sheet="' + esc(a.answer) + '">Read the answer</a>'
       : '<span class="wl-n">Not answered yet</span>' + (kept.has(a.id) ? '<span class="wl-s">' + icon("check") + "We will tell you on this device</span>" : '<button type="button" class="wl-b" data-want-keep="' + esc(a.id) + '">Tell me when it is answered</button>')) + "</li>").join("") + "</ul>" +
-    '<p class="auto-sec">' + (asked.length === 1 ? "This question is on our list. Our system looks for research on it by itself." : "These questions are on our list. Our system looks for research on them by itself.") + "</p>";
+    '<p class="auto-sec">' + (asked.length === 1 ? "This question is on our list: research on it is being looked for." : "These questions are on our list: research on them is being looked for.") + "</p>";
 }
 function autoPageHtml(k) {
   const name = AUTO_PAGES[k], sh = autoShell(k) || { name, science: [], asked: [] }, pics = autoPics(k), ids = autoFor("new:" + k), base = "auto/p-" + k, low = autoLow(k);
   const kind = sh.science.length ? sh.science[0].kind : "", ph = pics[0] || null, secs = [], open = sh.asked.filter(a => !(a.answer && isAuto(a.answer))).length;
-  if (pics.length) secs.push({ id: "p-looks", name: "What does it look like?", chip: "Looks", icon: "eye", n: pics.length + (pics.length === 1 ? " picture" : " pictures"), line: "Not yet checked by a person", body: autoLooksHtml(k) });
+  if (pics.length) secs.push({ id: "p-looks", name: "What does it look like?", chip: "Looks", icon: "eye", n: pics.length + (pics.length === 1 ? " picture" : " pictures"), line: "Examples", body: autoLooksHtml(k) });
   if (sh.asked.length) secs.push({ id: "p-asked", name: "What people ask", chip: "Questions", icon: "message", n: sh.asked.length + (sh.asked.length === 1 ? " question" : " questions"),
-    line: !open ? "Answered by our system" : open === sh.asked.length ? "Not answered yet" : open + " not answered yet", body: autoAskedHtml(k) });
-  if (ids.length) secs.push({ id: "p-auto", name: "Written by our system", chip: "By our system", icon: "book", n: ids.length + (ids.length === 1 ? " answer" : " answers"), line: "Not yet checked by a person",
-    body: '<p class="auto-sec">Our system wrote these by itself from research papers and official health pages it found and read. A person has not checked them yet.</p>' + autoListHtml(ids, false) });
+    line: !open ? "Answered" : open === sh.asked.length ? "Not answered yet" : open + " not answered yet", body: autoAskedHtml(k) });
+  if (ids.length) secs.push({ id: "p-auto", name: "Written with AI", chip: "With AI", icon: "book", n: ids.length + (ids.length === 1 ? " answer" : " answers"), line: "From research papers and official pages",
+    body: '<p class="auto-sec">Written with AI from research papers and official health pages. Each shows its sources.</p>' + autoListHtml(ids, false) });
   const aka = sh.science.filter(s => norm(s.name) !== norm(name));
   const head = '<header class="dh' + (ph ? " hasph" : "") + (name.length > 24 ? " long" : "") + '">' + (ph ? '<figure class="dh-ph">' + autoPicImg(ph, "m", autoPicAlt(ph), false) + (pics.length > 1 ? '<a class="dh-forms" href="#' + base + '/part-p-looks">See all ' + pics.length + " pictures</a>" : "") + "</figure>" : "") +
     '<div class="dh-t">' + (kind ? '<p class="dh-fam">' + icon(kind === "fungus" ? "mushroom" : "leaf") + (kind === "fungus" ? "Fungus" : "Plant") + "</p>" : "") + "<h1>" + esc(name) + "</h1>" +
     (aka.length ? '<p class="dh-aka">' + aka.map(s => "<i>" + esc(s.name) + "</i>").join(", ") + "</p>" : "") + "</div></header>";
-  const top = '<p class="auto-top" role="note">' + icon("bulb") + "<span>People asked about " + esc(low) + ", and the site had no page. Our system started this one by itself" +
-    (ids.length ? " and wrote what is on it. A person has not checked it yet." : ". It has not written an answer yet. A person has not checked this page.") + "</span></p>";
+  const top = '<p class="auto-top" role="note">' + icon("bulb") + "<span>People asked about " + esc(low) + ", so this page was started." +
+    (ids.length ? " Its answers are written with AI from the sources each one shows." : " Its answers are on the way.") + "</span></p>";
   // one part is shown at once; two or more are behind the menu, as on a drug's page
   const body = secs.length > 1 ? secPageHtml(name.replace(/\s*\(.*\)$/, ""), secs, "")
     : secs.map(x => '<section class="sec auto-one" id="' + x.id + '" aria-labelledby="' + x.id + '-h"><h2 id="' + x.id + '-h" tabindex="-1"><span class="sec-ic">' + icon(x.icon) + "</span>" + esc(x.name) + '</h2><div class="sec-b">' + x.body + "</div></section>").join("");
   const ask = '<section class="sec fbline" aria-label="Ask or report"><p><b>Ask about ' + esc(low) + ".</b> Type your question in the box at the top. If the site cannot answer it yet, you can send it to us with one tap.</p><div class=\"fb-two\">" +
     '<button type="button" data-ask-fill="' + esc(low) + '">' + icon("search") + 'Ask a question</button><button type="button" data-fb="issue">' + icon("flag") + "Report a mistake</button></div></section>";
-  return head + top + body + ask + '<p class="auto-back"><a class="go" href="#auto">Everything written by our system</a></p>';
+  return head + top + body + ask + '<p class="auto-back"><a class="go" href="#auto">All answers written with AI</a></p>';
 }
 function autoPage(started) {
   const box = document.getElementById("auto-list"); if (!box) return;
@@ -2593,13 +2605,13 @@ function autoPage(started) {
   }
   if (pg) { pg.hidden = true; pg.innerHTML = ""; delete pg.dataset.base; }
   if (main) main.hidden = false;
-  if (head) head.textContent = "Written by our system";
-  if (lede) lede.textContent = "Answers our system wrote by itself, from research papers and official health pages it found and read. A person has not checked them yet. Each one says so and shows its sources.";
+  if (head) head.textContent = "Written with AI";
+  if (lede) lede.textContent = "Answers written with AI from research papers and official health pages. Each one says so and shows its sources.";
   if (how) how.hidden = false;
   const ids = typeof AUTO === "object" && AUTO ? Object.keys(AUTO).sort((a, b) => (AUTO[b].made || "").localeCompare(AUTO[a].made || "") || a.localeCompare(b)) : [];
   const st = autoStartedListHtml();
   box.innerHTML = st + (ids.length ? (st ? '<h2 class="auto-h">Every answer</h2>' : "") + '<p class="auto-n">' + ids.length + (ids.length === 1 ? " answer" : " answers") + ", the newest first.</p>" + autoListHtml(ids, true)
-    : st ? '<h2 class="auto-h">Every answer</h2><p class="muted">No answer is shown right now.</p>' : '<p class="muted">Nothing yet. The first answers appear here as soon as the system has written them.</p>');
+    : st ? '<h2 class="auto-h">Every answer</h2><p class="muted">No answer is shown right now.</p>' : '<p class="muted">Nothing yet. The first answers appear here as soon as they are written.</p>');
 }
 if (typeof document !== "undefined") {
   { const pg = document.getElementById("auto-page"); if (!(pg && pg.dataset.base)) autoPage(); }   // (a started page the first route has just drawn stays)
@@ -2609,7 +2621,7 @@ if (typeof document !== "undefined") {
     if (s.scrollIntoView) s.scrollIntoView({ block: "center" }); setTimeout(() => { s.focus({ preventScroll: true }); try { s.setSelectionRange(s.value.length, s.value.length); } catch (err) { /* the cursor stays where the browser puts it */ } }, 0); });
   // every picture the system found is also named among the site's photo credits (About us)
   { const el = document.getElementById("photo-credits"); if (el && typeof AUTO_PICS === "object" && AUTO_PICS) el.insertAdjacentHTML("beforeend", Object.keys(AUTO_PICS).map(k => AUTO_PICS[k].map(p =>
-      "<li><b>" + esc(AUTO_PAGES[k] || k) + ":</b> the " + autoKindWord(p.kind) + " <i>" + esc(p.species) + '</i>, found by our system. <span class="phcredit">Photo: ' + autoPicCredit(p) + "</span></li>").join("")).join("")); }
+      "<li><b>" + esc(AUTO_PAGES[k] || k) + ":</b> the " + autoKindWord(p.kind) + " <i>" + esc(p.species) + '</i>. <span class="phcredit">Photo: ' + autoPicCredit(p) + "</span></li>").join("")).join("")); }
   document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("button[data-auto-report]"); if (!b) return;
     e.preventDefault(); const id = b.dataset.autoReport; if (EV.open) closeEvidence(); openFeedback("issue", "#auto/q-" + id, ""); });
 }

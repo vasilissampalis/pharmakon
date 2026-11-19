@@ -1,9 +1,17 @@
 # Project status and work queue
 
-Updated 2026-11-19, 13:00 (site 2.24.0, protocol 0.6.1; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
+Updated 2026-11-19, 18:30 (site 2.25.0, protocol 0.6.2; the newest entry is first below; older entries below as they were). The working record of what is done, what is waiting and on what. The site's About
 page states the same in public terms. The project's history is in the GitHub repository vasilissampalis/pharmakon (METHODS §11).
 
 ## Where things stand
+
+- **Next (his words of 17:57, 18:10, 18:11): Insight's own model, without limits, on the reader's device** (decision 37, a plan in four stages: our own small model trained on our material; the free big models as teachers on GitHub's machines; MeSH, RxNorm, Wikidata and PubChem; Europe PMC and PubMed ranked again on the device). A free model service in the page was set aside: its free plans are small and shared with the lane.
+- **19 November 2026, 17:48 and 17:49 (Athens): claims and evidence without words about the system; delete all questions at once (site 2.25.0; decision 36).** Every "our system" and "not checked by a person" is gone from the pages; an answer written with AI keeps one line, "Written with AI from …" (EU AI Act, art. 50); the code-written But says what the answer rests on and nothing else (nine published answers and the live record brought to it); "Delete all my questions" under the reader's list, with a yes.
+- **19 November 2026, 17:02 to 18:00 (Athens): published, pictures looked at, CC BY-SA, new example questions (site 2.24.0 live at 17:06; 2.24.1).**
+  - **His words (17:02):** "did you finish everything? did you publish all the changes? don't waste my time publish always". Everything was pushed and published at once (deploy-0307, 0308, 0309); from now on every finished step is published without asking.
+  - **Pictures, first daily run by hand (pictures-0005):** 76 Commons pages read; of 10 pictures waiting, the editor showed 3 and held 7 (each with its reason; `data/auto/pictures.json`). A Commons example is named by its category ("Piracetam"), not by the whole page.
+  - **CC BY-SA (his word, 17:44: "do whatever is best. if that's best, do it"):** the system's pictures follow the writing rules' own rule for photos, CC BY-SA only where nothing more open exists, marked (decision 35; METHODS §12.2 point 19, protocol 0.6.2). Every Commons look is made again once under the new rule.
+  - **The example questions under the search box (his words, 17:46: "the questions should be in random order and always new ones should appear"):** each time the box opens, a new draw at random: five questions of five drugs, from what people ask most about each drug (its first twelve by demand), the ones this device has not been shown first (`app.views.js`, `suggestDraw`; the numbers kept on the device only). A drug's own page still offers what people ask most about that drug.
 
 - **19 November 2026, 09:56 to 10:21 (Athens): his five requests of the morning (site 2.23.1 and 2.24.0; protocol 0.6.1). Built and checked; held back from GitHub at first (an automatic filter stopped the push, and by his rule a stopped step is not tried again in another form) until his word at 17:02: "don't waste my time publish always". Published at once after it, and from now on every finished step is published without asking.**
   - **One tap to the scientific detail (09:56, his words of 23:50 again):** live since 2.22.1 (01:13); seen on pharmakon.world at 09:58. His phone held the earlier page.

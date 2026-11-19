@@ -43,18 +43,18 @@ def load(p, d):
 key_of = lambda q: hashlib.sha256(str(q).lower().encode("utf-8")).hexdigest()[:20]                       # the store's own key (site/worker/_worker.js, keyOf): of the words as stored, in lower case
 finger = lambda t: hashlib.sha256(re.sub(r"[^a-z0-9]+", " ", (t or "").lower()).strip().encode("utf-8")).hexdigest()[:20]      # scripts/auto/ask.py, finger
 
-NO = [("not about drugs", "Our system did not read this as a question about drugs. If it is one, ask it again with the drug's name in it."),
+NO = [("not about drugs", "This was not read as a question about drugs. If it is one, ask it again with the drug's name in it."),
       ("something the site does not answer", "This is something the site does not answer: where to get a drug, how to make or take one, or how to hide its use."),
-      ("not a finished question", "Our system read this as a question that is not finished. Ask it again in a whole sentence."),
-      ("no wording of ours passed", "Our system could not yet put this question into words of its own that keep its meaning. An editor will read it."),
-      ("our wording was not near", "Our system could not yet put this question into words of its own that keep its meaning. An editor will read it.")]
-SAY = {"new": "It is on our system's list. The search for papers and official pages comes first.",
+      ("not a finished question", "This was read as a question that is not finished. Ask it again in a whole sentence."),
+      ("no wording of ours passed", "This question could not yet be put into words of ours that keep its meaning. An editor will read it."),
+      ("our wording was not near", "This question could not yet be put into words of ours that keep its meaning. An editor will read it.")]
+SAY = {"new": "It is on the list. The search for papers and official pages comes first.",
        "found": "The sources are found. The writing is next: every sentence is tied to a source's own words and read by two or more checkers.",
-       "trying": "A first try did not give an answer that passed every check. Our system is working on it again by itself.",
-       "tried": "Answers were written, and none passed our checks. We do not show an answer that has not passed. It is tried again another day.",
-       "nosource": "We searched. Nothing that can be read is published on this yet. Our system looks again by itself as new papers come out.",
+       "trying": "A first try did not pass the checks. Writing again.",
+       "tried": "No answer has passed the checks yet. It is tried again another day.",
+       "nosource": "Searched: nothing that can be read is published on this yet. It is looked for again as new papers come out.",
        "editor": "An answer is written. It is one of the few kinds that a person reads before it is shown.",
-       "check": "An answer is written and has passed every check that could be made. One more checker has to read it, and it can be asked only so many times a day. It goes on by itself.",
+       "check": "Written and checked. One last check is waiting for its turn today.",
        "answered": "Answered."}
 
 
@@ -165,7 +165,7 @@ def selftest():
     out2 = make([], dict(out, q=dict(out["q"], **{"0" * 20: {"id": "w_a0900", "seen": "2026-10-30"}})), done, listed, {"items": {}}, dict(src, auto={"au_w_a0901": {"q": "x", "made": "2026-11-10"}}), t=t)
     assert set(out2["q"]) == set(out["q"]) and out2["answers"] == {} and out2["items"]["w_a0901"]["st"] == "answered" and "working" not in out2 and "room" not in out2
     out3 = make([], {}, done, listed, {"items": {"w_a0900": {"status": "waiting", "for": "again", "soft": "a further reader could not be asked"}}}, dict(src, state={"w_a0900": "trying"}), t=t)
-    assert out3["items"]["w_a0900"]["st"] == "check" and out3["items"]["w_a0900"]["say"].startswith("An answer is written and has passed every check that could be made"), out3["items"]["w_a0900"]
+    assert out3["items"]["w_a0900"]["st"] == "check" and out3["items"]["w_a0900"]["say"] == "Written and checked. One last check is waiting for its turn today.", out3["items"]["w_a0900"]
     assert decided("on the editors' list already: w_0031") == {"id": "w_0031"} and decided("our wording was not near the visitor's question (0.41): left for the editors")["no"] and decided("") is None
     print("live selftest: ok (a sent question is known by its key alone, never by its words; what was done is said in one word and one line; an answer the build shows is carried in the page's own form for three days; what a run could not read is kept from the run before)")
 
