@@ -211,7 +211,7 @@ export function findQueries(names, groups) {
 }
 export function findPaper(r) {
   if (!r || typeof r !== "object") return null;
-  const t = clean(unEnt(String(r.title || "").replace(/<[^>]+>/g, ""))).replace(/\.$/, "").slice(0, 300); if (t.length < 8) return null;
+  const t = clean(unEnt(String(r.title || "").replace(/<[^>]+>/g, "")).replace(/<[^>]+>/g, "")).replace(/\.$/, "").slice(0, 300); if (t.length < 8) return null;   // (2.28.7) a tag written as entities ("&lt;b&gt;") is a tag too, once read: trial 21 showed "<b>Dose-dependent effects ..." as a title
   const types = String(r.pubType || (r.pubTypeList && r.pubTypeList.pubType ? [].concat(r.pubTypeList.pubType).join("; ") : "")).toLowerCase();
   const doi = /^10\.\d{4,9}\/[^\s"<>]{1,200}$/.test(String(r.doi || "")) ? String(r.doi) : "", pmid = /^\d{1,9}$/.test(String(r.pmid || "")) ? String(r.pmid) : "";
   if (!doi && !pmid) return null;

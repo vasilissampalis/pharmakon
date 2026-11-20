@@ -2354,9 +2354,11 @@ function insFindTerms(res) {
   if (less) words.push("reduction|reducing|cutting down"); if (comed) words.push("comedown|come down|after-effects");
   // (2.28.7) how long a drug can be found, as papers say it ("how long does coke stay in your system" was looked up by "stay" and "system"); a test's kind stays a key word
   const stays = /\b(?:stays?|staying|remains?|lingers?|lasts?)\s+in\s+(?:your|my|the|their|his|her|a|one'?s)?\s*(?:system|body|blood(?:stream)?|urine|pee|hair|saliva|spit)\b|\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
-  if (stays) words.push("detection|detectable|elimination");
+  // (trial 21: "detection" beside "cocaine" found sensors that detect cocaine in a sample) staying in the body is asked as how it leaves it; a drug test as testing
+  const tested = stays && /\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
+  if (stays) words.push(tested ? "detection|detectable|testing" : "excretion|detectable|urinary");
   const rape = /\bdate[\s-]+rape\b/.test(masked), spike = /\bspik(?:e|ed|es|ing)\b/.test(masked);   // (2.28.7) what papers call them
-  if (rape) words.push("drug-facilitated sexual assault|date rape|sexual assault"); else if (spike) words.push("drink spiking|spiking|drug-facilitated");
+  if (rape) words.push("assault|rape|facilitated"); else if (spike) words.push("spiking|spiked|facilitated");   // (trial 21: the server takes one word for each way, of letters only: "drug-facilitated sexual assault" was no key word at all)
   const why = /^\s*why\s+(?:do|would|does|did|should)\s+(?:people|someone|anyone|they|users?|folks|men|women|students|teens|kids)\s+(?:take|use|do|try|smoke|drink|snort|inject|vape|want)\b/.test(masked);   // (2.28.7) the reasons, as papers say them
   const bodyq = /\bdo(?:es)?\s+to\s+(?:your|my|the|a|their|his|her|one'?s)?\s*body\b/.test(masked);   // (2.28.7) "what does fentanyl do to your body": its effects
   if (bodyq) words.push("effects|physiological");
