@@ -611,6 +611,16 @@ def second_hand(text, q):
     return ""
 
 
+def intro_hand(src, item):
+    """(20 November 2026) What a single study says in its introduction is what earlier work found, not its own finding, unless the sentence speaks of its own
+    work ("we", "this study"): "" or the line the writer is shown. On 20 November an answer said "a study of surgeons found" what that paper's text said of
+    the field (the editor held it). Reviews are left as they are: what a review says anywhere is the review's own summing up."""
+    if src.get("read") != "full" or src.get("kind") in ("review", "official") or not re.match(r"(?:\d+\.?\s*)?(?:introduction|background)\b", str(item.get("where") or ""), re.I): return ""
+    text = norm((src.get("_text") or {}).get(item.get("passage"), "")); q = norm(item.get("quote") or ""); i = text.find(q.strip(' ."\'…'))
+    sent = next((m.group(0) for m in re.finditer(r"[^.!?]+(?:[.!?]+|$)", text) if i >= 0 and m.start() <= i < m.end()), q)
+    return "" if OWN_FRAME.search(sent) else "(the paper's introduction, where it tells what is known from earlier work)"
+
+
 def widen(q, among):
     """(lane 11) A quote too short to be found for sure (a cell of a table: "400 mg") is widened to the clause it stands in
     (a row of the table, a sentence), when it stands in ONE place of the passages it may come from and that clause is short:
@@ -1798,7 +1808,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
     labels, n_f, n_l = {}, 0, 0
     for s in sources:
         if s["design"]: labels["D" + s["tag"]] = dict(s["design"], paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][s["design"]["passage"]])
-        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; f["second_hand"] = second_hand(s["_text"][f["passage"]], f["quote"]); labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][f["passage"]])
+        for f in s["findings"]: n_f += 1; f["id"] = f"F{n_f}"; f["second_hand"] = second_hand(s["_text"][f["passage"]], f["quote"]) or intro_hand(s, f); labels[f["id"]] = dict(f, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][f["passage"]])
         for l in s["limits"]: n_l += 1; l["id"] = f"L{n_l}"; l["second_hand"] = second_hand(s["_text"][l["passage"]], l["quote"]); labels[l["id"]] = dict(l, paper=paper_name(s), title=s.get("title") or "", ref=s["ref"]["id"], year=s.get("year"), passage_text=s["_text"][l["passage"]])
     keep_sources()
     if sum(weight(s) for s in sources) < 2: return done("none", "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service" + out_of_reach())
@@ -3117,6 +3127,9 @@ def selftest():
     assert second_hand("According to a study of women with difficulty achieving orgasm, cannabis use before partnered sex eased reaching orgasm.", "cannabis use before partnered sex eased reaching orgasm") and second_hand("In a review of recent studies, Kipping and Lynn found that moderate doses of cannabis improved female sexual function.", "moderate doses of cannabis improved female sexual function")
     assert second_hand("Smith et al. (2019) reported that half of the sample relapsed. They also noted cravings in most.", "They also noted cravings in most") and not second_hand("Results from this study indicated that both men and women see benefits.", "both men and women see benefits") and not second_hand("Men and women reported benefits.", "Men and women reported benefits")
     assert second_hand(disc, "long-term marijuana use (over 10 years) was associated with an increased risk of testicular germ cell tumors").startswith("A meta-analysis in 2019 evaluated")          # (lane 17) it says which earlier work
+    intro = {"read": "full", "kind": "study", "_text": {2: "Stimulants improve vigilance in sleep-deprived people. In this study we asked 1,105 surgeons about their use."}}
+    assert intro_hand(intro, {"passage": 2, "where": "1. Introduction", "quote": "Stimulants improve vigilance in sleep-deprived people"}) and not intro_hand(intro, {"passage": 2, "where": "Introduction", "quote": "we asked 1,105 surgeons about their use"})
+    assert not intro_hand(intro, {"passage": 2, "where": "3. Results", "quote": "Stimulants improve vigilance in sleep-deprived people"}) and not intro_hand(dict(intro, kind="review"), {"passage": 2, "where": "Introduction", "quote": "Stimulants improve vigilance in sleep-deprived people"})
     # (lane 18) "A 2023 survey found ... A 2024 review reports ...": the second sentence says who reports it, so the rule has nothing against the first sentence's "found"
     assert not rules([{"part": "short", "text": "A 2023 survey found cannabis tends to improve perceived sexual satisfaction. A 2024 review reports that moderate doses improved female sexual function.", "uses": ["F5", "F1"]}], {"F5": {"quote": "x", "second_hand": ""}, "F1": {"quote": "y", "second_hand": "In a review of recent studies, Kipping and Lynn found"}}, years=[2023, 2024])
     # (lane 18) what people perceive or say of themselves, said as what is
