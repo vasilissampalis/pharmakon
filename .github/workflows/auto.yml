@@ -98,6 +98,7 @@ jobs:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}   # (19 November 2026) SambaNova Cloud's free tier; empty until the senior author adds its key
       DO_SCOUT: ${{ needs.tick.outputs.scout }}
+      PK_FETCH_CACHE: /home/runner/.cache/pk-fetch   # (20 November 2026) scripts/auto/papers.py keeps full texts and Crossref records here (actions/cache, above)
       DO_LANE: ${{ needs.tick.outputs.lane }}
       GH_TOKEN: ${{ github.token }}   # to ask for a publishing in the middle of the work, as soon as a sent question has its answer
     steps:
@@ -118,6 +119,16 @@ jobs:
           key: insight-cards-${{ hashFiles('site/insight/vendor/*.onnx') }}-${{ hashFiles('data/study-cards/*.json') }}
           restore-keys: |
             insight-cards-${{ hashFiles('site/insight/vendor/*.onnx') }}-
+      # (20 November 2026) the full texts of open-access papers and the Crossref records fetched before, kept OUTSIDE the repository (scripts/auto/papers.py,
+      # PK_FETCH_CACHE): a question tried again is not slowed by fetching them again (22 of the lane's tries that day ended because its sources could not be
+      # fetched in the time a question has). What is older than 14 days is dropped before the work.
+      - name: The papers' full texts fetched before (kept outside the repository)
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/pk-fetch
+          key: pk-fetch-${{ github.run_id }}
+          restore-keys: |
+            pk-fetch-
       - name: Python packages
         run: |
           python3 -m venv .venv
@@ -127,6 +138,7 @@ jobs:
         run: |
           set +e
           L="$RUNNER_TEMP/auto.log"; : > "$L"; RUN_BEGAN="$(date -u +%Y-%m-%dT%H:%M:%S+00:00)"
+          mkdir -p "$PK_FETCH_CACHE"; find "$PK_FETCH_CACHE" -type f -mtime +14 -delete 2>/dev/null; echo "kept fetches: $(find "$PK_FETCH_CACHE" -type f | wc -l) files, $(du -sh "$PK_FETCH_CACHE" 2>/dev/null | cut -f1)" >> "$L"
           # (18 November 2026) each step's note carries the time it began (UTC): where a run's minutes went must be readable from its notes
           step() { echo "== $1 [$(date -u +%H:%M:%S)]" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
           # (19 November 2026, site 2.23) the store is read in every run that works, not only where the scout has something new: what the system is doing is

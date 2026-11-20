@@ -47,10 +47,18 @@ jobs:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}   # (19 November 2026) SambaNova Cloud's free tier; empty until the senior author adds its key
+      PK_FETCH_CACHE: /home/runner/.cache/pk-fetch   # (20 November 2026) full texts and Crossref records fetched before, kept outside the repository (as in auto.yml)
     steps:
       - uses: actions/checkout@v6
         with:
           ref: main   # the newest main, not the commit that started the run: a run that waited must see what the run before it wrote
+      - name: The papers' full texts fetched before (kept outside the repository)
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/pk-fetch
+          key: pk-fetch-${{ github.run_id }}
+          restore-keys: |
+            pk-fetch-
       - name: Python packages
         run: |
           python3 -m venv .venv
@@ -60,6 +68,7 @@ jobs:
         run: |
           set +e
           L="$RUNNER_TEMP/lane.log"; : > "$L"
+          mkdir -p "$PK_FETCH_CACHE"; find "$PK_FETCH_CACHE" -type f -mtime +14 -delete 2>/dev/null
           step() { echo "== $1" >> "$L"; shift; "$@" >> "$L" 2>&1; c=$?; if [ $c -ne 0 ]; then echo "!! this step failed ($c)" >> "$L"; fi; return 0; }
           step "the model client's own check" python3 -I scripts/auto/llm.py --selftest
           step "the finder's own check" python3 -I scripts/auto/papers.py --selftest

@@ -55,9 +55,35 @@ _pace = threading.Lock()   # (19 November 2026) the lane fetches its sources at 
 STOP_AT = None             # a run's clock (scripts/auto/llm.py, STOP_AT): past this moment (time.time()) nothing is fetched or waited for; None: no clock
 
 
+# (20 November 2026) A paper's full text in Europe PMC's open-access set and a reference's record at Crossref, once fetched, are kept in a folder OUTSIDE the
+# repository (PK_FETCH_CACHE; .github/workflows/auto.yml keeps it between runs with actions/cache, and drops what is older than 14 days), so that a question tried
+# again in the next run is not slowed by fetching them again: of the lane's tries on 20 November, 22 ended because sources could not be fetched in the time a
+# question has. Nothing else is kept (never a search, never an official page), and nothing of it enters the repository.
+KEEP_DIR = os.environ.get("PK_FETCH_CACHE") or ""
+KEEP_URL = re.compile(r"/fullTextXML$|^https://api\.crossref\.org/works/")
+
+
+def _kept(url):
+    """The file a fetched reply is kept in, or None where nothing is kept for this address."""
+    if not KEEP_DIR or not KEEP_URL.search(url.split("?")[0]): return None
+    return pathlib.Path(KEEP_DIR) / (hashlib.sha1(url.encode("utf-8")).hexdigest() + ".bin")
+
+
 def fetch(url, opener=None, accept="application/json", tries=3):
     """The bytes at url, None for 'not there' (404). Waits between requests to one host; backs off on 429 and 503. Under a run's clock (STOP_AT) a
     request's own time limit ends with the clock, and nothing is tried again past it: IOError, which every caller takes as "could not be fetched just now"."""
+    keep = _kept(url) if opener is None else None
+    if keep is not None and keep.is_file():
+        try: return keep.read_bytes()
+        except OSError: pass
+    got = _fetch(url, opener, accept, tries)
+    if keep is not None and got:
+        try: keep.parent.mkdir(parents=True, exist_ok=True); keep.write_bytes(got)
+        except OSError: pass
+    return got
+
+
+def _fetch(url, opener=None, accept="application/json", tries=3):
     host = urllib.parse.urlparse(url).netloc
     if host in _refused: raise Refused(host)
     opener = opener or urllib.request.urlopen; real = opener is urllib.request.urlopen
@@ -562,6 +588,18 @@ def selftest():
     assert P["passages"][1]["text"] == "Death from acute alcohol poisoning is usually caused by depression of the brain centres that control breathing, and by inhaling vomit while unconscious.", P["passages"][1]["text"]
     assert P["money"] == ["This work was supported by a grant from a national research council; the funder had no role in the design."], P["money"]
     assert jats_passages("<article><body><p>broken") == {"passages": [], "money": []}
+    # (20 November 2026) a full text and a Crossref record are fetched once and kept in PK_FETCH_CACHE; a search is never kept
+    import tempfile
+    global KEEP_DIR, _fetch
+    keep_dir, real_fetch, calls = KEEP_DIR, _fetch, []
+    try:
+        KEEP_DIR = tempfile.mkdtemp(prefix="pk-fetch-")
+        _fetch = lambda url, opener=None, accept="application/json", tries=3: (calls.append(url), b"<article>x</article>")[1]
+        full, cr, srch = EPMC + "PMC123/fullTextXML", CROSSREF + "10.1000/x?mailto=contact@pharmakon.world", EPMC + "search?query=x"
+        assert fetch(full) == fetch(full) == b"<article>x</article>" and calls.count(full) == 1, calls
+        assert fetch(cr) == fetch(cr) and calls.count(cr) == 1 and fetch(srch) == fetch(srch) and calls.count(srch) == 2, calls
+        assert fetch(full, opener=lambda *a, **k: None) is not None and calls.count(full) == 2   # a test's own opener is never answered from what is kept
+    finally: KEEP_DIR, _fetch = keep_dir, real_fetch
     cr = crossref_compact({"DOI": "10.1111/add.12345", "type": "journal-article", "title": ["How Alcohol Kills: A Systematic Review"], "author": [{"family": "Smith", "given": "Jane A."}, {"family": "O'Neil", "given": "Liam"}, {"name": "The Alcohol Study Group"}],
                            "container-title": ["Addiction"], "volume": "118", "issue": "4", "page": "601-615", "issued": {"date-parts": [[2023, 4]]}, "published-print": {"date-parts": [[2023, 4]]}, "publisher": "Wiley",
                            "updated-by": [{"type": "correction", "DOI": "10.1111/add.99999"}]})
