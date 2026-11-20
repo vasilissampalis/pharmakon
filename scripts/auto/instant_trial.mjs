@@ -25,6 +25,11 @@ import { performance } from "node:perf_hooks";
 import worker, { iaParts, iaPick, readFind, iaNearStems, nameForms } from "../../site/worker/_worker.js";
 
 const [dir, outDir, usageFile] = process.argv.slice(2);
+// (2.28.20) a question with "worker": "next" is asked of a trial copy of the server (scripts/auto/trial/worker-next.mjs: the site's server with one proposed
+// change), so that a change to how the server searches is read in a trial before the site's server has it; every other question, of the site's own server
+const NEXT = path.join(path.dirname(new URL(import.meta.url).pathname), "trial", "worker-next.mjs");
+let nextWorker;   // undefined: not loaded yet; null: there is no trial copy
+const workerFor = async q => { if (q.worker !== "next") return worker; if (nextWorker === undefined) nextWorker = fs.existsSync(NEXT) ? (await import(NEXT)).default : null; return nextWorker || worker; };
 if (!dir || !outDir) { console.log("usage: node scripts/auto/instant_trial.mjs REQUESTS_DIR OUT_DIR [USAGE.json]"); process.exit(2); }
 const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => /^instant-.*\.json$/.test(f)).sort() : [];
 if (usageFile) fs.writeFileSync(usageFile, "[]");
@@ -72,7 +77,7 @@ for (const f of files) {
   const items = [];
   for (const q of Array.isArray(req.questions) ? req.questions.slice(0, 60) : []) {
     asked = []; const body = JSON.stringify(Object.assign({ names: q.names, words: q.words }, Array.isArray(q.also) && q.also.length ? { also: q.also } : {}, q.def ? { def: 1 } : {}, q.t ? { t: 1 } : {})), rf = readFind(JSON.parse(body));   // (t: titles only, as the page asks for a question about pregnancy or children or one that names no single drug)
-    const post = env => worker.fetch(new Request("https://pharmakon.world/api/find", { method: "POST", headers: { "content-type": "application/json", origin: "https://pharmakon.world" }, body }), env);
+    const W = await workerFor(q), post = env => W.fetch(new Request("https://pharmakon.world/api/find", { method: "POST", headers: { "content-type": "application/json", origin: "https://pharmakon.world" }, body }), env);
     const t0 = Date.now(), mine = asked, live = { ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: viaNet, CACHE }; let reply = null, status = 0;
     try { const r = await post(live); status = r.status; reply = await r.json(); } catch (e) { reply = { error: String(e && e.message).slice(0, 200) }; }
     const ms = Date.now() - t0, firstReply = reply; let asks = 1, wholeMs = ms;
@@ -84,7 +89,7 @@ for (const f of files) {
     // the server's own computing time: the same request again, from memory (the middle one of five)
     const again = []; for (let i = 0; i < 5; i++) { const c0 = performance.now(); try { await (await post({ ASSETS: {}, FETCH: fromMemory, CACHE })).json(); } catch (e) { /* not timed */ } again.push(performance.now() - c0); } again.sort((a, b) => a - b);
     const papers = ((reply && reply.papers) || []).map(p => Object.assign({ title: p.t, kind: p.kind, y: p.y, j: p.j, free: !!p.oa, id: p.doi || p.pmid }, p.q ? { shown: p.q, about: p.an === 1 ? "animals or cells" : p.an === 2 ? "its summary covers animals or cells too" : "", around: around(p) } : Object.assign({ shown: null }, rf.error ? { why: "" } : whyNone(p, rf))));
-    items.push(Object.assign({ q: q.q, names: q.names, also: q.also || [], words: q.words, def: !!q.def, titles_only: !!(firstReply && firstReply.titles), status, ms, more: !!(firstReply && firstReply.more), search_ms: (firstReply && firstReply.ms) || [], asked_twice: (firstReply && firstReply.again) || 0, which_asking_answered: (firstReply && firstReply.won) || [], its_own_ms: (firstReply && firstReply.own) || [], from_kept: (firstReply && firstReply.kept) || 0 },
+    items.push(Object.assign({ q: q.q, worker: W === worker ? "site" : "next", names: q.names, also: q.also || [], words: q.words, def: !!q.def, titles_only: !!(firstReply && firstReply.titles), status, ms, more: !!(firstReply && firstReply.more), search_ms: (firstReply && firstReply.ms) || [], asked_twice: (firstReply && firstReply.again) || 0, which_asking_answered: (firstReply && firstReply.won) || [], its_own_ms: (firstReply && firstReply.own) || [], from_kept: (firstReply && firstReply.kept) || 0 },
       firstReply && firstReply.more ? { asks, whole_ms: wholeMs, still_more: !!(reply && reply.more), first_list: firstIds.length, of_them_in_the_whole_list: firstIds.filter(i => ((reply && reply.papers) || []).some(p => idOf(p) === i)).length } : {},
       { server_ms: Math.round(again[2] * 10) / 10, held: !!(reply && reply.held), papers, searches: mine }));
     await new Promise(r => setTimeout(r, 400));   // (one question after another, with a breath between: Europe PMC is a shared service)
