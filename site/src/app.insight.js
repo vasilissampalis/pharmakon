@@ -675,6 +675,17 @@ function insRoutes(q, groups, drug) {
     const s = [about].concat(one).find(x => x && helpSigns(x));
     if (s) add("help", INS_PLACE.help(s), drugName(s), "If it gets too much: what helps"); else add("help", INS_PLACE.numbers(), "Get help", "Emergency numbers");
   }
+  // (2.28.5) two names of ONE drug asked to be told apart ("whats the difference between mdma and molly"): where both are names the drug's own record lists
+  // (its main name and the street names that official bodies list: IDENTITY, data/identity), they are names for the same drug, and the route says so; a drug
+  // the same page also covers (MDA on MDMA's page) or a part of a plant (THC and CBD) is no such name, and nothing is said
+  if (one.length === 1 && INS.nameRe && typeof IDENTITY !== "undefined" && /\b(?:difference|different|differ|differs|same|vs\.?|versus)\b/.test(q)) {
+    const doc = IDENTITY.find(x => x.substance === one[0]), main = String(subBySlug[one[0]].name || "").replace(/\s*\(.*\)\s*$/, "").trim(), own = new Map();
+    [main].concat(...((doc && doc.street_names) || []).map(x => (x.names || []).map(n => String(n).replace(/\s*\(.*\)\s*$/, "").trim()))).filter(Boolean).forEach(n => { if (!own.has(n.toLowerCase())) own.set(n.toLowerCase(), n); });
+    const said = []; INS.nameRe.lastIndex = 0; let m;
+    while ((m = INS.nameRe.exec(q))) { const n = String(m[1]).toLowerCase(); if (!said.includes(n)) said.push(n); if (m.index === INS.nameRe.lastIndex) INS.nameRe.lastIndex++; }
+    INS.nameRe.lastIndex = 0;
+    if (said.length === 2 && said.every(n => own.has(n))) { const dn = n => { const d = own.get(n); return d === d.toLowerCase() ? n : d; };   // a name as the record writes it (MDMA, Molly); an everyday word as it is
+      add("page", INS_PLACE.page(one[0]), "Drug · " + subBySlug[one[0]].cls, insCap(dn(said[0])) + " and " + dn(said[1]) + " are names used for the same drug: " + subBySlug[one[0]].name + ". What is sold under a name can hold something else.", { same: true }); } }
   if (one.length === 2 && !INS_RE.notmix.test(q) && (INS_RE.mixing.test(q) || (INS_RE.loose.test(q) && !INS_RE.versus.test(q))))
     add("mix", INS_PLACE.mix(), "Mixing", insCap(pageWord(one[0])) + " + " + pageWord(one[1]) + ": what’s known about mixing them", { mix: one[0] + "," + one[1] });
   if (INS_RE.dose.test(q)) {
@@ -1050,6 +1061,7 @@ async function insRank(query, ctx) {
     // on our list by its meaning: it is finished, and it is that question (its subject was there; the rule only reads words)
     if (unf === "which" && !named && !answered && !res.best.length) { const w0 = insWant(v, mv, core, tx.groups); if (w0) { res.want = w0; unf = ""; } }
     if (unf && !named && !answered && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
+    if (res.routes.some(r => r.same) && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; }   // (2.28.5) two names for one drug: the route is the answer
     if (!res.best.length && !answered && !unf && !res.want) res.want = insWant(v, mv, core, tx.groups);   // 2.5: is it on our list?
     // (2.13) nothing answers it yet: a place of the site that holds what is asked, found by meaning
     if (!res.best.length && !answered && !unf && !res.want && !res.routes.some(r => r.named)) res.where = insWhere(mv, tx.groups);
