@@ -338,8 +338,8 @@ def main():
     record["gold"] = {}; per_q = {}
     if SITE_MODEL.exists():
         enc = OnnxEncoder(SITE_MODEL); r1, p1 = gold_eval(enc, A, idx_std, G); r2, _ = gold_eval(enc, A, idx_tea, G)
-        record["gold"]["pharmakon-insight-1 (on the site)"] = {"index": r1, "index_with_teachers_wordings": r2, "sha256": hashlib.sha256(SITE_MODEL.read_bytes()).hexdigest()}
-        per_q["pharmakon-insight-1"] = p1; log("site model:", json.dumps(r1))
+        record["gold"][SITE_MODEL.stem.replace("-q8", "") + " (on the site)"] = {"index": r1, "index_with_teachers_wordings": r2, "sha256": hashlib.sha256(SITE_MODEL.read_bytes()).hexdigest()}
+        per_q[SITE_MODEL.stem.replace("-q8", "")] = p1; log("site model:", json.dumps(r1))
     for alpha in MIX:
         sd = {k: (1 - alpha) * orig[k] + alpha * trained[k] if orig[k].is_floating_point() else trained[k] for k in orig}
         model.load_state_dict(sd); model.eval()

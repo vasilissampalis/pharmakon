@@ -1842,6 +1842,12 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     the start page fetches and starts Insight by itself once the page has drawn and is idle, so a first question is read at
     once; never on a mobile network, a slow line or where data is saved, and never before the page's first paint
     (`insFastLine`, `insWarm`; `insight_check.js`, `speed_check.js`).
+    **The first pupil on the page (site 2.28.0, 20 November 2026).** all-MiniLM-L6-v2 taught with every answer and the editor's
+    3,001 teachers' wordings, half and half with the original (pharmakon-insight-2): held out, it finds the answer for 86.8% of
+    the readers' wordings of answers it never saw (85.3% without the teachers); on the gold set with the page's rule its best
+    match is wrong no more often (6 of 41; insight-1: 6 of 40), what Insight shows helps 138 of the 400 questions (133) and
+    misleads 58 (60), and near-miss questions get an answer they do not get 125 times in 1,810 (144). It knows the machine
+    lane's answers too.
 
 42. **No "AI" on a question or an answer; the line that the law asks for stays, in plain words (20 November 2026, 00:38 to
     00:55 Athens; site 2.26.3).** His words: "this 'Written with AI' should be removed from our website i don't want questions
