@@ -2356,7 +2356,8 @@ function insFindTerms(res) {
   const stays = /\b(?:stays?|staying|remains?|lingers?|lasts?)\s+in\s+(?:your|my|the|their|his|her|a|one'?s)?\s*(?:system|body|blood(?:stream)?|urine|pee|hair|saliva|spit)\b|\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
   // (trial 21: "detection" beside "cocaine" found sensors that detect cocaine in a sample) staying in the body is asked as how it leaves it; a drug test as testing
   const tested = stays && /\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
-  if (stays) words.push(tested ? "detection|detectable|testing" : "excretion|detectable|urinary");
+  // (trials 22 and 23: "urinary" beside ketamine found its papers on the bladder, and "clearance" beside cocaine papers on dopamine; urine asked of, urinary)
+  if (stays) words.push(tested ? "detection|detectable|testing" : /\b(?:urine|pee)\b/.test(masked) ? "excretion|detectable|urinary" : "excretion|detectable|clearance");
   const rape = /\bdate[\s-]+rape\b/.test(masked), spike = /\bspik(?:e|ed|es|ing)\b/.test(masked);   // (2.28.7) what papers call them
   if (rape) words.push("assault|rape|facilitated"); else if (spike) words.push("spiking|spiked|facilitated");   // (trial 21: the server takes one word for each way, of letters only: "drug-facilitated sexual assault" was no key word at all)
   const why = /^\s*why\s+(?:do|would|does|did|should)\s+(?:people|someone|anyone|they|users?|folks|men|women|students|teens|kids)\s+(?:take|use|do|try|smoke|drink|snort|inject|vape|want)\b/.test(masked);   // (2.28.7) the reasons, as papers say them
