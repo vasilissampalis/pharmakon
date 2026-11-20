@@ -17,7 +17,7 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
@@ -25,22 +25,28 @@
    "also2": "gemini:gemini-3.6-flash",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44770931921",
-  "read_seconds": 100,
+  "run": "44823363474",
+  "read_by": {
+   "gemini-3.5-flash-lite": 6,
+   "gemma-4-31b-it": 1
+  },
+  "read_seconds": 71,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 71
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
   "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
@@ -71,7 +77,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Predicting the effect of indirect cell kill in the treatment of multiple brain metastases via single-isocenter/multitarget volumetric modulated arc therapy stereotactic radiosurgery",
@@ -87,11 +102,49 @@
    "kind": "other",
    "at": "10.18632/oncotarget.19037",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Surmounting Cytarabine-resistance in acute myeloblastic leukemia cells and specimens with a synergistic combination of hydroxyurea and azidothymidine",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1038/s41419-019-1626-x",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Emerging pro-drug and nano-drug strategies for gemcitabine-based cancer therapy",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1016/j.ajps.2021.06.001",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Prolonged versus standard gemcitabine infusion: translation of molecular pharmacology to new treatment strategy",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1634/theoncologist.2007-0215",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "The role of alternative splicing in cancer: From oncogenesis to drug resistance",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.drup.2020.100728",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Coumarins as Potential Inhibitors of DNA Polymerases and Reverse Transcriptases. Searching New Antiretroviral and Antitumoral Drugs",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.2174/1570163812666150716111719",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
  "place": {
   "home": "new:Ketamine analogues (MXE, DCK)",
   "also": [],
