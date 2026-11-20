@@ -140,6 +140,7 @@ function insPrepare(d, vocabText) {
   const none = d.names.filter(([n, xs]) => !xs.length).map(([n]) => n);   // (2.28.17) the names that stand for no page (build_index.py, NONE_NAMES)
   INS.noneRe = none.length ? new RegExp(insNb("\\p{L}\\p{N}_") + "(?:" + none.map(insRx).join("|") + ")(?![\\p{L}\\p{N}_])", "giu") : null;
   INS.nameRe = new RegExp(insNb("\\p{L}\\p{N}_") + "(" + d.names.map(([n]) => insRx(n)).join("|") + ")(?![\\p{L}\\p{N}_])", "giu");
+  INS.maskOf = new Map(Object.entries(d.masks || {}));   // (2.28.24) a name that is a phrase keeps its other words where the drug's name is taken out (build_index.py, MASKS)
   Object.assign(INS, insWords(d.docs));
   // 2.5: what makes a question a question about drugs (site/insight/scope.json, through the index: the same patterns, between
   // the same word boundaries, as the build's Ranker.in_scope), and the list of questions not answered yet
@@ -311,7 +312,7 @@ function insNamed(t) {
   for (const m of String(t).matchAll(INS.nameRe)) { const g = INS.nameOf.get(m[1].toLowerCase()); if (!g || !g.length) continue; const k = g.join("|"); if (!seen.has(k)) { seen.add(k); out.push(g); } }   // (2.28.17: an empty list, a name that stands for no page: "amanita mushrooms")
   return out;
 }
-const insMask = t => String(t).replace(INS.nameRe, (m0, n) => { const g = INS.nameOf.get(String(n).toLowerCase()); return g && !g.length ? m0 : "it"; });   // (2.28.17: a name that stands for no page stays as typed, as the names of drugs without a page do)
+const insMask = t => String(t).replace(INS.nameRe, (m0, n) => { const g = INS.nameOf.get(String(n).toLowerCase()); return g && !g.length ? m0 : (INS.maskOf.get(String(n).toLowerCase()) || "%").replace("%", "it"); });   // (2.28.17: a name that stands for no page stays as typed, as the names of drugs without a page do)
 // what is embedded for a question: with the drug's own name brought along, and with the drug names taken out; and the drugs
 // it is about (on a drug's page, a question that names none is about that drug)
 function insTexts(q, drug) {
@@ -870,7 +871,7 @@ function insUnfTokens(q) {
   const U = INS.unfin, t = String(q).toLowerCase().replace(/\u2019/g, "'"), blank = INS.scope ? t.replace(INS.scope.not, m => " ".repeat(m.length)) : t;
   const surf = [], w = [], nm = []; let out = "", at = 0, m, k = 0; INS.nameRe.lastIndex = 0;
   while ((m = INS.nameRe.exec(blank))) { const g = INS.nameOf.get(m[1].toLowerCase()); if (g && !g.length) continue;   // (2.28.17) a name that stands for no page is read as its words
-    out += t.slice(at, m.index) + " 0n0 "; surf.push(t.slice(m.index, m.index + m[0].length)); at = m.index + m[0].length; }
+    out += t.slice(at, m.index) + " " + (INS.maskOf.get(m[1].toLowerCase()) || "%").replace("%", " 0n0 ") + " "; surf.push(t.slice(m.index, m.index + m[0].length)); at = m.index + m[0].length; }
   out += t.slice(at);
   (out.match(/[a-z0-9']+/g) || []).forEach(y => { y = y.replace(/^'+|'+$/g, ""); if (!y) return;
     if (y === "0n0" && k < surf.length) { w.push("it"); nm.push(surf[k++]); return; }
@@ -2371,7 +2372,7 @@ function insFindTerms(res) {
   // what its page is called. A page that stands for several things ("Cannabis (THC, CBD)"): the ones the reader named, where they named any ("does cbd help
   // with sleep" is about CBD); all of them where they named none ("weed"). A word for a whole class ("psychedelics") stands for itself, not for two of its pages
   if (first && first.length === 1) { const s = subBySlug[first[0]];
-    if (s) { const parts = String(s.name || "").split(/[(),/]| and | or /).map(norm).filter(x => x.length >= 3), typed = parts.filter(x => flat.includes(" " + x + " ")), into = typed.length || !names.length ? names : also;
+    if (s) { const parts = FIND_PAGE[first[0]] || String(s.name || "").split(/[(),/]| and | or /).map(norm).filter(x => x.length >= 3), typed = parts.filter(x => flat.includes(" " + x + " ")), into = typed.length || !names.length ? names : also;
       (typed.length ? typed : parts).forEach(x => add(into, x)); } }
   const pg = (res.routes || []).find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;
   // (2.28.18) a page the system started: the name the reader typed, as papers write it, else the page's own name made a search (autoFindNames). Before this the
@@ -2486,7 +2487,12 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
   // (2.28.24) the street names that official bodies list, read since 2.28.24, where papers call the drug otherwise (those papers never call so are in FIND_TYPED_NOT)
   meph: "mephedrone", roofies: "flunitrazepam", sherm: "phencyclidine", sherms: "phencyclidine", shermans: "phencyclidine", oxycotton: "oxycodone", bennies: "amphetamine",
   mesc: "mescaline", peyoto: "mescaline", amidone: "methadone", microdots: "lsd", mitsubishis: "mdma", reefers: "cannabis", mota: "cannabis", flualp: "flualprazolam",
-  krathom: "kratom", kakuam: "kratom", biak: "kratom", mambog: "kratom", ithang: "kratom" };
+  krathom: "kratom", kakuam: "kratom", biak: "kratom", mambog: "kratom", ithang: "kratom",
+  // (trial 37) "charas" found papers on Chara, an alga, and "yage" one on YagE, a protein; an accented name was cut to a word that is no name ("yagé" to "yag")
+  charas: "hashish", yage: "ayahuasca", "yagé": "ayahuasca", teonanacatl: "psilocybin", "teonanácatl": "psilocybin" };
+// (2.28.24, trial 37) a page's name made a search where not each of its words names a drug: "Fentanyl and analogues" was looked up as fentanyl OR "analogues", and
+// "what is murder 8" and "how strong is china white" found papers on visual analogue scales, nucleoside analogues and myosin
+const FIND_PAGE = { "fentanyl-and-analogues": ["fentanyl"] };
 // (2.28.18) a started page's own name as a search: what stands in its brackets, each as papers write it ("Ketamine analogues (MXE, DCK)": methoxetamine,
 // deschloroketamine), else its name before "and other", "and similar" or "and" ("Anabolic steroids and other body-building drugs": anabolic steroids)
 function autoFindNames(title) {
@@ -2498,7 +2504,7 @@ function autoFindNames(title) {
 }
 // (2.28.21) a street name that is an everyday word for something else: looked up only as papers name the drug ("skunk" also found a paper on the animal, trial 34)
 const FIND_TYPED_NOT = new Set(["skunk", "blunts", "meph", "roofies", "sherm", "sherms", "shermans", "oxycotton", "bennies", "mesc", "peyoto", "amidone", "microdots", "mitsubishis",
-  "reefers", "mota", "flualp", "krathom", "kakuam", "biak", "mambog", "ithang"]);   // ("blunts" also found papers on blunt chest trauma, trial 35)
+  "reefers", "mota", "flualp", "krathom", "kakuam", "biak", "mambog", "ithang", "charas", "yage", "yagé", "teonanacatl", "teonanácatl"]);   // ("blunts" also found papers on blunt chest trauma, trial 35)
 // (2.28.18) what papers call a drug the site has no page on, where people call it otherwise (several names: any of them)
 const FIND_PAPERS = { "delta 8": "delta-8-thc|delta-8-tetrahydrocannabinol", "delta-8": "delta-8-thc|delta-8-tetrahydrocannabinol",
   "delta 10": "delta-10-thc|delta-10-tetrahydrocannabinol", "delta-10": "delta-10-thc|delta-10-tetrahydrocannabinol", "gas station heroin": "tianeptine",

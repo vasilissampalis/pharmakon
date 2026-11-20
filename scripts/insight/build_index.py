@@ -137,6 +137,10 @@ EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazep
 EXTRA.update({n: ["prescription-opioids"] for n in ("hydromorphone", "dilaudid", "oxymorphone", "opana", "tapentadol", "nucynta", "dihydrocodeine", "norco", "lortab", "roxicodone",
                                                     "ultram", "demerol", "pethidine", "meperidine")})
 EXTRA["mother's little helper"] = ["benzodiazepines"]
+# (2.28.24) a name that is a phrase of everyday words ("taking speed", "speed comedown"): where the drug's name is taken out, its other words stay ("taking it"), as they
+# do where the drug is named by its own name ("taking amphetamine": "taking it"). Before this the whole phrase became "it": "can i take speed" read as "can i it", a
+# question not finished. "%" stands where the drug's name stood (the page's insMask and insUnfTokens; Ranker.mask and unf_tokens; the index's M)
+MASKS = {p: " ".join("%" if x == "speed" else x for x in p.split()) for p, g in EXTRA.items() if g == ["amphetamine"] and " " in p and "speed" in p.split()}
 # (2.28.24) a name with an apostrophe as a phone types it (’) and as people often type it, with none ("poor mans cocaine" was read as cocaine)
 EXTRA.update({v: g for n, g in list(EXTRA.items()) if "'" in n for v in (n.replace("'", "’"), n.replace("'", ""))})
 # a family's name names every drug of the family (substances.json, cls): an answer about any one of them is about it
@@ -338,7 +342,7 @@ class Ranker:
         self.unc_re = re.compile(SCOPE_B + "|".join(re.escape(n) for n in un_names) + SCOPE_E, re.I | re.A) if Un and un_names else None
         self.unc_of = [set(x.split("|")) - {""} for x in (Un or {}).get("of") or []]
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
-        self.pat = name_pattern([n for n, _ in D["names"]])
+        self.pat = name_pattern([n for n, _ in D["names"]]); self.mask_of = D.get("masks") or {}
         self.expand = drug_names(); self.canon = {s["slug"]: s["name"].split(" (")[0] for s in SUB}
         # 2.5: the list of questions not answered yet, as a ranker of its own over the same names, weights and judge
         Sc = D.get("scope"); self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A) if Sc else None
@@ -347,7 +351,7 @@ class Ranker:
         self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A) if Sc else None
         Wd = D.get("wanted"); self.wanted = None; self.want_cut = (Wd or {}).get("cut", 1.0); self.want_near = (Wd or {}).get("near", [0.0, 0.0])
         if Wd: self.wanted = Ranker({"dim": dim, "ids": Wd["ids"], "rows": Wd["rows"], "W": Wd["W"], "M": Wd["M"], "S": Wd["S"], "docs": Wd["docs"], "weights": D["weights"], "tiers": D["tiers"], "judge": D["judge"],
-                                     "slugs": D["slugs"], "about": Wd["about"], "names": D["names"]})
+                                     "slugs": D["slugs"], "about": Wd["about"], "names": D["names"], "masks": D.get("masks")})
     def named(self, q):
         """The drugs a question names, each as the list of drugs its name stands for (a family's name: every drug of it)."""
         out = []
@@ -355,7 +359,7 @@ class Ranker:
             g = self.name_of.get(m.group(1).lower())
             if g and g not in out: out.append(g)
         return out
-    def mask(self, q): return self.pat.sub(lambda m: m.group(0) if self.name_of.get(m.group(1).lower()) == [] else "it", q)   # (2.28.17: a name that stands for no page stays as typed)
+    def mask(self, q): return self.pat.sub(lambda m: m.group(0) if self.name_of.get(m.group(1).lower()) == [] else self.mask_of.get(m.group(1).lower(), "%").replace("%", "it"), q)   # (2.28.17: a name that stands for no page stays as typed)
     def texts(self, q, drug=None):
         """What is embedded for a question: with the drug's own name brought along, and with the drug names taken out; and
         the drugs it is about (on a drug's page, a question that names none is about that drug)."""
@@ -512,7 +516,7 @@ class Ranker:
         out, surf, at = [], [], 0
         for m in self.pat.finditer(blank):
             if self.name_of.get(m.group(1).lower()) == []: continue        # (2.28.17) a name that stands for no page is read as its words
-            out += [t[at:m.start()], " 0n0 "]; surf.append(t[m.start():m.end()]); at = m.end()
+            out += [t[at:m.start()], " " + self.mask_of.get(m.group(1).lower(), "%").replace("%", " 0n0 ") + " "]; surf.append(t[m.start():m.end()]); at = m.end()
         out.append(t[at:]); w, nm, k = [], [], 0
         short = (self.unfin or {}).get("short") or {}
         for y in re.findall(r"[a-z0-9']+", "".join(out)):
@@ -572,7 +576,7 @@ class WordRules:
     model and without a built index: from the same tables the index is built from. For --words and for callers that only
     need these."""
     def __init__(self):
-        t = names_table(); self.name_of = {n: g for n, g in t}; self.pat = name_pattern([n for n, _ in t]); Sc = scope_block()
+        t = names_table(); self.name_of = {n: g for n, g in t}; self.pat = name_pattern([n for n, _ in t]); self.mask_of = MASKS; Sc = scope_block()
         self.scope_re = re.compile(SCOPE_B + Sc["src"] + SCOPE_E, re.I | re.A); self.scope_not = re.compile(SCOPE_B + Sc["not"] + SCOPE_E, re.I | re.A)
         self.unfin = unfinished_rule(Sc["unfinished"], [n for n, _ in t], vocabulary())
         self.spell = spell_rule(Sc["spell"], self.name_of, Sc["unfinished"]["names"], vocabulary(), self.unfin["known"])
@@ -807,7 +811,7 @@ def main():
     docs = [" ".join(a["wordings"]) + " " + a["short"] for a in A]   # word overlap: the site's own wordings and the short answer
     names = names_table(); pat = name_pattern([n for n, _ in names])
     none = {n for n, xs in names if not xs}                              # (2.28.17) a name that stands for no page stays as typed
-    M_txt = [pat.sub(lambda m: m.group(0) if m.group(1).lower() in none else "it", w) for w in W_txt]   # every wording again, with the drug names taken out
+    M_txt = [pat.sub(lambda m: m.group(0) if m.group(1).lower() in none else MASKS.get(m.group(1).lower(), "%").replace("%", "it"), w) for w in W_txt]   # every wording again, with the drug names taken out
     V = embed_all(W_txt + shorts + M_txt)
     Wv, Sv, Mv = V[:len(W_txt)], V[len(W_txt):len(W_txt) + len(shorts)], V[len(W_txt) + len(shorts):]
     # next questions: the answers nearest by the meaning of their questions as the site words them
@@ -823,6 +827,7 @@ def main():
            "model": MODEL, "model_sha256": MODEL_SHA256, "dim": int(Wv.shape[1]), "weights": CONFIG["weights"], "tiers": CONFIG["tiers"], "judge": CONFIG["judge"],
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
            "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
+    out["masks"] = {n: MASKS[n] for n, _ in names if n in MASKS}   # (2.28.24) the names that keep their other words where the drug's name is taken out
     out["say"] = [{"ask": x["ask"], "add": x["add"]} for x in CONFIG.get("say") or []]   # (2.28.3) what people call a thing, as papers say it: added to a question before it is embedded
     out["expand"] = expand_extra()   # (2.28.11) the everyday names of one drug that bring its own name along, as its street names do (drug_names)
     out["scope"] = scope_block()   # 2.5: what makes a question a question about drugs (site/insight/scope.json)
