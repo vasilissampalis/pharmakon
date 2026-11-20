@@ -277,19 +277,51 @@ SYN = {"alcohol": ["alcohol", "ethanol", "alcohol drinking"], "cannabis": ["cann
 FAMILY = {"psychedelics": ["psychedelics", "hallucinogens", "psilocybin", "LSD"], "opioids": ["opioids", "heroin", "opioid"], "stimulants": ["stimulants", "amphetamine", "cocaine"], "drugs": ["illicit drugs", "substance use", "psychoactive drugs"]}
 
 
-def drug_terms(question, names):
-    """The words to search for the drugs a question names: [names of each drug], and the question's words that name them."""
-    groups, used = [], []
-    for n, slugs in names:                                   # the site's own table of names, the longest first
+# (20 November 2026) A question that names one compound of a page that holds several is about that compound. "What does lorazepam (Ativan) feel like?"
+# was searched as benzodiazepines, alprazolam or diazepam with any of its topic words (sedation among them), and the lane was given papers on remimazolam
+# in anaesthesia and on diazepam in rats; "What is 1P-LSD ...?" was searched as LSD, and the answer the editor held read another compound as 1P-LSD. Such
+# a name is searched by its own names (its brand and its chemical name), and the page it belongs to is not searched beside it. A name that begins a
+# longer one ("2C-B" in "2C-B-FLY") is not that compound: its page is searched, as before. Not here: everyday names (weed, molly), which stand for the page.
+MEMBER = {}
+for _slug, _ns, _terms in [("benzodiazepines", ("alprazolam", "xanax", "xans"), ["alprazolam", "Xanax"]), ("benzodiazepines", ("clonazepam", "klonopin"), ["clonazepam", "Klonopin"]),
+                           ("benzodiazepines", ("diazepam", "valium"), ["diazepam", "Valium"]), ("benzodiazepines", ("lorazepam", "ativan"), ["lorazepam", "Ativan"]),
+                           ("benzodiazepines", ("etizolam",), ["etizolam"]), ("prescription-opioids", ("hydrocodone", "vicodin"), ["hydrocodone", "Vicodin"]),
+                           ("prescription-opioids", ("oxycodone", "oxycontin", "percocet"), ["oxycodone", "OxyContin", "Percocet"]), ("prescription-opioids", ("codeine",), ["codeine"]),
+                           ("prescription-opioids", ("morphine",), ["morphine"]), ("prescription-opioids", ("tramadol",), ["tramadol"]),
+                           ("lsd", ("1p-lsd",), ["1P-LSD", "1-propionyl-lysergic acid diethylamide", "1-propionyl-LSD"]), ("2c-x", ("2c-b", "2cb"), ["2C-B", "4-bromo-2,5-dimethoxyphenethylamine"]),
+                           ("2c-x", ("2c-e",), ["2C-E"]), ("2c-x", ("2c-i",), ["2C-I"]), ("2c-x", ("25i",), ["25I-NBOMe"]),
+                           ("synthetic-cathinones", ("mephedrone", "4-mmc"), ["mephedrone", "4-methylmethcathinone", "4-MMC"]), ("synthetic-cathinones", ("3-mmc",), ["3-MMC", "3-methylmethcathinone"]),
+                           ("synthetic-cathinones", ("alpha-pvp", "flakka"), ["alpha-PVP", "alpha-pyrrolidinovalerophenone", "flakka"]), ("synthetic-cathinones", ("mdpv",), ["MDPV", "methylenedioxypyrovalerone"]),
+                           ("synthetic-cathinones", ("eutylone",), ["eutylone"]), ("amphetamine", ("lisdexamfetamine", "vyvanse"), ["lisdexamfetamine", "Vyvanse"]),
+                           ("fentanyl-and-analogues", ("carfentanil",), ["carfentanil"]), ("fentanyl-and-analogues", ("nitazenes", "nitazene"), ["nitazenes", "isotonitazene", "metonitazene", "protonitazene"]),
+                           ("fentanyl-and-analogues", ("xylazine",), ["xylazine"]), ("ketamine", ("esketamine",), ["esketamine", "Spravato"]), ("ketamine", ("2-fdck",), ["2-fluorodeschloroketamine", "2F-DCK"]),
+                           ("psilocybin", ("4-aco-dmt",), ["4-AcO-DMT", "psilacetin", "4-acetoxy-N,N-dimethyltryptamine"]), ("mdma", ("mda",), ["3,4-methylenedioxyamphetamine", "methylenedioxyamphetamine"]),
+                           ("synthetic-cannabinoids", ("jwh-018",), ["JWH-018"]), ("synthetic-cannabinoids", ("mdmb-4en-pinaca",), ["MDMB-4en-PINACA"]), ("cannabis", ("cbd",), ["cannabidiol"])]:
+    for _n in _ns: MEMBER[_n] = (_terms, _slug)
+
+
+def drug_terms(question, names, covered=None):
+    """The words to search for the drugs a question names: [names of each drug], and the question's words that name them. covered (a set, if
+    given): the pages whose compound the question names by its own name (MEMBER), which are then not searched beside it."""
+    groups, used, member, paged = [], [], {}, set()
+    table = [(n, slugs) for n, slugs in names] + [(n, [MEMBER[n][1]]) for n in sorted(set(MEMBER) - {n.lower() for n, _ in names}, key=lambda n: (-len(n), n))]   # (a compound the table does not name: "lorazepam")
+    for n, slugs in table:                                   # the site's own table of names, the longest first
         m = re.search(r"(?<!\w)" + re.escape(n) + r"(?!\w)", question, re.I)
-        if not m or any(a <= m.start() < b for a, b in used): continue
+        if not m or any(a <= m.start() < b or m.start() <= a < m.end() for a, b in used): continue
         used.append((m.start(), m.end()))
         terms = []
-        if len(slugs) > 1 and n.rstrip("s") + "s" in FAMILY: terms = FAMILY[n.rstrip("s") + "s"]
+        if n.lower() in MEMBER and not re.match(r"-\w", question[m.end():m.end() + 2]):
+            terms = MEMBER[n.lower()][0]; member[tuple(terms)] = slugs
+        elif len(slugs) > 1 and n.rstrip("s") + "s" in FAMILY: terms = FAMILY[n.rstrip("s") + "s"]
         else:
             for s in slugs[:3]: terms += SYN.get(s, [s.replace("-", " ")])
+            if re.search(r"\b(?:other|any|all|every|similar|such)\s+(?:\w+\s+){0,2}$", question[:m.start()], re.I) or re.match(r"\s+(?:in general|generally)\b", question[m.end():], re.I): paged.update(slugs)
         g = list(dict.fromkeys(terms))
         if g and g not in groups: groups.append(g)
+    # a question that names the page itself as well, as all of its kind ("Xanax or other benzos"), is about the page: the compound stands among its names
+    # (a comparison names both, and both are searched: "4-AcO-DMT ... compared with mushrooms")
+    groups = [g for g in groups if not (tuple(g) in member and set(member[tuple(g)]) <= paged)]
+    if covered is not None: covered.update(s for g in groups if tuple(g) in member for s in member[tuple(g)])
     return groups, used
 
 
@@ -335,8 +367,9 @@ def searches(question, ways, names, drugs=None, terms=None, extra=None):
     any paper that can be read; then reviews that cannot (for the list of papers wanted); then the drug's most cited
     reviews. drugs: the drugs the question is about, by the site's names for them (also where it names none); terms: the
     words papers use for its subject (data/site/wanted.json): without them, the question's own words are searched."""
-    groups, _ = drug_terms(question, names)
+    covered = set(); groups, _ = drug_terms(question, names, covered)
     for s in drugs or []:
+        if s in covered: continue                                             # (the question names its compound: that is searched, not the page)
         g = list(dict.fromkeys(SYN.get(s, [s.replace("-", " ")])))
         if g not in groups: groups.append(g)
     if drugs and len(drugs) > 1 and len(groups) > 1 and not drug_terms(question, names)[0]: groups = [[t for g in groups for t in g]]   # several drugs the question does not name one by one: any of them
@@ -531,6 +564,13 @@ def selftest():
     assert groups == [["alcohol", "ethanol", "alcohol drinking"]] and topics[:2] == ["die", "kill"] or "die" in topics, (groups, topics)
     assert len(qs) == 5 and qs[3].get("sort") == "CITED desc" and 'TITLE:"ethanol"' in qs[0]["query"] and "OPEN_ACCESS:y" in qs[0]["query"] and "OPEN_ACCESS" not in qs[2]["query"] and 'NOT PUB_TYPE:"retracted publication"' in qs[1]["query"], qs
     g2, _ = drug_terms("Do psychedelics help with crystal meth problems?", names); assert g2 == [["methamphetamine"], ["psychedelics", "hallucinogens", "psilocybin", "LSD"]], g2
+    # a compound named by its own name is searched by its own names, not its page's; where the page is named as all of its kind, the page is searched
+    mn = [["1p-lsd", ["lsd"]], ["ativan", ["benzodiazepines"]], ["benzos", ["benzodiazepines"]], ["xanax", ["benzodiazepines"]], ["2c-b", ["2c-x"]], ["lsd", ["lsd"]]]
+    cov = set(); gm, _ = drug_terms("What does lorazepam (Ativan) feel like?", mn, cov); assert gm == [["lorazepam", "Ativan"]] and cov == {"benzodiazepines"}, (gm, cov)
+    assert drug_terms("How fast can you get dependent on Xanax or other benzos?", mn)[0] == [["benzodiazepines", "alprazolam", "diazepam"]]
+    assert drug_terms("What is 2C-B-FLY like?", mn)[0] == [["2C-B", "2C drugs", "psychedelic phenethylamines"]] and drug_terms("What is 1P-LSD?", mn)[0][0][0] == "1P-LSD"
+    sm = searches("What does lorazepam (Ativan) feel like?", [], mn, ["benzodiazepines"], ["lorazepam", "subjective effects"], [])
+    assert sm[1] == [["lorazepam", "Ativan"]] and sm[2] == ["subjective effects"] and "benzodiazepines" not in sm[0][0]["query"], sm[1:]
     q3, g3, t3 = searches("What is a K-hole?", ["what does a k hole feel like"], names, ["ketamine"], ["k-hole", "dissociation"]); assert g3 == [["ketamine"]] and t3 == ["k-hole", "dissociation"] and 'ABSTRACT:"dissociation"' in q3[0]["query"], (g3, t3)
     q4, g4, _ = searches("Does LSD stay in your body forever?", [], [["lsd", ["lsd"]]], None, ["half-life"]); assert 'TITLE:"lysergide"' in q4[0]["query"] and '((TITLE:"LSD" OR ABSTRACT:"LSD") AND (ABSTRACT:"psychedelic"' in q4[0]["query"] and 'TITLE:"LSD" OR ABSTRACT:"LSD" OR' not in q4[0]["query"], q4[0]["query"]
     # a topic word that is the drug's own name is left out (with it, every paper on the drug counted as a paper on the question); a phrase that holds it stays;
