@@ -915,6 +915,7 @@ def spell_rule(Sp, names, other, vocab, known):
     phr = dict(Sp.get("phr") or {})
     phr_re = re.compile(r"(?<![A-Za-z0-9'\u2019-])(?:" + "|".join(r"\s+".join(re.escape(w) for w in k.split(" ")) for k in sorted(phr, key=lambda k: (-len(k), k))) + r")(?![A-Za-z0-9'\u2019-])", re.I) if phr else None
     return {"map": dict(Sp.get("map") or {}), "keep": set(Sp.get("keep") or []), "exact": set(group), "vocab": vocab or set(), "known": set(known), "phr": phr, "phr_re": phr_re,
+            "words": sorted(Sp.get("words") or [], key=lambda n: (-len(n), n)),
             "targets": sorted((n for n in group if len(n) >= 6 and re.fullmatch(r"[a-z]+", n)), key=lambda n: (-len(n), n)), "group": group}
 
 
@@ -926,10 +927,16 @@ def spell_word(R, w, scope_re):
     if any(f in R["vocab"] for f in forms): return None                                    # a word
     for end in ("s", "es"):                                                                 # a name with a plural or possessive s: the name
         if len(w) > len(end) + 2 and w.endswith(end) and w[:-len(end)] in R["exact"]: return w[:-len(end)]
-    if any(f in R["exact"] for f in forms[1:]) or (scope_re is not None and scope_re.search(w)): return None   # a name with another ending, or drug talk
-    hits = [n for n in R["targets"] if abs(len(n) - len(w)) <= 1 and near(w, n)]
-    if not hits or len({R["group"][n] for n in hits}) != 1: return None
-    return hits[0]
+    if any(f in R["exact"] for f in forms[1:]): return None                                 # a name with another ending
+    if not (scope_re is not None and scope_re.search(w)):                                   # (drug talk is no name with a letter wrong)
+        hits = [n for n in R["targets"] if abs(len(n) - len(w)) <= 1 and near(w, n)]
+        if hits and len({R["group"][n] for n in hits}) == 1: return hits[0]
+        if hits: return None
+    # (2.28.10) not a name: one of the words a question is most often about, with a letter wrong, where it is near exactly one of them
+    if w in (R.get("words") or []): return None                                            # (one of them, as it is: "hallucination")
+    wh = [n for n in R.get("words") or [] if abs(len(n) - len(w)) <= 1 and near(w, n)]
+    if len(wh) == 2 and wh[0] == wh[1] + "s": return wh[0] if w.endswith("s") else wh[1]   # a word and its plural: as typed ("seizurs": seizures)
+    return wh[0] if len(wh) == 1 else None
 
 
 def vocabulary():
@@ -961,7 +968,9 @@ def scope_block():
     # (2.9.1) a drug's name with a letter wrong: 'map' (only to names the site knows) and 'keep'; the names of drugs without a page are in unfinished.names
     Sp = S.get("spell") or {}; known = {n for n, _ in names_table()} | set(S["names"])
     spell = {"map": {k: v for k, v in sorted((Sp.get("map") or {}).items()) if v in known and k not in known}, "keep": sorted(set(Sp.get("keep") or [])),
-             "phr": {k: v for k, v in sorted(phr.items()) if k not in known}}
+             "phr": {k: v for k, v in sorted(phr.items()) if k not in known},
+             # (2.28.10) the words a question is most often about, read so when a letter is wrong ("can weed cause psycosis": the answer on psychosis stood at 0.57, at 0.94 spelt right)
+             "words": sorted({w for w in Sp.get("words") or [] if re.fullmatch(r"[a-z]{5,}", w) and w not in known})}
     for k, v in sorted((Sp.get("map") or {}).items()):
         if k not in spell["map"]: print(f"NOTE: scope.json spell.map: “{k}” -> “{v}” left out ({'the word is itself a name' if k in known else 'not a name the site knows'})")
     return {"src": src, "not": "|".join("(?:" + w + ")" for w in S["not"]), "unfinished": unf, "spell": spell}

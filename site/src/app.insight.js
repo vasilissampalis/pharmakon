@@ -970,7 +970,8 @@ function insSpellRule(Sp, other) {
   // (2.9.3) what people typed for a name the system learned by looking it up ("mytragina javanica"): read as that name first
   const phr = new Map(Object.entries(Sp.phr || {})), keys = [...phr.keys()].sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));
   const phrRe = keys.length ? new RegExp(insNb("A-Za-z0-9'\u2019-") + "(?:" + keys.map(k => k.split(" ").map(insRx).join("\\s+")).join("|") + ")(?![A-Za-z0-9'\u2019-])", "gi") : null;
-  return { map: new Map(Object.entries(Sp.map || {})), keep: new Set(Sp.keep || []), group, targets, phr, phrRe };
+  const words = (Sp.words || []).slice().sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));   // (2.28.10) the words a question is most often about
+  return { map: new Map(Object.entries(Sp.map || {})), keep: new Set(Sp.keep || []), group, targets, phr, phrRe, words };
 }
 function insSpellWord(w) {
   const R = INS.spell; if (R.map.has(w)) return R.map.get(w);
@@ -978,9 +979,16 @@ function insSpellWord(w) {
   const forms = [w].concat(INS_UNK_ENDS.filter(([end]) => w.length > end.length + 2 && w.endsWith(end)).map(([end, put]) => w.slice(0, -end.length) + put));
   if (forms.some(f => INS.vocab.has(f))) return null;                                    // a word
   for (const end of ["s", "es"]) if (w.length > end.length + 2 && w.endsWith(end) && R.group.has(w.slice(0, -end.length))) return w.slice(0, -end.length);   // a name with a plural or possessive s
-  if (forms.slice(1).some(f => R.group.has(f)) || (INS.scope && INS.scope.re.test(w))) return null;   // a name with another ending, or drug talk
-  const hits = R.targets.filter(n => Math.abs(n.length - w.length) <= 1 && insNear(w, n));
-  return hits.length && new Set(hits.map(n => R.group.get(n))).size === 1 ? hits[0] : null;
+  if (forms.slice(1).some(f => R.group.has(f))) return null;                              // a name with another ending
+  if (!(INS.scope && INS.scope.re.test(w))) {                                             // (drug talk is no name with a letter wrong)
+    const hits = R.targets.filter(n => Math.abs(n.length - w.length) <= 1 && insNear(w, n));
+    if (hits.length) return new Set(hits.map(n => R.group.get(n))).size === 1 ? hits[0] : null;
+  }
+  // (2.28.10) not a name: one of the words a question is most often about, with a letter wrong, where it is near exactly one of them (spell_word reads the same)
+  if ((R.words || []).includes(w)) return null;                                          // (one of them, as it is: "hallucination")
+  const wh = (R.words || []).filter(n => Math.abs(n.length - w.length) <= 1 && insNear(w, n));
+  if (wh.length === 2 && wh[0] === wh[1] + "s") return w.endsWith("s") ? wh[0] : wh[1];   // a word and its plural: as typed ("seizurs": seizures)
+  return wh.length === 1 ? wh[0] : null;
 }
 function insSpell(q) {
   const read = []; if (!INS.spell) return { text: q, read };

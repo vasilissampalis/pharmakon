@@ -66,7 +66,9 @@ const spells = ["what is mytragina javanica", "mitragina  JANANICA effects", "ca
   "is tusi dangerous", "does caffiene keep you awake", "alchohol and benzodiazapines", "is codiene an opiod", "how does methamphetamin work", "what is the capital of mongolia", "is gabapentine addictive",
   "is modafanil safe", "are steriods bad", "psycadelics and anxiety", "can i mix oxycodon and alcohol", "how long does 4-mmc last", "is nicotene addictive", "what about ayahuaska", "is cocaines effect long",
   "asteroids and comets", "what is a ketimine", "do peppers help", "is tobaco worse than weed", "valum for sleep", "is vyvance like adderall", "fentanil test strips", "does mdna hurt the brain", "COCANE and Ketamin?",
-  "cocane-like drugs", "the heroine's journey", "xanaxes", "weeds in my garden", "is MDNA an album"];
+  "cocane-like drugs", "the heroine's journey", "xanaxes", "weeds in my garden", "is MDNA an album",
+  "can weed cause psycosis", "does weed cause anxity", "can you overdoes on mdma", "kratom withdrawl symptoms", "is xanax addictve", "is it dangerus to mix", "ketamine for depresion", "seizurs from tramadol",
+  "pregnent and smoked weed", "how bad is the comedwn", "is depressing a word", "a paranoid android", "tolerant people", "the hallucination scene"];
 // the build's side, in Python: the same reading of every text, and the page's ranking rule from the same index
 const py = `
 import sys, json, importlib.util, numpy as np
@@ -169,7 +171,10 @@ const server = http.createServer((req, res) => {
     if (a.scope !== b.scope) wBad.push(tag + " about drugs: page " + a.scope + " build " + b.scope);
     if (!["want", "other", "none", "unfinished"].includes(a.note)) return;
     // (2.9) not finished yet, by the same rule on both sides: that is what the page says, before anything else
-    if ((a.note === "unfinished") !== !!b.unf || a.unf !== b.unf) { wBad.push(tag + " finished: page " + JSON.stringify(a.unf) + " (says " + a.note + ") build " + JSON.stringify(b.unf)); return; }
+    // (2.25.2) a question the rule reads as "which" (no drug, every word one any question may hold) that nothing answers and that is on our list by its
+    // meaning is finished, and it is that question: the page says so ("what are signs of an overdose"); the build must find the same listed question below
+    const listedWhich = a.unf === "" && b.unf === "which" && a.note === "want" && !b.best.length && !!b.want;
+    if (!listedWhich && ((a.note === "unfinished") !== !!b.unf || a.unf !== b.unf)) { wBad.push(tag + " finished: page " + JSON.stringify(a.unf) + " (says " + a.note + ") build " + JSON.stringify(b.unf)); return; }
     if (a.note === "unfinished") { seen.unfinished++; return; }
     const pw = a.want ? a.want.id : null, bw = b.want ? b.want.id : null;
     if (pw !== bw) { wBad.push(tag + " on our list: page " + pw + " build " + bw); return; }
