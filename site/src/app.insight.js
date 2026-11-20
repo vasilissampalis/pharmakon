@@ -2477,7 +2477,9 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
   m30s: "fentanyl", roxy: "oxycodone", roxies: "oxycodone", hydros: "hydrocodone", zannies: "alprazolam", addy: "amphetamine", addies: "amphetamine", blotter: "lsd",
   // (2.28.21) as papers name the thing itself: a Juul is an e-cigarette, cigs are cigarettes, skunk is cannabis of high potency ("is juul worse than cigs" was looked up
   // as nicotine alone, with nothing of the two set side by side)
-  juul: "e-cigarettes", juuls: "e-cigarettes", cigs: "cigarettes", skunk: "high-potency cannabis" };
+  juul: "e-cigarettes", juuls: "e-cigarettes", cigs: "cigarettes", skunk: "high-potency cannabis",
+  // (2.28.22) zyn is a nicotine pouch, a hookah a waterpipe, dabbing the smoking of cannabis concentrates
+  zyns: "nicotine pouches", hookah: "waterpipe", hookahs: "waterpipe", shisha: "waterpipe", dabbing: "cannabis concentrates", blunts: "blunt smoking" };
 // (2.28.18) a started page's own name as a search: what stands in its brackets, each as papers write it ("Ketamine analogues (MXE, DCK)": methoxetamine,
 // deschloroketamine), else its name before "and other", "and similar" or "and" ("Anabolic steroids and other body-building drugs": anabolic steroids)
 function autoFindNames(title) {
@@ -2488,7 +2490,7 @@ function autoFindNames(title) {
   return head ? (FIND_PAPERS[head] || head).split("|") : [];
 }
 // (2.28.21) a street name that is an everyday word for something else: looked up only as papers name the drug ("skunk" also found a paper on the animal, trial 34)
-const FIND_TYPED_NOT = new Set(["skunk"]);
+const FIND_TYPED_NOT = new Set(["skunk", "blunts"]);   // ("blunts" also found papers on blunt chest trauma, trial 35)
 // (2.28.18) what papers call a drug the site has no page on, where people call it otherwise (several names: any of them)
 const FIND_PAPERS = { "delta 8": "delta-8-thc|delta-8-tetrahydrocannabinol", "delta-8": "delta-8-thc|delta-8-tetrahydrocannabinol",
   "delta 10": "delta-10-thc|delta-10-tetrahydrocannabinol", "delta-10": "delta-10-thc|delta-10-tetrahydrocannabinol", "gas station heroin": "tianeptine",

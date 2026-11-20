@@ -92,7 +92,11 @@ EXTRA = {"benzo": ["benzodiazepines"], "benzodiazepine": ["benzodiazepines"], "x
          "roxy": ["prescription-opioids"], "roxies": ["prescription-opioids"], "hydros": ["prescription-opioids"], "zannies": ["benzodiazepines"], "aya": ["dmt-ayahuasca"],
          "addy": ["amphetamine"], "addies": ["amphetamine"], "juul": ["nicotine"], "juuls": ["nicotine"], "cig": ["nicotine"], "cigs": ["nicotine"], "blotter": ["lsd"],
          # a name that holds the name of another drug: "hippie crack" is nitrous oxide, "liquid ecstasy" is GHB
-         "hippie crack": ["nitrous-oxide"], "liquid ecstasy": ["ghb-gbl"]}
+         "hippie crack": ["nitrous-oxide"], "liquid ecstasy": ["ghb-gbl"],
+         # (2.28.22) what cannabis and tobacco are taken with or as: "is dabbing bad for your lungs", "is smoking from a bong safer", "are zyns bad for you" and
+         # "how bad are hookahs" named no drug ("are zyns bad for you" and "how bad are hookahs" were taken for questions that are not about drugs)
+         "bong": ["cannabis"], "bongs": ["cannabis"], "dabbing": ["cannabis"], "dab pen": ["cannabis"], "dab pens": ["cannabis"], "blunts": ["cannabis"],
+         "zyn": ["nicotine"], "zyns": ["nicotine"], "hookah": ["nicotine"], "hookahs": ["nicotine"], "shisha": ["nicotine"]}
 # (2.28.11, 20 November 2026) the benzodiazepines and opioids people name by their own names, on the page of their kind: "ativan" was read as a
 # benzodiazepine and "lorazepam", the same drug, as a drug the site has no page on, so that "is lorazepam addictive" was shown nothing
 EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazepam", "triazolam", "bromazepam", "chlordiazepoxide", "librium", "restoril", "halcion", "clobazam",
