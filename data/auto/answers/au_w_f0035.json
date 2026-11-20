@@ -17,72 +17,149 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44758838755",
-  "read_by": {
-   "gemini-3.1-flash-lite": 4,
-   "gemma-4-31b-it": 1
-  },
-  "read_seconds": 100,
+  "run": "44817796014",
+  "read_seconds": 38,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 173
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 2 of 4; gemini-3.6-flash accepted 0 of 4",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.86, but 0.98, how1 0.60, how2 0.58",
+  "check": "short: NOT accepted: The sentence attributes the statements to “a review,” but the passages do not identify the source as a review.; but: accepted; how1: NOT accepted: The sentence calls the 2022 source “a review,” which the passages never describe as a review.; how2: NOT accepted: The sentence labels the 2012 source as “a literature review,” a description not present in the passages."
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "zoofaghari_2020",
+    "id": "waring_2012",
     "type": "article-journal",
-    "title": "Massive citalopram overdose associated with recurrent seizures and bilateral shoulder dislocations",
+    "title": "Clinical use of antidepressant therapy and associated cardiovascular risk",
     "author": [
      {
-      "family": "Zoofaghari",
-      "given": "Shafeajafar"
-     },
-     {
-      "family": "Wong",
-      "given": "Anselm"
-     },
-     {
-      "family": "Kiarasi",
-      "given": "Pegah"
-     },
-     {
-      "family": "Gheshlaghi",
-      "given": "Farzad"
+      "family": "Waring",
+      "given": "W. Stephen"
      }
     ],
-    "container-title": "Journal of Research in Pharmacy Practice",
+    "container-title": "Drug, Healthcare and Patient Safety",
     "issued": {
      "date-parts": [
       [
-       2020
+       2012
       ]
      ]
     },
-    "DOI": "10.4103/jrpp.jrpp_20_24",
+    "DOI": "10.2147/dhps.s28804",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "page": "93",
+    "PMCID": "PMC3426258"
+   },
+   "doi": "10.2147/dhps.s28804",
+   "pmcid": "PMC3426258",
+   "title": "Clinical use of antidepressant therapy and associated cardiovascular risk",
+   "year": 2012,
+   "journal": "Drug, healthcare and patient safety",
+   "kind": "other",
+   "people": true,
+   "near": 0.751,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "A number of different psychotropic agents have been associated with an increased risk of cardiovascular disease, and these relationships have been difficult to interpret due to the presence of confounding factors.",
+    "text": "literature review of clinical use of antidepressant therapy and associated cardiovascular risk"
+   },
+   "findings": [
+    {
+     "passage": 8,
+     "where": "Pharmacological mechanisms responsible for cardiovascular effects › Selective serotonin reuptake inhibitors",
+     "quote": "Citalopram and escitalopram are known to cause dose-dependent QT prolongation, although the mechanism remains uncertain and may be unrelated to serotonin reuptake per se.",
+     "text": "Citalopram and escitalopram are known to cause dose-dependent QT prolongation, although the mechanism remains uncertain and may be unrelated to serotonin reuptake per se.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Differential risk between antidepressant classes › Selective serotonin reuptake inhibitors",
+     "quote": "Most of the reported cases involve QTcB prolongation or arrhythmia that occurs after toxic doses, such as might only be encountered after deliberate drug overdose.",
+     "text": "Most of the reported cases involve QTcB prolongation or arrhythmia that occurs after toxic doses, such as might only be encountered after deliberate drug overdose.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "Differential risk between antidepressant classes › Selective serotonin reuptake inhibitors",
+     "quote": "The greatest body of evidence of QTc prolongation is that concerning citalopram, particularly in the setting of overdose but also in a number of case reports involving therapeutic administration.",
+     "text": "The greatest body of evidence of QTc prolongation is that concerning citalopram, particularly in the setting of overdose but also in a number of case reports involving therapeutic administration.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 22,
+     "where": "Conclusion",
+     "quote": "Clinical judgment is needed on a patient by patient basis to consider carefully the overall risks and benefits of individual antidepressant agents, and there is a lack of robust evidence to guide clinical practice.",
+     "text": "There is a lack of robust evidence to guide clinical practice regarding the overall risks and benefits of individual antidepressant agents.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "dietrichs_2022",
+    "type": "article-journal",
+    "title": "Prediction of ventricular arrhythmias by QRS/QTc - ratio in citalopram or escitalopram intoxication",
+    "author": [
+     {
+      "family": "Dietrichs",
+      "given": "Erik Sveberg"
+     },
+     {
+      "family": "Smith",
+      "given": "Godfrey L."
+     }
+    ],
+    "container-title": "Frontiers in Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    },
+    "DOI": "10.3389/fmed.2022.866454",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -95,154 +172,59 @@
      }
     },
     "volume": "9",
-    "issue": "3",
-    "page": "161-164",
-    "PMCID": "PMC7808186"
+    "number": "866454",
+    "PMCID": "PMC8966227"
    },
-   "doi": "10.4103/jrpp.jrpp_20_24",
-   "pmcid": "PMC7808186",
-   "title": "Massive Citalopram Overdose Associated with Recurrent Seizures and Bilateral Shoulder Dislocations",
-   "year": 2020,
-   "journal": "Journal of research in pharmacy practice",
-   "kind": "case",
+   "doi": "10.3389/fmed.2022.866454",
+   "pmcid": "PMC8966227",
+   "title": "Prediction of Ventricular Arrhythmias by QRS/QTc - Ratio in Citalopram or Escitalopram Intoxication",
+   "year": 2022,
+   "journal": "Frontiers in medicine",
+   "kind": "review",
    "people": true,
-   "near": 0.806,
+   "near": 0.687,
    "money": [
-    "Nil.",
-    "There are no conflicts of interest."
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
    ],
    "design": {
-    "passage": 3,
-    "where": "CASE REPORT",
-    "quote": "A 33-year-old male patient presented with a chief complaint of drowsiness referred to the poisoning department of Khorshid Hospital, Isfahan, Iran. He had a history of taking 40 tablets of citalopram",
-    "text": "A case report of a 33-year-old male patient who experienced a massive citalopram overdose."
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "A total of 16 publications describing patients suffering from complications due to citalopram or escitalopram treatment, or intoxication with the same substances, were included after a systematic search.",
+    "text": "A systematic search and analysis of publications describing patients suffering from complications due to citalopram or escitalopram treatment or intoxication"
    },
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Citalopram is commonly used as a new generation of SSRIs in this regard; however, unfortunately, its overdose is associated with seizure and heart disorders.",
-     "text": "Citalopram overdose is associated with seizure and heart disorders.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 11,
-     "where": "DISCUSSION",
-     "quote": "However, an overdose of the SSRIs, including citalopram, may be associated with complications such as tachycardia, drowsiness, tremor, nausea, and vomiting.",
-     "text": "An overdose of citalopram may be associated with complications such as tachycardia, drowsiness, tremor, nausea, and vomiting.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 12,
-     "where": "DISCUSSION",
-     "quote": "Cardiac toxicity and seizure were reported as the rare complications of citalopram overdose.",
-     "text": "Cardiac toxicity and seizure are reported as rare complications of citalopram overdose.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 8,
-     "where": "DISCUSSION",
-     "quote": "The mechanism of seizure following citalopram poisoning is uncertain.",
-     "text": "The mechanism of seizure following citalopram poisoning is not known.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "aakjr_2022",
-    "type": "article-journal",
-    "title": "Serious arrhythmia in initiators of citalopram, escitalopram, and other selective serotonin reuptake inhibitors: A population-based cohort study in older adults",
-    "author": [
-     {
-      "family": "Aakjær",
-      "given": "Mia"
-     },
-     {
-      "family": "Werther",
-      "given": "Sarah Kimmer"
-     },
-     {
-      "family": "De Bruin",
-      "given": "Marie Louise"
-     },
-     {
-      "family": "Andersen",
-      "given": "Morten"
-     }
-    ],
-    "container-title": "Clinical and Translational Science",
-    "issued": {
-     "date-parts": [
-      [
-       2022
-      ]
-     ]
-    },
-    "DOI": "10.1111/cts.13319",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-20"
-     }
-    },
-    "volume": "15",
-    "issue": "9",
-    "page": "2105-2115",
-    "PMCID": "PMC9468567"
-   },
-   "doi": "10.1111/cts.13319",
-   "pmcid": "PMC9468567",
-   "title": "Serious arrhythmia in initiators of citalopram, escitalopram, and other selective serotonin reuptake inhibitors: A population-based cohort study in older adults",
-   "year": 2022,
-   "journal": "Clinical and translational science",
-   "kind": "other",
-   "people": true,
-   "near": 0.767,
-   "money": [
-    "The Pharmacovigilance Research Center is supported by a grant from the Novo Nordisk Foundation (NNF15SA0018404) to the University of Copenhagen. This includes the professorship of M.An. and part of the PhD study of M.Aa.",
-    "At the time of the study, M.L.D.B. was an employee of the Copenhagen Centre for Regulatory Science (CORS). CORS is a cross‐faculty university‐anchored institution involving various public (Danish Medicines Agency, Copenhagen University) and private (Novo Nordisk A/S, Lundbeck A/S, Ferring pharmaceuticals A/S, LEO pharma A/S) stakeholders as well as patient organizations (Rare Diseases Denmark). The center is purely devoted to the scientific aspects of the regulatory field and has a patient‐oriented focus, and the research is not a company‐specific product or directly company related. Currently, M.L.D.B. is employed by Utrecht University to conduct research under the umbrella of the Utrecht Centre for Pharmaceutical Policy and Regulation. This center receives no direct funding or donations from private parties, including the pharma industry. Research funding from public–private partnerships (e.g., IMI, The Escher Project; http://escher.lygature.org/), is accepted under the condition that no company‐specific study is conducted. The center has received unrestricted research funding from public sources (e.g., World Health Organization, Netherlands Organization for Health Research and Development, the Dutch National Health Care Institute, EC Horizon 2020, the Dutch Medicines Evaluation Board, and the Dutch Ministry of Health). M.An. has participated in research projects funded by AstraZeneca, H. Lundbeck & Mertz, Novartis, and Pfizer, and has received fees for leading courses and teaching from Atrium, the Danish Association of the Pharmaceutical Industry. All other authors declared no competing interests for this work."
-   ],
-   "design": null,
-   "findings": [
-    {
-     "passage": 20,
-     "where": "CONCLUSION",
-     "quote": "In this large, population‐based cohort study, we observed no increased risk of serious arrhythmia among initiators of citalopram or escitalopram compared to initiators of other SSRIs.",
-     "text": "In this large, population-based cohort study, there was no increased risk of serious arrhythmia among people who use citalopram or escitalopram compared to people who use other SSRIs.",
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "Use of antidepressants is also common in intended intoxications.",
+     "text": "Use of antidepressants is also common in intended intoxications.",
      "id": "F4",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Dose–response effects were not investigated because dosage instructions were not available.",
-     "text": "The study did not investigate dose-response effects because dosage instructions were not available.",
-     "id": "L2",
+     "passage": 24,
+     "where": "Conclusion",
+     "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+     "text": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Results",
+     "quote": "Twelve of the patients had taken additional drugs or ethanol, either as part of their prescribed treatment regime or due to voluntary intoxication.",
+     "text": "Twelve of the patients had taken additional drugs or ethanol, either as part of their prescribed treatment regime or due to voluntary intoxication.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
+   "limits": [],
    "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "frequency/prevalence of recreational use",
  "wanted": [
   {
    "doi": "10.1016/j.psym.2017.10.009",
@@ -267,14 +249,23 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Massive Citalopram Overdose Associated with Recurrent Seizures and Bilateral Shoulder Dislocations",
    "read": "full",
    "kind": "case",
    "at": "10.4103/jrpp.jrpp_20_24",
-   "kept": 3,
+   "kept": 0,
    "thrown": []
   },
   {
@@ -298,18 +289,28 @@
    "read": "full",
    "kind": "other",
    "at": "10.1111/cts.13319",
-   "kept": 1,
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Clinical use of antidepressant therapy and associated cardiovascular risk",
+   "read": "full",
+   "kind": "other",
+   "at": "10.2147/dhps.s28804",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Prediction of Ventricular Arrhythmias by QRS/QTc - Ratio in Citalopram or Escitalopram Intoxication",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fmed.2022.866454",
+   "kept": 3,
    "thrown": [
     {
-     "kind": "text",
-     "text": "A population-based cohort study of older adults initiating SSRI treatment.",
-     "quote": "We included patients (aged ≥65 years) who filled an SSRI prescription with a 1‐year washout period before the index date. The outcome was an event of serious arrhythmia.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
      "kind": "finding",
-     "text": "A UK study found no significant increased risk of arrhythmia for people who use citalopram, even at high doses greater than 40 mg, compared to episodes of no use.",
-     "quote": "A UK study by Coupland et al. examined the risk of arrhythmia in adults (20–64 years) from 2000 to 2011 and found no significant increased risk of arrhythmia for patients treated with citalopram, even",
+     "text": "The U.S. Food and Drug Administration (FDA) issued a Drug Safety Communication stating that citalopram should no longer be used at daily doses above 40 mg, due to risk of QT prolongation and fatal dev",
+     "quote": "The U.S. Food and Drug Administration (FDA) issued a Drug Safety Communication stating that the selective serotonin reuptake inhibitor (SSRI) citalopram should no longer be used at daily doses above 4",
      "why": "it holds an amount or a time between uses"
     }
    ]
@@ -321,18 +322,401 @@
    "at": "https://www.nhs.uk/medicines/citalopram/",
    "kept": 0,
    "thrown": []
-  },
-  {
-   "title": "Clinical use of antidepressant therapy and associated cardiovascular risk",
-   "read": "full",
-   "kind": "other",
-   "at": "10.2147/dhps.s28804",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F4",
+   "F5"
+  ],
+  "direct": "Yes",
+  "but": [
+   "F2"
+  ],
+  "how": [
+   [
+    "F4",
+    "F5"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "frequency/prevalence of recreational use"
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The passages do not state that the 2022 source is a 'review'."
+   ],
+   "how2": [
+    false,
+    "The source is not identified in the passages as a 'literature review'."
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passage states that ventricular arrhythmias are a potential complication of 'supratherapeutic serum concentrations' (serum concentrations that exceed recommended reference intervals), not of 'taking citalopram or escitalopram in amounts"
+   ],
+   "but": [
+    false,
+    "The passage refers specifically to reported cases of QTcB prolongation or arrhythmia associated with SSRIs in published reports/databases, not to 'most reported cases of heart rhythm problems' generally. It also alters 'such as might only b"
+   ],
+   "how1": [
+    false,
+    "The passage states that supratherapeutic serum concentrations of citalopram and escitalopram (not high levels of antidepressants in general) can lead to ventricular arrhythmias. Additionally, the passage does not state that the source is a "
+   ],
+   "how2": [
+    false,
+    "The passage mentions 'QT prolongation', but does not use or define the phrase 'lengthen the heart's electrical cycle'. It also does not identify the source as a 'literature review'."
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8594,
+   "but": 0.9795,
+   "how1": 0.5993,
+   "how2": 0.5787
+  },
+  "scores_quotes_alone": {
+   "short": 0.3409,
+   "but": 0.8579,
+   "how1": 0.2595,
+   "how2": 0.3596
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Antidepressants are common in intended intoxications. High doses can cause life-threatening heart rhythm problems like cardiac arrest.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dietrichs_2022",
+       "where": "Discussion",
+       "quote": "Use of antidepressants is also common in intended intoxications.",
+       "sha": "c4648519a59d1873"
+      },
+      {
+       "label": "F5",
+       "ref": "dietrichs_2022",
+       "where": "Conclusion",
+       "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+       "sha": "901bd05ee299e46a"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that high doses of antidepressants in general can cause life-threatening heart rhythm problems like cardiac arrest; they specifically mention citalopram and escitalopram serum concentrations exceeding recommended i"
+    },
+    {
+     "part": "but",
+     "text": "Most reported heart rhythm cases happen after toxic doses, such as those from deliberate overdose.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "waring_2012",
+       "where": "Differential risk between antidepressant classes › Selective serotonin reuptake inhibitors",
+       "quote": "Most of the reported cases involve QTcB prolongation or arrhythmia that occurs after toxic doses, such as might only be encountered after deliberate drug overdose.",
+       "sha": "4954c89e17260221"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2022 review says antidepressants are common in intended intoxications. High levels can cause life-threatening heart rhythm problems.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dietrichs_2022",
+       "where": "Discussion",
+       "quote": "Use of antidepressants is also common in intended intoxications.",
+       "sha": "c4648519a59d1873"
+      },
+      {
+       "label": "F5",
+       "ref": "dietrichs_2022",
+       "where": "Conclusion",
+       "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+       "sha": "901bd05ee299e46a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence calls the 2022 source a \"review,\" but the source is a research article, not a review."
+    },
+    {
+     "part": "how2",
+     "text": "A 2012 literature review notes citalopram can cause dose-dependent QT prolongation. The exact mechanism is uncertain.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "waring_2012",
+       "where": "Abstract",
+       "quote": "A number of different psychotropic agents have been associated with an increased risk of cardiovascular disease, and these relationships have been difficult to interpret due to the presence of confounding factors.",
+       "sha": "80c7f9110756f328"
+      },
+      {
+       "label": "F1",
+       "ref": "waring_2012",
+       "where": "Pharmacological mechanisms responsible for cardiovascular effects › Selective serotonin reuptake inhibitors",
+       "quote": "Citalopram and escitalopram are known to cause dose-dependent QT prolongation, although the mechanism remains uncertain and may be unrelated to serotonin reuptake per se.",
+       "sha": "fbc95140c4f54fca"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, taking citalopram or escitalopram in amounts above the recommended level can cause life-threatening heart rhythm problems, including cardiac arrest.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dietrichs_2022",
+       "where": "Discussion",
+       "quote": "Use of antidepressants is also common in intended intoxications.",
+       "sha": "c4648519a59d1873"
+      },
+      {
+       "label": "F5",
+       "ref": "dietrichs_2022",
+       "where": "Conclusion",
+       "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+       "sha": "901bd05ee299e46a"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that ventricular arrhythmias are a potential complication of 'supratherapeutic serum concentrations' (serum concentrations that exceed recommended reference intervals), not of 'taking citalopram or escitalopram in amounts"
+    },
+    {
+     "part": "but",
+     "text": "Most reported cases of heart rhythm problems happen after toxic doses, such as those taken in a deliberate overdose.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "waring_2012",
+       "where": "Differential risk between antidepressant classes › Selective serotonin reuptake inhibitors",
+       "quote": "Most of the reported cases involve QTcB prolongation or arrhythmia that occurs after toxic doses, such as might only be encountered after deliberate drug overdose.",
+       "sha": "4954c89e17260221"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage refers specifically to reported cases of QTcB prolongation or arrhythmia associated with SSRIs in published reports/databases, not to 'most reported cases of heart rhythm problems' generally. It also alters 'such as might only b"
+    },
+    {
+     "part": "how1",
+     "text": "A 2022 review says antidepressants are common in intended intoxications and that high levels can cause dangerous heart rhythms.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dietrichs_2022",
+       "where": "Discussion",
+       "quote": "Use of antidepressants is also common in intended intoxications.",
+       "sha": "c4648519a59d1873"
+      },
+      {
+       "label": "F5",
+       "ref": "dietrichs_2022",
+       "where": "Conclusion",
+       "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+       "sha": "901bd05ee299e46a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not describe the 2022 source as a \"review\"; it is presented as a study, so the claim that it is a review is unsupported."
+    },
+    {
+     "part": "how2",
+     "text": "A 2012 literature review notes citalopram can lengthen the heart's electrical cycle, a risk that rises with higher doses.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "waring_2012",
+       "where": "Abstract",
+       "quote": "A number of different psychotropic agents have been associated with an increased risk of cardiovascular disease, and these relationships have been difficult to interpret due to the presence of confounding factors.",
+       "sha": "80c7f9110756f328"
+      },
+      {
+       "label": "F1",
+       "ref": "waring_2012",
+       "where": "Pharmacological mechanisms responsible for cardiovascular effects › Selective serotonin reuptake inhibitors",
+       "quote": "Citalopram and escitalopram are known to cause dose-dependent QT prolongation, although the mechanism remains uncertain and may be unrelated to serotonin reuptake per se.",
+       "sha": "fbc95140c4f54fca"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The source is not identified in the passages as a 'literature review'."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. A review says antidepressants are common in intended intoxications. It says ventricular arrhythmias are a potential life-threatening complication of supratherapeutic serum concentrations.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dietrichs_2022",
+       "where": "Discussion",
+       "quote": "Use of antidepressants is also common in intended intoxications.",
+       "sha": "c4648519a59d1873"
+      },
+      {
+       "label": "F5",
+       "ref": "dietrichs_2022",
+       "where": "Conclusion",
+       "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+       "sha": "901bd05ee299e46a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence attributes the statements to “a review,” but the passages do not identify the source as a review."
+    },
+    {
+     "part": "but",
+     "text": "Most reported cases involve QTcB prolongation or arrhythmia after toxic doses, such as might only be encountered after deliberate drug overdose.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "waring_2012",
+       "where": "Differential risk between antidepressant classes › Selective serotonin reuptake inhibitors",
+       "quote": "Most of the reported cases involve QTcB prolongation or arrhythmia that occurs after toxic doses, such as might only be encountered after deliberate drug overdose.",
+       "sha": "4954c89e17260221"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2022 review says antidepressant use is common in intended intoxications. It says ventricular arrhythmias are a potential life-threatening complication of supratherapeutic serum concentrations.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "dietrichs_2022",
+       "where": "Discussion",
+       "quote": "Use of antidepressants is also common in intended intoxications.",
+       "sha": "c4648519a59d1873"
+      },
+      {
+       "label": "F5",
+       "ref": "dietrichs_2022",
+       "where": "Conclusion",
+       "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+       "sha": "901bd05ee299e46a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence calls the 2022 source “a review,” which the passages never describe as a review."
+    },
+    {
+     "part": "how2",
+     "text": "A 2012 literature review says citalopram causes dose-dependent QT prolongation. It says the mechanism is uncertain and may be unrelated to serotonin reuptake.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "waring_2012",
+       "where": "Abstract",
+       "quote": "A number of different psychotropic agents have been associated with an increased risk of cardiovascular disease, and these relationships have been difficult to interpret due to the presence of confounding factors.",
+       "sha": "80c7f9110756f328"
+      },
+      {
+       "label": "F1",
+       "ref": "waring_2012",
+       "where": "Pharmacological mechanisms responsible for cardiovascular effects › Selective serotonin reuptake inhibitors",
+       "quote": "Citalopram and escitalopram are known to cause dose-dependent QT prolongation, although the mechanism remains uncertain and may be unrelated to serotonin reuptake per se.",
+       "sha": "fbc95140c4f54fca"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence labels the 2012 source as “a literature review,” a description not present in the passages."
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2022 review says antidepressant use is common in intended intoxications. It says ventricular arrhythmias are a potential life-threatening complication of supratherapeutic serum concentrations.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "dietrichs_2022",
+     "where": "Discussion",
+     "quote": "Use of antidepressants is also common in intended intoxications.",
+     "sha": "c4648519a59d1873"
+    },
+    {
+     "label": "F5",
+     "ref": "dietrichs_2022",
+     "where": "Conclusion",
+     "quote": "Ventricular arrhythmias like torsades des pointes and cardiac arrest is a potential and life-threatening complication of such supratherapeutic serum concentrations.",
+     "sha": "901bd05ee299e46a"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The sentence calls the 2022 source “a review,” which the passages never describe as a review."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2012 literature review says citalopram causes dose-dependent QT prolongation. It says the mechanism is uncertain and may be unrelated to serotonin reuptake.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "waring_2012",
+     "where": "Abstract",
+     "quote": "A number of different psychotropic agents have been associated with an increased risk of cardiovascular disease, and these relationships have been difficult to interpret due to the presence of confounding factors.",
+     "sha": "80c7f9110756f328"
+    },
+    {
+     "label": "F1",
+     "ref": "waring_2012",
+     "where": "Pharmacological mechanisms responsible for cardiovascular effects › Selective serotonin reuptake inhibitors",
+     "quote": "Citalopram and escitalopram are known to cause dose-dependent QT prolongation, although the mechanism remains uncertain and may be unrelated to serotonin reuptake per se.",
+     "sha": "fbc95140c4f54fca"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The sentence labels the 2012 source as “a literature review,” a description not present in the passages."
+  }
+ ],
  "place": {
   "home": "new:Antidepressants",
   "also": [],
