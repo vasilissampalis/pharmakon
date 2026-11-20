@@ -874,6 +874,7 @@ function insUnfinished(q, onPage) {
   if (U.ends.has(last) && !any(U.strand)) return "ends";
   if (names >= 2 && w.every(x => x === "it" || U.join.has(x))) return "";               // two drugs and a word that joins them
   if (names >= 2 && /^(?:is|are|was|were|isnt|arent)\s+it\s+(?:an?\s+|the\s+)?(?:kind\s+of\s+|type\s+of\s+|form\s+of\s+)?(?:an?\s+)?it$/.test(s)) return "";   // (2.28.2) "is kratom an opioid", "are benzos opioids": whether one is one of the other is a whole question
+  if (names >= 2 && /\bit\s+(?:(?:is|are)\s+(?:there\s+)?)?(?:in|inside)\s+(?:an?\s+|the\s+|one\s+|my\s+|your\s+)?it$/.test(s)) return "";   // (2.28.4) "how much caffeine is in coffee", "how much alcohol is in beer": one named in the other is a whole question
   // nothing but function words and words for people: a subject, and nothing said of it, unless a form of "be" stands before
   // a last word that describes people ("are people gay") or before "for kids" and the like ("is weed for kids")
   const people = w.every(x => U.aux.has(x) || U.who.has(x) || U.whoadj.has(x)), be = w.findIndex(x => U.be.has(x)), gap = w.some(x => U.gap.has(x));
