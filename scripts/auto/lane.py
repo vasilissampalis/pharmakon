@@ -2088,15 +2088,15 @@ def turn_of(w, done):
     s = done.get(w["id"]) or {}
     if not s: return 0
     st, last = s.get("status"), str(s.get("last") or "")
+    if st in ("published", "waiting"):                                  # (20 November 2026) an answer the editor holds (data/auto/held.json) is written again by itself, with what
+        try: rec = json.load(open(OUT / ("au_" + str(w["id"]) + ".json"), encoding="utf-8"))   # the editor found (held_say), whatever it waited for; until now one that was
+        except (OSError, ValueError): rec = None                        # published and then held was taken off the site and never written again
+        tries_today = int(s.get("n") or 1) if last == TODAY else 0      # (a draft that does not pass leaves the held version in place: at most HARD_A_DAY tries a day)
+        if rec and is_held(rec): return 1 if tries_today < HARD_A_DAY else None
     n = int(s.get("n") or 1) if last == TODAY else 0                      # tries today (a try noted before lane 19 has no count: one)
     older = int(s.get("lane") or 1) < LANE
     if st == "published" and older: return 4
-    if st == "waiting" and s.get("for") == "editor":                    # an editor reads it; a newer lane does not write it again by itself,
-        # (20 November 2026) unless the editor has read it and held it (data/auto/held.json): then it is written again by itself, with what the editor found (held_say).
-        # Until now such a hold stopped nothing and started nothing: five answers the editor held on 18 November had waited two days, never written again.
-        try: rec = json.load(open(OUT / ("au_" + str(w["id"]) + ".json"), encoding="utf-8"))
-        except (OSError, ValueError): rec = None
-        return 1 if rec and is_held(rec) else None
+    if st == "waiting" and s.get("for") == "editor": return None        # an editor reads it; a newer lane does not write it again by itself (a held one: above)
     if older: return 1
     if st == "waiting" and s.get("for") != "again": return None
     newer = max([_searched(ROOT / "data" / "auto" / "papers" / (w["id"] + ".json")), _searched(FOUND_OFFICIAL / (w["id"] + ".json"))])
