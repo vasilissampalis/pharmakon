@@ -17,20 +17,24 @@
   "heroin"
  ],
  "made": {
-  "on": "2026-11-19",
+  "on": "2026-11-20",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44434987433",
+  "run": "44640930550",
   "read_by": {
-   "gemini-3.5-flash-lite": 5,
-   "gemini-3.1-flash-lite": 2
+   "gemini-3.5-flash-lite": 2,
+   "gemini-3.1-flash-lite": 1,
+   "gpt-oss-20b": 1
   },
   "read_seconds": 100,
   "from": {
@@ -42,10 +46,10 @@
   "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
  "gates": {
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -93,6 +97,14 @@
    "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -135,7 +147,8 @@
    "kind": "review",
    "at": "10.1007/s10461-018-2238-7",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Reinterpreting ethnic patterns among white and African American men who inject heroin: a social science of medicine approach",
@@ -151,37 +164,14 @@
    "kind": "review",
    "at": "10.1186/s12954-023-00758-1",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A research paper using mathematical models to analyze heroin administration methods for harm reduction.",
-     "quote": "This work employs Henderson–Hasselbalch models to analyse the risk of venous damage by placing solution pH within the context of the buffer capacity of the blood.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Fentanyls continue to replace heroin in the drug arena: the cases of ocfentanil and carfentanil",
    "read": "full",
    "kind": "review",
    "at": "10.1007/s11419-017-0379-4",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "What we have learned from the Methadone Maintenance Treatment of Dual Disorder Heroin Use Disorder patients",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/ijerph16030447",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Prevalence of Deliberate Self-harm Among Chinese Patients With Heroin Dependence: A Meta-Analysis",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyt.2018.00325",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
