@@ -557,7 +557,7 @@ async function findPapers(env, r, most, ctx) {
     if (!r.groups.length) add([c[0], first[0], c[1], first[1], first[2], c[2]].concat(first.slice(3)));   // (2.28.20) no key word: the reviews first
     else add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
     if (out.length < 3) add(w);
-    if (!A.done || (out.length < 3 && (!C.done || !W.done))) more = true;
+    if (!A.done || (!r.groups.length && !C.done) || (out.length < 3 && (!C.done || !W.done))) more = true;   // (2.28.20) no key word: the reviews are worth asking again for
     if (A.failed || (out.length < 3 && (C.failed || W.failed))) down = true;
     if (!ms) { ms = [A, C, W].map(s => s.ms); won = [A, C, W].map(s => s.won); own = [A, C, W].map(s => s.own); }
     again += A.again + C.again + W.again; kept += A.kept + C.kept + W.kept; };

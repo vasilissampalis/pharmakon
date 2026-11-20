@@ -48,6 +48,9 @@ const viaNet = async (u, o) => { const t0 = Date.now(), url = String(u), mine = 
   return new Response(text, { status: r.status, headers: { "content-type": "application/json" } }); };
 // what the server keeps of Europe PMC's replies (on the site: Cloudflare's cache), stood in for by a list in memory
 const KEPT = new Map(), CACHE = { match: async u => (KEPT.has(String(u)) ? new Response(KEPT.get(String(u))) : undefined), put: async (u, res) => { KEPT.set(String(u), await res.text()); }, delete: async u => KEPT.delete(String(u)) };
+// (2.28.20) the trial copy of the server keeps its own (as a server that has not been asked yet would): with the site's server's replies kept, its own new search
+// came after the list was given, and it showed the same list (trial 32)
+const KEPT_NEXT = new Map(), CACHE_NEXT = { match: async u => (KEPT_NEXT.has(String(u)) ? new Response(KEPT_NEXT.get(String(u))) : undefined), put: async (u, res) => { KEPT_NEXT.set(String(u), await res.text()); }, delete: async u => KEPT_NEXT.delete(String(u)) };
 const fromMemory = async u => { const r = replies.get(String(u)); return r ? new Response(r.text, { status: r.status, headers: { "content-type": "application/json" } }) : new Response("{}", { status: 200 }); };
 const LITTLE = new Set(("a an the of in on at to for from by with and or but that which who whom whose than as is are was were be been being it its their they this these those there into over under after before during while when where also both either neither nor not no none never without cannot " +
   "may might could can would should must suggest suggests suggested appear appears seem seems possibly possible potential potentially likely unlikely unclear unknown whether if although though however whereas despite except unless only just even rather instead versus compared comparison " +
@@ -78,7 +81,8 @@ for (const f of files) {
   for (const q of Array.isArray(req.questions) ? req.questions.slice(0, 60) : []) {
     asked = []; const body = JSON.stringify(Object.assign({ names: q.names, words: q.words }, Array.isArray(q.also) && q.also.length ? { also: q.also } : {}, q.def ? { def: 1 } : {}, q.t ? { t: 1 } : {})), rf = readFind(JSON.parse(body));   // (t: titles only, as the page asks for a question about pregnancy or children or one that names no single drug)
     const W = await workerFor(q), post = env => W.fetch(new Request("https://pharmakon.world/api/find", { method: "POST", headers: { "content-type": "application/json", origin: "https://pharmakon.world" }, body }), env);
-    const t0 = Date.now(), mine = asked, live = { ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: viaNet, CACHE }; let reply = null, status = 0;
+    const kept = W === worker ? CACHE : CACHE_NEXT;
+    const t0 = Date.now(), mine = asked, live = { ASSETS: { fetch: async () => new Response("", { status: 404 }) }, FETCH: viaNet, CACHE: kept }; let reply = null, status = 0;
     try { const r = await post(live); status = r.status; reply = await r.json(); } catch (e) { reply = { error: String(e && e.message).slice(0, 200) }; }
     const ms = Date.now() - t0, firstReply = reply; let asks = 1, wholeMs = ms;
     // as the page does (since site 2.21.1: six more askings over some forty seconds): where a search is still out, ask again; the newer list takes the place of the
@@ -87,7 +91,7 @@ for (const f of files) {
       if (r2 && r2.ok && ((r2.papers || []).length || !((reply.papers || []).length))) { reply = r2; wholeMs = Date.now() - t0; } else if (!(r2 && r2.ok && r2.more)) break; }
     const idOf = p => p.doi || p.pmid, firstIds = ((firstReply && firstReply.papers) || []).map(idOf);
     // the server's own computing time: the same request again, from memory (the middle one of five)
-    const again = []; for (let i = 0; i < 5; i++) { const c0 = performance.now(); try { await (await post({ ASSETS: {}, FETCH: fromMemory, CACHE })).json(); } catch (e) { /* not timed */ } again.push(performance.now() - c0); } again.sort((a, b) => a - b);
+    const again = []; for (let i = 0; i < 5; i++) { const c0 = performance.now(); try { await (await post({ ASSETS: {}, FETCH: fromMemory, CACHE: kept })).json(); } catch (e) { /* not timed */ } again.push(performance.now() - c0); } again.sort((a, b) => a - b);
     const papers = ((reply && reply.papers) || []).map(p => Object.assign({ title: p.t, kind: p.kind, y: p.y, j: p.j, free: !!p.oa, id: p.doi || p.pmid }, p.q ? { shown: p.q, about: p.an === 1 ? "animals or cells" : p.an === 2 ? "its summary covers animals or cells too" : "", around: around(p) } : Object.assign({ shown: null }, rf.error ? { why: "" } : whyNone(p, rf))));
     items.push(Object.assign({ q: q.q, worker: W === worker ? "site" : "next", names: q.names, also: q.also || [], words: q.words, def: !!q.def, titles_only: !!(firstReply && firstReply.titles), status, ms, more: !!(firstReply && firstReply.more), search_ms: (firstReply && firstReply.ms) || [], asked_twice: (firstReply && firstReply.again) || 0, which_asking_answered: (firstReply && firstReply.won) || [], its_own_ms: (firstReply && firstReply.own) || [], from_kept: (firstReply && firstReply.kept) || 0 },
       firstReply && firstReply.more ? { asks, whole_ms: wholeMs, still_more: !!(reply && reply.more), first_list: firstIds.length, of_them_in_the_whole_list: firstIds.filter(i => ((reply && reply.papers) || []).some(p => idOf(p) === i)).length } : {},
