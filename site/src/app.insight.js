@@ -451,6 +451,10 @@ const INS_RE = {
   make: /\b(?:how\s+(?:to|do\s+(?:i|you|u|we|they|people)|can\s+(?:i|you|u|we)|would\s+(?:i|you))\s+make|cook|cooking|synthesi[sz]e|synthesi[sz]ing|grow|growing|extract|extracting|brew|brewing|manufacture|manufacturing)\s+(?:(?:some|my|your|own|pure|the|a|good|homemade)\s+){0,3}$/i,
   made: /^\s+(?:(?:is|are|be|being|gets?|was|were)\s+)?(?:made|cooked|synthesi[sz]ed|grown|extracted|produced|manufactured)\b(?!\s+(?:of|from|me|my|him|her|us|them|you|it)\b)/i,
   how: /\bhow\b/i, recipe: /\b(?:recipe|synthesis)\b/i,
+  // (2.28.25) a question about the law of growing, buying or having a drug is no request to grow or buy it ("is it legal to grow shrooms in the us" was turned
+  // away as one); a question that also asks how or where still is ("how to grow weed legally")
+  lawq: /\b(?:is|are|was|were)\s+(?:it\s+)?(?:il)?legal\b|\b(?:il)?legal\s+to\b|\b(?:grow|growing|buy|buying|make|making|brew|brewing|extract|extracting|order|ordering|import|importing|possess|possessing|own|owning|carry|carrying)\b[^?.!]{0,40}\b(?:il)?legal\b|\b(?:penalt(?:y|ies)|sentences?|fines?|jail|prison|arrested|charged|prosecuted)\s+for\b|\bagainst the law\b/i,
+  lawhow: /\bhow\s+(?:to|do|does|can|could|would|should)\b|\bwhere\b|\bsteps?\b|\bguide\b|\brecipe\b|\btutorial\b/i,
   fine: /\b(?:test(?:ing)?\s+kits?|strips?|reagents?|naloxone|narcan|help|treatment|therapy|prescri\w*|doctor|clinic|rehab|support|needle exchange|drug checking)\b/i,
   hide: /\bhow\s+(?:to|do\s+i|can\s+i)\s+(?:hide|conceal|sneak|smuggle|cover up|mask)\b|\b(?:hide|hiding|conceal(?:ing)?)\s+(?:it|that|this|my|being|the\s+(?:smell|fact|signs|use|high))\b|\b(?:hide|hiding|conceal(?:ing)?)\b[^?.!]{0,40}\bfrom\s+(?:my|the|your|his|her|their|a|parents|mom|mum|dad|wife|husband|boss|cops|police|teachers?|doctors?)\b|\b(?:sneak|sneaking|smuggle|smuggling)\b|\bwithout\b.{0,40}\b(?:knowing|finding out|noticing)\b|\b(?:not|avoid|without)\s+(?:get(?:ting)?\s+)?caught\b|\b(?:mask|cover(?:\s+up)?|get rid of)\s+the\s+smell\b|\b(?:look|seem|act|appear)\s+sober\b/i,
   beat: /\b(?:pass|passing|beat|beating|cheat|cheating|fool|trick|get around|get past)\b.{0,30}\b(?:tests?|screens?|screening)\b|\b(?:fake|synthetic|someone else'?s|borrowed)\s+(?:pee|piss|urine)\b|\b(?:flush|get|clear|clean)\b.{0,25}\bout of (?:my|your|the|his|her) (?:system|body|urine|blood|hair|pee)\b|\bdetox (?:drinks?|kits?|pills?|shampoo|products?)\b|\b(?:clean|negative)\s+(?:in time\s+)?for\s+(?:a|my|the)\s+(?:drug\s+)?(?:test|screen)/i
@@ -458,6 +462,7 @@ const INS_RE = {
 function insBlocked(q) {
   if (INS_RE.hide.test(q) || INS_RE.beat.test(q)) return true;
   if (INS_RE.fine.test(q)) return false;                       // getting a test kit, naloxone, help or treatment is not getting drugs
+  if (INS_RE.lawq.test(q) && !INS_RE.lawhow.test(q)) return false;   // (2.28.25) what the law says of growing or buying it
   if (INS_RE.shops.test(q)) return true;
   let named = false;
   for (const m of q.matchAll(INS.nameRe)) {                    // a verb of getting or making, with a drug as what is got or made
@@ -2421,9 +2426,10 @@ function insFindTerms(res) {
   const cutw = /\bcut\s+(?:with|by)\b|\bwhat\s+(?:is|are|was|were|s)\s+(?:\w+\s+){0,3}cut\b/.test(masked);   // (2.26.4, trial 16) what a drug is cut with, as papers say it; "cut down" is no such question
   if (cutw) words.push("adulterants|adulteration|cutting agents");
   const less = /\bcut(?:ting)?\s+(?:down|back)\b/.test(masked), comed = /\bcom(?:e|es|ing)\s+down\b|\bcomedowns?\b/.test(masked);   // (2.28.25) "comedown" in one word too   // (2.26.4) "cut down", "coming down": what papers call them
-  // (2.28.25, trial 38) a first time, as papers say it: "first" alone found "a world first"
+  // (2.28.25, trials 38 to 40) a first time is no key word: "first" alone found "a world first", "naive" studies in drug-naive rats, "naive users" papers on other
+  // drugs, and few papers are about a first use; the drug's reviews come first, as for any question with no key word ("first time doing coke what to expect")
   const firstT = /\bfirst[- ]time(?:rs?)?\b/.test(masked);
-  if (firstT) { for (let i = words.length - 1; i >= 0; i--) if (/^(?:first|time|timer|timers)$/.test(words[i])) words.splice(i, 1); words.push("first-time|novice|naive"); }
+  if (firstT) for (let i = words.length - 1; i >= 0; i--) if (/^(?:first|time|timer|timers)$/.test(words[i])) words.splice(i, 1);
   if (less) words.push("reduction|reducing|cutting down"); if (comed) { for (let i = words.length - 1; i >= 0; i--) if (/^comedowns?$/.test(words[i])) words.splice(i, 1); words.push("comedown|come down|after-effects"); }
   // (2.28.7) how long a drug can be found, as papers say it ("how long does coke stay in your system" was looked up by "stay" and "system"); a test's kind stays a key word
   const stays = /\b(?:stays?|staying|remains?|lingers?|lasts?)\s+in\s+(?:your|my|the|their|his|her|a|one'?s)?\s*(?:system|body|blood(?:stream)?|urine|pee|hair|saliva|spit)\b|\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
