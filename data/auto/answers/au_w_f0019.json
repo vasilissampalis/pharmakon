@@ -19,98 +19,232 @@
   "models": {
    "reader": "gemini:gemma-4-31b-it",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44662002214",
-  "read_seconds": 100,
+  "run": "44773301247",
+  "read_by": {
+   "gemini-3.1-flash-lite": 6,
+   "gpt-oss-20b": 1
+  },
+  "read_seconds": 35,
   "from": {
    "papers": 0,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 300
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "2 findings kept from 2 sources (0 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8709) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8631)"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_magic-mushrooms",
+    "type": "webpage",
+    "title": "Psilocybin and psilocin (Magic mushrooms)",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       10,
+       20
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/magic-mushrooms.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "Psilocybin and psilocin (Magic mushrooms)",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.601,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/magic-mushrooms.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 4,
+     "where": "About magic mushrooms",
+     "quote": "Psilocybin and psilocin are hallucinogens that produce effects similar to LSD. Individuals using magic mushrooms experience hallucinations and an altered state of consciousness.",
+     "text": "Magic mushrooms contain psilocybin and psilocin, which are hallucinogens that cause hallucinations and an altered state of consciousness, similar to the effects of LSD.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "thelevel_dmt",
+    "type": "webpage",
+    "title": "DMT",
+    "author": [
+     {
+      "literal": "NZ Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://thelevel.org.nz/drug-information/dmt",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    },
+    "publisher": "The Level"
+   },
+   "title": "DMT",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.596,
+   "name": "NZ Drug Foundation",
+   "short": "the NZ Drug Foundation",
+   "tier": 2,
+   "address": "https://thelevel.org.nz/drug-information/dmt",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 8,
+     "where": "How to stay safer / How can you be safer when using DMT?",
+     "quote": "DMT is often described as a very intense experience, even when compared with other hallucinogenic drugs such as LSD or psilocybin.",
+     "text": "DMT is often described as a very intense experience, even when compared with other hallucinogenic drugs such as psilocybin.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
- "wanted": [
+ "wanted": [],
+ "person": null,
+ "history": [
   {
-   "doi": "10.1007/s13311-017-0542-y",
-   "apa": "Johnson, M. W., & Griffiths, R. R. (2017). Potential therapeutic effects of psilocybin. Neurotherapeutics, 14(3), 734–740. https://doi.org/10.1007/s13311-017-0542-y",
-   "near": 0.675,
-   "why": "a review or meta-analysis in people; nearness to the question 0.68; cited 205 times; its full text is not open",
-   "file": "johnson_2017_s13311_017_0542_y.pdf"
-  },
-  {
-   "doi": "10.1176/appi.ajp.2019.19010035",
-   "apa": "Reiff, C. M., Richman, E. E., Nemeroff, C. B., Carpenter, L. L., Widge, A. S., Rodriguez, C. I., Kalin, N. H., McDonald, W. M., & and the Work Group on Biomarkers and Novel Treatments, a Division of the American Psychiatric Association Council of Research. (2020). Psychedelics and psychedelic-assisted psychotherapy. American Journal of Psychiatry, 177(5), 391–410. https://doi.org/10.1176/appi.ajp.2019.19010035",
-   "near": 0.639,
-   "why": "a review or meta-analysis in people; nearness to the question 0.64; cited 426 times; its full text is not open",
-   "file": "reiff_2020_appi_ajp_2019_19010035.pdf"
-  },
-  {
-   "doi": "10.1016/j.pharmthera.2018.11.010",
-   "apa": "Johnson, M. W., Hendricks, P. S., Barrett, F. S., & Griffiths, R. R. (2019). Classic psychedelics: An integrative review of epidemiology, therapeutics, mystical experience, and brain network function. Pharmacology & Therapeutics, 197, 83–102. https://doi.org/10.1016/j.pharmthera.2018.11.010",
-   "near": 0.632,
-   "why": "a review or meta-analysis in people; nearness to the question 0.63; cited 314 times; its full text is not open",
-   "file": "johnson_2019_j_pharmthera_2018_11_010.pdf"
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
- "person": null,
- "history": [],
  "looked": [
   {
-   "title": "Impact of psilocybin on cognitive function: A systematic review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1111/pcn.13741",
+   "title": "Psilocybin for Mental Health and Addiction: What You Need To Know",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/psilocybin-for-mental-health-and-addiction-what-you-need-to-know",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Psilocybin as Transformative Fast-Acting Antidepressant: Pharmacological Properties and Molecular Mechanisms",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1111/fcp.70038",
+   "title": "Psilocybin (magic mushrooms)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/psilocybin/",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Towards an understanding of psychedelic-induced neuroplasticity",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1038/s41386-022-01389-z",
+   "title": "Psylocibin, Psilocin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/magic-mushrooms",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Psilocybin desynchronizes the human brain",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1038/s41586-024-07624-5",
+   "title": "5-MeO-DMT",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/5-meo-dmt",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Psilocybin and psilocin (Magic mushrooms)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/magic-mushrooms.html",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Psilocybin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/psilocybin",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "DMT",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/dmt",
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "new:Other tryptamines (4-AcO-DMT, 4-HO-MET, DPT)",
   "also": [
