@@ -73,6 +73,13 @@ EXTRA = {"benzo": ["benzodiazepines"], "benzodiazepine": ["benzodiazepines"], "x
          "fent": ["fentanyl-and-analogues"], "nitazene": ["fentanyl-and-analogues"], "amphetamines": ["amphetamine"], "cathinones": ["synthetic-cathinones"], "2cb": ["2c-x"],
          "beer": ["alcohol"], "beers": ["alcohol"], "wine": ["alcohol"], "liquor": ["alcohol"], "cigarettes": ["nicotine"], "cigarette": ["nicotine"],
          "edible": ["cannabis"], "energy drink": ["caffeine"], "robotussin": ["dxm"]}
+# (2.28.11, 20 November 2026) the benzodiazepines and opioids people name by their own names, on the page of their kind: "ativan" was read as a
+# benzodiazepine and "lorazepam", the same drug, as a drug the site has no page on, so that "is lorazepam addictive" was shown nothing
+EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazepam", "triazolam", "bromazepam", "chlordiazepoxide", "librium", "restoril", "halcion", "clobazam",
+                                               "midazolam", "nitrazepam", "lormetazepam", "flunitrazepam", "rohypnol", "bromazolam", "clonazolam", "flualprazolam", "flubromazolam",
+                                               "flubromazepam", "diclazepam", "pyrazolam", "deschloroetizolam")})
+EXTRA.update({n: ["prescription-opioids"] for n in ("hydromorphone", "dilaudid", "oxymorphone", "opana", "tapentadol", "nucynta", "dihydrocodeine", "norco", "lortab", "roxicodone",
+                                                    "ultram", "demerol", "pethidine", "meperidine")})
 # a family's name names every drug of the family (substances.json, cls): an answer about any one of them is about it
 FAMILY_WORDS = {"Opioids": ["opioids", "opioid", "opiates", "opiate"], "Stimulants": ["stimulants", "stimulant"], "Depressants": ["depressants", "downers"],
                 "Classic psychedelics": ["psychedelics", "psychedelic", "hallucinogens"], "Atypical psychedelics": ["psychedelics", "psychedelic", "hallucinogens"],
@@ -195,9 +202,21 @@ def drug_name_sets():
 
 
 # drug names for the first look (as tune.py's expand): a street or brand name in a question brings the drug's own name along
+def expand_extra():
+    """(2.28.11) The everyday names of one drug (EXTRA) that bring its own name along as well, as its street names do: "is lorazepam addictive
+    (Benzodiazepines)". The page reads the same list from the index ("expand"). Measured: the gold set does not change; near-miss 97 of 1,810 (100)."""
+    slugs = {s["slug"] for s in SUB}
+    out = {}
+    for n, ss in EXTRA.items():
+        if len(ss) == 1 and ss[0] in slugs: out.setdefault(ss[0], set()).add(n)
+    return {k: sorted(v) for k, v in sorted(out.items())}
+
+
 def drug_names():
     pats, canon = {}, {}
-    for slug, ns in drug_name_sets().items():
+    sets = drug_name_sets()
+    for slug, ns in expand_extra().items(): sets[slug] = set(sets.get(slug) or ()) | set(ns)
+    for slug, ns in sets.items():
         pats[slug] = re.compile(r"\b(" + "|".join(re.escape(n) for n in sorted(ns, key=len, reverse=True)) + r")\b")
     for s in SUB: canon[s["slug"]] = s["name"].split(" (")[0]
     def expand(t):
@@ -721,6 +740,7 @@ def main():
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
            "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
     out["say"] = [{"ask": x["ask"], "add": x["add"]} for x in CONFIG.get("say") or []]   # (2.28.3) what people call a thing, as papers say it: added to a question before it is embedded
+    out["expand"] = expand_extra()   # (2.28.11) the everyday names of one drug that bring its own name along, as its street names do (drug_names)
     out["scope"] = scope_block()   # 2.5: what makes a question a question about drugs (site/insight/scope.json)
     # 2.22: what a question asks about, where getting it wrong does harm (site/insight/model.json, aspects): each answer is marked once, by ALL its wordings and its short answer
     spoken = [" ".join(w for r, w in zip(rows, W_txt) if r == i) + " " + shorts[i] for i in range(len(A))]

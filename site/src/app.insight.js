@@ -168,11 +168,15 @@ function insPrepare(d, vocabText) {
     s.name.split(/[()\/,;]| and /).forEach(p => { p = p.trim().toLowerCase(); if (p.length >= 3) ns.add(p); });
     (ALIASES[s.slug] || []).forEach(a => { if (a.length >= 3) ns.add(a.toLowerCase()); });
     ns.forEach(n => { if (!INS.any.has(n)) INS.any.set(n, s.slug); });
-    const alt = [...ns].sort((a, b) => b.length - a.length).map(insRx).join("|");
+    const more = (d.expand || {})[s.slug] || [], all = new Set([...ns, ...more]);           // (2.28.11) and its everyday names (the index's "expand": "lorazepam", "ativan")
+    more.forEach(n => { if (!INS_NOT_ONE_PAGE.has(n) && !INS.any.has(n)) INS.any.set(n, s.slug); });   // ("what is ativan": the page of benzodiazepines, as for "what is xanax")
+    const alt = [...all].sort((a, b) => b.length - a.length).map(insRx).join("|");
     return { slug: s.slug, canon: s.name.split(" (")[0], re: new RegExp(insNb("\\p{L}\\p{N}_") + "(?:" + alt + ")(?![\\p{L}\\p{N}_])", "u") };
   }).sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
   INS.canon = new Map(INS.drugs.map(x => [x.slug, x.canon]));
 }
+// (2.28.11) everyday names that stand for more than the one page they bring along: asked alone, or as "what are painkillers", they are no drug's page
+const INS_NOT_ONE_PAGE = new Set(["painkillers", "sleeping pills", "sleeping pill", "sleeping tablets"]);
 function insExpand(t) {
   const tl = t.toLowerCase(), extra = INS.drugs.filter(x => x.re.test(tl) && !tl.includes(x.canon.toLowerCase())).map(x => x.canon);
   return t + (extra.length ? " (" + extra.join(", ") + ")" : "");
