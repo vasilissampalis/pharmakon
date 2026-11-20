@@ -41,7 +41,7 @@ const ECSTASY = ["does ecstasy damage your brain permanently", "cl_mdma_neurotox
 const UNCHECKED = "is modafinil safe", LISTED = "how can you die from alcohol", KETAMINE = "give me the full evidence about how can i die from ketamine", NONE = "what is the capital of mongolia";
 // (2.9) a question that is not finished, with no drug named and with one; a question whose one unknown word may be a drug's name;
 // and questions each read as finished or not by their words alone: [question, how it is read ("" finished), asked on a drug's page]
-const UNFIN = "can i die from", UNFIN_DRUG = "can i mix cocaine with", STRANGER = "is tusi dangerous", MISSPELT = "is cocane bad for your heart";
+const UNFIN = "can i die from", UNFIN_DRUG = "can i mix cocaine with", STRANGER = "is bromantane dangerous",   /* (2.28.19: tusi is a name Insight knows now) */ MISSPELT = "is cocane bad for your heart";
 const WORDS = [["can i die from ", "ends"], ["is it addictive", "which"], ["is it addictive", "", true], ["can you overdose", "which"], ["how long does it last", "which"], ["how long does it last", "", true],
   ["what is tolerance", ""], ["how long does withdrawal last", ""], ["why do people get addicted", ""], ["what is it cut with", "which"], ["what are pills cut with", ""], ["what is heroin cut with", ""],
   ["is cocaine", "bare"], ["what is ketamine", ""], ["what is ketamine for", ""], ["weed and alcohol", ""], ["weed and", "ends"], ["how does mdma", "bare"], ["can i die from coc", "typing"], ["is weed lega", "typing"],
@@ -262,8 +262,8 @@ const judged = f => 1 / (1 + Math.exp(-(f.reduce((z, x, i) => z + JUDGE.w[i] * (
     ok(w + ": the same with a drug named (“" + UNFIN_DRUG + "”): “Go on. Finish your question about cocaine and we will look.”, nothing to send", !un2.best.length && un2.none === "Go on." && !un2.askBtn && !un2.wordAsk &&
       /Go on\. Finish your question about cocaine and we will look\./.test(un2.text.replace(/\s+/g, " ")), un2.kids.join(" > ") + " | " + un2.text.replace(/\s+/g, " ").slice(0, 160));
     const unk = await ask(STRANGER);
-    ok(w + ": a question whose one unknown word may be a drug's name (“" + STRANGER + "”): “We do not know “tusi” as a drug. If it is one, send us your question and we will look into it.”", !unk.best.length && unk.none === "We do not know “tusi” as a drug." && unk.askBtn === "send us your question" &&
-      /If it is one, send us your question and we will look into it\./.test(unk.text.replace(/\s+/g, " ")) && /^We do not know “tusi” as a drug/.test(unk.live), unk.kids.join(" > ") + " | " + unk.text.replace(/\s+/g, " ").slice(0, 200) + " | heard: " + unk.live);
+    ok(w + ": a question whose one unknown word may be a drug's name (“" + STRANGER + "”): “We do not know “bromantane” as a drug. If it is one, send us your question and we will look into it.”", !unk.best.length && unk.none === "We do not know “bromantane” as a drug." && unk.askBtn === "send us your question" &&
+      /If it is one, send us your question and we will look into it\./.test(unk.text.replace(/\s+/g, " ")) && /^We do not know “bromantane” as a drug/.test(unk.live), unk.kids.join(" > ") + " | " + unk.text.replace(/\s+/g, " ").slice(0, 200) + " | heard: " + unk.live);
     // ---- (2.9.2) every circumstance has its response: a subject with nothing said of it, a helper with no main verb, a name
     // of two words that we do not know, a question that is not in English
     const cbad = [];

@@ -47,7 +47,8 @@ const queries = goldAll.filter((_, i) => i % 5 === 2).slice(0, 60).map(q => [q, 
   "is lorazepam addictive", "how long does lorazepam withdrawal last", "is flualprazolam dangerous", "is dilaudid stronger than morphine", "can tapentadol get you high", "is wine bad for your liver",
   // (2.28.16, 2.28.17) everyday names, mushrooms that are not magic mushrooms, and names that stand for no page
   "are xannies addictive", "are percs laced with fentanyl", "whippet side effects", "what is a bad mushroom trip like", "is lions mane mushroom good for memory", "are reishi mushrooms safe",
-  "chaga mushroom tea benefits", "can amanita mushrooms kill you", "is vitamin k2 safe", "what is gas station heroin", "is fake weed dangerous", "how strong are golden teachers", "is delta 8 safe"].map(q => [q, null]),
+  "chaga mushroom tea benefits", "can amanita mushrooms kill you", "is vitamin k2 safe", "what is gas station heroin", "is fake weed dangerous", "how strong are golden teachers", "is delta 8 safe",
+  "are pingers safe", "is hippie crack bad for you", "what is liquid ecstasy", "what is pink cocaine", "are m30s fentanyl", "is my joint pain from weed"].map(q => [q, null]),
   [["does it kill brain cells", "cannabis"], ["is it addictive", "cannabis"], ["how long does it stay in your blood", "ketamine"], ["is it addictive", "kratom"], ["can it damage my bladder", "ketamine"],
    ["what does mdma do to serotonin", "cannabis"], ["how long does it last", "lsd"], ["is it safe with alcohol", "mdma"]]);
 // 2.9: questions as a reader who is still typing leaves them: every third forum question of the gold set cut after each of its

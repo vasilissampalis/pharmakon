@@ -85,7 +85,14 @@ EXTRA = {"benzo": ["benzodiazepines"], "benzodiazepine": ["benzodiazepines"], "x
          "synthetic marijuana": ["synthetic-cannabinoids"], "synthetic cannabis": ["synthetic-cannabinoids"], "fake weed": ["synthetic-cannabinoids"], "k2": ["synthetic-cannabinoids"],
          "delta 9": ["cannabis"], "delta-9": ["cannabis"],   # (delta-9-THC is THC; delta-8 and delta-10, made from CBD, are drugs the site has no page on: scope.json)
          "golden teacher": ["psilocybin"], "golden teachers": ["psilocybin"], "liberty cap": ["psilocybin"], "liberty caps": ["psilocybin"],
-         "psilocybe": ["psilocybin"], "cubensis": ["psilocybin"], "psilocybe cubensis": ["psilocybin"]}
+         "psilocybe": ["psilocybin"], "cubensis": ["psilocybin"], "psilocybe cubensis": ["psilocybin"],
+         # (2.28.19) street names people type that Insight did not read; not the ones that are everyday words too (snow, grass, pot, joint, gear, glass, charlie)
+         "pingers": ["mdma"], "yayo": ["cocaine"], "whizz": ["amphetamine"], "mushies": ["psilocybin"], "skunk": ["cannabis"], "reefer": ["cannabis"], "spliff": ["cannabis"],
+         "spliffs": ["cannabis"], "mary jane": ["cannabis"], "skag": ["heroin"], "m30": ["fentanyl-and-analogues"], "m30s": ["fentanyl-and-analogues"],
+         "roxy": ["prescription-opioids"], "roxies": ["prescription-opioids"], "hydros": ["prescription-opioids"], "zannies": ["benzodiazepines"], "aya": ["dmt-ayahuasca"],
+         "addy": ["amphetamine"], "addies": ["amphetamine"], "juul": ["nicotine"], "juuls": ["nicotine"], "cig": ["nicotine"], "cigs": ["nicotine"], "blotter": ["lsd"],
+         # a name that holds the name of another drug: "hippie crack" is nitrous oxide, "liquid ecstasy" is GHB
+         "hippie crack": ["nitrous-oxide"], "liquid ecstasy": ["ghb-gbl"]}
 # (2.28.11, 20 November 2026) the benzodiazepines and opioids people name by their own names, on the page of their kind: "ativan" was read as a
 # benzodiazepine and "lorazepam", the same drug, as a drug the site has no page on, so that "is lorazepam addictive" was shown nothing
 EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazepam", "triazolam", "bromazepam", "chlordiazepoxide", "librium", "restoril", "halcion", "clobazam",
@@ -244,7 +251,8 @@ def drug_names():
 # mushrooms, "vitamin k2" is no synthetic cannabinoid, "gas station heroin" is tianeptine. They are read as names, the longest first, so that the shorter name
 # inside them is not read; they name no page (no drug, no group: the page's insNamed and Ranker.named pass over them), and the drug names inside them bring no
 # drug's name along before the question is embedded (drug_names, the page's insExpand). "can amanita mushrooms kill you" was read as a question on psilocybin.
-NONE_NAMES = ["amanita mushroom", "amanita mushrooms", "fly agaric mushroom", "fly agaric mushrooms", "muscaria mushroom", "muscaria mushrooms", "vitamin k2", "gas station heroin"]
+NONE_NAMES = ["amanita mushroom", "amanita mushrooms", "fly agaric mushroom", "fly agaric mushrooms", "muscaria mushroom", "muscaria mushrooms", "vitamin k2", "gas station heroin",
+              "pink cocaine"]   # (2.28.19) tusi: a powder of mixed drugs, mostly ketamine and MDMA, that seldom holds cocaine
 
 
 def names_table():
@@ -418,6 +426,10 @@ class Ranker:
         if any(p.search(s) for p in U["whole"]): return ""
         if w[-1] in U["ends"] and not any(p.search(s) for p in U["strand"]): return "ends"
         if names >= 2 and all(x == "it" or x in U["join"] for x in w): return ""               # two drugs and a word that joins them
+        # (2.28.19) the page's rules of 2.28.2 and 2.28.4, which the build lacked (the parity check found it on "are m30s fentanyl"): whether one is one of the
+        # other ("is kratom an opioid", "are m30s fentanyl"), and one named in the other ("how much caffeine is in coffee"), are whole questions
+        if names >= 2 and re.search(r"^(?:is|are|was|were|isnt|arent)\s+it\s+(?:an?\s+|the\s+)?(?:kind\s+of\s+|type\s+of\s+|form\s+of\s+)?(?:an?\s+)?it$", s): return ""
+        if names >= 2 and re.search(r"\bit\s+(?:(?:is|are)\s+(?:there\s+)?)?(?:in|inside)\s+(?:an?\s+|the\s+|one\s+|my\s+|your\s+)?it$", s): return ""
         # (2.9.2) nothing but function words and words for people: a subject, and nothing said of it ("do gay people"), unless
         # a form of "be" stands before a last word that describes people ("are people gay": finished, and not about drugs)
         people = all(x in U["aux"] or x in U["who"] or x in U["whoadj"] for x in w)

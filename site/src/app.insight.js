@@ -2467,7 +2467,11 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
   rohypnol: "flunitrazepam", restoril: "temazepam", halcion: "triazolam", librium: "chlordiazepoxide",
   // (2.28.18) the everyday names Insight reads since 2.28.16 (papers name the drug, not the street name)
   xanny: "alprazolam", xannies: "alprazolam", xanies: "alprazolam", perc: "oxycodone", percs: "oxycodone", whippet: "nitrous oxide", nang: "nitrous oxide",
-  popper: "alkyl nitrites", ganja: "cannabis", fenty: "fentanyl", shroom: "psilocybin" };
+  popper: "alkyl nitrites", ganja: "cannabis", fenty: "fentanyl", shroom: "psilocybin",
+  // (2.28.19) the street names Insight reads since 2.28.19
+  pingers: "mdma", yayo: "cocaine", whizz: "amphetamine", mushies: "psilocybin", skunk: "cannabis", reefer: "cannabis", spliff: "cannabis", spliffs: "cannabis", skag: "heroin",
+  m30s: "fentanyl", roxy: "oxycodone", roxies: "oxycodone", hydros: "hydrocodone", zannies: "alprazolam", addy: "amphetamine", addies: "amphetamine", juul: "nicotine",
+  juuls: "nicotine", cigs: "nicotine", blotter: "lsd" };
 // (2.28.18) a started page's own name as a search: what stands in its brackets, each as papers write it ("Ketamine analogues (MXE, DCK)": methoxetamine,
 // deschloroketamine), else its name before "and other", "and similar" or "and" ("Anabolic steroids and other body-building drugs": anabolic steroids)
 function autoFindNames(title) {
@@ -2490,7 +2494,8 @@ const FIND_PAPERS = { "delta 8": "delta-8-thc|delta-8-tetrahydrocannabinol", "de
   steroids: "anabolic steroids|anabolic-androgenic steroids", steroid: "anabolic steroids|anabolic-androgenic steroids", anabolic: "anabolic steroids|anabolic-androgenic steroids",
   anabolics: "anabolic steroids|anabolic-androgenic steroids", anavar: "oxandrolone", dianabol: "methandienone|methandrostenolone", winstrol: "stanozolol",
   hgh: "growth hormone abuse|growth hormone doping", sarms: "selective androgen receptor modulators", sarm: "selective androgen receptor modulators",
-  creatine: "creatine supplementation|creatine monohydrate", nbomes: "nbome|nbomes" };   // (trials 28 to 30: "growth hormone" alone found its basic science, "sarms" an immune protein, "creatine" creatine kinase)
+  creatine: "creatine supplementation|creatine monohydrate", nbomes: "nbome|nbomes",
+  tusi: "tusi|tucibi|pink cocaine", tucibi: "tusi|tucibi|pink cocaine", tuci: "tusi|tucibi|pink cocaine", "pink cocaine": "tusi|tucibi|pink cocaine" };   // (trials 28 to 30: "growth hormone" alone found its basic science, "sarms" an immune protein, "creatine" creatine kinase)
 /* (2.20) Each paper may come with at most 15 of its own words on the question, cut by fixed rules on the server from the end of its summary, where papers
    say what they found (site/worker/_worker.js, iaPick): no model reads or writes anything. They stand in quotation marks under the paper's title, so that
    they are read as that paper's and in its frame; where they are about animals or cells, the line says so. */
