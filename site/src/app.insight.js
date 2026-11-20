@@ -710,7 +710,8 @@ function insRoutes(q, groups, drug) {
       add("page", INS_PLACE.page(one[0]), "Drug · " + subBySlug[one[0]].cls, insCap(dn(said[0])) + " and " + dn(said[1]) + " are names used for the same drug: " + subBySlug[one[0]].name + ". What is sold under a name can hold something else.", { same: true }); } }
   if (one.length === 2 && !INS_RE.notmix.test(q) && (INS_RE.mixing.test(q) || (INS_RE.loose.test(q) && !INS_RE.versus.test(q))))
     add("mix", INS_PLACE.mix(), "Mixing", insCap(pageWord(one[0])) + " + " + pageWord(one[1]) + ": what’s known about mixing them", { mix: one[0] + "," + one[1] });
-  if (INS_RE.dose.test(q)) {
+  // (2.28.25) how much water to drink is no question about a dose ("how much water should i drink on molly" was sent to the doses, and no research was looked up for it)
+  if (INS_RE.dose.test(q.replace(/\bhow\s+much\s+(?:water|fluids?|liquids?|electrolytes?)\b/gi, " "))) {
     if (about) add("dose", INS_PLACE.doses(about), drugName(about), "We don’t list doses. These harm reduction groups do");
     else add("dose", INS_PLACE.drugs(), "Doses", "We don’t list doses. Each drug’s page links to harm reduction groups that do");
   }
@@ -2267,7 +2268,8 @@ if (typeof document !== "undefined") askedBox();
    drug: since 2.21 those are looked up and listed by title only, see FIND_TITLES below.) */
 const FIND_API = "api/find";
 const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
-  "together same both each other others another everyone everybody somebody anybody something anything stuff kind sort guys " +   // (2.26.2, trial 15: "together" was taken for a key word)
+  "together same both each other others another everyone everybody somebody anybody something anything stuff kind sort guys " +
+  "whats hows wheres whos thats tips expect month months week weeks " +   // (2.28.25) "whats" (what's without its apostrophe) and the like; tips; a span of time says nothing a search can use   // (2.26.2, trial 15: "together" was taken for a key word)
   "stronger weaker better worse safer riskier " +   // (2.28.7) the words that only set two things side by side: the two names are what is looked up ("mushrooms vs lsd which is stronger")
   "linked link links linking associated association connected connection related relation could have been usually often normally typically commonly generally mostly products product brands brand " +   // (2.26.4, trial 16: "is nitrous oxide linked to nerve damage" had "linked" for a key word)
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
@@ -2288,7 +2290,7 @@ const FIND_STOP = new Set(("what when where which while with would could should 
   // (2.22) how often is no subject ("how many people die from it each year in greece" is about deaths, and Greece)
   "each year years yearly annual annually per").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
-const FIND_SAY = { high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
+const FIND_SAY = { twice: "repeated|frequent|frequency of use", high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
   kids: "children|adolescents", kid: "children|adolescents", teens: "adolescents", teen: "adolescents", teenagers: "adolescents", teenager: "adolescents", teenage: "adolescents", moms: "maternal|mothers", mom: "maternal|mothers", mums: "maternal|mothers", mum: "maternal|mothers", mothers: "maternal", mother: "maternal", dads: "paternal|fathers", dad: "paternal|fathers", fathers: "paternal", father: "paternal", parents: "parental", parent: "parental", families: "family",
   creative: "creativity", lonely: "loneliness", poor: "poverty", genes: "genetic", inherited: "genetic", hereditary: "genetic", psychology: "psychological",
   pregnant: "pregnancy", baby: "infants", babies: "infants", breastfeeding: "lactation", breastfeed: "lactation",   // (2.21.2, after the twelfth trial)
@@ -2418,8 +2420,11 @@ function insFindTerms(res) {
   if (acad) words.push("academic|cognitive|students");
   const cutw = /\bcut\s+(?:with|by)\b|\bwhat\s+(?:is|are|was|were|s)\s+(?:\w+\s+){0,3}cut\b/.test(masked);   // (2.26.4, trial 16) what a drug is cut with, as papers say it; "cut down" is no such question
   if (cutw) words.push("adulterants|adulteration|cutting agents");
-  const less = /\bcut(?:ting)?\s+(?:down|back)\b/.test(masked), comed = /\bcom(?:e|es|ing)\s+down\b/.test(masked);   // (2.26.4) "cut down", "coming down": what papers call them
-  if (less) words.push("reduction|reducing|cutting down"); if (comed) words.push("comedown|come down|after-effects");
+  const less = /\bcut(?:ting)?\s+(?:down|back)\b/.test(masked), comed = /\bcom(?:e|es|ing)\s+down\b|\bcomedowns?\b/.test(masked);   // (2.28.25) "comedown" in one word too   // (2.26.4) "cut down", "coming down": what papers call them
+  // (2.28.25, trial 38) a first time, as papers say it: "first" alone found "a world first"
+  const firstT = /\bfirst[- ]time(?:rs?)?\b/.test(masked);
+  if (firstT) { for (let i = words.length - 1; i >= 0; i--) if (/^(?:first|time|timer|timers)$/.test(words[i])) words.splice(i, 1); words.push("first-time|novice|naive"); }
+  if (less) words.push("reduction|reducing|cutting down"); if (comed) { for (let i = words.length - 1; i >= 0; i--) if (/^comedowns?$/.test(words[i])) words.splice(i, 1); words.push("comedown|come down|after-effects"); }
   // (2.28.7) how long a drug can be found, as papers say it ("how long does coke stay in your system" was looked up by "stay" and "system"); a test's kind stays a key word
   const stays = /\b(?:stays?|staying|remains?|lingers?|lasts?)\s+in\s+(?:your|my|the|their|his|her|a|one'?s)?\s*(?:system|body|blood(?:stream)?|urine|pee|hair|saliva|spit)\b|\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
   // (trial 21: "detection" beside "cocaine" found sensors that detect cocaine in a sample) staying in the body is asked as how it leaves it; a drug test as testing
@@ -2440,7 +2445,7 @@ function insFindTerms(res) {
     if (lean && /^(?:lean|purple|drank|sizzurp|dirty|sprite)$/.test(w0)) continue;              // (2.28.13) lean's own words: the subject itself
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
     if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
-    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
+    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (firstT && /^(?:first|time|timer|timers)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
     const e = say && say !== w0 ? (say.split("|").includes(w0) ? say : say + "|" + w0) : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
     if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }

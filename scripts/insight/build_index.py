@@ -141,6 +141,27 @@ EXTRA["mother's little helper"] = ["benzodiazepines"]
 # do where the drug is named by its own name ("taking amphetamine": "taking it"). Before this the whole phrase became "it": "can i take speed" read as "can i it", a
 # question not finished. "%" stands where the drug's name stood (the page's insMask and insUnfTokens; Ranker.mask and unf_tokens; the index's M)
 MASKS = {p: " ".join("%" if x == "speed" else x for x in p.split()) for p, g in EXTRA.items() if g == ["amphetamine"] and " " in p and "speed" in p.split()}
+# (2.28.25) drinking ON a drug is alcohol with it: "can i drink on xanax" read Xanax alone, and the page showed no way to what is known about mixing the two (alcohol
+# with a benzodiazepine or an opioid is among the mixes that kill most often). Only where "drink" stands right before "on", "while on", "while taking" or "after
+# taking"; "drinking water on molly" and "what to drink with molly" are not. A question about how much water to drink stays one (NONE_NAMES below)
+DRINK = [d + " " + x for d in ("drink", "drinking") for x in ("on", "while on", "while taking", "after taking")]
+EXTRA.update({p: ["alcohol"] for p in DRINK})
+MASKS.update({p: p.replace(" ", " % ", 1) for p in DRINK})   # "drink on": "drink it on", as "drink alcohol on" is masked
+# (2.28.25) to roll is to take MDMA: "is it bad to roll twice in a month" was taken for a question not about drugs. Only in phrases that say so ("roll a joint" is not one)
+ROLL = {"first time rolling": "first time taking %", "rolling for the first time": "taking % for the first time", "my first roll": "my first time taking %",
+        "roll twice": "take % twice", "rolled twice": "took % twice", "rolling twice": "taking % twice", "roll again": "take % again", "rolling again": "taking % again",
+        "roll every weekend": "take % every weekend", "rolling every weekend": "taking % every weekend", "roll every week": "take % every week",
+        "rolling every week": "taking % every week", "roll every month": "take % every month", "rolling every month": "taking % every month",
+        "how often can you roll": "how often can you take %", "how often can i roll": "how often can i take %", "how often should you roll": "how often should you take %",
+        "how often should i roll": "how often should i take %", "how often is it safe to roll": "how often is it safe to take %", "how often to roll": "how often to take %",
+        "post roll": "after taking %", "post-roll": "after taking %", "roll back to back": "take % back to back", "rolling back to back": "taking % back to back",
+        "rolling balls": "high on %", "roll safely": "take % safely", "rolling safely": "taking % safely"}
+EXTRA.update({p: ["mdma"] for p in ROLL}); MASKS.update(ROLL)
+# (2.28.25) "md" is MDMA where it is taken or its comedown asked about ("whats the comedown from md like" named no drug); "md" alone is also a doctor and Maryland
+MD = ["taking md", "took md", "take md", "taken md", "on md", "doing md", "did md", "bombing md", "bombed md", "dabbing md", "md comedown", "md come down",
+      "comedown from md", "come down from md", "coming down from md", "md crystals", "md crystal", "md powder", "md pills", "pure md", "first time on md", "first time doing md",
+      "md last", "md lasts", "md kick in", "md to kick in", "md take to kick in", "md stay in your system", "md in your system", "md stay in your urine"]
+EXTRA.update({p: ["mdma"] for p in MD}); MASKS.update({p: " ".join("%" if x == "md" else x for x in p.split()) for p in MD})
 # (2.28.24) a name with an apostrophe as a phone types it (’) and as people often type it, with none ("poor mans cocaine" was read as cocaine)
 EXTRA.update({v: g for n, g in list(EXTRA.items()) if "'" in n for v in (n.replace("'", "’"), n.replace("'", ""))})
 # a family's name names every drug of the family (substances.json, cls): an answer about any one of them is about it
@@ -296,6 +317,11 @@ def drug_names():
 # drug's name along before the question is embedded (drug_names, the page's insExpand). "can amanita mushrooms kill you" was read as a question on psilocybin.
 NONE_NAMES = ["amanita mushroom", "amanita mushrooms", "fly agaric mushroom", "fly agaric mushrooms", "muscaria mushroom", "muscaria mushrooms", "vitamin k2", "gas station heroin",
               "pink cocaine"]   # (2.28.19) tusi: a powder of mixed drugs, mostly ketamine and MDMA, that seldom holds cocaine
+# (2.28.25) a question about how much water to drink on a drug is about water (DRINK above: "drink on" is alcohol)
+NONE_NAMES += [w + " " + v + " " + d for w in ("water", "fluids", "electrolytes") for v in ("to", "should i", "should you", "can i", "can you", "do i", "do you",
+               "do i need to", "do you need to", "is it safe to", "should i be", "should you be", "to be", "am i supposed to", "are you supposed to")
+               for d in ("drink on", "drink while on", "drinking on", "drinking while on")]
+NONE_NAMES += ["how much should i drink on", "how much should you drink on", "how much to drink on", "how much should i be drinking on", "how much should you be drinking on"]
 # (2.28.24) "mushroom tea" is magic mushrooms; a tea of the mushrooms people take for their health is not (site/insight/scope.json, not: the same mushrooms)
 NONE_NAMES += [m + " mushroom tea" for m in ("chaga", "reishi", "lions mane", "lion's mane", "lion’s mane", "lion mane", "cordyceps", "turkey tail", "maitake", "shiitake",
                                               "medicinal", "functional", "adaptogenic")]
