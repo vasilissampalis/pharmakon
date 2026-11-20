@@ -2237,7 +2237,10 @@ def team(file=None, only=None, avoid=()):
                     other = next((r for r in (t.get("reader"), t.get("reader_else")) if isinstance(r, str) and r and r != m["reader"] and llm.has(r) and base(r) not in (base(m["writer"]), base(m["checker"]))), None)
                     # (lane 19) the writer's stand-in: the team's "writer_else", else the first of the writers we know that is another model than every other of this answer
                     taken = {base(v.split("#")[0]) for v in m.values()}
-                    w2 = next((x for x in [t.get("writer_else"), "groq:qwen/qwen3.8-27b", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"] if isinstance(x, str) and x and llm.has(x) and base(x) not in taken), None)
+                    # (20 November 2026) and one with room today: team Z (every model at Google) was given Qwen at Groq, whose day was used up, as its stand-in; Gemma's
+                    # draft was not in the form asked for, Qwen was asked, Groq said no, and twice that stopped the lane for the day with Google's day still open
+                    room = lambda x: llm.calls_fit({x: CALLS["writer"]}) if llm.service_of(x)[0] else NEED["writer"][1] <= llm.groq_left(x[5:]) if x.startswith("groq:") else NEED["writer"][0] <= llm.left()
+                    w2 = next((x for x in [t.get("writer_else"), "groq:qwen/qwen3.8-27b", "@cf/meta/llama-3.3-70b-instruct-fp8-fast"] if isinstance(x, str) and x and llm.has(x) and base(x) not in taken and room(x)), None)
                     return dict(m, team=t.get("name") or "", **({"reader_2": other} if other else {}), **({"writer_2": w2} if w2 else {}), **{f"also{n}_else": "|".join(r) for n, r in rest.items() if r})
     return None
 
@@ -2672,6 +2675,7 @@ def selftest():
         assert team(tf)["writer_2"] == "@cf/meta/llama-3.3-70b-instruct-fp8-fast" and team(tf, avoid=("A",))["team"] == "B" and team(tf, avoid=("A", "B"))["team"] == "A"      # (lane 19) the writer's stand-in is another model than every other of the answer; a team that tried today comes after the others
         assert team(tf, only="B")["team"] == "B" and team(tf, only="Z") is None                                               # (a request may name its team)
         cf[0] = 100; assert team(tf)["reader"] == "groq:openai/gpt-oss-20b" and team(tf)["team"] == "A"                    # Cloudflare's day is used up: the reader works at Groq
+        assert "writer_2" not in team(tf)                                                                                   # (20 November 2026) and no stand-in writer there: one without room is none
         gq["qwen/qwen3.8-27b"] = 1000; assert team(tf) is None                                                             # team A's second reader has no room, and team B's writer is at Cloudflare, which has none
         cf[0] = 9000; assert T(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "groq:openai/gpt-oss-120b", "team": "B", "reader_2": "groq:openai/gpt-oss-20b"}
         keys["groq"] = False; assert T(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/openai/gpt-oss-120b", "team": "B"}   # no second service: every model at Cloudflare, as before
