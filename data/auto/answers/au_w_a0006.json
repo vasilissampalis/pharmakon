@@ -17,77 +17,88 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.1-flash-lite",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44640930550",
+  "run": "44671985100",
   "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "gemini-3.1-flash-lite": 2,
-   "gpt-oss-20b": 2
+   "gpt-oss-20b": 3,
+   "gemma-4-31b-it": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 150,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 298.0,
-  "seconds": 191
+  "neurons": 0.0,
+  "seconds": 150
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "rules": "broken at try 1: but: words that are not person-first (“Users”); short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words; written again, then nothing against it",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.12, but 0.01, how1 0.02, how2 0.10",
-  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "but": "the writer's But was not accepted (The passages do not state that the studies measured focus and fatigue; they only describe drug effects or assess prevalence of use.): the code wrote the But itself, from what this answer rests on",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "time": "3 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
+  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "myrseth_2018",
+    "id": "maier_2015",
     "type": "article-journal",
-    "title": "Prevalence and correlates of stimulant and depressant pharmacological cognitive enhancement among Norwegian students",
+    "title": "Pharmacological cognitive enhancement in healthy individuals: A compensation for cognitive deficits or a question of personality?",
     "author": [
      {
-      "family": "Myrseth",
-      "given": "Helga"
+      "family": "Maier",
+      "given": "Larissa J."
      },
      {
-      "family": "Pallesen",
-      "given": "Ståle"
+      "family": "Wunderli",
+      "given": "Michael D."
      },
      {
-      "family": "Torsheim",
-      "given": "Torbjørn"
+      "family": "Vonmoos",
+      "given": "Matthias"
      },
      {
-      "family": "Erevik",
-      "given": "Eilin Kristine"
+      "family": "Römmelt",
+      "given": "Andreas T."
+     },
+     {
+      "family": "Baumgartner",
+      "given": "Markus R."
+     },
+     {
+      "family": "Seifritz",
+      "given": "Erich"
+     },
+     {
+      "family": "Schaub",
+      "given": "Michael P."
+     },
+     {
+      "family": "Quednow",
+      "given": "Boris B."
      }
     ],
-    "container-title": "Nordic Studies on Alcohol and Drugs",
+    "container-title": "PLOS ONE",
     "issued": {
      "date-parts": [
       [
-       2018
+       2015
       ]
      ]
     },
-    "DOI": "10.1177/1455072518778493",
+    "DOI": "10.1371/journal.pone.0129805",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -99,247 +110,55 @@
       "checked_on": "2026-11-20"
      }
     },
-    "volume": "35",
-    "issue": "5",
-    "page": "372-387",
-    "PMCID": "PMC7434145"
+    "volume": "10",
+    "issue": "6",
+    "number": "e0129805",
+    "PMCID": "PMC4479570"
    },
-   "doi": "10.1177/1455072518778493",
-   "pmcid": "PMC7434145",
-   "title": "Prevalence and correlates of stimulant and depressant pharmacological cognitive enhancement among Norwegian students",
-   "year": 2018,
-   "journal": "Nordisk alkohol- & narkotikatidskrift : NAT",
+   "doi": "10.1371/journal.pone.0129805",
+   "pmcid": "PMC4479570",
+   "title": "Pharmacological Cognitive Enhancement in Healthy Individuals: A Compensation for Cognitive Deficits or a Question of Personality?",
+   "year": 2015,
+   "journal": "PloS one",
    "kind": "other",
    "people": true,
-   "near": 0.647,
-   "money": [],
+   "near": 0.745,
+   "money": [
+    "Competing Interests: The authors have declared that no competing interests exist.",
+    "This study was funded by the Swiss National Science Foundation, (SNSF; grant No. PP00P1-146326/1). The SNSF did not influence study design, data collection and analysis, decision to publish, or preparation of the manuscript.",
+    "This study was funded by the Swiss National Science Foundation (SNSF; grants No. PP00P1-123516/1 and PP00P1-146326/1). The authors thank Stefania Niedecker, Kathrin Küpeli, Katrin H. Preller, and Lea M. Hulka for their support with the recruitment and the neuropsychological assessment of the study participants."
+   ],
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "To assess the prevalence and factors associated with stimulant and depressant pharmacological cognitive enhancement (PCE) drug use among Norwegian students.",
-    "text": "A study assessing the prevalence and factors associated with pharmacological cognitive enhancement drug use among Norwegian students."
+    "quote": "Twenty‑five healthy individuals using MPH for PCE were compared with 39 age‑, sex‑, and education‑matched healthy controls regarding cognitive performance and personality assessed by a comprehensive neuropsychological test battery",
+    "text": "Cross‑sectional study of healthy adults using methylphenidate for cognitive enhancement compared with stimulant‑naïve controls"
    },
    "findings": [
     {
-     "passage": 6,
-     "where": "Text",
-     "quote": "smart drugs, enhancement drugs or “nootropics” are increasingly being consumed to enhance or augment cognitive abilities among high school and college students.",
-     "text": "In one survey, students consume smart drugs, enhancement drugs or nootropics to enhance or augment cognitive abilities.",
+     "passage": 20,
+     "where": "Discussion",
+     "quote": "PCE users performed better in strategic thinking and decision‑making",
+     "text": "People who use methylphenidate for cognitive enhancement performed better in strategic thinking and decision‑making than stimulant‑naïve controls",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 9,
-     "where": "Text",
-     "quote": "Drug-induced cognitive enhancement can be defined as “pharmaceutical augmentation of mental abilities (e.g., learning or memory) without medical necessity”.",
-     "text": "Drug-induced cognitive enhancement is defined as the pharmaceutical augmentation of mental abilities like learning or memory without medical necessity.",
+     "passage": 20,
+     "where": "Discussion",
+     "quote": "PCE users showed higher impulsivity, higher novelty seeking, higher Machiavellianism, and more pronounced antisocial and negativistic personality traits, in combination with lower social reward dependence compared to controls",
+     "text": "People who use methylphenidate for cognitive enhancement displayed higher impulsivity, novelty seeking, Machiavellianism, antisocial and negativistic traits, and lower social reward dependence than controls",
      "id": "F2",
      "second_hand": ""
-    },
-    {
-     "passage": 9,
-     "where": "Text",
-     "quote": "The most commonly used enhancement drugs are stimulants, e.g., methylphenidate (e.g., ®Ritalin/Concerta) and mixed amphetamine salts (e.g., ®Adderall), which are usually prescribed for attention deficit hyperactivity disorder (ADHD) and are assumed to improve the ability to focus attention",
-     "text": "Stimulants like methylphenidate and mixed amphetamine salts are assumed to improve the ability to focus attention.",
-     "id": "F3",
-     "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 39,
-     "where": "Conclusion",
-     "quote": "Although the rates of PCE drug use increased from T1 to T2, the prevalence rates among Norwegian students were similar to rates reported among German students, but lower compared to the US.",
-     "text": "The prevalence rates of pharmacological cognitive enhancement drug use among Norwegian students are lower than those reported in the US.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "franke_2013",
-    "type": "article-journal",
-    "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
-    "author": [
-     {
-      "family": "Franke",
-      "given": "Andreas G"
-     },
-     {
-      "family": "Bagusat",
-      "given": "Christiana"
-     },
-     {
-      "family": "Dietz",
-      "given": "Pavel"
-     },
-     {
-      "family": "Hoffmann",
-      "given": "Isabell"
-     },
-     {
-      "family": "Simon",
-      "given": "Perikles"
-     },
-     {
-      "family": "Ulrich",
-      "given": "Rolf"
-     },
-     {
-      "family": "Lieb",
-      "given": "Klaus"
-     }
-    ],
-    "container-title": "BMC Medicine",
-    "issued": {
-     "date-parts": [
-      [
-       2013
-      ]
-     ]
-    },
-    "DOI": "10.1186/1741-7015-11-102",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-20"
-     }
-    },
-    "volume": "11",
-    "issue": "1",
-    "number": "102",
-    "PMCID": "PMC3635891"
-   },
-   "doi": "10.1186/1741-7015-11-102",
-   "pmcid": "PMC3635891",
-   "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
-   "year": 2013,
-   "journal": "BMC medicine",
-   "kind": "other",
-   "people": true,
-   "near": 0.528,
-   "money": [
-    "The authors declare that they have no competing interests."
-   ],
-   "design": null,
-   "findings": [
-    {
-     "passage": 40,
-     "where": "Discussion",
-     "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-     "text": "Stimulants and modafinil improve fatigue, vigilance, psychomotor skills and reaction time in sleep‑deprived surgeons, and give only slight pro‑cognitive effects on higher cognitive domains.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 48,
-     "where": "Conclusions",
-     "quote": "Substances such as modafinil seem to counteract fatigue and loss of concentration and thus may provide simple pharmacological help for stressed surgeons.",
-     "text": "Modafinil may counteract fatigue and loss of concentration in stressed surgeons.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 48,
-     "where": "Conclusions",
-     "quote": "Furthermore, the side effects and effects of long-term use (for example, misuse, addiction) of such drugs seem to be underestimated by users.",
-     "text": "Side effects and long‑term risks such as misuse and addiction are underestimated by users.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 48,
-     "where": "Conclusions",
-     "quote": "Furthermore, the side effects and effects of long-term use (for example, misuse, addiction) of such drugs seem to be underestimated by users.",
-     "text": "The study notes that users underestimate the side effects and long‑term risks of these drugs.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Not known. The sources say stimulants can improve focus and fight fatigue, but they do not say if any drug increases wisdom.",
-   "uses": [
-    "F3",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "myrseth_2018",
-     "where": "Text",
-     "quote": "The most commonly used enhancement drugs are stimulants, e.g., methylphenidate (e.g., ®Ritalin/Concerta) and mixed amphetamine salts (e.g., ®Adderall), which are usually prescribed for attention deficit hyperactivity disorder (ADHD) and are assumed to improve the ability to focus attention",
-     "sha": "f1998e1fea2f455e"
-    },
-    {
-     "label": "F4",
-     "ref": "franke_2013",
-     "where": "Discussion",
-     "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-     "sha": "ddc5fcc63dd5e780"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 studies in people.",
-   "uses": [
-    "DA",
-    "F4"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "myrseth_2018",
-     "where": "Abstract",
-     "quote": "To assess the prevalence and factors associated with stimulant and depressant pharmacological cognitive enhancement (PCE) drug use among Norwegian students.",
-     "sha": "e20f499d50143167"
-    },
-    {
-     "label": "F4",
-     "ref": "franke_2013",
-     "where": "Discussion",
-     "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-     "sha": "ddc5fcc63dd5e780"
-    }
-   ]
-  },
-  {
-   "part": "how2",
-   "text": "A study of surgeons found stimulants and modafinil help with fatigue and reaction time, not wisdom.",
-   "uses": [
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "franke_2013",
-     "where": "Discussion",
-     "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-     "sha": "ddc5fcc63dd5e780"
-    }
-   ],
-   "quote": "such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects",
-   "quote_ref": "franke_2013"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "Whether any drug increases wisdom",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1007/s00406-014-0537-1",
@@ -404,6 +223,14 @@
    "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Not known. The sources say stimulants can improve focus and fight fatigue, but they do not say if any drug increases wisdom.",
+   "complete": false
   }
  ],
  "looked": [
@@ -412,8 +239,33 @@
    "read": "full",
    "kind": "other",
    "at": "10.1371/journal.pone.0129805",
-   "kept": 0,
-   "thrown": []
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "People who use methylphenidate for cognitive enhancement performed equally to controls on most cognitive tasks, with no cognitive impairment",
+     "quote": "Recently abstinent PCE users and stimulant‑naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision‑making",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "People who use methylphenidate for cognitive enhancement are unlikely to cause a widespread epidemic of use",
+     "quote": "a forthcoming epidemic of MPH use for PCE is considered unlikely",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The findings are limited by the small sample size of PCE users",
+     "quote": "First, the number of PCE users was relatively small. This is obviously a threat to the statistical power of the reported analysis",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The findings are limited by the cross‑sectional design, which cannot establish causality",
+     "quote": "Third, we used a cross‑sectional design but a longitudinal design would have been most appropriate to investigate cause‑effect relationships between PCE drug use and changes in cognition and personali",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "A survey of substance use for cognitive enhancement by university students in the Netherlands",
@@ -436,7 +288,7 @@
    "read": "full",
    "kind": "other",
    "at": "10.1177/1455072518778493",
-   "kept": 3,
+   "kept": 0,
    "thrown": []
   },
   {
@@ -445,14 +297,8 @@
    "kind": "review",
    "at": "10.3389/fpsyg.2021.730165",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Systematic review of cognitive training effects in substance use disorder populations",
-     "quote": "Cognitive Training Effectiveness on Memory, Executive Functioning, and Processing Speed in Individuals With Substance Use Disorders: A Systematic Review (2021), Frontiers in psychology.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "A Systematic Review and Narrative Synthesis of Cognitive Training in the Treatment of Mental Illness and Substance Use Disorder",
@@ -460,7 +306,8 @@
    "kind": "review",
    "at": "10.3390/jcm13154348",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Cognitive Enhancement Therapy Improves Frontolimbic Regulation of Emotion in Alcohol and/or Cannabis Misusing Schizophrenia: A Preliminary Study",
@@ -468,298 +315,11 @@
    "kind": "other",
    "at": "10.3389/fpsyt.2015.00186",
    "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/1741-7015-11-102",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Survey study of surgeons using prescription or illicit drugs for cognitive or mood enhancement",
-     "quote": "Surgeons are usually exposed to high workloads leading to fatigue and stress.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": "the planner gave no plan that could be used: the writer chose the items itself",
- "tries": [
-  {
-   "try": 1,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Stimulants and modafinil can improve focus and reduce fatigue. They may give slight benefits to higher thinking, but do not clearly increase wisdom.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "myrseth_2018",
-       "where": "Text",
-       "quote": "The most commonly used enhancement drugs are stimulants, e.g., methylphenidate (e.g., ®Ritalin/Concerta) and mixed amphetamine salts (e.g., ®Adderall), which are usually prescribed for attention deficit hyperactivity disorder (ADHD) and are assumed to improve the ability to focus attention",
-       "sha": "f1998e1fea2f455e"
-      },
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-       "sha": "ddc5fcc63dd5e780"
-      },
-      {
-       "label": "F5",
-       "ref": "franke_2013",
-       "where": "Conclusions",
-       "quote": "Substances such as modafinil seem to counteract fatigue and loss of concentration and thus may provide simple pharmacological help for stressed surgeons.",
-       "sha": "c01788292c72ee88"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
-    },
-    {
-     "part": "but",
-     "text": "These drugs are studied for focus and fatigue, not wisdom. Users may underestimate long-term risks like addiction.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-       "sha": "ddc5fcc63dd5e780"
-      },
-      {
-       "label": "L2",
-       "ref": "franke_2013",
-       "where": "Conclusions",
-       "quote": "Furthermore, the side effects and effects of long-term use (for example, misuse, addiction) of such drugs seem to be underestimated by users.",
-       "sha": "c01788292c72ee88"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: words that are not person-first (“Users”)"
-    },
-    {
-     "part": "how1",
-     "text": "A study of Norwegian students found stimulants are used to improve attention, but rates are lower than in the US.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "myrseth_2018",
-       "where": "Abstract",
-       "quote": "To assess the prevalence and factors associated with stimulant and depressant pharmacological cognitive enhancement (PCE) drug use among Norwegian students.",
-       "sha": "e20f499d50143167"
-      },
-      {
-       "label": "F3",
-       "ref": "myrseth_2018",
-       "where": "Text",
-       "quote": "The most commonly used enhancement drugs are stimulants, e.g., methylphenidate (e.g., ®Ritalin/Concerta) and mixed amphetamine salts (e.g., ®Adderall), which are usually prescribed for attention deficit hyperactivity disorder (ADHD) and are assumed to improve the ability to focus attention",
-       "sha": "f1998e1fea2f455e"
-      },
-      {
-       "label": "L1",
-       "ref": "myrseth_2018",
-       "where": "Conclusion",
-       "quote": "Although the rates of PCE drug use increased from T1 to T2, the prevalence rates among Norwegian students were similar to rates reported among German students, but lower compared to the US.",
-       "sha": "eb5c2101541a07db"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A study of surgeons found stimulants and modafinil help with fatigue and reaction time, with slight effects on higher thinking.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-       "sha": "ddc5fcc63dd5e780"
-      },
-      {
-       "label": "F5",
-       "ref": "franke_2013",
-       "where": "Conclusions",
-       "quote": "Substances such as modafinil seem to counteract fatigue and loss of concentration and thus may provide simple pharmacological help for stressed surgeons.",
-       "sha": "c01788292c72ee88"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It can. Stimulants and modafinil can improve focus and reduce fatigue, but they may only slightly help higher thinking skills.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "myrseth_2018",
-       "where": "Text",
-       "quote": "The most commonly used enhancement drugs are stimulants, e.g., methylphenidate (e.g., ®Ritalin/Concerta) and mixed amphetamine salts (e.g., ®Adderall), which are usually prescribed for attention deficit hyperactivity disorder (ADHD) and are assumed to improve the ability to focus attention",
-       "sha": "f1998e1fea2f455e"
-      },
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-       "sha": "ddc5fcc63dd5e780"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“It can”) is not the answer the passages bear out: The passages address focus, fatigue, and side‑effect underestimation, but they never mention wisdom; therefore the opening answer “It can” is not a fair response to "
-    },
-    {
-     "part": "but",
-     "text": "People who use these drugs may underestimate side effects and long-term risks, such as addiction.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "franke_2013",
-       "where": "Conclusions",
-       "quote": "Furthermore, the side effects and effects of long-term use (for example, misuse, addiction) of such drugs seem to be underestimated by users.",
-       "sha": "c01788292c72ee88"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (The passages address focus, fatigue, and side‑effect underestimation, but they never mention wisdom; therefore the opening answer “It can” is not a fair response to the question “Do certain drugs increase wisdom?”)"
-    },
-    {
-     "part": "how1",
-     "text": "A study of Norwegian students found stimulants are assumed to improve attention, though use rates are lower than in the US.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "myrseth_2018",
-       "where": "Abstract",
-       "quote": "To assess the prevalence and factors associated with stimulant and depressant pharmacological cognitive enhancement (PCE) drug use among Norwegian students.",
-       "sha": "e20f499d50143167"
-      },
-      {
-       "label": "F3",
-       "ref": "myrseth_2018",
-       "where": "Text",
-       "quote": "The most commonly used enhancement drugs are stimulants, e.g., methylphenidate (e.g., ®Ritalin/Concerta) and mixed amphetamine salts (e.g., ®Adderall), which are usually prescribed for attention deficit hyperactivity disorder (ADHD) and are assumed to improve the ability to focus attention",
-       "sha": "f1998e1fea2f455e"
-      },
-      {
-       "label": "L1",
-       "ref": "myrseth_2018",
-       "where": "Conclusion",
-       "quote": "Although the rates of PCE drug use increased from T1 to T2, the prevalence rates among Norwegian students were similar to rates reported among German students, but lower compared to the US.",
-       "sha": "eb5c2101541a07db"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A study of surgeons found stimulants and modafinil help with fatigue and reaction time, but have slight effects on higher thinking.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "franke_2013",
-       "where": "Discussion",
-       "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-       "sha": "ddc5fcc63dd5e780"
-      },
-      {
-       "label": "F5",
-       "ref": "franke_2013",
-       "where": "Conclusions",
-       "quote": "Substances such as modafinil seem to counteract fatigue and loss of concentration and thus may provide simple pharmacological help for stressed surgeons.",
-       "sha": "c01788292c72ee88"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.115,
-   "but": 0.0142,
-   "how1": 0.0211,
-   "how2": 0.1037
-  },
-  "scores_quotes_alone": {
-   "short": 0.0273,
-   "but": 0.0106,
-   "how1": 0.0094,
-   "how2": 0.1353
-  }
- },
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The studies looked at focus and fatigue in students and surgeons, not wisdom, so they do not answer the question.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "myrseth_2018",
-     "where": "Abstract",
-     "quote": "To assess the prevalence and factors associated with stimulant and depressant pharmacological cognitive enhancement (PCE) drug use among Norwegian students.",
-     "sha": "e20f499d50143167"
-    },
-    {
-     "label": "F4",
-     "ref": "franke_2013",
-     "where": "Discussion",
-     "quote": "stimulants and modafinil have enhancing effects on simple cognitive domains, such as fatigue, vigilance, psychomotor skills and reaction time in sleep-deprived subjects; furthermore, there are slightly pro-cognitive effects on higher cognitive domains",
-     "sha": "ddc5fcc63dd5e780"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passages do not state that the studies measured focus and fatigue; they only describe drug effects or assess prevalence of use."
-  },
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A survey of Norwegian students found people use stimulants to improve focus, but the study did not measure wisdom.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "myrseth_2018",
-     "where": "Abstract",
-     "quote": "To assess the prevalence and factors associated with stimulant and depressant pharmacological cognitive enhancement (PCE) drug use among Norwegian students.",
-     "sha": "e20f499d50143167"
-    },
-    {
-     "label": "F3",
-     "ref": "myrseth_2018",
-     "where": "Text",
-     "quote": "The most commonly used enhancement drugs are stimulants, e.g., methylphenidate (e.g., ®Ritalin/Concerta) and mixed amphetamine salts (e.g., ®Adderall), which are usually prescribed for attention deficit hyperactivity disorder (ADHD) and are assumed to improve the ability to focus attention",
-     "sha": "f1998e1fea2f455e"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The passages do not report that the student survey found people use stimulants to improve focus; they only note assumed effects."
-  }
- ],
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "soft": "a source could not be fetched",
  "place": {
   "home": "facts",
   "also": [],
