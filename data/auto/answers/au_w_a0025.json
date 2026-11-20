@@ -17,88 +17,85 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "@cf/openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "team": "team H",
+   "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
   "run": "44643940066",
   "read_by": {
-   "gemini-3.5-flash-lite": 11,
-   "gemini-3.1-flash-lite": 4,
-   "gpt-oss-20b": 3
+   "gemini-3.5-flash-lite": 9,
+   "gemini-3.1-flash-lite": 5,
+   "llama-4-scout-17b-16e-instruct": 1
   },
-  "read_seconds": 118,
+  "read_seconds": 150,
   "from": {
    "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 199.8,
-  "seconds": 234
+  "neurons": 140.8,
+  "seconds": 150
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
  "gates": {
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known. The sources only say nine studies looked at cannabis decriminalization; they do not report what those studies found about usage rates.”: The passage does not state that the sources do not report what the nine studies found about usage rates. | the But “The sources do not",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.03, but 0.03, how1 0.96, how2 0.98",
-  "check": "short: NOT accepted: adds claim that the summary does not report usage‑rate findings, which is not mentioned in the passage; but: NOT accepted: infers that the evidence base is small; the passage only states that few studies examined the topic; how1: NOT accepted: the passage does not state that the review examined global cannabis policy changes; how2: accepted",
-  "rules": "broken at try 2: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+  "time": "3 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "windle_2026",
+    "id": "roehler_2026",
     "type": "article-journal",
-    "title": "Impacts of global cannabis policy changes on substance use: A systematic review of quasi-experimental studies",
+    "title": "Coalitions as prevention infrastructure for youth substance use: Coordinated, local relevance, and sustainability",
     "author": [
      {
-      "family": "WINDLE",
-      "given": "SARAH B."
+      "family": "Roehler",
+      "given": "Douglas R."
      },
      {
-      "family": "SOCHA",
-      "given": "PETER M."
+      "family": "Moreno",
+      "given": "Caroline"
      },
      {
-      "family": "ARNEJA",
-      "given": "JASLEEN"
+      "family": "Watts",
+      "given": "Britta"
      },
      {
-      "family": "HARPER",
-      "given": "SAM"
+      "family": "Schainker",
+      "given": "Lisa M."
      },
      {
-      "family": "GORE",
-      "given": "GENEVIEVE"
+      "family": "Koffkey",
+      "given": "Christine"
      },
      {
-      "family": "GARIÉPY",
-      "given": "GENEVIÉVE"
+      "family": "Baranek",
+      "given": "Brigitte"
      },
      {
-      "family": "GRAHAM",
-      "given": "EVA"
+      "family": "Fockler",
+      "given": "Lisa"
      },
      {
-      "family": "BENEDETTI",
-      "given": "ANDREA"
+      "family": "Spieckerman",
+      "given": "Alisa"
      },
      {
-      "family": "NANDI",
-      "given": "ARIJIT"
+      "family": "Hardin",
+      "given": "Katherine"
      }
     ],
-    "container-title": "The Milbank Quarterly",
+    "container-title": "Journal of Public Health Management & Practice",
     "issued": {
      "date-parts": [
       [
@@ -106,7 +103,7 @@
       ]
      ]
     },
-    "DOI": "10.1111/1468-0009.70108",
+    "DOI": "10.1097/phh.0000000000002471",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -118,40 +115,42 @@
       "checked_on": "2026-11-20"
      }
     },
-    "volume": "104",
-    "issue": "3",
-    "page": "884-929",
-    "PMCID": "PMC13559975"
+    "volume": "32",
+    "issue": "6S",
+    "page": "S206-S213",
+    "PMCID": "PMC13608286"
    },
-   "doi": "10.1111/1468-0009.70108",
-   "pmcid": "PMC13559975",
-   "title": "Impacts of Global Cannabis Policy Changes on Substance Use: A Systematic Review of Quasi-Experimental Studies",
+   "doi": "10.1097/phh.0000000000002471",
+   "pmcid": "PMC13608286",
+   "title": "Coalitions as Prevention Infrastructure for Youth Substance Use: Coordinated, Local Relevance, and Sustainability",
    "year": 2026,
-   "journal": "The Milbank quarterly",
-   "kind": "review",
+   "journal": "Journal of public health management and practice : JPHMP",
+   "kind": "other",
    "people": true,
-   "near": 0.706,
-   "money": [
-    "This work was funded by the Canadian Institutes of Health Research (Funding Reference Number 190263). Ms. Windle was supported by a Canada Graduate Scholarship in Honour of Nelson Mandela from the Canadian Institutes of Health Research and a Doctoral Training Award from the Fonds de recherche Québec – Santé. Dr. Socha was supported by a Doctoral Training Award from the Fonds de recherche Québec – Santé. Ms. Arneja was supported by a Vanier Canada Graduate Scholarship from the Canadian Institutes of Health Research.",
-    "The authors have no conflicts of interest to declare."
-   ],
-   "design": null,
+   "near": 0.554,
+   "money": [],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "To outline the conceptual rationale for community partnerships in youth substance use prevention, summarize evidence supporting coalition- and partnership-based prevention systems, and demonstrate, through real-world examples, how partnerships strengthen prevention efforts.",
+    "text": "research paper on community partnerships in youth substance use prevention"
+   },
    "findings": [
     {
-     "passage": 86,
-     "where": "Cannabis Decriminalization",
-     "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-     "text": "Relatively few studies examined cannabis decriminalization.",
+     "passage": 17,
+     "where": "Examples of Community Partnerships and Coalitions › Highlighting cross-sector coordination",
+     "quote": "Randomized controlled trials and long-term follow-up studies show that CTC communities experience meaningful reductions in the initiation and prevalence of alcohol, tobacco, and illegal drug use compared with control communities.",
+     "text": "CTC communities experience meaningful reductions in the initiation and prevalence of alcohol, tobacco, and illegal drug use compared with control communities.",
      "id": "F1",
-     "second_hand": ""
+     "second_hand": "Randomized controlled trials and long-term follow-up studies show that CTC communities experience meaningful reductions in the initiation and prevalence of alcohol, tobacco, and il"
     }
    ],
    "limits": [
     {
-     "passage": 86,
-     "where": "Cannabis Decriminalization",
-     "quote": "Relatively few studies (n = 9) examined cannabis decriminalization",
-     "text": "Relatively few studies examined cannabis decriminalization.",
+     "passage": 35,
+     "where": "Application to Real-World Contexts › Case Study 2: Genesee County Prevention Coalition. › Challenges and adaptation",
+     "quote": "Policy shifts, including the state legalization of cannabis and changes in regulations also reshaped the prevention landscape. These changes influenced community priorities and funding sources, and revealed the limitations of substance-specific strategies.",
+     "text": "The studies were affected by policy shifts, including state legalization of cannabis and changes in regulations.",
      "id": "L1",
      "second_hand": ""
     }
@@ -202,6 +201,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -210,11 +217,11 @@
    "read": "full",
    "kind": "review",
    "at": "10.1111/1468-0009.70108",
-   "kept": 1,
+   "kept": 0,
    "thrown": [
     {
      "kind": "text",
-     "text": "systematic review of quasi-experimental studies examining the impacts of global cannabis policy changes on substance use",
+     "text": "A systematic review of quasi-experimental studies examining the impacts of global cannabis policies on substance use.",
      "quote": "A Systematic Review of Quasi-Experimental Studies",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
@@ -242,7 +249,14 @@
    "kind": "study",
    "at": "10.25259/ijmr_3378_2025",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A multi-centre, cross-sectional study of 7004 incarcerated people in India.",
+     "quote": "Seventeen prisons from 9 States representing different geographical regions of the country were selected. 7004 incarcerated people selected by systematic sampling were interviewed using a structured q",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Weighted prevalence of biochemically verified substance use in healthy adolescents across the USA",
@@ -290,15 +304,29 @@
    "kind": "review",
    "at": "10.1111/dar.70143",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a systematic review and meta-analysis of substance use prevalence among adolescents under 19 years of age in South Africa",
+     "quote": "We conducted a systematic review and meta‐analysis following PRISMA guidelines. Searches were run across PubMed, PsycINFO, Web of Science and Scielo. Studies reporting original SA prevalence data in c",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "Coalitions as Prevention Infrastructure for Youth Substance Use: Coordinated, Local Relevance, and Sustainability",
    "read": "full",
    "kind": "other",
    "at": "10.1097/phh.0000000000002471",
-   "kept": 0,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In communities funded by DFC, past-30-day alcohol use among middle and high school students fell from approximately 33% to 21%, past-30-day tobacco use dropped from 26% to 11%, and past-30-day cannabi",
+     "quote": "National evaluations of the DFC program show decreases in youth substance use. In communities funded by DFC, past-30-day alcohol use among middle and high school students fell from approximately 33% i",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Urban-Rural and Demographic Differences in Substance Use Among High School Students - Youth Risk Behavior Survey, United States, 2025",
@@ -338,7 +366,8 @@
    "kind": "official",
    "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Mixing alcohol with medicines or drugs",
@@ -346,7 +375,8 @@
    "kind": "official",
    "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Why It's Important To Talk To Your Child About Alcohol and Other Drugs",
@@ -354,231 +384,11 @@
    "kind": "official",
    "at": "https://www.samhsa.gov/substance-use/prevention/talk-they-hear-you/parent-resources/talk-with-your-child",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": "the planner gave no plan that could be used: the writer chose the items itself",
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.0277,
-   "but": 0.0334,
-   "how1": 0.9584,
-   "how2": 0.9758
-  },
-  "scores_quotes_alone": {
-   "short": 0.0227,
-   "but": 0.012,
-   "how1": 0.9691,
-   "how2": 0.9812
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. A 2026 review found nine studies on cannabis decriminalization, but the items do not say what those studies found about usage rates.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      },
-      {
-       "label": "L1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "adds claim that the review does not report study findings about usage rates, which is not stated in the passages"
-    },
-    {
-     "part": "but",
-     "text": "The review notes that relatively few studies examined this topic, so the evidence base is small.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "includes the conclusion that the evidence base is small, which is not explicitly stated in the passages"
-    },
-    {
-     "part": "how1",
-     "text": "A 2026 systematic review of quasi-experimental studies found nine studies used a difference-in-differences approach to look at cannabis decriminalization.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. The sources do not state what the nine studies found about usage rates after cannabis decriminalization.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
-    },
-    {
-     "part": "but",
-     "text": "The sources only say nine studies examined cannabis decriminalization; they do not describe the results of those studies.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2026 review of quasi-experimental studies says nine studies examined cannabis decriminalization using a difference-in-differences approach.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. A 2026 review found nine studies on cannabis decriminalization, but the summary does not say what they found about usage rates.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      },
-      {
-       "label": "L1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "adds claim that the summary does not report usage‑rate findings, which is not mentioned in the passage"
-    },
-    {
-     "part": "but",
-     "text": "The review notes that relatively few studies examined this topic, so the evidence base is small.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "infers that the evidence base is small; the passage only states that few studies examined the topic"
-    },
-    {
-     "part": "how1",
-     "text": "A 2026 systematic review of quasi-experimental studies looked at global cannabis policy changes.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the passage does not state that the review examined global cannabis policy changes"
-    },
-    {
-     "part": "how2",
-     "text": "It identified nine studies that used a difference-in-differences approach to examine cannabis decriminalization.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A 2026 systematic review of quasi-experimental studies looked at global cannabis policy changes.",
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "windle_2026",
-     "where": "Cannabis Decriminalization",
-     "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-     "sha": "32431aa7f32889b5"
-    }
-   ],
-   "by": "the second reader",
-   "said": "the passage does not state that the review examined global cannabis policy changes"
-  }
- ],
+ "soft": "a source could not be fetched",
  "place": {
   "home": "law",
   "also": [],
