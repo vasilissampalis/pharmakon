@@ -17,35 +17,365 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44662002214",
-  "read_seconds": 100,
+  "run": "44769390373",
+  "read_seconds": 21,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 286
  },
- "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.22, but 0.97, how1 0.58, how2 0.15, how3 0.80, how4 0.04",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview accepted 5 of 6",
+  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
- "sources": [],
- "parts": [],
- "complete": false,
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "berar_2019",
+    "type": "article-journal",
+    "title": "Intoxication with 3-MeO-PCP alone: A case report and literature review",
+    "author": [
+     {
+      "family": "Berar",
+      "given": "Antoine"
+     },
+     {
+      "family": "Allain",
+      "given": "Jean-Sébastien"
+     },
+     {
+      "family": "Allard",
+      "given": "Sophie"
+     },
+     {
+      "family": "Lefevre",
+      "given": "Charles"
+     },
+     {
+      "family": "Baert",
+      "given": "Alain"
+     },
+     {
+      "family": "Morel",
+      "given": "Isabelle"
+     },
+     {
+      "family": "Bouvet",
+      "given": "Renaud"
+     },
+     {
+      "family": "Gicquel",
+      "given": "Thomas"
+     }
+    ],
+    "container-title": "Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2019
+      ]
+     ]
+    },
+    "DOI": "10.1097/md.0000000000018295",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "98",
+    "issue": "52",
+    "number": "e18295",
+    "PMCID": "PMC6946333"
+   },
+   "doi": "10.1097/md.0000000000018295",
+   "pmcid": "PMC6946333",
+   "title": "Intoxication with 3-MeO-PCP alone: A case report and literature review",
+   "year": 2019,
+   "journal": "Medicine",
+   "kind": "review",
+   "people": true,
+   "near": 0.781,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
+    "text": "A case report and literature review of two 3-MeO-PCP intoxications in the same patient."
+   },
+   "findings": [
+    {
+     "passage": 10,
+     "where": "Introduction",
+     "quote": "Several publications have reported on cases of 3-MeO-PCP intoxication, either alone or in combination with other substances. Some of these intoxications were fatal.",
+     "text": "Several publications have reported on cases of 3-MeO-PCP intoxication, either alone or in combination with other substances, and some of these intoxications were fatal.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Discussion › Clinical and biochemical manifestations",
+     "quote": "The main clinical findings were high blood pressure, tachycardia, neurological manifestations (confusion, hypertonia, nystagmus, and agitation), and rash.",
+     "text": "The main clinical findings of 3-MeO-PCP intoxication were high blood pressure, tachycardia, neurological manifestations including confusion, hypertonia, nystagmus, and agitation, and rash.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 32,
+     "where": "Discussion › Confusion between 3-MeO-PCP and its isomers",
+     "quote": "These cases emphasize the risk of dosing errors caused by the similarity between the names “3-MeO-PCP” and “4-MeO-PCP.”",
+     "text": "There is a risk of dosing errors caused by the similarity between the names 3-MeO-PCP and 4-MeO-PCP.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 36,
+     "where": "Conclusion",
+     "quote": "We presented an instance of the new problem of NPS consumption: a little-known molecule purchased on the Internet that is difficult to identify and whose effects have not been characterized clinically.",
+     "text": "3-MeO-PCP is a little-known molecule whose effects have not been characterized clinically.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "pepe_2024",
+    "type": "article-journal",
+    "title": "3-methoxy-phencyclidine induced psychotic disorder: A literature review and an 18F-FDG PET/CT case report",
+    "author": [
+     {
+      "family": "Pepe",
+      "given": "Maria"
+     },
+     {
+      "family": "Di Nicola",
+      "given": "Marco"
+     },
+     {
+      "family": "Cocciolillo",
+      "given": "Fabrizio"
+     },
+     {
+      "family": "Chiappini",
+      "given": "Stefania"
+     },
+     {
+      "family": "Martinotti",
+      "given": "Giovanni"
+     },
+     {
+      "family": "Calcagni",
+      "given": "Maria Lucia"
+     },
+     {
+      "family": "Sani",
+      "given": "Gabriele"
+     }
+    ],
+    "container-title": "Pharmaceuticals",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.3390/ph17040452",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "17",
+    "issue": "4",
+    "number": "452",
+    "PMCID": "PMC11053433"
+   },
+   "doi": "10.3390/ph17040452",
+   "pmcid": "PMC11053433",
+   "title": "3-Methoxy-Phencyclidine Induced Psychotic Disorder: A Literature Review and an <sup>18</sup>F-FDG PET/CT Case Report",
+   "year": 2024,
+   "journal": "Pharmaceuticals (Basel, Switzerland)",
+   "kind": "review",
+   "people": true,
+   "near": 0.708,
+   "money": [
+    "The authors declare no conflicts of interest.",
+    "This research received no external funding."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 14,
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+     "text": "People who use 3-MeO-PCP generally report euphoria, empathy, dissociation, and hallucinations, but can also experience behavioral alterations, confusion, cognitive impairment, and severe psychotic symptoms.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "Cardiovascular, respiratory, and cerebral alterations, including hypertension, tachycardia, pulmonary edema, and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+     "text": "Acute physical consequences of 3-MeO-PCP intake include cardiovascular, respiratory, and cerebral alterations such as hypertension, tachycardia, pulmonary edema, and brain swelling.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "To date, several 3-MeO-PCP intoxication cases, both fatal and nonfatal, have been described in the literature.",
+     "text": "Several fatal and nonfatal cases of 3-MeO-PCP intoxication have been described in the literature.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Despite several cases of intoxication and death reported in the literature, little is known about substance-induced psychotic disorders (SIP) and potential cognitive impairment following 3-MeO-PCP intake.",
+     "text": "Little is known about substance-induced psychotic disorders and potential cognitive impairment following 3-MeO-PCP intake.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "People who use 3-MeO-PCP report euphoria, empathy, dissociation, and hallucinations. They can also have high blood pressure, fast heart rate, confusion, and severe psychotic symptoms.",
+   "uses": [
+    "F4",
+    "F5",
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+     "sha": "57a9630d6934186a"
+    },
+    {
+     "label": "F5",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "Cardiovascular, respiratory, and cerebral alterations, including hypertension, tachycardia, pulmonary edema, and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+     "sha": "f908a2f7c144b6c9"
+    },
+    {
+     "label": "F2",
+     "ref": "berar_2019",
+     "where": "Discussion › Clinical and biochemical manifestations",
+     "quote": "The main clinical findings were high blood pressure, tachycardia, neurological manifestations (confusion, hypertonia, nystagmus, and agitation), and rash.",
+     "sha": "1d8d3a933e0060bf"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 2 reviews.",
+   "uses": [
+    "DA",
+    "F4"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "berar_2019",
+     "where": "Abstract",
+     "quote": "Here, we report 2 cases of 3-MeO-PCP intoxication in the same patient, and summarize the manifestations of this intoxication reported in literature.",
+     "sha": "d9196508274ec132"
+    },
+    {
+     "label": "F4",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+     "sha": "57a9630d6934186a"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2024 review says people who use 3-MeO-PCP generally report euphoria, empathy, dissociation, and hallucinations, but can have confusion and severe psychotic symptoms.",
+   "uses": [
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+     "sha": "57a9630d6934186a"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "The same review lists acute physical effects like high blood pressure, fast heart rate, lung fluid, and brain swelling.",
+   "uses": [
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "Cardiovascular, respiratory, and cerebral alterations, including hypertension, tachycardia, pulmonary edema, and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+     "sha": "f908a2f7c144b6c9"
+    }
+   ],
+   "quote": "and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+   "quote_ref": "pepe_2024"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -71,50 +401,29 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Intoxication with 3-MeO-PCP alone: A case report and literature review",
    "read": "full",
    "kind": "review",
    "at": "10.1097/md.0000000000018295",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
      "kind": "finding",
-     "text": "The patient experienced high blood pressure, tachycardia, and neurological manifestations including confusion, hypertonia, nystagmus, and agitation after taking 200 mg of 3‑MeO‑PCP.",
-     "quote": "He developed high blood pressure (158/131 mm Hg), tachycardia (100 bpm), and neurological manifestations (confusion, hypertonia, nystagmus, and then agitation).",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "Hyperlactatemia of 2.6 mmol/L was the main laboratory finding after the 200 mg oral dose of 3‑MeO‑PCP.",
-     "quote": "Hyperlactatemia (2.6 mmol/L) was the main laboratory finding.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "A maculopapular rash appeared following the 200 mg oral dose of 3‑MeO‑PCP.",
-     "quote": "A maculopapular rash appeared, although this may have been related to the administration of midazolam.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "After sniffing 50 mg of 3‑MeO‑PCP, the patient had high blood pressure, tachycardia, and neurological manifestations (psychomotor impairment and dysarthria) that were less severe than the first intoxi",
-     "quote": "High blood pressure, tachycardia, and neurological manifestations (psychomotor impairment and dysarthria) were present but less severe than after the first intoxication.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "limit",
-     "text": "The paper notes a significant lack of accurate literature data on 3‑MeO‑PCP intoxications.",
-     "quote": "Several publications have reported on cases of 3-MeO-PCP intoxication, either alone or in combination with other substances. Some of these intoxications were fatal. However, there is a significant lac",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "limit",
-     "text": "The paper states that detailed biochemical and clinical data on 3‑MeO‑PCP intoxication are lacking.",
-     "quote": "As with many NPSs, detailed biochemical and clinical data on 3-MeO-PCP intoxication are lacking.",
-     "why": "a number of the sentence is not in its quote"
+     "text": "Neurological signs are frequent but vary from one case to another, including confusion, disorientation, dissociation, and/or hallucinations.",
+     "quote": "Neurological signs are frequent but vary from one case to another. ... Bäckberg et al observed confusion, disorientation, dissociation, and/or hallucinations in 4 of their patients.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -123,12 +432,427 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/ph17040452",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A literature review and a case report of a 29-year-old man with substance-induced psychotic disorder.",
+     "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects and to spread preliminary findings about persistent psychotic sy",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "PCP",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/pcp",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "PCP is a dissociative anesthetic that can cause feelings of joy, happiness, euphoria, and floating, as well as hallucinations.",
+     "quote": "PCP is a dissociative anaesthetic which can make you feel joyful, happy, euphoric, floating, and also start to hallucinate and see and hear things that aren’t really there.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "PCP",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/pcp",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "It is not possible to be certain about the contents of the drug or how an individual will react to it.",
+     "quote": "As with any drug, you can never be sure what you are taking and how you will react to it.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The duration of effects and the time the drug remains in the system depend on the amount taken, the person's size, and other drugs consumed.",
+     "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F4",
+   "F5",
+   "F6",
+   "F2"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F4",
+    "F5",
+    "F6"
+   ],
+   [
+    "F1",
+    "F2"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.2175,
+   "but": 0.9737,
+   "how1": 0.5843,
+   "how2": 0.1543,
+   "how3": 0.8005,
+   "how4": 0.0363
+  },
+  "scores_quotes_alone": {
+   "short": 0.2391,
+   "but": 0.8181,
+   "how1": 0.5226,
+   "how2": 0.347,
+   "how3": 0.4515,
+   "how4": 0.2165
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "People who use 3-MeO-PCP report euphoria and hallucinations, but can also have confusion and severe psychotic symptoms. It can cause high blood pressure, fast heart rate, and brain swelling, and some cases were fatal.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+       "sha": "57a9630d6934186a"
+      },
+      {
+       "label": "F5",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "Cardiovascular, respiratory, and cerebral alterations, including hypertension, tachycardia, pulmonary edema, and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+       "sha": "f908a2f7c144b6c9"
+      },
+      {
+       "label": "F6",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "To date, several 3-MeO-PCP intoxication cases, both fatal and nonfatal, have been described in the literature.",
+       "sha": "b0c9661513646a63"
+      },
+      {
+       "label": "F2",
+       "ref": "berar_2019",
+       "where": "Discussion › Clinical and biochemical manifestations",
+       "quote": "The main clinical findings were high blood pressure, tachycardia, neurological manifestations (confusion, hypertonia, nystagmus, and agitation), and rash.",
+       "sha": "1d8d3a933e0060bf"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "3-MeO-PCP is a little-known molecule whose effects have not been characterized clinically.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "berar_2019",
+       "where": "Conclusion",
+       "quote": "We presented an instance of the new problem of NPS consumption: a little-known molecule purchased on the Internet that is difficult to identify and whose effects have not been characterized clinically.",
+       "sha": "e4b09e1dd8e5d81b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says people who use 3-MeO-PCP generally report euphoria, empathy, dissociation, and hallucinations, but can also experience behavioral alterations, confusion, and severe psychotic symptoms.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+       "sha": "57a9630d6934186a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes acute physical consequences include hypertension, tachycardia, pulmonary edema, and brain swelling, and that several fatal and nonfatal intoxication cases have been described.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "Cardiovascular, respiratory, and cerebral alterations, including hypertension, tachycardia, pulmonary edema, and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+       "sha": "f908a2f7c144b6c9"
+      },
+      {
+       "label": "F6",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "To date, several 3-MeO-PCP intoxication cases, both fatal and nonfatal, have been described in the literature.",
+       "sha": "b0c9661513646a63"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2019 review of case reports found main clinical findings were high blood pressure, tachycardia, confusion, agitation, and rash, and noted some intoxications were fatal.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "berar_2019",
+       "where": "Introduction",
+       "quote": "Several publications have reported on cases of 3-MeO-PCP intoxication, either alone or in combination with other substances. Some of these intoxications were fatal.",
+       "sha": "c426060358ec8aef"
+      },
+      {
+       "label": "F2",
+       "ref": "berar_2019",
+       "where": "Discussion › Clinical and biochemical manifestations",
+       "quote": "The main clinical findings were high blood pressure, tachycardia, neurological manifestations (confusion, hypertonia, nystagmus, and agitation), and rash.",
+       "sha": "1d8d3a933e0060bf"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The 2019 review states that some intoxications in the literature were fatal, but the passage states that the specific 'main clinical findings' listed (high blood pressure, tachycardia, confusion, agitation, and rash) were from the specific "
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "People who use 3-MeO-PCP report euphoria and hallucinations, but can have high blood pressure, confusion, and severe psychotic symptoms. Some cases have been fatal.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+       "sha": "57a9630d6934186a"
+      },
+      {
+       "label": "F5",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "Cardiovascular, respiratory, and cerebral alterations, including hypertension, tachycardia, pulmonary edema, and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+       "sha": "f908a2f7c144b6c9"
+      },
+      {
+       "label": "F6",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "To date, several 3-MeO-PCP intoxication cases, both fatal and nonfatal, have been described in the literature.",
+       "sha": "b0c9661513646a63"
+      },
+      {
+       "label": "F2",
+       "ref": "berar_2019",
+       "where": "Discussion › Clinical and biochemical manifestations",
+       "quote": "The main clinical findings were high blood pressure, tachycardia, neurological manifestations (confusion, hypertonia, nystagmus, and agitation), and rash.",
+       "sha": "1d8d3a933e0060bf"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+    },
+    {
+     "part": "but",
+     "text": "The effects of 3-MeO-PCP have not been characterized clinically, so the full range of risks is not known.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "berar_2019",
+       "where": "Conclusion",
+       "quote": "We presented an instance of the new problem of NPS consumption: a little-known molecule purchased on the Internet that is difficult to identify and whose effects have not been characterized clinically.",
+       "sha": "e4b09e1dd8e5d81b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says people generally report euphoria and hallucinations, but can experience confusion and severe psychotic symptoms.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "As for the psychoactive consequences, 3-MeO-PCP users generally report euphoria, increased empathy, dissociation, and hallucinations as the immediate, desired effects, although behavioral alterations with psychomotor agitation, confusion, cognitive impairment, and severe psychotic symptoms can occur.",
+       "sha": "57a9630d6934186a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes acute physical effects include high blood pressure, fast heart rate, and brain swelling.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "Cardiovascular, respiratory, and cerebral alterations, including hypertension, tachycardia, pulmonary edema, and brain swelling, have been reported among the acute pathophysiological consequences of 3-MeO-PCP intake",
+       "sha": "f908a2f7c144b6c9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The review states that several fatal and nonfatal cases of 3-MeO-PCP intoxication have been described in the literature.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+       "quote": "To date, several 3-MeO-PCP intoxication cases, both fatal and nonfatal, have been described in the literature.",
+       "sha": "b0c9661513646a63"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2019 review found main clinical signs were high blood pressure, fast heart rate, confusion, and agitation.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "berar_2019",
+       "where": "Introduction",
+       "quote": "Several publications have reported on cases of 3-MeO-PCP intoxication, either alone or in combination with other substances. Some of these intoxications were fatal.",
+       "sha": "c426060358ec8aef"
+      },
+      {
+       "label": "F2",
+       "ref": "berar_2019",
+       "where": "Discussion › Clinical and biochemical manifestations",
+       "quote": "The main clinical findings were high blood pressure, tachycardia, neurological manifestations (confusion, hypertonia, nystagmus, and agitation), and rash.",
+       "sha": "1d8d3a933e0060bf"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: the passage says these were the findings for a specific case, not the general findings of the review, and the sentence omits rash"
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    false,
+    "the passage says these were the findings for a specific case, not the general findings of the review, and the sentence omits rash"
+   ]
+  }
+ },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "3-MeO-PCP is a little-known molecule whose effects have not been characterized clinically.",
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "berar_2019",
+     "where": "Conclusion",
+     "quote": "We presented an instance of the new problem of NPS consumption: a little-known molecule purchased on the Internet that is difficult to identify and whose effects have not been characterized clinically.",
+     "sha": "e4b09e1dd8e5d81b"
+    }
+   ],
+   "by": "the second reader",
+   "said": "it is about something else than the short answer"
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2019 review notes several publications have reported fatal and nonfatal cases of 3-MeO-PCP intoxication, either alone or with other substances.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "berar_2019",
+     "where": "Introduction",
+     "quote": "Several publications have reported on cases of 3-MeO-PCP intoxication, either alone or in combination with other substances. Some of these intoxications were fatal.",
+     "sha": "c426060358ec8aef"
+    },
+    {
+     "label": "F6",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.2. Intoxication and Clinical Manifestations",
+     "quote": "To date, several 3-MeO-PCP intoxication cases, both fatal and nonfatal, have been described in the literature.",
+     "sha": "b0c9661513646a63"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The 2019 review is cited for statements that appear in the 2024 paper's passage."
+  },
+  {
+   "try": 3,
+   "part": "how4",
+   "text": "The 2019 review found main clinical signs included high blood pressure, fast heart rate, confusion, muscle stiffness, eye movement issues, and rash.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "berar_2019",
+     "where": "Discussion › Clinical and biochemical manifestations",
+     "quote": "The main clinical findings were high blood pressure, tachycardia, neurological manifestations (confusion, hypertonia, nystagmus, and agitation), and rash.",
+     "sha": "1d8d3a933e0060bf"
+    }
+   ],
+   "by": "our own checker",
+   "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:PCP-like drugs (3-MeO-PCP, 3-MeO-PCE)",
   "also": [
