@@ -17,41 +17,34 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team H2",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44643940066",
-  "read_by": {
-   "gemini-3.5-flash-lite": 6,
-   "gemini-3.1-flash-lite": 4,
-   "llama-4-scout-17b-16e-instruct": 2
-  },
-  "read_seconds": 111,
+  "run": "44672174094",
+  "read_seconds": 150,
   "from": {
    "papers": 1,
-   "summaries": 1,
+   "summaries": 0,
    "official": 0
   },
-  "neurons": 589.8,
-  "seconds": 215
+  "neurons": 0.0,
+  "seconds": 150
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
-  "read": "5 findings kept from 2 sources (1 papers read in full, 0 official pages, 1 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 1 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “In a study of 357 people in treatment, alcohol was the most common primary drug. Synthetic cathinones also gained popularity among people who use drugs.”: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that the study included 357 people in tre",
-  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: short + DA (357); but + DA (357)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.22, but 0.06, how2 0.54",
-  "check": "short: NOT accepted: The passage does not explicitly state that alcohol was the most common primary drug for the entire sample of 357; it only reports subgroup percentages.; but: NOT accepted: The passage does not explicitly claim that the study does not show what people in general use most; this limitation is inferred, not stated.; how2: accepted",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how1: words that are not person-first (“users”))"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
@@ -119,142 +112,51 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-    "text": "an examination of opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA"
+    "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons.",
+    "text": "A study of 357 low-income justice-impacted adults in substance use disorder treatment in the Midwest, USA."
    },
    "findings": [
     {
      "passage": 30,
      "where": "Results",
-     "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
-     "text": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
+     "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+     "text": "In one survey of people in substance use disorder treatment, those 40 and above most frequently reported alcohol as their primary substance, followed by cocaine/crack cocaine, then opioids.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 30,
      "where": "Results",
-     "quote": "Age related variation in primary substance preference was notable with 55% of those 40 and above indicating primary preference for alcohol relative to 42% of those under 40 years of age reporting primary preference for alcohol.",
-     "text": "Age related variation in primary substance preference was notable with 55% of those 40 and above indicating primary preference for alcohol relative to 42% of those under 40 years of age reporting primary preference for alcohol.",
+     "quote": "This was relative to alcohol, then opioids, and finally cocaine/crack cocaine among those under 40 years of age",
+     "text": "In one survey of people in substance use disorder treatment, those under 40 years of age most frequently reported alcohol as their primary substance, followed by opioids, then cocaine/crack cocaine.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 31,
-     "where": "Results",
-     "quote": "Among those reporting a secondary substance of choice, the most frequent drug among older persons was marijuana and among those under 40, cocaine/crack cocaine.",
-     "text": "Among those reporting a secondary substance of choice, the most frequent drug among older persons was marijuana and among those under 40, cocaine/crack cocaine.",
+     "passage": 39,
+     "where": "Discussion",
+     "quote": "While the most commonly reported primary drug of choice was alcohol among younger and older cohorts, younger patients were more likely to report primary preference towards opioids compared to those 40 and older",
+     "text": "In one survey of people in substance use disorder treatment, younger patients were more likely to report a primary preference for opioids than those 40 and older.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 43,
+     "passage": 40,
      "where": "Discussion",
-     "quote": "More research is warranted to better understand substance use trends among older persons especially in the context of rising trends in overdose among marginalized people of color and shifting opioid use patterns which contribute to premature mortality.",
-     "text": "More research is warranted to better understand substance use trends among older persons especially in the context of rising trends in overdose among marginalized people of color and shifting opioid use patterns which contribute to premature mortality.",
+     "quote": "Given the high rates of premature mortality among Black and AIAN persons due to drug and alcohol related causes (Kepner et al.,; Friedman & Shover,) we may be observing only the patients who were engaged in lower risk drug use behaviors.",
+     "text": "The study may only be observing patients engaged in lower risk drug use behaviors due to high rates of premature mortality among Black and AIAN persons.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
-  },
-  {
-   "read": "summary",
-   "ref": {
-    "id": "gonalves_2019",
-    "type": "article-journal",
-    "title": "Synthetic cathinones: An evolving class of new psychoactive substances",
-    "author": [
-     {
-      "family": "Gonçalves",
-      "given": "João L."
-     },
-     {
-      "family": "Alves",
-      "given": "Vera L."
-     },
-     {
-      "family": "Aguiar",
-      "given": "Joselin"
-     },
-     {
-      "family": "Teixeira",
-      "given": "Helena M."
-     },
-     {
-      "family": "Câmara",
-      "given": "José S."
-     }
-    ],
-    "container-title": "Critical Reviews in Toxicology",
-    "issued": {
-     "date-parts": [
-      [
-       2019
-      ]
-     ]
-    },
-    "DOI": "10.1080/10408444.2019.1679087",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-20"
-     }
-    },
-    "volume": "49",
-    "issue": "7",
-    "page": "549-566"
-   },
-   "doi": "10.1080/10408444.2019.1679087",
-   "title": "Synthetic cathinones: an evolving class of new psychoactive substances",
-   "year": 2019,
-   "journal": "Critical reviews in toxicology",
-   "kind": "review",
-   "people": true,
-   "near": 0.469,
-   "money": [],
-   "design": null,
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "rapidly gained popularity amongst drugs users",
-     "text": "synthetic cathinones rapidly gained popularity amongst drug users",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "new derivatives continue to emerge",
-     "text": "new derivatives of synthetic cathinones continue to emerge on the recreational drugs market",
-     "id": "F5",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "the effects of SCat greatly differ from drug to drug",
-     "text": "the effects of synthetic cathinones greatly differ from drug to drug",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "favoured drug for the general population beyond the studied group",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/s0376-8716(03)00101-7",
@@ -273,14 +175,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -320,6 +214,14 @@
    "why": "the answer was not accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that the study included 357 people in treatment (the abstract mentions 357 low-income justice-impacted adults in SUD treatment, but the number 357 is mixed with treatment populations from another context or conflat",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -330,7 +232,7 @@
    "at": "10.3390/brainsci12091189",
    "kept": 0,
    "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "fault": "its full text could not be fetched (OSError)"
   },
   {
    "title": "Differences in opioid use and overdose among younger and older justice-impacted adults",
@@ -354,22 +256,8 @@
    "kind": "other",
    "at": "10.2196/47567",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A protocol for a discrete choice experiment assessing preferences for ecological momentary assessments and digital wearables",
-     "quote": "Decision Trade-Offs in Ecological Momentary Assessments and Digital Wearables Uptake: Protocol for a Discrete Choice Experiment",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
-  },
-  {
-   "title": "Oral Methylphenidate Treatment of an Adolescent ADHD Rat Model Does Not Alter Cocaine-Conditioned Place Preference during Adulthood: A Negative Report",
-   "read": "full",
-   "kind": "other",
-   "at": "10.20900/jpbs.20190021",
-   "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "its full text could not be fetched (OSError)"
   },
   {
    "title": "Designing mHealth Apps for Substance Use Recovery Through Real-World Co-Design and Deployment: Mixed Methods Study",
@@ -377,391 +265,11 @@
    "kind": "other",
    "at": "10.2196/83984",
    "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Substance Use in Canada Series",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substance-use-and-addiction/substance-use-canada-series",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Stigma around drug use",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/opioids/stigma.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "About the Canadian Drug and Substance Watch",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/about-canadian-drug-substance-watch.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Drug addiction: getting help",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nhs.uk/live-well/addiction-support/drug-addiction-getting-help/",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Assessing abuse liability in clinical trials",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/s0376-8716(03)00101-7",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "There is typically no measurement of how much a drug is liked.",
-     "quote": "There is generally no rating of drug \"liking\".",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "Synthetic cathinones: an evolving class of new psychoactive substances",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1080/10408444.2019.1679087",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "review of synthetic cathinones",
-     "quote": "the present work provides a review",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "finding",
-     "text": "about 150 synthetic cathinones have been identified on the clandestine drugs market",
-     "quote": "about 150 SCat have been identified",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": {
-  "short": [
-   "F1",
-   "F2"
-  ],
-  "direct": "",
-  "but": [
-   "L1"
-  ],
-  "how": [
-   [
-    "F4"
-   ],
-   [
-    "DA",
-    "F1"
-   ]
-  ],
-  "unanswered": "favoured drug for the general population beyond the studied group"
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.2165,
-   "but": 0.0564,
-   "how2": 0.5402
-  },
-  "scores_quotes_alone": {
-   "short": 0.285,
-   "but": 0.0236,
-   "how2": 0.5443
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In 357 low-income justice-impacted adults in treatment, alcohol was the most common primary drug. Synthetic cathinones rapidly gained popularity among people who use drugs.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "oneil_2025",
-       "where": "Results",
-       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
-       "sha": "94718403229d5736"
-      },
-      {
-       "label": "F4",
-       "ref": "gonalves_2019",
-       "where": "Summary",
-       "quote": "rapidly gained popularity amongst drugs users",
-       "sha": "bfcb35945e198f6c"
-      },
-      {
-       "label": "DA",
-       "ref": "oneil_2025",
-       "where": "Abstract",
-       "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-       "sha": "7455691de60ef5c4"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
-    },
-    {
-     "part": "but",
-     "text": "More research is needed to understand substance use trends among older persons and marginalized people of color.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "oneil_2025",
-       "where": "Discussion",
-       "quote": "More research is warranted to better understand substance use trends among older persons especially in the context of rising trends in overdose among marginalized people of color and shifting opioid use patterns which contribute to premature mortality.",
-       "sha": "49faa6b3ac93c1a3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 directly states that alcohol was the most common primary drug, which answers the question about the favourite drug, even though it adds extra information. Sentence 2 does not limit or doubt Sentence 1; it merely calls for more re)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2019 review says synthetic cathinones rapidly gained popularity among people who use drugs.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "gonalves_2019",
-       "where": "Summary",
-       "quote": "rapidly gained popularity amongst drugs users",
-       "sha": "bfcb35945e198f6c"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that the 2019 source is a review; the sentence adds that claim."
-    },
-    {
-     "part": "how2",
-     "text": "A study of 357 low-income justice-impacted adults in the Midwest found alcohol was the most frequent primary substance.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "oneil_2025",
-       "where": "Abstract",
-       "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-       "sha": "7455691de60ef5c4"
-      },
-      {
-       "label": "F1",
-       "ref": "oneil_2025",
-       "where": "Results",
-       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
-       "sha": "94718403229d5736"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In 357 justice-impacted adults in treatment, alcohol was the most frequently reported primary substance for those 40 and above.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "oneil_2025",
-       "where": "Results",
-       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
-       "sha": "94718403229d5736"
-      },
-      {
-       "label": "DA",
-       "ref": "oneil_2025",
-       "where": "Abstract",
-       "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-       "sha": "7455691de60ef5c4"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself"
-    },
-    {
-     "part": "but",
-     "text": "The study says more research is needed to understand trends among older persons and marginalized people of color.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "oneil_2025",
-       "where": "Discussion",
-       "quote": "More research is warranted to better understand substance use trends among older persons especially in the context of rising trends in overdose among marginalized people of color and shifting opioid use patterns which contribute to premature mortality.",
-       "sha": "49faa6b3ac93c1a3"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
-     "part": "how1",
-     "text": "A 2025 study of 357 low-income justice-impacted adults in the Midwest found alcohol was the top primary substance for those 40 and above.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "oneil_2025",
-       "where": "Abstract",
-       "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-       "sha": "7455691de60ef5c4"
-      },
-      {
-       "label": "F1",
-       "ref": "oneil_2025",
-       "where": "Results",
-       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
-       "sha": "94718403229d5736"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In a study of 357 people in treatment, alcohol was the most common primary drug. Synthetic cathinones also gained popularity among people who use drugs.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "oneil_2025",
-       "where": "Results",
-       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
-       "sha": "94718403229d5736"
-      },
-      {
-       "label": "F4",
-       "ref": "gonalves_2019",
-       "where": "Summary",
-       "quote": "rapidly gained popularity amongst drugs users",
-       "sha": "bfcb35945e198f6c"
-      },
-      {
-       "label": "DA",
-       "ref": "oneil_2025",
-       "where": "Abstract",
-       "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-       "sha": "7455691de60ef5c4"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not explicitly state that alcohol was the most common primary drug for the entire sample of 357; it only reports subgroup percentages."
-    },
-    {
-     "part": "but",
-     "text": "The study only looked at 357 low-income justice-impacted adults in the Midwest, so it does not show what people in general use most.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "oneil_2025",
-       "where": "Discussion",
-       "quote": "More research is warranted to better understand substance use trends among older persons especially in the context of rising trends in overdose among marginalized people of color and shifting opioid use patterns which contribute to premature mortality.",
-       "sha": "49faa6b3ac93c1a3"
-      },
-      {
-       "label": "DA",
-       "ref": "oneil_2025",
-       "where": "Abstract",
-       "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-       "sha": "7455691de60ef5c4"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not explicitly claim that the study does not show what people in general use most; this limitation is inferred, not stated."
-    },
-    {
-     "part": "how2",
-     "text": "A 2025 study of 357 low-income justice-impacted adults in the Midwest found alcohol was the most frequent primary substance.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "oneil_2025",
-       "where": "Abstract",
-       "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons",
-       "sha": "7455691de60ef5c4"
-      },
-      {
-       "label": "F1",
-       "ref": "oneil_2025",
-       "where": "Results",
-       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids, which accounted for 92% of the reported primary substances among this age bracket.",
-       "sha": "94718403229d5736"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "dropped": [
-  {
-   "try": 2,
-   "part": "how2",
-   "text": "A 2019 review summary says synthetic cathinones rapidly gained popularity amongst drug users.",
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "gonalves_2019",
-     "where": "Summary",
-     "quote": "rapidly gained popularity amongst drugs users",
-     "sha": "bfcb35945e198f6c"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“users”)"
-  },
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A 2019 review says synthetic cathinones rapidly gained popularity amongst drug users.",
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "gonalves_2019",
-     "where": "Summary",
-     "quote": "rapidly gained popularity amongst drugs users",
-     "sha": "bfcb35945e198f6c"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: words that are not person-first (“users”)"
-  }
- ],
+ "soft": "a source could not be fetched",
  "place": {
   "home": "facts",
   "also": [],

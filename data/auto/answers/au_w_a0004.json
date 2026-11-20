@@ -17,153 +17,40 @@
   "heroin"
  ],
  "made": {
-  "on": "2026-11-19",
+  "on": "2026-11-20",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44449513078",
+  "run": "44672174094",
   "read_by": {
-   "gemini-3.5-flash-lite": 2,
+   "gpt-oss-20b": 1,
    "gemini-3.1-flash-lite": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 150,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 594.4,
-  "seconds": 190
+  "neurons": 0.0,
+  "seconds": 150
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (8 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “It can be fatal in large enough quantities. Heroin kills far more people in the UK than any other illegal drug.”: it does not answer the question itself (Sentence 2 adds a limitation about users' knowledge of heroin strength, which relates to the overdose risk mentioned in sentence",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.39, but 0.98, how1 0.59, how2 0.77",
-  "check": "short: NOT accepted: it does not answer the question itself (All four sentences are directly supported by the quoted passages; however, sentence 1 provides raw death counts, not a mortality rate, so it does not answer the asked question. Sentence 2 does not limit or qualify sentence 1, so but_fits is); but: NOT accepted: it is about something else than the short answer (All four sentences are directly supported by the quoted passages; however, sentence 1 provides raw death counts, not a mortality rate, so it does not answer the asked question. Sentence 2 does not limit or qualify sentence 1, so but_fits is); how1: accepted; how2: accepted"
+  "time": "2 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "strang_2019",
-    "type": "article-journal",
-    "title": "Take-home naloxone for the emergency interim management of opioid overdose: The public health application of an emergency medicine",
-    "author": [
-     {
-      "family": "Strang",
-      "given": "John"
-     },
-     {
-      "family": "McDonald",
-      "given": "Rebecca"
-     },
-     {
-      "family": "Campbell",
-      "given": "Gabrielle"
-     },
-     {
-      "family": "Degenhardt",
-      "given": "Louisa"
-     },
-     {
-      "family": "Nielsen",
-      "given": "Suzanne"
-     },
-     {
-      "family": "Ritter",
-      "given": "Alison"
-     },
-     {
-      "family": "Dale",
-      "given": "Ola"
-     }
-    ],
-    "container-title": "Drugs",
-    "issued": {
-     "date-parts": [
-      [
-       2019
-      ]
-     ]
-    },
-    "DOI": "10.1007/s40265-019-01154-5",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-19"
-     }
-    },
-    "volume": "79",
-    "issue": "13",
-    "page": "1395-1418",
-    "PMCID": "PMC6728289"
-   },
-   "doi": "10.1007/s40265-019-01154-5",
-   "pmcid": "PMC6728289",
-   "title": "Take-Home Naloxone for the Emergency Interim Management of Opioid Overdose: The Public Health Application of an Emergency Medicine",
-   "year": 2019,
-   "journal": "Drugs",
-   "kind": "review",
-   "people": true,
-   "near": 0.702,
-   "money": [
-    "No sources of funding were received for the preparation of this article.",
-    "John Strang, through his university, is working with the pharmaceutical industry to identify new or improved treatments and his employer (King’s College London) has received grants, travel costs and/or consultancy payments; this includes investigation of new naloxone formulations and has included work with in the past 3 years, Martindale, Indivior and Mundipharma (all of whom have naloxone products). His employer (King’s College London) has also registered intellectual property on a novel buccal naloxone formulation, naming John Strang et al., and he was earlier named in a patent registration by a pharmaceutical company regarding a concentrated nasal naloxone spray. John Strang et al. have worked as consultants for the United Nations Office on Drugs and Crime, supporting them with a project introducing take-home naloxone to four central and western Asian countries as well as contributing to local take-home naloxone schemes. For a fuller account, see John Strang’s web-page at. Rebecca McDonald has undertaken an unpaid student industry placement with Mundipharma Research Ltd. and has received conference-related travel funding and an honorarium from IOTOD (Improving Opioid Outcomes in the Treatment of Opioid Dependence). Rebecca McDonald has been involved in the development of a tablet formulation on which the university (King’s College London) has registered intellectual property. Rebecca McDonald has worked as a consultant for the United Nations Office on Drugs and Crime. Gabrielle Campbell is supported by a National Health and Medical Research Council fellowship (No. 1119992). The National Drug and Alcohol Research Centre at the University of New South Wales is supported by funding from the Australian Government under the Substance Misuse Prevention and Service Improvements Grant Fund. Gabrielle Campbell has received investigator‐initiated untied educational grants from Reckitt Benckiser/Indivior for a study of opioid substitution therapy uptake among patients with chronic non-cancer pain. None of these are directly relevant to the current article. Louisa Degenhardt is supported by National Drug and Alcohol Research Centre research fellowships (No. 1109366 and No. 1041472/No. 1 135 991) and by the National Institutes of Health grant NIDA R01DA1104470. The National Drug and Alcohol Research Centre at the University of New South Wales is supported by funding from the Australian Government under the Drug and Alcohol Program. Louisa Degenhardt has received investigator-initiated untied educational grants from Reckitt Benckiser/Indivior for studies of buprenorphine‐naloxone, buprenorphine depot, naloxone, the development of an opioid‐related behaviour scale and a study of opioid substitution therapy uptake among patients with chronic non‐cancer pain. Louisa Degenhardt has received an untied educational grant from Seqirus for a post‐marketing study of tapentadol and an untied educational grant from Mundipharma for a post‐marketing study of oxycodone. These bodies had no involvement in or knowledge of the current article. Suzanne Nielsen has been a named investigator on untied educational grants from Indivior and Seqirus and has delivered training on opioid dependence for Indivior for which honoraria were paid to her institution. Suzanne Nielsen has participated in an advisory board meeting by Mundipharma relating to naloxone for which she declined a sitting fee. Suzanne Nielsen is a current recipient of a National Health and Medical Research Council Research Fellowship (No. 1163961). Alison Ritter is funded through a National Health and Medical Research Council Research Fellowship (GNT1136944). She has received no funding or untied educational grants from any pharmaceutical company in the last 15 years. This article covers (among others) a naloxone formulation that has been approved by 12 European countries from 16 June, 2018 under the name of Ventizolve® (Respinal® in Sweden), produced by Sanivo Pharma AS. The sponsor of this trial was AS Den Norske Eterfabrikk. Ola Dale was engaged by AS Den Norske Eterfabrikk as the principal investigator in this study, for which Ola Dale receives no personal honorarium. Ola Dale’s employer, the Norwegian University of Science and Technology and its subsidiary Technical Transfer Office have signed cooperation and licensing contracts with DNE PHARMA to seek commercialisation of this nasal naloxone formulation. This regulates potential royalties for Ola Dale through the Norwegian University of Science and Technology. DNE Pharma AS has compensated Ola Dale for business travel from Trondheim to Oslo."
-   ],
-   "design": null,
-   "findings": [
-    {
-     "passage": 2,
-     "where": "Introduction",
-     "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-     "text": "In the USA, 13,000 deaths from heroin were registered in 2015 alone.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 15,
-     "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-     "quote": "and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-     "text": "Heroin-related overdose increased from 1,842 deaths in 2000 to 10,574 deaths in 2014.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 26,
-     "where": "Clusters of Deaths and Crucial At-Risk Populations",
-     "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-     "text": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 22,
-     "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-     "quote": "N.B.: Comparisons across different countries are hampered by differences in data collection",
-     "text": "Comparisons across different countries are hampered by differences in data collection.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
   {
    "read": "full",
    "ref": {
@@ -198,10 +85,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
+     "verified_on": "2026-11-20",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-19"
+      "checked_on": "2026-11-20"
      }
     },
     "volume": "66",
@@ -216,7 +103,7 @@
    "journal": "MMWR. Morbidity and mortality weekly report",
    "kind": "other",
    "people": true,
-   "near": 0.739,
+   "near": 0.74,
    "money": [],
    "design": {
     "passage": 1,
@@ -230,7 +117,7 @@
      "where": "Text",
      "quote": "During 2010–2015, heroin overdose deaths quadrupled from 3,036 to 12,989.",
      "text": "During 2010–2015, heroin overdose deaths quadrupled from 3,036 to 12,989.",
-     "id": "F4",
+     "id": "F1",
      "second_hand": ""
     },
     {
@@ -238,7 +125,7 @@
      "where": "Text",
      "quote": "The rate of deaths involving heroin increased during 2006–2015 nationally and in all four U.S. Census regions.",
      "text": "The rate of deaths involving heroin increased during 2006–2015 nationally and in all four U.S. Census regions.",
-     "id": "F5",
+     "id": "F2",
      "second_hand": ""
     },
     {
@@ -246,7 +133,7 @@
      "where": "Discussion",
      "quote": "Approximately half of the increase in deaths involving heroin after 2013 is attributable to increases in deaths involving use of both heroin and fentanyl.",
      "text": "Approximately half of the increase in deaths involving heroin after 2013 is attributable to increases in deaths involving use of both heroin and fentanyl.",
-     "id": "F6",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -256,28 +143,28 @@
      "where": "Discussion",
      "quote": "although analyses excluded intentional deaths, it is possible that deaths involving heroin and synthetic opioids of undetermined intent might include homicides or suicides",
      "text": "It is possible that deaths involving heroin and synthetic opioids of undetermined intent might include homicides or suicides.",
-     "id": "L2",
+     "id": "L1",
      "second_hand": ""
     }
    ],
-   "tag": "B"
+   "tag": "A"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "mortality rate per user",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.2105/ajph.2015.302843",
    "apa": "Martins, S. S., Sampson, L., Cerdá, M., & Galea, S. (2015). Worldwide prevalence and trends in unintentional drug overdose: A systematic review of the literature. American Journal of Public Health, 105(11), e29–e49. https://doi.org/10.2105/ajph.2015.302843",
-   "near": 0.734,
+   "near": 0.733,
    "why": "a review or meta-analysis in people; nearness to the question 0.73; cited 212 times; its full text is not open",
    "file": "martins_2015_ajph_2015_302843.pdf"
   },
   {
    "doi": "10.2105/ajph.2015.302843a",
    "apa": "Martins, S. S., Sampson, L., Cerdá, M., & Galea, S. (2015). Worldwide prevalence and trends in unintentional drug overdose: A systematic review of the literature. American Journal of Public Health, 105(11), 2373. https://doi.org/10.2105/ajph.2015.302843a",
-   "near": 0.734,
+   "near": 0.733,
    "why": "a review or meta-analysis in people; nearness to the question 0.73; cited 40 times; its full text is not open",
    "file": "martins_2015_ajph_2015_302843a.pdf"
   },
@@ -330,6 +217,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -338,30 +233,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40265-019-01154-5",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "a research paper studying opioid overdose and take-home naloxone",
-     "quote": "Take-Home Naloxone for the Emergency Interim Management of Opioid Overdose: The Public Health Application of an Emergency Medicine",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "Why have overdose deaths decreased? Widespread fentanyl saturation and decreased drug use among key drivers",
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.lana.2025.101226",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Assessment of Changes in the Geographical Distribution of Opioid-Related Mortality Across the United States by Opioid Type, 1999-2016",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1001/jamanetworkopen.2019.0040",
    "kept": 0,
    "thrown": []
   },
@@ -372,353 +252,72 @@
    "at": "10.15585/mmwr.mm6634a2",
    "kept": 3,
    "thrown": []
+  },
+  {
+   "title": "Assessment of Changes in the Geographical Distribution of Opioid-Related Mortality Across the United States by Opioid Type, 1999-2016",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1001/jamanetworkopen.2019.0040",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Association of Medicaid Expansion With Opioid Overdose Mortality in the United States",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1001/jamanetworkopen.2019.19066",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Estimating naloxone need in the USA across fentanyl, heroin, and prescription opioid epidemics: a modelling study",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1016/s2468-2667(21)00304-2",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "What Your Death Certificate Says About You May Be Wrong: A Narrative Review on CDC's Efforts to Quantify Prescription Opioid Overdose Deaths",
+   "read": "full",
+   "kind": "review",
+   "at": "10.7759/cureus.18012",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "State-Level Prevalence and Associates of Opioid Dependence in the USA",
+   "read": "full",
+   "kind": "other",
+   "at": "10.3390/ijerph19073825",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Opportunities to Prevent Overdose Deaths Involving Prescription and Illicit Opioids, 11 States, July 2016-June 2017",
+   "read": "full",
+   "kind": "other",
+   "at": "10.15585/mmwr.mm6734a2",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Systematic Evaluation of State Policy Interventions Targeting the US Opioid Epidemic, 2007-2018",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1001/jamanetworkopen.2020.36687",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": {
-  "short": [
-   "F1",
-   "F2"
-  ],
-  "direct": "",
-  "but": [
-   "L1"
-  ],
-  "how": [
-   [
-    "F1",
-    "F2",
-    "F3"
-   ],
-   [
-    "F4",
-    "F5",
-    "F6"
-   ]
-  ],
-  "unanswered": "mortality rate per user"
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.3914,
-   "but": 0.9834,
-   "how1": 0.5876,
-   "how2": 0.7671
-  },
-  "scores_quotes_alone": {
-   "short": 0.4756,
-   "but": 0.888,
-   "how1": 0.3895,
-   "how2": 0.4997
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In the USA, 13,000 deaths from heroin were registered in 2015. Heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      },
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (All four sentences are directly supported by the quoted passages. Sentence 1 provides exact death counts that match the passages; Sentence 2 repeats the explicit limitation noted in the European passage; Sentence 3 combines two statements t)"
-    },
-    {
-     "part": "but",
-     "text": "Comparisons across different countries are hampered by differences in data collection.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-       "quote": "N.B.: Comparisons across different countries are hampered by differences in data collection",
-       "sha": "634f62d3b6ddb105"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (All four sentences are directly supported by the quoted passages. Sentence 1 provides exact death counts that match the passages; Sentence 2 repeats the explicit limitation noted in the European passage; Sentence 3 combines two statements t)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2019 review notes 13,000 heroin deaths in the USA in 2015. It also says one in 200 prisoners with a history of injecting heroin dies within two weeks of release.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      },
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      },
-      {
-       "label": "F3",
-       "ref": "strang_2019",
-       "where": "Clusters of Deaths and Crucial At-Risk Populations",
-       "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-       "sha": "a4ac9b23bd0228d3"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2017 study of US data found heroin overdose deaths quadrupled from 3,036 to 12,989 between 2010 and 2015. Rates increased in all four US Census regions.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "odonnell_2017",
-       "where": "Text",
-       "quote": "During 2010–2015, heroin overdose deaths quadrupled from 3,036 to 12,989.",
-       "sha": "4ef8b4dd7d6350c2"
-      },
-      {
-       "label": "F5",
-       "ref": "odonnell_2017",
-       "where": "Text",
-       "quote": "The rate of deaths involving heroin increased during 2006–2015 nationally and in all four U.S. Census regions.",
-       "sha": "4e08259f0e62e910"
-      },
-      {
-       "label": "F6",
-       "ref": "odonnell_2017",
-       "where": "Discussion",
-       "quote": "Approximately half of the increase in deaths involving heroin after 2013 is attributable to increases in deaths involving use of both heroin and fentanyl.",
-       "sha": "9cdf0b03ec760161"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In the USA, 13,000 deaths from heroin were registered in 2015. Heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      },
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (All four sentences are directly supported by the quoted passages: the death counts and trends are stated verbatim, the limitation about cross‑country data collection is explicitly noted, and the prison‑release risk statistic matches the sou)"
-    },
-    {
-     "part": "but",
-     "text": "Comparisons across different countries are hampered by differences in data collection.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-       "quote": "N.B.: Comparisons across different countries are hampered by differences in data collection",
-       "sha": "634f62d3b6ddb105"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (All four sentences are directly supported by the quoted passages: the death counts and trends are stated verbatim, the limitation about cross‑country data collection is explicitly noted, and the prison‑release risk statistic matches the sou)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2019 review notes 13,000 heroin deaths in the USA in 2015. It also says one in 200 prisoners with a history of injecting heroin dies within two weeks of release.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      },
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      },
-      {
-       "label": "F3",
-       "ref": "strang_2019",
-       "where": "Clusters of Deaths and Crucial At-Risk Populations",
-       "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-       "sha": "a4ac9b23bd0228d3"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2017 study of US data found heroin overdose deaths quadrupled from 3,036 to 12,989 between 2010 and 2015. Rates increased in all four US Census regions.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "odonnell_2017",
-       "where": "Text",
-       "quote": "During 2010–2015, heroin overdose deaths quadrupled from 3,036 to 12,989.",
-       "sha": "4ef8b4dd7d6350c2"
-      },
-      {
-       "label": "F5",
-       "ref": "odonnell_2017",
-       "where": "Text",
-       "quote": "The rate of deaths involving heroin increased during 2006–2015 nationally and in all four U.S. Census regions.",
-       "sha": "4e08259f0e62e910"
-      },
-      {
-       "label": "F6",
-       "ref": "odonnell_2017",
-       "where": "Discussion",
-       "quote": "Approximately half of the increase in deaths involving heroin after 2013 is attributable to increases in deaths involving use of both heroin and fentanyl.",
-       "sha": "9cdf0b03ec760161"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "In the USA, 13,000 deaths from heroin were registered in 2015. Heroin-related overdose deaths rose from 1,842 in 2000 to 10,574 in 2014.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      },
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it does not answer the question itself (All four sentences are directly supported by the quoted passages; however, sentence 1 provides raw death counts, not a mortality rate, so it does not answer the asked question. Sentence 2 does not limit or qualify sentence 1, so but_fits is)"
-    },
-    {
-     "part": "but",
-     "text": "Comparisons across different countries are hampered by differences in data collection.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › Europe",
-       "quote": "N.B.: Comparisons across different countries are hampered by differences in data collection",
-       "sha": "634f62d3b6ddb105"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (All four sentences are directly supported by the quoted passages; however, sentence 1 provides raw death counts, not a mortality rate, so it does not answer the asked question. Sentence 2 does not limit or qualify sentence 1, so but_fits is)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2019 review notes 13,000 heroin deaths in the USA in 2015. It also says one in 200 prisoners with a history of injecting heroin dies within two weeks of release.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "strang_2019",
-       "where": "Introduction",
-       "quote": "In the USA, 20,000 deaths from prescription opioids and 13,000 deaths from heroin were registered in 2015 alone.",
-       "sha": "5b635b179a4657db"
-      },
-      {
-       "label": "F2",
-       "ref": "strang_2019",
-       "where": "Epidemiology of Opioid Overdose Deaths › USA › Re-emergence and Increase of Heroin Use",
-       "quote": "and heroin-related overdose increased from 1842 deaths in 2000 to 10,574 deaths in 2014",
-       "sha": "c8f1683567fa5c34"
-      },
-      {
-       "label": "F3",
-       "ref": "strang_2019",
-       "where": "Clusters of Deaths and Crucial At-Risk Populations",
-       "quote": "For prisoners with a previous history of heroin use by injection, one in 200 will be dead within a fortnight of their release from prison, with most deaths being caused by opioid overdose.",
-       "sha": "a4ac9b23bd0228d3"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2017 study of US data found heroin overdose deaths quadrupled from 3,036 to 12,989 between 2010 and 2015. Rates increased in all four US Census regions.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "odonnell_2017",
-       "where": "Text",
-       "quote": "During 2010–2015, heroin overdose deaths quadrupled from 3,036 to 12,989.",
-       "sha": "4ef8b4dd7d6350c2"
-      },
-      {
-       "label": "F5",
-       "ref": "odonnell_2017",
-       "where": "Text",
-       "quote": "The rate of deaths involving heroin increased during 2006–2015 nationally and in all four U.S. Census regions.",
-       "sha": "4e08259f0e62e910"
-      },
-      {
-       "label": "F6",
-       "ref": "odonnell_2017",
-       "where": "Discussion",
-       "quote": "Approximately half of the increase in deaths involving heroin after 2013 is attributable to increases in deaths involving use of both heroin and fentanyl.",
-       "sha": "9cdf0b03ec760161"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
+ "soft": "a source could not be fetched",
  "place": {
   "home": "heroin",
   "also": [],

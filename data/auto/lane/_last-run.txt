@@ -4,15 +4,24 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history; sources read at once give the same answer from the same sources in the same order; a source not read in time is written down and the answer is written from the rest; past its clock a question is put down for the next run)
-== the papers' own words on a question, tried with the real index of papers on the editor's own questions
-instant trial: 1 request(s); no model takes part
-instant trial: "how long does coke stay in your system [trial 22 with 'urinary' gave two papers on urinary excretion; now 'clearance' in its place]": 6 paper(s), 0 with their own words, first list after 1267 ms (the server's own share 302.2 ms)
-instant trial: "how long does ketamine stay in your system [trial 22: 'urinary' found two papers on the bladder; now 'clearance' in its place]": 6 paper(s), 0 with their own words, first list after 936 ms (the server's own share 301.3 ms)
-instant trial: "how long does xanax stay in your blood [as trial 22, with 'clearance' in the place of 'urinary']": 6 paper(s), 0 with their own words, first list after 537 ms (the server's own share 301.9 ms)
-instant trial: "how long does weed stay in your urine [as trial 22, with 'clearance' in the place of 'urinary'; 'urine' stays a key word]": 5 paper(s), 0 with their own words, first list after 1721 ms (the server's own share 1.2 ms)
-instant trial: "how long does mdma stay in your system [new]": 6 paper(s), 0 with their own words, first list after 814 ms (the server's own share 1.5 ms)
-instant trial: written data/auto/instant/trial-20261120T0241-0023.json
-== what it used, into the ledger
-llm: today 8716 of 9000 neurons
 == write
-lane: no request waiting
+[0;93m2026-11-20 04:07:03.063065226 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+lane: sources are read at once, by gemini-3.5-flash-lite, gemini-3.1-flash-lite, gpt-oss-20b, gemma-4-31b-it beside the team's own reader
+lane: our own checker is pharmakon-check-0 (from lytang/MiniCheck-RoBERTa-Large), at least 0.05
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0016 'Does LSD cause shared hallucinations among users?': none (no source that can be read gave a finding for this question); 0 papers, 0 official pages, 0 summaries; 0.0 neurons; 124 seconds, 124 of them reading (gemini-3.1-flash-lite 16, gpt-oss-20b 3)
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0017: the time one question has was over: the time for this question was over before gemma-4-26b-a4b-it again (gemini could not be reached: The read operation timed out) could be asked (it would have waited 4 seconds more for the room its free plan gives in a minute)
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0025: the time one question has was over: the time for this question was over before gemma-4-26b-a4b-it again (gemini could not be reached: The read operation timed out) could be asked (it would have waited 4 seconds more for the room its free plan gives in a minute)
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0004 'What is the mortality rate associated with heroin use?': none (not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (8 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)); 1 papers, 0 official pages, 0 summaries; 0.0 neurons; 150 seconds, 150 of them reading (gpt-oss-20b 1, gemini-3.1-flash-lite 1)
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0009 'What drugs are associated with confident dancing?': none (no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)); 0 papers, 0 official pages, 0 summaries; 0.0 neurons; 150 seconds, 150 of them reading (gemini-3.1-flash-lite 4, gpt-oss-20b 2)
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0014: the time one question has was over: the time for this question was over before gemma-4-26b-a4b-it again (gemini could not be reached: The read operation timed out) could be asked (it would have waited 4 seconds more for the room its free plan gives in a minute)
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_a0020 'What is the favourite drug among people?': none (not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)); 1 papers, 0 official pages, 0 summaries; 0.0 neurons; 150 seconds, 150 of them reading
+lane: team K: gemini:gemma-4-31b-it reads, gemini:gemma-4-26b-a4b-it writes, groq:openai/gpt-oss-120b is the second reader
+lane: w_0048: the time one question has was over: the time for this question was over before gemma-4-31b-it again (gemini could not be reached: The read operation timed out) could be asked (it would have waited 4 seconds more for the room its free plan gives in a minute)
+lane: 4 questions worked on: published 0, waiting 0, none 4; today 8716 of 9000 neurons used
