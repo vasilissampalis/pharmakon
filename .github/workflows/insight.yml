@@ -6,6 +6,8 @@
 # editor's; data/auto/insight/teachers.json, the free models', written every day by scripts/insight/teachers.py in the Auto run), several at once
 # (one machine each), and measures each on the 400 forum questions of the gold set beside the model on the site.
 #
+# (20 November 2026) {"evaluate": ["insight-...-q8.onnx", ...]}: models already among the release files, walked through MODELS.md's measured path on these
+# machines (scripts/insight/candidate.py), each only where its file is the one its record names; the results in data/verification/insight/train/candidate-*.
 # A request file starts it: data/auto/requests/insight-*.json  {"runs": [{"base": "gte-small", "teacher": true, "masked": 0, "epochs": 6,
 # "all": true, "mix": "0.5,1.0"}, ...]} (at most eight runs; bases: minilm, gte-small). On Sundays it runs by itself with the teachers'
 # wordings of the week (the two bases, every answer), so that the model keeps learning the answers the site gains.
@@ -39,6 +41,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       runs: ${{ steps.p.outputs.runs }}
+      evaluate: ${{ steps.p.outputs.evaluate }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -64,6 +67,16 @@ jobs:
               runs = [{"base": b, "teacher": True, "masked": 0, "epochs": 6, "all": True, "mix": "0.5,1.0"} for b in ("minilm", "gte-small")]
           for i, r in enumerate(runs): r["label"] = f"{i:02d}-{r['base']}{'-teach' if r['teacher'] else ''}{'-masked' if r['masked'] else ''}-e{r['epochs']}{'-all' if r['all'] else '-heldout'}"
           print("runs=" + json.dumps(runs[:8]))
+          # (20 November 2026) "evaluate": models already among the release files (own-models), walked through the measured path on these machines
+          # (scripts/insight/candidate.py: the candidate's own index and judge, the gold set ranked with the page's rule beside the site's model)
+          ev = []
+          for f in sorted(glob.glob("data/auto/requests/insight-*.json")):
+              try: d = json.load(open(f))
+              except ValueError: continue
+              for a in d.get("evaluate") or []:
+                  a = a.get("asset") if isinstance(a, dict) else a
+                  if isinstance(a, str) and re.fullmatch(r"insight-[A-Za-z0-9._-]{1,160}-q8\.onnx", a) and a not in ev: ev.append(a)
+          print("evaluate=" + json.dumps(ev[:6]))
           EOF
 
   make:
@@ -141,9 +154,61 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
+  judge:
+    needs: plan
+    if: needs.plan.outputs.evaluate != '[]' && needs.plan.outputs.evaluate != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        asset: ${{ fromJSON(needs.plan.outputs.evaluate) }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - name: The vectors made before (so that only new texts are embedded)
+        uses: actions/cache/restore@v6
+        with:
+          path: site/insight/.cache
+          key: insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-x
+          restore-keys: |
+            insight-vectors-${{ hashFiles('site/insight/model.json', 'site/insight/vendor/*.onnx') }}-
+      - name: The measured path for one model of the release files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ASSET: ${{ matrix.asset }}
+        run: |
+          set +e
+          mkdir -p out; L="out/judge.txt"; : > "$L"
+          python3 -m venv .venv && .venv/bin/pip install -q numpy scikit-learn >> "$L" 2>&1
+          export PATH="$PWD/.venv/bin:$PATH"   # (candidate.py asks "python3" for the builder and the judge: the one with numpy and scikit-learn)
+          gh release download own-models -R "$GITHUB_REPOSITORY" -p "$ASSET" -D "$RUNNER_TEMP/m" >> "$L" 2>&1 || { echo "!! the model is not among the release files: $ASSET" >> "$L"; exit 0; }
+          # the file is the one its record names (data/verification/insight/train/*.json: gold.<name>.sha256), or it is not measured
+          sum="$(sha256sum "$RUNNER_TEMP/m/$ASSET" | cut -d' ' -f1)"
+          if ! grep -rq "$sum" data/verification/insight/train/*.json 2>/dev/null; then echo "!! $ASSET is not the file a record names ($sum): not measured" >> "$L"; exit 0; fi
+          node site/build.js > "$RUNNER_TEMP/build.log" 2>&1 || { echo "!! the build failed" >> "$L"; exit 0; }
+          name="${ASSET#insight-}"; echo "== candidate $name [$(date -u +%H:%M:%S)]" >> "$L"
+          timeout 100m python3 -I -u scripts/insight/candidate.py "$RUNNER_TEMP/m/$ASSET" --name "$name" --out out/candidate.json >> "$L" 2>&1
+          echo "== end [$(date -u +%H:%M:%S)]" >> "$L"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: judge-${{ matrix.asset }}
+          path: |
+            out/candidate.json
+            out/candidate.model.json
+            out/judge.txt
+          retention-days: 7
+          if-no-files-found: warn
+
   keep:
-    needs: [plan, make]
-    if: always() && needs.plan.outputs.runs != '[]' && needs.plan.outputs.runs != ''
+    needs: [plan, make, judge]
+    if: always() && ((needs.plan.outputs.runs != '[]' && needs.plan.outputs.runs != '') || (needs.plan.outputs.evaluate != '[]' && needs.plan.outputs.evaluate != ''))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -156,6 +221,10 @@ jobs:
         with:
           path: art
           pattern: insight-*
+      - uses: actions/download-artifact@v4
+        with:
+          path: judged
+          pattern: judge-*
       - name: Keep the records, and the models among the release files
         env:
           GH_TOKEN: ${{ github.token }}
@@ -195,6 +264,13 @@ jobs:
               i = v.get("index") or {}
               print(f"{k}: strict top-1 {i.get('strict_top1')}, top-3 {i.get('strict_top3')}, lenient top-3 {i.get('lenient_top3')}, AUC {i.get('answerable_vs_not_auc')}")
           EOF
+          done
+          for dir in judged/judge-*; do
+            [ -d "$dir" ] || continue
+            label="${dir#judged/judge-}"; label="$(printf '%s' "$label" | tr -cd 'A-Za-z0-9._-')"
+            echo "== measured path: $label" >> "$L"
+            [ -f "$dir/judge.txt" ] && tail -c 8000 "$dir/judge.txt" | sed -E 's/(hf_|gh[pousr]_|sk-)[A-Za-z0-9_-]{8,}/[key]/g' > "$D/candidate-$label.log"
+            if python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$dir/candidate.json" 2>/dev/null; then cp "$dir/candidate.json" "$D/candidate-$label.json"; [ -f "$dir/candidate.model.json" ] && cp "$dir/candidate.model.json" "$D/candidate-$label.model.json"; python3 -c "import json,sys; r=json.load(open(sys.argv[1])); print('verdict:', r.get('verdict'))" "$dir/candidate.json" >> "$L"; else echo "!! no result" >> "$L"; fi
           done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
