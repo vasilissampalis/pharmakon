@@ -55,7 +55,8 @@ const queries = goldAll.filter((_, i) => i % 5 === 2).slice(0, 60).map(q => [q, 
   "does my heart go fast on mdma", "is super weed stronger than normal weed",
   "can i drink on xanax", "is it safe to drink on adderall", "how much water should i drink on molly", "how much should i drink on mdma", "is drinking on antibiotics bad",
   "is it bad to roll twice in a month", "how often can you roll", "whats the comedown from md like", "can i take speed", "can you snort speed", "what does liquid g do",
-  "can you drink while on acid"].map(q => [q, null]),
+  "can you drink while on acid", "is it safe to take ibuprofen after drinking", "can i take adderall after drinking coffee", "can i smoke weed while drinking",
+  "headache after drinking water", "can i take xanax before drinking", "is it legal to grow shrooms in the us"].map(q => [q, null]),
   [["does it kill brain cells", "cannabis"], ["is it addictive", "cannabis"], ["how long does it stay in your blood", "ketamine"], ["is it addictive", "kratom"], ["can it damage my bladder", "ketamine"],
    ["what does mdma do to serotonin", "cannabis"], ["how long does it last", "lsd"], ["is it safe with alcohol", "mdma"]]);
 // 2.9: questions as a reader who is still typing leaves them: every third forum question of the gold set cut after each of its
@@ -163,6 +164,8 @@ const server = http.createServer((req, res) => {
     // (2.15.2) where two named drugs have a checked answer about the two together, the page shows that answer first whatever the judge's number
     // (a.pair): the build ranks by the judge alone, so what is compared there is what the judge alone gave the page (a.judged: no best match, and the related ids)
     if (a.judged) { const ids = a.judged.related.join(), want = br.map(r => r.id).join(); if (bb.length || ids !== want) rkBad.push(tag + " (two drugs together) the judge alone: page related [" + ids + "] build best [" + bb.map(r => r.id) + "] related [" + want + "]"); if (!a.emergency) nRel += br.length; nNone++; return; }
+    // (2.28.26) for such a question that comparison is the test: the page's best match is its pair rule's, not the judge's ("can i smoke weed while drinking")
+    if (a.judged) { if (a.emergency) urgent++; if (a.best.length > 2) rkBad.push(tag + ": more than two answers about the two together"); nBest += a.best.length; if (!a.emergency) nRel += a.related.length; if (!a.best.length) nNone++; return; }
     const pairs = [["best", a.best, bb]]; if (a.emergency) urgent++; else pairs.push(["related", a.related, br]);
     for (const [k, x, y] of pairs) {
       if (x.map(r => r.id).join() !== y.map(r => r.id).join()) { rkBad.push(tag + " " + k + ": page [" + x.map(r => r.id + " " + r.plain + "/" + r.topic) + "] build [" + y.map(r => r.id + " " + r.plain + "/" + r.topic) + "]"); continue; }

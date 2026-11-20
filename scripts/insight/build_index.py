@@ -146,6 +146,15 @@ MASKS = {p: " ".join("%" if x == "speed" else x for x in p.split()) for p, g in 
 # taking"; "drinking water on molly" and "what to drink with molly" are not. A question about how much water to drink stays one (NONE_NAMES below)
 DRINK = [d + " " + x for d in ("drink", "drinking") for x in ("on", "while on", "while taking", "after taking")]
 EXTRA.update({p: ["alcohol"] for p in DRINK})
+# (2.28.26) drinking before, after, while or when something else is done is alcohol: "is it safe to take ibuprofen after drinking" named no drug. A drink that is
+# named is that drink: coffee and energy drinks are caffeine (the longer name is read first, where both begin with the same word), and water, juice, milk or tea is
+# no drug (NONE_NAMES below)
+WHEN_DRINK = [w + " drinking" for w in ("after", "before", "while", "when")]
+EXTRA.update({p: ["alcohol"] for p in WHEN_DRINK})
+MASKS.update({p: p + " %" for p in WHEN_DRINK})                  # "after drinking": "after drinking it", as "after drinking alcohol" is masked
+CAFFEINE_DRINK = [w + " drinking " + d for w in ("after", "before", "while", "when") for d in ("coffee", "a coffee", "energy drinks", "an energy drink", "energy drink")]
+EXTRA.update({p: ["caffeine"] for p in CAFFEINE_DRINK})
+MASKS.update({p: p.split(" drinking ")[0] + " drinking %" for p in CAFFEINE_DRINK})
 MASKS.update({p: p.replace(" ", " % ", 1) for p in DRINK})   # "drink on": "drink it on", as "drink alcohol on" is masked
 # (2.28.25) to roll is to take MDMA: "is it bad to roll twice in a month" was taken for a question not about drugs. Only in phrases that say so ("roll a joint" is not one)
 ROLL = {"first time rolling": "first time taking %", "rolling for the first time": "taking % for the first time", "my first roll": "my first time taking %",
@@ -322,6 +331,8 @@ NONE_NAMES += [w + " " + v + " " + d for w in ("water", "fluids", "electrolytes"
                "do i need to", "do you need to", "is it safe to", "should i be", "should you be", "to be", "am i supposed to", "are you supposed to")
                for d in ("drink on", "drink while on", "drinking on", "drinking while on")]
 NONE_NAMES += ["how much should i drink on", "how much should you drink on", "how much to drink on", "how much should i be drinking on", "how much should you be drinking on"]
+NONE_NAMES += [w + " drinking " + d for w in ("after", "before", "while", "when") for d in ("water", "a lot of water", "too much water", "lots of water", "juice", "milk", "tea",
+               "soda", "kombucha", "gatorade", "electrolytes", "fluids")]
 # (2.28.24) "mushroom tea" is magic mushrooms; a tea of the mushrooms people take for their health is not (site/insight/scope.json, not: the same mushrooms)
 NONE_NAMES += [m + " mushroom tea" for m in ("chaga", "reishi", "lions mane", "lion's mane", "lion’s mane", "lion mane", "cordyceps", "turkey tail", "maitake", "shiitake",
                                               "medicinal", "functional", "adaptogenic")]

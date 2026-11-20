@@ -2295,7 +2295,10 @@ const FIND_STOP = new Set(("what when where which while with would could should 
   // (2.22) how often is no subject ("how many people die from it each year in greece" is about deaths, and Greece)
   "each year years yearly annual annually per").split(" "));
 // an everyday word and the word papers use for it: the search asks for both
-const FIND_SAY = { twice: "repeated|frequent|frequency of use", high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
+const FIND_SAY = { twice: "repeated|frequent|frequency of use",
+  // (2.28.26) a medicine by its brand, as papers name it; driving as papers say it
+  advil: "ibuprofen", motrin: "ibuprofen", nurofen: "ibuprofen", tylenol: "paracetamol|acetaminophen", panadol: "paracetamol|acetaminophen", aleve: "naproxen",
+  benadryl: "diphenhydramine", drive: "driving", high: "psychoactive", addictive: "addiction", addicted: "addiction", addicting: "addiction", dangerous: "adverse", harmful: "adverse", legal: "legal", illegal: "legal", anxious: "anxiety", depressed: "depression", sleepy: "sleep", effects: "effects", effect: "effects",
   kids: "children|adolescents", kid: "children|adolescents", teens: "adolescents", teen: "adolescents", teenagers: "adolescents", teenager: "adolescents", teenage: "adolescents", moms: "maternal|mothers", mom: "maternal|mothers", mums: "maternal|mothers", mum: "maternal|mothers", mothers: "maternal", mother: "maternal", dads: "paternal|fathers", dad: "paternal|fathers", fathers: "paternal", father: "paternal", parents: "parental", parent: "parental", families: "family",
   creative: "creativity", lonely: "loneliness", poor: "poverty", genes: "genetic", inherited: "genetic", hereditary: "genetic", psychology: "psychological",
   pregnant: "pregnancy", baby: "infants", babies: "infants", breastfeeding: "lactation", breastfeed: "lactation",   // (2.21.2, after the twelfth trial)
@@ -2405,7 +2408,9 @@ function insFindTerms(res) {
   const lean = !names.length && res.note !== "other" && FIND_LEAN.test(text);
   if (lean) add(names, "codeine");
   // (2.21.2, after the twelfth trial: "does drinking while breastfeeding harm the baby" was looked up under the name "breastfeeding") drinking, with no drug named, is alcohol
-  const DRINK = /^(?:drinking|drinks?|drunk|drank|booze|boozing)$/, drink = !names.length && res.note !== "other" && (text.match(/[a-z]+/g) || []).some(w => DRINK.test(w));
+  // (2.28.26) not where what is drunk is water, juice, milk or tea ("can i take tylenol after drinking a lot of water" was looked up as alcohol)
+  const DRINK = /^(?:drinking|drinks?|drunk|drank|booze|boozing)$/, drink = !names.length && res.note !== "other" && (text.match(/[a-z]+/g) || []).some(w => DRINK.test(w)) &&
+    !/\b(?:drink|drinks|drinking|drank)\s+(?:a\s+lot\s+of\s+|lots\s+of\s+|too\s+much\s+|some\s+|more\s+|enough\s+)?(?:water|juice|milk|tea|soda|kombucha|gatorade|electrolytes|fluids)\b/.test(text);
   if (drink) add(names, "alcohol");
   // a question about drugs that names none we know ("is tianeptine addictive", "what is kava"): the first word that is no everyday word is most likely the drug's name
   // (2.28.18) after lean and drinking, which name what papers search by. A short name is searched only as papers write it out (trial 27: "hhc" found papers on
@@ -2450,7 +2455,7 @@ function insFindTerms(res) {
     if (od && /^overdos/.test(w0)) continue;                                                   // (2.22) the subject itself is no key word
     if (lean && /^(?:lean|purple|drank|sizzurp|dirty|sprite)$/.test(w0)) continue;              // (2.28.13) lean's own words: the subject itself
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
-    if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
+    if ((say && inName.has(say)) || ((drink || names.includes("alcohol")) && DRINK.test(w0))) continue;   // (2.28.26) also where alcohol is named ("ibuprofen after drinking")
     if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (firstT && /^(?:first|time|timer|timers)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
     const e = say && say !== w0 ? (say.split("|").includes(w0) ? say : say + "|" + w0) : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
@@ -2530,6 +2535,9 @@ const FIND_PAPERS = { "delta 8": "delta-8-thc|delta-8-tetrahydrocannabinol", "de
   anabolics: "anabolic steroids|anabolic-androgenic steroids", anavar: "oxandrolone", dianabol: "methandienone|methandrostenolone", winstrol: "stanozolol",
   hgh: "growth hormone abuse|growth hormone doping", sarms: "selective androgen receptor modulators", sarm: "selective androgen receptor modulators",
   creatine: "creatine supplementation|creatine monohydrate", nbomes: "nbome|nbomes",
+  // (2.28.26) a medicine by its brand, as papers name it
+  tylenol: "paracetamol|acetaminophen", panadol: "paracetamol|acetaminophen", advil: "ibuprofen", motrin: "ibuprofen", nurofen: "ibuprofen", aleve: "naproxen",
+  benadryl: "diphenhydramine",
   tusi: "tusi|tucibi|pink cocaine", tucibi: "tusi|tucibi|pink cocaine", tuci: "tusi|tucibi|pink cocaine", "pink cocaine": "tusi|tucibi|pink cocaine" };   // (trials 28 to 30: "growth hormone" alone found its basic science, "sarms" an immune protein, "creatine" creatine kinase)
 /* (2.20) Each paper may come with at most 15 of its own words on the question, cut by fixed rules on the server from the end of its summary, where papers
    say what they found (site/worker/_worker.js, iaPick): no model reads or writes anything. They stand in quotation marks under the paper's title, so that
