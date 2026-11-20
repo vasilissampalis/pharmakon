@@ -131,6 +131,7 @@ function insPrepare(d, vocabText) {
   INS.W = insRows(d.W, d.dim); INS.M = insRows(d.M, d.dim); INS.S = insRows(d.S, d.dim);
   INS.idx = new Map(d.ids.map((id, i) => [id, i]));
   // (2.22) what a question asks about, where getting it wrong does harm (site/insight/model.json, aspects): [the question's pattern, each answer's mark]
+  INS.say = (d.say || []).map(x => ({ re: new RegExp(x.ask, "i"), add: x.add }));
   INS.aspects = (d.aspects || []).map(a => ({ ask: new RegExp(a.ask, "i"), has: a.has, best: +a.best || 0, narrow: (a.narrow || []).map(([n, bits]) => ({ re: new RegExp(n, "i"), bits })), two: a.two || "", together: a.together ? new RegExp(a.together, "i") : null }));
   INS.about = d.about.map(xs => new Set(xs.map(k => d.slugs[k])));   // the drugs each answer is about
   // the names that name a drug in a question (build_index.py's names_table: the longest first), and the drugs each stands for
@@ -303,6 +304,7 @@ const insMask = t => String(t).replace(INS.nameRe, "it");
 function insTexts(q, drug) {
   let groups = insNamed(q), full = insExpand(q);
   if (!groups.length && drug && INS.canon.has(drug)) { groups = [[drug]]; full += " (" + INS.canon.get(drug) + ")"; }
+  (INS.say || []).forEach(x => { if (x.re.test(q) && !q.toLowerCase().includes(x.add.toLowerCase())) full += " (" + x.add + ")"; });   // (2.28.3) what people call a thing, as papers say it (model.json, say)
   return { full, masked: insMask(q), groups };
 }
 /* Depth words: understood, and taken out before matching. A request for the evidence ("give me the full evidence about …",

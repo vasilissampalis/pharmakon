@@ -235,6 +235,7 @@ class Ranker:
         self.W, self.M, self.S = unit_rows(D["W"], dim), unit_rows(D["M"], dim), unit_rows(D["S"], dim)
         self.lex = Words(D["docs"]); self.wt = D["weights"]; self.t = D["tiers"]; self.J = D["judge"]
         # 2.22: (what the question asks about, which answers speak of it, the judge's cut for such a question, the narrower cases with the answers that are about each, the answers about two drugs)
+        self.say = [(re.compile(x["ask"], re.I | re.A), x["add"]) for x in D.get("say") or []]
         self.aspects = [(re.compile(a["ask"], re.I | re.A), a["has"], float(a.get("best") or 0), [(re.compile(n, re.I | re.A), bits) for n, bits in a.get("narrow") or []], a.get("two") or "", re.compile(a["together"], re.I | re.A) if a.get("together") else None) for a in D.get("aspects") or []]
         self.about = [set(D["slugs"][k] for k in xs) for xs in D["about"]]
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
@@ -261,6 +262,8 @@ class Ranker:
         the drugs it is about (on a drug's page, a question that names none is about that drug)."""
         groups = self.named(q); full = self.expand(q)
         if not groups and drug: groups = [[drug]]; full += " (" + self.canon[drug] + ")"
+        for rx, add in self.say:                                            # (2.28.3) what people call a thing, said as papers and our answers say it (model.json, say)
+            if rx.search(q) and add.lower() not in q.lower(): full += " (" + add + ")"
         return full, self.mask(q), groups
     def look(self, v, mv, q, groups):
         """Everything the page computes for a question, for every answer: bw and bw2, the best and the second-best wording
@@ -700,6 +703,7 @@ def main():
            "model": MODEL, "model_sha256": MODEL_SHA256, "dim": int(Wv.shape[1]), "weights": CONFIG["weights"], "tiers": CONFIG["tiers"], "judge": CONFIG["judge"],
            "ids": ids, "rows": rows, "W": wb, "M": mb, "S": sb, "docs": docs, "slugs": slugs, "about": [[at[s] for s in a["about"]] for a in A],
            "names": [[n, [at[s] for s in xs]] for n, xs in names], "variants": len(var), "more": sum(1 for a in A if more.get(a["id"]))}
+    out["say"] = [{"ask": x["ask"], "add": x["add"]} for x in CONFIG.get("say") or []]   # (2.28.3) what people call a thing, as papers say it: added to a question before it is embedded
     out["scope"] = scope_block()   # 2.5: what makes a question a question about drugs (site/insight/scope.json)
     # 2.22: what a question asks about, where getting it wrong does harm (site/insight/model.json, aspects): each answer is marked once, by ALL its wordings and its short answer
     spoken = [" ".join(w for r, w in zip(rows, W_txt) if r == i) + " " + shorts[i] for i in range(len(A))]
