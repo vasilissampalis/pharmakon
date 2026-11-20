@@ -17,17 +17,23 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
    "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44659769573",
+  "run": "44749724429",
+  "read_by": {
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 1
+  },
   "read_seconds": 100,
   "from": {
    "papers": 1,
@@ -40,8 +46,9 @@
  "status": "none",
  "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
   "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
@@ -109,36 +116,45 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "We thoroughly characterized the real‑world safety profile of amitriptyline through a systematic analysis of the FDA Adverse Event Reporting System (FAERS).",
-    "text": "Systematic pharmacovigilance analysis of FDA Adverse Event Reporting System data for amitriptyline"
+    "quote": "We thoroughly characterized the real-world safety profile of amitriptyline through a systematic analysis of the FDA Adverse Event Reporting System (FAERS). Adverse events were collected from Q1 2004 to Q1 2026",
+    "text": "A pharmacovigilance analysis of the FDA Adverse Event Reporting System database."
    },
    "findings": [
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "Our study detected several signals indicative of a potential for abuse, including overdose, intentional overdose, and drug abuse.",
-     "text": "The study found that amitriptyline has signals for potential abuse, including overdose, intentional overdose, and drug abuse.",
+     "quote": "Its potent anticholinergic effects may, at certain dosages, produce “dissociative” or hallucinogenic-like experiences that can be sought by some individuals.",
+     "text": "The potent anticholinergic effects of amitriptyline may produce dissociative or hallucinogenic-like experiences at certain dosages that some individuals seek.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "Its potent anticholinergic effects may, at certain dosages, produce “dissociative” or hallucinogenic‑like experiences that can be sought by some individuals.",
-     "text": "At certain dosages, amitriptyline’s anticholinergic effects may produce dissociative or hallucinogenic‑like experiences that some people may seek.",
+     "quote": "Preclinical research indicated that at high doses, its metabolite nortriptyline exerts non-competitive antagonism at N-methyl-d-aspartate (NMDA) receptors, producing psychotropic effects partially resembling those of ketamine",
+     "text": "Preclinical research indicated that at high doses, the metabolite nortriptyline produces psychotropic effects partially resembling those of ketamine by acting on NMDA receptors.",
      "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "Preclinical research indicated that at high doses, its metabolite nortriptyline exerts non‑competitive antagonism at N‑methyl‑d‑aspartate (NMDA) receptors, producing psychotropic effects partially resembling those of ketamine, which may constitute a potential pharmacological trigger for abuse.",
-     "text": "In preclinical research, high doses of nortriptyline, a metabolite of amitriptyline, antagonize NMDA receptors and produce psychotropic effects similar to ketamine, potentially triggering abuse.",
+     "quote": "The signals observed in this study suggested that the abuse and overdose risks of amitriptyline in real-world settings may be more pronounced than previously recognized.",
+     "text": "The risks of overdose and use of amitriptyline in real-world settings may be more pronounced than previously recognized.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 26,
+     "where": "Discussion",
+     "quote": "Further comprehensive prospective, multicenter clinical trials and epidemiological research are warranted to confirm these findings and more accurately assess amitriptyline’s safety.",
+     "text": "Further prospective clinical trials and epidemiological research are needed to confirm these findings and assess the safety of amitriptyline.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   }
  ],
@@ -169,7 +185,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Amitriptyline's anticholinergic adverse drug reactions-A systematic multiple-indication review and meta-analysis",
@@ -177,8 +202,7 @@
    "kind": "review",
    "at": "10.1371/journal.pone.0284168",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Inhibition of acid sphingomyelinase by tricyclic antidepressants and analogons",
@@ -186,8 +210,7 @@
    "kind": "review",
    "at": "10.3389/fphys.2014.00331",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Amitriptyline and Sexual Function: A Systematic Review Updated for Sexual Health Practice",
@@ -195,14 +218,7 @@
    "kind": "review",
    "at": "10.1177/1557988317734519",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Systematic review of clinical trials and case reports on amitriptyline and sexual dysfunction",
-     "quote": "Amitriptyline is an old drug but is still prevalently used as the first-line treatment for a variety of common diseases.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The real-world safety profile of amitriptyline: A comprehensive pharmacovigilance analysis based on the large-scale FDA adverse event reporting system database",
@@ -210,14 +226,33 @@
    "kind": "other",
    "at": "10.1016/j.neurot.2026.e00973",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "The study identified drug abuse as a potential adverse reaction not listed in the package insert.",
-     "quote": "Potential adverse reactions that were not listed in the package insert included drug abuse, cardio‑respiratory arrest, cardiac arrest, metabolic acidosis, respiratory depression, mydriasis, bradycardi",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "thrown": []
+  },
+  {
+   "title": "Unintentional amitriptyline overdose leading to coma and cardiac conduction impairment in an older adult: A case report",
+   "read": "full",
+   "kind": "case",
+   "at": "10.1177/2050313x251344032",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "The cardiovascular safety of tricyclic antidepressants in overdose and in clinical use",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1177/20451253241243297",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Plasma concentration of amitriptyline and metabolites after resuscitation from cardiopulmonary arrest following an overdose: A case report",
+   "read": "full",
+   "kind": "case",
+   "at": "10.1002/ccr3.3656",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "soft": "a source could not be fetched",
