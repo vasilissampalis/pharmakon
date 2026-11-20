@@ -2301,6 +2301,7 @@ const FIND_HELD = /\b(suicid\w*|self-?harm\w*|lethal|ld50|dos(e|es|age|ing)|mg|m
    way", "on purpose"); an amount ("how much ... kills", "too much", "how many pills"). The page says in one line that it does not look such a question up,
    with the way to the emergency numbers. "How can you die from ketamine" asks what the danger is: it is looked up like any question about dying. */
 const FIND_DEATH = /\b(kill\w*|die[sd]?|dying|deaths?|dead|deadly|mortalit\w*|overdos\w*|fatal\w*|ods?)\b/i;
+const FIND_LEAN = /\b(?:lean|purple\s+drank|sizzurp|dirty\s+sprite)\b/i;   // (2.28.13) codeine and promethazine cough syrup, by its street names
 const FIND_DEATH_NOT = new RegExp(["\\b(?:my|your|him|her|them|our|one)sel(?:f|ves)\\b", "\\b(?:end|ending|ended|take|taking|took)\\s+(?:my|your|his|her|their|one'?s)\\s+(?:own\\s+)?li(?:fe|ves)\\b",
   "\\bwant(?:s|ed|ing)?\\s+to\\s+die\\b", "\\bwish\\b[^?.!]{0,20}\\bdead\\b", "\\bpainless\\w*", "\\b(?:easiest|quickest|fastest|best|surest|simplest)\\s+way\\s+to\\s+(?:die|kill|overdose|od|end|go)\\b",
   "\\b(?:on\\s+purpose|intentional\\w*|deliberate\\w*|purposely|without\\s+(?:pain|suffering|anyone\\s+knowing))\\b",
@@ -2338,8 +2339,14 @@ function insFindTerms(res) {
   const text = String(res.focus || res.core || res.q || "").toLowerCase(), flat = " " + text.replace(/[^a-z0-9+-]+/g, " ") + " ";
   const fg = res.focus && INS.nameRe ? insNamed(res.focus) : [], first = (fg.length ? fg : res.groups || [])[0], firstKey = first ? first.join("|") : "";
   // (2.20) the first drug the question names is what it is about; another one named beside it is a key word ("does kratom help with opioid withdrawal")
+  let firstId = "";
+  const pageWords = new Set((first || []).flatMap(sl => { const s = subBySlug[sl]; return s ? [sl.replace(/-/g, " "), sl].concat(String(s.name || "").split(/[(),/]| and | or /).map(norm)) : []; }).filter(Boolean));
   if (first && INS.nameRe) { INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(text))) { const a = String(m[1] || "").toLowerCase(), g = INS.nameOf.get(a) || [];
-      if (g.join("|") === firstKey) { if (a.length >= 4 && !/\s/.test(a) && (!INS.vocab.has(a) || first.length > 1)) { add(names, a); if (FIND_GENERIC[a]) add(names, FIND_GENERIC[a]); } }
+      if (g.join("|") === firstKey) { if (a.length >= 4 && !/\s/.test(a) && (!INS.vocab.has(a) || first.length > 1)) { const id = FIND_GENERIC[a] || a;
+          // (2.28.13, trial 25) a second medicine of the same page ("is xanax stronger than valium", "oxycodone vs hydrocodone") is a key word, so that the search
+          // finds papers on both; as one more of the drug's names, any paper on either was found. A name of the page itself ("benzos") is never such a medicine
+          if (firstId && id !== firstId && !pageWords.has(firstId) && !pageWords.has(id)) { const k = FIND_GENERIC[a] && FIND_GENERIC[a] !== a ? a + "|" + FIND_GENERIC[a] : a; if (!extra.includes(k)) extra.push(k); }
+          else { if (!firstId) firstId = id; add(names, a); if (FIND_GENERIC[a]) add(names, FIND_GENERIC[a]); } } }
       else if (/^[a-z]{4,24}$/.test(a) && !INS.vocab.has(a) && !extra.some(x => x.split("|").includes(a))) extra.push(FIND_GENERIC[a] && FIND_GENERIC[a] !== a ? a + "|" + FIND_GENERIC[a] : a);   // (2.28.7) "meth" is also asked as "methamphetamine"
       // (2.28.7) a second drug whose typed name is an everyday word or short ("mushrooms vs lsd", "nicotine compared to heroin", "weed and alcohol"): its page's own
       // name, where it is one drug's page; "lsd" and "heroin" were no key word at all, so the search was for the first drug alone
@@ -2361,6 +2368,10 @@ function insFindTerms(res) {
   // (2.22) overdose, with no drug named ("how many people overdose in greece", "how do i avoid an overdose"): what research calls it stands in the place of a name
   const od = !names.length && res.note !== "other" && /\boverdos/.test(text);
   if (od) ["drug overdose", "overdose"].forEach(x => add(names, x));
+  // (2.28.13, trial 25) lean, purple drank: a cough syrup of codeine and promethazine that no page names (before this, nothing was looked up, or alcohol for
+  // "drank"): codeine, with promethazine or syrup as its first key word
+  const lean = !names.length && res.note !== "other" && FIND_LEAN.test(text);
+  if (lean) add(names, "codeine");
   // (2.21.2, after the twelfth trial: "does drinking while breastfeeding harm the baby" was looked up under the name "breastfeeding") drinking, with no drug named, is alcohol
   const DRINK = /^(?:drinking|drinks?|drunk|drank|booze|boozing)$/, drink = !names.length && res.note !== "other" && (text.match(/[a-z]+/g) || []).some(w => DRINK.test(w));
   if (drink) add(names, "alcohol");
@@ -2370,6 +2381,7 @@ function insFindTerms(res) {
     const cand = (text.match(/[a-z]{4,}/g) || []).filter(w => !plain(w)); if (cand.length) add(names, cand[0]); }
   if (!names.length) return null;
   const inName = new Set(names.concat(also).join(" ").split(/[^a-z0-9]+/)), words = extra.filter(w => !inName.has(w)).slice(0, 2), masked = (typeof insMask === "function" ? String(insMask(text)) : text).toLowerCase();
+  if (lean) words.unshift("promethazine|syrup");
   // (2.20, after the sixth trial: "does adderall help you study" had no key word, and got the most cited papers on amphetamine in rats) "Study" stands in
   // every summary and is no key word; "help you study", "for studying", "with exams" is asked as what papers call it
   const acad = /\b(?:study(?:ing)?\s+(?:for|better|longer|harder|drugs?|aids?|pills?)|(?:you|me|us|them|people|students|i)\s+study(?:ing)?|(?:to|and)\s+study(?:ing)?\b(?!\s+(?:of|on|about|that|which|shows?|found|says?))|studying|exams?|finals|homework|revising|revision|grades)\b/.test(masked);
@@ -2395,6 +2407,7 @@ function insFindTerms(res) {
     if (/^kill/.test(w0)) { if (!death) continue; say = FIND_SAY.die; }                        // (2.22) "kill" said of people: asked as papers say it; said of a thing: no key word
     if (/^lasts?$/.test(w0)) { if (!/\bhow\s+long\b/.test(masked)) continue; say = "duration"; }   // (2.26.4, trial 16) "how long does it last": papers say duration; "the last year" is no key word
     if (od && /^overdos/.test(w0)) continue;                                                   // (2.22) the subject itself is no key word
+    if (lean && /^(?:lean|purple|drank|sizzurp|dirty|sprite)$/.test(w0)) continue;              // (2.28.13) lean's own words: the subject itself
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
     if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
     if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
