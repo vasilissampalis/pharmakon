@@ -2560,8 +2560,12 @@ function insFoundHtml(d, all) {
   const said = d.papers.some(p => typeof p.q === "string" && p.q);
   // (2.22) a longer list shows its first four with a plain "Show all" (all: the reader has pressed it); a list is never cut for one paper
   const cut = !all && d.papers.length > 5 ? 4 : d.papers.length;
-  return '<p class="ins-found-h">Published research on this, found just now</p><ul class="ins-found-l">' + d.papers.map((p, n) => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
-    return "<li" + (n >= cut ? " hidden" : "") + '><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" · ")) + "</span>" +
+  // (2.28.28) a paper found only by one of the question's key words, or by the drug alone (the server's n), is near the question, not on it: the page says so, and
+  // where no paper is on it, that nothing published on exactly this was found ("do people who take lsd share the same hallucinations" got five papers on LSD under
+  // "Published research on this")
+  const firstNear = d.papers.findIndex(p => p.n === 1);
+  return '<p class="ins-found-h">' + (firstNear === 0 ? "Nothing published on exactly this was found. The nearest research:" : "Published research on this, found just now") + '</p><ul class="ins-found-l">' + d.papers.map((p, n) => { const href = p.doi ? "https://doi.org/" + p.doi : "https://europepmc.org/article/MED/" + p.pmid;
+    return (n === firstNear && n > 0 ? "<li" + (n >= cut ? " hidden" : "") + ' class="ins-near-h">Near it, not exactly on your question:</li>' : "") + "<li" + (n >= cut ? " hidden" : "") + '><a href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(p.t) + '</a><span class="m">' + esc([p.kind, p.y, p.j, p.oa ? "free to read" : ""].filter(Boolean).join(" · ")) + "</span>" +
       (typeof p.q === "string" && p.q ? '<span class="pq">“' + esc(p.q) + '”' + (p.an === 1 ? '<span class="pq-an"> in animals or cells, not in people</span>' : p.an === 2 ? '<span class="pq-an"> its summary covers work in animals or cells too</span>' : "") + "</span>" : "") + "</li>"; }).join("") +
     "</ul>" + (cut < d.papers.length ? '<p class="ins-found-n ins-all"><button type="button" class="linklike" data-show-all>Show all ' + d.papers.length + "</button></p>" : "") +
     (d.more ? '<p class="ins-found-n ins-found-w">Still looking for the most cited papers on this\u2026</p>' : "") + '<p class="ins-found-n">From Europe PMC, an open index of medical research. We have not read these yet, and a title is not a finding.' +

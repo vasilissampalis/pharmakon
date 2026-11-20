@@ -567,10 +567,13 @@ async function findPapers(env, r, most, ctx) {
   // wider, only where the searches are back and found too little (a search that is still out is not "too little": the page asks again)
   if (!more && out.length < 3 && all.length > r.names.length && left() > 600) await round(all);   // (the name the reader wrote found too little: with what its page is called)
   const Q = findQueries(all, r.groups);
-  if (!more && out.length < 3 && Q.loose) add(await one(Q.loose, "CITED%20desc", 4));
-  if (!more && out.length < 2 && r.groups.length) add(await one(Q.nameRev, "CITED%20desc", 4));
+  // (2.28.28; the senior author, 20 November 2026, 12:23, of "do people who take lsd share the same hallucinations": "these have nothing to do with my question") a
+  // paper found only by ONE of the key words, or by the drug alone, is near the question, not on it: it is marked (n), and the page says so
+  const near = list => list.map(p => Object.assign({}, p, { near: 1 }));
+  if (!more && out.length < 3 && Q.loose) add(near(await one(Q.loose, "CITED%20desc", 4)));
+  if (!more && out.length < 2 && r.groups.length) add(near(await one(Q.nameRev, "CITED%20desc", 4)));
   const papers = out.slice(0, most).map(p => { let pick = null; try { pick = r.noq ? null : iaPick(p, r.groups, all, r.def); } catch (e) { pick = null; }
-    const o = { t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind }; if (pick) { o.q = pick.q; if (pick.an) o.an = pick.an; } return o; });
+    const o = { t: p.t, a: p.a, j: p.j, y: p.y, doi: p.doi, pmid: p.pmid, oa: p.oa, kind: p.kind }; if (p.near) o.n = 1; if (pick) { o.q = pick.q; if (pick.an) o.an = pick.an; } return o; });
   return { papers, more, down, ms: ms || [], again, won, own, kept };
 }
 async function find(request, url, env, ctx) {
