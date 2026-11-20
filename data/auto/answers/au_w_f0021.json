@@ -21,97 +21,491 @@
   "models": {
    "reader": "gemini:gemma-4-31b-it",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44663191917",
-  "read_seconds": 100,
+  "run": "44774966341",
+  "read_by": {
+   "gemini-3.1-flash-lite": 4,
+   "gpt-oss-20b": 1
+  },
+  "read_seconds": 29,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 184
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 10307) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8424)"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "gouldiii_2015",
+    "type": "article-journal",
+    "title": "Critical appraisal of extended-release hydrocodone for chronic pain: Patient considerations",
+    "author": [
+     {
+      "family": "Gould, III",
+      "given": "Harry"
+     },
+     {
+      "family": "Paul",
+      "given": "Dennis"
+     }
+    ],
+    "container-title": "Therapeutics and Clinical Risk Management",
+    "issued": {
+     "date-parts": [
+      [
+       2015
+      ]
+     ]
+    },
+    "DOI": "10.2147/tcrm.s81979",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "page": "1635",
+    "PMCID": "PMC4622415"
+   },
+   "doi": "10.2147/tcrm.s81979",
+   "pmcid": "PMC4622415",
+   "title": "Critical appraisal of extended-release hydrocodone for chronic pain: patient considerations",
+   "year": 2015,
+   "journal": "Therapeutics and clinical risk management",
+   "kind": "review",
+   "people": true,
+   "near": 0.642,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Here, we discuss how the approval of extended-release formulations of hydrocodone and the emotionally charged controversy over their release may affect physician prescribing and the care available to patients in need of chronic opioid therapy for the management of pain.",
+    "text": "A critical appraisal of extended-release hydrocodone for chronic pain management."
+   },
+   "findings": [
+    {
+     "passage": 8,
+     "where": "Potential limitations to improvements for patients and prescribers",
+     "quote": "It is disappointing that the most effective medications used in our striving to provide comfort while doing no harm are frequently misused, abused, and diverted leading to harm in appropriately treated patients, unintended recipients, and society as a whole.",
+     "text": "Hydrocodone is frequently misused, abused, and diverted, which leads to harm in patients, unintended recipients, and society.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Potential limitations to improvements for patients and prescribers",
+     "quote": "there is “no substantial evidence for the maintenance of pain relief or improved function over long periods of time without incurring serious risk of overdose, dependence, or addiction”",
+     "text": "There is no substantial evidence that long-term use of opioids maintains pain relief or improves function without the risk of overdose, dependence, or addiction.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "The need for “single-drug” formulations",
+     "quote": "due to a high incidence of hepatotoxicity for those who develop tolerance to the opioid effect and for those who abuse these combination drugs and the frequency of potentially fatal skin rashes, the US Food and Drug Administration requested the limiting of single doses to no more than 325 mg by 2014.",
+     "text": "People who use hydrocodone-acetaminophen combinations face risks of hepatotoxicity and potentially fatal skin rashes when they develop tolerance or use the drugs in ways not intended.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 9,
+     "where": "Potential limitations to improvements for patients and prescribers",
+     "quote": "the frequent, subjective impression that many patients who receive regular treatment with opioid medications seem to show little change in their reported pain scores and levels of activity, raises strong concern over the prudence of using opioid medications for the treatment of chronic pain in general.",
+     "text": "The findings are based on subjective impressions that patients receiving regular opioid treatment show little change in pain scores and activity levels.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "sloan_2019",
+    "type": "article-journal",
+    "title": "A benefit risk review of pediatric use of hydrocodone/chlorpheniramine, a prescription opioid antitussive agent for the treatment of cough",
+    "author": [
+     {
+      "family": "Sloan",
+      "given": "Victor S."
+     },
+     {
+      "family": "Jones",
+      "given": "Alphia"
+     },
+     {
+      "family": "Maduka",
+      "given": "Chidi"
+     },
+     {
+      "family": "Bentz",
+      "given": "Jürgen W. G."
+     }
+    ],
+    "container-title": "Drugs - Real World Outcomes",
+    "issued": {
+     "date-parts": [
+      [
+       2019
+      ]
+     ]
+    },
+    "DOI": "10.1007/s40801-019-0152-6",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "6",
+    "issue": "2",
+    "page": "47-57",
+    "PMCID": "PMC6520422"
+   },
+   "doi": "10.1007/s40801-019-0152-6",
+   "pmcid": "PMC6520422",
+   "title": "A Benefit Risk Review of Pediatric Use of Hydrocodone/Chlorpheniramine, a Prescription Opioid Antitussive Agent for the Treatment of Cough",
+   "year": 2019,
+   "journal": "Drugs - real world outcomes",
+   "kind": "review",
+   "people": true,
+   "near": 0.629,
+   "money": [
+    "Victor S. Sloan and Chidi Maduka are employees of UCB BioSciences Inc., Alphia Jones is an employee of UCB Inc., and Jürgen W. G. Bentz is an employee of UCB Biopharma SPRL; all four are shareholders of UCB S.A."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 9,
+     "where": "Introduction",
+     "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+     "text": "In October 2014, the US Drug Enforcement Administration reclassified hydrocodone-containing antitussive agents from schedule III to schedule II drugs because they have a high potential for drug use.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "label_hydrocodone-bitartrate",
+    "type": "webpage",
+    "title": "Hydrocodone Bitartrate and Acetaminophen",
+    "author": [
+     {
+      "literal": "Granules Pharmaceuticals Inc."
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       10,
+       8
+      ]
+     ]
+    },
+    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=136bbd47-7a54-493f-9158-a84d39221d6c",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    },
+    "publisher": "DailyMed",
+    "genre": "Drug label"
+   },
+   "title": "Hydrocodone Bitartrate and Acetaminophen",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.68,
+   "name": "U.S. Food and Drug Administration",
+   "short": "the US label for hydrocodone",
+   "tier": 1,
+   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=136bbd47-7a54-493f-9158-a84d39221d6c",
+   "money": [],
+   "label": true,
+   "design": null,
+   "findings": [
+    {
+     "passage": 43,
+     "where": "Drug abuse and dependence",
+     "quote": "Abuse is the intentional, non-therapeutic use of a drug, even once, for its desirable psychological or physiological effects.",
+     "text": "People who use the drug intentionally for its desirable psychological or physiological effects are engaging in abuse.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 44,
+     "where": "Drug abuse and dependence",
+     "quote": "Misuse and abuse of Hydrocodone Bitartrate and Acetaminophen Tablets increases risk of overdose, which may lead to central nervous system and respiratory depression, hypotension, seizures, and death.",
+     "text": "Misuse and abuse of the drug increases the risk of overdose, which can result in central nervous system and respiratory depression, hypotension, seizures, and death.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 62,
+     "where": "Adverse reactions",
+     "quote": "Because these reactions are reported voluntarily from a population of uncertain size, it is not always possible to reliably estimate their frequency or establish a causal relationship to drug exposure.",
+     "text": "It is not always possible to reliably estimate the frequency of adverse reactions or establish a causal relationship because they are reported voluntarily from a population of uncertain size.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nhs_how-and-when-to-take-ibuprofen-and-codei",
+    "type": "webpage",
+    "title": "How and when to take ibuprofen and codeine Brand name: Nurofen Plus",
+    "author": [
+     {
+      "literal": "NHS"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       4,
+       7
+      ]
+     ]
+    },
+    "URL": "https://www.nhs.uk/medicines/ibuprofen-and-codeine-nurofen-plus/how-and-when-to-take-ibuprofen-and-codeine/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    }
+   },
+   "title": "How and when to take ibuprofen and codeine Brand name: Nurofen Plus",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.438,
+   "name": "NHS",
+   "short": "the NHS",
+   "tier": 1,
+   "address": "https://www.nhs.uk/medicines/ibuprofen-and-codeine-nurofen-plus/how-and-when-to-take-ibuprofen-and-codeine/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Top of the page",
+     "quote": "This is important because the codeine in combined ibuprofen and codeine can be addictive.",
+     "text": "The codeine in combined ibuprofen and codeine can be addictive.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "If you take too much",
+     "quote": "Taking too much combined ibuprofen and codeine can be dangerous. The amount that can lead to an overdose varies from person to person.",
+     "text": "Taking too much combined ibuprofen and codeine can be dangerous, and the amount that leads to an overdose varies between people.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
  "wanted": [
   {
-   "doi": "10.1080/14622416.2026.2738673",
-   "apa": "Massmann, A., Petry, N. J., Haan, M., Jacobsen, K., Schultz, A., & Baye, J. F. (2026). The role of pharmacogenomics in effective pain management with opioids. Pharmacogenomics, 27(8), 443–458. https://doi.org/10.1080/14622416.2026.2738673",
-   "near": 0.607,
-   "why": "a review or meta-analysis; nearness to the question 0.61; cited 0 times; its full text is not open",
-   "file": "massmann_2026_14622416_2026_2738673.pdf"
+   "doi": "10.1358/dot.2015.51.7.2361328",
+   "apa": "Manchikanti, L., Atluri, S., Kaye, A.M., & Kaye, A.D. (2015). Hydrocodone bitartrate for chronic pain. Drugs of Today, 51(7), 415. https://doi.org/10.1358/dot.2015.51.7.2361328",
+   "near": 0.722,
+   "why": "a review or meta-analysis; nearness to the question 0.72; cited 4 times; its full text is not open",
+   "file": "manchikantil_2015_dot_2015_51_7_2361328.pdf"
   },
   {
-   "doi": "10.1152/physrev.2001.81.1.299",
-   "apa": "Williams, J. T., Christie, M. J., & Manzoni, O. (2001). Cellular and synaptic adaptations mediating opioid dependence. Physiological Reviews, 81(1), 299–343. https://doi.org/10.1152/physrev.2001.81.1.299",
-   "near": 0.526,
-   "why": "a review or meta-analysis; nearness to the question 0.53; cited 605 times; its full text is not open",
-   "file": "williams_2001_physrev_2001_81_1_299.pdf"
+   "doi": "10.1007/s40261-016-0466-z",
+   "apa": "Dhillon, S. (2016). Hydrocodone bitartrate ER (hysingla® ER): A review in chronic pain. Clinical Drug Investigation, 36(11), 969–980. https://doi.org/10.1007/s40261-016-0466-z",
+   "near": 0.692,
+   "why": "a review or meta-analysis in people; nearness to the question 0.69; cited 8 times; its full text is not open",
+   "file": "dhillon_2016_s40261_016_0466_z.pdf"
   },
   {
-   "doi": "10.36076/ppj.2008/11/s105",
-   "apa": "Benyamin, R., MD. (2008). Opioid complications and side effects. Pain Physician, 2s;11(3;2s), S105–S120. https://doi.org/10.36076/ppj.2008/11/s105",
-   "near": 0.465,
-   "why": "a review or meta-analysis in people; nearness to the question 0.47; cited 1408 times; its full text is not open",
-   "file": "benyamin_2008_s105.pdf"
+   "doi": "10.36076/ppj.2021.24.73-82",
+   "apa": "American Society of Interventional Pain Physicians. (2021). Efficacy and safety of opioid analgesics for the management of chronic low back pain: An evidence from Bayesian network meta-analysis. Pain Physician, 1;24(1;1), 73–82. https://doi.org/10.36076/ppj.2021.24.73-82",
+   "near": 0.668,
+   "why": "a review or meta-analysis in people; nearness to the question 0.67; cited 6 times; its full text is not open",
+   "file": "anon_2021_ppj_2021_24_73_82.pdf"
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
-   "title": "Oxycodone at the Crossroads of Pain Management, Misuse, and Toxicological Investigation",
+   "title": "Critical appraisal of extended-release hydrocodone for chronic pain: patient considerations",
    "read": "full",
    "kind": "review",
-   "at": "10.3390/metabo16100719",
+   "at": "10.2147/tcrm.s81979",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "A Benefit Risk Review of Pediatric Use of Hydrocodone/Chlorpheniramine, a Prescription Opioid Antitussive Agent for the Treatment of Cough",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s40801-019-0152-6",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A benefit risk review of hydrocodone/chlorpheniramine use in pediatric patients aged 6 to < 18 years.",
+     "quote": "We present findings from a modern pharmacovigilance analysis that includes thorough and comprehensive review of the available safety and efficacy data for hydrocodone/chlorpheniramine use in pediatric",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "Many of the individual case safety reports identified were documented poorly, so it could not be confirmed that hydrocodone/chlorpheniramine caused the reported events.",
+     "quote": "However, many of the ICSRs identified were poorly documented such that causality with hydrocodone/chlorpheniramine could not be confirmed.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Hydrocodone Bitartrate and Acetaminophen",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=136bbd47-7a54-493f-9158-a84d39221d6c",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Acetaminophen is associated with acute liver failure, which can lead to death, particularly at doses exceeding 4,000 milligrams per day.",
+     "quote": "Hepatotoxicity Acetaminophen has been associated with cases of acute liver failure, at times resulting in liver transplant and death. Most of the cases of liver injury are associated with the use of a",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "limit",
+     "text": "The specific risk of addiction for any individual person is not known.",
+     "quote": "Although the risk of addiction in any individual is unknown, it can occur in patients appropriately prescribed Hydrocodone Bitartrate and Acetaminophen Tablets.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "About Prescription Opioids",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/overdose-prevention/about/prescription-opioids.html",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "Hydrocodone, Oxycodone, and Morphine Metabolism and Drug-Drug Interactions",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1124/jpet.123.001651",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Impact of Hydrocodone Rescheduling on Pharmaceutical Pain Management in End-of-Life Lung Cancer Patients",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1177/08258597251398132",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Tramadol Co-Administration with Oxycodone or Hydrocodone Increases Opioid Burden without Improving Postoperative Pain Control",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1002/cpt.70434",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "How and when to take ibuprofen and codeine Brand name: Nurofen Plus",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/ibuprofen-and-codeine-nurofen-plus/how-and-when-to-take-ibuprofen-and-codeine/",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The amount of combined ibuprofen and codeine that causes an overdose is different for each person.",
+     "quote": "The amount that can lead to an overdose varies from person to person.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F6",
+   "F1"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F5",
+    "F6"
+   ],
+   [
+    "DA",
+    "F1",
+    "F3"
+   ],
+   [
+    "F4"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "prescription-opioids",
   "also": [],
