@@ -17,32 +17,228 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44827046898",
+  "run": "44834919901",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 373
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The sentence leaves out narrowing conditions from the passages, such as the requirement that the steroid use was 'long-term' before immediate discontinuation causes withdrawal, and that the return of sperm production applies to bodybuilders",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3.6-flash accepted 1 of 4",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.80, how1 0.98, how2 0.75",
+  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The sentence leaves out narrowing conditions from the passages, such as the requirement that the steroid use was 'long-term' before immediate discontinuation causes withdrawal, and that the return of sperm production applies to bodybuilders; but: accepted; how1: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The sentence omits the narrowing detail 'after long-term', as the passage states that immediate discontinuation leads to withdrawal responses after long-term use.; how2: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The sentence omits key conditions stated in the passage, specifically that this applies after prolonged use of extremely high concentrations and for bodybuilders who stop consumption of anabolic steroids.",
+  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9661) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there."
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "albano_2021",
+    "type": "article-journal",
+    "title": "Adverse effects of anabolic-androgenic steroids: A literature review",
+    "author": [
+     {
+      "family": "Albano",
+      "given": "Giuseppe Davide"
+     },
+     {
+      "family": "Amico",
+      "given": "Francesco"
+     },
+     {
+      "family": "Cocimano",
+      "given": "Giuseppe"
+     },
+     {
+      "family": "Liberto",
+      "given": "Aldo"
+     },
+     {
+      "family": "Maglietta",
+      "given": "Francesca"
+     },
+     {
+      "family": "Esposito",
+      "given": "Massimiliano"
+     },
+     {
+      "family": "Rosi",
+      "given": "Giuseppe Li"
+     },
+     {
+      "family": "Di Nunno",
+      "given": "Nunzio"
+     },
+     {
+      "family": "Salerno",
+      "given": "Monica"
+     },
+     {
+      "family": "Montana",
+      "given": "Angelo"
+     }
+    ],
+    "container-title": "Healthcare",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.3390/healthcare9010097",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "9",
+    "issue": "1",
+    "number": "97",
+    "PMCID": "PMC7832337"
+   },
+   "doi": "10.3390/healthcare9010097",
+   "pmcid": "PMC7832337",
+   "title": "Adverse Effects of Anabolic-Androgenic Steroids: A Literature Review",
+   "year": 2021,
+   "journal": "Healthcare (Basel, Switzerland)",
+   "kind": "review",
+   "people": true,
+   "near": 0.695,
+   "money": [
+    "This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.",
+    "The authors declare no conflict of interest."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "The aim of the proposed review is to highlight the most recent evidence regarding the mechanisms of action of AASs and their unwanted effects on organs and lifestyle",
+    "text": "literature review on anabolic-androgenic steroids and their effects on organs and lifestyle"
+   },
+   "findings": [
+    {
+     "passage": 34,
+     "where": "4. AAS Use and Adverse Effects › 4.7. Reproductive System",
+     "quote": "even after prolonged use of extremely high concentrations of anabolic steroids, sperm production can return to physiological rates for bodybuilders who stop consumption of anabolic steroids for 4 months.",
+     "text": "After prolonged use of extremely high concentrations of anabolic steroids, sperm production can return to physiological rates for bodybuilders who stop consumption of anabolic steroids for 4 months.",
+     "id": "F1",
+     "second_hand": "According to the length of use of anabolic steroids and the period since the last drug administration prior to the survey, changes in sperm parameters were observed in a study: the"
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "liu_2019",
+    "type": "article-journal",
+    "title": "Anabolic-androgenic steroids and cardiovascular risk",
+    "author": [
+     {
+      "family": "Liu",
+      "given": "Jian-Di"
+     },
+     {
+      "family": "Wu",
+      "given": "Yan-Qing"
+     }
+    ],
+    "container-title": "Chinese Medical Journal",
+    "issued": {
+     "date-parts": [
+      [
+       2019
+      ]
+     ]
+    },
+    "DOI": "10.1097/cm9.0000000000000407",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "132",
+    "issue": "18",
+    "page": "2229-2236",
+    "PMCID": "PMC6797160"
+   },
+   "doi": "10.1097/cm9.0000000000000407",
+   "pmcid": "PMC6797160",
+   "title": "Anabolic-androgenic steroids and cardiovascular risk",
+   "year": 2019,
+   "journal": "Chinese medical journal",
+   "kind": "review",
+   "people": true,
+   "near": 0.671,
+   "money": [
+    "This study is supported by a grant from the National Natural Science Foundation of China (No. 81660062).",
+    "None."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "The data in this review were obtained from articles included in PubMed and the National Center for Biotechnology Information database.",
+    "text": "a review of articles obtained from PubMed and the National Center for Biotechnology Information database"
+   },
+   "findings": [
+    {
+     "passage": 23,
+     "where": "Discussion",
+     "quote": "Immediate discontinuation of high-dose AASs after long-term can lead to the withdrawal responses, including mood disorders (depression), anorexia, decreased libido, insomnia, fatigue, headache, and the desire to take more steroids.",
+     "text": "Immediate discontinuation of high-dose anabolic-androgenic steroids after long-term use can lead to withdrawal responses, including mood disorders such as depression, anorexia, decreased libido, insomnia, fatigue, headache, and the desire to take more steroids.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Discussion",
+     "quote": "most case reports have not shown whether AAS was discontinued immediately or if the dose was reduced gradually.",
+     "text": "Most case reports have not shown whether anabolic-androgenic steroids were discontinued immediately or if the dose was reduced gradually.",
+     "id": "L1",
+     "second_hand": "However, most case reports have not shown whether AAS was discontinued immediately or if the dose was reduced gradually."
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -70,7 +266,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Anabolic-androgenic steroids: How do they work and what are the risks?",
@@ -78,17 +283,22 @@
    "kind": "review",
    "at": "10.3389/fendo.2022.1059473",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Mild hirsutism that occurs in women given 150 mg testosterone enanthate every 4 weeks is reversible after stopping use.",
+     "quote": "Mild hirsutism occurs in around 1 out of 5 women given 150 mg testosterone enanthate every 4 weeks and is reversible after cessation of use.",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
   },
   {
    "title": "Adverse Effects of Anabolic-Androgenic Steroids: A Literature Review",
    "read": "full",
    "kind": "review",
    "at": "10.3390/healthcare9010097",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Anabolic Steroids and Cardiovascular Outcomes: The Controversy",
@@ -104,12 +314,312 @@
    "read": "full",
    "kind": "review",
    "at": "10.1097/cm9.0000000000000407",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F2",
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DB",
+    "F2"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The sentence leaves out narrowing conditions from the passages, such as the requirement that the steroid use was 'long-term' before immediate discontinuation causes withdrawal, and that the return of sperm production applies to bodybuilders"
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The sentence omits the narrowing detail 'after long-term', as the passage states that immediate discontinuation leads to withdrawal responses after long-term use."
+   ],
+   "how2": [
+    false,
+    "The sentence omits key conditions stated in the passage, specifically that this applies after prolonged use of extremely high concentrations and for bodybuilders who stop consumption of anabolic steroids."
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9709,
+   "but": 0.8047,
+   "how1": 0.9769,
+   "how2": 0.749
+  },
+  "scores_quotes_alone": {
+   "short": 0.5704,
+   "but": 0.7665,
+   "how1": 0.9677,
+   "how2": 0.6571
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Stopping high-dose anabolic steroids after long-term use can lead to withdrawal responses like depression, fatigue, and the desire to take more. For bodybuilders, sperm production can return to normal rates after stopping for 4 months.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "albano_2021",
+       "where": "4. AAS Use and Adverse Effects › 4.7. Reproductive System",
+       "quote": "even after prolonged use of extremely high concentrations of anabolic steroids, sperm production can return to physiological rates for bodybuilders who stop consumption of anabolic steroids for 4 months.",
+       "sha": "b19664f528e30ed9"
+      },
+      {
+       "label": "F2",
+       "ref": "liu_2019",
+       "where": "Discussion",
+       "quote": "Immediate discontinuation of high-dose AASs after long-term can lead to the withdrawal responses, including mood disorders (depression), anorexia, decreased libido, insomnia, fatigue, headache, and the desire to take more steroids.",
+       "sha": "0eede8cead9118de"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence leaves out the word 'immediate' from 'immediate discontinuation' of high-dose anabolic steroids."
+    },
+    {
+     "part": "but",
+     "text": "A 2019 review reports that most case reports have not shown whether people discontinued steroids immediately or if the dose was reduced gradually.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "liu_2019",
+       "where": "Discussion",
+       "quote": "most case reports have not shown whether AAS was discontinued immediately or if the dose was reduced gradually.",
+       "sha": "0eede8cead9118de"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2019 review of articles from PubMed and the National Center for Biotechnology Information database says immediate discontinuation after long-term use can lead to withdrawal responses.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "liu_2019",
+       "where": "Abstract",
+       "quote": "The data in this review were obtained from articles included in PubMed and the National Center for Biotechnology Information database.",
+       "sha": "f3572312e2e8187c"
+      },
+      {
+       "label": "F2",
+       "ref": "liu_2019",
+       "where": "Discussion",
+       "quote": "Immediate discontinuation of high-dose AASs after long-term can lead to the withdrawal responses, including mood disorders (depression), anorexia, decreased libido, insomnia, fatigue, headache, and the desire to take more steroids.",
+       "sha": "0eede8cead9118de"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence leaves out 'high-dose', as the passage specifically refers to immediate discontinuation of high-dose anabolic-androgenic steroids."
+    },
+    {
+     "part": "how2",
+     "text": "A 2021 literature review reports that sperm production can return to physiological rates for bodybuilders who stop for 4 months.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "albano_2021",
+       "where": "Abstract",
+       "quote": "The aim of the proposed review is to highlight the most recent evidence regarding the mechanisms of action of AASs and their unwanted effects on organs and lifestyle",
+       "sha": "443a79d9daf980db"
+      },
+      {
+       "label": "F1",
+       "ref": "albano_2021",
+       "where": "4. AAS Use and Adverse Effects › 4.7. Reproductive System",
+       "quote": "even after prolonged use of extremely high concentrations of anabolic steroids, sperm production can return to physiological rates for bodybuilders who stop consumption of anabolic steroids for 4 months.",
+       "sha": "b19664f528e30ed9"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Stopping high-dose steroids right away can cause withdrawal like depression and fatigue. Sperm production can return to normal rates after 4 months.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "liu_2019",
+       "where": "Discussion",
+       "quote": "Immediate discontinuation of high-dose AASs after long-term can lead to the withdrawal responses, including mood disorders (depression), anorexia, decreased libido, insomnia, fatigue, headache, and the desire to take more steroids.",
+       "sha": "0eede8cead9118de"
+      },
+      {
+       "label": "F1",
+       "ref": "albano_2021",
+       "where": "4. AAS Use and Adverse Effects › 4.7. Reproductive System",
+       "quote": "even after prolonged use of extremely high concentrations of anabolic steroids, sperm production can return to physiological rates for bodybuilders who stop consumption of anabolic steroids for 4 months.",
+       "sha": "b19664f528e30ed9"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence leaves out narrowing conditions from the passages, such as the requirement that the steroid use was 'long-term' before immediate discontinuation causes withdrawal, and that the return of sperm production applies to bodybuilders"
+    },
+    {
+     "part": "but",
+     "text": "Most case reports do not say if people stopped steroids immediately or reduced the dose gradually.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "liu_2019",
+       "where": "Discussion",
+       "quote": "most case reports have not shown whether AAS was discontinued immediately or if the dose was reduced gradually.",
+       "sha": "0eede8cead9118de"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2019 review of articles found that immediate stopping of high-dose steroids can lead to withdrawal responses.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "liu_2019",
+       "where": "Abstract",
+       "quote": "The data in this review were obtained from articles included in PubMed and the National Center for Biotechnology Information database.",
+       "sha": "f3572312e2e8187c"
+      },
+      {
+       "label": "F2",
+       "ref": "liu_2019",
+       "where": "Discussion",
+       "quote": "Immediate discontinuation of high-dose AASs after long-term can lead to the withdrawal responses, including mood disorders (depression), anorexia, decreased libido, insomnia, fatigue, headache, and the desire to take more steroids.",
+       "sha": "0eede8cead9118de"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence omits the narrowing detail 'after long-term', as the passage states that immediate discontinuation leads to withdrawal responses after long-term use."
+    },
+    {
+     "part": "how2",
+     "text": "A 2021 review reports that sperm production can return to physiological rates for bodybuilders after 4 months.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "albano_2021",
+       "where": "Abstract",
+       "quote": "The aim of the proposed review is to highlight the most recent evidence regarding the mechanisms of action of AASs and their unwanted effects on organs and lifestyle",
+       "sha": "443a79d9daf980db"
+      },
+      {
+       "label": "F1",
+       "ref": "albano_2021",
+       "where": "4. AAS Use and Adverse Effects › 4.7. Reproductive System",
+       "quote": "even after prolonged use of extremely high concentrations of anabolic steroids, sperm production can return to physiological rates for bodybuilders who stop consumption of anabolic steroids for 4 months.",
+       "sha": "b19664f528e30ed9"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence omits key conditions stated in the passage, specifically that this applies after prolonged use of extremely high concentrations and for bodybuilders who stop consumption of anabolic steroids."
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2019 review of articles found that immediate stopping of high-dose steroids can lead to withdrawal responses.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "liu_2019",
+     "where": "Abstract",
+     "quote": "The data in this review were obtained from articles included in PubMed and the National Center for Biotechnology Information database.",
+     "sha": "f3572312e2e8187c"
+    },
+    {
+     "label": "F2",
+     "ref": "liu_2019",
+     "where": "Discussion",
+     "quote": "Immediate discontinuation of high-dose AASs after long-term can lead to the withdrawal responses, including mood disorders (depression), anorexia, decreased libido, insomnia, fatigue, headache, and the desire to take more steroids.",
+     "sha": "0eede8cead9118de"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence omits the narrowing detail 'after long-term', as the passage states that immediate discontinuation leads to withdrawal responses after long-term use."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2021 review reports that sperm production can return to physiological rates for bodybuilders after 4 months.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "albano_2021",
+     "where": "Abstract",
+     "quote": "The aim of the proposed review is to highlight the most recent evidence regarding the mechanisms of action of AASs and their unwanted effects on organs and lifestyle",
+     "sha": "443a79d9daf980db"
+    },
+    {
+     "label": "F1",
+     "ref": "albano_2021",
+     "where": "4. AAS Use and Adverse Effects › 4.7. Reproductive System",
+     "quote": "even after prolonged use of extremely high concentrations of anabolic steroids, sperm production can return to physiological rates for bodybuilders who stop consumption of anabolic steroids for 4 months.",
+     "sha": "b19664f528e30ed9"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence omits key conditions stated in the passage, specifically that this applies after prolonged use of extremely high concentrations and for bodybuilders who stop consumption of anabolic steroids."
+  }
+ ],
  "place": {
   "home": "new:Anabolic steroids and other body-building drugs",
   "also": [],
