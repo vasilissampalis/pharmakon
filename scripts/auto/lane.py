@@ -862,9 +862,18 @@ def draft_of(out, labels):
         text = re.sub(r"\s+", " ", str(v.get("text") or "")).strip(); uses = [u.strip("[] ") for u in (v.get("uses") or []) if isinstance(u, str)]
         uses = [u for u in dict.fromkeys(uses) if u in labels]
         if not text: return None, f"{name} is empty"
-        if not uses: return None, f"{name} names no item it rests on"
+        if not uses and name != "but": return None, f"{name} names no item it rests on"
         parts.append({"part": name, "text": text, "uses": uses})
     if len(parts) < 3: return None, "fewer than one How-do-we-know line"
+    # (20 November 2026) a But that names no item: it is set beside the items that say what kind of study each source the other sentences rest on was
+    # (their D items), and read as every But is: where the readers do not accept it, the code writes the But itself from what the answer rests on, as for any
+    # But not accepted. Until now the whole draft was thrown away ("but names no item it rests on": three questions fell so on 19 and 20 November)
+    b = next(x for x in parts if x["part"] == "but")
+    if not b["uses"]:
+        refs = {labels[u].get("ref") for x in parts if x["part"] != "but" for u in x["uses"]} - {None}
+        b["uses"] = [u for u in labels if u.startswith("D") and labels[u].get("ref") in refs]
+        if not b["uses"]: return None, "but names no item it rests on"
+        b["mended"] = "named no item: set beside what kind of study each source was"
     return {"parts": parts, "complete": out.get("complete") is True, "missing": re.sub(r"\s+", " ", str(out.get("missing") or "")).strip()[:160]}, ""
 
 
@@ -2561,6 +2570,12 @@ def selftest():
     sq = shown_quote({"part": "how2", "text": "A review found tramadol among the opioids most often involved.", "uses": ["F5", "DA"]}, lb)   # as many words: the finding first
     assert sq["quote_ref"] == "gu_2024", sq
     assert shown_quote({"part": "how1", "text": "x", "uses": ["F9"]}, lb) == {}
+    # (20 November 2026) a But that names no item is set beside the D items of the sources the other sentences rest on, and read as every But is
+    dl = {"F1": {"ref": "a_2020"}, "DA": {"ref": "a_2020"}, "F2": {"ref": "b_2021"}, "DB": {"ref": "b_2021"}, "DC": {"ref": "c_2022"}}
+    d0, w0 = draft_of({"short": {"text": "S.", "uses": ["F1"]}, "but": {"text": "One small study.", "uses": []}, "how": [{"text": "H.", "uses": ["F2"]}]}, dl)
+    assert d0 and d0["parts"][1]["uses"] == ["DA", "DB"] and d0["parts"][1].get("mended"), (d0, w0)
+    assert draft_of({"short": {"text": "S.", "uses": []}, "but": {"text": "B.", "uses": ["DA"]}, "how": [{"text": "H.", "uses": ["F2"]}]}, dl)[1] == "short names no item it rests on"
+    assert draft_of({"short": {"text": "S.", "uses": ["F9"]}, "but": {"text": "B.", "uses": []}, "how": [{"text": "H.", "uses": ["F8"]}]}, dl)[1] == "short names no item it rests on"
     assert sum(c[0] == "reader" for c in calls) == 1 and "A retracted paper" not in " ".join(c[2] for c in calls)                       # the retracted paper was not read
     assert "[1]" in calls[0][2] and "[6]" not in calls[0][2] and "library" not in calls[0][2]                                              # the acknowledgments are not a passage
     assert calls[1][1] == MODELS["writer"] and calls[2][1] == MODELS["checker"] and MODELS["writer"] != MODELS["checker"] and "PASSAGE (Ketamine dependence: a systematic review (2022); Results)" in calls[2][2]
