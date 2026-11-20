@@ -444,6 +444,22 @@ SAYS = re.compile(r"(?:is|are|was|were|be|been|has|have|had|can|cannot|may|might
                   r"|ran|runs?|drank|drinks?|ate|eats?|lost|loses?|uses?|dies?|needs?|helps?|works?|affects?|differs?|exists?|carr(?:y|ies)|tends?|begins?|began|ends?|stops?|starts?|wears? off|builds?|develops?|experiences?|describes?|states?|advises?|recommends?|warns?|notes?)", re.I)   # a word that makes a part of a sentence say something
 
 
+def shown_quote(p, labels):
+    """(20 November 2026) The quotation shown under a How-do-we-know line, and whose it is: {"quote", "quote_ref"}, or {} where none can be shown. As
+    before, the first finding or limit the line rests on, in the writer's order (the finding is what the line reports), where its words share at least
+    two of the line's own; where none does, the item whose words share most of the line's (a finding first where two share as many). Until now a finding
+    came first whatever it said, so that under 'A review examined global toxicological case data on tramadol' stood a finding's words about how tramadol
+    acts on serotonin, which the line does not say (au_w_f0008): a reader compares the two, and they must agree."""
+    key = {w.lower() for w in re.findall(r"[A-Za-z0-9'’-]+", p.get("text") or "") if len(w) > 3}
+    cands = []
+    for i, u in enumerate(sorted(p.get("uses") or [], key=lambda u: (0 if u.startswith("F") else 1 if u.startswith("L") else 2))):
+        if u not in labels: continue
+        show = words15(labels[u]["quote"], p.get("text") or "")
+        if show: cands.append(((len({w.lower() for w in re.findall(r"[A-Za-z0-9'’-]+", show)} & key), -i), show, labels[u]["ref"], u[:1] in ("F", "L")))
+    best = next((c for c in cands if c[3] and c[0][0] >= 2), None) or (max(cands, key=lambda c: c[0]) if cands else None)
+    return {"quote": best[1], "quote_ref": best[2]} if best else {}
+
+
 def words15(quote, text=""):
     """The part of a source's words, 15 at most, that says most of what a sentence of ours says: the quotation shown under
     a How-do-we-know line, so that a reader can compare the two (the site's rule: 15 words at most, one for each line).
@@ -1901,10 +1917,8 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         p["rests_on"] = rests(p)
         for u in p["uses"]:
             if labels[u]["ref"] not in used_refs: used_refs.append(labels[u]["ref"])
-        if p["part"].startswith("how"):                                # the source's own words under the line (the finding's, before the design's)
-            for u in sorted(p["uses"], key=lambda u: (0 if u.startswith("F") else 1 if u.startswith("L") else 2)):
-                show = words15(labels[u]["quote"], p["text"])
-                if show: p["quote"], p["quote_ref"] = show, labels[u]["ref"]; break
+        if p["part"].startswith("how"):                                # the source's own words under the line: of the items it rests on, the one whose words say most of
+            p.update(shown_quote(p, labels))                           # what the line says (the finding's, before the design's, where they say as much)
     sources[:] = [s for s in sources if s["ref"]["id"] in used_refs]; keep_sources(); cn = counts(sources); rec["gates"]["sources"] = said() + " (the ones the answer rests on)"
     if sum(weight(s) for s in sources) < 2: return done("none", "after the second reader's check the answer rests on too few sources")
     rec["parts"] = parts
@@ -2538,6 +2552,15 @@ def selftest():
     assert words15("In this cohort the participants who were daily users of the drug reported more cravings than the others did across all waves", "People who used it daily reported more cravings.") is None      # the paper's word "users": not shown
     w15 = words15("Across the whole sample and in every wave of the survey that was run, many participants described cravings and difficulty stopping despite symptoms", "Many people described cravings and trouble stopping.")
     assert w15 == "many participants described cravings and difficulty stopping despite symptoms", w15
+    # (20 November 2026) under a line, the words of the item it rests on that say what the line says: not a finding's words the line does not say (au_w_f0008)
+    lb = {"F2": {"quote": "It has a dual mechanism of action including mu-opioid receptor agonism and monoaminergic modulation, specifically involving the inhibition of noradrenaline and serotonin reuptake.", "ref": "sy_2026"},
+          "DA": {"quote": "This review examines global toxicological case data to assess the prevalence of tramadol, a widely prescribed opioid analgesic, in the context of DFSA.", "ref": "sy_2026"},
+          "F5": {"quote": "Common opioids involved included tramadol, morphine, and buprenorphine.", "ref": "gu_2024"}}
+    sq = shown_quote({"part": "how3", "text": "A review examined global toxicological case data on tramadol.", "uses": ["DA", "F2"]}, lb)
+    assert sq["quote_ref"] == "sy_2026" and "global toxicological case data" in sq["quote"] and "serotonin" not in sq["quote"], sq
+    sq = shown_quote({"part": "how2", "text": "A review found tramadol among the opioids most often involved.", "uses": ["F5", "DA"]}, lb)   # as many words: the finding first
+    assert sq["quote_ref"] == "gu_2024", sq
+    assert shown_quote({"part": "how1", "text": "x", "uses": ["F9"]}, lb) == {}
     assert sum(c[0] == "reader" for c in calls) == 1 and "A retracted paper" not in " ".join(c[2] for c in calls)                       # the retracted paper was not read
     assert "[1]" in calls[0][2] and "[6]" not in calls[0][2] and "library" not in calls[0][2]                                              # the acknowledgments are not a passage
     assert calls[1][1] == MODELS["writer"] and calls[2][1] == MODELS["checker"] and MODELS["writer"] != MODELS["checker"] and "PASSAGE (Ketamine dependence: a systematic review (2022); Results)" in calls[2][2]

@@ -215,7 +215,8 @@ def main():
     else:
         from huggingface_hub import HfApi, hf_hub_download
         from transformers import AutoModel
-        repo = BASES[base]["repo"]; info = HfApi().model_info(repo); files = {s.rfilename for s in info.siblings or []}
+        repo = BASES[base]["repo"]; log(f"fetching the base {repo} from Hugging Face")   # (20 November 2026) two runs of gte-small waited five hours here and wrote nothing
+        info = HfApi().model_info(repo); files = {s.rfilename for s in info.siblings or []}
         vocab = hf_hub_download(repo, "vocab.txt", revision=info.sha)
         assert pathlib.Path(vocab).read_text(encoding="utf-8").split("\n") == VOCAB.read_text(encoding="utf-8").split("\n"), f"{repo} does not read with the page's vocabulary"
         weights = "model.safetensors" if "model.safetensors" in files else "pytorch_model.bin"

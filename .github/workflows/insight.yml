@@ -104,6 +104,11 @@ jobs:
       - name: Build (the answers and their wordings), then train and measure
         env:
           HF_HUB_DISABLE_TELEMETRY: "1"
+          # (20 November 2026) the runs of gte-small of 19 November waited five hours for its files and wrote nothing: plain downloads, each with its
+          # own time limit, and the whole training under a clock of its own, so that a run that cannot go on says so and its record is kept
+          HF_HUB_DISABLE_XET: "1"
+          HF_HUB_DOWNLOAD_TIMEOUT: "60"
+          HF_HUB_ETAG_TIMEOUT: "30"
           BASE: ${{ matrix.run.base }}
           TEACH: ${{ matrix.run.teacher }}
           MASKED: ${{ matrix.run.masked }}
@@ -119,7 +124,8 @@ jobs:
           [ "$TEACH" = "true" ] && a+=(--teacher)
           [ "$ALL" = "true" ] && a+=(--all)
           echo "== train ${a[*]} [$(date -u +%H:%M:%S)]" >> "$L"
-          python3 -I -u scripts/insight/train.py "${a[@]}" 2>&1 | grep -v -i "warning" >> "$L"
+          timeout 310m python3 -I -u scripts/insight/train.py "${a[@]}" 2>&1 | grep -v -i "warning" >> "$L"
+          [ "${PIPESTATUS[0]}" = "124" ] && echo "!! the training was stopped by its clock (310 minutes)" >> "$L"
           echo "== end [$(date -u +%H:%M:%S)]" >> "$L"
           rm -f out/best.pt
       - uses: actions/upload-artifact@v4
