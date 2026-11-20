@@ -2338,6 +2338,10 @@ function insFindTerms(res) {
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
     if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }
   if ((general || od) && words.length > 3) words.length = 3;   // (2.21) a question in everyday words about drugs in general: its first three key words (every key word must stand in a paper)
+  // (2.28.1, trial 19: "are kratom capsules contaminated with heavy metals" found nothing with "capsules" beside two other key words, where "do kratom products contain
+  // heavy metals" found the very paper first) a product's form is no key word where two others say what is asked
+  if (words.length >= 3) { const form = /^(?:capsules?|pills?|tablets?|powders?|gummies|gummy|edibles?|vapes?|carts?|cartridges?|oils?|tinctures?|drinks?|bottles?|bags?|packs?)$/;
+    const kept = words.filter(e => !e.split("|").every(t => form.test(t))); if (kept.length >= 2) { words.length = 0; kept.forEach(e => words.push(e)); } }
   if (od && !words.length) return null;                       // (2.22) nothing to look for beyond "overdose" itself
   // (2.21.2) "why do people take drugs" has no key word of its own; the eleventh trial found the papers on it under what research calls the reasons
   if (general && !words.length && names[0] === "drug use" && /^\s*why\b/.test(text)) words.push("motives|reasons");
