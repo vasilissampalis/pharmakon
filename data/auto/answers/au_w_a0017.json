@@ -17,38 +17,36 @@
   "methamphetamine"
  ],
  "made": {
-  "on": "2026-11-19",
+  "on": "2026-11-20",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.1-flash-lite",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44434987433",
-  "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "gemini-3.1-flash-lite": 1
-  },
-  "read_seconds": 29,
+  "run": "44677868343",
+  "read_seconds": 150,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
-   "official": 2
+   "official": 0
   },
-  "neurons": 80.6,
-  "seconds": 108
+  "neurons": 0.0,
+  "seconds": 339
  },
  "status": "none",
- "why": "no draft passed: not accepted at try 2: a second reader did not accept but (our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.69, but 0.04, how1 0.73, how2 0.96, how3 0.87",
-  "check": "not accepted at try 2: a second reader did not accept but (our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
-  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“pharmacological”): say it plainly"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "3 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
+  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9196) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9511)"
  },
  "sources": [
   {
@@ -93,10 +91,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
+     "verified_on": "2026-11-20",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-19"
+      "checked_on": "2026-11-20"
      }
     },
     "volume": "22",
@@ -114,271 +112,36 @@
    "near": 0.857,
    "money": [],
    "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
-    "text": "A mechanistic review on toxicity effects of methamphetamine"
+    "passage": 4,
+    "where": "Introduction",
+    "quote": "This review aims to revisit the pharmacological properties of methamphetamine along with its neurotoxic, cardiovascular, hepatotoxic and ophthalmologic effects in clinical populations and preclinical models.",
+    "text": "a mechanistic review of methamphetamine toxicity"
    },
    "findings": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-     "text": "The extent of methamphetamine toxicity depends on numerous pharmacological factors, including polysubstance abuse.",
-     "id": "F1",
-     "second_hand": ""
-    },
     {
      "passage": 4,
      "where": "Introduction",
      "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "text": "Polysubstance abuse is one of the various factors that can modify the risk of methamphetamine toxicity.",
+     "text": "Polysubstance use is one of the various factors that can modify the risk of methamphetamine toxicity.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+     "text": "The extent of methamphetamine toxicity depends on pharmacological factors including polysubstance use.",
      "id": "F2",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 39,
-     "where": "Toxicity effects › Hepatotoxicity",
-     "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
-     "text": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "zhao_2020",
-    "type": "article-journal",
-    "title": "TBHQ-overview of multiple mechanisms against oxidative stress for attenuating methamphetamine-induced neurotoxicity",
-    "author": [
-     {
-      "family": "Zhao",
-      "given": "Yuan-Ling"
-     },
-     {
-      "family": "Zhao",
-      "given": "Wei"
-     },
-     {
-      "family": "Liu",
-      "given": "Ming"
-     },
-     {
-      "family": "Liu",
-      "given": "Lian"
-     },
-     {
-      "family": "Wang",
-      "given": "Yun"
-     }
-    ],
-    "container-title": "Oxidative Medicine and Cellular Longevity",
-    "issued": {
-     "date-parts": [
-      [
-       2020
-      ]
-     ]
-    },
-    "DOI": "10.1155/2020/8874304",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-19",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-19"
-     }
-    },
-    "volume": "2020",
-    "page": "1-10",
-    "PMCID": "PMC7735854"
-   },
-   "doi": "10.1155/2020/8874304",
-   "pmcid": "PMC7735854",
-   "title": "TBHQ-Overview of Multiple Mechanisms against Oxidative Stress for Attenuating Methamphetamine-Induced Neurotoxicity",
-   "year": 2020,
-   "journal": "Oxidative medicine and cellular longevity",
-   "kind": "review",
-   "people": true,
-   "near": 0.777,
-   "money": [
-    "AcknowledgmentsThis research was funded by the National Natural Science Foundation of China (No. 81973404, 81503058), Department of Education of Liaoning Province (No. JC2019034), Natural Science Foundation of Liaoning Province (No. 2014021065), and Department of Science and Technology of Liaoning Province (No. 20170520137)."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This review summarized the mechanisms of methamphetamine-induced neurotoxicity including apoptosis and blood-brain barrier breakdown through oxidative stress and analyzed several possible antioxidative mechanisms of tert-butylhydroquinone (TBHQ)",
-    "text": "a review of research on methamphetamine-induced neurotoxicity and potential antioxidative mechanisms"
-   },
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Methamphetamine is a fatal and toxic chemical substance, and its lethal mechanism has been widely studied in recent years.",
-     "text": "Methamphetamine is a fatal and toxic chemical substance.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Methamphetamine is a derivative of amphetamines, a highly addictive central stimulant with multiple systemic toxicity including the brain, heart, liver, lung, and spleen.",
-     "text": "Methamphetamine is a highly addictive central stimulant that causes systemic toxicity in the brain, heart, liver, lung, and spleen.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 2,
-     "where": "1. Introduction",
-     "quote": "Brain hyperthermia is an important death cause of methamphetamine. Toxic doses of methamphetamine can cause hyperthermia, and high core temperature can cause a large amount of dopamine loss in the brain.",
-     "text": "Brain hyperthermia caused by toxic doses of methamphetamine is an important cause of death.",
-     "id": "F5",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "B"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "frank_methamphetamine",
-    "type": "webpage",
-    "title": "Methamphetamine",
-    "author": [
-     {
-      "literal": "FRANK"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      []
-     ]
-    },
-    "URL": "https://www.talktofrank.com/drug/methamphetamine",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       19
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-19"
-    }
-   },
-   "title": "Methamphetamine",
-   "year": null,
-   "kind": "official",
-   "people": true,
-   "near": 0.802,
-   "name": "FRANK",
-   "short": "FRANK",
-   "tier": 1,
-   "address": "https://www.talktofrank.com/drug/methamphetamine",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 5,
-     "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-     "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-     "text": "Mixing methamphetamine with alcohol can have serious consequences because their effects interact unpredictably, increasing the risk of harm or death.",
-     "id": "F6",
-     "second_hand": ""
-    },
-    {
-     "passage": 11,
-     "where": "Mixing methamphetamine with other drugs / What is methamphetamine cut with?",
-     "quote": "They can be cut with other amphetamines (like speed, caffeine, ephedrine, sugars (like glucose), starch powder, laxatives, talcum powder, paracetamol and other drugs with some similar effects.",
-     "text": "Methamphetamine can be cut with other amphetamines, caffeine, ephedrine, sugars, starch powder, laxatives, talcum powder, paracetamol, and other drugs with similar effects.",
-     "id": "F7",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "label_methamphetamine-hydrochloride",
-    "type": "webpage",
-    "title": "Methamphetamine Hydrochloride",
-    "author": [
-     {
-      "literal": "Dr. Reddy's Laboratories Inc"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2025,
-       11,
-       7
-      ]
-     ]
-    },
-    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d0905e2c-a02f-ec4f-59a3-6f7ad0acbbf6",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       19
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-19"
-    },
-    "publisher": "DailyMed",
-    "genre": "Drug label"
-   },
-   "title": "Methamphetamine Hydrochloride",
-   "year": 2025,
-   "kind": "official",
-   "people": true,
-   "near": 0.787,
-   "name": "U.S. Food and Drug Administration",
-   "short": "the US label for methamphetamine",
-   "tier": 1,
-   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d0905e2c-a02f-ec4f-59a3-6f7ad0acbbf6",
-   "money": [],
-   "label": true,
-   "design": null,
-   "findings": [
-    {
-     "passage": 14,
-     "where": "Warnings and precautions",
-     "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
-     "text": "A potentially life-threatening reaction called serotonin syndrome may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems.",
-     "id": "F8",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "D"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "exact quantitative safety level",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1111/j.1360-0443.2009.02564.x",
@@ -435,6 +198,14 @@
    "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-19",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 2: a second reader did not accept but (our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -444,7 +215,14 @@
    "kind": "review",
    "at": "10.7150/ijms.99159",
    "kept": 2,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The exact mechanisms of how methamphetamine causes liver damage are not yet clear.",
+     "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "The Main Molecular Mechanisms Underlying Methamphetamine- Induced Neurotoxicity and Implications for Pharmacological Treatment",
@@ -452,421 +230,80 @@
    "kind": "review",
    "at": "10.3389/fnmol.2018.00186",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "TBHQ-Overview of Multiple Mechanisms against Oxidative Stress for Attenuating Methamphetamine-Induced Neurotoxicity",
    "read": "full",
    "kind": "review",
    "at": "10.1155/2020/8874304",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The specific mechanism by which TBHQ plays an antioxidative stress role through Nrf2 is not very clear.",
-     "quote": "Many studies have confirmed that TBHQ can activate Nrf2 and can play the role of antioxidative stress through Nrf2, but the specific mechanism is not very clear.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (OSError)"
   },
   {
-   "title": "Methamphetamine",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.talktofrank.com/drug/methamphetamine",
-   "kept": 2,
+   "title": "Pharmacological Treatments for Methamphetamine Use Disorder: Current Status and Future Targets",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2147/sar.s431273",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (OSError)"
+  },
+  {
+   "title": "The Effectiveness of Mindfulness in the Treatment of Methamphetamine Addiction Symptoms: Does Neuroplasticity Play a Role?",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/brainsci14040320",
+   "kept": 0,
    "thrown": []
   },
   {
-   "title": "Methamphetamine Hydrochloride",
-   "read": "page",
-   "kind": "official",
-   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d0905e2c-a02f-ec4f-59a3-6f7ad0acbbf6",
-   "kept": 1,
-   "thrown": []
+   "title": "Current Understanding of Methamphetamine-Associated Metabolic Changes Revealed by the Metabolomics Approach",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/metabo9100195",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Vision health perspectives on Breaking Bad: Ophthalmic sequelae of methamphetamine use disorder",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/ftox.2023.1135792",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Methamphetamine-Induced Neuronal Damage: Neurotoxicity and Neuroinflammation",
+   "read": "full",
+   "kind": "review",
+   "at": "10.4062/biomolther.2020.044",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "plan": {
   "short": [
-   "F6",
-   "F8",
    "F1",
-   "F5"
+   "F2"
   ],
-  "direct": "No",
-  "but": [
-   "F1"
-  ],
+  "direct": "It depends",
+  "but": [],
   "how": [
    [
-    "F6",
-    "F7"
-   ],
-   [
-    "F8"
-   ],
-   [
     "DA",
-    "F1"
+    "F1",
+    "F2"
    ]
   ],
-  "unanswered": "exact quantitative safety level"
+  "unanswered": ""
  },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.6909,
-   "but": 0.038,
-   "how1": 0.729,
-   "how2": 0.9607,
-   "how3": 0.8697
-  },
-  "scores_quotes_alone": {
-   "short": 0.6515,
-   "but": 0.0127,
-   "how1": 0.5752,
-   "how2": 0.6079,
-   "how3": 0.9093
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "No. Mixing methamphetamine with alcohol or other drugs can cause serious harm or death. A life-threatening reaction called serotonin syndrome may also occur.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-       "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F8",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
-       "sha": "7dc7b2b59a688173"
-      },
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      },
-      {
-       "label": "F5",
-       "ref": "zhao_2020",
-       "where": "1. Introduction",
-       "quote": "Brain hyperthermia is an important death cause of methamphetamine. Toxic doses of methamphetamine can cause hyperthermia, and high core temperature can cause a large amount of dopamine loss in the brain.",
-       "sha": "00a5b24f26182a77"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The claim that mixing methamphetamine with \"other drugs\" (besides alcohol) can cause serious harm or death is not stated in the passages; only alcohol is linked to serious harm/death, while serotonin syndrome is linked to other drugs."
-    },
-    {
-     "part": "but",
-     "text": "The extent of toxicity depends on many factors, including how much is used and if other drugs are mixed in.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
-    },
-    {
-     "part": "how1",
-     "text": "FRANK says mixing methamphetamine with alcohol can have serious consequences because their effects interact unpredictably, increasing the risk of harm or death.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-       "sha": "910aa7002e05b72a"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "FRANK says methamphetamine can be cut with other amphetamines, caffeine, ephedrine, sugars, starch powder, laxatives, talcum powder, paracetamol, and other drugs.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / What is methamphetamine cut with?",
-       "quote": "They can be cut with other amphetamines (like speed, caffeine, ephedrine, sugars (like glucose), starch powder, laxatives, talcum powder, paracetamol and other drugs with some similar effects.",
-       "sha": "1a4abcba7d92c641"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The US label for methamphetamine says serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used with other drugs affecting serotonin.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
-       "sha": "7dc7b2b59a688173"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how4",
-     "text": "A 2025 review says the extent of methamphetamine toxicity depends on numerous pharmacological factors, including polysubstance use.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
-       "sha": "6bcbd2764ac3c987"
-      },
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "No. FRANK says mixing methamphetamine with alcohol can increase the risk of harm or death. The US label says serotonin syndrome may occur with other drugs.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-       "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F8",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
-       "sha": "7dc7b2b59a688173"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "The review says the extent of toxicity depends on factors including polysubstance use, but does not say how often this happens.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
-    },
-    {
-     "part": "how1",
-     "text": "FRANK says methamphetamine can be cut with other amphetamines, caffeine, ephedrine, sugars, starch, laxatives, talcum powder, and paracetamol.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / What is methamphetamine cut with?",
-       "quote": "They can be cut with other amphetamines (like speed, caffeine, ephedrine, sugars (like glucose), starch powder, laxatives, talcum powder, paracetamol and other drugs with some similar effects.",
-       "sha": "1a4abcba7d92c641"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The US label for methamphetamine says serotonin syndrome, a potentially life-threatening reaction, may occur when used with drugs affecting serotonin systems.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
-       "sha": "7dc7b2b59a688173"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2025 review says the extent of methamphetamine toxicity depends on pharmacological factors, including polysubstance use.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
-       "sha": "6bcbd2764ac3c987"
-      },
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "No. Mixing methamphetamine with alcohol or other drugs can cause serious harm or death. A life-threatening reaction called serotonin syndrome may also occur.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-       "sha": "910aa7002e05b72a"
-      },
-      {
-       "label": "F8",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
-       "sha": "7dc7b2b59a688173"
-      },
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      },
-      {
-       "label": "F5",
-       "ref": "zhao_2020",
-       "where": "1. Introduction",
-       "quote": "Brain hyperthermia is an important death cause of methamphetamine. Toxic doses of methamphetamine can cause hyperthermia, and high core temperature can cause a large amount of dopamine loss in the brain.",
-       "sha": "00a5b24f26182a77"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "The extent of toxicity depends on numerous pharmacological factors, including polysubstance use.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: a clinical word where an everyday one exists (“pharmacological”): say it plainly"
-    },
-    {
-     "part": "how1",
-     "text": "FRANK says mixing methamphetamine with alcohol can have serious consequences because their effects interact unpredictably, increasing the risk of harm or death.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / Is it dangerous to mix with other drugs?",
-       "quote": "Mixing methamphetamine with alcohol can have serious consequences – as the stimulant effects of methamphetamine and the depressant effects of alcohol interact unpredictably, which can increase the risk of harm or even death.",
-       "sha": "910aa7002e05b72a"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "FRANK says methamphetamine can be cut with other amphetamines, caffeine, ephedrine, sugars, starch powder, laxatives, talcum powder, paracetamol, and other drugs.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "frank_methamphetamine",
-       "where": "Mixing methamphetamine with other drugs / What is methamphetamine cut with?",
-       "quote": "They can be cut with other amphetamines (like speed, caffeine, ephedrine, sugars (like glucose), starch powder, laxatives, talcum powder, paracetamol and other drugs with some similar effects.",
-       "sha": "1a4abcba7d92c641"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "The US label for methamphetamine says serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used with other drugs affecting serotonin systems.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "label_methamphetamine-hydrochloride",
-       "where": "Warnings and precautions",
-       "quote": "Serotonin syndrome, a potentially life-threatening reaction, may occur when amphetamines are used in combination with other drugs that affect the serotonergic neurotransmitter systems",
-       "sha": "7dc7b2b59a688173"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how4",
-     "text": "A 2025 review says the extent of methamphetamine toxicity depends on numerous pharmacological factors, including polysubstance use.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
-       "sha": "6bcbd2764ac3c987"
-      },
-      {
-       "label": "F1",
-       "ref": "ramli_2025",
-       "where": "Abstract",
-       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-       "sha": "6bcbd2764ac3c987"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "methamphetamine",
   "also": [
