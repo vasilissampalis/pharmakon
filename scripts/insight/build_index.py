@@ -137,6 +137,7 @@ EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazep
 EXTRA.update({n: ["prescription-opioids"] for n in ("hydromorphone", "dilaudid", "oxymorphone", "opana", "tapentadol", "nucynta", "dihydrocodeine", "norco", "lortab", "roxicodone",
                                                     "ultram", "demerol", "pethidine", "meperidine")})
 EXTRA["mother's little helper"] = ["benzodiazepines"]
+EXTRA.update({"roxys": ["prescription-opioids"], "xannys": ["benzodiazepines"], "zannys": ["benzodiazepines"]})   # (2.28.27) the plurals people spell with a y
 # (2.28.24) a name that is a phrase of everyday words ("taking speed", "speed comedown"): where the drug's name is taken out, its other words stay ("taking it"), as they
 # do where the drug is named by its own name ("taking amphetamine": "taking it"). Before this the whole phrase became "it": "can i take speed" read as "can i it", a
 # question not finished. "%" stands where the drug's name stood (the page's insMask and insUnfTokens; Ranker.mask and unf_tokens; the index's M)

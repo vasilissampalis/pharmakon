@@ -2274,7 +2274,7 @@ if (typeof document !== "undefined") askedBox();
 const FIND_API = "api/find";
 const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
   "together same both each other others another everyone everybody somebody anybody something anything stuff kind sort guys " +
-  "whats hows wheres whos thats tips expect month months week weeks " +   // (2.28.25) "whats" (what's without its apostrophe) and the like; tips; a span of time says nothing a search can use   // (2.26.2, trial 15: "together" was taken for a key word)
+  "whats hows wheres whos thats tips expect month months week weeks day days " +   // (2.28.25) "whats" (what's without its apostrophe) and the like; tips; a span of time says nothing a search can use   // (2.26.2, trial 15: "together" was taken for a key word)
   "stronger weaker better worse safer riskier " +   // (2.28.7) the words that only set two things side by side: the two names are what is looked up ("mushrooms vs lsd which is stronger")
   "linked link links linking associated association connected connection related relation could have been usually often normally typically commonly generally mostly products product brands brand " +   // (2.26.4, trial 16: "is nitrous oxide linked to nerve damage" had "linked" for a key word)
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
@@ -2398,6 +2398,10 @@ function insFindTerms(res) {
   // is about, looked up as papers call it (FIND_PAPERS) where they call it otherwise. Before this the first word that is no everyday word stood for it ("what does
   // fly agaric do" was looked up as "agaric"), or nothing was looked up ("is delta 8 safe", "what is hhc", "what is gas station heroin"), or drugs in general
   const unM = !names.length && res.note !== "other" && INS.unc ? String(text).match(INS.unc.re) : null, unName = unM ? unM[0].toLowerCase() : "";
+  // (2.28.27) a bad trip, as papers name it ("challenging experiences"); where no drug is named, psychedelics are what it is about ("can a bad trip cause ptsd" looked
+  // nothing up)
+  const badTrip = /\bbad\s+trips?\b|\bchallenging\s+(?:experiences?|trips?)\b|\bdifficult\s+trips?\b|\bbad\s+acid\s+trips?\b/.test(text);
+  if (badTrip && !names.length && !unName && res.note !== "other") add(names, "psychedelics");
   const general = !names.length && !unName && res.note !== "other" && (FIND_GENERAL.test(text) || !!res.implied || /\b(?:use[sd]?|using|users?)\b/.test(text));
   if (general) (/\baddict|\bdependen|\bhooked\b/.test(text) ? ["addiction", "substance use disorder"] : ["drug use", "substance use"]).forEach(x => add(names, x));
   // (2.22) overdose, with no drug named ("how many people overdose in greece", "how do i avoid an overdose"): what research calls it stands in the place of a name
@@ -2435,6 +2439,7 @@ function insFindTerms(res) {
   // drugs, and few papers are about a first use; the drug's reviews come first, as for any question with no key word ("first time doing coke what to expect")
   const firstT = /\bfirst[- ]time(?:rs?)?\b/.test(masked);
   if (firstT) for (let i = words.length - 1; i >= 0; i--) if (/^(?:first|time|timer|timers)$/.test(words[i])) words.splice(i, 1);
+  if (badTrip) { for (let i = words.length - 1; i >= 0; i--) if (/^(?:trip|trips|bad|challenging|difficult|experience|experiences)$/.test(words[i])) words.splice(i, 1); words.push("challenging|distressing"); }   // (trial 43: the server takes a key word's ways one word each, so "challenging experiences" was dropped)
   if (less) words.push("reduction|reducing|cutting down"); if (comed) { for (let i = words.length - 1; i >= 0; i--) if (/^comedowns?$/.test(words[i])) words.splice(i, 1); words.push("comedown|come down|after-effects"); }
   // (2.28.7) how long a drug can be found, as papers say it ("how long does coke stay in your system" was looked up by "stay" and "system"); a test's kind stays a key word
   const stays = /\b(?:stays?|staying|remains?|lingers?|lasts?)\s+in\s+(?:your|my|the|their|his|her|a|one'?s)?\s*(?:system|body|blood(?:stream)?|urine|pee|hair|saliva|spit)\b|\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
@@ -2456,7 +2461,7 @@ function insFindTerms(res) {
     if (lean && /^(?:lean|purple|drank|sizzurp|dirty|sprite)$/.test(w0)) continue;              // (2.28.13) lean's own words: the subject itself
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
     if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
-    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (firstT && /^(?:first|time|timer|timers)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
+    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (firstT && /^(?:first|time|timer|timers)$/.test(w0)) || (badTrip && /^(?:trip|trips|bad|challenging|difficult|experience|experiences)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
     const e = say && say !== w0 ? (say.split("|").includes(w0) ? say : say + "|" + w0) : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
     if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }
@@ -2505,6 +2510,7 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
   mesc: "mescaline", peyoto: "mescaline", amidone: "methadone", microdots: "lsd", mitsubishis: "mdma", reefers: "cannabis", mota: "cannabis", flualp: "flualprazolam",
   krathom: "kratom", kakuam: "kratom", biak: "kratom", mambog: "kratom", ithang: "kratom",
   // (trial 37) "charas" found papers on Chara, an alga, and "yage" one on YagE, a protein; an accented name was cut to a word that is no name ("yagé" to "yag")
+  roxys: "oxycodone", xannys: "alprazolam", zannys: "alprazolam",   // (2.28.27)
   charas: "hashish", yage: "ayahuasca", "yagé": "ayahuasca", teonanacatl: "psilocybin", "teonanácatl": "psilocybin" };
 // (2.28.24, trial 37) a page's name made a search where not each of its words names a drug: "Fentanyl and analogues" was looked up as fentanyl OR "analogues", and
 // "what is murder 8" and "how strong is china white" found papers on visual analogue scales, nucleoside analogues and myosin
