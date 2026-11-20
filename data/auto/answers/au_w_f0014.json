@@ -17,34 +17,134 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.1-flash-lite",
    "team": "team Z",
    "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44660912576",
-  "read_seconds": 100,
+  "run": "44758838755",
+  "read_seconds": 51,
   "from": {
-   "papers": 1,
-   "summaries": 0,
+   "papers": 2,
+   "summaries": 1,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 211
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The passages discuss 2'-fluoro-2-oxo-PCE (or mention 2-oxo-PCE simply as a class example), but the sentence says '2-oxo-PCE' can substitute for drugs like MDMA, alprazolam, and ketamine, whereas the passage states that 'They' (referring to ); but (it is about something else than the short answer (The sentences contain inaccuracies regarding specific chemical names (conflating 2-oxo-PCE with 2'-fluoro-2-oxo-PCE and 3-HO-PCE) and misattribute group statements to individual substances.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "4 findings kept from 3 sources (2 papers read in full, 0 official pages, 1 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 1 paper(s) read in summary only",
+  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“pharmacological”): say it plainly",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.03, but 0.50, how1 0.93, how2 0.86, how3 0.93",
+  "check": "not accepted at try 2: a second reader did not accept short (The passages discuss 2'-fluoro-2-oxo-PCE (or mention 2-oxo-PCE simply as a class example), but the sentence says '2-oxo-PCE' can substitute for drugs like MDMA, alprazolam, and ketamine, whereas the passage states that 'They' (referring to ); but (it is about something else than the short answer (The sentences contain inaccuracies regarding specific chemical names (conflating 2-oxo-PCE with 2'-fluoro-2-oxo-PCE and 3-HO-PCE) and misattribute group statements to individual substances.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "larabi_2023",
+    "type": "article-journal",
+    "title": "Characterization of 3-hydroxyeticyclidine (3-HO-PCE) metabolism in human liver microsomes and biological samples using high-resolution mass spectrometry",
+    "author": [
+     {
+      "family": "Larabi",
+      "given": "Islam Amine"
+     },
+     {
+      "family": "Joseph",
+      "given": "Delphine"
+     },
+     {
+      "family": "Lesueur",
+      "given": "Camille"
+     },
+     {
+      "family": "Alvarez",
+      "given": "Jean-Claude"
+     }
+    ],
+    "container-title": "Metabolites",
+    "issued": {
+     "date-parts": [
+      [
+       2023
+      ]
+     ]
+    },
+    "DOI": "10.3390/metabo13030432",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "13",
+    "issue": "3",
+    "number": "432",
+    "PMCID": "PMC10055977"
+   },
+   "doi": "10.3390/metabo13030432",
+   "pmcid": "PMC10055977",
+   "title": "Characterization of 3-Hydroxyeticyclidine (3-HO-PCE) Metabolism in Human Liver Microsomes and Biological Samples Using High-Resolution Mass Spectrometry",
+   "year": 2023,
+   "journal": "Metabolites",
+   "kind": "other",
+   "people": true,
+   "near": 0.63,
+   "money": [
+    "The authors declare no conflict of interest.",
+    "This research received no external funding."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "To address this gap in knowledge, this study explored for the first time the metabolism of 3-HO-PCE. Based on this investigation, it is hypothesized that combining the use of Human Liver Microsomes (HLM) as an In vitro model with urine and hair samples from drug users may enable the identification of key analytes",
+    "text": "A study exploring the metabolism of 3-HO-PCE using human liver microsomes and biological samples."
+   },
+   "findings": [
+    {
+     "passage": 49,
+     "where": "4. Discussion",
+     "quote": "it has been described as one of the most prevalent reactions of O-PCE metabolization, accounting for up to 72% of the total peak area in HLM.",
+     "text": "Oxidative deamination is one of the most prevalent reactions of O-PCE metabolization, accounting for up to 72% of the total peak area in human liver microsomes.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 45,
+     "where": "4. Discussion",
+     "quote": "The metabolism of 3-HO-PCE closely resembles that of O-PCE (N-ethyl-deschloroketamine), which is another designer ketamine analog belonging to the eticyclidine family",
+     "text": "The metabolism of 3-HO-PCE closely resembles that of O-PCE, which is a designer ketamine analog belonging to the eticyclidine family.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 59,
+     "where": "6. Limitations of the Study",
+     "quote": "Therefore, the current findings should be considered preliminary, and further investigation is necessary to confirm the results. Given that only one authentic sample was analyzed, additional research is required to establish the validity of these findings.",
+     "text": "The findings are considered preliminary and require additional research to establish their validity because only one authentic sample was analyzed.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -128,26 +228,109 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Wastewater samples were analysed for alcohol, illicit drugs and new psychoactive substances (NPS) using liquid chromatography–tandem mass spectrometry.",
-    "text": "Wastewater‑based epidemiology and drug‑checking study of illicit drug use in Australian communities"
+    "quote": "Wastewater‐based epidemiology (WBE) and drug checking have emerged as complementary tools to monitor this market. WBE estimates drug use within communities for target compounds and their metabolites, while drug checking is a free service available in some Australian jurisdictions",
+    "text": "A study using wastewater-based epidemiology and drug checking to monitor illicit drug and new psychoactive substance consumption in Australia."
    },
    "findings": [
     {
-     "passage": 26,
-     "where": "Results and Discussion › Complementary Insights From Drug Checking and Wastewater Data",
-     "quote": "2′‑fluoro‑2‑oxo‑PCE and N,N‑dimethylpentylone showed decreased detections over the study period and were not detected through drug checking during the 2024 New Year period",
-     "text": "2‑oxo‑PCE was not detected in any drug‑checking samples submitted during the 2024 New Year period.",
-     "id": "F1",
+     "passage": 23,
+     "where": "Results and Discussion › Drug Checking Data › NPS in Drug Checking Samples",
+     "quote": "They often substitute for other expected drugs such as MDMA, alprazolam (expected Xanax) and ketamine. For example, in 2024, a public health alert was issued in the ACT related to N,N‐dimethylpentylone, 2′‐fluoro‐2‐oxo‐PCE and MDMA in an expected MDMA pill.",
+     "text": "2-oxo-PCE often substitutes for other expected drugs such as MDMA, alprazolam, and ketamine, and has been found in an expected MDMA pill.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
-   "tag": "A"
+   "limits": [
+    {
+     "passage": 26,
+     "where": "Results and Discussion › Complementary Insights From Drug Checking and Wastewater Data",
+     "quote": "These substances, often with limited pharmacological data, pose significant public health challenges due to their unpredictable effects and potential for harm.",
+     "text": "There is often limited pharmacological data available for these substances.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "tamama_2019",
+    "type": "chapter",
+    "title": "Newly emerging drugs of abuse",
+    "author": [
+     {
+      "family": "Tamama",
+      "given": "Kenichi"
+     },
+     {
+      "family": "Lynch",
+      "given": "Michael J."
+     }
+    ],
+    "container-title": "Handbook of Experimental Pharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2019
+      ]
+     ]
+    },
+    "DOI": "10.1007/164_2019_260",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "page": "463-502"
+   },
+   "doi": "10.1007/164_2019_260",
+   "title": "Newly Emerging Drugs of Abuse",
+   "year": 2020,
+   "journal": "Handbook of experimental pharmacology",
+   "kind": "review",
+   "people": false,
+   "near": 0.485,
+   "money": [],
+   "design": {
+    "passage": 2,
+    "where": "Summary",
+    "quote": "In this review, epidemiology, chemistry, pharmacophysiology, clinical effects, laboratory detection, and clinical treatment are discussed for newly emerging drugs of abuse in the following classes",
+    "text": "a review of newly emerging drugs of abuse"
+   },
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "dissociative agents (e.g., 3-MeO-PCP, methoxetamine, 2-oxo-PCE)",
+     "text": "2-oxo-PCE is classified as a dissociative agent.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "recreational use of newer synthetic drugs has continued to increase, but the prevalence of use is likely underestimated.",
+     "text": "The prevalence of use of newer synthetic drugs is likely underestimated.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "how risky it is",
  "wanted": [
   {
    "doi": "10.52964/amja.0566",
@@ -165,16 +348,24 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Characterization of 3-Hydroxyeticyclidine (3-HO-PCE) Metabolism in Human Liver Microsomes and Biological Samples Using High-Resolution Mass Spectrometry",
    "read": "full",
    "kind": "other",
    "at": "10.3390/metabo13030432",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "Understanding Consumption of Illicit Drugs and New Psychoactive Substances in Australia by Triangulating Drug Checking and Wastewater-Based Epidemiology",
@@ -185,26 +376,427 @@
    "thrown": [
     {
      "kind": "finding",
-     "text": "2‑oxo‑PCE was detected in wastewater samples from all sites with a 100% detection frequency.",
-     "quote": "2′‑fluoro‑2‑oxo‑PCE, methcathinone (all 100%)",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "2-oxo-PCE and other new psychoactive substances often have limited pharmacological data and pose significant public health challenges due to their unpredictable effects and potential for harm.",
+     "quote": "These substances, often with limited pharmacological data, pose significant public health challenges due to their unpredictable effects and potential for harm.",
+     "why": "a number of the sentence is not in its quote"
     },
     {
      "kind": "finding",
-     "text": "The proportion of 2‑oxo‑PCE among dissociative NPS detections decreased from 11% in 2022 to 0% in 2024.",
-     "quote": "2′‑fluoro‑2‑oxo‑PCE (11%, 10%, 0%)",
+     "text": "2-oxo-PCE is part of the dissociative class of new psychoactive substances, which made up the majority of those detected in one survey.",
+     "quote": "In total, drugs of the dissociative class made up the majority of NPS detected (68%, 83%, 74%) with smaller proportions of stimulants, psychedelics, sedative hypnotics and other NPS.",
      "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "Out with the old, in with the new? Case reports of the clinical features and acute management of two novel designer drugs",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.52964/amja.0566",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Newly Emerging Drugs of Abuse",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1007/164_2019_260",
+   "kept": 1,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F4",
+   "F2",
+   "F3"
+  ],
+  "direct": "",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "DC",
+    "F4"
+   ],
+   [
+    "DA",
+    "F2"
+   ],
+   [
+    "DB",
+    "F3"
+   ]
+  ],
+  "unanswered": "how risky it is"
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "2-oxo-PCE is a dissociative agent and a designer ketamine analog. It can substitute for other drugs like MDMA, alprazolam, and ketamine.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "larabi_2023",
+       "where": "4. Discussion",
+       "quote": "The metabolism of 3-HO-PCE closely resembles that of O-PCE (N-ethyl-deschloroketamine), which is another designer ketamine analog belonging to the eticyclidine family",
+       "sha": "0671e8e80e5be2c6"
+      },
+      {
+       "label": "F3",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Drug Checking Data › NPS in Drug Checking Samples",
+       "quote": "They often substitute for other expected drugs such as MDMA, alprazolam (expected Xanax) and ketamine. For example, in 2024, a public health alert was issued in the ACT related to N,N‐dimethylpentylone, 2′‐fluoro‐2‐oxo‐PCE and MDMA in an expected MDMA pill.",
+       "sha": "4e38165a0fe5dffe"
+      },
+      {
+       "label": "F4",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "dissociative agents (e.g., 3-MeO-PCP, methoxetamine, 2-oxo-PCE)",
+       "sha": "0fd11dcb98bf19af"
+      }
+     ],
+     "ok": true
     },
     {
-     "kind": "limit",
-     "text": "The pharmacological effects and safety profile of 2‑oxo‑PCE remain uncertain due to limited data.",
-     "quote": "These substances, often with limited pharmacological data, pose significant public health challenges due to their unpredictable effects and potential for harm.",
-     "why": "a number of the sentence is not in its quote"
+     "part": "but",
+     "text": "There is often limited pharmacological data available for these substances.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Complementary Insights From Drug Checking and Wastewater Data",
+       "quote": "These substances, often with limited pharmacological data, pose significant public health challenges due to their unpredictable effects and potential for harm.",
+       "sha": "372fb2c83b26854c"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“pharmacological”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "The summary of a 2020 review says 2-oxo-PCE is classified as a dissociative agent.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "In this review, epidemiology, chemistry, pharmacophysiology, clinical effects, laboratory detection, and clinical treatment are discussed for newly emerging drugs of abuse in the following classes",
+       "sha": "0fd11dcb98bf19af"
+      },
+      {
+       "label": "F4",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "dissociative agents (e.g., 3-MeO-PCP, methoxetamine, 2-oxo-PCE)",
+       "sha": "0fd11dcb98bf19af"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 study of human liver microsomes and biological samples found its metabolism closely resembles that of O-PCE.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "larabi_2023",
+       "where": "Abstract",
+       "quote": "To address this gap in knowledge, this study explored for the first time the metabolism of 3-HO-PCE. Based on this investigation, it is hypothesized that combining the use of Human Liver Microsomes (HLM) as an In vitro model with urine and hair samples from drug users may enable the identification of key analytes",
+       "sha": "e00969b77ade8041"
+      },
+      {
+       "label": "F2",
+       "ref": "larabi_2023",
+       "where": "4. Discussion",
+       "quote": "The metabolism of 3-HO-PCE closely resembles that of O-PCE (N-ethyl-deschloroketamine), which is another designer ketamine analog belonging to the eticyclidine family",
+       "sha": "0671e8e80e5be2c6"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A study using wastewater-based epidemiology and drug checking in Australia found it often substitutes for drugs like MDMA, alprazolam, and ketamine.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "usman_2026",
+       "where": "Abstract",
+       "quote": "Wastewater‐based epidemiology (WBE) and drug checking have emerged as complementary tools to monitor this market. WBE estimates drug use within communities for target compounds and their metabolites, while drug checking is a free service available in some Australian jurisdictions",
+       "sha": "75f721ce5655bb68"
+      },
+      {
+       "label": "F3",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Drug Checking Data › NPS in Drug Checking Samples",
+       "quote": "They often substitute for other expected drugs such as MDMA, alprazolam (expected Xanax) and ketamine. For example, in 2024, a public health alert was issued in the ACT related to N,N‐dimethylpentylone, 2′‐fluoro‐2‐oxo‐PCE and MDMA in an expected MDMA pill.",
+       "sha": "4e38165a0fe5dffe"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "2-oxo-PCE is a dissociative agent and a designer ketamine analog. It can substitute for drugs like MDMA, alprazolam, and ketamine.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "larabi_2023",
+       "where": "4. Discussion",
+       "quote": "The metabolism of 3-HO-PCE closely resembles that of O-PCE (N-ethyl-deschloroketamine), which is another designer ketamine analog belonging to the eticyclidine family",
+       "sha": "0671e8e80e5be2c6"
+      },
+      {
+       "label": "F3",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Drug Checking Data › NPS in Drug Checking Samples",
+       "quote": "They often substitute for other expected drugs such as MDMA, alprazolam (expected Xanax) and ketamine. For example, in 2024, a public health alert was issued in the ACT related to N,N‐dimethylpentylone, 2′‐fluoro‐2‐oxo‐PCE and MDMA in an expected MDMA pill.",
+       "sha": "4e38165a0fe5dffe"
+      },
+      {
+       "label": "F4",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "dissociative agents (e.g., 3-MeO-PCP, methoxetamine, 2-oxo-PCE)",
+       "sha": "0fd11dcb98bf19af"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages discuss 2'-fluoro-2-oxo-PCE (or mention 2-oxo-PCE simply as a class example), but the sentence says '2-oxo-PCE' can substitute for drugs like MDMA, alprazolam, and ketamine, whereas the passage states that 'They' (referring to "
+    },
+    {
+     "part": "but",
+     "text": "There is often limited data about how these substances work.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Complementary Insights From Drug Checking and Wastewater Data",
+       "quote": "These substances, often with limited pharmacological data, pose significant public health challenges due to their unpredictable effects and potential for harm.",
+       "sha": "372fb2c83b26854c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The sentences contain inaccuracies regarding specific chemical names (conflating 2-oxo-PCE with 2'-fluoro-2-oxo-PCE and 3-HO-PCE) and misattribute group statements to individual substances.)"
+    },
+    {
+     "part": "how1",
+     "text": "The summary of a 2020 review says 2-oxo-PCE is classified as a dissociative agent.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "In this review, epidemiology, chemistry, pharmacophysiology, clinical effects, laboratory detection, and clinical treatment are discussed for newly emerging drugs of abuse in the following classes",
+       "sha": "0fd11dcb98bf19af"
+      },
+      {
+       "label": "F4",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "dissociative agents (e.g., 3-MeO-PCP, methoxetamine, 2-oxo-PCE)",
+       "sha": "0fd11dcb98bf19af"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 study of human liver microsomes and biological samples found its metabolism closely resembles that of O-PCE.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "larabi_2023",
+       "where": "Abstract",
+       "quote": "To address this gap in knowledge, this study explored for the first time the metabolism of 3-HO-PCE. Based on this investigation, it is hypothesized that combining the use of Human Liver Microsomes (HLM) as an In vitro model with urine and hair samples from drug users may enable the identification of key analytes",
+       "sha": "e00969b77ade8041"
+      },
+      {
+       "label": "F2",
+       "ref": "larabi_2023",
+       "where": "4. Discussion",
+       "quote": "The metabolism of 3-HO-PCE closely resembles that of O-PCE (N-ethyl-deschloroketamine), which is another designer ketamine analog belonging to the eticyclidine family",
+       "sha": "0671e8e80e5be2c6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The 2023 study's passages refer to 3-HO-PCE, not 2-oxo-PCE, and state that the metabolism of 3-HO-PCE (not O-PCE) closely resembles that of O-PCE."
+    },
+    {
+     "part": "how3",
+     "text": "A study using wastewater and drug checking in Australia found 2-oxo-PCE often substitutes for MDMA, alprazolam, and ketamine.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "usman_2026",
+       "where": "Abstract",
+       "quote": "Wastewater‐based epidemiology (WBE) and drug checking have emerged as complementary tools to monitor this market. WBE estimates drug use within communities for target compounds and their metabolites, while drug checking is a free service available in some Australian jurisdictions",
+       "sha": "75f721ce5655bb68"
+      },
+      {
+       "label": "F3",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Drug Checking Data › NPS in Drug Checking Samples",
+       "quote": "They often substitute for other expected drugs such as MDMA, alprazolam (expected Xanax) and ketamine. For example, in 2024, a public health alert was issued in the ACT related to N,N‐dimethylpentylone, 2′‐fluoro‐2‐oxo‐PCE and MDMA in an expected MDMA pill.",
+       "sha": "4e38165a0fe5dffe"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The study mentions 2'-fluoro-2-oxo-PCE, not 2-oxo-PCE, and states that 'They' (emerging NPS) often substitute for other expected drugs, rather than singling out 2-oxo-PCE specifically."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "2-oxo-PCE is a dissociative agent and a designer ketamine analog. It can substitute for drugs like MDMA, alprazolam, and ketamine.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "larabi_2023",
+       "where": "4. Discussion",
+       "quote": "The metabolism of 3-HO-PCE closely resembles that of O-PCE (N-ethyl-deschloroketamine), which is another designer ketamine analog belonging to the eticyclidine family",
+       "sha": "0671e8e80e5be2c6"
+      },
+      {
+       "label": "F3",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Drug Checking Data › NPS in Drug Checking Samples",
+       "quote": "They often substitute for other expected drugs such as MDMA, alprazolam (expected Xanax) and ketamine. For example, in 2024, a public health alert was issued in the ACT related to N,N‐dimethylpentylone, 2′‐fluoro‐2‐oxo‐PCE and MDMA in an expected MDMA pill.",
+       "sha": "4e38165a0fe5dffe"
+      },
+      {
+       "label": "F4",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "dissociative agents (e.g., 3-MeO-PCP, methoxetamine, 2-oxo-PCE)",
+       "sha": "0fd11dcb98bf19af"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "There is often limited pharmacological data available for these substances.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Complementary Insights From Drug Checking and Wastewater Data",
+       "quote": "These substances, often with limited pharmacological data, pose significant public health challenges due to their unpredictable effects and potential for harm.",
+       "sha": "372fb2c83b26854c"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“pharmacological”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "The summary of a 2020 review says 2-oxo-PCE is classified as a dissociative agent.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "In this review, epidemiology, chemistry, pharmacophysiology, clinical effects, laboratory detection, and clinical treatment are discussed for newly emerging drugs of abuse in the following classes",
+       "sha": "0fd11dcb98bf19af"
+      },
+      {
+       "label": "F4",
+       "ref": "tamama_2019",
+       "where": "Summary",
+       "quote": "dissociative agents (e.g., 3-MeO-PCP, methoxetamine, 2-oxo-PCE)",
+       "sha": "0fd11dcb98bf19af"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 study using human liver microsomes and biological samples found that the metabolism of 3-HO-PCE closely resembles that of O-PCE.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "larabi_2023",
+       "where": "Abstract",
+       "quote": "To address this gap in knowledge, this study explored for the first time the metabolism of 3-HO-PCE. Based on this investigation, it is hypothesized that combining the use of Human Liver Microsomes (HLM) as an In vitro model with urine and hair samples from drug users may enable the identification of key analytes",
+       "sha": "e00969b77ade8041"
+      },
+      {
+       "label": "F2",
+       "ref": "larabi_2023",
+       "where": "4. Discussion",
+       "quote": "The metabolism of 3-HO-PCE closely resembles that of O-PCE (N-ethyl-deschloroketamine), which is another designer ketamine analog belonging to the eticyclidine family",
+       "sha": "0671e8e80e5be2c6"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A study using wastewater-based epidemiology and drug checking in Australia found 2-oxo-PCE often substitutes for drugs like MDMA, alprazolam, and ketamine.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "usman_2026",
+       "where": "Abstract",
+       "quote": "Wastewater‐based epidemiology (WBE) and drug checking have emerged as complementary tools to monitor this market. WBE estimates drug use within communities for target compounds and their metabolites, while drug checking is a free service available in some Australian jurisdictions",
+       "sha": "75f721ce5655bb68"
+      },
+      {
+       "label": "F3",
+       "ref": "usman_2026",
+       "where": "Results and Discussion › Drug Checking Data › NPS in Drug Checking Samples",
+       "quote": "They often substitute for other expected drugs such as MDMA, alprazolam (expected Xanax) and ketamine. For example, in 2024, a public health alert was issued in the ACT related to N,N‐dimethylpentylone, 2′‐fluoro‐2‐oxo‐PCE and MDMA in an expected MDMA pill.",
+       "sha": "4e38165a0fe5dffe"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
- "soft": "a source could not be fetched",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.0296,
+   "but": 0.4989,
+   "how1": 0.9295,
+   "how2": 0.8553,
+   "how3": 0.926
+  },
+  "scores_quotes_alone": {
+   "short": 0.8065,
+   "but": 0.9821,
+   "how1": 0.9201,
+   "how2": 0.8707,
+   "how3": 0.6243
+  }
+ },
  "place": {
   "home": "new:Ketamine analogues (MXE, DCK)",
   "also": [
