@@ -283,10 +283,10 @@ FAMILY = {"psychedelics": ["psychedelics", "hallucinogens", "psilocybin", "LSD"]
 # a name is searched by its own names (its brand and its chemical name), and the page it belongs to is not searched beside it. A name that begins a
 # longer one ("2C-B" in "2C-B-FLY") is not that compound: its page is searched, as before. Not here: everyday names (weed, molly), which stand for the page.
 MEMBER = {}
-for _slug, _ns, _terms in [("benzodiazepines", ("alprazolam", "xanax", "xans"), ["alprazolam", "Xanax"]), ("benzodiazepines", ("clonazepam", "klonopin"), ["clonazepam", "Klonopin"]),
+for _slug, _ns, _terms in [("benzodiazepines", ("alprazolam", "xanax", "xans", "xanny", "xannies", "xanies"), ["alprazolam", "Xanax"]), ("benzodiazepines", ("clonazepam", "klonopin"), ["clonazepam", "Klonopin"]),
                            ("benzodiazepines", ("diazepam", "valium"), ["diazepam", "Valium"]), ("benzodiazepines", ("lorazepam", "ativan"), ["lorazepam", "Ativan"]),
                            ("benzodiazepines", ("etizolam",), ["etizolam"]), ("prescription-opioids", ("hydrocodone", "vicodin", "norco", "lortab"), ["hydrocodone", "Vicodin", "Norco"]),
-                           ("prescription-opioids", ("oxycodone", "oxycontin", "percocet", "roxicodone"), ["oxycodone", "OxyContin", "Percocet"]), ("prescription-opioids", ("codeine",), ["codeine"]),
+                           ("prescription-opioids", ("oxycodone", "oxycontin", "percocet", "roxicodone", "perc", "percs"), ["oxycodone", "OxyContin", "Percocet"]), ("prescription-opioids", ("codeine",), ["codeine"]),
                            ("prescription-opioids", ("morphine",), ["morphine"]), ("prescription-opioids", ("tramadol", "ultram"), ["tramadol"]),
                            ("lsd", ("1p-lsd",), ["1P-LSD", "1-propionyl-lysergic acid diethylamide", "1-propionyl-LSD"]), ("2c-x", ("2c-b", "2cb"), ["2C-B", "4-bromo-2,5-dimethoxyphenethylamine"]),
                            ("2c-x", ("2c-e",), ["2C-E"]), ("2c-x", ("2c-i",), ["2C-I"]), ("2c-x", ("25i",), ["25I-NBOMe"]),
