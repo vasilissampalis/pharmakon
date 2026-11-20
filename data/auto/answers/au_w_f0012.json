@@ -19,41 +19,42 @@
   "models": {
    "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44751772947",
+  "run": "44753623133",
   "read_by": {
    "gemini-3.1-flash-lite": 4,
-   "gemma-4-31b-it": 1,
-   "gpt-oss-20b": 1
+   "gpt-oss-20b": 3,
+   "gemini-3.5-flash-lite": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 63,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 1
   },
   "neurons": 0.0,
-  "seconds": 428
+  "seconds": 218
  },
- "status": "waiting",
- "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (the word it opens with (“Yes”) is not the answer the passages bear out: The passages describe toxicity and risks of amitriptyline but do not mention its use to get high; therefore answering 'Yes' to the question about misuse for a high is n); but (it is about something else than the short answer (The passages describe toxicity and risks of amitriptyline but do not mention its use to get high; therefore answering 'Yes' to the question about misuse for a high is not directly supported.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "4 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview could not be asked: gemini could not be reached: The read operation timed out; gemini-4-hydrogen could not be asked: gemini could not be reached: The read operation timed out; gemini-3.8-flash could not be asked: the time for this question was over before gemini-3.8-flash could be asked",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.58, but 0.98, how1 0.91, how2 0.71, how3 0.77",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "4 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8967) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.42, but 0.98, how1 0.79, how2 0.77, how3 0.02",
+  "check": "not accepted at try 2: a second reader did not accept short (the word it opens with (“Yes”) is not the answer the passages bear out: The passages describe toxicity and risks of amitriptyline but do not mention its use to get high; therefore answering 'Yes' to the question about misuse for a high is n); but (it is about something else than the short answer (The passages describe toxicity and risks of amitriptyline but do not mention its use to get high; therefore answering 'Yes' to the question about misuse for a high is not directly supported.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
  },
  "sources": [
   {
@@ -266,9 +267,9 @@
   {
    "read": "page",
    "ref": {
-    "id": "nhs_how-and-when-to-take-amitriptyline-for-d",
+    "id": "nhs_how-and-when-to-take-amitriptyline-for-p",
     "type": "webpage",
-    "title": "How and when to take amitriptyline for depression",
+    "title": "How and when to take amitriptyline for pain and migraine",
     "author": [
      {
       "literal": "NHS"
@@ -277,13 +278,13 @@
     "issued": {
      "date-parts": [
       [
-       2025,
-       3,
-       5
+       2024,
+       9,
+       11
       ]
      ]
     },
-    "URL": "https://www.nhs.uk/medicines/amitriptyline-for-depression/how-and-when-to-take-amitriptyline-for-depression/",
+    "URL": "https://www.nhs.uk/medicines/amitriptyline-for-pain/how-and-when-to-take-amitriptyline-for-pain-and-migraine/",
     "accessed": {
      "date-parts": [
       [
@@ -299,15 +300,15 @@
      "verified_on": "2026-11-20"
     }
    },
-   "title": "How and when to take amitriptyline for depression",
-   "year": 2025,
+   "title": "How and when to take amitriptyline for pain and migraine",
+   "year": 2024,
    "kind": "official",
    "people": true,
-   "near": 0.654,
+   "near": 0.626,
    "name": "NHS",
    "short": "the NHS",
    "tier": 1,
-   "address": "https://www.nhs.uk/medicines/amitriptyline-for-depression/how-and-when-to-take-amitriptyline-for-depression/",
+   "address": "https://www.nhs.uk/medicines/amitriptyline-for-pain/how-and-when-to-take-amitriptyline-for-pain-and-migraine/",
    "money": [],
    "label": false,
    "design": null,
@@ -315,8 +316,8 @@
     {
      "passage": 6,
      "where": "If you take too much",
-     "quote": "It's important to get medical advice if you take more than your prescribed dose of amitriptyline.",
-     "text": "It is important to seek medical advice if you take more than the prescribed dose of amitriptyline.",
+     "quote": "Taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
+     "text": "Taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
      "id": "F4",
      "second_hand": ""
     }
@@ -325,68 +326,9 @@
    "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Yes. Amitriptyline is the leading cause of deaths from antidepressant poisoning. It has a narrow window where high levels can cause major toxicity or death.",
-   "uses": [
-    "F3",
-    "F2"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "beckmann_2014",
-     "where": "Future perspective",
-     "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
-     "sha": "ef4687e2193b1721"
-    },
-    {
-     "label": "F2",
-     "ref": "beckmann_2014",
-     "where": "Future perspective",
-     "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
-     "sha": "ef4687e2193b1721"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The review results may understate the situation for older individuals, who are generally more sensitive to anticholinergic effects.",
-   "uses": [
-    "L1"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "brueckle_2023",
-     "where": "Conclusion",
-     "quote": "Our results may even understate the situation in older individuals, who are generally more sensitive to anticholinergic effects.",
-     "sha": "8ffeedfe39c416a0"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "The NHS says it is important to seek medical advice if you take more than the prescribed dose of amitriptyline.",
-   "uses": [
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F4",
-     "ref": "nhs_how-and-when-to-take-amitriptyline-for-d",
-     "where": "If you take too much",
-     "quote": "It's important to get medical advice if you take more than your prescribed dose of amitriptyline.",
-     "sha": "bccc3aac7d2734b2"
-    }
-   ],
-   "quote": "important to get medical advice if you take more than your prescribed dose of amitriptyline",
-   "quote_ref": "nhs_how-and-when-to-take-amitriptyline-for-d"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "Whether people use it specifically to get a high",
+ "missing": "whether it is used specifically to achieve a high",
  "wanted": [
   {
    "doi": "10.2165/00139709-200524030-00013",
@@ -426,6 +368,14 @@
    "status": "none",
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "waiting",
+   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
+   "short": "Yes. Amitriptyline is the leading cause of deaths from antidepressant poisoning. It has a narrow window where high levels can cause major toxicity or death.",
    "complete": false
   }
  ],
@@ -473,21 +423,8 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/amitriptyline-for-depression/how-and-when-to-take-amitriptyline-for-depression/",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Taking more than the prescribed dose of amitriptyline can cause symptoms such as a fast or irregular heartbeat, seizures, drowsiness, passing out, difficulty breathing, or sudden confusion.",
-     "quote": "Take more than your prescribed dose of amitriptyline and you: have a fast or irregular heartbeat; have a seizure or fit; feel drowsy or pass out; have difficulty breathing; suddenly become very confus",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "finding",
-     "text": "You should contact 111 for advice if you take more than the prescribed dose of amitriptyline, even if you have no symptoms.",
-     "quote": "Contact 111 for advice now if: you take more than your prescribed dose of amitriptyline, even if you do not have any symptoms",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "About amitriptyline for depression",
@@ -502,7 +439,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/amitriptyline-for-pain/how-and-when-to-take-amitriptyline-for-pain-and-migraine/",
-   "kept": 0,
+   "kept": 1,
    "thrown": []
   },
   {
@@ -511,8 +448,7 @@
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/amitriptyline-for-pain/about-amitriptyline-for-pain-and-migraine/",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Who can and cannot take amitriptyline for pain and migraine",
@@ -520,16 +456,15 @@
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/amitriptyline-for-pain/who-can-and-cannot-take-amitriptyline-for-pain-and-migraine/",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
    "F3",
    "F2",
-   "F1",
-   "F4"
+   "F4",
+   "F1"
   ],
   "direct": "Yes",
   "but": [
@@ -548,90 +483,252 @@
     "F1"
    ]
   ],
-  "unanswered": "whether it is specifically misused for a high"
+  "unanswered": "whether it is used specifically to achieve a high"
  },
- "panel": {
-  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
-  "gemini:gemini-3-flash-preview": "could not be asked: gemini could not be reached: The read operation timed out",
-  "gemini:gemini-4-hydrogen": "could not be asked: gemini could not be reached: The read operation timed out",
-  "gemini:gemini-3.8-flash": "could not be asked: the time for this question was over before gemini-3.8-flash could be asked"
- },
- "panel_gap": [
-  "gemini-3.6-flash"
- ],
+ "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.5796,
+   "short": 0.4156,
    "but": 0.9827,
-   "how1": 0.9082,
-   "how2": 0.7141,
-   "how3": 0.7668
+   "how1": 0.7893,
+   "how2": 0.7714,
+   "how3": 0.0248
   },
   "scores_quotes_alone": {
-   "short": 0.1768,
+   "short": 0.4389,
    "but": 0.9264,
-   "how1": 0.9405,
-   "how2": 0.5378,
-   "how3": 0.6922
+   "how1": 0.7674,
+   "how2": 0.5498,
+   "how3": 0.0107
   }
  },
- "dropped": [
+ "tries": [
   {
-   "try": 1,
-   "part": "how2",
-   "text": "A 2014 review says toxicity starts at about 450 ng/ml, major toxicity above 1000 ng/ml, and death at 2000–3000 ng/ml. It accounts for 82% of antidepressant poisoning deaths.",
-   "rests_on": [
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
     {
-     "label": "F2",
-     "ref": "beckmann_2014",
-     "where": "Future perspective",
-     "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
-     "sha": "ef4687e2193b1721"
+     "part": "short",
+     "text": "Yes. Amitriptyline is the leading cause of deaths from antidepressant poisoning. Taking too much can change the heartbeat or cause seizures.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
+       "sha": "ef4687e2193b1721"
+      },
+      {
+       "label": "F2",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
+       "sha": "ef4687e2193b1721"
+      },
+      {
+       "label": "F4",
+       "ref": "nhs_how-and-when-to-take-amitriptyline-for-p",
+       "where": "If you take too much",
+       "quote": "Taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
+       "sha": "bf2d0a62166d8388"
+      },
+      {
+       "label": "F1",
+       "ref": "brueckle_2023",
+       "where": "Introduction",
+       "quote": "Commonly observed adverse drug reactions (ADRs) associated with anticholinergic medicines such as amitriptyline are constipation, dry mouth, dry eyes, tachycardia, urinary retention, agitation, confusion, delirium, falls, hallucinations, and cognitive dysfunction.",
+       "sha": "4792ef46427e79a6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The passages describe toxicity and risks of amitriptyline but do not mention its use to get high; therefore answering 'Yes' to the question about misuse for a high is n"
     },
     {
-     "label": "F3",
-     "ref": "beckmann_2014",
-     "where": "Future perspective",
-     "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
-     "sha": "ef4687e2193b1721"
+     "part": "but",
+     "text": "The review results may understate the situation for older individuals, who are generally more sensitive to anticholinergic effects.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "brueckle_2023",
+       "where": "Conclusion",
+       "quote": "Our results may even understate the situation in older individuals, who are generally more sensitive to anticholinergic effects.",
+       "sha": "8ffeedfe39c416a0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The passages describe toxicity and risks of amitriptyline but do not mention its use to get high; therefore answering 'Yes' to the question about misuse for a high is not directly supported.)"
+    },
+    {
+     "part": "how1",
+     "text": "The NHS says taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "nhs_how-and-when-to-take-amitriptyline-for-p",
+       "where": "If you take too much",
+       "quote": "Taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
+       "sha": "bf2d0a62166d8388"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2014 review says toxicity starts at about 450 ng/ml and death occurs at about 2000–3000 ng/ml. It is the leading vehicle for completed suicide attempts.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
+       "sha": "ef4687e2193b1721"
+      },
+      {
+       "label": "F3",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
+       "sha": "ef4687e2193b1721"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review of trials in adults found common reactions include dry mouth, confusion, and hallucinations. It may understate risks for older people.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "brueckle_2023",
+       "where": "Introduction",
+       "quote": "The objective of this multiple-indication systematic review and meta-analysis is thus to explore and quantify the frequency of ADRs associated with amitriptyline vs. placebo in randomized controlled trials (RCTs) of adults.",
+       "sha": "e4938d6be9cf8070"
+      },
+      {
+       "label": "F1",
+       "ref": "brueckle_2023",
+       "where": "Introduction",
+       "quote": "Commonly observed adverse drug reactions (ADRs) associated with anticholinergic medicines such as amitriptyline are constipation, dry mouth, dry eyes, tachycardia, urinary retention, agitation, confusion, delirium, falls, hallucinations, and cognitive dysfunction.",
+       "sha": "4792ef46427e79a6"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure"
     }
-   ],
-   "by": "the second reader",
-   "said": "The passages do not mention the year 2014 in relation to the review."
+   ]
   },
   {
-   "try": 1,
-   "part": "how3",
-   "text": "A 2023 review of trials in adults found common side effects include dry mouth, confusion, hallucinations, and cognitive dysfunction.",
-   "rests_on": [
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
     {
-     "label": "DA",
-     "ref": "brueckle_2023",
-     "where": "Introduction",
-     "quote": "The objective of this multiple-indication systematic review and meta-analysis is thus to explore and quantify the frequency of ADRs associated with amitriptyline vs. placebo in randomized controlled trials (RCTs) of adults.",
-     "sha": "e4938d6be9cf8070"
+     "part": "short",
+     "text": "It is risky. Amitriptyline is the leading cause of death from antidepressant poisoning, and taking too much can change your heartbeat or cause seizures.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
+       "sha": "ef4687e2193b1721"
+      },
+      {
+       "label": "F2",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
+       "sha": "ef4687e2193b1721"
+      },
+      {
+       "label": "F4",
+       "ref": "nhs_how-and-when-to-take-amitriptyline-for-p",
+       "where": "If you take too much",
+       "quote": "Taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
+       "sha": "bf2d0a62166d8388"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
     },
     {
-     "label": "F1",
-     "ref": "brueckle_2023",
-     "where": "Introduction",
-     "quote": "Commonly observed adverse drug reactions (ADRs) associated with anticholinergic medicines such as amitriptyline are constipation, dry mouth, dry eyes, tachycardia, urinary retention, agitation, confusion, delirium, falls, hallucinations, and cognitive dysfunction.",
-     "sha": "4792ef46427e79a6"
+     "part": "but",
+     "text": "The review results might underestimate the situation for older individuals, who are generally more sensitive to anticholinergic effects.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "brueckle_2023",
+       "where": "Conclusion",
+       "quote": "Our results may even understate the situation in older individuals, who are generally more sensitive to anticholinergic effects.",
+       "sha": "8ffeedfe39c416a0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The NHS says taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "nhs_how-and-when-to-take-amitriptyline-for-p",
+       "where": "If you take too much",
+       "quote": "Taking too much amitriptyline can cause serious side effects such as a change in your heartbeat, seizures or fits.",
+       "sha": "bf2d0a62166d8388"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2014 review says toxicity starts at about 450 ng/ml and death occurs at about 2000–3000 ng/ml. It is the leading vehicle for completed suicide attempts.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
+       "sha": "ef4687e2193b1721"
+      },
+      {
+       "label": "F3",
+       "ref": "beckmann_2014",
+       "where": "Future perspective",
+       "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
+       "sha": "ef4687e2193b1721"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 review of trials in adults found common reactions include dry mouth, confusion, and hallucinations. It may understate risks for older people.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "brueckle_2023",
+       "where": "Introduction",
+       "quote": "The objective of this multiple-indication systematic review and meta-analysis is thus to explore and quantify the frequency of ADRs associated with amitriptyline vs. placebo in randomized controlled trials (RCTs) of adults.",
+       "sha": "e4938d6be9cf8070"
+      },
+      {
+       "label": "F1",
+       "ref": "brueckle_2023",
+       "where": "Introduction",
+       "quote": "Commonly observed adverse drug reactions (ADRs) associated with anticholinergic medicines such as amitriptyline are constipation, dry mouth, dry eyes, tachycardia, urinary retention, agitation, confusion, delirium, falls, hallucinations, and cognitive dysfunction.",
+       "sha": "4792ef46427e79a6"
+      }
+     ],
+     "ok": true
     }
-   ],
-   "by": "the second reader",
-   "said": "The passage states that these are commonly observed ADRs associated with anticholinergic medicines such as amitriptyline, but does not state that a 2014 or 2023 review of trials specifically found confusion and hallucinations as common side"
+   ]
   }
  ],
- "stakes": "dying",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
- "for": "again",
- "soft": "a further reader could not be asked",
  "place": {
   "home": "new:Antidepressants",
   "also": [],
