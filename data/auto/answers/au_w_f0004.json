@@ -20,8 +20,8 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
@@ -30,31 +30,127 @@
    "reader_2": "gemini:gemini-3.5-flash-lite",
    "writer_2": "groq:qwen/qwen3.8-27b",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44737642269",
+  "run": "44741743946",
   "read_by": {
-   "gemini-3.5-flash-lite": 1,
-   "gemini-3.1-flash-lite": 1
+   "gemini-3.1-flash-lite": 1,
+   "gemma-4-31b-it": 1,
+   "gemini-3.5-flash-lite": 1
   },
   "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 422
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8846) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.36, but 0.01, how1 0.91, how2 0.95",
+  "check": "short: NOT accepted: The second clause claims alprazolam was found with cocaine in 32% of items, which is not stated; the passage reports that methamphetamine, cocaine, and heroin together accounted for 32% of drugs reported in the same item as alprazolam.; but: NOT accepted: The sentence adds that seizure data \"does not show how often people take them together,\" a claim about frequency not present in the passage.; how1: accepted; how2: NOT accepted: The sentence interprets the 32% figure as applying to items with alprazolam, whereas the passage says 32% of the drugs reported in the same item as alprazolam."
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "herreragmez_2020",
+    "type": "article-journal",
+    "title": "Benzodiazepines in the oral fluid of Spanish drivers",
+    "author": [
+     {
+      "family": "Herrera-Gómez",
+      "given": "Francisco"
+     },
+     {
+      "family": "García-Mingo",
+      "given": "Mercedes"
+     },
+     {
+      "family": "Álvarez",
+      "given": "F. Javier"
+     }
+    ],
+    "container-title": "Substance Abuse Treatment, Prevention, and Policy",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.1186/s13011-020-00260-y",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "15",
+    "issue": "1",
+    "number": "18",
+    "PMCID": "PMC7038549"
+   },
+   "doi": "10.1186/s13011-020-00260-y",
+   "pmcid": "PMC7038549",
+   "title": "Benzodiazepines in the oral fluid of Spanish drivers",
+   "year": 2020,
+   "journal": "Substance abuse treatment, prevention, and policy",
+   "kind": "other",
+   "people": true,
+   "near": 0.557,
+   "money": [
+    "AcknowledgementsThe authors would like to thank the Dirección General de Tráfico for giving us the permission to access the confirmation analysis data. Authorization from the Dirección General de Tráfico was requested on July 20, 2015 for data from 2011 to 2014, and on March 1, 2017 for data from 2015 to 2016."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "This study assessed data on Spanish drivers with confirmed drug-positive results recorded by the Spanish National Traffic Agency (Dirección General de Tráfico) between 2011 and 2016, accounting for 179,645 tests and 65,244 confirmed drug-positive tests.",
+    "text": "An observational study of Spanish drivers with confirmed drug-positive results between 2011 and 2016."
+   },
+   "findings": [
+    {
+     "passage": 23,
+     "where": "Results",
+     "quote": "Benzodiazepines were confirmed in 4.3% of the drivers tested (2785 out of 65,244). In most of those drivers (97.1%), other substances were also detected, particularly cocaine (75.3%) and cannabis (64.0%; Table).",
+     "text": "In one survey of drivers, 97.1% of those who tested positive for benzodiazepines also tested positive for other substances, most commonly cocaine at 75.3%.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 37,
+     "where": "Conclusions",
+     "quote": "the population, health professionals and authorities need to be aware that the concomitant use of benzodiazepines and other psychoactive substances on the road has become common enough to be a serious issue.",
+     "text": "The combined use of benzodiazepines and other psychoactive substances by drivers has become common enough to be a serious issue.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 34,
+     "where": "Discussion",
+     "quote": "the finding of benzodiazepines in a sample of oral fluid does not prove that the driver is clinically impaired but merely that the drug has been taken recently.",
+     "text": "Finding benzodiazepines in oral fluid does not prove that a driver is clinically impaired.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -132,15 +228,23 @@
     "passage": 33,
     "where": "Discussion",
     "quote": "This study analyzed results of drug seizure data submitted to NFLIS-Drug by participating laboratories. The analysis focused on benzodiazepines, with an emphasis on designer benzodiazepines reported in NFLIS-Drug.",
-    "text": "a study of drug seizure data submitted to the National Forensic Laboratory Information System"
+    "text": "an analysis of drug seizure data submitted to NFLIS-Drug by participating laboratories, focusing on benzodiazepines"
    },
    "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Methamphetamine, cocaine, and heroin accounted for 32% of the drugs reported in the same item as alprazolam.",
+     "text": "Methamphetamine, cocaine, and heroin accounted for 32% of the drugs reported in the same item as alprazolam.",
+     "id": "F3",
+     "second_hand": ""
+    },
     {
      "passage": 25,
      "where": "Results › Alprazolam and etizolam reported with other drugs in the same item",
      "quote": "Examples of other substances include lidocaine, caffeine, and cocaine.",
-     "text": "Cocaine is one of the substances reported in the same item as etizolam.",
-     "id": "F1",
+     "text": "Cocaine was among the examples of other substances found in combination with etizolam.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
@@ -149,17 +253,17 @@
      "passage": 23,
      "where": "Results › Alprazolam and etizolam reported with other drugs in the same item",
      "quote": "NFLIS-Drug data can provide some insight into potential combinations but can provide limited knowledge on true combinations.",
-     "text": "The data from NFLIS-Drug provides limited knowledge on whether drugs found in the same item are true combinations.",
-     "id": "L1",
+     "text": "NFLIS-Drug data can provide some insight into potential combinations but can provide limited knowledge on true combinations.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "the physiological or psychological effects of taking them together",
  "wanted": [
   {
    "doi": "10.1097/ftd.0000000000000465",
@@ -192,6 +296,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -200,9 +312,8 @@
    "read": "full",
    "kind": "other",
    "at": "10.1186/s13011-020-00260-y",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "High concentrations of illicit stimulants and cutting agents cause false positives on fentanyl test strips",
@@ -210,41 +321,283 @@
    "kind": "other",
    "at": "10.1186/s12954-021-00478-4",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A laboratory study testing pharmaceutical and illicit substances for false positive interference on fentanyl test strips.",
-     "quote": "We tested whether these concentrated samples could cause false positive results on a FTS.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Benzodiazepines reported in NFLIS-Drug, 2015 to 2018",
    "read": "full",
    "kind": "other",
    "at": "10.1016/j.fsisyn.2021.100138",
-   "kept": 1,
+   "kept": 2,
    "thrown": [
     {
      "kind": "finding",
-     "text": "In 2018, cocaine was reported in the same item as alprazolam in 103 reports.",
+     "text": "In 2018, out of 916 reports of alprazolam with at least one other drug in the same item, methamphetamine (168 reports), cocaine (103 reports), and heroin (69 reports) accounted for 32% of the drugs re",
      "quote": "Methamphetamine (168 reports), cocaine (103 reports), and heroin (69 reports) accounted for 32% of the drugs reported in the same item as alprazolam.",
      "why": "a number of the sentence is not in its quote"
     }
    ]
-  },
-  {
-   "title": "Mercy killing of a 72-year-old woman through heroin intoxication",
-   "read": "full",
-   "kind": "case",
-   "at": "10.1111/1556-4029.15637",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F3",
+   "F2"
+  ],
+  "direct": "",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1",
+    "F2"
+   ],
+   [
+    "DB",
+    "F3"
+   ]
+  ],
+  "unanswered": "the physiological or psychological effects of taking them together"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3595,
+   "but": 0.0099,
+   "how1": 0.9054,
+   "how2": 0.9496
+  },
+  "scores_quotes_alone": {
+   "short": 0.1985,
+   "but": 0.0156,
+   "how1": 0.8353,
+   "how2": 0.9775
+  }
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Xanax and cocaine are often found together. In one driver study, 75.3% of people with Xanax also had cocaine. Seizure data shows they are often in the same item.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "herreragmez_2020",
+       "where": "Results",
+       "quote": "Benzodiazepines were confirmed in 4.3% of the drivers tested (2785 out of 65,244). In most of those drivers (97.1%), other substances were also detected, particularly cocaine (75.3%) and cannabis (64.0%; Table).",
+       "sha": "d6c2a45d012d691a"
+      },
+      {
+       "label": "F3",
+       "ref": "bollinger_2021",
+       "where": "Abstract",
+       "quote": "Methamphetamine, cocaine, and heroin accounted for 32% of the drugs reported in the same item as alprazolam.",
+       "sha": "39887555307d6f7f"
+      },
+      {
+       "label": "F2",
+       "ref": "herreragmez_2020",
+       "where": "Conclusions",
+       "quote": "the population, health professionals and authorities need to be aware that the concomitant use of benzodiazepines and other psychoactive substances on the road has become common enough to be a serious issue.",
+       "sha": "f3c63225b5b9ca6a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The driver study reports benzodiazepines in general, not specifically Xanax (alprazolam); the claim of \"often\" is not quantified in the passages."
+    },
+    {
+     "part": "but",
+     "text": "Seizure data gives limited knowledge on true combinations, so it is not clear if people actually took them together.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "bollinger_2021",
+       "where": "Results › Alprazolam and etizolam reported with other drugs in the same item",
+       "quote": "NFLIS-Drug data can provide some insight into potential combinations but can provide limited knowledge on true combinations.",
+       "sha": "9342d63eb1204989"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.01): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how1",
+     "text": "A study of Spanish drivers found 97.1% of those with benzodiazepines had other drugs, most commonly cocaine at 75.3%.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "herreragmez_2020",
+       "where": "Abstract",
+       "quote": "This study assessed data on Spanish drivers with confirmed drug-positive results recorded by the Spanish National Traffic Agency (Dirección General de Tráfico) between 2011 and 2016, accounting for 179,645 tests and 65,244 confirmed drug-positive tests.",
+       "sha": "7577b303456cf057"
+      },
+      {
+       "label": "F1",
+       "ref": "herreragmez_2020",
+       "where": "Results",
+       "quote": "Benzodiazepines were confirmed in 4.3% of the drivers tested (2785 out of 65,244). In most of those drivers (97.1%), other substances were also detected, particularly cocaine (75.3%) and cannabis (64.0%; Table).",
+       "sha": "d6c2a45d012d691a"
+      },
+      {
+       "label": "F2",
+       "ref": "herreragmez_2020",
+       "where": "Conclusions",
+       "quote": "the population, health professionals and authorities need to be aware that the concomitant use of benzodiazepines and other psychoactive substances on the road has become common enough to be a serious issue.",
+       "sha": "f3c63225b5b9ca6a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "An analysis of drug seizures found methamphetamine, cocaine, and heroin in 32% of items with alprazolam.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "bollinger_2021",
+       "where": "Discussion",
+       "quote": "This study analyzed results of drug seizure data submitted to NFLIS-Drug by participating laboratories. The analysis focused on benzodiazepines, with an emphasis on designer benzodiazepines reported in NFLIS-Drug.",
+       "sha": "d36c6710e6586f5a"
+      },
+      {
+       "label": "F3",
+       "ref": "bollinger_2021",
+       "where": "Abstract",
+       "quote": "Methamphetamine, cocaine, and heroin accounted for 32% of the drugs reported in the same item as alprazolam.",
+       "sha": "39887555307d6f7f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage gives 32% of *drugs* reported in the same item as alprazolam, not 32% of items containing alprazolam."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "In Spanish drivers, 75.3% who tested positive for benzodiazepines also tested positive for cocaine. Seized alprazolam was found with cocaine in 32% of items.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "herreragmez_2020",
+       "where": "Results",
+       "quote": "Benzodiazepines were confirmed in 4.3% of the drivers tested (2785 out of 65,244). In most of those drivers (97.1%), other substances were also detected, particularly cocaine (75.3%) and cannabis (64.0%; Table).",
+       "sha": "d6c2a45d012d691a"
+      },
+      {
+       "label": "F3",
+       "ref": "bollinger_2021",
+       "where": "Abstract",
+       "quote": "Methamphetamine, cocaine, and heroin accounted for 32% of the drugs reported in the same item as alprazolam.",
+       "sha": "39887555307d6f7f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The second clause claims alprazolam was found with cocaine in 32% of items, which is not stated; the passage reports that methamphetamine, cocaine, and heroin together accounted for 32% of drugs reported in the same item as alprazolam."
+    },
+    {
+     "part": "but",
+     "text": "Seizure data can provide limited knowledge on true combinations, so it does not show how often people take them together.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "bollinger_2021",
+       "where": "Results › Alprazolam and etizolam reported with other drugs in the same item",
+       "quote": "NFLIS-Drug data can provide some insight into potential combinations but can provide limited knowledge on true combinations.",
+       "sha": "9342d63eb1204989"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence adds that seizure data \"does not show how often people take them together,\" a claim about frequency not present in the passage."
+    },
+    {
+     "part": "how1",
+     "text": "A study of 65,244 Spanish drivers found 97.1% of benzodiazepine positives had other drugs, mostly cocaine at 75.3%.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "herreragmez_2020",
+       "where": "Abstract",
+       "quote": "This study assessed data on Spanish drivers with confirmed drug-positive results recorded by the Spanish National Traffic Agency (Dirección General de Tráfico) between 2011 and 2016, accounting for 179,645 tests and 65,244 confirmed drug-positive tests.",
+       "sha": "7577b303456cf057"
+      },
+      {
+       "label": "F1",
+       "ref": "herreragmez_2020",
+       "where": "Results",
+       "quote": "Benzodiazepines were confirmed in 4.3% of the drivers tested (2785 out of 65,244). In most of those drivers (97.1%), other substances were also detected, particularly cocaine (75.3%) and cannabis (64.0%; Table).",
+       "sha": "d6c2a45d012d691a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "An analysis of drug seizures found methamphetamine, cocaine, and heroin in 32% of items with alprazolam.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "bollinger_2021",
+       "where": "Discussion",
+       "quote": "This study analyzed results of drug seizure data submitted to NFLIS-Drug by participating laboratories. The analysis focused on benzodiazepines, with an emphasis on designer benzodiazepines reported in NFLIS-Drug.",
+       "sha": "d36c6710e6586f5a"
+      },
+      {
+       "label": "F3",
+       "ref": "bollinger_2021",
+       "where": "Abstract",
+       "quote": "Methamphetamine, cocaine, and heroin accounted for 32% of the drugs reported in the same item as alprazolam.",
+       "sha": "39887555307d6f7f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence interprets the 32% figure as applying to items with alprazolam, whereas the passage says 32% of the drugs reported in the same item as alprazolam."
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "An analysis of drug seizures found methamphetamine, cocaine, and heroin in 32% of items with alprazolam.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "bollinger_2021",
+     "where": "Discussion",
+     "quote": "This study analyzed results of drug seizure data submitted to NFLIS-Drug by participating laboratories. The analysis focused on benzodiazepines, with an emphasis on designer benzodiazepines reported in NFLIS-Drug.",
+     "sha": "d36c6710e6586f5a"
+    },
+    {
+     "label": "F3",
+     "ref": "bollinger_2021",
+     "where": "Abstract",
+     "quote": "Methamphetamine, cocaine, and heroin accounted for 32% of the drugs reported in the same item as alprazolam.",
+     "sha": "39887555307d6f7f"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The sentence interprets the 32% figure as applying to items with alprazolam, whereas the passage says 32% of the drugs reported in the same item as alprazolam."
+  }
+ ],
  "place": {
   "home": "interactions",
   "also": [
