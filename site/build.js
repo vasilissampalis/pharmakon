@@ -301,6 +301,8 @@ const AUTO_SHOWN = (() => {
   // kilogram of body weight, however written ("3 mg/kg", "3 mg per kilogram", "6 mg kg(-1)"), and a summary's flattened signs ("mg day(-1)", "</=300 mg")
   const perKg = /\d\s?(?:mg|milligrams?|µg|μg|ug|mcg|micrograms?|g|grams?|ml)\s*(?:\/\s*(?:kg\b|kilo)|[·.]?\s*kg\b|\s+(?:of\s+[\w-]+\s+)?(?:per|for\s+each|for\s+every|a|each)\s+(?:kg\b|kilo))/i, oddSigns = /\(-?\d\)|[<>]\s?\/?\s?=|\^\s?-?\d|=\s?\/?[<>]/;
   const timing = /\bre-?dos\w*|\bevery\s+\d+(?:\s*(?:to|-|or)\s*\d+)?\s+(?:minutes?|hours?)\b|\b\d+\s+(?:minutes?|hours?)\s+(?:before|after|apart|later)\b|\bsupplement\w*|\byou\s+(?:should|must|need to)\b/i;
+  // (2.27) the editor's word on where an answer stands on its page: [page, topic] (data/auto/topics.json); kept only where it names the page the answer is on
+  const TOPICS = ((readJson("data", "auto", "topics.json") || {}).topics) || {};
   for (const f of (fs.existsSync(AUTO_DIR) ? fs.readdirSync(AUTO_DIR) : []).filter(f => /^au_[a-z0-9_]+\.json$/.test(f)).sort()) {
     const a = JSON.parse(fs.readFileSync(path.join(AUTO_DIR, f), "utf8"));
     if (a.status !== "published" || held.has(a.id, a.lane, a.made && a.made.run)) continue;
@@ -338,8 +340,10 @@ const AUTO_SHOWN = (() => {
       page = "new:" + pageSlug(name); startedPages[pageSlug(name)] = name; }
     else if (!drugs.length && drugSlugs.has(home)) page = home;
     else if (!drugs.length && GEN_HOMES[home]) page = GEN_HOMES[home];
+    const et = TOPICS[a.id], topic = et && et.page === page && typeof et.topic === "string" && /^[A-Za-z][A-Za-z0-9 ,'’()-]{1,58}$/.test(et.topic) && !amounts ? et.topic : "";
+    if (et && !topic) console.error("WARNING: data/auto/topics.json: " + a.id + " names " + et.page + " / " + et.topic + ", but the answer is on " + page + (amounts ? " (and is about amounts)" : ""));
     out.push(Object.assign({ id: a.id, q: a.question, ways: a.ways || [], short, but, how: amounts ? [] : how, howq, refs, from, made: (a.made || {}).on || "", complete: a.complete === true, wanted: (a.wanted || []).length, drugs, page, risk: typeof a.stakes === "string" && /^[a-z ,-]{3,40}$/.test(a.stakes) ? a.stakes : "" },   // (2.21, lane 19) risk: the answer is about dying, overdose, mixing, pregnancy or children: the page puts the way to the emergency numbers under it
-      amounts ? { kind: "amounts", first, rows: rows.map(r => ({ who: r.who, what: r.what, quote: r.quote, ref: r.ref, read: r.read })) } : {}));
+      amounts ? { kind: "amounts", first, rows: rows.map(r => ({ who: r.who, what: r.what, quote: r.quote, ref: r.ref, read: r.read })) } : {}, topic ? { topic } : {}));
   }
   if (left.length) console.error("WARNING: machine-lane answers left out of the site: " + left.join("; "));
   if (older) console.log("machine lane: " + older + " answers written by an older lane are not shown (they will be written again)");
@@ -447,7 +451,7 @@ const OFFICIAL = (() => {
   const n = Object.keys(by).length; if (n) console.log("official pages: " + n + " drugs and started pages have pages of " + Object.keys(src).length + " official bodies to link to (" + Object.values(by).reduce((a, r) => a + r.length, 0) + " pages)");
   return n ? { made: idx.made || "", src, by } : null;
 })();
-const AUTO_OBJ = Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {})]));
+const AUTO_OBJ = Object.fromEntries(AUTO_SHOWN.map(a => [a.id, Object.assign({ q: a.q, short: a.short, but: a.but, how: a.how, howq: a.howq.some(Boolean) ? a.howq : undefined, refs: a.refs, from: a.from, made: a.made, complete: a.complete, wanted: a.wanted, drugs: a.drugs, page: a.page }, a.risk ? { risk: a.risk } : {}, a.kind ? { kind: a.kind, first: a.first, rows: a.rows } : {}, a.topic ? { topic: a.topic } : {})]));
 const data2 = data + "\nconst OFFICIAL = " + JSON.stringify(OFFICIAL) + ";\nconst AUTO = " + JSON.stringify(AUTO_OBJ) +
   ";\nconst AUTO_STATE = " + JSON.stringify(AUTO_STATE) + ";\nconst AUTO_PAGES = " + JSON.stringify(startedPages) + ";\nconst AUTO_SHELL = " + JSON.stringify(AUTO_SHELL) + ";\nconst AUTO_PICS = " + JSON.stringify(AUTO_PICS) + ";\nconst AUTO_FORMS = " + JSON.stringify(AUTO_FORMS) + ";\nconst AUTO_NAMES = " + JSON.stringify(AUTO_NAMES) + ";\nconst AUTO_LOOP = " + JSON.stringify(AUTO_LOOP) + ";\nconst SITE_BUILD = " + JSON.stringify(SITE_BUILD) + ";\nconst SITE_VERSION = " + JSON.stringify(VERSION.site) + ";\nconst PROTOCOL_VERSION = " + JSON.stringify(VERSION.protocol) + ";";
 const js = [data2, src("app.core.js"), src("app.simple.js"), src("app.views.js"), src("app.insight.js")].join("\n\n");
@@ -538,7 +542,9 @@ const photoDir = path.join(__dirname, "photos"), imgDir = path.join(__dirname, "
         // (2.6: a machine-lane answer is never offered as a next question of a checked answer; it keeps its own next questions)
         // (2.21.2: but under another answer by the system it is: on a page the system started, kanna's two answers offered nothing, each being the other's only neighbour)
         const nx = JSON.parse(fs.readFileSync(nextFile, "utf8")); nx.next = nx.next.map((l, i) => (l || []).filter(j => !/^au_/.test(nx.ids[j]) || /^au_/.test(nx.ids[i])));
-        const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(nx) + ";\nconst WANTED = " + JSON.stringify(listed) + ";";
+        // (2.27) where each answer the system wrote stands on its page: the nearest checked answer of the page, where the likeness reaches the index's own bar (scripts/insight/build_index.py, auto_place)
+        const near = {}; Object.entries(nx.place || {}).forEach(([id, [c, v]]) => { if (c && v >= (nx.place_at || 1)) near[id] = c; }); delete nx.place; delete nx.place_at;
+        const told = "\nconst INS_MODEL = " + JSON.stringify(model) + ";\nconst INS_MB = " + Math.round(bytes / 1e6) + ";\nconst INS_NEXT = " + JSON.stringify(nx) + ";\nconst WANTED = " + JSON.stringify(listed) + ";\nconst AUTO_NEAR = " + JSON.stringify(near) + ";";
         if (page.split(mark).length === 2) fs.writeFileSync(pageFile, page.replace(mark, () => told + mark));
         else console.error("WARNING: the page's script has no place for what Insight tells it (const SITE_VERSION not found once): the search box answers by words only, and Read next falls back to the next questions of the topic");
       }

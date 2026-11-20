@@ -1867,6 +1867,17 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     for it before it asked whether the editor held it); now it is, with what the editor found. A draft in the wrong form twice
     goes to the team's other writer for its third try. The self-test of the reserve no longer depends on Google's room.
 
+44. **Each answer the system wrote stands where it belongs on its page (20 November 2026, 01:50 to 02:30 Athens; site 2.27.0).**
+    His words, 00:51: "it should categorize the answers to sections of the menu or create new sections ... while avoiding
+    bugs". An answer is shown as a card among the checked answers of its topic, marked "Drafted automatically" and without
+    bars, its one line ("Drafted automatically from ...") inside it as before. Where it stands: the editor's topic for it
+    (`data/auto/topics.json`, which may name a new topic), else the topic of the nearest checked answer of its page by meaning
+    (`auto_place` in `scripts/insight/build_index.py`, from a likeness of 0.70, measured by leaving each checked answer out:
+    80% under their own topic, 92% in their own part), else the page's part "More questions". Never an answer about amounts
+    among checked answers. Computed at build time, without a model; the page works without it (everything under More
+    questions). The 2.6 rule "never among the checked ones" is replaced by this, at his word; the label and the absence of
+    bars keep the two kinds apart.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):

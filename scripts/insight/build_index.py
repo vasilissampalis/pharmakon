@@ -540,25 +540,28 @@ def measure_words(R, show=True):
 
 
 
-PLACE_AT = 0.62   # (2.27) an answer the system wrote stands under the topic of the nearest checked answer of its page only from this likeness (set by place_eval below)
+PLACE_AT = 0.70   # (2.27) an answer the system wrote stands under the topic of the nearest checked answer of its page only from this likeness (place_eval, 20 November 2026: an answer's own question and ways set beside the other answers' questions, ways and the readers' wordings of them, leaving one out each time: from 0.65, 224 of 428 checked answers placed, 76% under their own topic, 92% in their own part of the page; from 0.70, 170, 80% and 92%)
 
 
-def auto_place(A, rows, Wv, quiet=False):
+def auto_place(A, rows, Wv, W_txt, hurried=frozenset(), quiet=False):
     """(2.27; the senior author, 20 November 2026, 00:51: "our ai should enrichen the drug page menus and all the other sections of the site with new
     information ... it should categorize the answers to sections of the menu or create new sections") Where each answer the system wrote stands on its
     page: under the topic of the checked answer of the same page whose wordings are nearest to its own (the best likeness of any wording of one to any
-    wording of the other), where that likeness reaches PLACE_AT; otherwise in the page's part of its own for more questions. An answer about amounts never
+    wording of the other: its own question and the ways it is asked, beside the other's question, ways and the readers' wordings of it, not the hurried ones of the
+    near-miss readers), where that likeness reaches PLACE_AT; otherwise in the page's part of its own for more questions. An answer about amounts never
     stands among checked answers. Returns {answer id: [nearest checked id or "", likeness]}. Measured on the checked answers themselves (place_eval): how
     often the nearest other checked answer of the same page is of the same topic, by likeness."""
-    by = {}
-    for k, r in enumerate(rows): by.setdefault(r, []).append(k)
+    own, them = {}, {}
+    for k, r in enumerate(rows):
+        if W_txt[k] in A[r]["wordings"]: own.setdefault(r, []).append(k)
+        if (A[r]["id"], W_txt[k]) not in hurried: them.setdefault(r, []).append(k)
     unit = Wv / np.maximum(np.linalg.norm(Wv, axis=1, keepdims=True), 1e-9)
     def best(i, cands):
-        if not cands or i not in by: return "", 0.0
-        mi = unit[by[i]]; top, at = -1.0, ""
+        if not cands or i not in own: return "", 0.0
+        mi = unit[own[i]]; top, at = -1.0, ""
         for j in cands:
-            if j not in by: continue
-            v = float((mi @ unit[by[j]].T).max())
+            if j not in them: continue
+            v = float((mi @ unit[them[j]].T).max())
             if v > top: top, at = v, A[j]["id"]
         return at, top
     checked = [j for j, a in enumerate(A) if not a["id"].startswith("au_")]
@@ -572,7 +575,7 @@ def auto_place(A, rows, Wv, quiet=False):
     return out
 
 
-def place_eval(A, rows, Wv):
+def place_eval(A, rows, Wv, W_txt, hurried=frozenset()):
     """Leave one out: each checked answer on a page with topics (data/site/questions.json), placed by the same rule among the OTHER checked answers of
     that page. Prints, for each likeness from which an answer would be placed, how many are placed and how often under their own topic."""
     Q = json.load(open(ROOT / "data/site/questions.json", encoding="utf-8")); topic = {}
@@ -580,19 +583,21 @@ def place_eval(A, rows, Wv):
         if page.startswith("_"): continue
         for g in groups:
             for cid, q in g["items"]: topic[(page, cid)] = g["topic"]
-    by = {}
-    for k, r in enumerate(rows): by.setdefault(r, []).append(k)
+    own, them = {}, {}
+    for k, r in enumerate(rows):
+        if W_txt[k] in A[r]["wordings"]: own.setdefault(r, []).append(k)
+        if (A[r]["id"], W_txt[k]) not in hurried: them.setdefault(r, []).append(k)
     unit = Wv / np.maximum(np.linalg.norm(Wv, axis=1, keepdims=True), 1e-9)
     idx = {a["id"]: j for j, a in enumerate(A)}
     res = []
     for (page, cid), t in topic.items():
         i = idx.get(cid)
-        if i is None or i not in by: continue
-        cands = [idx[c] for (p, c) in topic if p == page and c != cid and c in idx and idx[c] in by]
+        if i is None or i not in own: continue
+        cands = [idx[c] for (p, c) in topic if p == page and c != cid and c in idx and idx[c] in them]
         if not cands: continue
-        mi = unit[by[i]]; top, at = -1.0, None
+        mi = unit[own[i]]; top, at = -1.0, None
         for j in cands:
-            v = float((mi @ unit[by[j]].T).max())
+            v = float((mi @ unit[them[j]].T).max())
             if v > top: top, at = v, j
         res.append((top, topic.get((page, A[at]["id"])) == t))
     for cut in (0.5, 0.55, 0.6, 0.62, 0.65, 0.7, 0.75, 0.8):
@@ -718,8 +723,9 @@ def main():
     if pl: out["places"] = pl
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, separators=(",", ":")), encoding="utf-8")
-    place = auto_place(A, rows, Wv)
-    if "--place-eval" in sys.argv: place_eval(A, rows, Wv)
+    hurried = frozenset((a_id, w) for a_id, ws in more.items() for w in ws)
+    place = auto_place(A, rows, Wv, W_txt, hurried)
+    if "--place-eval" in sys.argv: place_eval(A, rows, Wv, W_txt, hurried)
     if len(args) > 2:
         pathlib.Path(args[2]).write_text(json.dumps({"ids": ids, "next": nxt, "place": place, "place_at": PLACE_AT}, separators=(",", ":")), encoding="utf-8")
     changed = sum(1 for w, m in zip(W_txt, M_txt) if w != m)

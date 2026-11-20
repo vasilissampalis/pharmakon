@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """live.py: what the system is doing, right now, for each question a person sent (docs/AUTOMATION.md, decision 34).
 
-    python3 -I scripts/auto/live.py write [--questions FILE]... [--working] [--no-room-check]
+    python3 -I scripts/auto/live.py write [--questions FILE]... [--working] [--no-room-check] [--quick]
     python3 -I scripts/auto/live.py --selftest
 
 The senior author, 18 November 2026, 23:42 Athens: "the site is taking too long to answer my pending questions... like 5 minutes pass
@@ -132,6 +132,14 @@ def write(argv):
     import papers as P
     listed = P.listed(); state = load(ROOT / "data" / "auto" / "lane" / "state.json", {"items": {}}); done = load(ROOT / "data" / "auto" / "asked.json", {}).get("done") or {}
     src = load(SRC, None)
+    if not isinstance(src, dict) and "--quick" in argv:
+        # (20 November 2026; the senior author: "this should be fucking instant i wait for minutes") before the lane has written anything in a run, what the
+        # site shows is what the last file said: the page of the person who waits hears how their question was read without waiting for a build (95 seconds
+        # in the run of 23:30 UTC). An answer the last file carried is carried again; the build after the lane decides anew
+        was0 = load(LIVE, {})
+        src = {"auto": {"au_" + w: ((was0.get("answers") or {}).get("au_" + w) or {"made": ""}) for w, it in (was0.get("items") or {}).items() if isinstance(it, dict) and it.get("st") == "answered"},
+               "state": {w: it["st"] for w, it in (was0.get("items") or {}).items() if isinstance(it, dict) and it.get("st") in SAY and it.get("st") not in ("answered", "new", "found", "trying")},
+               "built": str(was0.get("built") or "")}
     if not isinstance(src, dict): sys.exit("live: site/dist/live-src.json is not there: run node site/build.js first")
     working, room = None, None
     if "--working" in argv or "--no-room-check" not in argv:

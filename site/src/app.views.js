@@ -192,7 +192,7 @@ function routeTo() {
   // drug page should be one"): the addresses of the research page that stood beside it (/evidence, /sec-13, /not-yet) lead to
   // the page, its law or its looks.
   if (h.startsWith("s-")) {
-    const mm = h.slice(2).match(/^([a-z0-9-]+)(?:\/(sec-\d+|not-yet|evidence|q-cl_[a-z0-9_]+|part-d-[a-z]+))?$/);
+    const mm = h.slice(2).match(/^([a-z0-9-]+)(?:\/(sec-\d+|not-yet|evidence|q-(?:cl|au)_[a-z0-9_]+|part-d-[a-z]+))?$/);
     const slug = mm ? mm[1] : h.slice(2), sec = mm && mm[2];
     if (!mm || !subBySlug[slug]) { renderNotFound(h.slice(2)); show("notfound"); setTitle(PAGE_TITLES.notfound); window.scrollTo({ top: 0 }); focusHeading("notfound"); return; }
     if (sec && !sec.startsWith("q-") && !sec.startsWith("part-")) { navReplace("#s-" + slug + (sec === "sec-13" ? "/part-d-law" : sec === "sec-2" ? "/part-d-looks" : "")); return; }

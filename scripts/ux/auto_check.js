@@ -5,7 +5,7 @@
 // What must hold: the quiet line is on every such answer, everywhere it is shown ("Written by our system from N papers. Not
 // yet checked by a person.", and "Not complete yet." where papers could not be read); no evidence bars (nobody has rated it);
 // its sources as APA 7 references with their DOI links; a way to report a mistake; the search box finds it by a question in
-// other words and says what it is before it is opened; its drug's page lists it in a section of its own, never among the
+// other words and says what it is before it is opened; (2.27) its drug's page shows it under the topic where it belongs, marked and without bars (until 2.27: in a section of its own, never among the
 // checked answers; one page lists every one; a question it answers leaves the list of questions not answered yet; a kept
 // question turns "Answered"; nothing is wider than the phone; no console errors.
 // Usage: node scripts/ux/auto_check.js [--shots DIR] [--keep]   (--keep: leave site/dist built with the pretend answers)
@@ -52,7 +52,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     return { title: document.getElementById("ev-title").textContent, eye: (document.querySelector("#evsheet .ins-eye") || {}).textContent || "", short: (a.querySelector(".ask-short") || {}).textContent || "", but: (a.querySelector(".ask-but") || {}).textContent || "",
       how: [...a.querySelectorAll(".ask-howl li")].map(e => e.textContent), line: (a.querySelector(".auto-l") || {}).textContent || "", bars: a.querySelectorAll(".meter").length, evLink: a.querySelectorAll('a.ask-ev, a[href^="#cl_"]').length,
       refs: [...a.querySelectorAll(".auto-refs li")].map(li => ({ text: li.textContent, italic: (li.querySelector("i") || {}).textContent || "", link: (li.querySelector("a") || {}).href || "" })), srcSummary: (a.querySelector(".auto-src summary") || {}).textContent || "",
-      report: (a.querySelector("button[data-auto-report]") || {}).textContent || "", all: (s.querySelector('.ins-page a[href="#auto"]') || {}).textContent || "", label: (s.querySelector(".ins-l-k") || {}).textContent || "", next: s.querySelectorAll(".ins-next a").length, wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
+      report: (a.querySelector("button[data-auto-report]") || {}).textContent || "", all: (s.querySelector('.ins-page a') || {}).textContent || "", label: (s.querySelector(".ins-l-k") || {}).textContent || "", next: s.querySelectorAll(".ins-next a").length, wide: document.documentElement.scrollWidth > innerWidth + 1 }; });
 
   for (const width of [390, 1280]) {
     const w = width + ": ", p = await open(width);
@@ -141,7 +141,7 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     ok(w + "it carries its quiet line, with “Not complete yet.”, and no evidence bars and no link to an evidence page it does not have", s1 && s1.line === LINE2 && s1.bars === 0 && s1.evLink === 0, s1 && s1.line + " | bars " + s1.bars + " | evidence links " + s1.evLink);
     ok(w + "its sources are APA 7 references with the journal in italics and the DOI as a link", s1 && s1.srcSummary === "Sources (2)" && s1.refs.length === 2 && s1.refs[0].text === "Fixture, A. B., & Sample, C. (2022). A pretend review of ketamine dependence for the checks. Journal of Checks, 11(2), 300–312. https://doi.org/10.0000/fixture.1" &&
       s1.refs[0].italic === "Journal of Checks, 11" && s1.refs[0].link === "https://doi.org/10.0000/fixture.1", s1 && JSON.stringify(s1.refs));
-    ok(w + "it offers a way to report a mistake, the way to every answer the system wrote, and next questions from the checked answers", s1 && s1.report === "Report a mistake in this answer" && /^All new answers/.test(s1.all) && s1.next >= 1 && !s1.wide, s1 && s1.report + " | " + s1.all + " | next " + s1.next);
+    ok(w + "it offers a way to report a mistake, the way to its place on its drug's page (2.27), and next questions from the checked answers", s1 && s1.report === "Report a mistake in this answer" && /^See it on the Ketamine page/.test(s1.all) && s1.next >= 1 && !s1.wide, s1 && s1.report + " | " + s1.all + " | next " + s1.next);
     await shot(p, width + "-auto-sheet");
     await p.click("#evsheet button[data-auto-report]"); await p.waitForTimeout(400);
     const fb = await p.evaluate(() => ({ open: document.getElementById("report").classList.contains("open"), mode: (document.querySelector('.fb-opt[aria-pressed="true"]') || { dataset: {} }).dataset.mode, sheet: document.getElementById("evsheet").classList.contains("open") }));
@@ -162,16 +162,19 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     await p.keyboard.press("Escape"); await p.waitForTimeout(300); await p.fill("#search", ""); await p.keyboard.press("Escape");
     // ---- its drug's page
     await go(p, "#s-ketamine", 700);
-    const sec = await p.evaluate(() => { const b = document.getElementById("sm-d-auto"); return b ? { name: b.querySelector(".sm-n").textContent, n: (b.querySelector(".sm-c") || {}).textContent || "", line: (b.querySelector(".sm-l") || {}).textContent || "", among: [...document.querySelectorAll("#drug2 details.ask[data-cid]")].some(d => /^au_/.test(d.dataset.cid)) } : null; });
-    ok(w + "the ketamine page lists it in a section of its own, “Written with AI”, never among the checked answers", sec && sec.name === "New answers" && sec.n === "1 answer" && sec.line === "From research papers" && !sec.among, JSON.stringify(sec));
-    await p.click("#sm-d-auto"); await p.waitForTimeout(500);
-    const inSec = await p.evaluate(() => { const s = document.getElementById("d-auto"); return s ? { note: (s.querySelector(".auto-sec") || {}).textContent || "", rows: [...s.querySelectorAll(".auto-i")].map(r => r.querySelector(".wl-q").textContent + " | " + r.querySelector(".auto-meta").textContent), hash: location.hash } : null; });
-    ok(w + "the section says what these are, and lists the answer", inSec && /^Drafted automatically from research papers\. Each shows its sources\.$/.test(inSec.note) && inSec.rows.join() === "Can you get addicted to ketamine? | 2 papers · 15 November 2026 · not complete yet" && inSec.hash === "#s-ketamine/part-d-auto", JSON.stringify(inSec));
+    // (2.27) it stands on its page where it belongs: under the topic of the nearest checked answer (or the editor's topic), marked and without bars,
+    // or, near none, in the page's part "More questions"; never as a list of links of its own any more
+    const card = await p.evaluate(() => { const d = document.querySelector('#drug2 details.ask[data-cid="au_fixture_ketamine"]'); if (!d) return null; const sec = d.closest(".sec");
+      const b = document.getElementById("sm-d-auto");
+      return { sec: sec ? sec.id : "", mark: (d.querySelector(":scope > summary .auto-m") || {}).textContent || "", bars: d.querySelectorAll(".meter, .mw").length, q: (d.querySelector(".ask-q") || {}).textContent || "",
+        more: b ? { name: b.querySelector(".sm-n").textContent, n: (b.querySelector(".sm-c") || {}).textContent || "" } : null, note: sec && sec.id === "d-auto" ? (sec.querySelector(".auto-sec") || {}).textContent || "" : "" }; });
+    ok(w + "the ketamine page shows it where it belongs: among the answers of its topic, or under More questions, marked “Drafted automatically” and without bars", card && card.q === "Can you get addicted to ketamine?" && card.mark === "Drafted automatically" && card.bars === 0 &&
+      (card.sec !== "d-auto" || (card.more && card.more.name === "More questions" && /^Drafted automatically from research papers and official health pages\. Each shows its sources\.$/.test(card.note))), JSON.stringify(card));
+    await go(p, "#s-ketamine/q-au_fixture_ketamine", 800);
+    const opened = await p.evaluate(() => { const d = document.querySelector('#drug2 details.ask[data-cid="au_fixture_ketamine"]'); return d ? { open: d.open, line: (d.querySelector(".auto-l") || {}).textContent || "", shorts: d.querySelectorAll(".ask-short").length, hidden: !!d.closest(".sec[hidden]") } : null; });
+    ok(w + "its own address opens it where it stands, with its one line and its short answer once", opened && opened.open && !opened.hidden && opened.line === LINE2 && opened.shorts === 0, JSON.stringify(opened));
     await shot(p, width + "-auto-drug-page");
-    await p.click('#d-auto a[data-sheet="au_fixture_ketamine"]'); await p.waitForTimeout(600);
-    const s3 = await sheet(p); ok(w + "from the drug's page it opens over the page, and Back returns to the section", s3 && s3.line === LINE2 && (await p.evaluate(() => location.hash)) === "#s-ketamine/part-d-auto", s3 && s3.line);
-    await p.keyboard.press("Escape"); await p.waitForTimeout(300);
-    ok(w + "a drug the system wrote nothing about has no such section", !(await (async () => { await go(p, "#s-cannabis", 600); return p.evaluate(() => !!document.getElementById("sm-d-auto")); })()));
+    ok(w + "a drug the system wrote nothing about has no such section and no such card", !(await (async () => { await go(p, "#s-cannabis", 600); return p.evaluate(() => !!document.getElementById("sm-d-auto") || !!document.querySelector("#drug2 details.ask-auto")); })()));
     // ---- an answer about no drug, complete: the other line
     await go(p, "#auto/q-au_fixture_police", 900);
     const s4 = await sheet(p);

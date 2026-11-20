@@ -135,10 +135,10 @@ jobs:
           # What the system is doing for each sent question is written into one small file as the run works (scripts/auto/live.py: by the question's key in
           # the store, never by its words) and pushed at once; the site's own server reads it for the page of the person who waits (GET /api/asked): how the
           # question was read, what was found, that it is being written, and the answer itself the moment it has passed every gate and the build's own look.
-          live_now() {   # $1: a word for the notes; the rest: more for live.py (--working)
+          live_now() {   # $1: a word for the notes; the rest: more for live.py (--working; --quick: before the lane has written, no build is waited for)
             what="$1"; shift
             echo "== tell the pages of the people who wait: $what [$(date -u +%H:%M:%S)]" >> "$L"
-            node site/build.js > "$RUNNER_TEMP/live-build.log" 2>&1 || { echo "!! the build for it failed" >> "$L"; tail -3 "$RUNNER_TEMP/live-build.log" >> "$L"; return 0; }
+            case " $* " in *" --quick "*) ;; *) node site/build.js > "$RUNNER_TEMP/live-build.log" 2>&1 || { echo "!! the build for it failed" >> "$L"; tail -3 "$RUNNER_TEMP/live-build.log" >> "$L"; return 0; } ;; esac
             python3 -I scripts/auto/live.py write --questions "$RUNNER_TEMP/questions.json" --questions "$RUNNER_TEMP/auto-sent.json" "$@" >> "$L" 2>&1 || { echo "!! it could not be written" >> "$L"; return 0; }
             git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add -A data/auto >> "$L" 2>&1
@@ -177,7 +177,7 @@ jobs:
               mkdir -p "$RUNNER_TEMP/private"
               step "first, the questions the page sent by itself (their words stay in this run's own folder)" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/auto-sent.json" --out "$RUNNER_TEMP/private" --report "$RUNNER_TEMP/private/MISSING.md" --no-cards --unknown "$RUNNER_TEMP/unknown-names-2.json"
               if [ -s "$RUNNER_TEMP/private/report.json" ]; then step "they become questions on the system's own list (our words, never theirs)" python3 -I scripts/auto/ask.py run --report "$RUNNER_TEMP/private/report.json" --marker "$RUNNER_TEMP/new-items"; fi
-              live_now "how the questions the page sent were read"
+              live_now "how the questions the page sent were read" --quick
             fi
             step "the scout: what people asked, and what the site lacks" python3 -I scripts/auto/scout.py --questions "$RUNNER_TEMP/questions.json" --unknown "$RUNNER_TEMP/unknown-names.json"
             # (17 November 2026, decision 27 step a) "hardcode is not enough our ai has to correct and update itself with all possible relevant
@@ -194,7 +194,7 @@ jobs:
               step "names we do not know among the questions the page sent, looked up in open name lists" python3 -I scripts/auto/names_open.py learn --tokens "$RUNNER_TEMP/unknown-names-2.json"
             fi
           fi
-          live_now "how each question was read"
+          live_now "how each question was read" --quick
           if [ "$DO_LANE" = "true" ] || [ -f "$RUNNER_TEMP/new-items" ]; then   # (a question that was just listed is worked on in this same run)
             # (19 November 2026; the senior author, 18 November, 23:42 Athens: "like 5 minutes pass and i don't have an answer ... it should be answered almost
             # immediately") the two searches run at the same time (each writes its own files; 24 and 56 seconds one after the other on 18 November), and the
@@ -207,7 +207,7 @@ jobs:
             cat "$RUNNER_TEMP/find-official.log" "$RUNNER_TEMP/find-papers.log" >> "$L"
             if [ $co -ne 0 ]; then echo "!! the search for official pages failed ($co)" >> "$L"; fi
             if [ $cp -ne 0 ]; then echo "!! the search for papers failed ($cp)" >> "$L"; fi
-            live_now "what was found, and which questions are being written now" --working
+            live_now "what was found, and which questions are being written now" --working --quick
             step "the lane writes: the questions people sent, first and alone" python3 -I -u scripts/auto/lane.py run --sent --max 3 --minutes 9
             echo "== keep and publish what was written for them [$(date -u +%H:%M:%S)]" >> "$L"; keep_now
             own "the system asks by itself: what people ask about every drug, where a page lacks it" python3 -I scripts/auto/grow.py run

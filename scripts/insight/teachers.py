@@ -34,7 +34,7 @@ INPUT = ROOT / "site" / "insight" / ".cache" / "index-input.json"
 TARGET, A_RUN, ASK = 16, 8, 10
 NEAR_TARGET, NEAR_ASK = 6, 6          # near-miss questions per answer: questions that sound close and that the answer does not answer
 ROOM = {"groq": 100000, "cf": 4000, "google": 200}   # what is left of each free allowance today before the teachers stop asking it: the lane's room comes first
-WRITERS = ["gemini:gemma-4-26b-a4b-it", "gemini:gemma-4-31b-it", "groq:openai/gpt-oss-120b", "@cf/meta/llama-4-scout-17b-16e-instruct"]   # (the first a quick one: 4B at work of 26B)
+WRITERS = ["groq:openai/gpt-oss-120b", "gemini:gemma-4-31b-it", "gemini:gemma-4-26b-a4b-it", "@cf/meta/llama-4-scout-17b-16e-instruct"]   # (20 November 2026: Groq's first, the quickest in form; in the Auto run of 23:41 UTC Gemma 26B wrote nothing, and the run's clock was over before the next was asked)
 ROOM_TOKENS = 3000   # Google's Gemma thinks before it writes: with 700 tokens of room its thought filled them and it wrote nothing (the Auto run of 19 November, 20:31 UTC)
 CHECKERS = ["groq:openai/gpt-oss-120b", "gemini:gemini-3.5-flash-lite", "@cf/meta/llama-4-scout-17b-16e-instruct", "gemini:gemma-4-31b-it"]
 TODAY = datetime.date.today().isoformat()
@@ -177,13 +177,17 @@ def listed(raw, key):
 
 
 def ask_model(models, messages, chat, avoid=None, tokens=ROOM_TOKENS):
-    """(answer, model) from the first model with a key and room, not of the family to avoid; (None, why) otherwise."""
+    """(answer, model) from the first model with a key and room, not of the family to avoid; (None, why) otherwise. (20 November 2026) A model that
+    answers nothing at all is passed over for the next one, as one that cannot be asked is."""
     import llm
     why = "no model with a key and room"
     for m in models:
         if avoid and family(m) == avoid: continue
         if chat is llm.chat and (not llm.has(m) or not room(m)): continue
-        try: return chat(m, messages, tokens), m
+        try:
+            out = chat(m, messages, tokens)
+            if isinstance(out, str) and not out.strip(): why = f"{m}: an empty reply"; continue
+            return out, m
         except llm.Budget as e: why = f"{m}: {e}"
         except llm.Unavailable as e: why = f"{m}: {e}"
     return None, why
@@ -304,7 +308,7 @@ def selftest():
     assert got["x_meth"] == ["how long does crystal meth stay in your blood", "meth in blood how long"], got["x_meth"]   # no drug, a copy, a link, a word: out; the checker's last "false": out
     assert got["x_gen"] == ["did decriminalisation work in portugal", "portugal drug policy results"], got["x_gen"]
     saved = json.load(open(AUTO)); assert saved["variants"]["x_meth"][0]["by"] == WRITERS[0] and family(saved["variants"]["x_meth"][0]["ok"]) != family(WRITERS[0])
-    assert all(family(c) != "google" for c in calls[1::2]), calls
+    assert all(family(c) != family(WRITERS[0]) for c in calls[1::2]), calls   # the checker is always of another family than the writer
     assert family("gemini:gemma-4-31b-it") == family("gemini:gemini-3.5-flash-lite") == "google" and family("groq:openai/gpt-oss-120b") == "gpt-oss"
     assert listed('{"ways": ["a b", "c d"]}', "ways") == ["a b", "c d"] and listed('Sure: ["is weed bad", "weed risks"]', "ways") == ["is weed bad", "weed risks"]
     assert listed("1. is weed bad for you\n2) weed risks\n- pot dangers", "ways") == ["is weed bad for you", "weed risks", "pot dangers"] and listed("", "ways") == []

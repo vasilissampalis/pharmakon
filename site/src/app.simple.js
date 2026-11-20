@@ -68,6 +68,7 @@ const REWRITING = id => '<p class="ask-short rewriting">We are rewriting this an
    tap opens the rest: the catch ("But") first, then the picture of the numbers, "How do we know?" and the way to the
    evidence, and at the end up to three answers to read next. */
 function ansHtml(id, q, pre, rn) {
+  if (typeof isAuto === "function" && isAuto(id)) return autoAnsHtml(id, q, pre);   // (2.27) an answer the system wrote, where it stands among the checked ones
   const c = claimById[id]; if (!c) return "";
   const sp = (SIMPLE.claims || {})[id];
   if (!sp) return '<details class="ask" id="' + (pre || "ask-") + id + '"><summary><span class="ask-q">' + esc(q) + '</span><span class="ask-i" aria-hidden="true"></span></summary><div class="ask-a">' + REWRITING(id) + "</div></details>";
@@ -192,7 +193,7 @@ function renderShared(ctx, id) {
 // GEN, DC or "interactions"), for the addresses of the answers to read next
 function askList(items, key, first, pre, page) {
   const n = first || 4, shown = items.slice(0, n), rest = items.slice(n);
-  const rn = i => readNextHtml(items[i][0], nextInTopic(items, i), page, pre);
+  const rn = i => /^au_/.test(items[i][0]) ? "" : readNextHtml(items[i][0], nextInTopic(items, i), page, pre);
   return '<div class="asks">' + shown.map(([id, q], i) => ansHtml(id, q, pre, rn(i))).join("") +
     (rest.length ? '<div class="asks-more" id="more-' + key + '" hidden>' + rest.map(([id, q], i) => ansHtml(id, q, pre, rn(n + i))).join("") + '</div><button type="button" class="morebtn" data-more="more-' + key + '">' + rest.length + " more question" + (rest.length === 1 ? "" : "s") + "</button>" : "") + "</div>";
 }
@@ -580,10 +581,14 @@ function kitAnswersHtml(slug) {
    checking page: In short first, then the questions by topic; each answer's evidence opens over the page. */
 function dcKitsHtml() {
   const qs = drugQuestions(DC); if (!qs.length) return "";
-  const groups = (QUESTIONS[DC] || []).map(g => [g.topic, g.items.filter(([id]) => claimById[id])]).filter(([, it]) => it.length);
+  // (2.27) the answers the system wrote about drug checking, each under its topic (autoPlaced); a new topic or none: under More questions
+  const AP = typeof autoPlaced === "function" ? autoPlaced(DC, qs) : { placed: [], rest: [] };
+  const groups = (QUESTIONS[DC] || []).map(g => [g.topic, g.items.filter(([id]) => claimById[id]).concat(AP.placed.filter(x => x[2] === g.topic).map(x => [x[0], x[1]]))]).filter(([, it]) => it.length);
+  const known = new Set(groups.map(g => g[0])), more = AP.placed.filter(x => !known.has(x[2])).concat(AP.rest).map(x => [x[0], x[1]]);
   // (site 2.4: a section of the drug checking page; its heading is the section's, and the menu took the place of "In short")
   return '<p class="say">What studies found when test strips and colour tests were checked in a laboratory, and what people did after testing.</p>' +
-    groups.map(([t, it], i) => '<h3 class="tp">' + esc(t) + "</h3>" + askList(it, "dck-" + i, 999, null, DC)).join("");
+    groups.map(([t, it], i) => '<h3 class="tp">' + esc(t) + "</h3>" + askList(it, "dck-" + i, 999, null, DC)).join("") +
+    (more.length ? '<h3 class="tp">More questions</h3>' + askList(more, "dck-more", 999, null, DC) : "");
 }
 /* ---------- Facts about drug use: the answers about no single drug (women and men, genes and family, the words used about
    people, starting young), with their own In short and quiz (the senior author, 31 October: general facts such as men and
@@ -592,7 +597,7 @@ let FACTS_DRAWN = false;
 function renderFacts() {
   const box = document.getElementById("facts-box"); if (!box || FACTS_DRAWN) return;
   FACTS_DRAWN = true;
-  const qs = drugQuestions(GEN);
+  const own = drugQuestions(GEN), AP = autoPlaced(GEN, own), qs = own.concat(AP.placed.map(x => x.slice(0, 3)), AP.rest);   // (2.27) the answers the system wrote, each under its topic; the others under More questions
   if (!qs.length) { box.innerHTML = '<p class="say">The first answers are being checked. They will appear here soon.</p>'; return; }
   // the sections (data/site/pages.json), each with its topics as plain headings; a topic no section names goes last
   const defs = ((typeof PAGES !== "undefined" && PAGES.facts) || {}).sections || [], used = new Set(), nAns = n => n + (n === 1 ? " answer" : " answers");
@@ -849,7 +854,10 @@ function renderDrug(slug) {
   const s = subBySlug[slug]; if (!s) return;
   renderedDrug = slug; currentSlug = slug;
   const f = fam(s.cls), fp = famPlain(s.cls), ph = headerPhoto(slug), names = documentedNames(slug).slice(0, 3);
-  const qs = drugQuestions(slug), zone = z => qs.filter(([, , t]) => topicZone(t) === z);
+  // (2.27) the answers the system wrote about this drug, each under the topic of the checked answer nearest to it (autoPlaced); one near a mixing answer among the mixing answers
+  const mixOwn = mixQuestions(slug), AP = autoPlaced(slug, drugQuestions(slug).concat(mixOwn)), mixIds = new Set(mixOwn.map(x => x[0]));
+  const toMix = x => mixIds.has(x[3]) || topicZone(x[2]) === "mix";
+  const qs = drugQuestions(slug).concat(AP.placed.filter(x => !toMix(x)).map(x => x.slice(0, 3))), zone = z => qs.filter(([, , t]) => topicZone(t) === z);
   const forms = (FORMS[slug] || []).filter(x => x.name), nForms = (FORMS[slug] || []).length, short = s.name.replace(/\s*\(.*\)$/, "");
   const S = {}, nAns = n => n + (n === 1 ? " answer" : " answers");
   const add = (id, name, chip, body, n, line) => { S[id] = { id, name, chip, body, n, line }; };
@@ -865,13 +873,13 @@ function renderDrug(slug) {
       bef ? "Before & after" : day ? "Day after" : "After stopping", ordered, "after", { timed: true });
   }
   // mixing: the page's own answers and the mixing page's answers about this drug
-  asks("d-mix", "Is it safe to mix?", "Mixing", mixQuestions(slug), "mix", { flat: true }, '<p><a class="go" href="#interactions">Mixing drugs: every answer we have</a></p>');
+  asks("d-mix", "Is it safe to mix?", "Mixing", mixOwn.concat(AP.placed.filter(toMix).map(x => x.slice(0, 3))), "mix", { flat: true }, '<p><a class="go" href="#interactions">Mixing drugs: every answer we have</a></p>');
   // the drug as a medicine, or treatment in hospital or clinic (for example after a long PCP psychosis): the heading names which
   const med = zone("med"), medAs = med.some(([, , t]) => /as a medicine/i.test(t)), medTx = med.some(([, , t]) => /treatment/i.test(t) && !/as a medicine/i.test(t));
   asks("d-med", medAs ? (medTx ? "As a medicine, and treatment" : "Is it used as a medicine?") : "What can treatment do?", medAs ? "Medicine" : "Treatment", med, "med");
   asks("d-feel", "What does it feel like?", "Feels", zone("feel"), "feel");
-  // (2.6) the answers the system wrote about this drug, in a section of their own: never among the checked ones
-  { const au = autoFor(slug); if (au.length) add("d-auto", "New answers", "New", '<p class="auto-sec">Drafted automatically from research papers. Each shows its sources.</p>' + autoListHtml(au, false), nAns(au.length), "From research papers"); }
+  // (2.6) the answers the system wrote about this drug; (2.27) each now stands under its topic where one is near (above), and the others here, in a part of their own
+  if (AP.rest.length) add("d-auto", "More questions", "More", '<p class="auto-sec">Drafted automatically from research papers and official health pages. Each shows its sources.</p>' + askList(AP.rest, "auto", 999, null, slug), nAns(AP.rest.length), AP.rest.slice(0, 2).map(x => x[1]).join(" · "));
   // what it looks like: photos first, and looks do not tell you what is inside
   if (forms.length) add("d-looks", "What does it look like?", "Looks", formsHtml(slug), forms.length + (forms.length === 1 ? " form" : " forms"), forms.slice(0, 3).map(x => x.name).join(" · ") + (forms.length > 3 ? " · more" : ""));
   if (LEGAL.some(d => d.substance === slug)) add("d-law", "Is it legal where I am?", "Law", lawHtml(slug), "", "What the law says in your country");

@@ -106,6 +106,8 @@ N_PASSAGES = 7          # passages of a paper shown to the reader
 # immediately"; the notes of that evening's runs: 34 minutes on one question, and a run that sat on one step until GitHub stopped it after 40).
 AT_ONCE = 6             # sources fetched and read at the same time
 READ_SECONDS = 100      # what one question's reading may take: a source not read by then is written down as not read, and the answer is written from the rest
+READ_SECONDS_SENT = 150 # (20 November 2026) for a question a person sent: eleven tries of such questions since 19 November ended with nothing read "for want of time", and
+                        # each sent its person to wait for another run; fifty seconds more within the same seven minutes (QUESTION_SECONDS) cost less than that
 QUESTION_SECONDS = 420  # what one question may take in all: past it no model is asked or waited for (llm.STOP_AT), and the question is tried again in the next run. (A last stop,
                         # not what an answer takes: with the fast models about two minutes; where only Google's slower ones have room, four to six. On the clock a strong
                         # further reader with 20 calls a day is waited for 80 seconds, not 170: one that does not answer is "could not be asked", as before.)
@@ -2386,7 +2388,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
             try: before = json.load(open(af, encoding="utf-8"))
             except (OSError, ValueError): before = None
             rec = make(w, found, chat, enc, models, official=official, names=names, before=before, claims=checked_claims, own_check=own_chk, stakes_how=stakes_policy() if real else None, note=held_say("au_" + w["id"]) if real else "", agreed=agreed_claims(w["id"]) if real else (), last=last_refusal(before) if real else "",
-                       pool=pool, at_once=AT_ONCE if real else 1, read_secs=READ_SECONDS if real else None)
+                       pool=pool, at_once=AT_ONCE if real else 1, read_secs=(READ_SECONDS_SENT if w.get("from") == "a question visitors sent" else READ_SECONDS) if real else None)
             if own_err and rec.get("status") == "published": rec["status"] = "waiting"; rec["for"] = "again"; rec["soft"] = "our own checker could not be run"; rec["why"] = "our own checker is in use and could not be run in this run (" + own_err + "): worked on again by itself in the next run"
             cut = 0
         except llm.Budget as e:

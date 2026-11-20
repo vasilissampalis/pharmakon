@@ -1500,6 +1500,9 @@ function insBodyHtml(id, depth) {
   return depth === "full" ? body.replace('<details class="ask-how">', '<details class="ask-how" open>') : body;
 }
 const insPageLink = (id, page) => { if (isAuto(id)) { const p = AUTO[id].page, k = typeof p === "string" && p.slice(0, 4) === "new:" ? p.slice(4) : "";      // (2.8) an answer on a page the system started links to that page
+    // (2.27) one that stands on a drug's page or on Big questions links to its place there
+    if (subBySlug[p]) return '<p class="ins-page"><a class="qz2-ev" href="#s-' + esc(p) + "/q-" + esc(id) + '">See it on the ' + esc(drugName(p)) + " page " + icon("arrow") + "</a></p>";
+    if (p === GEN) return '<p class="ins-page"><a class="qz2-ev" href="#facts/q-' + esc(id) + '">See it on Big questions ' + icon("arrow") + "</a></p>";
     return k && typeof AUTO_PAGES === "object" && AUTO_PAGES && AUTO_PAGES[k] ? '<p class="ins-page"><a class="qz2-ev" href="#auto/p-' + esc(k) + '">' + esc(AUTO_PAGES[k]) + ": its page " + icon("arrow") + "</a></p>"
       : '<p class="ins-page"><a class="qz2-ev" href="#auto">All new answers ' + icon("arrow") + "</a></p>"; }
   const addr = answerAddr(id, page), w = mfWhere(page), pl = sharedPlace(page || "", id);
@@ -2633,6 +2636,25 @@ function autoBodyHtml(id) {
     '<details class="ask-how"><summary>' + (a.from && a.from.official ? "What the sources found" : "What the research found") + '</summary><ul class="ask-howl">' + a.how.map((t, i) => { const hq = a.howq && a.howq[i], ref = hq && a.refs.find(x => x.id === hq.ref);
       // (2.7.1) the source's own words under the line, 15 at most: what the system wrote can be compared with what the source says
       return "<li>" + esc(t) + (hq && ref ? '<span class="how-q"><q>' + esc(hq.q) + '</q> <span class="how-src">' + esc(inTextLabel(ref, a.refs)) + "</span></span>" : "") + "</li>"; }).join("") + "</ul></details>" + tail;
+}
+/* (2.27; the senior author, 20 November 2026, 00:51: "our ai should enrichen the drug page menus and all the other sections of the site with new information it
+   answers instantly and endlessly. it should categorize the answers to sections of the menu or create new sections") Where each answer the system wrote for a
+   page stands: under the topic of the checked answer of the page nearest to it in meaning (AUTO_NEAR: the index finds it, and keeps it only from a likeness
+   measured on the checked answers themselves, scripts/insight/build_index.py, auto_place); an answer about amounts, or one near none of them, stands in the
+   page's part for more questions. items: the page's own [id, question, topic]. Returns { placed: [[id, question, topic, nearest id]], rest: [[id, question, "Questions people asked"]] }. */
+function autoPlaced(page, items) {
+  const near = typeof AUTO_NEAR === "object" && AUTO_NEAR ? AUTO_NEAR : {}, topicOf = new Map((items || []).map(x => [x[0], x[2]])), placed = [], rest = [];
+  // the editor's word first (data/auto/topics.json: a topic of the page, or a new one), then the nearest checked answer
+  autoFor(page).forEach(id => { const a = AUTO[id], c = near[id], t = a.kind === "amounts" ? null : a.topic ? a.topic : c && topicOf.has(c) ? topicOf.get(c) : null;
+    if (t != null) placed.push([id, a.q, t, a.topic ? ([...topicOf].find(([, x]) => x === t) || [""])[0] : c]); else rest.push([id, a.q, "Questions people asked"]); });
+  return { placed, rest };
+}
+// its card, as a checked answer's: the question and the first line of the answer closed; open, the answer in the site's own form under its one line
+// ("Drafted automatically from ..."), with no bars, since nobody has rated it
+function autoAnsHtml(id, q, pre) {
+  const a = AUTO[id];
+  return '<details class="ask ask-auto' + (wasSeen(id) ? " seen" : "") + '" id="' + (pre || "ask-") + id + '" data-cid="' + id + '"><summary><span class="ask-h"><span class="ask-q">' + esc(q || a.q) + '</span><span class="ask-s">' + esc(a.short) + '</span><span class="ask-m auto-m">Drafted automatically</span></span>' +
+    '<span class="ask-seen" title="You have read this">' + icon("check") + '</span><span class="ask-i" aria-hidden="true"></span></summary><div class="ask-a">' + autoBodyHtml(id).replace('<p class="ask-short">' + esc(a.short) + "</p>", "") + "</div></details>";   // (the short answer is the card's own, as on a checked card)
 }
 function autoRowHtml(x, best) {
   const a = AUTO[x.id], w = mfWhere(a.page);
