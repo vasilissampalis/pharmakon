@@ -52,7 +52,7 @@
  "aspects": [
   {
    "name": "dying",
-   "ask": "\\b(?:die|dies|died|dying|death|deaths|dead|deadly|kill|kills|killed|killing|fatal|fatally|fatality|fatalities|lethal|overdose|overdoses|overdosed|overdosing|od|ods)\\b",
+   "ask": "\\b(?:die|dies|died|dying|death|deaths|dead|deadly|(?:kill|kills|killed|killing)(?!\\s+(?:off\\s+)?(?:your\\s+|my\\s+|the\\s+|our\\s+|their\\s+)?(?:brain\\s+)?(?:cells?|neurons?|high|buzz|vibe|mood|pain|time|germs|bacteria|sperm|appetite|libido|sex\\s+drive|motivation|creativity|gains)\\b)|fatal|fatally|fatality|fatalities|lethal|overdose|overdoses|overdosed|overdosing|od|ods)\\b",
    "has": "\\b(?:die|dies|died|dying|death|deaths|dead|deadly|kill|kills|killed|killing|killer|fatal|fatally|fatality|fatalities|lethal|overdose|overdoses|overdosed|overdosing|mortality|poisoning|poisonings|poisoned|life-threatening|survive|survived|survival)\\b",
    "narrow": [
     "\\b(?:withdraw\\w*|coming off|come off|comes off|stop|stops|stopping|stopped|quit\\w*|detox\\w*|cold turkey|abstinen\\w*)\\b",
@@ -60,7 +60,8 @@
     "\\b(?:pregnan\\w*|breast-?feed\\w*|bab(?:y|ies)|unborn|newborns?|child\\w*|kids?|teen\\w*|adolescen\\w*)\\b",
     "\\b(?:test strips?|strips?|reagents?|kits?|naloxone)\\b"
    ],
-   "two": true
+   "two": true,
+   "_why_kill": "2.28.8 (20 November 2026): 'kill' said of a thing is no question about dying ('does weed kill brain cells' asked every answer on cannabis to speak of dying, and none could be its best match). Measured on the gold set and the near-miss questions: nothing changes there."
   },
   {
    "name": "purity",
@@ -76,6 +77,18 @@
    "narrow": [],
    "two": true,
    "together": "\\b(?:with|together|mix\\w*|combin\\w*|and|plus|on top of|at the same time|while)\\b"
+  },
+  {
+   "name": "vaping",
+   "ask": "\\bvap(?:e|es|ed|ing|er|ers|or|ors|ourised|ourized|orised|orized|oriser|orizer|orisers|orizers|ourise|ourize|orise|orize)\\b",
+   "has": "\\bvap",
+   "_why": "2.28.8 (20 November 2026): 'how bad is vaping for your lungs' got the answer on what smoking cannabis does to the lungs as its best match (judge 0.85). An answer none of whose wordings nor its short answer speaks of vaping never answers a question about vaping. Measured on the gold set and the near-miss questions: nothing changes there."
+  },
+  {
+   "name": "harm",
+   "ask": "\\b(?:damage|damages|damaged|damaging|harm|harms|harmed|harmful|hurt|hurts|fry|fries|fried|rot|rots|rotting|destroy|destroys|ruin|ruins|ruined|wreck|wrecks|wrecked|mess(?:es)? up)\\b",
+   "has": "\\b(?:damag\\w*|harm\\w*|hurt\\w*|injur\\w*|toxic\\w*|neurotox\\w*|problems?|worse|deficits?|impair\\w*|declin\\w*|risks?|riskier|danger\\w*|safe|safer|safety|bad for|lasting|long[- ]term|diseases?|cancers?|deaths?|die|dies|kill\\w*|lesions?|atrophy|shrink\\w*|memory|cognit\\w*|rot\\w*|fr(?:y|ied)|wreck\\w*|ruin\\w*|effects? on|side effects?|adverse|poison\\w*|failure|attacks?|strokes?|psychosis|dependen\\w*|addict\\w*|withdrawal|overdos\\w*|teeth|bladder|liver|kidneys?|heart|lungs?|brain cells)\\b",
+   "_why": "2.28.8 (20 November 2026): 'does ketamine damage your brain' got the answer on what brain scans show while ketamine is given as its best match (judge 0.72), an answer whose near-miss readers had written 'Do brain scans show damage in people who use ketamine a lot?' as a question it does not answer. A question about damage or harm is answered only by an answer that speaks of harm in any of its wordings or its short answer (141 of 397 answers do not). Measured: the gold set does not change; near-miss questions given the answer they do not get 100 of 1810 (101); of the editor's 198 probe questions only that one changes."
   }
  ],
  "say": [
