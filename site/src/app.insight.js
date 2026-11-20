@@ -131,7 +131,7 @@ function insPrepare(d, vocabText) {
   INS.W = insRows(d.W, d.dim); INS.M = insRows(d.M, d.dim); INS.S = insRows(d.S, d.dim);
   INS.idx = new Map(d.ids.map((id, i) => [id, i]));
   // (2.22) what a question asks about, where getting it wrong does harm (site/insight/model.json, aspects): [the question's pattern, each answer's mark]
-  INS.aspects = (d.aspects || []).map(a => ({ ask: new RegExp(a.ask, "i"), has: a.has, best: +a.best || 0, narrow: (a.narrow || []).map(([n, bits]) => ({ re: new RegExp(n, "i"), bits })), two: a.two || "" }));
+  INS.aspects = (d.aspects || []).map(a => ({ ask: new RegExp(a.ask, "i"), has: a.has, best: +a.best || 0, narrow: (a.narrow || []).map(([n, bits]) => ({ re: new RegExp(n, "i"), bits })), two: a.two || "", together: a.together ? new RegExp(a.together, "i") : null }));
   INS.about = d.about.map(xs => new Set(xs.map(k => d.slugs[k])));   // the drugs each answer is about
   // the names that name a drug in a question (build_index.py's names_table: the longest first), and the drugs each stands for
   INS.nameOf = new Map(d.names.map(([n, xs]) => [n, xs.map(k => d.slugs[k])]));
@@ -746,7 +746,8 @@ function insJudge(f) {
 // (and, for such a question: the judge's number at the aspect's own cut or more; no narrower case than the question names: an answer whose own question is about
 // withdrawal, touching, pregnancy or test strips, or about two drugs together, answers a question about dying only where the question says so too. ng: the drugs the question names)
 function insSpeaks(q, i, p, ng) {
-  return !q || !INS.aspects || INS.aspects.every(a => !a.ask.test(q) || (a.has.charAt(i) === "1" && p >= a.best && !a.narrow.some(n => n.bits.charAt(i) === "1" && !n.re.test(q)) && !(a.two && a.two.charAt(i) === "1" && ng < 2)));
+  // (2.28.2) together: an answer about two drugs TOGETHER answers such a question only where the question speaks of them together too ("is weed worse than alcohol")
+  return !q || !INS.aspects || INS.aspects.every(a => !a.ask.test(q) || (a.has.charAt(i) === "1" && p >= a.best && !a.narrow.some(n => n.bits.charAt(i) === "1" && !n.re.test(q)) && !(a.two && a.two.charAt(i) === "1" && (a.together ? !a.together.test(q) : ng < 2))));
 }
 function insTiers(sc, groups, X, q) {
   X = X || INS;
@@ -870,6 +871,7 @@ function insUnfinished(q, onPage) {
   if (any(U.whole)) return "";
   if (U.ends.has(last) && !any(U.strand)) return "ends";
   if (names >= 2 && w.every(x => x === "it" || U.join.has(x))) return "";               // two drugs and a word that joins them
+  if (names >= 2 && /^(?:is|are|was|were|isnt|arent)\s+it\s+(?:an?\s+|the\s+)?(?:kind\s+of\s+|type\s+of\s+|form\s+of\s+)?(?:an?\s+)?it$/.test(s)) return "";   // (2.28.2) "is kratom an opioid", "are benzos opioids": whether one is one of the other is a whole question
   // nothing but function words and words for people: a subject, and nothing said of it, unless a form of "be" stands before
   // a last word that describes people ("are people gay") or before "for kids" and the like ("is weed for kids")
   const people = w.every(x => U.aux.has(x) || U.who.has(x) || U.whoadj.has(x)), be = w.findIndex(x => U.be.has(x)), gap = w.some(x => U.gap.has(x));

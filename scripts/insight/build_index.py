@@ -235,7 +235,7 @@ class Ranker:
         self.W, self.M, self.S = unit_rows(D["W"], dim), unit_rows(D["M"], dim), unit_rows(D["S"], dim)
         self.lex = Words(D["docs"]); self.wt = D["weights"]; self.t = D["tiers"]; self.J = D["judge"]
         # 2.22: (what the question asks about, which answers speak of it, the judge's cut for such a question, the narrower cases with the answers that are about each, the answers about two drugs)
-        self.aspects = [(re.compile(a["ask"], re.I | re.A), a["has"], float(a.get("best") or 0), [(re.compile(n, re.I | re.A), bits) for n, bits in a.get("narrow") or []], a.get("two") or "") for a in D.get("aspects") or []]
+        self.aspects = [(re.compile(a["ask"], re.I | re.A), a["has"], float(a.get("best") or 0), [(re.compile(n, re.I | re.A), bits) for n, bits in a.get("narrow") or []], a.get("two") or "", re.compile(a["together"], re.I | re.A) if a.get("together") else None) for a in D.get("aspects") or []]
         self.about = [set(D["slugs"][k] for k in xs) for xs in D["about"]]
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
         self.pat = name_pattern([n for n, _ in D["names"]])
@@ -301,11 +301,11 @@ class Ranker:
         that the question does not name; or it is about two drugs and the question names fewer (ng: how many it names).
         q None: not asked (the callers that have no question at hand)."""
         if q is None: return True
-        for ask, has, best, narrow, two in self.aspects:
+        for ask, has, best, narrow, two, together in self.aspects:
             if not ask.search(q): continue
             if has[c] != "1" or p < best: return False
             if any(bits[c] == "1" and not rx.search(q) for rx, bits in narrow): return False
-            if two and two[c] == "1" and ng < 2: return False
+            if two and two[c] == "1" and ((not together.search(q)) if together else ng < 2): return False   # (2.28.2) together: see model.json, comparison
         return True
     def tiers(self, plain, topic, groups, feats, q=None):
         """The page's rule. c, the first candidate in the page's order, is the best match if it is about every drug the
@@ -715,7 +715,7 @@ def main():
     own = [a["wordings"][0] if a["wordings"] else "" for a in A]
     out["aspects"] = [dict({"name": a["name"], "ask": a["ask"], "has": "".join("1" if re.search(a["has"], s, re.I | re.A) else "0" for s in spoken)}, **({"best": float(a["best"])} if a.get("best") else {}),
                            **({"narrow": [[n, "".join("1" if re.search(n, s, re.I | re.A) else "0" for s in own)] for n in a["narrow"]]} if a.get("narrow") else {}),
-                           **({"two": "".join("1" if two(s) else "0" for s in own)} if a.get("two") else {})) for a in CONFIG.get("aspects") or []]
+                           **({"two": "".join("1" if two(s) else "0" for s in own)} if a.get("two") else {}), **({"together": a["together"]} if a.get("together") else {})) for a in CONFIG.get("aspects") or []]
     # 2.5: the list of questions not answered yet (data/site/wanted.json), as a second, small index of the same kind
     wl = wanted_index(json.load(open(IN, encoding="utf-8")).get("wanted") or [], out, names, pat, at)
     if wl: out["wanted"] = wl
