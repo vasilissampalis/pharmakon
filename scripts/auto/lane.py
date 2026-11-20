@@ -2376,6 +2376,12 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         if own_chk: print(f"lane: our own checker is {own_chk.e.get('name')} (from {own_chk.e.get('from')}), at least {own_chk.e.get('threshold')}")
         if own_err: print("lane: our own checker is in use and could NOT be run here: every answer of this run waits for the editor:", own_err)
     if real and not trial and not ids: order = [w for w in order if not kept_for_sent(w)] or order[:0]      # (what is left of the day is for the questions people send)
+    # (20 November 2026) of the system's own questions never tried, one a run before the rest of its work: the questions it lists from the forums on research
+    # chemicals few papers name (2-oxo-PCE, ETH-LAD, ALD-52) took every place of the main pass, run after run, and found nothing to write from, while an answer
+    # the editor held (1P-LSD) or one an older lane wrote and that waits was not written again. The others never tried come after that work, not never
+    if not ids and not again and not trial and not only_sent:
+        fresh = [w["id"] for w in order if w.get("from") != "a question visitors sent" and turn(w) == 0]
+        if len(fresh) > 1 and len(order) > len(fresh): later = set(fresh[1:]); order = [w for w in order if w["id"] not in later] + [w for w in order if w["id"] in later]
     def note_try(w, status, why, **more):
         """One try in the lane's state: when, how many today, by which teams, and whether the fault was the answer's ("soft": it was not)."""
         was = st["items"].get(w["id"]) or {}; same_day = was.get("last") == TODAY
