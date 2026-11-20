@@ -19,17 +19,21 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
   "run": "44677868343",
+  "read_by": {
+   "gemini-3.5-flash-lite": 5,
+   "gemini-3.1-flash-lite": 2
+  },
   "read_seconds": 150,
   "from": {
    "papers": 1,
@@ -37,16 +41,17 @@
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 339
+  "seconds": 221
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 2 addresses the uncertainty about the precise mechanisms of methamphetamine‑induced liver damage, which does not serve as a limitation or doubt on the claim in sentence 1 that the risk of harm changes when methamphetamine is used w)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "3 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
-  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "time": "1 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
+  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9196) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9511)"
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.46, but 0.97, how1 0.29, how2 0.94",
+  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 2 addresses the uncertainty about the precise mechanisms of methamphetamine‑induced liver damage, which does not serve as a limitation or doubt on the claim in sentence 1 that the risk of harm changes when methamphetamine is used w)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: but: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
  },
  "sources": [
   {
@@ -112,36 +117,45 @@
    "near": 0.857,
    "money": [],
    "design": {
-    "passage": 4,
-    "where": "Introduction",
-    "quote": "This review aims to revisit the pharmacological properties of methamphetamine along with its neurotoxic, cardiovascular, hepatotoxic and ophthalmologic effects in clinical populations and preclinical models.",
-    "text": "a mechanistic review of methamphetamine toxicity"
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+    "text": "A mechanistic review on toxicity effects of methamphetamine"
    },
    "findings": [
-    {
-     "passage": 4,
-     "where": "Introduction",
-     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
-     "text": "Polysubstance use is one of the various factors that can modify the risk of methamphetamine toxicity.",
-     "id": "F1",
-     "second_hand": ""
-    },
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
-     "text": "The extent of methamphetamine toxicity depends on pharmacological factors including polysubstance use.",
+     "text": "The extent of methamphetamine toxicity depends on various pharmacological factors, including polysubstance abuse.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "Introduction",
+     "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+     "text": "Polysubstance abuse can modify the risk of methamphetamine toxicity.",
      "id": "F2",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 39,
+     "where": "Toxicity effects › Hepatotoxicity",
+     "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+     "text": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "exact risk level for particular adulterants",
  "wanted": [
   {
    "doi": "10.1111/j.1360-0443.2009.02564.x",
@@ -206,6 +220,14 @@
    "why": "no draft passed: not accepted at try 2: a second reader did not accept but (our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -215,14 +237,7 @@
    "kind": "review",
    "at": "10.7150/ijms.99159",
    "kept": 2,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The exact mechanisms of how methamphetamine causes liver damage are not yet clear.",
-     "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The Main Molecular Mechanisms Underlying Methamphetamine- Induced Neurotoxicity and Implications for Pharmacological Treatment",
@@ -230,8 +245,7 @@
    "kind": "review",
    "at": "10.3389/fnmol.2018.00186",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "TBHQ-Overview of Multiple Mechanisms against Oxidative Stress for Attenuating Methamphetamine-Induced Neurotoxicity",
@@ -239,8 +253,14 @@
    "kind": "review",
    "at": "10.1155/2020/8874304",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (OSError)"
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The specific mechanism of how TBHQ can play the role of antioxidative stress through Nrf2 is not very clear.",
+     "quote": "Many studies have confirmed that TBHQ can activate Nrf2 and can play the role of antioxidative stress through Nrf2, but the specific mechanism is not very clear.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Pharmacological Treatments for Methamphetamine Use Disorder: Current Status and Future Targets",
@@ -248,8 +268,7 @@
    "kind": "review",
    "at": "10.2147/sar.s431273",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (OSError)"
+   "thrown": []
   },
   {
    "title": "The Effectiveness of Mindfulness in the Treatment of Methamphetamine Addiction Symptoms: Does Neuroplasticity Play a Role?",
@@ -265,8 +284,7 @@
    "kind": "review",
    "at": "10.3390/metabo9100195",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Vision health perspectives on Breaking Bad: Ophthalmic sequelae of methamphetamine use disorder",
@@ -274,8 +292,14 @@
    "kind": "review",
    "at": "10.3389/ftox.2023.1135792",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The biological processes behind ocular complications from methamphetamine use are not yet fully understood and are still being studied.",
+     "quote": "The pathophysiology of methamphetamine-related ocular complications has not yet been fully elucidated and is a topic of ongoing investigation.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Methamphetamine-Induced Neuronal Damage: Neurotoxicity and Neuroinflammation",
@@ -293,17 +317,286 @@
    "F2"
   ],
   "direct": "It depends",
-  "but": [],
+  "but": [
+   "L1"
+  ],
   "how": [
    [
     "DA",
     "F1",
-    "F2"
+    "F2",
+    "L1"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "exact risk level for particular adulterants"
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.4594,
+   "but": 0.9737,
+   "how1": 0.2874,
+   "how2": 0.94
+  },
+  "scores_quotes_alone": {
+   "short": 0.5172,
+   "but": 0.9659,
+   "how1": 0.2479,
+   "how2": 0.9635
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. A 2025 review says using methamphetamine with other drugs can change the risk of harm.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F2",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The review says the exact ways methamphetamine damages the liver are not yet clear.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "ramli_2025",
+       "where": "Toxicity effects › Hepatotoxicity",
+       "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+       "sha": "2f89e3f4853511e1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review of how methamphetamine affects the body says toxicity depends on factors like using other drugs.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+       "sha": "6bcbd2764ac3c987"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review notes that using other drugs can modify the risk of methamphetamine toxicity.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The review states that the precise mechanisms behind liver damage from methamphetamine remain unclear.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "ramli_2025",
+       "where": "Toxicity effects › Hepatotoxicity",
+       "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+       "sha": "2f89e3f4853511e1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. The risk of harm from methamphetamine can change when people use it with other drugs.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F2",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The exact ways methamphetamine harms the liver are not yet clear.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "ramli_2025",
+       "where": "Toxicity effects › Hepatotoxicity",
+       "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+       "sha": "2f89e3f4853511e1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 2 addresses the uncertainty about the precise mechanisms of methamphetamine‑induced liver damage, which does not serve as a limitation or doubt on the claim in sentence 1 that the risk of harm changes when methamphetamine is used w)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review of how methamphetamine affects the body says its toxicity depends on factors like using other drugs.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+       "sha": "6bcbd2764ac3c987"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review notes that using multiple drugs can modify the risk of toxicity from methamphetamine.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. The risk of harm from methamphetamine can change when it is used with other drugs.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F2",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The review does not say how often this happens or which specific other drugs change the risk.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "ramli_2025",
+       "where": "Toxicity effects › Hepatotoxicity",
+       "quote": "The precise mechanisms underlying methamphetamine-induced liver damage remain unclear.",
+       "sha": "2f89e3f4853511e1"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review of how methamphetamine affects the body says its toxicity depends on factors like dose and using other drugs.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "This review revisits the pharmacological profiles of methamphetamine and its effects on the brai",
+       "sha": "6bcbd2764ac3c987"
+      },
+      {
+       "label": "F1",
+       "ref": "ramli_2025",
+       "where": "Abstract",
+       "quote": "The extent of its toxicity depends on numerous pharmacological factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse.",
+       "sha": "6bcbd2764ac3c987"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review notes that using methamphetamine with other substances can modify the risk of toxicity.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "ramli_2025",
+       "where": "Introduction",
+       "quote": "Various factors, including route of administration, dose, genetic polymorphism related to drug metabolism and polysubstance abuse, can modify the risk of methamphetamine toxicity.",
+       "sha": "1201e7e17351d730"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "methamphetamine",
   "also": [
