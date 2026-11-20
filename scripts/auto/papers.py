@@ -391,6 +391,20 @@ class General:
 sentences = lambda t: [s.strip() for s in re.split(r"(?<=[.!?])\s+(?=[A-Z0-9])", t or "") if len(s.strip()) >= 30]
 HUMAN = re.compile(r"\b(participants?|patients?|volunteers?|adults?|adolescents?|people|persons?|individuals|users?|men|women|cohort|survey|randomi[sz]ed|trial|respondents|students|drinkers|smokers)\b", re.I)
 ANIMAL = re.compile(r"\b(rats?|mice|mouse|rodents?|zebrafish|in vitro|cell lines?|primates?|monkeys?)\b", re.I)
+# (20 November 2026) A paper on mice was counted as a study in people: its summary said effects "have been reported by users" (5-MeO-MiPT, in
+# vivo acute toxicity, Balkan Med J 2021), and "users" was enough. Where a summary names animals or cells, the paper is a study in people only
+# where it names what only a study in people has (participants, volunteers, a trial, a survey, patients who were treated): stricter, never looser
+STRONG_HUMAN = re.compile(r"\b(participants?|volunteers?|respondents|randomi[sz]ed|placebo|cohorts?|surveys?|surveyed|interview(?:s|ed)?|questionnaires?|case series"
+                          r"|clinical trials?|patients? (?:who|were|was|received|treated|admitted|presenting|enrolled|recruited)|healthy (?:adults|subjects|controls|men|women))\b", re.I)
+
+
+def in_people(title, abstract):
+    """Is the paper a study in people (from its title and summary, before it is read)? A paper whose title names animals or cells is one only
+    where its title names people too; one whose summary names them, only where the summary names what only a study in people has."""
+    text = (title or "") + " " + (abstract or "")
+    if not HUMAN.search(text): return False
+    if ANIMAL.search(title or ""): return bool(STRONG_HUMAN.search(title or ""))
+    return bool(STRONG_HUMAN.search(text)) if ANIMAL.search(text) else True
 
 
 def rank(question, ways, cands, enc):
@@ -405,8 +419,8 @@ def rank(question, ways, cands, enc):
         ss = sentences(c["abstract"]); S = enc([c["title"]] + (ss if len(ss) <= 9 else ss[:6] + ss[-3:])); sim = S @ Q.T   # the title, and the abstract's first and last sentences (its aim and its conclusion)
         c["near"] = round(float(max(sim[0].max(), sim.max() * 0.97, float(np.sort(sim.max(1))[-3:].mean()) if len(S) > 3 else 0)), 3)
         text = c["title"] + " " + c["abstract"]
-        people = bool(HUMAN.search(text)); animal = bool(ANIMAL.search(text)) and not people
-        c["people"] = people and not animal
+        people = in_people(c["title"], c["abstract"]); animal = bool(ANIMAL.search(text)) and not people
+        c["people"] = people
         c["score"] = round(c["near"] + (0.06 if c["kind"] == "review" else 0.02 if c["kind"] == "study" else 0) + (0.02 if c["people"] else -0.06 if animal else 0)
                            + (0.01 if (c["year"] or 0) >= 2010 else 0) + min(0.07, 0.025 * math.log10(1 + c["cited"])), 3)
     return sorted(cands, key=lambda c: (-c["score"], c["epmc"]))
@@ -555,6 +569,9 @@ def selftest():
             M = np.array([[1.0 if w in t.lower() else 0.0 for w in words] + [0.1] for t in texts], np.float32)
             return M / np.linalg.norm(M, axis=1, keepdims=True)
     out = find({"id": "w_0027", "q": "How can you die from alcohol?", "ways": ["can alcohol kill you", "alcohol death causes"]}, names, Enc2(), opener)
+    assert in_people("Ketamine use and bladder harm", "A survey of 3,806 people who use ketamine.") and in_people("Kratom: patterns of use", "Users reported energy.")
+    assert not in_people("New psychoactive substance 5-MeO-MiPT in vivo acute toxicity", "Effects have been reported by users. To report the acute toxicity of 5-MeO-MiPT in mice.")
+    assert not in_people("Ketamine in male rats", "Ketamine helps patients who were depressed in a randomized trial. Here, rats were given ketamine.") and in_people("MDMA and memory", "Studies in rats found harm; in a randomized trial, 40 volunteers took MDMA.")
     assert out["found"] == 3 and [c["pmcid"] for c in out["can_read"]] == ["PMC111", "PMC444"] and out["can_read"][0]["kind"] == "review" and not out["can_read"][1]["people"], out["can_read"]
     assert len(out["wanted"]) == 1 and out["wanted"][0]["apa"].startswith("Smith, J. (2021). Causes of death from alcohol. Addiction, 1, 1–9. https://doi.org/10.1000/j.2") and out["wanted"][0]["file"].endswith(".pdf"), out["wanted"]
     # (two papers that can be read are fewer than four: every open paper that names the drug is searched as well, last)

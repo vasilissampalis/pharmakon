@@ -243,6 +243,14 @@ def read_gate(out, picked, amounts_ok=True):
     return design, fs, ls, dropped
 
 
+def in_people_design(design):
+    """(20 November 2026) After reading: what the reader says the paper is, in its own words and in the paper's (a quote that stands in it). A
+    paper the reader shows to be on animals or cells alone ("An acute toxicity study of 5-MeO-MiPT in mice.") is no study in people, whatever
+    its summary said of users: it never counts as one at the gate on sources. Stricter, never looser."""
+    t = (design.get("text") or "") + " " + (design.get("quote") or "")
+    return not P.ANIMAL.search(t) or bool(P.HUMAN.search(t))
+
+
 def ask_json(chat, model, system, prompt, room):
     for attempt in range(2):
         out = llm.as_json(chat(model, [{"role": "system", "content": system}, {"role": "user", "content": prompt + ("" if not attempt else "\n\nYour last answer was not valid JSON. Answer with the JSON object only.")}], room))
@@ -1652,6 +1660,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
                 near = (enc([f["text"] for f in fs]) @ QV.T).max(1); keep_i = sorted(sorted(range(len(fs)), key=lambda i: -float(near[i]))[:N_TO_WRITER]); fs = [fs[i] for i in keep_i]
             if len(ls) > 1: ls = [ls[int((enc([l["text"] for l in ls]) @ QV.T).max(1).argmax())]]      # one limit: the one nearest the question
             src.update(design=design, findings=fs, limits=ls[:1]); ok = bool(fs)
+            if src["read"] != "page" and src.get("people") and design and not in_people_design(design): src["people"] = False
         thrown += len(dropped)
         looked.append({"title": src.get("title"), "read": src["read"], "kind": src.get("kind"), "at": src.get("address") or src.get("doi"), "kept": len(src.get("rows") or []) if amounts else len(src.get("findings") or []), "thrown": dropped[:12]})
         if not ok: return False
@@ -1700,7 +1709,7 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
         if not got: return ("skip",)
         pp, passages = got
         return ask({"read": "summary", "ref": ref, "doi": w["doi"], "title": pp["title"], "year": pp.get("year"), "journal": pp.get("journal"), "kind": pp["kind"] if pp.get("kind") in ("review", "study", "case") else "review",
-                    "people": bool(P.HUMAN.search(pp["title"] + " " + (pp.get("abstract") or ""))), "near": w.get("near"), "money": [],
+                    "people": P.in_people(pp["title"], pp.get("abstract") or ""), "near": w.get("near"), "money": [],
                     "_abbr": abbreviations(" ".join(p["text"] for p in passages))}, passages)
     sem = threading.Semaphore(max(1, at_once))
     def begin(fn, things):
@@ -3131,6 +3140,8 @@ def selftest():
     # "male rats" is no result for men; a result for men still is
     assert not [k for k, w, h in says_more_text("It reduced anxiety in healthy people.", "Sceletium reduced anxiety in male Wistar rats and in female mice. The extract promoted calmness.") if "said of people" in k]
     assert [k for k, w, h in says_more_text("It reduced anxiety in healthy people.", "In 20 healthy men the extract reduced anxiety.") if "said of people" in k] == ["a result for men, said of people"]
+    assert not in_people_design({"text": "An acute toxicity study of 5-MeO-MiPT in mice.", "quote": "To report the acute toxicity of 5-MeO-MiPT in mice"}) and in_people_design({"text": "A survey of 2,000 people who used ketamine", "quote": "We surveyed 2,000 people"})
+    assert in_people_design({"text": "A review of studies in rats and in people", "quote": "studies in rats and in patients"}) and in_people_design({"text": "A review", "quote": "We reviewed 12 trials"})
     assert ANIMAL_SEX.search("in male Sprague-Dawley rats") and ANIMAL_SEX.search("female mice") and not ANIMAL_SEX.search("male and female students") and not ANIMAL_SEX.search("in males aged 18 to 25")
     # a writer that gives no answer in the form asked for: the team's other writer writes from there, and the record says so
     def chat_w(model, messages, max_tokens=0):
