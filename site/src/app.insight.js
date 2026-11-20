@@ -2865,6 +2865,14 @@ function autoListHtml(ids, withPage) {
 // (2.8) the pages the system started: drugs people ask about that had no page. Each has an address of its own (#auto/p-kava), is
 // listed with the drugs, and says at its top that the system started it and that nobody has checked it yet.
 function autoStarted() { return typeof AUTO_PAGES === "object" && AUTO_PAGES ? Object.keys(AUTO_PAGES).filter(k => autoFor("new:" + k).length || autoShell(k)).sort((a, b) => AUTO_PAGES[a].localeCompare(AUTO_PAGES[b])) : []; }
+// (2.28.30) a started page as a card of the drugs' grid, in the form of a drug's card (drugCardHtml), marked New page
+function autoCardHtml(k, i) {
+  const ph = autoPics(k)[0], nm = String(AUTO_PAGES[k]), longest = Math.max(...nm.split(/[\s/]+/).map(w => w.length)), n = autoFor("new:" + k).length, sh = autoShell(k);
+  const kind = sh && sh.science.length ? sh.science[0].kind : "", ic = kind === "fungus" ? "mushroom" : kind === "plant" ? "leaf" : "molecule";
+  return '<a class="dcard f-oth dc-new' + (ph ? " hasph" : " noph") + '" href="#auto/p-' + esc(k) + '" style="--i:' + (i || 0) + '">' + (ph ? '<span class="dc-ph">' + autoPicImg(ph, "m", "", true) + "</span>" : "") +
+    '<span class="dc-ic">' + icon(ic) + '</span><span class="dc-t"><span class="dc-f">New page</span><span class="dc-n' + (longest > 10 ? " long" : "") + '">' + esc(nm) + "</span>" +
+    '<span class="dc-a">' + esc(n ? n + (n === 1 ? " answer" : " answers") + " so far" : "No answer yet") + "</span></span></a>";
+}
 function autoStartedListHtml() {
   const ks = autoStarted(); if (!ks.length) return "";
   const meta = k => { const n = autoFor("new:" + k).length, p = autoPics(k).length, sh = autoShell(k), q = sh ? sh.asked.length : 0;

@@ -396,14 +396,17 @@ const POPULAR = ["cannabis", "alcohol", "mdma", "cocaine", "ketamine", "methamph
 let activeClass = "All";
 function renderSubstances() {
   const classes = ["All"].concat(CLASSES.map(c => c.name).filter(n => SUBSTANCES.some(s => s.cls === n)));
-  document.getElementById("filters").innerHTML = classes.map(c => '<button class="chip' + (c === "All" ? "" : " famchip f-" + fam(c).k) + '" data-cls="' + esc(c) + '" aria-pressed="' + (c === activeClass) + '">' + (c === "All" ? "" : icon(fam(c).icon)) + esc(c === "All" ? "All 30" : c) + "</button>").join("");
+  const started = typeof autoStarted === "function" ? autoStarted() : [];   // (2.28.30) the pages the system started stand among the drugs
+  document.getElementById("filters").innerHTML = classes.map(c => '<button class="chip' + (c === "All" ? "" : " famchip f-" + fam(c).k) + '" data-cls="' + esc(c) + '" aria-pressed="' + (c === activeClass) + '">' + (c === "All" ? "" : icon(fam(c).icon)) + esc(c === "All" ? "All " + (SUBSTANCES.length + started.length) : c) + "</button>").join("");
   document.querySelectorAll("#filters .chip").forEach(b => b.addEventListener("click", () => { activeClass = b.dataset.cls; renderSubstances(); }));
   const list = SUBSTANCES.filter(s => activeClass === "All" || s.cls === activeClass);
   // (site 2.4) the same picture cards as the start page, two across on a phone: the page was one large tile per row, some 12,000 pixels of it
-  document.getElementById("subgrid").innerHTML = list.map(s => drugCardHtml(s, 0)).join("");
-  // (2.8) under the drugs: the pages our system started, with their label (only under "All": they have no family a person gave them)
+  // (2.28.30; the senior author, 20 November 2026, 14:27: "i want the new pages (mitragyna javanica, kanna etc to get added to our 30 drug pages this is how the
+  // website could be expanded endlessly") the pages the system started are cards in the same grid, after the checked pages, each marked "New page" (only under
+  // "All": no person has given them a family); one line under the grid says what they are
+  document.getElementById("subgrid").innerHTML = list.map(s => drugCardHtml(s, 0)).join("") + (activeClass === "All" ? started.map(k => autoCardHtml(k)).join("") : "");
   const more = document.getElementById("sub-started");
-  if (more) more.innerHTML = activeClass === "All" ? autoStartedListHtml() : "";
+  if (more) more.innerHTML = activeClass === "All" && started.length ? '<p class="auto-sec">' + started.length + (started.length === 1 ? " page" : " pages") + " marked New page: drugs and medicines people asked about that had no page here. The system started them, and their answers are drafted automatically.</p>" : "";
 }
 
 /* ---------- Claims ---------- */

@@ -127,10 +127,11 @@ const build = env => spawnSync("node", [path.join(REPO, "site", "build.js")], { 
     }
     await go(p, "#auto", 400);
     await go(p, "#substances", 600);
-    const sub = await p.evaluate(() => ({ h: (document.querySelector("#sub-started .auto-h") || {}).textContent || "", a: [...document.querySelectorAll("#sub-started .auto-pages a")].map(a => a.getAttribute("href") + " | " + a.querySelector(".wl-q").textContent), cards: document.querySelectorAll("#subgrid > *").length, wide: document.documentElement.scrollWidth > innerWidth + 1 }));
-    ok(w + "under the drugs, “All drugs” lists the new pages, apart from the 30 checked pages", sub.h === "New pages" && sub.a.includes("#auto/p-kava | Kava") && sub.cards === 30 && !sub.wide, JSON.stringify(sub));
+    // (2.28.30) the new pages are cards in the same grid, after the 30 checked pages, each marked New page
+    const sub = await p.evaluate(() => ({ note: (document.querySelector("#sub-started .auto-sec") || {}).textContent || "", a: [...document.querySelectorAll("#subgrid a.dc-new")].map(a => a.getAttribute("href") + " | " + a.querySelector(".dc-n").textContent + " | " + a.querySelector(".dc-f").textContent), checked: document.querySelectorAll("#subgrid a.dcard:not(.dc-new)").length, last: [...document.querySelectorAll("#subgrid a.dcard")].slice(-1)[0].classList.contains("dc-new"), all: (document.querySelector('#filters .chip[data-cls="All"]') || {}).textContent || "", wide: document.documentElement.scrollWidth > innerWidth + 1 }));
+    ok(w + "under “All”, the new pages stand among the drugs as cards marked New page, after the 30 checked pages", sub.a.includes("#auto/p-kava | Kava | New page") && sub.checked === 30 && sub.last && sub.all === "All " + (30 + sub.a.length) && /drafted automatically/.test(sub.note) && !sub.wide, JSON.stringify(sub));
     await p.click('#filters .chip:nth-child(2)'); await p.waitForTimeout(300);
-    ok(w + "a family chosen shows that family's checked pages only", await p.evaluate(() => !document.querySelector("#sub-started .auto-pages") && document.querySelectorAll("#subgrid > *").length < 30));
+    ok(w + "a family chosen shows that family's checked pages only", await p.evaluate(() => !document.querySelector("#subgrid a.dc-new") && !document.querySelector("#sub-started .auto-sec") && document.querySelectorAll("#subgrid > *").length < 30));
     await p.click('#filters .chip:nth-child(1)'); await p.waitForTimeout(200);
     await go(p, "#auto/p-no-such-page", 500);
     ok(w + "an address of a page nobody started is the page for unknown addresses, never another page", await p.evaluate(() => !document.getElementById("view-auto").classList.contains("active")));

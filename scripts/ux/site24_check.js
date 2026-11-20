@@ -510,8 +510,8 @@ const ok = (name, cond, extra) => { if (cond) { pass++; console.log("PASS " + na
     await go(p, "#emergency", 600);
     ok("Emergency numbers: the two folds under the country look alike", await p.evaluate(() => { const d = [...document.querySelectorAll("#view-emergency details")]; return d.length === 2 && d.every(x => x.classList.contains("allc") && x.querySelector("summary .ask-i")); }));
     await go(p, "#substances", 700);
-    const sub = await p.evaluate(() => { const c = [...document.querySelectorAll("#subgrid a.dcard")], r = c.slice(0, 3).map(x => x.getBoundingClientRect()); return { n: c.length, two: Math.abs(r[0].top - r[1].top) < 2 && r[2].top > r[0].top + 50, h: Math.round(document.getElementById("subgrid").getBoundingClientRect().height), old: document.querySelectorAll("#subgrid .dtile").length }; });
-    ok("Find a drug: the start page's picture cards, two across on a phone", sub.n === 30 && sub.two && sub.h < 5200 && !sub.old, JSON.stringify(sub));
+    const sub = await p.evaluate(() => { const c = [...document.querySelectorAll("#subgrid a.dcard:not(.dc-new)")], r = c.slice(0, 3).map(x => x.getBoundingClientRect()); return { nw: document.querySelectorAll("#subgrid a.dc-new").length, n: c.length, two: Math.abs(r[0].top - r[1].top) < 2 && r[2].top > r[0].top + 50, h: Math.round(document.getElementById("subgrid").getBoundingClientRect().height), old: document.querySelectorAll("#subgrid .dtile").length }; });
+    ok("Find a drug: the start page's picture cards, two across on a phone", sub.n === 30 && sub.two && sub.h < 5200 + 175 * sub.nw && !sub.old, JSON.stringify(sub));
     await p.click('#filters .chip[data-cls="Opioids"]'); await p.waitForTimeout(300);
     ok("Find a drug: a family can be chosen", await p.evaluate(() => { const c = [...document.querySelectorAll("#subgrid a.dcard")]; return c.length >= 3 && c.length < 12 && c.every(x => /Opioids/.test(x.textContent)); }));
     await shot(p, "390-find-a-drug-opioids");
