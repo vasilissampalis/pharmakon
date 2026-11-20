@@ -19,7 +19,7 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
@@ -27,27 +27,480 @@
    "also2": "gemini:gemini-3.6-flash",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44671985100",
-  "read_seconds": 100,
+  "run": "44798186055",
+  "read_seconds": 45,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 388
  },
- "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "7 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 6 of 6; gemini-3.6-flash accepted 5 of 6",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.61, but 0.96, how1 0.94, how2 0.97, how3 0.51, how4 0.96",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
- "sources": [],
- "parts": [],
- "complete": false,
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "gasser_2014",
+    "type": "article-journal",
+    "title": "Safety and efficacy of lysergic acid diethylamide-assisted psychotherapy for anxiety associated with life-threatening diseases",
+    "author": [
+     {
+      "family": "Gasser",
+      "given": "Peter"
+     },
+     {
+      "family": "Holstein",
+      "given": "Dominique"
+     },
+     {
+      "family": "Michel",
+      "given": "Yvonne"
+     },
+     {
+      "family": "Doblin",
+      "given": "Rick"
+     },
+     {
+      "family": "Yazar-Klosinski",
+      "given": "Berra"
+     },
+     {
+      "family": "Passie",
+      "given": "Torsten"
+     },
+     {
+      "family": "Brenneisen",
+      "given": "Rudolf"
+     }
+    ],
+    "container-title": "Journal of Nervous & Mental Disease",
+    "issued": {
+     "date-parts": [
+      [
+       2014
+      ]
+     ]
+    },
+    "DOI": "10.1097/nmd.0000000000000113",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "202",
+    "issue": "7",
+    "page": "513-520",
+    "PMCID": "PMC4086777"
+   },
+   "doi": "10.1097/nmd.0000000000000113",
+   "pmcid": "PMC4086777",
+   "title": "Safety and efficacy of lysergic acid diethylamide-assisted psychotherapy for anxiety associated with life-threatening diseases",
+   "year": 2014,
+   "journal": "The Journal of nervous and mental disease",
+   "kind": "study",
+   "people": true,
+   "near": 0.572,
+   "money": [
+    "This study was funded in part by Schweizerische Aerztegesellschaft für Psycholytische Therapie (Swiss Medical Society for Psycholytic Therapy) and Multidisciplinary Association for Psychedelic Studies.",
+    "Rick Doblin (president) and Berra Yazar-Klosinski are employees of the main sponsor MAPS. Peter Gasser is president of SAEPT."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "A double-blind, randomized, active placebo-controlled pilot study was conducted to examine safety and efficacy of lysergic acid diethylamide (LSD)-assisted psychotherapy in 12 patients with anxiety associated with life-threatening diseases.",
+    "text": "A double-blind, randomized, active placebo-controlled pilot study of LSD-assisted psychotherapy in 12 patients with anxiety associated with life-threatening diseases"
+   },
+   "findings": [
+    {
+     "passage": 4,
+     "where": "Text",
+     "quote": "These effects last for 6 to 9 hours and can be used to support and enhance psychotherapeutic processing.",
+     "text": "The effects of LSD last for 6 to 9 hours.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 34,
+     "where": "DISCUSSION › Limitations of the Study",
+     "quote": "As a pilot study, this study had limited sample size, which reduced precision in effect size estimates and significance testing.",
+     "text": "As a pilot study, the study had a limited sample size which reduced precision in effect size estimates and significance testing.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "suleria_2025",
+    "type": "article-journal",
+    "title": "Lysergic acid diethylamide (LSD) and the heart: Exploring the potential impacts of LSD on cardiovascular function",
+    "author": [
+     {
+      "family": "Suleria",
+      "given": "Akshita"
+     },
+     {
+      "family": "Verma",
+      "given": "Sakshi"
+     },
+     {
+      "family": "Arya",
+      "given": "Khanij"
+     },
+     {
+      "family": "Stoltzfus",
+      "given": "Mason T"
+     },
+     {
+      "family": "Gupta",
+      "given": "Ira"
+     },
+     {
+      "family": "Singh",
+      "given": "Bhupinder"
+     },
+     {
+      "family": "Shaik",
+      "given": "Tanveer"
+     }
+    ],
+    "container-title": "Cureus",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.7759/cureus.87356",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "PMCID": "PMC12322343"
+   },
+   "doi": "10.7759/cureus.87356",
+   "pmcid": "PMC12322343",
+   "title": "Lysergic Acid Diethylamide (LSD) and the Heart: Exploring the Potential Impacts of LSD on Cardiovascular Function",
+   "year": 2025,
+   "journal": "Cureus",
+   "kind": "review",
+   "people": false,
+   "near": 0.608,
+   "money": [
+    "Conflicts of interest: In compliance with the ICMJE uniform disclosure form, all authors declare the following:",
+    "Payment/services info: All authors have declared that no financial support was received from any organization for the submitted work.",
+    "Financial relationships: All authors have declared that they have no financial relationships at present or within the previous three years with any organizations that might have an interest in the submitted work."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 4,
+     "where": "Introduction and background",
+     "quote": "It is sold in a variety of formulations with effects that start appearing within 30-60 minutes after consumption and persist for 10-12 hours.",
+     "text": "LSD effects persist for 10-12 hours.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "Review",
+     "quote": "LSD is absorbed from the gastrointestinal tract, and its actions start in 30 minutes, lasting for 6-12 hours.",
+     "text": "LSD actions last for 6-12 hours.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "thelevel_lsd",
+    "type": "webpage",
+    "title": "LSD",
+    "author": [
+     {
+      "literal": "NZ Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://thelevel.org.nz/drug-information/lsd",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    },
+    "publisher": "The Level"
+   },
+   "title": "LSD",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.741,
+   "name": "NZ Drug Foundation",
+   "short": "the NZ Drug Foundation",
+   "tier": 2,
+   "address": "https://thelevel.org.nz/drug-information/lsd",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 3,
+     "where": "What to expect / How does LSD make you feel?",
+     "quote": "These effects can last 6–15 hours, but most people will not have a trip that lasts longer than 12 hours.",
+     "text": "The effects of LSD can last 6 to 15 hours, but most people will not have a trip lasting longer than 12 hours.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 22,
+     "where": "Working and driving / How can LSD affect your daily activities?",
+     "quote": "However, if you mix it with alcohol or other drugs, these effects may last longer or be stronger.",
+     "text": "Mixing LSD with alcohol or other drugs can cause the effects to last longer or be stronger.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_lsd",
+    "type": "webpage",
+    "title": "LSD",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/lsd",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    }
+   },
+   "title": "LSD",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.703,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/lsd",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 14,
+     "where": "Mixing LSD with other drugs / What does it taste/smell like?",
+     "quote": "LSD trips can last several hours and can be very intense.",
+     "text": "LSD trips can last several hours.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "Mixing LSD with other drugs / How does it make people behave?",
+     "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+     "text": "How long the effects last depends on how much you have taken, your size, and what other drugs you may have also taken.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "The effects of LSD can last 6 to 15 hours, but most people will not have a trip lasting longer than 12 hours. Effects can also last 6 to 9 hours or 6 to 12 hours.",
+   "uses": [
+    "F4",
+    "F3",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "thelevel_lsd",
+     "where": "What to expect / How does LSD make you feel?",
+     "quote": "These effects can last 6–15 hours, but most people will not have a trip that lasts longer than 12 hours.",
+     "sha": "5bd73ba8895296ca"
+    },
+    {
+     "label": "F3",
+     "ref": "suleria_2025",
+     "where": "Review",
+     "quote": "LSD is absorbed from the gastrointestinal tract, and its actions start in 30 minutes, lasting for 6-12 hours.",
+     "sha": "e15912fdcb9395c9"
+    },
+    {
+     "label": "F1",
+     "ref": "gasser_2014",
+     "where": "Text",
+     "quote": "These effects last for 6 to 9 hours and can be used to support and enhance psychotherapeutic processing.",
+     "sha": "5db80aceb48af877"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "How long the effects last depends on how much a person has taken, their size, and what other drugs they may have also taken.",
+   "uses": [
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "frank_lsd",
+     "where": "Mixing LSD with other drugs / How does it make people behave?",
+     "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+     "sha": "811553e2dad38373"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "The NZ Drug Foundation says the effects can last 6 to 15 hours, but most people will not have a trip longer than 12 hours.",
+   "uses": [
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "thelevel_lsd",
+     "where": "What to expect / How does LSD make you feel?",
+     "quote": "These effects can last 6–15 hours, but most people will not have a trip that lasts longer than 12 hours.",
+     "sha": "5bd73ba8895296ca"
+    }
+   ],
+   "quote": "but most people will not have a trip that lasts longer than 12 hours",
+   "quote_ref": "thelevel_lsd"
+  },
+  {
+   "part": "how2",
+   "text": "FRANK says LSD trips can last several hours, and the length depends on how much was taken, size, and other drugs used.",
+   "uses": [
+    "F6",
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "frank_lsd",
+     "where": "Mixing LSD with other drugs / What does it taste/smell like?",
+     "quote": "LSD trips can last several hours and can be very intense.",
+     "sha": "958f08e4c6b0e80b"
+    },
+    {
+     "label": "F7",
+     "ref": "frank_lsd",
+     "where": "Mixing LSD with other drugs / How does it make people behave?",
+     "quote": "How long the effects last and the drug stays in your system depends on how much you’ve taken, your size and what other drugs you may have also taken.",
+     "sha": "811553e2dad38373"
+    }
+   ],
+   "quote": "LSD trips can last several hours and can be very intense",
+   "quote_ref": "frank_lsd"
+  },
+  {
+   "part": "how3",
+   "text": "A 2025 review says LSD actions last 6 to 12 hours, and effects can persist for 10 to 12 hours.",
+   "uses": [
+    "F3",
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "suleria_2025",
+     "where": "Review",
+     "quote": "LSD is absorbed from the gastrointestinal tract, and its actions start in 30 minutes, lasting for 6-12 hours.",
+     "sha": "e15912fdcb9395c9"
+    },
+    {
+     "label": "F2",
+     "ref": "suleria_2025",
+     "where": "Introduction and background",
+     "quote": "It is sold in a variety of formulations with effects that start appearing within 30-60 minutes after consumption and persist for 10-12 hours.",
+     "sha": "e22a3d18ea6d0032"
+    }
+   ],
+   "quote": "and its actions start in 30 minutes, lasting for 6-12 hours",
+   "quote_ref": "suleria_2025"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -73,7 +526,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Microdosing psychedelics and the risk of cardiac fibrosis and valvulopathy: Comparison to known cardiotoxins",
@@ -81,8 +543,7 @@
    "kind": "review",
    "at": "10.1177/02698811231225609",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Dose-response relationships of LSD-induced subjective experiences in humans",
@@ -90,8 +551,7 @@
    "kind": "review",
    "at": "10.1038/s41386-023-01588-2",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Pharmacokinetics and pharmacodynamics of sublingual microdosed lysergic acid diethylamide in healthy adult volunteers",
@@ -99,8 +559,7 @@
    "kind": "study",
    "at": "10.1177/02698811251330747",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Acute Effects and Pharmacokinetics of LSD after Paroxetine or Placebo Pre-Administration in a Randomized, Double-Blind, Cross-Over Phase I Trial",
@@ -108,11 +567,180 @@
    "kind": "study",
    "at": "10.1002/cpt.3618",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Safety and efficacy of lysergic acid diethylamide-assisted psychotherapy for anxiety associated with life-threatening diseases",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1097/nmd.0000000000000113",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Lysergic Acid Diethylamide (LSD) and the Heart: Exploring the Potential Impacts of LSD on Cardiovascular Function",
+   "read": "full",
+   "kind": "review",
+   "at": "10.7759/cureus.87356",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A research paper reviewing the cardiovascular and other impacts of LSD based on literature and survey data",
+     "quote": "Lysergic Acid Diethylamide (LSD) and the Heart: Exploring the Potential Impacts of LSD on Cardiovascular Function (2025), Cureus.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/lsd",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "The effects of LSD can last up to 6 to 15 hours after taking a dose.",
+     "quote": "The effects of LSD can last up to 6–15 hours after you have taken a dose.",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
+  },
+  {
+   "title": "LSD",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/lsd",
+   "kept": 2,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F4",
+   "F3",
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "F7"
+  ],
+  "how": [
+   [
+    "F4"
+   ],
+   [
+    "F6",
+    "F7"
+   ],
+   [
+    "F3",
+    "F2"
+   ],
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    false,
+    "The sentence omits the clarifying detail from the passage that the 6 to 9 hour duration was specifically reported for oral doses of more than 100 μg."
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6087,
+   "but": 0.9582,
+   "how1": 0.9359,
+   "how2": 0.9672,
+   "how3": 0.5105,
+   "how4": 0.9557
+  },
+  "scores_quotes_alone": {
+   "short": 0.4498,
+   "but": 0.8962,
+   "how1": 0.8012,
+   "how2": 0.7269,
+   "how3": 0.4063,
+   "how4": 0.6345
+  }
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how4",
+   "text": "A 2014 study found the effects of LSD last for 6 to 9 hours.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "gasser_2014",
+     "where": "Text",
+     "quote": "These effects last for 6 to 9 hours and can be used to support and enhance psychotherapeutic processing.",
+     "sha": "5db80aceb48af877"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence omits the clarifying detail from the passage that the 6 to 9 hour duration was specifically reported for oral doses of more than 100 μg."
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "lsd",
   "also": [],
