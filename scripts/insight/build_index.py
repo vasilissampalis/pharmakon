@@ -238,7 +238,11 @@ class Ranker:
         self.say = [(re.compile(x["ask"], re.I | re.A), x["add"]) for x in D.get("say") or []]
         self.aspects = [(re.compile(a["ask"], re.I | re.A), a["has"], float(a.get("best") or 0), [(re.compile(n, re.I | re.A), bits) for n, bits in a.get("narrow") or []], a.get("two") or "", re.compile(a["together"], re.I | re.A) if a.get("together") else None) for a in D.get("aspects") or []]
         self.about = [set(D["slugs"][k] for k in xs) for xs in D["about"]]
+        dy = next((a for a in D.get("aspects") or [] if a.get("name") == "dying"), None); self.dying = re.compile(dy["ask"], re.I | re.A) if dy else None   # (2.28.9)
         Ch = D.get("chem"); self.chem_re = re.compile(SCOPE_B + Ch["src"] + SCOPE_E, re.I | re.A) if Ch else None; self.chem_of = [set(x.split()) for x in (Ch or {}).get("of") or []]
+        Un = D.get("unc"); un_names = sorted({str(n).lower() for n in ((D.get("scope") or {}).get("unfinished") or {}).get("names") or [] if str(n).strip()}, key=len, reverse=True)
+        self.unc_re = re.compile(SCOPE_B + "|".join(re.escape(n) for n in un_names) + SCOPE_E, re.I | re.A) if Un and un_names else None
+        self.unc_of = [set(x.split("|")) - {""} for x in (Un or {}).get("of") or []]
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
         self.pat = name_pattern([n for n, _ in D["names"]])
         self.expand = drug_names(); self.canon = {s["slug"]: s["name"].split(" (")[0] for s in SUB}
@@ -305,6 +309,9 @@ class Ranker:
         that the question does not name; or it is about two drugs and the question names fewer (ng: how many it names).
         q None: not asked (the callers that have no question at hand)."""
         if q is None: return True
+        # (2.28.9) a question about dying or overdose that names no drug is never answered by an answer about one drug ("overdose symptoms" got the answer on
+        # meth's acute toxicity as its best match). Measured: nothing changes on the gold set and the near-miss questions
+        if self.dying is not None and ng == 0 and len(self.about[c]) == 1 and self.dying.search(q): return False
         if self.chem_re is not None:   # (2.28.6) a research chemical the question names, which the answer never names: never its best match
             qc = {chem_key(m.group(0)) for m in self.chem_re.finditer(q)}
             if qc and not (qc & self.chem_of[c]): return False
@@ -326,8 +333,11 @@ class Ranker:
         some = np.array([not groups or any(has(i, g) for g in groups) for i in range(self.n)])
         order = np.argsort(-(plain + self.wt["topic"] * topic + self.wt["same"] * ok), kind="stable")
         c = int(order[0]); p = self.judge(feats(c))
-        best = [c] if ok[c] and p >= self.J["best"] and self.speaks(q, c, p, len(groups)) else []
-        related = [int(i) for i in order if int(i) not in best and plain[i] >= t["related"] and topic[i] >= t["near"] and some[i]][:3]
+        # (2.28.9) a question that names a drug the site has no page on, and none it covers: only the answers that name that drug
+        un = {m.group(0).lower() for m in self.unc_re.finditer(q)} if (q and not groups and self.unc_re is not None) else set()
+        named = (lambda i: bool(self.unc_of[i] & un)) if un else (lambda i: True)
+        best = [c] if ok[c] and named(c) and p >= self.J["best"] and self.speaks(q, c, p, len(groups)) else []
+        related = [int(i) for i in order if int(i) not in best and plain[i] >= t["related"] and topic[i] >= t["near"] and some[i] and named(int(i))][:3]
         return best, related, p
     def rank_vectors(self, q, v, mv, groups):
         L = self.look(v, mv, q, groups); best, related, p = self.tiers(L["plain"], L["topic"], groups, lambda c: self.six(L, c), q)
@@ -732,6 +742,14 @@ def main():
     # those it names: on the gold set "What is 3-MeO-PCE like, and how risky is it?" got the answer on 5-MeO-DALT, another drug, as its best match.
     Sc_ = json.load(open(ROOT / "site" / "insight" / "scope.json", encoding="utf-8")); crx = re.compile(SCOPE_B + Sc_["chem"] + SCOPE_E, re.I | re.A)
     out["chem"] = {"src": Sc_["chem"], "of": [" ".join(sorted({chem_key(m.group(0)) for m in crx.finditer(s)})) for s in spoken]}
+    # (2.28.9) a drug the site has no page on, named by one of the names scope.json lists (and those the system learned): each answer's such names. A
+    # question that names one and no drug the site covers is shown only answers that name it: "can you get high from nutmeg" was shown the answers on
+    # kratom and ibogaine. Measured on the gold set (21 such questions): 7 fewer questions shown only rows that do not answer them, 1 fewer helped ("Does
+    # CBN help sleep?", by the answers on cannabis and sleep)
+    unc = sorted({str(n).lower() for n in (out["scope"].get("unfinished") or {}).get("names") or [] if str(n).strip()}, key=len, reverse=True)
+    if unc:
+        urx = re.compile(SCOPE_B + "|".join(re.escape(n) for n in unc) + SCOPE_E, re.I | re.A)
+        out["unc"] = {"of": ["|".join(sorted({m.group(0).lower() for m in urx.finditer(s)})) for s in spoken]}
     # 2.5: the list of questions not answered yet (data/site/wanted.json), as a second, small index of the same kind
     wl = wanted_index(json.load(open(IN, encoding="utf-8")).get("wanted") or [], out, names, pat, at)
     if wl: out["wanted"] = wl

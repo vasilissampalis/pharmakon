@@ -132,6 +132,7 @@ function insPrepare(d, vocabText) {
   INS.idx = new Map(d.ids.map((id, i) => [id, i]));
   // (2.22) what a question asks about, where getting it wrong does harm (site/insight/model.json, aspects): [the question's pattern, each answer's mark]
   INS.say = (d.say || []).map(x => ({ re: new RegExp(x.ask, "i"), add: x.add }));
+  { const dy = (d.aspects || []).find(a => a.name === "dying"); INS.dyingRe = dy ? new RegExp(dy.ask, "i") : null; }   // (2.28.9)
   INS.aspects = (d.aspects || []).map(a => ({ ask: new RegExp(a.ask, "i"), has: a.has, best: +a.best || 0, narrow: (a.narrow || []).map(([n, bits]) => ({ re: new RegExp(n, "i"), bits })), two: a.two || "", together: a.together ? new RegExp(a.together, "i") : null }));
   INS.about = d.about.map(xs => new Set(xs.map(k => d.slugs[k])));   // the drugs each answer is about
   // the names that name a drug in a question (build_index.py's names_table: the longest first), and the drugs each stands for
@@ -145,6 +146,9 @@ function insPrepare(d, vocabText) {
   INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
   // (2.28.6) the research chemicals each answer names (the shape of the name, site/insight/scope.json "chem"), as the build's Ranker.speaks reads them
   INS.chem = d.chem ? { re: new RegExp(wb + d.chem.src + we, "gi"), of: d.chem.of.map(s => new Set(s ? s.split(" ") : [])) } : null;
+  // (2.28.9) the drugs the site has no page on that each answer names (scope.json's names, through the index), as the build's Ranker.tiers reads them
+  { const un = d.unc && d.scope && d.scope.unfinished ? [...new Set((d.scope.unfinished.names || []).map(n => String(n).toLowerCase()).filter(n => n.trim()))].sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0)) : [];
+    INS.unc = un.length ? { re: new RegExp(wb + un.map(insRx).join("|") + we, "gi"), of: d.unc.of.map(s => new Set(s ? s.split("|") : [])) } : null; }
   INS.unfin = d.scope && d.scope.unfinished ? insUnfinRule(d.scope.unfinished, d.names.map(x => x[0])) : null;   // 2.9: is a question finished?
   INS.spell = d.scope && d.scope.spell && INS.unfin ? insSpellRule(d.scope.spell, d.scope.unfinished.names || []) : null;   // 2.9.1: a drug's name with a letter wrong
   // 2.13: the places of the site, found by the meaning of a question (site/insight/places.json through the index: insWhere)
@@ -707,8 +711,11 @@ function insRoutes(q, groups, drug) {
     else if (c) add("law", { href: "#law/c-" + encodeURIComponent(ctryName(c)) }, "The law · " + shortCtry(c), insLawLine(c), loose);
     else add("law", { href: "#law" }, "The law", "Drug treaties, country by country", loose);
   }
-  if (INS_RE.nums.test(q) && !out.some(r => r.kind === "help")) { const em = c ? emFor(c) : null;
-    add("numbers", { href: em ? "#emergency/c-" + encodeURIComponent(em.country) : "#emergency" }, "Emergency numbers" + (c ? " · " + shortCtry(c) : ""), em ? "In " + inCtry(c) + ", call " + em.numbers[0].n : "Emergency numbers, country by country"); }
+  // (2.28.8) the signs of an overdose: the way to the emergency numbers beside whatever answers it ("what are signs of an overdose" was shown nothing to do), never
+  // the emergency route, which would hide the answers (the answer on recognising an opioid overdose stands first for "what are the signs of an opioid overdose")
+  const odSigns = !INS_RE.nums.test(q) && /\b(?:signs?|symptoms?)\s+of\s+(?:an?\s+)?(?:[a-z]+\s+)?overdos(?:e|es|ing)\b|\boverdose\s+(?:signs|symptoms)\b/i.test(q);
+  if ((INS_RE.nums.test(q) || odSigns) && !out.some(r => r.kind === "help")) { const em = c ? emFor(c) : null;
+    add("numbers", { href: em ? "#emergency/c-" + encodeURIComponent(em.country) : "#emergency" }, "Emergency numbers" + (c ? " · " + shortCtry(c) : ""), em ? "In " + inCtry(c) + ", call " + em.numbers[0].n : "Emergency numbers, country by country", odSigns ? { loose: true } : null); }   // (beside the signs of an overdose the numbers are a way on, not the answer: loose)
   if (c && INS_RE.checkc.test(q)) { const dc = DRUGCHECK.services.filter(s => sameCountry(s.country, c)), i = out.findIndex(r => r.kind === "test");
     const r = Object.assign({ kind: "test", k: "Drug checking · " + shortCtry(c), t: dc.length ? dc.length + " drug checking service" + (dc.length === 1 ? "" : "s") + " in " + inCtry(c) : "Drug checking in " + inCtry(c) + ": what we found" }, { href: "#checking/c-" + encodeURIComponent(dc.length ? dc[0].country : shortCtry(c)) });
     if (i >= 0 && !about) out[i] = r; else out.push(r); }
@@ -762,6 +769,9 @@ function insJudge(f) {
 // withdrawal, touching, pregnancy or test strips, or about two drugs together, answers a question about dying only where the question says so too. ng: the drugs the question names)
 const insChemKey = t => String(t).toLowerCase().replace(/[^a-z0-9]/g, "");
 function insSpeaks(q, i, p, ng) {
+  // (2.28.9) a question about dying or overdose that names no drug is never answered by an answer about one drug ("overdose symptoms" got the answer on meth's
+  // acute toxicity as its best match); Ranker.speaks reads the same
+  if (q && !ng && INS.dyingRe && INS.about[i] && INS.about[i].size === 1 && INS.dyingRe.test(q)) return false;
   // (2.28.6, 20 November 2026) a question that names a research chemical by the shape of its name is never answered by an answer that names none of
   // those it names: "What is 3-MeO-PCE like?" got the answer on 5-MeO-DALT, another drug, as its best match
   if (q && INS.chem) { const qc = (String(q).match(INS.chem.re) || []).map(insChemKey); if (qc.length && !qc.some(x => INS.chem.of[i].has(x))) return false; }
@@ -778,8 +788,10 @@ function insTiers(sc, groups, X, q) {
   all.sort((a, b) => b.key - a.key || a.i - b.i);
   const c = all[0]; let next = null; for (const x of all) if (x !== c && x.on && (next === null || x.by > next)) next = x.by;
   c.f = [sc.bw[c.i], Math.max(sc.bw2[c.i], 0), sc.sh[c.i], sc.lex[c.i], c.topic, c.by - (next === null ? 0 : next)]; c.p = insJudge(c.f);
-  const best = c.on && c.p >= INS.judge.best && (X !== INS || insSpeaks(q, c.i, c.p, groups.length)) ? [c] : [];
-  return { first: c, best, related: all.filter(x => !best.includes(x) && x.plain >= T.related && x.topic >= T.near && x.some).slice(0, 3) };
+  // (2.28.9) a question that names a drug the site has no page on, and none it covers: only the answers that name that drug (Ranker.tiers reads the same)
+  const un = X === INS && q && !groups.length && INS.unc ? new Set((String(q).match(INS.unc.re) || []).map(x => x.toLowerCase())) : null, named = i => !un || !un.size || [...un].some(x => INS.unc.of[i].has(x));
+  const best = c.on && named(c.i) && c.p >= INS.judge.best && (X !== INS || insSpeaks(q, c.i, c.p, groups.length)) ? [c] : [];
+  return { first: c, best, related: all.filter(x => !best.includes(x) && x.plain >= T.related && x.topic >= T.near && x.some && named(x.i)).slice(0, 3) };
 }
 /* 2.5 (15 November 2026; the senior author: "make the site understand on its own what the users want added in the website
    in-app and not via email"). When no answer is a best match, a second look, at the list of questions not answered yet

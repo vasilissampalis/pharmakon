@@ -392,3 +392,12 @@ look of 0.65: 12 questions more see an answer among what is shown, and 11 more a
 nobody can answer get rows); from 0.60, 25 and 20. As many rows mislead as help: tiers stay as they are.
 
 **Three more aspects (site 2.28.8, 20 November 2026).** "kill" said of brain cells, the high, pain or time is no question about dying ("does weed kill brain cells" asked every answer on cannabis to speak of dying); an answer that never speaks of vaping never answers a question about vaping ("how bad is vaping for your lungs" got the answer on smoking cannabis, judge 0.85); a question about damage or harm is answered only by an answer that speaks of harm ("does ketamine damage your brain" got the answer on brain scans during ketamine, judge 0.72, whose near-miss readers had written "Do brain scans show damage in people who use ketamine a lot?"). On the gold set nothing changes (35 best matches: 23 full, 7 partial, 5 wrong; 2 of 126 unanswerable); near-miss questions given the answer they do not get 100 of 1,810 (101); of the editor's 198 probe questions only the ketamine one changes.
+
+**A drug the site has no page on (site 2.28.9, 20 November 2026).** A question that names one (scope.json's names and the names the system
+learned) and no drug the site covers is shown only the answers that name it, as best match or related (`build_index.py`, the index's "unc";
+`Ranker.tiers` and the page's `insTiers`). "can you get high from nutmeg" was shown the answers on kratom and ibogaine. On the gold set (21
+such questions): best matches as before (35: 23 full, 7 partial, 5 wrong); related rows 299 (317), 49% of them a full or partial answer (47%);
+questions nobody can answer that are shown rows 20 of 126 (25); near-miss 100 of 1,810 as before. One question helped before is not: "Does CBN
+help sleep?" was helped by the answers on cannabis and sleep, which do not name CBN.
+
+And (2.28.9): a question about dying or overdose that names no drug is never answered by an answer about one drug (`Ranker.speaks`, the page's `insSpeaks`): "overdose symptoms" got the answer on meth's acute toxicity as its best match. Nothing changes on the gold set or the near-miss questions. The same rule for every question that names no drug was measured too and not kept: three full answers fewer on the gold set (best matches 32, full 20), though near-miss 90.
