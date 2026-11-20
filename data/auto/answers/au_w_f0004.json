@@ -20,18 +20,22 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44651722655",
+  "run": "44737642269",
   "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "gemini-3.1-flash-lite": 2
+   "gemini-3.5-flash-lite": 1,
+   "gemini-3.1-flash-lite": 1
   },
   "read_seconds": 100,
   "from": {
@@ -39,12 +43,13 @@
    "summaries": 0,
    "official": 0
   },
-  "neurons": 74.9,
+  "neurons": 0.0,
   "seconds": 100
  },
  "status": "none",
  "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
   "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
@@ -53,80 +58,48 @@
   {
    "read": "full",
    "ref": {
-    "id": "family_2025",
+    "id": "bollinger_2021",
     "type": "article-journal",
-    "title": "A qualitative study of benzodiazepine/z-drug and opioid co-use patterns and overdose risk",
+    "title": "Benzodiazepines reported in NFLIS-drug, 2015 to 2018",
     "author": [
      {
-      "family": "Family",
-      "given": "Hannah E."
+      "family": "Bollinger",
+      "given": "Katherine"
      },
      {
-      "family": "Vojt",
-      "given": "Gabriele"
+      "family": "Weimer",
+      "given": "BeLinda"
      },
      {
-      "family": "Poulter",
-      "given": "Hannah"
+      "family": "Heller",
+      "given": "David"
      },
      {
-      "family": "Bailey",
-      "given": "Chris P."
+      "family": "Bynum",
+      "given": "Nichole"
      },
      {
-      "family": "Abdala Sheikh",
-      "given": "Ana Paula"
+      "family": "Grabenauer",
+      "given": "Megan"
      },
      {
-      "family": "Cavallo",
-      "given": "Damiana"
+      "family": "Pressley",
+      "given": "DeMia"
      },
      {
-      "family": "Karimi",
-      "given": "Sara"
-     },
-     {
-      "family": "Booth",
-      "given": "Nick"
-     },
-     {
-      "family": "Da Silva",
-      "given": "Peter"
-     },
-     {
-      "family": "Aitken",
-      "given": "Louise"
-     },
-     {
-      "family": "Stewart",
-      "given": "Samantha"
-     },
-     {
-      "family": "Hickman",
-      "given": "Matthew"
-     },
-     {
-      "family": "Henderson",
-      "given": "Graeme"
-     },
-     {
-      "family": "Scott",
-      "given": "Jenny"
-     },
-     {
-      "family": "Kesten",
-      "given": "Joanna M."
+      "family": "Smiley-McDonald",
+      "given": "Hope"
      }
     ],
-    "container-title": "Harm Reduction Journal",
+    "container-title": "Forensic Science International: Synergy",
     "issued": {
      "date-parts": [
       [
-       2025
+       2021
       ]
      ]
     },
-    "DOI": "10.1186/s12954-025-01153-8",
+    "DOI": "10.1016/j.fsisyn.2021.100138",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -138,34 +111,49 @@
       "checked_on": "2026-11-20"
      }
     },
-    "volume": "22",
-    "issue": "1",
-    "number": "24",
-    "PMCID": "PMC11866653"
+    "volume": "3",
+    "number": "100138",
+    "PMCID": "PMC7905184"
    },
-   "doi": "10.1186/s12954-025-01153-8",
-   "pmcid": "PMC11866653",
-   "title": "A qualitative study of benzodiazepine/z-drug and opioid co-use patterns and overdose risk",
-   "year": 2025,
-   "journal": "Harm reduction journal",
+   "doi": "10.1016/j.fsisyn.2021.100138",
+   "pmcid": "PMC7905184",
+   "title": "Benzodiazepines reported in NFLIS-Drug, 2015 to 2018",
+   "year": 2021,
+   "journal": "Forensic science international. Synergy",
    "kind": "other",
    "people": true,
-   "near": 0.634,
+   "near": 0.53,
    "money": [
-    "This work was supported by the Medical Research Council (MRC) grant number MR/W029162/1. CPB, AP, AS, HP, HF, GV, DC, SK, MH, GH, JK are partially funded by this MRC grant. JK and HF are partly funded by National Institute for Health Research Applied Research Collaboration West (NIHR ARC West). HF, MH, GV and JK acknowledge support from the NIHR Health Protection Research Unit in Behavioural Science and Evaluation at the University of Bristol (NIHR200877)."
+    "The authors have no conflicts of interest to declare.",
+    "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.",
+    "AcknowledgementsWe acknowledge the assistance of Neelima Kunta and Jeffrey Ancheta for providing NFLIS-Drug data and for their review of the manuscript. This work was supported by the DEA through the NFLIS program. This publication was reviewed and approved by the DEA Publication Review Board (DEA PRB 08-21-20-27a)."
    ],
-   "design": null,
+   "design": {
+    "passage": 33,
+    "where": "Discussion",
+    "quote": "This study analyzed results of drug seizure data submitted to NFLIS-Drug by participating laboratories. The analysis focused on benzodiazepines, with an emphasis on designer benzodiazepines reported in NFLIS-Drug.",
+    "text": "a study of drug seizure data submitted to the National Forensic Laboratory Information System"
+   },
    "findings": [
     {
-     "passage": 65,
-     "where": "Discussion",
-     "quote": "It is notable that participants in the present study reported co-use as a method of coming down from stimulant use in pattern 1",
-     "text": "Participants reported co-use as a method of coming down from stimulant use in pattern 1.",
+     "passage": 25,
+     "where": "Results › Alprazolam and etizolam reported with other drugs in the same item",
+     "quote": "Examples of other substances include lidocaine, caffeine, and cocaine.",
+     "text": "Cocaine is one of the substances reported in the same item as etizolam.",
      "id": "F1",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Results › Alprazolam and etizolam reported with other drugs in the same item",
+     "quote": "NFLIS-Drug data can provide some insight into potential combinations but can provide limited knowledge on true combinations.",
+     "text": "The data from NFLIS-Drug provides limited knowledge on whether drugs found in the same item are true combinations.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   }
  ],
@@ -174,109 +162,86 @@
  "missing": "",
  "wanted": [
   {
-   "doi": "10.1080/10550887.2021.1950262",
-   "apa": "Armoon, B., SoleimanvandiAzar, N., Rostami, M., Higgs, P., Bayani, A., Bayat, A.-H., Mohammadi, R., Ahounbar, E., & Fattah Moghaddam, L. (2022). Drug type and risk behaviors associated with non-fatal overdose among people who use drugs: A systematic review and meta-analysis. Journal of Addictive Diseases, 40(1), 114–125. https://doi.org/10.1080/10550887.2021.1950262",
-   "near": 0.604,
-   "why": "a review or meta-analysis in people; nearness to the question 0.60; cited 16 times; its full text is not open",
-   "file": "armoon_2022_10550887_2021_1950262.pdf"
+   "doi": "10.1097/ftd.0000000000000465",
+   "apa": "Pichini, S., Solimini, R., Berretta, P., Pacifici, R., & Busardò, F. P. (2018). Acute intoxications and fatalities from illicit fentanyl and analogues: An update. Therapeutic Drug Monitoring, 40(1), 38–51. https://doi.org/10.1097/ftd.0000000000000465",
+   "near": 0.523,
+   "why": "a review or meta-analysis in people; nearness to the question 0.52; cited 94 times; its full text is not open",
+   "file": "pichini_2018_ftd_0000000000000465.pdf"
   },
   {
-   "doi": "10.1097/yco.0000000000000875",
-   "apa": "van Amsterdam, J., Pierce, M., & van den Brink, W. (2023). Predictors and motives of polydrug use in opioid users. a narrative review. Current Opinion in Psychiatry, 36(4), 301–307. https://doi.org/10.1097/yco.0000000000000875",
-   "near": 0.593,
-   "why": "a review or meta-analysis in people; nearness to the question 0.59; cited 11 times; its full text is not open",
-   "file": "vanamsterdam_2023_yco_0000000000000875.pdf"
+   "doi": "10.1016/s0306-4530(97)00027-9",
+   "apa": "Goeders, N. E. (1997). A neuroendocrine role in cocaine reinforcement. Psychoneuroendocrinology, 22(4), 237–259. https://doi.org/10.1016/s0306-4530(97)00027-9",
+   "near": 0.574,
+   "why": "a review or meta-analysis; nearness to the question 0.57; cited 114 times; its full text is not open",
+   "file": "goeders_1997_s0306_4530_97_00027_9.pdf"
   },
   {
-   "doi": "10.1097/00007611-199212000-00013",
-   "apa": "SKINNER, M. H., & THOMPSON, D. A. (1992). Pharmacologic considerations in the treatment of substance abuse. Southern Medical Journal, 85(12), 1207–1219. https://doi.org/10.1097/00007611-199212000-00013",
-   "near": 0.568,
-   "why": "a review or meta-analysis in people; nearness to the question 0.57; cited 3 times; its full text is not open",
-   "file": "skinner_1992_00007611_199212000_00013.pdf"
+   "doi": "10.1016/j.forsciint.2018.05.042",
+   "apa": "Kuczyńska, K., Grzonkowski, P., Kacprzak, Ł., & Zawilska, J. B. (2018). Abuse of fentanyl: An emerging problem to face. Forensic Science International, 289, 207–214. https://doi.org/10.1016/j.forsciint.2018.05.042",
+   "near": 0.474,
+   "why": "a review or meta-analysis in people; nearness to the question 0.47; cited 133 times; its full text is not open",
+   "file": "kuczyska_2018_j_forsciint_2018_05_042.pdf"
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
-   "title": "A qualitative study of benzodiazepine/z-drug and opioid co-use patterns and overdose risk",
+   "title": "Benzodiazepines in the oral fluid of Spanish drivers",
    "read": "full",
    "kind": "other",
-   "at": "10.1186/s12954-025-01153-8",
-   "kept": 1,
+   "at": "10.1186/s13011-020-00260-y",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "High concentrations of illicit stimulants and cutting agents cause false positives on fentanyl test strips",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/s12954-021-00478-4",
+   "kept": 0,
    "thrown": [
     {
      "kind": "text",
-     "text": "A qualitative study featuring semi-structured interviews with 48 individuals who co-use illicit and/or prescribed opioids and benzodiazepines/z-drugs across Glasgow, Bristol, and Teesside.",
-     "quote": "Forty-eight semi-structured interviews across Glasgow in Scotland (n = 28), Bristol (n = 10) and Teesside (n = 10) in England with individuals who co-use illicit and/or prescribed opioids and benzodia",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
-  },
-  {
-   "title": "Polysubstance mortality trends in White and Black Americans during the opioid epidemic, 1999-2018",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/s12889-023-17563-x",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Associations Between Polysubstance Use Patterns and Receipt of Medications for Opioid Use Disorder Among Adults in Treatment for Opioid Use Disorder",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1097/adm.0000000000000726",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Patterns, circumstances and risk factors associated with non-fatal substance overdose in a cohort of homeless population: an observational study",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1007/s11096-024-01812-z",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "In a study of people experiencing homelessness, cocaine and benzodiazepines were both identified as substances involved in polysubstance overdoses.",
-     "quote": "For polysubstance overdoses, paracetamol (n = 37, 28.0%) was the most common substance followed by heroin (n = 31, 23.5%), cocaine (n = 32, 24.2%), benzodiazepines (n = 31, 23.5%)",
+     "text": "A laboratory study testing pharmaceutical and illicit substances for false positive interference on fentanyl test strips.",
+     "quote": "We tested whether these concentrated samples could cause false positive results on a FTS.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
   {
-   "title": "The Role of Toxicology Investigations in Overdose Deaths",
-   "read": "full",
-   "kind": "review",
-   "at": "10.7759/cureus.79352",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Communities That HEAL Intervention and Mortality Including Polysubstance Overdose Deaths: A Randomized Clinical Trial",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1001/jamanetworkopen.2024.40006",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Nonfatal Drug and Polydrug Overdoses Treated in Emergency Departments - 29 States, 2018-2019",
+   "title": "Benzodiazepines reported in NFLIS-Drug, 2015 to 2018",
    "read": "full",
    "kind": "other",
-   "at": "10.15585/mmwr.mm6934a1",
+   "at": "10.1016/j.fsisyn.2021.100138",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In 2018, cocaine was reported in the same item as alprazolam in 103 reports.",
+     "quote": "Methamphetamine (168 reports), cocaine (103 reports), and heroin (69 reports) accounted for 32% of the drugs reported in the same item as alprazolam.",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "Mercy killing of a 72-year-old woman through heroin intoxication",
+   "read": "full",
+   "kind": "case",
+   "at": "10.1111/1556-4029.15637",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Drug overdose deaths among women 1999-2021 in the United States: Differences by race, ethnicity, and age",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1177/17455057241307088",
-   "kept": 0,
-   "thrown": []
   }
  ],
  "soft": "a source could not be fetched",
