@@ -2225,6 +2225,7 @@ if (typeof document !== "undefined") askedBox();
 const FIND_API = "api/find";
 const FIND_STOP = new Set(("what when where which while with would could should does doing done have having from that this these those there their them they your yours about into than then also just very much many more most some such only over under after before because being been were will shall might must cant dont long take takes taking took taken using used uses make makes made feel feels feeling felt people person someone anyone thing things really actually good bad safe okay fine true real ever still even like know want need tell does help helps helped work works worked " +
   "together same both each other others another everyone everybody somebody anybody something anything stuff kind sort guys " +   // (2.26.2, trial 15: "together" was taken for a key word)
+  "stronger weaker better worse safer riskier " +   // (2.28.7) the words that only set two things side by side: the two names are what is looked up ("mushrooms vs lsd which is stronger")
   "linked link links linking associated association connected connection related relation could have been usually often normally typically commonly generally mostly products product brands brand " +   // (2.26.4, trial 16: "is nitrous oxide linked to nerve damage" had "linked" for a key word)
   // (2.18.2) words that stand in nearly every paper's summary, or say nothing a search can use
   "cause causes caused causing study studies studying studied time times term same different between kind kinds type types happen happens happened give gives given get gets getting mean means compared versus " +
@@ -2313,7 +2314,10 @@ function insFindTerms(res) {
   // (2.20) the first drug the question names is what it is about; another one named beside it is a key word ("does kratom help with opioid withdrawal")
   if (first && INS.nameRe) { INS.nameRe.lastIndex = 0; let m; while ((m = INS.nameRe.exec(text))) { const a = String(m[1] || "").toLowerCase(), g = INS.nameOf.get(a) || [];
       if (g.join("|") === firstKey) { if (a.length >= 4 && !/\s/.test(a) && (!INS.vocab.has(a) || first.length > 1)) { add(names, a); if (FIND_GENERIC[a]) add(names, FIND_GENERIC[a]); } }
-      else if (/^[a-z]{4,24}$/.test(a) && !INS.vocab.has(a) && !extra.includes(a)) extra.push(a);
+      else if (/^[a-z]{4,24}$/.test(a) && !INS.vocab.has(a) && !extra.some(x => x.split("|").includes(a))) extra.push(FIND_GENERIC[a] && FIND_GENERIC[a] !== a ? a + "|" + FIND_GENERIC[a] : a);   // (2.28.7) "meth" is also asked as "methamphetamine"
+      // (2.28.7) a second drug whose typed name is an everyday word or short ("mushrooms vs lsd", "nicotine compared to heroin", "weed and alcohol"): its page's own
+      // name, where it is one drug's page; "lsd" and "heroin" were no key word at all, so the search was for the first drug alone
+      else if (g.length === 1 && g.join("|") !== firstKey && subBySlug[g[0]]) { const pn = norm(String(subBySlug[g[0]].name || "").split(/[(,/]/)[0]); if (/^[a-z0-9-]{3,24}$/.test(pn) && !extra.includes(pn) && !names.includes(pn)) extra.push(pn); }
       if (m.index === INS.nameRe.lastIndex) INS.nameRe.lastIndex++; } INS.nameRe.lastIndex = 0; }
   // what its page is called. A page that stands for several things ("Cannabis (THC, CBD)"): the ones the reader named, where they named any ("does cbd help
   // with sleep" is about CBD); all of them where they named none ("weed"). A word for a whole class ("psychedelics") stands for itself, not for two of its pages
@@ -2348,6 +2352,14 @@ function insFindTerms(res) {
   if (cutw) words.push("adulterants|adulteration|cutting agents");
   const less = /\bcut(?:ting)?\s+(?:down|back)\b/.test(masked), comed = /\bcom(?:e|es|ing)\s+down\b/.test(masked);   // (2.26.4) "cut down", "coming down": what papers call them
   if (less) words.push("reduction|reducing|cutting down"); if (comed) words.push("comedown|come down|after-effects");
+  // (2.28.7) how long a drug can be found, as papers say it ("how long does coke stay in your system" was looked up by "stay" and "system"); a test's kind stays a key word
+  const stays = /\b(?:stays?|staying|remains?|lingers?|lasts?)\s+in\s+(?:your|my|the|their|his|her|a|one'?s)?\s*(?:system|body|blood(?:stream)?|urine|pee|hair|saliva|spit)\b|\b(?:show(?:s|ing)?\s+up|detect(?:ed|able)?|test(?:s|ed)?\s+positive)\s+(?:on|in)\s+(?:a\s+)?(?:drug\s+)?(?:test|tests|screen|screening)\b/.test(masked);
+  if (stays) words.push("detection|detectable|elimination");
+  const rape = /\bdate[\s-]+rape\b/.test(masked), spike = /\bspik(?:e|ed|es|ing)\b/.test(masked);   // (2.28.7) what papers call them
+  if (rape) words.push("drug-facilitated sexual assault|date rape|sexual assault"); else if (spike) words.push("drink spiking|spiking|drug-facilitated");
+  const why = /^\s*why\s+(?:do|would|does|did|should)\s+(?:people|someone|anyone|they|users?|folks|men|women|students|teens|kids)\s+(?:take|use|do|try|smoke|drink|snort|inject|vape|want)\b/.test(masked);   // (2.28.7) the reasons, as papers say them
+  const bodyq = /\bdo(?:es)?\s+to\s+(?:your|my|the|a|their|his|her|one'?s)?\s*body\b/.test(masked);   // (2.28.7) "what does fentanyl do to your body": its effects
+  if (bodyq) words.push("effects|physiological");
   const metals = /\bheavy\s+metals?\b/.test(masked);   // (2.28.0, trial 18: "heavy" and "metals" were two key words, and every search with both found nothing) one thing, as papers name it
   if (metals) words.push("heavy metals|arsenic|cadmium|mercury|nickel");   // (not "lead": "can lead to" stands in every summary)
   for (const w0 of masked.match(/[a-z]{3,}/g) || []) { let say = FIND_SAY[w0];
@@ -2356,7 +2368,7 @@ function insFindTerms(res) {
     if (od && /^overdos/.test(w0)) continue;                                                   // (2.22) the subject itself is no key word
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
     if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
-    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0))) continue;
+    if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
     const e = say && say !== w0 ? (say.split("|").includes(w0) ? say : say + "|" + w0) : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
     if (!words.includes(e) && !words.includes(say || w0) && !e.split("|").some(a => words.some(x => x.split("|").includes(a))) && words.length < 5) words.push(e); }
@@ -2368,6 +2380,7 @@ function insFindTerms(res) {
   if (od && !words.length) return null;                       // (2.22) nothing to look for beyond "overdose" itself
   // (2.21.2) "why do people take drugs" has no key word of its own; the eleventh trial found the papers on it under what research calls the reasons
   if (general && !words.length && names[0] === "drug use" && /^\s*why\b/.test(text)) words.push("motives|reasons");
+  if (!general && why && !words.length) words.push("motives|reasons|motivations");   // (2.28.7) "why do people take xanax": the reasons, beside the drug's name
   if (general && !words.length) return null;                 // (2.21) nothing to look for beyond "drug use" itself
   // (2.21.2, after the twelfth trial: "smoking", "pregnant", "baby" found two papers, neither on the question) a question about pregnancy or children that names
   // a drug: two key words at most, the ones about pregnancy or the child first
