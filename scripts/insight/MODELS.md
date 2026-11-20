@@ -385,3 +385,8 @@ Measured and not kept (20 November 2026): the judge's lead measured over the nex
 psychosis would no longer stand in each other's way for "can weed make you go crazy"). With the judge as it is, at the cut of 0.7: best
 matches 39 (full 24, partial 8, wrong 7), near-miss questions given the answer they do not get 138 of 1,810 against 101: a near-miss
 question is most often one of the same topic, and the lead is what kept it from the answer.
+
+Measured and not kept (20 November 2026): a related answer whose first look is very near whatever its topic score ("is it bad to smoke weed
+while pregnant": the answer on cannabis in pregnancy stood first at 0.68, its topic at 0.49, and was not listed). On the gold set, from a first
+look of 0.65: 12 questions more see an answer among what is shown, and 11 more are shown rows none of which answers them (and 5 more questions
+nobody can answer get rows); from 0.60, 25 and 20. As many rows mislead as help: tiers stay as they are.
