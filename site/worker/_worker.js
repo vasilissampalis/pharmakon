@@ -539,6 +539,7 @@ async function findPapers(env, r, most, ctx) {
     if (G.failed || T.failed) down = true;
     if (!ms) { ms = [G.ms, T.ms, null]; won = [G.won, T.won, null]; own = [G.own, T.own, null]; }
     kept += G.kept + T.kept; };
+  const near = list => list.map(p => p ? Object.assign({}, p, { near: 1 }) : p);
   const round = async (names, noted) => { const Q = findQueries(names, r.groups), live = { on: true };
     // (2.28.20) a question with no key word ("what is hhc", "is delta 8 safe", "what does fly agaric do"): reviews of the drug, the most cited, beside its most
     // cited papers, and first. Before this its most cited papers alone came, often old studies in animals or of the plant's biology (trials 32 and 33)
@@ -554,7 +555,9 @@ async function findPapers(env, r, most, ctx) {
     const first = stems.length ? a.filter(onTopic) : a, rest = stems.length ? a.filter(p => !onTopic(p)) : [];
     if (!r.groups.length) add([c[0], first[0], c[1], first[1], first[2], c[2]].concat(first.slice(3)));   // (2.28.20) no key word: the reviews first
     else add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
-    if (out.length < 3) add(w);
+    // (2.28.28, trial 46) the widest of the three (the drug and the key words anywhere in a summary) is near the question too: for "do people who take lsd share the
+    // same hallucinations" it found a review of sleep paralysis that names LSD and holds both words. With no key word, a paper with the drug in its title is on it
+    if (out.length < 3) add(r.groups.length ? near(w) : w);
     if (!A.done || (!r.groups.length && !C.done) || (out.length < 3 && (!C.done || !W.done))) more = true;   // (2.28.20) no key word: the reviews are worth asking again for
     if (A.failed || (out.length < 3 && (C.failed || W.failed))) down = true;
     if (!ms) { ms = [A, C, W].map(s => s.ms); won = [A, C, W].map(s => s.won); own = [A, C, W].map(s => s.own); }
@@ -568,8 +571,7 @@ async function findPapers(env, r, most, ctx) {
   if (!more && out.length < 3 && all.length > r.names.length && left() > 600) await round(all);   // (the name the reader wrote found too little: with what its page is called)
   const Q = findQueries(all, r.groups);
   // (2.28.28; the senior author, 20 November 2026, 12:23, of "do people who take lsd share the same hallucinations": "these have nothing to do with my question") a
-  // paper found only by ONE of the key words, or by the drug alone, is near the question, not on it: it is marked (n), and the page says so
-  const near = list => list.map(p => Object.assign({}, p, { near: 1 }));
+  // paper found only by ONE of the key words, or by the drug alone, is near the question, not on it: it is marked (n), and the page says so (near: above)
   if (!more && out.length < 3 && Q.loose) add(near(await one(Q.loose, "CITED%20desc", 4)));
   if (!more && out.length < 2 && r.groups.length) add(near(await one(Q.nameRev, "CITED%20desc", 4)));
   const papers = out.slice(0, most).map(p => { let pick = null; try { pick = r.noq ? null : iaPick(p, r.groups, all, r.def); } catch (e) { pick = null; }
