@@ -137,6 +137,8 @@ function insPrepare(d, vocabText) {
   INS.about = d.about.map(xs => new Set(xs.map(k => d.slugs[k])));   // the drugs each answer is about
   // the names that name a drug in a question (build_index.py's names_table: the longest first), and the drugs each stands for
   INS.nameOf = new Map(d.names.map(([n, xs]) => [n, xs.map(k => d.slugs[k])]));
+  const none = d.names.filter(([n, xs]) => !xs.length).map(([n]) => n);   // (2.28.17) the names that stand for no page (build_index.py, NONE_NAMES)
+  INS.noneRe = none.length ? new RegExp(insNb("\\p{L}\\p{N}_") + "(?:" + none.map(insRx).join("|") + ")(?![\\p{L}\\p{N}_])", "giu") : null;
   INS.nameRe = new RegExp(insNb("\\p{L}\\p{N}_") + "(" + d.names.map(([n]) => insRx(n)).join("|") + ")(?![\\p{L}\\p{N}_])", "giu");
   Object.assign(INS, insWords(d.docs));
   // 2.5: what makes a question a question about drugs (site/insight/scope.json, through the index: the same patterns, between
@@ -178,7 +180,8 @@ function insPrepare(d, vocabText) {
 // (2.28.11) everyday names that stand for more than the one page they bring along: asked alone, or as "what are painkillers", they are no drug's page
 const INS_NOT_ONE_PAGE = new Set(["painkillers", "sleeping pills", "sleeping pill", "sleeping tablets"]);
 function insExpand(t) {
-  const tl = t.toLowerCase(), extra = INS.drugs.filter(x => x.re.test(tl) && !tl.includes(x.canon.toLowerCase())).map(x => x.canon);
+  // (2.28.17) the drug names inside a name that stands for no page ("amanita mushrooms", "vitamin k2") bring no drug's name along (the build's drug_names)
+  const tl = t.toLowerCase(), tb = INS.noneRe ? tl.replace(INS.noneRe, m => " ".repeat(m.length)) : tl, extra = INS.drugs.filter(x => x.re.test(tb) && !tl.includes(x.canon.toLowerCase())).map(x => x.canon);
   return t + (extra.length ? " (" + extra.join(", ") + ")" : "");
 }
 
@@ -305,10 +308,10 @@ const insWordsIn = q => (q.match(/[\p{L}\p{N}]+/gu) || []).length;
 // the drugs a question names, each as the list of drugs its name stands for (a family's name stands for every drug of it)
 function insNamed(t) {
   const out = [], seen = new Set();
-  for (const m of String(t).matchAll(INS.nameRe)) { const g = INS.nameOf.get(m[1].toLowerCase()); if (!g) continue; const k = g.join("|"); if (!seen.has(k)) { seen.add(k); out.push(g); } }
+  for (const m of String(t).matchAll(INS.nameRe)) { const g = INS.nameOf.get(m[1].toLowerCase()); if (!g || !g.length) continue; const k = g.join("|"); if (!seen.has(k)) { seen.add(k); out.push(g); } }   // (2.28.17: an empty list, a name that stands for no page: "amanita mushrooms")
   return out;
 }
-const insMask = t => String(t).replace(INS.nameRe, "it");
+const insMask = t => String(t).replace(INS.nameRe, (m0, n) => { const g = INS.nameOf.get(String(n).toLowerCase()); return g && !g.length ? m0 : "it"; });   // (2.28.17: a name that stands for no page stays as typed, as the names of drugs without a page do)
 // what is embedded for a question: with the drug's own name brought along, and with the drug names taken out; and the drugs
 // it is about (on a drug's page, a question that names none is about that drug)
 function insTexts(q, drug) {
@@ -450,6 +453,7 @@ function insBlocked(q) {
   if (INS_RE.shops.test(q)) return true;
   let named = false;
   for (const m of q.matchAll(INS.nameRe)) {                    // a verb of getting or making, with a drug as what is got or made
+    const g = INS.nameOf.get(String(m[1]).toLowerCase()); if (g && !g.length) continue;   // (2.28.17) not a name that stands for no page ("where to buy vitamin k2")
     const before = q.slice(0, m.index), after = q.slice(m.index + m[0].length); named = true;
     if (INS_RE.buy.test(before) || (INS_RE.get.test(before) && INS_RE.ask.test(q)) || INS_RE.make.test(before) || (INS_RE.how.test(q) && INS_RE.made.test(after))) return true;
   }
@@ -854,7 +858,8 @@ function insUnfinRule(U, names) {
 function insUnfTokens(q) {
   const U = INS.unfin, t = String(q).toLowerCase().replace(/\u2019/g, "'"), blank = INS.scope ? t.replace(INS.scope.not, m => " ".repeat(m.length)) : t;
   const surf = [], w = [], nm = []; let out = "", at = 0, m, k = 0; INS.nameRe.lastIndex = 0;
-  while ((m = INS.nameRe.exec(blank))) { out += t.slice(at, m.index) + " 0n0 "; surf.push(t.slice(m.index, m.index + m[0].length)); at = m.index + m[0].length; }
+  while ((m = INS.nameRe.exec(blank))) { const g = INS.nameOf.get(m[1].toLowerCase()); if (g && !g.length) continue;   // (2.28.17) a name that stands for no page is read as its words
+    out += t.slice(at, m.index) + " 0n0 "; surf.push(t.slice(m.index, m.index + m[0].length)); at = m.index + m[0].length; }
   out += t.slice(at);
   (out.match(/[a-z0-9']+/g) || []).forEach(y => { y = y.replace(/^'+|'+$/g, ""); if (!y) return;
     if (y === "0n0" && k < surf.length) { w.push("it"); nm.push(surf[k++]); return; }

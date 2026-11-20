@@ -79,7 +79,13 @@ EXTRA = {"benzo": ["benzodiazepines"], "benzodiazepine": ["benzodiazepines"], "x
          "shroom": ["psilocybin"], "magic mushroom": ["psilocybin"], "mushroom trip": ["psilocybin"], "mushroom trips": ["psilocybin"],
          "xanny": ["benzodiazepines"], "xannies": ["benzodiazepines"], "xanies": ["benzodiazepines"],
          "perc": ["prescription-opioids"], "percs": ["prescription-opioids"], "whippet": ["nitrous-oxide"], "nang": ["nitrous-oxide"], "popper": ["alkyl-nitrites-and-inhalants"],
-         "ganja": ["cannabis"], "fenty": ["fentanyl-and-analogues"]}
+         "ganja": ["cannabis"], "fenty": ["fentanyl-and-analogues"],
+         # (2.28.17) the names of synthetic cannabinoids that hold a name of cannabis ("is fake weed dangerous" was a question on cannabis), and of magic mushrooms
+         # by their kind ("how strong are golden teachers" was taken for a question that is not about drugs)
+         "synthetic marijuana": ["synthetic-cannabinoids"], "synthetic cannabis": ["synthetic-cannabinoids"], "fake weed": ["synthetic-cannabinoids"], "k2": ["synthetic-cannabinoids"],
+         "delta 9": ["cannabis"], "delta-9": ["cannabis"],   # (delta-9-THC is THC; delta-8 and delta-10, made from CBD, are drugs the site has no page on: scope.json)
+         "golden teacher": ["psilocybin"], "golden teachers": ["psilocybin"], "liberty cap": ["psilocybin"], "liberty caps": ["psilocybin"],
+         "psilocybe": ["psilocybin"], "cubensis": ["psilocybin"], "psilocybe cubensis": ["psilocybin"]}
 # (2.28.11, 20 November 2026) the benzodiazepines and opioids people name by their own names, on the page of their kind: "ativan" was read as a
 # benzodiazepine and "lorazepam", the same drug, as a drug the site has no page on, so that "is lorazepam addictive" was shown nothing
 EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazepam", "triazolam", "bromazepam", "chlordiazepoxide", "librium", "restoril", "halcion", "clobazam",
@@ -226,11 +232,19 @@ def drug_names():
     for slug, ns in sets.items():
         pats[slug] = re.compile(r"\b(" + "|".join(re.escape(n) for n in sorted(ns, key=len, reverse=True)) + r")\b")
     for s in SUB: canon[s["slug"]] = s["name"].split(" (")[0]
+    none = name_pattern(NONE_NAMES)                                       # (2.28.17) the drug names inside a name that stands for no page bring nothing along
     def expand(t):
-        tl = t.lower(); d = sorted(slug for slug, p in pats.items() if p.search(tl))
+        tl = t.lower(); tb = none.sub(lambda m: " " * len(m.group(0)), tl); d = sorted(slug for slug, p in pats.items() if p.search(tb))
         extra = [canon[x] for x in d if canon[x].lower() not in tl]
         return t + (" (" + ", ".join(extra) + ")" if extra else "")
     return expand
+
+
+# (2.28.17, 20 November 2026) Names that hold the name of a drug the site has a page on, but stand for another thing: "amanita mushrooms" are not magic
+# mushrooms, "vitamin k2" is no synthetic cannabinoid, "gas station heroin" is tianeptine. They are read as names, the longest first, so that the shorter name
+# inside them is not read; they name no page (no drug, no group: the page's insNamed and Ranker.named pass over them), and the drug names inside them bring no
+# drug's name along before the question is embedded (drug_names, the page's insExpand). "can amanita mushrooms kill you" was read as a question on psilocybin.
+NONE_NAMES = ["amanita mushroom", "amanita mushrooms", "fly agaric mushroom", "fly agaric mushrooms", "muscaria mushroom", "muscaria mushrooms", "vitamin k2", "gas station heroin"]
 
 
 def names_table():
@@ -244,6 +258,7 @@ def names_table():
     for fam, ws in FAMILY_WORDS.items():
         members = {s["slug"] for s in SUB if s["cls"] == fam}
         for w in ws: t.setdefault(w, set()).update(members)
+    for n in NONE_NAMES: t[n] = set()                                    # (2.28.17) a name that stands for no page
     return [[n, sorted(t[n])] for n in sorted(t, key=lambda n: (-len(n), n))]
 
 
@@ -287,7 +302,7 @@ class Ranker:
             g = self.name_of.get(m.group(1).lower())
             if g and g not in out: out.append(g)
         return out
-    def mask(self, q): return self.pat.sub("it", q)
+    def mask(self, q): return self.pat.sub(lambda m: m.group(0) if self.name_of.get(m.group(1).lower()) == [] else "it", q)   # (2.28.17: a name that stands for no page stays as typed)
     def texts(self, q, drug=None):
         """What is embedded for a question: with the drug's own name brought along, and with the drug names taken out; and
         the drugs it is about (on a drug's page, a question that names none is about that drug)."""
@@ -436,6 +451,7 @@ class Ranker:
         blank = self.scope_not.sub(lambda m: " " * len(m.group(0)), t) if getattr(self, "scope_not", None) is not None else t
         out, surf, at = [], [], 0
         for m in self.pat.finditer(blank):
+            if self.name_of.get(m.group(1).lower()) == []: continue        # (2.28.17) a name that stands for no page is read as its words
             out += [t[at:m.start()], " 0n0 "]; surf.append(t[m.start():m.end()]); at = m.end()
         out.append(t[at:]); w, nm, k = [], [], 0
         short = (self.unfin or {}).get("short") or {}
@@ -730,7 +746,8 @@ def main():
     shorts = [(a["wordings"][0] + " " + a["short"]).strip() if CONFIG.get("short_with_question") and a.get("wordings") else a["short"] for a in A]
     docs = [" ".join(a["wordings"]) + " " + a["short"] for a in A]   # word overlap: the site's own wordings and the short answer
     names = names_table(); pat = name_pattern([n for n, _ in names])
-    M_txt = [pat.sub("it", w) for w in W_txt]                          # every wording again, with the drug names taken out
+    none = {n for n, xs in names if not xs}                              # (2.28.17) a name that stands for no page stays as typed
+    M_txt = [pat.sub(lambda m: m.group(0) if m.group(1).lower() in none else "it", w) for w in W_txt]   # every wording again, with the drug names taken out
     V = embed_all(W_txt + shorts + M_txt)
     Wv, Sv, Mv = V[:len(W_txt)], V[len(W_txt):len(W_txt) + len(shorts)], V[len(W_txt) + len(shorts):]
     # next questions: the answers nearest by the meaning of their questions as the site words them

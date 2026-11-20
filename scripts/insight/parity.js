@@ -44,7 +44,10 @@ const queries = goldAll.filter((_, i) => i % 5 === 2).slice(0, 60).map(q => [q, 
   "can i die from mosquito bites", "how do i cook mushrooms in butter", "is diet coke bad for your teeth", "can you die from a bee sting", "how do i get high scores in tetris", "do vaccines cause autism", "is stomach acid dangerous",
   "whats the comedown from coke like", "how do i help a friend who is addicted", "how bad is vaping for your lungs", "does weed kill brain cells",
   "does ketamine damage your brain", "is lean dangerous", "can you get high from nutmeg", "is kanna safe", "does cbn help sleep", "what are signs of an overdose", "overdose symptoms", "can you overdose", "what is 6-apb like", "what is 3-meo-pce like, and how risky is it", "is 5-MeO-DALT dangerous", "is 1p-lsd the same as lsd", "is modafinil safe", "how long does the high last", "is it ok to take ibuprofen every day", "why do people take drugs", "what is the best tablet for drawing",
-  "is lorazepam addictive", "how long does lorazepam withdrawal last", "is flualprazolam dangerous", "is dilaudid stronger than morphine", "can tapentadol get you high", "is wine bad for your liver"].map(q => [q, null]),
+  "is lorazepam addictive", "how long does lorazepam withdrawal last", "is flualprazolam dangerous", "is dilaudid stronger than morphine", "can tapentadol get you high", "is wine bad for your liver",
+  // (2.28.16, 2.28.17) everyday names, mushrooms that are not magic mushrooms, and names that stand for no page
+  "are xannies addictive", "are percs laced with fentanyl", "whippet side effects", "what is a bad mushroom trip like", "is lions mane mushroom good for memory", "are reishi mushrooms safe",
+  "chaga mushroom tea benefits", "can amanita mushrooms kill you", "is vitamin k2 safe", "what is gas station heroin", "is fake weed dangerous", "how strong are golden teachers", "is delta 8 safe"].map(q => [q, null]),
   [["does it kill brain cells", "cannabis"], ["is it addictive", "cannabis"], ["how long does it stay in your blood", "ketamine"], ["is it addictive", "kratom"], ["can it damage my bladder", "ketamine"],
    ["what does mdma do to serotonin", "cannabis"], ["how long does it last", "lsd"], ["is it safe with alcohol", "mdma"]]);
 // 2.9: questions as a reader who is still typing leaves them: every third forum question of the gold set cut after each of its
