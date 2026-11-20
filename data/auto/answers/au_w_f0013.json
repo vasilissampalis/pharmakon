@@ -20,99 +20,930 @@
   "on": "2026-11-20",
   "models": {
    "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44659769573",
-  "read_seconds": 100,
+  "run": "44757104716",
+  "read_seconds": 30,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 378
  },
- "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 4 of 6",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.50, but 0.96, how1 0.70, how2 0.77, how3 0.09, how4 0.91",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash; 1 How-do-we-know line(s) dropped",
+  "but": "the writer's But was not accepted (it is about something else than the short answer (Sentence 1 directly answers the question about what lorazepam feels like based on the provided passages. Most ): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
- "sources": [],
- "parts": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "amore_2021",
+    "type": "article-journal",
+    "title": "Treatment of agitation with lorazepam in clinical practice: A systematic review",
+    "author": [
+     {
+      "family": "Amore",
+      "given": "Mario"
+     },
+     {
+      "family": "D'Andrea",
+      "given": "Mariella"
+     },
+     {
+      "family": "Fagiolini",
+      "given": "Andrea"
+     }
+    ],
+    "container-title": "Frontiers in Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpsyt.2021.628965",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "12",
+    "number": "628965",
+    "PMCID": "PMC7937895"
+   },
+   "doi": "10.3389/fpsyt.2021.628965",
+   "pmcid": "PMC7937895",
+   "title": "Treatment of Agitation With Lorazepam in Clinical Practice: A Systematic Review",
+   "year": 2021,
+   "journal": "Frontiers in psychiatry",
+   "kind": "review",
+   "people": true,
+   "near": 0.685,
+   "money": [
+    "MA is /has been a consultant and/or a speaker and/or has received research grants from Angelini, FB-Health, Janssen, Lundbeck, Otsuka, Pfizer, Recordati, and Glaxo. AF is/has been a consultant and/or a speaker and/or has received research grants from Allergan, Angelini, Aspen, Boehringer Ingelheim, Daiichi Sankyo Brasil Farmacêutica, Doc Generici, FB-Health, Italfarmaco, Janssen, Lundbeck, Mylan, Otsuka, Pfizer, Recordati, Sanofi Aventis, Sunovion, and Vifor. MD'A is a Pfizer employee.",
+    "Editorial and medical writing support was provided by HPS and was funded by Pfizer. MA and AF received honoraria from Pfizer in connection with the development of this manuscript."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We performed a systematic review with focus on lorazepam, including all randomized clinical trials on lorazepam in mental and behavioral disorders, excluding studies on dementia and pediatric patients and in mixed conditions.",
+    "text": "A systematic review of randomized clinical trials on the use of lorazepam for acute agitation in patients with mental and behavioral disorders."
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "the safety of lorazepam among the different studies was consistent with its well-characterized profile with dizziness, sedation, and somnolence being the most common adverse events.",
+     "text": "The most common adverse events associated with lorazepam are dizziness, sedation, and somnolence.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 16,
+     "where": "Results › Safety",
+     "quote": "Dizziness was reported in ≥10% of patients in 3 trials; sedation/somnolence was documented in about 10% of patients in three trials as well.",
+     "text": "Dizziness was reported in 10% or more of patients in 3 trials, and sedation or somnolence was documented in about 10% of patients in three trials.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "the heterogeneity of trials from multiple points of view hindered additional analyses.",
+     "text": "The heterogeneity of the trials from multiple points of view prevented additional analyses.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "label_lorazepam",
+    "type": "webpage",
+    "title": "Lorazepam",
+    "author": [
+     {
+      "literal": "REMEDYREPACK INC."
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       16
+      ]
+     ]
+    },
+    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=6c5356b1-c199-49ad-bb00-fd67c6691f74",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    },
+    "publisher": "DailyMed",
+    "genre": "Drug label"
+   },
+   "title": "Lorazepam",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.675,
+   "name": "U.S. Food and Drug Administration",
+   "short": "the US label for lorazepam",
+   "tier": 1,
+   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=6c5356b1-c199-49ad-bb00-fd67c6691f74",
+   "money": [],
+   "label": true,
+   "design": null,
+   "findings": [
+    {
+     "passage": 25,
+     "where": "Adverse reactions",
+     "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+     "text": "In a sample of about 3500 patients treated for anxiety, the most frequent effects were sedation, dizziness, weakness, and unsteadiness.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 26,
+     "where": "Adverse reactions",
+     "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, unmasking of depression, disinhibition, euphoria, suicidal ideation/attempt, ataxia, asthenia, extrapyramidal symptoms, convulsions/seizures, tremor, vertigo",
+     "text": "Other effects of lorazepam include fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, disinhibition, euphoria, and vertigo.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 27,
+     "where": "Adverse reactions",
+     "quote": "Paradoxical reactions, including anxiety, excitation, agitation, hostility, aggression, rage, sleep disturbances/insomnia, sexual arousal, and hallucinations may occur.",
+     "text": "Paradoxical reactions such as anxiety, excitation, agitation, hostility, aggression, rage, sleep disturbances, sexual arousal, and hallucinations may occur.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 3,
+     "where": "Indications and usage",
+     "quote": "The effectiveness of lorazepam in long-term use, that is, more than 4 months, has not been assessed by systematic clinical studies.",
+     "text": "The effectiveness of lorazepam for use longer than 4 months has not been assessed by systematic clinical studies.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_benzodiazepines",
+    "type": "webpage",
+    "title": "Benzodiazepines",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/benzodiazepines",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    }
+   },
+   "title": "Benzodiazepines",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.59,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/benzodiazepines",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 7,
+     "where": "How might the drug make you feel?",
+     "quote": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+     "text": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "How might the drug make you feel?",
+     "quote": "Common side effects are drowsiness, lethargy, and fatigue. Another common side effect is anterograde amnesia, which is the inability to form new memories after taking the drug.",
+     "text": "Common side effects include drowsiness, lethargy, fatigue, and anterograde amnesia, which is the inability to form new memories after taking the drug.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "How might the drug make you feel?",
+     "quote": "For some people, benzodiazepines can cause paradoxical or disinhibitory reactions. Characteristic symptoms are excessive talkativeness, increased activity level, excitement, agitation, aggression and confusion.",
+     "text": "For some people, benzodiazepines can cause paradoxical or disinhibitory reactions, with symptoms such as excessive talkativeness, increased activity level, excitement, agitation, aggression, and confusion.",
+     "id": "F11",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 7,
+     "where": "How might the drug make you feel?",
+     "quote": "Important risk factors for paradoxical effects are older age and dementia, but also history of alcohol use and affective disorder have been associated with a higher risk of paradoxical effects from benzodiazepines.",
+     "text": "Older age, dementia, and a history of alcohol use or affective disorder are associated with a higher risk of experiencing paradoxical effects.",
+     "id": "L4",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Lorazepam calms the nervous system, reducing anxiety and relaxing muscles. It can cause sedation, dizziness, weakness, and unsteadiness. Some people feel euphoria or confusion.",
+   "uses": [
+    "F9",
+    "F6",
+    "F1",
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "drugscience_benzodiazepines",
+     "where": "How might the drug make you feel?",
+     "quote": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+     "sha": "f01f51521199e076"
+    },
+    {
+     "label": "F6",
+     "ref": "label_lorazepam",
+     "where": "Adverse reactions",
+     "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+     "sha": "67cb81b8af5c05fe"
+    },
+    {
+     "label": "F1",
+     "ref": "amore_2021",
+     "where": "Abstract",
+     "quote": "the safety of lorazepam among the different studies was consistent with its well-characterized profile with dizziness, sedation, and somnolence being the most common adverse events.",
+     "sha": "11f8b3b5ab0d8036"
+    },
+    {
+     "label": "F7",
+     "ref": "label_lorazepam",
+     "where": "Adverse reactions",
+     "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, unmasking of depression, disinhibition, euphoria, suicidal ideation/attempt, ataxia, asthenia, extrapyramidal symptoms, convulsions/seizures, tremor, vertigo",
+     "sha": "cfece30078b4827a"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review and 2 official pages.",
+   "uses": [
+    "DA",
+    "F6",
+    "F9"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "amore_2021",
+     "where": "Abstract",
+     "quote": "We performed a systematic review with focus on lorazepam, including all randomized clinical trials on lorazepam in mental and behavioral disorders, excluding studies on dementia and pediatric patients and in mixed conditions.",
+     "sha": "11f8b3b5ab0d8036"
+    },
+    {
+     "label": "F6",
+     "ref": "label_lorazepam",
+     "where": "Adverse reactions",
+     "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+     "sha": "67cb81b8af5c05fe"
+    },
+    {
+     "label": "F9",
+     "ref": "drugscience_benzodiazepines",
+     "where": "How might the drug make you feel?",
+     "quote": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+     "sha": "f01f51521199e076"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "The US label for lorazepam says that in about 3500 people treated for anxiety, sedation, dizziness, weakness, and unsteadiness were most frequent.",
+   "uses": [
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "label_lorazepam",
+     "where": "Adverse reactions",
+     "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+     "sha": "67cb81b8af5c05fe"
+    }
+   ],
+   "quote": "3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%)",
+   "quote_ref": "label_lorazepam"
+  },
+  {
+   "part": "how2",
+   "text": "The US label lists other effects like fatigue, amnesia, confusion, and euphoria. It says paradoxical reactions like aggression or hallucinations may occur.",
+   "uses": [
+    "F7",
+    "F8"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "label_lorazepam",
+     "where": "Adverse reactions",
+     "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, unmasking of depression, disinhibition, euphoria, suicidal ideation/attempt, ataxia, asthenia, extrapyramidal symptoms, convulsions/seizures, tremor, vertigo",
+     "sha": "cfece30078b4827a"
+    },
+    {
+     "label": "F8",
+     "ref": "label_lorazepam",
+     "where": "Adverse reactions",
+     "quote": "Paradoxical reactions, including anxiety, excitation, agitation, hostility, aggression, rage, sleep disturbances/insomnia, sexual arousal, and hallucinations may occur.",
+     "sha": "35c234133ac3f0c1"
+    }
+   ],
+   "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation",
+   "quote_ref": "label_lorazepam"
+  },
+  {
+   "part": "how4",
+   "text": "Drug Science says some people can have paradoxical reactions, such as excessive talkativeness, excitement, or aggression.",
+   "uses": [
+    "F11"
+   ],
+   "rests_on": [
+    {
+     "label": "F11",
+     "ref": "drugscience_benzodiazepines",
+     "where": "How might the drug make you feel?",
+     "quote": "For some people, benzodiazepines can cause paradoxical or disinhibitory reactions. Characteristic symptoms are excessive talkativeness, increased activity level, excitement, agitation, aggression and confusion.",
+     "sha": "f01f51521199e076"
+    }
+   ],
+   "quote": "For some people, benzodiazepines can cause paradoxical or disinhibitory reactions",
+   "quote_ref": "drugscience_benzodiazepines"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
-   "doi": "10.1016/0149-7634(85)90034-x",
-   "apa": "Lister, R. G. (1985). The amnesic action of benzodiazepines in man. Neuroscience & Biobehavioral Reviews, 9(1), 87–94. https://doi.org/10.1016/0149-7634(85)90034-x",
-   "near": 0.665,
-   "why": "a review or meta-analysis; nearness to the question 0.67; cited 301 times; its full text is not open",
-   "file": "lister_1985_0149_7634_85_90034_x.pdf"
+   "doi": "10.1016/j.pharmthera.2010.01.004",
+   "apa": "Giersch, A., Boucart, M., Elliott, M., & Vidailhet, P. (2010). Atypical behavioural effects of lorazepam: Clues to the design of novel therapies? Pharmacology & Therapeutics, 126(1), 94–108. https://doi.org/10.1016/j.pharmthera.2010.01.004",
+   "near": 0.7,
+   "why": "a review or meta-analysis; nearness to the question 0.70; cited 6 times; its full text is not open",
+   "file": "giersch_2010_j_pharmthera_2010_01_004.pdf"
   },
   {
-   "doi": "10.1046/j.1528-1157.2001.28900.x",
-   "apa": "Temkin, N. R. (2001). Antiepileptogenesis and seizure prevention trials with antiepileptic drugs: Meta-analysis of controlled trials. Epilepsia, 42(4), 515–524. https://doi.org/10.1046/j.1528-1157.2001.28900.x",
-   "near": 0.602,
-   "why": "a review or meta-analysis; nearness to the question 0.60; cited 312 times; its full text is not open",
-   "file": "temkin_2001_j_1528_1157_2001_28900_x.pdf"
+   "doi": "10.2165/00003495-200565090-00003",
+   "apa": "Battaglia, J. (2005). Pharmacological management of acute agitation. Drugs, 65(9), 1207–1222. https://doi.org/10.2165/00003495-200565090-00003",
+   "near": 0.654,
+   "why": "a review or meta-analysis in people; nearness to the question 0.65; cited 135 times; its full text is not open",
+   "file": "battaglia_2005_00003495_200565090_00003.pdf"
   },
   {
-   "doi": "10.1016/j.gie.2007.12.046",
-   "apa": "McQuaid, K. R., & Laine, L. (2008). A systematic review and meta-analysis of randomized, controlled trials of moderate sedation for routine endoscopic procedures. Gastrointestinal Endoscopy, 67(6), 910–923. https://doi.org/10.1016/j.gie.2007.12.046",
-   "near": 0.539,
-   "why": "a review or meta-analysis in people; nearness to the question 0.54; cited 363 times; its full text is not open",
-   "file": "mcquaid_2008_j_gie_2007_12_046.pdf"
+   "doi": "10.1007/s40263-016-0403-y",
+   "apa": "Weintraub, S. J. (2017). Diazepam in the treatment of moderate to severe alcohol withdrawal. CNS Drugs, 31(2), 87–95. https://doi.org/10.1007/s40263-016-0403-y",
+   "near": 0.607,
+   "why": "a review or meta-analysis in people; nearness to the question 0.61; cited 47 times; its full text is not open",
+   "file": "weintraub_2017_s40263_016_0403_y.pdf"
   }
  ],
  "person": null,
- "history": [],
- "looked": [
+ "history": [
   {
-   "title": "Clinical Experience With Remimazolam in Neuroanesthesiology and Neurocritical Care: An Educational Focused Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.14740/jocmr6193",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Novel Designer Benzodiazepines: Comprehensive Review of Evolving Clinical and Adverse Effects",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/neurolint14030053",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Comparative Effects of Liraglutide-R-Alpha Lipoic Acid Combination and Donepezil on Diazepam-Induced Amnesia in Rats",
-   "read": "full",
-   "kind": "other",
-   "at": "10.7759/cureus.87148",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Rapid Improvement of Persistent Catatonia Temporally Associated With Amantadine After Benzodiazepine Intolerance and Discontinuation of Electroconvulsive Therapy: A Case Report",
-   "read": "full",
-   "kind": "case",
-   "at": "10.7759/cureus.116670",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
- "soft": "a source could not be fetched",
+ "looked": [
+  {
+   "title": "Treatment of Agitation With Lorazepam in Clinical Practice: A Systematic Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2021.628965",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Evaluation of the sedative effect of sublingual lorazepam versus placebo in patients underwent endoscopy: a double-blind, randomized controlled clinical trial",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1177/26317745231219597",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A double-blind, randomized controlled clinical trial evaluating the sedative effect of sublingual lorazepam in patients undergoing digestive endoscopy.",
+     "quote": "This study aims to determine the sedative effect of sublingual lorazepam versus placebo as a premedication in patients who underwent DE.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "limit",
+     "text": "One study on patients undergoing endoscopic retrograde cholangiopancreatography did not show beneficial sedative effects from 1 mg of orally administered lorazepam.",
+     "quote": "a randomized, double-blind trial was conducted to assess the sedative effect and enhancement in sedation quality of 1 mg orally administered lorazepam in patients who underwent endoscopic retrograde c",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
+  },
+  {
+   "title": "Lorazepam",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=6c5356b1-c199-49ad-bb00-fd67c6691f74",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Benzodiazepines",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/benzodiazepines",
+   "kept": 3,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F9",
+   "F6",
+   "F1",
+   "F7"
+  ],
+  "direct": "",
+  "but": [
+   "L4"
+  ],
+  "how": [
+   [
+    "F6",
+    "F7",
+    "F8"
+   ],
+   [
+    "F9",
+    "F10",
+    "F11"
+   ],
+   [
+    "DA",
+    "F1",
+    "F2"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel": {
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages state that benzodiazepines in general calm the nervous system, but do not explicitly state this specific property for lorazepam itself."
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    false,
+    "The passages do not mention that Drug Science is \"a UK charity of scientists\"."
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.4991,
+   "but": 0.9593,
+   "how1": 0.6954,
+   "how2": 0.7684,
+   "how3": 0.0908,
+   "how4": 0.9112
+  },
+  "scores_quotes_alone": {
+   "short": 0.8439,
+   "but": 0.6287,
+   "how1": 0.6498,
+   "how2": 0.5086,
+   "how3": 0.103,
+   "how4": 0.7568
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Lorazepam calms the nervous system, reducing anxiety and relaxing muscles. It can cause sedation, dizziness, weakness, and unsteadiness. Some people feel euphoria or confusion.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+       "sha": "f01f51521199e076"
+      },
+      {
+       "label": "F6",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+       "sha": "67cb81b8af5c05fe"
+      },
+      {
+       "label": "F1",
+       "ref": "amore_2021",
+       "where": "Abstract",
+       "quote": "the safety of lorazepam among the different studies was consistent with its well-characterized profile with dizziness, sedation, and somnolence being the most common adverse events.",
+       "sha": "11f8b3b5ab0d8036"
+      },
+      {
+       "label": "F7",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, unmasking of depression, disinhibition, euphoria, suicidal ideation/attempt, ataxia, asthenia, extrapyramidal symptoms, convulsions/seizures, tremor, vertigo",
+       "sha": "cfece30078b4827a"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages state that benzodiazepines in general calm the nervous system, but do not explicitly state this specific property for lorazepam itself."
+    },
+    {
+     "part": "but",
+     "text": "Older age, dementia, and a history of alcohol use or affective disorder are linked to a higher risk of paradoxical effects.",
+     "rests_on": [
+      {
+       "label": "L4",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "Important risk factors for paradoxical effects are older age and dementia, but also history of alcohol use and affective disorder have been associated with a higher risk of paradoxical effects from benzodiazepines.",
+       "sha": "f01f51521199e076"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US label for lorazepam says that in about 3500 people treated for anxiety, sedation, dizziness, weakness, and unsteadiness were most frequent.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+       "sha": "67cb81b8af5c05fe"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label lists other effects like memory loss, confusion, and euphoria. It says paradoxical reactions like aggression or hallucinations may occur.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, unmasking of depression, disinhibition, euphoria, suicidal ideation/attempt, ataxia, asthenia, extrapyramidal symptoms, convulsions/seizures, tremor, vertigo",
+       "sha": "cfece30078b4827a"
+      },
+      {
+       "label": "F8",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "Paradoxical reactions, including anxiety, excitation, agitation, hostility, aggression, rage, sleep disturbances/insomnia, sexual arousal, and hallucinations may occur.",
+       "sha": "35c234133ac3f0c1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "Drug Science, a UK charity of scientists says benzodiazepines calm the nervous system. Common side effects include drowsiness and the inability to form new memories.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+       "sha": "f01f51521199e076"
+      },
+      {
+       "label": "F10",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "Common side effects are drowsiness, lethargy, and fatigue. Another common side effect is anterograde amnesia, which is the inability to form new memories after taking the drug.",
+       "sha": "f01f51521199e076"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that Drug Science is a UK charity of scientists."
+    },
+    {
+     "part": "how4",
+     "text": "Drug Science says some people can have paradoxical reactions, such as excitement or aggression. A 2021 review of trials found dizziness and sedation were common adverse events.",
+     "rests_on": [
+      {
+       "label": "F11",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "For some people, benzodiazepines can cause paradoxical or disinhibitory reactions. Characteristic symptoms are excessive talkativeness, increased activity level, excitement, agitation, aggression and confusion.",
+       "sha": "f01f51521199e076"
+      },
+      {
+       "label": "DA",
+       "ref": "amore_2021",
+       "where": "Abstract",
+       "quote": "We performed a systematic review with focus on lorazepam, including all randomized clinical trials on lorazepam in mental and behavioral disorders, excluding studies on dementia and pediatric patients and in mixed conditions.",
+       "sha": "11f8b3b5ab0d8036"
+      },
+      {
+       "label": "F1",
+       "ref": "amore_2021",
+       "where": "Abstract",
+       "quote": "the safety of lorazepam among the different studies was consistent with its well-characterized profile with dizziness, sedation, and somnolence being the most common adverse events.",
+       "sha": "11f8b3b5ab0d8036"
+      },
+      {
+       "label": "F2",
+       "ref": "amore_2021",
+       "where": "Results › Safety",
+       "quote": "Dizziness was reported in ≥10% of patients in 3 trials; sedation/somnolence was documented in about 10% of patients in three trials as well.",
+       "sha": "ceeef9c8a250d904"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Lorazepam causes sedation, dizziness, weakness, and unsteadiness. It can also cause euphoria, confusion, or memory loss.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+       "sha": "67cb81b8af5c05fe"
+      },
+      {
+       "label": "F1",
+       "ref": "amore_2021",
+       "where": "Abstract",
+       "quote": "the safety of lorazepam among the different studies was consistent with its well-characterized profile with dizziness, sedation, and somnolence being the most common adverse events.",
+       "sha": "11f8b3b5ab0d8036"
+      },
+      {
+       "label": "F7",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, unmasking of depression, disinhibition, euphoria, suicidal ideation/attempt, ataxia, asthenia, extrapyramidal symptoms, convulsions/seizures, tremor, vertigo",
+       "sha": "cfece30078b4827a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Older age, dementia, alcohol use, or mood disorders raise the risk of paradoxical effects like aggression.",
+     "rests_on": [
+      {
+       "label": "L4",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "Important risk factors for paradoxical effects are older age and dementia, but also history of alcohol use and affective disorder have been associated with a higher risk of paradoxical effects from benzodiazepines.",
+       "sha": "f01f51521199e076"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "The US label for lorazepam lists sedation, dizziness, weakness, and unsteadiness as frequent effects in about 3500 anxiety patients.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "In a sample of about 3500 patients treated for anxiety, the most frequent adverse reaction to lorazepam was sedation (15.9%), followed by dizziness (6.9%), weakness (4.2%), and unsteadiness (3.4%).",
+       "sha": "67cb81b8af5c05fe"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label says lorazepam can cause euphoria, confusion, or memory loss, and may cause paradoxical reactions like aggression.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "Other adverse reactions to benzodiazepines, including lorazepam are fatigue, drowsiness, amnesia, memory impairment, confusion, disorientation, depression, unmasking of depression, disinhibition, euphoria, suicidal ideation/attempt, ataxia, asthenia, extrapyramidal symptoms, convulsions/seizures, tremor, vertigo",
+       "sha": "cfece30078b4827a"
+      },
+      {
+       "label": "F8",
+       "ref": "label_lorazepam",
+       "where": "Adverse reactions",
+       "quote": "Paradoxical reactions, including anxiety, excitation, agitation, hostility, aggression, rage, sleep disturbances/insomnia, sexual arousal, and hallucinations may occur.",
+       "sha": "35c234133ac3f0c1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "Drug Science says benzodiazepines calm the nervous system, reducing anxiety and alertness, and can cause memory gaps.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+       "sha": "f01f51521199e076"
+      },
+      {
+       "label": "F10",
+       "ref": "drugscience_benzodiazepines",
+       "where": "How might the drug make you feel?",
+       "quote": "Common side effects are drowsiness, lethargy, and fatigue. Another common side effect is anterograde amnesia, which is the inability to form new memories after taking the drug.",
+       "sha": "f01f51521199e076"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2021 review of trials found dizziness, sedation, and sleepiness were the most common adverse events for lorazepam.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "amore_2021",
+       "where": "Abstract",
+       "quote": "We performed a systematic review with focus on lorazepam, including all randomized clinical trials on lorazepam in mental and behavioral disorders, excluding studies on dementia and pediatric patients and in mixed conditions.",
+       "sha": "11f8b3b5ab0d8036"
+      },
+      {
+       "label": "F1",
+       "ref": "amore_2021",
+       "where": "Abstract",
+       "quote": "the safety of lorazepam among the different studies was consistent with its well-characterized profile with dizziness, sedation, and somnolence being the most common adverse events.",
+       "sha": "11f8b3b5ab0d8036"
+      },
+      {
+       "label": "F2",
+       "ref": "amore_2021",
+       "where": "Results › Safety",
+       "quote": "Dizziness was reported in ≥10% of patients in 3 trials; sedation/somnolence was documented in about 10% of patients in three trials as well.",
+       "sha": "ceeef9c8a250d904"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "Older age, dementia, and a history of alcohol use or affective disorder are linked to a higher risk of paradoxical effects.",
+   "rests_on": [
+    {
+     "label": "L4",
+     "ref": "drugscience_benzodiazepines",
+     "where": "How might the drug make you feel?",
+     "quote": "Important risk factors for paradoxical effects are older age and dementia, but also history of alcohol use and affective disorder have been associated with a higher risk of paradoxical effects from benzodiazepines.",
+     "sha": "f01f51521199e076"
+    }
+   ],
+   "by": "the second reader",
+   "said": "it is about something else than the short answer (Sentence 1 directly answers the question about what lorazepam feels like based on the provided passages. Most sentences are well supported, except for sentence 5 which introduces outside information not found in the text regarding the ident)"
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "Drug Science, a UK charity of scientists says benzodiazepines calm the nervous system. Common side effects include drowsiness and the inability to form new memories.",
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "drugscience_benzodiazepines",
+     "where": "How might the drug make you feel?",
+     "quote": "Benzodiazepines calm the nervous system, which reduces anxiety, relaxes the mind and muscles, and decreases alertness and concentration.",
+     "sha": "f01f51521199e076"
+    },
+    {
+     "label": "F10",
+     "ref": "drugscience_benzodiazepines",
+     "where": "How might the drug make you feel?",
+     "quote": "Common side effects are drowsiness, lethargy, and fatigue. Another common side effect is anterograde amnesia, which is the inability to form new memories after taking the drug.",
+     "sha": "f01f51521199e076"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages do not state that Drug Science is a UK charity of scientists."
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "benzodiazepines",
   "also": [],
