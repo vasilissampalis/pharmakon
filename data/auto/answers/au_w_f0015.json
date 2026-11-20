@@ -17,22 +17,18 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44760802245",
-  "read_by": {
-   "gpt-oss-20b": 1,
-   "gemma-4-31b-it": 1,
-   "gemini-3.1-flash-lite": 1
-  },
+  "run": "44765957319",
   "read_seconds": 100,
   "from": {
    "papers": 0,
@@ -45,7 +41,7 @@
  "status": "none",
  "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
   "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
@@ -85,6 +81,14 @@
    "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -94,14 +98,8 @@
    "kind": "review",
    "at": "10.1038/s41386-023-01588-2",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "",
-     "quote": "",
-     "why": "no sentence"
-    }
-   ]
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Lysergic Acid Diethylamide (LSD) and the Heart: Exploring the Potential Impacts of LSD on Cardiovascular Function",
@@ -109,8 +107,14 @@
    "kind": "review",
    "at": "10.7759/cureus.87356",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a review of literature on the cardiovascular impacts of LSD",
+     "quote": "Lysergic acid diethylamide (LSD) and the Heart: Exploring the Potential Impacts of LSD on Cardiovascular Function (2025), Cureus.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Psychedelic Drugs in Mental Disorders: Current Clinical Scope and Deep Learning-Based Advanced Perspectives",
