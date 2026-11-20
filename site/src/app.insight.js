@@ -2455,7 +2455,7 @@ function insFindTerms(res) {
     if (od && /^overdos/.test(w0)) continue;                                                   // (2.22) the subject itself is no key word
     if (lean && /^(?:lean|purple|drank|sizzurp|dirty|sprite)$/.test(w0)) continue;              // (2.28.13) lean's own words: the subject itself
     // (2.21.2) a word that only says the subject again is no key word: "addicted" where the subject is addiction (its paper word is the name itself); "drinking" where it stood for alcohol
-    if ((say && inName.has(say)) || ((drink || names.includes("alcohol")) && DRINK.test(w0))) continue;   // (2.28.26) also where alcohol is named ("ibuprofen after drinking")
+    if ((say && inName.has(say)) || (drink && DRINK.test(w0))) continue;
     if ((w0.length < 4 && !say) || FIND_STOP.has(w0) || inName.has(w0) || INS.nameOf.has(w0) || (acad && /^(?:exams?|finals|homework|revising|revision|grades|school|college|uni|university|students?)$/.test(w0)) || ((cutw || less) && w0 === "cut") || ((less || comed) && w0 === "down") || (comed && /^com(?:e|es|ing)$/.test(w0)) || (firstT && /^(?:first|time|timer|timers)$/.test(w0)) || (metals && /^(?:heavy|metals?)$/.test(w0)) || (stays && /^(?:stays?|staying|remains?|lingers?|lasts?|system|body|blood|bloodstream|shows?|showing|detect|detected|detectable|tests?|tested|positive|screen|screening)$/.test(w0)) || ((rape || spike) && /^(?:date|rape|spike|spiked|spikes|spiking)$/.test(w0)) || (spike && /^drinks?$/.test(w0)) || (bodyq && w0 === "body")) continue;
     const e = say && say !== w0 ? (say.split("|").includes(w0) ? say : say + "|" + w0) : w0;   // (2.19) the word papers use and the everyday word are one thing asked for, in two ways: one entry
     // (2.21) a word that an earlier key word already stands for ("mums" after "moms": both are asked as "maternal") is not a second key word
@@ -3027,7 +3027,7 @@ window.pkInsight = {
   embed: t => insEmbed(t).then(v => Array.from(v)), tiers: () => Object.assign({}, INS.t), weights: () => Object.assign({}, INS.wt), judge: () => JSON.parse(JSON.stringify(INS.judge)),
   read: (t, ctx) => { const r = insRead(t, ctx || {}); return { core: r.core, depth: r.depth, note: r.note, routes: r.routes.map(x => x.kind), groups: r.groups }; },
   rank: (t, ctx) => insRank(t, ctx || {}).then(r => ({ q: r.q, core: r.core, depth: r.depth, note: r.note, emergency: r.emergency, routes: r.routes.map(x => ({ kind: x.kind, t: x.t, href: x.href, el: x.el || null, mix: x.mix || null })),
-    best: r.best, related: r.related, judge: r.judge || null, want: r.want || null, unf: r.unf || "", demoted: !!r.demoted, stranger: r.stranger || "", read: r.read || [], ms: r.ms })),
+    best: r.best, related: r.related, judge: r.judge || null, judged: r.judged || null, want: r.want || null, unf: r.unf || "", demoted: !!r.demoted, stranger: r.stranger || "", read: r.read || [], ms: r.ms })),
   say: (t, ctx) => insRank(t, ctx || {}).then(r => insSay(r)),   // (the words a screen reader hears: scripts/ux/say.js)
   scope: t => insScope(t), unfinished: (t, on) => insUnfinished(t, !!on), unknown: t => insUnknown(t), spell: t => insSpell(t), listed: () => (INS.list ? INS.list.ids.slice() : [])
 };
