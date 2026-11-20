@@ -346,3 +346,37 @@ shows helps five questions more and misleads two fewer; it gives one full answer
 of one question in 400. It also knows every answer the site has now (the machine lane's among them), which insight-1 never saw. So it is the
 site's model from 2.27.0 (`ship.py`; NOTICE-pharmakon-insight-2.txt). The two other rows are not shipped: more wrong best matches at the
 judge's cut (the index would also grow by 2.8 MB). The free models' wordings (`teachers.py`) and gte-small (`insight.yml`) come next.
+
+## The short answer read after its question; the judge's cut at 0.7; a research chemical by its own name (site 2.28.6, 20 November 2026)
+
+Found by asking Insight thirty-five more everyday questions: "does ketamine help depression" (also gold question 119) got no answer, though
+the answer on ketamine drips ("Can a ketamine drip lift depression within hours, and for how long?") had a wording at 0.97 from it. Its short
+answer leans on its question ("It can, within hours. A day after one drip, 64 in 100 were much better ..."): alone, its meaning stood at -0.03
+from the question, so the answer on side effects of ketamine treatment came first and the judge, rightly, did not take it. Now each short answer
+is embedded after its own question (`model.json`, `short_with_question`; `build_index.py`). On the gold set (`build_index.py --eval`; near-miss:
+of 1,810 questions written as ones an answer does NOT answer, how many get it as best match; "now" is the site before this change, with the
+answers the machine lane has published since 2.28.0, which the gold readers never saw: of the "wrong" below, four go to such answers and answer
+the question, among them "Does LSD stay in the body forever?"):
+
+| | Best matches | Full | Partial | Wrong | Nobody can answer, given one | Near-miss given | Full answer first | in the first three |
+|---|---|---|---|---|---|---|---|---|
+| now (judge's cut 0.6) | 43 | 23 | 12 | 8 | 4 of 126 | 122 | 60.8% | 77.2% |
+| short after its question, cut 0.6 | 47 | 25 | 13 | 9 | 5 | 142 | 63.3% | 78.5% |
+| the same, with a judge taught for it (`judge2.py --six`), cut 0.6 | 42 | 22 | 10 | 10 | 5 | | | |
+| short after its question, cut 0.64 | 41 | 24 | 10 | 7 | 3 | 126 | | |
+| short after its question, cut 0.66 | 38 | 23 | 8 | 7 | 3 | 115 | | |
+| **short after its question, cut 0.7 (shipped)** | **35** | **23** | **7** | **5** | **2** | **101** | **63.3%** | **78.5%** |
+
+The cut was chosen on the odd-numbered gold questions (dev: 14 full, 3 partial, 4 wrong at 0.7, against 13, 5, 6 now) and reported on the even
+ones (test: 9, 4, 1 against 10, 7, 2). At 0.7 the best match is wrong less often, a question nobody can answer gets one half as often and a
+near-miss question gets the answer it does not get 21 times fewer, for as many full answers; five partial answers go from best match to the
+related answers. tiers.related moves from 0.48 to 0.50 (`sweep_related.py`: the related answers as many as before, as often right, and fewer
+for questions nobody can answer). The cost, measured on the editor's 198 probe questions: "can weed make you go crazy" and "does lsd make you
+insane" now get their answers (psychosis; psychedelics and mental health) first among the related answers rather than as the best match: the
+three answers on psychosis stand close to each other, so the lead over the next one is small and the judge is less sure. The partly right
+"is ecstasy the same as mdma" (pill contents) and the wrong "is molly the same as mdma" (MDMA and MDA) went the same way.
+
+A research chemical named by the shape of its name (`scope.json`, "chem": 3-MeO-PCE, 5-MeO-DALT, 1P-LSD) is never answered by an answer that
+names none of those the question names (`build_index.py`, the index's "chem"; `Ranker.speaks` and the page's `insSpeaks`; `parity.js` asks
+three such questions): "What is 3-MeO-PCE like, and how risky is it?" had the answer on 5-MeO-DALT, another drug, as its best match at the cut
+of 0.6.

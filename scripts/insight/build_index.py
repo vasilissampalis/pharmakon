@@ -238,6 +238,7 @@ class Ranker:
         self.say = [(re.compile(x["ask"], re.I | re.A), x["add"]) for x in D.get("say") or []]
         self.aspects = [(re.compile(a["ask"], re.I | re.A), a["has"], float(a.get("best") or 0), [(re.compile(n, re.I | re.A), bits) for n, bits in a.get("narrow") or []], a.get("two") or "", re.compile(a["together"], re.I | re.A) if a.get("together") else None) for a in D.get("aspects") or []]
         self.about = [set(D["slugs"][k] for k in xs) for xs in D["about"]]
+        Ch = D.get("chem"); self.chem_re = re.compile(SCOPE_B + Ch["src"] + SCOPE_E, re.I | re.A) if Ch else None; self.chem_of = [set(x.split()) for x in (Ch or {}).get("of") or []]
         self.name_of = {n: [D["slugs"][k] for k in xs] for n, xs in D["names"]}
         self.pat = name_pattern([n for n, _ in D["names"]])
         self.expand = drug_names(); self.canon = {s["slug"]: s["name"].split(" (")[0] for s in SUB}
@@ -304,6 +305,9 @@ class Ranker:
         that the question does not name; or it is about two drugs and the question names fewer (ng: how many it names).
         q None: not asked (the callers that have no question at hand)."""
         if q is None: return True
+        if self.chem_re is not None:   # (2.28.6) a research chemical the question names, which the answer never names: never its best match
+            qc = {chem_key(m.group(0)) for m in self.chem_re.finditer(q)}
+            if qc and not (qc & self.chem_of[c]): return False
         for ask, has, best, narrow, two, together in self.aspects:
             if not ask.search(q): continue
             if has[c] != "1" or p < best: return False
@@ -684,7 +688,10 @@ def main():
     for i, a in enumerate(A):
         ws = list(dict.fromkeys([w for w in a["wordings"] if w] + [w for w in var.get(a["id"], []) if isinstance(w, str) and w.strip()] + more.get(a["id"], [])))
         for w in ws: rows.append(i); W_txt.append(w)
-    shorts = [a["short"] for a in A]
+    # (2.28.6, 20 November 2026) the short answer is embedded after its own question where model.json says so ("short_with_question"): a short answer
+    # leans on its question ("It can, within hours. A day after one drip, 64 in 100 were much better ..."), and alone its meaning was near nothing that
+    # was asked ("does ketamine help depression": -0.03 for the answer on ketamine drips, whose best wording stood at 0.97)
+    shorts = [(a["wordings"][0] + " " + a["short"]).strip() if CONFIG.get("short_with_question") and a.get("wordings") else a["short"] for a in A]
     docs = [" ".join(a["wordings"]) + " " + a["short"] for a in A]   # word overlap: the site's own wordings and the short answer
     names = names_table(); pat = name_pattern([n for n, _ in names])
     M_txt = [pat.sub("it", w) for w in W_txt]                          # every wording again, with the drug names taken out
@@ -720,6 +727,11 @@ def main():
     out["aspects"] = [dict({"name": a["name"], "ask": a["ask"], "has": "".join("1" if re.search(a["has"], s, re.I | re.A) else "0" for s in spoken)}, **({"best": float(a["best"])} if a.get("best") else {}),
                            **({"narrow": [[n, "".join("1" if re.search(n, s, re.I | re.A) else "0" for s in own)] for n in a["narrow"]]} if a.get("narrow") else {}),
                            **({"two": "".join("1" if two(s) else "0" for s in own)} if a.get("two") else {}), **({"together": a["together"]} if a.get("together") else {})) for a in CONFIG.get("aspects") or []]
+    # (2.28.6, 20 November 2026) a research chemical named by the shape of its name (site/insight/scope.json, "chem": 3-MeO-PCE, 5-MeO-DALT, 1P-LSD):
+    # each answer's such names, from all its wordings and its short answer. A question that names one is never answered by an answer that names none of
+    # those it names: on the gold set "What is 3-MeO-PCE like, and how risky is it?" got the answer on 5-MeO-DALT, another drug, as its best match.
+    Sc_ = json.load(open(ROOT / "site" / "insight" / "scope.json", encoding="utf-8")); crx = re.compile(SCOPE_B + Sc_["chem"] + SCOPE_E, re.I | re.A)
+    out["chem"] = {"src": Sc_["chem"], "of": [" ".join(sorted({chem_key(m.group(0)) for m in crx.finditer(s)})) for s in spoken]}
     # 2.5: the list of questions not answered yet (data/site/wanted.json), as a second, small index of the same kind
     wl = wanted_index(json.load(open(IN, encoding="utf-8")).get("wanted") or [], out, names, pat, at)
     if wl: out["wanted"] = wl
@@ -742,6 +754,7 @@ def main():
 
 
 SCOPE_B, SCOPE_E = r"(?<![A-Za-z0-9_])(?:", r")(?![A-Za-z0-9_])"   # a word boundary that reads the same in JavaScript and in Python
+chem_key = lambda t: re.sub(r"[^a-z0-9]", "", t.lower())   # (2.28.6) a research chemical's name as it is compared: "3-MeO-PCE" and "3-meo-pce" alike
 UNF_SETS, UNF_PATS = ("ends", "aux", "func", "topic", "nouns", "gap", "join", "who", "whoadj", "help", "do", "det", "be", "open", "verbs", "wants", "pp", "abbr"), ("strand", "whole", "named")
 UNF_KNOWN = ("ends", "aux", "func", "topic", "nouns", "gap", "join", "who", "whoadj", "help", "det", "be", "abbr")   # the words that could be asked of any drug ('verbs', 'open', 'wants' only say how a word is read)
 UNF_SUBJ = ("i", "you", "we", "they", "he", "she", "it")                                                    # after one of these stands the verb

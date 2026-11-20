@@ -143,6 +143,8 @@ function insPrepare(d, vocabText) {
   // (data/site/wanted.json): a second, small index of the same kind as the answers', with the judge's cut for it
   const wb = insNb("A-Za-z0-9_") + "(?:", we = ")(?![A-Za-z0-9_])", L = d.wanted;
   INS.scope = d.scope ? { re: new RegExp(wb + d.scope.src + we, "i"), not: new RegExp(wb + d.scope.not + we, "gi") } : null;
+  // (2.28.6) the research chemicals each answer names (the shape of the name, site/insight/scope.json "chem"), as the build's Ranker.speaks reads them
+  INS.chem = d.chem ? { re: new RegExp(wb + d.chem.src + we, "gi"), of: d.chem.of.map(s => new Set(s ? s.split(" ") : [])) } : null;
   INS.unfin = d.scope && d.scope.unfinished ? insUnfinRule(d.scope.unfinished, d.names.map(x => x[0])) : null;   // 2.9: is a question finished?
   INS.spell = d.scope && d.scope.spell && INS.unfin ? insSpellRule(d.scope.spell, d.scope.unfinished.names || []) : null;   // 2.9.1: a drug's name with a letter wrong
   // 2.13: the places of the site, found by the meaning of a question (site/insight/places.json through the index: insWhere)
@@ -758,7 +760,11 @@ function insJudge(f) {
    stays among the nearest answers, and the question is not answered. */
 // (and, for such a question: the judge's number at the aspect's own cut or more; no narrower case than the question names: an answer whose own question is about
 // withdrawal, touching, pregnancy or test strips, or about two drugs together, answers a question about dying only where the question says so too. ng: the drugs the question names)
+const insChemKey = t => String(t).toLowerCase().replace(/[^a-z0-9]/g, "");
 function insSpeaks(q, i, p, ng) {
+  // (2.28.6, 20 November 2026) a question that names a research chemical by the shape of its name is never answered by an answer that names none of
+  // those it names: "What is 3-MeO-PCE like?" got the answer on 5-MeO-DALT, another drug, as its best match
+  if (q && INS.chem) { const qc = (String(q).match(INS.chem.re) || []).map(insChemKey); if (qc.length && !qc.some(x => INS.chem.of[i].has(x))) return false; }
   // (2.28.2) together: an answer about two drugs TOGETHER answers such a question only where the question speaks of them together too ("is weed worse than alcohol")
   return !q || !INS.aspects || INS.aspects.every(a => !a.ask.test(q) || (a.has.charAt(i) === "1" && p >= a.best && !a.narrow.some(n => n.bits.charAt(i) === "1" && !n.re.test(q)) && !(a.two && a.two.charAt(i) === "1" && (a.together ? !a.together.test(q) : ng < 2))));
 }
