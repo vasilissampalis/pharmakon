@@ -1092,6 +1092,8 @@ async function insRank(query, ctx) {
     if (unf === "which" && !named && !answered && !res.best.length) { const w0 = insWant(v, mv, core, tx.groups); if (w0) { res.want = w0; unf = ""; } }
     if (unf && !named && !answered && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
     if (res.routes.some(r => r.same) && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; }   // (2.28.5) two names for one drug: the route is the answer
+    // (2.28.12) "what is laughing gas": the drug's page is the answer; an answer about one of its harms (judge 0.95) is a place to look, not what was asked
+    if (res.routes.some(r => r.kind === "page" && r.whole) && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
     if (!res.best.length && !answered && !unf && !res.want) res.want = insWant(v, mv, core, tx.groups);   // 2.5: is it on our list?
     // (2.13) nothing answers it yet: a place of the site that holds what is asked, found by meaning
     if (!res.best.length && !answered && !unf && !res.want && !res.routes.some(r => r.named)) res.where = insWhere(mv, tx.groups);
@@ -2424,7 +2426,10 @@ function insFindTerms(res) {
 // the name papers use for a name people use (a brand, a street name): asked for beside it
 const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clonazepam", ativan: "lorazepam", ambien: "zolpidem", adderall: "amphetamine", ritalin: "methylphenidate", concerta: "methylphenidate", vyvanse: "lisdexamfetamine",
   oxycontin: "oxycodone", percocet: "oxycodone", vicodin: "hydrocodone", suboxone: "buprenorphine", subutex: "buprenorphine", lyrica: "pregabalin", neurontin: "gabapentin", provigil: "modafinil", benzos: "benzodiazepines", benzo: "benzodiazepines",
-  shrooms: "psilocybin", molly: "mdma", ecstasy: "mdma", coke: "cocaine", meth: "methamphetamine", zembrin: "sceletium tortuosum", marijuana: "cannabis", lean: "codeine", poppers: "alkyl nitrites", whippets: "nitrous oxide", nangs: "nitrous oxide" };
+  shrooms: "psilocybin", molly: "mdma", ecstasy: "mdma", coke: "cocaine", meth: "methamphetamine", zembrin: "sceletium tortuosum", marijuana: "cannabis", lean: "codeine", poppers: "alkyl nitrites", whippets: "nitrous oxide", nangs: "nitrous oxide",
+  // (2.28.12) the brands of the benzodiazepines and opioid painkillers Insight reads on their pages since 2.28.11: papers name the medicine, not the brand
+  dilaudid: "hydromorphone", norco: "hydrocodone", lortab: "hydrocodone", roxicodone: "oxycodone", ultram: "tramadol", demerol: "meperidine", opana: "oxymorphone", nucynta: "tapentadol",
+  rohypnol: "flunitrazepam", restoril: "temazepam", halcion: "triazolam", librium: "chlordiazepoxide" };
 /* (2.20) Each paper may come with at most 15 of its own words on the question, cut by fixed rules on the server from the end of its summary, where papers
    say what they found (site/worker/_worker.js, iaPick): no model reads or writes anything. They stand in quotation marks under the paper's title, so that
    they are read as that paper's and in its frame; where they are about animals or cells, the line says so. */
