@@ -2359,7 +2359,7 @@ function insFindTerms(res) {
           // (2.28.13, trial 25) a second medicine of the same page ("is xanax stronger than valium", "oxycodone vs hydrocodone") is a key word, so that the search
           // finds papers on both; as one more of the drug's names, any paper on either was found. A name of the page itself ("benzos") is never such a medicine
           if (firstId && id !== firstId && !pageWords.has(firstId) && !pageWords.has(id)) { const k = FIND_GENERIC[a] && FIND_GENERIC[a] !== a ? a + "|" + FIND_GENERIC[a] : a; if (!extra.includes(k)) extra.push(k); }
-          else { if (!firstId) firstId = id; add(names, a); if (FIND_GENERIC[a]) add(names, FIND_GENERIC[a]); } } }
+          else { if (!firstId) firstId = id; if (!FIND_TYPED_NOT.has(a)) add(names, a); if (FIND_GENERIC[a]) add(names, FIND_GENERIC[a]); } } }
       else if (/^[a-z]{4,24}$/.test(a) && !INS.vocab.has(a) && !extra.some(x => x.split("|").includes(a))) extra.push(FIND_GENERIC[a] && FIND_GENERIC[a] !== a ? a + "|" + FIND_GENERIC[a] : a);   // (2.28.7) "meth" is also asked as "methamphetamine"
       // (2.28.7) a second drug whose typed name is an everyday word or short ("mushrooms vs lsd", "nicotine compared to heroin", "weed and alcohol"): its page's own
       // name, where it is one drug's page; "lsd" and "heroin" were no key word at all, so the search was for the first drug alone
@@ -2473,9 +2473,11 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
   xanny: "alprazolam", xannies: "alprazolam", xanies: "alprazolam", perc: "oxycodone", percs: "oxycodone", whippet: "nitrous oxide", nang: "nitrous oxide",
   popper: "alkyl nitrites", ganja: "cannabis", fenty: "fentanyl", shroom: "psilocybin",
   // (2.28.19) the street names Insight reads since 2.28.19
-  pingers: "mdma", yayo: "cocaine", whizz: "amphetamine", mushies: "psilocybin", skunk: "cannabis", reefer: "cannabis", spliff: "cannabis", spliffs: "cannabis", skag: "heroin",
-  m30s: "fentanyl", roxy: "oxycodone", roxies: "oxycodone", hydros: "hydrocodone", zannies: "alprazolam", addy: "amphetamine", addies: "amphetamine", juul: "nicotine",
-  juuls: "nicotine", cigs: "nicotine", blotter: "lsd" };
+  pingers: "mdma", yayo: "cocaine", whizz: "amphetamine", mushies: "psilocybin", reefer: "cannabis", spliff: "cannabis", spliffs: "cannabis", skag: "heroin",
+  m30s: "fentanyl", roxy: "oxycodone", roxies: "oxycodone", hydros: "hydrocodone", zannies: "alprazolam", addy: "amphetamine", addies: "amphetamine", blotter: "lsd",
+  // (2.28.21) as papers name the thing itself: a Juul is an e-cigarette, cigs are cigarettes, skunk is cannabis of high potency ("is juul worse than cigs" was looked up
+  // as nicotine alone, with nothing of the two set side by side)
+  juul: "e-cigarettes", juuls: "e-cigarettes", cigs: "cigarettes", skunk: "high-potency cannabis" };
 // (2.28.18) a started page's own name as a search: what stands in its brackets, each as papers write it ("Ketamine analogues (MXE, DCK)": methoxetamine,
 // deschloroketamine), else its name before "and other", "and similar" or "and" ("Anabolic steroids and other body-building drugs": anabolic steroids)
 function autoFindNames(title) {
@@ -2485,6 +2487,8 @@ function autoFindNames(title) {
   const head = t.replace(/\s*\(.*\)\s*$/, "").split(/\s+and\s+(?:other|similar)\s+|\s+and\s+/)[0].trim();
   return head ? (FIND_PAPERS[head] || head).split("|") : [];
 }
+// (2.28.21) a street name that is an everyday word for something else: looked up only as papers name the drug ("skunk" also found a paper on the animal, trial 34)
+const FIND_TYPED_NOT = new Set(["skunk"]);
 // (2.28.18) what papers call a drug the site has no page on, where people call it otherwise (several names: any of them)
 const FIND_PAPERS = { "delta 8": "delta-8-thc|delta-8-tetrahydrocannabinol", "delta-8": "delta-8-thc|delta-8-tetrahydrocannabinol",
   "delta 10": "delta-10-thc|delta-10-tetrahydrocannabinol", "delta-10": "delta-10-thc|delta-10-tetrahydrocannabinol", "gas station heroin": "tianeptine",
