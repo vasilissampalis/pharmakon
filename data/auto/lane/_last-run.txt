@@ -3,27 +3,15 @@ llm selftest: ok (one call counted in neurons by the service's own token counts;
 == the finder's own check
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
-Traceback (most recent call last):
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/lane.py", line 3232, in <module>
-    if "--selftest" in sys.argv: selftest()
-                                 ~~~~~~~~^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/lane.py", line 2465, in selftest
-    _reserve_selftest()
-    ~~~~~~~~~~~~~~~~~^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/lane.py", line 2458, in _reserve_selftest
-    assert kept_for_sent({"id": "w_1"}) and kept_for_sent({"id": "w_g1", "from": "the system's own question"}) and not kept_for_sent({"id": "w_a1", "from": "a question visitors sent"}) and not kept_for_sent({"id": "t_1", "trial": True})
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError
-!! this step failed (1)
+lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history; sources read at once give the same answer from the same sources in the same order; a source not read in time is written down and the answer is written from the rest; past its clock a question is put down for the next run)
 == the papers' own words on a question, tried with the real index of papers on the editor's own questions
 instant trial: 1 request(s); no model takes part
-instant trial: "could the laughing gas in nerve-damage cases have been impure or laced [trial 16 gave operating-room air and hospital gas pipes: now its use as a drug or its harm to people only]": 5 paper(s), 0 with their own words, first list after 3049 ms, the whole list after 11568 ms (3 askings) (the server's own share 2.9 ms)
-instant trial: "is nitrous oxide linked to nerve damage [the same, without the words of anaesthesia]": 6 paper(s), 0 with their own words, first list after 564 ms (the server's own share 303.6 ms)
-instant trial: "is nos bad for you [the same: trial 16 gave trials of anaesthesia]": 6 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 10507 ms (3 askings) (the server's own share 1.1 ms)
-instant trial: "can laughing gas canisters contain anything harmful [the same: trial 16 gave greenhouse gas emissions and sedation of children]": 4 paper(s), 0 with their own words, first list after 3001 ms, the whole list after 10445 ms (3 askings) (the server's own share 3.2 ms)
-instant trial: "how common is nitrous oxide use among young people [new]": 6 paper(s), 0 with their own words, first list after 825 ms (the server's own share 0.9 ms)
-instant trial: written data/auto/instant/trial-20261119T2321-0017.json
+instant trial: "can laughing gas canisters contain anything harmful [trial 17 gave papers on sedating children and anaesthesia: now the loose search leaves out 'adverse|harmful']": 4 paper(s), 0 with their own words, first list after 3196 ms, the whole list after 6844 ms (2 askings) (the server's own share 3.7 ms)
+instant trial: "does weed vape oil contain harmful chemicals [new]": 5 paper(s), 0 with their own words, first list after 3002 ms, the whole list after 4601 ms (2 askings) (the server's own share 3.5 ms)
+instant trial: "is ketamine cut with anything dangerous [new]": 5 paper(s), 0 with their own words, first list after 2011 ms, the whole list after 6522 ms (3 askings) (the server's own share 3.7 ms)
+instant trial: "are kratom capsules contaminated with heavy metals [new]": 4 paper(s), 0 with their own words, first list after 3000 ms, the whole list after 12609 ms (3 askings) (the server's own share 2.3 ms)
+instant trial: written data/auto/instant/trial-20261120T0006-0018.json
 == what it used, into the ledger
-llm: today 8839 of 9000 neurons
+llm: today 298 of 9000 neurons
 == write
 lane: no request waiting
