@@ -19,36 +19,42 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
   },
-  "run": "44774966341",
+  "run": "44776810934",
   "read_by": {
-   "gemini-3.1-flash-lite": 4,
-   "gpt-oss-20b": 1
+   "gemini-3.1-flash-lite": 2,
+   "gemini-3.5-flash-lite": 1,
+   "gemma-4-31b-it": 1
   },
-  "read_seconds": 29,
+  "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 2
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 184
+  "seconds": 169
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 10307) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8424)"
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "7 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
+  "rules": "2 How-do-we-know line(s) left out for a rule (how2: words that are not person-first (“misuse”); how3: words that are not person-first (“misuse”))",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.50, but 0.93, how1 0.73, how4 0.98",
+  "check": "short: NOT accepted: Passage does not state that hydrocodone can cause a high.; but: NOT accepted: it is about something else than the short answer; how1: accepted; how4: NOT accepted: Passage mentions high potential for drug abuse, not for drug use."
  },
  "sources": [
   {
@@ -103,44 +109,35 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "Here, we discuss how the approval of extended-release formulations of hydrocodone and the emotionally charged controversy over their release may affect physician prescribing and the care available to patients in need of chronic opioid therapy for the management of pain.",
-    "text": "A critical appraisal of extended-release hydrocodone for chronic pain management."
+    "text": "A critical appraisal discussing extended-release hydrocodone for chronic pain, patient considerations, and the controversy over its approval and general safety."
    },
    "findings": [
     {
-     "passage": 8,
-     "where": "Potential limitations to improvements for patients and prescribers",
-     "quote": "It is disappointing that the most effective medications used in our striving to provide comfort while doing no harm are frequently misused, abused, and diverted leading to harm in appropriately treated patients, unintended recipients, and society as a whole.",
-     "text": "Hydrocodone is frequently misused, abused, and diverted, which leads to harm in patients, unintended recipients, and society.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "reaction to the approval of the new formulations has fueled controversy over the general safety and need for opioid medications, in light of their potential for misuse, abuse, diversion, and addiction.",
+     "text": "The approval of new formulations of hydrocodone has fueled controversy over the general safety and need for opioid medications due to their potential for misuse, abuse, diversion, and addiction.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 9,
+     "passage": 8,
      "where": "Potential limitations to improvements for patients and prescribers",
-     "quote": "there is “no substantial evidence for the maintenance of pain relief or improved function over long periods of time without incurring serious risk of overdose, dependence, or addiction”",
-     "text": "There is no substantial evidence that long-term use of opioids maintains pain relief or improves function without the risk of overdose, dependence, or addiction.",
+     "quote": "It is disappointing that the most effective medications used in our striving to provide comfort while doing no harm are frequently misused, abused, and diverted leading to harm in appropriately treated patients, unintended recipients, and society as a whole.",
+     "text": "The most effective medications used to provide comfort while doing no harm are frequently misused, abused, and diverted, which leads to harm in appropriately treated patients, unintended recipients, and society as a whole.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 4,
-     "where": "The need for “single-drug” formulations",
-     "quote": "due to a high incidence of hepatotoxicity for those who develop tolerance to the opioid effect and for those who abuse these combination drugs and the frequency of potentially fatal skin rashes, the US Food and Drug Administration requested the limiting of single doses to no more than 325 mg by 2014.",
-     "text": "People who use hydrocodone-acetaminophen combinations face risks of hepatotoxicity and potentially fatal skin rashes when they develop tolerance or use the drugs in ways not intended.",
+     "passage": 9,
+     "where": "Potential limitations to improvements for patients and prescribers",
+     "quote": "A frequently reported truth is that there is “no substantial evidence for the maintenance of pain relief or improved function over long periods of time without incurring serious risk of overdose, dependence, or addiction”.",
+     "text": "There is no substantial evidence for maintaining pain relief or improved function over long periods of time without incurring serious risk of overdose, dependence, or addiction.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 9,
-     "where": "Potential limitations to improvements for patients and prescribers",
-     "quote": "the frequent, subjective impression that many patients who receive regular treatment with opioid medications seem to show little change in their reported pain scores and levels of activity, raises strong concern over the prudence of using opioid medications for the treatment of chronic pain in general.",
-     "text": "The findings are based on subjective impressions that patients receiving regular opioid treatment show little change in pain scores and activity levels.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -220,104 +217,24 @@
   {
    "read": "page",
    "ref": {
-    "id": "label_hydrocodone-bitartrate",
+    "id": "cdc_prescription-opioids",
     "type": "webpage",
-    "title": "Hydrocodone Bitartrate and Acetaminophen",
+    "title": "About Prescription Opioids",
     "author": [
      {
-      "literal": "Granules Pharmaceuticals Inc."
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2026,
-       10,
-       8
-      ]
-     ]
-    },
-    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=136bbd47-7a54-493f-9158-a84d39221d6c",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       20
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-20"
-    },
-    "publisher": "DailyMed",
-    "genre": "Drug label"
-   },
-   "title": "Hydrocodone Bitartrate and Acetaminophen",
-   "year": 2026,
-   "kind": "official",
-   "people": true,
-   "near": 0.68,
-   "name": "U.S. Food and Drug Administration",
-   "short": "the US label for hydrocodone",
-   "tier": 1,
-   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=136bbd47-7a54-493f-9158-a84d39221d6c",
-   "money": [],
-   "label": true,
-   "design": null,
-   "findings": [
-    {
-     "passage": 43,
-     "where": "Drug abuse and dependence",
-     "quote": "Abuse is the intentional, non-therapeutic use of a drug, even once, for its desirable psychological or physiological effects.",
-     "text": "People who use the drug intentionally for its desirable psychological or physiological effects are engaging in abuse.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 44,
-     "where": "Drug abuse and dependence",
-     "quote": "Misuse and abuse of Hydrocodone Bitartrate and Acetaminophen Tablets increases risk of overdose, which may lead to central nervous system and respiratory depression, hypotension, seizures, and death.",
-     "text": "Misuse and abuse of the drug increases the risk of overdose, which can result in central nervous system and respiratory depression, hypotension, seizures, and death.",
-     "id": "F6",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 62,
-     "where": "Adverse reactions",
-     "quote": "Because these reactions are reported voluntarily from a population of uncertain size, it is not always possible to reliably estimate their frequency or establish a causal relationship to drug exposure.",
-     "text": "It is not always possible to reliably estimate the frequency of adverse reactions or establish a causal relationship because they are reported voluntarily from a population of uncertain size.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "nhs_how-and-when-to-take-ibuprofen-and-codei",
-    "type": "webpage",
-    "title": "How and when to take ibuprofen and codeine Brand name: Nurofen Plus",
-    "author": [
-     {
-      "literal": "NHS"
+      "literal": "Centers for Disease Control and Prevention"
      }
     ],
     "issued": {
      "date-parts": [
       [
        2025,
-       4,
-       7
+       6,
+       10
       ]
      ]
     },
-    "URL": "https://www.nhs.uk/medicines/ibuprofen-and-codeine-nurofen-plus/how-and-when-to-take-ibuprofen-and-codeine/",
+    "URL": "https://www.cdc.gov/overdose-prevention/about/prescription-opioids.html",
     "accessed": {
      "date-parts": [
       [
@@ -333,38 +250,55 @@
      "verified_on": "2026-11-20"
     }
    },
-   "title": "How and when to take ibuprofen and codeine Brand name: Nurofen Plus",
+   "title": "About Prescription Opioids",
    "year": 2025,
    "kind": "official",
    "people": true,
-   "near": 0.438,
-   "name": "NHS",
-   "short": "the NHS",
+   "near": 0.465,
+   "name": "Centers for Disease Control and Prevention",
+   "short": "the US Centers for Disease Control and Prevention",
    "tier": 1,
-   "address": "https://www.nhs.uk/medicines/ibuprofen-and-codeine-nurofen-plus/how-and-when-to-take-ibuprofen-and-codeine/",
+   "address": "https://www.cdc.gov/overdose-prevention/about/prescription-opioids.html",
    "money": [],
    "label": false,
    "design": null,
    "findings": [
     {
      "passage": 1,
-     "where": "Top of the page",
-     "quote": "This is important because the codeine in combined ibuprofen and codeine can be addictive.",
-     "text": "The codeine in combined ibuprofen and codeine can be addictive.",
-     "id": "F7",
+     "where": "What to know",
+     "quote": "Prescription opioids can treat pain but carry serious risks of addiction, overdose, and even death. Anyone who takes prescription opioids can become addicted to them.",
+     "text": "Prescription opioids carry risks of addiction, overdose, and death, and anyone who takes them can become addicted.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "Side effects of opioids",
+     "quote": "In addition to the serious risks of addiction, misuse, and overdose, the use of prescription opioids can have several side effects, even when taken as directed",
+     "text": "The use of prescription opioids carries risks of addiction, misuse, and overdose, along with side effects even when taken as directed.",
+     "id": "F6",
      "second_hand": ""
     },
     {
      "passage": 7,
-     "where": "If you take too much",
-     "quote": "Taking too much combined ibuprofen and codeine can be dangerous. The amount that can lead to an overdose varies from person to person.",
-     "text": "Taking too much combined ibuprofen and codeine can be dangerous, and the amount that leads to an overdose varies between people.",
-     "id": "F8",
+     "where": "Opioid use disorder and the risk of overdose",
+     "quote": "Anyone taking prescription opioids is at risk for unintentional overdose or death and can become addicted regardless of race, sex, income level, or social class.",
+     "text": "Anyone taking prescription opioids is at risk for unintentional overdose, death, or addiction regardless of their background.",
+     "id": "F7",
      "second_hand": ""
     }
    ],
-   "limits": [],
-   "tag": "D"
+   "limits": [
+    {
+     "passage": 9,
+     "where": "Opioid use disorder and the risk of overdose",
+     "quote": "Anyone who uses opioids can experience an overdose, but certain factors may increase risk that your clinician can consider when prescribing",
+     "text": "Certain factors may increase the risk of overdose for people who use opioids, which clinicians consider when prescribing.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
   }
  ],
  "parts": [],
@@ -402,6 +336,14 @@
    "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -411,7 +353,14 @@
    "kind": "review",
    "at": "10.2147/tcrm.s81979",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "Concerns are raised by literature and the subjective impression that many regularly treated patients show little change in reported pain scores and levels of activity.",
+     "quote": "When taken in the context of the literature that clearly demonstrates the rapid increase in the prescribing of opioid medications that has taken place in the last 30 years parallels an unprecedented a",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "A Benefit Risk Review of Pediatric Use of Hydrocodone/Chlorpheniramine, a Prescription Opioid Antitussive Agent for the Treatment of Cough",
@@ -439,28 +388,16 @@
    "read": "page",
    "kind": "official",
    "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=136bbd47-7a54-493f-9158-a84d39221d6c",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Acetaminophen is associated with acute liver failure, which can lead to death, particularly at doses exceeding 4,000 milligrams per day.",
-     "quote": "Hepatotoxicity Acetaminophen has been associated with cases of acute liver failure, at times resulting in liver transplant and death. Most of the cases of liver injury are associated with the use of a",
-     "why": "it holds an amount or a time between uses"
-    },
-    {
-     "kind": "limit",
-     "text": "The specific risk of addiction for any individual person is not known.",
-     "quote": "Although the risk of addiction in any individual is unknown, it can occur in patients appropriately prescribed Hydrocodone Bitartrate and Acetaminophen Tablets.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "About Prescription Opioids",
    "read": "page",
    "kind": "official",
    "at": "https://www.cdc.gov/overdose-prevention/about/prescription-opioids.html",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -468,26 +405,18 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/ibuprofen-and-codeine-nurofen-plus/how-and-when-to-take-ibuprofen-and-codeine/",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The amount of combined ibuprofen and codeine that causes an overdose is different for each person.",
-     "quote": "The amount that can lead to an overdose varies from person to person.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
-   "F6",
-   "F1"
+   "F4",
+   "F5"
   ],
   "direct": "Yes",
   "but": [
-   "L2"
+   "L1"
   ],
   "how": [
    [
@@ -496,8 +425,7 @@
    ],
    [
     "DA",
-    "F1",
-    "F3"
+    "F1"
    ],
    [
     "F4"
@@ -505,7 +433,362 @@
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how1",
+   "text": "The US Centers for Disease Control and Prevention says prescription opioids carry risks of addiction, misuse, and overdose, along with side effects even when taken as directed.",
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "cdc_prescription-opioids",
+     "where": "What to know",
+     "quote": "Prescription opioids can treat pain but carry serious risks of addiction, overdose, and even death. Anyone who takes prescription opioids can become addicted to them.",
+     "sha": "675cadfa38677396"
+    },
+    {
+     "label": "F6",
+     "ref": "cdc_prescription-opioids",
+     "where": "Side effects of opioids",
+     "quote": "In addition to the serious risks of addiction, misuse, and overdose, the use of prescription opioids can have several side effects, even when taken as directed",
+     "sha": "87a80ab606ce8316"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“misuse”)"
+  },
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "A 2015 review of extended-release hydrocodone for chronic pain notes that approval of new formulations fueled controversy over safety and the potential for misuse and addiction.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "gouldiii_2015",
+     "where": "Abstract",
+     "quote": "Here, we discuss how the approval of extended-release formulations of hydrocodone and the emotionally charged controversy over their release may affect physician prescribing and the care available to patients in need of chronic opioid therapy for the management of pain.",
+     "sha": "c759d15a1cd2a8f7"
+    },
+    {
+     "label": "F1",
+     "ref": "gouldiii_2015",
+     "where": "Abstract",
+     "quote": "reaction to the approval of the new formulations has fueled controversy over the general safety and need for opioid medications, in light of their potential for misuse, abuse, diversion, and addiction.",
+     "sha": "c759d15a1cd2a8f7"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“misuse”)"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "The US Centers for Disease Control and Prevention says the use of prescription opioids carries risks of addiction, misuse, and overdose, along with side effects even when taken as directed.",
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "cdc_prescription-opioids",
+     "where": "Side effects of opioids",
+     "quote": "In addition to the serious risks of addiction, misuse, and overdose, the use of prescription opioids can have several side effects, even when taken as directed",
+     "sha": "87a80ab606ce8316"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“misuse”)"
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2015 review of extended-release hydrocodone for chronic pain discusses the controversy over its approval and the potential for misuse, diversion, and addiction.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "gouldiii_2015",
+     "where": "Abstract",
+     "quote": "Here, we discuss how the approval of extended-release formulations of hydrocodone and the emotionally charged controversy over their release may affect physician prescribing and the care available to patients in need of chronic opioid therapy for the management of pain.",
+     "sha": "c759d15a1cd2a8f7"
+    },
+    {
+     "label": "F1",
+     "ref": "gouldiii_2015",
+     "where": "Abstract",
+     "quote": "reaction to the approval of the new formulations has fueled controversy over the general safety and need for opioid medications, in light of their potential for misuse, abuse, diversion, and addiction.",
+     "sha": "c759d15a1cd2a8f7"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“misuse”)"
+  },
+  {
+   "try": 3,
+   "part": "how4",
+   "text": "In October 2014, the US Drug Enforcement Administration reclassified hydrocodone-containing antitussive agents from schedule III to schedule II drugs because they have a high potential for drug use.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "sloan_2019",
+     "where": "Introduction",
+     "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+     "sha": "e300678081637e82"
+    }
+   ],
+   "by": "the second reader",
+   "said": "Passage mentions high potential for drug abuse, not for drug use."
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5013,
+   "but": 0.9273,
+   "how1": 0.7276,
+   "how4": 0.9762
+  },
+  "scores_quotes_alone": {
+   "short": 0.3686,
+   "but": 0.8823,
+   "how1": 0.6015,
+   "how4": 0.9805
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. The US Drug Enforcement Administration says hydrocodone has a high potential for drug use. The US Centers for Disease Control and Prevention says anyone who takes it can become addicted.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "sloan_2019",
+       "where": "Introduction",
+       "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+       "sha": "e300678081637e82"
+      },
+      {
+       "label": "F5",
+       "ref": "cdc_prescription-opioids",
+       "where": "What to know",
+       "quote": "Prescription opioids can treat pain but carry serious risks of addiction, overdose, and even death. Anyone who takes prescription opioids can become addicted to them.",
+       "sha": "675cadfa38677396"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says the DEA reclassified hydrocodone antitussives because of a high potential for drug *abuse*, not \"drug use\", and it does not state the DEA \"says\" it has high potential; the wording differs."
+    },
+    {
+     "part": "but",
+     "text": "Anyone who uses opioids can experience an overdose, but certain factors may increase risk that your clinician can consider when prescribing.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "cdc_prescription-opioids",
+       "where": "Opioid use disorder and the risk of overdose",
+       "quote": "Anyone who uses opioids can experience an overdose, but certain factors may increase risk that your clinician can consider when prescribing",
+       "sha": "60c5d0dd37bf7a9d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The opening word \"Yes\" does not fairly answer the question about whether hydrocodone causes a high, because the passages discuss abuse potential and addiction risk but do not address a euphoric \"high\". The answer consisting of sentence 1 al)"
+    },
+    {
+     "part": "how3",
+     "text": "In October 2014, the US Drug Enforcement Administration reclassified hydrocodone-containing antitussive agents from schedule III to schedule II drugs because they have a high potential for drug use.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "sloan_2019",
+       "where": "Introduction",
+       "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+       "sha": "e300678081637e82"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage attributes the reclassification to \"recognition of their high potential for drug abuse\", not \"because they have a high potential for drug use\"; the causal phrasing and term \"drug use\" are not in the source."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, hydrocodone has a high potential for drug abuse. The US Centers for Disease Control and Prevention says anyone who takes prescription opioids can become addicted.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "sloan_2019",
+       "where": "Introduction",
+       "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+       "sha": "e300678081637e82"
+      },
+      {
+       "label": "F5",
+       "ref": "cdc_prescription-opioids",
+       "where": "What to know",
+       "quote": "Prescription opioids can treat pain but carry serious risks of addiction, overdose, and even death. Anyone who takes prescription opioids can become addicted to them.",
+       "sha": "675cadfa38677396"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“abuse”)"
+    },
+    {
+     "part": "but",
+     "text": "Anyone who uses opioids can experience an overdose, but certain factors may increase risk that your clinician can consider when prescribing.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "cdc_prescription-opioids",
+       "where": "Opioid use disorder and the risk of overdose",
+       "quote": "Anyone who uses opioids can experience an overdose, but certain factors may increase risk that your clinician can consider when prescribing",
+       "sha": "60c5d0dd37bf7a9d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US Centers for Disease Control and Prevention says prescription opioids carry risks of addiction, misuse, and overdose, along with side effects even when taken as directed.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "cdc_prescription-opioids",
+       "where": "What to know",
+       "quote": "Prescription opioids can treat pain but carry serious risks of addiction, overdose, and even death. Anyone who takes prescription opioids can become addicted to them.",
+       "sha": "675cadfa38677396"
+      },
+      {
+       "label": "F6",
+       "ref": "cdc_prescription-opioids",
+       "where": "Side effects of opioids",
+       "quote": "In addition to the serious risks of addiction, misuse, and overdose, the use of prescription opioids can have several side effects, even when taken as directed",
+       "sha": "87a80ab606ce8316"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“misuse”)"
+    },
+    {
+     "part": "how2",
+     "text": "A 2015 review notes that the approval of new hydrocodone formulations fueled controversy over their general safety and potential for misuse, abuse, diversion, and addiction.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "gouldiii_2015",
+       "where": "Abstract",
+       "quote": "Here, we discuss how the approval of extended-release formulations of hydrocodone and the emotionally charged controversy over their release may affect physician prescribing and the care available to patients in need of chronic opioid therapy for the management of pain.",
+       "sha": "c759d15a1cd2a8f7"
+      },
+      {
+       "label": "F1",
+       "ref": "gouldiii_2015",
+       "where": "Abstract",
+       "quote": "reaction to the approval of the new formulations has fueled controversy over the general safety and need for opioid medications, in light of their potential for misuse, abuse, diversion, and addiction.",
+       "sha": "c759d15a1cd2a8f7"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“misuse”)"
+    },
+    {
+     "part": "how3",
+     "text": "In October 2014, the US Drug Enforcement Administration reclassified hydrocodone-containing antitussive agents from schedule III to schedule II drugs because they have a high potential for drug abuse.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "sloan_2019",
+       "where": "Introduction",
+       "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+       "sha": "e300678081637e82"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“abuse”)"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, hydrocodone can cause a high. The US Drug Enforcement Administration says it has a high potential for drug use.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "sloan_2019",
+       "where": "Introduction",
+       "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+       "sha": "e300678081637e82"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage does not state that hydrocodone can cause a high."
+    },
+    {
+     "part": "but",
+     "text": "Anyone who uses opioids can experience an overdose, but certain factors may increase risk that your clinician can consider when prescribing.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "cdc_prescription-opioids",
+       "where": "Opioid use disorder and the risk of overdose",
+       "quote": "Anyone who uses opioids can experience an overdose, but certain factors may increase risk that your clinician can consider when prescribing",
+       "sha": "60c5d0dd37bf7a9d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "The US Centers for Disease Control and Prevention says prescription opioids carry risks of addiction, overdose, and death, and anyone who takes them can become addicted.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "cdc_prescription-opioids",
+       "where": "What to know",
+       "quote": "Prescription opioids can treat pain but carry serious risks of addiction, overdose, and even death. Anyone who takes prescription opioids can become addicted to them.",
+       "sha": "675cadfa38677396"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "In October 2014, the US Drug Enforcement Administration reclassified hydrocodone-containing antitussive agents from schedule III to schedule II drugs because they have a high potential for drug use.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "sloan_2019",
+       "where": "Introduction",
+       "quote": "In October 2014, hydrocodone-containing antitussive agents were reclassified from schedule III to schedule II drugs by the US Drug Enforcement Administration in recognition of their high potential for drug abuse.",
+       "sha": "e300678081637e82"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage mentions high potential for drug abuse, not for drug use."
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "prescription-opioids",
   "also": [],
