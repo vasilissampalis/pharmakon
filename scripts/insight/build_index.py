@@ -275,6 +275,9 @@ def name_pattern(names):
     return re.compile(r"(?<!\w)(" + "|".join(re.escape(n) for n in names) + r")(?!\w)", re.I)
 
 
+GENERAL_DRUGS = re.compile(r"\b(?:drugs|substances)\b", re.I)   # (2.28.20) a question about drugs in general (Ranker.speaks; the page's INS_GENERAL_DRUGS)
+
+
 class Ranker:
     """The page's ranking (insRank in site/src/app.insight.js) in Python, from the index the page reads: for --eval, and
     for scripts/insight/parity.js, which requires the page to give the same best match, the same related answers and the
@@ -361,6 +364,9 @@ class Ranker:
         # (2.28.9) a question about dying or overdose that names no drug is never answered by an answer about one drug ("overdose symptoms" got the answer on
         # meth's acute toxicity as its best match). Measured: nothing changes on the gold set and the near-miss questions
         if self.dying is not None and ng == 0 and len(self.about[c]) == 1 and self.dying.search(q): return False
+        # (2.28.20) a question about drugs in general (it says "drugs" or "substances" and names none) is never answered by an answer about one drug: "do drugs kill
+        # brain cells" got the answer on alcohol as its best match. The page's insSpeaks reads the same (INS_GENERAL_DRUGS)
+        if ng == 0 and len(self.about[c]) == 1 and GENERAL_DRUGS.search(q): return False
         if self.chem_re is not None:   # (2.28.6) a research chemical the question names, which the answer never names: never its best match
             qc = {chem_key(m.group(0)) for m in self.chem_re.finditer(q)}
             if qc and not (qc & self.chem_of[c]): return False

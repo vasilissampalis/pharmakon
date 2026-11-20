@@ -780,10 +780,14 @@ function insJudge(f) {
 // (and, for such a question: the judge's number at the aspect's own cut or more; no narrower case than the question names: an answer whose own question is about
 // withdrawal, touching, pregnancy or test strips, or about two drugs together, answers a question about dying only where the question says so too. ng: the drugs the question names)
 const insChemKey = t => String(t).toLowerCase().replace(/[^a-z0-9]/g, "");
+const INS_GENERAL_DRUGS = /\b(?:drugs|substances)\b/i;   // (2.28.20) a question about drugs in general (insSpeaks; the build's GENERAL_DRUGS)
 function insSpeaks(q, i, p, ng) {
   // (2.28.9) a question about dying or overdose that names no drug is never answered by an answer about one drug ("overdose symptoms" got the answer on meth's
   // acute toxicity as its best match); Ranker.speaks reads the same
   if (q && !ng && INS.dyingRe && INS.about[i] && INS.about[i].size === 1 && INS.dyingRe.test(q)) return false;
+  // (2.28.20) a question about drugs in general (it says "drugs" or "substances" and names none) is never answered by an answer about one drug: "do drugs kill brain
+  // cells" got the answer on alcohol as its best match; Ranker.speaks reads the same (GENERAL_DRUGS)
+  if (q && !ng && INS.about[i] && INS.about[i].size === 1 && INS_GENERAL_DRUGS.test(q)) return false;
   // (2.28.6, 20 November 2026) a question that names a research chemical by the shape of its name is never answered by an answer that names none of
   // those it names: "What is 3-MeO-PCE like?" got the answer on 5-MeO-DALT, another drug, as its best match
   if (q && INS.chem) { const qc = (String(q).match(INS.chem.re) || []).map(insChemKey); if (qc.length && !qc.some(x => INS.chem.of[i].has(x))) return false; }

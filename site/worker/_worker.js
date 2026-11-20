@@ -540,7 +540,9 @@ async function findPapers(env, r, most, ctx) {
     if (!ms) { ms = [G.ms, T.ms, null]; won = [G.won, T.won, null]; own = [G.own, T.own, null]; }
     kept += G.kept + T.kept; };
   const round = async (names, noted) => { const Q = findQueries(names, r.groups), live = { on: true };
-    const A = start(Q.cited, "CITED%20desc", 8, FIND_A, live, noted), C = start(r.groups.length ? Q.onTitle : "", "P_PDATE_D%20desc", 2, FIND_B, live, noted), W = start(Q.wide || Q.anyTitle, "", 4, FIND_B, live, noted);
+    // (2.28.20) a question with no key word ("what is hhc", "is delta 8 safe", "what does fly agaric do"): reviews of the drug, the most cited, beside its most
+    // cited papers, and first. Before this its most cited papers alone came, often old studies in animals or of the plant's biology (trials 32 and 33)
+    const A = start(Q.cited, "CITED%20desc", 8, FIND_A, live, noted), C = start(r.groups.length ? Q.onTitle : Q.nameRev, r.groups.length ? "P_PDATE_D%20desc" : "CITED%20desc", r.groups.length ? 2 : 3, FIND_B, live, noted), W = start(Q.wide || Q.anyTitle, "", 4, FIND_B, live, noted);
     const known = (...ss) => new Set(ss.flatMap(got).map(p => p.doi || p.pmid)).size;
     await new Promise(go => { let grace = false, soon = false, fin = false; const timers = [];
       const look = last => { if (fin) return;
@@ -550,9 +552,10 @@ async function findPapers(env, r, most, ctx) {
     live.on = false;
     const a = got(A), c = got(C), w = got(W);
     const first = stems.length ? a.filter(onTopic) : a, rest = stems.length ? a.filter(p => !onTopic(p)) : [];
-    add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
+    if (!r.groups.length) add([c[0], first[0], c[1], first[1], first[2], c[2]].concat(first.slice(3)));   // (2.28.20) no key word: the reviews first
+    else add([first[0], first[1], rest[0], first[2], c[0], rest[1], first[3], rest[2], c[1]].concat(first.slice(4), rest.slice(3)));
     if (out.length < 3) add(w);
-    if (!A.done || (out.length < 3 && (!C.done || !W.done))) more = true;
+    if (!A.done || (!r.groups.length && !C.done) || (out.length < 3 && (!C.done || !W.done))) more = true;   // (2.28.20) no key word: the reviews are worth asking again for
     if (A.failed || (out.length < 3 && (C.failed || W.failed))) down = true;
     if (!ms) { ms = [A, C, W].map(s => s.ms); won = [A, C, W].map(s => s.won); own = [A, C, W].map(s => s.own); }
     again += A.again + C.again + W.again; kept += A.kept + C.kept + W.kept; };
