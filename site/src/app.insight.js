@@ -370,14 +370,14 @@ const INS_RE = {
     "\\b(?:won'?t|wont|can'?t|cant|cannot|not|isn'?t)\\s+wak(?:e|ing)(?:\\s+up)?\\b", "\\bunresponsive\\b", "\\bunconscious\\b", "\\bpassed out\\b",
     "\\b(?:is|are|'s|he'?s|she'?s|i'?m|am|friend|someone|they'?re)\\s+(?:\\w+\\s+)?having\\s+a\\s+(?:seizure|fit)\\b", "\\bseizing\\b",
     "\\b(?:is|am|are|i'?m|he'?s|she'?s|they'?re|might be|may be|could be)\\s+(?:\\w+\\s+)?overdosing\\b", "\\boverdosing\\s+(?:right\\s+)?now\\b", "\\bod'?ing\\b",
-    "\\btoo high\\b", "\\bgreen(?:ing|ed)?\\s+out\\b", "\\bwhitey\\b", "\\bbad trip\\b.{0,24}\\bhelp\\b", "\\bhelp\\b.{0,24}\\bbad trip\\b", "\\bfreaking out\\b", "\\bturning blue\\b", "\\bblue lips\\b",
+    "\\btoo high\\b", "\\bgreen(?:ing|ed)?\\s+out\\b", "\\bwhitey\\b", "\\bbad (?:\\w+ )?trip\\b.{0,24}\\bhelp\\b", "\\bhelp\\b.{0,24}\\bbad (?:\\w+ )?trip\\b", "\\bfreaking out\\b", "\\bturning blue\\b", "\\bblue lips\\b",
     "\\bi think (?:i'?m|i am|he'?s|she'?s|they'?re) (?:dying|overdosing)\\b",
     // (2.22) someone HAS overdosed ("how to help someone who overdosed" was told "Which drug do you mean?"; "how do i know if i overdosed" the same): the same route as "is overdosing"
     "\\b(?:someone|somebody|friend|he|she|they|brother|sister|mom|mum|mother|dad|father|son|daughter|partner|boyfriend|girlfriend|husband|wife|roommate|flatmate|mate|buddy)\\b[^?.!]{0,24}\\b(?:overdosed|od'?e?d)\\b",
     "\\b(?:i|i'?ve|we)\\s+(?:\\w+\\s+){0,3}(?:overdosed|od'?e?d)\\b"].join("|"), "i"),
   // "what do i do" is an emergency only beside a sign that something is happening now
-  whatdo: /\bwhat (?:do|should|can|shall) (?:i|we) do\b/i,
-  acute: /\b(?:just|right now|now|tonight|took|taken|ate|eaten|swallowed|drank|too much|too many|unwell|sick|shaking|sweating|overheat\w*|burning up|heart|chest|breath\w*|pass(?:ed|ing)? out|faint\w*|collaps\w*|seiz\w*|fitting|panic\w*|freak\w*|scared|terrified|bad trip|too high|overdos\w*|unconscious|unresponsive|blue|vomit\w*|throwing up|emergency|ambulance|help me)\b/i,
+  whatdo: /\bwhat (?:do|should|can|shall) (?:i|we) do\b|\bwhat to do (?:if|when|for)\b/i,   // (2.28.15) "what to do if someone is having a bad acid trip"
+  acute: /\b(?:just|right now|now|tonight|took|taken|ate|eaten|swallowed|drank|too much|too many|unwell|sick|shaking|sweating|overheat\w*|burning up|heart|chest|breath\w*|pass(?:ed|ing)? out|faint\w*|collaps\w*|seiz\w*|fitting|panic\w*|freak\w*|scared|terrified|bad (?:\w+ )?trip|too high|overdos\w*|unconscious|unresponsive|blue|vomit\w*|throwing up|emergency|ambulance|help me)\b/i,
   // someone writing about ending their own life: the numbers, at once
   // (2.22) also someone asking for the easiest or a painless WAY of dying. ("how can i die from ketamine", "how do you overdose on xanax" ask what the danger is: they are questions like any other)
   self: new RegExp(["\\b(?:i|i'?m|im|i am|i feel|feeling|me)\\b[^?.!]{0,30}\\bsuicid\\w*", "\\bsuicid\\w*\\b[^?.!]{0,20}\\b(?:myself|me|i)\\b", "\\bkill(?:ing)? myself\\b", "\\bwant(?:ing)? to die\\b", "\\bend(?:ing)? my life\\b", "\\bdon'?t want to (?:live|be alive|be here)\\b",
