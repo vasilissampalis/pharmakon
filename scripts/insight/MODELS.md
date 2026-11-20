@@ -380,3 +380,8 @@ A research chemical named by the shape of its name (`scope.json`, "chem": 3-MeO-
 names none of those the question names (`build_index.py`, the index's "chem"; `Ranker.speaks` and the page's `insSpeaks`; `parity.js` asks
 three such questions): "What is 3-MeO-PCE like, and how risky is it?" had the answer on 5-MeO-DALT, another drug, as its best match at the cut
 of 0.6.
+
+Measured and not kept (20 November 2026): the judge's lead measured over the next answer of ANOTHER topic of the page (the three answers on
+psychosis would no longer stand in each other's way for "can weed make you go crazy"). With the judge as it is, at the cut of 0.7: best
+matches 39 (full 24, partial 8, wrong 7), near-miss questions given the answer they do not get 138 of 1,810 against 101: a near-miss
+question is most often one of the same topic, and the lead is what kept it from the answer.
