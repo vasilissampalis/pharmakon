@@ -96,7 +96,12 @@ EXTRA = {"benzo": ["benzodiazepines"], "benzodiazepine": ["benzodiazepines"], "x
          # (2.28.22) what cannabis and tobacco are taken with or as: "is dabbing bad for your lungs", "is smoking from a bong safer", "are zyns bad for you" and
          # "how bad are hookahs" named no drug ("are zyns bad for you" and "how bad are hookahs" were taken for questions that are not about drugs)
          "bong": ["cannabis"], "bongs": ["cannabis"], "dabbing": ["cannabis"], "dab pen": ["cannabis"], "dab pens": ["cannabis"], "blunts": ["cannabis"],
-         "zyn": ["nicotine"], "zyns": ["nicotine"], "hookah": ["nicotine"], "hookahs": ["nicotine"], "shisha": ["nicotine"]}
+         "zyn": ["nicotine"], "zyns": ["nicotine"], "hookah": ["nicotine"], "hookahs": ["nicotine"], "shisha": ["nicotine"],
+         # (2.28.23) "speed" is an everyday word (WEAK): where it is taken, or its comedown is asked about, it is amphetamine ("help my heart is racing after taking
+         # speed" was taken for a question that is not about drugs)
+         **{p: ["amphetamine"] for p in ("taking speed", "took speed", "take speed", "taken speed", "on speed", "doing speed", "did speed", "snorting speed",
+                                          "snorted speed", "snort speed", "speed comedown", "speed come down", "speed pills", "speed paste", "speed psychosis",
+                                          "speed addiction", "speed withdrawal")}}
 # (2.28.11, 20 November 2026) the benzodiazepines and opioids people name by their own names, on the page of their kind: "ativan" was read as a
 # benzodiazepine and "lorazepam", the same drug, as a drug the site has no page on, so that "is lorazepam addictive" was shown nothing
 EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazepam", "triazolam", "bromazepam", "chlordiazepoxide", "librium", "restoril", "halcion", "clobazam",

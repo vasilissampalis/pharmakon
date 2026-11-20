@@ -384,7 +384,10 @@ const INS_RE = {
     "\\b(?:i|i'?ve|we)\\s+(?:\\w+\\s+){0,3}(?:overdosed|od'?e?d)\\b"].join("|"), "i"),
   // "what do i do" is an emergency only beside a sign that something is happening now
   whatdo: /\bwhat (?:do|should|can|shall) (?:i|we) do\b|\bwhat to do (?:if|when|for)\b/i,   // (2.28.15) "what to do if someone is having a bad acid trip"
-  acute: /\b(?:just|right now|now|tonight|took|taken|ate|eaten|swallowed|drank|too much|too many|unwell|sick|shaking|sweating|overheat\w*|burning up|heart|chest|breath\w*|pass(?:ed|ing)? out|faint\w*|collaps\w*|seiz\w*|fitting|panic\w*|freak\w*|scared|terrified|bad (?:\w+ )?trip|too high|overdos\w*|unconscious|unresponsive|blue|vomit\w*|throwing up|emergency|ambulance|help me)\b/i,
+  // (2.28.23) a message that begins with "help" ("help my heart is racing after taking speed"): beside a sign that something is happening now (not "help me" alone:
+  // "help me understand ketamine"), the way to help
+  helpStart: /^\s*(?:please |pls |plz |someone |somebody )?help\b/i,   // (2.28.15) "what to do if someone is having a bad acid trip"
+  acute: /\b(?:just|right now|now|tonight|took|taken|ate|eaten|swallowed|drank|too much|too many|unwell|sick|shaking|sweating|overheat\w*|burning up|heart|chest|breath\w*|pass(?:ed|ing)? out|faint\w*|collaps\w*|seiz\w*|fitting|panic\w*|freak\w*|scared|terrified|bad (?:\w+ )?trip|too high|overdos\w*|unconscious|unresponsive|blue|vomit\w*|throwing up|emergency|ambulance|help me|laced|spiked|drugged)\b/i,   // (2.28.23: laced, spiked, drugged: "i think my pills were laced what should i do")
   // someone writing about ending their own life: the numbers, at once
   // (2.22) also someone asking for the easiest or a painless WAY of dying. ("how can i die from ketamine", "how do you overdose on xanax" ask what the danger is: they are questions like any other)
   self: new RegExp(["\\b(?:i|i'?m|im|i am|i feel|feeling|me)\\b[^?.!]{0,30}\\bsuicid\\w*", "\\bsuicid\\w*\\b[^?.!]{0,20}\\b(?:myself|me|i)\\b", "\\bkill(?:ing)? myself\\b", "\\bwant(?:ing)? to die\\b", "\\bend(?:ing)? my life\\b", "\\bdon'?t want to (?:live|be alive|be here)\\b",
@@ -689,7 +692,7 @@ function insRoutes(q, groups, drug) {
   const about = one[0] || (drug && subBySlug[drug] ? drug : null);   // the drug a route is for: the one named, else the page's
   const add = (kind, place, k, t, extra) => out.push(Object.assign({ kind, k, t }, place, extra || {}));
   if (INS_RE.self.test(q)) add("help", INS_PLACE.numbers(), "Get help now", "Emergency numbers where you are");
-  else if (INS_RE.help.test(q) || (INS_RE.whatdo.test(q) && INS_RE.acute.test(q))) {
+  else if (INS_RE.help.test(q) || (INS_RE.whatdo.test(q) && INS_RE.acute.test(q)) || (INS_RE.helpStart.test(q) && INS_RE.acute.test(q.replace(/\bhelp me\b/gi, " ")))) {
     const s = [about].concat(one).find(x => x && helpSigns(x));
     if (s) add("help", INS_PLACE.help(s), drugName(s), "If it gets too much: what helps"); else add("help", INS_PLACE.numbers(), "Get help", "Emergency numbers");
   }
