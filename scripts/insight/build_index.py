@@ -73,7 +73,13 @@ EXTRA = {"benzo": ["benzodiazepines"], "benzodiazepine": ["benzodiazepines"], "x
          "fent": ["fentanyl-and-analogues"], "nitazene": ["fentanyl-and-analogues"], "amphetamines": ["amphetamine"], "cathinones": ["synthetic-cathinones"], "2cb": ["2c-x"],
          "beer": ["alcohol"], "beers": ["alcohol"], "wine": ["alcohol"], "liquor": ["alcohol"], "cigarettes": ["nicotine"], "cigarette": ["nicotine"],
          "edible": ["cannabis"], "energy drink": ["caffeine"], "robotussin": ["dxm"],
-         "meow meow": ["synthetic-cathinones"], "m-cat": ["synthetic-cathinones"], "mcat": ["synthetic-cathinones"]}   # (2.28.15) mephedrone's street names ("has anyone died from meow meow" was read as no question about drugs)
+         "meow meow": ["synthetic-cathinones"], "m-cat": ["synthetic-cathinones"], "mcat": ["synthetic-cathinones"],   # (2.28.15) mephedrone's street names ("has anyone died from meow meow" was read as no question about drugs)
+         # (2.28.16) the singulars of names Insight knows in the plural ("a bad mushroom trip", "one shroom"), and street names of one drug that were missing
+         # (not "mushroom" alone: lion's mane, reishi and amanita are mushrooms too; "is lions mane mushroom good for memory" was read as psilocybin)
+         "shroom": ["psilocybin"], "magic mushroom": ["psilocybin"], "mushroom trip": ["psilocybin"], "mushroom trips": ["psilocybin"],
+         "xanny": ["benzodiazepines"], "xannies": ["benzodiazepines"], "xanies": ["benzodiazepines"],
+         "perc": ["prescription-opioids"], "percs": ["prescription-opioids"], "whippet": ["nitrous-oxide"], "nang": ["nitrous-oxide"], "popper": ["alkyl-nitrites-and-inhalants"],
+         "ganja": ["cannabis"], "fenty": ["fentanyl-and-analogues"]}
 # (2.28.11, 20 November 2026) the benzodiazepines and opioids people name by their own names, on the page of their kind: "ativan" was read as a
 # benzodiazepine and "lorazepam", the same drug, as a drug the site has no page on, so that "is lorazepam addictive" was shown nothing
 EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazepam", "triazolam", "bromazepam", "chlordiazepoxide", "librium", "restoril", "halcion", "clobazam",

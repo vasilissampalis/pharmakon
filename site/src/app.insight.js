@@ -1091,7 +1091,7 @@ async function insRank(query, ctx) {
     // on our list by its meaning: it is finished, and it is that question (its subject was there; the rule only reads words)
     if (unf === "which" && !named && !answered && !res.best.length) { const w0 = insWant(v, mv, core, tx.groups); if (w0) { res.want = w0; unf = ""; } }
     if (unf && !named && !answered && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
-    if (res.routes.some(r => r.same) && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; }   // (2.28.5) two names for one drug: the route is the answer
+    if (res.routes.some(r => r.same) && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }   // (2.28.5) two names for one drug: the route is the answer (2.28.16: marked, as the parity check reads it)
     // (2.28.12) "what is laughing gas": the drug's page is the answer; an answer about one of its harms (judge 0.95) is a place to look, not what was asked
     if (res.routes.some(r => r.kind === "page" && r.whole) && res.best.length) { res.related = res.best.concat(res.related).slice(0, 3); res.best = []; res.demoted = true; }
     if (!res.best.length && !answered && !unf && !res.want) res.want = insWant(v, mv, core, tx.groups);   // 2.5: is it on our list?
