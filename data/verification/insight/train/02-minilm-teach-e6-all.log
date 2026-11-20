@@ -1,0 +1,28 @@
+== build [20:16:25]
+== train --base minilm --out out --epochs 6 --mix 0.5,1.0 --masked 0 --max-minutes 300 --teacher --all [20:16:32]
+Loading weights:   0%|          | 0/101 [00:00<?, ?it/s]Loading weights: 100%|██████████| 101/101 [00:00<00:00, 10766.65it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.weight | UNEXPECTED |  | 
+pooler.dense.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+train: base {"repo": "sentence-transformers/all-MiniLM-L6-v2", "commit": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41", "weights": "model.safetensors", "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db", "bytes": 90868376}
+train: 392 answers; 6166 wordings as anchors (2979 of them the teachers'); 1810 near-miss questions; held out 57
+train: before: held-out wordings find their answer 75.6%, wording vs near-miss AUC 0.778
+train: pass 1: loss 1.487 | held out (now trained on): finds its answer 83.4%, AUC 0.911 | 117s
+train: pass 2: loss 0.840 | held out (now trained on): finds its answer 87.0%, AUC 0.941 | 233s
+train: pass 3: loss 0.659 | held out (now trained on): finds its answer 88.4%, AUC 0.954 | 348s
+train: pass 4: loss 0.513 | held out (now trained on): finds its answer 89.7%, AUC 0.962 | 464s
+train: pass 5: loss 0.476 | held out (now trained on): finds its answer 89.7%, AUC 0.967 | 580s
+train: pass 6: loss 0.459 | held out (now trained on): finds its answer 89.7%, AUC 0.969 | 697s
+train: site model: {"strict_top1": 0.595, "strict_top3": 0.81, "lenient_top1": 0.507, "lenient_top3": 0.701, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.779, "seconds": 7.9}
+  torch.onnx.export(Wrap(model).eval(), (ii, am, torch.zeros_like(ii)), str(fp), input_names=["input_ids", "attention_mask", "token_type_ids"], output_names=["last_hidden_state"],
+  if (padding_length := kv_length + kv_offset - attention_mask.shape[-1]) > 0:
+  return opset9.index(g, self, index)
+train: minilm-teach-mix50 {"strict_top1": 0.608, "strict_top3": 0.81, "lenient_top1": 0.515, "lenient_top3": 0.745, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.771, "seconds": 7.7} | with the teachers' wordings in the index: {"strict_top1": 0.658, "strict_top3": 0.848, "lenient_top1": 0.544, "lenient_top3": 0.77, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.781, "seconds": 11.5}
+train: minilm-teach-mix100 {"strict_top1": 0.633, "strict_top3": 0.873, "lenient_top1": 0.467, "lenient_top3": 0.73, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.705, "seconds": 7.8} | with the teachers' wordings in the index: {"strict_top1": 0.608, "strict_top3": 0.873, "lenient_top1": 0.464, "lenient_top3": 0.763, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.708, "seconds": 11.6}
+train: done: out/train.json
+== end [20:29:21]

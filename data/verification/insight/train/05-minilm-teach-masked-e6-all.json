@@ -1,0 +1,159 @@
+{
+ "base": "minilm",
+ "licence": "Apache-2.0",
+ "teacher": true,
+ "masked": 0.3,
+ "epochs": 6,
+ "lr": 2e-05,
+ "seed": 7,
+ "batch": 32,
+ "max_tokens": 48,
+ "all_answers": true,
+ "mix": [
+  0.5,
+  1.0
+ ],
+ "began": "2026-11-19T20:16:33Z",
+ "source": {
+  "repo": "sentence-transformers/all-MiniLM-L6-v2",
+  "commit": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "weights": "model.safetensors",
+  "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db",
+  "bytes": 90868376
+ },
+ "answers": 392,
+ "held_out_answers": 57,
+ "anchors": 6166,
+ "readers_wordings": 3187,
+ "teachers_wordings": 2979,
+ "near_miss": 1810,
+ "before": {
+  "held_out_finds_answer": 0.7563,
+  "held_out_auc": 0.7785
+ },
+ "passes": [
+  {
+   "pass": 1,
+   "loss": 1.6926,
+   "held_out_finds_answer": 0.8235,
+   "held_out_auc": 0.9057,
+   "seconds": 140
+  },
+  {
+   "pass": 2,
+   "loss": 1.0791,
+   "held_out_finds_answer": 0.8592,
+   "held_out_auc": 0.935,
+   "seconds": 282
+  },
+  {
+   "pass": 3,
+   "loss": 0.874,
+   "held_out_finds_answer": 0.8739,
+   "held_out_auc": 0.944,
+   "seconds": 423
+  },
+  {
+   "pass": 4,
+   "loss": 0.7265,
+   "held_out_finds_answer": 0.8908,
+   "held_out_auc": 0.9529,
+   "seconds": 565
+  },
+  {
+   "pass": 5,
+   "loss": 0.6822,
+   "held_out_finds_answer": 0.895,
+   "held_out_auc": 0.957,
+   "seconds": 704
+  },
+  {
+   "pass": 6,
+   "loss": 0.626,
+   "held_out_finds_answer": 0.895,
+   "held_out_auc": 0.9588,
+   "seconds": 845
+  }
+ ],
+ "kept_pass": 6,
+ "gold": {
+  "pharmakon-insight-1 (on the site)": {
+   "index": {
+    "strict_top1": 0.595,
+    "strict_top3": 0.81,
+    "lenient_top1": 0.507,
+    "lenient_top3": 0.701,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.779,
+    "seconds": 9.1
+   },
+   "index_with_teachers_wordings": {
+    "strict_top1": 0.62,
+    "strict_top3": 0.823,
+    "lenient_top1": 0.511,
+    "lenient_top3": 0.748,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.791,
+    "seconds": 13.7
+   },
+   "sha256": "4f5059c16139f1d93e5b78df2a4ee7c5728452e46d93d663cca31e23d1c2c2f5"
+  },
+  "minilm-teach-masked-mix50": {
+   "index": {
+    "strict_top1": 0.582,
+    "strict_top3": 0.785,
+    "lenient_top1": 0.522,
+    "lenient_top3": 0.719,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.784,
+    "seconds": 8.9
+   },
+   "index_with_teachers_wordings": {
+    "strict_top1": 0.633,
+    "strict_top3": 0.81,
+    "lenient_top1": 0.536,
+    "lenient_top3": 0.737,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.789,
+    "seconds": 13.4
+   },
+   "share_trained": 0.5,
+   "int8_vs_trained_cosine_min": 0.9732,
+   "file": "minilm-teach-masked-mix50-q8.onnx",
+   "bytes": 22873441,
+   "sha256": "17b62bb4920773419ba3304ff3a1d47010e74a7bf3338b0a0f123ad94e1062ba"
+  },
+  "minilm-teach-masked-mix100": {
+   "index": {
+    "strict_top1": 0.57,
+    "strict_top3": 0.823,
+    "lenient_top1": 0.449,
+    "lenient_top3": 0.715,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.699,
+    "seconds": 9.0
+   },
+   "index_with_teachers_wordings": {
+    "strict_top1": 0.582,
+    "strict_top3": 0.848,
+    "lenient_top1": 0.456,
+    "lenient_top3": 0.759,
+    "n_strict": 79,
+    "n_lenient": 274,
+    "answerable_vs_not_auc": 0.698,
+    "seconds": 13.3
+   },
+   "share_trained": 1.0,
+   "int8_vs_trained_cosine_min": 0.9676,
+   "file": "minilm-teach-masked-mix100-q8.onnx",
+   "bytes": 22873441,
+   "sha256": "d30ee8abbd7f25a8daaddaf208c3503ce2f3348da2378ac3bb637b0c2d0428b5"
+  }
+ },
+ "ended": "2026-11-19T20:32:10Z"
+}

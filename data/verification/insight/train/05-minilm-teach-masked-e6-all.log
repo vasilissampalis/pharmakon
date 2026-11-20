@@ -1,0 +1,29 @@
+== build [20:16:27]
+== train --base minilm --out out --epochs 6 --mix 0.5,1.0 --masked 0.3 --max-minutes 300 --teacher --all [20:16:32]
+Loading weights:   0%|          | 0/101 [00:00<?, ?it/s]Loading weights: 100%|██████████| 101/101 [00:00<00:00, 5739.24it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                 | Status     |  | 
+--------------------+------------+--+-
+pooler.dense.bias   | UNEXPECTED |  | 
+pooler.dense.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+train: base {"repo": "sentence-transformers/all-MiniLM-L6-v2", "commit": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41", "weights": "model.safetensors", "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db", "bytes": 90868376}
+train: 392 answers; 6166 wordings as anchors (2979 of them the teachers'); 1810 near-miss questions; held out 57
+train: before: held-out wordings find their answer 75.6%, wording vs near-miss AUC 0.778
+train: pass 1: loss 1.693 | held out (now trained on): finds its answer 82.4%, AUC 0.906 | 140s
+train: pass 2: loss 1.079 | held out (now trained on): finds its answer 85.9%, AUC 0.935 | 282s
+train: pass 3: loss 0.874 | held out (now trained on): finds its answer 87.4%, AUC 0.944 | 423s
+train: pass 4: loss 0.727 | held out (now trained on): finds its answer 89.1%, AUC 0.953 | 565s
+train: pass 5: loss 0.682 | held out (now trained on): finds its answer 89.5%, AUC 0.957 | 704s
+train: pass 6: loss 0.626 | held out (now trained on): finds its answer 89.5%, AUC 0.959 | 845s
+[0;93m2026-11-19 20:31:00.088252495 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+train: site model: {"strict_top1": 0.595, "strict_top3": 0.81, "lenient_top1": 0.507, "lenient_top3": 0.701, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.779, "seconds": 9.1}
+  torch.onnx.export(Wrap(model).eval(), (ii, am, torch.zeros_like(ii)), str(fp), input_names=["input_ids", "attention_mask", "token_type_ids"], output_names=["last_hidden_state"],
+  if (padding_length := kv_length + kv_offset - attention_mask.shape[-1]) > 0:
+  return opset9.index(g, self, index)
+train: minilm-teach-masked-mix50 {"strict_top1": 0.582, "strict_top3": 0.785, "lenient_top1": 0.522, "lenient_top3": 0.719, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.784, "seconds": 8.9} | with the teachers' wordings in the index: {"strict_top1": 0.633, "strict_top3": 0.81, "lenient_top1": 0.536, "lenient_top3": 0.737, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.789, "seconds": 13.4}
+train: minilm-teach-masked-mix100 {"strict_top1": 0.57, "strict_top3": 0.823, "lenient_top1": 0.449, "lenient_top3": 0.715, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.699, "seconds": 9.0} | with the teachers' wordings in the index: {"strict_top1": 0.582, "strict_top3": 0.848, "lenient_top1": 0.456, "lenient_top3": 0.759, "n_strict": 79, "n_lenient": 274, "answerable_vs_not_auc": 0.698, "seconds": 13.3}
+train: done: out/train.json
+== end [20:32:11]
