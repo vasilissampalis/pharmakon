@@ -49,7 +49,10 @@ const queries = goldAll.filter((_, i) => i % 5 === 2).slice(0, 60).map(q => [q, 
   "are xannies addictive", "are percs laced with fentanyl", "whippet side effects", "what is a bad mushroom trip like", "is lions mane mushroom good for memory", "are reishi mushrooms safe",
   "chaga mushroom tea benefits", "can amanita mushrooms kill you", "is vitamin k2 safe", "what is gas station heroin", "is fake weed dangerous", "how strong are golden teachers", "is delta 8 safe",
   "are pingers safe", "is hippie crack bad for you", "what is liquid ecstasy", "what is pink cocaine", "are m30s fentanyl", "is my joint pain from weed",
-  "do drugs kill brain cells", "what drugs are safe to take together", "can substances change your personality"].map(q => [q, null]),
+  "do drugs kill brain cells", "what drugs are safe to take together", "can substances change your personality",
+  "what is poor mans cocaine", "what is poor man’s cocaine", "is cat valium the same as valium", "what does hippie crack do", "is reishi mushroom tea safe",
+  "is mushroom tea stronger than eating them", "why do i cough up black tar after smoking", "is special la coke real", "what does china white do", "what is yaba",
+  "does my heart go fast on mdma", "is super weed stronger than normal weed"].map(q => [q, null]),
   [["does it kill brain cells", "cannabis"], ["is it addictive", "cannabis"], ["how long does it stay in your blood", "ketamine"], ["is it addictive", "kratom"], ["can it damage my bladder", "ketamine"],
    ["what does mdma do to serotonin", "cannabis"], ["how long does it last", "lsd"], ["is it safe with alcohol", "mdma"]]);
 // 2.9: questions as a reader who is still typing leaves them: every third forum question of the gold set cut after each of its

@@ -101,7 +101,34 @@ EXTRA = {"benzo": ["benzodiazepines"], "benzodiazepine": ["benzodiazepines"], "x
          # speed" was taken for a question that is not about drugs)
          **{p: ["amphetamine"] for p in ("taking speed", "took speed", "take speed", "taken speed", "on speed", "doing speed", "did speed", "snorting speed",
                                           "snorted speed", "snort speed", "speed comedown", "speed come down", "speed pills", "speed paste", "speed psychosis",
-                                          "speed addiction", "speed withdrawal")}}
+                                          "speed addiction", "speed withdrawal")},
+         # (2.28.24) the street names that official bodies list (data/identity) and Insight did not read, without the everyday words among them (grass, pot,
+         # joint, horse, ice, crystal, glass, snow, boomers, kit kat, vitamin k ...) and the ones that say something else as often (black tar: what smokers cough
+         # up; go-fast; superweed; grievous bodily harm; easy lay; tranks, now said of xylazine as "tranq"; nerve pills; duck eggs; liquid e, beside e-liquid; miaow).
+         # Some hold another drug's name and were read as it: "cat valium" (ketamine) as a benzodiazepine, "super acid" (ketamine) as LSD, "hillbilly heroin"
+         # (oxycodone) and "synthetic heroin" (fentanyl) as heroin, "poor man's cocaine" (methamphetamine) as cocaine, "special la coke" (ketamine) as cocaine
+         **{n: ["amphetamine"] for n in ("bennies", "black beauties")},
+         **{n: ["benzodiazepines"] for n in ("roofies", "flualp", "mother's little helpers")},
+         **{n: ["cannabis"] for n in ("hashish", "hashish oil", "bhang", "charas", "kif", "sinsemilla", "mota", "reefers")},
+         **{n: ["dmt-ayahuasca"] for n in ("hoasca", "yage", "yagé")},
+         **{n: ["dxm"] for n in ("triple c", "triple cs", "poor man's pcp")},
+         **{n: ["fentanyl-and-analogues"] for n in ("china white", "china girl", "murder 8", "synthetic heroin")},
+         **{n: ["ghb-gbl"] for n in ("georgia home boy", "liquid g", "liquid x", "gamma g", "one comma four")},
+         **{n: ["heroin"] for n in ("chiva",)},
+         **{n: ["ketamine"] for n in ("cat valium", "super acid", "special la coke")},
+         **{n: ["kratom"] for n in ("ketum", "biak", "kakuam", "krathom", "mambog", "ithang")},
+         **{n: ["lsd"] for n in ("microdots",)},
+         **{n: ["mdma"] for n in ("disco biscuit", "disco biscuits", "hug drug", "love doves", "mitsubishis", "lover's speed")},
+         **{n: ["mescaline"] for n in ("mesc", "peyoto")},
+         **{n: ["methadone-buprenorphine"] for n in ("amidone",)},
+         **{n: ["methamphetamine"] for n in ("hiropon", "pervitin", "yaba", "poor man's cocaine")},
+         **{n: ["nitrous-oxide"] for n in ("hippy crack", "wippets", "sweet air", "buzz bomb")},
+         **{n: ["pcp"] for n in ("embalming fluid", "sherm", "sherms", "shermans")},
+         **{n: ["prescription-opioids"] for n in ("hillbilly heroin", "oxycotton")},
+         **{n: ["psilocybin"] for n in ("mushroom tea", "sacred mushrooms", "mexican mushroom", "mexican mushrooms", "teonanacatl", "teonanácatl")},
+         **{n: ["salvia-divinorum"] for n in ("sally d", "sally-d", "magic mint", "diviner's sage")},
+         **{n: ["synthetic-cannabinoids"] for n in ("black mamba", "herbal incense")},
+         **{n: ["synthetic-cathinones"] for n in ("bath salt", "meph", "miaow miaow", "ivory wave")}}
 # (2.28.11, 20 November 2026) the benzodiazepines and opioids people name by their own names, on the page of their kind: "ativan" was read as a
 # benzodiazepine and "lorazepam", the same drug, as a drug the site has no page on, so that "is lorazepam addictive" was shown nothing
 EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazepam", "triazolam", "bromazepam", "chlordiazepoxide", "librium", "restoril", "halcion", "clobazam",
@@ -109,6 +136,9 @@ EXTRA.update({n: ["benzodiazepines"] for n in ("lorazepam", "temazepam", "oxazep
                                                "flubromazepam", "diclazepam", "pyrazolam", "deschloroetizolam")})
 EXTRA.update({n: ["prescription-opioids"] for n in ("hydromorphone", "dilaudid", "oxymorphone", "opana", "tapentadol", "nucynta", "dihydrocodeine", "norco", "lortab", "roxicodone",
                                                     "ultram", "demerol", "pethidine", "meperidine")})
+EXTRA["mother's little helper"] = ["benzodiazepines"]
+# (2.28.24) a name with an apostrophe as a phone types it (’) and as people often type it, with none ("poor mans cocaine" was read as cocaine)
+EXTRA.update({v: g for n, g in list(EXTRA.items()) if "'" in n for v in (n.replace("'", "’"), n.replace("'", ""))})
 # a family's name names every drug of the family (substances.json, cls): an answer about any one of them is about it
 FAMILY_WORDS = {"Opioids": ["opioids", "opioid", "opiates", "opiate"], "Stimulants": ["stimulants", "stimulant"], "Depressants": ["depressants", "downers"],
                 "Classic psychedelics": ["psychedelics", "psychedelic", "hallucinogens"], "Atypical psychedelics": ["psychedelics", "psychedelic", "hallucinogens"],
@@ -262,6 +292,9 @@ def drug_names():
 # drug's name along before the question is embedded (drug_names, the page's insExpand). "can amanita mushrooms kill you" was read as a question on psilocybin.
 NONE_NAMES = ["amanita mushroom", "amanita mushrooms", "fly agaric mushroom", "fly agaric mushrooms", "muscaria mushroom", "muscaria mushrooms", "vitamin k2", "gas station heroin",
               "pink cocaine"]   # (2.28.19) tusi: a powder of mixed drugs, mostly ketamine and MDMA, that seldom holds cocaine
+# (2.28.24) "mushroom tea" is magic mushrooms; a tea of the mushrooms people take for their health is not (site/insight/scope.json, not: the same mushrooms)
+NONE_NAMES += [m + " mushroom tea" for m in ("chaga", "reishi", "lions mane", "lion's mane", "lion’s mane", "lion mane", "cordyceps", "turkey tail", "maitake", "shiitake",
+                                              "medicinal", "functional", "adaptogenic")]
 
 
 def names_table():
