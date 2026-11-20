@@ -17,74 +17,102 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44749724429",
+  "run": "44751772947",
   "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "gemini-3.1-flash-lite": 1
+   "gemini-3.1-flash-lite": 4,
+   "gemma-4-31b-it": 1,
+   "gpt-oss-20b": 1
   },
   "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 428
  },
- "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "status": "waiting",
+ "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
   "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "4 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview could not be asked: gemini could not be reached: The read operation timed out; gemini-4-hydrogen could not be asked: gemini could not be reached: The read operation timed out; gemini-3.8-flash could not be asked: the time for this question was over before gemini-3.8-flash could be asked",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.58, but 0.98, how1 0.91, how2 0.71, how3 0.77",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "yang_2026",
+    "id": "brueckle_2023",
     "type": "article-journal",
-    "title": "The real-world safety profile of amitriptyline: A comprehensive pharmacovigilance analysis based on the large-scale FDA adverse event reporting system database",
+    "title": "Amitriptyline’s anticholinergic adverse drug reactions–a systematic multiple-indication review and meta-analysis",
     "author": [
      {
-      "family": "Yang",
-      "given": "Ying"
+      "family": "Brueckle",
+      "given": "Maria-Sophie"
      },
      {
-      "family": "Xie",
-      "given": "Yanhua"
+      "family": "Thomas",
+      "given": "Elizabeth T."
      },
      {
-      "family": "Hou",
-      "given": "Liangjuan"
+      "family": "Seide",
+      "given": "Svenja Elisabeth"
      },
      {
-      "family": "Liu",
-      "given": "Xiang"
+      "family": "Pilz",
+      "given": "Maximilian"
+     },
+     {
+      "family": "Gonzalez-Gonzalez",
+      "given": "Ana I."
+     },
+     {
+      "family": "Dinh",
+      "given": "Truc Sophia"
+     },
+     {
+      "family": "Gerlach",
+      "given": "Ferdinand M."
+     },
+     {
+      "family": "Harder",
+      "given": "Sebastian"
+     },
+     {
+      "family": "Glasziou",
+      "given": "Paul P."
+     },
+     {
+      "family": "Muth",
+      "given": "Christiane"
      }
     ],
-    "container-title": "Neurotherapeutics",
+    "container-title": "PLOS ONE",
     "issued": {
      "date-parts": [
       [
-       2026
+       2023
       ]
      ]
     },
-    "DOI": "10.1016/j.neurot.2026.e00973",
+    "DOI": "10.1371/journal.pone.0284168",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -96,71 +124,269 @@
       "checked_on": "2026-11-20"
      }
     },
-    "volume": "23",
-    "issue": "5",
-    "number": "e00973",
-    "PMCID": "PMC13393666"
+    "volume": "18",
+    "issue": "4",
+    "number": "e0284168",
+    "PMCID": "PMC10075391"
    },
-   "doi": "10.1016/j.neurot.2026.e00973",
-   "pmcid": "PMC13393666",
-   "title": "The real-world safety profile of amitriptyline: A comprehensive pharmacovigilance analysis based on the large-scale FDA adverse event reporting system database",
-   "year": 2026,
-   "journal": "Neurotherapeutics : the journal of the American Society for Experimental NeuroTherapeutics",
-   "kind": "other",
+   "doi": "10.1371/journal.pone.0284168",
+   "pmcid": "PMC10075391",
+   "title": "Amitriptyline's anticholinergic adverse drug reactions-A systematic multiple-indication review and meta-analysis",
+   "year": 2023,
+   "journal": "PloS one",
+   "kind": "review",
    "people": true,
-   "near": 0.803,
+   "near": 0.799,
    "money": [
-    "This work was supported by grants from the Science and Technology Innovation Fund Project of Sichuan Provincial Women’s and Children’s Hospital/The Affiliated Women’s and Children’s Hospital of Chengdu Medical College [grant number CXZD2022-04].",
-    "The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper."
+    "Competing Interests: The authors have declared that no competing interests exist.",
+    "FMG, Funding Source: “Evidence-based multimedication program with implementation to practical care” (EVITA; grant number: 01VSF16034) funded by the German Innovation Fund. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.",
+    "We would like to thank Justin Clark from Bond University for developing the search strategy and carry out all searches in the various databases. We are also grateful to Phillip Elliott from Johann Wolfgang Goethe University for conducting a language review. Thanks also go to Kiran Chapidi from University of Bielefeld for his support in data management."
    ],
    "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "We thoroughly characterized the real-world safety profile of amitriptyline through a systematic analysis of the FDA Adverse Event Reporting System (FAERS). Adverse events were collected from Q1 2004 to Q1 2026",
-    "text": "A pharmacovigilance analysis of the FDA Adverse Event Reporting System database."
+    "passage": 7,
+    "where": "Introduction",
+    "quote": "The objective of this multiple-indication systematic review and meta-analysis is thus to explore and quantify the frequency of ADRs associated with amitriptyline vs. placebo in randomized controlled trials (RCTs) of adults.",
+    "text": "A systematic review and meta-analysis of randomized controlled trials comparing amitriptyline to placebo in adults."
    },
    "findings": [
     {
-     "passage": 18,
-     "where": "Discussion",
-     "quote": "Its potent anticholinergic effects may, at certain dosages, produce “dissociative” or hallucinogenic-like experiences that can be sought by some individuals.",
-     "text": "The potent anticholinergic effects of amitriptyline may produce dissociative or hallucinogenic-like experiences at certain dosages that some individuals seek.",
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Commonly observed adverse drug reactions (ADRs) associated with anticholinergic medicines such as amitriptyline are constipation, dry mouth, dry eyes, tachycardia, urinary retention, agitation, confusion, delirium, falls, hallucinations, and cognitive dysfunction.",
+     "text": "Commonly observed adverse drug reactions associated with amitriptyline include constipation, dry mouth, dry eyes, tachycardia, urinary retention, agitation, confusion, delirium, falls, hallucinations, and cognitive dysfunction.",
      "id": "F1",
      "second_hand": ""
-    },
+    }
+   ],
+   "limits": [
     {
-     "passage": 18,
-     "where": "Discussion",
-     "quote": "Preclinical research indicated that at high doses, its metabolite nortriptyline exerts non-competitive antagonism at N-methyl-d-aspartate (NMDA) receptors, producing psychotropic effects partially resembling those of ketamine",
-     "text": "Preclinical research indicated that at high doses, the metabolite nortriptyline produces psychotropic effects partially resembling those of ketamine by acting on NMDA receptors.",
+     "passage": 34,
+     "where": "Conclusion",
+     "quote": "Our results may even understate the situation in older individuals, who are generally more sensitive to anticholinergic effects.",
+     "text": "The results might underestimate the situation for older individuals who are more sensitive to anticholinergic effects.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "beckmann_2014",
+    "type": "article-journal",
+    "title": "Inhibition of acid sphingomyelinase by tricyclic antidepressants and analogons",
+    "author": [
+     {
+      "family": "Beckmann",
+      "given": "Nadine"
+     },
+     {
+      "family": "Sharma",
+      "given": "Deepa"
+     },
+     {
+      "family": "Gulbins",
+      "given": "Erich"
+     },
+     {
+      "family": "Becker",
+      "given": "Katrin Anne"
+     },
+     {
+      "family": "Edelmann",
+      "given": "BÃ¤rbel"
+     }
+    ],
+    "container-title": "Frontiers in Physiology",
+    "issued": {
+     "date-parts": [
+      [
+       2014
+      ]
+     ]
+    },
+    "DOI": "10.3389/fphys.2014.00331",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     }
+    },
+    "volume": "5",
+    "PMCID": "PMC4151525"
+   },
+   "doi": "10.3389/fphys.2014.00331",
+   "pmcid": "PMC4151525",
+   "title": "Inhibition of acid sphingomyelinase by tricyclic antidepressants and analogons",
+   "year": 2014,
+   "journal": "Frontiers in physiology",
+   "kind": "review",
+   "people": true,
+   "near": 0.75,
+   "money": [
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 36,
+     "where": "Future perspective",
+     "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
+     "text": "Amitriptyline has a narrow therapeutic window where toxicity effects begin at approximately 450 ng/ml, major toxicity occurs above 1000 ng/ml, and death occurs at about 2000–3000 ng/ml.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 18,
-     "where": "Discussion",
-     "quote": "The signals observed in this study suggested that the abuse and overdose risks of amitriptyline in real-world settings may be more pronounced than previously recognized.",
-     "text": "The risks of overdose and use of amitriptyline in real-world settings may be more pronounced than previously recognized.",
+     "passage": 36,
+     "where": "Future perspective",
+     "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
+     "text": "Amitriptyline is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 26,
-     "where": "Discussion",
-     "quote": "Further comprehensive prospective, multicenter clinical trials and epidemiological research are warranted to confirm these findings and more accurately assess amitriptyline’s safety.",
-     "text": "Further prospective clinical trials and epidemiological research are needed to confirm these findings and assess the safety of amitriptyline.",
-     "id": "L1",
+     "passage": 37,
+     "where": "Future perspective",
+     "quote": "preliminary studies suggest that treatment of these conditions with amitriptyline may require lower doses of the drug than necessary for the treatment of depression and that amitriptyline is also well tolerated at these lower dosages",
+     "text": "It is suggested by preliminary studies that lower doses of amitriptyline may be used for new indications compared to the doses required for treating depression.",
+     "id": "L2",
+     "second_hand": "Also, preliminary studies suggest that treatment of these conditions with amitriptyline may require lower doses of the drug than necessary for the treatment of depression and that "
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nhs_how-and-when-to-take-amitriptyline-for-d",
+    "type": "webpage",
+    "title": "How and when to take amitriptyline for depression",
+    "author": [
+     {
+      "literal": "NHS"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       3,
+       5
+      ]
+     ]
+    },
+    "URL": "https://www.nhs.uk/medicines/amitriptyline-for-depression/how-and-when-to-take-amitriptyline-for-depression/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    }
+   },
+   "title": "How and when to take amitriptyline for depression",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.654,
+   "name": "NHS",
+   "short": "the NHS",
+   "tier": 1,
+   "address": "https://www.nhs.uk/medicines/amitriptyline-for-depression/how-and-when-to-take-amitriptyline-for-depression/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 6,
+     "where": "If you take too much",
+     "quote": "It's important to get medical advice if you take more than your prescribed dose of amitriptyline.",
+     "text": "It is important to seek medical advice if you take more than the prescribed dose of amitriptyline.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "limits": [],
+   "tag": "C"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes. Amitriptyline is the leading cause of deaths from antidepressant poisoning. It has a narrow window where high levels can cause major toxicity or death.",
+   "uses": [
+    "F3",
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "beckmann_2014",
+     "where": "Future perspective",
+     "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
+     "sha": "ef4687e2193b1721"
+    },
+    {
+     "label": "F2",
+     "ref": "beckmann_2014",
+     "where": "Future perspective",
+     "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
+     "sha": "ef4687e2193b1721"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The review results may understate the situation for older individuals, who are generally more sensitive to anticholinergic effects.",
+   "uses": [
+    "L1"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "brueckle_2023",
+     "where": "Conclusion",
+     "quote": "Our results may even understate the situation in older individuals, who are generally more sensitive to anticholinergic effects.",
+     "sha": "8ffeedfe39c416a0"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "The NHS says it is important to seek medical advice if you take more than the prescribed dose of amitriptyline.",
+   "uses": [
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "nhs_how-and-when-to-take-amitriptyline-for-d",
+     "where": "If you take too much",
+     "quote": "It's important to get medical advice if you take more than your prescribed dose of amitriptyline.",
+     "sha": "bccc3aac7d2734b2"
+    }
+   ],
+   "quote": "important to get medical advice if you take more than your prescribed dose of amitriptyline",
+   "quote_ref": "nhs_how-and-when-to-take-amitriptyline-for-d"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "Whether people use it specifically to get a high",
  "wanted": [
   {
    "doi": "10.2165/00139709-200524030-00013",
@@ -193,6 +419,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -201,61 +435,203 @@
    "read": "full",
    "kind": "review",
    "at": "10.1371/journal.pone.0284168",
-   "kept": 0,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The lack of studies on severe adverse drug reactions like cognitive decline and falls may make decision-making difficult.",
+     "quote": "The paucity of studies examining more severe ADRs, such as cognitive decline and falls, may hinder the decision-making process and should be investigated in future studies.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Inhibition of acid sphingomyelinase by tricyclic antidepressants and analogons",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fphys.2014.00331",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A review of the clinical and research applications of the tricyclic antidepressant amitriptyline.",
+     "quote": "In this review, we aim to provide an overview of the ability of tricyclic antidepressants to inhibit acid sphingomyelinase (ASM) was discovered.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Who can and cannot take amitriptyline for depression",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/amitriptyline-for-depression/who-can-and-cannot-take-amitriptyline-for-depression/",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "Amitriptyline and Sexual Function: A Systematic Review Updated for Sexual Health Practice",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1177/1557988317734519",
+   "title": "How and when to take amitriptyline for depression",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/amitriptyline-for-depression/how-and-when-to-take-amitriptyline-for-depression/",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Taking more than the prescribed dose of amitriptyline can cause symptoms such as a fast or irregular heartbeat, seizures, drowsiness, passing out, difficulty breathing, or sudden confusion.",
+     "quote": "Take more than your prescribed dose of amitriptyline and you: have a fast or irregular heartbeat; have a seizure or fit; feel drowsy or pass out; have difficulty breathing; suddenly become very confus",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "You should contact 111 for advice if you take more than the prescribed dose of amitriptyline, even if you have no symptoms.",
+     "quote": "Contact 111 for advice now if: you take more than your prescribed dose of amitriptyline, even if you do not have any symptoms",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "About amitriptyline for depression",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/amitriptyline-for-depression/about-amitriptyline-for-depression/",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "The real-world safety profile of amitriptyline: A comprehensive pharmacovigilance analysis based on the large-scale FDA adverse event reporting system database",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1016/j.neurot.2026.e00973",
-   "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "Unintentional amitriptyline overdose leading to coma and cardiac conduction impairment in an older adult: A case report",
-   "read": "full",
-   "kind": "case",
-   "at": "10.1177/2050313x251344032",
+   "title": "How and when to take amitriptyline for pain and migraine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/amitriptyline-for-pain/how-and-when-to-take-amitriptyline-for-pain-and-migraine/",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "The cardiovascular safety of tricyclic antidepressants in overdose and in clinical use",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1177/20451253241243297",
+   "title": "About amitriptyline for pain and migraine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/amitriptyline-for-pain/about-amitriptyline-for-pain-and-migraine/",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
   },
   {
-   "title": "Plasma concentration of amitriptyline and metabolites after resuscitation from cardiopulmonary arrest following an overdose: A case report",
-   "read": "full",
-   "kind": "case",
-   "at": "10.1002/ccr3.3656",
+   "title": "Who can and cannot take amitriptyline for pain and migraine",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/amitriptyline-for-pain/who-can-and-cannot-take-amitriptyline-for-pain-and-migraine/",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F3",
+   "F2",
+   "F1",
+   "F4"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F4"
+   ],
+   [
+    "F2",
+    "F3"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "whether it is specifically misused for a high"
+ },
+ "panel": {
+  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-4-hydrogen": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3.8-flash": "could not be asked: the time for this question was over before gemini-3.8-flash could be asked"
+ },
+ "panel_gap": [
+  "gemini-3.6-flash"
+ ],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5796,
+   "but": 0.9827,
+   "how1": 0.9082,
+   "how2": 0.7141,
+   "how3": 0.7668
+  },
+  "scores_quotes_alone": {
+   "short": 0.1768,
+   "but": 0.9264,
+   "how1": 0.9405,
+   "how2": 0.5378,
+   "how3": 0.6922
+  }
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "A 2014 review says toxicity starts at about 450 ng/ml, major toxicity above 1000 ng/ml, and death at 2000–3000 ng/ml. It accounts for 82% of antidepressant poisoning deaths.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "beckmann_2014",
+     "where": "Future perspective",
+     "quote": "TCAs have a narrow therapeutic window. To be effective, plasma concentrations of 50–300 ng/ml are required, but toxicity effects start at approximately 450 ng/ml, with major toxicity occurring above 1000 ng/ml and death at about 2000–3000 ng/ml",
+     "sha": "ef4687e2193b1721"
+    },
+    {
+     "label": "F3",
+     "ref": "beckmann_2014",
+     "where": "Future perspective",
+     "quote": "amitriptyline, along with other TCAs, is the leading vehicle for completed suicide attempts, accounting for 82% of deaths by antidepressant poisoning.",
+     "sha": "ef4687e2193b1721"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages do not mention the year 2014 in relation to the review."
+  },
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "A 2023 review of trials in adults found common side effects include dry mouth, confusion, hallucinations, and cognitive dysfunction.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "brueckle_2023",
+     "where": "Introduction",
+     "quote": "The objective of this multiple-indication systematic review and meta-analysis is thus to explore and quantify the frequency of ADRs associated with amitriptyline vs. placebo in randomized controlled trials (RCTs) of adults.",
+     "sha": "e4938d6be9cf8070"
+    },
+    {
+     "label": "F1",
+     "ref": "brueckle_2023",
+     "where": "Introduction",
+     "quote": "Commonly observed adverse drug reactions (ADRs) associated with anticholinergic medicines such as amitriptyline are constipation, dry mouth, dry eyes, tachycardia, urinary retention, agitation, confusion, delirium, falls, hallucinations, and cognitive dysfunction.",
+     "sha": "4792ef46427e79a6"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage states that these are commonly observed ADRs associated with anticholinergic medicines such as amitriptyline, but does not state that a 2014 or 2023 review of trials specifically found confusion and hallucinations as common side"
+  }
+ ],
+ "stakes": "dying",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
+ "for": "again",
+ "soft": "a further reader could not be asked",
  "place": {
   "home": "new:Antidepressants",
   "also": [],
