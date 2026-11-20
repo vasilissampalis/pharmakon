@@ -17,21 +17,17 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.1-flash-lite",
    "team": "team Z",
    "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44662002214",
-  "read_by": {
-   "gpt-oss-20b": 2,
-   "gemma-4-31b-it": 1
-  },
+  "run": "44760802245",
   "read_seconds": 100,
   "from": {
    "papers": 0,
@@ -42,10 +38,11 @@
   "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -75,7 +72,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Autologous Micrograft Technology (AMT) and Finasteride for the Management of Androgenic Alopecia - A Systematic Review and Meta-Analysis of Their Efficacy and Safety",
@@ -83,7 +89,20 @@
    "kind": "review",
    "at": "10.5826/dpc.1602a6211",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a systematic review and meta-analysis comparing autologous micrograft technology and finasteride for androgenetic alopecia",
+     "quote": "To compare the efficacy of AMT and finasteride in the management of AGA using a meta-analysis study, comparators being hair count and percentage of patients benefitting from the treatment.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "No serious side effects were reported, but some patients experienced dynamic hair loss, mild pain, discomfort during the procedure, and a chance of minor scarring at the donor site.",
+     "quote": "No serious side effect (SAE) was reported in any of the studies. ... dynamic hair loss in a small portion of AMT-treated patients was reported in two studies. Though no SAE was reported, mild pain and",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Management of traumatic macular hole and retinal detachment using amniotic membrane transplantation: A case report",
@@ -99,7 +118,8 @@
    "kind": "case",
    "at": "10.3389/fimmu.2026.1966692",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Amniotic membrane transplantation in a patient with impending perforated corneal ulcer caused by Streptococcus mitis: A case report and review of literature",

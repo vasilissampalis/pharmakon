@@ -17,17 +17,21 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.1-flash-lite",
    "team": "team Z",
    "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44660912576",
+  "run": "44760802245",
+  "read_by": {
+   "gemini-3.1-flash-lite": 2,
+   "gemma-4-31b-it": 1
+  },
   "read_seconds": 100,
   "from": {
    "papers": 0,
@@ -38,9 +42,10 @@
   "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
@@ -71,7 +76,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Dose-response relationships of LSD-induced subjective experiences in humans",
@@ -79,8 +93,7 @@
    "kind": "review",
    "at": "10.1038/s41386-023-01588-2",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Lysergic Acid Diethylamide (LSD) and the Heart: Exploring the Potential Impacts of LSD on Cardiovascular Function",
@@ -97,8 +110,7 @@
    "kind": "review",
    "at": "10.3390/ph17111484",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Clinical Research on Lysergic Acid Diethylamide (LSD) in Psychiatry and Neuroscience",
