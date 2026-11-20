@@ -328,3 +328,21 @@ question nobody can answer gets one no more often, and more questions get their 
 with fewer wrong). The real `model.json` is not touched (`PK_INSIGHT_MODEL_JSON`). A model that is better is shipped by
 the editor with its NOTICE, the tiers swept for it (`sweep_related.py`), a build and every check.
 
+**First results (19 November 2026, evening).** Held out (the readers' wordings of the 57 answers a training never saw), all-MiniLM-L6-v2,
+six passes: without the teachers' wordings it finds the answer for 85.3% of them (wording against near-miss, area under the curve 0.917);
+with them, 86.8% (0.933). On the gold set with the page's own rule (`candidate.py`; each model with the judge made for it):
+
+| | Best matches | Full | Partial | Wrong | Nobody can answer, given one | Full answer first | in the first three | Shown: helps | junk | misses |
+|---|---|---|---|---|---|---|---|---|---|---|
+| pharmakon-insight-1 (site 2.3 to 2.26) | 40 | 24 | 10 | 6 (15.0%) | 2 of 126 | 60.8% | 73.4% | 133 | 60 | 106 |
+| **pharmakon-insight-2** (every answer, the teachers' wordings, half and half) | **41** | **23** | **12** | **6 (14.6%)** | **2 of 126** | **62.0%** | **77.2%** | **138** | **58** | **102** |
+| insight-1 with 8 teachers' wordings per answer in its index | 45 | 24 | 13 | 8 (17.8%) | 1 | 63.3% | 81.0% | | | |
+| insight-1 with its judge taught the teachers' wordings too | 51 | 24 | 18 | 9 (17.6%) | 2 | 60.8% | 73.4% | | | |
+
+"Shown" is what Insight puts before the reader for each of the 400 questions (the best match and the related rows, at the tiers of
+model.json): helps (a full or partial answer is among them), junk (rows, none an answer), misses (nothing, though the site has an answer).
+pharmakon-insight-2 is wrong no more often (MODELS.md's rule), gives a question nobody can answer a best match no more often, and what it
+shows helps five questions more and misleads two fewer; it gives one full answer fewer as best match and two partial ones more, a difference
+of one question in 400. It also knows every answer the site has now (the machine lane's among them), which insight-1 never saw. So it is the
+site's model from 2.27.0 (`ship.py`; NOTICE-pharmakon-insight-2.txt). The two other rows are not shipped: more wrong best matches at the
+judge's cut (the index would also grow by 2.8 MB). The free models' wordings (`teachers.py`) and gte-small (`insight.yml`) come next.
