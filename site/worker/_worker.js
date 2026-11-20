@@ -189,6 +189,7 @@ const FIND_CTX = { lsd: "lysergic psychedelic psychedelics hallucinogen hallucin
   nitrous: "recreational misuse abuse abusers inhalant inhalants neuropathy myelopathy myeloneuropathy neurological neurologic cobalamin b12 whippets nangs balloons laughing intoxication" };
 /* What Europe PMC is asked (its own search words). groups: the question's key words, each an array of the ways it is said. Every key word must
    stand in a paper, not any one of them; the drug's name must stand in the paper's title, except in the widest search. */
+const LOOSE_GENERIC = /^(?:adverse|adverse effects?|harmful|harms?|risks?|risky|effects?|side effects?|safety|safe|dangers?|dangerous|toxicity|toxic|health|bad)$/i;
 export function findQueries(names, groups) {
   const any = ts => "(" + ts.map(t => `TITLE:"${t}" OR ABSTRACT:"${t}"`).join(" OR ") + ")";
   const one = (n, inTitle) => { const fs = nameForms(n), core = inTitle ? (fs.length > 1 ? "(" + fs.map(f => `TITLE:"${f}"`).join(" OR ") + ")" : `TITLE:"${fs[0]}"`) : any(fs), ctx = FIND_CTX[n]; return ctx ? "(" + core + " AND " + any(ctx.split(" ")) + ")" : core; };
@@ -201,7 +202,9 @@ export function findQueries(names, groups) {
   return { cited: nm(true) + (gs.length ? " AND ((" + kT + ") OR (" + kA + " AND " + rev + "))" : "") + tail,   // the drug in the title, and: every key word in the title too, or a review that holds every key word (asked for the most cited)
     onTitle: nm(true) + key(true) + tail,                                          // the drug and every key word in the very title (asked for the newest)
     wide: gs.length ? nm(false) + key(false) + tail : "",                          // the drug and every key word anywhere in title or summary (only where those found fewer than three)
-    loose: gs.length > 1 ? nm(false) + " AND " + any([...new Set(gs.flat())]) + tail : "",   // any one key word (only where the others found fewer than three)
+    // any one key word (only where the others found fewer than three); (2.28.1, trial 18) not a word that stands in nearly every paper on a drug ("adverse",
+    // "harmful", "risk", "effects"): with it, "can laughing gas canisters contain anything harmful" got papers on sedating children and on anaesthesia
+    loose: gs.length > 1 ? nm(false) + " AND " + any([...new Set((gs.filter(g => !g.every(t => LOOSE_GENERIC.test(t))).length ? gs.filter(g => !g.every(t => LOOSE_GENERIC.test(t))) : gs).flat())]) + tail : "",
     genRev: gs.length ? nm(true) + key(false) + " AND " + rev + tail : "",          // (2.21) reviews with the subject in the title that hold every key word (a question that names no single drug)
     nameRev: nm(true) + " AND " + rev + tail,                                      // reviews of the drug itself (only where the others found fewer than two)
     anyTitle: nm(true) + tail };                                                   // without key words: the drug in the title, in Europe PMC's own order (what is there when the most cited are slow)
