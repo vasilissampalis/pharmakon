@@ -374,6 +374,10 @@ const INS_RE = {
     "\\b(?:is|are|'s|he'?s|she'?s|i'?m|am|friend|someone|they'?re)\\s+(?:\\w+\\s+)?having\\s+a\\s+(?:seizure|fit)\\b", "\\bseizing\\b",
     "\\b(?:is|am|are|i'?m|he'?s|she'?s|they'?re|might be|may be|could be)\\s+(?:\\w+\\s+)?overdosing\\b", "\\boverdosing\\s+(?:right\\s+)?now\\b", "\\bod'?ing\\b",
     "\\btoo high\\b", "\\bgreen(?:ing|ed)?\\s+out\\b", "\\bwhitey\\b", "\\bbad (?:\\w+ )?trip\\b.{0,24}\\bhelp\\b", "\\bhelp\\b.{0,24}\\bbad (?:\\w+ )?trip\\b", "\\bfreaking out\\b", "\\bturning blue\\b", "\\bblue lips\\b",
+    // (2.28.18) coming down from a bad trip, or ending one ("how to come down from a bad trip" got no way to help)
+    "\\b(?:come|coming|bring|get|getting|calm|calming)\\s+(?:\\w+\\s+)?down\\s+(?:from|off)\\s+(?:a\\s+|the\\s+|my\\s+|this\\s+|your\\s+)?bad\\s+(?:\\w+\\s+)?trip\\b",
+    "\\b(?:stop|end|kill|get out of)\\s+(?:a\\s+|the\\s+|my\\s+|this\\s+|your\\s+)?bad\\s+(?:\\w+\\s+)?trip\\b",
+    "\\b(?:i'?m|im|i am|we'?re|we are|he'?s|she'?s|they'?re|he is|she is|they are|(?:friend|mate|buddy|partner|boyfriend|girlfriend|bf|gf|brother|sister|someone|somebody) is)\\s+(?:\\w+\\s+)?having\\s+a\\s+bad\\s+(?:\\w+\\s+)?trip\\b",   // ("i'm having a bad trip": now; not "is having a bad trip dangerous")
     "\\bi think (?:i'?m|i am|he'?s|she'?s|they'?re) (?:dying|overdosing)\\b",
     // (2.22) someone HAS overdosed ("how to help someone who overdosed" was told "Which drug do you mean?"; "how do i know if i overdosed" the same): the same route as "is overdosing"
     "\\b(?:someone|somebody|friend|he|she|they|brother|sister|mom|mum|mother|dad|father|son|daughter|partner|boyfriend|girlfriend|husband|wife|roommate|flatmate|mate|buddy)\\b[^?.!]{0,24}\\b(?:overdosed|od'?e?d)\\b",
@@ -674,7 +678,7 @@ function insStarted(q) {
   const hit = insStartedNames().find(([n]) => t.includes(" " + n + " ") || t.includes(" " + n + "s ") || (n.length >= 5 && n.endsWith("s") && t.includes(" " + n.slice(0, -1) + " ")));
   if (!hit) return null;
   const k = hit[1], name = AUTO_PAGES[k], sh = autoShell(k), pics = autoPics(k), n = autoFor("new:" + k).length, kind = sh && sh.science.length ? sh.science[0].kind : "";
-  const base = { kind: "page", icon: kind === "fungus" ? "mushroom" : kind === "plant" ? "leaf" : "book", k: "New page", href: "#auto/p-" + k, started: k };
+  const base = { kind: "page", icon: kind === "fungus" ? "mushroom" : kind === "plant" ? "leaf" : "book", k: "New page", href: "#auto/p-" + k, started: k, typed: hit[0] };   // (2.28.18: typed, the name that led here, for the research)
   if (pics.length && INS_LOOKS.test(q)) return Object.assign(base, { href: base.href + (pics.length > 1 || n || (sh && sh.asked.length) ? "/part-p-looks" : ""),
     t: insCap(autoLow(k)) + ": " + pics.length + (pics.length === 1 ? " picture" : " pictures") });
   const has = [pics.length ? "pictures" : "", n ? n + (n === 1 ? " answer" : " answers") + " drafted automatically" : "", sh && sh.asked.length ? "what people ask" : ""].filter(Boolean);
@@ -2363,15 +2367,23 @@ function insFindTerms(res) {
     if (s) { const parts = String(s.name || "").split(/[(),/]| and | or /).map(norm).filter(x => x.length >= 3), typed = parts.filter(x => flat.includes(" " + x + " ")), into = typed.length || !names.length ? names : also;
       (typed.length ? typed : parts).forEach(x => add(into, x)); } }
   const pg = (res.routes || []).find(r => r.started), sh = pg && typeof autoShell === "function" ? autoShell(pg.started) : null;
-  if (sh) { add(names, sh.name); (sh.science || []).forEach(x => add(names, x.name)); }
+  // (2.28.18) a page the system started: the name the reader typed, as papers write it, else the page's own name made a search (autoFindNames). Before this the
+  // page's title was the search ("anabolic steroids and other body-building drugs", "ketamine analogues (mxe, dck)"), and no paper has such a title (trial 28)
+  const typed = pg && pg.typed ? String(pg.typed).toLowerCase() : "";
+  if (sh) { const tp = typed ? FIND_PAPERS[typed] || FIND_GENERIC[typed] || (typed.replace(/[^a-z]/g, "").length >= 5 || /\d/.test(typed) ? typed : "") : "";
+    (tp ? tp.split("|") : autoFindNames(sh.name)).forEach(x => add(names, x)); (sh.science || []).forEach(x => add(names, x.name)); }
   if (!names.length && res.stranger) add(names, res.stranger);
   // (2.21) a question about drugs in general: what research calls the subject stands in the place of a drug's name
   // (2.22) also a question that names no drug and holds no drug word, but is about drugs by its meaning (insRank: implied: "is use more common among men than women")
   // and one about who uses more or less, which the scope rule reads as drug talk ("do women use less than men")
-  const general = !names.length && res.note !== "other" && (FIND_GENERAL.test(text) || !!res.implied || /\b(?:use[sd]?|using|users?)\b/.test(text));
+  // (2.28.18) a drug the site has no page on, named by a name the scope rule knows (site/insight/scope.json, names; the first such name), is what the question
+  // is about, looked up as papers call it (FIND_PAPERS) where they call it otherwise. Before this the first word that is no everyday word stood for it ("what does
+  // fly agaric do" was looked up as "agaric"), or nothing was looked up ("is delta 8 safe", "what is hhc", "what is gas station heroin"), or drugs in general
+  const unM = !names.length && res.note !== "other" && INS.unc ? String(text).match(INS.unc.re) : null, unName = unM ? unM[0].toLowerCase() : "";
+  const general = !names.length && !unName && res.note !== "other" && (FIND_GENERAL.test(text) || !!res.implied || /\b(?:use[sd]?|using|users?)\b/.test(text));
   if (general) (/\baddict|\bdependen|\bhooked\b/.test(text) ? ["addiction", "substance use disorder"] : ["drug use", "substance use"]).forEach(x => add(names, x));
   // (2.22) overdose, with no drug named ("how many people overdose in greece", "how do i avoid an overdose"): what research calls it stands in the place of a name
-  const od = !names.length && res.note !== "other" && /\boverdos/.test(text);
+  const od = !names.length && !unName && res.note !== "other" && /\boverdos/.test(text);
   if (od) ["drug overdose", "overdose"].forEach(x => add(names, x));
   // (2.28.13, trial 25) lean, purple drank: a cough syrup of codeine and promethazine that no page names (before this, nothing was looked up, or alcohol for
   // "drank"): codeine, with promethazine or syrup as its first key word
@@ -2381,11 +2393,16 @@ function insFindTerms(res) {
   const DRINK = /^(?:drinking|drinks?|drunk|drank|booze|boozing)$/, drink = !names.length && res.note !== "other" && (text.match(/[a-z]+/g) || []).some(w => DRINK.test(w));
   if (drink) add(names, "alcohol");
   // a question about drugs that names none we know ("is tianeptine addictive", "what is kava"): the first word that is no everyday word is most likely the drug's name
+  // (2.28.18) after lean and drinking, which name what papers search by. A short name is searched only as papers write it out (trial 27: "hhc" found papers on
+  // home health care; "pma", "thca" or "dck" stand for other things in papers too): one of four letters or fewer that FIND_PAPERS does not hold is left to the next rule
+  const unPaper = unName ? FIND_PAPERS[unName] || (unName.replace(/[^a-z]/g, "").length >= 5 ? unName : "") : "";
+  if (!names.length && unPaper) unPaper.split("|").forEach(x => add(names, x));
   if (!names.length && res.note !== "other") { const known = w => INS.vocab.has(w) || FIND_STOP.has(w) || !!FIND_SAY[w],
       plain = w => known(w) || ["ies", "es", "s", "ed", "d", "ing", "ly", "ive", "al", "er", "est", "y", "ness", "ful"].some(suf => w.length > suf.length + 2 && w.endsWith(suf) && (known(w.slice(0, -suf.length)) || known(w.slice(0, -suf.length) + "e") || (suf === "ies" && known(w.slice(0, -3) + "y")) || (suf === "ive" && known(w.slice(0, -3) + "ion"))));
     const cand = (text.match(/[a-z]{4,}/g) || []).filter(w => !plain(w)); if (cand.length) add(names, cand[0]); }
   if (!names.length) return null;
-  const inName = new Set(names.concat(also).join(" ").split(/[^a-z0-9]+/)), words = extra.filter(w => !inName.has(w)).slice(0, 2), masked = (typeof insMask === "function" ? String(insMask(text)) : text).toLowerCase();
+  // (2.28.18) the words of a name the scope rule knows, as typed, are part of the name too: "station" of "gas station heroin" is no key word
+  const inName = new Set(names.concat(also, unName ? [unName] : [], typed ? [typed] : []).join(" ").split(/[^a-z0-9]+/)), words = extra.filter(w => !inName.has(w)).slice(0, 2), masked = (typeof insMask === "function" ? String(insMask(text)) : text).toLowerCase();
   if (lean) words.unshift("promethazine|syrup");
   // (2.20, after the sixth trial: "does adderall help you study" had no key word, and got the most cited papers on amphetamine in rats) "Study" stands in
   // every summary and is no key word; "help you study", "for studying", "with exams" is asked as what papers call it
@@ -2447,7 +2464,33 @@ const FIND_GENERIC = { xanax: "alprazolam", valium: "diazepam", klonopin: "clona
   shrooms: "psilocybin", molly: "mdma", ecstasy: "mdma", coke: "cocaine", meth: "methamphetamine", zembrin: "sceletium tortuosum", marijuana: "cannabis", lean: "codeine", poppers: "alkyl nitrites", whippets: "nitrous oxide", nangs: "nitrous oxide",
   // (2.28.12) the brands of the benzodiazepines and opioid painkillers Insight reads on their pages since 2.28.11: papers name the medicine, not the brand
   dilaudid: "hydromorphone", norco: "hydrocodone", lortab: "hydrocodone", roxicodone: "oxycodone", ultram: "tramadol", demerol: "meperidine", opana: "oxymorphone", nucynta: "tapentadol",
-  rohypnol: "flunitrazepam", restoril: "temazepam", halcion: "triazolam", librium: "chlordiazepoxide" };
+  rohypnol: "flunitrazepam", restoril: "temazepam", halcion: "triazolam", librium: "chlordiazepoxide",
+  // (2.28.18) the everyday names Insight reads since 2.28.16 (papers name the drug, not the street name)
+  xanny: "alprazolam", xannies: "alprazolam", xanies: "alprazolam", perc: "oxycodone", percs: "oxycodone", whippet: "nitrous oxide", nang: "nitrous oxide",
+  popper: "alkyl nitrites", ganja: "cannabis", fenty: "fentanyl", shroom: "psilocybin" };
+// (2.28.18) a started page's own name as a search: what stands in its brackets, each as papers write it ("Ketamine analogues (MXE, DCK)": methoxetamine,
+// deschloroketamine), else its name before "and other", "and similar" or "and" ("Anabolic steroids and other body-building drugs": anabolic steroids)
+function autoFindNames(title) {
+  const t = String(title || "").toLowerCase(), br = (t.match(/\(([^)]*)\)/) || [])[1], ok = x => FIND_PAPERS[x] || (x.replace(/[^a-z]/g, "").length >= 5 || /\d/.test(x) ? x : "");
+  const inside = br ? br.split(/\s*,\s*/).map(x => x.trim()).filter(Boolean).map(ok).filter(Boolean).join("|") : "";
+  if (inside) return inside.split("|");
+  const head = t.replace(/\s*\(.*\)\s*$/, "").split(/\s+and\s+(?:other|similar)\s+|\s+and\s+/)[0].trim();
+  return head ? (FIND_PAPERS[head] || head).split("|") : [];
+}
+// (2.28.18) what papers call a drug the site has no page on, where people call it otherwise (several names: any of them)
+const FIND_PAPERS = { "delta 8": "delta-8-thc|delta-8-tetrahydrocannabinol", "delta-8": "delta-8-thc|delta-8-tetrahydrocannabinol",
+  "delta 10": "delta-10-thc|delta-10-tetrahydrocannabinol", "delta-10": "delta-10-thc|delta-10-tetrahydrocannabinol", "gas station heroin": "tianeptine",
+  "fly agaric": "amanita muscaria|fly agaric",
+  // the short names, written out (trials 27 and 28)
+  hhc: "hexahydrocannabinol", thca: "tetrahydrocannabinolic acid", thcp: "tetrahydrocannabiphorol", dck: "deschloroketamine", mxe: "methoxetamine",
+  mxp: "methoxphenidine", pma: "paramethoxyamphetamine|para-methoxyamphetamine", pmma: "paramethoxymethamphetamine|para-methoxymethamphetamine",
+  lsa: "lysergic acid amide|ergine", cbn: "cannabinol", cbg: "cannabigerol", dph: "diphenhydramine", amt: "alpha-methyltryptamine", dpt: "dipropyltryptamine",
+  hbwr: "argyreia nervosa|hawaiian baby woodrose", tren: "trenbolone", "2m2b": "2-methyl-2-butanol",
+  // the names that lead to the pages the system started, where papers write them otherwise ("steroids" alone finds corticosteroids)
+  steroids: "anabolic steroids|anabolic-androgenic steroids", steroid: "anabolic steroids|anabolic-androgenic steroids", anabolic: "anabolic steroids|anabolic-androgenic steroids",
+  anabolics: "anabolic steroids|anabolic-androgenic steroids", anavar: "oxandrolone", dianabol: "methandienone|methandrostenolone", winstrol: "stanozolol",
+  hgh: "growth hormone abuse|growth hormone doping", sarms: "selective androgen receptor modulators", sarm: "selective androgen receptor modulators",
+  creatine: "creatine supplementation|creatine monohydrate", nbomes: "nbome|nbomes" };   // (trials 28 to 30: "growth hormone" alone found its basic science, "sarms" an immune protein, "creatine" creatine kinase)
 /* (2.20) Each paper may come with at most 15 of its own words on the question, cut by fixed rules on the server from the end of its summary, where papers
    say what they found (site/worker/_worker.js, iaPick): no model reads or writes anything. They stand in quotation marks under the paper's title, so that
    they are read as that paper's and in its frame; where they are about animals or cells, the line says so. */
