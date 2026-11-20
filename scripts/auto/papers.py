@@ -285,9 +285,9 @@ FAMILY = {"psychedelics": ["psychedelics", "hallucinogens", "psilocybin", "LSD"]
 MEMBER = {}
 for _slug, _ns, _terms in [("benzodiazepines", ("alprazolam", "xanax", "xans"), ["alprazolam", "Xanax"]), ("benzodiazepines", ("clonazepam", "klonopin"), ["clonazepam", "Klonopin"]),
                            ("benzodiazepines", ("diazepam", "valium"), ["diazepam", "Valium"]), ("benzodiazepines", ("lorazepam", "ativan"), ["lorazepam", "Ativan"]),
-                           ("benzodiazepines", ("etizolam",), ["etizolam"]), ("prescription-opioids", ("hydrocodone", "vicodin"), ["hydrocodone", "Vicodin"]),
-                           ("prescription-opioids", ("oxycodone", "oxycontin", "percocet"), ["oxycodone", "OxyContin", "Percocet"]), ("prescription-opioids", ("codeine",), ["codeine"]),
-                           ("prescription-opioids", ("morphine",), ["morphine"]), ("prescription-opioids", ("tramadol",), ["tramadol"]),
+                           ("benzodiazepines", ("etizolam",), ["etizolam"]), ("prescription-opioids", ("hydrocodone", "vicodin", "norco", "lortab"), ["hydrocodone", "Vicodin", "Norco"]),
+                           ("prescription-opioids", ("oxycodone", "oxycontin", "percocet", "roxicodone"), ["oxycodone", "OxyContin", "Percocet"]), ("prescription-opioids", ("codeine",), ["codeine"]),
+                           ("prescription-opioids", ("morphine",), ["morphine"]), ("prescription-opioids", ("tramadol", "ultram"), ["tramadol"]),
                            ("lsd", ("1p-lsd",), ["1P-LSD", "1-propionyl-lysergic acid diethylamide", "1-propionyl-LSD"]), ("2c-x", ("2c-b", "2cb"), ["2C-B", "4-bromo-2,5-dimethoxyphenethylamine"]),
                            ("2c-x", ("2c-e",), ["2C-E"]), ("2c-x", ("2c-i",), ["2C-I"]), ("2c-x", ("25i",), ["25I-NBOMe"]),
                            ("synthetic-cathinones", ("mephedrone", "4-mmc"), ["mephedrone", "4-methylmethcathinone", "4-MMC"]), ("synthetic-cathinones", ("3-mmc",), ["3-MMC", "3-methylmethcathinone"]),
@@ -296,7 +296,17 @@ for _slug, _ns, _terms in [("benzodiazepines", ("alprazolam", "xanax", "xans"), 
                            ("fentanyl-and-analogues", ("carfentanil",), ["carfentanil"]), ("fentanyl-and-analogues", ("nitazenes", "nitazene"), ["nitazenes", "isotonitazene", "metonitazene", "protonitazene"]),
                            ("fentanyl-and-analogues", ("xylazine",), ["xylazine"]), ("ketamine", ("esketamine",), ["esketamine", "Spravato"]), ("ketamine", ("2-fdck",), ["2-fluorodeschloroketamine", "2F-DCK"]),
                            ("psilocybin", ("4-aco-dmt",), ["4-AcO-DMT", "psilacetin", "4-acetoxy-N,N-dimethyltryptamine"]), ("mdma", ("mda",), ["3,4-methylenedioxyamphetamine", "methylenedioxyamphetamine"]),
-                           ("synthetic-cannabinoids", ("jwh-018",), ["JWH-018"]), ("synthetic-cannabinoids", ("mdmb-4en-pinaca",), ["MDMB-4en-PINACA"]), ("cannabis", ("cbd",), ["cannabidiol"])]:
+                           ("synthetic-cannabinoids", ("jwh-018",), ["JWH-018"]), ("synthetic-cannabinoids", ("mdmb-4en-pinaca",), ["MDMB-4en-PINACA"]), ("cannabis", ("cbd",), ["cannabidiol"]),
+                           # (site 2.28.11: the benzodiazepines and opioids Insight now reads on their pages)
+                           ("benzodiazepines", ("temazepam", "restoril"), ["temazepam"]), ("benzodiazepines", ("oxazepam",), ["oxazepam"]), ("benzodiazepines", ("triazolam", "halcion"), ["triazolam"]),
+                           ("benzodiazepines", ("bromazepam",), ["bromazepam"]), ("benzodiazepines", ("chlordiazepoxide", "librium"), ["chlordiazepoxide"]), ("benzodiazepines", ("clobazam",), ["clobazam"]),
+                           ("benzodiazepines", ("midazolam",), ["midazolam"]), ("benzodiazepines", ("nitrazepam",), ["nitrazepam"]), ("benzodiazepines", ("lormetazepam",), ["lormetazepam"]),
+                           ("benzodiazepines", ("flunitrazepam", "rohypnol"), ["flunitrazepam", "Rohypnol"]), ("benzodiazepines", ("bromazolam",), ["bromazolam"]), ("benzodiazepines", ("clonazolam",), ["clonazolam"]),
+                           ("benzodiazepines", ("flualprazolam",), ["flualprazolam"]), ("benzodiazepines", ("flubromazolam",), ["flubromazolam"]), ("benzodiazepines", ("flubromazepam",), ["flubromazepam"]),
+                           ("benzodiazepines", ("diclazepam",), ["diclazepam"]), ("benzodiazepines", ("pyrazolam",), ["pyrazolam"]), ("benzodiazepines", ("deschloroetizolam",), ["deschloroetizolam"]),
+                           ("prescription-opioids", ("hydromorphone", "dilaudid"), ["hydromorphone", "Dilaudid"]), ("prescription-opioids", ("oxymorphone", "opana"), ["oxymorphone"]),
+                           ("prescription-opioids", ("tapentadol", "nucynta"), ["tapentadol"]), ("prescription-opioids", ("dihydrocodeine",), ["dihydrocodeine"]),
+                           ("prescription-opioids", ("pethidine", "meperidine", "demerol"), ["pethidine", "meperidine"])]:
     for _n in _ns: MEMBER[_n] = (_terms, _slug)
 
 
