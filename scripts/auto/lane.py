@@ -1636,7 +1636,11 @@ def make(item, found, chat, enc, models, fulltext=None, crossref=None, ex=None, 
             with guard:
                 if m in gone and len(order) > 1: continue
             tried.append(m)
-            try: return fn(chat, m, *a), m
+            # (20 November 2026) each reading call with its own short limit and no second try (llm.quick): a reader that did not answer held its source for
+            # 80 seconds, and again, and questions ended with nothing read "for want of time"; now the next reader takes the source (4 times the model's
+            # usual time, 25 to 80 seconds)
+            try:
+                with llm.quick(min(80.0, max(25.0, 4 * takes.get(m, 10)))): return fn(chat, m, *a), m
             except llm.Late: raise
             except (llm.Unavailable, llm.Budget) as e:
                 last = e

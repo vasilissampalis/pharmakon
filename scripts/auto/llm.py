@@ -55,7 +55,23 @@ class Unavailable(Exception):
 
 
 import threading
+from contextlib import contextmanager
 LOCK = threading.RLock()        # one writer of the count at a time (the lesson maker asks several models at once)
+_call = threading.local()       # (20 November 2026) limits a caller sets for the calls of its own thread (quick)
+
+
+@contextmanager
+def quick(seconds):
+    """Within it, a call this thread makes waits at most `seconds` for its answer, and a call that timed out, found the model busy or was refused
+    for the minute is not tried again: Unavailable, so that another model takes the work. For the lane's readers (scripts/auto/lane.py, by_reader):
+    on 20 November 2026 a reader that did not answer held its source for 80 seconds, and again, and questions ended with nothing read "for want of
+    time" while other readers had room. Which model reads changes how much is found, never what is true."""
+    was = getattr(_call, "s", None); _call.s = float(seconds)
+    try: yield
+    finally: _call.s = was
+
+
+def _quick(): return getattr(_call, "s", None)
 
 # ---------- a run's clock (19 November 2026) ----------
 # The senior author, 18 November 2026, 23:42 Athens, of two questions he had sent: "the site is taking too long to answer my pending questions ... like 5 minutes
@@ -345,6 +361,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
             few = not S.get("paid") and 0 < lim["calls"] <= 20                 # a model with a handful of free calls a day (Google's strong readers): each call is dear
             url = local_url(name) if svc == "local" else S["url"]
             limit = S["timeout"] if S.get("timeout") else 180 if S.get("paid") else (170 if STOP_AT is None else 80) if few else 80
+            if _quick(): limit = min(limit, _quick())
             with op(urllib.request.Request(url, data=json.dumps(body).encode("utf-8"), headers=headers), timeout=_capped(limit)) as r: d = json.loads(r.read().decode("utf-8"))      # (a free service that does not answer in 80 seconds is busy: a run must not hang on it. 17 November 2026: a strong reader that thinks before it answers is given 170 seconds; Gemini 3.8 Flash did not answer six sentences in 80)
         except urllib.error.HTTPError as e:
             whole = e.read().decode("utf-8", "replace")[:6000] if hasattr(e, "read") else ""; detail = whole[:400]; last = f"{svc} answered {e.code}: {detail}"
@@ -356,7 +373,9 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                     raise Budget(f"{svc} says the allowance is used up: {detail[:160]}")
                 ra = str((e.headers or {}).get("Retry-After") or "").strip(); rd = re.search(r'"retryDelay":\s*"(\d+(?:\.\d+)?)s?"', whole)
                 secs = min(65, int(float(ra)) + 1) if re.fullmatch(r"\d+(?:\.\d+)?", ra) else min(65, int(float(rd.group(1))) + 1) if rd else 25
+                if _quick(): raise Unavailable(last)                         # (another model takes the work: quick)
                 if k + 1 < tries: _nap(secs, not opener, f"{name} again ({last[:120]})"); continue
+            if _quick() and e.code in (500, 502, 503, 504): raise Unavailable(last)
             if e.code == 503 and not S.get("paid") and busy < 4 and re.search(r"high demand|overloaded|UNAVAILABLE|try again later", whole, re.I):     # a free model that many people are asking at once: waited out, up to about a minute in all
                 busy += 1; _nap((6, 12, 20, 30)[busy - 1], not opener, f"{name} again ({last[:120]})"); k -= 1; continue
             if e.code in (500, 502, 503, 504) and k + 1 < tries: _nap(4 * (k + 1), not opener, f"{name} again ({last[:120]})"); continue
@@ -374,6 +393,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                     L = ledger(); used = svc_used(svc, L); used["calls"] += 1; used.setdefault("models", {})[name] = int(used["models"].get(name) or 0) + 1; L.setdefault("svc", {})[svc] = used
                     LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
                 if few: break
+            if _quick(): break
             if k + 1 < tries: _nap(4, not opener, f"{name} again ({last[:120]})"); continue
             break
         if svc == "claude":
@@ -466,7 +486,7 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     for k in range(tries):
         req = urllib.request.Request(GROQ, data=json.dumps(body).encode("utf-8"), method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json", "User-Agent": "Pharmakon (https://pharmakon.world; mailto:contact@pharmakon.world)"})
         try:
-            with op(req, timeout=_capped(180)) as r: d = json.loads(r.read().decode("utf-8"))
+            with op(req, timeout=_capped(min(180, _quick() or 180))) as r: d = json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             detail = ""
             try: detail = e.read().decode("utf-8", "replace")[:300]
@@ -474,10 +494,10 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
             if e.code == 429 and re.search(r"per day|TPD|RPD|daily", detail, re.I):
                 groq_count(name, 0, 0, full=True)                        # our count was too low: Groq's own word is taken, and the next team is chosen without this model
                 raise Budget("Groq says today's free plan is used up for " + name)
-            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: _nap(20 * (k + 1), opener is None, f"{name} again (Groq answered {e.code})"); continue
+            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries and not _quick(): _nap(20 * (k + 1), opener is None, f"{name} again (Groq answered {e.code})"); continue
             raise Unavailable(f"Groq answered {e.code}" + (": " + re.sub(r"\s+", " ", detail) if detail else ""))
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
-            if k + 1 < tries: _nap(3, opener is None, f"{name} again (Groq could not be reached)"); continue
+            if k + 1 < tries and not _quick(): _nap(3, opener is None, f"{name} again (Groq could not be reached)"); continue
             raise Unavailable("Groq could not be reached: " + str(e)[:200])
         text = ((d.get("choices") or [{}])[0].get("message") or {}).get("content") or ""; u = d.get("usage") or {}
         used = int(u.get("total_tokens") or (int(u.get("prompt_tokens") or est - max_tokens) + int(u.get("completion_tokens") or rough_tokens(text))))
@@ -507,16 +527,16 @@ def chat(model, messages, max_tokens=700, opener=None, tries=3, extra=None):
         if real: _in_time(0, model.split("/")[-1])
         req = urllib.request.Request(API.format(account=account), data=body, method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"})
         try:
-            with opener(req, timeout=_capped(180)) as r: d = json.loads(r.read().decode("utf-8"))
+            with opener(req, timeout=_capped(min(180, _quick() or 180))) as r: d = json.loads(r.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             detail = ""
             try: detail = e.read().decode("utf-8", "replace")[:300]
             except Exception: pass
             if e.code == 429 and re.search(r"allocation|quota|neurons|daily", detail, re.I): raise Budget("Cloudflare says today's free allowance is used up")
-            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries: _nap(4 * (k + 1), real, f"{model.split('/')[-1]} again (the service answered {e.code})"); continue
+            if e.code in (429, 500, 502, 503, 504) and k + 1 < tries and not _quick(): _nap(4 * (k + 1), real, f"{model.split('/')[-1]} again (the service answered {e.code})"); continue
             raise Unavailable(f"the model service answered {e.code}" + (": " + re.sub(r"\s+", " ", detail) if detail else ""))
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
-            if k + 1 < tries: _nap(3, real, f"{model.split('/')[-1]} again (the service could not be reached)"); continue
+            if k + 1 < tries and not _quick(): _nap(3, real, f"{model.split('/')[-1]} again (the service could not be reached)"); continue
             raise Unavailable("the model service could not be reached: " + str(e)[:200])
         ch = (d.get("choices") or [{}])[0].get("message") or {}
         text = ch.get("content") or ""
@@ -667,6 +687,14 @@ def selftest():
         if state["n"] == 1: raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", {}, io.BytesIO(b'{"error": {"code": 429, "message": "You exceeded your current quota", "status": "RESOURCE_EXHAUSTED", "details": [{"quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"}, {"retryDelay": "34s"}]}}'))
         return sopener(req)
     assert as_json(chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, minute_then_ok)) == {"ok": True} and state["n"] == 2
+    state["n"] = 0; seen = []
+    def hangs(req, timeout=0): state["n"] += 1; seen.append(timeout); raise TimeoutError("The read operation timed out")
+    with quick(25):                                                          # (a reader that does not answer: one call, its own short limit, then another model)
+        try: chat("gemini:gemini-3.1-flash-lite", [{"role": "user", "content": "x"}], 50, hangs); raise AssertionError("no Unavailable")
+        except Unavailable: pass
+    assert state["n"] == 1 and seen[0] <= 25 and _quick() is None, (state, seen)
+    state["n"] = 0
+    with quick(25): assert as_json(chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, sopener)) == {"ok": True}
     def day(req, timeout=0): raise urllib.error.HTTPError(req.full_url, 429, "Too Many Requests", {}, io.BytesIO(b'{"error": {"code": 429, "status": "RESOURCE_EXHAUSTED", "details": [{"quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]}}'))
     try: chat("gemini:gemma-4-31b-it", [{"role": "user", "content": "x"}], 50, day); raise AssertionError("no Budget")
     except Budget: pass
