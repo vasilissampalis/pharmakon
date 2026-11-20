@@ -19,32 +19,33 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1": "gemini:gemini-3.1-flash-lite",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44670558262",
-  "read_seconds": 100,
+  "run": "44785855149",
+  "read_seconds": 38,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 262
+  "seconds": 212
  },
  "status": "none",
  "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "read": "3 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9660) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8896)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "7 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8374) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9057)"
  },
  "sources": [
   {
@@ -243,6 +244,140 @@
     }
    ],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "adf_benzodiazepines",
+    "type": "webpage",
+    "title": "Benzodiazepines",
+    "author": [
+     {
+      "literal": "Alcohol and Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       3,
+       6
+      ]
+     ]
+    },
+    "URL": "https://adf.org.au/drug-facts/benzodiazepines/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    }
+   },
+   "title": "Benzodiazepines",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.75,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "tier": 2,
+   "address": "https://adf.org.au/drug-facts/benzodiazepines/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 24,
+     "where": "Reducing harm / Dependence",
+     "quote": "Short-acting benzodiazepines are more likely to cause dependence than long-acting ones.",
+     "text": "Short-acting benzodiazepines are more likely to cause dependence than long-acting ones.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_benzodiazepines",
+    "type": "webpage",
+    "title": "Benzodiazepines",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/benzodiazepines",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       20
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-20"
+    }
+   },
+   "title": "Benzodiazepines",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.749,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/benzodiazepines",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 9,
+     "where": "Is Benzodiazepines addictive, and what are the long-term effects?",
+     "quote": "Short-acting and high-potency benzodiazepines (like Xanax) are more addictive than long-acting benzodiazepines (like Valium).",
+     "text": "Short-acting and high-potency benzodiazepines are more addictive than long-acting benzodiazepines.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Is Benzodiazepines addictive, and what are the long-term effects?",
+     "quote": "The second group consists of people actively seeking out the sedative effects of benzodiazepines, as benzodiazepine dependence is often accompanied by dependence on other substances and / or alcohol.",
+     "text": "Some people seek out the sedative effects of benzodiazepines, and this dependence is often accompanied by dependence on other substances or alcohol.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Is Benzodiazepines addictive, and what are the long-term effects?",
+     "quote": "People who suffer from a substance use disorder are at higher risk of developing benzodiazepine dependence.",
+     "text": "People who suffer from a substance use disorder are at higher risk of developing benzodiazepine dependence.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
  "parts": [],
@@ -272,7 +407,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Benzodiazepines at the crossroads: navigating therapeutic promise and perils of misuse",
@@ -296,16 +440,42 @@
      "why": "a number of the sentence is not in its quote"
     }
    ]
+  },
+  {
+   "title": "Benzodiazepines",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/benzodiazepines/",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Benzodiazepines",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/benzodiazepines",
+   "kept": 3,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
+   "F5",
    "F3",
+   "F4",
    "F2"
   ],
   "direct": "Yes",
-  "but": [],
+  "but": [
+   "F7"
+  ],
   "how": [
+   [
+    "F5"
+   ],
+   [
+    "F4"
+   ],
    [
     "DB",
     "F3"

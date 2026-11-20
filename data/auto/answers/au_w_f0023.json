@@ -17,22 +17,17 @@
  "made": {
   "on": "2026-11-20",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1": "gemini:gemini-3.1-flash-lite",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44664910605",
-  "read_by": {
-   "gemini-3.1-flash-lite": 4,
-   "gpt-oss-20b": 1
-  },
+  "run": "44785855149",
   "read_seconds": 100,
   "from": {
    "papers": 1,
@@ -45,9 +40,10 @@
  "status": "none",
  "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
  "gates": {
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
   "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
@@ -118,7 +114,7 @@
    "year": 2021,
    "journal": "Balkan medical journal",
    "kind": "other",
-   "people": true,
+   "people": false,
    "near": 0.792,
    "money": [
     "AcknowledgementPoster presentation at 57th Annual Meeting of the International Association of Forensic Toxicologists (TIAFT) in Birmingham, UK. Which took place 2nd–6th September 2019.",
@@ -140,20 +136,28 @@
      "second_hand": ""
     },
     {
+     "passage": 8,
+     "where": "Text",
+     "quote": "The psychoactive effects begin 15 to 20 minutes after oral ingestion and reach a peak value between approximately 45 and 60 minutes.",
+     "text": "After oral ingestion, psychoactive effects begin in 15 to 20 minutes and reach a peak in approximately 45 to 60 minutes.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
      "passage": 9,
      "where": "Text",
      "quote": "5-MeO-MiPT, like many other tryptamine derivatives, is an agonist of the 5-HT2A receptor. It inhibits 5-HT and norepinephrine reuptake with less dopamine reuptake.",
-     "text": "5-MeO-MiPT is an agonist of the 5-HT2A receptor and inhibits 5-HT and norepinephrine reuptake with less dopamine reuptake.",
-     "id": "F2",
+     "text": "5-MeO-MiPT is a 5-HT2A receptor agonist that inhibits 5-HT and norepinephrine reuptake while having less effect on dopamine reuptake.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 35,
+     "passage": 34,
      "where": "DISCUSSION",
-     "quote": "Little is known about the human metabolism and toxicity of 5-MeO-MiPT in the assessment of potential harm to humans.",
-     "text": "Little is known about how 5-MeO-MiPT is metabolized in humans or its toxicity regarding potential harm to humans.",
+     "quote": "We could not find any literature on the detection of 5-MeO-MiPT in organs.",
+     "text": "The researchers could not find any existing literature regarding the detection of 5-MeO-MiPT in organs.",
      "id": "L1",
      "second_hand": ""
     }
@@ -166,18 +170,27 @@
  "missing": "",
  "wanted": [],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "New Psychoactive Substance 5-MeO-MiPT In vivo Acute Toxicity and Hystotoxicological Study",
    "read": "full",
    "kind": "other",
    "at": "10.4274/balkanmedj.galenos.2020.2019.11.68",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "finding",
-     "text": "The dose for oral administration is 4 to 6 mg with a period of effect of 4 to 6 hours, while the dose for inhalation is 12 to 20 mg.",
+     "text": "The dose for oral administration is 4 to 6 mg with a 4 to 6 hour effect period, while the inhaled dose is 12 to 20 mg.",
      "quote": "The dose for oral administration is 4 to 6 mg, and the period of effect is 4 to 6 hours; if inhaled, the dose is 12 to 20 mg.",
      "why": "it holds an amount or a time between uses"
     }
@@ -197,14 +210,7 @@
    "kind": "other",
    "at": "10.1007/s00421-024-05514-2",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Study of 12 trained cyclists and triathletes measuring muscle oxygen saturation during cycling tests",
-     "quote": "Twelve trained cyclists and triathletes completed 3 incremental step tests with 5 min step duration starting at 1.0 W/kg with an increase of 0.5 W/kg separated by 2–7 days.",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Acute effects of inspiratory muscle warm-up on muscle oxygenation, perceived exertion and prefrontal cortical activation",
@@ -223,8 +229,14 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "A study investigating muscle oxygen saturation differences in forty-eight participants during treadmill running.",
+     "text": "A study investigating muscle oxygen saturation differences between dominant and non-dominant legs in 48 young adults during treadmill running.",
      "quote": "Forty-eight participants (20 female, Age = 21.6 ± 1.5 years) performed two graded treadmill exercise tests, 14 days apart. The Moxy Monitor was placed bilaterally on the vastus lateralis to measure Sm",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "limit",
+     "text": "The measurement response of the Moxy device differs depending on whether a participant's adipose tissue thickness is above or below 7mm.",
+     "quote": "In the ATT<7mm subgroup, SmO₂ showed the expected tendency to decrease toward HIGH, with a significant LOW–HIGH difference only within NDOM after correction. In contrast, the ATT>7mm subgroup showed a",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
