@@ -18,35 +18,137 @@
   "on": "2026-11-20",
   "models": {
    "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
    "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44659769573",
-  "read_seconds": 100,
+  "run": "44748411041",
+  "read_by": {
+   "gpt-oss-20b": 1,
+   "gemini-3.1-flash-lite": 1
+  },
+  "read_seconds": 49,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 264
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: the form was wrong: but names no item it rests on",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8628) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there. try 2: but names no item it rests on (how the reply ended: length; reasoned 0 characters, wrote 8628) try 3: but names no item it rests on (how the reply ended: length; reasoned 0 characters, wrote 8628)"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "corkery_2026",
+    "type": "article-journal",
+    "title": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report",
+    "author": [
+     {
+      "family": "Corkery",
+      "given": "John Martin"
+     },
+     {
+      "family": "Copeland",
+      "given": "Caroline"
+     },
+     {
+      "family": "Schifano",
+      "given": "Fabrizio"
+     }
+    ],
+    "container-title": "Journal of Psychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1177/02698811251349203",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-20",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-20"
+     },
+     "online_first_year": 2025
+    },
+    "volume": "40",
+    "issue": "2",
+    "page": "325-338",
+    "PMCID": "PMC13222385"
+   },
+   "doi": "10.1177/02698811251349203",
+   "pmcid": "PMC13222385",
+   "title": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report",
+   "year": 2026,
+   "journal": "Journal of psychopharmacology (Oxford, England)",
+   "kind": "review",
+   "people": false,
+   "near": 0.59,
+   "money": [],
+   "design": null,
+   "findings": [
+    {
+     "passage": 55,
+     "where": "Discussion › Characteristics of decedents",
+     "quote": "The overall characteristics of the fatalities examined here match well with those of methoxetamine-related cases previously reported from the NPSAD programme.",
+     "text": "The fatalities involving methoxphenidine and diphenidine had characteristics similar to methoxetamine‑related deaths.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 61,
+     "where": "Discussion › Cause of death and toxicology",
+     "quote": "MXP and diphenidine were implicated on their own in about one‑third of cases; this suggests that they are relatively toxic.",
+     "text": "In about one‑third of deaths, MXP alone was implicated, indicating a relatively high toxicity.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 61,
+     "where": "Discussion › Cause of death and toxicology",
+     "quote": "If one were to apply the ‘Index of Fatal Toxicity’ approach, that is, ratio of sole versus all mentions in the cause of death to these findings for both molecules combined, it would yield a ratio of 0.414 (i.e., 12/29, see).",
+     "text": "The Index of Fatal Toxicity for MXP and diphenidine combined was 0.414, comparable to ketamine.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 60,
+     "where": "Discussion › Cause of death and toxicology",
+     "quote": "Most deaths reported here involved MXP and then diphenidine; there were no cases involving ephenidine, fluorolintane or isophenidine.",
+     "text": "The study did not include deaths involving ephenidine, fluorolintane or isophenidine.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "what it is like in terms of subjective effects",
  "wanted": [
   {
    "doi": "10.1016/j.expneurol.2021.113638",
@@ -57,19 +159,71 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report",
    "read": "full",
    "kind": "review",
    "at": "10.1177/02698811251349203",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Systematic review and case series of diarylethylamine‑related deaths in the UK",
+     "quote": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "The circumstances leading to MXP‑related deaths are poorly documented.",
+     "quote": "There is little information in the published case reports regarding circumstances leading to death, and this is true of the coroners’ cases analysed above, as is the case with other NPS cases.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Urinary metabolomic signatures associated with early adverse events during volumetric modulated arc therapy for prostate cancer: A secondary analysis of a public dataset",
+   "read": "full",
+   "kind": "other",
+   "at": "10.3892/mco.2026.2953",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "It is unknown if the observed metabolic changes occur in higher-grade adverse events because only Grade 1 urinary toxicities were studied.",
+     "quote": "Second, only Grade 1 urinary toxicities were observed, leaving it unclear whether similar metabolic alterations would be observed in higher-grade AEs.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F2",
+   "F3",
+   "F1"
+  ],
+  "direct": "",
+  "but": [],
+  "how": [
+   [
+    "F2",
+    "F3",
+    "F1"
+   ]
+  ],
+  "unanswered": "what it is like in terms of subjective effects"
+ },
  "place": {
   "home": "new:Diarylethylamines (diphenidine, MXP)",
   "also": [],
