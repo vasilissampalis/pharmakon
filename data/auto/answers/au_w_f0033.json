@@ -19,74 +19,111 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
   },
-  "run": "44866193269",
-  "read_seconds": 100,
+  "run": "44884127336",
+  "read_by": {
+   "gemini-3.1-flash-lite": 3,
+   "gpt-oss-20b": 1,
+   "gemini-3.5-flash-lite": 1
+  },
+  "read_seconds": 20,
   "from": {
    "papers": 1,
-   "summaries": 0,
-   "official": 0
+   "summaries": 1,
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 287
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "about dying: written, but it does not meet the stricter bar for such an answer (its short answer rests on no official body's page and on no review read in full): no answer yet",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "12 findings kept from 5 sources (2 papers read in full, 1 official pages, 2 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 1 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.87, but 0.87, how1 0.39, how2 0.72, how3 0.58",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 5; gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview accepted 3 of 5",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: NOT met: its short answer rests on no official body's page and on no review read in full"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "mallaroni_2026",
+    "id": "syrov_2023",
     "type": "article-journal",
-    "title": "Spatiotemporal mapping of brain organisation following the administration of 2C-B and psilocybin",
+    "title": "Acute pharmacological profile of 2C-b-fly-NBOMe in male Wistar rats—pharmacokinetics, effects on behaviour and thermoregulation",
     "author": [
      {
-      "family": "Mallaroni",
-      "given": "Pablo"
+      "family": "Syrová",
+      "given": "Kateřina"
      },
      {
-      "family": "Singleton",
-      "given": "S. Parker"
+      "family": "Šíchová",
+      "given": "Klára"
      },
      {
-      "family": "Mason",
-      "given": "Natasha L."
+      "family": "Danda",
+      "given": "Hynek"
      },
      {
-      "family": "Satterthwaite",
-      "given": "Theodore D."
+      "family": "Lhotková",
+      "given": "Eva"
      },
      {
-      "family": "Ramaekers",
-      "given": "Johannes G."
+      "family": "Jorratt",
+      "given": "Pascal"
+     },
+     {
+      "family": "Pinterová-Leca",
+      "given": "Nikola"
+     },
+     {
+      "family": "Vejmola",
+      "given": "Čestmír"
+     },
+     {
+      "family": "Olejníková-Ladislavová",
+      "given": "Lucie"
+     },
+     {
+      "family": "Hájková",
+      "given": "Kateřina"
+     },
+     {
+      "family": "Kuchař",
+      "given": "Martin"
+     },
+     {
+      "family": "Horáček",
+      "given": "Jiří"
+     },
+     {
+      "family": "Páleníček",
+      "given": "Tomáš"
      }
     ],
-    "container-title": "Molecular Psychiatry",
+    "container-title": "Frontiers in Pharmacology",
     "issued": {
      "date-parts": [
       [
-       2026
+       2023
       ]
      ]
     },
-    "DOI": "10.1038/s41380-026-03447-0",
+    "DOI": "10.3389/fphar.2023.1120419",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -98,71 +135,335 @@
       "checked_on": "2026-11-21"
      }
     },
-    "volume": "31",
-    "issue": "6",
-    "page": "3295-3307",
-    "PMCID": "PMC13190263"
+    "volume": "14",
+    "number": "1120419",
+    "PMCID": "PMC10033663"
    },
-   "doi": "10.1038/s41380-026-03447-0",
-   "pmcid": "PMC13190263",
-   "title": "Spatiotemporal mapping of brain organisation following the administration of 2C-B and psilocybin",
-   "year": 2026,
-   "journal": "Molecular psychiatry",
-   "kind": "study",
+   "doi": "10.3389/fphar.2023.1120419",
+   "pmcid": "PMC10033663",
+   "title": "Acute pharmacological profile of 2C-B-Fly-NBOMe in male Wistar rats-pharmacokinetics, effects on behaviour and thermoregulation",
+   "year": 2023,
+   "journal": "Frontiers in pharmacology",
+   "kind": "other",
    "people": true,
-   "near": 0.525,
+   "near": 0.545,
    "money": [
-    "J.G.R acknowledges financial support from the Dutch Research Council (NWO, grant number 406.18. GO.019).",
-    "J.G.R is a scientific consultant to GH Research who have no involvement in the preparation or conception of this manuscript or related data. All other authors have no relevant conflicts of interest to declare."
+    "This work was supported by grant from the Czech Science Foundation (project 20-25349S), Czech Health Research Council (project NU21-04-00307), Long-term conceptual development of research organization (RVO 00023752), Ministry of the interior of the Czech Republic (project VK01010212), Specific University Research, Czech Ministry of Education, Youth and Sports (project 260533/SVV/2022), programme Cooperatio, Neuroscience Charles University and private funds obtained via Foundation for Psychedelic Research.",
+    "TP and JH declare to have shares in “Psyon s.r.o.,” and in “Společnost pro podporu neurovědního výzkumu s.r.o.” They founded “PSYRES–Psychedelic Research Foundation”. TP also reports consulting fees from GH Research and CB21-Pharma outside the submitted work. TP and JH are involved in Compass Pathways trials with psilocybin and MAPS clinical trial with MDMA outside the submitted work."
    ],
    "design": {
-    "passage": 1,
+    "passage": 2,
     "where": "Abstract",
-    "quote": "Using 7 T resting-state functional MRI in 22 healthy volunteers, we mapped out the acute effects of matched doses of 20 mg 2C-B, 15 mg psilocybin and placebo across spatiotemporal benchmarks of functional brain organisation.",
-    "text": "Using 7 T resting-state functional MRI in 22 healthy volunteers, we mapped out the acute effects of matched doses of 20 mg 2C-B, 15 mg psilocybin and placebo across spatiotemporal benchmarks of functional brain organisation."
+    "quote": "All experiments were conducted on adult male Wistar rats. Pharmacokinetic parameters of 2C-B-Fly-NBOMe (1 mg/kg subcutaneously; s. c.) in blood serum and brain tissue were analysed over 24 h",
+    "text": "An investigation of pharmacokinetics and acute behavioural effects of 2C-B-Fly-NBOMe in adult male Wistar rats."
    },
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "2,5-dimethoxy-4-bromophenethylamine (2C-B) is a psychedelic phenethylamine reported to produce less dysphoria and subjective impairment than the psychedelic tryptamine psilocybin.",
-     "text": "2C-B is a psychedelic phenethylamine reported to produce less dysphoria and subjective impairment than the psychedelic tryptamine psilocybin.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 36,
-     "where": "Discussion",
-     "quote": "Consistent with our hypothesis, we found that 2C-B exhibits empirical properties similar to classical psychedelics, including network desegregation and increased spontaneous BOLD complexity, irrespective of variations in rsfMRI thought content or effect intensity.",
-     "text": "2C-B exhibits empirical properties similar to classical psychedelics, including network desegregation and increased spontaneous BOLD complexity.",
+     "passage": 10,
+     "where": "1 Introduction",
+     "quote": "data from online drug forums already suggest apparent interest in 2C-B-Fly-NBOMe, even though consequences of such ingestion are unknown and could be life-threatening, given its presumed high potency.",
+     "text": "Data from online drug forums suggest apparent interest in 2C-B-Fly-NBOMe, even though consequences of such ingestion are unknown and could be life-threatening, given its presumed high potency.",
      "id": "F2",
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+    },
+    {
+     "passage": 37,
+     "where": "4 Discussion › 4.1 Pharmacokinetics",
+     "quote": "self-reports of recreational users declare peak effects of various NBOMes within 45–90 min and duration for up to 8 h.",
+     "text": "Self-reports of recreational users declare peak effects of various NBOMes within 45 to 90 minutes and duration for up to 8 hours.",
+     "id": "F3",
      "second_hand": ""
     },
     {
-     "passage": 40,
-     "where": "Discussion",
-     "quote": "Eliciting similar behavioural effects, 2C-B also produced comparable increases in complexity to psilocybin.",
-     "text": "2C-B produced comparable increases in complexity to psilocybin while eliciting similar behavioural effects.",
-     "id": "F3",
+     "passage": 41,
+     "where": "4 Discussion › 4.4 Thermoregulatory effect",
+     "quote": "In contrast to the reports of recreational users with NBOMe compounds usually enhancing physical activity almost to the state of agitation, 2C-B-Fly-NBOMe caused strong inhibitory effects in our study.",
+     "text": "In contrast to reports of recreational users with NBOMe compounds usually enhancing physical activity almost to the state of agitation, 2C-B-Fly-NBOMe caused strong inhibitory effects in the study.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 40,
-     "where": "Discussion",
-     "quote": "It remains to be studied however whether this is a feature inherent to 5-HT2A agonism, since MDMA or amphetamines have yet to be fully assessed.",
-     "text": "It remains to be studied whether this is a feature inherent to 5-HT2A agonism, because MDMA or amphetamines have yet to be fully assessed.",
-     "id": "L1",
+     "passage": 10,
+     "where": "1 Introduction",
+     "quote": "Despite two decades have passed, there is still a critical deficit of scientific data concerning this analogue, and to the best of our knowledge, no study has focused on the changes in behavioural and physiological parameters after 2C-B-Fly-NBOMe intake up until now.",
+     "text": "There is still a critical deficit of scientific data concerning this analogue, and no prior study has focused on changes in behavioural and physiological parameters after 2C-B-Fly-NBOMe intake.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "thelevel_2c",
+    "type": "webpage",
+    "title": "2C drugs",
+    "author": [
+     {
+      "literal": "NZ Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://thelevel.org.nz/drug-information/2c",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       21
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-21"
+    },
+    "publisher": "The Level"
+   },
+   "title": "2C drugs",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.469,
+   "name": "NZ Drug Foundation",
+   "short": "the NZ Drug Foundation",
+   "tier": 2,
+   "address": "https://thelevel.org.nz/drug-information/2c",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 3,
+     "where": "What to expect / How do 2C drugs make you feel?",
+     "quote": "The 2C family of synthetic drugs are sometimes described as being ‘somewhere in between MDMA and LSD’ due to producing both stimulant and hallucinogenic effects.",
+     "text": "The 2C family of synthetic drugs are described as being between MDMA and LSD because they produce both stimulant and hallucinogenic effects.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "What to expect / How do 2C drugs make you feel?",
+     "quote": "2C drugs might make you see and hear things that aren’t there, and make you feel stimulated, or excited. 2C drugs can also make some people feel more empathetic and connected towards others",
+     "text": "2C drugs can cause hallucinations, feelings of stimulation or excitement, and for some people, increased empathy and connection towards others.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
+     "quote": "If you use 2C drugs regularly and have pre-existing heart conditions or high blood pressure, 2C drugs can put extra strain on your heart, especially in higher doses.",
+     "text": "Regular use of 2C drugs can put extra strain on the heart for people with pre-existing heart conditions or high blood pressure, particularly in higher doses.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 19,
+     "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
+     "quote": "Long term effects from 2Cs are relatively rare, though there is still a lack of research available on this family of drugs.",
+     "text": "There is a lack of research available regarding the long-term effects of the 2C family of drugs.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "dean_2013",
+    "type": "article-journal",
+    "title": "2C or not 2C: Phenethylamine designer drug review",
+    "author": [
+     {
+      "family": "Dean",
+      "given": "Be Vang"
+     },
+     {
+      "family": "Stellpflug",
+      "given": "Samuel J."
+     },
+     {
+      "family": "Burnett",
+      "given": "Aaron M."
+     },
+     {
+      "family": "Engebretsen",
+      "given": "Kristin M."
+     }
+    ],
+    "container-title": "Journal of Medical Toxicology",
+    "issued": {
+     "date-parts": [
+      [
+       2013
+      ]
+     ]
+    },
+    "DOI": "10.1007/s13181-013-0295-x",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "9",
+    "issue": "2",
+    "page": "172-178"
+   },
+   "doi": "10.1007/s13181-013-0295-x",
+   "title": "2C or not 2C: phenethylamine designer drug review",
+   "year": 2013,
+   "journal": "Journal of medical toxicology : official journal of the American College of Medical Toxicology",
+   "kind": "review",
+   "people": true,
+   "near": 0.522,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Summary",
+    "quote": "This review focuses on the pharmacology, pharmacokinetics, clinical effects, and treatment of 2C drug intoxication based on available published literature.",
+    "text": "a review of the pharmacology, pharmacokinetics, clinical effects, and treatment of 2C drug intoxication"
+   },
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "Common features identified in patients intoxicated with 2Cs included hallucinations, agitation, aggression, violence, dysphoria, hypertension, tachycardia, seizures, and hyperthermia.",
+     "text": "Patients intoxicated with 2C drugs may experience hallucinations, agitation, aggression, violence, dysphoria, hypertension, tachycardia, seizures, and hyperthermia.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "at least five deaths have been reported in the literature in patients intoxicated with 2C drugs.",
+     "text": "At least five deaths have been reported in the literature involving patients intoxicated with 2C drugs.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "2C drugs are a group of designer intoxicants, many of which are marketed as legal, but may carry risks that consumers are unaware of.",
+     "text": "2C drugs are designer intoxicants that are often marketed as legal but may carry risks that consumers do not know about.",
+     "id": "F10",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "2C drugs can cause hallucinations and stimulation. In rats, 2C-B-Fly-NBOMe caused strong inhibitory effects. People intoxicated with 2C drugs may have seizures or die.",
+   "uses": [
+    "F5",
+    "F4",
+    "F8",
+    "F9"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "thelevel_2c",
+     "where": "What to expect / How do 2C drugs make you feel?",
+     "quote": "The 2C family of synthetic drugs are sometimes described as being ‘somewhere in between MDMA and LSD’ due to producing both stimulant and hallucinogenic effects.",
+     "sha": "20470bd59590dd0a"
+    },
+    {
+     "label": "F4",
+     "ref": "syrov_2023",
+     "where": "4 Discussion › 4.4 Thermoregulatory effect",
+     "quote": "In contrast to the reports of recreational users with NBOMe compounds usually enhancing physical activity almost to the state of agitation, 2C-B-Fly-NBOMe caused strong inhibitory effects in our study.",
+     "sha": "a9d9cab1b9f0e25c"
+    },
+    {
+     "label": "F8",
+     "ref": "dean_2013",
+     "where": "Summary",
+     "quote": "Common features identified in patients intoxicated with 2Cs included hallucinations, agitation, aggression, violence, dysphoria, hypertension, tachycardia, seizures, and hyperthermia.",
+     "sha": "d3530e0e88a6f39f"
+    },
+    {
+     "label": "F9",
+     "ref": "dean_2013",
+     "where": "Summary",
+     "quote": "at least five deaths have been reported in the literature in patients intoxicated with 2C drugs.",
+     "sha": "d3530e0e88a6f39f"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "There is a critical deficit of scientific data on this specific analogue, and no prior study focused on its behavioural effects.",
+   "uses": [
+    "L2"
+   ],
+   "rests_on": [
+    {
+     "label": "L2",
+     "ref": "syrov_2023",
+     "where": "1 Introduction",
+     "quote": "Despite two decades have passed, there is still a critical deficit of scientific data concerning this analogue, and to the best of our knowledge, no study has focused on the changes in behavioural and physiological parameters after 2C-B-Fly-NBOMe intake up until now.",
+     "sha": "56243d782430a5e4"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "A 2013 review of 2C drug intoxication says patients may have hallucinations, seizures, and high body temperature. At least five deaths were reported.",
+   "uses": [
+    "DD",
+    "F8",
+    "F9"
+   ],
+   "rests_on": [
+    {
+     "label": "DD",
+     "ref": "dean_2013",
+     "where": "Summary",
+     "quote": "This review focuses on the pharmacology, pharmacokinetics, clinical effects, and treatment of 2C drug intoxication based on available published literature.",
+     "sha": "067240d139d67a57"
+    },
+    {
+     "label": "F8",
+     "ref": "dean_2013",
+     "where": "Summary",
+     "quote": "Common features identified in patients intoxicated with 2Cs included hallucinations, agitation, aggression, violence, dysphoria, hypertension, tachycardia, seizures, and hyperthermia.",
+     "sha": "d3530e0e88a6f39f"
+    },
+    {
+     "label": "F9",
+     "ref": "dean_2013",
+     "where": "Summary",
+     "quote": "at least five deaths have been reported in the literature in patients intoxicated with 2C drugs.",
+     "sha": "d3530e0e88a6f39f"
+    }
+   ],
+   "quote": "identified in patients intoxicated with 2Cs included hallucinations, agitation, aggression, violence, dysphoria, hypertension, tachycardia, seizures",
+   "quote_ref": "dean_2013"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "Specific human experience of 2C-B-Fly",
  "wanted": [
   {
    "doi": "10.1007/s13181-013-0295-x",
@@ -203,6 +504,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -211,29 +520,357 @@
    "read": "full",
    "kind": "case",
    "at": "10.1111/1556-4029.14214",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Case report of a single 18‑year‑old man who ingested 2C‑B",
+     "quote": "4‐bromo‐2,5‐dimethoxyphenethylamine (2C‐B) is a designer drug. In Europe, 2C‐B is easily obtained and used for recreational purposes.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "The ingestion of 2C‑B can cause severe neurological consequences, including serotonin syndrome and severe brain edema.",
+     "quote": "The neurological consequences were severe, including the development of serotonin syndrome and severe brain edema.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "Even after supportive care, patients may suffer long‑term severe neurological impairment from 2C‑B toxicity.",
+     "quote": "Supportive therapy resulted in a stable condition, although, after several months, the patient still suffered from severe neurological impairment due to the drug‐induced toxicity.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "At low doses 2C‑B produces MDMA‑like stimulation; at higher doses it produces psychedelic and hallucinogenic effects.",
+     "quote": "In low doses, it produces enhanced sensory sensitivity and has stimulating effects similar to those of 3,4‐methylenedioxymethamphetamine (MDMA) or “ecstasy.” In higher doses, the psychedelic and hallu",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "Acute pharmacological profile of 2C-B-Fly-NBOMe in male Wistar rats-pharmacokinetics, effects on behaviour and thermoregulation",
    "read": "full",
    "kind": "other",
    "at": "10.3389/fphar.2023.1120419",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "Spatiotemporal mapping of brain organisation following the administration of 2C-B and psilocybin",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1038/s41380-026-03447-0",
+   "title": "2C drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/2c",
    "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Unpleasant effects of 2C drugs can include restlessness, confusion, nausea, vomiting, anxiety, paranoia, agitation, disorientation, panic attacks, irregular heartbeat, chest pain, fever, seizures, and",
+     "quote": "Unpleasant effects; Feeling energised and alert Changes in perception Feeling horny Increased empathy and connection with others Euphoria Hallucinations *Ego death Restlessness Confusion Sweating or c",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "2C or not 2C: phenethylamine designer drug review",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1007/s13181-013-0295-x",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "A presentation consistent with excited delirium is consistent among the reported deaths related to 2C drugs.",
+     "quote": "a presentation consistent with excited delirium is consistent amongst the reported 2C-related deaths.",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "A new trend in drugs-of-abuse; the 2C-series of phenethylamine designer drugs",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1023/b:phar.0000018600.03664.36",
+   "kept": 2,
    "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F4",
+   "F8",
+   "F9"
+  ],
+  "direct": "",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F5",
+    "F6"
+   ],
+   [
+    "DD",
+    "F8",
+    "F9"
+   ],
+   [
+    "DB",
+    "F4"
+   ]
+  ],
+  "unanswered": "detailed subjective effects and precise risk profile of 2C‑B‑FLY"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.869,
+   "but": 0.8703,
+   "how1": 0.3943,
+   "how2": 0.7152,
+   "how3": 0.5796
+  },
+  "scores_quotes_alone": {
+   "short": 0.9517,
+   "but": 0.8394,
+   "how1": 0.3192,
+   "how2": 0.7348,
+   "how3": 0.8025
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "2C drugs can cause hallucinations and stimulation. People intoxicated with them may have seizures or die. In rats, 2C-B-Fly-NBOMe caused strong inhibitory effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_2c",
+       "where": "What to expect / How do 2C drugs make you feel?",
+       "quote": "The 2C family of synthetic drugs are sometimes described as being ‘somewhere in between MDMA and LSD’ due to producing both stimulant and hallucinogenic effects.",
+       "sha": "20470bd59590dd0a"
+      },
+      {
+       "label": "F4",
+       "ref": "syrov_2023",
+       "where": "4 Discussion › 4.4 Thermoregulatory effect",
+       "quote": "In contrast to the reports of recreational users with NBOMe compounds usually enhancing physical activity almost to the state of agitation, 2C-B-Fly-NBOMe caused strong inhibitory effects in our study.",
+       "sha": "a9d9cab1b9f0e25c"
+      },
+      {
+       "label": "F8",
+       "ref": "dean_2013",
+       "where": "Summary",
+       "quote": "Common features identified in patients intoxicated with 2Cs included hallucinations, agitation, aggression, violence, dysphoria, hypertension, tachycardia, seizures, and hyperthermia.",
+       "sha": "d3530e0e88a6f39f"
+      },
+      {
+       "label": "F9",
+       "ref": "dean_2013",
+       "where": "Summary",
+       "quote": "at least five deaths have been reported in the literature in patients intoxicated with 2C drugs.",
+       "sha": "d3530e0e88a6f39f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "There is a critical deficit of scientific data on this analogue, and no prior study focused on its behavioural effects.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "syrov_2023",
+       "where": "1 Introduction",
+       "quote": "Despite two decades have passed, there is still a critical deficit of scientific data concerning this analogue, and to the best of our knowledge, no study has focused on the changes in behavioural and physiological parameters after 2C-B-Fly-NBOMe intake up until now.",
+       "sha": "56243d782430a5e4"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "The NZ Drug Foundation says 2C drugs are between MDMA and LSD, causing hallucinations, stimulation, and sometimes empathy.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_2c",
+       "where": "What to expect / How do 2C drugs make you feel?",
+       "quote": "The 2C family of synthetic drugs are sometimes described as being ‘somewhere in between MDMA and LSD’ due to producing both stimulant and hallucinogenic effects.",
+       "sha": "20470bd59590dd0a"
+      },
+      {
+       "label": "F6",
+       "ref": "thelevel_2c",
+       "where": "What to expect / How do 2C drugs make you feel?",
+       "quote": "2C drugs might make you see and hear things that aren’t there, and make you feel stimulated, or excited. 2C drugs can also make some people feel more empathetic and connected towards others",
+       "sha": "20470bd59590dd0a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2013 review of 2C intoxication says patients may have seizures, high blood pressure, and at least five deaths have been reported.",
+     "rests_on": [
+      {
+       "label": "DD",
+       "ref": "dean_2013",
+       "where": "Summary",
+       "quote": "This review focuses on the pharmacology, pharmacokinetics, clinical effects, and treatment of 2C drug intoxication based on available published literature.",
+       "sha": "067240d139d67a57"
+      },
+      {
+       "label": "F8",
+       "ref": "dean_2013",
+       "where": "Summary",
+       "quote": "Common features identified in patients intoxicated with 2Cs included hallucinations, agitation, aggression, violence, dysphoria, hypertension, tachycardia, seizures, and hyperthermia.",
+       "sha": "d3530e0e88a6f39f"
+      },
+      {
+       "label": "F9",
+       "ref": "dean_2013",
+       "where": "Summary",
+       "quote": "at least five deaths have been reported in the literature in patients intoxicated with 2C drugs.",
+       "sha": "d3530e0e88a6f39f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 study on male rats found 2C-B-Fly-NBOMe caused strong inhibitory effects, unlike reports of agitation in people.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "syrov_2023",
+       "where": "Abstract",
+       "quote": "All experiments were conducted on adult male Wistar rats. Pharmacokinetic parameters of 2C-B-Fly-NBOMe (1 mg/kg subcutaneously; s. c.) in blood serum and brain tissue were analysed over 24 h",
+       "sha": "2b5cf48ae0ce613e"
+      },
+      {
+       "label": "F4",
+       "ref": "syrov_2023",
+       "where": "4 Discussion › 4.4 Thermoregulatory effect",
+       "quote": "In contrast to the reports of recreational users with NBOMe compounds usually enhancing physical activity almost to the state of agitation, 2C-B-Fly-NBOMe caused strong inhibitory effects in our study.",
+       "sha": "a9d9cab1b9f0e25c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The sentence is stronger than the passage, stating that the drugs \"are\" between MDMA and LSD and \"causing\" effects, whereas the passage says they are \"sometimes described as being\" between them and \"might\" make you feel those effects."
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    false,
+    "The passage says the contrast is with reports from recreational users, not a finding of the study itself or a general fact about the drugs."
+   ]
+  }
+ },
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how1",
+   "text": "The NZ Drug Foundation says 2C drugs are between MDMA and LSD, causing hallucinations, stimulation, and sometimes empathy.",
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "thelevel_2c",
+     "where": "What to expect / How do 2C drugs make you feel?",
+     "quote": "The 2C family of synthetic drugs are sometimes described as being ‘somewhere in between MDMA and LSD’ due to producing both stimulant and hallucinogenic effects.",
+     "sha": "20470bd59590dd0a"
+    },
+    {
+     "label": "F6",
+     "ref": "thelevel_2c",
+     "where": "What to expect / How do 2C drugs make you feel?",
+     "quote": "2C drugs might make you see and hear things that aren’t there, and make you feel stimulated, or excited. 2C drugs can also make some people feel more empathetic and connected towards others",
+     "sha": "20470bd59590dd0a"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence is stronger than the passage, stating that the drugs \"are\" between MDMA and LSD and \"causing\" effects, whereas the passage says they are \"sometimes described as being\" between them and \"might\" make you feel those effects."
+  },
+  {
+   "try": 2,
+   "part": "how3",
+   "text": "A 2023 study on male rats found 2C-B-Fly-NBOMe caused strong inhibitory effects, unlike other similar drugs that increase activity.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "syrov_2023",
+     "where": "Abstract",
+     "quote": "All experiments were conducted on adult male Wistar rats. Pharmacokinetic parameters of 2C-B-Fly-NBOMe (1 mg/kg subcutaneously; s. c.) in blood serum and brain tissue were analysed over 24 h",
+     "sha": "2b5cf48ae0ce613e"
+    },
+    {
+     "label": "F4",
+     "ref": "syrov_2023",
+     "where": "4 Discussion › 4.4 Thermoregulatory effect",
+     "quote": "In contrast to the reports of recreational users with NBOMe compounds usually enhancing physical activity almost to the state of agitation, 2C-B-Fly-NBOMe caused strong inhibitory effects in our study.",
+     "sha": "a9d9cab1b9f0e25c"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3-flash-preview) did not accept it: The passage says the contrast is with reports from recreational users, not a finding of the study itself or a general fact about the drugs."
+  }
+ ],
+ "stakes": "dying",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "2c-x",
   "also": [],
