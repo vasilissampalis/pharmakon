@@ -17,146 +17,219 @@
   "benzodiazepines"
  ],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-21",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3-flash-preview",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44656053491",
-  "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "gemini-3.1-flash-lite": 1
-  },
+  "run": "44856862209",
   "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 303
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.16, but 0.21, how1 0.45, how2 0.78",
+  "check": "short: NOT accepted: Passages do not explicitly state that diazepam makes people feel calm, sleepy, and relaxed; they list 'sedative' and 'anxiolytic' effects, not those exact feelings, and 'muscle relaxant' does not equal 'trouble moving smoothly'.; but: NOT accepted: Passages contain no statement about the listed effects being merely a list rather than a personal description.; how1: accepted; how2: accepted",
+  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9275) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there."
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "fujii_2025",
+    "id": "ho_2023",
     "type": "article-journal",
-    "title": "Comparison of midazolam and diazepam for sedation in patients undergoing double-balloon endoscopic retrograde cholangiopancreatography: A propensity score-matched analysis",
+    "title": "Clinical impact of the CYP2C19 gene on diazepam for the management of alcohol withdrawal syndrome",
     "author": [
      {
-      "family": "Fujii",
-      "given": "Yuki"
+      "family": "Ho",
+      "given": "Teresa T."
      },
      {
-      "family": "Matsumoto",
-      "given": "Kazuyuki"
+      "family": "Noble",
+      "given": "Melissa"
      },
      {
-      "family": "Matsumi",
-      "given": "Akihiro"
+      "family": "Tran",
+      "given": "Bao Anh"
      },
      {
-      "family": "Miyamoto",
-      "given": "Kazuya"
+      "family": "Sunjic",
+      "given": "Katlynd"
      },
      {
-      "family": "Uchida",
-      "given": "Daisuke"
+      "family": "Gupta",
+      "given": "Sheeba Varghese"
      },
      {
-      "family": "Horiguchi",
-      "given": "Shigeru"
+      "family": "Turgeon",
+      "given": "Jacques"
      },
      {
-      "family": "Tsutsumi",
-      "given": "Koichiro"
-     },
-     {
-      "family": "Mitsuhashi",
-      "given": "Toshiharu"
-     },
-     {
-      "family": "Otsuka",
-      "given": "Motoyuki"
+      "family": "Crutchley",
+      "given": "Rustin D."
      }
     ],
-    "container-title": "Journal of Clinical Medicine",
+    "container-title": "Journal of Personalized Medicine",
     "issued": {
      "date-parts": [
       [
-       2025
+       2023
       ]
      ]
     },
-    "DOI": "10.3390/jcm14072287",
+    "DOI": "10.3390/jpm13020285",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-21",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-21"
      }
     },
-    "volume": "14",
-    "issue": "7",
-    "number": "2287",
-    "PMCID": "PMC11989694"
+    "volume": "13",
+    "issue": "2",
+    "number": "285",
+    "PMCID": "PMC9961427"
    },
-   "doi": "10.3390/jcm14072287",
-   "pmcid": "PMC11989694",
-   "title": "Comparison of Midazolam and Diazepam for Sedation in Patients Undergoing Double-Balloon Endoscopic Retrograde Cholangiopancreatography: A Propensity Score-Matched Analysis",
-   "year": 2025,
-   "journal": "Journal of clinical medicine",
-   "kind": "other",
+   "doi": "10.3390/jpm13020285",
+   "pmcid": "PMC9961427",
+   "title": "Clinical Impact of the CYP2C19 Gene on Diazepam for the Management of Alcohol Withdrawal Syndrome",
+   "year": 2023,
+   "journal": "Journal of personalized medicine",
+   "kind": "review",
    "people": true,
-   "near": 0.661,
+   "near": 0.626,
    "money": [
-    "The authors declare no conflicts of interest.",
-    "This research was funded by the Japan Society for the Promotion of Science (JSPS) through the Grant-in-Aid for Scientific Research (KAKENHI), under Grant Number JSPS KAKENHI 24K18948, awarded to YF."
+    "This research received no external funding."
    ],
    "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This retrospective cohort study analyzed consecutive patients who underwent DB-ERCP between January 2017 and February 2024. A total of 203 patients who were sedated with diazepam (n = 94) or midazolam (n = 109) were analyzed.",
-    "text": "A retrospective cohort study comparing the effects of midazolam and diazepam sedation on DB-ERCP outcomes in 203 patients."
+    "passage": 5,
+    "where": "1. Introduction",
+    "quote": "Herein, this review article provides an overview of diazepam and its role in the management of AWS, summarizes the impact of CYP2C19 variants on diazepam pharmacokinetics and AWS outcomes during treatment with diazepam",
+    "text": "A review article reviewing the clinical impact of variants in the CYP2C19 gene on diazepam pharmacokinetics and treatment outcomes for alcohol withdrawal syndrome"
    },
    "findings": [
     {
-     "passage": 16,
-     "where": "4. Discussions",
-     "quote": "For upper gastrointestinal endoscopy, randomized controlled trials have shown that, compared to diazepam, midazolam provides superior outcomes such as greater patient satisfaction, enhanced amnesic effects regarding the examination, reduced phlebitis, and alleviation of patient discomfort.",
-     "text": "Compared to diazepam, midazolam provides superior outcomes for upper gastrointestinal endoscopy, including greater patient satisfaction, enhanced amnesic effects, reduced phlebitis, and alleviation of patient discomfort.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "adverse drug reactions, such as impaired motor coordination, dizziness, and slurred speech.",
+     "text": "Adverse drug reactions of diazepam include impaired motor coordination, dizziness, and slurred speech.",
      "id": "F1",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 21,
-     "where": "4. Discussions",
-     "quote": "However, further large-scale prospective studies are warranted to validate these findings and provide guidance for clinical practice.",
-     "text": "Further large-scale prospective studies are needed to validate the findings and provide clinical guidance.",
-     "id": "L1",
+     "passage": 12,
+     "where": "3. Diazepam for Management of Alcohol Withdrawal Syndrome",
+     "quote": "oversedation, which may present as confusion, memory issues, ataxia, and delirium.",
+     "text": "Oversedation from diazepam accumulation may present as confusion, memory issues, ataxia, and delirium.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "3. Diazepam for Management of Alcohol Withdrawal Syndrome",
+     "quote": "longer-acting benzodiazepines, such as diazepam, are more likely to accumulate and lead to possible respiratory depression",
+     "text": "Diazepam can accumulate and lead to possible respiratory depression.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
+   "limits": [],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "cheng_2018",
+    "type": "article-journal",
+    "title": "Valium without dependence? Individual GABA<sub>A</sub> receptor subtype contribution toward benzodiazepine addiction, tolerance, and therapeutic effects",
+    "author": [
+     {
+      "family": "Cheng",
+      "given": "Tianze"
+     },
+     {
+      "family": "Wallace",
+      "given": "Dominique Marie"
+     },
+     {
+      "family": "Ponteri",
+      "given": "Benjamin Bixby"
+     },
+     {
+      "family": "Tuli",
+      "given": "Mahir"
+     }
+    ],
+    "container-title": "Neuropsychiatric Disease and Treatment",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.2147/ndt.s164307",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "Volume 14",
+    "page": "1351-1361",
+    "PMCID": "PMC5973310"
+   },
+   "doi": "10.2147/ndt.s164307",
+   "pmcid": "PMC5973310",
+   "title": "Valium without dependence? Individual GABAA receptor subtype contribution toward benzodiazepine addiction, tolerance, and therapeutic effects",
+   "year": 2018,
+   "journal": "Neuropsychiatric disease and treatment",
+   "kind": "review",
+   "people": false,
+   "near": 0.634,
+   "money": [],
+   "design": null,
+   "findings": [
+    {
+     "passage": 3,
+     "where": "Introduction",
+     "quote": "The major behavioral and psychoactive effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+     "text": "The major behavioral and psychoactive effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
   }
  ],
  "parts": [],
@@ -164,65 +237,304 @@
  "missing": "",
  "wanted": [
   {
-   "doi": "10.1016/j.gie.2007.12.046",
-   "apa": "McQuaid, K. R., & Laine, L. (2008). A systematic review and meta-analysis of randomized, controlled trials of moderate sedation for routine endoscopic procedures. Gastrointestinal Endoscopy, 67(6), 910–923. https://doi.org/10.1016/j.gie.2007.12.046",
-   "near": 0.599,
-   "why": "a review or meta-analysis in people; nearness to the question 0.60; cited 363 times; its full text is not open",
-   "file": "mcquaid_2008_j_gie_2007_12_046.pdf"
+   "doi": "10.2165/00003088-197803010-00005",
+   "apa": "Mandelli, M., Tognoni, G., & Garattini, S. (1978). Clinical pharmacokinetics of diazepam. Clinical Pharmacokinetics, 3(1), 72–91. https://doi.org/10.2165/00003088-197803010-00005",
+   "near": 0.723,
+   "why": "a review or meta-analysis in people; nearness to the question 0.72; cited 199 times; its full text is not open",
+   "file": "mandelli_1978_00003088_197803010_00005.pdf"
   },
   {
-   "doi": "10.1080/15563650.2025.2493216",
-   "apa": "Weintraub, S. J. (2025). Should chlordiazepoxide and diazepam be avoided when treating alcohol withdrawal syndrome in patients with hepatic insufficiency? Clinical Toxicology, 63(5), 303–309. https://doi.org/10.1080/15563650.2025.2493216",
-   "near": 0.606,
-   "why": "a review or meta-analysis in people; nearness to the question 0.61; cited 3 times; its full text is not open",
-   "file": "weintraub_2025_15563650_2025_2493216.pdf"
+   "doi": "10.1007/s40263-016-0403-y",
+   "apa": "Weintraub, S. J. (2017). Diazepam in the treatment of moderate to severe alcohol withdrawal. CNS Drugs, 31(2), 87–95. https://doi.org/10.1007/s40263-016-0403-y",
+   "near": 0.699,
+   "why": "a review or meta-analysis in people; nearness to the question 0.70; cited 47 times; its full text is not open",
+   "file": "weintraub_2017_s40263_016_0403_y.pdf"
   },
   {
-   "doi": "10.1126/science.6101294",
-   "apa": "Tallman, J. F., Paul, S. M., Skolnick, P., & Gallager, D. W. (1980). Receptors for the age of anxiety: Pharmacology of the benzodiazepines. Science, 207(4428), 274–281. https://doi.org/10.1126/science.6101294",
-   "near": 0.569,
-   "why": "a review or meta-analysis; nearness to the question 0.57; cited 542 times; its full text is not open",
-   "file": "tallman_1980_science_6101294.pdf"
+   "doi": "10.2174/138945005774574416",
+   "apa": "Arcangeli, A., Antonelli, M., Mignani, V., & Sandroni, C. (2005). Sedation in PACU: The role of benzodiazepines. Current Drug Targets, 6(7), 745–748. https://doi.org/10.2174/138945005774574416",
+   "near": 0.656,
+   "why": "a review or meta-analysis in people; nearness to the question 0.66; cited 16 times; its full text is not open",
+   "file": "arcangeli_2005_138945005774574416.pdf"
   }
  ],
  "person": null,
- "history": [],
- "looked": [
+ "history": [
   {
-   "title": "Comparison of Anesthetic Features in Diazepam and Midazolam for Sedation Dentistry: A Scoping Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.7759/cureus.79079",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Preoperative Anxiolysis in Surgical Care Without Sedation or General Anesthesia: A Systematic Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/dj14060327",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Comfort and patient-centred care without excessive sedation: the eCASH concept",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1007/s00134-016-4297-4",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Comparison of Midazolam and Diazepam for Sedation in Patients Undergoing Double-Balloon Endoscopic Retrograde Cholangiopancreatography: A Propensity Score-Matched Analysis",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3390/jcm14072287",
-   "kept": 1,
-   "thrown": []
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
- "soft": "a source could not be fetched",
+ "looked": [
+  {
+   "title": "Clinical Impact of the CYP2C19 Gene on Diazepam for the Management of Alcohol Withdrawal Syndrome",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/jpm13020285",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "A successful loading dose of diazepam can result in the patient attaining a drowsy but arousable state.",
+     "quote": "a successful loading dose of diazepam was defined as the patient attaining a drowsy but arousable state",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "While the clinical significance of the observed recovery times remains unclear based on the CYP2C19 genotype",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "However, additional research is warranted to determine the clinical utility of CYP2C19 genotype-guided testing for diazepam to improve overall treatment outcomes in individuals who experience AWS.",
+     "why": "no sentence"
+    }
+   ]
+  },
+  {
+   "title": "Valium without dependence? Individual GABAA receptor subtype contribution toward benzodiazepine addiction, tolerance, and therapeutic effects",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2147/ndt.s164307",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a research paper studying benzodiazepine addiction, tolerance, and therapeutic effects",
+     "quote": "Valium without dependence? Individual GABAA receptor subtype contribution toward benzodiazepine addiction, tolerance, and therapeutic effects (2018), Neuropsychiatric disease and treatment.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  }
+ ],
+ "plan": {
+  "short": [
+   "F4",
+   "F1",
+   "F2"
+  ],
+  "direct": "",
+  "but": [],
+  "how": [
+   [
+    "F4"
+   ],
+   [
+    "DA",
+    "F1",
+    "F2"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.1578,
+   "but": 0.2064,
+   "how1": 0.4457,
+   "how2": 0.7796
+  },
+  "scores_quotes_alone": {
+   "short": 0.0654,
+   "but": 0.1294,
+   "how1": 0.2666,
+   "how2": 0.7016
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "The major effects of benzodiazepines include sedative, muscle relaxant, and anxiolytic effects. People may also experience impaired motor coordination, dizziness, slurred speech, confusion, memory issues, ataxia, and delirium.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "cheng_2018",
+       "where": "Introduction",
+       "quote": "The major behavioral and psychoactive effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+       "sha": "671f7e3191c23dcc"
+      },
+      {
+       "label": "F1",
+       "ref": "ho_2023",
+       "where": "Abstract",
+       "quote": "adverse drug reactions, such as impaired motor coordination, dizziness, and slurred speech.",
+       "sha": "f8ab6d23ccd0dbf9"
+      },
+      {
+       "label": "F2",
+       "ref": "ho_2023",
+       "where": "3. Diazepam for Management of Alcohol Withdrawal Syndrome",
+       "quote": "oversedation, which may present as confusion, memory issues, ataxia, and delirium.",
+       "sha": "b43c9625dce2cc87"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "This information comes from a review article.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ho_2023",
+       "where": "1. Introduction",
+       "quote": "Herein, this review article provides an overview of diazepam and its role in the management of AWS, summarizes the impact of CYP2C19 variants on diazepam pharmacokinetics and AWS outcomes during treatment with diazepam",
+       "sha": "fa26c83bd088fb5c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 review says the major effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "cheng_2018",
+       "where": "Introduction",
+       "quote": "The major behavioral and psychoactive effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+       "sha": "671f7e3191c23dcc"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that the 2018 source is a review article."
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 review of the impact of a gene on diazepam says adverse reactions can include impaired motor coordination, dizziness, and slurred speech, while oversedation may cause confusion, memory issues, ataxia, and delirium.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ho_2023",
+       "where": "1. Introduction",
+       "quote": "Herein, this review article provides an overview of diazepam and its role in the management of AWS, summarizes the impact of CYP2C19 variants on diazepam pharmacokinetics and AWS outcomes during treatment with diazepam",
+       "sha": "fa26c83bd088fb5c"
+      },
+      {
+       "label": "F1",
+       "ref": "ho_2023",
+       "where": "Abstract",
+       "quote": "adverse drug reactions, such as impaired motor coordination, dizziness, and slurred speech.",
+       "sha": "f8ab6d23ccd0dbf9"
+      },
+      {
+       "label": "F2",
+       "ref": "ho_2023",
+       "where": "3. Diazepam for Management of Alcohol Withdrawal Syndrome",
+       "quote": "oversedation, which may present as confusion, memory issues, ataxia, and delirium.",
+       "sha": "b43c9625dce2cc87"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Diazepam can make people feel calm, sleepy, and relaxed. It can also cause dizziness, slurred speech, and trouble moving smoothly.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "cheng_2018",
+       "where": "Introduction",
+       "quote": "The major behavioral and psychoactive effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+       "sha": "671f7e3191c23dcc"
+      },
+      {
+       "label": "F1",
+       "ref": "ho_2023",
+       "where": "Abstract",
+       "quote": "adverse drug reactions, such as impaired motor coordination, dizziness, and slurred speech.",
+       "sha": "f8ab6d23ccd0dbf9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passages do not explicitly state that diazepam makes people feel calm, sleepy, and relaxed; they list 'sedative' and 'anxiolytic' effects, not those exact feelings, and 'muscle relaxant' does not equal 'trouble moving smoothly'."
+    },
+    {
+     "part": "but",
+     "text": "These are listed effects, not a description of what it feels like to a person taking it.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "cheng_2018",
+       "where": "Introduction",
+       "quote": "The major behavioral and psychoactive effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+       "sha": "671f7e3191c23dcc"
+      },
+      {
+       "label": "F1",
+       "ref": "ho_2023",
+       "where": "Abstract",
+       "quote": "adverse drug reactions, such as impaired motor coordination, dizziness, and slurred speech.",
+       "sha": "f8ab6d23ccd0dbf9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passages contain no statement about the listed effects being merely a list rather than a personal description."
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 review says benzodiazepines have sedative, muscle relaxant, and anxiety-reducing effects.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "cheng_2018",
+       "where": "Introduction",
+       "quote": "The major behavioral and psychoactive effects of benzodiazepines include anticonvulsive, sedative, muscle relaxant, and anxiolytic effects.",
+       "sha": "671f7e3191c23dcc"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 review of alcohol withdrawal treatment lists dizziness, slurred speech, and poor coordination as reactions.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "ho_2023",
+       "where": "1. Introduction",
+       "quote": "Herein, this review article provides an overview of diazepam and its role in the management of AWS, summarizes the impact of CYP2C19 variants on diazepam pharmacokinetics and AWS outcomes during treatment with diazepam",
+       "sha": "fa26c83bd088fb5c"
+      },
+      {
+       "label": "F1",
+       "ref": "ho_2023",
+       "where": "Abstract",
+       "quote": "adverse drug reactions, such as impaired motor coordination, dizziness, and slurred speech.",
+       "sha": "f8ab6d23ccd0dbf9"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "benzodiazepines",
   "also": [],
