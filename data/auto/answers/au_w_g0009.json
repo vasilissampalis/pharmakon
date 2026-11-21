@@ -17,35 +17,339 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44890388736",
-  "read_seconds": 94,
+  "run": "44893591780",
+  "read_by": {
+   "gemini-3.5-flash-lite": 1,
+   "gemma-4-31b-it": 1
+  },
+  "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 94
+  "seconds": 424
  },
- "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "status": "waiting",
+ "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8573)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 6 of 6; gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview could not be asked: the time for this question was over before gemini-3-flash-preview could be asked; gemini-4-hydrogen could not be asked: the time for this question was over before gemini-4-hydrogen could be asked; gemini-3.8-flash could not be asked: the time for this question was over before gemini-3.8-flash could be asked",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.83, but 0.98, how1 0.03, how2 0.01, how3 0.84, how4 0.96",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
- "sources": [],
- "parts": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "luethi_2020",
+    "type": "article-journal",
+    "title": "Designer drugs: Mechanism of action and adverse effects",
+    "author": [
+     {
+      "family": "Luethi",
+      "given": "Dino"
+     },
+     {
+      "family": "Liechti",
+      "given": "Matthias E."
+     }
+    ],
+    "container-title": "Archives of Toxicology",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.1007/s00204-020-02693-7",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "correction",
+      "checked_on": "2026-11-21",
+      "note": "Crossref lists a correction; read it with the paper."
+     }
+    },
+    "volume": "94",
+    "issue": "4",
+    "page": "1085-1133",
+    "PMCID": "PMC7225206"
+   },
+   "doi": "10.1007/s00204-020-02693-7",
+   "pmcid": "PMC7225206",
+   "title": "Designer drugs: mechanism of action and adverse effects",
+   "year": 2020,
+   "journal": "Archives of toxicology",
+   "kind": "review",
+   "people": false,
+   "near": 0.635,
+   "money": [
+    "The authors declare that they have no conflict of interest."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 45,
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
+     "text": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs include agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 45,
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
+     "text": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 45,
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
+     "text": "Regular use of ketamine has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 45,
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "The prevalence of urinary symptoms was related to the frequency of methoxetamine use during the previous month, but prior ketamine use could have a",
+     "text": "Prior ketamine use could have an effect on the prevalence of urinary symptoms reported by methoxetamine users.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "li_2016",
+    "type": "article-journal",
+    "title": "Ketamine: 50 years of modulating the mind",
+    "author": [
+     {
+      "family": "Li",
+      "given": "Linda"
+     },
+     {
+      "family": "Vlisides",
+      "given": "Phillip E."
+     }
+    ],
+    "container-title": "Frontiers in Human Neuroscience",
+    "issued": {
+     "date-parts": [
+      [
+       2016
+      ]
+     ]
+    },
+    "DOI": "10.3389/fnhum.2016.00612",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "10",
+    "PMCID": "PMC5126726"
+   },
+   "doi": "10.3389/fnhum.2016.00612",
+   "pmcid": "PMC5126726",
+   "title": "Ketamine: 50 Years of Modulating the Mind",
+   "year": 2016,
+   "journal": "Frontiers in human neuroscience",
+   "kind": "review",
+   "people": false,
+   "near": 0.612,
+   "money": [
+    "PEV is supported by the National Institutes of Health, Bethesda, MD, USA, Grant T32GM103730. Funding also provided by the Department of Anesthesiology, University of Michigan Medical School.",
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.",
+    "The authors would like to acknowledge support from the Department of Anesthesiology at the University of Michigan Medical School. Additionally, the authors would like to thank Dr. George Mashour for expert consultation throughout the manuscript writing process."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "In this article, we review the history of ketamine, its pharmacology, putative mechanisms of action and current clinical applications.",
+    "text": "Review of ketamine's history, pharmacology, mechanisms, and clinical applications"
+   },
+   "findings": [
+    {
+     "passage": 48,
+     "where": "Conclusions and Future Directions",
+     "quote": "researchers have now moved towards developing shorter acting analogs of ketamine to further reduce the psychogenic effects",
+     "text": "Researchers are developing shorter acting analogs of ketamine to further reduce psychogenic effects.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Pharmacology › Side Effects, Toxicities, Interactions and Abuse",
+     "quote": "given its CNS modulatory activity, ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
+     "text": "Ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 48,
+     "where": "Conclusions and Future Directions",
+     "quote": "the adverse psychological effects are often transient and either prevented by or alleviated with premedication or combined use with other agents.",
+     "text": "Adverse psychological effects of ketamine are often transient and can be prevented or alleviated with combined use with other agents or premedication.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "With considerably diverse molecular targets and neurophysiological properties, ketamine’s effects on the central nervous system remain incompletely understood.",
+     "text": "Ketamine's effects on the central nervous system remain incompletely understood.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "These drugs can cause agitation, confusion, hallucinations, and muscle rigidity. Methoxetamine inhaled can cause seizures, slow heart rates, and low salt in the blood. Ketamine use is linked to bladder and kidney problems.",
+   "uses": [
+    "F1",
+    "F2",
+    "F3",
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "luethi_2020",
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
+     "sha": "c6a3fd974c1fdedf"
+    },
+    {
+     "label": "F2",
+     "ref": "luethi_2020",
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
+     "sha": "c6a3fd974c1fdedf"
+    },
+    {
+     "label": "F3",
+     "ref": "luethi_2020",
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
+     "sha": "c6a3fd974c1fdedf"
+    },
+    {
+     "label": "F5",
+     "ref": "li_2016",
+     "where": "Pharmacology › Side Effects, Toxicities, Interactions and Abuse",
+     "quote": "given its CNS modulatory activity, ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
+     "sha": "9218c60fca0721b9"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The effects of ketamine on the central nervous system are not fully understood.",
+   "uses": [
+    "L2"
+   ],
+   "rests_on": [
+    {
+     "label": "L2",
+     "ref": "li_2016",
+     "where": "Abstract",
+     "quote": "With considerably diverse molecular targets and neurophysiological properties, ketamine’s effects on the central nervous system remain incompletely understood.",
+     "sha": "8156767961673c86"
+    }
+   ]
+  },
+  {
+   "part": "how3",
+   "text": "The 2020 review also links regular ketamine use to bladder and kidney issues.",
+   "uses": [
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "luethi_2020",
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
+     "sha": "c6a3fd974c1fdedf"
+    }
+   ],
+   "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
+   "quote_ref": "luethi_2020"
+  },
+  {
+   "part": "how4",
+   "text": "A 2016 review says ketamine should be used cautiously with alcohol, opioids, benzodiazepines, and cannabis.",
+   "uses": [
+    "DB",
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "li_2016",
+     "where": "Abstract",
+     "quote": "In this article, we review the history of ketamine, its pharmacology, putative mechanisms of action and current clinical applications.",
+     "sha": "8156767961673c86"
+    },
+    {
+     "label": "F5",
+     "ref": "li_2016",
+     "where": "Pharmacology › Side Effects, Toxicities, Interactions and Abuse",
+     "quote": "given its CNS modulatory activity, ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
+     "sha": "9218c60fca0721b9"
+    }
+   ],
+   "quote": "ketamine should be used cautiously with other drugs that alter mood and perception",
+   "quote_ref": "li_2016"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "What it feels like to use them.",
  "wanted": [
   {
    "doi": "10.1111/j.1360-0443.2011.03576.x",
@@ -70,7 +374,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Safety considerations and risk mitigation strategies for ketamine use: a comprehensive review",
@@ -86,30 +399,146 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s00204-020-02693-7",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a review of designer drugs, their mechanisms of action, and their adverse effects",
+     "quote": "Designer drugs: mechanism of action and adverse effects (2020)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Ketamine: 50 Years of Modulating the Mind",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fnhum.2016.00612",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Safety and tolerance of oral ketamine: A systematic review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1111/pcn.70091",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F2",
+   "F3",
+   "F5"
+  ],
+  "direct": "",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
+    "DB",
+    "F5",
+    "F6"
+   ]
+  ],
+  "unanswered": "subjective or desired effects"
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": "could not be asked: the time for this question was over before gemini-3-flash-preview could be asked",
+  "gemini:gemini-4-hydrogen": "could not be asked: the time for this question was over before gemini-4-hydrogen could be asked",
+  "gemini:gemini-3.8-flash": "could not be asked: the time for this question was over before gemini-3.8-flash could be asked"
+ },
+ "panel_gap": [
+  "gemini-3.6-flash"
+ ],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8295,
+   "but": 0.984,
+   "how1": 0.0259,
+   "how2": 0.0141,
+   "how3": 0.8351,
+   "how4": 0.9634
+  },
+  "scores_quotes_alone": {
+   "short": 0.3088,
+   "but": 0.9672,
+   "how1": 0.6352,
+   "how2": 0.3506,
+   "how3": 0.724,
+   "how4": 0.7891
+  }
+ },
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how1",
+   "text": "A 2020 review of designer drugs found effects like confusion, hallucinations, and high blood pressure.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "luethi_2020",
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
+     "sha": "c6a3fd974c1fdedf"
+    }
+   ],
+   "by": "our own checker",
+   "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+  },
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "The same 2020 review says inhaling methoxetamine can cause seizures and slow heart rates.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "luethi_2020",
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
+     "sha": "c6a3fd974c1fdedf"
+    }
+   ],
+   "by": "our own checker",
+   "said": "our own checker does not find it in the words it rests on (0.01): say only what those words say, in their own measure"
+  }
+ ],
+ "stakes": "overdose or an emergency",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
+ "for": "again",
+ "soft": "a further reader could not be asked",
  "place": {
   "home": "new:Ketamine analogues (MXE, DCK)",
   "also": [],
