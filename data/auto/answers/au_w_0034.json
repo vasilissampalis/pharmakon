@@ -19,38 +19,283 @@
   "dmt-ayahuasca"
  ],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1": "gemini:gemma-4-31b-it",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44666137611",
+  "run": "44850781058",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 166.5,
+  "seconds": 215
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (9 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "about dying: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9200) gemma-4-26b-a4b-it gave no answer in the form asked for: llama-3.3-70b-instruct-fp8-fast wrote from there.",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: a number that is not in the paper's words it rests on (20))",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.74, but 0.17, how1 0.71",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemma-4-31b-it",
+  "but": "the writer's But was not accepted (The passages do not state that it was found in a systematic review.): the code wrote the But itself, from what this answer rests on",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: NOT met: no further reader read it"
  },
- "sources": [],
- "parts": [],
- "complete": false,
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "roseman_2018",
+    "type": "article-journal",
+    "title": "Quality of acute psychedelic experience predicts therapeutic efficacy of psilocybin for treatment-resistant depression",
+    "author": [
+     {
+      "family": "Roseman",
+      "given": "Leor"
+     },
+     {
+      "family": "Nutt",
+      "given": "David J."
+     },
+     {
+      "family": "Carhart-Harris",
+      "given": "Robin L."
+     }
+    ],
+    "container-title": "Frontiers in Pharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.3389/fphar.2017.00974",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "8",
+    "number": "974",
+    "PMCID": "PMC5776504"
+   },
+   "doi": "10.3389/fphar.2017.00974",
+   "pmcid": "PMC5776504",
+   "title": "Quality of Acute Psychedelic Experience Predicts Therapeutic Efficacy of Psilocybin for Treatment-Resistant Depression",
+   "year": 2017,
+   "journal": "Frontiers in pharmacology",
+   "kind": "other",
+   "people": true,
+   "near": 0.663,
+   "money": [],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "Twenty patients with treatment resistant depression underwent treatment with psilocybin (two separate sessions: 10 and 25 mg psilocybin).",
+    "text": "Clinical trial of psilocybin for treatment‑resistant depression"
+   },
+   "findings": [
+    {
+     "passage": 26,
+     "where": "Discussion",
+     "quote": "writers on the mystical‑type/peak experience have reliably identified loss of self or “ego‑dissolution” as one of its basic pre‑requisites and features",
+     "text": "The study notes that mystical‑type or peak experiences involve loss of self, also called ego‑dissolution.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "ko_2022",
+    "type": "article-journal",
+    "title": "Psychedelics, mystical experience, and therapeutic efficacy: A systematic review",
+    "author": [
+     {
+      "family": "Ko",
+      "given": "Kwonmok"
+     },
+     {
+      "family": "Knight",
+      "given": "Gemma"
+     },
+     {
+      "family": "Rucker",
+      "given": "James J."
+     },
+     {
+      "family": "Cleare",
+      "given": "Anthony J."
+     }
+    ],
+    "container-title": "Frontiers in Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpsyt.2022.917199",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "13",
+    "number": "917199",
+    "PMCID": "PMC9340494"
+   },
+   "doi": "10.3389/fpsyt.2022.917199",
+   "pmcid": "PMC9340494",
+   "title": "Psychedelics, Mystical Experience, and Therapeutic Efficacy: A Systematic Review",
+   "year": 2022,
+   "journal": "Frontiers in psychiatry",
+   "kind": "review",
+   "people": true,
+   "near": 0.574,
+   "money": [
+    "This research was supported by the NIHR Biomedical Research Centre (BRC) at South London and Maudsley NHS Foundation Trust and King's College London.",
+    "KK is a member of Psychedelic Trials Group PTG at King's College London KCL. KCL receives grant funding from COMPASS Pathways PLC and Beckley PsyTech to undertake phase 1 and phase 2 trials with psychedelics, including psilocybin. GK is an honorary member of PTG at KCL. JR leads the PTG at KCL; COMPASS Pathways PLC has paid for JR to attend trial related meetings and conferences to present the results of research using psilocybin. JR has undertaken paid consultancy work for Beckley PsyTech, Delica Therapeutics and Clerkenwell Health. AC has recently received honoraria for presentations and/or serving on advisory boards from the following pharmaceutical companies: Janssen, Lundbeck, Allergan, and Livanova."
+   ],
+   "design": {
+    "passage": 3,
+    "where": "Introduction",
+    "quote": "Both neurobiological and psychological mechanisms related to psychedelics have been identified. These include emotional breakthrough, increased psychological flexibility, and mystical experience to include oceanic boundlessness [OBN], universal interconnectedness, ego dissolution, and transcendence of time and space.",
+    "text": "Systematic review of psychedelic therapy studies examining mystical experience and its components, including ego dissolution"
+   },
+   "findings": [
+    {
+     "passage": 3,
+     "where": "Introduction",
+     "quote": "Ego dissolution refers to reduction or loss of one's sense of personal identity; this can be positive, in the form of OBN (experience of unity), or negative, in producing anxiety.",
+     "text": "Ego dissolution is defined as a reduction or loss of one’s sense of personal identity, which can be experienced positively as unity or negatively as anxiety.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "6 out of 12 studies were open-label in design and therefore susceptible to bias.",
+     "text": "Six of the twelve studies were open-label, making them susceptible to bias.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Ego death is a loss of one’s sense of personal identity, which can be experienced positively as unity or negatively as anxiety.",
+   "uses": [
+    "F2",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "ko_2022",
+     "where": "Introduction",
+     "quote": "Ego dissolution refers to reduction or loss of one's sense of personal identity; this can be positive, in the form of OBN (experience of unity), or negative, in producing anxiety.",
+     "sha": "758462dacfedda4c"
+    },
+    {
+     "label": "F1",
+     "ref": "roseman_2018",
+     "where": "Discussion",
+     "quote": "writers on the mystical‑type/peak experience have reliably identified loss of self or “ego‑dissolution” as one of its basic pre‑requisites and features",
+     "sha": "c40effd9579ba2a5"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review and 1 study in people.",
+   "uses": [
+    "DA",
+    "DB"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "roseman_2018",
+     "where": "Abstract",
+     "quote": "Twenty patients with treatment resistant depression underwent treatment with psilocybin (two separate sessions: 10 and 25 mg psilocybin).",
+     "sha": "2491ba18b8147765"
+    },
+    {
+     "label": "DB",
+     "ref": "ko_2022",
+     "where": "Introduction",
+     "quote": "Both neurobiological and psychological mechanisms related to psychedelics have been identified. These include emotional breakthrough, increased psychological flexibility, and mystical experience to include oceanic boundlessness [OBN], universal interconnectedness, ego dissolution, and transcendence of time and space.",
+     "sha": "758462dacfedda4c"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A systematic review of psychedelic therapy studies examined ego dissolution.",
+   "uses": [
+    "DB",
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "ko_2022",
+     "where": "Introduction",
+     "quote": "Both neurobiological and psychological mechanisms related to psychedelics have been identified. These include emotional breakthrough, increased psychological flexibility, and mystical experience to include oceanic boundlessness [OBN], universal interconnectedness, ego dissolution, and transcendence of time and space.",
+     "sha": "758462dacfedda4c"
+    },
+    {
+     "label": "F2",
+     "ref": "ko_2022",
+     "where": "Introduction",
+     "quote": "Ego dissolution refers to reduction or loss of one's sense of personal identity; this can be positive, in the form of OBN (experience of unity), or negative, in producing anxiety.",
+     "sha": "758462dacfedda4c"
+    }
+   ],
+   "quote": "Ego dissolution refers to reduction or loss of one's sense of personal identity",
+   "quote_ref": "ko_2022"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -84,6 +329,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (9 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -92,84 +345,196 @@
    "read": "full",
    "kind": "other",
    "at": "10.3389/fphar.2017.00974",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The paper acknowledges that constructs such as ego dissolution have not yet been clearly defined, measured, or quantified.",
+     "quote": "little effort has been made to define, measure and quantify their contributions",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Psychedelics, Mystical Experience, and Therapeutic Efficacy: A Systematic Review",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2022.917199",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "Alterations of consciousness and mystical-type experiences after acute LSD in humans",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1007/s00213-016-4453-0",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "Me, myself, bye: regional alterations in glutamate and the experience of ego dissolution with psilocybin",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1038/s41386-020-0718-8",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "Dose-response relationships of LSD-induced subjective experiences in humans",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1038/s41386-023-01588-2",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "DMT Models the Near-Death Experience",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyg.2018.01424",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Sub-acute and long-term effects of ayahuasca on affect and cognitive thinking style and their association with ego dissolution",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1007/s00213-018-4988-3",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Naturalistic psychedelic therapy: The role of relaxation and subjective drug effects in antidepressant response",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1177/02698811241278873",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Embracing change: impermanence acceptance mediates differences in death processing between long-term ayahuasca users and non-users",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1007/s00213-025-06792-0",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F2",
+   "F1"
+  ],
+  "direct": "",
+  "but": [],
+  "how": [
+   [
+    "DB",
+    "F2"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "A clinical trial studied 20 patients with treatment-resistant depression.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "roseman_2018",
+     "where": "Abstract",
+     "quote": "Twenty patients with treatment resistant depression underwent treatment with psilocybin (two separate sessions: 10 and 25 mg psilocybin).",
+     "sha": "2491ba18b8147765"
+    },
+    {
+     "label": "F1",
+     "ref": "roseman_2018",
+     "where": "Discussion",
+     "quote": "writers on the mystical‑type/peak experience have reliably identified loss of self or “ego‑dissolution” as one of its basic pre‑requisites and features",
+     "sha": "c40effd9579ba2a5"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: a number that is not in the paper's words it rests on (20)"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A clinical trial of psilocybin for treatment-resistant depression involved 20 patients.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "roseman_2018",
+     "where": "Abstract",
+     "quote": "Twenty patients with treatment resistant depression underwent treatment with psilocybin (two separate sessions: 10 and 25 mg psilocybin).",
+     "sha": "2491ba18b8147765"
+    },
+    {
+     "label": "F1",
+     "ref": "roseman_2018",
+     "where": "Discussion",
+     "quote": "writers on the mystical‑type/peak experience have reliably identified loss of self or “ego‑dissolution” as one of its basic pre‑requisites and features",
+     "sha": "c40effd9579ba2a5"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: a number that is not in the paper's words it rests on (20)"
+  },
+  {
+   "try": 3,
+   "part": "but",
+   "text": "But it was found in a clinical trial and a systematic review.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "roseman_2018",
+     "where": "Abstract",
+     "quote": "Twenty patients with treatment resistant depression underwent treatment with psilocybin (two separate sessions: 10 and 25 mg psilocybin).",
+     "sha": "2491ba18b8147765"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages do not state that it was found in a systematic review."
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.7438,
+   "but": 0.1687,
+   "how1": 0.7086
+  },
+  "scores_quotes_alone": {
+   "short": 0.4984,
+   "but": 0.0186,
+   "how1": 0.7551
+  }
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Ego death is a loss of personal identity, felt as unity or anxiety. It involves ego dissolution.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "ko_2022",
+       "where": "Introduction",
+       "quote": "Ego dissolution refers to reduction or loss of one's sense of personal identity; this can be positive, in the form of OBN (experience of unity), or negative, in producing anxiety.",
+       "sha": "758462dacfedda4c"
+      },
+      {
+       "label": "F1",
+       "ref": "roseman_2018",
+       "where": "Discussion",
+       "quote": "writers on the mystical‑type/peak experience have reliably identified loss of self or “ego‑dissolution” as one of its basic pre‑requisites and features",
+       "sha": "c40effd9579ba2a5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "But it was a single study and a review.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "roseman_2018",
+       "where": "Abstract",
+       "quote": "Twenty patients with treatment resistant depression underwent treatment with psilocybin (two separate sessions: 10 and 25 mg psilocybin).",
+       "sha": "2491ba18b8147765"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that it was a single study and a review."
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review examined psychedelic therapy studies.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "ko_2022",
+       "where": "Introduction",
+       "quote": "Both neurobiological and psychological mechanisms related to psychedelics have been identified. These include emotional breakthrough, increased psychological flexibility, and mystical experience to include oceanic boundlessness [OBN], universal interconnectedness, ego dissolution, and transcendence of time and space.",
+       "sha": "758462dacfedda4c"
+      },
+      {
+       "label": "F2",
+       "ref": "ko_2022",
+       "where": "Introduction",
+       "quote": "Ego dissolution refers to reduction or loss of one's sense of personal identity; this can be positive, in the form of OBN (experience of unity), or negative, in producing anxiety.",
+       "sha": "758462dacfedda4c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages mention a systematic review, but do not state that it examined psychedelic therapy studies specifically."
+    }
+   ]
+  }
+ ],
+ "stakes": "dying",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "facts",
   "also": [],
