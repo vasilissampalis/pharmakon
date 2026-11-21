@@ -15,37 +15,143 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.6-flash",
    "team": "team L",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44838604890",
+  "run": "44892722568",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 145
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.76, but 0.98, how1 0.01, how2 0.96",
+  "check": "short: NOT accepted: it does not answer the question itself (Sentence 1 does not answer the question about how long NBOMes stay in the body, and sentence 2 is not a limit or doubt about sentence 1.); but: NOT accepted: it is about something else than the short answer (Sentence 1 does not answer the question about how long NBOMes stay in the body, and sentence 2 is not a limit or doubt about sentence 1.); how1: NOT accepted: The text is an excerpt from a review, but the abstract does not state it is a review of research on detection in biological materials.; how2: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "zawilska_2020",
+    "type": "article-journal",
+    "title": "NBOMes–highly potent and toxic alternatives of LSD",
+    "author": [
+     {
+      "family": "Zawilska",
+      "given": "Jolanta B."
+     },
+     {
+      "family": "Kacela",
+      "given": "Monika"
+     },
+     {
+      "family": "Adamowicz",
+      "given": "Piotr"
+     }
+    ],
+    "container-title": "Frontiers in Neuroscience",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.3389/fnins.2020.00078",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "14",
+    "number": "78",
+    "PMCID": "PMC7054380"
+   },
+   "doi": "10.3389/fnins.2020.00078",
+   "pmcid": "PMC7054380",
+   "title": "NBOMes-Highly Potent and Toxic Alternatives of LSD",
+   "year": 2020,
+   "journal": "Frontiers in neuroscience",
+   "kind": "review",
+   "people": true,
+   "near": 0.678,
+   "money": [
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.",
+    "Funding. This work was supported by the Medical University of Łódź (grant no. 503/3-011-01/503-31-001-19-00)."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Recently, a new class of psychedelic compounds named NBOMe (or 25X-NBOMe) has appeared on the illegal drug market. NBOMes are analogs of the 2C family of phenethylamine drugs",
+    "text": "A review of research on NBOMe compounds, their pharmacology, and methods for their detection in biological materials."
+   },
+   "findings": [
+    {
+     "passage": 34,
+     "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+     "quote": "only sensitive and specific analytical methods can be used for the detection, identification, and determination of NBOMes in biological materials.",
+     "text": "Only sensitive and specific analytical methods can be used to detect, identify, and determine NBOMes in biological materials.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 34,
+     "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+     "quote": "the resulting biological fluid concentrations tend to be very low, ranging from about 0.1 ng/mL to several ng/mL in blood and up to several dozen ng/mL in urine.",
+     "text": "Biological fluid concentrations of NBOMes are very low, ranging from about 0.1 ng/mL to several ng/mL in blood and up to several dozen ng/mL in urine.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 34,
+     "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+     "quote": "Although the compounds are generally present at higher concentrations in urine than in blood, detection methods should be targeted to the metabolites rather than the parent compounds.",
+     "text": "NBOMes are generally present at higher concentrations in urine than in blood, and detection methods should target metabolites rather than the parent compounds.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 36,
+     "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+     "quote": "only a few screening methods covering more than one or two NBOMe compounds have been published.",
+     "text": "Only a few screening methods that cover more than one or two NBOMe compounds have been published.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "how long they stay in the body",
  "wanted": [
   {
    "doi": "10.1007/s00414-023-03151-6",
@@ -63,16 +169,24 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "NBOMes-Highly Potent and Toxic Alternatives of LSD",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fnins.2020.00078",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "25C-NBOMe: preliminary data on pharmacology, psychoactive effects, and toxicity of a new potent and dangerous hallucinogenic drug",
@@ -89,11 +203,246 @@
    "kind": "review",
    "at": "10.1016/j.toxrep.2025.101890",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "It can",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "how long they stay in the body"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.7593,
+   "but": 0.9775,
+   "how1": 0.0116,
+   "how2": 0.9642
+  },
+  "scores_quotes_alone": {
+   "short": 0.5703,
+   "but": 0.8196,
+   "how1": 0.0453,
+   "how2": 0.7616
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can be found in biological materials using sensitive and specific analytical methods.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only sensitive and specific analytical methods can be used for the detection, identification, and determination of NBOMes in biological materials.",
+       "sha": "d1865933298a97ec"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Only a few screening methods cover more than one or two NBOMe compounds.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only a few screening methods covering more than one or two NBOMe compounds have been published.",
+       "sha": "d26e3b2ec215333b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of research on NBOMe compounds and detection methods says only sensitive and specific analytical methods can detect them in biological materials.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "zawilska_2020",
+       "where": "Abstract",
+       "quote": "Recently, a new class of psychedelic compounds named NBOMe (or 25X-NBOMe) has appeared on the illegal drug market. NBOMes are analogs of the 2C family of phenethylamine drugs",
+       "sha": "fa3fa31f73c04eda"
+      },
+      {
+       "label": "F1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only sensitive and specific analytical methods can be used for the detection, identification, and determination of NBOMes in biological materials.",
+       "sha": "d1865933298a97ec"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can be found in biological materials using sensitive and specific analytical methods.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only sensitive and specific analytical methods can be used for the detection, identification, and determination of NBOMes in biological materials.",
+       "sha": "d1865933298a97ec"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "Only a few screening methods cover more than one or two NBOMe compounds.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only a few screening methods covering more than one or two NBOMe compounds have been published.",
+       "sha": "d26e3b2ec215333b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of research on NBOMe compounds and detection methods says only sensitive and specific analytical methods can detect them in biological materials.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "zawilska_2020",
+       "where": "Abstract",
+       "quote": "Recently, a new class of psychedelic compounds named NBOMe (or 25X-NBOMe) has appeared on the illegal drug market. NBOMes are analogs of the 2C family of phenethylamine drugs",
+       "sha": "fa3fa31f73c04eda"
+      },
+      {
+       "label": "F1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only sensitive and specific analytical methods can be used for the detection, identification, and determination of NBOMes in biological materials.",
+       "sha": "d1865933298a97ec"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can be found in biological materials using sensitive and specific analytical methods.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only sensitive and specific analytical methods can be used for the detection, identification, and determination of NBOMes in biological materials.",
+       "sha": "d1865933298a97ec"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 does not answer the question about how long NBOMes stay in the body, and sentence 2 is not a limit or doubt about sentence 1.)"
+    },
+    {
+     "part": "but",
+     "text": "Only a few screening methods cover more than one or two NBOMe compounds.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only a few screening methods covering more than one or two NBOMe compounds have been published.",
+       "sha": "d26e3b2ec215333b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 does not answer the question about how long NBOMes stay in the body, and sentence 2 is not a limit or doubt about sentence 1.)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 review of research on NBOMe compounds and their detection in biological materials.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "zawilska_2020",
+       "where": "Abstract",
+       "quote": "Recently, a new class of psychedelic compounds named NBOMe (or 25X-NBOMe) has appeared on the illegal drug market. NBOMes are analogs of the 2C family of phenethylamine drugs",
+       "sha": "fa3fa31f73c04eda"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The text is an excerpt from a review, but the abstract does not state it is a review of research on detection in biological materials."
+    },
+    {
+     "part": "how2",
+     "text": "It says only sensitive and specific analytical methods can detect, identify, and determine NBOMes.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "zawilska_2020",
+       "where": "Detection and Identification of NBOMes and Their Metabolites in Biological Materials",
+       "quote": "only sensitive and specific analytical methods can be used for the detection, identification, and determination of NBOMes in biological materials.",
+       "sha": "d1865933298a97ec"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2020 review of research on NBOMe compounds and their detection in biological materials.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "zawilska_2020",
+     "where": "Abstract",
+     "quote": "Recently, a new class of psychedelic compounds named NBOMe (or 25X-NBOMe) has appeared on the illegal drug market. NBOMes are analogs of the 2C family of phenethylamine drugs",
+     "sha": "fa3fa31f73c04eda"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The text is an excerpt from a review, but the abstract does not state it is a review of research on detection in biological materials."
+  }
+ ],
  "place": {
   "home": "new:NBOMes",
   "also": [],
