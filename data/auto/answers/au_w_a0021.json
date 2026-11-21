@@ -15,42 +15,37 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44659042878",
-  "read_by": {
-   "gpt-oss-20b": 1,
-   "llama-4-scout-17b-16e-instruct": 1
-  },
-  "read_seconds": 130,
+  "run": "44841499696",
+  "read_seconds": 41,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 271.3,
-  "seconds": 179
+  "neurons": 590.8,
+  "seconds": 235
  },
- "status": "published",
- "why": "passed every gate",
+ "status": "none",
+ "why": "the answer was not accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention a study that found these exact things combined in this manner as described in the sentence, or the review does not explicitly summarize them in this exact way.",
  "gates": {
-  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.1-flash-lite accepted 4 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.66, but 0.93, how1 0.29, how2 0.86",
-  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.1-flash-lite; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 4; gemini-3.6-flash accepted 3 of 4",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.08, but 0.99, how1 0.03, how2 0.98",
+  "check": "short: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention a study that found these exact things combined in this manner as described in the sentence, or the review does not explicitly summarize them in this exact way.; but: accepted; how1: NOT accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure; how2: accepted"
  },
  "sources": [
   {
@@ -91,10 +86,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-21",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-21"
      }
     },
     "volume": "26",
@@ -116,45 +111,36 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa...",
-    "text": "Review paper on Sceletium tortuosum (kanna) and its biological properties"
+    "quote": "Thus, this review provides an extensive overview of the biological and p",
+    "text": "a review of the biological and pharmaceutical properties of Sceletium tortuosum"
    },
    "findings": [
     {
-     "passage": 18,
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-     "quote": "Various formulae of Sceletium products such as dried plant material, tinctures, teas, tablets, and capsules have been used to enhance well‑being and act as a stress reliever.",
-     "text": "Sceletium products are used to enhance well‑being and act as a stress reliever.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well-being by relieving stress with calming effects.",
+     "text": "Kanna promotes a sense of well-being by relieving stress with calming effects.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 22,
      "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-     "quote": "The plant improves mood, thus has anti‑depression properties.",
-     "text": "The plant improves mood and has anti‑depression properties.",
+     "quote": "The plant improves mood, thus has anti-depression properties.",
+     "text": "The plant improves mood and thus has anti-depression properties.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 25,
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-     "quote": "A recent clinical study was conducted using plant extracts of S. tortuosum (trademarked―Zembrin®, Morristown, NJ, USA) to determine the anti‑anxiolytic potential of the plant.",
-     "text": "A clinical study found that S. tortuosum extracts have anti‑anxiolytic potential.",
+     "passage": 27,
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.5. Analgesic Properties of Sceletium Plants",
+     "quote": "The results revealed that mesembrine, as a major compound in S. tortuosum, can be responsible for analgesic activity.",
+     "text": "Mesembrine as a major compound in S. tortuosum can be responsible for analgesic activity.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 25,
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-     "quote": "The study was placebo‑controlled, double‑blind whereby 20 young healthy volunteers were administrated a single dose of S. tortuosum (25 mg, Zembrin®).",
-     "text": "The anxiolytic study involved only 20 young healthy volunteers receiving a single dose.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -239,10 +225,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-21",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-21"
      }
     },
     "volume": "2014",
@@ -264,175 +250,50 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study.",
-    "text": "randomized double-blind placebo-controlled cross-over design"
+    "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+    "text": "randomized double-blind placebo-controlled cross-over study of healthy human subjects"
    },
    "findings": [
-    {
-     "passage": 16,
-     "where": "3. Results › 3.2. Efficacy",
-     "quote": "The subjective ratings of generalized well-being and positive mood states in our study agreed well with a recent safety and tolerability study on extract Sceletium tortuosum (Zembrin) in healthy subjects who reported “uplifted spirits” and better coping with stress and depressing events.",
-     "text": "Subjects reported uplifted spirits and better coping with stress and depressing events.",
-     "id": "F4",
-     "second_hand": ""
-    },
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "Positive changes in mood and sleep were found.",
-     "text": "Positive changes in mood and sleep were found in cognitively healthy subjects.",
+     "text": "Positive changes in mood and sleep were found.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 18,
+     "where": "3. Results › 3.3. Safety and Tolerability",
+     "quote": "Extract Sceletium tortuosum (Zembrin) was safe and well tolerated.",
+     "text": "Extract Sceletium tortuosum was safe and well tolerated.",
      "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 18,
+     "where": "3. Results › 3.3. Safety and Tolerability",
+     "quote": "the Zembrin group reported transient gastrointestinal discomfort (9.5%) which resolved spontaneously",
+     "text": "The Zembrin group reported transient gastrointestinal discomfort which resolved spontaneously.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 7,
-     "where": "2. Materials and Methods › 2.1. Study Design",
-     "quote": "The study was conducted at a single center in Puerto Rico (a territory administered by the USA).",
-     "text": "The study was conducted at a single center.",
-     "id": "L2",
+     "passage": 24,
+     "where": "4. Discussion",
+     "quote": "The results of our study on the cognitive enhancing effects of Zembrin extract, however, may not be interpreted solely in the context of PDE-4 modulation.",
+     "text": "The results of the study on the cognitive enhancing effects of Zembrin extract may not be interpreted solely in the context of PDE-4 modulation.",
+     "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Kanna may improve mood, help with sleep, and act as a stress reliever. A review says the plant can enhance well-being and has anti-depression properties.",
-   "uses": [
-    "F1",
-    "F2",
-    "F3",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-     "quote": "Various formulae of Sceletium products such as dried plant material, tinctures, teas, tablets, and capsules have been used to enhance well‑being and act as a stress reliever.",
-     "sha": "77f8a2c1ff253682"
-    },
-    {
-     "label": "F2",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-     "quote": "The plant improves mood, thus has anti‑depression properties.",
-     "sha": "a2a1a8fb7ba7f860"
-    },
-    {
-     "label": "F3",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-     "quote": "A recent clinical study was conducted using plant extracts of S. tortuosum (trademarked―Zembrin®, Morristown, NJ, USA) to determine the anti‑anxiolytic potential of the plant.",
-     "sha": "eac5b4c9f6b450a2"
-    },
-    {
-     "label": "F5",
-     "ref": "chiu_2014",
-     "where": "Abstract",
-     "quote": "Positive changes in mood and sleep were found.",
-     "sha": "3ee98d5d0e849718"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "One study on the plant's potential to reduce anxiety involved only 20 young healthy volunteers receiving a single dose.",
-   "uses": [
-    "L1"
-   ],
-   "rests_on": [
-    {
-     "label": "L1",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-     "quote": "The study was placebo‑controlled, double‑blind whereby 20 young healthy volunteers were administrated a single dose of S. tortuosum (25 mg, Zembrin®).",
-     "sha": "eac5b4c9f6b450a2"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2021 review says various forms of the plant have been used to enhance well-being and act as a stress reliever.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "manganyi_2021",
-     "where": "Abstract",
-     "quote": "Sceletium tortuosum (L.) N.E.Br. (Mesembryanthemaceae), commonly known as kanna or kougoed, is an effective indigenous medicinal plant in South Africa...",
-     "sha": "926eab80cf3dad03"
-    },
-    {
-     "label": "F1",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.2. Anti-Stress Properties of Sceletium Plants",
-     "quote": "Various formulae of Sceletium products such as dried plant material, tinctures, teas, tablets, and capsules have been used to enhance well‑being and act as a stress reliever.",
-     "sha": "77f8a2c1ff253682"
-    },
-    {
-     "label": "F2",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
-     "quote": "The plant improves mood, thus has anti‑depression properties.",
-     "sha": "a2a1a8fb7ba7f860"
-    },
-    {
-     "label": "F3",
-     "ref": "manganyi_2021",
-     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.4. Anxiolytic Properties of Sceletium Plants",
-     "quote": "A recent clinical study was conducted using plant extracts of S. tortuosum (trademarked―Zembrin®, Morristown, NJ, USA) to determine the anti‑anxiolytic potential of the plant.",
-     "sha": "eac5b4c9f6b450a2"
-    }
-   ],
-   "quote": "tablets, and capsules have been used to enhance well-being and act as a stress reliever",
-   "quote_ref": "manganyi_2021"
-  },
-  {
-   "part": "how2",
-   "text": "In a 2014 randomized double-blind study, cognitively healthy subjects found positive changes in mood and sleep.",
-   "uses": [
-    "DB",
-    "F4",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "chiu_2014",
-     "where": "Abstract",
-     "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study.",
-     "sha": "3ee98d5d0e849718"
-    },
-    {
-     "label": "F4",
-     "ref": "chiu_2014",
-     "where": "3. Results › 3.2. Efficacy",
-     "quote": "The subjective ratings of generalized well-being and positive mood states in our study agreed well with a recent safety and tolerability study on extract Sceletium tortuosum (Zembrin) in healthy subjects who reported “uplifted spirits” and better coping with stress and depressing events.",
-     "sha": "9ca9213f3a7a1b03"
-    },
-    {
-     "label": "F5",
-     "ref": "chiu_2014",
-     "where": "Abstract",
-     "quote": "Positive changes in mood and sleep were found.",
-     "sha": "3ee98d5d0e849718"
-    }
-   ],
-   "quote": "The subjective ratings of generalized well-being and positive mood states in our study agreed well",
-   "quote_ref": "chiu_2014"
-  }
- ],
- "complete": true,
+ "parts": [],
+ "complete": false,
  "missing": "",
  "wanted": [],
  "person": null,
@@ -452,6 +313,14 @@
    "why": "passed every gate",
    "short": "Kanna can promote well-being and relieve stress. In a small study, it was linked to better mood and coping with stress in healthy people.",
    "complete": true
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "published",
+   "why": "passed every gate",
+   "short": "Kanna may improve mood, help with sleep, and act as a stress reliever. A review says the plant can enhance well-being and has anti-depression properties.",
+   "complete": true
   }
  ],
  "looked": [
@@ -461,32 +330,27 @@
    "kind": "review",
    "at": "10.3390/molecules26092557",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Despite the extensive documented history of the psychological and biological effect, few studies have proved that the Sceletium plant possesses useful analgesic properties.",
+     "why": "no sentence"
+    }
+   ]
   },
   {
    "title": "Proof-of-Concept Randomized Controlled Study of Cognition Effects of the Proprietary Extract Sceletium tortuosum (Zembrin) Targeting Phosphodiesterase-4 in Cognitively Healthy Subjects: Implications for Alzheimer's Dementia",
    "read": "full",
    "kind": "other",
    "at": "10.1155/2014/682014",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "finding",
-     "text": "Zembrin at 25 mg daily dosage significantly improved cognitive set flexibility and executive function in cognitively healthy subjects.",
+     "text": "Zembrin at 25 mg daily dosage significantly improved cognitive set flexibility and executive function, compared with the placebo group.",
      "quote": "Zembrin at 25 mg daily dosage significantly improved cognitive set flexibility (P < 0.032) and executive function (P < 0.022), compared with the placebo group.",
      "why": "it holds an amount or a time between uses"
-    },
-    {
-     "kind": "finding",
-     "text": "Zembrin was safe and well tolerated in cognitively healthy subjects.",
-     "quote": "Extract Sceletium tortuosum (Zembrin) was safe and well tolerated.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The study does not fully understand the mechanism of Zembrin's effects.",
-     "quote": "The promising cognitive enhancing effects of Zembrin likely implicate the PDE-4-cAMP-CREB cascade.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   }
@@ -495,8 +359,8 @@
   "short": [
    "F1",
    "F2",
-   "F3",
-   "F5"
+   "F4",
+   "F3"
   ],
   "direct": "",
   "but": [
@@ -511,17 +375,34 @@
    ],
    [
     "DB",
-    "F4",
-    "F5"
+    "F4"
    ]
   ],
   "unanswered": ""
  },
  "panel": {
-  "gemini:gemini-3.1-flash-lite": {
+  "gemini:gemini-3.5-flash-lite": {
    "short": [
+    false,
+    "The passages do not mention a study that found these exact things combined in this manner as described in the sentence, or the review does not explicitly summarize them in this exact way."
+   ],
+   "but": [
     true,
     ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passage refers to the substance as Zembrin or extract Sceletium tortuosum and does not mention the name 'kanna'."
    ],
    "but": [
     true,
@@ -542,22 +423,385 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.6608,
-   "but": 0.9282,
-   "how1": 0.2926,
-   "how2": 0.8595
+   "short": 0.0779,
+   "but": 0.9873,
+   "how1": 0.0331,
+   "how2": 0.9765
   },
   "scores_quotes_alone": {
-   "short": 0.8203,
-   "but": 0.0807,
-   "how1": 0.7254,
-   "how2": 0.9297
+   "short": 0.3103,
+   "but": 0.9818,
+   "how1": 0.1521,
+   "how2": 0.6851
   }
  },
- "with_checked": {
-  "differs": [],
-  "same": []
- },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "In a small trial, kanna caused positive changes in mood and sleep in healthy people. A review says it can relieve stress and improve mood.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well-being by relieving stress with calming effects.",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+       "quote": "The plant improves mood, thus has anti-depression properties.",
+       "sha": "a2a1a8fb7ba7f860"
+      },
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence claims that kanna 'caused' positive changes in mood and sleep, but the 2014 study passage only states that positive changes in mood and sleep 'were found'."
+    },
+    {
+     "part": "but",
+     "text": "The study results may not be explained only by how the drug works on the brain.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "The results of our study on the cognitive enhancing effects of Zembrin extract, however, may not be interpreted solely in the context of PDE-4 modulation.",
+       "sha": "d5301b4ce0f2e5a8"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage says the study results may not be interpreted solely in the context of 'PDE-4 modulation' and discusses another brain mechanism (serotonin signaling), whereas the sentence incorrectly states they may not be explained only by 'ho"
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of kanna says it can relieve stress, improve mood, and reduce pain.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Thus, this review provides an extensive overview of the biological and p",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well-being by relieving stress with calming effects.",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+       "quote": "The plant improves mood, thus has anti-depression properties.",
+       "sha": "a2a1a8fb7ba7f860"
+      },
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.5. Analgesic Properties of Sceletium Plants",
+       "quote": "The results revealed that mesembrine, as a major compound in S. tortuosum, can be responsible for analgesic activity.",
+       "sha": "07423230aa034c47"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The review mentions limited evidence for analgesic properties; it does not state definitively that kanna can reduce pain."
+    },
+    {
+     "part": "how2",
+     "text": "A 2014 study of 21 healthy people found positive changes in mood and sleep after three weeks.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "In a small study of healthy people, positive changes in mood and sleep were found after using kanna extract.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "DB",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage refers to the substance as Zembrin or extract Sceletium tortuosum and does not mention the name 'kanna'."
+    },
+    {
+     "part": "but",
+     "text": "The study results may not be interpreted solely in the context of PDE-4 modulation.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "The results of our study on the cognitive enhancing effects of Zembrin extract, however, may not be interpreted solely in the context of PDE-4 modulation.",
+       "sha": "d5301b4ce0f2e5a8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says kanna can promote well-being, improve mood, and relieve pain.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Thus, this review provides an extensive overview of the biological and p",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well-being by relieving stress with calming effects.",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+       "quote": "The plant improves mood, thus has anti-depression properties.",
+       "sha": "a2a1a8fb7ba7f860"
+      },
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.5. Analgesic Properties of Sceletium Plants",
+       "quote": "The results revealed that mesembrine, as a major compound in S. tortuosum, can be responsible for analgesic activity.",
+       "sha": "07423230aa034c47"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that kanna relieves pain; it only notes limited evidence for analgesic properties, so the claim \"relieve pain\" is stronger than the source."
+    },
+    {
+     "part": "how2",
+     "text": "A 2014 study of 21 healthy people found positive changes in mood and sleep after three weeks.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "A small study found positive changes in mood and sleep. A review says kanna can relieve stress, improve mood, and reduce pain.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well-being by relieving stress with calming effects.",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+       "quote": "The plant improves mood, thus has anti-depression properties.",
+       "sha": "a2a1a8fb7ba7f860"
+      },
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.5. Analgesic Properties of Sceletium Plants",
+       "quote": "The results revealed that mesembrine, as a major compound in S. tortuosum, can be responsible for analgesic activity.",
+       "sha": "07423230aa034c47"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention a study that found these exact things combined in this manner as described in the sentence, or the review does not explicitly summarize them in this exact way."
+    },
+    {
+     "part": "but",
+     "text": "The study results may not be interpreted solely in the context of PDE-4 modulation.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "chiu_2014",
+       "where": "4. Discussion",
+       "quote": "The results of our study on the cognitive enhancing effects of Zembrin extract, however, may not be interpreted solely in the context of PDE-4 modulation.",
+       "sha": "d5301b4ce0f2e5a8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of Sceletium tortuosum says it can relieve stress, improve mood, and reduce pain.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Thus, this review provides an extensive overview of the biological and p",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F1",
+       "ref": "manganyi_2021",
+       "where": "Abstract",
+       "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well-being by relieving stress with calming effects.",
+       "sha": "926eab80cf3dad03"
+      },
+      {
+       "label": "F2",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+       "quote": "The plant improves mood, thus has anti-depression properties.",
+       "sha": "a2a1a8fb7ba7f860"
+      },
+      {
+       "label": "F3",
+       "ref": "manganyi_2021",
+       "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.5. Analgesic Properties of Sceletium Plants",
+       "quote": "The results revealed that mesembrine, as a major compound in S. tortuosum, can be responsible for analgesic activity.",
+       "sha": "07423230aa034c47"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how2",
+     "text": "A 2014 study of 21 healthy people found positive changes in mood and sleep after using Zembrin.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "We chose the randomized double-blind placebo-controlled cross-over design in our study. We randomized normal healthy subjects (total n = 21) to receive either 25 mg capsule Zembrin or placebo capsule once daily for 3 weeks",
+       "sha": "3ee98d5d0e849718"
+      },
+      {
+       "label": "F4",
+       "ref": "chiu_2014",
+       "where": "Abstract",
+       "quote": "Positive changes in mood and sleep were found.",
+       "sha": "3ee98d5d0e849718"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2021 review of Sceletium tortuosum says it can relieve stress, improve mood, and reduce pain.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "manganyi_2021",
+     "where": "Abstract",
+     "quote": "Thus, this review provides an extensive overview of the biological and p",
+     "sha": "926eab80cf3dad03"
+    },
+    {
+     "label": "F1",
+     "ref": "manganyi_2021",
+     "where": "Abstract",
+     "quote": "Today, the plant has gained strong global attraction and reputation due to its capabilities to promote a sense of well-being by relieving stress with calming effects.",
+     "sha": "926eab80cf3dad03"
+    },
+    {
+     "label": "F2",
+     "ref": "manganyi_2021",
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.3. Anti-Depressant Properties of Sceletium Plants",
+     "quote": "The plant improves mood, thus has anti-depression properties.",
+     "sha": "a2a1a8fb7ba7f860"
+    },
+    {
+     "label": "F3",
+     "ref": "manganyi_2021",
+     "where": "5. Biological and Pharmaceutical Properties of Sceletium sp. › 5.5. Analgesic Properties of Sceletium Plants",
+     "quote": "The results revealed that mesembrine, as a major compound in S. tortuosum, can be responsible for analgesic activity.",
+     "sha": "07423230aa034c47"
+    }
+   ],
+   "by": "our own checker",
+   "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+  }
+ ],
  "place": {
   "home": "new:Kanna",
   "also": [],
