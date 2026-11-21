@@ -17,8 +17,8 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
@@ -26,28 +26,141 @@
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
    "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44924240786",
+  "run": "44945254439",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 405
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9131) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
+  "rules": "broken at try 2: but: words that are not person-first (“misuse”); how2: words that are not person-first (“misused”)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.71, but 0.88, how1 0.92, how2 0.61, how3 0.13",
+  "check": "short: NOT accepted: it does not answer the question itself; but: NOT accepted: the passage does not explicitly state that rules are still forming; how1: accepted; how2: accepted; how3: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "salum_2026",
+    "type": "article-journal",
+    "title": "Antidepressant misuse in esports: A review of pharmacology, adverse effects, pharmacokinetics and biomatrix-based detection for anti-doping applications",
+    "author": [
+     {
+      "family": "Salum",
+      "given": "Kassim Ali"
+     },
+     {
+      "family": "Hung",
+      "given": "Shao-Hsin"
+     },
+     {
+      "family": "Hsieh",
+      "given": "Meng-Tsang"
+     },
+     {
+      "family": "Hsu",
+      "given": "Mei-Chich"
+     },
+     {
+      "family": "Chang",
+      "given": "William Chih-Wei"
+     }
+    ],
+    "container-title": "Drug Testing and Analysis",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1002/dta.70131",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "18",
+    "issue": "11",
+    "page": "1361-1373",
+    "PMCID": "PMC13727328"
+   },
+   "doi": "10.1002/dta.70131",
+   "pmcid": "PMC13727328",
+   "title": "Antidepressant Misuse in Esports: A Review of Pharmacology, Adverse Effects, Pharmacokinetics and Biomatrix-Based Detection for Anti-Doping Applications",
+   "year": 2026,
+   "journal": "Drug testing and analysis",
+   "kind": "review",
+   "people": false,
+   "near": 0.62,
+   "money": [
+    "This research was made possible by funding from the National Science and Technology Council, Taiwan (NSTC 114‐2410‐H‐037‐022‐MY3), and the Chi Mei Medical Center and Kaohsiung Medical University Research Foundation (114CM‐KMU‐001). The financial sources had no role in the design or execution of the study, data analysis, manuscript preparation or decision to publish.",
+    "The authors declare no conflicts of interest."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 20,
+     "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+     "quote": "The resulting adverse outcomes vary according to antidepressant class and pharmacological profile but have been reported to include seizures, cognitive impairment, confusion and psychotic-like symptoms.",
+     "text": "The resulting adverse outcomes vary according to antidepressant class and pharmacological profile but have been reported to include seizures, cognitive impairment, confusion and psychotic-like symptoms.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+     "quote": "TCAs are associated with particularly severe consequences when misused. Their anticholinergic and antihistaminergic properties can induce confusion and delirium, while seizures represent a dose-dependent risk.",
+     "text": "Tricyclic antidepressants are associated with particularly severe consequences when misused, as their anticholinergic and antihistaminergic properties can induce confusion and delirium, while seizures represent a dose-dependent risk.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+     "quote": "TCAs have a narrow therapeutic index and can be lethal in overdose, with cardiac arrhythmias representing the principal cause of mortality.",
+     "text": "Tricyclic antidepressants have a narrow therapeutic index and can be lethal in overdose, with cardiac arrhythmias representing the principal cause of mortality.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 13,
+     "where": "Results and Discussion › Statistics of Antidepressant Misuse in Esports",
+     "quote": "Consequently, the misuse of antidepressants with potential cognitive-enhancing effects remains an emerging regulatory challenge.",
+     "text": "The misuse of antidepressants with potential cognitive-enhancing effects remains an emerging regulatory challenge.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "the specific nature of the 'high'",
  "wanted": [
   {
    "doi": "10.1016/j.ejphar.2026.179414",
@@ -72,7 +185,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Progress in the study of the effects of selective serotonin reuptake inhibitors (SSRIs) on the reproductive system",
@@ -80,8 +202,7 @@
    "kind": "review",
    "at": "10.3389/fphar.2025.1567863",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Patients Reported Adverse Effects of Antidepressants Among Depressive Disorder and Associated Risk Factors: A Multicenter Cross-Sectional Study",
@@ -89,8 +210,7 @@
    "kind": "study",
    "at": "10.1155/da/9957695",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Selective Serotonin Reuptake Inhibitors and Adverse Effects: A Narrative Review",
@@ -98,8 +218,7 @@
    "kind": "review",
    "at": "10.3390/neurolint13030038",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Pharmacogenetics and the Response to Antidepressants in Major Depressive Disorder",
@@ -107,11 +226,316 @@
    "kind": "review",
    "at": "10.3390/ph18091360",
    "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Effects of modified Soyo-san (Xiao-yao-san, Shoyo-san) combined with antidepressants on post-stroke depression and functional recovery: a systematic review and meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fphar.2025.1651831",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Treating hearts and minds: adverse cardiovascular effects of psychiatric medications",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1177/20420986261418947",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Comparative gastrointestinal effects of antidepressants for the acute treatment of adults with major depressive disorder: a network and dose‒response meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1038/s41398-025-03751-3",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Antidepressant Misuse in Esports: A Review of Pharmacology, Adverse Effects, Pharmacokinetics and Biomatrix-Based Detection for Anti-Doping Applications",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1002/dta.70131",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a review of antidepressant misuse in esports focusing on pharmacology, adverse effects, pharmacokinetics and detection",
+     "quote": "Antidepressant Misuse in Esports: A Review of Pharmacology, Adverse Effects, Pharmacokinetics and Biomatrix-Based Detection for Anti-Doping Applications",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "A commonly reported motivation for antidepressant misuse is the pursuit of psychostimulant-like effects, and they may be used at high doses and through various routes including intranasal and intraven",
+     "quote": "A commonly reported motivation for such misuse is the pursuit of psychostimulant-like effects. Antidepressant may be abused at high doses and through various routes of administration, including intran",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Stopping antidepressants: when and how",
+   "read": "full",
+   "kind": "review",
+   "at": "10.18773/austprescr.2026.019",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Osteoporosis and Fracture Risk Associated with Novel Antidepressants: A Systematic Review and Meta-Analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.62641/aep.v52i3.1560",
+   "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Adverse effects of 21 antidepressants on sleep during acute-phase treatment in major depressive disorder: a systemic review and dose-effect network meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1093/sleep/zsad177",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Antidepressants and Lung Toxicity: A Narrative Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.7759/cureus.89263",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F2",
+   "F3"
+  ],
+  "direct": "It can",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F1",
+    "F2",
+    "F3"
+   ]
+  ],
+  "unanswered": "the specific nature of the 'high'"
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can cause confusion, seizures, and heart problems. Tricyclic antidepressants are especially risky and can be lethal in overdose.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "The resulting adverse outcomes vary according to antidepressant class and pharmacological profile but have been reported to include seizures, cognitive impairment, confusion and psychotic-like symptoms.",
+       "sha": "818da8008bff4e9a"
+      },
+      {
+       "label": "F2",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs are associated with particularly severe consequences when misused. Their anticholinergic and antihistaminergic properties can induce confusion and delirium, while seizures represent a dose-dependent risk.",
+       "sha": "818da8008bff4e9a"
+      },
+      {
+       "label": "F3",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs have a narrow therapeutic index and can be lethal in overdose, with cardiac arrhythmias representing the principal cause of mortality.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The misuse of antidepressants for cognitive effects remains an emerging regulatory challenge.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Statistics of Antidepressant Misuse in Esports",
+       "quote": "Consequently, the misuse of antidepressants with potential cognitive-enhancing effects remains an emerging regulatory challenge.",
+       "sha": "fcadeb9d6bd2bb7a"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“misuse”)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review says adverse outcomes vary by drug type but include seizures, confusion, and psychotic-like symptoms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "The resulting adverse outcomes vary according to antidepressant class and pharmacological profile but have been reported to include seizures, cognitive impairment, confusion and psychotic-like symptoms.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review notes tricyclic antidepressants can cause confusion, delirium, and dose-dependent seizures when misused.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs are associated with particularly severe consequences when misused. Their anticholinergic and antihistaminergic properties can induce confusion and delirium, while seizures represent a dose-dependent risk.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“misused”)"
+    },
+    {
+     "part": "how3",
+     "text": "The review states tricyclic antidepressants can be lethal in overdose, with heart rhythm problems as the main cause of death.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs have a narrow therapeutic index and can be lethal in overdose, with cardiac arrhythmias representing the principal cause of mortality.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can cause confusion, seizures, and heart problems. Tricyclic antidepressants can be lethal in overdose, with heart rhythm issues as the main cause of death.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "The resulting adverse outcomes vary according to antidepressant class and pharmacological profile but have been reported to include seizures, cognitive impairment, confusion and psychotic-like symptoms.",
+       "sha": "818da8008bff4e9a"
+      },
+      {
+       "label": "F2",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs are associated with particularly severe consequences when misused. Their anticholinergic and antihistaminergic properties can induce confusion and delirium, while seizures represent a dose-dependent risk.",
+       "sha": "818da8008bff4e9a"
+      },
+      {
+       "label": "F3",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs have a narrow therapeutic index and can be lethal in overdose, with cardiac arrhythmias representing the principal cause of mortality.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "The review notes that using antidepressants for cognitive effects is an emerging regulatory challenge, so rules are still forming.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Statistics of Antidepressant Misuse in Esports",
+       "quote": "Consequently, the misuse of antidepressants with potential cognitive-enhancing effects remains an emerging regulatory challenge.",
+       "sha": "fcadeb9d6bd2bb7a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passage does not explicitly state that rules are still forming"
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review says adverse outcomes vary by drug type but include seizures, confusion, and psychotic-like symptoms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "The resulting adverse outcomes vary according to antidepressant class and pharmacological profile but have been reported to include seizures, cognitive impairment, confusion and psychotic-like symptoms.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review says tricyclic antidepressants can cause confusion and delirium, with seizures as a dose-dependent risk for people who use them.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs are associated with particularly severe consequences when misused. Their anticholinergic and antihistaminergic properties can induce confusion and delirium, while seizures represent a dose-dependent risk.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The review states tricyclic antidepressants have a narrow therapeutic index and can be lethal in overdose, mainly from heart rhythm problems.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "salum_2026",
+       "where": "Results and Discussion › Side Effects and Health Risks of Misusing Antidepressants",
+       "quote": "TCAs have a narrow therapeutic index and can be lethal in overdose, with cardiac arrhythmias representing the principal cause of mortality.",
+       "sha": "818da8008bff4e9a"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.7058,
+   "but": 0.8805,
+   "how1": 0.9202,
+   "how2": 0.612,
+   "how3": 0.1335
+  },
+  "scores_quotes_alone": {
+   "short": 0.666,
+   "but": 0.5155,
+   "how1": 0.9602,
+   "how2": 0.1476,
+   "how3": 0.158
+  }
+ },
  "place": {
   "home": "new:Antidepressants",
   "also": [
