@@ -17,39 +17,43 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44899901306",
+  "run": "44904614759",
   "read_by": {
-   "gemini-3.1-flash-lite": 3,
-   "gemini-3.5-flash-lite": 1
+   "gemini-3.5-flash-lite": 3,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 38,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 1
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 306
+  "seconds": 218
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "5 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9348) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8978)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "6 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8358) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how4: words that are not person-first (“abuse”))",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.90, but 0.97, how1 0.83, how2 0.05, how3 0.87",
+  "check": "short: NOT accepted: it does not answer the question itself; but: accepted; how1: accepted; how2: accepted; how3: accepted"
  },
  "sources": [
   {
@@ -100,32 +104,24 @@
     "passage": 4,
     "where": "Introduction",
     "quote": "Despite over 30 years of intensive research on MDMA both in humans and in animal models, there remain several major controversies that have yet to be resolved.",
-    "text": "a review of research on MDMA in humans and animal models"
+    "text": "A critical review of the current status of MDMA based on research in humans and animal models."
    },
    "findings": [
     {
      "passage": 49,
      "where": "Summary and conclusion",
      "quote": "Moreover, long-term use, particularly with dose escalation, can lead to dependence on the drug.",
-     "text": "Long-term use of MDMA, especially when the dose is increased, can lead to dependence.",
+     "text": "Long-term use, particularly with dose escalation, can lead to dependence on the drug.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 4,
-     "where": "Introduction",
-     "quote": "Can MDMA cause dependence, and, if so, what treatment approaches are currently available?",
-     "text": "Whether MDMA can cause dependence and what treatments are available for it are unresolved controversies.",
-     "id": "F2",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Most ecstasy users consume other substances as well, which complicates the interpretation of research in this field.",
-     "text": "Research interpretation is complicated because most people who use ecstasy also consume other substances.",
+     "passage": 4,
+     "where": "Introduction",
+     "quote": "Can MDMA cause dependence, and, if so, what treatment approaches are currently available?",
+     "text": "Whether MDMA can cause dependence and what treatment approaches are currently available remain major unresolved controversies.",
      "id": "L1",
      "second_hand": ""
     }
@@ -187,41 +183,92 @@
    "money": [
     "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Here we discuss some of the common circuit mechanisms underlying social and addictive behaviors that may underlie their antagonistic functions. We also highlight key neurochemicals involved in social influences over addiction",
-    "text": "a review of research on the relationship between social influences and substance use disorders"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 48,
      "where": "The Interplay of Drug Use and Social Behavior › Interactions of Social and Reward Circuits",
      "quote": "This has led to the hypothesis that most amphetamines have high abuse liability while MDMA maintains a low abuse liability due to differential effects on DA and 5-HT.",
-     "text": "Most amphetamines are hypothesized to have high abuse liability, while MDMA is hypothesized to have low abuse liability because of its different effects on dopamine and serotonin.",
+     "text": "Most amphetamines have high abuse liability, whereas MDMA has a low abuse liability because it affects dopamine and serotonin differently.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "drugscience_mdma",
+    "type": "webpage",
+    "title": "MDMA",
+    "author": [
+     {
+      "literal": "Drug Science"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.drugscience.org.uk/drugs/mdma",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       21
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-21"
+    }
+   },
+   "title": "MDMA",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.683,
+   "name": "Drug Science",
+   "short": "Drug Science, a UK charity of scientists",
+   "tier": 2,
+   "address": "https://www.drugscience.org.uk/drugs/mdma",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 14,
+     "where": "Is MDMA addictive, and what are the long-term effects?",
+     "quote": "MDMA is considered to have low addictive potential, especially compared with alcohol, nicotine or heroin, but that does not mean it cannot be addictive at all.",
+     "text": "MDMA is considered to have low addictive potential, particularly compared to alcohol, nicotine, or heroin, but it can still be addictive.",
      "id": "F3",
      "second_hand": ""
     },
     {
-     "passage": 48,
-     "where": "The Interplay of Drug Use and Social Behavior › Interactions of Social and Reward Circuits",
-     "quote": "Extrapolating to other drugs of abuse, all of which drive DA release, but not so much 5-HT release, a pattern is emerging where the degree of 5-HT engagement may dictate the degree of addictive behavior.",
-     "text": "A pattern is emerging where the level of serotonin engagement may determine the level of addictive behavior for drugs that drive dopamine release.",
+     "passage": 14,
+     "where": "Is MDMA addictive, and what are the long-term effects?",
+     "quote": "Chemically, MDMA is unlikely to be addictive in the classic sense.",
+     "text": "Chemically, MDMA is unlikely to be addictive in the classic sense.",
      "id": "F4",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 36,
-     "where": "Negative Social Experiences and Drug Intake › Social Isolation Stress and Addiction › Neural Mechanisms of aSI-Induced Escalation of Drug Intake",
-     "quote": "However, there seems to be a marked species difference in the effects of aSI on drug intake with most of the literature focusing on studies in rats.",
-     "text": "Most of the research on the effects of social isolation on drug intake has been conducted in rats, and there are marked species differences.",
-     "id": "L2",
+     "passage": 15,
+     "where": "Is MDMA addictive, and what are the long-term effects?",
+     "quote": "Psychological addiction is a more realistic risk. The euphoria, happiness and empathy MDMA produces can make people want to use it again and again",
+     "text": "Psychological addiction is a more realistic risk because the euphoria, happiness, and empathy that MDMA produces can make people want to use it repeatedly.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
-   "tag": "B"
+   "limits": [],
+   "tag": "C"
   },
   {
    "read": "page",
@@ -276,19 +323,19 @@
     {
      "passage": 11,
      "where": "Substance use disorders and withdrawal",
-     "quote": "MDMA can be addictive. If you use too much your body may become tolerant of the drug.",
-     "text": "MDMA can be addictive, and using too much can cause the body to become tolerant of the drug.",
-     "id": "F5",
+     "quote": "MDMA can be addictive. If you use too much your body may become tolerant of the drug. This means you need to take more and more of it to feel the same effects.",
+     "text": "MDMA can be addictive, and using too much can cause your body to become tolerant of it so that you need to take more and more to feel the same effects.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "C"
+   "tag": "D"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "6-APB and other MDMA-like drugs",
+ "missing": "6-APB and other MDMA-like drugs besides MDMA",
  "wanted": [
   {
    "doi": "10.1016/j.drugalcdep.2014.08.009",
@@ -313,14 +360,23 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "3,4-methylenedioxymethamphetamine (MDMA): current perspectives",
    "read": "full",
    "kind": "review",
    "at": "10.2147/sar.s37258",
-   "kept": 2,
+   "kept": 1,
    "thrown": []
   },
   {
@@ -328,17 +384,41 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fnbeh.2022.836996",
-   "kept": 2,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review article on social influences and drug addiction",
+     "quote": "MDMA is an amphetamine derivative with remarkable properties. Unlike amphetamine or methamphetamine, MDMA’s primary mechanism of action is through evoking reverse transport of SERT (as opposed to DAT)",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Amphetamine and methamphetamine preferentially increase dopamine release over serotonin, unlike MDMA.",
+     "quote": "In contrast, amphetamine and methamphetamine also trigger reverse transport of both modulators but with a much larger affinity for DAT than for SERT.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The findings about drug intake and social isolation are mainly based on rat studies, and species differences may limit generalization.",
+     "quote": "However, there seems to be a marked species difference in the effects of aSI on drug intake with most of the literature focusing on studies in rats.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The conclusion that serotonin engagement predicts addictive behavior is inferred from other drugs and may not directly apply to all MDMA‑like substances.",
+     "quote": "Extrapolating to other drugs of abuse, all of which drive DA release, but not so much 5-HT release, a pattern is emerging where the degree of 5-HT engagement may dictate the degree of addictive behavi",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "MDMA",
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/mdma",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "MDMA",
@@ -347,28 +427,25 @@
    "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
    "kept": 1,
    "thrown": []
-  },
-  {
-   "title": "MDMA (ecstasy)",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/mdma-ecstasy",
-   "kept": 0,
-   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
-   "F1",
-   "F3"
+   "F3",
+   "F6",
+   "F1"
   ],
   "direct": "It can",
   "but": [
-   "F2"
+   "L1"
   ],
   "how": [
    [
+    "F6"
+   ],
+   [
+    "F3",
+    "F4",
     "F5"
    ],
    [
@@ -376,13 +453,294 @@
     "F1"
    ],
    [
-    "DB",
-    "F3"
+    "F2"
    ]
   ],
-  "unanswered": "6-APB and other MDMA-like drugs"
+  "unanswered": "6-APB and other MDMA-like drugs besides MDMA"
  },
- "soft": "the writer's reply was not in the form asked for",
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how4",
+   "text": "A 2022 review says most amphetamines have high abuse liability, whereas MDMA has a low abuse liability due to different effects on brain chemicals.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "pomrenze_2022",
+     "where": "The Interplay of Drug Use and Social Behavior › Interactions of Social and Reward Circuits",
+     "quote": "This has led to the hypothesis that most amphetamines have high abuse liability while MDMA maintains a low abuse liability due to differential effects on DA and 5-HT.",
+     "sha": "7d8688aaf40f95ca"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“abuse”)"
+  },
+  {
+   "try": 3,
+   "part": "how4",
+   "text": "A 2022 review says MDMA has a low abuse liability because it affects dopamine and serotonin differently than most amphetamines.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "pomrenze_2022",
+     "where": "The Interplay of Drug Use and Social Behavior › Interactions of Social and Reward Circuits",
+     "quote": "This has led to the hypothesis that most amphetamines have high abuse liability while MDMA maintains a low abuse liability due to differential effects on DA and 5-HT.",
+     "sha": "7d8688aaf40f95ca"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“abuse”)"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8977,
+   "but": 0.9736,
+   "how1": 0.8318,
+   "how2": 0.0532,
+   "how3": 0.8698
+  },
+  "scores_quotes_alone": {
+   "short": 0.8838,
+   "but": 0.5528,
+   "how1": 0.8353,
+   "how2": 0.0305,
+   "how3": 0.3894
+  }
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can be addictive. MDMA is considered to have low addictive potential, but long-term use, particularly with dose escalation, can lead to dependence.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "MDMA is considered to have low addictive potential, especially compared with alcohol, nicotine or heroin, but that does not mean it cannot be addictive at all.",
+       "sha": "cebd1059bdf5925b"
+      },
+      {
+       "label": "F6",
+       "ref": "healthcanada_ecstasy",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "MDMA can be addictive. If you use too much your body may become tolerant of the drug. This means you need to take more and more of it to feel the same effects.",
+       "sha": "eca62c0231c7a122"
+      },
+      {
+       "label": "F1",
+       "ref": "meyer_2013",
+       "where": "Summary and conclusion",
+       "quote": "Moreover, long-term use, particularly with dose escalation, can lead to dependence on the drug.",
+       "sha": "ee1340b8da49a4c9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "Whether MDMA can cause dependence and what treatment approaches are currently available remain major unresolved controversies.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "meyer_2013",
+       "where": "Introduction",
+       "quote": "Can MDMA cause dependence, and, if so, what treatment approaches are currently available?",
+       "sha": "52d5614ccf16b18e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says MDMA can be addictive, and using too much can cause your body to become tolerant of it.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "healthcanada_ecstasy",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "MDMA can be addictive. If you use too much your body may become tolerant of the drug. This means you need to take more and more of it to feel the same effects.",
+       "sha": "eca62c0231c7a122"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science, a UK charity of scientists says, MDMA is unlikely to be addictive in the classic sense, but psychological addiction is a realistic risk.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "MDMA is considered to have low addictive potential, especially compared with alcohol, nicotine or heroin, but that does not mean it cannot be addictive at all.",
+       "sha": "cebd1059bdf5925b"
+      },
+      {
+       "label": "F4",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "Chemically, MDMA is unlikely to be addictive in the classic sense.",
+       "sha": "cebd1059bdf5925b"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "Psychological addiction is a more realistic risk. The euphoria, happiness and empathy MDMA produces can make people want to use it again and again",
+       "sha": "3c6e021495c7f3de"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.05): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how3",
+     "text": "A 2013 review of human and animal research says long-term use, particularly with dose escalation, can lead to dependence on the drug.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "meyer_2013",
+       "where": "Introduction",
+       "quote": "Despite over 30 years of intensive research on MDMA both in humans and in animal models, there remain several major controversies that have yet to be resolved.",
+       "sha": "52d5614ccf16b18e"
+      },
+      {
+       "label": "F1",
+       "ref": "meyer_2013",
+       "where": "Summary and conclusion",
+       "quote": "Moreover, long-term use, particularly with dose escalation, can lead to dependence on the drug.",
+       "sha": "ee1340b8da49a4c9"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can be addictive. MDMA is considered to have low addictive potential, but it can still be addictive.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "MDMA is considered to have low addictive potential, especially compared with alcohol, nicotine or heroin, but that does not mean it cannot be addictive at all.",
+       "sha": "cebd1059bdf5925b"
+      },
+      {
+       "label": "F6",
+       "ref": "healthcanada_ecstasy",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "MDMA can be addictive. If you use too much your body may become tolerant of the drug. This means you need to take more and more of it to feel the same effects.",
+       "sha": "eca62c0231c7a122"
+      },
+      {
+       "label": "F1",
+       "ref": "meyer_2013",
+       "where": "Summary and conclusion",
+       "quote": "Moreover, long-term use, particularly with dose escalation, can lead to dependence on the drug.",
+       "sha": "ee1340b8da49a4c9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "Whether MDMA can cause dependence remains a major unresolved controversy.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "meyer_2013",
+       "where": "Introduction",
+       "quote": "Can MDMA cause dependence, and, if so, what treatment approaches are currently available?",
+       "sha": "52d5614ccf16b18e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says MDMA can be addictive and using too much can cause tolerance.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "healthcanada_ecstasy",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "MDMA can be addictive. If you use too much your body may become tolerant of the drug. This means you need to take more and more of it to feel the same effects.",
+       "sha": "eca62c0231c7a122"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science, a UK charity of scientists says MDMA is unlikely to be addictive in the classic sense, but psychological addiction is a realistic risk.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "MDMA is considered to have low addictive potential, especially compared with alcohol, nicotine or heroin, but that does not mean it cannot be addictive at all.",
+       "sha": "cebd1059bdf5925b"
+      },
+      {
+       "label": "F4",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "Chemically, MDMA is unlikely to be addictive in the classic sense.",
+       "sha": "cebd1059bdf5925b"
+      },
+      {
+       "label": "F5",
+       "ref": "drugscience_mdma",
+       "where": "Is MDMA addictive, and what are the long-term effects?",
+       "quote": "Psychological addiction is a more realistic risk. The euphoria, happiness and empathy MDMA produces can make people want to use it again and again",
+       "sha": "3c6e021495c7f3de"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2013 review of human and animal research says long-term use, particularly with dose escalation, can lead to dependence.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "meyer_2013",
+       "where": "Introduction",
+       "quote": "Despite over 30 years of intensive research on MDMA both in humans and in animal models, there remain several major controversies that have yet to be resolved.",
+       "sha": "52d5614ccf16b18e"
+      },
+      {
+       "label": "F1",
+       "ref": "meyer_2013",
+       "where": "Summary and conclusion",
+       "quote": "Moreover, long-term use, particularly with dose escalation, can lead to dependence on the drug.",
+       "sha": "ee1340b8da49a4c9"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "new:MDA-like drugs (MDEA, MDAI, benzofurans)",
   "also": [],
