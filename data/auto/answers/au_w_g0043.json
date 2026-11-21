@@ -17,37 +17,223 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemma-4-31b-it",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44941960027",
-  "read_seconds": 0,
+  "run": "44950451454",
+  "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 0
+  "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (the search for papers did not all come back: tried again in the next run)",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "brioschi_2013",
+    "type": "article-journal",
+    "title": "Pharmacokinetics and bioequivalence evaluation of cyclobenzaprine tablets",
+    "author": [
+     {
+      "family": "Brioschi",
+      "given": "Tatiane Maria de Lima Souza"
+     },
+     {
+      "family": "Schramm",
+      "given": "Simone Grigoleto"
+     },
+     {
+      "family": "Kano",
+      "given": "Eunice Kazue"
+     },
+     {
+      "family": "Koono",
+      "given": "Eunice Emiko Mori"
+     },
+     {
+      "family": "Ching",
+      "given": "Ting Hui"
+     },
+     {
+      "family": "Serra",
+      "given": "Cristina Helena dos Reis"
+     },
+     {
+      "family": "Porta",
+      "given": "Valentina"
+     }
+    ],
+    "container-title": "BioMed Research International",
+    "issued": {
+     "date-parts": [
+      [
+       2013
+      ]
+     ]
+    },
+    "DOI": "10.1155/2013/281392",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "2013",
+    "page": "1-6",
+    "PMCID": "PMC3787571"
+   },
+   "doi": "10.1155/2013/281392",
+   "pmcid": "PMC3787571",
+   "title": "Pharmacokinetics and bioequivalence evaluation of cyclobenzaprine tablets",
+   "year": 2013,
+   "journal": "BioMed research international",
+   "kind": "study",
+   "people": true,
+   "near": 0.766,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "An open, randomized, crossover, single-dose, two-period, and two-sequence design was employed. Tablets were administered to 23 healthy subjects after an overnight fasting and blood samples were collected up to 240 hours after drug administration.",
+    "text": "an open, randomized, crossover, single-dose, two-period, and two-sequence design studying 23 healthy subjects"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Cyclobenzaprine pharmacokinetics can be described by a multicompartment open model with an average rapid elimination half-life (t (1/2)β) of 3.1 hours and an average terminal elimination half-life (t (1/2)γ) of 31.9 hours.",
+     "text": "Cyclobenzaprine pharmacokinetics can be described by a multicompartment open model with an average rapid elimination half-life of 3.1 hours and an average terminal elimination half-life of 31.9 hours.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "1. Introduction",
+     "quote": "Some authors describe the highly variable elimination half-life, ranging from 8 to 37 hours, while Darwish and coworkers describe the average values of 30–35 hours and lower variability for cyclobenzaprine elimination half-life.",
+     "text": "Some authors describe a highly variable elimination half-life ranging from 8 to 37 hours, while Darwish and coworkers describe average values of 30-35 hours and lower variability for the cyclobenzaprine elimination half-life.",
+     "id": "F2",
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "blood samples were collected up to 240 hours after drug administration. Plasma cyclobenzaprine was quantified by means of an LC-MS/MS method.",
+     "text": "Blood samples were collected up to 240 hours after drug administration, and plasma cyclobenzaprine was quantified by means of an LC-MS/MS method.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 5,
+     "where": "1. Introduction",
+     "quote": "Cyclobenzaprine pharmacokinetics is not well defined.",
+     "text": "Cyclobenzaprine pharmacokinetics is not well defined.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
- "wanted": [],
+ "wanted": [
+  {
+   "doi": "10.1177/87551225261426559",
+   "apa": "St. Onge, E., Bui, P. (., Rogers, H., Guerrero, I., & Phillips, B. (2026). Cyclobenzaprine reimagined: Clinical insights into tonmya TM for fibromyalgia. Journal of Pharmacy Technology, 42(3), 143–148. https://doi.org/10.1177/87551225261426559",
+   "near": 0.663,
+   "why": "a review or meta-analysis; nearness to the question 0.66; cited 2 times; its full text is not open",
+   "file": "stonge_2026_87551225261426559.pdf"
+  },
+  {
+   "doi": "10.1080/08869634.1990.11678317",
+   "apa": "Stanko, J. R. (1990). A review of oral skeletal muscle relaxants for the craniomandibular disorder (CMD) practitioner. CRANIO®, 8(3), 234–243. https://doi.org/10.1080/08869634.1990.11678317",
+   "near": 0.607,
+   "why": "a review or meta-analysis; nearness to the question 0.61; cited 7 times; its full text is not open",
+   "file": "stanko_1990_08869634_1990_11678317.pdf"
+  },
+  {
+   "doi": "10.1208/s12248-009-9127-y",
+   "apa": "Zhou, S.-F., Yang, L.-P., Zhou, Z.-W., Liu, Y.-H., & Chan, E. (2009). Insights into the substrate specificity, inhibitors, regulation, and polymorphisms and the clinical impact of human cytochrome P450 1A2. The AAPS Journal, 11(3), 481–494. https://doi.org/10.1208/s12248-009-9127-y",
+   "near": 0.389,
+   "why": "a review or meta-analysis in people; nearness to the question 0.39; cited 171 times; its full text is not open",
+   "file": "zhou_2009_s12248_009_9127_y.pdf"
+  }
+ ],
  "person": null,
- "history": [],
- "looked": [],
+ "history": [
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (the search for papers did not all come back: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
+ "looked": [
+  {
+   "title": "Pharmacokinetics and bioequivalence evaluation of cyclobenzaprine tablets",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1155/2013/281392",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Sublingual cyclobenzaprine for fibromyalgia: a critical evaluation of clinical development and therapeutic positioning",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1080/07853890.2026.2743411",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Single-Dose Pharmacokinetic Assessment of TNX-102 SL (Cyclobenzaprine HCl Sublingual Tablets): Results From Randomized, Open-Label Studies in Healthy Volunteers",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1002/cpdd.70034",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Efficacy and safety of interventions for Fibromyalgia syndrome comorbid with Irritable bowel syndrome: systematic review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s10067-025-07861-7",
+   "kept": 0,
+   "thrown": []
+  }
+ ],
  "soft": "a source could not be fetched",
  "place": {
   "home": "new:Muscle relaxants (cyclobenzaprine, methocarbamol)",
