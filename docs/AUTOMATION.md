@@ -1883,6 +1883,16 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     among checked answers. Computed at build time, without a model; the page works without it (everything under More
     questions). The 2.6 rule "never among the checked ones" is replaced by this, at his word; the label and the absence of
     bars keep the two kinds apart.
+45. **Groq's paid plan, prepared and off (21 November 2026, 20:54 Athens).** His words, 20:52 and 20:54, of a monthly pot
+    for Groq: "how will it be sure that no user will ask another question during the day and use all the tokens for the
+    day? and how will its monthly usage tokens be divided" and "yes". One pot a month (`data/auto/lane/pay.json`, the same
+    sum as the limit he sets in Groq's console): a question a person sent may spend from it at any hour; the lane's own
+    questions (forum, Reddit, its list) only within a day's share of what is above a floor kept for visitors (the busiest of
+    the last seven days' visitor spending, at least 20 cents a day, times 1.5, times the days left in the month), the share
+    being that rest divided by the days left; recomputed at every call (`llm.pay_share`, `pay_count`; tested in
+    `llm.pay_selftest`). The free models go on as before and take the list's work when its share is spent. Off ("paid":
+    false) until he says that his Groq account is on the paid plan: his rule of 16 November 2026 was free models only, and
+    the switch is his. No gate changes.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

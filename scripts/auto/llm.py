@@ -24,7 +24,7 @@ openai/gpt-oss-20b and qwen/qwen3.8-27b, 30 requests and 8,000 tokens a minute, 
 The ledger counts tokens for each of its models and a call that today's free tokens cannot hold is not made (Budget);
 between calls it waits so that a minute never holds more than the plan allows. A free account is not charged.
 """
-import sys, os, io, re, json, time, pathlib, datetime, urllib.request, urllib.error
+import sys, os, io, re, json, time, pathlib, datetime, calendar, urllib.request, urllib.error
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LEDGER = ROOT / "data" / "auto" / "lane" / "usage.json"
@@ -150,7 +150,7 @@ def ledger():
         try: d = json.load(open(LEDGER, encoding="utf-8"))
         except (OSError, ValueError): d = {}
     if d.get("day") != today():        # a new day by UTC: Cloudflare's count begins again. What is counted by another clock is kept: Groq's allowance comes back over 24 hours, and each other service has its own day (svc_used: Google's begins at midnight Pacific time)
-        d = dict({"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}, **{k: d[k] for k in ("groq_rolling", "svc") if isinstance(d.get(k), dict)})
+        d = dict({"day": today(), "neurons": 0.0, "calls": 0, "by_model": {}}, **{k: d[k] for k in ("groq_rolling", "svc", "groq_pay") if isinstance(d.get(k), dict)})
     return d
 
 
@@ -445,6 +445,8 @@ def groq_left(name, now=None):
     """Tokens of Groq's free plan that one of its models can still take now, by our own count (we stop at GROQ_SHARE of it)."""
     lim = GROQ_FREE.get(name)
     if not lim: return 0
+    if groq_paid():                                                            # (21 November 2026) on the paid plan, room is what the pot allows this question
+        return int(lim["tpd"]) if (pay().get("prices") or {}).get(name) and pay_share(0.005, FOR == "visitor")[0] else 0
     tokens, calls = groq_level(name, now=now)
     return 0 if calls >= lim["rpd"] * GROQ_SHARE else max(0, int(lim["tpd"] * GROQ_SHARE - tokens))
 
@@ -460,6 +462,52 @@ def groq_count(name, used, calls=1, full=False):
         LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
 
 
+PAY = ROOT / "data" / "auto" / "lane" / "pay.json"   # (21 November 2026) Groq's paid plan: the month's pot, the visitors' floor, the prices (its _note says how)
+FOR = "list"   # whose question a call serves: "visitor" (a question a person sent: it may spend from the pot at any hour) or "list" (what the lane answers by itself)
+
+
+def pay():
+    try: return json.load(open(PAY, encoding="utf-8")).get("groq") or {}
+    except (OSError, ValueError, AttributeError): return {}
+
+
+def groq_paid(): return bool(pay().get("paid"))
+
+
+def _pay_ledger(L):
+    g = L.get("groq_pay") if isinstance(L.get("groq_pay"), dict) else {}
+    if g.get("month") != today()[:7]: g = {"month": today()[:7], "usd": 0.0, "days": dict(g.get("days") or {})}
+    return g
+
+
+def pay_share(est=0.0, visitor=False, L=None):
+    """(May a call of about est dollars be paid for at Groq, why not). A person's question: while the month's pot holds it. The list: only within today's share of
+    what is above the floor kept for visitors (the busiest of the last seven days' visitor spending, at least visitors_least_a_day, times margin, times the days left
+    in the month), the share being that rest divided by the days left. data/auto/lane/pay.json."""
+    P = pay(); g = _pay_ledger(L if L is not None else ledger())
+    month, spent = float(P.get("usd_a_month") or 0), float(g.get("usd") or 0)
+    if spent + est > month: return False, f"this month's ${month:.2f} at Groq is spent (${spent:.2f} so far)"
+    if visitor: return True, ""
+    d = datetime.date.fromisoformat(today()); days = g.get("days") or {}; td = days.get(today()) or {}
+    before = spent - float(td.get("visitors", 0)) - float(td.get("list", 0))
+    rate = max([float((days.get((d - datetime.timedelta(i)).isoformat()) or {}).get("visitors", 0)) for i in range(7)] + [float(P.get("visitors_least_a_day") or 0)])
+    left = calendar.monthrange(d.year, d.month)[1] - d.day + 1
+    share = max(0.0, month - before - rate * float(P.get("margin") or 1.5) * left) / left
+    if float(td.get("list", 0)) + est > share: return False, f"today's share of Groq's money for the lane's own questions is spent (${share:.2f} today; the rest is kept for the questions people send)"
+    return True, ""
+
+
+def pay_count(name, t_in, t_out, visitor):
+    """Write a paid call at Groq into the ledger (the month's dollars, and each day's for visitors and for the list, forty days kept); returns its dollars."""
+    pr = (pay().get("prices") or {}).get(name) or [0, 0]; c = t_in * pr[0] / 1e6 + t_out * pr[1] / 1e6
+    with LOCK:
+        L = ledger(); g = _pay_ledger(L); g["usd"] = round(float(g.get("usd") or 0) + c, 6)
+        dd = g["days"].setdefault(today(), {"visitors": 0.0, "list": 0.0}); k = "visitors" if visitor else "list"; dd[k] = round(float(dd.get(k) or 0) + c, 6)
+        cut = (datetime.date.fromisoformat(today()) - datetime.timedelta(40)).isoformat(); g["days"] = {k2: v for k2, v in g["days"].items() if k2 >= cut}
+        L["groq_pay"] = g; LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+    return c
+
+
 def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     name = model[5:]; token = (os.environ.get("GROQ_API_KEY") or "").strip()
     if not token: raise Unavailable("no key for Groq (the secret GROQ_API_KEY is not set)")
@@ -467,7 +515,13 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     if not lim: raise Unavailable(f"{name} is not on the list of Groq's free models that this file knows")
     est = sum(rough_tokens(m["content"]) for m in messages) + max_tokens
     if est > lim["tpm"]: raise Unavailable(f"this call is larger than Groq's free plan allows in a minute ({est} of {lim['tpm']} tokens)")
-    if est > groq_left(name): raise Budget(f"today's free tokens at Groq cannot hold this call for {name}")
+    paid = groq_paid()
+    if paid:                                                                   # (21 November 2026) the paid plan: the pot and its shares, not the free day's tokens
+        pr = (pay().get("prices") or {}).get(name)
+        if not pr: raise Unavailable(f"{name} costs money at Groq and its price is not in data/auto/lane/pay.json: not asked")
+        ok, why = pay_share(max(0, est - max_tokens) * pr[0] / 1e6 + max_tokens * pr[1] / 1e6, FOR == "visitor")
+        if not ok: raise Budget(why)
+    elif est > groq_left(name): raise Budget(f"today's free tokens at Groq cannot hold this call for {name}")
     wait, kept = _slot(name, 2.2, lim["tpm"], est, real=opener is None)                  # wait for the minute to have room (and never more than 30 calls in one)
     if opener is None:
         try: _in_time(wait, name)
@@ -481,7 +535,7 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
     # effort in lanes 7 to 9 and in its first exam. EFFORT: an exam's or a trial's own choice for a model.)
     if name.startswith("openai/gpt-oss"): body["reasoning_effort"] = EFFORT.get(name) or ("low" if name.endswith("gpt-oss-20b") else "medium")
     elif name.startswith("qwen/qwen3"):                                # Groq's free plan gives it 1,000 output tokens a minute (its refusal of 16 November 2026: "output tokens per minute (OTPM): Limit 1000"): it answers without reasoning first, and never more than 900 tokens
-        body["reasoning_effort"] = "none"; body["max_completion_tokens"] = min(max_tokens, 900)
+        body["reasoning_effort"] = "none"; body["max_completion_tokens"] = max_tokens if paid else min(max_tokens, 900)   # (21 November 2026) the paid plan does not cut a draft at 900 (the "wrong form" of a cut reply)
     op = opener or urllib.request.urlopen
     for k in range(tries):
         req = urllib.request.Request(GROQ, data=json.dumps(body).encode("utf-8"), method="POST", headers={"Authorization": "Bearer " + token, "Content-Type": "application/json", "User-Agent": "Pharmakon (https://pharmakon.world; mailto:contact@pharmakon.world)"})
@@ -502,6 +556,7 @@ def chat_groq(model, messages, max_tokens, opener=None, tries=3):
         text = ((d.get("choices") or [{}])[0].get("message") or {}).get("content") or ""; u = d.get("usage") or {}
         used = int(u.get("total_tokens") or (int(u.get("prompt_tokens") or est - max_tokens) + int(u.get("completion_tokens") or rough_tokens(text))))
         groq_count(name, used)
+        if paid: pay_count(name, int(u.get("prompt_tokens") or max(0, est - max_tokens)), int(u.get("completion_tokens") or rough_tokens(text)), FOR == "visitor")
         with LOCK: kept[1] = used                                           # what the call really took stands in the minute's count, not the estimate
         return clean(text)
     raise Unavailable("Groq gave no answer")
@@ -561,6 +616,38 @@ def as_json(text):
             return v if isinstance(v, dict) else None
         except ValueError: continue
     return None
+
+
+def pay_selftest():
+    """(21 November 2026) Groq's paid plan: a person's question spends from the month's pot at any hour; the list only within today's share above the visitors' floor;
+    a busy day for visitors slows the list at once; the last day spends what is left; the month's pot is never passed; off unless switched on."""
+    import tempfile
+    global PAY, LEDGER, today
+    keep_pay, keep_led, keep_today = PAY, LEDGER, today
+    tmp = pathlib.Path(tempfile.mkdtemp()); PAY = tmp / "pay.json"; LEDGER = tmp / "usage.json"
+    try:
+        assert not groq_paid(), "no file: not paid"
+        json.dump({"groq": {"paid": True, "usd_a_month": 10, "margin": 1.5, "visitors_least_a_day": 0.2, "prices": {"m": [1.0, 2.0]}}}, open(PAY, "w"))
+        assert groq_paid()
+        today = lambda: "2026-11-01"                                          # the first day of a month of 30 days
+        assert pay_share(0.01, False)[0], "the list may spend on the first day"
+        # the floor: 0.2 a day x 1.5 x 30 days = 9.00; above it 1.00, a 30th of it a day (0.033)
+        ok, why = pay_share(0.04, False); assert not ok and "share" in why, why
+        assert pay_share(0.03, False)[0], "0.033 a day is the list's share"
+        assert pay_share(0.04, True)[0], "a person's question is not kept to the list's share"
+        pay_count("m", 30000, 0, False); assert not pay_share(0.01, False)[0], "the day's share spent: the list waits"
+        assert pay_share(0.5, True)[0], "a person still may"
+        today = lambda: "2026-11-02"; assert pay_share(0.01, False)[0], "a new day: a new share"
+        pay_count("m", 1000000, 0, True); assert abs(_pay_ledger(ledger())["days"]["2026-11-02"]["visitors"] - 1.0) < 1e-9
+        assert not pay_share(0.01, False)[0], "a busy day for visitors (1.00) raises the floor past the pot: the list stops at once"
+        today = lambda: "2026-11-30"                                          # the last day; the busy day is more than a week ago
+        assert pay_share(0.5, False)[0], "the last day: what is above one day's floor may be spent"
+        L = ledger(); g = _pay_ledger(L); g["usd"] = 9.99; L["groq_pay"] = g; json.dump(L, open(LEDGER, "w"))
+        assert not pay_share(0.02, True)[0] and pay_share(0.005, True)[0], "the month's pot is never passed, not even for a person"
+        today = lambda: "2026-12-01"; assert pay_share(0.02, True)[0] and _pay_ledger(ledger())["usd"] == 0.0, "a new month: a new pot"
+        json.dump({"groq": {"paid": False}}, open(PAY, "w")); assert not groq_paid()
+    finally:
+        PAY, LEDGER, today = keep_pay, keep_led, keep_today
 
 
 def selftest():
@@ -775,6 +862,7 @@ def selftest():
     FREE = keep_free; del os.environ["GEMINI_API_KEY"]
     for k in ("MISTRAL_API_KEY", "OPENROUTER_API_KEY", "ANTHROPIC_API_KEY"): del os.environ[k]
     if had: os.environ["GROQ_API_KEY"] = had
+    pay_selftest()
     LEDGER = keep
     print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it; calls made at once each get their own moment; past a run's clock nothing is asked or waited for)")
 

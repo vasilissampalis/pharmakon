@@ -2422,6 +2422,7 @@ def run(ids=None, limit=3, again=False, chat=None, enc=None, only_team=None, tri
         if real: llm.STOP_AT = P.STOP_AT = time.time() + (min(QUESTION_SECONDS, max(BEGIN_WITH, 60 * minutes - gone_by + 30)) if minutes else QUESTION_SECONDS)
         if real: llm.GIVE_WAY = give_way if (give_way and w.get("from") != "a question visitors sent") else None; llm._gave[:] = [time.time(), False]      # one of the system's own gives way in the middle too (asked every 25 seconds)
         begun += 1
+        llm.FOR = "visitor" if w.get("from") == "a question visitors sent" else "list"      # (21 November 2026) whose money at Groq it may spend, before its team is chosen (data/auto/lane/pay.json)
         if give_way and made and give_way(): print("lane: a run is waiting behind this one (a new question came): the rest is left to it"); break      # (between two of the system's own questions; never in the pass for the questions people sent)
         if real:
             was = st["items"].get(w["id"]) or {}

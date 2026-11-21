@@ -1,0 +1,23 @@
+{
+ "_note": "(21 November 2026; the senior author, 20:54: \"yes\" to the plan of 20:52) Groq's paid plan, when it is switched on (\"paid\": true, only after he says that his Groq account is on the paid plan with a monthly limit; his rule of 16 November 2026 was free models only). One pot a month (usd_a_month, which is also the limit he sets in Groq's console): a question a person sent may spend from it at any hour until it is empty; the questions the lane answers by itself (the list: forum, Reddit and its own) may spend only above a floor kept for the visitors: what visitors spent on the busiest of the last seven days (at least visitors_least_a_day), times margin, times the days left in the month; of what is above the floor, a day's share is the rest divided by the days left. Recomputed at every call, so a busy day slows the list at once, and the last days spend what is left. scripts/auto/llm.py: pay_share, pay_count. Prices in dollars per million tokens [in, out], as a summary of Groq's price page gave them on 20 November 2026 (groq.com/pricing could not be read from here): to be checked in Groq's console when the plan is switched on. Groq's own monthly limit is the last safety: past it, the free models go on as before.",
+ "groq": {
+  "paid": false,
+  "usd_a_month": 10,
+  "margin": 1.5,
+  "visitors_least_a_day": 0.2,
+  "prices": {
+   "openai/gpt-oss-120b": [
+    0.15,
+    0.6
+   ],
+   "openai/gpt-oss-20b": [
+    0.075,
+    0.3
+   ],
+   "qwen/qwen3.8-27b": [
+    0.8,
+    4.0
+   ]
+  }
+ }
+}
