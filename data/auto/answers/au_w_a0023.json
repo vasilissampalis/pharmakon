@@ -15,43 +15,233 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2": "gemini:gemini-3-flash-preview",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "44648136440",
-  "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "gemini-3.1-flash-lite": 3,
-   "gpt-oss-20b": 2
-  },
-  "read_seconds": 62,
+  "run": "44846110386",
+  "read_seconds": 19,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 62
+  "neurons": 710.8,
+  "seconds": 389
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8856) gemma-4-26b-a4b-it gave no answer in the form asked for: llama-3.3-70b-instruct-fp8-fast wrote from there.",
+  "rules": "broken at try 2: but: a clinical word where an everyday one exists (“cardiovascular”): say it plainly",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.50, but 0.92, how1 0.93",
+  "check": "short: NOT accepted: Passage does not discuss heart attack risk, so the claim that it is 'not known' is unsupported; also magnesium's effectiveness is not confirmed.; but: NOT accepted: it is about something else than the short answer (Sentence 1 does not correctly answer the question about heart attack risk based on the passages, and Sentence 2 does not serve as a limitation or doubt on Sentence 1.); how1: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "koenig_2015",
+    "type": "article-journal",
+    "title": "The anti-addiction drug ibogaine and the heart: A delicate relation",
+    "author": [
+     {
+      "family": "Koenig",
+      "given": "Xaver"
+     },
+     {
+      "family": "Hilber",
+      "given": "Karlheinz"
+     }
+    ],
+    "container-title": "Molecules",
+    "issued": {
+     "date-parts": [
+      [
+       2015
+      ]
+     ]
+    },
+    "DOI": "10.3390/molecules20022208",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "20",
+    "issue": "2",
+    "page": "2208-2228",
+    "PMCID": "PMC4382526"
+   },
+   "doi": "10.3390/molecules20022208",
+   "pmcid": "PMC4382526",
+   "title": "The anti-addiction drug ibogaine and the heart: a delicate relation",
+   "year": 2015,
+   "journal": "Molecules (Basel, Switzerland)",
+   "kind": "review",
+   "people": false,
+   "near": 0.703,
+   "money": [
+    "The authors declare no conflict of interest. The founding sponsors had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript, and in the decision to publish the results."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "The aim of this review is to recapitulate the current knowledge about ibogaine’s effects on the heart and the cardiovascular system, and to assess the cardiac risks associated with the use of this drug in anti- addiction therapy.",
+    "text": "review of research on ibogaine"
+   },
+   "findings": [
+    {
+     "passage": 30,
+     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.1. Clinical Reports",
+     "quote": "Noteworthy is that ibogaine intake is typically not immediately accompanied by deleterious adverse events.",
+     "text": "Ibogaine intake is not immediately accompanied by adverse events.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 33,
+     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+     "quote": "Thus, ibogaine itself induces bradycardia, and hypokalemia is frequent in drug users",
+     "text": "Ibogaine induces bradycardia and hypokalemia is frequent in people who use drugs.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 40,
+     "where": "4. Conclusions",
+     "quote": "The anti-addiction drug ibogaine certainly affects the heart and the cardiovascular system.",
+     "text": "Ibogaine affects the heart and cardiovascular system.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 39,
+     "where": "3. Effects on the Cardiovascular System › 3.2. Clinical Evidence of Cardiotoxicity › 3.2.2. Risk Factors",
+     "quote": "The lack of knowledge about the amount of 18-MC’s plasma protein binding, however, is an element of uncertainty which remains.",
+     "text": "The amount of 18-MC's plasma protein binding is not known.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "brunt_2026",
+    "type": "article-journal",
+    "title": "Rare but relevant: Ibogaine and cardiovascular complications—prolonged QT interval and ventricular arrhythmias",
+    "author": [
+     {
+      "family": "Brunt",
+      "given": "Tibor Markus"
+     }
+    ],
+    "container-title": "Addiction",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1111/add.70319",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "121",
+    "issue": "6",
+    "page": "1616-1621",
+    "PMCID": "PMC13155281"
+   },
+   "doi": "10.1111/add.70319",
+   "pmcid": "PMC13155281",
+   "title": "Rare but relevant: Ibogaine and cardiovascular complications-prolonged QT interval and ventricular arrhythmias",
+   "year": 2026,
+   "journal": "Addiction (Abingdon, England)",
+   "kind": "review",
+   "people": true,
+   "near": 0.713,
+   "money": [
+    "None."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Revived interest in psychedelic‐assisted therapies has also renewed focus on ibogaine, a psychoactive alkaloid, for its notable anti‐addictive potential.",
+    "text": "research paper on ibogaine and cardiovascular complications"
+   },
+   "findings": [
+    {
+     "passage": 8,
+     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+     "quote": "ibogaine is responsible for this prolonged QTc interval and ventricular tachyarrhythmias is the blockade by noribogaine or ibogaine of ether‐a‐go‐go‐related gene (hERG) potassium channels in cardiomyocytes of the heart.",
+     "text": "Ibogaine causes prolonged QTc interval and ventricular tachyarrhythmias by blocking hERG potassium channels in heart cardiomyocytes.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+     "quote": "pre‐existing cardiovascular morbidity was a leading cause of fatalities of individuals taking iboga or ibogaine.",
+     "text": "Pre-existing cardiovascular morbidity was a leading cause of fatalities in individuals taking iboga or ibogaine in a forensic case series review.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 11,
+     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+     "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events.",
+     "text": "Magnesium was used in some studies to manage adverse cardiac events after ibogaine treatment.",
+     "id": "F6",
+     "second_hand": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events."
+    }
+   ],
+   "limits": [
+    {
+     "passage": 9,
+     "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+     "quote": "However, the finding that pre‐existing cardiovascular morbidity is a pre‐requisite for ibogaine‐related cardiac events has been since then refuted by several case studies",
+     "text": "The requirement of pre-existing cardiovascular morbidity for ibogaine-related cardiac events has been refuted by several case studies.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "whether it specifically lowers heart attack risk",
  "wanted": [
   {
    "doi": "10.3109/15563650.2016.1138226",
@@ -85,6 +275,14 @@
    "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that two studies found magnesium did not fix heart rhythm problems; they only report that two studies covered magnesium/sodium and saline suppletion and that most of the other clinical interventions were not effect",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -93,55 +291,30 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules20022208",
-   "kept": 0,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The mechanisms of ibogaine's effects on heart rate have not been conclusively proven.",
+     "quote": "Although none of those mechanisms has been conclusively proven as yet, this complex topic is worth considering in more detail.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Rare but relevant: Ibogaine and cardiovascular complications-prolonged QT interval and ventricular arrhythmias",
    "read": "full",
    "kind": "review",
    "at": "10.1111/add.70319",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Ibogaine/Noribogaine in the Treatment of Substance Use Disorders: A Systematic Review of the Current Literature",
-   "read": "full",
-   "kind": "review",
-   "at": "10.2174/1570159x21666221017085612",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
      "kind": "limit",
-     "text": "The absence of sufficient controlled clinical trials prevents a definitive conclusion regarding the safety of ibogaine.",
-     "quote": "The lack of adequate controlled clinical trials does not allow a definitive answer about the therapeutic efficacy of ibogaine and its safety.",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "A 10-fold reduced dose of ibogaine may not have therapeutic effects.",
+     "quote": "such a dose might not have any therapeutic effects.",
+     "why": "a number of the sentence is not in its quote"
     }
    ]
-  },
-  {
-   "title": "Ibogaine and addiction in the animal model, a systematic review and meta-analysis",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1038/tp.2016.71",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Implications of Potential US FDA Approval of Psychedelics or Psychedelic-Adjacents Such as Ibogaine for Pharmacy in Japan",
-   "read": "full",
-   "kind": "review",
-   "at": "10.7759/cureus.116178",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Neurorestorative properties of ibogaine: linking multi-receptor affinities to remyelination and metabolic restoration",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1017/neu.2026.10059",
-   "kept": 0,
-   "thrown": []
   },
   {
    "title": "Ibogaine",
@@ -150,24 +323,155 @@
    "at": "https://www.drugscience.org.uk/drugs/ibogaine",
    "kept": 0,
    "thrown": []
-  },
-  {
-   "title": "How toxic is ibogaine?",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.3109/15563650.2016.1138226",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Identifying setting factors associated with improved ibogaine safety: a systematic review of clinical studies",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1007/s00406-023-01590-1",
-   "kept": 0,
-   "thrown": []
   }
  ],
+ "plan": {
+  "short": [
+   "F6"
+  ],
+  "direct": "Not known",
+  "but": [],
+  "how": [
+   [
+    "DB",
+    "F6"
+   ]
+  ],
+  "unanswered": "whether it specifically lowers heart attack risk"
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known if magnesium with ibogaine lowers heart attack risk. It may manage cardiac events.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "But it is a review of ibogaine and cardiovascular complications.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Revived interest in psychedelic‐assisted therapies has also renewed focus on ibogaine, a psychoactive alkaloid, for its notable anti‐addictive potential.",
+       "sha": "fe42210921266e8c"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“cardiovascular”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "A review of ibogaine and cardiovascular complications reports on magnesium use.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Revived interest in psychedelic‐assisted therapies has also renewed focus on ibogaine, a psychoactive alkaloid, for its notable anti‐addictive potential.",
+       "sha": "fe42210921266e8c"
+      },
+      {
+       "label": "F6",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known if magnesium with ibogaine lowers heart attack risk. It may manage adverse cardiac events.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage does not discuss heart attack risk, so the claim that it is 'not known' is unsupported; also magnesium's effectiveness is not confirmed."
+    },
+    {
+     "part": "but",
+     "text": "But it is a review of ibogaine and heart problems.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Revived interest in psychedelic‐assisted therapies has also renewed focus on ibogaine, a psychoactive alkaloid, for its notable anti‐addictive potential.",
+       "sha": "fe42210921266e8c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 does not correctly answer the question about heart attack risk based on the passages, and Sentence 2 does not serve as a limitation or doubt on Sentence 1.)"
+    },
+    {
+     "part": "how1",
+     "text": "A review of ibogaine and heart problems reports on magnesium use.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "brunt_2026",
+       "where": "Abstract",
+       "quote": "Revived interest in psychedelic‐assisted therapies has also renewed focus on ibogaine, a psychoactive alkaloid, for its notable anti‐addictive potential.",
+       "sha": "fe42210921266e8c"
+      },
+      {
+       "label": "F6",
+       "ref": "brunt_2026",
+       "where": "EFFECTS ON THE CARDIOVASCULAR SYSTEM",
+       "quote": "Two studies reported on magnesium/sodium and saline suppletion after ibogaine treatment to manage adverse cardiac events.",
+       "sha": "1122b5e36debc63f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.4975,
+   "but": 0.9204,
+   "how1": 0.9343
+  },
+  "scores_quotes_alone": {
+   "short": 0.2838,
+   "but": 0.8829,
+   "how1": 0.8251
+  }
+ },
  "place": {
   "home": "new:Ibogaine",
   "also": [],

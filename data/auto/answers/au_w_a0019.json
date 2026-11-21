@@ -17,30 +17,36 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team B",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3-flash-preview",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44845069658",
+  "run": "44846110386",
   "read_by": {
-   "gemini-3.5-flash-lite": 3,
-   "llama-4-scout-17b-16e-instruct": 3
+   "gemini-3.5-flash-lite": 4,
+   "llama-4-scout-17b-16e-instruct": 2
   },
-  "read_seconds": 71,
+  "read_seconds": 73,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 109.2,
-  "seconds": 71
+  "neurons": 74.9,
+  "seconds": 73
  },
  "status": "none",
  "why": "no source that can be read gave a finding for this question (15 source(s) could not be fetched just now: tried again in the next run)",
  "gates": {
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
   "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
@@ -101,6 +107,14 @@
    "lane": 19,
    "status": "none",
    "why": "no source that can be read gave a finding for this question",
+   "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (15 source(s) could not be fetched just now: tried again in the next run)",
    "short": "",
    "complete": false
   }
