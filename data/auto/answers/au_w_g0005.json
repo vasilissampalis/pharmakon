@@ -17,34 +17,236 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44827046898",
-  "read_seconds": 100,
+  "run": "44885513725",
+  "read_by": {
+   "gemini-3.5-flash-lite": 4,
+   "gemini-3.1-flash-lite": 4,
+   "gpt-oss-20b": 1
+  },
+  "read_seconds": 22,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 86
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 2 discusses the quality and age of human studies, which is unrelated to the tolerance claim in sentence 1, so it does not serve as a limiting or qualifying statement for sentence 1.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: how1: words that are not person-first (“users”); how3: words that are not person-first (“users”); but: it says “everyone”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.70, but 0.98, how1 0.56, how3 0.88",
+  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 2 discusses the quality and age of human studies, which is unrelated to the tolerance claim in sentence 1, so it does not serve as a limiting or qualifying statement for sentence 1.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "ilan_2022",
+    "type": "article-journal",
+    "title": "Digital medical cannabis as market differentiator: Second-generation artificial intelligence systems to improve response",
+    "author": [
+     {
+      "family": "Ilan",
+      "given": "Yaron"
+     }
+    ],
+    "container-title": "Frontiers in Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    },
+    "DOI": "10.3389/fmed.2021.788777",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "8",
+    "number": "788777",
+    "PMCID": "PMC8818992"
+   },
+   "doi": "10.3389/fmed.2021.788777",
+   "pmcid": "PMC8818992",
+   "title": "Digital Medical Cannabis as Market Differentiator: Second-Generation Artificial Intelligence Systems to Improve Response",
+   "year": 2021,
+   "journal": "Frontiers in medicine",
+   "kind": "review",
+   "people": true,
+   "near": 0.725,
+   "money": [
+    "YI is the founder of Oberon Sciences."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "The development of tolerance toward cannabis and low adherence to chronic administration further impair its long-term beneficial effects.",
+    "text": "Review paper on medical cannabis challenges and tolerance"
+   },
+   "findings": [
+    {
+     "passage": 12,
+     "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+     "quote": "Partial and complete loss of response to chronic medication is a common problem with multiple drugs when regular cannabis users develop tolerance to its effect.",
+     "text": "Regular cannabis users often experience partial or complete loss of response to chronic cannabis medication.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+     "quote": "The morning subjective intoxication ratings increased from day 1 to day 2, and then declined over days 4 and 6.",
+     "text": "Subjective intoxication ratings rise initially but decline over days 4 and 6, indicating tolerance development.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 14,
+     "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+     "quote": "The downregulation of CB1 receptors in chronic users is associated with dopaminergic output normalization from the ventral tegmental to mesolimbic circuit area.",
+     "text": "In chronic users, CB1 receptor downregulation normalizes dopaminergic output, reducing acute impairment.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 14,
+     "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+     "quote": "The mechanisms of this neuroadaptation underlying cannabis tolerance are unclear.",
+     "text": "The exact neurobiological mechanisms of cannabis tolerance remain unclear.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "singh_2018",
+    "type": "article-journal",
+    "title": "Cardiovascular complications of marijuana and related substances: A review",
+    "author": [
+     {
+      "family": "Singh",
+      "given": "Amitoj"
+     },
+     {
+      "family": "Saluja",
+      "given": "Sajeev"
+     },
+     {
+      "family": "Kumar",
+      "given": "Akshat"
+     },
+     {
+      "family": "Agrawal",
+      "given": "Sahil"
+     },
+     {
+      "family": "Thind",
+      "given": "Munveer"
+     },
+     {
+      "family": "Nanda",
+      "given": "Sudip"
+     },
+     {
+      "family": "Shirani",
+      "given": "Jamshid"
+     }
+    ],
+    "container-title": "Cardiology and Therapy",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.1007/s40119-017-0102-x",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     },
+     "online_first_year": 2017
+    },
+    "volume": "7",
+    "issue": "1",
+    "page": "45-59",
+    "PMCID": "PMC5986667"
+   },
+   "doi": "10.1007/s40119-017-0102-x",
+   "pmcid": "PMC5986667",
+   "title": "Cardiovascular Complications of Marijuana and Related Substances: A Review",
+   "year": 2018,
+   "journal": "Cardiology and therapy",
+   "kind": "review",
+   "people": true,
+   "near": 0.681,
+   "money": [
+    "AcknowledgementsFundingNo funding or sponsorship was received for this study or publication of this article.AuthorshipAll named authors meet the International Committee of Medical Journal Editors (ICMJE) criteria for authorship for this manuscript, take responsibility for the integrity of the work as a whole, and have given final approval for the version to be published.DisclosuresA Singh, S. Saluja, A. Kumar, S. Agrawal, M. Thind, S. Nanda and J. Shirani have nothing to disclose.Compliance with Ethics GuidelinesThis article does not contain any new studies with human or animal subjects performed by any of the authors.Open AccessThis article is distributed under the terms of the Creative Commons Attribution-NonCommercial 4.0 International License, which permits any noncommercial use, distribution, and reproduction in any medium, provided you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons license, and indicate if changes were made."
+   ],
+   "design": {
+    "passage": 4,
+    "where": "Methods",
+    "quote": "To prepare this literature review, we performed searches of PUBMED, MEDLINE and EMBASE databases using the phrases “marijuana”, “cannabis”, “cannabinoids”, “THC”",
+    "text": "A literature review of cannabis and cardiovascular complications"
+   },
+   "findings": [
+    {
+     "passage": 13,
+     "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+     "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+     "text": "Counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 24,
+     "where": "Conclusions",
+     "quote": "Human data is generally deficient and most available studies in humans have been performed decades ago with methodology and resources of the time.",
+     "text": "Human data is generally deficient and most available studies in humans have been performed decades ago with methodology and resources of the time.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -72,46 +274,426 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Digital Medical Cannabis as Market Differentiator: Second-Generation Artificial Intelligence Systems to Improve Response",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fmed.2021.788777",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Cardiovascular Complications of Marijuana and Related Substances: A Review",
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40119-017-0102-x",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   },
   {
-   "title": "Assessment of the associative determinants of tolerance to the effects of cannabis extract on exploratory behavior in rats",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1016/j.dadr.2025.100344",
+   "title": "About Cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/cannabis/about/index.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Cannabis tolerance reduces symptom relief",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fphar.2025.1496232",
+   "title": "Cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/cannabis",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Cannabis (Marijuana) and Cannabinoids: What You Need To Know",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/cannabis-marijuana-and-cannabinoids-what-you-need-to-know",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Research",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substance-use-and-addiction/cannabis/research-cannabis",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "About cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Medical cannabis (and cannabis oils)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/medical-cannabis/",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F2",
+   "F4"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
+    "F4"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, people can build up a tolerance to cannabis. Regular users often experience a partial or complete loss of response to its effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "Partial and complete loss of response to chronic medication is a common problem with multiple drugs when regular cannabis users develop tolerance to its effect.",
+       "sha": "b46675b44d0d5b9e"
+      },
+      {
+       "label": "F4",
+       "ref": "singh_2018",
+       "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+       "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+       "sha": "07d973aff41440be"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "but",
+     "text": "Human data is generally deficient, and most available studies in humans were performed decades ago with older methods.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "singh_2018",
+       "where": "Conclusions",
+       "quote": "Human data is generally deficient and most available studies in humans have been performed decades ago with methodology and resources of the time.",
+       "sha": "3d354127ee5e08f9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says regular cannabis users often lose response to chronic medication. It notes intoxication ratings rise then decline over days 4 and 6.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "Partial and complete loss of response to chronic medication is a common problem with multiple drugs when regular cannabis users develop tolerance to its effect.",
+       "sha": "b46675b44d0d5b9e"
+      },
+      {
+       "label": "F2",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "The morning subjective intoxication ratings increased from day 1 to day 2, and then declined over days 4 and 6.",
+       "sha": "3b5e4128b9f1f79c"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "how2",
+     "text": "The same review says CB1 receptor downregulation in chronic users normalizes dopaminergic output, which reduces acute impairment.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "The downregulation of CB1 receptors in chronic users is associated with dopaminergic output normalization from the ventral tegmental to mesolimbic circuit area.",
+       "sha": "ca0092193a9a0cc8"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 review says counter-regulatory mechanisms and tolerance to cannabinoid effects exist and may play a role in variable individual responses.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "singh_2018",
+       "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+       "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+       "sha": "07d973aff41440be"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, people who use cannabis can build up a tolerance. Regular use often leads to a partial or complete loss of response to its effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "Partial and complete loss of response to chronic medication is a common problem with multiple drugs when regular cannabis users develop tolerance to its effect.",
+       "sha": "b46675b44d0d5b9e"
+      },
+      {
+       "label": "F4",
+       "ref": "singh_2018",
+       "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+       "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+       "sha": "07d973aff41440be"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Human data is generally deficient, and most available studies in humans were performed decades ago with older methods.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "singh_2018",
+       "where": "Conclusions",
+       "quote": "Human data is generally deficient and most available studies in humans have been performed decades ago with methodology and resources of the time.",
+       "sha": "3d354127ee5e08f9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 2 discusses the quality and age of human studies, which is unrelated to the tolerance claim in sentence 1, so it does not serve as a limiting or qualifying statement for sentence 1.)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says regular cannabis use often causes a loss of response. It notes that subjective intoxication ratings rise at first but decline over days 4 and 6.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "Partial and complete loss of response to chronic medication is a common problem with multiple drugs when regular cannabis users develop tolerance to its effect.",
+       "sha": "b46675b44d0d5b9e"
+      },
+      {
+       "label": "F2",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "The morning subjective intoxication ratings increased from day 1 to day 2, and then declined over days 4 and 6.",
+       "sha": "3b5e4128b9f1f79c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 review states that counter-regulatory mechanisms and tolerance to cannabinoids exist. These may play a role in variable individual responses to these agents.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "singh_2018",
+       "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+       "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+       "sha": "07d973aff41440be"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, people who use cannabis regularly can build up a tolerance. This can lead to a partial or complete loss of response to its effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "Partial and complete loss of response to chronic medication is a common problem with multiple drugs when regular cannabis users develop tolerance to its effect.",
+       "sha": "b46675b44d0d5b9e"
+      },
+      {
+       "label": "F4",
+       "ref": "singh_2018",
+       "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+       "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+       "sha": "07d973aff41440be"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Tolerance may play a role in variable individual responses, meaning it does not affect everyone in the same way.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "singh_2018",
+       "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+       "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+       "sha": "07d973aff41440be"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “everyone”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says regular users often experience partial or complete loss of response to chronic cannabis medication.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "Partial and complete loss of response to chronic medication is a common problem with multiple drugs when regular cannabis users develop tolerance to its effect.",
+       "sha": "b46675b44d0d5b9e"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "how2",
+     "text": "In one study, subjective intoxication ratings rose initially but declined over days 4 and 6, indicating tolerance development.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "The morning subjective intoxication ratings increased from day 1 to day 2, and then declined over days 4 and 6.",
+       "sha": "3b5e4128b9f1f79c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "In chronic users, CB1 receptor downregulation normalizes dopaminergic output, reducing acute impairment.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "ilan_2022",
+       "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+       "quote": "The downregulation of CB1 receptors in chronic users is associated with dopaminergic output normalization from the ventral tegmental to mesolimbic circuit area.",
+       "sha": "ca0092193a9a0cc8"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "how4",
+     "text": "A 2018 review says counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "singh_2018",
+       "where": "Cardiovascular Physiologic Effects of Cannabinoids",
+       "quote": "In addition, counter-regulatory mechanisms and tolerance to the effects of cannabinoids exist and may play a role in variable individual responses to these agents.",
+       "sha": "07d973aff41440be"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "The same review explains that in chronic users, CB1 receptor downregulation normalizes dopaminergic output, which reduces acute impairment.",
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "ilan_2022",
+     "where": "Tolerance Toward Cannabis Impairs the Long-Term Effects of Cannabis Products",
+     "quote": "The downregulation of CB1 receptors in chronic users is associated with dopaminergic output normalization from the ventral tegmental to mesolimbic circuit area.",
+     "sha": "ca0092193a9a0cc8"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6972,
+   "but": 0.9782,
+   "how1": 0.5554,
+   "how3": 0.8778
+  },
+  "scores_quotes_alone": {
+   "short": 0.8221,
+   "but": 0.6379,
+   "how1": 0.4364,
+   "how3": 0.8359
+  }
+ },
  "place": {
   "home": "cannabis",
   "also": [],
