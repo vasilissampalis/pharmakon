@@ -19,35 +19,37 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "planner": "@cf/openai/gpt-oss-120b",
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b"
   },
-  "run": "44841499696",
-  "read_seconds": 52,
+  "run": "44843559493",
+  "read_by": {
+   "llama-4-scout-17b-16e-instruct": 6,
+   "gemini-3.5-flash-lite": 4
+  },
+  "read_seconds": 26,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 590.0,
-  "seconds": 215
+  "neurons": 894.6,
+  "seconds": 77
  },
- "status": "none",
- "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the link between caffeine and abnormal bone growth comes specifically from lab studies.",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.69, but 0.99, how1 0.19, how2 0.57",
-  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the link between caffeine and abnormal bone growth comes specifically from lab studies.; but: accepted; how1: NOT accepted: Passage does not specify that the 2020 review was limited to lab and animal studies.; how2: accepted",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 4; gemini-3.6-flash accepted 2 of 4"
+  "read": "7 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 9 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “It can affect growth. Children of women who used caffeine in pregnancy had lower height z-scores. Caffeine is linked to abnormal bone growth in lab studies.”: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the link between caffeine and abnorma",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.96, but 0.99, how1 0.71, how2 0.96",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -128,15 +130,15 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "Accordingly, in this review, we summarize all current knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage.",
-    "text": "a review summarizing knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage"
+    "text": "a review summarizing current knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-     "text": "Caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
-     "id": "F1",
+     "text": "Caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer osteoarthritis and longitudinal bone growth inhibition.",
+     "id": "F2",
      "second_hand": ""
     },
     {
@@ -144,138 +146,192 @@
      "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
      "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
      "text": "Caffeine has been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-     "id": "F2",
+     "id": "F3",
      "second_hand": ""
     },
     {
      "passage": 35,
      "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.2. Direct and Indirect Effect of Caffeine on Growth Plate Chondrocytes",
-     "quote": "In these rats, caffeine ingestion reduced the expression of the c-myc oncogene, an intracellular growth promoting protein.",
-     "text": "In rats, caffeine ingestion reduced the expression of the c-myc oncogene, an intracellular growth promoting protein.",
-     "id": "F3",
+     "quote": "In these rats, caffeine ingestion reduced the expression of the c-myc oncogene, an intracellular growth promoting protein. As a result, a significant inhibition in the number of chondrocytes was observed in this experimental design.",
+     "text": "In rats, caffeine ingestion reduced the expression of the c-myc oncogene and resulted in a significant inhibition in the number of chondrocytes.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "However, its effects on these tissues have not been reviewed.",
-     "text": "Its effects on these tissues have not been reviewed.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
+   "limits": [],
+   "tag": "B"
   },
   {
-   "read": "full",
+   "read": "page",
    "ref": {
-    "id": "struniewicz_2025",
-    "type": "article-journal",
-    "title": "Pregnancy and caffeine metabolism: Updated insights and implications for maternal–fetal health",
+    "id": "camh_caffeine",
+    "type": "webpage",
+    "title": "Caffeine",
     "author": [
      {
-      "family": "Struniewicz",
-      "given": "Katarzyna Maria"
-     },
-     {
-      "family": "Ptaszek",
-      "given": "Magdalena Maria"
-     },
-     {
-      "family": "Ziółkowska",
-      "given": "Alicja Marianna"
-     },
-     {
-      "family": "Nitsch-Osuch",
-      "given": "Aneta"
-     },
-     {
-      "family": "Kozłowska",
-      "given": "Aleksandra"
+      "literal": "Centre for Addiction and Mental Health"
      }
     ],
-    "container-title": "Nutrients",
     "issued": {
      "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/caffeine",
+    "accessed": {
+     "date-parts": [
       [
-       2025
+       2026,
+       11,
+       21
       ]
      ]
     },
-    "DOI": "10.3390/nu17193173",
     "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-21"
-     }
-    },
-    "volume": "17",
-    "issue": "19",
-    "number": "3173",
-    "PMCID": "PMC12526311"
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-21"
+    }
    },
-   "doi": "10.3390/nu17193173",
-   "pmcid": "PMC12526311",
-   "title": "Pregnancy and Caffeine Metabolism: Updated Insights and Implications for Maternal-Fetal Health",
-   "year": 2025,
-   "journal": "Nutrients",
-   "kind": "review",
+   "title": "Caffeine",
+   "year": null,
+   "kind": "official",
    "people": true,
-   "near": 0.655,
-   "money": [
-    "The authors declare no conflicts of interest.",
-    "This research received no external funding."
-   ],
+   "near": 0.66,
+   "name": "Centre for Addiction and Mental Health",
+   "short": "Canada's Centre for Addiction and Mental Health, a teaching hospital",
+   "tier": 2,
+   "address": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/caffeine",
+   "money": [],
+   "label": false,
    "design": null,
    "findings": [
     {
-     "passage": 40,
-     "where": "6. Clinical Studies on Caffeine Exposure During Pregnancy—An Update from the Last 5 Years › 6.4. Impact of Prenatal Caffeine Exposure on Child Development and Health › 6.4.1. Effects on Fetal Growth and Birth Outcomes",
-     "quote": "In a different study, children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-     "text": "Children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-     "id": "F4",
+     "passage": 13,
+     "where": "What are the long-term effects of using it?",
+     "quote": "Long-term use of large amounts of caffeine (e.g., four cups of coffee a day) may be associated with loss of bone density, increasing the risk of osteoporosis.",
+     "text": "Long-term use of large amounts of caffeine may be associated with loss of bone density, increasing the risk of osteoporosis.",
+     "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "These findings suggest that caffeine may influence multiple physiological pathways during gestation, including epigenetic modifications and metabolic programming. However, evidence from human studies remains heterogeneous and often inconclusive.",
-     "text": "Caffeine may influence multiple physiological pathways during gestation, including epigenetic modifications and metabolic programming, though evidence from human studies remains heterogeneous and often inconclusive.",
-     "id": "F5",
-     "second_hand": "These findings suggest that caffeine may influence multiple physiological pathways during gestation, including epigenetic modifications and metabolic programming."
-    },
-    {
-     "passage": 17,
-     "where": "5. Experimental Evidence on the Mechanisms of Caffeine Action During Pregnancy › 5.1. Caffeine and Adverse Developmental Outcomes in Offspring",
-     "quote": "In Swiss mice, high-dose caffeine (1 mg/mL) resulted in lower offspring body weight at 14, 21, and 30 days compared with low-dose (0.3 mg/mL) and control groups.",
-     "text": "In Swiss mice, high-dose caffeine resulted in lower offspring body weight at 14, 21, and 30 days compared with low-dose and control groups.",
+     "passage": 12,
+     "where": "Is it dangerous?",
+     "quote": "Although caffeine has not been proven to cause birth defects, too much caffeine can increase the risk of miscarriage and of the baby having a low birth weight.",
+     "text": "Too much caffeine can increase the risk of miscarriage and of the baby having a low birth weight.",
      "id": "F6",
      "second_hand": ""
+    },
+    {
+     "passage": 13,
+     "where": "What are the long-term effects of using it?",
+     "quote": "Some studies indicate that caffeine can cause changes in the cells of the body and in the way these cells reproduce themselves.",
+     "text": "Some studies indicate that caffeine can cause changes in the cells of the body and in the way these cells reproduce themselves.",
+     "id": "F7",
+     "second_hand": "Some studies indicate that caffeine can cause changes in the cells of the body and in the way these cells reproduce themselves."
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Despite these findings, the magnitude and clinical relevance of these effects remain uncertain, partly due to variability in caffeine sources, dosages, stud",
-     "text": "The magnitude and clinical relevance of these effects remain uncertain partly due to variability in caffeine sources and dosages.",
+     "passage": 13,
+     "where": "What are the long-term effects of using it?",
+     "quote": "but there is no firm evidence that caffeine causes heart disease. Although caffeine is suspected to be a cause of cancer, the evidence is contradictory and does not allow a clear conclusion.",
+     "text": "There is no firm evidence that caffeine causes heart disease and the evidence for cancer is contradictory.",
      "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "B"
+   "tag": "C"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "It can affect bone growth. Caffeine intake negatively affects growth plate cartilage.",
+   "uses": [
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "guillnfresco_2020",
+     "where": "Abstract",
+     "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
+     "sha": "c9cd1592add6e1bd"
+    },
+    {
+     "label": "F3",
+     "ref": "guillnfresco_2020",
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
+     "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
+     "sha": "603b769fb9fa20e9"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This was reported in rats.",
+   "uses": [
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "guillnfresco_2020",
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders › 5.2. Caffeine Effects on the Growth Plate: Longitudinal Bone Growth Inhibition › 5.2.2. Direct and Indirect Effect of Caffeine on Growth Plate Chondrocytes",
+     "quote": "In these rats, caffeine ingestion reduced the expression of the c-myc oncogene, an intracellular growth promoting protein. As a result, a significant inhibition in the number of chondrocytes was observed in this experimental design.",
+     "sha": "3b63b0867e1aa941"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2020 review found caffeine intake affects growth plate cartilage.",
+   "uses": [
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "guillnfresco_2020",
+     "where": "Abstract",
+     "quote": "Overall, there is ample evidence indicating that caffeine intake negatively affects the physiology of both articular and growth plate cartilage, increasing consumers predisposition to suffer OA and LBGI.",
+     "sha": "c9cd1592add6e1bd"
+    },
+    {
+     "label": "F3",
+     "ref": "guillnfresco_2020",
+     "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
+     "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
+     "sha": "603b769fb9fa20e9"
+    }
+   ],
+   "quote": "caffeine intake negatively affects the physiology of both articular and growth plate cartilage",
+   "quote_ref": "guillnfresco_2020"
+  },
+  {
+   "part": "how2",
+   "text": "Canada's Centre for Addiction and Mental Health says long-term caffeine use may be associated with bone density loss.",
+   "uses": [
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "camh_caffeine",
+     "where": "What are the long-term effects of using it?",
+     "quote": "Long-term use of large amounts of caffeine (e.g., four cups of coffee a day) may be associated with loss of bone density, increasing the risk of osteoporosis.",
+     "sha": "d29c5af54e724cec"
+    }
+   ],
+   "quote": "associated with loss of bone density, increasing the risk of osteoporosis",
+   "quote_ref": "camh_caffeine"
+  }
+ ],
  "complete": false,
- "missing": "effects of caffeine on growth in non‑pregnant individuals",
+ "missing": "effect on human growth",
  "wanted": [
   {
    "doi": "10.1080/10408398.2022.2068499",
@@ -301,14 +357,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-18",
-   "lane": 19,
-   "status": "none",
-   "why": "about pregnancy or children: written, but it does not meet the stricter bar for such an answer (a reader found that its lead can be read as saying a danger is small or absent): no answer yet",
-   "short": "Yes. Caffeine intake can negatively affect growth plate cartilage. In one study, children of women who used caffeine in pregnancy had reduced height z-scores.",
-   "complete": true
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -348,6 +396,14 @@
    "why": "passed every gate, and the stricter bar for an answer about pregnancy or children",
    "short": "It can affect growth. A review says caffeine intake can inhibit bone growth. One study found reduced height z-scores in children of women who used caffeine during pregnancy.",
    "complete": true
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the link between caffeine and abnormal bone growth comes specifically from lab studies.",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -356,8 +412,27 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/nu14214696",
-   "kept": 0,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "doses of 1 mg.kg−1 or more of caffeine may enhance some aspects of physical performance in people",
+     "quote": "doses lower than 3 mg.kg−1, and even as little as 1 mg.kg−1, may be effective in enhancing some aspects of physical performance",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "finding",
+     "text": "3 mg.kg−1 caffeine increases maximal power in the half squat and bench press in people, more than 1 mg.kg−1",
+     "quote": "3 mg.kg−1 caffeine has been shown to increase maximal power in the half squat and bench press, effects that were not evident following 1 mg.kg−1 ingestion",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "finding",
+     "text": "100 mg of caffeine improved simple reaction time but not physical function in healthy middle-aged women",
+     "quote": "Waer et al. demonstrated that low dose caffeine (100 mg) improved simple reaction time but had no effect on the physical function of healthy middle-aged women",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
   },
   {
    "title": "Caffeine, a Risk Factor for Osteoarthritis and Longitudinal Bone Growth Inhibition",
@@ -368,33 +443,19 @@
    "thrown": []
   },
   {
-   "title": "Pregnancy and Caffeine Metabolism: Updated Insights and Implications for Maternal-Fetal Health",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/nu17193173",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A review of research papers and official health body data on pregnancy and caffeine metabolism.",
-     "quote": "Caffeine is one of the most widely consumed psychoactive substances globally and is a common component of daily diets, particularly among women of reproductive age. Numerous in vitro and in vivo studi",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "Women who reported drinking over 50 mg of caffeine daily gave birth to children with lower birth weight and length, reduced arm and thigh circumference, and smaller anterior thigh skin fold compared t",
-     "quote": "Women who reported drinking >50 mg of caffeine daily gave birth to children with lower birth weight (LBW) and length, reduced arm and thigh circumference, and smaller anterior thigh skin fold compared",
-     "why": "it holds an amount or a time between uses"
-    }
-   ]
-  },
-  {
    "title": "Caffeine",
    "read": "page",
    "kind": "official",
    "at": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/caffeine",
-   "kept": 0,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The study did not provide information on caffeine intake from other sources.",
+     "quote": "Health Canada recommends that caffeine intake from chocolate products, soft drinks and medications be limited to 45 mg for children aged four to six, 62.5 mg for children aged seven to nine and 85 mg ",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Caffeine",
@@ -410,7 +471,38 @@
    "kind": "official",
    "at": "https://www.efsa.europa.eu/en/topics/topic/caffeine",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Single doses of caffeine up to 200mg or 3mg/kg bw do not raise safety concerns for healthy adults.",
+     "quote": "Single doses of caffeine up to 200mg – about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "finding",
+     "text": "The safe dose of 3mg/kg bw per day for adults may also apply to children and adolescents.",
+     "quote": "The single doses of caffeine considered to be of no concern for adults (3mg/kg bw per day) may also be applied to children, because the caffeine “clearance rate” in children and adolescents is at leas",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "Daily intakes of up to 400mg or 5.7mg/kg bw do not raise safety concerns for healthy adults except pregnant women.",
+     "quote": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "finding",
+     "text": "A safe habitual daily dose of 3mg/kg bw is proposed for children and adolescents.",
+     "quote": "A safety level of 3mg/kg bw per day is also proposed for habitual caffeine consumption by children and adolescents.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The assessment does not consider caffeine effects in people with diseases or medical conditions, or with medicines/drugs of abuse.",
+     "quote": "EFSA’s Scientific Opinion on the Safety of Caffeine looks at the possible adverse health effects of caffeine consumption from all dietary sources... in the general healthy population and in specific g",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Spilling the Beans: How Much Caffeine is Too Much?",
@@ -456,369 +548,45 @@
  "plan": {
   "short": [
    "F2",
-   "F4"
+   "F3"
   ],
   "direct": "It can",
   "but": [
-   "L2"
+   "F4"
   ],
   "how": [
    [
-    "DA",
-    "F2"
+    "F2",
+    "F3",
+    "F4"
    ],
    [
-    "F4",
     "F5"
    ]
   ],
-  "unanswered": "effects of caffeine on growth in non‑pregnant individuals"
+  "unanswered": "effect on human longitudinal growth"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.6864,
-   "but": 0.9863,
-   "how1": 0.1906,
-   "how2": 0.5689
+   "short": 0.9644,
+   "but": 0.9902,
+   "how1": 0.7058,
+   "how2": 0.9597
   },
   "scores_quotes_alone": {
-   "short": 0.6532,
-   "but": 0.9403,
-   "how1": 0.0218,
-   "how2": 0.5095
+   "short": 0.9624,
+   "but": 0.9895,
+   "how1": 0.4797,
+   "how2": 0.3888
   }
  },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It can affect growth. A study found children of women who used caffeine in pregnancy had reduced height scores. No study measured caffeine and height in children or teens.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "guillnfresco_2020",
-       "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
-       "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-       "sha": "603b769fb9fa20e9"
-      },
-      {
-       "label": "F4",
-       "ref": "struniewicz_2025",
-       "where": "6. Clinical Studies on Caffeine Exposure During Pregnancy—An Update from the Last 5 Years › 6.4. Impact of Prenatal Caffeine Exposure on Child Development and Health › 6.4.1. Effects on Fetal Growth and Birth Outcomes",
-       "quote": "In a different study, children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-       "sha": "bec486b937e52c61"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The claim 'No study measured caffeine and height in children or teens' contradicts the passage, which reports a study that measured reduced height z‑scores in children."
-    },
-    {
-     "part": "but",
-     "text": "The size and real-world impact of these effects are uncertain because caffeine sources and amounts vary widely.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "Despite these findings, the magnitude and clinical relevance of these effects remain uncertain, partly due to variability in caffeine sources, dosages, stud",
-       "sha": "616afddde64f2a67"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review of lab and animal studies says caffeine can change growth plate cartilage, which is linked to abnormal bone growth.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Accordingly, in this review, we summarize all current knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F2",
-       "ref": "guillnfresco_2020",
-       "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
-       "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-       "sha": "603b769fb9fa20e9"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not specify that the 2020 review is limited to lab and animal studies."
-    },
-    {
-     "part": "how2",
-     "text": "A 2025 review reports that children of women who used caffeine in pregnancy had lower height scores. It says human evidence is mixed.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "struniewicz_2025",
-       "where": "6. Clinical Studies on Caffeine Exposure During Pregnancy—An Update from the Last 5 Years › 6.4. Impact of Prenatal Caffeine Exposure on Child Development and Health › 6.4.1. Effects on Fetal Growth and Birth Outcomes",
-       "quote": "In a different study, children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-       "sha": "bec486b937e52c61"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "These findings suggest that caffeine may influence multiple physiological pathways during gestation, including epigenetic modifications and metabolic programming. However, evidence from human studies remains heterogeneous and often inconclusive.",
-       "sha": "616afddde64f2a67"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It can affect growth. A review links caffeine to abnormal bone growth. Children of women who used caffeine in pregnancy had reduced height scores.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "guillnfresco_2020",
-       "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
-       "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-       "sha": "603b769fb9fa20e9"
-      },
-      {
-       "label": "F4",
-       "ref": "struniewicz_2025",
-       "where": "6. Clinical Studies on Caffeine Exposure During Pregnancy—An Update from the Last 5 Years › 6.4. Impact of Prenatal Caffeine Exposure on Child Development and Health › 6.4.1. Effects on Fetal Growth and Birth Outcomes",
-       "quote": "In a different study, children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-       "sha": "bec486b937e52c61"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that children had reduced 'height z-scores', not general 'height scores', omitting the specific measure used."
-    },
-    {
-     "part": "but",
-     "text": "The size and real-world impact of these effects are uncertain because caffeine sources and amounts vary widely.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "Despite these findings, the magnitude and clinical relevance of these effects remain uncertain, partly due to variability in caffeine sources, dosages, stud",
-       "sha": "616afddde64f2a67"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that the uncertainty is 'partly due to' variability, whereas the sentence presents it as the sole reason by omitting 'partly'."
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review of database records says caffeine is linked to abnormal bone growth due to changes in growth plate cartilage.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Accordingly, in this review, we summarize all current knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F2",
-       "ref": "guillnfresco_2020",
-       "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
-       "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-       "sha": "603b769fb9fa20e9"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2025 review reports that children of women who used caffeine in pregnancy had lower height scores. It cites earlier work suggesting caffeine may affect body pathways.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "struniewicz_2025",
-       "where": "6. Clinical Studies on Caffeine Exposure During Pregnancy—An Update from the Last 5 Years › 6.4. Impact of Prenatal Caffeine Exposure on Child Development and Health › 6.4.1. Effects on Fetal Growth and Birth Outcomes",
-       "quote": "In a different study, children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-       "sha": "bec486b937e52c61"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "These findings suggest that caffeine may influence multiple physiological pathways during gestation, including epigenetic modifications and metabolic programming. However, evidence from human studies remains heterogeneous and often inconclusive.",
-       "sha": "616afddde64f2a67"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies 'height z-scores' rather than 'height scores'."
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "It can affect growth. Children of women who used caffeine in pregnancy had lower height z-scores. Caffeine is linked to abnormal bone growth in lab studies.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "guillnfresco_2020",
-       "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
-       "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-       "sha": "603b769fb9fa20e9"
-      },
-      {
-       "label": "F4",
-       "ref": "struniewicz_2025",
-       "where": "6. Clinical Studies on Caffeine Exposure During Pregnancy—An Update from the Last 5 Years › 6.4. Impact of Prenatal Caffeine Exposure on Child Development and Health › 6.4.1. Effects on Fetal Growth and Birth Outcomes",
-       "quote": "In a different study, children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-       "sha": "bec486b937e52c61"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the link between caffeine and abnormal bone growth comes specifically from lab studies."
-    },
-    {
-     "part": "but",
-     "text": "The size and real-world impact of these effects are uncertain, partly because caffeine sources and amounts vary.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "Despite these findings, the magnitude and clinical relevance of these effects remain uncertain, partly due to variability in caffeine sources, dosages, stud",
-       "sha": "616afddde64f2a67"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review of lab and animal studies says caffeine can change growth plate cartilage, which is linked to abnormal bone growth.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "guillnfresco_2020",
-       "where": "Abstract",
-       "quote": "Accordingly, in this review, we summarize all current knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage.",
-       "sha": "c9cd1592add6e1bd"
-      },
-      {
-       "label": "F2",
-       "ref": "guillnfresco_2020",
-       "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
-       "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-       "sha": "603b769fb9fa20e9"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passage does not specify that the 2020 review was limited to lab and animal studies."
-    },
-    {
-     "part": "how2",
-     "text": "A 2025 review reports that children of women who used caffeine in pregnancy had lower height z-scores. It says human evidence is often inconclusive.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "struniewicz_2025",
-       "where": "6. Clinical Studies on Caffeine Exposure During Pregnancy—An Update from the Last 5 Years › 6.4. Impact of Prenatal Caffeine Exposure on Child Development and Health › 6.4.1. Effects on Fetal Growth and Birth Outcomes",
-       "quote": "In a different study, children of women who consumed caffeine during pregnancy had reduced height z-scores compared to those with no exposure.",
-       "sha": "bec486b937e52c61"
-      },
-      {
-       "label": "F5",
-       "ref": "struniewicz_2025",
-       "where": "Abstract",
-       "quote": "These findings suggest that caffeine may influence multiple physiological pathways during gestation, including epigenetic modifications and metabolic programming. However, evidence from human studies remains heterogeneous and often inconclusive.",
-       "sha": "616afddde64f2a67"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    false,
-    "The passages do not state that the link between caffeine and abnormal bone growth comes specifically from lab studies."
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    false,
-    "The passages do not state that the 2020 review was limited to or focused specifically on lab and animal studies."
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  }
+ "with_checked": {
+  "differs": [],
+  "same": []
  },
- "dropped": [
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "A 2020 review of lab and animal studies says caffeine can change growth plate cartilage, which is linked to abnormal bone growth.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "guillnfresco_2020",
-     "where": "Abstract",
-     "quote": "Accordingly, in this review, we summarize all current knowledge in the PubMed database about caffeine catabolic effects on articular and growth plate cartilage.",
-     "sha": "c9cd1592add6e1bd"
-    },
-    {
-     "label": "F2",
-     "ref": "guillnfresco_2020",
-     "where": "5. Caffeine’s Role in Cartilage-Related Disorders",
-     "quote": "Caffeine has also been related to abnormal bone growth due to alterations in the growth plate cartilage.",
-     "sha": "603b769fb9fa20e9"
-    }
-   ],
-   "by": "the second reader",
-   "said": "Passage does not specify that the 2020 review was limited to lab and animal studies."
-  }
- ],
  "place": {
   "home": "caffeine",
   "also": [],
