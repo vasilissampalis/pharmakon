@@ -15,37 +15,168 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44816425934",
-  "read_seconds": 100,
+  "run": "44884844478",
+  "read_by": {
+   "gemini-3.5-flash-lite": 7,
+   "gpt-oss-20b": 2,
+   "gemini-3.1-flash-lite": 2
+  },
+  "read_seconds": 65,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 196
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the answer was not accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The sentence states that LSA seeds 'can cause' these effects, but the passage states that these are 'Reported effects' and that severe outcomes 'have also been documented', altering the certainty/phrasing.",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.96, but 0.28, how1 0.87, how2 0.97, how3 0.97",
+  "check": "short: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The sentence states that LSA seeds 'can cause' these effects, but the passage states that these are 'Reported effects' and that severe outcomes 'have also been documented', altering the certainty/phrasing.; but: accepted; how1: accepted; how2: accepted; how3: accepted",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 5"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "castro_2025",
+    "type": "article-journal",
+    "title": "Lysergic acid amide (LSA), an LSD analog: Systematic review of pharmacological effects, adverse outcomes, and therapeutic potentials",
+    "author": [
+     {
+      "family": "Castro",
+      "given": "Paula S. C. C."
+     },
+     {
+      "family": "Leopoldo",
+      "given": "Kae"
+     },
+     {
+      "family": "Pedro",
+      "given": "Maria Olivia Pozzolo"
+     },
+     {
+      "family": "Takitane",
+      "given": "Juliana"
+     },
+     {
+      "family": "Bombana",
+      "given": "Henrique Silva"
+     },
+     {
+      "family": "Negrão",
+      "given": "André Brooking"
+     },
+     {
+      "family": "Scholz",
+      "given": "Jaqueline R."
+     },
+     {
+      "family": "Castaldelli-Maia",
+      "given": "João Maurício"
+     }
+    ],
+    "container-title": "Pharmacy",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.3390/pharmacy13040098",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "13",
+    "issue": "4",
+    "number": "98",
+    "PMCID": "PMC12286086"
+   },
+   "doi": "10.3390/pharmacy13040098",
+   "pmcid": "PMC12286086",
+   "title": "Lysergic Acid Amide (LSA), an LSD Analog: Systematic Review of Pharmacological Effects, Adverse Outcomes, and Therapeutic Potentials",
+   "year": 2025,
+   "journal": "Pharmacy (Basel, Switzerland)",
+   "kind": "review",
+   "people": false,
+   "near": 0.67,
+   "money": [
+    "The authors declare no conflicts of interest.",
+    "This research was funded by Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), grant number 2023/07651-9 (PI: Castaldelli-Maia)."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Objective: To systematically review the scientific literature on lysergic acid amide (LSA), focusing on its physical, neurobiological, and social effects, as well as its potential risks and therapeutic uses.",
+    "text": "systematic review of human studies on LSA"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Reported effects include euphoria, hallucinations, nausea, and anxiety.",
+     "text": "LSA seeds produce euphoria, hallucinations, nausea, and anxiety.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Severe adverse outcomes, such as psychosis, hypertension, and hospitalization, have also been documented.",
+     "text": "LSA seeds can cause severe adverse outcomes such as psychosis, hypertension, and hospitalization.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 14,
+     "where": "3. Results › 3.1. Sources and Concentrations of LSA",
+     "quote": "its concentration varied significantly across batches, rendering the dose unpredictable.",
+     "text": "The dose of LSA seeds is unpredictable because concentrations vary across batches.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 30,
+     "where": "5. Conclusions",
+     "quote": "current evidence remains insufficient to support widespread medical use.",
+     "text": "Current evidence is insufficient to support widespread medical use of LSA seeds.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "long‑term safety",
  "wanted": [
   {
    "doi": "10.1067/moe.2002.129185",
@@ -78,6 +209,14 @@
    "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -86,9 +225,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/pharmacy13040098",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Coexistence of Lichen Sclerosus Et Atrophicus and Morphea in the Same Lesion: A Case Report",
@@ -96,8 +234,7 @@
    "kind": "case",
    "at": "10.7759/cureus.43062",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Comparison of Bilateral Versus Unilateral Transversus Abdominis Plane Block Combined with Spinal Anesthesia in Laparoscopic Appendectomy: A Retrospective Observational Study",
@@ -105,8 +242,7 @@
    "kind": "other",
    "at": "10.3390/diagnostics15172122",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Efficacy of dupilumab in the treatment of severe vulvar pruritus associated with lichen sclerosus et atrophicus: a case report",
@@ -114,11 +250,383 @@
    "kind": "case",
    "at": "10.3389/fmed.2024.1422389",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Lateral Spinal Artery Aneurysm Causing Subarachnoid Hemorrhage: Literature Review and Case Report",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/jcm13164910",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Partially thrombosed middle cerebral artery-lenticulostriate artery aneurysm with native radiological examinations suggesting proximal lenticulostriate artery aneurysm: A case report",
+   "read": "full",
+   "kind": "case",
+   "at": "10.25259/sni_597_2021",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "One-stage supraclavicular hybrid procedure for type B aortic dissection involving three rare anatomical anomalies: a case report and literature review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1177/03000605211020241",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Case Report: staged segment-specific open and endovascular treatment of chronic post-dissection aortic disease with descending thoracic and giant infrarenal aneurysmal components",
+   "read": "full",
+   "kind": "case",
+   "at": "10.3389/fcvm.2026.1925462",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "An Unusual Origin of the Left Vertebral Artery: A Case Report",
+   "read": "full",
+   "kind": "case",
+   "at": "10.7759/cureus.43824",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Stent assisted coil embolization for a dissecting cerebral aneurysm of middle cerebral artery: A case report and the literature review",
+   "read": "full",
+   "kind": "case",
+   "at": "10.25259/sni_619_2023",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Psychedelics as a potential treatment for tobacco use disorder: a systematic review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s44192-024-00095-0",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F2"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1",
+    "F2"
+   ]
+  ],
+  "unanswered": "long‑term safety"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.96,
+   "but": 0.2752,
+   "how1": 0.8743,
+   "how2": 0.9681,
+   "how3": 0.9658
+  },
+  "scores_quotes_alone": {
+   "short": 0.4456,
+   "but": 0.2012,
+   "how1": 0.5608,
+   "how2": 0.9716,
+   "how3": 0.8966
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "LSA seeds can cause euphoria, hallucinations, nausea, and anxiety. They can also cause severe problems like psychosis, high blood pressure, and hospitalization.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Reported effects include euphoria, hallucinations, nausea, and anxiety.",
+       "sha": "092098331ffb11e1"
+      },
+      {
+       "label": "F2",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Severe adverse outcomes, such as psychosis, hypertension, and hospitalization, have also been documented.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Current evidence is not enough to support widespread medical use of LSA seeds.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "castro_2025",
+       "where": "5. Conclusions",
+       "quote": "current evidence remains insufficient to support widespread medical use.",
+       "sha": "0d79d65fc03c74e5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (All five sentences are directly supported by the provided passages. Sentence 1 accurately lists the reported mild and severe effects. Sentence 2 reflects the conclusion that evidence is insufficient for widespread medical use. Sentence 3 ma)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review of human studies looked at LSA’s physical, neurobiological, and social effects, risks, and potential uses.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Objective: To systematically review the scientific literature on lysergic acid amide (LSA), focusing on its physical, neurobiological, and social effects, as well as its potential risks and therapeutic uses.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review found that LSA seeds produce euphoria, hallucinations, nausea, and anxiety.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Reported effects include euphoria, hallucinations, nausea, and anxiety.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The review also documented severe adverse outcomes, such as psychosis, hypertension, and hospitalization.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Severe adverse outcomes, such as psychosis, hypertension, and hospitalization, have also been documented.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "LSA seeds can cause euphoria, hallucinations, nausea, and anxiety. They can also cause severe outcomes like psychosis, high blood pressure, and hospitalization.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Reported effects include euphoria, hallucinations, nausea, and anxiety.",
+       "sha": "092098331ffb11e1"
+      },
+      {
+       "label": "F2",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Severe adverse outcomes, such as psychosis, hypertension, and hospitalization, have also been documented.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Current evidence is insufficient to support widespread medical use of LSA seeds.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "castro_2025",
+       "where": "5. Conclusions",
+       "quote": "current evidence remains insufficient to support widespread medical use.",
+       "sha": "0d79d65fc03c74e5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (All five sentences are directly reflected in the provided abstract and conclusions; none add information beyond the passages, and sentence 2 addresses a different aspect (medical use) rather than limiting the safety description of sentence )"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 systematic review of human studies looked at LSA's physical, neurobiological, and social effects.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Objective: To systematically review the scientific literature on lysergic acid amide (LSA), focusing on its physical, neurobiological, and social effects, as well as its potential risks and therapeutic uses.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review found reported effects include euphoria, hallucinations, nausea, and anxiety.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Reported effects include euphoria, hallucinations, nausea, and anxiety.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "It also documented severe adverse outcomes such as psychosis, hypertension, and hospitalization.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Severe adverse outcomes, such as psychosis, hypertension, and hospitalization, have also been documented.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "LSA seeds can cause euphoria, hallucinations, nausea, and anxiety. They can also cause severe outcomes like psychosis, high blood pressure, and hospitalization.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Reported effects include euphoria, hallucinations, nausea, and anxiety.",
+       "sha": "092098331ffb11e1"
+      },
+      {
+       "label": "F2",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Severe adverse outcomes, such as psychosis, hypertension, and hospitalization, have also been documented.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence states that LSA seeds 'can cause' these effects, but the passage states that these are 'Reported effects' and that severe outcomes 'have also been documented', altering the certainty/phrasing."
+    },
+    {
+     "part": "but",
+     "text": "Current evidence is insufficient to support widespread medical use of LSA seeds.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "castro_2025",
+       "where": "5. Conclusions",
+       "quote": "current evidence remains insufficient to support widespread medical use.",
+       "sha": "0d79d65fc03c74e5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 systematic review of human studies looked at LSA's physical, neurobiological, and social effects.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Objective: To systematically review the scientific literature on lysergic acid amide (LSA), focusing on its physical, neurobiological, and social effects, as well as its potential risks and therapeutic uses.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review found reported effects include euphoria, hallucinations, nausea, and anxiety.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Reported effects include euphoria, hallucinations, nausea, and anxiety.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "It also documented severe adverse outcomes such as psychosis, hypertension, and hospitalization.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "castro_2025",
+       "where": "Abstract",
+       "quote": "Severe adverse outcomes, such as psychosis, hypertension, and hospitalization, have also been documented.",
+       "sha": "092098331ffb11e1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    false,
+    "The sentence states that LSA seeds 'can cause' these effects, but the passage states that these are 'Reported effects' and that severe outcomes 'have also been documented', altering the certainty/phrasing."
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  }
+ },
  "place": {
   "home": "new:LSA (morning glory, Hawaiian baby woodrose)",
   "also": [],
