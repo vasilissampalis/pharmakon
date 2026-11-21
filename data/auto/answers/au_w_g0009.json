@@ -17,46 +17,141 @@
  "made": {
   "on": "2026-11-21",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44893591780",
+  "run": "44894599216",
   "read_by": {
-   "gemini-3.5-flash-lite": 1,
-   "gemma-4-31b-it": 1
+   "gemini-3.1-flash-lite": 3,
+   "gpt-oss-20b": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 53,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 424
+  "seconds": 220
  },
- "status": "waiting",
- "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
+ "status": "none",
+ "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8573)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 6 of 6; gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview could not be asked: the time for this question was over before gemini-3-flash-preview could be asked; gemini-4-hydrogen could not be asked: the time for this question was over before gemini-4-hydrogen could be asked; gemini-3.8-flash could not be asked: the time for this question was over before gemini-3.8-flash could be asked",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.83, but 0.98, how1 0.03, how2 0.01, how3 0.84, how4 0.96",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.54, but 0.69, how1 0.63, how2 0.54, how3 0.04",
+  "check": "short: NOT accepted: detached, chilled out, and euphoric is fromFRANK while dependence risk is from ADF; sentence combines multiple sources not explicitly linked in that exact way in one passage, though it matches overall contents. Wait, Frankfurt says chilled ; but: NOT accepted: it is about something else than the short answer; how1: accepted; how2: accepted; how3: NOT accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "sayad_2025",
+    "type": "article-journal",
+    "title": "Safety considerations and risk mitigation strategies for ketamine use: A comprehensive review",
+    "author": [
+     {
+      "family": "Sayad",
+      "given": "Reem"
+     },
+     {
+      "family": "Elsaeidy",
+      "given": "Ahmed Saad"
+     },
+     {
+      "family": "Anis",
+      "given": "Amna M."
+     },
+     {
+      "family": "Atef",
+      "given": "Mohamed"
+     },
+     {
+      "family": "Hawash",
+      "given": "Eslam A."
+     },
+     {
+      "family": "Saad",
+      "given": "Hager Adel"
+     },
+     {
+      "family": "Hamad",
+      "given": "Khadijah Ali Abdalrahman"
+     },
+     {
+      "family": "Kohaf",
+      "given": "Neveen A."
+     }
+    ],
+    "container-title": "Annals of Medicine & Surgery",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1097/ms9.0000000000003232",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-21",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-21"
+     }
+    },
+    "volume": "87",
+    "issue": "5",
+    "page": "2829-2837",
+    "PMCID": "PMC12055169"
+   },
+   "doi": "10.1097/ms9.0000000000003232",
+   "pmcid": "PMC12055169",
+   "title": "Safety considerations and risk mitigation strategies for ketamine use: a comprehensive review",
+   "year": 2025,
+   "journal": "Annals of medicine and surgery (2012)",
+   "kind": "review",
+   "people": true,
+   "near": 0.669,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Ketamine, a dissociative anesthetic, has gained widespread use in various medical contexts, including anesthesia, pain management, and treatment-resistant depression.",
+    "text": "comprehensive literature review of ketamine safety"
+   },
+   "findings": [
+    {
+     "passage": 15,
+     "where": "Adverse effects and safety concerns › Potential for abuse and dependence",
+     "quote": "The rising severity of ketamine misuse has led to its reclassification from a Schedule II to a Schedule I psychoactive substance in China, despite its relative safety in medical contexts.",
+     "text": "Ketamine misuse has caused its reclassification from a Schedule II to a Schedule I psychoactive substance in China, even though it is relatively safe in medical contexts.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "Adverse effects and safety concerns › Potential for abuse and dependence",
+     "quote": "Ketamine may impair executive cognitive functions, attention, and memory, increasing the risk of road accidents.",
+     "text": "Ketamine may impair executive cognitive functions, attention, and memory, increasing the risk of road accidents.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -113,27 +208,27 @@
    "design": null,
    "findings": [
     {
+     "passage": 44,
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Mechanism of action of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Similar to ketamine and PCP, dissociative arylcyclohexylamine and diarylethylamine designer drugs act as relatively selective noncompetitive antagonists at ionotropic glutamatergic NMDA receptors.",
+     "text": "Dissociative arylcyclohexylamine and diarylethylamine designer drugs act as relatively selective noncompetitive antagonists at ionotropic glutamatergic NMDA receptors, similar to ketamine and PCP.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
      "passage": 45,
      "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
      "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
      "text": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs include agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity.",
-     "id": "F1",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 45,
      "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
      "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
-     "text": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 45,
-     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
-     "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
-     "text": "Regular use of ketamine has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment.",
-     "id": "F3",
+     "text": "Inhalation of the designer drug methoxetamine is associated with severe adverse effects including seizures, hyponatremia, and sinus bradycardia.",
+     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -142,214 +237,185 @@
      "passage": 45,
      "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
      "quote": "The prevalence of urinary symptoms was related to the frequency of methoxetamine use during the previous month, but prior ketamine use could have a",
-     "text": "Prior ketamine use could have an effect on the prevalence of urinary symptoms reported by methoxetamine users.",
+     "text": "The prevalence of urinary symptoms in people who use methoxetamine may be influenced by prior ketamine use.",
      "id": "L1",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
   },
   {
-   "read": "full",
+   "read": "page",
    "ref": {
-    "id": "li_2016",
-    "type": "article-journal",
-    "title": "Ketamine: 50 years of modulating the mind",
+    "id": "frank_methoxetamine",
+    "type": "webpage",
+    "title": "Methoxetamine (MXE)",
     "author": [
      {
-      "family": "Li",
-      "given": "Linda"
-     },
-     {
-      "family": "Vlisides",
-      "given": "Phillip E."
+      "literal": "FRANK"
      }
     ],
-    "container-title": "Frontiers in Human Neuroscience",
     "issued": {
      "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/methoxetamine",
+    "accessed": {
+     "date-parts": [
       [
-       2016
+       2026,
+       11,
+       21
       ]
      ]
     },
-    "DOI": "10.3389/fnhum.2016.00612",
     "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-21"
-     }
-    },
-    "volume": "10",
-    "PMCID": "PMC5126726"
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-21"
+    }
    },
-   "doi": "10.3389/fnhum.2016.00612",
-   "pmcid": "PMC5126726",
-   "title": "Ketamine: 50 Years of Modulating the Mind",
-   "year": 2016,
-   "journal": "Frontiers in human neuroscience",
-   "kind": "review",
-   "people": false,
-   "near": 0.612,
-   "money": [
-    "PEV is supported by the National Institutes of Health, Bethesda, MD, USA, Grant T32GM103730. Funding also provided by the Department of Anesthesiology, University of Michigan Medical School.",
-    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.",
-    "The authors would like to acknowledge support from the Department of Anesthesiology at the University of Michigan Medical School. Additionally, the authors would like to thank Dr. George Mashour for expert consultation throughout the manuscript writing process."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "In this article, we review the history of ketamine, its pharmacology, putative mechanisms of action and current clinical applications.",
-    "text": "Review of ketamine's history, pharmacology, mechanisms, and clinical applications"
-   },
+   "title": "Methoxetamine (MXE)",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.709,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/methoxetamine",
+   "money": [],
+   "label": false,
+   "design": null,
    "findings": [
     {
-     "passage": 48,
-     "where": "Conclusions and Future Directions",
-     "quote": "researchers have now moved towards developing shorter acting analogs of ketamine to further reduce the psychogenic effects",
-     "text": "Researchers are developing shorter acting analogs of ketamine to further reduce psychogenic effects.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 20,
-     "where": "Pharmacology › Side Effects, Toxicities, Interactions and Abuse",
-     "quote": "given its CNS modulatory activity, ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
-     "text": "Ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 48,
-     "where": "Conclusions and Future Directions",
-     "quote": "the adverse psychological effects are often transient and either prevented by or alleviated with premedication or combined use with other agents.",
-     "text": "Adverse psychological effects of ketamine are often transient and can be prevented or alleviated with combined use with other agents or premedication.",
+     "passage": 4,
+     "where": "Mixing methoxetamine with other drugs / How does it make you feel?",
+     "quote": "The effects of MXE tend to be similar to ketamine effects, but are more intense and longer lasting and include: MXE can make people feel very chilled out, relaxed and euphoric.",
+     "text": "The effects of MXE are similar to ketamine but are more intense and longer lasting, including feelings of being chilled out, relaxed, and euphoric.",
      "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Mixing methoxetamine with other drugs / Physical health risks",
+     "quote": "It appears that MXE can make the heart beat faster than it should (called tachycardia) and increases blood pressure. Both of which might lead to a range of problems including heart attacks or strokes.",
+     "text": "MXE can increase heart rate and blood pressure, which may lead to problems such as heart attacks or strokes.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "Mixing methoxetamine with other drugs / How does it make people behave?",
+     "quote": "MXE can also cause involuntary eye movement, loss of balance and poor coordination, unsteadiness on your feet and slurred speech. These effects are not seen when people use ketamine.",
+     "text": "MXE can cause involuntary eye movement, loss of balance, poor coordination, unsteadiness, and slurred speech, which are not seen when people use ketamine.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 8,
+     "where": "Mixing methoxetamine with other drugs / Physical health risks",
+     "quote": "There have been no confirmed deaths from methoxetamine (MXE) and nobody knows the long-term risks of using MXE, and how similar the risks are to ketamine.",
+     "text": "The long-term risks of using MXE and how they compare to the risks of ketamine are unknown.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "adf_methoxetamine",
+    "type": "webpage",
+    "title": "Methoxetamine (MXE)",
+    "author": [
+     {
+      "literal": "Alcohol and Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       5,
+       18
+      ]
+     ]
+    },
+    "URL": "https://adf.org.au/drug-facts/methoxetamine/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       21
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-21"
+    }
+   },
+   "title": "Methoxetamine (MXE)",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.697,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "tier": 2,
+   "address": "https://adf.org.au/drug-facts/methoxetamine/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "What is methoxetamine?",
+     "quote": "Methoxetamine (MXE) is a dissociative, which means it causes people to feel separated or detached from their body or physical environment. They can also have psychedelic effects, causing changes in thoughts, emotions and consciousness.",
+     "text": "MXE is a dissociative drug that causes people to feel detached from their body or environment and can cause changes in thoughts, emotions, and consciousness.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 14,
+     "where": "Long-term effects",
+     "quote": "reports suggest that using high doses over several weeks or months may cause bladder or urinary tract problems similar to ketamine-induced cystitis.",
+     "text": "Using high doses of MXE over several weeks or months may cause bladder or urinary tract problems similar to those caused by ketamine.",
+     "id": "F10",
+     "second_hand": "15 However, reports suggest that using high doses over several weeks or months may cause bladder or urinary tract problems similar to ketamine-induced cystitis."
+    },
+    {
+     "passage": 17,
+     "where": "Dependence",
+     "quote": "There is limited evidence regarding MXE and dependence. However, experts believe that the similarity to ketamine means that it carries a similar risk of dependence.",
+     "text": "Experts believe that because MXE is similar to ketamine, it carries a similar risk of dependence.",
+     "id": "F11",
      "second_hand": ""
     }
    ],
    "limits": [
     {
      "passage": 1,
-     "where": "Abstract",
-     "quote": "With considerably diverse molecular targets and neurophysiological properties, ketamine’s effects on the central nervous system remain incompletely understood.",
-     "text": "Ketamine's effects on the central nervous system remain incompletely understood.",
-     "id": "L2",
+     "where": "What is methoxetamine?",
+     "quote": "MXE is also a New/novel psychoactive substances (NPS). This is a broad term for drugs that are not well studied and have little to no history of widespread use in the community, or in medical settings.",
+     "text": "MXE is a new psychoactive substance that is not well studied and has little history of use in medical settings or the community.",
+     "id": "L3",
      "second_hand": ""
     }
    ],
-   "tag": "B"
+   "tag": "D"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "These drugs can cause agitation, confusion, hallucinations, and muscle rigidity. Methoxetamine inhaled can cause seizures, slow heart rates, and low salt in the blood. Ketamine use is linked to bladder and kidney problems.",
-   "uses": [
-    "F1",
-    "F2",
-    "F3",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "luethi_2020",
-     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
-     "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
-     "sha": "c6a3fd974c1fdedf"
-    },
-    {
-     "label": "F2",
-     "ref": "luethi_2020",
-     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
-     "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
-     "sha": "c6a3fd974c1fdedf"
-    },
-    {
-     "label": "F3",
-     "ref": "luethi_2020",
-     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
-     "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
-     "sha": "c6a3fd974c1fdedf"
-    },
-    {
-     "label": "F5",
-     "ref": "li_2016",
-     "where": "Pharmacology › Side Effects, Toxicities, Interactions and Abuse",
-     "quote": "given its CNS modulatory activity, ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
-     "sha": "9218c60fca0721b9"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The effects of ketamine on the central nervous system are not fully understood.",
-   "uses": [
-    "L2"
-   ],
-   "rests_on": [
-    {
-     "label": "L2",
-     "ref": "li_2016",
-     "where": "Abstract",
-     "quote": "With considerably diverse molecular targets and neurophysiological properties, ketamine’s effects on the central nervous system remain incompletely understood.",
-     "sha": "8156767961673c86"
-    }
-   ]
-  },
-  {
-   "part": "how3",
-   "text": "The 2020 review also links regular ketamine use to bladder and kidney issues.",
-   "uses": [
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "luethi_2020",
-     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
-     "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
-     "sha": "c6a3fd974c1fdedf"
-    }
-   ],
-   "quote": "Regular ketamine use has been associated with potentially irreversible bladder dysfunction and subsequent renal impairment",
-   "quote_ref": "luethi_2020"
-  },
-  {
-   "part": "how4",
-   "text": "A 2016 review says ketamine should be used cautiously with alcohol, opioids, benzodiazepines, and cannabis.",
-   "uses": [
-    "DB",
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "li_2016",
-     "where": "Abstract",
-     "quote": "In this article, we review the history of ketamine, its pharmacology, putative mechanisms of action and current clinical applications.",
-     "sha": "8156767961673c86"
-    },
-    {
-     "label": "F5",
-     "ref": "li_2016",
-     "where": "Pharmacology › Side Effects, Toxicities, Interactions and Abuse",
-     "quote": "given its CNS modulatory activity, ketamine should be used cautiously with other drugs that alter mood and perception, including alcohol, opioids, benzodiazepines and cannabis.",
-     "sha": "9218c60fca0721b9"
-    }
-   ],
-   "quote": "ketamine should be used cautiously with other drugs that alter mood and perception",
-   "quote_ref": "li_2016"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "What it feels like to use them.",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1111/j.1360-0443.2011.03576.x",
@@ -382,6 +448,14 @@
    "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "waiting",
+   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3.6-flash): it is worked on again by itself when that reader can be asked",
+   "short": "These drugs can cause agitation, confusion, hallucinations, and muscle rigidity. Methoxetamine inhaled can cause seizures, slow heart rates, and low salt in the blood. Ketamine use is linked to bladder and kidney problems.",
+   "complete": false
   }
  ],
  "looked": [
@@ -390,9 +464,21 @@
    "read": "full",
    "kind": "review",
    "at": "10.1097/ms9.0000000000003232",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Ketamine is linked to heightened sexual experiences, raising concerns about drug‑facilitated sexual assault.",
+     "quote": "Ketamine is linked to heightened sexual experiences, raising concerns about drug-facilitated sexual assault.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "In Shanghai, ketamine ranked as the third most common illicit substance found in drivers.",
+     "quote": "In Shanghai, it ranked as the third most common illicit substance found in drivers.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Designer drugs: mechanism of action and adverse effects",
@@ -403,125 +489,489 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "a review of designer drugs, their mechanisms of action, and their adverse effects",
-     "quote": "Designer drugs: mechanism of action and adverse effects (2020)",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "a review of the mechanism of action and adverse effects of designer drugs",
+     "quote": "Psychoactive substances with chemical structures or pharmacological profiles that are similar to traditional drugs of abuse continue to emerge on the recreational drug market.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
   {
-   "title": "Ketamine: 50 Years of Modulating the Mind",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fnhum.2016.00612",
+   "title": "Methoxetamine (MXE)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/methoxetamine",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Methoxetamine (MXE)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/methoxetamine/",
    "kept": 3,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F1",
-   "F2",
-   "F3",
-   "F5"
+   "F9",
+   "F6",
+   "F4",
+   "F11"
   ],
   "direct": "",
   "but": [
-   "L2"
+   "L3"
   ],
   "how": [
    [
-    "F1",
-    "F2",
-    "F3"
+    "F9",
+    "F10",
+    "F11"
    ],
    [
-    "DB",
-    "F5",
-    "F6"
+    "F6",
+    "F7",
+    "F8"
+   ],
+   [
+    "F3",
+    "F4",
+    "F5"
    ]
   ],
-  "unanswered": "subjective or desired effects"
+  "unanswered": ""
  },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ],
-   "how3": [
-    true,
-    ""
-   ],
-   "how4": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
-  "gemini:gemini-3-flash-preview": "could not be asked: the time for this question was over before gemini-3-flash-preview could be asked",
-  "gemini:gemini-4-hydrogen": "could not be asked: the time for this question was over before gemini-4-hydrogen could be asked",
-  "gemini:gemini-3.8-flash": "could not be asked: the time for this question was over before gemini-3.8-flash could be asked"
- },
- "panel_gap": [
-  "gemini-3.6-flash"
- ],
+ "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8295,
-   "but": 0.984,
-   "how1": 0.0259,
-   "how2": 0.0141,
-   "how3": 0.8351,
-   "how4": 0.9634
+   "short": 0.5419,
+   "but": 0.6907,
+   "how1": 0.6254,
+   "how2": 0.5391,
+   "how3": 0.0432
   },
   "scores_quotes_alone": {
-   "short": 0.3088,
-   "but": 0.9672,
-   "how1": 0.6352,
-   "how2": 0.3506,
-   "how3": 0.724,
-   "how4": 0.7891
+   "short": 0.678,
+   "but": 0.6227,
+   "how1": 0.0494,
+   "how2": 0.699,
+   "how3": 0.6101
   }
  },
- "dropped": [
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "MXE is a dissociative that makes people feel detached, chilled out, and euphoric. Experts believe it carries a similar risk of dependence as ketamine.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "Methoxetamine (MXE) is a dissociative, which means it causes people to feel separated or detached from their body or physical environment. They can also have psychedelic effects, causing changes in thoughts, emotions and consciousness.",
+       "sha": "cc680b0b2f8daa24"
+      },
+      {
+       "label": "F6",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make you feel?",
+       "quote": "The effects of MXE tend to be similar to ketamine effects, but are more intense and longer lasting and include: MXE can make people feel very chilled out, relaxed and euphoric.",
+       "sha": "f3a3a4b2ab7dc1a2"
+      },
+      {
+       "label": "F11",
+       "ref": "adf_methoxetamine",
+       "where": "Dependence",
+       "quote": "There is limited evidence regarding MXE and dependence. However, experts believe that the similarity to ketamine means that it carries a similar risk of dependence.",
+       "sha": "fcfa07b6a505abea"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "MXE is a new drug that is not well studied and has little history of use in the community or medical settings.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "MXE is also a New/novel psychoactive substances (NPS). This is a broad term for drugs that are not well studied and have little to no history of widespread use in the community, or in medical settings.",
+       "sha": "cc680b0b2f8daa24"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says MXE causes detachment and changes in thoughts. It reports that high doses over weeks may cause bladder problems.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "Methoxetamine (MXE) is a dissociative, which means it causes people to feel separated or detached from their body or physical environment. They can also have psychedelic effects, causing changes in thoughts, emotions and consciousness.",
+       "sha": "cc680b0b2f8daa24"
+      },
+      {
+       "label": "F10",
+       "ref": "adf_methoxetamine",
+       "where": "Long-term effects",
+       "quote": "reports suggest that using high doses over several weeks or months may cause bladder or urinary tract problems similar to ketamine-induced cystitis.",
+       "sha": "bb40ad949d7bffe8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says MXE effects are more intense and longer lasting than ketamine. It can raise heart rate and blood pressure, and cause balance issues not seen with ketamine.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make you feel?",
+       "quote": "The effects of MXE tend to be similar to ketamine effects, but are more intense and longer lasting and include: MXE can make people feel very chilled out, relaxed and euphoric.",
+       "sha": "f3a3a4b2ab7dc1a2"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / Physical health risks",
+       "quote": "It appears that MXE can make the heart beat faster than it should (called tachycardia) and increases blood pressure. Both of which might lead to a range of problems including heart attacks or strokes.",
+       "sha": "e48016cf53d7a079"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make people behave?",
+       "quote": "MXE can also cause involuntary eye movement, loss of balance and poor coordination, unsteadiness on your feet and slurred speech. These effects are not seen when people use ketamine.",
+       "sha": "bb93e9555f64ece8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 review says these drugs work like ketamine. Adverse effects include agitation, confusion, and hallucinations. Inhaling MXE is linked to seizures and low sodium.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Mechanism of action of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Similar to ketamine and PCP, dissociative arylcyclohexylamine and diarylethylamine designer drugs act as relatively selective noncompetitive antagonists at ionotropic glutamatergic NMDA receptors.",
+       "sha": "5d54cd939ad4fe25"
+      },
+      {
+       "label": "F4",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
+       "sha": "c6a3fd974c1fdedf"
+      },
+      {
+       "label": "F5",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
+       "sha": "c6a3fd974c1fdedf"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
   {
    "try": 2,
-   "part": "how1",
-   "text": "A 2020 review of designer drugs found effects like confusion, hallucinations, and high blood pressure.",
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "MXE is a dissociative that makes people feel detached, chilled out, and euphoric. Experts believe it carries a similar risk of dependence as ketamine.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "Methoxetamine (MXE) is a dissociative, which means it causes people to feel separated or detached from their body or physical environment. They can also have psychedelic effects, causing changes in thoughts, emotions and consciousness.",
+       "sha": "cc680b0b2f8daa24"
+      },
+      {
+       "label": "F6",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make you feel?",
+       "quote": "The effects of MXE tend to be similar to ketamine effects, but are more intense and longer lasting and include: MXE can make people feel very chilled out, relaxed and euphoric.",
+       "sha": "f3a3a4b2ab7dc1a2"
+      },
+      {
+       "label": "F11",
+       "ref": "adf_methoxetamine",
+       "where": "Dependence",
+       "quote": "There is limited evidence regarding MXE and dependence. However, experts believe that the similarity to ketamine means that it carries a similar risk of dependence.",
+       "sha": "fcfa07b6a505abea"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "MXE is a new drug that is not well studied and has little history of use in the community or medical settings.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "MXE is also a New/novel psychoactive substances (NPS). This is a broad term for drugs that are not well studied and have little to no history of widespread use in the community, or in medical settings.",
+       "sha": "cc680b0b2f8daa24"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says MXE causes detachment and changes in thoughts. It reports that high doses over weeks may cause bladder problems.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "Methoxetamine (MXE) is a dissociative, which means it causes people to feel separated or detached from their body or physical environment. They can also have psychedelic effects, causing changes in thoughts, emotions and consciousness.",
+       "sha": "cc680b0b2f8daa24"
+      },
+      {
+       "label": "F10",
+       "ref": "adf_methoxetamine",
+       "where": "Long-term effects",
+       "quote": "reports suggest that using high doses over several weeks or months may cause bladder or urinary tract problems similar to ketamine-induced cystitis.",
+       "sha": "bb40ad949d7bffe8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says MXE effects are more intense and longer than ketamine. It can raise heart rate and blood pressure, and cause eye movement and balance issues.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make you feel?",
+       "quote": "The effects of MXE tend to be similar to ketamine effects, but are more intense and longer lasting and include: MXE can make people feel very chilled out, relaxed and euphoric.",
+       "sha": "f3a3a4b2ab7dc1a2"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / Physical health risks",
+       "quote": "It appears that MXE can make the heart beat faster than it should (called tachycardia) and increases blood pressure. Both of which might lead to a range of problems including heart attacks or strokes.",
+       "sha": "e48016cf53d7a079"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make people behave?",
+       "quote": "MXE can also cause involuntary eye movement, loss of balance and poor coordination, unsteadiness on your feet and slurred speech. These effects are not seen when people use ketamine.",
+       "sha": "bb93e9555f64ece8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 review says these drugs block NMDA receptors like ketamine. Adverse effects include agitation, confusion, and hallucinations. Inhaling MXE is linked to seizures.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Mechanism of action of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Similar to ketamine and PCP, dissociative arylcyclohexylamine and diarylethylamine designer drugs act as relatively selective noncompetitive antagonists at ionotropic glutamatergic NMDA receptors.",
+       "sha": "5d54cd939ad4fe25"
+      },
+      {
+       "label": "F4",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
+       "sha": "c6a3fd974c1fdedf"
+      },
+      {
+       "label": "F5",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
+       "sha": "c6a3fd974c1fdedf"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "MXE is a dissociative that makes people feel detached, chilled out, and euphoric. Experts believe it carries a similar risk of dependence as ketamine.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "Methoxetamine (MXE) is a dissociative, which means it causes people to feel separated or detached from their body or physical environment. They can also have psychedelic effects, causing changes in thoughts, emotions and consciousness.",
+       "sha": "cc680b0b2f8daa24"
+      },
+      {
+       "label": "F6",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make you feel?",
+       "quote": "The effects of MXE tend to be similar to ketamine effects, but are more intense and longer lasting and include: MXE can make people feel very chilled out, relaxed and euphoric.",
+       "sha": "f3a3a4b2ab7dc1a2"
+      },
+      {
+       "label": "F11",
+       "ref": "adf_methoxetamine",
+       "where": "Dependence",
+       "quote": "There is limited evidence regarding MXE and dependence. However, experts believe that the similarity to ketamine means that it carries a similar risk of dependence.",
+       "sha": "fcfa07b6a505abea"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "detached, chilled out, and euphoric is fromFRANK while dependence risk is from ADF; sentence combines multiple sources not explicitly linked in that exact way in one passage, though it matches overall contents. Wait, Frankfurt says chilled "
+    },
+    {
+     "part": "but",
+     "text": "MXE is a new drug that is not well studied and has little history of use in the community or medical settings.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "MXE is also a New/novel psychoactive substances (NPS). This is a broad term for drugs that are not well studied and have little to no history of widespread use in the community, or in medical settings.",
+       "sha": "cc680b0b2f8daa24"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says MXE causes detachment and changes in thoughts. It reports that high doses over weeks may cause bladder problems.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "adf_methoxetamine",
+       "where": "What is methoxetamine?",
+       "quote": "Methoxetamine (MXE) is a dissociative, which means it causes people to feel separated or detached from their body or physical environment. They can also have psychedelic effects, causing changes in thoughts, emotions and consciousness.",
+       "sha": "cc680b0b2f8daa24"
+      },
+      {
+       "label": "F10",
+       "ref": "adf_methoxetamine",
+       "where": "Long-term effects",
+       "quote": "reports suggest that using high doses over several weeks or months may cause bladder or urinary tract problems similar to ketamine-induced cystitis.",
+       "sha": "bb40ad949d7bffe8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says MXE effects are more intense and longer than ketamine. It can raise heart rate and blood pressure, and cause eye movement and balance issues.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make you feel?",
+       "quote": "The effects of MXE tend to be similar to ketamine effects, but are more intense and longer lasting and include: MXE can make people feel very chilled out, relaxed and euphoric.",
+       "sha": "f3a3a4b2ab7dc1a2"
+      },
+      {
+       "label": "F7",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / Physical health risks",
+       "quote": "It appears that MXE can make the heart beat faster than it should (called tachycardia) and increases blood pressure. Both of which might lead to a range of problems including heart attacks or strokes.",
+       "sha": "e48016cf53d7a079"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_methoxetamine",
+       "where": "Mixing methoxetamine with other drugs / How does it make people behave?",
+       "quote": "MXE can also cause involuntary eye movement, loss of balance and poor coordination, unsteadiness on your feet and slurred speech. These effects are not seen when people use ketamine.",
+       "sha": "bb93e9555f64ece8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2020 review says these drugs block NMDA receptors like ketamine. Adverse effects include agitation, confusion, and hallucinations. Inhaling MXE is linked to seizures.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Mechanism of action of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Similar to ketamine and PCP, dissociative arylcyclohexylamine and diarylethylamine designer drugs act as relatively selective noncompetitive antagonists at ionotropic glutamatergic NMDA receptors.",
+       "sha": "5d54cd939ad4fe25"
+      },
+      {
+       "label": "F4",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
+       "sha": "c6a3fd974c1fdedf"
+      },
+      {
+       "label": "F5",
+       "ref": "luethi_2020",
+       "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
+       "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
+       "sha": "c6a3fd974c1fdedf"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2020 review says these drugs block NMDA receptors like ketamine. Adverse effects include agitation, confusion, and hallucinations. Inhaling MXE is linked to seizures.",
    "rests_on": [
     {
-     "label": "F1",
+     "label": "F3",
+     "ref": "luethi_2020",
+     "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Mechanism of action of arylcyclohexylamine and diarylethylamine designer drugs",
+     "quote": "Similar to ketamine and PCP, dissociative arylcyclohexylamine and diarylethylamine designer drugs act as relatively selective noncompetitive antagonists at ionotropic glutamatergic NMDA receptors.",
+     "sha": "5d54cd939ad4fe25"
+    },
+    {
+     "label": "F4",
      "ref": "luethi_2020",
      "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
      "quote": "Adverse effects of dissociative arylcyclohexylamine and diarylethylamine designer drugs resemble adverse effects of traditional dissociatives, including agitation, confusion, disorientation, dissociation, hallucinations, amnesia, nystagmus, slurred speech, diaphoresis, hypertension, tachycardia, renal deficiency, nausea, ataxia, and muscle rigidity",
      "sha": "c6a3fd974c1fdedf"
-    }
-   ],
-   "by": "our own checker",
-   "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
-  },
-  {
-   "try": 2,
-   "part": "how2",
-   "text": "The same 2020 review says inhaling methoxetamine can cause seizures and slow heart rates.",
-   "rests_on": [
+    },
     {
-     "label": "F2",
+     "label": "F5",
      "ref": "luethi_2020",
      "where": "Dissociatives › Arylcyclohexylamine and diarylethylamine designer drugs › Adverse effects of arylcyclohexylamine and diarylethylamine designer drugs",
      "quote": "Severe adverse effects associated with inhalation of the designer drug methoxetamine include seizures, hyponatremia, and sinus bradycardia",
@@ -529,16 +979,9 @@
     }
    ],
    "by": "our own checker",
-   "said": "our own checker does not find it in the words it rests on (0.01): say only what those words say, in their own measure"
+   "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
   }
  ],
- "stakes": "overdose or an emergency",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
- "for": "again",
- "soft": "a further reader could not be asked",
  "place": {
   "home": "new:Ketamine analogues (MXE, DCK)",
   "also": [],
