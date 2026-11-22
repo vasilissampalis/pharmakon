@@ -17,9 +17,9 @@
   "kratom"
  ],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-22",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
@@ -29,27 +29,112 @@
    "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44943629386",
+  "run": "45004366611",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 41.7,
+  "seconds": 197
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The passage states that mitragynine 'might' be easily removed, whereas the sentence states as a fact that it is easily removed, and the passage does not contain information about whether a drug test can find it.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.96, how1 0.63",
+  "check": "not accepted at try 2: a second reader did not accept short (The passage states that mitragynine 'might' be easily removed, whereas the sentence states as a fact that it is easily removed, and the passage does not contain information about whether a drug test can find it.). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "fluyau_2017",
+    "type": "article-journal",
+    "title": "Biochemical benefits, diagnosis, and clinical risks evaluation of kratom",
+    "author": [
+     {
+      "family": "Fluyau",
+      "given": "Dimy",
+      "suffix": "Fluyau"
+     },
+     {
+      "family": "Revadigar",
+      "given": "Neelambika"
+     }
+    ],
+    "container-title": "Frontiers in Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2017
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpsyt.2017.00062",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "8",
+    "number": "62",
+    "PMCID": "PMC5402527"
+   },
+   "doi": "10.3389/fpsyt.2017.00062",
+   "pmcid": "PMC5402527",
+   "title": "Biochemical Benefits, Diagnosis, and Clinical Risks Evaluation of Kratom",
+   "year": 2017,
+   "journal": "Frontiers in psychiatry",
+   "kind": "review",
+   "people": true,
+   "near": 0.694,
+   "money": [
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom",
+    "text": "A literature review of databases from 2007 to 2017 analyzing the benefits, risks, and diagnosis evaluation of kratom."
+   },
+   "findings": [
+    {
+     "passage": 8,
+     "where": "Results › Benefits",
+     "quote": "The finding revealed that the pharmacokinetics of mitragynine is linear, which might explain that mitragynine (kratom) might be easily removed from the circulation without invasive methods such as hemodialysis or hemoperfusion in case of toxici",
+     "text": "The pharmacokinetics of mitragynine is linear, which might explain that it is easily removed from the circulation.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The clinical manifestations of kratom effects are not well defined and the clinical studies are limited.",
+     "text": "The clinical manifestations of kratom effects are not well defined and clinical studies are limited.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "Whether a drug test can find it and the specific duration it stays in the body",
  "wanted": [
   {
    "doi": "10.1080/10550887.2021.1950263",
@@ -74,7 +159,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Kratom-Pharmacology, Clinical Implications, and Outlook: A Comprehensive Review",
@@ -98,9 +192,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2017.00062",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Kratom as a potential substance use disorder harm reduction agent",
@@ -108,17 +201,215 @@
    "kind": "review",
    "at": "10.3389/fpubh.2024.1416689",
    "kept": 0,
-   "thrown": [
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "Whether a drug test can find it and the specific duration it stays in the body"
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
     {
-     "kind": "text",
-     "text": "Review article on kratom as a potential harm reduction agent",
-     "quote": "Kratom (Mitragyna speciosa Korth.) is an herbal substance that can produce both opioid and stimulant-like effects, and its use in the US is growing.",
-     "why": "the sentence is not carried by its quote and passage"
+     "part": "short",
+     "text": "Kratom is easily removed from the blood. The sources do not say how long it stays in the body or if a drug test finds it.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Results › Benefits",
+       "quote": "The finding revealed that the pharmacokinetics of mitragynine is linear, which might explain that mitragynine (kratom) might be easily removed from the circulation without invasive methods such as hemodialysis or hemoperfusion in case of toxici",
+       "sha": "33df976b3a337b3e"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "Clinical studies are limited and the effects of kratom are not well defined.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "The clinical manifestations of kratom effects are not well defined and the clinical studies are limited.",
+       "sha": "6b4fcae0c3461e7e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2017 review of research from 2007 to 2017 found that kratom is easily removed from the circulation.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom",
+       "sha": "44723a8f7598b3e0"
+      },
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Results › Benefits",
+       "quote": "The finding revealed that the pharmacokinetics of mitragynine is linear, which might explain that mitragynine (kratom) might be easily removed from the circulation without invasive methods such as hemodialysis or hemoperfusion in case of toxici",
+       "sha": "33df976b3a337b3e"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Kratom is easily removed from the blood. It is not known how long it stays in the body or if a drug test finds it.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Results › Benefits",
+       "quote": "The finding revealed that the pharmacokinetics of mitragynine is linear, which might explain that mitragynine (kratom) might be easily removed from the circulation without invasive methods such as hemodialysis or hemoperfusion in case of toxici",
+       "sha": "33df976b3a337b3e"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage states that mitragynine 'might' be easily removed, whereas the sentence states as a fact that it is easily removed, and the passage does not contain information about whether a drug test can find it."
+    },
+    {
+     "part": "but",
+     "text": "Clinical studies are limited and the effects of kratom are not well defined.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "The clinical manifestations of kratom effects are not well defined and the clinical studies are limited.",
+       "sha": "6b4fcae0c3461e7e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2017 review of medical databases found that kratom is easily removed from the circulation.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom",
+       "sha": "44723a8f7598b3e0"
+      },
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Results › Benefits",
+       "quote": "The finding revealed that the pharmacokinetics of mitragynine is linear, which might explain that mitragynine (kratom) might be easily removed from the circulation without invasive methods such as hemodialysis or hemoperfusion in case of toxici",
+       "sha": "33df976b3a337b3e"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that the 2017 review of medical databases found that kratom is easily removed; the review evaluated literature, and the finding about removal came from a pharmacokinetic study in humans."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Kratom may be easily removed from the blood. The sources do not say how long it stays in the body or if a drug test finds it.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Results › Benefits",
+       "quote": "The finding revealed that the pharmacokinetics of mitragynine is linear, which might explain that mitragynine (kratom) might be easily removed from the circulation without invasive methods such as hemodialysis or hemoperfusion in case of toxici",
+       "sha": "33df976b3a337b3e"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "Clinical studies are limited and the effects of kratom are not well defined.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "The clinical manifestations of kratom effects are not well defined and the clinical studies are limited.",
+       "sha": "6b4fcae0c3461e7e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2017 review of databases from 2007 to 2017 found that mitragynine is easily removed from the circulation.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "fluyau_2017",
+       "where": "Abstract",
+       "quote": "Literature review using databases such as Embase, Medline, PubMed, Cochrane Library, and Mendeley from 2007 to 2017 were evaluated by all authors to analyze current state on benefits, risks, and diagnosis evaluation of kratom",
+       "sha": "44723a8f7598b3e0"
+      },
+      {
+       "label": "F1",
+       "ref": "fluyau_2017",
+       "where": "Results › Benefits",
+       "quote": "The finding revealed that the pharmacokinetics of mitragynine is linear, which might explain that mitragynine (kratom) might be easily removed from the circulation without invasive methods such as hemodialysis or hemoperfusion in case of toxici",
+       "sha": "33df976b3a337b3e"
+      }
+     ],
+     "ok": true
     }
    ]
   }
  ],
- "soft": "a source could not be fetched",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.0556,
+   "but": 0.9569,
+   "how1": 0.6272
+  },
+  "scores_quotes_alone": {
+   "short": 0.0885,
+   "but": 0.9146,
+   "how1": 0.5547
+  }
+ },
  "place": {
   "home": "kratom",
   "also": [],
