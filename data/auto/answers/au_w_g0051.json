@@ -17,7 +17,7 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
@@ -25,24 +25,31 @@
    "also2": "gemini:gemini-3.6-flash",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45027020711",
-  "read_seconds": 78,
+  "run": "45033801690",
+  "read_by": {
+   "gpt-oss-20b": 2,
+   "gemini-3.1-flash-lite": 2,
+   "gemini-3.5-flash-lite": 1
+  },
+  "read_seconds": 38,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 300
+  "seconds": 307
  },
  "status": "none",
  "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9749) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9615)"
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8740) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8460)"
  },
  "sources": [
   {
@@ -122,40 +129,34 @@
     "G.P. acted as a consultant to Lundbeck, Angelini, FB-Health; he received a scholarship/research support from Lundbeck and Angelini and he is a member of the speaker/advisory board of Sanofi-Aventis, Lundbeck, FB-Health, Angelini (unrelated to the present work). I.M. participated as speaker or in advisory boards for Indivior, Molteni, Camurus, Lundbeck, CT Sanremo, Gerot-Lannach, Recordati (unrelated to the present work). Other authors have no affiliation or financial interest in any organization that may constitute a conflict of interest.",
     "This research received no external funding."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Adults with attention deficit/hyperactivity disorder (ADHD) often present psychiatric comorbidities and, in particular, substance use disorder (SUD). ADHD-SUD comorbidity is characterized by greater severity of both disorders",
-    "text": "A review of pharmacological management for adults and adolescents with ADHD and comorbid substance use disorder."
-   },
+   "design": null,
    "findings": [
     {
      "passage": 18,
      "where": "3. ADHD with Comorbid Stimulant/Cocaine Use Disorder",
-     "quote": "Atomoxetine is often recommended for ADHD with comorbid CUD; however, its efficacy in reducing addictive behavior has yet to be demonstrated. Given its low abuse potential, bupropion (250–400 mg/day) may have a role",
-     "text": "Atomoxetine is recommended for people with ADHD and comorbid cocaine use disorder because it has low potential for use in a way that is not intended.",
+     "quote": "Atomoxetine is often recommended for ADHD with comorbid CUD; however, its efficacy in reducing addictive behavior has yet to be demonstrated.",
+     "text": "Atomoxetine is often recommended for ADHD with comorbid cocaine or amphetamine use disorder, but its efficacy in reducing addictive behavior has not been demonstrated.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "For the absence of potential misuse, atomoxetine is often recommended for ADHD with comorbid cocaine or amphetamine use disorder.",
-     "text": "Atomoxetine is often recommended for people with ADHD and comorbid cocaine or amphetamine use disorder because it lacks potential for use in a way that is not intended.",
+     "passage": 18,
+     "where": "3. ADHD with Comorbid Stimulant/Cocaine Use Disorder",
+     "quote": "Given its low abuse potential, bupropion (250–400 mg/day) may have a role in treating ADHD individuals with comorbid CUD and depression.",
+     "text": "Atomoxetine has a low abuse potential, making it a suitable option for patients with comorbid substance use disorder.",
      "id": "F2",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "At the present stage, research focused on the pharmacological management of ADHD with comorbid SUD in both adolescents and adults is still lacking.",
-     "text": "Research on the pharmacological management of ADHD with comorbid substance use disorder in adolescents and adults is currently lacking.",
-     "id": "L1",
+     "passage": 22,
+     "where": "4. ADHD with Comorbid Alcohol Use Disorder",
+     "quote": "Atomoxetine was effective in reducing ADHD symptomatology, but it did not have an impact on the relapse into heavy drinking.",
+     "text": "In abstinent adults with ADHD and alcohol use disorder, atomoxetine reduced ADHD symptoms but did not affect relapse into heavy drinking.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -214,40 +215,18 @@
    "money": [
     "SD declares that he has received grant support from the NHMRC, Beyond Blue, ARHRF, Simons Foundation, Geelong Medical Research Foundation, Harry Windsor Foundation, Fondation FondaMental, Eli Lilly, Glaxo SmithKline, Organon, Mayne Pharma, and Servier; speaker’s fees from Eli Lilly; advisory board fees from Eli Lilly and Novartis; and conference travel support from Servier. LOP and JSM declare that they have no competing interests."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "Stimulants that act on the central nervous system have been used since antiquity for ritual and other uses. Organic chemistry techniques, especially those developed in Germany in the late 1800s, resulted in the isolation and structural determination of several important stimulants.",
-    "text": "a research paper reviewing the history, medical use, and recreational use of central nervous system stimulants"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 55,
      "where": "Discussion",
      "quote": "New treatments are emerging that are not stimulants, such as atomoxetine and viloxazine; however, the efficacy of amphetamines and phenidates has not been surpassed by the non-stimulant agents.",
-     "text": "Atomoxetine and viloxazine are non-stimulant treatments for ADHD, but their efficacy has not surpassed that of amphetamines and phenidates.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 55,
-     "where": "Discussion",
-     "quote": "There is a need for newer agents with better safety profiles and lower risk of addiction.",
-     "text": "There is a need for newer agents that have better safety profiles and a lower risk of addiction.",
+     "text": "New treatments are emerging that are not stimulants, such as atomoxetine and viloxazine, but the efficacy of amphetamines and phenidates has not been surpassed by the non-stimulant agents.",
      "id": "F4",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 55,
-     "where": "Discussion",
-     "quote": "There is a need for newer agents with better safety profiles and lower risk of addiction.",
-     "text": "The paper identifies a need for agents with better safety profiles and lower risk of addiction without confirming if current non-stimulants meet these criteria.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "B"
   }
  ],
@@ -278,7 +257,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Safety of Stimulants Across Patient Populations: A Meta-Analysis",
@@ -293,8 +281,27 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/jcm12093096",
-   "kept": 2,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review article on pharmacologic treatment of ADHD with comorbid substance use disorder",
+     "quote": "Currently approved pharmacological agents for youths and adults with ADHD act by increasing DA and norepinephrine (NE) transmission and include stimulant (for example, methylphenidate and amphetamines",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The paper states that atomoxetine’s efficacy in reducing addictive behavior has not yet been demonstrated.",
+     "quote": "However, its efficacy in reducing addictive behavior has yet to be demonstrated.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "The paper notes that atomoxetine did not influence relapse into heavy drinking in the studied population.",
+     "quote": "but it did not have an impact on the relapse into heavy drinking.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Efficiency of Different Supplements in Alleviating Symptoms of ADHD with or Without the Use of Stimulants: A Systematic Review",
@@ -317,24 +324,26 @@
    "read": "full",
    "kind": "review",
    "at": "10.1017/s1092852925100357",
-   "kept": 2,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A research paper reviewing central nervous system stimulants in recreational and medical use",
+     "quote": "Central nervous system stimulants in recreational and medical use (2025), CNS spectrums.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   }
  ],
  "plan": {
   "short": [
-   "F2",
-   "F1"
+   "F2"
   ],
   "direct": "No",
-  "but": [
-   "L1"
-  ],
+  "but": [],
   "how": [
    [
-    "DA",
-    "F2",
-    "F1"
+    "F2"
    ]
   ],
   "unanswered": "the risks"
