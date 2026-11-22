@@ -17,32 +17,38 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45017589606",
-  "read_seconds": 22,
+  "run": "45019500923",
+  "read_by": {
+   "gemini-3.5-flash-lite": 2,
+   "gemini-3.1-flash-lite": 1
+  },
+  "read_seconds": 12,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 1
   },
   "neurons": 0.0,
-  "seconds": 302
+  "seconds": 180
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not mention \"tolerance\", stating instead \"whether the person is used to taking it\".",
  "gates": {
-  "read": "9 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "9 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8080) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 7905)"
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 5; gemini-3.6-flash accepted 1 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.95, but 0.30, how1 0.49, how2 0.79, how3 0.62",
+  "check": "short: accepted; but: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not mention \"tolerance\", stating instead \"whether the person is used to taking it\".; how1: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not mention that the Alcohol and Drug Foundation is Australia's.; how2: NOT accepted: The passages report that a single paper within the 2022 review found the increased hazard, not that the review itself concluded this.; how3: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage states there are long-term detrimental effects on the disorders (diabetes, dyslipidemia, and hypertension), not directly on \"lipids\" and \"blood pressure\"."
  },
  "sources": [
   {
@@ -93,47 +99,38 @@
     "The author declares that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
    ],
    "design": {
-    "passage": 2,
+    "passage": 1,
     "where": "Abstract",
-    "quote": "I conducted a systematic search based on Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines to evaluate the association between opium dependence and stroke.",
-    "text": "a systematic review and meta-analysis of studies on opium dependence and stroke in Iran"
+    "quote": "The objective of this study is to evaluate the association between opium dependence and stroke.",
+    "text": "a systematic review and meta-analysis evaluating the association between opium dependence and stroke"
    },
    "findings": [
     {
-     "passage": 21,
-     "where": "Results › Discussion",
-     "quote": "This study indicated that not only opium dependence almost doubles the odds of being diagnosed with a stroke but also it leads to a higher hazard of mortality due to stroke.",
-     "text": "Opium dependence almost doubles the odds of being diagnosed with a stroke and leads to a higher hazard of mortality due to stroke.",
+     "passage": 19,
+     "where": "Results › Study characteristics › Qualitative findings",
+     "quote": "opium use increases the hazard of mortality due to stroke.",
+     "text": "Opium use increases the hazard of mortality due to stroke.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 5,
-     "where": "Introduction",
-     "quote": "ever-use of opium results in an 86% higher hazard of all-cause mortality.",
-     "text": "Ever-use of opium results in an 86% higher hazard of all-cause mortality.",
+     "passage": 19,
+     "where": "Results › Study characteristics › Qualitative findings",
+     "quote": "Andalibi et al.'s study showed that although opium use increases the hazard of death following stroke, it does not significantly alter the hazard of disability following stroke.",
+     "text": "Opium use increases the hazard of death following stroke, but it does not significantly alter the hazard of disability following stroke.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 24,
+     "passage": 27,
      "where": "Results › Discussion",
-     "quote": "opium addiction is a well-established risk factor for diabetes, hypertension, and hyperlipidemia, which can potentially elevate stroke hazards.",
-     "text": "Opium addiction is a risk factor for diabetes, hypertension, and hyperlipidemia, which can potentially elevate stroke hazards.",
+     "quote": "Khademi et al.'s study demonstrated that opium consumption leads to strongly increased risks of death due to a stroke.",
+     "text": "Opium consumption leads to strongly increased risks of death due to a stroke.",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 21,
-     "where": "Results › Discussion",
-     "quote": "It should be clarified that this study and included records are all focused on the cerebrovascular effects of opium abuse, rather than the effects of prescribed opium, as a component of a medical treatment plan.",
-     "text": "The study focuses on the cerebrovascular effects of opium use rather than the effects of opium prescribed as part of a medical treatment plan.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "A"
   },
   {
@@ -225,7 +222,7 @@
      "where": "Introduction",
      "quote": "Some of these variables that may alter the effect of opium in human include, sex and age range of subjects, nutritional factors, psycho-social conditions, physical activity level, concomitant use of other substances such as alcohol, cigarette, tobacco, and underlying diseases.",
      "text": "Variables such as age, sex, nutrition, psycho-social conditions, physical activity, and the use of other substances like alcohol or tobacco may alter the effects of opium in humans.",
-     "id": "L2",
+     "id": "L1",
      "second_hand": ""
     }
    ],
@@ -281,10 +278,10 @@
    "design": null,
    "findings": [
     {
-     "passage": 2,
-     "where": "What is opium? / What does it look like?",
+     "passage": 1,
+     "where": "What is opium?",
      "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
-     "text": "Opium is a sticky dark-brown gum with a strong odour that can also be manufactured into a liquid or powder.",
+     "text": "Opium is a sticky dark-brown gum with a strong odour, and it can also be manufactured into a liquid or powder.",
      "id": "F7",
      "second_hand": ""
     },
@@ -292,7 +289,7 @@
      "passage": 6,
      "where": "Effects of opium",
      "quote": "Opium can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the strength of the drug (varies from batch to batch); the environment (where the drug is taken).",
-     "text": "The effects of opium vary between people based on their size, weight, health, tolerance, other drugs taken, the amount used, the strength of the batch, and the environment.",
+     "text": "Opium can affect everyone differently based on size, weight, health, tolerance, other drugs taken, amount taken, drug strength, and the environment.",
      "id": "F8",
      "second_hand": ""
     },
@@ -300,27 +297,18 @@
      "passage": 14,
      "where": "Reducing harm",
      "quote": "mixing opioids with depressant drugs such as alcohol or benzodiazepines can greatly increase the risk of overdose",
-     "text": "Mixing opium with depressant drugs like alcohol or benzodiazepines significantly increases the risk of overdose.",
+     "text": "Mixing opioids with depressant drugs such as alcohol or benzodiazepines can greatly increase the risk of overdose.",
      "id": "F9",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 6,
-     "where": "Effects of opium",
-     "quote": "the strength of the drug (varies from batch to batch)",
-     "text": "The strength of opium is not consistent and varies from one batch to another.",
-     "id": "L3",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "C"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "the subjective experience or feeling of using it",
+ "missing": "exact probability of harm",
  "wanted": [
   {
    "doi": "10.1038/nrcardio.2013.159",
@@ -345,7 +333,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Opium abuse and stroke in Iran: A systematic review and meta-analysis",
@@ -353,7 +350,20 @@
    "kind": "review",
    "at": "10.3389/fneur.2022.855578",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "all included studies were from a single country (Iran).",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "studies included in the meta-analysis were all case-control studies.",
+     "why": "no sentence"
+    }
+   ]
   },
   {
    "title": "The Impact of Opium Consumption on Blood Glucose, Serum Lipids and Blood Pressure, and Related Mechanisms",
@@ -375,9 +385,7 @@
  "plan": {
   "short": [
    "F7",
-   "F1",
-   "F2",
-   "F9"
+   "F1"
   ],
   "direct": "",
   "but": [
@@ -390,17 +398,481 @@
    ],
    [
     "DA",
-    "F1",
-    "F2"
+    "F1"
    ],
    [
     "DB",
     "F4"
    ]
   ],
-  "unanswered": "the subjective experience or feeling of using it"
+  "unanswered": "exact probability of harm"
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    false,
+    "The passages do not mention \"tolerance\", stating instead \"whether the person is used to taking it\"."
+   ],
+   "how1": [
+    false,
+    "The passages do not mention that the Alcohol and Drug Foundation is Australia's."
+   ],
+   "how2": [
+    false,
+    "The passages state that a single paper revealed that opium use increases the hazard of mortality due to stroke, not that the 2022 review as a whole found this."
+   ],
+   "how3": [
+    false,
+    "The passage states there are long-term detrimental effects on the disorders (diabetes, dyslipidemia, and hypertension), not directly on \"lipids\" and \"blood pressure\"."
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.954,
+   "but": 0.2989,
+   "how1": 0.494,
+   "how2": 0.7867,
+   "how3": 0.6223
+  },
+  "scores_quotes_alone": {
+   "short": 0.6114,
+   "but": 0.3997,
+   "how1": 0.3735,
+   "how2": 0.537,
+   "how3": 0.6535
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Opium is a sticky dark-brown gum with a strong odour. It can increase the risk of dying from a stroke.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_opium",
+       "where": "What is opium?",
+       "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
+       "sha": "f3d75035ad85040b"
+      },
+      {
+       "label": "F1",
+       "ref": "mardi_2022",
+       "where": "Results › Study characteristics › Qualitative findings",
+       "quote": "opium use increases the hazard of mortality due to stroke.",
+       "sha": "25baea8791d1e7d1"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The sentence presents the finding of a single paper as a general fact about opium."
+    },
+    {
+     "part": "but",
+     "text": "Opium can affect everyone differently based on size, weight, health, tolerance, other drugs, amount, strength, and environment.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "adf_opium",
+       "where": "Effects of opium",
+       "quote": "Opium can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the strength of the drug (varies from batch to batch); the environment (where the drug is taken).",
+       "sha": "22b9f27afb48021e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says opium is a sticky dark-brown gum. Mixing it with alcohol or benzodiazepines can greatly increase overdose risk.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_opium",
+       "where": "What is opium?",
+       "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
+       "sha": "f3d75035ad85040b"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_opium",
+       "where": "Reducing harm",
+       "quote": "mixing opioids with depressant drugs such as alcohol or benzodiazepines can greatly increase the risk of overdose",
+       "sha": "212e2d70ba7e47dd"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2022 review of studies found that opium use increases the hazard of mortality due to stroke.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "mardi_2022",
+       "where": "Abstract",
+       "quote": "The objective of this study is to evaluate the association between opium dependence and stroke.",
+       "sha": "fa60806f0562d95a"
+      },
+      {
+       "label": "F1",
+       "ref": "mardi_2022",
+       "where": "Results › Study characteristics › Qualitative findings",
+       "quote": "opium use increases the hazard of mortality due to stroke.",
+       "sha": "25baea8791d1e7d1"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that a single paper within the review found this, not that the overall 2022 review concluded this."
+    },
+    {
+     "part": "how3",
+     "text": "A 2016 review of human and animal studies found long-term detrimental effects on diabetes, lipids, and blood pressure.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "najafipour_2016",
+       "where": "Abstract",
+       "quote": "The results of available studies on both humans and animals searched in different search engines up to mid-2016 were integrated (78 articles).",
+       "sha": "6a42e80603522b74"
+      },
+      {
+       "label": "F4",
+       "ref": "najafipour_2016",
+       "where": "Conclusion",
+       "quote": "these findings, not only do not support the traditional beliefs about beneficial effects of opium and its derivatives on diabetes, dyslipidemia and hypertension, but they also represents their long term detrimental effects on these disorders and on many body organs.",
+       "sha": "c50f9bac0dc6d580"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Opium is a sticky dark-brown gum. A 2022 review found opium use increases the hazard of dying from stroke.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_opium",
+       "where": "What is opium?",
+       "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
+       "sha": "f3d75035ad85040b"
+      },
+      {
+       "label": "F1",
+       "ref": "mardi_2022",
+       "where": "Results › Study characteristics › Qualitative findings",
+       "quote": "opium use increases the hazard of mortality due to stroke.",
+       "sha": "25baea8791d1e7d1"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies that a single paper revealed that opium use increases the hazard of mortality due to stroke, not that the 2022 review overall found this."
+    },
+    {
+     "part": "but",
+     "text": "Australia's Alcohol and Drug Foundation says opium can affect everyone differently based on size, weight, health, and other drugs.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "adf_opium",
+       "where": "Effects of opium",
+       "quote": "Opium can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the strength of the drug (varies from batch to batch); the environment (where the drug is taken).",
+       "sha": "22b9f27afb48021e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says opium is a sticky dark-brown gum. Mixing it with alcohol or benzodiazepines can greatly increase overdose risk.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_opium",
+       "where": "What is opium?",
+       "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
+       "sha": "f3d75035ad85040b"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_opium",
+       "where": "Reducing harm",
+       "quote": "mixing opioids with depressant drugs such as alcohol or benzodiazepines can greatly increase the risk of overdose",
+       "sha": "212e2d70ba7e47dd"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2022 systematic review and meta-analysis evaluated the association between opium dependence and stroke. It found opium use increases the hazard of mortality due to stroke.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "mardi_2022",
+       "where": "Abstract",
+       "quote": "The objective of this study is to evaluate the association between opium dependence and stroke.",
+       "sha": "fa60806f0562d95a"
+      },
+      {
+       "label": "F1",
+       "ref": "mardi_2022",
+       "where": "Results › Study characteristics › Qualitative findings",
+       "quote": "opium use increases the hazard of mortality due to stroke.",
+       "sha": "25baea8791d1e7d1"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies that a single paper revealed that opium use increases the hazard of mortality due to stroke, rather than the systematic review itself finding this."
+    },
+    {
+     "part": "how3",
+     "text": "A 2016 review of human and animal studies found opium has long-term detrimental effects on diabetes, lipids, and blood pressure, not beneficial ones.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "najafipour_2016",
+       "where": "Abstract",
+       "quote": "The results of available studies on both humans and animals searched in different search engines up to mid-2016 were integrated (78 articles).",
+       "sha": "6a42e80603522b74"
+      },
+      {
+       "label": "F4",
+       "ref": "najafipour_2016",
+       "where": "Conclusion",
+       "quote": "these findings, not only do not support the traditional beliefs about beneficial effects of opium and its derivatives on diabetes, dyslipidemia and hypertension, but they also represents their long term detrimental effects on these disorders and on many body organs.",
+       "sha": "c50f9bac0dc6d580"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Opium is a sticky dark-brown gum with a strong odour. One study found opium use increases the hazard of dying from stroke.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_opium",
+       "where": "What is opium?",
+       "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
+       "sha": "f3d75035ad85040b"
+      },
+      {
+       "label": "F1",
+       "ref": "mardi_2022",
+       "where": "Results › Study characteristics › Qualitative findings",
+       "quote": "opium use increases the hazard of mortality due to stroke.",
+       "sha": "25baea8791d1e7d1"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Opium can affect everyone differently based on size, weight, health, tolerance, other drugs, amount, strength, and environment.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "adf_opium",
+       "where": "Effects of opium",
+       "quote": "Opium can affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the strength of the drug (varies from batch to batch); the environment (where the drug is taken).",
+       "sha": "22b9f27afb48021e"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not mention \"tolerance\", stating instead \"whether the person is used to taking it\"."
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says opium is a sticky dark-brown gum. Mixing it with alcohol or benzodiazepines can greatly increase overdose risk.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "adf_opium",
+       "where": "What is opium?",
+       "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
+       "sha": "f3d75035ad85040b"
+      },
+      {
+       "label": "F9",
+       "ref": "adf_opium",
+       "where": "Reducing harm",
+       "quote": "mixing opioids with depressant drugs such as alcohol or benzodiazepines can greatly increase the risk of overdose",
+       "sha": "212e2d70ba7e47dd"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not mention that the Alcohol and Drug Foundation is Australia's."
+    },
+    {
+     "part": "how2",
+     "text": "A 2022 review of studies in Iran found opium use increases the hazard of mortality due to stroke.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "mardi_2022",
+       "where": "Abstract",
+       "quote": "The objective of this study is to evaluate the association between opium dependence and stroke.",
+       "sha": "fa60806f0562d95a"
+      },
+      {
+       "label": "F1",
+       "ref": "mardi_2022",
+       "where": "Results › Study characteristics › Qualitative findings",
+       "quote": "opium use increases the hazard of mortality due to stroke.",
+       "sha": "25baea8791d1e7d1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages report that a single paper within the 2022 review found the increased hazard, not that the review itself concluded this."
+    },
+    {
+     "part": "how3",
+     "text": "A 2016 review of human and animal studies found long-term detrimental effects on diabetes, lipids, and blood pressure.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "najafipour_2016",
+       "where": "Abstract",
+       "quote": "The results of available studies on both humans and animals searched in different search engines up to mid-2016 were integrated (78 articles).",
+       "sha": "6a42e80603522b74"
+      },
+      {
+       "label": "F4",
+       "ref": "najafipour_2016",
+       "where": "Conclusion",
+       "quote": "these findings, not only do not support the traditional beliefs about beneficial effects of opium and its derivatives on diabetes, dyslipidemia and hypertension, but they also represents their long term detrimental effects on these disorders and on many body organs.",
+       "sha": "c50f9bac0dc6d580"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states there are long-term detrimental effects on the disorders (diabetes, dyslipidemia, and hypertension), not directly on \"lipids\" and \"blood pressure\"."
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says opium is a sticky dark-brown gum. Mixing it with alcohol or benzodiazepines can greatly increase overdose risk.",
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "adf_opium",
+     "where": "What is opium?",
+     "quote": "Opium is a sticky dark-brown gum with a strong odour. It can also be manufactured into a liquid or powder.",
+     "sha": "f3d75035ad85040b"
+    },
+    {
+     "label": "F9",
+     "ref": "adf_opium",
+     "where": "Reducing harm",
+     "quote": "mixing opioids with depressant drugs such as alcohol or benzodiazepines can greatly increase the risk of overdose",
+     "sha": "212e2d70ba7e47dd"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not mention that the Alcohol and Drug Foundation is Australia's."
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2022 review of studies in Iran found opium use increases the hazard of mortality due to stroke.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "mardi_2022",
+     "where": "Abstract",
+     "quote": "The objective of this study is to evaluate the association between opium dependence and stroke.",
+     "sha": "fa60806f0562d95a"
+    },
+    {
+     "label": "F1",
+     "ref": "mardi_2022",
+     "where": "Results › Study characteristics › Qualitative findings",
+     "quote": "opium use increases the hazard of mortality due to stroke.",
+     "sha": "25baea8791d1e7d1"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages report that a single paper within the 2022 review found the increased hazard, not that the review itself concluded this."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2016 review of human and animal studies found long-term detrimental effects on diabetes, lipids, and blood pressure.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "najafipour_2016",
+     "where": "Abstract",
+     "quote": "The results of available studies on both humans and animals searched in different search engines up to mid-2016 were integrated (78 articles).",
+     "sha": "6a42e80603522b74"
+    },
+    {
+     "label": "F4",
+     "ref": "najafipour_2016",
+     "where": "Conclusion",
+     "quote": "these findings, not only do not support the traditional beliefs about beneficial effects of opium and its derivatives on diabetes, dyslipidemia and hypertension, but they also represents their long term detrimental effects on these disorders and on many body organs.",
+     "sha": "c50f9bac0dc6d580"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states there are long-term detrimental effects on the disorders (diabetes, dyslipidemia, and hypertension), not directly on \"lipids\" and \"blood pressure\"."
+  }
+ ],
  "place": {
   "home": "new:Opium",
   "also": [],
