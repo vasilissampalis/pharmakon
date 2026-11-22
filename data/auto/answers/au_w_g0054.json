@@ -19,32 +19,41 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45041908119",
-  "read_seconds": 61,
+  "run": "45044934442",
+  "read_by": {
+   "gemini-3.1-flash-lite": 4,
+   "gpt-oss-20b": 4
+  },
+  "read_seconds": 76,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 1,
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 258
+  "seconds": 173
  },
- "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "10 findings kept from 5 sources (2 papers read in full, 2 official pages, 1 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 1 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9058) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9023)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "10 findings kept from 5 sources (2 papers read in full, 2 official pages, 1 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 1 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 5 of 6",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.43, but 0.98, how1 0.18, how2 0.93, how3 0.75, how4 0.91",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -184,137 +193,6 @@
     }
    ],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "luan_2024",
-    "type": "article-journal",
-    "title": "Psychological and physiological effects of extended DMT",
-    "author": [
-     {
-      "family": "Luan",
-      "given": "Lisa X"
-     },
-     {
-      "family": "Eckernäs",
-      "given": "Emma"
-     },
-     {
-      "family": "Ashton",
-      "given": "Michael"
-     },
-     {
-      "family": "Rosas",
-      "given": "Fernando E"
-     },
-     {
-      "family": "Uthaug",
-      "given": "Malin V"
-     },
-     {
-      "family": "Bartha",
-      "given": "Alexander"
-     },
-     {
-      "family": "Jagger",
-      "given": "Samantha"
-     },
-     {
-      "family": "Gascon-Perai",
-      "given": "Kiara"
-     },
-     {
-      "family": "Gomes",
-      "given": "Lauren"
-     },
-     {
-      "family": "Nutt",
-      "given": "David J"
-     },
-     {
-      "family": "Erritzøe",
-      "given": "David"
-     },
-     {
-      "family": "Carhart-Harris",
-      "given": "Robin L"
-     },
-     {
-      "family": "Timmermann",
-      "given": "Christopher"
-     }
-    ],
-    "container-title": "Journal of Psychopharmacology",
-    "issued": {
-     "date-parts": [
-      [
-       2024
-      ]
-     ]
-    },
-    "DOI": "10.1177/02698811231196877",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-22"
-     },
-     "online_first_year": 2023
-    },
-    "volume": "38",
-    "issue": "1",
-    "page": "56-67",
-    "PMCID": "PMC10851633"
-   },
-   "doi": "10.1177/02698811231196877",
-   "pmcid": "PMC10851633",
-   "title": "Psychological and physiological effects of extended DMT",
-   "year": 2024,
-   "journal": "Journal of psychopharmacology (Oxford, England)",
-   "kind": "study",
-   "people": true,
-   "near": 0.726,
-   "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "In a within-subjects, placebo-controlled study, we investigated a novel method of DMT administration involving a bolus injection paired with a constant-rate infusion, with the goal of extending the DMT experience.",
-    "text": "A within-subjects, placebo-controlled study of extended DMT administration in eleven healthy volunteers."
-   },
-   "findings": [
-    {
-     "passage": 32,
-     "where": "Discussion",
-     "quote": "These findings may suggest a progressive development of acute psychological tolerance to DMT during continuous infusion, a finding not seen in previous studies employing this compound.",
-     "text": "The study suggests that acute psychological tolerance to DMT may develop during continuous infusion.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 30,
-     "where": "Results › Plasma DMT concentrations",
-     "quote": "The increase in plasma levels of DMT from minutes 10 to 30, while subjective effects remain sustained suggest the development of short-term psychological tolerance induced by DMT.",
-     "text": "The increase in plasma levels of DMT while subjective effects remain sustained suggests the development of short-term psychological tolerance.",
-     "id": "F5",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 32,
-     "where": "Discussion",
-     "quote": "However, the observed variability between individuals makes it difficult to draw any final conclusions based on this analysis.",
-     "text": "Individual variability makes it difficult to draw final conclusions about the development of tolerance.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
   },
   {
    "read": "page",
@@ -509,35 +387,135 @@
    "design": {
     "passage": 1,
     "where": "Summary",
-    "quote": "This chapter summarizes pharmacological characteristics of the serotonergic psychedelics psilocybin, lysergic acid diethylamide (LSD), mescaline, N,N-dimethyltryptamine (DMT), 5-methoxy-DMT (5-MeO-DMT), and MDMA.",
-    "text": "A review of the clinical pharmacology of serotonergic psychedelics and MDMA in humans."
+    "quote": "To design therapeutic trials and select the most appropriate substance and dose for an indication, a detailed understanding of clinical pharmacology is crucial.",
+    "text": "Review of human pharmacology of serotonergic psychedelics"
    },
    "findings": [
     {
      "passage": 3,
      "where": "Summary",
-     "quote": "Thus, MDMA, but not the psychedelics, exhibits marked acute pharmacological tolerance.",
-     "text": "MDMA exhibits marked acute pharmacological tolerance, but the psychedelics do not.",
+     "quote": "MDMA, but not the psychedelics, exhibits marked acute pharmacological tolerance.",
+     "text": "The psychedelics, including DMT, do not exhibit marked acute pharmacological tolerance.",
      "id": "F10",
      "second_hand": ""
     }
    ],
-   "limits": [
-    {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "However, the exact mechanisms of their potential therapeutic benefits in patients remain to be elucidated.",
-     "text": "The exact mechanisms of the potential therapeutic benefits of these substances in patients are not yet known.",
-     "id": "L4",
-     "second_hand": ""
-    }
-   ],
+   "limits": [],
    "tag": "E"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "It depends. Regular use may lead to tolerance, but other sources say it does not appear to result in increased tolerance.",
+   "uses": [
+    "F6",
+    "F8",
+    "F10",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "adf_dmt",
+     "where": "Long-term effects / Tolerance",
+     "quote": "Regularly taking DMT may lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
+     "sha": "47572daf3b14b5c1"
+    },
+    {
+     "label": "F8",
+     "ref": "thelevel_dmt",
+     "where": "Long-term effects / What are the long-term effects of using DMT?",
+     "quote": "Unlike other hallucinogens like LSD, regular DMT use does not appear to result in increased tolerance to its effects.",
+     "sha": "d1466baee11eab3a"
+    },
+    {
+     "label": "F10",
+     "ref": "vogt_2025",
+     "where": "Summary",
+     "quote": "MDMA, but not the psychedelics, exhibits marked acute pharmacological tolerance.",
+     "sha": "f3bdb43ef20bc7da"
+    },
+    {
+     "label": "F1",
+     "ref": "erne_2025",
+     "where": "Discussion",
+     "quote": "The present study documented the presence of acute pharmacological tolerance to the continuous administration of DMT.",
+     "sha": "3e1fe04ee6149961"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The evidence regarding whether DMT use results in tolerance is mixed.",
+   "uses": [
+    "L3"
+   ],
+   "rests_on": [
+    {
+     "label": "L3",
+     "ref": "adf_dmt",
+     "where": "Long-term effects / Tolerance",
+     "quote": "There is mixed evidence on DMT use resulting in tolerance.",
+     "sha": "47572daf3b14b5c1"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "The NZ Drug Foundation says regular DMT use does not appear to result in increased tolerance, unlike LSD, and taking more results in stronger effects.",
+   "uses": [
+    "F8",
+    "F9"
+   ],
+   "rests_on": [
+    {
+     "label": "F8",
+     "ref": "thelevel_dmt",
+     "where": "Long-term effects / What are the long-term effects of using DMT?",
+     "quote": "Unlike other hallucinogens like LSD, regular DMT use does not appear to result in increased tolerance to its effects.",
+     "sha": "d1466baee11eab3a"
+    },
+    {
+     "label": "F9",
+     "ref": "thelevel_dmt",
+     "where": "Long-term effects / What are the long-term effects of using DMT?",
+     "quote": "This means that taking more will make you feel stronger effects, regardless of how much you have used before.",
+     "sha": "d1466baee11eab3a"
+    }
+   ],
+   "quote": "regular DMT use does not appear to result in increased tolerance to its effects",
+   "quote_ref": "thelevel_dmt"
+  },
+  {
+   "part": "how4",
+   "text": "A 2025 study of 22 healthy participants found that people develop acute pharmacological tolerance to continuous DMT infusions.",
+   "uses": [
+    "DA",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "erne_2025",
+     "where": "Abstract",
+     "quote": "We used a double-blind, randomized, placebo-controlled, crossover design in 22 healthy participants (11 women, 11 men) who received placebo and DMT (0.6, 1.2, 1.8, and 2.4 mg/min) over an infusion duration of 120 min.",
+     "sha": "3290865b10810a12"
+    },
+    {
+     "label": "F1",
+     "ref": "erne_2025",
+     "where": "Discussion",
+     "quote": "The present study documented the presence of acute pharmacological tolerance to the continuous administration of DMT.",
+     "sha": "3e1fe04ee6149961"
+    }
+   ],
+   "quote": "The present study documented the presence of acute pharmacological tolerance to the continuous administration",
+   "quote_ref": "erne_2025"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "1 paper(s) could be read in summary only",
  "wanted": [
   {
    "doi": "10.1016/bs.irn.2025.02.003",
@@ -568,6 +546,14 @@
    "lane": 19,
    "status": "none",
    "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
    "short": "",
    "complete": false
   }
@@ -627,20 +613,7 @@
    "kind": "review",
    "at": "10.1016/j.pnpbp.2024.111129",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "There is significant variation between individuals regarding how long the effects of a single treatment dose last.",
-     "quote": "Although many participants achieve positive results with only one treatment dose in clinical studies, great inter-individual variability exists in the duration of these effects.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "More research using various doses and experimental protocols is needed to improve the evidence regarding these substances.",
-     "quote": "Therefore, further studies using different doses and experimental protocols should be conducted to enhance evidence about psychedelic substances.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The effect of psychedelic microdosing on animal behavior: A review with recommendations for the field",
@@ -651,9 +624,9 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "a narrative review of 12 studies investigating the effects of microdosing on the behaviors of rats, mice, and zebrafish",
-     "quote": "In this narrative review, we synthesize the findings from studies investigating the effects of microdosing on the behaviors of three animal species: rats, mice, and zebrafish.",
-     "why": "a number of the sentence is not in its quote"
+     "text": "Narrative review of microdosing effects on animal behavior",
+     "quote": "Microdosing, the repeated use of psychedelic substances at low doses, is growing in popularity among recreational consumers.",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   }
@@ -684,13 +657,112 @@
    ],
    [
     "DA",
-    "F1",
-    "F2"
+    "F1"
    ]
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel": {
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The passages do not mention that the Alcohol and Drug Foundation is Australia's."
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.427,
+   "but": 0.9827,
+   "how1": 0.1824,
+   "how2": 0.9297,
+   "how3": 0.7455,
+   "how4": 0.9074
+  },
+  "scores_quotes_alone": {
+   "short": 0.5325,
+   "but": 0.9673,
+   "how1": 0.1897,
+   "how2": 0.6946,
+   "how3": 0.0663,
+   "how4": 0.8595
+  }
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says regular use may lead to tolerance, but reports some evidence suggests DMT does not cause any tolerance.",
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "adf_dmt",
+     "where": "Long-term effects / Tolerance",
+     "quote": "Regularly taking DMT may lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
+     "sha": "47572daf3b14b5c1"
+    },
+    {
+     "label": "F7",
+     "ref": "adf_dmt",
+     "where": "Long-term effects / Tolerance",
+     "quote": "However, some evidence suggests that DMT does not cause any tolerance.",
+     "sha": "47572daf3b14b5c1"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not mention that the Alcohol and Drug Foundation is Australia's."
+  },
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "The summary of a 2025 review of human pharmacology says psychedelics, including DMT, do not exhibit marked acute pharmacological tolerance.",
+   "rests_on": [
+    {
+     "label": "DE",
+     "ref": "vogt_2025",
+     "where": "Summary",
+     "quote": "To design therapeutic trials and select the most appropriate substance and dose for an indication, a detailed understanding of clinical pharmacology is crucial.",
+     "sha": "14fa72ffb1439d00"
+    },
+    {
+     "label": "F10",
+     "ref": "vogt_2025",
+     "where": "Summary",
+     "quote": "MDMA, but not the psychedelics, exhibits marked acute pharmacological tolerance.",
+     "sha": "f3bdb43ef20bc7da"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage says MDMA exhibits marked acute pharmacological tolerance, but psychedelics do not; it does not explicitly state that psychedelics including DMT do not exhibit marked acute pharmacological tolerance in the cited summary text."
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "dmt-ayahuasca",
   "also": [],
