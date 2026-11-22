@@ -19,65 +19,99 @@
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "44965593386",
+  "run": "44966990358",
   "read_by": {
-   "gemini-3.5-flash-lite": 12,
-   "llama-4-scout-17b-16e-instruct": 6,
-   "gpt-oss-20b": 3
+   "gemini-3.5-flash-lite": 18,
+   "llama-4-scout-17b-16e-instruct": 3
   },
-  "read_seconds": 121,
+  "read_seconds": 101,
   "from": {
-   "papers": 0,
-   "summaries": 2,
-   "official": 0
+   "papers": 1,
+   "summaries": 0,
+   "official": 1
   },
-  "neurons": 281.0,
-  "seconds": 200
+  "neurons": 377.7,
+  "seconds": 161
  },
  "status": "none",
- "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons.); but (The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (the claim that the sources only say this is not stated in the passages). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "read": "2 findings kept from 2 sources (0 papers read in full, 0 official pages, 2 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 2 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.26, how1 0.75, how2 0.71",
-  "check": "not accepted at try 2: a second reader did not accept short (The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons.); but (The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
-  "rules": "broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
+  "read": "4 findings kept from 2 sources (1 papers read in full, 1 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“cessation”): say it plainly",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.31, but 0.07, how1 0.40, how2 0.96",
+  "check": "not accepted at try 2: a second reader did not accept short (the claim that the sources only say this is not stated in the passages). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
   {
-   "read": "summary",
+   "read": "full",
    "ref": {
-    "id": "wang_2013",
+    "id": "cox_2020",
     "type": "article-journal",
-    "title": "Epidemiology of alcohol and drug use in the elderly",
+    "title": "Genome-wide association study of opioid cessation",
     "author": [
      {
-      "family": "Wang",
-      "given": "Yuan-Pang"
+      "family": "Cox",
+      "given": "Jiayi W."
      },
      {
-      "family": "Andrade",
-      "given": "Laura Helena"
+      "family": "Sherva",
+      "given": "Richard M."
+     },
+     {
+      "family": "Lunetta",
+      "given": "Kathryn L."
+     },
+     {
+      "family": "Johnson",
+      "given": "Emma C."
+     },
+     {
+      "family": "Martin",
+      "given": "Nicholas G."
+     },
+     {
+      "family": "Degenhardt",
+      "given": "Louisa"
+     },
+     {
+      "family": "Agrawal",
+      "given": "Arpana"
+     },
+     {
+      "family": "Nelson",
+      "given": "Elliot C."
+     },
+     {
+      "family": "Kranzler",
+      "given": "Henry R."
+     },
+     {
+      "family": "Gelernter",
+      "given": "Joel"
+     },
+     {
+      "family": "Farrer",
+      "given": "Lindsay A."
      }
     ],
-    "container-title": "Current Opinion in Psychiatry",
+    "container-title": "Journal of Clinical Medicine",
     "issued": {
      "date-parts": [
       [
-       2013
+       2020
       ]
      ]
     },
-    "DOI": "10.1097/yco.0b013e328360eafd",
+    "DOI": "10.3390/jcm9010180",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -89,35 +123,61 @@
       "checked_on": "2026-11-22"
      }
     },
-    "volume": "26",
-    "issue": "4",
-    "page": "343-348"
+    "volume": "9",
+    "issue": "1",
+    "number": "180",
+    "PMCID": "PMC7019731"
    },
-   "doi": "10.1097/yco.0b013e328360eafd",
-   "title": "Epidemiology of alcohol and drug use in the elderly",
-   "year": 2013,
-   "journal": "Current opinion in psychiatry",
-   "kind": "review",
+   "doi": "10.3390/jcm9010180",
+   "pmcid": "PMC7019731",
+   "title": "Genome-Wide Association Study of Opioid Cessation",
+   "year": 2020,
+   "journal": "Journal of clinical medicine",
+   "kind": "other",
    "people": true,
-   "near": 0.557,
-   "money": [],
-   "design": null,
+   "near": 0.561,
+   "money": [
+    "This was supported by the National Institutes of Health grants RC2, R01 DA12690, R01 DA12849, R01 DA18432, R01 AA11330, R01 AA017535, 2P50, and by the VA Connecticut Healthcare Center and Philadelphia VA MIRECCS.",
+    "H.R.K. is a member of the American Society of Clinical Psychopharmacology’s Alcohol Clinical Trials Initiative, which was supported for the last three years by AbbVie, Alkermes, Ethypharm, Indivior, Lilly, Lundbeck, Otsuka, Pfizer, Arbor, and Amygdala Neurosciences. Drs. Kranzler and Gelernter are named as inventors on PCT patent application #15/878,640 entitled: \"Genotype-guided dosing of opioid agonists,\" filed January 24, 2018. The funders had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript; or in the decision to publish the results."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+    "text": "Genome-Wide Association Study of Opioid Cessation"
+   },
    "findings": [
     {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "prevalence of substance use disorders is increasing among American and European elders",
-     "text": "prevalence of substance use disorders is increasing among American and European elders",
+     "passage": 3,
+     "where": "1. Introduction",
+     "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+     "text": "More than 33,000 Americans died of an opioid overdose in 2015.",
      "id": "F1",
-     "second_hand": "Recent findingsRelevant studies showed that prevalence of substance use disorders is increasing among American and European elders."
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+    },
+    {
+     "passage": 3,
+     "where": "1. Introduction",
+     "quote": "The US Department of Health and Human Services declared a public health emergency in 2017",
+     "text": "The US Department of Health and Human Services declared a public health emergency in 2017.",
+     "id": "F2",
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
+     "text": "The United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
+     "id": "F3",
+     "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 2,
-     "where": "Summary",
-     "quote": "it is unclear whether this population subgroup will also seek treatment for substance use to a greater extent",
-     "text": "it is unclear whether older adults in less developed regions will seek treatment for substance use to a greater extent",
+     "passage": 5,
+     "where": "2. Materials and Methods › 2.1. Participants and Diagnostic Procedures",
+     "quote": "Persons who had recent suicidal intent or psychosis were excluded",
+     "text": "People with recent suicidal intent or psychosis were excluded from the study.",
      "id": "L1",
      "second_hand": ""
     }
@@ -125,74 +185,61 @@
    "tag": "A"
   },
   {
-   "read": "summary",
+   "read": "page",
    "ref": {
-    "id": "vanderplasschen_2004",
-    "type": "article-journal",
-    "title": "The development and implementation of case management for substance use disorders in north America and Europe",
+    "id": "healthcanada_overdose-crisis-toxic-illegal-drug-suppl",
+    "type": "webpage",
+    "title": "Canada's overdose crisis and the toxic illegal drug supply",
     "author": [
      {
-      "family": "Vanderplasschen",
-      "given": "Wouter"
-     },
-     {
-      "family": "Rapp",
-      "given": "Richard C."
-     },
-     {
-      "family": "Wolf",
-      "given": "Judith R."
-     },
-     {
-      "family": "Broekaert",
-      "given": "Eric"
+      "literal": "Health Canada"
      }
     ],
-    "container-title": "Psychiatric Services",
     "issued": {
      "date-parts": [
       [
-       2004
+       2026,
+       6,
+       15
       ]
      ]
     },
-    "DOI": "10.1176/appi.ps.55.8.913",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-22"
-     }
+    "URL": "https://www.canada.ca/en/health-canada/services/opioids/overdose-crisis-toxic-illegal-drug-supply.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       22
+      ]
+     ]
     },
-    "volume": "55",
-    "issue": "8",
-    "page": "913-922"
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-22"
+    },
+    "publisher": "Government of Canada"
    },
-   "doi": "10.1176/appi.ps.55.8.913",
-   "title": "The development and implementation of case management for substance use disorders in North America and Europe",
-   "year": 2004,
-   "journal": "Psychiatric services (Washington, D.C.)",
-   "kind": "review",
+   "title": "Canada's overdose crisis and the toxic illegal drug supply",
+   "year": 2026,
+   "kind": "official",
    "people": true,
-   "near": 0.497,
+   "near": 0.619,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/opioids/overdose-crisis-toxic-illegal-drug-supply.html",
    "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Summary",
-    "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
-    "text": "comparison of experiences from the United States, the Netherlands, and Belgium"
-   },
+   "label": false,
+   "design": null,
    "findings": [
     {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "beneficial drug-related outcomes",
-     "text": "case management has been associated with beneficial drug-related outcomes",
-     "id": "F2",
+     "passage": 8,
+     "where": "Opioid- and stimulant-related harms in Canada",
+     "quote": "There have been over 56,600 opioid-related deaths in Canada since 2016.",
+     "text": "There have been over 56,600 opioid-related deaths in Canada since 2016.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
@@ -202,7 +249,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "European drug‑related death rates",
  "wanted": [
   {
    "doi": "10.1097/yco.0b013e328360eafd",
@@ -245,14 +292,6 @@
    "complete": false
   },
   {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "the second reader did not accept the answer",
-   "short": "",
-   "complete": false
-  },
-  {
    "on": "2026-11-20",
    "lane": 19,
    "status": "none",
@@ -273,6 +312,14 @@
    "lane": 19,
    "status": "none",
    "why": "no source that can be read gave a finding for this question (15 source(s) could not be fetched just now: tried again in the next run)",
+   "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons.); but (The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
   }
@@ -307,7 +354,7 @@
    "read": "full",
    "kind": "other",
    "at": "10.3390/jcm9010180",
-   "kept": 0,
+   "kept": 3,
    "thrown": []
   },
   {
@@ -351,9 +398,9 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "Randomized controlled trial of transcranial direct current stimulation in patients with alcohol use disorder",
-     "quote": "This is a multicenter, randomized, placebo-controlled, double-blind, parallel-group study comparing five consecutive two-daily sessions of active tDCS versus placebo tDCS",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "study protocol for a randomized controlled trial",
+     "quote": "Efficacy of transcranial direct current stimulation (tDCS) in reducing consumption in patients with alcohol use disorders: study protocol for a randomized controlled trial",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -363,14 +410,7 @@
    "kind": "other",
    "at": "10.3389/fpsyt.2021.641430",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "Data regarding chronic pain in patients receiving opioid agonist treatments are still lacking in Europe.",
-     "quote": "The majority of available estimates come from American studies, but data are still lacking in Europe.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Use and knowledge of contraceptive methods by patients in two substance use disorders treatment centers in Paris",
@@ -393,8 +433,21 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/opioids/overdose-crisis-toxic-illegal-drug-supply.html",
-   "kept": 0,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The page only provides data on Canada, not on America or Europe.",
+     "quote": "Recent data on opioid- and stimulant-related harms in Canada",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The page focuses on Canada's overdose crisis, without mentioning America or Europe.",
+     "quote": "About the overdose crisis; Opioid- and stimulant-related harms in Canada; Toxic illegal drug supply; What we're doing",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Facts About U.S. Deaths from Excessive Alcohol Use",
@@ -441,21 +494,8 @@
    "read": "summary",
    "kind": "review",
    "at": "10.1097/yco.0b013e328360eafd",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "epidemiological surveys",
-     "quote": "Recent findingsRelevant studies showed that prevalence of substance use disorders is increasing among American and European elders.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "alcohol and drug abuse among the elderly are current health problems in developed regions",
-     "quote": "there is robust epidemiological evidence showing that alcohol and drug abuse among the elderly are current health problems in developed regions",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "The globalization of addiction research: capacity-building mechanisms and selected examples",
@@ -463,124 +503,98 @@
    "kind": "review",
    "at": "10.1097/hrp.0000000000000067",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "research paper",
-     "quote": "the nature and context of substance use disorders and the populations using drugs are far more diverse than is reflected in studies done in Western cultures",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "The development and implementation of case management for substance use disorders in North America and Europe",
    "read": "summary",
    "kind": "review",
    "at": "10.1176/appi.ps.55.8.913",
-   "kept": 1,
+   "kept": 0,
    "thrown": []
   }
  ],
- "plan": "the planner gave no plan that could be used: the writer chose the items itself",
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.0559,
-   "but": 0.2637,
-   "how1": 0.7533,
-   "how2": 0.7143
-  },
-  "scores_quotes_alone": {
-   "short": 0.0313,
-   "but": 0.1215,
-   "how1": 0.582,
-   "how2": 0.2268
-  }
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "Not known",
+  "but": [],
+  "how": [
+   [
+    "DA",
+    "F1",
+    "F3"
+   ]
+  ],
+  "unanswered": "European drug‑related death rates"
  },
  "tries": [
   {
    "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The sources do not compare drug-related death rates between America and Europe.",
+     "text": "Not known. The sources only say more than 33,000 Americans died of an opioid overdose in 2015.",
      "rests_on": [
       {
        "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not state that the sources do not compare drug‑related death rates between America and Europe."
+     "ok": true
     },
     {
      "part": "but",
-     "text": "The sources cover substance use disorders and case management, not death statistics.",
+     "text": "The source is a single genome-wide association study of opioid cessation, not a comparison of death rates.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "label": "DA",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "The passages do not explicitly say that the sources do not include death statistics."
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“cessation”): say it plainly"
     },
     {
      "part": "how1",
-     "text": "A 2013 review summary says earlier work found substance use disorders are increasing among American and European elders.",
+     "text": "A 2020 genome-wide association study of opioid cessation reports that more than 33,000 Americans died of an opioid overdose in 2015.",
      "rests_on": [
       {
+       "label": "DA",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
+      },
+      {
        "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2004 review summary compared case management in the US, Netherlands, and Belgium, linking it to beneficial drug-related outcomes.",
+     "text": "The same study says the United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
-       "sha": "d3a24e37be01844b"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "label": "F3",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
+       "sha": "d59720ae0ef9e4b3"
       }
      ],
      "ok": true
@@ -593,81 +607,65 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The sources do not compare drug-related death rates between America and Europe.",
+     "text": "Not known. The sources only say more than 33,000 Americans died of an opioid overdose in 2015.",
      "rests_on": [
       {
        "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons."
+     "said": "the claim that the sources only say this is not stated in the passages"
     },
     {
      "part": "but",
-     "text": "The sources cover substance use disorders and case management, not death statistics.",
+     "text": "The source is a single study of genes linked to stopping opioids, not a comparison of deaths in America and Europe.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "label": "DA",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics."
+     "ok": true
     },
     {
      "part": "how1",
-     "text": "A 2013 review reports that substance use disorders are increasing among American and European elders.",
+     "text": "A 2020 gene study reports that more than 33,000 Americans died of an opioid overdose in 2015.",
      "rests_on": [
       {
+       "label": "DA",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
+      },
+      {
        "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2004 review compared case management in the US, Netherlands, and Belgium, linking it to beneficial outcomes.",
+     "text": "The same study says the United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
-       "sha": "d3a24e37be01844b"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "label": "F3",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
+       "sha": "d59720ae0ef9e4b3"
       }
      ],
      "ok": true
@@ -680,79 +678,65 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The sources do not say if drug-related deaths are more common in America than in Europe.",
+     "text": "Not known. The sources only say more than 33,000 Americans died of an opioid overdose in 2015.",
      "rests_on": [
       {
        "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
-    },
-    {
-     "part": "but",
-     "text": "The sources look at substance use disorders and case management, not death rates.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
      "ok": true
     },
     {
-     "part": "how1",
-     "text": "A 2013 review reports that substance use disorders are increasing among American and European elders.",
+     "part": "but",
+     "text": "This is a single genome-wide association study of opioid cessation, not a comparison of death rates.",
      "rests_on": [
       {
+       "label": "DA",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“cessation”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "A 2020 genome-wide association study of opioid cessation reports that more than 33,000 Americans died of an opioid overdose in 2015.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
+       "sha": "d59720ae0ef9e4b3"
+      },
+      {
        "label": "F1",
-       "ref": "wang_2013",
-       "where": "Summary",
-       "quote": "prevalence of substance use disorders is increasing among American and European elders",
-       "sha": "9492e2f3a67150c0"
+       "ref": "cox_2020",
+       "where": "1. Introduction",
+       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
+       "sha": "84cc7c5ff03b3ee1"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2004 review compared case management in the US, Netherlands, and Belgium, linking it to beneficial outcomes.",
+     "text": "The same study says the United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
-       "sha": "d3a24e37be01844b"
-      },
-      {
-       "label": "F2",
-       "ref": "vanderplasschen_2004",
-       "where": "Summary",
-       "quote": "beneficial drug-related outcomes",
-       "sha": "d3a24e37be01844b"
+       "label": "F3",
+       "ref": "cox_2020",
+       "where": "Abstract",
+       "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
+       "sha": "d59720ae0ef9e4b3"
       }
      ],
      "ok": true
@@ -760,6 +744,23 @@
    ]
   }
  ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3111,
+   "but": 0.0653,
+   "how1": 0.3974,
+   "how2": 0.9637
+  },
+  "scores_quotes_alone": {
+   "short": 0.1962,
+   "but": 0.0081,
+   "how1": 0.3661,
+   "how2": 0.8406
+  }
+ },
  "place": {
   "home": "facts",
   "also": [],
