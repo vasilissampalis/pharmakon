@@ -17,34 +17,37 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45012062586",
-  "read_seconds": 100,
+  "run": "45014313344",
+  "read_seconds": 16,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 339
+  "seconds": 223
  },
- "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "status": "published",
+ "why": "passed every gate, and the stricter bar for an answer about dying",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9280) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9590)"
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: the source says “up to 24 to 48”: that is the most it found, not the size. Say “up to” or “as much as”, as the source does)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.56, but 0.98, how1 0.71",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash accepted 0 of 4",
+  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: met (an official page or a review read in full under the short answer; a further reader read it; no word that plays a danger down, by code and by every reader)"
  },
  "sources": [
   {
@@ -159,44 +162,36 @@
   {
    "read": "full",
    "ref": {
-    "id": "bhat_2025",
+    "id": "jaggernauth_2022",
     "type": "article-journal",
-    "title": "Psychiatric aspects of mass datura poisoning",
+    "title": "Datura poisoning in trinidad: A case report",
     "author": [
      {
-      "family": "Bhat",
-      "given": "Shashidhar"
+      "family": "Jaggernauth",
+      "given": "Camille"
      },
      {
-      "family": "Zambare",
-      "given": "Neeraj"
+      "family": "Dalip",
+      "given": "Dominic"
      },
      {
-      "family": "George",
-      "given": "Nisha A."
+      "family": "Ewe",
+      "given": "Peng"
      },
      {
-      "family": "Korade",
-      "given": "Anil"
-     },
-     {
-      "family": "Bhalwar",
-      "given": "Rajvir"
-     },
-     {
-      "family": "Bhat",
-      "given": "Pookala S."
+      "family": "Jaggernauth",
+      "given": "Shiva"
      }
     ],
-    "container-title": "Industrial Psychiatry Journal",
+    "container-title": "Cureus",
     "issued": {
      "date-parts": [
       [
-       2025
+       2022
       ]
      ]
     },
-    "DOI": "10.4103/ipj.ipj_5_25",
+    "DOI": "10.7759/cureus.29829",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -208,46 +203,45 @@
       "checked_on": "2026-11-22"
      }
     },
-    "volume": "34",
-    "issue": "3",
-    "page": "545-547",
-    "PMCID": "PMC12574776"
+    "PMCID": "PMC9624438"
    },
-   "doi": "10.4103/ipj.ipj_5_25",
-   "pmcid": "PMC12574776",
-   "title": "Psychiatric aspects of mass datura poisoning",
-   "year": 2025,
-   "journal": "Industrial psychiatry journal",
-   "kind": "other",
-   "people": true,
-   "near": 0.744,
-   "money": [
-    "There are no conflicts of interest.",
-    "Nil."
-   ],
-   "design": null,
+   "doi": "10.7759/cureus.29829",
+   "pmcid": "PMC9624438",
+   "title": "Datura Poisoning in Trinidad: A Case Report",
+   "year": 2022,
+   "journal": "Cureus",
+   "kind": "case",
+   "people": false,
+   "near": 0.766,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We describe a case of datura poisoning presenting in Trinidad, West Indies, which was not described previously in the literature.",
+    "text": "a case report of a patient in Trinidad who experienced datura poisoning"
+   },
    "findings": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Datura is a poisonous plant, leading to the anticholinergic toxicity of the plant. After attending a marriage celebration, fifty individuals were hospitalized with acute onset of giddiness, blurred vision, excessive sweating, headaches, feeling hot, fearfulness, and dry mouth.",
-     "text": "Datura is a poisonous plant that causes anticholinergic toxicity, leading to symptoms such as giddiness, blurred vision, excessive sweating, headaches, feeling hot, fearfulness, and dry mouth.",
+     "passage": 13,
+     "where": "Discussion",
+     "quote": "Inappropriate consumption of any part of the plant results in anticholinergic poisoning but the extent of toxicity is highly variable and unpredictable depending on the part of the plant ingested.",
+     "text": "Consuming any part of the plant causes anticholinergic poisoning, but the level of toxicity is unpredictable and varies based on which part of the plant is consumed.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 2,
-     "where": "Text",
-     "quote": "The classic symptoms of poisoning are tachycardia, hyperthermia, dryness of skin and mucous membranes, reddening of the skin, blurring of vision, speech disorder, a decrease in intestinal sounds, urinary retention, agitation, disorientation, and hallucinations.",
-     "text": "The classic symptoms of poisoning include tachycardia, hyperthermia, dryness of skin and mucous membranes, reddening of the skin, blurring of vision, speech disorder, decreased intestinal sounds, urinary retention, agitation, disorientation, and hallucinations.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Despite its many purposes, its inappropriate misuse can result in mild-to-severe toxicity, leading to severe anticholinergic effects and even death in some cases.",
+     "text": "Using the plant inappropriately can cause mild to severe toxicity, which may lead to severe anticholinergic effects or death.",
      "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 10,
-     "where": "DISCUSSION",
-     "quote": "In addition to the classical symptoms, on presentation, 64% of the individuals exhibited ataxia and 52% exhibited disorientation, with 20% of individuals experiencing visual hallucinations",
-     "text": "In one study, 64% of individuals exhibited ataxia, 52% exhibited disorientation, and 20% experienced visual hallucinations.",
+     "passage": 17,
+     "where": "Discussion",
+     "quote": "Toxicity occurs within 30 to 60 minutes following ingestion and can persist up to 24 to 48 hours owing to delayed gastric emptying.",
+     "text": "Toxicity begins 30 to 60 minutes after ingestion and can last for 24 to 48 hours because of delayed gastric emptying.",
      "id": "F6",
      "second_hand": ""
     }
@@ -256,8 +250,100 @@
    "tag": "B"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Eating any part of datura causes unpredictable poisoning. Higher doses of D. stramonium can cause severe central nervous system damage, hallucinations, and death.",
+   "uses": [
+    "F4",
+    "F1",
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "jaggernauth_2022",
+     "where": "Discussion",
+     "quote": "Inappropriate consumption of any part of the plant results in anticholinergic poisoning but the extent of toxicity is highly variable and unpredictable depending on the part of the plant ingested.",
+     "sha": "f40ed3dab0cd7b01"
+    },
+    {
+     "label": "F1",
+     "ref": "sharma_2021",
+     "where": "6. Conclusions",
+     "quote": "Intoxication due to higher doses of D. stramonium causes severe damage to the central nervous system leading to an uncontrolled mental state. The other adverse impacts include hallucinations, convulsions, dryness in skin, irregular heart and pulse rates, memory loss, blurred vision, and coma, leading to death.",
+     "sha": "914565896e059890"
+    },
+    {
+     "label": "F5",
+     "ref": "jaggernauth_2022",
+     "where": "Abstract",
+     "quote": "Despite its many purposes, its inappropriate misuse can result in mild-to-severe toxicity, leading to severe anticholinergic effects and even death in some cases.",
+     "sha": "75c8af627bef4906"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review and 1 case report.",
+   "uses": [
+    "DA",
+    "DB"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "sharma_2021",
+     "where": "Abstract",
+     "quote": "The present review aims to summarize the phytochemical composition and pharmacological and toxicological aspects of the plant Datura.",
+     "sha": "dea87f205fbef4a1"
+    },
+    {
+     "label": "DB",
+     "ref": "jaggernauth_2022",
+     "where": "Abstract",
+     "quote": "We describe a case of datura poisoning presenting in Trinidad, West Indies, which was not described previously in the literature.",
+     "sha": "75c8af627bef4906"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2021 review of Datura species says seeds are smoked for hallucinations and frequent use has led to toxic syndromes.",
+   "uses": [
+    "DA",
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "sharma_2021",
+     "where": "Abstract",
+     "quote": "The present review aims to summarize the phytochemical composition and pharmacological and toxicological aspects of the plant Datura.",
+     "sha": "dea87f205fbef4a1"
+    },
+    {
+     "label": "F2",
+     "ref": "sharma_2021",
+     "where": "1. Introduction",
+     "quote": "Moreover, D. stramonium seed is generally smoked to get a hallucinogenic experience.",
+     "sha": "ee0dcf9326f45476"
+    },
+    {
+     "label": "F3",
+     "ref": "sharma_2021",
+     "where": "Abstract",
+     "quote": "the frequent abuse of D. stramonium for recreational purposes has led to toxic syndromes.",
+     "sha": "dea87f205fbef4a1"
+    }
+   ],
+   "quote": "Moreover, D. stramonium seed is generally smoked to get a hallucinogenic experience",
+   "quote_ref": "sharma_2021"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -291,6 +377,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -307,27 +401,18 @@
    "read": "full",
    "kind": "case",
    "at": "10.7759/cureus.29829",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Psychiatric aspects of mass datura poisoning",
-   "read": "full",
-   "kind": "other",
-   "at": "10.4103/ipj.ipj_5_25",
    "kept": 3,
    "thrown": [
     {
-     "kind": "text",
-     "text": "A report on a mass poisoning incident involving fifty individuals who consumed contaminated food.",
-     "quote": "Fifty individuals were hospitalized with acute onset of giddiness, blurred vision, excessive sweating, headaches, feeling hot, fearfulness, and dry mouth.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "kind": "finding",
+     "text": "The fatal dose of Datura consists of 50 to 100 seeds, which is equivalent to 10-100 mg of atropine and 2-4 mg of scopolamine.",
+     "quote": "The fatal dose comprises of 50 to 100 Datura seeds, which equates to 10-100 mg of atropine and 2-4 mg of scopolamine",
+     "why": "it holds an amount or a time between uses"
     },
     {
      "kind": "limit",
-     "text": "The source of food contamination in the reported mass poisoning incident remained inconclusive.",
-     "quote": "Family members of affected individuals, the Village Sarpanch, and the nearby Primary Health Centre Medical Officer were contacted to identify the possible sources of food contamination, but it was inc",
+     "text": "Some studies have documented recovery in cases involving more than 500 mg of atropine equivalent.",
+     "quote": "however, studies have shown recovery with greater than 500 mg of atropine equivalent.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -336,7 +421,8 @@
  "plan": {
   "short": [
    "F5",
-   "F1"
+   "F1",
+   "F4"
   ],
   "direct": "",
   "but": [
@@ -346,17 +432,328 @@
    [
     "DA",
     "F1",
+    "F2",
     "F3"
    ],
    [
-    "F5",
+    "DB",
     "F4",
+    "F5",
     "F6"
    ]
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "A 2022 case report from Trinidad describes one person with datura poisoning, noting that toxicity starts 30 to 60 minutes after ingestion and can last 24 to 48 hours.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "jaggernauth_2022",
+     "where": "Abstract",
+     "quote": "We describe a case of datura poisoning presenting in Trinidad, West Indies, which was not described previously in the literature.",
+     "sha": "75c8af627bef4906"
+    },
+    {
+     "label": "F4",
+     "ref": "jaggernauth_2022",
+     "where": "Discussion",
+     "quote": "Inappropriate consumption of any part of the plant results in anticholinergic poisoning but the extent of toxicity is highly variable and unpredictable depending on the part of the plant ingested.",
+     "sha": "f40ed3dab0cd7b01"
+    },
+    {
+     "label": "F5",
+     "ref": "jaggernauth_2022",
+     "where": "Abstract",
+     "quote": "Despite its many purposes, its inappropriate misuse can result in mild-to-severe toxicity, leading to severe anticholinergic effects and even death in some cases.",
+     "sha": "75c8af627bef4906"
+    },
+    {
+     "label": "F6",
+     "ref": "jaggernauth_2022",
+     "where": "Discussion",
+     "quote": "Toxicity occurs within 30 to 60 minutes following ingestion and can persist up to 24 to 48 hours owing to delayed gastric emptying.",
+     "sha": "d39dea0104587e93"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: the source says “up to 24 to 48”: that is the most it found, not the size. Say “up to” or “as much as”, as the source does"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A 2022 case report from Trinidad says toxicity starts 30 to 60 minutes after eating the plant and can last 24 to 48 hours.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "jaggernauth_2022",
+     "where": "Abstract",
+     "quote": "We describe a case of datura poisoning presenting in Trinidad, West Indies, which was not described previously in the literature.",
+     "sha": "75c8af627bef4906"
+    },
+    {
+     "label": "F6",
+     "ref": "jaggernauth_2022",
+     "where": "Discussion",
+     "quote": "Toxicity occurs within 30 to 60 minutes following ingestion and can persist up to 24 to 48 hours owing to delayed gastric emptying.",
+     "sha": "d39dea0104587e93"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: the source says “up to 24 to 48”: that is the most it found, not the size. Say “up to” or “as much as”, as the source does"
+  },
+  {
+   "try": 3,
+   "part": "but",
+   "text": "Information about the toxicity of D. stramonium remains almost uncertain.",
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "sharma_2021",
+     "where": "Abstract",
+     "quote": "Although some studies on D. stramonium have reported potential pharmacological effects, information about the toxicity remains almost uncertain.",
+     "sha": "dea87f205fbef4a1"
+    }
+   ],
+   "by": "the second reader",
+   "said": "it is about something else than the short answer"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5637,
+   "but": 0.9796,
+   "how1": 0.7093
+  },
+  "scores_quotes_alone": {
+   "short": 0.7824,
+   "but": 0.98,
+   "how1": 0.506
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Using datura can cause mild to severe toxicity, including hallucinations, convulsions, and death. The level of harm is unpredictable and depends on which part of the plant is used.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "jaggernauth_2022",
+       "where": "Abstract",
+       "quote": "Despite its many purposes, its inappropriate misuse can result in mild-to-severe toxicity, leading to severe anticholinergic effects and even death in some cases.",
+       "sha": "75c8af627bef4906"
+      },
+      {
+       "label": "F1",
+       "ref": "sharma_2021",
+       "where": "6. Conclusions",
+       "quote": "Intoxication due to higher doses of D. stramonium causes severe damage to the central nervous system leading to an uncontrolled mental state. The other adverse impacts include hallucinations, convulsions, dryness in skin, irregular heart and pulse rates, memory loss, blurred vision, and coma, leading to death.",
+       "sha": "914565896e059890"
+      },
+      {
+       "label": "F4",
+       "ref": "jaggernauth_2022",
+       "where": "Discussion",
+       "quote": "Inappropriate consumption of any part of the plant results in anticholinergic poisoning but the extent of toxicity is highly variable and unpredictable depending on the part of the plant ingested.",
+       "sha": "f40ed3dab0cd7b01"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Information about the toxicity of D. stramonium remains almost uncertain.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "sharma_2021",
+       "where": "Abstract",
+       "quote": "Although some studies on D. stramonium have reported potential pharmacological effects, information about the toxicity remains almost uncertain.",
+       "sha": "dea87f205fbef4a1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of Datura species says higher doses cause severe central nervous system damage, leading to hallucinations, convulsions, and death.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "sharma_2021",
+       "where": "Abstract",
+       "quote": "The present review aims to summarize the phytochemical composition and pharmacological and toxicological aspects of the plant Datura.",
+       "sha": "dea87f205fbef4a1"
+      },
+      {
+       "label": "F1",
+       "ref": "sharma_2021",
+       "where": "6. Conclusions",
+       "quote": "Intoxication due to higher doses of D. stramonium causes severe damage to the central nervous system leading to an uncontrolled mental state. The other adverse impacts include hallucinations, convulsions, dryness in skin, irregular heart and pulse rates, memory loss, blurred vision, and coma, leading to death.",
+       "sha": "914565896e059890"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes that D. stramonium seeds are generally smoked for a hallucinogenic experience, and frequent recreational use has led to toxic syndromes.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "sharma_2021",
+       "where": "1. Introduction",
+       "quote": "Moreover, D. stramonium seed is generally smoked to get a hallucinogenic experience.",
+       "sha": "ee0dcf9326f45476"
+      },
+      {
+       "label": "F3",
+       "ref": "sharma_2021",
+       "where": "Abstract",
+       "quote": "the frequent abuse of D. stramonium for recreational purposes has led to toxic syndromes.",
+       "sha": "dea87f205fbef4a1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Datura can cause mild to severe poisoning or death. Higher doses damage the brain, causing hallucinations, convulsions, and coma.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "jaggernauth_2022",
+       "where": "Abstract",
+       "quote": "Despite its many purposes, its inappropriate misuse can result in mild-to-severe toxicity, leading to severe anticholinergic effects and even death in some cases.",
+       "sha": "75c8af627bef4906"
+      },
+      {
+       "label": "F1",
+       "ref": "sharma_2021",
+       "where": "6. Conclusions",
+       "quote": "Intoxication due to higher doses of D. stramonium causes severe damage to the central nervous system leading to an uncontrolled mental state. The other adverse impacts include hallucinations, convulsions, dryness in skin, irregular heart and pulse rates, memory loss, blurred vision, and coma, leading to death.",
+       "sha": "914565896e059890"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages state that higher doses of D. stramonium (not Datura generally) cause damage to the central nervous system (not specifically the brain), and list hallucinations, convulsions, and coma as other adverse impacts rather than conseq"
+    },
+    {
+     "part": "but",
+     "text": "Information about the toxicity of Datura remains almost uncertain.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "sharma_2021",
+       "where": "Abstract",
+       "quote": "Although some studies on D. stramonium have reported potential pharmacological effects, information about the toxicity remains almost uncertain.",
+       "sha": "dea87f205fbef4a1"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that information about toxicity remains almost uncertain regarding D. stramonium, whereas the sentence generalizes this to the entire Datura genus."
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of Datura species says seeds are smoked for hallucinations. Frequent use has led to toxic syndromes.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "sharma_2021",
+       "where": "Abstract",
+       "quote": "The present review aims to summarize the phytochemical composition and pharmacological and toxicological aspects of the plant Datura.",
+       "sha": "dea87f205fbef4a1"
+      },
+      {
+       "label": "F2",
+       "ref": "sharma_2021",
+       "where": "1. Introduction",
+       "quote": "Moreover, D. stramonium seed is generally smoked to get a hallucinogenic experience.",
+       "sha": "ee0dcf9326f45476"
+      },
+      {
+       "label": "F3",
+       "ref": "sharma_2021",
+       "where": "Abstract",
+       "quote": "the frequent abuse of D. stramonium for recreational purposes has led to toxic syndromes.",
+       "sha": "dea87f205fbef4a1"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies that D. stramonium seeds are smoked and that frequent abuse of D. stramonium for recreational purposes has led to toxic syndromes, whereas the sentence refers to Datura species generally and changes frequent abuse for "
+    },
+    {
+     "part": "how2",
+     "text": "A 2022 case report from Trinidad says any part causes poisoning. Toxicity is unpredictable and varies by plant part.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "jaggernauth_2022",
+       "where": "Abstract",
+       "quote": "We describe a case of datura poisoning presenting in Trinidad, West Indies, which was not described previously in the literature.",
+       "sha": "75c8af627bef4906"
+      },
+      {
+       "label": "F4",
+       "ref": "jaggernauth_2022",
+       "where": "Discussion",
+       "quote": "Inappropriate consumption of any part of the plant results in anticholinergic poisoning but the extent of toxicity is highly variable and unpredictable depending on the part of the plant ingested.",
+       "sha": "f40ed3dab0cd7b01"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that inappropriate consumption of any part of the plant results in anticholinergic poisoning, whereas the sentence leaves out inappropriate consumption."
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages state that higher doses of D. stramonium (not Datura generally) cause damage to the central nervous system (not specifically the brain), and list hallucinations, convulsions, and coma as other adverse impacts rather than conseq"
+   ],
+   "but": [
+    false,
+    "The passage states that information about toxicity remains almost uncertain regarding D. stramonium, whereas the sentence generalizes this to the entire Datura genus."
+   ],
+   "how1": [
+    false,
+    "The passage specifies that D. stramonium seeds are smoked and that frequent abuse of D. stramonium for recreational purposes has led to toxic syndromes, whereas the sentence refers to Datura species generally and changes frequent abuse for "
+   ],
+   "how2": [
+    false,
+    "The passage states that inappropriate consumption of any part of the plant results in anticholinergic poisoning, whereas the sentence leaves out inappropriate consumption."
+   ]
+  }
+ },
+ "stakes": "dying",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:Datura and other nightshades",
   "also": [],
