@@ -15,41 +15,191 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-22",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "@cf/openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44846110386",
+  "run": "44965593386",
   "read_by": {
-   "gemini-3.5-flash-lite": 4,
-   "llama-4-scout-17b-16e-instruct": 2
+   "gemini-3.5-flash-lite": 12,
+   "llama-4-scout-17b-16e-instruct": 6,
+   "gpt-oss-20b": 3
   },
-  "read_seconds": 73,
+  "read_seconds": 121,
   "from": {
    "papers": 0,
-   "summaries": 0,
+   "summaries": 2,
    "official": 0
   },
-  "neurons": 74.9,
-  "seconds": 73
+  "neurons": 281.0,
+  "seconds": 200
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (15 source(s) could not be fetched just now: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons.); but (The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "2 findings kept from 2 sources (0 papers read in full, 0 official pages, 2 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 2 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.26, how1 0.75, how2 0.71",
+  "check": "not accepted at try 2: a second reader did not accept short (The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons.); but (The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "summary",
+   "ref": {
+    "id": "wang_2013",
+    "type": "article-journal",
+    "title": "Epidemiology of alcohol and drug use in the elderly",
+    "author": [
+     {
+      "family": "Wang",
+      "given": "Yuan-Pang"
+     },
+     {
+      "family": "Andrade",
+      "given": "Laura Helena"
+     }
+    ],
+    "container-title": "Current Opinion in Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2013
+      ]
+     ]
+    },
+    "DOI": "10.1097/yco.0b013e328360eafd",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "26",
+    "issue": "4",
+    "page": "343-348"
+   },
+   "doi": "10.1097/yco.0b013e328360eafd",
+   "title": "Epidemiology of alcohol and drug use in the elderly",
+   "year": 2013,
+   "journal": "Current opinion in psychiatry",
+   "kind": "review",
+   "people": true,
+   "near": 0.557,
+   "money": [],
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "prevalence of substance use disorders is increasing among American and European elders",
+     "text": "prevalence of substance use disorders is increasing among American and European elders",
+     "id": "F1",
+     "second_hand": "Recent findingsRelevant studies showed that prevalence of substance use disorders is increasing among American and European elders."
+    }
+   ],
+   "limits": [
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "it is unclear whether this population subgroup will also seek treatment for substance use to a greater extent",
+     "text": "it is unclear whether older adults in less developed regions will seek treatment for substance use to a greater extent",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "vanderplasschen_2004",
+    "type": "article-journal",
+    "title": "The development and implementation of case management for substance use disorders in north America and Europe",
+    "author": [
+     {
+      "family": "Vanderplasschen",
+      "given": "Wouter"
+     },
+     {
+      "family": "Rapp",
+      "given": "Richard C."
+     },
+     {
+      "family": "Wolf",
+      "given": "Judith R."
+     },
+     {
+      "family": "Broekaert",
+      "given": "Eric"
+     }
+    ],
+    "container-title": "Psychiatric Services",
+    "issued": {
+     "date-parts": [
+      [
+       2004
+      ]
+     ]
+    },
+    "DOI": "10.1176/appi.ps.55.8.913",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "55",
+    "issue": "8",
+    "page": "913-922"
+   },
+   "doi": "10.1176/appi.ps.55.8.913",
+   "title": "The development and implementation of case management for substance use disorders in North America and Europe",
+   "year": 2004,
+   "journal": "Psychiatric services (Washington, D.C.)",
+   "kind": "review",
+   "people": true,
+   "near": 0.497,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Summary",
+    "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
+    "text": "comparison of experiences from the United States, the Netherlands, and Belgium"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "beneficial drug-related outcomes",
+     "text": "case management has been associated with beneficial drug-related outcomes",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -117,6 +267,14 @@
    "why": "no source that can be read gave a finding for this question (15 source(s) could not be fetched just now: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (15 source(s) could not be fetched just now: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -126,8 +284,7 @@
    "kind": "review",
    "at": "10.1080/07853890.2022.2079150",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Misuse of Pregabalin and Gabapentin: A Second Systematic Review Update",
@@ -135,8 +292,7 @@
    "kind": "review",
    "at": "10.1007/s40265-026-02342-w",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Psychiatric morbidity and gambling disorder: A systematic review and meta-analysis of population-based surveys",
@@ -144,8 +300,7 @@
    "kind": "review",
    "at": "10.1192/j.eurpsy.2025.10122",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Genome-Wide Association Study of Opioid Cessation",
@@ -153,8 +308,7 @@
    "kind": "other",
    "at": "10.3390/jcm9010180",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Unemployment and Substance Use: An Updated Review of Studies from North America and Europe",
@@ -162,8 +316,7 @@
    "kind": "review",
    "at": "10.3390/healthcare11081182",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Using physiological biomarkers in forensic psychiatry: a scoping review",
@@ -171,8 +324,7 @@
    "kind": "review",
    "at": "10.3389/fpsyt.2025.1580615",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Psychedelic substitution: altered substance use patterns following psychedelic use in a global survey",
@@ -180,8 +332,7 @@
    "kind": "other",
    "at": "10.3389/fpsyt.2024.1349565",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Genome-wide meta-analyses of cross substance use disorders in diverse populations",
@@ -189,8 +340,7 @@
    "kind": "review",
    "at": "10.1038/s41380-025-03294-5",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Efficacy of transcranial direct current stimulation (tDCS) in reducing consumption in patients with alcohol use disorders: study protocol for a randomized controlled trial",
@@ -198,8 +348,14 @@
    "kind": "study",
    "at": "10.1186/s13063-016-1363-8",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Randomized controlled trial of transcranial direct current stimulation in patients with alcohol use disorder",
+     "quote": "This is a multicenter, randomized, placebo-controlled, double-blind, parallel-group study comparing five consecutive two-daily sessions of active tDCS versus placebo tDCS",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Prevalence and Characteristics of Chronic Pain in Buprenorphine and Methadone-Maintained Patients",
@@ -207,8 +363,14 @@
    "kind": "other",
    "at": "10.3389/fpsyt.2021.641430",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "Data regarding chronic pain in patients receiving opioid agonist treatments are still lacking in Europe.",
+     "quote": "The majority of available estimates come from American studies, but data are still lacking in Europe.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Use and knowledge of contraceptive methods by patients in two substance use disorders treatment centers in Paris",
@@ -216,8 +378,7 @@
    "kind": "study",
    "at": "10.1186/s12954-017-0181-y",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Global Influence of Cannabis Legalization on Social Media Discourse: Mixed Methods Study",
@@ -225,8 +386,7 @@
    "kind": "other",
    "at": "10.2196/65319",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Canada's overdose crisis and the toxic illegal drug supply",
@@ -277,34 +437,329 @@
    "thrown": []
   },
   {
-   "title": "",
+   "title": "Epidemiology of alcohol and drug use in the elderly",
    "read": "summary",
    "kind": "review",
    "at": "10.1097/yco.0b013e328360eafd",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its summary could not be fetched (HTTPError)"
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "epidemiological surveys",
+     "quote": "Recent findingsRelevant studies showed that prevalence of substance use disorders is increasing among American and European elders.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "alcohol and drug abuse among the elderly are current health problems in developed regions",
+     "quote": "there is robust epidemiological evidence showing that alcohol and drug abuse among the elderly are current health problems in developed regions",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
-   "title": "",
+   "title": "The globalization of addiction research: capacity-building mechanisms and selected examples",
    "read": "summary",
    "kind": "review",
    "at": "10.1097/hrp.0000000000000067",
    "kept": 0,
-   "thrown": [],
-   "fault": "its summary could not be fetched (HTTPError)"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "research paper",
+     "quote": "the nature and context of substance use disorders and the populations using drugs are far more diverse than is reflected in studies done in Western cultures",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
-   "title": "",
+   "title": "The development and implementation of case management for substance use disorders in North America and Europe",
    "read": "summary",
    "kind": "review",
    "at": "10.1176/appi.ps.55.8.913",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its summary could not be fetched (HTTPError)"
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.0559,
+   "but": 0.2637,
+   "how1": 0.7533,
+   "how2": 0.7143
+  },
+  "scores_quotes_alone": {
+   "short": 0.0313,
+   "but": 0.1215,
+   "how1": 0.582,
+   "how2": 0.2268
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. The sources do not compare drug-related death rates between America and Europe.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that the sources do not compare drug‑related death rates between America and Europe."
+    },
+    {
+     "part": "but",
+     "text": "The sources cover substance use disorders and case management, not death statistics.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not explicitly say that the sources do not include death statistics."
+    },
+    {
+     "part": "how1",
+     "text": "A 2013 review summary says earlier work found substance use disorders are increasing among American and European elders.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2004 review summary compared case management in the US, Netherlands, and Belgium, linking it to beneficial drug-related outcomes.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
+       "sha": "d3a24e37be01844b"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. The sources do not compare drug-related death rates between America and Europe.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons."
+    },
+    {
+     "part": "but",
+     "text": "The sources cover substance use disorders and case management, not death statistics.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics."
+    },
+    {
+     "part": "how1",
+     "text": "A 2013 review reports that substance use disorders are increasing among American and European elders.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2004 review compared case management in the US, Netherlands, and Belgium, linking it to beneficial outcomes.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
+       "sha": "d3a24e37be01844b"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. The sources do not say if drug-related deaths are more common in America than in Europe.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "The sources look at substance use disorders and case management, not death rates.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2013 review reports that substance use disorders are increasing among American and European elders.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "wang_2013",
+       "where": "Summary",
+       "quote": "prevalence of substance use disorders is increasing among American and European elders",
+       "sha": "9492e2f3a67150c0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2004 review compared case management in the US, Netherlands, and Belgium, linking it to beneficial outcomes.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "a comparison of experiences from the United States, the Netherlands, and Belgium",
+       "sha": "d3a24e37be01844b"
+      },
+      {
+       "label": "F2",
+       "ref": "vanderplasschen_2004",
+       "where": "Summary",
+       "quote": "beneficial drug-related outcomes",
+       "sha": "d3a24e37be01844b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "facts",
   "also": [],
