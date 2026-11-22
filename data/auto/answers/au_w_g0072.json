@@ -17,36 +17,281 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
+   "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45012062586",
-  "read_by": {
-   "gpt-oss-20b": 3,
-   "gemma-4-31b-it": 1
-  },
-  "read_seconds": 100,
+  "run": "45059799548",
+  "read_seconds": 74,
   "from": {
-   "papers": 0,
-   "summaries": 0,
+   "papers": 1,
+   "summaries": 2,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 304
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: broken at try 2: how2: words that are not person-first (“misuse”); but: a clinical word where an everyday one exists (“pharmacology”): say it plainly",
  "gates": {
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "4 findings kept from 3 sources (1 papers read in full, 0 official pages, 2 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 2 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8120) try 3: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8506)",
+  "rules": "broken at try 2: how2: words that are not person-first (“misuse”); but: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "temmingh_2020",
+    "type": "article-journal",
+    "title": "The prevalence and clinical correlates of substance use disorders in patients with psychotic disorders from an upper-middle-income country",
+    "author": [
+     {
+      "family": "Temmingh",
+      "given": "Henk S."
+     },
+     {
+      "family": "Mall",
+      "given": "Sumaya"
+     },
+     {
+      "family": "Howells",
+      "given": "Fleur M."
+     },
+     {
+      "family": "Sibeko",
+      "given": "Goodman"
+     },
+     {
+      "family": "Stein",
+      "given": "Dan J."
+     }
+    ],
+    "container-title": "South African Journal of Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.4102/sajpsychiatry.v26i0.1473",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "26",
+    "PMCID": "PMC7433243"
+   },
+   "doi": "10.4102/sajpsychiatry.v26i0.1473",
+   "pmcid": "PMC7433243",
+   "title": "The prevalence and clinical correlates of substance use disorders in patients with psychotic disorders from an Upper-Middle-Income Country",
+   "year": 2020,
+   "journal": "The South African journal of psychiatry : SAJP : the journal of the Society of Psychiatrists of South Africa",
+   "kind": "other",
+   "people": true,
+   "near": 0.559,
+   "money": [],
+   "design": {
+    "passage": 20,
+    "where": "Results › Prevalence, patterns and distribution of substance use disorders",
+    "quote": "In the total sample of 248 participants, the prevalence of any substance use disorder (abuse or dependence) was 55.6%",
+    "text": "A study on substance use disorders in patients with psychotic disorders"
+   },
+   "findings": [
+    {
+     "passage": 20,
+     "where": "Results › Prevalence, patterns and distribution of substance use disorders",
+     "quote": "In turn, cannabis, methamphetamine or methaqualone use disorders often occurred together with the odds of having any one of these disorders significantly increasing the odds of having another with as many as 4-5 fold.",
+     "text": "Methaqualone use disorders often occurred together with cannabis or methamphetamine use disorders, with the odds of having one significantly increasing the odds of having another by as much as 4-5 fold.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "inger_2023",
+    "type": "article-journal",
+    "title": "DARK classics in chemical neuroscience: Methaqualone",
+    "author": [
+     {
+      "family": "Inger",
+      "given": "Joseph A."
+     },
+     {
+      "family": "Mihan",
+      "given": "Elias R."
+     },
+     {
+      "family": "Kolli",
+      "given": "Jhansi U."
+     },
+     {
+      "family": "Lindsley",
+      "given": "Craig W."
+     },
+     {
+      "family": "Bender",
+      "given": "Aaron M."
+     }
+    ],
+    "container-title": "ACS Chemical Neuroscience",
+    "issued": {
+     "date-parts": [
+      [
+       2023
+      ]
+     ]
+    },
+    "DOI": "10.1021/acschemneuro.2c00697",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "14",
+    "issue": "3",
+    "page": "340-350"
+   },
+   "doi": "10.1021/acschemneuro.2c00697",
+   "title": "DARK Classics in Chemical Neuroscience: Methaqualone",
+   "year": 2023,
+   "journal": "ACS chemical neuroscience",
+   "kind": "review",
+   "people": true,
+   "near": 0.657,
+   "money": [],
+   "design": {
+    "passage": 2,
+    "where": "Summary",
+    "quote": "In this review, the background, synthesis, pharmacology, metabolism, and pharmacokinetics of methaqualone (1) will be covered along with its discovery, history, and the derivatives that are currently available around the world through manufacture in clandestine laboratories.",
+    "text": "a review of the background, synthesis, pharmacology, metabolism, and pharmacokinetics of methaqualone along with its discovery and history"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "Not long after its introduction, many individuals began to misuse the drug leading to overdoses and drug dependence which brought to light methaqualone's (1) addictive nature.",
+     "text": "Many individuals began to misuse the drug not long after its introduction, leading to overdoses and drug dependence which brought to light methaqualone's addictive nature.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "mccarthy_2005",
+    "type": "article-journal",
+    "title": "Treatment for methaqualone dependence in adults",
+    "author": [
+     {
+      "family": "McCarthy",
+      "given": "Greg"
+     },
+     {
+      "family": "Myers",
+      "given": "Bronwyn"
+     },
+     {
+      "family": "Siegfried",
+      "given": "Nandi"
+     }
+    ],
+    "container-title": "Cochrane Database of Systematic Reviews",
+    "issued": {
+     "date-parts": [
+      [
+       2005
+      ]
+     ]
+    },
+    "DOI": "10.1002/14651858.cd004146.pub2",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    }
+   },
+   "doi": "10.1002/14651858.cd004146.pub2",
+   "title": "Treatment for methaqualone dependence in adults",
+   "year": 2005,
+   "journal": "The Cochrane database of systematic reviews",
+   "kind": "review",
+   "people": true,
+   "near": 0.594,
+   "money": [],
+   "design": {
+    "passage": 2,
+    "where": "Summary",
+    "quote": "This review aimed to provide health care workers, policy-makers and consumers with the necessary information to make decisions regarding effective treatment of this highly dependence-producing drug.",
+    "text": "a systematic review of treatments for methaqualone dependence"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "Methaqualone is a potent quinazoline, a class of sedative-hypnotics, that has a high potential for abuse.",
+     "text": "Methaqualone is a potent quinazoline, which is a class of sedative-hypnotics that has a high potential for abuse.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "This review aimed to provide health care workers, policy-makers and consumers with the necessary information to make decisions regarding effective treatment of this highly dependence-producing drug.",
+     "text": "Methaqualone is a highly dependence-producing drug.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 3,
+     "where": "Summary",
+     "quote": "No studies were found that met the inclusion criteria.",
+     "text": "No studies were found that met the inclusion criteria.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -74,16 +319,37 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "The prevalence and clinical correlates of substance use disorders in patients with psychotic disorders from an Upper-Middle-Income Country",
    "read": "full",
    "kind": "other",
    "at": "10.4102/sajpsychiatry.v26i0.1473",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Methaqualone (sedative-hypnotic) use disorders had a prevalence of 10.4% in the total sample of 248 participants.",
+     "quote": "the most common SUD was cannabis use disorders with a prevalence of 34.3% (95% CI: 28.3% - 40.5%), followed by alcohol use disorders (30.6%; 95% CI = 25.0% - 36.7%), methamphetamine use disorder (27.4",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "There is an absence of research on the prevalence and clinical correlates of SUDs in psychotic disorders in low-and-middle-income countries (LMICs).",
+     "why": "no sentence"
+    }
+   ]
   },
   {
    "title": "Substance use and duration of untreated psychosis in KwaZulu-Natal, South Africa",
@@ -107,14 +373,7 @@
    "kind": "other",
    "at": "10.1136/bmjopen-2018-024776",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A single-arm, uncontrolled feasibility study of a trauma-informed substance use and sexual risk reduction intervention for young South African women",
-     "quote": "Sixty women, between 18 and 25 years of age, who reported trauma exposure, substance use and recent condom-less sex were recruited.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Associations between childbirth, gang exposure and substance use among young women in Cape Town, South Africa",
@@ -130,11 +389,173 @@
    "kind": "review",
    "at": "10.1155/2020/2580259",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "The feasibility of respondent-driven sampling with people who use drugs in rural Western Cape, South Africa: A qualitative study",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1371/journal.pgph.0004065",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "The test-retest reliability of the Opiate Treatment Index in nyaope users in Johannesburg",
+   "read": "full",
+   "kind": "other",
+   "at": "10.4102/sajpsychiatry.v30i0.2087",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Transmission Of Tuberculosis Among illicit drug use Linkages (TOTAL): A cross-sectional observational study protocol using respondent driven sampling",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1371/journal.pone.0262440",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "DARK Classics in Chemical Neuroscience: Methaqualone",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1021/acschemneuro.2c00697",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Treatment for methaqualone dependence in adults",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1002/14651858.cd004146.pub2",
+   "kept": 2,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F4",
+   "F2",
+   "F3"
+  ],
+  "direct": "Yes",
+  "but": [],
+  "how": [
+   [
+    "DC",
+    "F4",
+    "F3"
+   ],
+   [
+    "DB",
+    "F2"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, methaqualone is a highly dependence-producing drug. It has a high potential for use disorder and is considered to have an addictive nature.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "inger_2023",
+       "where": "Summary",
+       "quote": "Not long after its introduction, many individuals began to misuse the drug leading to overdoses and drug dependence which brought to light methaqualone's (1) addictive nature.",
+       "sha": "e2e4b3dc6b9b6deb"
+      },
+      {
+       "label": "F3",
+       "ref": "mccarthy_2005",
+       "where": "Summary",
+       "quote": "Methaqualone is a potent quinazoline, a class of sedative-hypnotics, that has a high potential for abuse.",
+       "sha": "0c16802875869024"
+      },
+      {
+       "label": "F4",
+       "ref": "mccarthy_2005",
+       "where": "Summary",
+       "quote": "This review aimed to provide health care workers, policy-makers and consumers with the necessary information to make decisions regarding effective treatment of this highly dependence-producing drug.",
+       "sha": "8610f8fa17641765"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The summary of a 2023 review of the background, pharmacology, and history of methaqualone was used.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "inger_2023",
+       "where": "Summary",
+       "quote": "In this review, the background, synthesis, pharmacology, metabolism, and pharmacokinetics of methaqualone (1) will be covered along with its discovery, history, and the derivatives that are currently available around the world through manufacture in clandestine laboratories.",
+       "sha": "c15cb2b7eb851843"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review of treatments for methaqualone dependence says it is a highly dependence-producing drug with a high potential for use disorder.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "mccarthy_2005",
+       "where": "Summary",
+       "quote": "This review aimed to provide health care workers, policy-makers and consumers with the necessary information to make decisions regarding effective treatment of this highly dependence-producing drug.",
+       "sha": "8610f8fa17641765"
+      },
+      {
+       "label": "F3",
+       "ref": "mccarthy_2005",
+       "where": "Summary",
+       "quote": "Methaqualone is a potent quinazoline, a class of sedative-hypnotics, that has a high potential for abuse.",
+       "sha": "0c16802875869024"
+      },
+      {
+       "label": "F4",
+       "ref": "mccarthy_2005",
+       "where": "Summary",
+       "quote": "This review aimed to provide health care workers, policy-makers and consumers with the necessary information to make decisions regarding effective treatment of this highly dependence-producing drug.",
+       "sha": "8610f8fa17641765"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2023 review of the background, pharmacology, and history of methaqualone says many individuals began to misuse the drug, leading to overdoses and drug dependence.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "inger_2023",
+       "where": "Summary",
+       "quote": "In this review, the background, synthesis, pharmacology, metabolism, and pharmacokinetics of methaqualone (1) will be covered along with its discovery, history, and the derivatives that are currently available around the world through manufacture in clandestine laboratories.",
+       "sha": "c15cb2b7eb851843"
+      },
+      {
+       "label": "F2",
+       "ref": "inger_2023",
+       "where": "Summary",
+       "quote": "Not long after its introduction, many individuals began to misuse the drug leading to overdoses and drug dependence which brought to light methaqualone's (1) addictive nature.",
+       "sha": "e2e4b3dc6b9b6deb"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“misuse”)"
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "new:Methaqualone (Quaaludes)",
   "also": [],
