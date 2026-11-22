@@ -17,32 +17,43 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45023774152",
-  "read_seconds": 15,
+  "run": "45026262541",
+  "read_by": {
+   "gpt-oss-20b": 3,
+   "gemini-3.1-flash-lite": 2
+  },
+  "read_seconds": 100,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 1
+   "official": 0
   },
   "neurons": 0.0,
-  "seconds": 281
+  "seconds": 211
  },
  "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "why": "about overdose or an emergency: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
  "gates": {
-  "read": "6 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9247) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8848)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "2 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.96, but 0.07, how1 0.74, how2 0.88",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash",
+  "but": "the writer's But was not accepted (The passages do not mention how opium affects the brain.): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about overdose or an emergency: the stricter bar for such an answer: NOT met: no further reader read it"
  },
  "sources": [
   {
@@ -120,44 +131,52 @@
   {
    "read": "full",
    "ref": {
-    "id": "nakhaee_2020",
+    "id": "mansouri_2022",
     "type": "article-journal",
-    "title": "The effects of opium on the cardiovascular system: A review of side effects, uses, and potential mechanisms",
+    "title": "Opium use and cancer risk: A comprehensive systematic review and meta-analysis of observational studies",
     "author": [
      {
-      "family": "Nakhaee",
-      "given": "Samaneh"
+      "family": "Mansouri",
+      "given": "Masoume"
      },
      {
-      "family": "Ghasemi",
-      "given": "Saeedeh"
+      "family": "Naghshi",
+      "given": "Sina"
      },
      {
-      "family": "Karimzadeh",
-      "given": "Kimiya"
+      "family": "Parsaeian",
+      "given": "Mahbobeh"
      },
      {
-      "family": "Zamani",
-      "given": "Nasim"
+      "family": "G Sepanlou",
+      "given": "Sadaf"
      },
      {
-      "family": "Alinejad-Mofrad",
-      "given": "Samaneh"
+      "family": "Poustchi",
+      "given": "Hossein"
      },
      {
-      "family": "Mehrpour",
+      "family": "Momayez Sanat",
+      "given": "Zahra"
+     },
+     {
+      "family": "Sadeghi",
       "given": "Omid"
+     },
+     {
+      "family": "Pourshams",
+      "given": "Akram"
      }
     ],
-    "container-title": "Substance Abuse Treatment, Prevention, and Policy",
+    "container-title": "International Journal of Clinical Practice",
     "issued": {
      "date-parts": [
       [
-       2020
+       2022
       ]
      ]
     },
-    "DOI": "10.1186/s13011-020-00272-8",
+    "DOI": "10.1155/2022/5397449",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -169,140 +188,132 @@
       "checked_on": "2026-11-22"
      }
     },
-    "volume": "15",
+    "volume": "2022",
     "issue": "1",
-    "number": "30",
-    "PMCID": "PMC7164148"
+    "number": "5397449",
+    "PMCID": "PMC9159125"
    },
-   "doi": "10.1186/s13011-020-00272-8",
-   "pmcid": "PMC7164148",
-   "title": "The effects of opium on the cardiovascular system: a review of side effects, uses, and potential mechanisms",
-   "year": 2020,
-   "journal": "Substance abuse treatment, prevention, and policy",
+   "doi": "10.1155/2022/5397449",
+   "pmcid": "PMC9159125",
+   "title": "Opium Use and Cancer Risk: A Comprehensive Systematic Review and Meta-Analysis of Observational Studies",
+   "year": 2022,
+   "journal": "International journal of clinical practice",
    "kind": "review",
    "people": true,
-   "near": 0.659,
+   "near": 0.654,
    "money": [
-    "No funding was obtained for this study.",
-    "Authors have no competing interests."
+    "The authors declare no personal or financial conflicts of interest."
    ],
-   "design": {
-    "passage": 8,
-    "where": "Background",
-    "quote": "The aim of this review article was, therefore, to clarify the effect of opium on cardiovascular problems by integrating the previous findings and the current information on the issue and to explain the possible mechanisms of this effect.",
-    "text": "A review article examining the effects of opium on the cardiovascular system."
-   },
-   "findings": [
-    {
-     "passage": 33,
-     "where": "Results › Opium as a potential risk factor for atherosclerosis › Potential mechanisms › Lifestyle",
-     "quote": "Opium is a CNS suppressant and can decrease physical activity in addicted individuals, which increases the risk of CVDs.",
-     "text": "Opium is a central nervous system suppressant that can decrease physical activity in people who use opium, which increases the risk of cardiovascular diseases.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 31,
-     "where": "Results › Opium as a potential risk factor for atherosclerosis › Potential mechanisms › Insulin resistance",
-     "quote": "Similar to type 2 diabetic patients, people with opium use disorder show insulin resistance and an increase in the insulin level of the blood.",
-     "text": "People with opium use disorder show insulin resistance and an increase in blood insulin levels, similar to people with type 2 diabetes.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 58,
-     "where": "Results › Opium and ejection fraction (EF) › Opium as an impartial factor",
-     "quote": "Similar results were withdrawn from other studies, all confirming that EF, the emergence of heart failure after MI, and Killip class were similar between opium dependent and non-dependent patients",
-     "text": "Studies confirm that ejection fraction, the emergence of heart failure after myocardial infarction, and Killip class are similar between people who are dependent on opium and those who are not.",
-     "id": "F4",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Dependent patients suppose that opium has positive effects on cardiovascular function and can prevent or improve cardiovascular diseases; however, only few comprehensive studies evaluating such effects have been performed.",
-     "text": "Only a few comprehensive studies have been performed to evaluate the effects of opium on cardiovascular function.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "adf_opium",
-    "type": "webpage",
-    "title": "Opium",
-    "author": [
-     {
-      "literal": "Alcohol and Drug Foundation"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2025,
-       3,
-       6
-      ]
-     ]
-    },
-    "URL": "https://adf.org.au/drug-facts/opium/",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       22
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-22"
-    }
-   },
-   "title": "Opium",
-   "year": 2025,
-   "kind": "official",
-   "people": true,
-   "near": 0.721,
-   "name": "Alcohol and Drug Foundation",
-   "short": "Australia's Alcohol and Drug Foundation",
-   "tier": 2,
-   "address": "https://adf.org.au/drug-facts/opium/",
-   "money": [],
-   "label": false,
    "design": null,
    "findings": [
     {
-     "passage": 18,
-     "where": "Reducing harm / Dependence",
-     "quote": "People who regularly use opium may become dependent. They may feel they need to use opium to go about usual activities like working, studying and socialising, or just to get through the day.",
-     "text": "People who regularly use opium may become dependent and feel they need it to perform daily activities.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 15,
-     "where": "Reducing harm / Long-term effects",
-     "quote": "Regular use may eventually contribute to: tolerance - needing to use more to get the same effect; irregular periods and difficulty having children; loss of sex drive; constipation; dependence on opium.",
-     "text": "Regular use of opium may eventually contribute to dependence.",
-     "id": "F6",
+     "passage": 5,
+     "where": "1. Introduction",
+     "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+     "text": "Opium is an addictive substance used for recreational or medical purposes.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "C"
+   "tag": "B"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes, opium is an addictive substance. It is a common form of substance use in Iran.",
+   "uses": [
+    "F2",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "mansouri_2022",
+     "where": "1. Introduction",
+     "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+     "sha": "29a515b2750e1524"
+    },
+    {
+     "label": "F1",
+     "ref": "shadnia_2018",
+     "where": "Abstract",
+     "quote": "Opium addiction is a common form of substance abuse in Iran.",
+     "sha": "50ca981b27b7c431"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 2 reviews.",
+   "uses": [
+    "DA",
+    "F2"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "shadnia_2018",
+     "where": "Discussion",
+     "quote": "In this article, we reviewed 20 documents; from which, 18 studies reported 324 cases of lead poisoning in opium abusers in Iran during 2004–2016.",
+     "sha": "756e6f0d68b7946f"
+    },
+    {
+     "label": "F2",
+     "ref": "mansouri_2022",
+     "where": "1. Introduction",
+     "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+     "sha": "29a515b2750e1524"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2022 review of observational studies says opium is an addictive substance used for recreational or medical purposes.",
+   "uses": [
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "mansouri_2022",
+     "where": "1. Introduction",
+     "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+     "sha": "29a515b2750e1524"
+    }
+   ],
+   "quote": "is an addictive substance that has been used for recreational or medical purposes",
+   "quote_ref": "mansouri_2022"
+  },
+  {
+   "part": "how2",
+   "text": "A 2018 review of 20 documents on lead poisoning in Iran says opium addiction is a common form of substance use there.",
+   "uses": [
+    "DA",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "shadnia_2018",
+     "where": "Discussion",
+     "quote": "In this article, we reviewed 20 documents; from which, 18 studies reported 324 cases of lead poisoning in opium abusers in Iran during 2004–2016.",
+     "sha": "756e6f0d68b7946f"
+    },
+    {
+     "label": "F1",
+     "ref": "shadnia_2018",
+     "where": "Abstract",
+     "quote": "Opium addiction is a common form of substance abuse in Iran.",
+     "sha": "50ca981b27b7c431"
+    }
+   ]
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
    "doi": "10.1002/14651858.cd007775.pub2",
@@ -335,6 +346,14 @@
    "why": "no draft passed: the form was wrong: no JSON",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -358,32 +377,67 @@
    "read": "full",
    "kind": "review",
    "at": "10.1186/s13011-020-00272-8",
-   "kept": 3,
+   "kept": 0,
    "thrown": []
+  },
+  {
+   "title": "The Impact of Opium Consumption on Blood Glucose, Serum Lipids and Blood Pressure, and Related Mechanisms",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fphys.2016.00436",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Treatment of opium addiction in persian medicine: A review study",
+   "read": "full",
+   "kind": "review",
+   "at": "10.4103/jehp.jehp_5_21",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Narrative review of opium addiction treatment in Persian medicine",
+     "quote": "Drug abuse is one of the most important threats to human beings today, leading to disability and even early death.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Opium Use and Cancer Risk: A Comprehensive Systematic Review and Meta-Analysis of Observational Studies",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1155/2022/5397449",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Systematic review and meta‑analysis of observational studies on opium use",
+     "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Opium",
    "read": "page",
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/opium/",
-   "kept": 2,
-   "thrown": []
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "plan": {
   "short": [
-   "F5",
-   "F6",
+   "F2",
    "F1"
   ],
   "direct": "Yes",
-  "but": [
-   "F6"
-  ],
+  "but": [],
   "how": [
    [
-    "F5",
-    "F6"
+    "F2"
    ],
    [
     "DA",
@@ -392,7 +446,204 @@
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9613,
+   "but": 0.0665,
+   "how1": 0.7448,
+   "how2": 0.8792
+  },
+  "scores_quotes_alone": {
+   "short": 0.7876,
+   "but": 0.0617,
+   "how1": 0.6687,
+   "how2": 0.6036
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, opium is an addictive substance. It is a common form of substance use in Iran.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "mansouri_2022",
+       "where": "1. Introduction",
+       "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+       "sha": "29a515b2750e1524"
+      },
+      {
+       "label": "F1",
+       "ref": "shadnia_2018",
+       "where": "Abstract",
+       "quote": "Opium addiction is a common form of substance abuse in Iran.",
+       "sha": "50ca981b27b7c431"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The evidence comes from a review of documents about lead poisoning, not a study of addiction itself.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "shadnia_2018",
+       "where": "Discussion",
+       "quote": "In this article, we reviewed 20 documents; from which, 18 studies reported 324 cases of lead poisoning in opium abusers in Iran during 2004–2016.",
+       "sha": "756e6f0d68b7946f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage discusses reviewing 20 documents about lead poisoning in opium abusers, but does not state that the evidence comes from a review of documents about lead poisoning rather than a study of addiction itself."
+    },
+    {
+     "part": "how1",
+     "text": "A 2022 review of observational studies says opium is an addictive substance used for recreational or medical purposes.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "mansouri_2022",
+       "where": "1. Introduction",
+       "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+       "sha": "29a515b2750e1524"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2018 review of 20 documents in Iran found opium addiction is a common form of substance use.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "shadnia_2018",
+       "where": "Discussion",
+       "quote": "In this article, we reviewed 20 documents; from which, 18 studies reported 324 cases of lead poisoning in opium abusers in Iran during 2004–2016.",
+       "sha": "756e6f0d68b7946f"
+      },
+      {
+       "label": "F1",
+       "ref": "shadnia_2018",
+       "where": "Abstract",
+       "quote": "Opium addiction is a common form of substance abuse in Iran.",
+       "sha": "50ca981b27b7c431"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, opium is an addictive substance. It is a common form of substance use in Iran.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "mansouri_2022",
+       "where": "1. Introduction",
+       "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+       "sha": "29a515b2750e1524"
+      },
+      {
+       "label": "F1",
+       "ref": "shadnia_2018",
+       "where": "Abstract",
+       "quote": "Opium addiction is a common form of substance abuse in Iran.",
+       "sha": "50ca981b27b7c431"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The sources are reviews of other documents, not direct studies of how opium affects the brain.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "shadnia_2018",
+       "where": "Discussion",
+       "quote": "In this article, we reviewed 20 documents; from which, 18 studies reported 324 cases of lead poisoning in opium abusers in Iran during 2004–2016.",
+       "sha": "756e6f0d68b7946f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not mention that the sources are not direct studies of how opium affects the brain."
+    },
+    {
+     "part": "how1",
+     "text": "A 2022 review of observational studies says opium is an addictive substance used for recreational or medical purposes.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "mansouri_2022",
+       "where": "1. Introduction",
+       "quote": "Opium, the raw extract of opium poppy, is an addictive substance that has been used for recreational or medical purposes.",
+       "sha": "29a515b2750e1524"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2018 review of 20 documents on lead poisoning in Iran describes opium addiction as a common form of substance use.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "shadnia_2018",
+       "where": "Discussion",
+       "quote": "In this article, we reviewed 20 documents; from which, 18 studies reported 324 cases of lead poisoning in opium abusers in Iran during 2004–2016.",
+       "sha": "756e6f0d68b7946f"
+      },
+      {
+       "label": "F1",
+       "ref": "shadnia_2018",
+       "where": "Abstract",
+       "quote": "Opium addiction is a common form of substance abuse in Iran.",
+       "sha": "50ca981b27b7c431"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "These are reviews of other reports, not direct studies of how opium affects the brain.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "shadnia_2018",
+     "where": "Discussion",
+     "quote": "In this article, we reviewed 20 documents; from which, 18 studies reported 324 cases of lead poisoning in opium abusers in Iran during 2004–2016.",
+     "sha": "756e6f0d68b7946f"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages do not mention how opium affects the brain."
+  }
+ ],
+ "stakes": "overdose or an emergency",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:Opium",
   "also": [],
