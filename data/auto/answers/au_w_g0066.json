@@ -19,17 +19,17 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45006112053",
+  "run": "45058408870",
   "read_seconds": 100,
   "from": {
    "papers": 0,
@@ -40,10 +40,9 @@
   "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (5 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
@@ -74,7 +73,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "The subtle science: a systematic review of psilocybin magic mushroom and truffle microdosing",
@@ -82,8 +90,7 @@
    "kind": "review",
    "at": "10.3389/fpsyt.2026.1866881",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "The therapeutic potential of microdosing psychedelics in depression",
@@ -93,14 +100,8 @@
    "kept": 0,
    "thrown": [
     {
-     "kind": "text",
-     "text": "A review of experimental studies on the therapeutic potential and safety of microdosing psychedelics in healthy volunteers and patient samples.",
-     "quote": "The purpose of this review was to investigate whether there are scientific grounds to state that this practice could be helpful in the treatment of affective disorders, and safe to use repeatedly.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
      "kind": "finding",
-     "text": "Tolerance to the perceptual effects of a higher dose of LSD was observed after three repeated low doses of LSD were administered on consecutive days, suggesting adaptation at the receptor level.",
+     "text": "Tolerance to perceptual effects of a higher dose of LSD was observed after three repeated low doses of LSD administered on consecutive days, suggesting adaptation at the receptor level.",
      "quote": "Interestingly in this light was the tolerance to perceptual effects of a higher dose of LSD after three repeated low doses LSD administered on consecutive days, which suggests adaptation at receptor l",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
@@ -112,8 +113,7 @@
    "kind": "review",
    "at": "10.7759/cureus.102694",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Psilocybin as Transformative Fast-Acting Antidepressant: Pharmacological Properties and Molecular Mechanisms",
@@ -137,8 +137,14 @@
    "kind": "review",
    "at": "10.1017/neu.2025.10039",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a systematic review of clinical evidence regarding therapeutic use of psilocybin in depression",
+     "quote": "Therapeutic Use of Psilocybin in Depression: a Systematic Review of Clinical Evidence (2025)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Effects of LSD, DMT and psilocybin on cognitive and psychological functions: A systematic review of the literature",
@@ -153,6 +159,42 @@
    "read": "full",
    "kind": "review",
    "at": "10.1111/pcn.13741",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Extraction Yields of Psilocybin and Psilocin: A Short Review of Current Methods and Their Implications",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/ph18030380",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Neurobiology of psilocybin: a comprehensive overview and comparative analysis of experimental models",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fnsys.2025.1585367",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Comparative oral monotherapy of psilocybin, lysergic acid diethylamide, 3,4-methylenedioxymethamphetamine, ayahuasca, and escitalopram for depressive symptoms: systematic review and Bayesian network meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1136/bmj-2023-078607",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "The phenomenology of psilocybin's experience mediates subsequent persistent psychological effects independently of sex, previous experience, or setting",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1007/s43440-025-00742-5",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
