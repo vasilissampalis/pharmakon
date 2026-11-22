@@ -17,21 +17,16 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45039566077",
-  "read_by": {
-   "gemini-3.1-flash-lite": 4,
-   "gemma-4-31b-it": 1
-  },
+  "run": "45040516572",
   "read_seconds": 100,
   "from": {
    "papers": 1,
@@ -39,16 +34,19 @@
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 360
+  "seconds": 270
  },
- "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9353) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9370)"
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.99, but 0.18, how1 0.91, how2 0.98",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.6-flash",
+  "but": "the writer's But was not accepted (the passage does not state that the review consists of direct tests of stopping the medicine or that sentence 2 describes it): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -121,8 +119,78 @@
    "tag": "A"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Atomoxetine can be stopped abruptly without withdrawal effects.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "cheng_2025",
+     "where": "Introduction and background",
+     "quote": "Hence, the risk for addiction and dependence is reduced in ATX compared to stimulants, as it can be stopped abruptly without withdrawal effects, making them a preferred option for ADHD patients with a higher risk for substance use disorders.",
+     "sha": "f15fb2217ea9d2de"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review.",
+   "uses": [
+    "DA"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "cheng_2025",
+     "where": "Abstract",
+     "quote": "This review aims to investigate the effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies, which came after the last major systematic review published in 2013.",
+     "sha": "d4f4f9f38040b5c5"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2025 systematic review of six retrospective studies on combining atomoxetine with stimulants for ADHD.",
+   "uses": [
+    "DA"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "cheng_2025",
+     "where": "Abstract",
+     "quote": "This review aims to investigate the effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies, which came after the last major systematic review published in 2013.",
+     "sha": "d4f4f9f38040b5c5"
+    }
+   ],
+   "quote": "effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies",
+   "quote_ref": "cheng_2025"
+  },
+  {
+   "part": "how2",
+   "text": "The review says atomoxetine can be stopped abruptly without withdrawal effects.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "cheng_2025",
+     "where": "Introduction and background",
+     "quote": "Hence, the risk for addiction and dependence is reduced in ATX compared to stimulants, as it can be stopped abruptly without withdrawal effects, making them a preferred option for ADHD patients with a higher risk for substance use disorders.",
+     "sha": "f15fb2217ea9d2de"
+    }
+   ],
+   "quote": "as it can be stopped abruptly without withdrawal effects",
+   "quote_ref": "cheng_2025"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -148,7 +216,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Effectiveness of Atomoxetine and Stimulant Combination in Attention-Deficit/Hyperactivity Disorder (ADHD) Treatment: A Systematic Review",
@@ -188,7 +265,8 @@
    "kind": "review",
    "at": "10.1001/jamanetworkopen.2025.9492",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Effect of N-acetylcysteine on craving in substance use disorders (SUD): a meta-analysis of randomized controlled trials",
@@ -205,8 +283,7 @@
    "kind": "other",
    "at": "10.1038/s41398-026-03925-7",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "The Predictive Value of Emotion Regulation in Cocaine Use Disorder Severity: Psychotherapeutic Implications During Hospitalization for Detoxification",
@@ -214,8 +291,7 @@
    "kind": "study",
    "at": "10.1002/cpp.70155",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   }
  ],
  "plan": {
@@ -232,7 +308,170 @@
   ],
   "unanswered": ""
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9882,
+   "but": 0.1826,
+   "how1": 0.9075,
+   "how2": 0.9837
+  },
+  "scores_quotes_alone": {
+   "short": 0.9814,
+   "but": 0.0036,
+   "how1": 0.0061,
+   "how2": 0.9825
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Atomoxetine can be stopped abruptly without withdrawal effects. This makes it a preferred option for people with a higher risk for substance use disorders.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "cheng_2025",
+       "where": "Introduction and background",
+       "quote": "Hence, the risk for addiction and dependence is reduced in ATX compared to stimulants, as it can be stopped abruptly without withdrawal effects, making them a preferred option for ADHD patients with a higher risk for substance use disorders.",
+       "sha": "f15fb2217ea9d2de"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "This comes from a systematic review of six retrospective studies, not direct trials of stopping the medicine.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "cheng_2025",
+       "where": "Abstract",
+       "quote": "This review aims to investigate the effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies, which came after the last major systematic review published in 2013.",
+       "sha": "d4f4f9f38040b5c5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passage does not state that the review consists of six retrospective studies specifically about stopping the medicine"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 systematic review looked at six retrospective studies on combining stimulants with atomoxetine for ADHD.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "cheng_2025",
+       "where": "Abstract",
+       "quote": "This review aims to investigate the effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies, which came after the last major systematic review published in 2013.",
+       "sha": "d4f4f9f38040b5c5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review says atomoxetine can be stopped abruptly without withdrawal effects, reducing addiction risk compared to stimulants.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "cheng_2025",
+       "where": "Introduction and background",
+       "quote": "Hence, the risk for addiction and dependence is reduced in ATX compared to stimulants, as it can be stopped abruptly without withdrawal effects, making them a preferred option for ADHD patients with a higher risk for substance use disorders.",
+       "sha": "f15fb2217ea9d2de"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Atomoxetine can be stopped abruptly without withdrawal effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "cheng_2025",
+       "where": "Introduction and background",
+       "quote": "Hence, the risk for addiction and dependence is reduced in ATX compared to stimulants, as it can be stopped abruptly without withdrawal effects, making them a preferred option for ADHD patients with a higher risk for substance use disorders.",
+       "sha": "f15fb2217ea9d2de"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "This comes from a systematic review, not a study that only looked at stopping the medicine.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "cheng_2025",
+       "where": "Abstract",
+       "quote": "This review aims to investigate the effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies, which came after the last major systematic review published in 2013.",
+       "sha": "d4f4f9f38040b5c5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that the review comes from something other than a study that only looked at stopping the medicine; that sentence is an independent meta-commentary not found in the passage."
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 systematic review of six retrospective studies on combining stimulants with atomoxetine says it can be stopped abruptly without withdrawal effects.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "cheng_2025",
+       "where": "Abstract",
+       "quote": "This review aims to investigate the effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies, which came after the last major systematic review published in 2013.",
+       "sha": "d4f4f9f38040b5c5"
+      },
+      {
+       "label": "F1",
+       "ref": "cheng_2025",
+       "where": "Introduction and background",
+       "quote": "Hence, the risk for addiction and dependence is reduced in ATX compared to stimulants, as it can be stopped abruptly without withdrawal effects, making them a preferred option for ADHD patients with a higher risk for substance use disorders.",
+       "sha": "f15fb2217ea9d2de"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that the 2025 systematic review itself says atomoxetine can be stopped abruptly without withdrawal effects; while both facts are in the text, their direct attribution to each other is absent."
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "This comes from a review of six retrospective studies, not direct tests of stopping the medicine.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "cheng_2025",
+     "where": "Abstract",
+     "quote": "This review aims to investigate the effectiveness of combining stimulants such as methylphenidate with atomoxetine based on all newer studies, which came after the last major systematic review published in 2013.",
+     "sha": "d4f4f9f38040b5c5"
+    }
+   ],
+   "by": "the second reader",
+   "said": "the passage does not state that the review consists of direct tests of stopping the medicine or that sentence 2 describes it"
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:Medicines for ADHD that are not stimulants",
   "also": [],
