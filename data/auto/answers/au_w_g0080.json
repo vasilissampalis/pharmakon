@@ -19,36 +19,369 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also2": "gemini:gemini-3-flash-preview",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45023774152",
-  "read_seconds": 100,
+  "run": "45079398839",
+  "read_seconds": 28,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 104
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (8 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (it does not answer the question itself); but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "5 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: short: words that are not person-first (“users”); how4: words that are not person-first (“users”)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.86, but 0.93, how1 0.97, how2 0.84, how3 0.78, how4 0.85",
+  "check": "not accepted at try 2: a second reader did not accept short (it does not answer the question itself); but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "bhuchakra_2025",
+    "type": "article-journal",
+    "title": "Personalized perioperative opioid strategies in children: Focus on methadone, pharmacogenomics and prevention of persistent postoperative opioid use",
+    "author": [
+     {
+      "family": "Bhuchakra",
+      "given": "Hamsa Priya"
+     },
+     {
+      "family": "Balasubramanian",
+      "given": "Sennaraj"
+     },
+     {
+      "family": "Nair",
+      "given": "Alivia G."
+     },
+     {
+      "family": "Marcos",
+      "given": "Isabella"
+     },
+     {
+      "family": "Falconett",
+      "given": "Victoria Chen"
+     },
+     {
+      "family": "Falcon",
+      "given": "Dominic"
+     },
+     {
+      "family": "Bari",
+      "given": "Ayesha Abdul"
+     },
+     {
+      "family": "Sadhasivam",
+      "given": "Senthilkumar"
+     }
+    ],
+    "container-title": "Children",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.3390/children12121660",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "12",
+    "issue": "12",
+    "number": "1660",
+    "PMCID": "PMC12732015"
+   },
+   "doi": "10.3390/children12121660",
+   "pmcid": "PMC12732015",
+   "title": "Personalized Perioperative Opioid Strategies in Children: Focus on Methadone, Pharmacogenomics and Prevention of Persistent Postoperative Opioid Use",
+   "year": 2025,
+   "journal": "Children (Basel, Switzerland)",
+   "kind": "review",
+   "people": true,
+   "near": 0.703,
+   "money": [
+    "The authors declare no conflicts of interest with the current article.",
+    "This research received no external funding. Part of Dr. Sadhasivam’s effort was funded by NIH funding: U01TR003719 (PI: Sadhasivam), U01HD116257 (MPI: Sadhasivam/Chidambaran), R01HD096800 (PI: Sadhasivam), R01DA054513 (MPI: Chelly/Sadhasivam), R01DA059321 (MPI: Radhakrishnan/Sadhasivam), R44DA056280, R43HL167661, R43DA058430, R44DA055407, R41DA059303 (MPI: Sadhasivam)."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This narrative review explores the intersection of methadone pharmacology, pharmacogenomic (PGx)-guided opioid prescribing, and their potential to reduce PPOU and optimize perioperative pain control in children.",
+    "text": "a narrative review exploring methadone pharmacology and pharmacogenomic-guided opioid prescribing in children"
+   },
+   "findings": [
+    {
+     "passage": 22,
+     "where": "4. Reduced Central Sensitization and Lower Opioid Use",
+     "quote": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+     "text": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "pelletti_2026",
+    "type": "article-journal",
+    "title": "Characterizing post-mortem blood concentrations in methadone-related deaths",
+    "author": [
+     {
+      "family": "Pelletti",
+      "given": "Guido"
+     },
+     {
+      "family": "Giunchi",
+      "given": "Valentina"
+     },
+     {
+      "family": "Fais",
+      "given": "Paolo"
+     },
+     {
+      "family": "Innocenti",
+      "given": "Mattia"
+     },
+     {
+      "family": "Giorgetti",
+      "given": "Arianna"
+     },
+     {
+      "family": "Poluzzi",
+      "given": "Elisabetta"
+     },
+     {
+      "family": "Fusaroli",
+      "given": "Michele"
+     },
+     {
+      "family": "Pelotti",
+      "given": "Susi"
+     }
+    ],
+    "container-title": "International Journal of Legal Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1007/s00414-025-03620-0",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     },
+     "online_first_year": 2025
+    },
+    "volume": "140",
+    "issue": "1",
+    "page": "207-216",
+    "PMCID": "PMC12808249"
+   },
+   "doi": "10.1007/s00414-025-03620-0",
+   "pmcid": "PMC12808249",
+   "title": "Characterizing post-mortem blood concentrations in methadone-related deaths",
+   "year": 2026,
+   "journal": "International journal of legal medicine",
+   "kind": "review",
+   "people": true,
+   "near": 0.681,
+   "money": [
+    "Open access funding provided by Alma Mater Studiorum - Università di Bologna within the CRUI-CARE Agreement. Not applicable."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "A systematic literature review was conducted to retrieve and analyze publications on methadone-related deaths that included post-mortem toxicological analyses.",
+    "text": "systematic literature review on methadone-related deaths"
+   },
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Introduction",
+     "quote": "Habitual users–whether following a maintenance prescription or because of habitual abuse–develop a much higher tolerance than individuals using methadone recreationally",
+     "text": "Habitual users, whether following a maintenance prescription or because of habitual abuse, develop a much higher tolerance than individuals using methadone recreationally.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Determining methadone’s role in drug-related deaths is often challenging due to its pharmacological properties, such as tolerance, and the co-consumption of psychotropic substances.",
+     "text": "Determining methadone’s role in drug-related deaths is often challenging due to its pharmacological properties, such as tolerance, and the co-consumption of psychotropic substances.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "However, this finding will need to be further investigated by quantitatively analyzing the other detected substances to determine whether methadone played a primary role in the death or if it was caused by other compounds.",
+     "text": "This finding will need to be further investigated by quantitatively analyzing the other detected substances to determine whether methadone played a primary role in the death or if it was caused by other compounds.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "label_methadone-hydrochloride",
+    "type": "webpage",
+    "title": "Methadone Hydrochloride",
+    "author": [
+     {
+      "literal": "American Health Packaging"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       9,
+       9
+      ]
+     ]
+    },
+    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=540edd43-165d-4257-b989-3bccc8f54afb",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       22
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-22"
+    },
+    "publisher": "DailyMed",
+    "genre": "Drug label"
+   },
+   "title": "Methadone Hydrochloride",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.684,
+   "name": "U.S. Food and Drug Administration",
+   "short": "the US label for methadone",
+   "tier": 1,
+   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=540edd43-165d-4257-b989-3bccc8f54afb",
+   "money": [],
+   "label": true,
+   "design": null,
+   "findings": [
+    {
+     "passage": 80,
+     "where": "Drug abuse and dependence",
+     "quote": "Both tolerance and physical dependence can develop during use of opioid therapy. Tolerance is a physiological state characterized by a reduced response to a drug after repeated administration",
+     "text": "Tolerance and physical dependence can develop during use of opioid therapy, where tolerance is a physiological state characterized by a reduced response to a drug after repeated administration.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_methadone",
+    "type": "webpage",
+    "title": "Methadone",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/methadone",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       22
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-22"
+    }
+   },
+   "title": "Methadone",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.67,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/methadone",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 10,
+     "where": "Mixing methadone with other drugs / Can you get addicted?",
+     "quote": "You can build a tolerance to it, needing higher doses to get the same effects; and can develop marked withdrawals, particularly if its use is stopped suddenly.",
+     "text": "People can build a tolerance to methadone, needing higher doses to get the same effects.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "tolerance to buprenorphine (Suboxone)",
  "wanted": [
   {
    "doi": "10.1111/acps.13088",
@@ -73,82 +406,447 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (8 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Personalized Perioperative Opioid Strategies in Children: Focus on Methadone, Pharmacogenomics and Prevention of Persistent Postoperative Opioid Use",
    "read": "full",
    "kind": "review",
    "at": "10.3390/children12121660",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Characterizing post-mortem blood concentrations in methadone-related deaths",
    "read": "full",
    "kind": "review",
    "at": "10.1007/s00414-025-03620-0",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 2,
+   "thrown": []
   },
   {
-   "title": "The comparative effects of prenatal exposure to methadone versus buprenorphine for opioid use disorder on neonatal outcomes: a systematic review and meta-analysis",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s12884-026-09256-1",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "title": "Methadone Hydrochloride",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=540edd43-165d-4257-b989-3bccc8f54afb",
+   "kept": 1,
+   "thrown": []
   },
   {
-   "title": "Metabolic and Addiction Indices in Patients on Opioid Agonist Medication-Assisted Treatment: A Comparison of Buprenorphine and Methadone",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1038/s41598-020-62556-0",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "Intraoperative Intravenous Methadone Versus Non-Methadone Opioid Analgesia in Instrumented Spinal Fusion: A GRADE-Guided Systematic Review and Meta-Analysis",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/jcm15218470",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Intravenous methadone versus regional and neuraxial analgesic techniques in the peri-operative period: a scoping review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1002/anr3.70070",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Methadone for critically ill patients under mechanical ventilation in the intensive care unit: a systematic review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.62675/2965-2774.20250396",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Initiating buprenorphine to treat opioid use disorder without prerequisite withdrawal: an updated systematic review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s13722-025-00548-z",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Methadone",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/methadone",
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F2"
+  ],
+  "direct": "It depends",
+  "but": [
+   "F1"
+  ],
+  "how": [
+   [
+    "F5"
+   ],
+   [
+    "F4"
+   ],
+   [
+    "DA",
+    "F1"
+   ],
+   [
+    "DB",
+    "F2"
+   ]
+  ],
+  "unanswered": "tolerance to buprenorphine (Suboxone)"
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. People can build a tolerance to methadone, needing higher doses for the same effects. Habitual users develop much higher tolerance than recreational users.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "frank_methadone",
+       "where": "Mixing methadone with other drugs / Can you get addicted?",
+       "quote": "You can build a tolerance to it, needing higher doses to get the same effects; and can develop marked withdrawals, particularly if its use is stopped suddenly.",
+       "sha": "575cd4e6f8c9ae3c"
+      },
+      {
+       "label": "F2",
+       "ref": "pelletti_2026",
+       "where": "Introduction",
+       "quote": "Habitual users–whether following a maintenance prescription or because of habitual abuse–develop a much higher tolerance than individuals using methadone recreationally",
+       "sha": "426c8cec7852434d"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "but",
+     "text": "Methadone delays the development of opioid tolerance by blocking NMDA receptors, which reduces central sensitization.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "bhuchakra_2025",
+       "where": "4. Reduced Central Sensitization and Lower Opioid Use",
+       "quote": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+       "sha": "defceacd11fbbe15"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says people can build a tolerance to methadone, needing higher doses to get the same effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "frank_methadone",
+       "where": "Mixing methadone with other drugs / Can you get addicted?",
+       "quote": "You can build a tolerance to it, needing higher doses to get the same effects; and can develop marked withdrawals, particularly if its use is stopped suddenly.",
+       "sha": "575cd4e6f8c9ae3c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label for methadone says tolerance and physical dependence can develop during use of opioid therapy.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "label_methadone-hydrochloride",
+       "where": "Drug abuse and dependence",
+       "quote": "Both tolerance and physical dependence can develop during use of opioid therapy. Tolerance is a physiological state characterized by a reduced response to a drug after repeated administration",
+       "sha": "257f09b650972562"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review of children's opioid use says methadone delays the development of opioid tolerance by blocking NMDA receptors.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "bhuchakra_2025",
+       "where": "Abstract",
+       "quote": "This narrative review explores the intersection of methadone pharmacology, pharmacogenomic (PGx)-guided opioid prescribing, and their potential to reduce PPOU and optimize perioperative pain control in children.",
+       "sha": "76db0ff6d85141ce"
+      },
+      {
+       "label": "F1",
+       "ref": "bhuchakra_2025",
+       "where": "4. Reduced Central Sensitization and Lower Opioid Use",
+       "quote": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+       "sha": "defceacd11fbbe15"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2026 review of methadone deaths says habitual users develop much higher tolerance than individuals using it recreationally.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "pelletti_2026",
+       "where": "Abstract",
+       "quote": "A systematic literature review was conducted to retrieve and analyze publications on methadone-related deaths that included post-mortem toxicological analyses.",
+       "sha": "90b9f18b01f95bca"
+      },
+      {
+       "label": "F2",
+       "ref": "pelletti_2026",
+       "where": "Introduction",
+       "quote": "Habitual users–whether following a maintenance prescription or because of habitual abuse–develop a much higher tolerance than individuals using methadone recreationally",
+       "sha": "426c8cec7852434d"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. People can build a tolerance to methadone, needing higher doses for the same effects. Habitual use leads to much higher tolerance than recreational use.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "frank_methadone",
+       "where": "Mixing methadone with other drugs / Can you get addicted?",
+       "quote": "You can build a tolerance to it, needing higher doses to get the same effects; and can develop marked withdrawals, particularly if its use is stopped suddenly.",
+       "sha": "575cd4e6f8c9ae3c"
+      },
+      {
+       "label": "F2",
+       "ref": "pelletti_2026",
+       "where": "Introduction",
+       "quote": "Habitual users–whether following a maintenance prescription or because of habitual abuse–develop a much higher tolerance than individuals using methadone recreationally",
+       "sha": "426c8cec7852434d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "Methadone delays the development of opioid tolerance by blocking NMDA receptors, which reduces central sensitization after surgery.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "bhuchakra_2025",
+       "where": "4. Reduced Central Sensitization and Lower Opioid Use",
+       "quote": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+       "sha": "defceacd11fbbe15"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says people can build a tolerance to methadone, needing higher doses to get the same effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "frank_methadone",
+       "where": "Mixing methadone with other drugs / Can you get addicted?",
+       "quote": "You can build a tolerance to it, needing higher doses to get the same effects; and can develop marked withdrawals, particularly if its use is stopped suddenly.",
+       "sha": "575cd4e6f8c9ae3c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label for methadone says tolerance and physical dependence can develop during use of opioid therapy.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "label_methadone-hydrochloride",
+       "where": "Drug abuse and dependence",
+       "quote": "Both tolerance and physical dependence can develop during use of opioid therapy. Tolerance is a physiological state characterized by a reduced response to a drug after repeated administration",
+       "sha": "257f09b650972562"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review of children's opioid prescribing notes methadone delays opioid tolerance development by blocking NMDA receptors.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "bhuchakra_2025",
+       "where": "Abstract",
+       "quote": "This narrative review explores the intersection of methadone pharmacology, pharmacogenomic (PGx)-guided opioid prescribing, and their potential to reduce PPOU and optimize perioperative pain control in children.",
+       "sha": "76db0ff6d85141ce"
+      },
+      {
+       "label": "F1",
+       "ref": "bhuchakra_2025",
+       "where": "4. Reduced Central Sensitization and Lower Opioid Use",
+       "quote": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+       "sha": "defceacd11fbbe15"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2026 review of methadone deaths says people who habitually use methadone develop much higher tolerance than those using it recreationally.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "pelletti_2026",
+       "where": "Abstract",
+       "quote": "A systematic literature review was conducted to retrieve and analyze publications on methadone-related deaths that included post-mortem toxicological analyses.",
+       "sha": "90b9f18b01f95bca"
+      },
+      {
+       "label": "F2",
+       "ref": "pelletti_2026",
+       "where": "Introduction",
+       "quote": "Habitual users–whether following a maintenance prescription or because of habitual abuse–develop a much higher tolerance than individuals using methadone recreationally",
+       "sha": "426c8cec7852434d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not describe the source as a review; the sentence calls it a \"2026 review\" which is not supported."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. People can build a tolerance to methadone, needing higher doses for the same effects. Habitual users develop much higher tolerance than recreational users.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "frank_methadone",
+       "where": "Mixing methadone with other drugs / Can you get addicted?",
+       "quote": "You can build a tolerance to it, needing higher doses to get the same effects; and can develop marked withdrawals, particularly if its use is stopped suddenly.",
+       "sha": "575cd4e6f8c9ae3c"
+      },
+      {
+       "label": "F2",
+       "ref": "pelletti_2026",
+       "where": "Introduction",
+       "quote": "Habitual users–whether following a maintenance prescription or because of habitual abuse–develop a much higher tolerance than individuals using methadone recreationally",
+       "sha": "426c8cec7852434d"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "but",
+     "text": "Methadone delays the development of opioid tolerance by blocking NMDA receptors, which reduces central sensitization.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "bhuchakra_2025",
+       "where": "4. Reduced Central Sensitization and Lower Opioid Use",
+       "quote": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+       "sha": "defceacd11fbbe15"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says people can build a tolerance to methadone, needing higher doses to get the same effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "frank_methadone",
+       "where": "Mixing methadone with other drugs / Can you get addicted?",
+       "quote": "You can build a tolerance to it, needing higher doses to get the same effects; and can develop marked withdrawals, particularly if its use is stopped suddenly.",
+       "sha": "575cd4e6f8c9ae3c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label for methadone says tolerance and physical dependence can develop during use of opioid therapy.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "label_methadone-hydrochloride",
+       "where": "Drug abuse and dependence",
+       "quote": "Both tolerance and physical dependence can develop during use of opioid therapy. Tolerance is a physiological state characterized by a reduced response to a drug after repeated administration",
+       "sha": "257f09b650972562"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review of children's opioid use says methadone delays the development of opioid tolerance by blocking NMDA receptors.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "bhuchakra_2025",
+       "where": "Abstract",
+       "quote": "This narrative review explores the intersection of methadone pharmacology, pharmacogenomic (PGx)-guided opioid prescribing, and their potential to reduce PPOU and optimize perioperative pain control in children.",
+       "sha": "76db0ff6d85141ce"
+      },
+      {
+       "label": "F1",
+       "ref": "bhuchakra_2025",
+       "where": "4. Reduced Central Sensitization and Lower Opioid Use",
+       "quote": "By blocking NMDA receptors, methadone reduces central sensitization and delays the development of opioid tolerance, which are two key components of escalating opioid requirements after surgery.",
+       "sha": "defceacd11fbbe15"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2026 review of methadone deaths says habitual users develop much higher tolerance than individuals using it recreationally.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "pelletti_2026",
+       "where": "Abstract",
+       "quote": "A systematic literature review was conducted to retrieve and analyze publications on methadone-related deaths that included post-mortem toxicological analyses.",
+       "sha": "90b9f18b01f95bca"
+      },
+      {
+       "label": "F2",
+       "ref": "pelletti_2026",
+       "where": "Introduction",
+       "quote": "Habitual users–whether following a maintenance prescription or because of habitual abuse–develop a much higher tolerance than individuals using methadone recreationally",
+       "sha": "426c8cec7852434d"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    }
+   ]
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8634,
+   "but": 0.9337,
+   "how1": 0.9739,
+   "how2": 0.8428,
+   "how3": 0.7791,
+   "how4": 0.8497
+  },
+  "scores_quotes_alone": {
+   "short": 0.8022,
+   "but": 0.6446,
+   "how1": 0.9589,
+   "how2": 0.6497,
+   "how3": 0.1449,
+   "how4": 0.7784
+  }
+ },
  "place": {
   "home": "methadone-buprenorphine",
   "also": [],
