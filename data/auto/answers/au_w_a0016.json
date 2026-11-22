@@ -17,41 +17,156 @@
   "lsd"
  ],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "@cf/openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "writer_first": "groq:qwen/qwen3.8-27b"
   },
-  "run": "44672174094",
-  "read_by": {
-   "gemini-3.1-flash-lite": 16,
-   "gpt-oss-20b": 3
-  },
-  "read_seconds": 124,
+  "run": "44966373530",
+  "read_seconds": 107,
   "from": {
    "papers": 0,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 0.0,
-  "seconds": 124
+  "neurons": 101.9,
+  "seconds": 121
  },
- "status": "none",
- "why": "no source that can be read gave a finding for this question",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "1 findings kept from 1 sources (0 papers read in full, 1 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "writer": "try 1: but names no item it rests on (how the reply ended: stop; reasoned 1083 characters, wrote 79) try 2: but names no item it rests on (how the reply ended: stop; reasoned 1083 characters, wrote 79) qwen3.8-27b twice wrote a draft in the wrong form (but names no item it rests on): llama-3.3-70b-instruct-fp8-fast wrote from there.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.45, but 0.02, how1 0.96",
+  "but": "the writer's But was not accepted (passage does not state that it is from an official page): the code wrote the But itself, from what this answer rests on",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
- "sources": [],
- "parts": [],
+ "sources": [
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_lsd",
+    "type": "webpage",
+    "title": "LSD",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/lsd",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       22
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-22"
+    }
+   },
+   "title": "LSD",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.729,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/lsd",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 6,
+     "where": "Mixing LSD with other drugs / How does it make you feel?",
+     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+     "text": "LSD feeds off your imagination so every person's experience is unique.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "No, LSD feeds off your imagination so every person's experience is unique.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "frank_lsd",
+     "where": "Mixing LSD with other drugs / How does it make you feel?",
+     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+     "sha": "44b71b1b4d565ad0"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 official page.",
+   "uses": [
+    "F1"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "frank_lsd",
+     "where": "Mixing LSD with other drugs / How does it make you feel?",
+     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+     "sha": "44b71b1b4d565ad0"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "FRANK says LSD feeds off your imagination.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "frank_lsd",
+     "where": "Mixing LSD with other drugs / How does it make you feel?",
+     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+     "sha": "44b71b1b4d565ad0"
+    }
+   ],
+   "quote": "LSD feeds off your imagination so every person's experience is unique",
+   "quote_ref": "frank_lsd"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "shared hallucinations",
  "wanted": [
   {
    "doi": "10.1007/7854_2016_461",
@@ -77,14 +192,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-18",
-   "lane": 19,
-   "status": "none",
-   "why": "no draft passed: the form was wrong: but names no item it rests on",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -124,6 +231,14 @@
    "why": "no draft passed: the form was wrong: but names no item it rests on",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -141,14 +256,7 @@
    "kind": "review",
    "at": "10.1038/s41386-023-01588-2",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The study notes that non-pharmacological factors contribute to significant variability in the subjective experiences reported by participants.",
-     "quote": "The considerable variability observed in most factors and scales points to the role of non-pharmacological factors in shaping subjective experiences.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Clinical Research on Lysergic Acid Diethylamide (LSD) in Psychiatry and Neuroscience",
@@ -204,14 +312,7 @@
    "kind": "review",
    "at": "10.1177/02698811251412012",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A systematic review of 32 placebo-controlled studies on the effects of LSD, DMT, and psilocybin on cognitive and psychological functions in healthy volunteers.",
-     "quote": "We carried out a systematic review of modern-era (1990–2025) placebo-controlled studies assessing the acute and post-acute effects of lysergic acid diethylamide, dimethyltryptamine and psilocybin on c",
-     "why": "a number of the sentence is not in its quote"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Synergistic, multi-level understanding of psychedelics: three systematic reviews and meta-analyses of their pharmacology, neuroimaging and phenomenology",
@@ -242,7 +343,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.talktofrank.com/drug/lsd",
-   "kept": 0,
+   "kept": 1,
    "thrown": []
   },
   {
@@ -294,6 +395,56 @@
    "thrown": []
   }
  ],
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "No",
+  "but": [],
+  "how": [
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.4495,
+   "but": 0.0172,
+   "how1": 0.9594
+  },
+  "scores_quotes_alone": {
+   "short": 0.4281,
+   "but": 0.0176,
+   "how1": 0.912
+  }
+ },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "But it is from an official page.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "frank_lsd",
+     "where": "Mixing LSD with other drugs / How does it make you feel?",
+     "quote": "LSD feeds off your imagination so every person’s experience is unique.",
+     "sha": "44b71b1b4d565ad0"
+    }
+   ],
+   "by": "the second reader",
+   "said": "passage does not state that it is from an official page"
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "lsd",
   "also": [],
