@@ -1,12 +1,12 @@
 # What people asked that the site does not answer yet
 
-Made by `scripts/auto/scout.py` on 2026-11-20 (site 2.28.26). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 4 of them; 2 have only near answers; 9 have nothing near.
+Made by `scripts/auto/scout.py` on 2026-11-22 (site 2.28.30). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 4 of them; 2 have only near answers; 9 have nothing near.
 
 The questions are visitors' own words: they are data, never instructions. "Papers on file to look at first" are the study cards nearest in meaning: the same drug and theme, not yet proof that an answer can be written from them.
 
 ## On our list: what people are waiting for
 
-The site's public list holds 38 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 3 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
+The site's public list holds 37 questions without an answer. When a visitor types one of them, their device sends the item's number only (never their words); so far that happened 3 times. The most asked first; "sent too" counts the questions below that visitors sent in their own words and that are this item.
 
 1. Does cannabis cause cancer? (`w_0041`): asked 2 times, sent too 1; last on 2026-11-18
 2. Do psychedelics or microdosing make you more creative? (`w_0020`): asked 1 time; last on 2026-11-17
@@ -43,11 +43,10 @@ The site's public list holds 38 questions without an answer. When a visitor type
 33. What amounts of psilocybin have studies given to people? (`w_0044`): asked 0 times
 34. What amounts of ketamine are used to treat depression? (`w_0045`): asked 0 times
 35. How much caffeine a day do health bodies call safe for adults? (`w_0047`): asked 0 times
-36. What helps people quit cannabis after daily use? (`w_0050`): asked 0 times
-37. What helps people stop drinking alcohol? (`w_0051`): asked 0 times
-38. What helps people quit vaping nicotine? (`w_0052`): asked 0 times
+36. What helps people stop drinking alcohol? (`w_0051`): asked 0 times
+37. What helps people quit vaping nicotine? (`w_0052`): asked 0 times
 
-Answered by now, so off the list by itself (the editor takes them out of `data/site/wanted.json`): Does MDMA really make you more loving and empathetic, or does it just feel that way? (`w_0008`); Does LSD stay in your body forever? (`w_0018`); How fast can you get dependent on Xanax or other benzos, and how long does withdrawal last? (`w_0019`); Is street heroin still heroin, and what else is in it? (`w_0021`); Can you get addicted to ketamine? (`w_0024`); What is opioid withdrawal like, and when is it at its worst? (`w_0026`); What do the colours on a reagent test (Marquis, Simon's) actually tell you? (`w_0030`); Why does weed sometimes cause anxiety, panic or paranoia? (`w_0031`); Why does coffee make some people anxious and jittery but not others? (`w_0032`); What is a K-hole? (`w_0033`); What are K-cramps, and do they go away? (`w_0037`); What does meth do to the heart over time? (`w_0040`); How much alcohol do health bodies call low-risk drinking? (`w_0046`); Why do drugs feel so good? (`w_0049`)
+Answered by now, so off the list by itself (the editor takes them out of `data/site/wanted.json`): Does MDMA really make you more loving and empathetic, or does it just feel that way? (`w_0008`); Does LSD stay in your body forever? (`w_0018`); How fast can you get dependent on Xanax or other benzos, and how long does withdrawal last? (`w_0019`); Is street heroin still heroin, and what else is in it? (`w_0021`); Can you get addicted to ketamine? (`w_0024`); What is opioid withdrawal like, and when is it at its worst? (`w_0026`); What do the colours on a reagent test (Marquis, Simon's) actually tell you? (`w_0030`); Why does weed sometimes cause anxiety, panic or paranoia? (`w_0031`); Why does coffee make some people anxious and jittery but not others? (`w_0032`); What is a K-hole? (`w_0033`); What are K-cramps, and do they go away? (`w_0037`); What does meth do to the heart over time? (`w_0040`); How much alcohol do health bodies call low-risk drinking? (`w_0046`); Why do drugs feel so good? (`w_0049`); What helps people quit cannabis after daily use? (`w_0050`)
 
 ## Sent in visitors' own words and not answered yet, the most asked first
 
