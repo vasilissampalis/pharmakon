@@ -19,32 +19,39 @@
  "made": {
   "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
+   "also2": "gemini:gemini-3-flash-preview",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45015106221",
+  "run": "45067558601",
   "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 345
  },
- "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (7 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 5; gemini-3-flash-preview accepted 5 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.35, but 0.99, how1 0.30, how2 0.98, how3 0.71",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3-flash-preview; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -108,18 +115,13 @@
     "The authors declare no conflicts of interest.",
     "This research received no external funding."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "A patient receiving treatment for opioid use disorder tested negative for methadone in 11 out of 22 toxicology screenings (50.0%). We hypothesized that the patient was a rapid methadone metabolizer.",
-    "text": "a case report of a patient with rapid methadone metabolism"
-   },
+   "design": null,
    "findings": [
     {
      "passage": 4,
      "where": "2. Methadone Metabolism and Serum Concentration",
      "quote": "Methadone’s half-life varies from 8 to 59 h based on the patient. The average time is 24 h.",
-     "text": "The half-life of methadone ranges from 8 to 59 hours depending on the patient, with an average of 24 hours.",
+     "text": "Methadone's half-life varies from 8 to 59 hours depending on the patient, with an average time of 24 hours.",
      "id": "F1",
      "second_hand": ""
     },
@@ -127,35 +129,229 @@
      "passage": 1,
      "where": "Abstract",
      "quote": "Toxicology screenings to monitor methadone levels may show negative for methadone, even with regular adherence to a regimen.",
-     "text": "Toxicology screenings can return negative results for methadone even when a person is taking it regularly.",
+     "text": "Toxicology screenings to monitor methadone levels may show negative for methadone, even with regular adherence to a regimen.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 14,
-     "where": "9. Discussion",
-     "quote": "The rapid methadone metabolism is confirmed in the serum results indicating that there is no non-adherence or tampering.",
-     "text": "Rapid metabolism can be confirmed through serum results to show that negative toxicology tests are not due to non-adherence or tampering.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "A patient receiving treatment for opioid use disorder tested negative for methadone in 11 out of 22 toxicology screenings (50.0%).",
+     "text": "A patient receiving treatment for opioid use disorder tested negative for methadone in 11 out of 22 toxicology screenings (50.0%).",
      "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "shan_2022",
+    "type": "article-journal",
+    "title": "Analytical approaches for the determination of buprenorphine, methadone and their metabolites in biological matrices",
+    "author": [
+     {
+      "family": "Shan",
+      "given": "Xiaoyue"
+     },
+     {
+      "family": "Cao",
+      "given": "Chengjian"
+     },
+     {
+      "family": "Yang",
+      "given": "Bingsheng"
+     }
+    ],
+    "container-title": "Molecules",
+    "issued": {
+     "date-parts": [
+      [
+       2022
+      ]
+     ]
+    },
+    "DOI": "10.3390/molecules27165211",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "27",
+    "issue": "16",
+    "number": "5211",
+    "PMCID": "PMC9415157"
+   },
+   "doi": "10.3390/molecules27165211",
+   "pmcid": "PMC9415157",
+   "title": "Analytical Approaches for the Determination of Buprenorphine, Methadone and Their Metabolites in Biological Matrices",
+   "year": 2022,
+   "journal": "Molecules (Basel, Switzerland)",
+   "kind": "review",
+   "people": false,
+   "near": 0.667,
+   "money": [
+    "The authors declare no conflict of interest.",
+    "This research was funded by Hangzhou Medical and Health Science and Technology Project (Grant No. A20220302) and Hangzhou Foundation for Development of Science and Technology (Grant No. 20181228Y28)."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This research aims to review a critical discussion of the latest trends for the monitoring of buprenorphine, methadone and their metabolites in various biological specimens.",
+    "text": "A review of analytical approaches for the determination of buprenorphine, methadone and their metabolites in biological matrices."
+   },
+   "findings": [
     {
-     "passage": 16,
-     "where": "11. Conclusions",
-     "quote": "This instance adds to the increasing amount of data demonstrating the necessity for a comprehensive comprehension of methadone pharmacokinetics in a range of patient demographics.",
-     "text": "A comprehensive understanding of methadone pharmacokinetics across different patient demographics is still needed.",
-     "id": "L1",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "After their consumption, buprenorphine, methadone and their metabolites can be found in the human organism.",
+     "text": "After their consumption, buprenorphine, methadone and their metabolites can be found in the human organism.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "1. Introduction",
+     "quote": "After oral administration, MTD is rapidly absorbed. The measurable plasma concentration is obtained after 15 to 45 min, and peak plasma concentration is achieved after 2.5 to 4.4 h.",
+     "text": "After oral administration, methadone is rapidly absorbed, with measurable plasma concentration obtained after 15 to 45 min and peak plasma concentration achieved after 2.5 to 4.4 h.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "1. Introduction",
+     "quote": "Different biological specimens including urine, plasma, serum, blood, nails, oral fluid, hair, tissue and exhaled breath condensate have been used for the measurement of BUP, MTD and their metabolites.",
+     "text": "Different biological specimens including urine, plasma, serum, blood, nails, oral fluid, hair, tissue and exhaled breath condensate have been used for the measurement of buprenorphine, methadone and their metabolites.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "limits": [],
+   "tag": "B"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes, buprenorphine and methadone can be found in the human organism after use. They can be measured in urine, blood, hair, and other specimens, and methadone's half-life averages 24 hours.",
+   "uses": [
+    "F1",
+    "F4",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "nazmin_2025",
+     "where": "2. Methadone Metabolism and Serum Concentration",
+     "quote": "Methadone’s half-life varies from 8 to 59 h based on the patient. The average time is 24 h.",
+     "sha": "0a3c57604eccace8"
+    },
+    {
+     "label": "F4",
+     "ref": "shan_2022",
+     "where": "Abstract",
+     "quote": "After their consumption, buprenorphine, methadone and their metabolites can be found in the human organism.",
+     "sha": "2156e6ab8b28aff8"
+    },
+    {
+     "label": "F6",
+     "ref": "shan_2022",
+     "where": "1. Introduction",
+     "quote": "Different biological specimens including urine, plasma, serum, blood, nails, oral fluid, hair, tissue and exhaled breath condensate have been used for the measurement of BUP, MTD and their metabolites.",
+     "sha": "e9682f6a67fbfcac"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "Toxicology screenings to monitor methadone levels may show negative for methadone, even with regular adherence to a regimen.",
+   "uses": [
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "nazmin_2025",
+     "where": "Abstract",
+     "quote": "Toxicology screenings to monitor methadone levels may show negative for methadone, even with regular adherence to a regimen.",
+     "sha": "321f5d2b1411dd44"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2022 review of analytical approaches says buprenorphine, methadone, and their metabolites can be found in the human organism.",
+   "uses": [
+    "DB",
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "shan_2022",
+     "where": "Abstract",
+     "quote": "This research aims to review a critical discussion of the latest trends for the monitoring of buprenorphine, methadone and their metabolites in various biological specimens.",
+     "sha": "2156e6ab8b28aff8"
+    },
+    {
+     "label": "F4",
+     "ref": "shan_2022",
+     "where": "Abstract",
+     "quote": "After their consumption, buprenorphine, methadone and their metabolites can be found in the human organism.",
+     "sha": "2156e6ab8b28aff8"
+    }
+   ],
+   "quote": "After their consumption, buprenorphine, methadone and their metabolites can be found in the human organism",
+   "quote_ref": "shan_2022"
+  },
+  {
+   "part": "how2",
+   "text": "The review notes that urine, plasma, serum, blood, nails, oral fluid, hair, tissue, and exhaled breath condensate have been used to measure these substances.",
+   "uses": [
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "shan_2022",
+     "where": "1. Introduction",
+     "quote": "Different biological specimens including urine, plasma, serum, blood, nails, oral fluid, hair, tissue and exhaled breath condensate have been used for the measurement of BUP, MTD and their metabolites.",
+     "sha": "e9682f6a67fbfcac"
+    }
+   ],
+   "quote": "plasma, serum, blood, nails, oral fluid, hair, tissue and exhaled breath condensate have been used",
+   "quote_ref": "shan_2022"
+  },
+  {
+   "part": "how3",
+   "text": "A 2025 case report says methadone's half-life varies from 8 to 59 hours, with an average of 24 hours.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "nazmin_2025",
+     "where": "2. Methadone Metabolism and Serum Concentration",
+     "quote": "Methadone’s half-life varies from 8 to 59 h based on the patient. The average time is 24 h.",
+     "sha": "0a3c57604eccace8"
+    }
+   ],
+   "quote": "Methadone's half-life varies from 8 to 59 h based on the patient",
+   "quote_ref": "nazmin_2025"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
    "doi": "10.2165/00003088-200241140-00003",
@@ -180,7 +376,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (7 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Methadone-induced encephalopathy: a case series and literature review",
@@ -188,8 +393,7 @@
    "kind": "review",
    "at": "10.1186/s12880-020-0410-9",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Characterizing post-mortem blood concentrations in methadone-related deaths",
@@ -197,8 +401,7 @@
    "kind": "review",
    "at": "10.1007/s00414-025-03620-0",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Rapid Methadone Metabolism in Opioid Use Disorder: A Case Report of Clinical Challenges and Individualized Treatment Approaches",
@@ -208,10 +411,16 @@
    "kept": 3,
    "thrown": [
     {
+     "kind": "text",
+     "text": "A case report on a patient with opioid use disorder and rapid methadone metabolism.",
+     "quote": "Rapid methadone metabolism in opioid use disorder: A Case Report of Clinical Challenges and Individualized Treatment Approaches",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
      "kind": "limit",
-     "text": "Further research is required to understand the physiological and genetic factors involved in methadone metabolism.",
+     "text": "",
      "quote": "More investigation into the physiological and genetic aspects of methadone metabolism is needed.",
-     "why": "the sentence is not carried by its quote and passage"
+     "why": "no sentence"
     }
    ]
   },
@@ -221,47 +430,115 @@
    "kind": "review",
    "at": "10.17305/bjbms.2020.4897",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "research paper reviewing pharmacogenomics biomarkers for personalized methadone maintenance treatment",
+     "quote": "Pharmacogenomics biomarkers seem promising for personalized methadone maintenance treatment.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Analytical Approaches for the Determination of Buprenorphine, Methadone and Their Metabolites in Biological Matrices",
    "read": "full",
    "kind": "review",
    "at": "10.3390/molecules27165211",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "The Use of Low-Dose Methadone as Add-On to Ongoing Opioid Treatment in Palliative Cancer Care-An Underrated Treatment?",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/life12050679",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Personalized Perioperative Opioid Strategies in Children: Focus on Methadone, Pharmacogenomics and Prevention of Persistent Postoperative Opioid Use",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/children12121660",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Gender differences in pharmacokinetics and pharmacodynamics of methadone substitution therapy",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fphar.2015.00122",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F4",
+   "F6",
+   "F1"
+  ],
+  "direct": "Yes",
+  "but": [
+   "F2"
+  ],
+  "how": [
+   [
+    "DB",
+    "F4",
+    "F6"
+   ],
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": "How long buprenorphine stays in the body"
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3541,
+   "but": 0.9857,
+   "how1": 0.302,
+   "how2": 0.9832,
+   "how3": 0.7121
+  },
+  "scores_quotes_alone": {
+   "short": 0.6574,
+   "but": 0.8141,
+   "how1": 0.3361,
+   "how2": 0.9316,
+   "how3": 0.4247
+  }
+ },
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "methadone-buprenorphine",
   "also": [],
