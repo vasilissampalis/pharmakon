@@ -15,36 +15,34 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-22",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "groq:qwen/qwen3.8-27b"
   },
-  "run": "44672174094",
-  "read_seconds": 150,
+  "run": "44972710214",
+  "read_seconds": 51,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 150
+  "neurons": 961.0,
+  "seconds": 107
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.97, how1 0.82",
+  "check": "short: NOT accepted: it does not answer the question itself; but: NOT accepted: it is about something else than the short answer; how1: accepted",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + F1 (40)"
  },
  "sources": [
   {
@@ -89,10 +87,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-20",
+     "verified_on": "2026-11-22",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-20"
+      "checked_on": "2026-11-22"
      }
     },
     "volume": "13",
@@ -112,31 +110,31 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment in the Midwest, USA, including a natural oversampling of Black and American Indian or Alaska Native (AIAN) persons.",
-    "text": "A study of 357 low-income justice-impacted adults in substance use disorder treatment in the Midwest, USA."
+    "quote": "we examined opioid use outcomes among 357 low-income justice-impacted adults in SUD treatment",
+    "text": "research paper on opioid use among justice-impacted adults"
    },
    "findings": [
     {
      "passage": 30,
      "where": "Results",
      "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
-     "text": "In one survey of people in substance use disorder treatment, those 40 and above most frequently reported alcohol as their primary substance, followed by cocaine/crack cocaine, then opioids.",
+     "text": "Among people 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 30,
-     "where": "Results",
-     "quote": "This was relative to alcohol, then opioids, and finally cocaine/crack cocaine among those under 40 years of age",
-     "text": "In one survey of people in substance use disorder treatment, those under 40 years of age most frequently reported alcohol as their primary substance, followed by opioids, then cocaine/crack cocaine.",
-     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 39,
      "where": "Discussion",
-     "quote": "While the most commonly reported primary drug of choice was alcohol among younger and older cohorts, younger patients were more likely to report primary preference towards opioids compared to those 40 and older",
-     "text": "In one survey of people in substance use disorder treatment, younger patients were more likely to report a primary preference for opioids than those 40 and older.",
+     "quote": "Approximately 40% of older as well as younger patients had preferences towards opioids or cocaine/crack cocaine collectively",
+     "text": "About 40% of both older and younger patients had preferences towards opioids or cocaine/crack cocaine.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 40,
+     "where": "Discussion",
+     "quote": "When it came to secondary substance preference, older adults were just as likely to report “opioids” relative to their younger peers",
+     "text": "Older adults were just as likely to report opioids as their secondary substance of choice as their younger peers.",
      "id": "F3",
      "second_hand": ""
     }
@@ -145,18 +143,126 @@
     {
      "passage": 40,
      "where": "Discussion",
-     "quote": "Given the high rates of premature mortality among Black and AIAN persons due to drug and alcohol related causes (Kepner et al.,; Friedman & Shover,) we may be observing only the patients who were engaged in lower risk drug use behaviors.",
-     "text": "The study may only be observing patients engaged in lower risk drug use behaviors due to high rates of premature mortality among Black and AIAN persons.",
+     "quote": "Zero Black or AIAN persons selected opioids (natural or synthetic) as their secondary drug of choice",
+     "text": "The study did not observe Black or AIAN persons selecting opioids as their secondary drug of choice.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "bie_2026",
+    "type": "article-journal",
+    "title": "Addictive potential of methylphenidate: A systematic review of human and preclinical behavioral, clinical and neurobiological evidence",
+    "author": [
+     {
+      "family": "Bieś",
+      "given": "Rafał"
+     },
+     {
+      "family": "Chabrzyk",
+      "given": "Adam"
+     },
+     {
+      "family": "Zborowska",
+      "given": "Katarzyna"
+     },
+     {
+      "family": "Krysta",
+      "given": "Krzysztof"
+     },
+     {
+      "family": "Krzystanek",
+      "given": "Marek"
+     }
+    ],
+    "container-title": "Pharmaceuticals",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.3390/ph19091409",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "19",
+    "issue": "9",
+    "number": "1409",
+    "PMCID": "PMC13609970"
+   },
+   "doi": "10.3390/ph19091409",
+   "pmcid": "PMC13609970",
+   "title": "Addictive Potential of Methylphenidate: A Systematic Review of Human and Preclinical Behavioral, Clinical and Neurobiological Evidence",
+   "year": 2026,
+   "journal": "Pharmaceuticals (Basel, Switzerland)",
+   "kind": "review",
+   "people": true,
+   "near": 0.442,
+   "money": [
+    "The APC was funded by WSB University and the Medical School of Silesia."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This systematic review aims to synthesize current evidence on the addictive properties of methylphenidate, including misuse, abuse, tolerance, craving, and withdrawal symptoms.",
+    "text": "A systematic review of human and preclinical behavioral, clinical and neurobiological evidence"
+   },
+   "findings": [
+    {
+     "passage": 16,
+     "where": "3. Results › 3.1. Behavioral, Subjective, and Neurobiological Indicators of the Addictive Potential of MPH",
+     "quote": "Participants were willing to complete an increasing number of responses to obtain the drug.",
+     "text": "People were willing to complete an increasing number of responses to obtain methylphenidate.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 17,
+     "where": "3. Results › 3.1. Behavioral, Subjective, and Neurobiological Indicators of the Addictive Potential of MPH",
+     "quote": "Rapid attainment of peak concentration after administration of immediate-release formulations, as well as combinations of immediate-release and extended-release forms, was associated with clear euphoric effects.",
+     "text": "Immediate-release formulations of methylphenidate were associated with clear euphoric effects.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 18,
+     "where": "3. Results › 3.1. Behavioral, Subjective, and Neurobiological Indicators of the Addictive Potential of MPH",
+     "quote": "The highest Drug Liking and Take Drug Again scores were observed after intranasal and intravenous administration.",
+     "text": "Intranasal and intravenous administration of methylphenidate resulted in the highest Drug Liking and Take Drug Again scores.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 43,
+     "where": "4. Discussion",
+     "quote": "These observations explain why, under therapeutic conditions, the risk of developing substance use disorders is relatively low, while it increases significantly in cases of non-medical use or alternative routes of administration.",
+     "text": "The risk of developing substance use disorders increases significantly in cases of non-medical use or alternative routes of administration of methylphenidate.",
+     "id": "L2",
+     "second_hand": "At the same time, findings from neuroimaging studies indicate that craving is not solely a consequence of pharmacological action but also depends on cognitive processes such as rew"
+    }
+   ],
+   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "general population preferences",
  "wanted": [
   {
    "doi": "10.1016/s0376-8716(03)00101-7",
@@ -175,14 +281,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -222,6 +320,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -232,7 +338,7 @@
    "at": "10.3390/brainsci12091189",
    "kept": 0,
    "thrown": [],
-   "fault": "its full text could not be fetched (OSError)"
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "Differences in opioid use and overdose among younger and older justice-impacted adults",
@@ -240,36 +346,259 @@
    "kind": "other",
    "at": "10.1186/s40352-025-00367-z",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Among people under 40, alcohol, opioids, and cocaine/crack cocaine accounted for 81% of all primary substance preferences.",
+     "quote": "these three selections accounted for 81% of all primary substance preferences among this younger age bracket",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "Addictive Potential of Methylphenidate: A Systematic Review of Human and Preclinical Behavioral, Clinical and Neurobiological Evidence",
    "read": "full",
    "kind": "review",
    "at": "10.3390/ph19091409",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "Decision Trade-Offs in Ecological Momentary Assessments and Digital Wearables Uptake: Protocol for a Discrete Choice Experiment",
-   "read": "full",
-   "kind": "other",
-   "at": "10.2196/47567",
+   "title": "Substance Use in Canada Series",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substance-use-and-addiction/substance-use-canada-series",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (OSError)"
+   "thrown": []
   },
   {
-   "title": "Designing mHealth Apps for Substance Use Recovery Through Real-World Co-Design and Deployment: Mixed Methods Study",
-   "read": "full",
-   "kind": "other",
-   "at": "10.2196/83984",
+   "title": "Stigma around drug use",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/opioids/stigma.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "About the Canadian Drug and Substance Watch",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/about-canadian-drug-substance-watch.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Drug addiction: getting help",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/live-well/addiction-support/drug-addiction-getting-help/",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": "general population preferences"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9667,
+   "but": 0.9744,
+   "how1": 0.8186
+  },
+  "scores_quotes_alone": {
+   "short": 0.7859,
+   "but": 0.7264,
+   "how1": 0.197
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Among people 40 and above, alcohol was most frequently used, then cocaine/crack cocaine, then opioids.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "oneil_2025",
+       "where": "Results",
+       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+       "sha": "94718403229d5736"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 correctly reflects the passage for people aged 40+, but the question asks for the favourite drug among people in general, not just that age group, so it does not answer the question. Sentence 2 concerns secondary drug choice amon)"
+    },
+    {
+     "part": "but",
+     "text": "The study did not observe Black or AIAN persons selecting opioids as their secondary drug of choice.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "oneil_2025",
+       "where": "Discussion",
+       "quote": "Zero Black or AIAN persons selected opioids (natural or synthetic) as their secondary drug of choice",
+       "sha": "8b2fb47513d3cdb3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 correctly reflects the passage for people aged 40+, but the question asks for the favourite drug among people in general, not just that age group, so it does not answer the question. Sentence 2 concerns secondary drug choice amon)"
+    },
+    {
+     "part": "how1",
+     "text": "A single study of people 40 and above in the justice system found alcohol was most frequently used.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "oneil_2025",
+       "where": "Results",
+       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+       "sha": "94718403229d5736"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Among people 40 and above, alcohol was the most frequently reported primary substance used",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "oneil_2025",
+       "where": "Results",
+       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+       "sha": "94718403229d5736"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "This study did not look at people under 40",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "oneil_2025",
+       "where": "Discussion",
+       "quote": "Zero Black or AIAN persons selected opioids (natural or synthetic) as their secondary drug of choice",
+       "sha": "8b2fb47513d3cdb3"
+      },
+      {
+       "label": "F1",
+       "ref": "oneil_2025",
+       "where": "Results",
+       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+       "sha": "94718403229d5736"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "what the passages do not say"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 study of people 40 and above in the justice system found this",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "oneil_2025",
+       "where": "Results",
+       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+       "sha": "94718403229d5736"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Among people 40 and above, alcohol was most frequently used, then cocaine/crack cocaine, then opioids.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "oneil_2025",
+       "where": "Results",
+       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+       "sha": "94718403229d5736"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "The study did not observe Black or AIAN persons selecting opioids as their secondary drug of choice.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "oneil_2025",
+       "where": "Discussion",
+       "quote": "Zero Black or AIAN persons selected opioids (natural or synthetic) as their secondary drug of choice",
+       "sha": "8b2fb47513d3cdb3"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A single study of people 40 and above found alcohol was most frequently used.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "oneil_2025",
+       "where": "Results",
+       "quote": "Among those 40 and above, the most frequently reported primary substance used was alcohol, then cocaine/crack cocaine, then opioids",
+       "sha": "94718403229d5736"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "facts",
   "also": [],
