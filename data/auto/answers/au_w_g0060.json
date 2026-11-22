@@ -1,0 +1,1020 @@
+{
+ "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
+ "id": "au_w_g0060",
+ "lane": 19,
+ "kind": "answer",
+ "from": "w_g0060",
+ "question": "What are fly agaric mushrooms (Amanita muscaria) like, and how risky are they?",
+ "ways": [
+  "what are fly agaric",
+  "how risky are fly agaric",
+  "are fly agaric dangerous",
+  "what do fly agaric do to you",
+  "how bad are fly agaric",
+  "what should people know about fly agaric"
+ ],
+ "drugs": [],
+ "made": {
+  "on": "2026-11-22",
+  "models": {
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
+  },
+  "run": "45000637934",
+  "read_seconds": 57,
+  "from": {
+   "papers": 2,
+   "summaries": 0,
+   "official": 1
+  },
+  "neurons": 0.0,
+  "seconds": 225
+ },
+ "status": "published",
+ "why": "passed every gate, and the stricter bar for an answer about dying",
+ "gates": {
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 5; gemini-3.6-flash accepted 2 of 5",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.70, but 0.99, how1 0.18, how2 0.31, how3 0.23",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "broken at try 2: short: a clinical word where an everyday one exists (“intoxication”): say it plainly; written again, then nothing against it",
+  "but": "the writer's But was not accepted (a further reader (gemini-3.6-flash) did not accept it: The passage refers specifically to Amanita muscaria specimens, not all mushrooms in general.): the code wrote the But itself, from what this answer rests on",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: met (an official page or a review read in full under the short answer; a further reader read it; no word that plays a danger down, by code and by every reader)"
+ },
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "stoevagrigorova_2025",
+    "type": "article-journal",
+    "title": "Acute amanita muscaria toxicity: A literature review and two case reports in elderly spouses following home preparation",
+    "author": [
+     {
+      "family": "Stoeva-Grigorova",
+      "given": "Stanila"
+     },
+     {
+      "family": "Yarabanova",
+      "given": "Ivanesa"
+     },
+     {
+      "family": "Radeva-Ilieva",
+      "given": "Maya"
+     },
+     {
+      "family": "Ivanova",
+      "given": "Diana"
+     },
+     {
+      "family": "Zlateva",
+      "given": "Snezha"
+     },
+     {
+      "family": "Marinov",
+      "given": "Petko"
+     }
+    ],
+    "container-title": "Toxins",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.3390/toxins17120570",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "17",
+    "issue": "12",
+    "number": "570",
+    "PMCID": "PMC12737661"
+   },
+   "doi": "10.3390/toxins17120570",
+   "pmcid": "PMC12737661",
+   "title": "Acute <i>Amanita muscaria</i> Toxicity: A Literature Review and Two Case Reports in Elderly Spouses Following Home Preparation",
+   "year": 2025,
+   "journal": "Toxins",
+   "kind": "review",
+   "people": true,
+   "near": 0.744,
+   "money": [
+    "This work was supported by the European Union–NextGenerationEU through the National Recovery and Resilience Plan of the Republic of Bulgaria [project No. BG-RRP-2.004-0009-C02, Research Group 3.1.1. Natura4Health, which is part of the MUVE-TEAM project No. BG-RRP-2.004-0009-C02]."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This work provides an integrative review of the biochemical composition, toxicodynamics, and clinical manifestations associated with A. muscaria exposure, with particular emphasis on the pharmacological actions of its principal constituents, ibotenic acid and muscimol. The review is complemented by two contemporaneous cases of severe intoxication in elderly individuals",
+    "text": "A literature review and two case reports of acute Amanita muscaria intoxication in elderly individuals."
+   },
+   "findings": [
+    {
+     "passage": 29,
+     "where": "5. Discussion",
+     "quote": "Consumption of A. muscaria rarely leads to fatal outcomes. Intoxications are largely seasonal, peaking in July–August and November, coinciding with optimal mushroom growth.",
+     "text": "Consumption of A. muscaria rarely leads to fatal outcomes, and intoxications are largely seasonal, peaking in July–August and November.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Amanita muscaria (L.) Lam., commonly known as fly agaric, remains an uncommon yet clinically important cause of acute mushroom intoxication. Although typically associated with mild to moderate neuropsychiatric disturbances, the mushroom’s toxic profile is highly variable",
+     "text": "Amanita muscaria is an uncommon but clinically important cause of acute mushroom intoxication with a highly variable toxic profile.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 29,
+     "where": "5. Discussion",
+     "quote": "Seasonal variations significantly affect toxicity, with spring and summer specimens containing up to ten times more toxins than autumnal mushrooms.",
+     "text": "Seasonal variations affect toxicity, with spring and summer specimens containing up to ten times more toxins than autumnal mushrooms.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 43,
+     "where": "6. Conclusions",
+     "quote": "further research into the metabolism, clinical biomarkers, and therapeutic strategies relevant to A. muscaria and related psychoactive fungi.",
+     "text": "Further research is required regarding the metabolism, clinical biomarkers, and therapeutic strategies for A. muscaria.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "stpiepyniak_2026",
+    "type": "article-journal",
+    "title": "Fatal poisoning of old Polish ducks with amanita muscaria",
+    "author": [
+     {
+      "family": "Stępień-Pyśniak",
+      "given": "Dagmara"
+     },
+     {
+      "family": "Tutaj",
+      "given": "Krzysztof"
+     },
+     {
+      "family": "Niczyporuk",
+      "given": "Jowita S."
+     },
+     {
+      "family": "Sell",
+      "given": "Bartosz"
+     },
+     {
+      "family": "Marek",
+      "given": "Agnieszka"
+     },
+     {
+      "family": "Piekarska",
+      "given": "Karolina"
+     },
+     {
+      "family": "Ognik",
+      "given": "Katarzyna"
+     }
+    ],
+    "container-title": "BMC Veterinary Research",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1186/s12917-026-05461-4",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-22",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-22"
+     }
+    },
+    "volume": "22",
+    "issue": "1",
+    "number": "301",
+    "PMCID": "PMC13195819"
+   },
+   "doi": "10.1186/s12917-026-05461-4",
+   "pmcid": "PMC13195819",
+   "title": "Fatal poisoning of Old Polish ducks with Amanita muscaria",
+   "year": 2026,
+   "journal": "BMC veterinary research",
+   "kind": "case",
+   "people": false,
+   "near": 0.695,
+   "money": [
+    "AcknowledgementsWe wish to thank Dr. Dominik Bakalarz from the Institute of Forensic Research in Kraków for providing the analytical methodology for the determination of IBA and MUS in mushroom samples and digestive tract contents."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This report presents the first documented case of fatal poisoning of Old Polish ducks following ingestion of A. muscaria, confirmed by anatomopathological and toxicological analyses.",
+    "text": "A case report on the fatal poisoning of Old Polish ducks by Amanita muscaria."
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Amanita muscaria (fly agaric) is a poisonous mushroom containing ibotenic acid (IBA) and muscimol (MUS), two neuroactive alkaloids capable of causing severe or fatal intoxication.",
+     "text": "Amanita muscaria is a poisonous mushroom that contains the neuroactive alkaloids ibotenic acid and muscimol, which can cause severe or fatal intoxication.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Discussion",
+     "quote": "People intentionally consume fresh or dried red fly agaric mushrooms to induce altered states of consciousness, for medicinal purposes, for spiritual needs, or to enhance mental performance.",
+     "text": "People intentionally consume fresh or dried red fly agaric mushrooms to induce altered states of consciousness, for medicinal purposes, for spiritual needs, or to enhance mental performance.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "In the case of domestic animals (e.g. dogs and Old Polish ducks – the case described here), ingestion of A. muscaria results in clinical signs of poisoning similar to those observed in humans, sometimes even leading to death.",
+     "text": "Ingestion of Amanita muscaria by domestic animals like dogs and Old Polish ducks results in clinical signs of poisoning similar to those in humans, which can lead to death.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "It is difficult to determine whether the same characteristic contributed to the consumption of A. muscaria by the Old Polish drakes.",
+     "text": "It is difficult to determine if the fish-like smell of the mushrooms contributed to their consumption by the Old Polish drakes.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_magic-mushrooms",
+    "type": "webpage",
+    "title": "Psylocibin, Psilocin",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/magic-mushrooms",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       22
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-22"
+    }
+   },
+   "title": "Psylocibin, Psilocin",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.528,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/magic-mushrooms",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 12,
+     "where": "Mixing psylocibin, psilocin with other drugs / What does it look like?",
+     "quote": "Fly agarics look like red and white spotted toadstools",
+     "text": "Fly agaric mushrooms appear as red and white spotted toadstools.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 10,
+     "where": "Mixing psylocibin, psilocin with other drugs / Physical health risks",
+     "quote": "There are many types of mushroom in the UK and some, like the fly agaric, can kill you.",
+     "text": "Fly agaric mushrooms are a type of mushroom that can kill people.",
+     "id": "F11",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "Mixing psylocibin, psilocin with other drugs / What does it look like?",
+     "quote": "It’s important to know that some types of magic mushroom are stronger than others. For example, the fly agaric mushroom is usually more potent than the liberty cap mushroom.",
+     "text": "Fly agaric mushrooms are typically more potent than liberty cap mushrooms.",
+     "id": "F12",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Fly agaric mushrooms look like red and white spotted toadstools. They contain chemicals that can cause severe or fatal poisoning.",
+   "uses": [
+    "F10",
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F10",
+     "ref": "frank_magic-mushrooms",
+     "where": "Mixing psylocibin, psilocin with other drugs / What does it look like?",
+     "quote": "Fly agarics look like red and white spotted toadstools",
+     "sha": "679c6ab35a1381a2"
+    },
+    {
+     "label": "F4",
+     "ref": "stpiepyniak_2026",
+     "where": "Abstract",
+     "quote": "Amanita muscaria (fly agaric) is a poisonous mushroom containing ibotenic acid (IBA) and muscimol (MUS), two neuroactive alkaloids capable of causing severe or fatal intoxication.",
+     "sha": "8623097f3b65d1a9"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review, 1 case report and 1 official page.",
+   "uses": [
+    "DA",
+    "DB",
+    "F10"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "stoevagrigorova_2025",
+     "where": "Abstract",
+     "quote": "This work provides an integrative review of the biochemical composition, toxicodynamics, and clinical manifestations associated with A. muscaria exposure, with particular emphasis on the pharmacological actions of its principal constituents, ibotenic acid and muscimol. The review is complemented by two contemporaneous cases of severe intoxication in elderly individuals",
+     "sha": "dbfb7cad8c375612"
+    },
+    {
+     "label": "DB",
+     "ref": "stpiepyniak_2026",
+     "where": "Abstract",
+     "quote": "This report presents the first documented case of fatal poisoning of Old Polish ducks following ingestion of A. muscaria, confirmed by anatomopathological and toxicological analyses.",
+     "sha": "8623097f3b65d1a9"
+    },
+    {
+     "label": "F10",
+     "ref": "frank_magic-mushrooms",
+     "where": "Mixing psylocibin, psilocin with other drugs / What does it look like?",
+     "quote": "Fly agarics look like red and white spotted toadstools",
+     "sha": "679c6ab35a1381a2"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "A 2025 review and two case reports of elderly people found fly agaric rarely causes death. It is an uncommon but important cause of mushroom poisoning with a highly variable toxic profile.",
+   "uses": [
+    "DA",
+    "F1",
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "stoevagrigorova_2025",
+     "where": "Abstract",
+     "quote": "This work provides an integrative review of the biochemical composition, toxicodynamics, and clinical manifestations associated with A. muscaria exposure, with particular emphasis on the pharmacological actions of its principal constituents, ibotenic acid and muscimol. The review is complemented by two contemporaneous cases of severe intoxication in elderly individuals",
+     "sha": "dbfb7cad8c375612"
+    },
+    {
+     "label": "F1",
+     "ref": "stoevagrigorova_2025",
+     "where": "5. Discussion",
+     "quote": "Consumption of A. muscaria rarely leads to fatal outcomes. Intoxications are largely seasonal, peaking in July–August and November, coinciding with optimal mushroom growth.",
+     "sha": "4134c09da63c009a"
+    },
+    {
+     "label": "F2",
+     "ref": "stoevagrigorova_2025",
+     "where": "Abstract",
+     "quote": "Amanita muscaria (L.) Lam., commonly known as fly agaric, remains an uncommon yet clinically important cause of acute mushroom intoxication. Although typically associated with mild to moderate neuropsychiatric disturbances, the mushroom’s toxic profile is highly variable",
+     "sha": "dbfb7cad8c375612"
+    },
+    {
+     "label": "F3",
+     "ref": "stoevagrigorova_2025",
+     "where": "5. Discussion",
+     "quote": "Seasonal variations significantly affect toxicity, with spring and summer specimens containing up to ten times more toxins than autumnal mushrooms.",
+     "sha": "4134c09da63c009a"
+    }
+   ],
+   "quote": "Intoxications are largely seasonal, peaking in July-August and November, coinciding with optimal mushroom growth",
+   "quote_ref": "stoevagrigorova_2025"
+  }
+ ],
+ "complete": true,
+ "missing": "",
+ "wanted": [
+  {
+   "doi": "10.1016/j.pharmthera.2004.03.003",
+   "apa": "Halpern, J. H. (2004). Hallucinogens and dissociative agents naturally growing in the United States. Pharmacology & Therapeutics, 102(2), 131–138. https://doi.org/10.1016/j.pharmthera.2004.03.003",
+   "near": 0.529,
+   "why": "a review or meta-analysis in people; nearness to the question 0.53; cited 113 times; its full text is not open",
+   "file": "halpern_2004_j_pharmthera_2004_03_003.pdf"
+  },
+  {
+   "doi": "10.1002/14651858.cd000203",
+   "apa": "Soares, K. V. S., McGrath, J. J., & Deeks, J. J. (2001). Gamma-aminobutyric acid agonists for neuroleptic-induced tardive dyskinesia. Cochrane Database of Systematic Reviews. Advance online publication. https://doi.org/10.1002/14651858.cd000203",
+   "near": 0.54,
+   "why": "a review or meta-analysis in people; nearness to the question 0.54; cited 6 times; its full text is not open",
+   "file": "soares_2001_14651858_cd000203.pdf"
+  },
+  {
+   "doi": "10.1177/09603271251323134",
+   "apa": "Wijesekara, T., & Xu, B. (2025). Insights into therapeutic potential and practical applications of natural toxins from poisonous mushrooms. Human & Experimental Toxicology, 44, Article 09603271251323134. https://doi.org/10.1177/09603271251323134",
+   "near": 0.559,
+   "why": "a review or meta-analysis; nearness to the question 0.56; cited 1 times; its full text is not open",
+   "file": "wijesekara_2025_09603271251323134.pdf"
+  }
+ ],
+ "person": null,
+ "history": [],
+ "looked": [
+  {
+   "title": "Acute <i>Amanita muscaria</i> Toxicity: A Literature Review and Two Case Reports in Elderly Spouses Following Home Preparation",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/toxins17120570",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Fatal poisoning of Old Polish ducks with Amanita muscaria",
+   "read": "full",
+   "kind": "case",
+   "at": "10.1186/s12917-026-05461-4",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Fresh Amanita muscaria mushrooms are particularly toxic because of their high ibotenic acid content, with a 50–70 g fruiting body containing up to 70 mg of ibotenic acid and about 6 mg of muscimol.",
+     "quote": "Fresh A. muscaria mushrooms are known to be particularly toxic due to their high ibotenic acid content. A fly agaric fruiting body weighing 50–70 g (fresh weight) can contain up to 70 mg of ibotenic a",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
+  },
+  {
+   "title": "Psilocybin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/psilocybin",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Psylocibin, Psilocin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/magic-mushrooms",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "People generally avoid eating fly agaric mushrooms raw because they can cause sickness.",
+     "quote": "People don’t tend to eat fly agaric mushrooms raw as they can make you feel very sick.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  }
+ ],
+ "plan": {
+  "short": [
+   "F10",
+   "F4"
+  ],
+  "direct": "",
+  "but": [
+   "F3"
+  ],
+  "how": [
+   [
+    "F7",
+    "F8",
+    "F9"
+   ],
+   [
+    "DA",
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
+    "DB",
+    "F4",
+    "F5",
+    "F6"
+   ]
+  ],
+  "unanswered": "exact lethal dose and safe consumption guidelines"
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The passages do not mention that the organization 'Drug Science' is a UK charity of scientists."
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    false,
+    "The passage refers specifically to Amanita muscaria specimens, not all mushrooms in general."
+   ],
+   "how1": [
+    false,
+    "The passage text does not state that Drug Science is a UK charity of scientists."
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    false,
+    "The passage specifies that domestic animals (like dogs and Old Polish ducks) show signs similar to humans, whereas some wild animals like squirrels experience no adverse health effects, so stating generally that animals show similar signs i"
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.702,
+   "but": 0.9867,
+   "how1": 0.1798,
+   "how2": 0.3057,
+   "how3": 0.2305
+  },
+  "scores_quotes_alone": {
+   "short": 0.5672,
+   "but": 0.9842,
+   "how1": 0.0507,
+   "how2": 0.4745,
+   "how3": 0.8697
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Fly agaric mushrooms look like red and white spotted toadstools. They contain chemicals that can cause severe or fatal poisoning.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "frank_magic-mushrooms",
+       "where": "Mixing psylocibin, psilocin with other drugs / What does it look like?",
+       "quote": "Fly agarics look like red and white spotted toadstools",
+       "sha": "679c6ab35a1381a2"
+      },
+      {
+       "label": "F4",
+       "ref": "stpiepyniak_2026",
+       "where": "Abstract",
+       "quote": "Amanita muscaria (fly agaric) is a poisonous mushroom containing ibotenic acid (IBA) and muscimol (MUS), two neuroactive alkaloids capable of causing severe or fatal intoxication.",
+       "sha": "8623097f3b65d1a9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Spring and summer mushrooms can contain up to ten times more toxins than autumn ones, changing the risk.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "stoevagrigorova_2025",
+       "where": "5. Discussion",
+       "quote": "Seasonal variations significantly affect toxicity, with spring and summer specimens containing up to ten times more toxins than autumnal mushrooms.",
+       "sha": "4134c09da63c009a"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that seasonal variations significantly affect toxicity, but it does not state that this changes the risk."
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says fly agaric is a different family from psilocybin mushrooms. Its key chemicals are ibotenic acid and muscimol.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "drugscience_psilocybin",
+       "where": "Myths and Misconceptions",
+       "quote": "Fly agaric mushrooms (the fairytale toadstools with white spots on red) belong to a different family and should not be confused with psilocybin-containing mushrooms.",
+       "sha": "75790c3a18ed9e5d"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_psilocybin",
+       "where": "Myths and Misconceptions",
+       "quote": "Rather than psilocybin, the key chemicals associated with the psychoactive effects include ibotenic acid and muscimol.",
+       "sha": "75790c3a18ed9e5d"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages state that the information comes from Drug Science, but do not mention that Drug Science is a UK charity of scientists."
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science says effects can include twitching, drooling, sweating, dizziness, vomiting, and delirium. These are very unlike psilocybin effects.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "drugscience_psilocybin",
+       "where": "Myths and Misconceptions",
+       "quote": "Effects can include twitching, drooling, sweating, dizziness, vomiting and delirium, very unlike the fairly mild physical effects of psilocybin mushrooms.",
+       "sha": "75790c3a18ed9e5d"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies that the effects are very unlike the 'fairly mild physical effects of psilocybin mushrooms', not psilocybin effects in general."
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review and two case reports of elderly people found fly agaric rarely causes death. It is an uncommon but important cause of poisoning.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "stoevagrigorova_2025",
+       "where": "Abstract",
+       "quote": "This work provides an integrative review of the biochemical composition, toxicodynamics, and clinical manifestations associated with A. muscaria exposure, with particular emphasis on the pharmacological actions of its principal constituents, ibotenic acid and muscimol. The review is complemented by two contemporaneous cases of severe intoxication in elderly individuals",
+       "sha": "dbfb7cad8c375612"
+      },
+      {
+       "label": "F1",
+       "ref": "stoevagrigorova_2025",
+       "where": "5. Discussion",
+       "quote": "Consumption of A. muscaria rarely leads to fatal outcomes. Intoxications are largely seasonal, peaking in July–August and November, coinciding with optimal mushroom growth.",
+       "sha": "4134c09da63c009a"
+      },
+      {
+       "label": "F2",
+       "ref": "stoevagrigorova_2025",
+       "where": "Abstract",
+       "quote": "Amanita muscaria (L.) Lam., commonly known as fly agaric, remains an uncommon yet clinically important cause of acute mushroom intoxication. Although typically associated with mild to moderate neuropsychiatric disturbances, the mushroom’s toxic profile is highly variable",
+       "sha": "dbfb7cad8c375612"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage describes fly agaric as an uncommon yet clinically important cause of 'acute mushroom intoxication', not simply of poisoning."
+    },
+    {
+     "part": "how4",
+     "text": "A 2026 case report on Old Polish ducks found fly agaric can cause death. People also use it for altered states or mental performance.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "stpiepyniak_2026",
+       "where": "Abstract",
+       "quote": "This report presents the first documented case of fatal poisoning of Old Polish ducks following ingestion of A. muscaria, confirmed by anatomopathological and toxicological analyses.",
+       "sha": "8623097f3b65d1a9"
+      },
+      {
+       "label": "F4",
+       "ref": "stpiepyniak_2026",
+       "where": "Abstract",
+       "quote": "Amanita muscaria (fly agaric) is a poisonous mushroom containing ibotenic acid (IBA) and muscimol (MUS), two neuroactive alkaloids capable of causing severe or fatal intoxication.",
+       "sha": "8623097f3b65d1a9"
+      },
+      {
+       "label": "F5",
+       "ref": "stpiepyniak_2026",
+       "where": "Discussion",
+       "quote": "People intentionally consume fresh or dried red fly agaric mushrooms to induce altered states of consciousness, for medicinal purposes, for spiritual needs, or to enhance mental performance.",
+       "sha": "567f24e1aacb48e7"
+      },
+      {
+       "label": "F6",
+       "ref": "stpiepyniak_2026",
+       "where": "Discussion",
+       "quote": "In the case of domestic animals (e.g. dogs and Old Polish ducks – the case described here), ingestion of A. muscaria results in clinical signs of poisoning similar to those observed in humans, sometimes even leading to death.",
+       "sha": "0f5c100569b19d34"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states people consume it to induce 'altered states of consciousness', omitting 'of consciousness' alters the meaning."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Fly agaric mushrooms look like red and white spotted toadstools. They contain chemicals that can cause severe or fatal intoxication.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "frank_magic-mushrooms",
+       "where": "Mixing psylocibin, psilocin with other drugs / What does it look like?",
+       "quote": "Fly agarics look like red and white spotted toadstools",
+       "sha": "679c6ab35a1381a2"
+      },
+      {
+       "label": "F4",
+       "ref": "stpiepyniak_2026",
+       "where": "Abstract",
+       "quote": "Amanita muscaria (fly agaric) is a poisonous mushroom containing ibotenic acid (IBA) and muscimol (MUS), two neuroactive alkaloids capable of causing severe or fatal intoxication.",
+       "sha": "8623097f3b65d1a9"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“intoxication”): say it plainly"
+    },
+    {
+     "part": "but",
+     "text": "Spring and summer specimens contain up to ten times more toxins than autumnal mushrooms.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "stoevagrigorova_2025",
+       "where": "5. Discussion",
+       "quote": "Seasonal variations significantly affect toxicity, with spring and summer specimens containing up to ten times more toxins than autumnal mushrooms.",
+       "sha": "4134c09da63c009a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says fly agaric is a different family than psilocybin mushrooms. Its key chemicals are ibotenic acid and muscimol. Effects can include twitching, drooling, sweating, dizziness, vomiting, and delirium.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "drugscience_psilocybin",
+       "where": "Myths and Misconceptions",
+       "quote": "Fly agaric mushrooms (the fairytale toadstools with white spots on red) belong to a different family and should not be confused with psilocybin-containing mushrooms.",
+       "sha": "75790c3a18ed9e5d"
+      },
+      {
+       "label": "F8",
+       "ref": "drugscience_psilocybin",
+       "where": "Myths and Misconceptions",
+       "quote": "Rather than psilocybin, the key chemicals associated with the psychoactive effects include ibotenic acid and muscimol.",
+       "sha": "75790c3a18ed9e5d"
+      },
+      {
+       "label": "F9",
+       "ref": "drugscience_psilocybin",
+       "where": "Myths and Misconceptions",
+       "quote": "Effects can include twitching, drooling, sweating, dizziness, vomiting and delirium, very unlike the fairly mild physical effects of psilocybin mushrooms.",
+       "sha": "75790c3a18ed9e5d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review and two case reports of elderly people found consumption rarely leads to fatal outcomes. It is an uncommon but clinically important cause of acute mushroom intoxication with a highly variable toxic profile.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "stoevagrigorova_2025",
+       "where": "Abstract",
+       "quote": "This work provides an integrative review of the biochemical composition, toxicodynamics, and clinical manifestations associated with A. muscaria exposure, with particular emphasis on the pharmacological actions of its principal constituents, ibotenic acid and muscimol. The review is complemented by two contemporaneous cases of severe intoxication in elderly individuals",
+       "sha": "dbfb7cad8c375612"
+      },
+      {
+       "label": "F1",
+       "ref": "stoevagrigorova_2025",
+       "where": "5. Discussion",
+       "quote": "Consumption of A. muscaria rarely leads to fatal outcomes. Intoxications are largely seasonal, peaking in July–August and November, coinciding with optimal mushroom growth.",
+       "sha": "4134c09da63c009a"
+      },
+      {
+       "label": "F2",
+       "ref": "stoevagrigorova_2025",
+       "where": "Abstract",
+       "quote": "Amanita muscaria (L.) Lam., commonly known as fly agaric, remains an uncommon yet clinically important cause of acute mushroom intoxication. Although typically associated with mild to moderate neuropsychiatric disturbances, the mushroom’s toxic profile is highly variable",
+       "sha": "dbfb7cad8c375612"
+      },
+      {
+       "label": "F3",
+       "ref": "stoevagrigorova_2025",
+       "where": "5. Discussion",
+       "quote": "Seasonal variations significantly affect toxicity, with spring and summer specimens containing up to ten times more toxins than autumnal mushrooms.",
+       "sha": "4134c09da63c009a"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 case report on Old Polish ducks found ingestion causes poisoning signs similar to humans, sometimes leading to death. People intentionally consume the mushrooms for altered states, medicinal, spiritual, or mental performance reasons.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "stpiepyniak_2026",
+       "where": "Abstract",
+       "quote": "This report presents the first documented case of fatal poisoning of Old Polish ducks following ingestion of A. muscaria, confirmed by anatomopathological and toxicological analyses.",
+       "sha": "8623097f3b65d1a9"
+      },
+      {
+       "label": "F4",
+       "ref": "stpiepyniak_2026",
+       "where": "Abstract",
+       "quote": "Amanita muscaria (fly agaric) is a poisonous mushroom containing ibotenic acid (IBA) and muscimol (MUS), two neuroactive alkaloids capable of causing severe or fatal intoxication.",
+       "sha": "8623097f3b65d1a9"
+      },
+      {
+       "label": "F5",
+       "ref": "stpiepyniak_2026",
+       "where": "Discussion",
+       "quote": "People intentionally consume fresh or dried red fly agaric mushrooms to induce altered states of consciousness, for medicinal purposes, for spiritual needs, or to enhance mental performance.",
+       "sha": "567f24e1aacb48e7"
+      },
+      {
+       "label": "F6",
+       "ref": "stpiepyniak_2026",
+       "where": "Discussion",
+       "quote": "In the case of domestic animals (e.g. dogs and Old Polish ducks – the case described here), ingestion of A. muscaria results in clinical signs of poisoning similar to those observed in humans, sometimes even leading to death.",
+       "sha": "0f5c100569b19d34"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "Spring and summer mushrooms can have up to ten times more toxins than autumn ones.",
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "stoevagrigorova_2025",
+     "where": "5. Discussion",
+     "quote": "Seasonal variations significantly affect toxicity, with spring and summer specimens containing up to ten times more toxins than autumnal mushrooms.",
+     "sha": "4134c09da63c009a"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage refers specifically to Amanita muscaria specimens, not all mushrooms in general."
+  },
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says fly agaric is a different family from psilocybin mushrooms. Its key chemicals are ibotenic acid and muscimol. Effects can include twitching, drooling, sweating, dizziness, vomiting, and delirium.",
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "drugscience_psilocybin",
+     "where": "Myths and Misconceptions",
+     "quote": "Fly agaric mushrooms (the fairytale toadstools with white spots on red) belong to a different family and should not be confused with psilocybin-containing mushrooms.",
+     "sha": "75790c3a18ed9e5d"
+    },
+    {
+     "label": "F8",
+     "ref": "drugscience_psilocybin",
+     "where": "Myths and Misconceptions",
+     "quote": "Rather than psilocybin, the key chemicals associated with the psychoactive effects include ibotenic acid and muscimol.",
+     "sha": "75790c3a18ed9e5d"
+    },
+    {
+     "label": "F9",
+     "ref": "drugscience_psilocybin",
+     "where": "Myths and Misconceptions",
+     "quote": "Effects can include twitching, drooling, sweating, dizziness, vomiting and delirium, very unlike the fairly mild physical effects of psilocybin mushrooms.",
+     "sha": "75790c3a18ed9e5d"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages do not state that Drug Science is a UK charity of scientists."
+  },
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2026 case report on Old Polish ducks found fly agaric can cause death. People use it for altered states, medicine, or mental performance. Animals show similar signs to humans.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "stpiepyniak_2026",
+     "where": "Abstract",
+     "quote": "This report presents the first documented case of fatal poisoning of Old Polish ducks following ingestion of A. muscaria, confirmed by anatomopathological and toxicological analyses.",
+     "sha": "8623097f3b65d1a9"
+    },
+    {
+     "label": "F4",
+     "ref": "stpiepyniak_2026",
+     "where": "Abstract",
+     "quote": "Amanita muscaria (fly agaric) is a poisonous mushroom containing ibotenic acid (IBA) and muscimol (MUS), two neuroactive alkaloids capable of causing severe or fatal intoxication.",
+     "sha": "8623097f3b65d1a9"
+    },
+    {
+     "label": "F5",
+     "ref": "stpiepyniak_2026",
+     "where": "Discussion",
+     "quote": "People intentionally consume fresh or dried red fly agaric mushrooms to induce altered states of consciousness, for medicinal purposes, for spiritual needs, or to enhance mental performance.",
+     "sha": "567f24e1aacb48e7"
+    },
+    {
+     "label": "F6",
+     "ref": "stpiepyniak_2026",
+     "where": "Discussion",
+     "quote": "In the case of domestic animals (e.g. dogs and Old Polish ducks – the case described here), ingestion of A. muscaria results in clinical signs of poisoning similar to those observed in humans, sometimes even leading to death.",
+     "sha": "0f5c100569b19d34"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies that domestic animals (like dogs and Old Polish ducks) show signs similar to humans, whereas some wild animals like squirrels experience no adverse health effects, so stating generally that animals show similar signs i"
+  }
+ ],
+ "stakes": "dying",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
+ "place": {
+  "home": "new:Amanita muscaria (fly agaric)",
+  "also": [
+   "psilocybin"
+  ],
+  "cls": "Atypical psychedelics",
+  "why": "it names a drug that has no page yet"
+ }
+}
