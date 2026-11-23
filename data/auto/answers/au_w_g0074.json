@@ -17,135 +17,272 @@
   "fentanyl-and-analogues"
  ],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
   },
-  "run": "45014313344",
+  "run": "45138481007",
+  "read_by": {
+   "gemini-3.1-flash-lite": 3,
+   "gemini-3.5-flash-lite": 1,
+   "gpt-oss-20b": 1
+  },
   "read_seconds": 100,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 165
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (5 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: but: it says “each”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.65, but 0.97, how1 0.61, how2 0.65, how3 0.92, how4 0.98",
+  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "huhn_2024",
+    "id": "barletta_2025",
     "type": "article-journal",
-    "title": "Fentanyl, heroin, methamphetamine, and cocaine analyte concentrations in urine drug testing specimens",
+    "title": "The rise of fentanyl: Molecular aspects and forensic investigations",
     "author": [
      {
-      "family": "Huhn",
-      "given": "Andrew S."
+      "family": "Barletta",
+      "given": "Cecilia"
      },
      {
-      "family": "Whitley",
-      "given": "Penn"
+      "family": "Di Natale",
+      "given": "Virginia"
      },
      {
-      "family": "Bolin",
-      "given": "B. Levi"
+      "family": "Esposito",
+      "given": "Massimiliano"
      },
      {
-      "family": "Dunn",
-      "given": "Kelly E."
+      "family": "Chisari",
+      "given": "Mario"
+     },
+     {
+      "family": "Cocimano",
+      "given": "Giuseppe"
+     },
+     {
+      "family": "Di Mauro",
+      "given": "Lucio"
+     },
+     {
+      "family": "Salerno",
+      "given": "Monica"
+     },
+     {
+      "family": "Sessa",
+      "given": "Francesco"
      }
     ],
-    "container-title": "JAMA Network Open",
+    "container-title": "International Journal of Molecular Sciences",
     "issued": {
      "date-parts": [
       [
-       2024
+       2025
       ]
      ]
     },
-    "DOI": "10.1001/jamanetworkopen.2024.41063",
+    "DOI": "10.3390/ijms26020444",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
+     "verified_on": "2026-11-23",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-22"
+      "checked_on": "2026-11-23"
      }
     },
-    "volume": "7",
-    "issue": "10",
-    "number": "e2441063",
-    "PMCID": "PMC11577146"
+    "volume": "26",
+    "issue": "2",
+    "number": "444",
+    "PMCID": "PMC11765396"
    },
-   "doi": "10.1001/jamanetworkopen.2024.41063",
-   "pmcid": "PMC11577146",
-   "title": "Fentanyl, Heroin, Methamphetamine, and Cocaine Analyte Concentrations in Urine Drug Testing Specimens",
-   "year": 2024,
-   "journal": "JAMA network open",
-   "kind": "other",
-   "people": true,
-   "near": 0.737,
-   "money": [],
+   "doi": "10.3390/ijms26020444",
+   "pmcid": "PMC11765396",
+   "title": "The Rise of Fentanyl: Molecular Aspects and Forensic Investigations",
+   "year": 2025,
+   "journal": "International journal of molecular sciences",
+   "kind": "review",
+   "people": false,
+   "near": 0.695,
+   "money": [
+    "The authors declare no conflicts of interest.",
+    "This research received no external funding."
+   ],
    "design": {
-    "passage": 2,
+    "passage": 1,
     "where": "Abstract",
-    "quote": "In this cross-sectional study of 921 931 unique urine samples collected between 2013 and 2023, adjusted concentrations of fentanyl, methamphetamine, and, to a lesser degree, cocaine increased while heroin concentration decreased.",
-    "text": "a cross-sectional study of urine samples"
+    "quote": "This review aims to provide an in-depth analysis of fentanyl’s medical applications, pharmacokinetics, metabolism, and pharmacogenetics while examining its adverse effects and forensic implications.",
+    "text": "a review of fentanyl's medical and forensic aspects"
    },
    "findings": [
     {
-     "passage": 22,
-     "where": "Discussion",
-     "quote": "Therapeutically delivered fentanyl is known to be sequestered in peripheral fat and muscle stores and subject to a delayed, compartmental clearance process, although sequestration and clearance of supratherapeutic doses of IMF remain poorly understood.",
-     "text": "Therapeutically delivered fentanyl is known to be sequestered in peripheral fat and muscle stores and subject to a delayed, compartmental clearance process, although sequestration and clearance of supratherapeutic doses of illicitly manufactured fentanyl remain poorly understood.",
+     "passage": 57,
+     "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+     "quote": "Accurate toxicological analysis requires the proper collection and preservation of biological samples, including blood (preferably from the femoral vein), urine, vitreous humor, gastric contents, bile, and solid organ tissues",
+     "text": "Toxicological analysis can detect fentanyl in biological samples including blood, urine, vitreous humor, gastric contents, bile, and solid organ tissues.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 15,
-     "where": "Results › Changes in Drug Concentrations Over Time",
-     "quote": "the incidence of positive UDT results for fentanyl and methamphetamine increased rapidly during most of the study period, peaking in 2021",
-     "text": "The incidence of positive urine drug testing results for fentanyl and methamphetamine increased rapidly during most of the study period, peaking in 2021.",
+     "passage": 57,
+     "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+     "quote": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
+     "text": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "3. Pharmacokinetics, Metabolism, and Pharmacogenetics of Fentanyl",
+     "quote": "It later accumulates in less vascularized tissues, including muscles and adipose tissue, which act as a drug reservoir, contributing to prolonged effects even after administration ceases.",
+     "text": "Fentanyl accumulates in muscles and adipose tissue, which act as a drug reservoir and contribute to prolonged effects after administration stops.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 22,
-     "where": "Discussion",
-     "quote": "sequestration and clearance of supratherapeutic doses of IMF remain poorly understood.",
-     "text": "The sequestration and clearance of supratherapeutic doses of illicitly manufactured fentanyl remain poorly understood.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Genetic polymorphisms in CYP3A4, OPRM1, and ABCB1 significantly influence individual responses to fentanyl, affecting its efficacy and potential for toxicity.",
+     "text": "Individual responses to fentanyl are influenced by genetic polymorphisms in CYP3A4, OPRM1, and ABCB1.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "karamouzian_2018",
+    "type": "article-journal",
+    "title": "Evaluation of a fentanyl drug checking service for clients of a supervised injection facility, Vancouver, Canada",
+    "author": [
+     {
+      "family": "Karamouzian",
+      "given": "Mohammad"
+     },
+     {
+      "family": "Dohoo",
+      "given": "Carolyn"
+     },
+     {
+      "family": "Forsting",
+      "given": "Sara"
+     },
+     {
+      "family": "McNeil",
+      "given": "Ryan"
+     },
+     {
+      "family": "Kerr",
+      "given": "Thomas"
+     },
+     {
+      "family": "Lysyshyn",
+      "given": "Mark"
+     }
+    ],
+    "container-title": "Harm Reduction Journal",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.1186/s12954-018-0252-8",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     },
+     "metadata_corrections": {
+      "note": "Title in APA sentence case with the place names kept as proper nouns ('Vancouver'), which the casing rules lowered.",
+      "source": "Crossref title (browser record, 2026-10-26): 'Evaluation of a fentanyl drug checking service for clients of a supervised injection facility, Vancouver, Canada'"
+     }
+    },
+    "volume": "15",
+    "issue": "1",
+    "number": "46",
+    "PMCID": "PMC6131768"
+   },
+   "doi": "10.1186/s12954-018-0252-8",
+   "pmcid": "PMC6131768",
+   "title": "Evaluation of a fentanyl drug checking service for clients of a supervised injection facility, Vancouver, Canada",
+   "year": 2018,
+   "journal": "Harm reduction journal",
+   "kind": "other",
+   "people": true,
+   "near": 0.704,
+   "money": [
+    "The authors declare that they have no competing interests."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This cross-sectional study evaluates a drug checking intervention for the clients of a supervised injection facility (SIF) in Vancouver.",
+    "text": "A cross-sectional study evaluating a drug checking intervention for clients of a supervised injection facility in Vancouver."
+   },
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Abstract",
+     "quote": "Insite clients were offered an opportunity to check their drugs for fentanyl using a test strip designed to test urine for fentanyl.",
+     "text": "In one survey, clients were offered an opportunity to check their drugs for fentanyl using a test strip designed to test urine for fentanyl.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Discussion",
+     "quote": "Previous studies including a recent report by Health Canada have raised concerns about the validity of these test strips in detecting novel analogues of fentanyl in street drug samples",
+     "text": "There are concerns regarding the validity of these test strips in detecting novel analogues of fentanyl in street drug samples.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "precise detection window",
  "wanted": [
   {
    "doi": "10.2165/00003088-198308050-00004",
@@ -170,7 +307,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (5 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "A Review of Toxicological Profile of Fentanyl-A 2024 Update",
@@ -186,15 +332,14 @@
    "kind": "other",
    "at": "10.1021/acs.analchem.5c01129",
    "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "thrown": []
   },
   {
    "title": "Fentanyl, Heroin, Methamphetamine, and Cocaine Analyte Concentrations in Urine Drug Testing Specimens",
    "read": "full",
    "kind": "other",
    "at": "10.1001/jamanetworkopen.2024.41063",
-   "kept": 2,
+   "kept": 0,
    "thrown": []
   },
   {
@@ -202,9 +347,8 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/ijms26020444",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Effect of Fentanyl as an Adjuvant to Brachial Plexus Block for Upper Extremity Surgeries: A Systematic Review and Meta-Analysis of RCTs",
@@ -220,21 +364,421 @@
    "read": "full",
    "kind": "other",
    "at": "10.1186/s12954-018-0252-8",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Modern Methods for Detection of Fentanyl and Its Analogues: A Comprehensive Review of Technologies and Applications",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/molecules30173577",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F3",
+   "F1",
+   "F2"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F3",
+    "F1",
+    "F2"
+   ],
+   [
+    "DB",
+    "F4"
+   ]
+  ],
+  "unanswered": "precise detection window"
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Fentanyl can stay in the body for a long time because it builds up in muscles and fat. Tests can find it in blood, urine, and hair.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "barletta_2025",
+       "where": "3. Pharmacokinetics, Metabolism, and Pharmacogenetics of Fentanyl",
+       "quote": "It later accumulates in less vascularized tissues, including muscles and adipose tissue, which act as a drug reservoir, contributing to prolonged effects even after administration ceases.",
+       "sha": "a0c4d05364a2868f"
+      },
+      {
+       "label": "F1",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Accurate toxicological analysis requires the proper collection and preservation of biological samples, including blood (preferably from the femoral vein), urine, vitreous humor, gastric contents, bile, and solid organ tissues",
+       "sha": "16cfe8b88dc9746d"
+      },
+      {
+       "label": "F2",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Genetic differences in specific genes can change how each person handles fentanyl, affecting how long it stays in the body.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "barletta_2025",
+       "where": "Abstract",
+       "quote": "Genetic polymorphisms in CYP3A4, OPRM1, and ABCB1 significantly influence individual responses to fentanyl, affecting its efficacy and potential for toxicity.",
+       "sha": "c537c966412a460f"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “each”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review of medical and forensic data says fentanyl builds up in muscles and fat, acting as a reservoir.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "barletta_2025",
+       "where": "Abstract",
+       "quote": "This review aims to provide an in-depth analysis of fentanyl’s medical applications, pharmacokinetics, metabolism, and pharmacogenetics while examining its adverse effects and forensic implications.",
+       "sha": "c537c966412a460f"
+      },
+      {
+       "label": "F3",
+       "ref": "barletta_2025",
+       "where": "3. Pharmacokinetics, Metabolism, and Pharmacogenetics of Fentanyl",
+       "quote": "It later accumulates in less vascularized tissues, including muscles and adipose tissue, which act as a drug reservoir, contributing to prolonged effects even after administration ceases.",
+       "sha": "a0c4d05364a2868f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says tests can detect fentanyl in blood, urine, and other body samples, including hair for long-term history.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "barletta_2025",
+       "where": "Abstract",
+       "quote": "This review aims to provide an in-depth analysis of fentanyl’s medical applications, pharmacokinetics, metabolism, and pharmacogenetics while examining its adverse effects and forensic implications.",
+       "sha": "c537c966412a460f"
+      },
+      {
+       "label": "F1",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Accurate toxicological analysis requires the proper collection and preservation of biological samples, including blood (preferably from the femoral vein), urine, vitreous humor, gastric contents, bile, and solid organ tissues",
+       "sha": "16cfe8b88dc9746d"
+      },
+      {
+       "label": "F2",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2018 study in Vancouver found that people at a supervised injection facility could use test strips to check for fentanyl.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "karamouzian_2018",
+       "where": "Abstract",
+       "quote": "This cross-sectional study evaluates a drug checking intervention for the clients of a supervised injection facility (SIF) in Vancouver.",
+       "sha": "1dab4e444bc1d1de"
+      },
+      {
+       "label": "F4",
+       "ref": "karamouzian_2018",
+       "where": "Abstract",
+       "quote": "Insite clients were offered an opportunity to check their drugs for fentanyl using a test strip designed to test urine for fentanyl.",
+       "sha": "a9ac0d8dc4809ac1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Fentanyl stays in muscles and fat, which can keep effects going after use stops. Tests can find it in blood, urine, and hair.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "barletta_2025",
+       "where": "3. Pharmacokinetics, Metabolism, and Pharmacogenetics of Fentanyl",
+       "quote": "It later accumulates in less vascularized tissues, including muscles and adipose tissue, which act as a drug reservoir, contributing to prolonged effects even after administration ceases.",
+       "sha": "a0c4d05364a2868f"
+      },
+      {
+       "label": "F1",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Accurate toxicological analysis requires the proper collection and preservation of biological samples, including blood (preferably from the femoral vein), urine, vitreous humor, gastric contents, bile, and solid organ tissues",
+       "sha": "16cfe8b88dc9746d"
+      },
+      {
+       "label": "F2",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Genetic differences in CYP3A4, OPRM1, and ABCB1 change how people respond to fentanyl, affecting its effects and toxicity.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "barletta_2025",
+       "where": "Abstract",
+       "quote": "Genetic polymorphisms in CYP3A4, OPRM1, and ABCB1 significantly influence individual responses to fentanyl, affecting its efficacy and potential for toxicity.",
+       "sha": "c537c966412a460f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review of fentanyl's medical and forensic aspects says it accumulates in muscles and fat, acting as a reservoir.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "barletta_2025",
+       "where": "Abstract",
+       "quote": "This review aims to provide an in-depth analysis of fentanyl’s medical applications, pharmacokinetics, metabolism, and pharmacogenetics while examining its adverse effects and forensic implications.",
+       "sha": "c537c966412a460f"
+      },
+      {
+       "label": "F3",
+       "ref": "barletta_2025",
+       "where": "3. Pharmacokinetics, Metabolism, and Pharmacogenetics of Fentanyl",
+       "quote": "It later accumulates in less vascularized tissues, including muscles and adipose tissue, which act as a drug reservoir, contributing to prolonged effects even after administration ceases.",
+       "sha": "a0c4d05364a2868f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says toxicological analysis can detect fentanyl in blood, urine, and other body samples.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Accurate toxicological analysis requires the proper collection and preservation of biological samples, including blood (preferably from the femoral vein), urine, vitreous humor, gastric contents, bile, and solid organ tissues",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage does not explicitly state that fentanyl can be detected in blood or urine; it only mentions collection of those samples and detection in other tissues."
+    },
+    {
+     "part": "how3",
+     "text": "The review also notes that hair samples from the nape or pubic area can show a long-term history of exposure.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2018 study in Vancouver found clients at a supervised injection facility used test strips to check drugs for fentanyl.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "karamouzian_2018",
+       "where": "Abstract",
+       "quote": "This cross-sectional study evaluates a drug checking intervention for the clients of a supervised injection facility (SIF) in Vancouver.",
+       "sha": "1dab4e444bc1d1de"
+      },
+      {
+       "label": "F4",
+       "ref": "karamouzian_2018",
+       "where": "Abstract",
+       "quote": "Insite clients were offered an opportunity to check their drugs for fentanyl using a test strip designed to test urine for fentanyl.",
+       "sha": "a9ac0d8dc4809ac1"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage says clients were offered the opportunity to use test strips, but does not state that they actually used them."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Fentanyl stays in muscles and fat, which can keep effects going after use stops. Tests can find it in blood, urine, and hair.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "barletta_2025",
+       "where": "3. Pharmacokinetics, Metabolism, and Pharmacogenetics of Fentanyl",
+       "quote": "It later accumulates in less vascularized tissues, including muscles and adipose tissue, which act as a drug reservoir, contributing to prolonged effects even after administration ceases.",
+       "sha": "a0c4d05364a2868f"
+      },
+      {
+       "label": "F1",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Accurate toxicological analysis requires the proper collection and preservation of biological samples, including blood (preferably from the femoral vein), urine, vitreous humor, gastric contents, bile, and solid organ tissues",
+       "sha": "16cfe8b88dc9746d"
+      },
+      {
+       "label": "F2",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Genetic differences in CYP3A4, OPRM1, and ABCB1 change how each person handles fentanyl, so timing varies.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "barletta_2025",
+       "where": "Abstract",
+       "quote": "Genetic polymorphisms in CYP3A4, OPRM1, and ABCB1 significantly influence individual responses to fentanyl, affecting its efficacy and potential for toxicity.",
+       "sha": "c537c966412a460f"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says “each”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
+    },
+    {
+     "part": "how1",
+     "text": "A 2025 review says fentanyl builds up in muscles and fat, acting as a reservoir for prolonged effects.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "barletta_2025",
+       "where": "Abstract",
+       "quote": "This review aims to provide an in-depth analysis of fentanyl’s medical applications, pharmacokinetics, metabolism, and pharmacogenetics while examining its adverse effects and forensic implications.",
+       "sha": "c537c966412a460f"
+      },
+      {
+       "label": "F3",
+       "ref": "barletta_2025",
+       "where": "3. Pharmacokinetics, Metabolism, and Pharmacogenetics of Fentanyl",
+       "quote": "It later accumulates in less vascularized tissues, including muscles and adipose tissue, which act as a drug reservoir, contributing to prolonged effects even after administration ceases.",
+       "sha": "a0c4d05364a2868f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes toxicological analysis can detect fentanyl in blood, urine, and other body samples.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Accurate toxicological analysis requires the proper collection and preservation of biological samples, including blood (preferably from the femoral vein), urine, vitreous humor, gastric contents, bile, and solid organ tissues",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "It also says hair samples from the nape or pubic area can show a long-term history of exposure.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "barletta_2025",
+       "where": "5. Post-Mortem Investigation in Fentanyl-Related Deaths › 5.6. Toxicological Investigation",
+       "quote": "Hair samples from the nape or pubic region can provide a long-term history of drug exposure.",
+       "sha": "16cfe8b88dc9746d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2018 study in Vancouver found clients used test strips designed for urine to check drugs for fentanyl.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "karamouzian_2018",
+       "where": "Abstract",
+       "quote": "This cross-sectional study evaluates a drug checking intervention for the clients of a supervised injection facility (SIF) in Vancouver.",
+       "sha": "1dab4e444bc1d1de"
+      },
+      {
+       "label": "F4",
+       "ref": "karamouzian_2018",
+       "where": "Abstract",
+       "quote": "Insite clients were offered an opportunity to check their drugs for fentanyl using a test strip designed to test urine for fentanyl.",
+       "sha": "a9ac0d8dc4809ac1"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6514,
+   "but": 0.969,
+   "how1": 0.6145,
+   "how2": 0.6543,
+   "how3": 0.9162,
+   "how4": 0.9815
+  },
+  "scores_quotes_alone": {
+   "short": 0.418,
+   "but": 0.6231,
+   "how1": 0.6538,
+   "how2": 0.1226,
+   "how3": 0.5786,
+   "how4": 0.9771
+  }
+ },
  "place": {
   "home": "fentanyl-and-analogues",
   "also": [],
