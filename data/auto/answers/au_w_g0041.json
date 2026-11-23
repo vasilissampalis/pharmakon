@@ -15,40 +15,32 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "@cf/openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemini-3.5-flash-lite"
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45019500923",
-  "read_by": {
-   "gemini-3.1-flash-lite": 5,
-   "gemini-3.5-flash-lite": 4
-  },
-  "read_seconds": 100,
+  "run": "45088898793",
+  "read_seconds": 94,
   "from": {
    "papers": 1,
-   "summaries": 0,
+   "summaries": 1,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 94
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now: tried again in the next run)",
  "gates": {
-  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
+  "read": "5 findings kept from 2 sources (1 papers read in full, 0 official pages, 1 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 1 paper(s) read in summary only"
  },
  "sources": [
   {
@@ -117,10 +109,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
+     "verified_on": "2026-11-23",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-22"
+      "checked_on": "2026-11-23"
      }
     },
     "volume": "16",
@@ -144,7 +136,7 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "We report a case of a 34-year-old female presenting with an acute onset of altered mental status following a social event.",
-    "text": "A case report describing a 34-year-old female presenting with acute anticholinergic toxic syndrome"
+    "text": "A case report of a 34-year-old female with scopolamine exposure"
    },
    "findings": [
     {
@@ -158,22 +150,102 @@
     {
      "passage": 24,
      "where": "3. Discussion",
-     "quote": "Although scopolamine is characterized by a short plasma elimination half-life (approximately 1–4 h), several forensic and clinical case reports have demonstrated that urinary detection may persist significantly beyond the expected pharmacokinetic window.",
-     "text": "Although scopolamine is characterized by a short plasma elimination half-life (approximately 1–4 h), urinary detection may persist significantly beyond the expected pharmacokinetic window.",
+     "quote": "Standard toxicological screening does not include tropane alkaloids, which represents a significant diagnostic limitation.",
+     "text": "Standard toxicological screening does not include tropane alkaloids, which represents a significant diagnostic limitation.",
      "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 24,
      "where": "3. Discussion",
-     "quote": "Standard toxicological screening does not include tropane alkaloids, which represents a significant diagnostic limitation.",
-     "text": "Standard toxicological screening does not include tropane alkaloids.",
+     "quote": "Although scopolamine is characterized by a short plasma elimination half-life (approximately 1–4 h), several forensic and clinical case reports have demonstrated that urinary detection may persist significantly beyond the expected pharmacokinetic window.",
+     "text": "Although scopolamine is characterized by a short plasma elimination half-life (approximately 1–4 h), several forensic and clinical case reports have demonstrated that urinary detection may persist significantly beyond the expected pharmacokinetic window.",
      "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "A"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "alimelkkil_1993",
+    "type": "article-journal",
+    "title": "Pharmacokinetics and related pharmacodynamics of anticholinergic drugs",
+    "author": [
+     {
+      "family": "ALI–MELKKILÄ",
+      "given": "T."
+     },
+     {
+      "family": "KANTO",
+      "given": "J."
+     },
+     {
+      "family": "IISALO",
+      "given": "E."
+     }
+    ],
+    "container-title": "Acta Anaesthesiologica Scandinavica",
+    "issued": {
+     "date-parts": [
+      [
+       1993
+      ]
+     ]
+    },
+    "DOI": "10.1111/j.1399-6576.1993.tb03780.x",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     },
+     "online_first_year": 2008
+    },
+    "volume": "37",
+    "issue": "7",
+    "page": "633-642"
+   },
+   "doi": "10.1111/j.1399-6576.1993.tb03780.x",
+   "title": "Pharmacokinetics and related pharmacodynamics of anticholinergic drugs",
+   "year": 1993,
+   "journal": "Acta anaesthesiologica Scandinavica",
+   "kind": "review",
+   "people": true,
+   "near": 0.482,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Summary",
+    "quote": "The pharmacokinetics and some pharmacodynamic properties of atropine, glycopyrrolate and scopolamine are reviewed.",
+    "text": "review of the pharmacokinetics and some pharmacodynamic properties of atropine, glycopyrrolate and scopolamine"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "their elimination phase half-lives vary from 1 to 4 h.",
+     "text": "Their elimination phase half-lives vary from 1 to 4 h.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "The cardiovascular effects are of short duration; other peripheral muscarinic effects and CNS effects can last up to 8 h or even longer.",
+     "text": "The cardiovascular effects are of short duration, and other peripheral muscaniric effects and CNS effects can last up to 8 h or even longer.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
   }
  ],
  "parts": [],
@@ -235,6 +307,14 @@
    "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -290,6 +370,12 @@
      "text": "",
      "quote": "However, interpretation is limited by the frequent inability of patients to provide a reliable exposure history due to anterograde amnesia and altered mental status, requiring repeated and structured ",
      "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Given the characteristics of the present case, drug-facilitated exposure may be considered as a theoretical possibility; however, it cannot be confirmed based on the available clinical and toxicologic",
+     "why": "no sentence"
     }
    ]
   },
@@ -299,7 +385,14 @@
    "kind": "other",
    "at": "10.1007/s00213-015-4111-y",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "not mentioned in the provided passages",
+     "quote": "In this study, we examined the effects of clonidine and scopolamine on multiple target detection in a rapid serial visual presentation task to assess the role of the central noradrenergic and choliner",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Application of Paper-Based Microfluidic Analytical Devices (µPAD) in Forensic and Clinical Toxicology: A Review",
@@ -324,7 +417,31 @@
    "at": "10.1007/s00414-021-02583-2",
    "kept": 0,
    "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Clinical pharmacokinetics of drugs used to treat urge incontinence",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.2165/00003088-200342140-00004",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Pharmacokinetics and related pharmacodynamics of anticholinergic drugs",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1111/j.1399-6576.1993.tb03780.x",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Trospium chloride for the treatment of overactive bladder with urge incontinence",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.clinthera.2005.05.008",
+   "kept": 0,
+   "thrown": []
   }
  ],
  "soft": "a source could not be fetched",
