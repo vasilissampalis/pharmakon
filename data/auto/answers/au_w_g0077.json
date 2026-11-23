@@ -15,37 +15,394 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3-flash-preview",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45071366158",
-  "read_seconds": 100,
+  "run": "45141431443",
+  "read_by": {
+   "gemini-3.1-flash-lite": 2,
+   "gpt-oss-20b": 1,
+   "gemini-3.5-flash-lite": 1
+  },
+  "read_seconds": 8,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 241
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "8 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.30, but 0.97, how1 0.68, how3 0.69, how4 0.92",
+  "check": "short: NOT accepted: the word it opens with (“It depends”) is not the answer the passages bear out: The opening phrase 'It depends' is not a fair answer because the passages give definitive statements about pseudoephedrine’s addictive potential and ephedrine’s ; but: accepted; how1: accepted; how3: accepted; how4: accepted",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: a number that is not in the paper's words it rests on (double, triple))"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "munaf_2021",
+    "type": "article-journal",
+    "title": "In search of an ideal drug for safer treatment of obesity: The false promise of pseudoephedrine",
+    "author": [
+     {
+      "family": "Munafò",
+      "given": "Antonio"
+     },
+     {
+      "family": "Frara",
+      "given": "Stefano"
+     },
+     {
+      "family": "Perico",
+      "given": "Norberto"
+     },
+     {
+      "family": "Di Mauro",
+      "given": "Rosaria"
+     },
+     {
+      "family": "Cortinovis",
+      "given": "Monica"
+     },
+     {
+      "family": "Burgaletto",
+      "given": "Chiara"
+     },
+     {
+      "family": "Cantarella",
+      "given": "Giuseppina"
+     },
+     {
+      "family": "Remuzzi",
+      "given": "Giuseppe"
+     },
+     {
+      "family": "Giustina",
+      "given": "Andrea"
+     },
+     {
+      "family": "Bernardini",
+      "given": "Renato"
+     }
+    ],
+    "container-title": "Reviews in Endocrine and Metabolic Disorders",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.1007/s11154-021-09658-w",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     }
+    },
+    "volume": "22",
+    "issue": "4",
+    "page": "1013-1025",
+    "PMCID": "PMC8724077"
+   },
+   "doi": "10.1007/s11154-021-09658-w",
+   "pmcid": "PMC8724077",
+   "title": "In search of an ideal drug for safer treatment of obesity: The false promise of pseudoephedrine",
+   "year": 2021,
+   "journal": "Reviews in endocrine & metabolic disorders",
+   "kind": "review",
+   "people": true,
+   "near": 0.739,
+   "money": [
+    "Open access funding provided by Università degli Studi di Catania within the CRUI-CARE Agreement."
+   ],
+   "design": {
+    "passage": 10,
+    "where": "Introduction",
+    "quote": "In the present review we i) discuss the criteria required for a valuable anti-obesity drug; ii) summarize the risk and rewards of the most common anti-obesity medicines, and; iii) assess the potentiality and risks of pseudoephedrine in obese patients.",
+    "text": "A review article assessing the potentiality and risks of pseudoephedrine in obese patients."
+   },
+   "findings": [
+    {
+     "passage": 27,
+     "where": "Conclusions",
+     "quote": "In light of the above considerations, in light of the unfavorable risk/benefit ratio presented by pseudoephedrine associated with its addictive potential, there appear no valid reasons for its systematic use in obesity of any order and degree.",
+     "text": "Pseudoephedrine has an addictive potential.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "Ephedra compounds › Clinical data",
+     "quote": "The authors collected sufficient evidence to conclude that the use of ephedrine and Ephedra compounds resulted in two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia and hypertension compared to placebo.",
+     "text": "The use of ephedrine and Ephedra compounds resulted in a two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia, and hypertension compared to placebo.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Ephedra compounds › Clinical data",
+     "quote": "In particular, the adverse events of pseudoephedrine are mainly concerning the cardiovascular system, supported by the increased availability of catecholamines and by the subsequent overstimulation of the adrenergic receptors.",
+     "text": "Adverse events of pseudoephedrine primarily involve the cardiovascular system due to increased catecholamine availability and adrenergic receptor overstimulation.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 25,
+     "where": "Conclusions",
+     "quote": "At any rate, risks arising from the use of pseudoephedrine depend significantly upon individual susceptibility, which, at the present state of knowledge, is not known, and, therefore, scarcely predictable, for all compounds of this class.",
+     "text": "Individual susceptibility to the risks of pseudoephedrine is currently unknown and difficult to predict.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "odaguchi_2018",
+    "type": "article-journal",
+    "title": "A double-blind, randomized, crossover comparative study for evaluating the clinical safety of ephedrine alkaloids-free ephedra herb extract (EFE)",
+    "author": [
+     {
+      "family": "Odaguchi",
+      "given": "Hiroshi"
+     },
+     {
+      "family": "Sekine",
+      "given": "Mariko"
+     },
+     {
+      "family": "Hyuga",
+      "given": "Sumiko"
+     },
+     {
+      "family": "Hanawa",
+      "given": "Toshihiko"
+     },
+     {
+      "family": "Hoshi",
+      "given": "Keika"
+     },
+     {
+      "family": "Sasaki",
+      "given": "Yoshinobu"
+     },
+     {
+      "family": "Aso",
+      "given": "Masako"
+     },
+     {
+      "family": "Yang",
+      "given": "Jinwei"
+     },
+     {
+      "family": "Hyuga",
+      "given": "Masashi"
+     },
+     {
+      "family": "Kobayashi",
+      "given": "Yoshinori"
+     },
+     {
+      "family": "Hakamatsuka",
+      "given": "Takashi"
+     },
+     {
+      "family": "Goda",
+      "given": "Yukihiro"
+     },
+     {
+      "family": "Kumagai",
+      "given": "Yuji"
+     }
+    ],
+    "container-title": "Evidence-Based Complementary and Alternative Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.1155/2018/4625358",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     }
+    },
+    "volume": "2018",
+    "issue": "1",
+    "number": "4625358",
+    "PMCID": "PMC6098921"
+   },
+   "doi": "10.1155/2018/4625358",
+   "pmcid": "PMC6098921",
+   "title": "A Double-Blind, Randomized, Crossover Comparative Study for Evaluating the Clinical Safety of Ephedrine Alkaloids-Free Ephedra Herb Extract (EFE)",
+   "year": 2018,
+   "journal": "Evidence-based complementary and alternative medicine : eCAM",
+   "kind": "other",
+   "people": true,
+   "near": 0.769,
+   "money": [
+    "Kitasato University, the National Institute of Health Sciences, Matsuyama University, the Functional and Phytochemical Laboratory of Tokiwa Phytochemical Co., Ltd., and Zeria Pharmaceutical Co., Ltd., are co-applicants for relevant patent applications. The Oriental Medicine Research Center of Kitasato University has received donations from Tsumura & Co."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Twelve healthy male subjects were equally and randomly allocated into two groups: prior administration of EFE (EFE-P) and prior administration of EHE (EHE-P).",
+    "text": "clinical safety trial of ephedrine alkaloids-free ephedra herb extract and ephedra herb extract in healthy male subjects"
+   },
+   "findings": [
+    {
+     "passage": 4,
+     "where": "1. Introduction",
+     "quote": "On the other hand, it is known that EAs contained in Ephedra Herb induce hypertension, palpitations, insomnia, dysuria, and other side effects.",
+     "text": "Ephedra Herb contains ephedrine alkaloids that are known to induce side effects such as hypertension, palpitations, insomnia, and dysuria.",
+     "id": "F4",
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+    },
+    {
+     "passage": 21,
+     "where": "3. Results › 3.2. Adverse Events",
+     "quote": "In 11 cases, the adverse events showed a causal relationship with the study drugs. The most frequent adverse event was increased pulse rate (5 cases), followed by insomnia (4 cases).",
+     "text": "Adverse events showing a causal relationship with the study drugs included increased pulse rate and insomnia.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 24,
+     "where": "4. Discussion",
+     "quote": "Because an increase in the incidence of adverse events would be expected for an older sample population, caution is required when Ephedra Herb is used by individuals older than those in this study.",
+     "text": "Because an increase in the incidence of adverse events would be expected for an older sample population, caution is required when Ephedra Herb is used by individuals older than those in this study.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nhs_pseudoephedrine",
+    "type": "webpage",
+    "title": "Pseudoephedrine (Sudafed)",
+    "author": [
+     {
+      "literal": "NHS"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       10,
+       26
+      ]
+     ]
+    },
+    "URL": "https://www.nhs.uk/medicines/pseudoephedrine/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       23
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-23"
+    }
+   },
+   "title": "Pseudoephedrine (Sudafed)",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.754,
+   "name": "NHS",
+   "short": "the NHS",
+   "tier": 1,
+   "address": "https://www.nhs.uk/medicines/pseudoephedrine/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 10,
+     "where": "Side effects of pseudoephedrine / Common side effects",
+     "quote": "Common side effects of pseudoephedrine include: feeling sick (nausea); headaches; a dry mouth; feeling nervous; difficulty sleeping",
+     "text": "Common side effects of pseudoephedrine include feeling sick, headaches, a dry mouth, feeling nervous, and difficulty sleeping.",
+     "id": "F6",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "Side effects of pseudoephedrine / Serious side effects",
+     "quote": "Possible serious side effects of pseudoephedrine include: a serious allergic reaction (anaphylaxis) – causing symptoms such as a swollen throat or tongue, a raise, itchy rash and difficulty breathing; a more noticeable heartbeat (palpitations)",
+     "text": "Serious side effects of pseudoephedrine can include a serious allergic reaction and a more noticeable heartbeat.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "Side effects of pseudoephedrine / Serious side effects",
+     "quote": "a severe headache that comes on very quickly, suddenly feeling sick (nausea) or being sick (vomiting), sudden changes in your vision or having a seizure",
+     "text": "Other serious side effects include a severe headache, sudden nausea or vomiting, sudden vision changes, or having a seizure.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 9,
+     "where": "Side effects of pseudoephedrine",
+     "quote": "Like all medicines, pseudoephedrine can cause side effects, although not everyone gets them.",
+     "text": "Not everyone experiences the side effects associated with pseudoephedrine.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "dose needed for a high",
  "wanted": [
   {
    "doi": "10.1080/03007995.2024.2424422",
@@ -70,7 +427,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Pseudoephedrine-Benefits and Risks",
@@ -78,38 +444,481 @@
    "kind": "review",
    "at": "10.3390/ijms22105146",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "In search of an ideal drug for safer treatment of obesity: The false promise of pseudoephedrine",
    "read": "full",
    "kind": "review",
    "at": "10.1007/s11154-021-09658-w",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "A Double-Blind, Randomized, Crossover Comparative Study for Evaluating the Clinical Safety of Ephedrine Alkaloids-Free Ephedra Herb Extract (EFE)",
    "read": "full",
    "kind": "other",
    "at": "10.1155/2018/4625358",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In mice orally administered a dose of 700 mg/kg EHE, excitation, insomnia, and arrhythmias were observed.",
+     "quote": "When a dose of 700 mg/kg EHE was orally administered to mice, excitation, insomnia, and arrhythmias were observed.",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
   },
   {
-   "title": "The advent of a new pseudoephedrine product to combat methamphetamine abuse",
-   "read": "full",
-   "kind": "study",
-   "at": "10.3109/00952990.2013.821476",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Pseudoephedrine (Sudafed)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/pseudoephedrine/",
+   "kept": 3,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F2",
+   "F3",
+   "F6"
+  ],
+  "direct": "It depends",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
+    "F6",
+    "F7",
+    "F8"
+   ]
+  ],
+  "unanswered": "dose needed for a high"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3002,
+   "but": 0.9724,
+   "how1": 0.6827,
+   "how3": 0.6875,
+   "how4": 0.9233
+  },
+  "scores_quotes_alone": {
+   "short": 0.7976,
+   "but": 0.9497,
+   "how1": 0.5355,
+   "how3": 0.8656,
+   "how4": 0.6293
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. Pseudoephedrine can be addictive and raise the risk of heart and gut problems. Common side effects include feeling sick, headaches, and trouble sleeping.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "In light of the above considerations, in light of the unfavorable risk/benefit ratio presented by pseudoephedrine associated with its addictive potential, there appear no valid reasons for its systematic use in obesity of any order and degree.",
+       "sha": "f5b9d1571c383c1d"
+      },
+      {
+       "label": "F2",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "The authors collected sufficient evidence to conclude that the use of ephedrine and Ephedra compounds resulted in two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia and hypertension compared to placebo.",
+       "sha": "cff13fe36b00827b"
+      },
+      {
+       "label": "F3",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "In particular, the adverse events of pseudoephedrine are mainly concerning the cardiovascular system, supported by the increased availability of catecholamines and by the subsequent overstimulation of the adrenergic receptors.",
+       "sha": "85c587b0ac5d0530"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Common side effects",
+       "quote": "Common side effects of pseudoephedrine include: feeling sick (nausea); headaches; a dry mouth; feeling nervous; difficulty sleeping",
+       "sha": "d99e5ecb3c3a25c0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (“It depends” is appropriate because the passages indicate that risk varies with individual susceptibility, which is currently unknown and unpredictable.)"
+    },
+    {
+     "part": "but",
+     "text": "Individual susceptibility to the risks of pseudoephedrine is currently unknown and difficult to predict.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "At any rate, risks arising from the use of pseudoephedrine depend significantly upon individual susceptibility, which, at the present state of knowledge, is not known, and, therefore, scarcely predictable, for all compounds of this class.",
+       "sha": "904998066908ac9f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of pseudoephedrine in obese patients says it has addictive potential and can increase risks of heart and gut issues.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "munaf_2021",
+       "where": "Introduction",
+       "quote": "In the present review we i) discuss the criteria required for a valuable anti-obesity drug; ii) summarize the risk and rewards of the most common anti-obesity medicines, and; iii) assess the potentiality and risks of pseudoephedrine in obese patients.",
+       "sha": "edd98b934206f51d"
+      },
+      {
+       "label": "F1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "In light of the above considerations, in light of the unfavorable risk/benefit ratio presented by pseudoephedrine associated with its addictive potential, there appear no valid reasons for its systematic use in obesity of any order and degree.",
+       "sha": "f5b9d1571c383c1d"
+      },
+      {
+       "label": "F2",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "The authors collected sufficient evidence to conclude that the use of ephedrine and Ephedra compounds resulted in two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia and hypertension compared to placebo.",
+       "sha": "cff13fe36b00827b"
+      },
+      {
+       "label": "F3",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "In particular, the adverse events of pseudoephedrine are mainly concerning the cardiovascular system, supported by the increased availability of catecholamines and by the subsequent overstimulation of the adrenergic receptors.",
+       "sha": "85c587b0ac5d0530"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The NHS says common side effects include feeling sick, headaches, and dry mouth. Serious ones can include a severe headache or a seizure.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Common side effects",
+       "quote": "Common side effects of pseudoephedrine include: feeling sick (nausea); headaches; a dry mouth; feeling nervous; difficulty sleeping",
+       "sha": "d99e5ecb3c3a25c0"
+      },
+      {
+       "label": "F7",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Serious side effects",
+       "quote": "Possible serious side effects of pseudoephedrine include: a serious allergic reaction (anaphylaxis) – causing symptoms such as a swollen throat or tongue, a raise, itchy rash and difficulty breathing; a more noticeable heartbeat (palpitations)",
+       "sha": "b374e07693e825bf"
+      },
+      {
+       "label": "F8",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Serious side effects",
+       "quote": "a severe headache that comes on very quickly, suddenly feeling sick (nausea) or being sick (vomiting), sudden changes in your vision or having a seizure",
+       "sha": "b374e07693e825bf"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. Pseudoephedrine can cause a high and risks like heart problems. Ephedrine raises the risk of heart and gut issues.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "In light of the above considerations, in light of the unfavorable risk/benefit ratio presented by pseudoephedrine associated with its addictive potential, there appear no valid reasons for its systematic use in obesity of any order and degree.",
+       "sha": "f5b9d1571c383c1d"
+      },
+      {
+       "label": "F2",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "The authors collected sufficient evidence to conclude that the use of ephedrine and Ephedra compounds resulted in two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia and hypertension compared to placebo.",
+       "sha": "cff13fe36b00827b"
+      },
+      {
+       "label": "F3",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "In particular, the adverse events of pseudoephedrine are mainly concerning the cardiovascular system, supported by the increased availability of catecholamines and by the subsequent overstimulation of the adrenergic receptors.",
+       "sha": "85c587b0ac5d0530"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Common side effects",
+       "quote": "Common side effects of pseudoephedrine include: feeling sick (nausea); headaches; a dry mouth; feeling nervous; difficulty sleeping",
+       "sha": "d99e5ecb3c3a25c0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passages do not state that pseudoephedrine can cause a high; the claim about a high is unsupported (the heart and gut risk part is partially supported but the sentence as a whole is not fully supported)."
+    },
+    {
+     "part": "but",
+     "text": "Individual susceptibility to the risks of pseudoephedrine is currently unknown and difficult to predict.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "At any rate, risks arising from the use of pseudoephedrine depend significantly upon individual susceptibility, which, at the present state of knowledge, is not known, and, therefore, scarcely predictable, for all compounds of this class.",
+       "sha": "904998066908ac9f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The opening phrase \"It depends\" suggests that the effect of getting high varies, but the passages provide no evidence that pseudoephedrine or ephedrine can produce a high; therefore a fair answer would be \"No, they do not get you high\" or s)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of pseudoephedrine in obese patients says it has addictive potential and risks for the heart.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "munaf_2021",
+       "where": "Introduction",
+       "quote": "In the present review we i) discuss the criteria required for a valuable anti-obesity drug; ii) summarize the risk and rewards of the most common anti-obesity medicines, and; iii) assess the potentiality and risks of pseudoephedrine in obese patients.",
+       "sha": "edd98b934206f51d"
+      },
+      {
+       "label": "F1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "In light of the above considerations, in light of the unfavorable risk/benefit ratio presented by pseudoephedrine associated with its addictive potential, there appear no valid reasons for its systematic use in obesity of any order and degree.",
+       "sha": "f5b9d1571c383c1d"
+      },
+      {
+       "label": "F3",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "In particular, the adverse events of pseudoephedrine are mainly concerning the cardiovascular system, supported by the increased availability of catecholamines and by the subsequent overstimulation of the adrenergic receptors.",
+       "sha": "85c587b0ac5d0530"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review says ephedrine use linked to two-to-three times higher risk of heart and gut symptoms.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "The authors collected sufficient evidence to conclude that the use of ephedrine and Ephedra compounds resulted in two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia and hypertension compared to placebo.",
+       "sha": "cff13fe36b00827b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The NHS says common side effects include feeling sick, headaches, and feeling nervous.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Common side effects",
+       "quote": "Common side effects of pseudoephedrine include: feeling sick (nausea); headaches; a dry mouth; feeling nervous; difficulty sleeping",
+       "sha": "d99e5ecb3c3a25c0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "The NHS says serious side effects can include a serious allergic reaction, a more noticeable heartbeat, or a seizure.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Serious side effects",
+       "quote": "Possible serious side effects of pseudoephedrine include: a serious allergic reaction (anaphylaxis) – causing symptoms such as a swollen throat or tongue, a raise, itchy rash and difficulty breathing; a more noticeable heartbeat (palpitations)",
+       "sha": "b374e07693e825bf"
+      },
+      {
+       "label": "F8",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Serious side effects",
+       "quote": "a severe headache that comes on very quickly, suddenly feeling sick (nausea) or being sick (vomiting), sudden changes in your vision or having a seizure",
+       "sha": "b374e07693e825bf"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. Pseudoephedrine has an addictive potential. Ephedrine can raise the risk of heart and gut problems.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "In light of the above considerations, in light of the unfavorable risk/benefit ratio presented by pseudoephedrine associated with its addictive potential, there appear no valid reasons for its systematic use in obesity of any order and degree.",
+       "sha": "f5b9d1571c383c1d"
+      },
+      {
+       "label": "F2",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "The authors collected sufficient evidence to conclude that the use of ephedrine and Ephedra compounds resulted in two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia and hypertension compared to placebo.",
+       "sha": "cff13fe36b00827b"
+      },
+      {
+       "label": "F3",
+       "ref": "munaf_2021",
+       "where": "Ephedra compounds › Clinical data",
+       "quote": "In particular, the adverse events of pseudoephedrine are mainly concerning the cardiovascular system, supported by the increased availability of catecholamines and by the subsequent overstimulation of the adrenergic receptors.",
+       "sha": "85c587b0ac5d0530"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Common side effects",
+       "quote": "Common side effects of pseudoephedrine include: feeling sick (nausea); headaches; a dry mouth; feeling nervous; difficulty sleeping",
+       "sha": "d99e5ecb3c3a25c0"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“It depends”) is not the answer the passages bear out: The opening phrase 'It depends' is not a fair answer because the passages give definitive statements about pseudoephedrine’s addictive potential and ephedrine’s "
+    },
+    {
+     "part": "but",
+     "text": "Individual susceptibility to the risks of pseudoephedrine is currently unknown and difficult to predict.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "At any rate, risks arising from the use of pseudoephedrine depend significantly upon individual susceptibility, which, at the present state of knowledge, is not known, and, therefore, scarcely predictable, for all compounds of this class.",
+       "sha": "904998066908ac9f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review of pseudoephedrine in obese patients says it has an addictive potential.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "munaf_2021",
+       "where": "Introduction",
+       "quote": "In the present review we i) discuss the criteria required for a valuable anti-obesity drug; ii) summarize the risk and rewards of the most common anti-obesity medicines, and; iii) assess the potentiality and risks of pseudoephedrine in obese patients.",
+       "sha": "edd98b934206f51d"
+      },
+      {
+       "label": "F1",
+       "ref": "munaf_2021",
+       "where": "Conclusions",
+       "quote": "In light of the above considerations, in light of the unfavorable risk/benefit ratio presented by pseudoephedrine associated with its addictive potential, there appear no valid reasons for its systematic use in obesity of any order and degree.",
+       "sha": "f5b9d1571c383c1d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The NHS says common side effects include feeling sick, headaches, and difficulty sleeping.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Common side effects",
+       "quote": "Common side effects of pseudoephedrine include: feeling sick (nausea); headaches; a dry mouth; feeling nervous; difficulty sleeping",
+       "sha": "d99e5ecb3c3a25c0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "The NHS says serious side effects can include a serious allergic reaction or a seizure.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Serious side effects",
+       "quote": "Possible serious side effects of pseudoephedrine include: a serious allergic reaction (anaphylaxis) – causing symptoms such as a swollen throat or tongue, a raise, itchy rash and difficulty breathing; a more noticeable heartbeat (palpitations)",
+       "sha": "b374e07693e825bf"
+      },
+      {
+       "label": "F8",
+       "ref": "nhs_pseudoephedrine",
+       "where": "Side effects of pseudoephedrine / Serious side effects",
+       "quote": "a severe headache that comes on very quickly, suddenly feeling sick (nausea) or being sick (vomiting), sudden changes in your vision or having a seizure",
+       "sha": "b374e07693e825bf"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "The review says ephedrine use can double or triple the risk of heart and gut issues.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "munaf_2021",
+     "where": "Ephedra compounds › Clinical data",
+     "quote": "The authors collected sufficient evidence to conclude that the use of ephedrine and Ephedra compounds resulted in two-to-three times increased risk of psychiatric symptoms, autonomic symptoms, upper gastrointestinal symptoms, tachycardia and hypertension compared to placebo.",
+     "sha": "cff13fe36b00827b"
+    },
+    {
+     "label": "F3",
+     "ref": "munaf_2021",
+     "where": "Ephedra compounds › Clinical data",
+     "quote": "In particular, the adverse events of pseudoephedrine are mainly concerning the cardiovascular system, supported by the increased availability of catecholamines and by the subsequent overstimulation of the adrenergic receptors.",
+     "sha": "85c587b0ac5d0530"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: a number that is not in the paper's words it rests on (double, triple)"
+  }
+ ],
  "place": {
   "home": "new:Ephedrine and pseudoephedrine",
   "also": [],
