@@ -15,36 +15,335 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-23",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "45051726598",
-  "read_seconds": 100,
+  "run": "45096455163",
+  "read_by": {
+   "llama-4-scout-17b-16e-instruct": 4,
+   "gpt-oss-20b": 1
+  },
+  "read_seconds": 81,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 1070.2,
+  "seconds": 199
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "6 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 8 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.20, but 0.33, how1 0.95, how2 0.98, how3 0.53",
+  "check": "short: NOT accepted: The claim that \"the sources do not describe what stopping feels like\" is not explicitly stated in the passages; it is an inferred meta‑statement rather than a direct quotation.; but: NOT accepted: The statement that \"the sources do not list specific withdrawal symptoms\" is not directly expressed in the passages; it is an inferred conclusion.; how1: accepted; how2: accepted; how3: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "patel_2024",
+    "type": "article-journal",
+    "title": "Treating diphenhydramine overdose: A literature review of currently available treatment methods",
+    "author": [
+     {
+      "family": "Patel",
+      "given": "Jayna"
+     },
+     {
+      "family": "Edwards",
+      "given": "Joshua"
+     }
+    ],
+    "container-title": "Toxics",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.3390/toxics12060376",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     }
+    },
+    "volume": "12",
+    "issue": "6",
+    "number": "376",
+    "PMCID": "PMC11209105"
+   },
+   "doi": "10.3390/toxics12060376",
+   "pmcid": "PMC11209105",
+   "title": "Treating Diphenhydramine Overdose: A Literature Review of Currently Available Treatment Methods",
+   "year": 2024,
+   "journal": "Toxics",
+   "kind": "review",
+   "people": false,
+   "near": 0.648,
+   "money": [
+    "This research received no external funding."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+    "text": "Literature review of diphenhydramine overdose treatments"
+   },
+   "findings": [
+    {
+     "passage": 6,
+     "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+     "quote": "Adults most commonly present with sedation and coma while children may be more likely to also experience agitation, hallucinations, and seizures.",
+     "text": "Adults with diphenhydramine overdose commonly experience sedation and coma, while children may also experience agitation, hallucinations, and seizures.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 14,
+     "where": "2. Treatments › 2.2. Sodium Bicarbonate",
+     "quote": "Although more studies are needed to solidify the current understanding of sodium bicarbonate’s effects in the body and in various demographics...",
+     "text": "More studies are needed to understand sodium bicarbonate’s effects in various demographics.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "abdi_2014",
+    "type": "article-journal",
+    "title": "Diphenhydramine overdose with intraventricular conduction delay treated with hypertonic sodium bicarbonate and IV lipid emulsion",
+    "author": [
+     {
+      "family": "Abdi",
+      "given": "Amin"
+     },
+     {
+      "family": "Rose",
+      "given": "Emily"
+     },
+     {
+      "family": "Levine",
+      "given": "Michael"
+     }
+    ],
+    "container-title": "Western Journal of Emergency Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2014
+      ]
+     ]
+    },
+    "DOI": "10.5811/westjem.2014.8.23407",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     }
+    },
+    "volume": "15",
+    "issue": "7",
+    "page": "855-858",
+    "PMCID": "PMC4251236"
+   },
+   "doi": "10.5811/westjem.2014.8.23407",
+   "pmcid": "PMC4251236",
+   "title": "Diphenhydramine overdose with intraventricular conduction delay treated with hypertonic sodium bicarbonate and i.v. lipid emulsion",
+   "year": 2014,
+   "journal": "The western journal of emergency medicine",
+   "kind": "review",
+   "people": true,
+   "near": 0.567,
+   "money": [],
+   "design": null,
+   "findings": [
+    {
+     "passage": 10,
+     "where": "DISCUSSION",
+     "quote": "In mild overdoses DPH can cause sedation and symptoms attributable to the classic antimuscarinic toxidrome, namely tachycardia, mydriasis, urinary retention, dry mucosal membranes with flushed skin, and hypoactive bowel sounds.",
+     "text": "In mild overdoses, diphenhydramine can cause sedation and symptoms of the classic antimuscarinic toxidrome.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 10,
+     "where": "DISCUSSION",
+     "quote": "Moderate or severe ingestions can have central antimuscarinic features as well, including agitation, delirium, hallucinations, or coma.",
+     "text": "Moderate or severe ingestions can have central antimuscarinic features, including agitation, delirium, hallucinations, or coma.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 10,
+     "where": "DISCUSSION",
+     "quote": "In addition, DPH toxicity can induce rhabdomyolysis.",
+     "text": "DPH toxicity can also induce rhabdomyolysis.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 16,
+     "where": "DISCUSSION",
+     "quote": "This case has several potential limitations.",
+     "text": "The case report has several potential limitations.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nhs_about-diphenhydramine",
+    "type": "webpage",
+    "title": "About diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+    "author": [
+     {
+      "literal": "NHS"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       7,
+       13
+      ]
+     ]
+    },
+    "URL": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       23
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-23"
+    }
+   },
+   "title": "About diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.577,
+   "name": "NHS",
+   "short": "the NHS",
+   "tier": 1,
+   "address": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Key facts",
+     "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+     "text": "You can become dependent on diphenhydramine tablets or liquid if taken for too long without a break.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nhs_how-and-when-to-take-or-use-diphenhydram",
+    "type": "webpage",
+    "title": "How and when to take or use diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+    "author": [
+     {
+      "literal": "NHS"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       5,
+       22
+      ]
+     ]
+    },
+    "URL": "https://www.nhs.uk/medicines/diphenhydramine/how-and-when-to-take-or-use-diphenhydramine/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       23
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-23"
+    }
+   },
+   "title": "How and when to take or use diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.535,
+   "name": "NHS",
+   "short": "the NHS",
+   "tier": 1,
+   "address": "https://www.nhs.uk/medicines/diphenhydramine/how-and-when-to-take-or-use-diphenhydramine/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 11,
+     "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
+     "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+     "text": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -72,15 +371,43 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Treating Diphenhydramine Overdose: A Literature Review of Currently Available Treatment Methods",
    "read": "full",
    "kind": "review",
    "at": "10.3390/toxics12060376",
-   "kept": 0,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Diphenhydramine overdose of more than 1 g can cause seizures, delirium, psychosis, rhabdomyolysis, coma, and death in people.",
+     "quote": "In doses greater than 1 g, symptoms may also include seizures, delirium, psychosis, rhabdomyolysis, coma, and death.",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "finding",
+     "text": "Diphenhydramine overdose of less than 300 mg can cause tachycardia, dry mucous membranes, dilated pupils, hypoactive bowel sounds, and urinary retention in people.",
+     "quote": "In mild oral overdoses of less than 300 mg, the patient usually presents with symptoms including tachycardia, dry mucous membranes, dilated pupils, hypoactive bowel sounds, and urinary retention.",
+     "why": "it holds an amount or a time between uses"
+    },
+    {
+     "kind": "limit",
+     "text": "The current understanding of treatments for diphenhydramine overdose is based on limited research.",
+     "quote": "Recent research on physostigmine, sodium bicarbonate, donepezil, dexmedetomidine, and lipid emulsion therapy has proved promising so far, suggesting success in treating diphenhydramine toxicity withou",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Diphenhydramine: It is time to say a final goodbye",
@@ -91,7 +418,7 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "Review article evaluating the safety and use of diphenhydramine",
+     "text": "Review article on diphenhydramine’s safety and usage",
      "quote": "Diphenhydramine, once a pioneering antihistamine, is now obscured by second-generation antihistamines with similar efficacy and fewer adverse effects.",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
@@ -102,27 +429,463 @@
    "read": "full",
    "kind": "review",
    "at": "10.5811/westjem.2014.8.23407",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "case report of a single patient with diphenhydramine overdose",
+     "text": "case report and literature review",
+     "quote": "Diphenhydramine toxicity commonly manifests with antimuscarinic features, including dry mucous membranes, tachycardia, urinary retention, mydriasis, tachycardia, and encephalopathy.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "A case of a 23-year-old male who ingested 2000-2500mg of diphenhydramine was studied.",
      "quote": "A 23-year-old male with no significant past medical history presented to the emergency department (ED) for evaluation of a witnessed ingestion of 2000–2500mg of DPH.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "It is possible that other sodium channel blocking agents were not detected and contributed to the wide complex tachycardia.",
+     "quote": "However, the girlfriend’s history of DPH ingestion, along with an empty pill bottle of DPH and the elevated level, makes this less likely.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
   {
-   "title": "Antidotal Effects of the Antihistamine Diphenhydramine Against Cholinesterase Inhibitor Poisoning: A Meta-Analysis of Median Lethal Doses in Experimental Animals",
-   "read": "full",
-   "kind": "review",
-   "at": "10.7759/cureus.54403",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "About diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The information about taking it for more than 2 weeks is to be discussed with a doctor.",
+     "quote": "Speak to your doctor if you need to take it for more than 2 weeks.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "How and when to take or use diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/diphenhydramine/how-and-when-to-take-or-use-diphenhydramine/",
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.2042,
+   "but": 0.3323,
+   "how1": 0.9488,
+   "how2": 0.9814,
+   "how3": 0.5349
+  },
+  "scores_quotes_alone": {
+   "short": 0.0149,
+   "but": 0.1102,
+   "how1": 0.7043,
+   "how2": 0.977,
+   "how3": 0.3584
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "The NHS says you can become dependent on diphenhydramine if taken for too long without a break. The sources do not describe what withdrawal feels like.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
+       "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
+       "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+       "sha": "7ae9711e2ce83d48"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The clause \"The sources do not describe what withdrawal feels like\" is not explicitly stated in any passage."
+    },
+    {
+     "part": "but",
+     "text": "The sources only list overdose symptoms and dependence risk; they do not describe the specific symptoms of stopping the drug.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+       "quote": "Adults most commonly present with sedation and coma while children may be more likely to also experience agitation, hallucinations, and seizures.",
+       "sha": "6394ce591af47110"
+      },
+      {
+       "label": "F2",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In mild overdoses DPH can cause sedation and symptoms attributable to the classic antimuscarinic toxidrome, namely tachycardia, mydriasis, urinary retention, dry mucosal membranes with flushed skin, and hypoactive bowel sounds.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F3",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "Moderate or severe ingestions can have central antimuscarinic features as well, including agitation, delirium, hallucinations, or coma.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F4",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In addition, DPH toxicity can induce rhabdomyolysis.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
+       "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
+       "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+       "sha": "7ae9711e2ce83d48"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The claim that the sources \"only list overdose symptoms and dependence risk\" is not explicitly stated in the passages."
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review of overdose treatments says adults with overdose commonly have sedation and coma, while children may have agitation, hallucinations, and seizures.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
+      },
+      {
+       "label": "F1",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+       "quote": "Adults most commonly present with sedation and coma while children may be more likely to also experience agitation, hallucinations, and seizures.",
+       "sha": "6394ce591af47110"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2014 review says mild overdoses can cause sedation and dry mouth, while severe ones can cause agitation, delirium, or coma.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In mild overdoses DPH can cause sedation and symptoms attributable to the classic antimuscarinic toxidrome, namely tachycardia, mydriasis, urinary retention, dry mucosal membranes with flushed skin, and hypoactive bowel sounds.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F3",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "Moderate or severe ingestions can have central antimuscarinic features as well, including agitation, delirium, hallucinations, or coma.",
+       "sha": "dd03df101bba5499"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The NHS says you can become dependent on diphenhydramine tablets or liquid if taken for too long without a break.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
+       "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
+       "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+       "sha": "7ae9711e2ce83d48"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "The NHS says you can become dependent on diphenhydramine if taken for too long without a break. The sources do not describe what withdrawal feels like.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
+       "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
+       "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+       "sha": "7ae9711e2ce83d48"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The claim that \"the sources do not describe what withdrawal feels like\" is not explicitly stated in the passages."
+    },
+    {
+     "part": "but",
+     "text": "The sources only list overdose symptoms and dependence risk, not the specific symptoms of stopping the drug.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+       "quote": "Adults most commonly present with sedation and coma while children may be more likely to also experience agitation, hallucinations, and seizures.",
+       "sha": "6394ce591af47110"
+      },
+      {
+       "label": "F2",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In mild overdoses DPH can cause sedation and symptoms attributable to the classic antimuscarinic toxidrome, namely tachycardia, mydriasis, urinary retention, dry mucosal membranes with flushed skin, and hypoactive bowel sounds.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F3",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "Moderate or severe ingestions can have central antimuscarinic features as well, including agitation, delirium, hallucinations, or coma.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F4",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In addition, DPH toxicity can induce rhabdomyolysis.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
+       "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
+       "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+       "sha": "7ae9711e2ce83d48"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The statement that the sources \"only list overdose symptoms and dependence risk\" is not explicitly stated; the passages do not claim exclusivity."
+    },
+    {
+     "part": "how1",
+     "text": "The NHS says you can become dependent on diphenhydramine tablets or liquid if taken for too long without a break.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review of overdose treatments says adults with overdose commonly experience sedation and coma.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
+      },
+      {
+       "label": "F1",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+       "quote": "Adults most commonly present with sedation and coma while children may be more likely to also experience agitation, hallucinations, and seizures.",
+       "sha": "6394ce591af47110"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2014 review says mild overdoses can cause sedation and dry mouth, while severe ones can cause agitation or coma.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In mild overdoses DPH can cause sedation and symptoms attributable to the classic antimuscarinic toxidrome, namely tachycardia, mydriasis, urinary retention, dry mucosal membranes with flushed skin, and hypoactive bowel sounds.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F3",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "Moderate or severe ingestions can have central antimuscarinic features as well, including agitation, delirium, hallucinations, or coma.",
+       "sha": "dd03df101bba5499"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage mentions \"dry mucosal membranes\" not \"dry mouth\"; the sentence adds a term not present in the source."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "The NHS says you can become dependent on diphenhydramine if taken for too long without a break. The sources do not describe what stopping feels like.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      },
+      {
+       "label": "F6",
+       "ref": "nhs_how-and-when-to-take-or-use-diphenhydram",
+       "where": "Dosage and how to take or use diphenhydramine / How long to take it for",
+       "quote": "You can become dependent on diphenhydramine if you take it without a break for too long.",
+       "sha": "7ae9711e2ce83d48"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The claim that \"the sources do not describe what stopping feels like\" is not explicitly stated in the passages; it is an inferred meta‑statement rather than a direct quotation."
+    },
+    {
+     "part": "but",
+     "text": "The sources describe overdose symptoms and dependence risk, but do not list specific withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+       "quote": "Adults most commonly present with sedation and coma while children may be more likely to also experience agitation, hallucinations, and seizures.",
+       "sha": "6394ce591af47110"
+      },
+      {
+       "label": "F2",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In mild overdoses DPH can cause sedation and symptoms attributable to the classic antimuscarinic toxidrome, namely tachycardia, mydriasis, urinary retention, dry mucosal membranes with flushed skin, and hypoactive bowel sounds.",
+       "sha": "dd03df101bba5499"
+      },
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The statement that \"the sources do not list specific withdrawal symptoms\" is not directly expressed in the passages; it is an inferred conclusion."
+    },
+    {
+     "part": "how1",
+     "text": "The NHS says you can become dependent on diphenhydramine tablets or liquid if taken for too long without a break.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Key facts",
+       "quote": "You can become dependent on diphenhydramine tablets or liquid if you take it for too long without a break.",
+       "sha": "1d792fc43c347b25"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review of overdose treatments notes adults with overdose commonly experience sedation and coma.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
+      },
+      {
+       "label": "F1",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.3. Diphenhydramine Overdoses",
+       "quote": "Adults most commonly present with sedation and coma while children may be more likely to also experience agitation, hallucinations, and seizures.",
+       "sha": "6394ce591af47110"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2014 review notes mild overdoses can cause sedation and dry mucosal membranes.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "abdi_2014",
+       "where": "DISCUSSION",
+       "quote": "In mild overdoses DPH can cause sedation and symptoms attributable to the classic antimuscarinic toxidrome, namely tachycardia, mydriasis, urinary retention, dry mucosal membranes with flushed skin, and hypoactive bowel sounds.",
+       "sha": "dd03df101bba5499"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "new:Diphenhydramine and similar antihistamines",
   "also": [],

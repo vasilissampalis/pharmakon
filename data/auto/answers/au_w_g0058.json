@@ -17,153 +17,37 @@
   "alcohol"
  ],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b"
   },
-  "run": "45051726598",
-  "read_seconds": 96,
+  "run": "45096455163",
+  "read_seconds": 39,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 340
+  "neurons": 862.0,
+  "seconds": 78
  },
- "status": "none",
- "why": "no draft passed: not accepted at try 1: a second reader did not accept but (it is about something else than the short answer (Sentence 2 addresses the unpredictability of when dependence will occur, which is a limitation about prediction, not a limitation or doubt about the claim in sentence 1 that alcohol is addictive.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): gemini-3.1-flash-lite read from there",
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.85, but 0.86, how1 0.91, how2 0.77, how3 0.66",
-  "check": "not accepted at try 1: a second reader did not accept but (it is about something else than the short answer (Sentence 2 addresses the unpredictability of when dependence will occur, which is a limitation about prediction, not a limitation or doubt about the claim in sentence 1 that alcohol is addictive.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
-  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9532) try 3: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9053)"
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the But “It is not possible to predict if or when a person will become dependent on alcohol because every situation is different.”: it is about something else than the short answer (Sentence 2 addresses the unpredictability of when dependence will occur, which is a limitation about prediction, not a",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.93, but 0.78, how1 0.97, how2 0.50, how3 0.98",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "sampedropiquero_2026",
-    "type": "article-journal",
-    "title": "Acute effects of brief exercise on alcohol craving among young adults with problematic alcohol use: A systematic review",
-    "author": [
-     {
-      "family": "Sampedro-Piquero",
-      "given": "P."
-     },
-     {
-      "family": "Cordellat-Marzal",
-      "given": "A."
-     },
-     {
-      "family": "Dragotti",
-      "given": "M."
-     },
-     {
-      "family": "Mandolesi",
-      "given": "L."
-     },
-     {
-      "family": "Gigliotta",
-      "given": "O."
-     },
-     {
-      "family": "Moreno-Fernández",
-      "given": "R. D."
-     }
-    ],
-    "container-title": "European Journal of Sport Science",
-    "issued": {
-     "date-parts": [
-      [
-       2026
-      ]
-     ]
-    },
-    "DOI": "10.1002/ejsc.70258",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-22"
-     }
-    },
-    "volume": "26",
-    "issue": "10",
-    "number": "e70258",
-    "PMCID": "PMC13620218"
-   },
-   "doi": "10.1002/ejsc.70258",
-   "pmcid": "PMC13620218",
-   "title": "Acute Effects of Brief Exercise on Alcohol Craving Among Young Adults With Problematic Alcohol Use: A Systematic Review",
-   "year": 2026,
-   "journal": "European journal of sport science",
-   "kind": "review",
-   "people": true,
-   "near": 0.648,
-   "money": [
-    "This study was funded by the Spanish Ministry of Health (Government Delegation for the National Plan on Drugs, code 2024I030 to R.D.M.‐F.) and FEDER/Spanish Ministry of Science and Innovation and the National Research Agency (AEI) (MCIN/AEI/10.13039/501100011033/FEDER, UE, code PID2022‐137601OA‐I00 to P.S.‐P).",
-    "The authors declare no conflicts of interest."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This systematic review examined the effects of brief exercise interventions on alcohol craving in young adults with problematic alcohol use or alcohol use disorder (AUD) and explored available evidence on associated neurobiological responses.",
-    "text": "A systematic review of studies on brief exercise interventions for alcohol craving in young adults with problematic alcohol use or alcohol use disorder."
-   },
-   "findings": [
-    {
-     "passage": 30,
-     "where": "Discussion › Neurobiological Processes Associated With Alcohol Use and Acute Exercise",
-     "quote": "At the neurochemical level, alcohol has been linked to persistent adaptations in mesolimbic dopaminergic circuits involved in incentive salience and craving",
-     "text": "Alcohol is linked to persistent adaptations in mesolimbic dopaminergic circuits that are involved in incentive salience and craving.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 30,
-     "where": "Discussion › Neurobiological Processes Associated With Alcohol Use and Acute Exercise",
-     "quote": "In addition, NMDA receptor‐mediated glutamatergic transmission contributes to synaptic adaptations underlying dependence and relapse vulnerability.",
-     "text": "NMDA receptor-mediated glutamatergic transmission contributes to synaptic adaptations that underlie dependence and relapse vulnerability.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 30,
-     "where": "Discussion › Neurobiological Processes Associated With Alcohol Use and Acute Exercise",
-     "quote": "alcohol‐related cues elicit robust dopaminergic responses in the ventral striatum and associated limbic structures, which may be related to compulsive consumption patterns",
-     "text": "Alcohol-related cues cause robust dopaminergic responses in the ventral striatum and associated limbic structures, which may be related to compulsive consumption patterns.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 34,
-     "where": "Conclusions",
-     "quote": "Future research should therefore prioritize adequately powered studies using standardised craving and neurobiological measures, as well as designs that allow for the assessment of temporal dynamics and real‐world relevance of exercise‐induced effects on alcohol craving.",
-     "text": "Future research needs to use standardized measures and designs that assess the temporal dynamics and real-world relevance of exercise effects on alcohol craving.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
   {
    "read": "full",
    "ref": {
@@ -210,10 +94,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
+     "verified_on": "2026-11-23",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-22"
+      "checked_on": "2026-11-23"
      }
     },
     "volume": "16",
@@ -236,19 +120,27 @@
    "design": null,
    "findings": [
     {
-     "passage": 23,
-     "where": "3. Results › 3.4. Summary of Findings",
-     "quote": "individuals with AUD, or who were dependent on alcohol, had 24% higher odds of incident neuropathy compared to non-dependent or abstinent individuals",
-     "text": "Individuals with alcohol use disorder or who were dependent on alcohol had 24% higher odds of incident neuropathy compared to non-dependent or abstinent individuals.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Alcohol consumption and dependence were associated with increased incidence, prevalence, and/or severity of neuropathy/neuropathic pain",
+     "text": "Alcohol consumption and dependence were associated with increased incidence, prevalence, and/or severity of neuropathy/neuropathic pain in people.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 26,
-     "where": "3. Results › 3.4. Summary of Findings",
-     "quote": "four studies (80%) reported a significant positive association, either with a greater prevalence of alcohol dependence, parental history of alcoholism, and higher weekly alcohol consumption among those with neuropathy",
-     "text": "Four studies reported a significant positive association between neuropathy and a greater prevalence of alcohol dependence, parental history of alcoholism, and higher weekly alcohol consumption.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Pooled analysis showed higher odds of neuropathy with alcohol exposure",
+     "text": "Pooled analysis showed higher odds of neuropathy with alcohol exposure in people.",
      "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 32,
+     "where": "4. Discussion › 4.1. Cohort Studies",
+     "quote": "Alcohol use disorder and dependence were associated with 24% higher odds of incident neuropathy",
+     "text": "Alcohol use disorder and dependence were associated with 24% higher odds of incident neuropathy in people.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -256,8 +148,8 @@
     {
      "passage": 38,
      "where": "4. Discussion › 4.4. Limitations",
-     "quote": "Alcohol use was measured exclusively by self-report, without objective biological or physiological validation, increasing susceptibility to misclassification and information bias.",
-     "text": "Alcohol use was measured only by self-report without objective validation, which increases the risk of misclassification and information bias.",
+     "quote": "Alcohol use was measured exclusively by self-report, without objective biological or physiological validation",
+     "text": "Alcohol use was measured only by self-report, without objective validation.",
      "id": "L2",
      "second_hand": ""
     }
@@ -286,14 +178,14 @@
       [
        2026,
        11,
-       22
+       23
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-22"
+     "verified_on": "2026-11-23"
     }
    },
    "title": "Signs of alcohol dependence",
@@ -312,25 +204,25 @@
     {
      "passage": 11,
      "where": "Why it is hard to stop",
-     "quote": "It can be very difficult to give up when you are dependent on alcohol. But it is possible to stop drinking. There are 2 main types of dependence which make it hard to stop: physical dependence; psychological dependence",
-     "text": "It is difficult to stop drinking when dependent on alcohol, and there are two types of dependence: physical and psychological.",
-     "id": "F6",
+     "quote": "It can be very difficult to give up when you are dependent on alcohol.",
+     "text": "It can be very difficult to give up when you are dependent on alcohol.",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 12,
      "where": "Why it is hard to stop / Physical dependence",
-     "quote": "Physical dependence is when your body needs and craves alcohol. It can mean you feel very ill when you do not have alcohol.",
-     "text": "Physical dependence occurs when the body needs and craves alcohol, which can cause a person to feel very ill without it.",
-     "id": "F7",
+     "quote": "Physical dependence is when your body needs and craves alcohol.",
+     "text": "Physical dependence is when your body needs and craves alcohol.",
+     "id": "F8",
      "second_hand": ""
     },
     {
-     "passage": 10,
-     "where": "How alcohol dependence develops",
-     "quote": "Over time your drinking increases until you can no longer manage without it.",
-     "text": "Alcohol dependence can develop over time as drinking increases until a person can no longer manage without it.",
-     "id": "F8",
+     "passage": 3,
+     "where": "Signs and patterns of alcohol dependence / Patterns of drinking if you are dependent on alcohol",
+     "quote": "Alcohol dependence affects different people in different ways.",
+     "text": "Alcohol dependence affects different people in different ways.",
+     "id": "F9",
      "second_hand": ""
     }
    ],
@@ -338,8 +230,8 @@
     {
      "passage": 1,
      "where": "Top of the page",
-     "quote": "It's not possible to tell if and when someone will become dependent on alcohol. Everyone’s situation is different.",
-     "text": "It is not possible to predict if or when a person will become dependent on alcohol because every situation is different.",
+     "quote": "It's not possible to tell if and when someone will become dependent on alcohol.",
+     "text": "It's not possible to tell if and when someone will become dependent on alcohol.",
      "id": "L3",
      "second_hand": ""
     }
@@ -368,14 +260,14 @@
       [
        2026,
        11,
-       22
+       23
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-22"
+     "verified_on": "2026-11-23"
     }
    },
    "title": "Alcohol",
@@ -394,9 +286,9 @@
     {
      "passage": 10,
      "where": "What Is Alcohol?",
-     "quote": "the consumption of alcohol carries a risk of adverse health and social consequences related to its intoxicating, toxic and dependence-producing properties.",
-     "text": "The consumption of alcohol carries a risk of adverse health and social consequences because it has dependence-producing properties.",
-     "id": "F9",
+     "quote": "Nevertheless, the consumption of alcohol carries a risk of adverse health and social consequences related to its intoxicating, toxic and dependence-producing properties.",
+     "text": "Alcohol consumption carries a risk of adverse health and social consequences related to its dependence-producing properties.",
+     "id": "F10",
      "second_hand": ""
     }
    ],
@@ -404,8 +296,119 @@
    "tag": "D"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes, alcohol can be addictive. It carries a risk of dependence.",
+   "uses": [
+    "F10",
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F10",
+     "ref": "ccsa_alcohol",
+     "where": "What Is Alcohol?",
+     "quote": "Nevertheless, the consumption of alcohol carries a risk of adverse health and social consequences related to its intoxicating, toxic and dependence-producing properties.",
+     "sha": "bfd652cb69efa996"
+    },
+    {
+     "label": "F4",
+     "ref": "klowak_2026",
+     "where": "Abstract",
+     "quote": "Alcohol consumption and dependence were associated with increased incidence, prevalence, and/or severity of neuropathy/neuropathic pain",
+     "sha": "4e8e08f7f6adfa21"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "It's not possible to tell if and when someone will become dependent on alcohol.",
+   "uses": [
+    "L3"
+   ],
+   "rests_on": [
+    {
+     "label": "L3",
+     "ref": "hse_signs-patterns",
+     "where": "Top of the page",
+     "quote": "It's not possible to tell if and when someone will become dependent on alcohol.",
+     "sha": "b4e9f72135bfd186"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "The Canadian Centre on Substance Use and Addiction says alcohol has dependence-producing properties.",
+   "uses": [
+    "F10"
+   ],
+   "rests_on": [
+    {
+     "label": "F10",
+     "ref": "ccsa_alcohol",
+     "where": "What Is Alcohol?",
+     "quote": "Nevertheless, the consumption of alcohol carries a risk of adverse health and social consequences related to its intoxicating, toxic and dependence-producing properties.",
+     "sha": "bfd652cb69efa996"
+    }
+   ],
+   "quote": "risk of adverse health and social consequences related to its intoxicating, toxic and dependence-producing properties",
+   "quote_ref": "ccsa_alcohol"
+  },
+  {
+   "part": "how2",
+   "text": "Ireland's health service says physical dependence is when your body needs and craves alcohol.",
+   "uses": [
+    "F8",
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "F8",
+     "ref": "hse_signs-patterns",
+     "where": "Why it is hard to stop / Physical dependence",
+     "quote": "Physical dependence is when your body needs and craves alcohol.",
+     "sha": "9c3e3e1b3ba8795c"
+    },
+    {
+     "label": "F7",
+     "ref": "hse_signs-patterns",
+     "where": "Why it is hard to stop",
+     "quote": "It can be very difficult to give up when you are dependent on alcohol.",
+     "sha": "b0e7df4bc54d9687"
+    }
+   ],
+   "quote": "Physical dependence is when your body needs and craves alcohol",
+   "quote_ref": "hse_signs-patterns"
+  },
+  {
+   "part": "how3",
+   "text": "A 2026 review found alcohol consumption and dependence were associated with neuropathy in people.",
+   "uses": [
+    "F4",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "klowak_2026",
+     "where": "Abstract",
+     "quote": "Alcohol consumption and dependence were associated with increased incidence, prevalence, and/or severity of neuropathy/neuropathic pain",
+     "sha": "4e8e08f7f6adfa21"
+    },
+    {
+     "label": "F6",
+     "ref": "klowak_2026",
+     "where": "4. Discussion › 4.1. Cohort Studies",
+     "quote": "Alcohol use disorder and dependence were associated with 24% higher odds of incident neuropathy",
+     "sha": "c6dbaf7c03e558ce"
+    }
+   ],
+   "quote": "Alcohol consumption and dependence were associated with increased incidence, prevalence, and/or severity of neuropathy/neuropathic pain",
+   "quote_ref": "klowak_2026"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -431,7 +434,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 1: a second reader did not accept but (it is about something else than the short answer (Sentence 2 addresses the unpredictability of when dependence will occur, which is a limitation about prediction, not a limitation or doubt about the claim in sentence 1 that alcohol is addictive.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Acute Effects of Brief Exercise on Alcohol Craving Among Young Adults With Problematic Alcohol Use: A Systematic Review",
@@ -446,12 +458,12 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/brainsci16060551",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "A systematic review of observational studies assessing the relationship between alcohol dependence and neuropathy or neuropathic pain.",
-     "quote": "A Systematic Review of Lifestyle Interventions for Neuropathy and Neuropathic Pain: Alcohol Consumption and Avoidance (2026), Brain sciences.",
+     "text": "A Systematic Review",
+     "quote": "A Systematic Review of Lifestyle Interventions for Neuropathy and Neuropathic Pain",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -483,10 +495,8 @@
  ],
  "plan": {
   "short": [
-   "F9",
-   "F6",
-   "F8",
-   "F1"
+   "F10",
+   "F4"
   ],
   "direct": "Yes",
   "but": [
@@ -494,17 +504,15 @@
   ],
   "how": [
    [
-    "F9"
+    "F10"
    ],
    [
-    "F6",
-    "F7",
-    "F8"
+    "F8",
+    "F7"
    ],
    [
-    "F1",
-    "F2",
-    "F3"
+    "F4",
+    "F6"
    ]
   ],
   "unanswered": ""
@@ -514,150 +522,24 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8504,
-   "but": 0.859,
-   "how1": 0.9062,
-   "how2": 0.7723,
-   "how3": 0.661
+   "short": 0.9298,
+   "but": 0.7838,
+   "how1": 0.9721,
+   "how2": 0.4968,
+   "how3": 0.9826
   },
   "scores_quotes_alone": {
-   "short": 0.7522,
-   "but": 0.8029,
-   "how1": 0.9213,
-   "how2": 0.1451,
-   "how3": 0.6252
+   "short": 0.7433,
+   "but": 0.7846,
+   "how1": 0.9807,
+   "how2": 0.3915,
+   "how3": 0.965
   }
  },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes, alcohol has dependence-producing properties. It can be difficult to stop drinking when dependent, and this can develop over time as drinking increases until a person can no longer manage without it.",
-     "rests_on": [
-      {
-       "label": "F9",
-       "ref": "ccsa_alcohol",
-       "where": "What Is Alcohol?",
-       "quote": "the consumption of alcohol carries a risk of adverse health and social consequences related to its intoxicating, toxic and dependence-producing properties.",
-       "sha": "bfd652cb69efa996"
-      },
-      {
-       "label": "F6",
-       "ref": "hse_signs-patterns",
-       "where": "Why it is hard to stop",
-       "quote": "It can be very difficult to give up when you are dependent on alcohol. But it is possible to stop drinking. There are 2 main types of dependence which make it hard to stop: physical dependence; psychological dependence",
-       "sha": "b0e7df4bc54d9687"
-      },
-      {
-       "label": "F8",
-       "ref": "hse_signs-patterns",
-       "where": "How alcohol dependence develops",
-       "quote": "Over time your drinking increases until you can no longer manage without it.",
-       "sha": "3ddc7da8af1976d5"
-      },
-      {
-       "label": "F1",
-       "ref": "sampedropiquero_2026",
-       "where": "Discussion › Neurobiological Processes Associated With Alcohol Use and Acute Exercise",
-       "quote": "At the neurochemical level, alcohol has been linked to persistent adaptations in mesolimbic dopaminergic circuits involved in incentive salience and craving",
-       "sha": "fec5575b6231c3e0"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "It is not possible to predict if or when a person will become dependent on alcohol because every situation is different.",
-     "rests_on": [
-      {
-       "label": "L3",
-       "ref": "hse_signs-patterns",
-       "where": "Top of the page",
-       "quote": "It's not possible to tell if and when someone will become dependent on alcohol. Everyone’s situation is different.",
-       "sha": "b4e9f72135bfd186"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 2 addresses the unpredictability of when dependence will occur, which is a limitation about prediction, not a limitation or doubt about the claim in sentence 1 that alcohol is addictive.)"
-    },
-    {
-     "part": "how1",
-     "text": "The Canadian Centre on Substance Use and Addiction says the consumption of alcohol carries a risk of adverse health and social consequences.",
-     "rests_on": [
-      {
-       "label": "F9",
-       "ref": "ccsa_alcohol",
-       "where": "What Is Alcohol?",
-       "quote": "the consumption of alcohol carries a risk of adverse health and social consequences related to its intoxicating, toxic and dependence-producing properties.",
-       "sha": "bfd652cb69efa996"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Ireland's health service (HSE) says physical dependence occurs when the body needs and craves alcohol, which can cause a person to feel very ill without it.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "hse_signs-patterns",
-       "where": "Why it is hard to stop",
-       "quote": "It can be very difficult to give up when you are dependent on alcohol. But it is possible to stop drinking. There are 2 main types of dependence which make it hard to stop: physical dependence; psychological dependence",
-       "sha": "b0e7df4bc54d9687"
-      },
-      {
-       "label": "F7",
-       "ref": "hse_signs-patterns",
-       "where": "Why it is hard to stop / Physical dependence",
-       "quote": "Physical dependence is when your body needs and craves alcohol. It can mean you feel very ill when you do not have alcohol.",
-       "sha": "9c3e3e1b3ba8795c"
-      },
-      {
-       "label": "F8",
-       "ref": "hse_signs-patterns",
-       "where": "How alcohol dependence develops",
-       "quote": "Over time your drinking increases until you can no longer manage without it.",
-       "sha": "3ddc7da8af1976d5"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2026 systematic review says alcohol is linked to persistent adaptations in brain circuits involved in craving and may be related to compulsive consumption patterns.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "sampedropiquero_2026",
-       "where": "Discussion › Neurobiological Processes Associated With Alcohol Use and Acute Exercise",
-       "quote": "At the neurochemical level, alcohol has been linked to persistent adaptations in mesolimbic dopaminergic circuits involved in incentive salience and craving",
-       "sha": "fec5575b6231c3e0"
-      },
-      {
-       "label": "F2",
-       "ref": "sampedropiquero_2026",
-       "where": "Discussion › Neurobiological Processes Associated With Alcohol Use and Acute Exercise",
-       "quote": "In addition, NMDA receptor‐mediated glutamatergic transmission contributes to synaptic adaptations underlying dependence and relapse vulnerability.",
-       "sha": "fec5575b6231c3e0"
-      },
-      {
-       "label": "F3",
-       "ref": "sampedropiquero_2026",
-       "where": "Discussion › Neurobiological Processes Associated With Alcohol Use and Acute Exercise",
-       "quote": "alcohol‐related cues elicit robust dopaminergic responses in the ventral striatum and associated limbic structures, which may be related to compulsive consumption patterns",
-       "sha": "fec5575b6231c3e0"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "soft": "the writer's reply was not in the form asked for",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "alcohol",
   "also": [],
