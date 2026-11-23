@@ -17,37 +17,120 @@
  "made": {
   "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45194925661",
+  "run": "45204328220",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 169
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.98, but 0.06, how1 0.01, how2 0.99",
+  "check": "short: NOT accepted: the word it opens with (“Yes”) is not the answer the passages bear out: The passages only report that loperamide has been used for recreational effects, which is less certain than a definitive 'Yes' that it gets you high; thus the opening w; but: NOT accepted: The passage does not state that the review summarizes reports rather than testing the drug in people.; how1: NOT accepted: The abstract passage does not mention loperamide, so the claim that the review included loperamide is not supported by the given text.; how2: accepted",
+  "rules": "broken at try 2: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "schifano_2018",
+    "type": "article-journal",
+    "title": "Abuse of prescription drugs in the context of novel psychoactive substances (NPS): A systematic review",
+    "author": [
+     {
+      "family": "Schifano",
+      "given": "Fabrizio"
+     },
+     {
+      "family": "Chiappini",
+      "given": "Stefania"
+     },
+     {
+      "family": "Corkery",
+      "given": "John"
+     },
+     {
+      "family": "Guirguis",
+      "given": "Amira"
+     }
+    ],
+    "container-title": "Brain Sciences",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.3390/brainsci8040073",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     }
+    },
+    "volume": "8",
+    "issue": "4",
+    "number": "73",
+    "PMCID": "PMC5924409"
+   },
+   "doi": "10.3390/brainsci8040073",
+   "pmcid": "PMC5924409",
+   "title": "Abuse of Prescription Drugs in the Context of Novel Psychoactive Substances (NPS): A Systematic Review",
+   "year": 2018,
+   "journal": "Brain sciences",
+   "kind": "review",
+   "people": true,
+   "near": 0.728,
+   "money": [
+    "F.S. is the guest editor of this special issue; an Advisory Council on the Misuse Drugs (ACMD) member, UK; and an EMA Advisory board (psychiatry) member. The authors have no other relevant affiliations or financial involvement with any organization or entity with a financial interest in or financial conflict with the subject matter or materials discussed in the manuscript."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+    "text": "a systematic review focusing on a range of medications emerging as used recreationally"
+   },
+   "findings": [
+    {
+     "passage": 13,
+     "where": "3. Results › 3.5. Over-The-Counter (OTC) Medicines—Loperamide",
+     "quote": "Over previous years, the OTC antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+     "text": "Over previous years, the over-the-counter antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "Risks",
  "wanted": [
   {
    "doi": "10.1016/0002-9343(90)90269-j",
@@ -72,7 +155,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Topical loperamide for the treatment of localized neuropathic pain: a case report and literature review",
@@ -80,17 +172,15 @@
    "kind": "review",
    "at": "10.2147/jpr.s196927",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Abuse of Prescription Drugs in the Context of Novel Psychoactive Substances (NPS): A Systematic Review",
    "read": "full",
    "kind": "review",
    "at": "10.3390/brainsci8040073",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Risk of Cardiac Lesion with Chronic and Acute Use of Loperamide-An Integrative Review",
@@ -102,7 +192,248 @@
    "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "Yes",
+  "but": [],
+  "how": [
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "Risks"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9784,
+   "but": 0.0643,
+   "how1": 0.0098,
+   "how2": 0.9864
+  },
+  "scores_quotes_alone": {
+   "short": 0.9729,
+   "but": 0.0155,
+   "how1": 0.0054,
+   "how2": 0.9842
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "schifano_2018",
+       "where": "3. Results › 3.5. Over-The-Counter (OTC) Medicines—Loperamide",
+       "quote": "Over previous years, the OTC antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+       "sha": "85474b04b7316959"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: Passages show loperamide is used recreationally, but they do not provide information on the risks; therefore a simple “Yes” does not fairly answer the full question ask"
+    },
+    {
+     "part": "but",
+     "text": "This is a systematic review of reports, not a study that tested if it works or how risky it is.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "schifano_2018",
+       "where": "Abstract",
+       "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+       "sha": "ba31917cc3ba57a4"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that the paper is not a study testing efficacy or risk; it only describes it as a systematic review."
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 systematic review looked at medications used recreationally. It says loperamide is increasingly reported for recreational use.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "schifano_2018",
+       "where": "Abstract",
+       "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+       "sha": "ba31917cc3ba57a4"
+      },
+      {
+       "label": "F1",
+       "ref": "schifano_2018",
+       "where": "3. Results › 3.5. Over-The-Counter (OTC) Medicines—Loperamide",
+       "quote": "Over previous years, the OTC antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+       "sha": "85474b04b7316959"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, loperamide is used to get high. The sources do not say what the risks are.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "schifano_2018",
+       "where": "3. Results › 3.5. Over-The-Counter (OTC) Medicines—Loperamide",
+       "quote": "Over previous years, the OTC antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+       "sha": "85474b04b7316959"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "This is a systematic review, not a study that tested the drug in people.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "schifano_2018",
+       "where": "Abstract",
+       "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+       "sha": "ba31917cc3ba57a4"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 systematic review looked at medications used recreationally.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "schifano_2018",
+       "where": "Abstract",
+       "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+       "sha": "ba31917cc3ba57a4"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "It says loperamide is increasingly reported as being used to achieve recreational effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "schifano_2018",
+       "where": "3. Results › 3.5. Over-The-Counter (OTC) Medicines—Loperamide",
+       "quote": "Over previous years, the OTC antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+       "sha": "85474b04b7316959"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, loperamide has been reported as being used to achieve recreational effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "schifano_2018",
+       "where": "3. Results › 3.5. Over-The-Counter (OTC) Medicines—Loperamide",
+       "quote": "Over previous years, the OTC antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+       "sha": "85474b04b7316959"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“Yes”) is not the answer the passages bear out: The passages only report that loperamide has been used for recreational effects, which is less certain than a definitive 'Yes' that it gets you high; thus the opening w"
+    },
+    {
+     "part": "but",
+     "text": "This is a systematic review, so it summarizes reports rather than testing the drug in people.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "schifano_2018",
+       "where": "Abstract",
+       "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+       "sha": "ba31917cc3ba57a4"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that the review summarizes reports rather than testing the drug in people."
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 systematic review looked at medications used recreationally, including loperamide.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "schifano_2018",
+       "where": "Abstract",
+       "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+       "sha": "ba31917cc3ba57a4"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The abstract passage does not mention loperamide, so the claim that the review included loperamide is not supported by the given text."
+    },
+    {
+     "part": "how2",
+     "text": "It found loperamide is increasingly reported as being diverted for recreational use.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "schifano_2018",
+       "where": "3. Results › 3.5. Over-The-Counter (OTC) Medicines—Loperamide",
+       "quote": "Over previous years, the OTC antidiarrhoeal medicine loperamide has increasingly been reported as being diverted and used to achieve recreational effects.",
+       "sha": "85474b04b7316959"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "A 2018 systematic review looked at medications used recreationally, including loperamide.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "schifano_2018",
+     "where": "Abstract",
+     "quote": "This paper provides a systematic review of the topic, focusing on a range of medications which have emerged as being used recreationally, either on their own or in combination with NPS.",
+     "sha": "ba31917cc3ba57a4"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The abstract passage does not mention loperamide, so the claim that the review included loperamide is not supported by the given text."
+  }
+ ],
  "place": {
   "home": "new:Loperamide",
   "also": [],
