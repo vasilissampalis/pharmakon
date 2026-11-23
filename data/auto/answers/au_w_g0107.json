@@ -20,159 +20,65 @@
   "on": "2026-11-23",
   "models": {
    "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team F",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
   },
-  "run": "45152020046",
-  "read_by": {
-   "gpt-oss-20b": 3,
-   "gemma-4-31b-it": 1
-  },
+  "run": "45219142423",
   "read_seconds": 100,
   "from": {
    "papers": 0,
    "summaries": 0,
-   "official": 1
+   "official": 0
   },
   "neurons": 0.0,
   "seconds": 100
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time; the search for papers did not all come back: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemma-4-31b-it read from there",
   "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "2 findings kept from 1 sources (0 papers read in full, 1 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only"
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
- "sources": [
-  {
-   "read": "page",
-   "ref": {
-    "id": "thelevel_synthetic-cathinones",
-    "type": "webpage",
-    "title": "Synthetic Cathinones (Bath Salts)",
-    "author": [
-     {
-      "literal": "NZ Drug Foundation"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      []
-     ]
-    },
-    "URL": "https://thelevel.org.nz/drug-information/synthetic-cathinones",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       23
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-23"
-    },
-    "publisher": "The Level"
-   },
-   "title": "Synthetic Cathinones (Bath Salts)",
-   "year": null,
-   "kind": "official",
-   "people": true,
-   "near": 0.717,
-   "name": "NZ Drug Foundation",
-   "short": "the NZ Drug Foundation",
-   "tier": 2,
-   "address": "https://thelevel.org.nz/drug-information/synthetic-cathinones",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 29,
-     "where": "Working and driving / If you take synthetic cathinones, will it show up on a drug test?",
-     "quote": "Synthetic cathinones can be tested for in urine, blood, saliva (spit) and hair.",
-     "text": "Synthetic cathinones can be detected in urine, blood, saliva (spit), and hair.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 29,
-     "where": "Working and driving / If you take synthetic cathinones, will it show up on a drug test?",
-     "quote": "If they are tested for, these samples need to be sent to a forensic laboratory.",
-     "text": "Samples must be sent to a forensic laboratory if synthetic cathinones are being tested for.",
-     "id": "F2",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 29,
-     "where": "Working and driving / If you take synthetic cathinones, will it show up on a drug test?",
-     "quote": "Because there is very little information about how to test for them, they are usually not tested for.",
-     "text": "Synthetic cathinones are usually not tested for because there is very little information on how to test for them.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  }
- ],
+ "sources": [],
  "parts": [],
  "complete": false,
  "missing": "",
  "wanted": [],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time; the search for papers did not all come back: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
-   "title": "Synthetic Cathinones (Bath Salts)",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/synthetic-cathinones",
-   "kept": 2,
-   "thrown": []
-  },
-  {
-   "title": "Bath salts",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/bath-salts.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Synthetic cathinones",
-   "read": "page",
-   "kind": "official",
-   "at": "https://adf.org.au/drug-facts/synthetic-cathinones/",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Synthetic cathinones",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.talktofrank.com/drug/cathinones",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Mephedrone",
-   "read": "page",
-   "kind": "official",
-   "at": "https://adf.org.au/drug-facts/mephedrone/",
+   "title": "Metaphedrone (3-Methylmethcathinone): Pharmacological, Clinical, and Toxicological Profile",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/medicina60030466",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Integrated Approach for Synthetic Cathinone Drug Prioritization and Risk Assessment: In Silico Approach and Sub-Chronic Studies in Daphnia magna and Tetrahymena thermophila",
+   "read": "full",
+   "kind": "other",
+   "at": "10.3390/molecules28072899",
+   "kept": 0,
+   "thrown": []
   }
  ],
  "soft": "a source could not be fetched",
