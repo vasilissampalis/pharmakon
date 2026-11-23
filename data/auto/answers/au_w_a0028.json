@@ -18,33 +18,39 @@
   "on": "2026-11-23",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "@cf/openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team B",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
   "run": "45087767314",
-  "read_seconds": 77,
+  "read_by": {
+   "gemini-3.5-flash-lite": 3,
+   "llama-4-scout-17b-16e-instruct": 1
+  },
+  "read_seconds": 43,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 490.1,
-  "seconds": 173
+  "neurons": 727.6,
+  "seconds": 109
  },
- "status": "none",
- "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.04, but 0.54, how1 0.43, how2 0.01",
-  "check": "short: NOT accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure; but: NOT accepted: it is about something else than the short answer; how1: accepted; how2: NOT accepted: Passages do not state that none of the drugs have progressed in human trials; some are already used clinically."
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
+  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Yes. A review says gabapentinoids work for nerve pain. In animal models, other drugs also eased nerve pain symptoms.”: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure | the But “The animal studies used drugs that",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.75, but 0.91, how1 0.97, how2 0.98",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b)",
+  "but": "the writer's But was not accepted (The sentence says none have progressed to clinical trials, but the passage states FAAH inhibitors have been tried in clinical trials (though none have progresse): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -106,7 +112,7 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
-    "text": "targeted narrative review"
+    "text": "a targeted narrative review"
    },
    "findings": [
     {
@@ -118,19 +124,11 @@
      "second_hand": ""
     },
     {
-     "passage": 2,
-     "where": "Abstract",
-     "quote": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
-     "text": "These activities reduce the likelihood of central sensitization, which explains in part the efficacy of the gabapentinoids in the management of neuropathic pain.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
      "passage": 6,
      "where": "Introduction",
      "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
-     "text": "The calcium channel alpha-2-delta subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
-     "id": "F3",
+     "text": "The calcium channel alpha-2-delta subunit ligands gabapentin and pregabalin play an increasingly important role in pain management, with a primary role in the treatment of neuropathic pain.",
+     "id": "F2",
      "second_hand": ""
     }
    ],
@@ -199,8 +197,8 @@
      "passage": 15,
      "where": "Results › Preclinical studies › FAAH inhibitors",
      "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-     "text": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-     "id": "F4",
+     "text": "A FAAH inhibitor called palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC in preclinical studies, and its effects were comparable to gabapentin.",
+     "id": "F3",
      "second_hand": ""
     },
     {
@@ -208,7 +206,7 @@
      "where": "Results › Preclinical studies › FAAH inhibitors",
      "quote": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
      "text": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
-     "id": "F5",
+     "id": "F4",
      "second_hand": ""
     },
     {
@@ -216,7 +214,7 @@
      "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
      "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
      "text": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
-     "id": "F6",
+     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -225,7 +223,7 @@
      "passage": 30,
      "where": "Concluding remarks and opinion",
      "quote": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
-     "text": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
+     "text": "Various FAAH inhibitors have been tried in clinical trials for various types of pain, but to the authors' knowledge, none have progressed so far.",
      "id": "L1",
      "second_hand": ""
     }
@@ -233,9 +231,127 @@
    "tag": "B"
   }
  ],
- "parts": [],
- "complete": false,
- "missing": "specific drug choices, dosing, and safety",
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes. Gabapentinoids can help with nerve issues.",
+   "uses": [
+    "F1",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "mcanally_2020",
+     "where": "The Therapeutic Benefits of Gabapentinoids",
+     "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
+     "sha": "19fcd613f42c8068"
+    },
+    {
+     "label": "F3",
+     "ref": "aly_2021",
+     "where": "Results › Preclinical studies › FAAH inhibitors",
+     "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
+     "sha": "6e25ad8c661883b3"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review and 1 study in people.",
+   "uses": [
+    "DA",
+    "DB"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "mcanally_2020",
+     "where": "Abstract",
+     "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
+     "sha": "516fd95f7e7bedf5"
+    },
+    {
+     "label": "DB",
+     "ref": "aly_2021",
+     "where": "Abstract",
+     "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
+     "sha": "61ec1bcbf9210728"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A review found gabapentinoids work for neuropathic pain.",
+   "uses": [
+    "DA",
+    "F1",
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "mcanally_2020",
+     "where": "Abstract",
+     "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
+     "sha": "516fd95f7e7bedf5"
+    },
+    {
+     "label": "F1",
+     "ref": "mcanally_2020",
+     "where": "The Therapeutic Benefits of Gabapentinoids",
+     "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
+     "sha": "19fcd613f42c8068"
+    },
+    {
+     "label": "F2",
+     "ref": "mcanally_2020",
+     "where": "Introduction",
+     "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
+     "sha": "9d5a5db535c5b751"
+    }
+   ],
+   "quote": "multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain",
+   "quote_ref": "mcanally_2020"
+  },
+  {
+   "part": "how2",
+   "text": "A systematic review studied molecules for HIV-associated neuropathic pain.",
+   "uses": [
+    "DB",
+    "F3",
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "aly_2021",
+     "where": "Abstract",
+     "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
+     "sha": "61ec1bcbf9210728"
+    },
+    {
+     "label": "F3",
+     "ref": "aly_2021",
+     "where": "Results › Preclinical studies › FAAH inhibitors",
+     "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
+     "sha": "6e25ad8c661883b3"
+    },
+    {
+     "label": "F5",
+     "ref": "aly_2021",
+     "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
+     "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
+     "sha": "8e5d4a398516b0d1"
+    }
+   ],
+   "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system",
+   "quote_ref": "aly_2021"
+  }
+ ],
+ "complete": true,
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/j.neubiorev.2025.106209",
@@ -260,14 +376,23 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Gabapentinoid Benefit and Risk Stratification: Mechanisms Over Myth",
    "read": "full",
    "kind": "review",
    "at": "10.1007/s40122-020-00189-x",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -307,7 +432,7 @@
  "plan": {
   "short": [
    "F1",
-   "F4"
+   "F3"
   ],
   "direct": "Yes",
   "but": [
@@ -317,32 +442,31 @@
    [
     "DA",
     "F1",
-    "F3"
+    "F2"
    ],
    [
     "DB",
-    "F4",
-    "F5",
-    "F6"
+    "F3",
+    "F5"
    ]
   ],
-  "unanswered": "specific drug choices, dosing, and safety"
+  "unanswered": "specific drug recommendations for particular neuropathies"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.0386,
-   "but": 0.5369,
-   "how1": 0.4256,
-   "how2": 0.0119
+   "short": 0.7498,
+   "but": 0.9091,
+   "how1": 0.9721,
+   "how2": 0.9816
   },
   "scores_quotes_alone": {
-   "short": 0.0406,
-   "but": 0.0159,
-   "how1": 0.4446,
-   "how2": 0.0046
+   "short": 0.5155,
+   "but": 0.9521,
+   "how1": 0.9702,
+   "how2": 0.9843
   }
  },
  "tries": [
@@ -352,7 +476,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. A review says gabapentinoids work for nerve pain. In animal models, other drugs also eased nerve pain symptoms.",
+     "text": "Yes. Gabapentinoids can help with nerve issues.",
      "rests_on": [
       {
        "label": "F1",
@@ -362,20 +486,18 @@
        "sha": "19fcd613f42c8068"
       },
       {
-       "label": "F4",
+       "label": "F3",
        "ref": "aly_2021",
        "where": "Results › Preclinical studies › FAAH inhibitors",
        "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
        "sha": "6e25ad8c661883b3"
       }
      ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
+     "ok": true
     },
     {
      "part": "but",
-     "text": "The review notes that no FAAH inhibitors have progressed in clinical trials for pain so far.",
+     "text": "None have progressed to clinical trials for people.",
      "rests_on": [
       {
        "label": "L1",
@@ -387,11 +509,11 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 2 limits clinical‑trial progression of FAAH inhibitors, which is a different aspect than the efficacy in animal models reported in sentence 1; therefore it is not a direct limit or doubt on sentence 1’s claim.)"
+     "said": "Passage states FAAH inhibitors have been tried in clinical trials, contradicting the claim that none have progressed to clinical trials."
     },
     {
      "part": "how1",
-     "text": "A 2020 review of literature says gabapentinoids have a well-established role in treating neuropathic pain.",
+     "text": "A review found gabapentinoids work for neuropathic pain.",
      "rests_on": [
       {
        "label": "DA",
@@ -408,7 +530,7 @@
        "sha": "19fcd613f42c8068"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "mcanally_2020",
        "where": "Introduction",
        "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
@@ -419,7 +541,7 @@
     },
     {
      "part": "how2",
-     "text": "A 2021 review of animal models and patients found some endocannabinoid drugs eased nerve pain symptoms.",
+     "text": "Animal models and patients with HIV-associated neuropathic pain were studied.",
      "rests_on": [
       {
        "label": "DB",
@@ -429,7 +551,7 @@
        "sha": "61ec1bcbf9210728"
       },
       {
-       "label": "F4",
+       "label": "F3",
        "ref": "aly_2021",
        "where": "Results › Preclinical studies › FAAH inhibitors",
        "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
@@ -437,13 +559,6 @@
       },
       {
        "label": "F5",
-       "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
-       "sha": "6e25ad8c661883b3"
-      },
-      {
-       "label": "F6",
        "ref": "aly_2021",
        "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
        "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
@@ -460,7 +575,7 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. A review says gabapentinoids work for nerve pain. In animals, other drugs also eased nerve pain.",
+     "text": "Yes. Gabapentinoids can help with nerve issues.",
      "rests_on": [
       {
        "label": "F1",
@@ -470,7 +585,7 @@
        "sha": "19fcd613f42c8068"
       },
       {
-       "label": "F4",
+       "label": "F3",
        "ref": "aly_2021",
        "where": "Results › Preclinical studies › FAAH inhibitors",
        "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
@@ -481,7 +596,7 @@
     },
     {
      "part": "but",
-     "text": "The animal studies used specific drugs that have not yet been approved for people.",
+     "text": "None of these FAAH inhibitors have progressed so far in clinical trials.",
      "rests_on": [
       {
        "label": "L1",
@@ -497,7 +612,7 @@
     },
     {
      "part": "how1",
-     "text": "A 2020 review of research says gabapentinoids have a well-established role in treating nerve pain.",
+     "text": "A review found gabapentinoids work for neuropathic pain.",
      "rests_on": [
       {
        "label": "DA",
@@ -514,7 +629,7 @@
        "sha": "19fcd613f42c8068"
       },
       {
-       "label": "F3",
+       "label": "F2",
        "ref": "mcanally_2020",
        "where": "Introduction",
        "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
@@ -525,7 +640,7 @@
     },
     {
      "part": "how2",
-     "text": "A 2021 review of animal models found that certain drugs eased pain caused by HIV or chemicals.",
+     "text": "A systematic review studied molecules for HIV-associated neuropathic pain in animal models and patients.",
      "rests_on": [
       {
        "label": "DB",
@@ -533,117 +648,9 @@
        "where": "Abstract",
        "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
        "sha": "61ec1bcbf9210728"
-      },
-      {
-       "label": "F4",
-       "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-       "sha": "6e25ad8c661883b3"
-      },
-      {
-       "label": "F5",
-       "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
-       "sha": "6e25ad8c661883b3"
-      },
-      {
-       "label": "F6",
-       "ref": "aly_2021",
-       "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
-       "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
-       "sha": "8e5d4a398516b0d1"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Yes. A review says gabapentinoids work for nerve pain. In animal models, other drugs also eased nerve pain symptoms.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "mcanally_2020",
-       "where": "The Therapeutic Benefits of Gabapentinoids",
-       "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-       "sha": "19fcd613f42c8068"
-      },
-      {
-       "label": "F4",
-       "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-       "sha": "6e25ad8c661883b3"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
-    },
-    {
-     "part": "but",
-     "text": "The animal studies used drugs that have not yet passed clinical trials for people.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "aly_2021",
-       "where": "Concluding remarks and opinion",
-       "quote": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
-       "sha": "ec5895cf55eabab7"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 review of research says gabapentinoids have a well-established role in treating nerve pain.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "mcanally_2020",
-       "where": "Abstract",
-       "quote": "In this targeted narrative review, we aim to disabuse pain physicians and other clinicians, pharmacists, and policymakers of both the positive and negative myths concerning gabapentinoid medications.",
-       "sha": "516fd95f7e7bedf5"
-      },
-      {
-       "label": "F1",
-       "ref": "mcanally_2020",
-       "where": "The Therapeutic Benefits of Gabapentinoids",
-       "quote": "the literature supports a well-established efficacy of gabapentinoids for traditional neuropathic pain indications, with numerous systematic reviews and meta-analyses demonstrating significant and superior benefit in these states.",
-       "sha": "19fcd613f42c8068"
       },
       {
        "label": "F3",
-       "ref": "mcanally_2020",
-       "where": "Introduction",
-       "quote": "The calcium channel α-2-δ (CCα2δ) subunit ligands gabapentin and pregabalin play an increasingly important role in the post-opioid-centric and multimodal-focused era of pain management, with a primary role in the treatment of neuropathic pain.",
-       "sha": "9d5a5db535c5b751"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 2021 review of animal models found some drugs eased nerve pain, but none have progressed in human trials.",
-     "rests_on": [
-      {
-       "label": "DB",
-       "ref": "aly_2021",
-       "where": "Abstract",
-       "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
-       "sha": "61ec1bcbf9210728"
-      },
-      {
-       "label": "F4",
        "ref": "aly_2021",
        "where": "Results › Preclinical studies › FAAH inhibitors",
        "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
@@ -652,21 +659,12 @@
       {
        "label": "F5",
        "ref": "aly_2021",
-       "where": "Results › Preclinical studies › FAAH inhibitors",
-       "quote": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
-       "sha": "6e25ad8c661883b3"
-      },
-      {
-       "label": "F6",
-       "ref": "aly_2021",
        "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
        "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
        "sha": "8e5d4a398516b0d1"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passages do not state that none of the drugs have progressed in human trials; some are already used clinically."
+     "ok": true
     }
    ]
   }
@@ -674,42 +672,25 @@
  "dropped": [
   {
    "try": 3,
-   "part": "how2",
-   "text": "A 2021 review of animal models found some drugs eased nerve pain, but none have progressed in human trials.",
+   "part": "but",
+   "text": "None have progressed to clinical trials for various types of pain.",
    "rests_on": [
     {
-     "label": "DB",
+     "label": "L1",
      "ref": "aly_2021",
-     "where": "Abstract",
-     "quote": "All original research articles that evaluated the efficacy of molecules that modulate the endocannabinoid system (ECS) for the prevention and/or treatment of pain in HIV-NP animal models and patients with HIV-NP were included.",
-     "sha": "61ec1bcbf9210728"
-    },
-    {
-     "label": "F4",
-     "ref": "aly_2021",
-     "where": "Results › Preclinical studies › FAAH inhibitors",
-     "quote": "A FAAH inhibitor palmitoylallylamide (L-29) alleviated mechanical sensitivity induced by ddC and its effects were comparable to gabapentin, which is used in the management of NP.",
-     "sha": "6e25ad8c661883b3"
-    },
-    {
-     "label": "F5",
-     "ref": "aly_2021",
-     "where": "Results › Preclinical studies › FAAH inhibitors",
-     "quote": "Two other FAAH inhibitors, URB597 and PF-3845, alleviated HIV-gp120-induced cold and tactile/mechanical allodynia with limited effects on mechanical hyperalgesia.",
-     "sha": "6e25ad8c661883b3"
-    },
-    {
-     "label": "F6",
-     "ref": "aly_2021",
-     "where": "Discussion › Preclinical studies on the effects of cannabis/cannabinoids in HIV-NP animal models",
-     "quote": "The IPM combination was found to alleviate ddC-induced mechanical allodynia and thermal hyperalgesia in a CBR-dependent manner.",
-     "sha": "8e5d4a398516b0d1"
+     "where": "Concluding remarks and opinion",
+     "quote": "Various FAAH inhibitors have been tried in clinical trials for various types of pain but to our knowledge, none have progressed so far.",
+     "sha": "ec5895cf55eabab7"
     }
    ],
    "by": "the second reader",
-   "said": "Passages do not state that none of the drugs have progressed in human trials; some are already used clinically."
+   "said": "The sentence says none have progressed to clinical trials, but the passage states FAAH inhibitors have been tried in clinical trials (though none have progressed further)."
   }
  ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "facts",
   "also": [],
