@@ -17,33 +17,396 @@
   "alcohol"
  ],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemma-4-31b-it",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45057198767",
-  "read_seconds": 100,
+  "run": "45137291338",
+  "read_by": {
+   "gemini-3.5-flash-lite": 7,
+   "gpt-oss-20b": 2
+  },
+  "read_seconds": 67,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 153
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the findings were from a lab study.",
  "gates": {
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: words that are not person-first (“drinkers”))",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.34, but 0.98, how1 0.94",
+  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the findings were from a lab study.; but: accepted; how1: accepted",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 3; gemini-3.6-flash accepted 2 of 3"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "petrie_2026",
+    "type": "article-journal",
+    "title": "Effects of acute alcohol administration on endocannabinoids and relation to subjective effects",
+    "author": [
+     {
+      "family": "Petrie",
+      "given": "Gavin N."
+     },
+     {
+      "family": "Mazurka",
+      "given": "Raegan"
+     },
+     {
+      "family": "Paul",
+      "given": "Elisabeth R."
+     },
+     {
+      "family": "Stensson",
+      "given": "Niclas"
+     },
+     {
+      "family": "Ghafouri",
+      "given": "Bijar"
+     },
+     {
+      "family": "Hill",
+      "given": "Matthew N."
+     },
+     {
+      "family": "Heilig",
+      "given": "Markus"
+     },
+     {
+      "family": "Mayo",
+      "given": "Leah M."
+     }
+    ],
+    "container-title": "Psychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1007/s00213-025-06843-6",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     },
+     "online_first_year": 2025
+    },
+    "volume": "243",
+    "issue": "2",
+    "page": "401-411",
+    "PMCID": "PMC12904980"
+   },
+   "doi": "10.1007/s00213-025-06843-6",
+   "pmcid": "PMC12904980",
+   "title": "Effects of acute alcohol administration on endocannabinoids and relation to subjective effects",
+   "year": 2026,
+   "journal": "Psychopharmacology",
+   "kind": "study",
+   "people": true,
+   "near": 0.614,
+   "money": [
+    "Open access funding provided by Linköping University. This work was funded by the Swedish Research Council 2013–2024 to MH (2013–07434)."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "Healthy social drinkers (n = 28, aged 20–35 years) participated in a within-subjects, single-blind, placebo-controlled laboratory alcohol challenge study.",
+    "text": "A laboratory alcohol challenge study of healthy social drinkers"
+   },
+   "findings": [
+    {
+     "passage": 28,
+     "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+     "quote": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+     "text": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 27,
+     "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+     "quote": "Further, self-report on “feeling” the effects of alcohol (DEQ-Feel) confirmed that subjective intoxication was achieved with the moderate-to-high alcohol dose.",
+     "text": "Self-report on feeling the effects of alcohol confirmed that subjective intoxication was achieved with the moderate-to-high alcohol dose.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 36,
+     "where": "Discussion",
+     "quote": "We further found that a drop in 2-AG concentrations following alcohol intake was associated with less liking and feelings of friendliness, whereas under placebo conditions, a rise in 2-AG was associated with a smaller decrease in feelings of stimulation (e.g., feeling energized, talkative).",
+     "text": "A drop in 2-AG concentrations following alcohol intake was associated with less liking and feelings of friendliness.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "odigie_2026",
+    "type": "article-journal",
+    "title": "The effect of alcohol on near point of convergence and accommodation",
+    "author": [
+     {
+      "family": "Odigie",
+      "given": "Oseleonomhen Monica"
+     },
+     {
+      "family": "Addeh",
+      "given": "Ese Francis"
+     },
+     {
+      "family": "Okechukwu",
+      "given": "Clinton Ifeanyi"
+     },
+     {
+      "family": "Shuaibu",
+      "given": "Ayishetu Oshoke"
+     }
+    ],
+    "container-title": "British and Irish Orthoptic Journal",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.22599/bioj.569",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     }
+    },
+    "volume": "22",
+    "issue": "1",
+    "page": "172-177",
+    "PMCID": "PMC13761835"
+   },
+   "doi": "10.22599/bioj.569",
+   "pmcid": "PMC13761835",
+   "title": "The Effect of Alcohol on Near Point of Convergence and Accommodation",
+   "year": 2026,
+   "journal": "The British and Irish orthoptic journal",
+   "kind": "other",
+   "people": true,
+   "near": 0.622,
+   "money": [
+    "The authors have no competing interests to declare."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "This was a quasi-experimental pretest–posttest study conducted on 60 young participants (70% males and 30% females).",
+    "text": "A quasi-experimental pretest-posttest study on 60 young participants evaluating near visual components."
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The influence of alcohol on the central nervous system has been known to have an impact on different aspects of visual performance, a critical element for tasks like reading and driving.",
+     "text": "The influence of alcohol on the central nervous system has been known to have an impact on different aspects of visual performance, which is a critical element for tasks like reading and driving.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Discussion",
+     "quote": "Our results demonstrate that near vision is negatively impacted by even moderate acute alcohol consumption.",
+     "text": "Near vision is negatively impacted by even moderate acute alcohol consumption.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 26,
+     "where": "Conclusion and Recommendations",
+     "quote": "As a result of ethanol’s CNS-depressant effect on the oculomotor system, acute alcohol ingestion dramatically reduces AA and causes NPC to recede.",
+     "text": "As a result of ethanol's CNS-depressant effect on the oculomotor system, acute alcohol ingestion dramatically reduces AA and causes NPC to recede.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "niaaa_alcohols-effects-body",
+    "type": "webpage",
+    "title": "Alcohol's Effects on the Body",
+    "author": [
+     {
+      "literal": "National Institute on Alcohol Abuse and Alcoholism"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.niaaa.nih.gov/alcohols-effects-health/alcohols-effects-body",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       23
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-23"
+    }
+   },
+   "title": "Alcohol's Effects on the Body",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.71,
+   "name": "National Institute on Alcohol Abuse and Alcoholism",
+   "short": "the US National Institute on Alcohol Abuse and Alcoholism",
+   "tier": 1,
+   "address": "https://www.niaaa.nih.gov/alcohols-effects-health/alcohols-effects-body",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Brain/Neurological System",
+     "quote": "These disruptions can change mood and behavior and make it harder to think clearly and move with coordination.",
+     "text": "These disruptions can change mood and behavior and make it harder to think clearly and move with coordination.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_about",
+    "type": "webpage",
+    "title": "About alcohol",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       6,
+       18
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/about.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       23
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-23"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "About alcohol",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.67,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/about.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 4,
+     "where": "How alcohol affects you",
+     "quote": "Alcohol activates the pleasure or reward centres in the brain. It can make you feel: a sense of wellbeing; relaxed; disinhibited (having less control over your actions, especially inappropriate actions); euphoric",
+     "text": "Alcohol activates the pleasure or reward centres in the brain and can make you feel a sense of wellbeing, relaxed, disinhibited, or euphoric.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "How alcohol affects you",
+     "quote": "Alcohol is also a central nervous system depressant. This means that alcohol slows down brain functions and thought processes.",
+     "text": "Alcohol is a central nervous system depressant, meaning it slows down brain functions and thought processes.",
+     "id": "F9",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+     "quote": "Alcohol continues to circulate through your body until your liver eliminates it. Some alcohol (10%) exits your body through urine, sweat and breathing.",
+     "text": "Alcohol continues to circulate through your body until your liver eliminates it, and 10% exits through urine, sweat, and breathing.",
+     "id": "F10",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 6,
+     "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+     "quote": "How long it takes alcohol to affect you varies greatly.",
+     "text": "How long it takes alcohol to affect you varies greatly.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -87,6 +450,14 @@
    "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -114,8 +485,14 @@
    "kind": "review",
    "at": "10.1111/add.70540",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Systematic review and meta‑analysis of harmful alcohol use and intimate partner violence in high‑income countries",
+     "quote": "Perpetrator alcohol use and intimate partner violence in high‑income countries: A systematic review and meta‑analysis (2026), Addiction (Abingdon, England).",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Alcohol consumption and risk of atrial fibrillation: a pairwise and network meta-analysis",
@@ -123,11 +500,474 @@
    "kind": "review",
    "at": "10.1093/europace/euag111",
    "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "systematic review, pairwise meta-analysis, and network meta-analysis of twenty-six studies with nearly 15 million participants",
+     "quote": "We performed this systematic review, pairwise meta-analysis, and network meta-analysis to assess the association and dose–response relationship between varying quantities of alcohol consumption and in",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "Impact of Alcohol Intake on Parkinson's Disease Risk and Progression: A Systematic Review and Dose-Response Meta-Analysis of Prospective Studies",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1002/mds.70200",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Alcohol Consumption Behaviors and Liver Disease: Is There a Safer Drinking Practices?",
+   "read": "full",
+   "kind": "review",
+   "at": "10.12659/msm.948617",
+   "kept": 0,
    "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Effects of acute alcohol administration on endocannabinoids and relation to subjective effects",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1007/s00213-025-06843-6",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "However, as alcohol did not significantly affect AEA levels in this study, further research is needed to clarify its role, particularly in populations at-risk for harmful alcohol use.",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "While these findings provide a compelling basis for further investigation, they remain speculative. Longitudinal studies are needed to determine whether alcohol-induced changes in eCBs and their subje",
+     "why": "no sentence"
+    }
+   ]
+  },
+  {
+   "title": "The Pathophysiology of Alcohol-Associated Liver Disease: Focusing on Superoxide Dismutase 1 as a Therapeutic Target",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/biology14101319",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Alcohol consumption and risk of dementia: a systematic review and meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1111/imj.70288",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "The Effect of Alcohol on Near Point of Convergence and Accommodation",
+   "read": "full",
+   "kind": "other",
+   "at": "10.22599/bioj.569",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Our sample was small and made up of young, healthy volunteers; statistical power and generalisability may be limited.",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Higher dosages or longer-lasting effects cannot be addressed because we only examined one modest dose of alcohol and monitored performance for 60 minutes.",
+     "why": "no sentence"
+    }
+   ]
+  },
+  {
+   "title": "Alcohol's Effects on the Body",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.niaaa.nih.gov/alcohols-effects-health/alcohols-effects-body",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "About alcohol",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/alcohol/about.html",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "The effect of alcohol on subsequent sleep in healthy adults: A systematic review and meta-analysis",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.smrv.2024.102030",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.pnpbp.2026.111684",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its summary could not be fetched (HTTPError)"
+  },
+  {
+   "title": "",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1007/7854_2024_461",
+   "kept": 0,
+   "thrown": [],
+   "fault": "its summary could not be fetched (HTTPError)"
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F8",
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F8",
+    "F10"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "A lab study of 28 healthy social drinkers found that alcohol's stimulatory effects peaked at 30 minutes and sedative effects at 150 minutes.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "petrie_2026",
+     "where": "Abstract",
+     "quote": "Healthy social drinkers (n = 28, aged 20–35 years) participated in a within-subjects, single-blind, placebo-controlled laboratory alcohol challenge study.",
+     "sha": "4ef9d701352d728f"
+    },
+    {
+     "label": "F1",
+     "ref": "petrie_2026",
+     "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+     "quote": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+     "sha": "756cc9f1bbe18cd9"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“drinkers”)"
+  },
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "A lab study of 28 healthy social drinkers found stimulatory effects peaked at 30 minutes and sedative effects at 150 minutes.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "petrie_2026",
+     "where": "Abstract",
+     "quote": "Healthy social drinkers (n = 28, aged 20–35 years) participated in a within-subjects, single-blind, placebo-controlled laboratory alcohol challenge study.",
+     "sha": "4ef9d701352d728f"
+    },
+    {
+     "label": "F1",
+     "ref": "petrie_2026",
+     "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+     "quote": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+     "sha": "756cc9f1bbe18cd9"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“drinkers”)"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A lab study of 28 healthy social drinkers found stimulatory effects peaked at 30 minutes and sedative effects at 150 minutes.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "petrie_2026",
+     "where": "Abstract",
+     "quote": "Healthy social drinkers (n = 28, aged 20–35 years) participated in a within-subjects, single-blind, placebo-controlled laboratory alcohol challenge study.",
+     "sha": "4ef9d701352d728f"
+    },
+    {
+     "label": "F1",
+     "ref": "petrie_2026",
+     "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+     "quote": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+     "sha": "756cc9f1bbe18cd9"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“drinkers”)"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3361,
+   "but": 0.9753,
+   "how1": 0.9387
+  },
+  "scores_quotes_alone": {
+   "short": 0.3964,
+   "but": 0.9364,
+   "how1": 0.6941
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Alcohol can make people feel relaxed, happy, or euphoric. In a lab study, the energizing feeling peaked at 30 minutes and the sleepy feeling at 150 minutes.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you",
+       "quote": "Alcohol activates the pleasure or reward centres in the brain. It can make you feel: a sense of wellbeing; relaxed; disinhibited (having less control over your actions, especially inappropriate actions); euphoric",
+       "sha": "e053b9230de5d26f"
+      },
+      {
+       "label": "F1",
+       "ref": "petrie_2026",
+       "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+       "quote": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+       "sha": "756cc9f1bbe18cd9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The word \"happy\" is not stated in the Health Canada passage; only \"sense of wellbeing\" is mentioned."
+    },
+    {
+     "part": "but",
+     "text": "Health Canada says how long it takes for alcohol to affect you varies greatly from person to person.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+       "quote": "How long it takes alcohol to affect you varies greatly.",
+       "sha": "e38906ff813e4075"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The phrase \"from person to person\" is not present in the Health Canada passage; it only says \"varies greatly\"."
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says alcohol activates brain reward centers, which can lead to feelings of wellbeing, relaxation, or euphoria.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you",
+       "quote": "Alcohol activates the pleasure or reward centres in the brain. It can make you feel: a sense of wellbeing; relaxed; disinhibited (having less control over your actions, especially inappropriate actions); euphoric",
+       "sha": "e053b9230de5d26f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Health Canada says alcohol stays in the body until the liver removes it, with 10% leaving through urine, sweat, and breath.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+       "quote": "Alcohol continues to circulate through your body until your liver eliminates it. Some alcohol (10%) exits your body through urine, sweat and breathing.",
+       "sha": "e38906ff813e4075"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Alcohol can make you feel a sense of wellbeing, relaxed, disinhibited, or euphoric. In a lab study, stimulatory effects peaked at 30 minutes and sedative effects at 150 minutes.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you",
+       "quote": "Alcohol activates the pleasure or reward centres in the brain. It can make you feel: a sense of wellbeing; relaxed; disinhibited (having less control over your actions, especially inappropriate actions); euphoric",
+       "sha": "e053b9230de5d26f"
+      },
+      {
+       "label": "F1",
+       "ref": "petrie_2026",
+       "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+       "quote": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+       "sha": "756cc9f1bbe18cd9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The phrase \"In a lab study\" is not stated in the provided passages."
+    },
+    {
+     "part": "but",
+     "text": "Health Canada says how long it takes alcohol to affect you varies greatly.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+       "quote": "How long it takes alcohol to affect you varies greatly.",
+       "sha": "e38906ff813e4075"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says alcohol activates pleasure centres in the brain and continues to circulate until the liver eliminates it.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you",
+       "quote": "Alcohol activates the pleasure or reward centres in the brain. It can make you feel: a sense of wellbeing; relaxed; disinhibited (having less control over your actions, especially inappropriate actions); euphoric",
+       "sha": "e053b9230de5d26f"
+      },
+      {
+       "label": "F10",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+       "quote": "Alcohol continues to circulate through your body until your liver eliminates it. Some alcohol (10%) exits your body through urine, sweat and breathing.",
+       "sha": "e38906ff813e4075"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Alcohol can make people feel relaxed, disinhibited, or euphoric. In a lab study, stimulatory effects peaked at 30 minutes and sedative effects at 150 minutes.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you",
+       "quote": "Alcohol activates the pleasure or reward centres in the brain. It can make you feel: a sense of wellbeing; relaxed; disinhibited (having less control over your actions, especially inappropriate actions); euphoric",
+       "sha": "e053b9230de5d26f"
+      },
+      {
+       "label": "F1",
+       "ref": "petrie_2026",
+       "where": "Results › Change in BrAC and subjective intoxication over time for alcohol versus placebo conditions",
+       "quote": "Consistent with the biphasic effects of alcohol, the stimulatory effects of alcohol peaked at T + 30 min and the sedative effects at T + 150 min.",
+       "sha": "756cc9f1bbe18cd9"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not state that the findings were from a lab study."
+    },
+    {
+     "part": "but",
+     "text": "Health Canada says how long it takes alcohol to affect you varies greatly.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+       "quote": "How long it takes alcohol to affect you varies greatly.",
+       "sha": "e38906ff813e4075"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says alcohol activates pleasure centres in the brain and continues to circulate until the liver eliminates it.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you",
+       "quote": "Alcohol activates the pleasure or reward centres in the brain. It can make you feel: a sense of wellbeing; relaxed; disinhibited (having less control over your actions, especially inappropriate actions); euphoric",
+       "sha": "e053b9230de5d26f"
+      },
+      {
+       "label": "F10",
+       "ref": "healthcanada_about",
+       "where": "How alcohol affects you / How long it takes for alcohol to affect you",
+       "quote": "Alcohol continues to circulate through your body until your liver eliminates it. Some alcohol (10%) exits your body through urine, sweat and breathing.",
+       "sha": "e38906ff813e4075"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages do not state that the findings were from a lab study."
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ]
+  }
+ },
  "place": {
   "home": "alcohol",
   "also": [],
