@@ -15,37 +15,39 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-20",
+  "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also2": "gemini:gemini-3-flash-preview",
+   "team": "team H",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "44672174094",
+  "run": "45086364526",
   "read_by": {
-   "gemini-3.1-flash-lite": 4,
-   "gpt-oss-20b": 2
+   "gemini-3.5-flash-lite": 17,
+   "llama-4-scout-17b-16e-instruct": 1
   },
-  "read_seconds": 150,
+  "read_seconds": 116,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 150
+  "neurons": 32.4,
+  "seconds": 116
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now: tried again in the next run)",
  "gates": {
-  "time": "2 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -88,14 +90,6 @@
    "on": "2026-11-18",
    "lane": 19,
    "status": "none",
-   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now: tried again in the next run)",
-   "short": "",
-   "complete": false
-  },
-  {
-   "on": "2026-11-18",
-   "lane": 19,
-   "status": "none",
    "why": "no source that can be read gave a finding for this question (8 source(s) could not be fetched just now: tried again in the next run)",
    "short": "",
    "complete": false
@@ -121,6 +115,14 @@
    "lane": 19,
    "status": "none",
    "why": "no draft passed: the form was wrong: but names no item it rests on",
+   "short": "",
+   "complete": false
+  },
+  {
+   "on": "2026-11-20",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
   }
@@ -181,7 +183,7 @@
    "at": "10.1016/s2468-2667(24)00160-9",
    "kept": 0,
    "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "fault": "its full text could not be fetched (HTTPError)"
   },
   {
    "title": "Dependence of psychopharmacological drug effects on early social stress experience: An analysis aligned with the research domain criteria framework",
@@ -190,7 +192,117 @@
    "at": "10.1016/j.jpet.2025.103710",
    "kept": 0,
    "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "fault": "its full text could not be fetched (HTTPError)"
+  },
+  {
+   "title": "Experimental Evidence on Age-related Differential Outcomes Associated With Substance Abuse",
+   "read": "full",
+   "kind": "review",
+   "at": "10.32598/bcn.2023.587.1",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "A simple mechanistic terminology of psychoactive drugs: a proposal",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s00210-020-01918-x",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A proposal for a simple mechanistic terminology of psychoactive drugs",
+     "quote": "A simple mechanistic terminology of psychoactive drugs: a proposal (2020), Naunyn-Schmiedeberg's archives of pharmacology.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Adenosine A2AReceptors in Substance Use Disorders: A Focus on Cocaine",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/cells9061372",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Exploring the link between recreational substances and physical activity in children and adolescents: insights from the Health Behavior in School-Aged Children study (2013-2019)",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/s12889-025-25448-4",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Controlled and illegal drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Mixing alcohol with medicines or drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Canadian Drugs and Substances Strategy: Overview",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/canadian-drugs-substances-strategy.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "2C drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/2c",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Social Homeostasis and Psychoactive Drugs: What Can We Learn From Opioid and Amphetamine Drug Challenge Studies in Humans?",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.biopsych.2024.09.006",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Set and setting, psychedelics and the placebo response: An extra-pharmacological perspective on psychopharmacology",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1177/0269881116677852",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Classical conditioning in drug-dependent humans",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1111/j.1749-6632.1992.tb25984.x",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A summary of a study involving drug-dependent humans",
+     "quote": "Classical conditioning in drug-dependent humans (1992)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   }
  ],
  "soft": "a source could not be fetched",
