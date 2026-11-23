@@ -17,41 +17,278 @@
   "fentanyl-and-analogues"
  ],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-23",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
   },
-  "run": "45075949795",
-  "read_seconds": 100,
+  "run": "45143100898",
+  "read_by": {
+   "gemini-3.1-flash-lite": 8,
+   "gemini-3.5-flash-lite": 5,
+   "gpt-oss-20b": 2
+  },
+  "read_seconds": 62,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 424.1,
+  "seconds": 140
  },
- "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "7 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.41, but 0.35, how1 0.10, how2 0.85, how3 0.83",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3.6-flash; 2 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 5 of 5; gemini-3.6-flash accepted 3 of 5",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
- "sources": [],
- "parts": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "martinez_2025",
+    "type": "article-journal",
+    "title": "Treating opioid use disorder and opioid withdrawal in the context of fentanyl",
+    "author": [
+     {
+      "family": "Martinez",
+      "given": "Suky"
+     },
+     {
+      "family": "Ellis",
+      "given": "Jennifer D."
+     },
+     {
+      "family": "Bergeria",
+      "given": "Cecilia L."
+     },
+     {
+      "family": "Huhn",
+      "given": "Andrew S."
+     },
+     {
+      "family": "Dunn",
+      "given": "Kelly E."
+     }
+    ],
+    "container-title": "Annual Review of Clinical Psychology",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1146/annurev-clinpsy-081423-023518",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-23",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-23"
+     }
+    },
+    "volume": "21",
+    "issue": "1",
+    "page": "221-249",
+    "PMCID": "PMC13147498"
+   },
+   "doi": "10.1146/annurev-clinpsy-081423-023518",
+   "pmcid": "PMC13147498",
+   "title": "Treating Opioid Use Disorder and Opioid Withdrawal in the Context of Fentanyl",
+   "year": 2025,
+   "journal": "Annual review of clinical psychology",
+   "kind": "review",
+   "people": true,
+   "near": 0.634,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This review examines the limitations of traditional diagnostic criteria like those of the Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition, Text Revision (DSM-5-TR) and explores the potential of dimensional models",
+    "text": "a review of research on treating opioid use disorder and withdrawal in the context of fentanyl"
+   },
+   "findings": [
+    {
+     "passage": 31,
+     "where": "UNIQUE CONSIDERATIONS FOR PERSONS WITH FENTANYL EXPOSURE › Fentanyl-Induced Structural Changes That May Increase Risk of Fatal Overdose",
+     "quote": "In animals, fentanyl has been shown to produce deeper respiratory depression than either morphine or heroin, and opioid tolerance is also less protective against changes in respiration following fentanyl exposure relative to those comparators.",
+     "text": "In animals, opioid tolerance provides less protection against respiratory changes following fentanyl exposure compared to morphine or heroin.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 48,
+     "where": "DISCUSSION AND FUTURE DIRECTIONS",
+     "quote": "Fentanyl is known to lower oxygen consumption, producing deeper respiratory depression than morphine or heroin, and tolerance provides less protection against these respiratory changes.",
+     "text": "Tolerance provides less protection against respiratory changes caused by fentanyl than it does for morphine or heroin.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 30,
+     "where": "UNIQUE CONSIDERATIONS FOR PERSONS WITH FENTANYL EXPOSURE",
+     "quote": "Most data informing the consequences of fentanyl exposure derive from the medicinal fentanyl literature, which is characterized by doses of fentanyl that are orders of magnitude lower than current IMF exposure patterns.",
+     "text": "Most data on the consequences of fentanyl exposure come from medicinal literature using doses much lower than current illicitly manufactured fentanyl exposure patterns.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "adf_fentanyl",
+    "type": "webpage",
+    "title": "Fentanyl",
+    "author": [
+     {
+      "literal": "Alcohol and Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       3,
+       6
+      ]
+     ]
+    },
+    "URL": "https://adf.org.au/drug-facts/fentanyl/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       23
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-23"
+    }
+   },
+   "title": "Fentanyl",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.697,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "tier": 2,
+   "address": "https://adf.org.au/drug-facts/fentanyl/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 19,
+     "where": "Reducing harm / Tolerance",
+     "quote": "Regularly taking fentanyl can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
+     "text": "Regularly taking fentanyl can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 17,
+     "where": "Reducing harm / Long-term effects",
+     "quote": "Regular use may eventually contribute to: dependence; less effective pain relief (tolerance); increased risk of getting sick from viruses and infections",
+     "text": "Regular use of fentanyl may eventually contribute to less effective pain relief, which is known as tolerance.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes. Australia's Alcohol and Drug Foundation says regularly taking fentanyl can lead to tolerance, meaning larger amounts are needed for the same effects.",
+   "uses": [
+    "F5",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "adf_fentanyl",
+     "where": "Reducing harm / Tolerance",
+     "quote": "Regularly taking fentanyl can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
+     "sha": "9980a63eaa7a0df4"
+    },
+    {
+     "label": "F6",
+     "ref": "adf_fentanyl",
+     "where": "Reducing harm / Long-term effects",
+     "quote": "Regular use may eventually contribute to: dependence; less effective pain relief (tolerance); increased risk of getting sick from viruses and infections",
+     "sha": "17db05616d8ed3e8"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "Most data on fentanyl effects come from medical doses, which are much lower than current illicit fentanyl levels.",
+   "uses": [
+    "L2"
+   ],
+   "rests_on": [
+    {
+     "label": "L2",
+     "ref": "martinez_2025",
+     "where": "UNIQUE CONSIDERATIONS FOR PERSONS WITH FENTANYL EXPOSURE",
+     "quote": "Most data informing the consequences of fentanyl exposure derive from the medicinal fentanyl literature, which is characterized by doses of fentanyl that are orders of magnitude lower than current IMF exposure patterns.",
+     "sha": "fbc07768b48a74a9"
+    }
+   ]
+  },
+  {
+   "part": "how3",
+   "text": "A 2025 review says in animals, opioid tolerance offers less protection against fentanyl's respiratory effects than for morphine or heroin.",
+   "uses": [
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F3",
+     "ref": "martinez_2025",
+     "where": "UNIQUE CONSIDERATIONS FOR PERSONS WITH FENTANYL EXPOSURE › Fentanyl-Induced Structural Changes That May Increase Risk of Fatal Overdose",
+     "quote": "In animals, fentanyl has been shown to produce deeper respiratory depression than either morphine or heroin, and opioid tolerance is also less protective against changes in respiration following fentanyl exposure relative to those comparators.",
+     "sha": "91ac7b9d742d7d0f"
+    }
+   ],
+   "quote": "depression than either morphine or heroin, and opioid tolerance is also less protective against changes",
+   "quote_ref": "martinez_2025"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
    "doi": "10.1016/j.pedneo.2014.06.002",
@@ -92,6 +329,14 @@
    "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -101,8 +346,7 @@
    "kind": "review",
    "at": "10.3389/fpsyt.2024.1347678",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "A Review of Toxicological Profile of Fentanyl-A 2024 Update",
@@ -110,8 +354,14 @@
    "kind": "review",
    "at": "10.3390/toxics12100690",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "2 mg of fentanyl can be lethal to the average human, although previous usage will have an influence on this.",
+     "quote": "It is understood that 2 mg of fentanyl can be lethal to the average human, although previous usage will have an influence on this.",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
   },
   {
    "title": "The xylazine-fentanyl nexus: A public health emergency",
@@ -128,9 +378,337 @@
    "at": "10.1186/s12871-022-01871-7",
    "kept": 0,
    "thrown": []
+  },
+  {
+   "title": "Modern Methods for Detection of Fentanyl and Its Analogues: A Comprehensive Review of Technologies and Applications",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/molecules30173577",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Fentanyl and its derivatives: Pain-killers or man-killers?",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1016/j.heliyon.2024.e28795",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "According to the Drug Enforcement Administration, a dose of 2 mg of fentanyl can be lethal depending on a person's body weight, tolerance, and previous usage of the drug.",
+     "quote": "according to Drug Enforcement Administration (DEA), dose of 2 mg of fentanyl can be lethal depending on a person's body weight, tolerance and previous usage of the drug.",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
+  },
+  {
+   "title": "Causes, Nature and Toxicology of Fentanyl-Analogues Associated Fatalities: A Systematic Review of Case Reports and Case Series",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2147/jpr.s312227",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a systematic review of case reports and case series regarding fentanyl analogue-related fatalities",
+     "quote": "This review aimed to assess the causes, nature and toxicology of fentanyl-analogue associated fatalities using case reports and case series.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Why have overdose deaths decreased? Widespread fentanyl saturation and decreased drug use among key drivers",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1016/j.lana.2025.101226",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Treating Opioid Use Disorder and Opioid Withdrawal in the Context of Fentanyl",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1146/annurev-clinpsy-081423-023518",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "Most data regarding the physiological effects of fentanyl are based on pharmaceutical-grade fentanyl rather than the higher doses of illicitly manufactured fentanyl currently experienced by people.",
+     "quote": "However, it is important to note that most data on fentanyl’s physiological effects are derived from pharmaceutical-grade fentanyl, which is typically administered at significantly lower doses than th",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Fentanyl",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/fentanyl/",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "How and when to use fentanyl",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/fentanyl/how-and-when-to-use-fentanyl/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Fentanyl",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/fentanyl.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Fentanyl Citrate",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=58dcd3f7-e3d8-4929-a186-8f680a51ff11",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Fentanyl",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/overdose-prevention/about/fentanyl.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Accidental Exposures to Fentanyl Patches Continue to Be Deadly to Children",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.fda.gov/consumers/consumer-updates/accidental-exposures-fentanyl-patches-continue-be-deadly-children",
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F6"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F5",
+    "F6"
+   ],
+   [
+    "F2"
+   ],
+   [
+    "F3"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.4104,
+   "but": 0.3451,
+   "how1": 0.0969,
+   "how2": 0.8458,
+   "how3": 0.8299
+  },
+  "scores_quotes_alone": {
+   "short": 0.155,
+   "but": 0.6891,
+   "how1": 0.1667,
+   "how2": 0.5757,
+   "how3": 0.6712
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Australia's Alcohol and Drug Foundation says regularly taking fentanyl can lead to tolerance, meaning you need larger amounts for the same effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "adf_fentanyl",
+       "where": "Reducing harm / Tolerance",
+       "quote": "Regularly taking fentanyl can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
+       "sha": "9980a63eaa7a0df4"
+      },
+      {
+       "label": "F6",
+       "ref": "adf_fentanyl",
+       "where": "Reducing harm / Long-term effects",
+       "quote": "Regular use may eventually contribute to: dependence; less effective pain relief (tolerance); increased risk of getting sick from viruses and infections",
+       "sha": "17db05616d8ed3e8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Most data on fentanyl effects come from medical doses, which are much lower than current illicitly manufactured fentanyl exposure patterns.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "martinez_2025",
+       "where": "UNIQUE CONSIDERATIONS FOR PERSONS WITH FENTANYL EXPOSURE",
+       "quote": "Most data informing the consequences of fentanyl exposure derive from the medicinal fentanyl literature, which is characterized by doses of fentanyl that are orders of magnitude lower than current IMF exposure patterns.",
+       "sha": "fbc07768b48a74a9"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The opening word 'Yes' correctly affirms the question. Sentence 1 directly states that regular fentanyl use leads to tolerance, answering the question. Sentence 2 discusses a limitation about the source of data on fentanyl effects, which do)"
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says regular use may eventually contribute to less effective pain relief, known as tolerance.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "adf_fentanyl",
+       "where": "Reducing harm / Tolerance",
+       "quote": "Regularly taking fentanyl can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
+       "sha": "9980a63eaa7a0df4"
+      },
+      {
+       "label": "F6",
+       "ref": "adf_fentanyl",
+       "where": "Reducing harm / Long-term effects",
+       "quote": "Regular use may eventually contribute to: dependence; less effective pain relief (tolerance); increased risk of getting sick from viruses and infections",
+       "sha": "17db05616d8ed3e8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2021 review of case reports says chronic multidrug use could have increased opioid tolerance, leading to higher fentanyl doses.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "rauf_2021",
+       "where": "Discussion",
+       "quote": "chronic multidrug use could have increased their levels of opioid tolerance, resulting in the administration of higher fentanyl analogue doses and subsequently higher post-mortem concentrations.",
+       "sha": "293601c2f1001343"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review says in animals, opioid tolerance provides less protection against respiratory changes from fentanyl than from morphine or heroin.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "martinez_2025",
+       "where": "UNIQUE CONSIDERATIONS FOR PERSONS WITH FENTANYL EXPOSURE › Fentanyl-Induced Structural Changes That May Increase Risk of Fatal Overdose",
+       "quote": "In animals, fentanyl has been shown to produce deeper respiratory depression than either morphine or heroin, and opioid tolerance is also less protective against changes in respiration following fentanyl exposure relative to those comparators.",
+       "sha": "91ac7b9d742d7d0f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The passage states that regular use 'may eventually contribute to' less effective pain relief, whereas the sentence says it 'may also lead to' it and leaves out 'eventually'."
+   ],
+   "how2": [
+    false,
+    "The passage specifies 'fentanyl analogue doses', whereas the sentence changes this to 'fentanyl doses'."
+   ],
+   "how3": [
+    true,
+    ""
+   ]
+  }
+ },
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says regular use may also lead to less effective pain relief, known as tolerance.",
+   "rests_on": [
+    {
+     "label": "F6",
+     "ref": "adf_fentanyl",
+     "where": "Reducing harm / Long-term effects",
+     "quote": "Regular use may eventually contribute to: dependence; less effective pain relief (tolerance); increased risk of getting sick from viruses and infections",
+     "sha": "17db05616d8ed3e8"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage states that regular use 'may eventually contribute to' less effective pain relief, whereas the sentence says it 'may also lead to' it and leaves out 'eventually'."
+  },
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "A 2021 review of case reports says chronic multidrug use could increase opioid tolerance, leading to higher fentanyl doses.",
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "rauf_2021",
+     "where": "Discussion",
+     "quote": "chronic multidrug use could have increased their levels of opioid tolerance, resulting in the administration of higher fentanyl analogue doses and subsequently higher post-mortem concentrations.",
+     "sha": "293601c2f1001343"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.6-flash) did not accept it: The passage specifies 'fentanyl analogue doses', whereas the sentence changes this to 'fentanyl doses'."
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "fentanyl-and-analogues",
   "also": [],
