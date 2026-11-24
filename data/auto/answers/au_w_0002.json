@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0002",
- "lane": 10,
+ "lane": 19,
  "kind": "answer",
  "from": "w_0002",
  "question": "What is really in fake Xanax bars?",
@@ -17,33 +17,38 @@
   "benzodiazepines"
  ],
  "made": {
-  "on": "2026-11-17",
+  "on": "2026-11-24",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-4-hydrogen",
-   "team": "team H2"
+   "planner": "@cf/openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team H2",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "writer_first": "groq:qwen/qwen3.8-27b"
   },
-  "run": "43985089101",
+  "run": "45296724451",
+  "read_seconds": 30,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 1
+   "official": 2
   },
-  "neurons": 362.0
+  "neurons": 799.0,
+  "seconds": 153
  },
- "status": "waiting",
- "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-4-hydrogen): it waits until that reader, or the editor, has read it",
+ "status": "none",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 7 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-4-hydrogen could not be asked: gemini says the allowance is used up: [{ \"error\": { \"code\": 429, \"message\": \"You exceeded your current quota, please check your plan and billing details. For mo",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.66, but 0.98, how1 0.40, how2 0.02, how3 0.97, how4 0.54",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-4-hydrogen; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them; 2 sentence(s) say what a checked claim says"
+  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: stop; reasoned 1764 characters, wrote 199) qwen3.8-27b gave no answer in the form asked for: llama-3.3-70b-instruct-fp8-fast wrote from there.",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.6-flash could not be asked: gemini could not be reached: The read operation timed out; gemini-3-flash-preview accepted 4 of 4",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.16, but 0.98, how1 0.57, how2 0.36",
+  "check": "short: accepted; but: accepted; how1: NOT accepted: The passages do not state that the 2024 review cites earlier work.; how2: NOT accepted: FRANK does not explicitly say that some fake Xanax bars contain synthetic opioids; it only notes that some drugs may be cut with them."
  },
  "sources": [
   {
@@ -108,10 +113,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-24",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-24"
      }
     },
     "volume": "14",
@@ -126,7 +131,7 @@
    "journal": "Neurology international",
    "kind": "review",
    "people": true,
-   "near": 0.679,
+   "near": 0.676,
    "money": [
     "This research received no external funding."
    ],
@@ -137,23 +142,34 @@
      "where": "1. Introduction › 1.7. Clonazolam",
      "quote": "It is reportedly over twice as potent as alprazolam and can be found in tablets, capsules, blotters, or liquid form.",
      "text": "Clonazolam is reportedly over twice as potent as alprazolam.",
-     "id": "F1"
+     "id": "F1",
+     "second_hand": ""
     },
     {
      "passage": 4,
      "where": "1. Introduction",
-     "quote": "A review of 197 trip reports of 10 different DBZs categorized and analyzed their most commonly reported effects. The 10 drugs reviewed were clonazolam, deschloroetizolam, diclazepam, etizolam, flubromazepam, flubromazolam, meclonazepam, metizolam, nifoxipam, and pyrazolam.",
-     "text": "The most commonly reported effects of 10 different DBZs were analyzed from 197 trip reports.",
-     "id": "F2"
+     "quote": "The most anxiolytic was reported to be pyrazolam, and the most hypnotic was flubromazolam. Etizolam was the most euphoric, and flubromazolam and clonazolam were the most amnesic.",
+     "text": "Flubromazolam and clonazolam were reported to cause amnesia.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The most common effects noted by recreational users include heavy hypnosis and sedation, long-lasting amnesia, and rapid development of tolerance.",
+     "text": "Recreational users reported heavy hypnosis and sedation, long-lasting amnesia, and rapid development of tolerance.",
+     "id": "F3",
+     "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 32,
-     "where": "2. Clinical Studies › 2.3. Identifying Metabolites of Designer Benzodiazepines on Urine Drug Screening",
-     "quote": "Because DBZs are classified as new psychoactive substances and are not regulated like standard benzodiazepines, there have not been established ways to identify them on drug screening.",
-     "text": "There are no established ways to identify DBZs on drug screening.",
-     "id": "L1"
+     "passage": 30,
+     "where": "2. Clinical Studies › 2.2. Difficulties in Managing and Diagnosing Designer Benzodiazepine Use",
+     "quote": "DBZ users often do not know exactly what drug they are taking or the dose.",
+     "text": "The studies did not know exactly what drug the users were taking or the dose.",
+     "id": "L1",
+     "second_hand": ""
     }
    ],
    "tag": "A"
@@ -161,77 +177,130 @@
   {
    "read": "full",
    "ref": {
-    "id": "wu_2023",
+    "id": "kaye_2024",
     "type": "article-journal",
-    "title": "Recent findings and advancements in the detection of designer benzodiazepines: A brief review",
+    "title": "Fake xanax: Designer emerging benzodiazepine epidemic linked to morbidity and mortality a narrative review",
     "author": [
      {
-      "family": "Wu",
-      "given": "Dihua"
+      "family": "Kaye",
+      "given": "Alan D."
      },
      {
-      "family": "Fu",
-      "given": "Li"
+      "family": "Tassin",
+      "given": "Joseph P."
+     },
+     {
+      "family": "Upshaw",
+      "given": "William C."
+     },
+     {
+      "family": "Robichaux",
+      "given": "Camille M."
+     },
+     {
+      "family": "Frolov",
+      "given": "Mark V."
+     },
+     {
+      "family": "Dupaquier",
+      "given": "Mark M."
+     },
+     {
+      "family": "Fox",
+      "given": "Julia E."
+     },
+     {
+      "family": "Sterritt",
+      "given": "Jeffrey"
+     },
+     {
+      "family": "Mathew",
+      "given": "Jibin"
+     },
+     {
+      "family": "Shekoohi",
+      "given": "Sahar"
+     },
+     {
+      "family": "Kaye",
+      "given": "Adam M."
+     },
+     {
+      "family": "Edinoff",
+      "given": "Amber N."
      }
     ],
-    "container-title": "Archives of Industrial Hygiene and Toxicology",
+    "container-title": "Neurology and Therapy",
     "issued": {
      "date-parts": [
       [
-       2023
+       2024
       ]
      ]
     },
-    "DOI": "10.2478/aiht-2023-74-3771",
+    "DOI": "10.1007/s40120-024-00628-3",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-17",
+     "verified_on": "2026-11-24",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-17"
+      "checked_on": "2026-11-24"
      }
     },
-    "volume": "74",
+    "volume": "13",
     "issue": "4",
-    "page": "224-231",
-    "PMCID": "PMC10750316"
+    "page": "965-973",
+    "PMCID": "PMC11263270"
    },
-   "doi": "10.2478/aiht-2023-74-3771",
-   "pmcid": "PMC10750316",
-   "title": "Recent findings and advancements in the detection of designer benzodiazepines: a brief review",
-   "year": 2022,
-   "journal": "Arhiv za higijenu rada i toksikologiju",
+   "doi": "10.1007/s40120-024-00628-3",
+   "pmcid": "PMC11263270",
+   "title": "Fake Xanax: Designer Emerging Benzodiazepine Epidemic Linked to Morbidity and Mortality a Narrative Review",
+   "year": 2024,
+   "journal": "Neurology and therapy",
    "kind": "review",
-   "people": false,
-   "near": 0.698,
-   "money": [],
+   "people": true,
+   "near": 0.658,
+   "money": [
+    "No funding or sponsorship was received for this study or publication of this article."
+   ],
    "design": null,
    "findings": [
     {
      "passage": 13,
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "Reports of harmful effects are mostly related to its non-medical application, particularly the ingestion of illegal pills containing varying doses of etizolam and other unidentified substances.",
-     "text": "Harmful effects of etizolam are mostly related to ingestion of illegal pills with varying doses of etizolam and other unidentified substances.",
-     "id": "F3"
+     "where": "Case Studies",
+     "quote": "etizolam was the most frequently detected compound in the illicit tablets",
+     "text": "Etizolam was the most frequently detected compound in counterfeit Xanax tablets.",
+     "id": "F4",
+     "second_hand": "Demonstrating the prevalence and potential dangers of etizolam in counterfeit tablets, Blakey et al conducted a dosage survey of designer benzodiazepines in counterfeit pharmaceuti"
     },
     {
-     "passage": 14,
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "flualprazolam can considerably impair driving ability even at concentrations below 10 ng/mL",
-     "text": "Flualprazolam can considerably impair driving ability even at concentrations below 10 ng/mL.",
-     "id": "F4"
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam",
+     "text": "Counterfeit Xanax tablets contain variable amounts of etizolam.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "Etizolam: Pharmacokinetics and Pharmacodynamics Considerations",
+     "quote": "most reported overdoses involving etizolam typically involve polypharmacy—including coadministration with several other drugs",
+     "text": "Most reported overdoses involving etizolam involve coadministration with several other drugs.",
+     "id": "F6",
+     "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 16,
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "no range has been established that elicits specific clinical manifestations",
-     "text": "There is no established range of flubromazolam that elicits specific clinical manifestations.",
-     "id": "L2"
+     "passage": 18,
+     "where": "Case Studies",
+     "quote": "Kolbe et al. described a lethal etizolam and caffeine overdose",
+     "text": "The study is based on case reports, including a lethal etizolam and caffeine overdose described by Kolbe et al.",
+     "id": "L2",
+     "second_hand": "Kolbe et al described a lethal etizolam and caffeine overdose of a 49-year-old German man."
     }
    ],
    "tag": "B"
@@ -258,14 +327,14 @@
       [
        2026,
        11,
-       17
+       24
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-17"
+     "verified_on": "2026-11-24"
     }
    },
    "title": "Benzodiazepines and derivatives",
@@ -286,21 +355,24 @@
      "where": "Mixing benzodiazepines and derivatives with other drugs / What does it look like?",
      "quote": "Instead they might contain other dangerous benzodiazepines, their analogues or other chemicals.",
      "text": "Fake Xanax bars might contain other dangerous benzodiazepines, their analogues or other chemicals.",
-     "id": "F5"
+     "id": "F7",
+     "second_hand": ""
     },
     {
      "passage": 1,
      "where": "Top of the page",
      "quote": "Some drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
      "text": "Some fake Xanax bars are cut with dangerous synthetic opioids like nitazenes.",
-     "id": "F6"
+     "id": "F8",
+     "second_hand": ""
     },
     {
      "passage": 9,
      "where": "Mixing benzodiazepines and derivatives with other drugs / What are benzodiazepines and derivatives cut with?",
      "quote": "Other street benzos are made illegally and often contain more dangerously potent substances than are displayed on the packaging.",
      "text": "Illegally made fake Xanax bars often contain more dangerously potent substances than displayed.",
-     "id": "F7"
+     "id": "F9",
+     "second_hand": ""
     }
    ],
    "limits": [
@@ -309,131 +381,107 @@
      "where": "Mixing benzodiazepines and derivatives with other drugs / Physical health risks",
      "quote": "Street benzos are unpredictable in content and in potency...",
      "text": "The content and potency of street benzos are unpredictable.",
-     "id": "L3"
+     "id": "L3",
+     "second_hand": ""
     }
    ],
    "tag": "C"
-  }
- ],
- "parts": [
+  },
   {
-   "part": "short",
-   "text": "Fake Xanax bars might contain other dangerous benzodiazepines, their analogues, or other chemicals. Illegally made ones often contain more dangerously potent substances than displayed.",
-   "uses": [
-    "F5",
-    "F7"
-   ],
-   "rests_on": [
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_benzodiazepines",
+    "type": "webpage",
+    "title": "Benzodiazepines",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       2,
+       8
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/benzodiazepines.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       24
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-24"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "Benzodiazepines",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.563,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/benzodiazepines.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
     {
-     "label": "F5",
-     "ref": "frank_benzodiazepines",
-     "where": "Mixing benzodiazepines and derivatives with other drugs / What does it look like?",
-     "quote": "Instead they might contain other dangerous benzodiazepines, their analogues or other chemicals.",
-     "sha": "06770c27f848d9c1"
+     "passage": 3,
+     "where": "About benzodiazepines",
+     "quote": "Benzodiazepines are drugs that slow brain activity.",
+     "text": "Benzodiazepines are drugs that slow brain activity.",
+     "id": "F10",
+     "second_hand": ""
     },
     {
-     "label": "F7",
-     "ref": "frank_benzodiazepines",
-     "where": "Mixing benzodiazepines and derivatives with other drugs / What are benzodiazepines and derivatives cut with?",
-     "quote": "Other street benzos are made illegally and often contain more dangerously potent substances than are displayed on the packaging.",
-     "sha": "94af6c0e3b473032"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "The content and potency of street benzos are unpredictable.",
-   "uses": [
-    "L3"
-   ],
-   "rests_on": [
-    {
-     "label": "L3",
-     "ref": "frank_benzodiazepines",
-     "where": "Mixing benzodiazepines and derivatives with other drugs / Physical health risks",
-     "quote": "Street benzos are unpredictable in content and in potency...",
-     "sha": "e09c64de5d88a2f9"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "FRANK says fake Xanax bars might contain other dangerous benzodiazepines, their analogues, or other chemicals.",
-   "uses": [
-    "F5"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "frank_benzodiazepines",
-     "where": "Mixing benzodiazepines and derivatives with other drugs / What does it look like?",
-     "quote": "Instead they might contain other dangerous benzodiazepines, their analogues or other chemicals.",
-     "sha": "06770c27f848d9c1"
+     "passage": 3,
+     "where": "About benzodiazepines",
+     "quote": "They come in liquid, tablet or capsule form but are usually given in pill form, for example as: diazepam (Valium); alprazolam (Xanax); lorazepam (Ativan)",
+     "text": "Benzodiazepines come in liquid, tablet or capsule form but are usually given in pill form, for example as: diazepam (Valium); alprazolam (Xanax); lorazepam (Ativan).",
+     "id": "F11",
+     "second_hand": ""
     }
    ],
-   "quote": "Instead they might contain other dangerous benzodiazepines, their analogues or other chemicals",
-   "quote_ref": "frank_benzodiazepines"
-  },
-  {
-   "part": "how3",
-   "text": "A 2022 review says harmful effects of etizolam are mostly related to illegal pills with varying doses and other unidentified substances.",
-   "uses": [
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "wu_2023",
-     "where": "TOXICOLOGY AND PUBLIC HEALTH RISKS",
-     "quote": "Reports of harmful effects are mostly related to its non-medical application, particularly the ingestion of illegal pills containing varying doses of etizolam and other unidentified substances.",
-     "sha": "87f328233ce0add0"
-    }
-   ],
-   "quote": "particularly the ingestion of illegal pills containing varying doses of etizolam and other unidentified substances",
-   "quote_ref": "wu_2023"
-  },
-  {
-   "part": "how4",
-   "text": "A 2022 review says clonazolam is reportedly over twice as potent as alprazolam and can be found in tablets.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "edinoff_2022",
-     "where": "1. Introduction › 1.7. Clonazolam",
-     "quote": "It is reportedly over twice as potent as alprazolam and can be found in tablets, capsules, blotters, or liquid form.",
-     "sha": "c1e2d74ee5b2937c"
-    }
-   ],
-   "quote": "It is reportedly over twice as potent as alprazolam and can be found in tablets",
-   "quote_ref": "edinoff_2022"
+   "limits": [],
+   "tag": "D"
   }
  ],
- "complete": true,
- "missing": "",
+ "parts": [],
+ "complete": false,
+ "missing": "exact quantities and complete spectrum of possible adulterants",
  "wanted": [
   {
-   "doi": "10.1097/ftd.0000000000001071",
-   "apa": "El Balkhi, S., & Abbara, C. (2023). Designer benzodiazepines: Effects, toxicity, and interactions. Therapeutic Drug Monitoring, 45(4), 494–507. https://doi.org/10.1097/ftd.0000000000001071",
-   "near": 0.675,
-   "why": "a review or meta-analysis in people; nearness to the question 0.68; cited 7 times; its full text is not open",
-   "file": "elbalkhi_2023_ftd_0000000000001071.pdf"
+   "doi": "10.2174/138920008786049258",
+   "apa": "Mandrioli, R., Mercolini, L., & Raggi, M. (2008). Benzodiazepine metabolism: An analytical perspective. Current Drug Metabolism, 9(8), 827–844. https://doi.org/10.2174/138920008786049258",
+   "near": 0.652,
+   "why": "a review or meta-analysis; nearness to the question 0.65; cited 78 times; its full text is not open",
+   "file": "mandrioli_2008_138920008786049258.pdf"
   },
   {
-   "doi": "10.1016/j.neuro.2019.02.015",
-   "apa": "Zawilska, J. B., & Wojcieszak, J. (2019). An expanding world of new psychoactive substances—designer benzodiazepines. NeuroToxicology, 73, 8–16. https://doi.org/10.1016/j.neuro.2019.02.015",
-   "near": 0.645,
-   "why": "a review or meta-analysis in people; nearness to the question 0.65; cited 75 times; its full text is not open",
-   "file": "zawilska_2019_j_neuro_2019_02_015.pdf"
+   "doi": "10.1097/ftd.0000000000000465",
+   "apa": "Pichini, S., Solimini, R., Berretta, P., Pacifici, R., & Busardò, F. P. (2018). Acute intoxications and fatalities from illicit fentanyl and analogues: An update. Therapeutic Drug Monitoring, 40(1), 38–51. https://doi.org/10.1097/ftd.0000000000000465",
+   "near": 0.618,
+   "why": "a review or meta-analysis in people; nearness to the question 0.62; cited 94 times; its full text is not open",
+   "file": "pichini_2018_ftd_0000000000000465.pdf"
   },
   {
-   "doi": "10.1016/j.mcna.2018.02.010",
-   "apa": "Graddy, R., Buresh, M. E., & Rastegar, D. A. (2018). New and emerging illicit psychoactive substances. Medical Clinics of North America, 102(4), 697–714. https://doi.org/10.1016/j.mcna.2018.02.010",
-   "near": 0.639,
-   "why": "a review or meta-analysis in people; nearness to the question 0.64; cited 29 times; its full text is not open",
-   "file": "graddy_2018_j_mcna_2018_02_010.pdf"
+   "doi": "10.1517/17425255.2013.759209",
+   "apa": "Altamura, A. C., Moliterno, D., Paletta, S., Maffini, M., Mauri, M. C., & Bareggi, S. (2013). Understanding the pharmacokinetics of anxiolytic drugs. Expert Opinion on Drug Metabolism & Toxicology, 9(4), 423–440. https://doi.org/10.1517/17425255.2013.759209",
+   "near": 0.57,
+   "why": "a review or meta-analysis in people; nearness to the question 0.57; cited 65 times; its full text is not open",
+   "file": "altamura_2013_17425255_2013_759209.pdf"
   }
  ],
  "person": null,
@@ -453,6 +501,14 @@
    "why": "passed every gate",
    "short": "Fake Xanax bars can contain variable amounts of etizolam. They may also contain different ingredients, adulterants, or doses than the genuine brand.",
    "complete": true
+  },
+  {
+   "on": "2026-11-17",
+   "lane": 10,
+   "status": "waiting",
+   "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-4-hydrogen): it waits until that reader, or the editor, has read it",
+   "short": "Fake Xanax bars might contain other dangerous benzodiazepines, their analogues, or other chemicals. Illegally made ones often contain more dangerously potent substances than displayed.",
+   "complete": true
   }
  ],
  "looked": [
@@ -461,7 +517,7 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/neurolint14030053",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
@@ -471,36 +527,30 @@
     },
     {
      "kind": "finding",
-     "text": "Clonazolam and flubromazolam were found in candy-like pills that looked like PEZ.",
-     "quote": "The pills were found on an intoxicated patient when they were brought into the emergency department. The patient had a known history of drug use and was on methadone. His initial drug screen was posit",
+     "text": "Clonazolam and flubromazolam were found in candy-like pills.",
+     "quote": "The pills were found on an intoxicated patient when they were brought into the emergency department. ... The result was two unknown peaks on the total ion chromatogram, which were further identified a",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
   {
-   "title": "Recent findings and advancements in the detection of designer benzodiazepines: a brief review",
+   "title": "Fake Xanax: Designer Emerging Benzodiazepine Epidemic Linked to Morbidity and Mortality a Narrative Review",
    "read": "full",
    "kind": "review",
-   "at": "10.2478/aiht-2023-74-3771",
-   "kept": 2,
+   "at": "10.1007/s40120-024-00628-3",
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "a brief review",
-     "quote": "a brief review",
+     "text": "Narrative review of fake Xanax",
+     "quote": "a Narrative Review (2024)",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     },
     {
      "kind": "finding",
-     "text": "Flubromazolam in post-mortem cases ranged from 1 to 70 mg/L.",
-     "quote": "flubromazolam in post-mortem cases ranged from 1 to 70 mg/L",
+     "text": "The dosage of etizolam in counterfeit Xanax tablets ranged from 0.7 to 8.3 mg per tablet.",
+     "quote": "etizolam to have the most significant variation in dosage in visually similar counterfeit tablets, ranging from 0.7 to 8.3 mg per tablet",
      "why": "it holds an amount or a time between uses"
-    },
-    {
-     "kind": "finding",
-     "text": "A 26-year-old woman who ingested 10 mg of clonazolam powder had an extended state of unconsciousness, reduced muscular tonicity, and impaired reflexes.",
-     "quote": "Despite the substantial dose and toxic blood levels, the patient's response was confined to an extended state of unconsciousness, reduced muscular tonicity, and impaired reflexes.",
-     "why": "a number of the sentence is not in its quote"
     }
    ]
   },
@@ -529,14 +579,14 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "The passages do not provide information on the composition of illegally available benzodiazepines.",
+     "text": "The passages do not provide information on the composition of fake Xanax bars.",
      "quote": "Benzodiazepines are only legally available by prescription.",
      "why": "the sentence is not carried by its quote and passage"
     },
     {
      "kind": "limit",
-     "text": "The passages do not discuss the content of benzodiazepines obtained through illegal means.",
-     "quote": "Activities such as sale, possession and production of benzodiazepines are illegal, unless authorized for medical, scientific or industrial purposes.",
+     "text": "The provided passages do not discuss the specific contents of fake Xanax bars.",
+     "quote": "Although they are some of the most commonly prescribed medications, there is still a risk of overdose and substance use disorder associated with them.",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -545,8 +595,7 @@
  "plan": {
   "short": [
    "F5",
-   "F6",
-   "F7"
+   "F8"
   ],
   "direct": "",
   "but": [
@@ -554,50 +603,206 @@
   ],
   "how": [
    [
-    "F5",
-    "F6",
-    "F7"
+    "F4",
+    "F5"
    ],
    [
-    "F3"
-   ],
-   [
-    "F1"
+    "F7",
+    "F8",
+    "F9"
    ]
   ],
-  "unanswered": "exact substances and their concentrations"
+  "unanswered": "exact quantities and complete spectrum of possible adulterants"
  },
  "panel": {
-  "gemini:gemini-4-hydrogen": "could not be asked: gemini says the allowance is used up: [{ \"error\": { \"code\": 429, \"message\": \"You exceeded your current quota, please check your plan and billing details. For mo"
+  "gemini:gemini-3.6-flash": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  }
  },
- "panel_gap": [
-  "gemini-4-hydrogen"
- ],
+ "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.6566,
-   "but": 0.9829,
-   "how1": 0.3972,
-   "how2": 0.0189,
-   "how3": 0.9731,
-   "how4": 0.5392
+   "short": 0.1648,
+   "but": 0.9819,
+   "how1": 0.5699,
+   "how2": 0.3557
+  },
+  "scores_quotes_alone": {
+   "short": 0.216,
+   "but": 0.9452,
+   "how1": 0.0583,
+   "how2": 0.0056
   }
  },
- "with_checked": {
-  "differs": [],
-  "same": [
-   {
-    "part": "how1",
-    "claim": "cl_benzo_harm_reduction_services"
-   },
-   {
-    "part": "but",
-    "claim": "cl_benzo_harm_reduction_services"
-   }
-  ]
- },
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how1",
+   "text": "A 2024 review reports etizolam in counterfeit Xanax tablets, citing earlier work.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "kaye_2024",
+     "where": "Case Studies",
+     "quote": "etizolam was the most frequently detected compound in the illicit tablets",
+     "sha": "69c4bba467746742"
+    },
+    {
+     "label": "F5",
+     "ref": "kaye_2024",
+     "where": "Abstract",
+     "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam",
+     "sha": "4e4f2f4786b174f5"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passages do not state that the 2024 review cites earlier work."
+  },
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "FRANK says some fake Xanax bars contain synthetic opioids or other dangerous chemicals.",
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "frank_benzodiazepines",
+     "where": "Mixing benzodiazepines and derivatives with other drugs / What does it look like?",
+     "quote": "Instead they might contain other dangerous benzodiazepines, their analogues or other chemicals.",
+     "sha": "06770c27f848d9c1"
+    },
+    {
+     "label": "F8",
+     "ref": "frank_benzodiazepines",
+     "where": "Top of the page",
+     "quote": "Some drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
+     "sha": "7a81551b15da3f16"
+    },
+    {
+     "label": "F9",
+     "ref": "frank_benzodiazepines",
+     "where": "Mixing benzodiazepines and derivatives with other drugs / What are benzodiazepines and derivatives cut with?",
+     "quote": "Other street benzos are made illegally and often contain more dangerously potent substances than are displayed on the packaging.",
+     "sha": "94af6c0e3b473032"
+    }
+   ],
+   "by": "the second reader",
+   "said": "FRANK does not explicitly say that some fake Xanax bars contain synthetic opioids; it only notes that some drugs may be cut with them."
+  }
+ ],
+ "tries": [
+  {
+   "try": 2,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Fake Xanax bars can contain etizolam and synthetic opioids like nitazenes. They may hold other dangerous benzodiazepines or chemicals.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "kaye_2024",
+       "where": "Abstract",
+       "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam",
+       "sha": "4e4f2f4786b174f5"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_benzodiazepines",
+       "where": "Top of the page",
+       "quote": "Some drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
+       "sha": "7a81551b15da3f16"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The content and potency of these pills are unpredictable.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "frank_benzodiazepines",
+       "where": "Mixing benzodiazepines and derivatives with other drugs / Physical health risks",
+       "quote": "Street benzos are unpredictable in content and in potency...",
+       "sha": "e09c64de5d88a2f9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review reports etizolam in counterfeit Xanax tablets, citing earlier work.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "kaye_2024",
+       "where": "Case Studies",
+       "quote": "etizolam was the most frequently detected compound in the illicit tablets",
+       "sha": "69c4bba467746742"
+      },
+      {
+       "label": "F5",
+       "ref": "kaye_2024",
+       "where": "Abstract",
+       "quote": "Counterfeit Xanax tablets contain variable amounts of etizolam",
+       "sha": "4e4f2f4786b174f5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that the 2024 review cites earlier work."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says some fake Xanax bars contain synthetic opioids or other dangerous chemicals.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "frank_benzodiazepines",
+       "where": "Mixing benzodiazepines and derivatives with other drugs / What does it look like?",
+       "quote": "Instead they might contain other dangerous benzodiazepines, their analogues or other chemicals.",
+       "sha": "06770c27f848d9c1"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_benzodiazepines",
+       "where": "Top of the page",
+       "quote": "Some drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
+       "sha": "7a81551b15da3f16"
+      },
+      {
+       "label": "F9",
+       "ref": "frank_benzodiazepines",
+       "where": "Mixing benzodiazepines and derivatives with other drugs / What are benzodiazepines and derivatives cut with?",
+       "quote": "Other street benzos are made illegally and often contain more dangerously potent substances than are displayed on the packaging.",
+       "sha": "94af6c0e3b473032"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "FRANK does not explicitly say that some fake Xanax bars contain synthetic opioids; it only notes that some drugs may be cut with them."
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "benzodiazepines",
   "also": [
