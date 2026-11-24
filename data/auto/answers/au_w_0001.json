@@ -18,38 +18,422 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-24",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "45245583011",
-  "read_seconds": 100,
+  "run": "45295167350",
+  "read_seconds": 35,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 597.9,
+  "seconds": 237
  },
- "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.76, but 0.98, how1 0.93, how2 0.97, how3 0.43, how4 0.52",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them; 2 sentence(s) say what a checked claim says"
  },
- "sources": [],
- "parts": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "debruyne_2015",
+    "type": "article-journal",
+    "title": "Emerging drugs of abuse: Current perspectives on synthetic cannabinoids",
+    "author": [
+     {
+      "family": "Debruyne",
+      "given": "Daniele"
+     },
+     {
+      "family": "LE BOISSELIER",
+      "given": "Reynald"
+     }
+    ],
+    "container-title": "Substance Abuse and Rehabilitation",
+    "issued": {
+     "date-parts": [
+      [
+       2015
+      ]
+     ]
+    },
+    "DOI": "10.2147/sar.s73586",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "page": "113",
+    "PMCID": "PMC4622447"
+   },
+   "doi": "10.2147/sar.s73586",
+   "pmcid": "PMC4622447",
+   "title": "Emerging drugs of abuse: current perspectives on synthetic cannabinoids",
+   "year": 2015,
+   "journal": "Substance abuse and rehabilitation",
+   "kind": "review",
+   "people": true,
+   "near": 0.753,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "New psychoactive drugs that have appeared over the last decade are typically dominated by cathinones and synthetic cannabinoids (SCs).",
+    "text": "research paper on synthetic cannabinoids"
+   },
+   "findings": [
+    {
+     "passage": 3,
+     "where": "Introduction",
+     "quote": "Among SCs, CB1 agonists mimic the effects of cannabis where consumers may feel happy and relaxed.",
+     "text": "SCs can make people feel happy and relaxed like cannabis.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 47,
+     "where": "Conclusion",
+     "quote": "Even if most of the SCs mimic marijuana effects, some SCs bind much more strongly to CB1 receptors than natural can-nabinoids, which can lead to more potent, unpredictable, or dangerous effects.",
+     "text": "Some SCs can have more potent, unpredictable, or dangerous effects than natural cannabinoids.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Introduction",
+     "quote": "SCs were first reported for their use in recreational settings in December 2008 by a German firm who identified them in the smoking blends sold as herbs sprayed or mixed with one or more synthetic compounds, and were referred to as “Spice”, “Yucatan”, “Chill”, “K2”, or “Black Mamba”.",
+     "text": "SCs were first identified in recreational use in December 2008 in products like Spice, K2, and others.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 47,
+     "where": "Conclusion",
+     "quote": "Because of the multitude of compounds, a complete toxicological profile of SCs is far from being drawn and understood.",
+     "text": "The toxicological profile of SCs is not yet fully understood due to the many different compounds.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_synthetic-cannabinoids",
+    "type": "webpage",
+    "title": "Synthetic and semi-synthetic cannabinoids",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/synthetic-cannabinoids",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       24
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-24"
+    }
+   },
+   "title": "Synthetic and semi-synthetic cannabinoids",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.696,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/synthetic-cannabinoids",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 9,
+     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
+     "quote": "Synthetic and semi-synthetic cannabinoids, possibly because of their potency, are more likely to be associated with hallucinations than natural cannabis.",
+     "text": "Synthetic and semi-synthetic cannabinoids are more likely to be associated with hallucinations than natural cannabis.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 4,
+     "where": "Quick info / Effects on your body",
+     "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
+     "text": "The effects of synthetic and semi-synthetic cannabinoids can be similar to cannabis but can also be stronger or more unpleasant.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 9,
+     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
+     "quote": "However, synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis , so it's easier to use too much and experience unpleasant and harmful effects.",
+     "text": "Synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 16,
+     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / What are Synthetic and semi-synthetic cannabinoids cut with?",
+     "quote": "The chemical composition of synthetic and semi-synthetic cannabinoids and the ingredients of smoking mixtures are changing all the time, so you can never be sure of what you're getting, how powerful it is, and how it could affect you.",
+     "text": "The chemical composition of synthetic and semi-synthetic cannabinoids is constantly changing, making it uncertain what their effects will be.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "adf_synthetic-cannabinoids",
+    "type": "webpage",
+    "title": "Synthetic cannabinoids",
+    "author": [
+     {
+      "literal": "Alcohol and Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       5,
+       19
+      ]
+     ]
+    },
+    "URL": "https://adf.org.au/drug-facts/synthetic-cannabinoids/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       24
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-24"
+    }
+   },
+   "title": "Synthetic cannabinoids",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.675,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "tier": 2,
+   "address": "https://adf.org.au/drug-facts/synthetic-cannabinoids/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 2,
+     "where": "What are synthetic cannabinoids?",
+     "quote": "They can be stronger, more dangerous and cause unpredictable effects.",
+     "text": "Synthetic cannabinoids can be stronger, more dangerous and cause unpredictable effects.",
+     "id": "F10",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "What are synthetic cannabinoids?",
+     "quote": "novel synthetic cannabinoids can produce very different effects to cannabis (THC) (delta-9 tetrahydrocannabinol), the active ingredient in cannabis.",
+     "text": "Synthetic cannabinoids can produce very different effects to cannabis.",
+     "id": "F11",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "What are synthetic cannabinoids?",
+     "quote": "Synthetic cannabinoids were first developed in the 1980s by researchers who were trying to create medicines with similar therapeutic effects (e.g. nausea and pain relief) to cannabis (THC) and CBD (cannabidiol).",
+     "text": "Synthetic cannabinoids were first developed in the 1980s for therapeutic effects similar to cannabis.",
+     "id": "F12",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 4,
+     "where": "What are synthetic cannabinoids? / Misleading packaging",
+     "quote": "Chemicals usually change from batch to batch, so different packets can produce different effects, even if the packaging looks the same.",
+     "text": "Different batches of synthetic cannabinoids can produce different effects.",
+     "id": "L4",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Yes, synthetic weed can feel like cannabis but can be stronger or more unpleasant. Some types can have more dangerous effects than real cannabis.",
+   "uses": [
+    "F1",
+    "F2",
+    "F8"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "debruyne_2015",
+     "where": "Introduction",
+     "quote": "Among SCs, CB1 agonists mimic the effects of cannabis where consumers may feel happy and relaxed.",
+     "sha": "2a6514d70b117a84"
+    },
+    {
+     "label": "F2",
+     "ref": "debruyne_2015",
+     "where": "Conclusion",
+     "quote": "Even if most of the SCs mimic marijuana effects, some SCs bind much more strongly to CB1 receptors than natural can-nabinoids, which can lead to more potent, unpredictable, or dangerous effects.",
+     "sha": "b11fc8b147a989d6"
+    },
+    {
+     "label": "F8",
+     "ref": "frank_synthetic-cannabinoids",
+     "where": "Quick info / Effects on your body",
+     "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
+     "sha": "ada4d50dff7e284b"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The full health risks are not yet fully understood because there are many different compounds.",
+   "uses": [
+    "L1"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "debruyne_2015",
+     "where": "Conclusion",
+     "quote": "Because of the multitude of compounds, a complete toxicological profile of SCs is far from being drawn and understood.",
+     "sha": "b11fc8b147a989d6"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "FRANK says effects can be similar to cannabis but can also be stronger or more unpleasant.",
+   "uses": [
+    "F8"
+   ],
+   "rests_on": [
+    {
+     "label": "F8",
+     "ref": "frank_synthetic-cannabinoids",
+     "where": "Quick info / Effects on your body",
+     "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
+     "sha": "ada4d50dff7e284b"
+    }
+   ],
+   "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant",
+   "quote_ref": "frank_synthetic-cannabinoids"
+  },
+  {
+   "part": "how2",
+   "text": "FRANK says they are often more potent than natural cannabis, making it easier to use too much.",
+   "uses": [
+    "F9"
+   ],
+   "rests_on": [
+    {
+     "label": "F9",
+     "ref": "frank_synthetic-cannabinoids",
+     "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
+     "quote": "However, synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis , so it's easier to use too much and experience unpleasant and harmful effects.",
+     "sha": "7cc2ae518bba7119"
+    }
+   ],
+   "quote": "However, synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis",
+   "quote_ref": "frank_synthetic-cannabinoids"
+  },
+  {
+   "part": "how3",
+   "text": "Australia's Alcohol and Drug Foundation says they can be stronger, more dangerous, and cause unpredictable effects.",
+   "uses": [
+    "F10"
+   ],
+   "rests_on": [
+    {
+     "label": "F10",
+     "ref": "adf_synthetic-cannabinoids",
+     "where": "What are synthetic cannabinoids?",
+     "quote": "They can be stronger, more dangerous and cause unpredictable effects.",
+     "sha": "d3bf85eacdd5dbf5"
+    }
+   ],
+   "quote": "They can be stronger, more dangerous and cause unpredictable effects",
+   "quote_ref": "adf_synthetic-cannabinoids"
+  },
+  {
+   "part": "how4",
+   "text": "Australia's Alcohol and Drug Foundation says they can produce very different effects to cannabis.",
+   "uses": [
+    "F11"
+   ],
+   "rests_on": [
+    {
+     "label": "F11",
+     "ref": "adf_synthetic-cannabinoids",
+     "where": "What are synthetic cannabinoids?",
+     "quote": "novel synthetic cannabinoids can produce very different effects to cannabis (THC) (delta-9 tetrahydrocannabinol), the active ingredient in cannabis.",
+     "sha": "d3bf85eacdd5dbf5"
+    }
+   ],
+   "quote": "produce very different effects to cannabis (THC) (delta-9 tetrahydrocannabinol), the active ingredient in cannabis",
+   "quote_ref": "adf_synthetic-cannabinoids"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
    "doi": "10.1097/pec.0000000000001970",
@@ -106,6 +490,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -114,39 +506,229 @@
    "read": "full",
    "kind": "review",
    "at": "10.2147/sar.s73586",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "There is still limited data available on SCs, especially in human settings.",
+     "quote": "Nevertheless, as ever-increasing data on the identification or analysis methods, pharmacokinetics or pharmacodynamics, animal or human pharmacology or toxicity, and addictive potential are becoming av",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Gone to Pot - A Review of the Association between Cannabis and Psychosis",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2014.00054",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A review of associations between cannabis and psychosis",
+     "quote": "Gone to Pot - A Review of the Association between Cannabis and Psychosis",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "Synthetic cannabinoids (Spice/K2) are more potent than THC.",
+     "quote": "Unlike THC, which is a weak partial agonist of brain CB1Rs, the synthetic cannabinoids are highly potent, full agonists of CB1R, which would predict more robust effects.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
-   "title": "Beyond THC: The New Generation of Cannabinoid Designer Drugs",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fnbeh.2011.00060",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Synthetic and semi-synthetic cannabinoids",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/synthetic-cannabinoids",
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "The emergency department care of the cannabis and synthetic cannabinoid patient: a narrative review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s12245-021-00330-3",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Synthetic cannabinoids",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/synthetic-cannabinoids/",
+   "kept": 3,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F2",
+   "F8"
+  ],
+  "direct": "Yes",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F8",
+    "F9"
+   ],
+   [
+    "F10",
+    "F11"
+   ],
+   [
+    "F2",
+    "F1"
+   ]
+  ],
+  "unanswered": "long‑term health effects"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.7628,
+   "but": 0.9833,
+   "how1": 0.9312,
+   "how2": 0.9736,
+   "how3": 0.4264,
+   "how4": 0.5243
+  },
+  "scores_quotes_alone": {
+   "short": 0.3118,
+   "but": 0.9787,
+   "how1": 0.9215,
+   "how2": 0.8651,
+   "how3": 0.0957,
+   "how4": 0.2686
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, synthetic weed can feel like cannabis but is often stronger and more dangerous. It can cause unpredictable effects that real cannabis does not.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "debruyne_2015",
+       "where": "Introduction",
+       "quote": "Among SCs, CB1 agonists mimic the effects of cannabis where consumers may feel happy and relaxed.",
+       "sha": "2a6514d70b117a84"
+      },
+      {
+       "label": "F2",
+       "ref": "debruyne_2015",
+       "where": "Conclusion",
+       "quote": "Even if most of the SCs mimic marijuana effects, some SCs bind much more strongly to CB1 receptors than natural can-nabinoids, which can lead to more potent, unpredictable, or dangerous effects.",
+       "sha": "b11fc8b147a989d6"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_synthetic-cannabinoids",
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
+       "sha": "ada4d50dff7e284b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "uses 'often' which is not stated in the passages (they say 'some' or 'can be')"
+    },
+    {
+     "part": "but",
+     "text": "The full health risks are not yet known because there are so many different compounds in these drugs.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "debruyne_2015",
+       "where": "Conclusion",
+       "quote": "Because of the multitude of compounds, a complete toxicological profile of SCs is far from being drawn and understood.",
+       "sha": "b11fc8b147a989d6"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "FRANK says effects can be similar to cannabis but often stronger, making it easier to use too much and feel bad.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "frank_synthetic-cannabinoids",
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects can be similar to cannabis but can also be stronger or more unpleasant.",
+       "sha": "ada4d50dff7e284b"
+      },
+      {
+       "label": "F9",
+       "ref": "frank_synthetic-cannabinoids",
+       "where": "Mixing Synthetic and semi-synthetic cannabinoids with other drugs / How does it make you feel?",
+       "quote": "However, synthetic and semi-synthetic cannabinoids are often more potent than natural cannabis , so it's easier to use too much and experience unpleasant and harmful effects.",
+       "sha": "7cc2ae518bba7119"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Australia's Alcohol and Drug Foundation says synthetic cannabinoids can be stronger, more dangerous, and cause very different effects to cannabis.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "adf_synthetic-cannabinoids",
+       "where": "What are synthetic cannabinoids?",
+       "quote": "They can be stronger, more dangerous and cause unpredictable effects.",
+       "sha": "d3bf85eacdd5dbf5"
+      },
+      {
+       "label": "F11",
+       "ref": "adf_synthetic-cannabinoids",
+       "where": "What are synthetic cannabinoids?",
+       "quote": "novel synthetic cannabinoids can produce very different effects to cannabis (THC) (delta-9 tetrahydrocannabinol), the active ingredient in cannabis.",
+       "sha": "d3bf85eacdd5dbf5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2015 review says some synthetic cannabinoids bind more strongly to brain receptors than natural ones, leading to more potent or dangerous effects.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "debruyne_2015",
+       "where": "Conclusion",
+       "quote": "Even if most of the SCs mimic marijuana effects, some SCs bind much more strongly to CB1 receptors than natural can-nabinoids, which can lead to more potent, unpredictable, or dangerous effects.",
+       "sha": "b11fc8b147a989d6"
+      },
+      {
+       "label": "F1",
+       "ref": "debruyne_2015",
+       "where": "Introduction",
+       "quote": "Among SCs, CB1 agonists mimic the effects of cannabis where consumers may feel happy and relaxed.",
+       "sha": "2a6514d70b117a84"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": [
+   {
+    "part": "short",
+    "claim": "cl_scb_hangover_vs_cannabis"
+   },
+   {
+    "part": "how2",
+    "claim": "cl_can_concentrates"
+   }
+  ]
+ },
  "place": {
   "home": "synthetic-cannabinoids",
   "also": [

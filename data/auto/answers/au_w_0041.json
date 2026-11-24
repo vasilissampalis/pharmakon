@@ -17,35 +17,334 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-24",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "45245583011",
-  "read_seconds": 100,
+  "run": "45295167350",
+  "read_seconds": 34,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 578.8,
+  "seconds": 167
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "9 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.03, but 0.99, how1 0.97, how2 0.99, how3 0.35, how4 0.50",
+  "check": "short: NOT accepted: The phrase \"It depends on the cancer\" is not explicitly stated in the passages.; but: accepted; how1: accepted; how2: accepted; how3: accepted; how4: accepted",
+  "rules": "broken at try 2: short: it says its source found (“A 2019 review found”) what that source only reports from another study (F5, F6): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder; how3: it says its source found (“A 2019 meta-analysis found”) what that source only reports from another study (F5): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "russo_2026",
+    "type": "article-journal",
+    "title": "Medical cannabis and the hallmarks of cancer: A critical narrative review",
+    "author": [
+     {
+      "family": "Russo",
+      "given": "Diana"
+     },
+     {
+      "family": "Fernandes",
+      "given": "Rute"
+     },
+     {
+      "family": "Tavares",
+      "given": "Valéria"
+     },
+     {
+      "family": "Agrelo",
+      "given": "Ana"
+     },
+     {
+      "family": "Medeiros",
+      "given": "Rui"
+     }
+    ],
+    "container-title": "International Journal of Molecular Sciences",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.3390/ijms27177549",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "volume": "27",
+    "issue": "17",
+    "number": "7549",
+    "PMCID": "PMC13565641"
+   },
+   "doi": "10.3390/ijms27177549",
+   "pmcid": "PMC13565641",
+   "title": "Medical Cannabis and the Hallmarks of Cancer: A Critical Narrative Review",
+   "year": 2026,
+   "journal": "International journal of molecular sciences",
+   "kind": "review",
+   "people": false,
+   "near": 0.818,
+   "money": [
+    "The authors declare no conflicts of interest.",
+    "This research received no external funding."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This narrative review summarizes the current evidence on cannabinoids, in particular the phytocannabinoids cannabidiol (CBD) and Δ9-tetrahydrocannabinol (THC),",
+    "text": "A critical narrative review of medical cannabis"
+   },
+   "findings": [
+    {
+     "passage": 55,
+     "where": "11. Hallmark Enabling Characteristics › 11.1. Loss of Genomic Integrity—Gene Mutations and CIN",
+     "quote": "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis.",
+     "text": "Some suggest CBD may induce DNA damage in a laboratory.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 88,
+     "where": "13. Conclusions",
+     "quote": "Nonetheless, the molecular mechanisms underlying the anticancer effects of cannabinoids remain incompletely understood.",
+     "text": "The molecular mechanisms underlying the anticancer effects of cannabinoids remain incompletely understood in a laboratory.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "5. Activation of Invasion and Metastasis",
+     "quote": "Evidence suggests that cannabis may influence invasion and metastasis via multiple, complementary mechanisms, namely EMT inhibition, modulation of Wnt/β-catenin and IL-1β/AKT signalling, MMP-related extracellular matrix degradation and suppression of pro-metastatic mediators.",
+     "text": "Cannabis may influence invasion and metastasis via multiple mechanisms in a laboratory.",
+     "id": "F3",
+     "second_hand": "Evidence suggests that cannabis may influence invasion and metastasis via multiple, complementary mechanisms, namely EMT inhibition, modulation of Wnt/β-catenin and IL-1β/AKT signa"
+    }
+   ],
+   "limits": [
+    {
+     "passage": 86,
+     "where": "12. Discussion",
+     "quote": "Current evidence supports preliminary and context-dependent pharmacodynamic interactions between CBD and THC in selected preclinical cancer models. However, these findings have not been consistently reproduced in vivo and do not establish a clinically validated entourage effect involving the broader phytochemical composition of Cannabis sativa.",
+     "text": "These findings have not been consistently reproduced in vivo.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "karimi_2026",
+    "type": "article-journal",
+    "title": "Marijuana (cannabis) smoking increases the risk of lung cancer: Evidence from a systematic review and meta-analysis",
+    "author": [
+     {
+      "family": "Karimi",
+      "given": "Mehdi"
+     },
+     {
+      "family": "Kazemi",
+      "given": "Kimia"
+     },
+     {
+      "family": "Pourhanifeh",
+      "given": "Mohammad Hossein"
+     },
+     {
+      "family": "Irajian",
+      "given": "Parsa"
+     },
+     {
+      "family": "Asbaghi",
+      "given": "Omid"
+     }
+    ],
+    "container-title": "Addiction and Health",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.34172/ahj.1710",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "volume": "18",
+    "page": "1710",
+    "PMCID": "PMC13678052"
+   },
+   "doi": "10.34172/ahj.1710",
+   "pmcid": "PMC13678052",
+   "title": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis",
+   "year": 2026,
+   "journal": "Addiction & health",
+   "kind": "review",
+   "people": true,
+   "near": 0.789,
+   "money": [
+    "This study was self-funded by the authors and received no external financial support from any funding organization."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 27,
+     "where": "Discussion",
+     "quote": "These findings are consistent with some previous studies that have proposed a potential relationship between heavy or long-term marijuana use and respiratory malignancies.",
+     "text": "Some previous studies proposed a potential relationship between heavy or long-term marijuana use and respiratory malignancies.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 28,
+     "where": "Discussion",
+     "quote": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+     "text": "A 2019 meta-analysis found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+     "id": "F5",
+     "second_hand": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head an"
+    },
+    {
+     "passage": 27,
+     "where": "Discussion",
+     "quote": "For example, Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+     "text": "Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+     "id": "F6",
+     "second_hand": "For example, Aldington et al (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use."
+    }
+   ],
+   "limits": [
+    {
+     "passage": 32,
+     "where": "Conclusion",
+     "quote": "However, the non-significant results from case-control studies suggest variability in the existing literature, likely due to differences in study design, population characteristics, and methods of exposure assessment.",
+     "text": "The existing literature has variability, likely due to differences in study design, population characteristics, and methods of exposure assessment.",
+     "id": "L2",
+     "second_hand": "However, the non-significant results from case-control studies suggest variability in the existing literature, likely due to differences in study design, population characteristics"
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "cdc_lung-health",
+    "type": "webpage",
+    "title": "Cannabis and Lung Health",
+    "author": [
+     {
+      "literal": "Centers for Disease Control and Prevention"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2024,
+       2,
+       26
+      ]
+     ]
+    },
+    "URL": "https://www.cdc.gov/cannabis/health-effects/lung-health.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       24
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-24"
+    }
+   },
+   "title": "Cannabis and Lung Health",
+   "year": 2024,
+   "kind": "official",
+   "people": true,
+   "near": 0.694,
+   "name": "Centers for Disease Control and Prevention",
+   "short": "the US Centers for Disease Control and Prevention",
+   "tier": 1,
+   "address": "https://www.cdc.gov/cannabis/health-effects/lung-health.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Lung health and smoking cannabis",
+     "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+     "text": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens as tobacco smoke.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Lung health and smoking cannabis",
+     "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+     "text": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Key points",
+     "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+     "text": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 2,
+     "where": "Lung health and smoking cannabis",
+     "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+     "text": "The specific effects of cannabis smoking on lung cancer are not yet fully understood.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -113,6 +412,14 @@
    "why": "it disagrees with a checked claim of the same page (cl_can_smoked_cancer): waiting for a person; the claim is not changed",
    "short": "It depends. The US Centers for Disease Control and Prevention says cannabis smoke has cancer-causing chemicals. A 2026 review found a potential link between smoking it and lung cancer.",
    "complete": true
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -121,39 +428,463 @@
    "read": "full",
    "kind": "review",
    "at": "10.3390/ijms27177549",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Marijuana (Cannabis) Smoking Increases the Risk of Lung Cancer: Evidence from a Systematic Review and Meta-Analysis",
    "read": "full",
    "kind": "review",
    "at": "10.34172/ahj.1710",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "systematic review and meta-analysis of existing observational studies",
+     "quote": "This systematic review and meta-analysis of existing observational studies aimed to evaluate the potential relationship between marijuana use and the risk of developing lung cancer.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "This review found evidence supporting a potential association between marijuana smoking and an increased risk of lung cancer.",
+     "quote": "These findings support growing concerns about the carcinogenic potential of cannabis smoke, which shares many harmful constituents with tobacco smoke.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
-   "title": "Meta-analysis of medical cannabis outcomes and associations with cancer",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fonc.2025.1490621",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Cannabis and Lung Health",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/cannabis/health-effects/lung-health.html",
+   "kept": 3,
+   "thrown": []
   },
   {
-   "title": "Epidemiology of lung cancer",
-   "read": "full",
-   "kind": "review",
-   "at": "10.5114/wo.2021.103829",
+   "title": "Cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substances/cannabis",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Research",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.ccsa.ca/en/guidance-tools-resources/substance-use-and-addiction/cannabis/research-cannabis",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Cannabis (Marijuana) and Cannabinoids: What You Need To Know",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nccih.nih.gov/health/cannabis-marijuana-and-cannabinoids-what-you-need-to-know",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Cannabis (marijuana)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/cannabis-marijuana",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "About cannabis",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/drugs-medication/cannabis/about.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Medical cannabis (and cannabis oils)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/medical-cannabis/",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F7",
+   "F5",
+   "F6"
+  ],
+  "direct": "It depends",
+  "but": [
+   "L3"
+  ],
+  "how": [
+   [
+    "F7",
+    "F8"
+   ],
+   [
+    "F5",
+    "F6"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.0275,
+   "but": 0.9877,
+   "how1": 0.9653,
+   "how2": 0.9858,
+   "how3": 0.348,
+   "how4": 0.4973
+  },
+  "scores_quotes_alone": {
+   "short": 0.4352,
+   "but": 0.9592,
+   "how1": 0.6453,
+   "how2": 0.87,
+   "how3": 0.0403,
+   "how4": 0.1629
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends on the cancer. Cannabis smoke has cancer-causing chemicals like tobacco. One study linked smoking to lung cancer, but another found no link to head and neck cancer.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+       "sha": "d36eceaa23a4f945"
+      },
+      {
+       "label": "F5",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+       "sha": "05981e70b9f244d2"
+      },
+      {
+       "label": "F6",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "For example, Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+       "sha": "b2f219a2b1b53489"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The clause \"It depends on the cancer\" is not explicitly stated in the passages."
+    },
+    {
+     "part": "but",
+     "text": "The specific effects of cannabis smoking on lung cancer are not yet fully understood.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US Centers for Disease Control and Prevention says cannabis smoke has many of the same toxins and cancer-causing chemicals as tobacco smoke.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same page says more research is needed to understand the specific effects cannabis smoking may have on lung cancer.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 review reports a 2019 meta-analysis found no significant link between using marijuana and head or neck cancer.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+       "sha": "05981e70b9f244d2"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "That review also cites a 2008 study finding each joint-year of cannabis smoking was associated with increased lung cancer risk.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "For example, Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+       "sha": "b2f219a2b1b53489"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends on the type of cancer. A 2019 review found no link to head and neck cancer, but one study linked smoking to lung cancer.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+       "sha": "05981e70b9f244d2"
+      },
+      {
+       "label": "F6",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "For example, Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+       "sha": "b2f219a2b1b53489"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says its source found (“A 2019 review found”) what that source only reports from another study (F5, F6): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder"
+    },
+    {
+     "part": "but",
+     "text": "The specific effects of cannabis smoking on lung cancer are not yet fully understood.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US Centers for Disease Control and Prevention says cannabis smoke has many of the same cancer-causing chemicals as tobacco smoke.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The CDC says more research is needed to understand the specific effects cannabis smoking may have on lung cancer.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2019 meta-analysis found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+       "sha": "05981e70b9f244d2"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says its source found (“A 2019 meta-analysis found”) what that source only reports from another study (F5): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder"
+    },
+    {
+     "part": "how4",
+     "text": "A 2008 study reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "For example, Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+       "sha": "b2f219a2b1b53489"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends on the cancer. Cannabis smoke has cancer-causing chemicals. One study links smoking to lung cancer, but an earlier review found no link to head and neck cancer.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+       "sha": "d36eceaa23a4f945"
+      },
+      {
+       "label": "F6",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "For example, Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+       "sha": "b2f219a2b1b53489"
+      },
+      {
+       "label": "F5",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+       "sha": "05981e70b9f244d2"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The phrase \"It depends on the cancer\" is not explicitly stated in the passages."
+    },
+    {
+     "part": "but",
+     "text": "The specific effects of cannabis smoking on lung cancer are not yet fully understood.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "The US Centers for Disease Control and Prevention says cannabis smoke has many of the same cancer-causing chemicals as tobacco smoke.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "Smoke from cannabis has many of the same toxins, irritants, and carcinogens (cancer-causing chemicals) as tobacco smoke.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The CDC says more research is needed to understand the specific effects cannabis smoking may have on lung cancer.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "cdc_lung-health",
+       "where": "Lung health and smoking cannabis",
+       "quote": "More research is needed to understand the specific effects cannabis smoking may have on lung cancer and other respiratory diseases.",
+       "sha": "d36eceaa23a4f945"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2026 review reports that one study found a link between smoking and lung cancer, and an earlier meta-analysis found no link to head and neck cancer.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "A meta-analysis in 2019 evaluated the association between marijuana use and risk of cancer and found no significant association between ever using marijuana and the risk of head and neck or oral cancers.",
+       "sha": "05981e70b9f244d2"
+      },
+      {
+       "label": "F6",
+       "ref": "karimi_2026",
+       "where": "Discussion",
+       "quote": "For example, Aldington et al. (2008) reported that each joint-year of cannabis smoking was associated with an increased risk of lung cancer after adjusting for tobacco use.",
+       "sha": "b2f219a2b1b53489"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2026 review of lab studies says CBD may cause DNA damage, but the link to cancer is still poorly defined.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "russo_2026",
+       "where": "Abstract",
+       "quote": "This narrative review summarizes the current evidence on cannabinoids, in particular the phytocannabinoids cannabidiol (CBD) and Δ9-tetrahydrocannabinol (THC),",
+       "sha": "d038ed95ab7076db"
+      },
+      {
+       "label": "F1",
+       "ref": "russo_2026",
+       "where": "11. Hallmark Enabling Characteristics › 11.1. Loss of Genomic Integrity—Gene Mutations and CIN",
+       "quote": "The relation between cannabis and genomic integrity is still poorly defined with some suggesting CBD may induce DNA damage and THC-related cell cycle block contributing to DNA damage accumulation and apoptosis.",
+       "sha": "0500e9adbd2a9a8d"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "cannabis",
   "also": [],
