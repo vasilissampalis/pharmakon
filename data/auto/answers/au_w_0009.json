@@ -18,38 +18,258 @@
   "lsd"
  ],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-24",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "@cf/openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team H2",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45270481318",
+  "run": "45299414783",
+  "read_by": {
+   "llama-4-scout-17b-16e-instruct": 1,
+   "gpt-oss-20b": 1
+  },
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 624.0,
+  "seconds": 197
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gpt-oss-20b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + DA (10)",
+  "rules": "broken at try 1: short: it says its source found (“A review found”) what that source only reports from another study (F1): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.32, but 0.95, how1 0.97, how2 0.71, how3 0.33",
+  "check": "short: NOT accepted: it does not answer the question itself; but: accepted; how1: accepted; how2: accepted; how3: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "silczuk_2025",
+    "type": "article-journal",
+    "title": "Psychedelic-assisted therapy: Potential benefits and challenges in mental health treatment",
+    "author": [
+     {
+      "family": "Silczuk",
+      "given": "Andrzej"
+     },
+     {
+      "family": "Madejek",
+      "given": "Robert J."
+     },
+     {
+      "family": "Koweszko",
+      "given": "Tytus"
+     },
+     {
+      "family": "Mularczyk-Tomczewska",
+      "given": "Paulina"
+     },
+     {
+      "family": "Adamska",
+      "given": "Ewelina"
+     },
+     {
+      "family": "Gujski",
+      "given": "Mariusz"
+     },
+     {
+      "family": "Szulc",
+      "given": "Agata"
+     }
+    ],
+    "container-title": "Medical Science Monitor",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.12659/msm.948302",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "volume": "31",
+    "PMCID": "PMC12352260"
+   },
+   "doi": "10.12659/msm.948302",
+   "pmcid": "PMC12352260",
+   "title": "Psychedelic-Assisted Therapy: Potential Benefits and Challenges in Mental Health Treatment",
+   "year": 2025,
+   "journal": "Medical science monitor : international medical journal of experimental and clinical research",
+   "kind": "review",
+   "people": true,
+   "near": 0.863,
+   "money": [],
+   "design": {
+    "passage": 8,
+    "where": "Introduction",
+    "quote": "The purpose of this study is to critically examine and synthesize existing research from the past 10 years regarding the potential use of psychedelics in psychotherapy",
+    "text": "A review of research paper"
+   },
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Abstract",
+     "quote": "preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder, and substance use disorders",
+     "text": "Preliminary studies suggest potential therapeutic benefits in treating depression and other conditions.",
+     "id": "F1",
+     "second_hand": "While preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder"
+    },
+    {
+     "passage": 67,
+     "where": "Key Conclusions on Psychedelic-Assisted Psychotherapy and Navigating the Future of Psychedelic-Assisted Therapy: Research, Ethics, and Clinical Practice › Cautious Optimism for Future Applications",
+     "quote": "early results are promising and suggest that psychedelics can play a transformative role in psychiatry",
+     "text": "Early results are promising for psychedelics in psychiatry.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 54,
+     "where": "Safety and Ethical Considerations",
+     "quote": "substantial uncertainties about their safety, addiction potential, and psychological risks persist",
+     "text": "There are substantial uncertainties about the safety and risks of psychedelics.",
+     "id": "L1",
+     "second_hand": "While early findings suggest rapid and sustained benefits in certain mental health conditions, substantial uncertainties about their safety, addiction potential, and psychological "
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "feulner_2023",
+    "type": "article-journal",
+    "title": "Efficacy and safety of psychedelics in treating anxiety disorders",
+    "author": [
+     {
+      "family": "Feulner",
+      "given": "Leah"
+     },
+     {
+      "family": "Sermchaiwong",
+      "given": "Thanpicha"
+     },
+     {
+      "family": "Rodland",
+      "given": "Nathan"
+     },
+     {
+      "family": "Galarneau",
+      "given": "David"
+     }
+    ],
+    "container-title": "Ochsner Journal",
+    "issued": {
+     "date-parts": [
+      [
+       2023
+      ]
+     ]
+    },
+    "DOI": "10.31486/toj.23.0076",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "volume": "23",
+    "issue": "4",
+    "page": "315-328",
+    "PMCID": "PMC10741816"
+   },
+   "doi": "10.31486/toj.23.0076",
+   "pmcid": "PMC10741816",
+   "title": "Efficacy and Safety of Psychedelics in Treating Anxiety Disorders",
+   "year": 2023,
+   "journal": "Ochsner journal",
+   "kind": "review",
+   "people": true,
+   "near": 0.837,
+   "money": [
+    "ACKNOWLEDGMENTS The authors have no financial or proprietary interest in the subject matter of this article."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Background: Anxiety disorders are commonly diagnosed and cause substantial functional impairment. A mixture of pharmacologic and psychosocial treatments currently exists, but these treatments are not always tolerable and effective.",
+    "text": "Literature review of psychedelic-assisted therapy for anxiety disorders"
+   },
+   "findings": [
+    {
+     "passage": 66,
+     "where": "CONCLUSION",
+     "quote": "Ketamine, LSD, MDMA, and psilocybin consistently produced an anxiolytic effect sustained for at least 2 weeks after the therapeutic session.",
+     "text": "Ketamine, LSD, MDMA, and psilocybin consistently produced an anxiolytic effect sustained for at least 2 weeks after the therapeutic session.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 51,
+     "where": "DISCUSSION › Therapeutic Effects of Psychedelics",
+     "quote": "Scores on the STAI-T continued to decrease for the entire 6-month follow-up, reaching significance at the 1-month and 3-month follow-ups.",
+     "text": "Scores on the STAI-T continued to decrease for the entire 6-month follow-up, reaching significance at the 1-month and 3-month follow-ups.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 66,
+     "where": "CONCLUSION",
+     "quote": "No life-threatening psychedelic-related adverse effects were reported in any of the trials.",
+     "text": "No life-threatening psychedelic-related adverse effects were reported in any of the trials.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 59,
+     "where": "DISCUSSION › Safety and Tolerability of Psychedelics",
+     "quote": "Although these studies show promising evidence of safe anxiety relief with psychedelics, the psychedelics were administered under controlled conditions in each of these studies.",
+     "text": "The psychedelics were administered under controlled conditions, so risk may increase when dose and context are not controlled.",
+     "id": "L2",
+     "second_hand": "Although these studies show promising evidence of safe anxiety relief with psychedelics, the psychedelics were administered under controlled conditions in each of these studies."
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "Evidence specific to cancer or serious‑illness patients",
  "wanted": [
   {
    "doi": "10.1176/appi.ajp.2019.19010035",
@@ -82,6 +302,14 @@
    "why": "passed every gate; read by the editor and let out on 2026-11-20",
    "short": "Yes. In terminal cancer patients, psilocybin lowered depression and anxiety. A 2020 analysis says it may help anxiety and depression in people with life-threatening cancer.",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -90,9 +318,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.12659/msm.948302",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The current evidence is preliminary and long-term effects are unexplored.",
+     "quote": "the current evidence is preliminary, and the long-term effects, risks, and critical factors influencing outcomes remain largely unexplored",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Psychedelic Treatments for Psychiatric Disorders: A Systematic Review and Thematic Synthesis of Patient Experiences in Qualitative Studies",
@@ -108,21 +342,366 @@
    "read": "full",
    "kind": "review",
    "at": "10.31486/toj.23.0076",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "The possible place for psychedelics in pharmacotherapy of mental disorders",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1007/s43440-023-00550-9",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Patients with social anxiety disorder had increased self-perception and performance.",
+     "quote": "Patients with social anxiety disorder had increased self-perception and performance.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F3",
+   "F4"
+  ],
+  "direct": "It depends",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DB",
+    "F3",
+    "F4",
+    "F5"
+   ],
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": "Evidence specific to cancer or serious‑illness patients"
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. Preliminary studies suggest potential benefits for depression. A review found ketamine, LSD, MDMA, and psilocybin eased anxiety for at least 2 weeks.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "silczuk_2025",
+       "where": "Abstract",
+       "quote": "preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder, and substance use disorders",
+       "sha": "023def5355dc1aaa"
+      },
+      {
+       "label": "F3",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "Ketamine, LSD, MDMA, and psilocybin consistently produced an anxiolytic effect sustained for at least 2 weeks after the therapeutic session.",
+       "sha": "a909ab11c59becc5"
+      },
+      {
+       "label": "F4",
+       "ref": "feulner_2023",
+       "where": "DISCUSSION › Therapeutic Effects of Psychedelics",
+       "quote": "Scores on the STAI-T continued to decrease for the entire 6-month follow-up, reaching significance at the 1-month and 3-month follow-ups.",
+       "sha": "3a6f92ef0847bb90"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says its source found (“A review found”) what that source only reports from another study (F1): say that the source reports or cites that earlier work, called what the passage calls it (“an earlier meta-analysis”, “one study”), or name no finder"
+    },
+    {
+     "part": "but",
+     "text": "Substantial uncertainties about safety, addiction potential, and psychological risks persist, according to a review of research from the past 10 years.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "silczuk_2025",
+       "where": "Safety and Ethical Considerations",
+       "quote": "substantial uncertainties about their safety, addiction potential, and psychological risks persist",
+       "sha": "89735791f76a31f5"
+      },
+      {
+       "label": "DA",
+       "ref": "silczuk_2025",
+       "where": "Introduction",
+       "quote": "The purpose of this study is to critically examine and synthesize existing research from the past 10 years regarding the potential use of psychedelics in psychotherapy",
+       "sha": "41abcf8827787fc2"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2023 literature review of anxiety disorders found no life-threatening adverse effects in trials. Anxiety scores kept dropping for 6 months.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "feulner_2023",
+       "where": "Abstract",
+       "quote": "Background: Anxiety disorders are commonly diagnosed and cause substantial functional impairment. A mixture of pharmacologic and psychosocial treatments currently exists, but these treatments are not always tolerable and effective.",
+       "sha": "55a5def405ca6581"
+      },
+      {
+       "label": "F3",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "Ketamine, LSD, MDMA, and psilocybin consistently produced an anxiolytic effect sustained for at least 2 weeks after the therapeutic session.",
+       "sha": "a909ab11c59becc5"
+      },
+      {
+       "label": "F4",
+       "ref": "feulner_2023",
+       "where": "DISCUSSION › Therapeutic Effects of Psychedelics",
+       "quote": "Scores on the STAI-T continued to decrease for the entire 6-month follow-up, reaching significance at the 1-month and 3-month follow-ups.",
+       "sha": "3a6f92ef0847bb90"
+      },
+      {
+       "label": "F5",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "No life-threatening psychedelic-related adverse effects were reported in any of the trials.",
+       "sha": "a909ab11c59becc5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review of the past 10 years reports that preliminary studies suggest potential therapeutic benefits for depression and other conditions.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "silczuk_2025",
+       "where": "Introduction",
+       "quote": "The purpose of this study is to critically examine and synthesize existing research from the past 10 years regarding the potential use of psychedelics in psychotherapy",
+       "sha": "41abcf8827787fc2"
+      },
+      {
+       "label": "F1",
+       "ref": "silczuk_2025",
+       "where": "Abstract",
+       "quote": "preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder, and substance use disorders",
+       "sha": "023def5355dc1aaa"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. A 2025 review reports earlier work suggests benefits for depression. A 2023 review found ketamine, LSD, MDMA, and psilocybin eased anxiety for at least 2 weeks.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "silczuk_2025",
+       "where": "Abstract",
+       "quote": "preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder, and substance use disorders",
+       "sha": "023def5355dc1aaa"
+      },
+      {
+       "label": "F3",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "Ketamine, LSD, MDMA, and psilocybin consistently produced an anxiolytic effect sustained for at least 2 weeks after the therapeutic session.",
+       "sha": "a909ab11c59becc5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "A 2025 review reports substantial uncertainties about the safety, addiction potential, and psychological risks of psychedelics.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "silczuk_2025",
+       "where": "Safety and Ethical Considerations",
+       "quote": "substantial uncertainties about their safety, addiction potential, and psychological risks persist",
+       "sha": "89735791f76a31f5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2023 literature review of anxiety disorders found ketamine, LSD, MDMA, and psilocybin eased anxiety for at least 2 weeks. No life-threatening effects were reported.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "feulner_2023",
+       "where": "Abstract",
+       "quote": "Background: Anxiety disorders are commonly diagnosed and cause substantial functional impairment. A mixture of pharmacologic and psychosocial treatments currently exists, but these treatments are not always tolerable and effective.",
+       "sha": "55a5def405ca6581"
+      },
+      {
+       "label": "F3",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "Ketamine, LSD, MDMA, and psilocybin consistently produced an anxiolytic effect sustained for at least 2 weeks after the therapeutic session.",
+       "sha": "a909ab11c59becc5"
+      },
+      {
+       "label": "F5",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "No life-threatening psychedelic-related adverse effects were reported in any of the trials.",
+       "sha": "a909ab11c59becc5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review of research from the past 10 years reports that preliminary studies suggest potential therapeutic benefits for depression and other conditions.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "silczuk_2025",
+       "where": "Introduction",
+       "quote": "The purpose of this study is to critically examine and synthesize existing research from the past 10 years regarding the potential use of psychedelics in psychotherapy",
+       "sha": "41abcf8827787fc2"
+      },
+      {
+       "label": "F1",
+       "ref": "silczuk_2025",
+       "where": "Abstract",
+       "quote": "preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder, and substance use disorders",
+       "sha": "023def5355dc1aaa"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. Preliminary studies suggest potential benefits for depression. Ketamine, LSD, MDMA, and psilocybin consistently eased anxiety for at least 2 weeks.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "silczuk_2025",
+       "where": "Abstract",
+       "quote": "preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder, and substance use disorders",
+       "sha": "023def5355dc1aaa"
+      },
+      {
+       "label": "F3",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "Ketamine, LSD, MDMA, and psilocybin consistently produced an anxiolytic effect sustained for at least 2 weeks after the therapeutic session.",
+       "sha": "a909ab11c59becc5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "Substantial uncertainties about safety, addiction potential, and psychological risks persist.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "silczuk_2025",
+       "where": "Safety and Ethical Considerations",
+       "quote": "substantial uncertainties about their safety, addiction potential, and psychological risks persist",
+       "sha": "89735791f76a31f5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2023 review of anxiety disorder trials found no life-threatening adverse effects were reported.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "feulner_2023",
+       "where": "Abstract",
+       "quote": "Background: Anxiety disorders are commonly diagnosed and cause substantial functional impairment. A mixture of pharmacologic and psychosocial treatments currently exists, but these treatments are not always tolerable and effective.",
+       "sha": "55a5def405ca6581"
+      },
+      {
+       "label": "F5",
+       "ref": "feulner_2023",
+       "where": "CONCLUSION",
+       "quote": "No life-threatening psychedelic-related adverse effects were reported in any of the trials.",
+       "sha": "a909ab11c59becc5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "In those trials, anxiety scores kept dropping for 6 months, reaching significance at 1 and 3 months.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "feulner_2023",
+       "where": "DISCUSSION › Therapeutic Effects of Psychedelics",
+       "quote": "Scores on the STAI-T continued to decrease for the entire 6-month follow-up, reaching significance at the 1-month and 3-month follow-ups.",
+       "sha": "3a6f92ef0847bb90"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review of the past 10 years reports earlier work found potential benefits for depression.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "silczuk_2025",
+       "where": "Introduction",
+       "quote": "The purpose of this study is to critically examine and synthesize existing research from the past 10 years regarding the potential use of psychedelics in psychotherapy",
+       "sha": "41abcf8827787fc2"
+      },
+      {
+       "label": "F1",
+       "ref": "silczuk_2025",
+       "where": "Abstract",
+       "quote": "preliminary studies suggest potential therapeutic benefits in treating various conditions, including depression, post-traumatic stress disorder, obsessive-compulsive disorder, and substance use disorders",
+       "sha": "023def5355dc1aaa"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3204,
+   "but": 0.9495,
+   "how1": 0.9698,
+   "how2": 0.7078,
+   "how3": 0.3337
+  },
+  "scores_quotes_alone": {
+   "short": 0.3174,
+   "but": 0.8181,
+   "how1": 0.8381,
+   "how2": 0.7348,
+   "how3": 0.2282
+  }
+ },
  "place": {
   "home": "psilocybin",
   "also": [
