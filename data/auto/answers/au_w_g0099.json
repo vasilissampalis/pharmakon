@@ -15,35 +15,318 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-24",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.1-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45208379857",
-  "read_seconds": 100,
+  "run": "45356487256",
+  "read_by": {
+   "gpt-oss-20b": 2,
+   "gemini-3.5-flash-lite": 1
+  },
+  "read_seconds": 50,
   "from": {
-   "papers": 0,
+   "papers": 3,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 247
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "the answer was not accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that carisoprodol breaks down into a sedative; they state it is metabolized to meprobamate, which is a sedative.",
  "gates": {
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "9 findings kept from 3 sources (3 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 2 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.41, but 0.12, how1 0.68, how2 0.07, how3 0.51, how4 0.78",
+  "check": "short: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that carisoprodol breaks down into a sedative; they state it is metabolized to meprobamate, which is a sedative.; but: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passage states the four-fold increase is a pharmacokinetic change in poor metabolizers following standard doses, not that the exposure increase itself is linked to risks of breathing problems, seizures, and death; rather, overdose cause; how1: accepted; how2: accepted; how3: NOT accepted: The passage does not describe the source as a \"case report\"; it is a 2024 article on counterfeit medicines.; how4: NOT accepted: The passage is a 2020 study, not a \"case report\" that cites another study; the source type is mischaracterized.",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 2 of 6"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "plhn_2024",
+    "type": "article-journal",
+    "title": "Adverse effects from counterfeit and mislabeled medicine containing tapentadol and carisoprodol",
+    "author": [
+     {
+      "family": "Plæhn",
+      "given": "Gitte"
+     },
+     {
+      "family": "Fuglsang",
+      "given": "Thomas"
+     },
+     {
+      "family": "Hindersson",
+      "given": "Peter"
+     },
+     {
+      "family": "Breindahl",
+      "given": "Torben"
+     }
+    ],
+    "container-title": "Clinical Case Reports",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.1002/ccr3.9241",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "volume": "12",
+    "issue": "8",
+    "number": "e9241",
+    "PMCID": "PMC11303665"
+   },
+   "doi": "10.1002/ccr3.9241",
+   "pmcid": "PMC11303665",
+   "title": "Adverse effects from counterfeit and mislabeled medicine containing tapentadol and carisoprodol",
+   "year": 2024,
+   "journal": "Clinical case reports",
+   "kind": "case",
+   "people": false,
+   "near": 0.704,
+   "money": [
+    "No funding.",
+    "The authors have no conflict of interest to be disclosed."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 19,
+     "where": "DISCUSSION › Carisoprodol",
+     "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+     "text": "Drug users seek the sedating, relaxant and anxiolytic effects of carisoprodol, which has been reported in combinations with benzodiazepines for example.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "DISCUSSION › Carisoprodol",
+     "quote": "The abuse liability of carisoprodol involving addiction followed by severe withdrawal symptoms during abstinence has been known for decades.",
+     "text": "The abuse liability of carisoprodol involves addiction followed by severe withdrawal symptoms during abstinence.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 19,
+     "where": "DISCUSSION › Carisoprodol",
+     "quote": "Reports from Norway has described carisoprodol as an addictive drug and in 2008, after a debate about its properties,,, it was withdrawn from the market.",
+     "text": "Reports from Norway have described carisoprodol as an addictive drug, and it was withdrawn from the market in 2008 after a debate about its properties.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "gupta_2020",
+    "type": "article-journal",
+    "title": "Case report: Carisoprodol abuse in adolescence",
+    "author": [
+     {
+      "family": "Gupta",
+      "given": "Mayank"
+     }
+    ],
+    "container-title": "Cureus",
+    "issued": {
+     "date-parts": [
+      [
+       2020
+      ]
+     ]
+    },
+    "DOI": "10.7759/cureus.11525",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "PMCID": "PMC7746313"
+   },
+   "doi": "10.7759/cureus.11525",
+   "pmcid": "PMC7746313",
+   "title": "Carisoprodol Abuse in Adolescence",
+   "year": 2020,
+   "journal": "Cureus",
+   "kind": "case",
+   "people": true,
+   "near": 0.689,
+   "money": [
+    "The authors have declared that no competing interests exist."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Discussion",
+     "quote": "According to the ‘Monitoring the Future’ study, the effects of carisoprodol are similar to those of tranquilizers like Xanax.",
+     "text": "Carisoprodol produces effects similar to tranquilizers such as Xanax.",
+     "id": "F4",
+     "second_hand": "According to the 'Monitoring the Future' study, the effects of carisoprodol are similar to those of tranquilizers like Xanax."
+    },
+    {
+     "passage": 5,
+     "where": "Discussion",
+     "quote": "Carisoprodol (i.e. Soma, Soprodol, Vanadom) was not classified as a controlled substance initially, although it was frequently abused, and a psychological dependence developed.",
+     "text": "Carisoprodol can lead to psychological dependence.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Discussion",
+     "quote": "Thirty-five percent of ED visits required hospitalization from 2004-2009.",
+     "text": "Thirty-five percent of emergency department visits for carisoprodol misuse required hospitalization.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 5,
+     "where": "Discussion",
+     "quote": "the number of younger patients did not significantly change.",
+     "text": "The data show no significant change in carisoprodol misuse among younger patients.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "zhu_2024",
+    "type": "article-journal",
+    "title": "Tizanidine: Advances in pharmacology & therapeutics and drug formulations",
+    "author": [
+     {
+      "family": "Zhu",
+      "given": "Ling-Ling"
+     },
+     {
+      "family": "Wang",
+      "given": "Yan-Hong"
+     },
+     {
+      "family": "Zhou",
+      "given": "Quan"
+     }
+    ],
+    "container-title": "Journal of Pain Research",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.2147/jpr.s461032",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "volume": "Volume 17",
+    "page": "1257-1271",
+    "PMCID": "PMC10962466"
+   },
+   "doi": "10.2147/jpr.s461032",
+   "pmcid": "PMC10962466",
+   "title": "Tizanidine: Advances in Pharmacology & Therapeutics and Drug Formulations",
+   "year": 2024,
+   "journal": "Journal of pain research",
+   "kind": "review",
+   "people": true,
+   "near": 0.484,
+   "money": [
+    "The authors report no conflicts of interest in this work."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Skeletal muscle relaxants (SMRs) are widely used in treating musculoskeletal conditions.",
+    "text": "Review of skeletal muscle relaxants with focus on tizanidine and comparison to other SMRs"
+   },
+   "findings": [
+    {
+     "passage": 59,
+     "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+     "quote": "Carisoprodol raises the concern of potential physical and psychological dependence, and the Drug Enforcement Administration (DEA) has listed it as a schedule IV controlled substance.",
+     "text": "Carisoprodol is a schedule IV controlled substance that can cause physical and psychological dependence.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 59,
+     "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+     "quote": "Carisoprodol is metabolized by CYP2C19 to meprobamate, a sedative used in the treatment of anxiety disorders.",
+     "text": "Carisoprodol is metabolized to meprobamate, a sedative.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 59,
+     "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+     "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C19 poor metabolizers (PMs) following standard-doses compared to normal metabolizers (NMs)], carisoprodol should be used with caution in CYP2C19 PMs (approximately 3–5% of Caucasians and Africans and 15–20% of Asians), or individuals receiving concurrent CYP2C19 inhibitors or inducers.",
+     "text": "In people who are CYP2C19 poor metabolizers, carisoprodol exposure can increase four‑fold, raising the risk of CNS respiratory depression, seizures, and death.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 19,
+     "where": "Results › Safety of Tizanidine versus Other SMRs › Opioid Overdose",
+     "quote": "Using four US commercial and public insurance databases, Khan et al compared the magnitude of opioid overdose risk among patients who were on long-term opioid therapy and were treated with different SMRs at the same time.",
+     "text": "The overdose risk estimate comes from a retrospective database study of patients on long‑term opioid therapy.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -79,6 +362,14 @@
    "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -87,21 +378,612 @@
    "read": "full",
    "kind": "case",
    "at": "10.1002/ccr3.9241",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A clinical case report about adverse effects from counterfeit and mislabeled medicine containing tapentadol and carisoprodol.",
+     "quote": "Adverse effects from counterfeit and mislabeled medicine containing tapentadol and carisoprodol (2024), Clinical case reports.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Carisoprodol Abuse in Adolescence",
    "read": "full",
    "kind": "case",
    "at": "10.7759/cureus.11525",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Case report of adolescent carisoprodol abuse",
+     "quote": "At age 16, she started snorting muscle relaxants, specifically carisoprodol, and occasionally used cannabis.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Tizanidine: Advances in Pharmacology & Therapeutics and Drug Formulations",
+   "read": "full",
+   "kind": "review",
+   "at": "10.2147/jpr.s461032",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In a survey of patients on long‑term opioid therapy, carisoprodol was associated with a 1.64‑fold higher risk of opioid overdose compared to cyclobenzaprine.",
+     "quote": "Using four US commercial and public insurance databases, Khan et al compared the magnitude of opioid overdose risk among patients who were on long-term opioid therapy and were treated with different S",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "The caution regarding CYP2C19 poor metabolizers is based on pharmacokinetic data and not on clinical outcome studies.",
+     "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1",
+   "F4",
+   "F7",
+   "F8"
+  ],
+  "direct": "Yes",
+  "but": [
+   "F9"
+  ],
+  "how": [
+   [
+    "F7",
+    "F8",
+    "F9"
+   ],
+   [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
+    "F4",
+    "F5",
+    "F6"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.4138,
+   "but": 0.1223,
+   "how1": 0.6778,
+   "how2": 0.075,
+   "how3": 0.5093,
+   "how4": 0.7764
+  },
+  "scores_quotes_alone": {
+   "short": 0.5856,
+   "but": 0.095,
+   "how1": 0.2485,
+   "how2": 0.0464,
+   "how3": 0.4429,
+   "how4": 0.7108
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Carisoprodol is a controlled substance that can cause dependence. It turns into a sedative in the body, which can make people feel relaxed or high.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F4",
+       "ref": "gupta_2020",
+       "where": "Discussion",
+       "quote": "According to the ‘Monitoring the Future’ study, the effects of carisoprodol are similar to those of tranquilizers like Xanax.",
+       "sha": "5ee1df659d151f9b"
+      },
+      {
+       "label": "F7",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol raises the concern of potential physical and psychological dependence, and the Drug Enforcement Administration (DEA) has listed it as a schedule IV controlled substance.",
+       "sha": "568501f3a0ec5735"
+      },
+      {
+       "label": "F8",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol is metabolized by CYP2C19 to meprobamate, a sedative used in the treatment of anxiety disorders.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "includes claim of 'high' which is not mentioned in the passages"
+    },
+    {
+     "part": "but",
+     "text": "In people who process drugs slowly, carisoprodol levels can rise four-fold, raising the risk of breathing problems, seizures, and death.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C19 poor metabolizers (PMs) following standard-doses compared to normal metabolizers (NMs)], carisoprodol should be used with caution in CYP2C19 PMs (approximately 3–5% of Caucasians and Africans and 15–20% of Asians), or individuals receiving concurrent CYP2C19 inhibitors or inducers.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (A more accurate opening would be something like 'It can produce relaxing effects' rather than a simple 'Yes', because the passages do not state that carisoprodol reliably gets users high.)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says carisoprodol is a schedule IV drug that can cause physical and psychological dependence. It turns into a sedative called meprobamate.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol raises the concern of potential physical and psychological dependence, and the Drug Enforcement Administration (DEA) has listed it as a schedule IV controlled substance.",
+       "sha": "568501f3a0ec5735"
+      },
+      {
+       "label": "F8",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol is metabolized by CYP2C19 to meprobamate, a sedative used in the treatment of anxiety disorders.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review notes that in people who process drugs slowly, carisoprodol levels can rise four-fold, increasing the risk of serious harm.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C19 poor metabolizers (PMs) following standard-doses compared to normal metabolizers (NMs)], carisoprodol should be used with caution in CYP2C19 PMs (approximately 3–5% of Caucasians and Africans and 15–20% of Asians), or individuals receiving concurrent CYP2C19 inhibitors or inducers.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 case report says people seek carisoprodol for its relaxing effects. It notes that addiction and severe withdrawal symptoms have been known for decades.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F2",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "The abuse liability of carisoprodol involving addiction followed by severe withdrawal symptoms during abstinence has been known for decades.",
+       "sha": "0d504a44bf3a4a19"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "characterizes the source as a case report, which the passages do not state"
+    },
+    {
+     "part": "how4",
+     "text": "The same report says Norway withdrew carisoprodol from the market in 2008 after describing it as an addictive drug.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Reports from Norway has described carisoprodol as an addictive drug and in 2008, after a debate about its properties,,, it was withdrawn from the market.",
+       "sha": "0d504a44bf3a4a19"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, carisoprodol can produce sedating and relaxant effects. It is a controlled substance that can cause physical and psychological dependence.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F4",
+       "ref": "gupta_2020",
+       "where": "Discussion",
+       "quote": "According to the ‘Monitoring the Future’ study, the effects of carisoprodol are similar to those of tranquilizers like Xanax.",
+       "sha": "5ee1df659d151f9b"
+      },
+      {
+       "label": "F7",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol raises the concern of potential physical and psychological dependence, and the Drug Enforcement Administration (DEA) has listed it as a schedule IV controlled substance.",
+       "sha": "568501f3a0ec5735"
+      },
+      {
+       "label": "F8",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol is metabolized by CYP2C19 to meprobamate, a sedative used in the treatment of anxiety disorders.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "In people who are CYP2C19 poor metabolizers, carisoprodol exposure can increase four-fold, raising the risk of respiratory depression, seizures, and death.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C19 poor metabolizers (PMs) following standard-doses compared to normal metabolizers (NMs)], carisoprodol should be used with caution in CYP2C19 PMs (approximately 3–5% of Caucasians and Africans and 15–20% of Asians), or individuals receiving concurrent CYP2C19 inhibitors or inducers.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage reports a four‑fold increase in exposure and mentions risk of respiratory depression, seizures and death, but does not explicitly state that the increased exposure raises those risks."
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says carisoprodol is a schedule IV controlled substance that can cause physical and psychological dependence.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol raises the concern of potential physical and psychological dependence, and the Drug Enforcement Administration (DEA) has listed it as a schedule IV controlled substance.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes carisoprodol is metabolized to meprobamate, a sedative used for anxiety.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol is metabolized by CYP2C19 to meprobamate, a sedative used in the treatment of anxiety disorders.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "It warns that in CYP2C19 poor metabolizers, carisoprodol exposure can increase four-fold, raising the risk of respiratory depression, seizures, and death.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C19 poor metabolizers (PMs) following standard-doses compared to normal metabolizers (NMs)], carisoprodol should be used with caution in CYP2C19 PMs (approximately 3–5% of Caucasians and Africans and 15–20% of Asians), or individuals receiving concurrent CYP2C19 inhibitors or inducers.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Same issue as sentence 2: passage does not directly link the four‑fold exposure increase to a raised risk."
+    },
+    {
+     "part": "how4",
+     "text": "A 2024 case report says people seek carisoprodol for sedating and relaxant effects, and it can lead to addiction and severe withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F2",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "The abuse liability of carisoprodol involving addiction followed by severe withdrawal symptoms during abstinence has been known for decades.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F3",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Reports from Norway has described carisoprodol as an addictive drug and in 2008, after a debate about its properties,,, it was withdrawn from the market.",
+       "sha": "0d504a44bf3a4a19"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage does not describe the source as a \"case report\"; it is a discussion section of a 2024 study."
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes. Carisoprodol is a controlled substance that can cause dependence. It breaks down into a sedative, and people seek its relaxing effects.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F4",
+       "ref": "gupta_2020",
+       "where": "Discussion",
+       "quote": "According to the ‘Monitoring the Future’ study, the effects of carisoprodol are similar to those of tranquilizers like Xanax.",
+       "sha": "5ee1df659d151f9b"
+      },
+      {
+       "label": "F7",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol raises the concern of potential physical and psychological dependence, and the Drug Enforcement Administration (DEA) has listed it as a schedule IV controlled substance.",
+       "sha": "568501f3a0ec5735"
+      },
+      {
+       "label": "F8",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol is metabolized by CYP2C19 to meprobamate, a sedative used in the treatment of anxiety disorders.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not state that carisoprodol breaks down into a sedative; they state it is metabolized to meprobamate, which is a sedative."
+    },
+    {
+     "part": "but",
+     "text": "In people who process the drug slowly, exposure can increase four-fold, which is linked to risks of breathing problems, seizures, and death.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C19 poor metabolizers (PMs) following standard-doses compared to normal metabolizers (NMs)], carisoprodol should be used with caution in CYP2C19 PMs (approximately 3–5% of Caucasians and Africans and 15–20% of Asians), or individuals receiving concurrent CYP2C19 inhibitors or inducers.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passage states the four-fold increase is a pharmacokinetic change in poor metabolizers following standard doses, not that the exposure increase itself is linked to risks of breathing problems, seizures, and death; rather, overdose cause"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says carisoprodol is a schedule IV drug that can cause physical and psychological dependence. It breaks down into a sedative.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol raises the concern of potential physical and psychological dependence, and the Drug Enforcement Administration (DEA) has listed it as a schedule IV controlled substance.",
+       "sha": "568501f3a0ec5735"
+      },
+      {
+       "label": "F8",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Carisoprodol is metabolized by CYP2C19 to meprobamate, a sedative used in the treatment of anxiety disorders.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review notes that in people who process the drug slowly, exposure can increase four-fold. It lists risks of breathing problems, seizures, and death.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "zhu_2024",
+       "where": "Discussion › Why or How is Tizanidine Better Than Other SMRs › Carisoprodol",
+       "quote": "Given the risk of CNS respiratory depression, seizures and death caused by carisoprodol overdose, and the significant pharmacokinetic change [ie, a four-fold increase in carisoprodol exposure in CYP2C19 poor metabolizers (PMs) following standard-doses compared to normal metabolizers (NMs)], carisoprodol should be used with caution in CYP2C19 PMs (approximately 3–5% of Caucasians and Africans and 15–20% of Asians), or individuals receiving concurrent CYP2C19 inhibitors or inducers.",
+       "sha": "568501f3a0ec5735"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 case report says people seek the relaxing effects of carisoprodol. It notes addiction and severe withdrawal symptoms are known.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F2",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "The abuse liability of carisoprodol involving addiction followed by severe withdrawal symptoms during abstinence has been known for decades.",
+       "sha": "0d504a44bf3a4a19"
+      },
+      {
+       "label": "F3",
+       "ref": "plhn_2024",
+       "where": "DISCUSSION › Carisoprodol",
+       "quote": "Reports from Norway has described carisoprodol as an addictive drug and in 2008, after a debate about its properties,,, it was withdrawn from the market.",
+       "sha": "0d504a44bf3a4a19"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not describe the source as a \"case report\"; it is a 2024 article on counterfeit medicines."
+    },
+    {
+     "part": "how4",
+     "text": "A 2020 case report cites a study saying effects are like tranquilizers. It says psychological dependence can develop. Thirty-five percent of emergency visits needed hospitalization.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "gupta_2020",
+       "where": "Discussion",
+       "quote": "According to the ‘Monitoring the Future’ study, the effects of carisoprodol are similar to those of tranquilizers like Xanax.",
+       "sha": "5ee1df659d151f9b"
+      },
+      {
+       "label": "F5",
+       "ref": "gupta_2020",
+       "where": "Discussion",
+       "quote": "Carisoprodol (i.e. Soma, Soprodol, Vanadom) was not classified as a controlled substance initially, although it was frequently abused, and a psychological dependence developed.",
+       "sha": "5ee1df659d151f9b"
+      },
+      {
+       "label": "F6",
+       "ref": "gupta_2020",
+       "where": "Discussion",
+       "quote": "Thirty-five percent of ED visits required hospitalization from 2004-2009.",
+       "sha": "5ee1df659d151f9b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage is a 2020 study, not a \"case report\" that cites another study; the source type is mischaracterized."
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    false,
+    "The passages do not state that carisoprodol breaks down into a sedative; they state it is metabolized to meprobamate, which is a sedative."
+   ],
+   "but": [
+    false,
+    "The passage states the four-fold increase is a pharmacokinetic change in poor metabolizers following standard doses, not that the exposure increase itself is linked to risks of breathing problems, seizures, and death; rather, overdose cause"
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    false,
+    "The source is a 2024 discussion/review article, not a case report."
+   ],
+   "how4": [
+    false,
+    "The source is a 2020 discussion article, not a case report."
+   ]
+  }
+ },
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A 2024 case report says people seek the relaxing effects of carisoprodol. It notes addiction and severe withdrawal symptoms are known.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "plhn_2024",
+     "where": "DISCUSSION › Carisoprodol",
+     "quote": "Drug users seek the sedating, relaxant and anxiolytic effects of the drug, and carisoprodol has been reported in combinations with for example benzodiazepines.",
+     "sha": "0d504a44bf3a4a19"
+    },
+    {
+     "label": "F2",
+     "ref": "plhn_2024",
+     "where": "DISCUSSION › Carisoprodol",
+     "quote": "The abuse liability of carisoprodol involving addiction followed by severe withdrawal symptoms during abstinence has been known for decades.",
+     "sha": "0d504a44bf3a4a19"
+    },
+    {
+     "label": "F3",
+     "ref": "plhn_2024",
+     "where": "DISCUSSION › Carisoprodol",
+     "quote": "Reports from Norway has described carisoprodol as an addictive drug and in 2008, after a debate about its properties,,, it was withdrawn from the market.",
+     "sha": "0d504a44bf3a4a19"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage does not describe the source as a \"case report\"; it is a 2024 article on counterfeit medicines."
+  },
+  {
+   "try": 3,
+   "part": "how4",
+   "text": "A 2020 case report cites a study saying effects are like tranquilizers. It says psychological dependence can develop. Thirty-five percent of emergency visits needed hospitalization.",
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "gupta_2020",
+     "where": "Discussion",
+     "quote": "According to the ‘Monitoring the Future’ study, the effects of carisoprodol are similar to those of tranquilizers like Xanax.",
+     "sha": "5ee1df659d151f9b"
+    },
+    {
+     "label": "F5",
+     "ref": "gupta_2020",
+     "where": "Discussion",
+     "quote": "Carisoprodol (i.e. Soma, Soprodol, Vanadom) was not classified as a controlled substance initially, although it was frequently abused, and a psychological dependence developed.",
+     "sha": "5ee1df659d151f9b"
+    },
+    {
+     "label": "F6",
+     "ref": "gupta_2020",
+     "where": "Discussion",
+     "quote": "Thirty-five percent of ED visits required hospitalization from 2004-2009.",
+     "sha": "5ee1df659d151f9b"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage is a 2020 study, not a \"case report\" that cites another study; the source type is mischaracterized."
+  }
+ ],
  "place": {
   "home": "new:Carisoprodol",
   "also": [],
