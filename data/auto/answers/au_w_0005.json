@@ -21,365 +21,32 @@
  "made": {
   "on": "2026-11-24",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader": "gemini:gemma-4-31b-it",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.6-flash",
-   "team": "team H2",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "team": "team G",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45296724451",
-  "read_seconds": 31,
+  "run": "45499327574",
+  "read_seconds": 100,
   "from": {
-   "papers": 2,
+   "papers": 0,
    "summaries": 0,
-   "official": 2
+   "official": 0
   },
-  "neurons": 592.3,
-  "seconds": 116
+  "neurons": 0.0,
+  "seconds": 100
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
  "gates": {
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.36, but 0.04, how1 0.67, how2 0.97",
-  "check": "short: NOT accepted: adds qualifier 'mainly' not present in the passage; but: NOT accepted: passage does not state that it is a review nor that it does not prove effects in humans; how1: accepted; how2: accepted"
+  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
- "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "gouzoulismayfrank_2009",
-    "type": "article-journal",
-    "title": "Neurotoxicity of drugs of abuse - the case of methylenedioxy amphetamines (MDMA, ecstasy ), and amphetamines",
-    "author": [
-     {
-      "family": "Gouzoulis-Mayfrank",
-      "given": "Euphrosyne"
-     },
-     {
-      "family": "Daumann",
-      "given": "Joerg"
-     }
-    ],
-    "container-title": "Dialogues in Clinical Neuroscience",
-    "issued": {
-     "date-parts": [
-      [
-       2009
-      ]
-     ]
-    },
-    "DOI": "10.31887/dcns.2009.11.3/egmayfrank",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-24"
-     },
-     "online_first_year": 2022
-    },
-    "volume": "11",
-    "issue": "3",
-    "page": "305-317",
-    "PMCID": "PMC3181923"
-   },
-   "doi": "10.31887/dcns.2009.11.3/egmayfrank",
-   "pmcid": "PMC3181923",
-   "title": "Neurotoxicity of drugs of abuse--the case of methylenedioxyamphetamines (MDMA, ecstasy), and amphetamines",
-   "year": 2009,
-   "journal": "Dialogues in clinical neuroscience",
-   "kind": "review",
-   "people": true,
-   "near": 0.752,
-   "money": [],
-   "design": null,
-   "findings": [
-    {
-     "passage": 5,
-     "where": "Text",
-     "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-     "text": "Amphetamines mainly release dopamine and norepinephrine, while MDMA mainly releases serotonin and dopamine.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "MDMA causes selective and persistent lesions of central serotonergic nerve terminals, whereas amphetamines damage both the serotonergic and dopaminergic systems.",
-     "text": "MDMA damages serotonergic nerve terminals, while amphetamines damage both serotonergic and dopaminergic systems.",
-     "id": "F2",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "Despite large methodological problems, the bulk of evidence suggests residual alterations of serotonergic transmission in MDMA users, although at least partial recovery may occur after long-term abstinence.",
-     "text": "The studies on MDMA users have large methodological problems.",
-     "id": "L1",
-     "second_hand": "Despite large methodological problems, the bulk of evidence suggests residual alterations of serotonergic transmission in MDMA users, although at least partial recovery may occur a"
-    }
-   ],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "litenski_2024",
-    "type": "article-journal",
-    "title": "Navigating treatment challenges: A case study on refractory psychosis in a chronic MDMA (3,4-methylenedioxymethamphetamine) user",
-    "author": [
-     {
-      "family": "Litenski",
-      "given": "Melissa N"
-     },
-     {
-      "family": "O'Reardon",
-      "given": "Aoife B"
-     },
-     {
-      "family": "Pabon",
-      "given": "Nicole"
-     },
-     {
-      "family": "Hernandez",
-      "given": "Melissa"
-     },
-     {
-      "family": "Niyazov",
-      "given": "Yakov"
-     },
-     {
-      "family": "Cruz",
-      "given": "Jose"
-     }
-    ],
-    "container-title": "Cureus",
-    "issued": {
-     "date-parts": [
-      [
-       2024
-      ]
-     ]
-    },
-    "DOI": "10.7759/cureus.59641",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-24"
-     }
-    },
-    "PMCID": "PMC11146661"
-   },
-   "doi": "10.7759/cureus.59641",
-   "pmcid": "PMC11146661",
-   "title": "Navigating Treatment Challenges: A Case Study on Refractory Psychosis in a Chronic MDMA (3,4-Methylenedioxymethamphetamine) User",
-   "year": 2024,
-   "journal": "Cureus",
-   "kind": "case",
-   "people": true,
-   "near": 0.728,
-   "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "We describe a case of a 23-year-old woman with chronic MDMA use disorder and childhood trauma, who presented with severe psychosis and catatonic features.",
-    "text": "A case study"
-   },
-   "findings": [
-    {
-     "passage": 8,
-     "where": "Case presentation",
-     "quote": "her substance use history initially involved intermittent marijuana and cocaine use, then persistent MDMA, and, more recently, experimentation with a drug concoction called “tusi” (an admixture of MDMA, methamphetamine, cocaine, and opioids).",
-     "text": "People who use MDMA may also use other substances like methamphetamine.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 11,
-     "where": "Case presentation",
-     "quote": "The onset of psychosis on this occasion was also believed to be correlated with chronic drug use, with MDMA now combined with other illicit drugs (ketamine, methamphetamine) in a novel form, called “tusi.”",
-     "text": "The combination of MDMA with other substances like methamphetamine and ketamine may contribute to psychosis.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 23,
-     "where": "Discussion",
-     "quote": "A recent case report by Virani et al. reports that typical clinical features of MDMA-induced psychosis included paranoid delusions, lack of verbal response, aggression, agitation, and suicidal ideation, as was the case here.",
-     "text": "MDMA-induced psychosis can include symptoms like paranoid delusions and agitation.",
-     "id": "F5",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 26,
-     "where": "Conclusions",
-     "quote": "Furthermore, the challenges encountered post-discharge, including socioeconomic barriers, emphasize the urgent need for comprehensive and accessible mental health services, especially for vulnerable populations.",
-     "text": "The study highlights the need for better mental health services, especially for vulnerable populations.",
-     "id": "L2",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "betterhealth_mdma-ecstasy",
-    "type": "webpage",
-    "title": "MDMA (ecstasy)",
-    "author": [
-     {
-      "literal": "Department of Health, State Government of Victoria"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2000,
-       6,
-       13
-      ]
-     ]
-    },
-    "URL": "https://www.betterhealth.vic.gov.au/health/healthyliving/mdma-ecstasy",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       24
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
-    },
-    "publisher": "Better Health Channel"
-   },
-   "title": "MDMA (ecstasy)",
-   "year": 2000,
-   "kind": "official",
-   "people": true,
-   "near": 0.677,
-   "name": "Department of Health, State Government of Victoria",
-   "short": "Victoria's health department (Australia)",
-   "tier": 1,
-   "address": "https://www.betterhealth.vic.gov.au/health/healthyliving/mdma-ecstasy",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "MDMA (also known as ecstasy) is an illegal synthetic drug that is classed as an empathogen (increases feeling of empathy and compassion towards others) but also acts as a nervous system stimulant.",
-     "text": "MDMA is classed as an empathogen and acts as a nervous system stimulant.",
-     "id": "F6",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Summary",
-     "quote": "In high doses, MDMA can cause hallucinations and floating sensations, as well as seizures and vomiting.",
-     "text": "In high doses, MDMA can cause hallucinations, floating sensations, seizures, and vomiting.",
-     "id": "F7",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "healthcanada_ecstasy",
-    "type": "webpage",
-    "title": "MDMA",
-    "author": [
-     {
-      "literal": "Health Canada"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2023,
-       2,
-       8
-      ]
-     ]
-    },
-    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       24
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
-    },
-    "publisher": "Government of Canada"
-   },
-   "title": "MDMA",
-   "year": 2023,
-   "kind": "official",
-   "people": true,
-   "near": 0.642,
-   "name": "Health Canada",
-   "short": "Health Canada",
-   "tier": 1,
-   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 3,
-     "where": "About MDMA",
-     "quote": "MDMA has stimulant properties like amphetamine.",
-     "text": "MDMA has stimulant properties like amphetamine.",
-     "id": "F8",
-     "second_hand": ""
-    },
-    {
-     "passage": 9,
-     "where": "Risks related to MDMA use",
-     "quote": "Common additions include: anesthetics such as ketamine or PCP; stimulants such as methamphetamine, amphetamine or cocaine;",
-     "text": "Pills sold as MDMA are often mixed with stimulants such as methamphetamine or amphetamine.",
-     "id": "F9",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "D"
-  }
- ],
+ "sources": [],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -415,6 +82,14 @@
    "why": "it disagrees with a checked claim of the same page (cl_mdma_neurotoxicity_contested): waiting for a person; the claim is not changed",
    "short": "MDMA mainly releases serotonin and dopamine, while amphetamines mainly release dopamine and norepinephrine. MDMA damages serotonin nerves, while amphetamines damage serotonin and dopamine nerves.",
    "complete": true
+  },
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -423,327 +98,39 @@
    "read": "full",
    "kind": "review",
    "at": "10.31887/dcns.2009.11.3/egmayfrank",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "research paper on drug effects",
-     "quote": "Ecstasy (MDMA, 3,4-methylendioxymethamphetamine) and the stimulants methamphetamine (METH, speed) and amphetamine are popular drugs among young people, particularly in the dance scene.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The neurotoxic doses in animal studies are much higher than typical human recreational doses.",
-     "quote": "two reasons may account for the relatively lower interest in amphetaminerelated neurotoxicity in humans: first, the neurotoxic doses in experimental animals are much higher than the typical human recr",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
    "title": "Navigating Treatment Challenges: A Case Study on Refractory Psychosis in a Chronic MDMA (3,4-Methylenedioxymethamphetamine) User",
    "read": "full",
    "kind": "case",
    "at": "10.7759/cureus.59641",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The study's findings may be limited by socioeconomic factors that affected the patient's follow-up care.",
-     "quote": "Socioeconomic barriers hindered follow-up care, leading to an Emergency Department (ED) admission shortly after discharge.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
-   "title": "MDMA (ecstasy)",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/mdma-ecstasy",
-   "kept": 2,
-   "thrown": []
+   "title": "Comparison of the monoamine transporters from human and mouse in their sensitivities to psychostimulant drugs",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1186/1471-2210-6-6",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   },
   {
-   "title": "MDMA",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/ecstasy.html",
-   "kept": 2,
-   "thrown": []
+   "title": "Rates and Patterns of Australian Emergency Department Presentations of People Who Use Stimulants: A Systematic Literature Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.7759/cureus.30429",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": {
-  "short": [
-   "F1",
-   "F2"
-  ],
-  "direct": "",
-  "but": [],
-  "how": [
-   [
-    "F1",
-    "F2"
-   ],
-   [
-    "F6"
-   ]
-  ],
-  "unanswered": ""
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.3553,
-   "but": 0.0391,
-   "how1": 0.6682,
-   "how2": 0.9665
-  },
-  "scores_quotes_alone": {
-   "short": 0.1872,
-   "but": 0.0115,
-   "how1": 0.2067,
-   "how2": 0.7849
-  }
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "MDMA binds most strongly to the serotonin transporter and releases serotonin and dopamine. Amphetamines mainly release dopamine and norepinephrine.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "The review is a summary of research, not a study of people, so it does not prove these effects happen in humans.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage does not state that the review is merely a summary of research nor that it fails to prove the effects in humans."
-    },
-    {
-     "part": "how1",
-     "text": "A 2009 review says MDMA binds most strongly to the serotonin transporter and releases serotonin and dopamine.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The same review says amphetamines mainly release dopamine and norepinephrine.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "Victoria's health department (Australia) says MDMA is an empathogen that increases empathy and acts as a stimulant.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "betterhealth_mdma-ecstasy",
-       "where": "Summary",
-       "quote": "MDMA (also known as ecstasy) is an illegal synthetic drug that is classed as an empathogen (increases feeling of empathy and compassion towards others) but also acts as a nervous system stimulant.",
-       "sha": "052fa0f9cf299b1e"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "MDMA mainly releases serotonin and dopamine, while amphetamines mainly release dopamine and norepinephrine. MDMA binds most strongly to the serotonin transporter.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "The sources describe how the drugs act in the body, but do not compare their effects on people.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      },
-      {
-       "label": "F2",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Abstract",
-       "quote": "MDMA causes selective and persistent lesions of central serotonergic nerve terminals, whereas amphetamines damage both the serotonergic and dopaminergic systems.",
-       "sha": "992d2488cb0b0697"
-      },
-      {
-       "label": "F6",
-       "ref": "betterhealth_mdma-ecstasy",
-       "where": "Summary",
-       "quote": "MDMA (also known as ecstasy) is an illegal synthetic drug that is classed as an empathogen (increases feeling of empathy and compassion towards others) but also acts as a nervous system stimulant.",
-       "sha": "052fa0f9cf299b1e"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "Passages indicate the sources do compare effects on people, contrary to the claim."
-    },
-    {
-     "part": "how1",
-     "text": "A 2009 review says MDMA binds most strongly to the serotonin transporter and releases serotonin and dopamine.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The same review says amphetamines mainly release dopamine and norepinephrine.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "Victoria's health department (Australia) says MDMA is an empathogen that also acts as a nervous system stimulant.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "betterhealth_mdma-ecstasy",
-       "where": "Summary",
-       "quote": "MDMA (also known as ecstasy) is an illegal synthetic drug that is classed as an empathogen (increases feeling of empathy and compassion towards others) but also acts as a nervous system stimulant.",
-       "sha": "052fa0f9cf299b1e"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "MDMA mainly releases serotonin and dopamine, while amphetamines mainly release dopamine and norepinephrine. MDMA binds most strongly to the serotonin transporter.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "adds qualifier 'mainly' not present in the passage"
-    },
-    {
-     "part": "but",
-     "text": "This is a review of research, not a study of people, so it does not prove these effects happen in humans.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "passage does not state that it is a review nor that it does not prove effects in humans"
-    },
-    {
-     "part": "how1",
-     "text": "A 2009 review says amphetamines release dopamine and norepinephrine, while MDMA releases serotonin and dopamine.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "gouzoulismayfrank_2009",
-       "where": "Text",
-       "quote": "The main mechanism of amphetamines is the enhanced release of dopamine (DA), particularly in the striatal system, and norepinephrine (NE). MDMA binds most strongly to the serotonin (5-HT) transporter (SERT) and induces rapid and powerful release of both 5-HT and DA.",
-       "sha": "396d41bfffdfed37"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "Victoria's health department (Australia) says MDMA is an empathogen that also acts as a nervous system stimulant.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "betterhealth_mdma-ecstasy",
-       "where": "Summary",
-       "quote": "MDMA (also known as ecstasy) is an illegal synthetic drug that is classed as an empathogen (increases feeling of empathy and compassion towards others) but also acts as a nervous system stimulant.",
-       "sha": "052fa0f9cf299b1e"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
+ "soft": "a source could not be fetched",
  "place": {
   "home": "mdma",
   "also": [
