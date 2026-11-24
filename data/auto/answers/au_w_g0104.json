@@ -15,37 +15,152 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-24",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "@cf/openai/gpt-oss-120b",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "also1": "gemini:gemini-3.1-flash-lite",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "45145076008",
-  "read_seconds": 100,
+  "run": "45365856913",
+  "read_seconds": 92,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 216.3,
+  "seconds": 216
  },
- "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (4 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "status": "published",
+ "why": "passed every gate, and the stricter bar for an answer about dying",
  "gates": {
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8668) gemma-4-26b-a4b-it gave no answer in the form asked for: llama-3.3-70b-instruct-fp8-fast wrote from there.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.82, but 0.98, how1 0.96, how2 0.82",
+  "check": "every sentence kept was accepted by the second reader (gemini:gemini-3.5-flash-lite) and by gemini:gemini-3.1-flash-lite; it also found that the short answer answers the question and that the But is about that answer",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.1-flash-lite accepted 4 of 4",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about dying: the stricter bar for such an answer: met (an official page or a review read in full under the short answer; a further reader read it; no word that plays a danger down, by code and by every reader)"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "stewart_2024",
+    "type": "article-journal",
+    "title": "A systematic review of phenibut withdrawals",
+    "author": [
+     {
+      "family": "Stewart",
+      "given": "Christopher"
+     },
+     {
+      "family": "Simonsen",
+      "given": "Hunter"
+     },
+     {
+      "family": "Satyasi",
+      "given": "Savitha K"
+     },
+     {
+      "family": "Ashraf",
+      "given": "Nauman"
+     },
+     {
+      "family": "Sukpraprut-Braaten",
+      "given": "Suporn"
+     }
+    ],
+    "container-title": "Cureus",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.7759/cureus.68775",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "PMCID": "PMC11456982"
+   },
+   "doi": "10.7759/cureus.68775",
+   "pmcid": "PMC11456982",
+   "title": "A Systematic Review of Phenibut Withdrawals",
+   "year": 2024,
+   "journal": "Cureus",
+   "kind": "review",
+   "people": true,
+   "near": 0.834,
+   "money": [
+    "Conflicts of interest: In compliance with the ICMJE uniform disclosure form, all authors declare the following:",
+    "Payment/services info: All authors have declared that no financial support was received from any organization for the submitted work.",
+    "Financial relationships: All authors have declared that they have no financial relationships at present or within the previous three years with any organizations that might have an interest in the submitted work."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This is a systematic review of case reports of phenibut patients with withdrawal symptoms published in the PubMed database between January 2010 and October 2023.",
+    "text": "A systematic review of case reports of phenibut patients with withdrawal symptoms published in the PubMed database between January 2010 and October 2023."
+   },
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Introduction and background",
+     "quote": "Additional side effects that may occur when taking phenibut include relaxation, drowsiness, sedation, confusion, irritability, delirium, seizures, dilated pupils, high blood pressure, and increased heart rate.",
+     "text": "Side effects of phenibut include relaxation, drowsiness, sedation, confusion, irritability, delirium, seizures, dilated pupils, high blood pressure, and increased heart rate.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Introduction and background",
+     "quote": "While individuals may take this drug thinking they are using a supplement to help with their anxiety and depression, serious side effects may occur, especially when phenibut is combined with other substances, including coma and death.",
+     "text": "Serious side effects, including coma and death, may occur when phenibut is combined with other substances.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 5,
+     "where": "Introduction and background",
+     "quote": "Although there is limited research on phenibut’s potential for addiction, cases have been reported where patients develop a tolerance in as little as a week, indicating the potential danger and risks of taking this supplement.",
+     "text": "Patients have been reported to develop a tolerance to phenibut in as little as a week.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 28,
+     "where": "Review",
+     "quote": "This study's limitations include the small number of cases available, along with the limited age range and the gender of reporting patients.",
+     "text": "The study is limited by the small number of cases available and the limited age range and gender of the patients.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -76,10 +191,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-23",
+     "verified_on": "2026-11-24",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-23"
+      "checked_on": "2026-11-24"
      }
     },
     "PMCID": "PMC9078085"
@@ -93,49 +208,195 @@
    "people": false,
    "near": 0.762,
    "money": [],
-   "design": null,
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We present the case of a 30-year-old-male with a history of polysubstance abuse, anxiety, and depression, who presented to the Emergency Department by ambulance for altered mental status with severe agitation",
+    "text": "a case report on a 30-year-old male who presented to the emergency department with phenibut overdose"
+   },
    "findings": [
     {
      "passage": 12,
      "where": "Discussion",
-     "quote": "Physical findings include acute dystonia, pupillary dilation, respiratory depression, and seizures.",
-     "text": "Physical findings of acute phenibut intoxication include acute dystonia, pupillary dilation, respiratory depression, and seizures.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 13,
-     "where": "Discussion",
-     "quote": "Reported signs and symptoms of acute withdrawal include tremors, myalgias, nausea, and vomiting. Psychiatric signs and symptoms include increased anxiety, acute psychosis, delusions, hallucinations, disorganization, and increased depression.",
-     "text": "Acute phenibut withdrawal presents with tremors, myalgias, nausea, vomiting, increased anxiety, acute psychosis, delusions, hallucinations, disorganization, and increased depression.",
-     "id": "F2",
+     "quote": "Patients may report anxiolysis, euphoria, and hypnosis. Other case reports have described patients having mildly increased anxiety, delirium, and psychomotor agitation.",
+     "text": "People who use phenibut may report feeling anxiolysis, euphoria, and hypnosis, or may experience increased anxiety, delirium, and psychomotor agitation.",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 12,
      "where": "Discussion",
-     "quote": "Treatment is aimed at supportive care with airway monitoring and respiratory support as needed, including mechanical ventilation and management of seizures.",
-     "text": "Treatment of acute phenibut intoxication is supportive care, including airway monitoring, respiratory support, mechanical ventilation, and seizure management.",
-     "id": "F3",
+     "quote": "Physical findings include acute dystonia, pupillary dilation, respiratory depression, and seizures. Hemodynamic instability is reported with tachycardia, hypotension or hypertension, and hypothermia.",
+     "text": "Physical findings of phenibut intoxication include acute dystonia, pupillary dilation, respiratory depression, seizures, and hemodynamic instability such as tachycardia, blood pressure changes, and hypothermia.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 14,
+     "where": "Conclusions",
+     "quote": "With the increasing ease of access through the internet and social media, and lack of regulation within the United States, the potential for abuse with subsequent adverse reactions among patients is growing.",
+     "text": "The potential for adverse reactions from phenibut is growing due to easy access through the internet and social media and a lack of regulation in the United States.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 12,
-     "where": "Discussion",
-     "quote": "No antidote or formal readily available diagnostic testing exists for phenibut intoxication. Gas chromatography and mass spectrometry may be used for definitive identification, but offer little in time-sensitive, emergent situations.",
-     "text": "There is no readily available antidote or rapid diagnostic test for phenibut intoxication; gas chromatography and mass spectrometry are definitive but not timely in emergencies.",
-     "id": "L1",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Currently, no readily available confirmatory laboratory tests exist to aid in the diagnosis of acute phenibut intoxication.",
+     "text": "There are no readily available confirmatory laboratory tests to help diagnose acute phenibut intoxication.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Phenibut can cause relaxation, drowsiness, and confusion, and may lead to seizures, coma, or death when combined with other substances. It can also lead to tolerance in as little as a week.",
+   "uses": [
+    "F4",
+    "F1",
+    "F5",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "nedzlek_2022",
+     "where": "Discussion",
+     "quote": "Patients may report anxiolysis, euphoria, and hypnosis. Other case reports have described patients having mildly increased anxiety, delirium, and psychomotor agitation.",
+     "sha": "93a6b5ad47d69835"
+    },
+    {
+     "label": "F1",
+     "ref": "stewart_2024",
+     "where": "Introduction and background",
+     "quote": "Additional side effects that may occur when taking phenibut include relaxation, drowsiness, sedation, confusion, irritability, delirium, seizures, dilated pupils, high blood pressure, and increased heart rate.",
+     "sha": "8b07c0752425f21f"
+    },
+    {
+     "label": "F5",
+     "ref": "nedzlek_2022",
+     "where": "Discussion",
+     "quote": "Physical findings include acute dystonia, pupillary dilation, respiratory depression, and seizures. Hemodynamic instability is reported with tachycardia, hypotension or hypertension, and hypothermia.",
+     "sha": "93a6b5ad47d69835"
+    },
+    {
+     "label": "F3",
+     "ref": "stewart_2024",
+     "where": "Introduction and background",
+     "quote": "Although there is limited research on phenibut’s potential for addiction, cases have been reported where patients develop a tolerance in as little as a week, indicating the potential danger and risks of taking this supplement.",
+     "sha": "8b07c0752425f21f"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The study is limited by the small number of cases and limited age range and gender of patients.",
+   "uses": [
+    "L1"
+   ],
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "stewart_2024",
+     "where": "Review",
+     "quote": "This study's limitations include the small number of cases available, along with the limited age range and the gender of reporting patients.",
+     "sha": "4b0b9b9701386c9a"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A systematic review of case reports of phenibut patients with withdrawal symptoms found side effects and risks.",
+   "uses": [
+    "DA",
+    "F1",
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "stewart_2024",
+     "where": "Abstract",
+     "quote": "This is a systematic review of case reports of phenibut patients with withdrawal symptoms published in the PubMed database between January 2010 and October 2023.",
+     "sha": "e8018770f8536c9e"
+    },
+    {
+     "label": "F1",
+     "ref": "stewart_2024",
+     "where": "Introduction and background",
+     "quote": "Additional side effects that may occur when taking phenibut include relaxation, drowsiness, sedation, confusion, irritability, delirium, seizures, dilated pupils, high blood pressure, and increased heart rate.",
+     "sha": "8b07c0752425f21f"
+    },
+    {
+     "label": "F2",
+     "ref": "stewart_2024",
+     "where": "Introduction and background",
+     "quote": "While individuals may take this drug thinking they are using a supplement to help with their anxiety and depression, serious side effects may occur, especially when phenibut is combined with other substances, including coma and death.",
+     "sha": "8b07c0752425f21f"
+    },
+    {
+     "label": "F3",
+     "ref": "stewart_2024",
+     "where": "Introduction and background",
+     "quote": "Although there is limited research on phenibut’s potential for addiction, cases have been reported where patients develop a tolerance in as little as a week, indicating the potential danger and risks of taking this supplement.",
+     "sha": "8b07c0752425f21f"
+    }
+   ],
+   "quote": "Additional side effects that may occur when taking phenibut include relaxation, drowsiness, sedation, confusion, irritability",
+   "quote_ref": "stewart_2024"
+  },
+  {
+   "part": "how2",
+   "text": "A case report on a 30-year-old male with phenibut overdose described physical findings and potential for adverse reactions.",
+   "uses": [
+    "DB",
+    "F4",
+    "F5",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "nedzlek_2022",
+     "where": "Abstract",
+     "quote": "We present the case of a 30-year-old-male with a history of polysubstance abuse, anxiety, and depression, who presented to the Emergency Department by ambulance for altered mental status with severe agitation",
+     "sha": "cef5df56c23143ce"
+    },
+    {
+     "label": "F4",
+     "ref": "nedzlek_2022",
+     "where": "Discussion",
+     "quote": "Patients may report anxiolysis, euphoria, and hypnosis. Other case reports have described patients having mildly increased anxiety, delirium, and psychomotor agitation.",
+     "sha": "93a6b5ad47d69835"
+    },
+    {
+     "label": "F5",
+     "ref": "nedzlek_2022",
+     "where": "Discussion",
+     "quote": "Physical findings include acute dystonia, pupillary dilation, respiratory depression, and seizures. Hemodynamic instability is reported with tachycardia, hypotension or hypertension, and hypothermia.",
+     "sha": "93a6b5ad47d69835"
+    },
+    {
+     "label": "F6",
+     "ref": "nedzlek_2022",
+     "where": "Conclusions",
+     "quote": "With the increasing ease of access through the internet and social media, and lack of regulation within the United States, the potential for abuse with subsequent adverse reactions among patients is growing.",
+     "sha": "019db2e1218f392b"
+    }
+   ],
+   "quote": "Other case reports have described patients having mildly increased anxiety, delirium, and psychomotor agitation",
+   "quote_ref": "nedzlek_2022"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "full risk assessment",
  "wanted": [
   {
    "doi": "10.1007/s11920-019-1009-0",
@@ -160,16 +421,31 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (4 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "A Systematic Review of Phenibut Withdrawals",
    "read": "full",
    "kind": "review",
    "at": "10.7759/cureus.68775",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The purity of the phenibut used by patients is unknown.",
+     "quote": "Quality factors such as the purity of phenibut are not known and could contribute.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "An Unusual Presentation of an Uncommon Drug: A Case Report on Phenibut Overdose",
@@ -177,44 +453,207 @@
    "kind": "case",
    "at": "10.7759/cureus.23913",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "case report of a single patient",
-     "quote": "We present the case of a 30-year-old-male with a history of polysubstance abuse, anxiety, and depression, who presented to the Emergency Department by ambulance for altered mental status with severe a",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "Phenibut Addiction in a Patient with Substance Use Disorder",
-   "read": "full",
-   "kind": "case",
-   "at": "10.7759/cureus.5230",
-   "kept": 0,
-   "thrown": [],
-   "fault": "its full text could not be fetched (HTTPError)"
-  },
-  {
-   "title": "Characteristics of Tianeptine Exposures Reported to the National Poison Data System - United States, 2000-2017",
-   "read": "full",
-   "kind": "other",
-   "at": "10.15585/mmwr.mm6730a2",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Psychomotor Agitation Non-responsive to Treatment: A Case Report of Phenibut Withdrawal Syndrome",
-   "read": "full",
-   "kind": "case",
-   "at": "10.3389/fpsyt.2021.688147",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F4",
+   "F1",
+   "F5",
+   "F3"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "DA",
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
+    "DB",
+    "F4",
+    "F5",
+    "F6"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8177,
+   "but": 0.9825,
+   "how1": 0.9617,
+   "how2": 0.8171
+  },
+  "scores_quotes_alone": {
+   "short": 0.0177,
+   "but": 0.9515,
+   "how1": 0.9793,
+   "how2": 0.9221
+  }
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Phenibut can cause relaxation, drowsiness, and seizures. It may lead to coma or death with other substances.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "nedzlek_2022",
+       "where": "Discussion",
+       "quote": "Patients may report anxiolysis, euphoria, and hypnosis. Other case reports have described patients having mildly increased anxiety, delirium, and psychomotor agitation.",
+       "sha": "93a6b5ad47d69835"
+      },
+      {
+       "label": "F1",
+       "ref": "stewart_2024",
+       "where": "Introduction and background",
+       "quote": "Additional side effects that may occur when taking phenibut include relaxation, drowsiness, sedation, confusion, irritability, delirium, seizures, dilated pupils, high blood pressure, and increased heart rate.",
+       "sha": "8b07c0752425f21f"
+      },
+      {
+       "label": "F5",
+       "ref": "nedzlek_2022",
+       "where": "Discussion",
+       "quote": "Physical findings include acute dystonia, pupillary dilation, respiratory depression, and seizures. Hemodynamic instability is reported with tachycardia, hypotension or hypertension, and hypothermia.",
+       "sha": "93a6b5ad47d69835"
+      },
+      {
+       "label": "F3",
+       "ref": "stewart_2024",
+       "where": "Introduction and background",
+       "quote": "Although there is limited research on phenibut’s potential for addiction, cases have been reported where patients develop a tolerance in as little as a week, indicating the potential danger and risks of taking this supplement.",
+       "sha": "8b07c0752425f21f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The study is limited by the small number of cases and limited age range and gender.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "stewart_2024",
+       "where": "Review",
+       "quote": "This study's limitations include the small number of cases available, along with the limited age range and the gender of reporting patients.",
+       "sha": "4b0b9b9701386c9a"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review of case reports of phenibut patients with withdrawal symptoms found side effects.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "stewart_2024",
+       "where": "Abstract",
+       "quote": "This is a systematic review of case reports of phenibut patients with withdrawal symptoms published in the PubMed database between January 2010 and October 2023.",
+       "sha": "e8018770f8536c9e"
+      },
+      {
+       "label": "F1",
+       "ref": "stewart_2024",
+       "where": "Introduction and background",
+       "quote": "Additional side effects that may occur when taking phenibut include relaxation, drowsiness, sedation, confusion, irritability, delirium, seizures, dilated pupils, high blood pressure, and increased heart rate.",
+       "sha": "8b07c0752425f21f"
+      },
+      {
+       "label": "F2",
+       "ref": "stewart_2024",
+       "where": "Introduction and background",
+       "quote": "While individuals may take this drug thinking they are using a supplement to help with their anxiety and depression, serious side effects may occur, especially when phenibut is combined with other substances, including coma and death.",
+       "sha": "8b07c0752425f21f"
+      },
+      {
+       "label": "F3",
+       "ref": "stewart_2024",
+       "where": "Introduction and background",
+       "quote": "Although there is limited research on phenibut’s potential for addiction, cases have been reported where patients develop a tolerance in as little as a week, indicating the potential danger and risks of taking this supplement.",
+       "sha": "8b07c0752425f21f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A case report on a 30-year-old male with phenibut overdose described physical findings and potential for adverse reactions.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "nedzlek_2022",
+       "where": "Abstract",
+       "quote": "We present the case of a 30-year-old-male with a history of polysubstance abuse, anxiety, and depression, who presented to the Emergency Department by ambulance for altered mental status with severe agitation",
+       "sha": "cef5df56c23143ce"
+      },
+      {
+       "label": "F4",
+       "ref": "nedzlek_2022",
+       "where": "Discussion",
+       "quote": "Patients may report anxiolysis, euphoria, and hypnosis. Other case reports have described patients having mildly increased anxiety, delirium, and psychomotor agitation.",
+       "sha": "93a6b5ad47d69835"
+      },
+      {
+       "label": "F5",
+       "ref": "nedzlek_2022",
+       "where": "Discussion",
+       "quote": "Physical findings include acute dystonia, pupillary dilation, respiratory depression, and seizures. Hemodynamic instability is reported with tachycardia, hypotension or hypertension, and hypothermia.",
+       "sha": "93a6b5ad47d69835"
+      },
+      {
+       "label": "F6",
+       "ref": "nedzlek_2022",
+       "where": "Conclusions",
+       "quote": "With the increasing ease of access through the internet and social media, and lack of regulation within the United States, the potential for abuse with subsequent adverse reactions among patients is growing.",
+       "sha": "019db2e1218f392b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel": {
+  "gemini:gemini-3.1-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ]
+  }
+ },
+ "stakes": "dying",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:Phenibut",
   "also": [],
