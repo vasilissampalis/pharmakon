@@ -15,41 +15,153 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-24",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "@cf/openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "45259557698",
-  "read_seconds": 100,
+  "run": "45298091247",
+  "read_seconds": 33,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 100
+  "neurons": 692.6,
+  "seconds": 56
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "after the second reader's check the answer rests on too few sources",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.75, but 0.89, how1 0.80, how2 0.88",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b); 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "coney_2025",
+    "type": "article-journal",
+    "title": "Comparison of strength and adulteration between illicit drugs obtained from cryptomarkets versus off-line",
+    "author": [
+     {
+      "family": "Coney",
+      "given": "Leigh"
+     },
+     {
+      "family": "Peacock",
+      "given": "Amy"
+     },
+     {
+      "family": "van der Gouwe",
+      "given": "Daan"
+     },
+     {
+      "family": "Smit-Rigter",
+      "given": "Laura"
+     },
+     {
+      "family": "Hutten",
+      "given": "Nadia"
+     },
+     {
+      "family": "Ventura",
+      "given": "Mireia"
+     },
+     {
+      "family": "Quesada",
+      "given": "Adrià"
+     },
+     {
+      "family": "Barratt",
+      "given": "Monica J."
+     }
+    ],
+    "container-title": "Addiction",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1111/add.16665",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     },
+     "online_first_year": 2024
+    },
+    "volume": "120",
+    "issue": "1",
+    "page": "128-137",
+    "PMCID": "PMC11638503"
+   },
+   "doi": "10.1111/add.16665",
+   "pmcid": "PMC11638503",
+   "title": "Comparison of strength and adulteration between illicit drugs obtained from cryptomarkets versus off-line",
+   "year": 2025,
+   "journal": "Addiction (Abingdon, England)",
+   "kind": "study",
+   "people": false,
+   "near": 0.631,
+   "money": [
+    "A.P. has received untied educational grants from Seqirus and Mundipharma. Funding from these organizations has now ceased, funding was for work unrelated to this project and the funding bodies had no role in study design, analysis and reporting. No pharmaceutical grants were received for this study. M.J.B. has an unpaid role as Research Lead for The Loop Australia, a charity that delivers drug‐checking services in Australia. All other authors have no further relevant disclosures of interest to declare."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "A between‐groups design was used to compare cryptomarket versus off‐line‐sourced drugs.",
+    "text": "A between-groups design"
+   },
+   "findings": [
+    {
+     "passage": 25,
+     "where": "RESULTS › Matching advertised substance",
+     "quote": "MDMA tablets, MDMA powder, cocaine and LSD were significantly more likely to match their advertised description (in terms of containing any amount of the substance) when sourced from cryptomarkets",
+     "text": "MDMA tablets, MDMA powder, cocaine and LSD were more likely to be what they were sold as when bought from cryptomarkets.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "DISCUSSION",
+     "quote": "Caudevilla and colleagues found that more than 90% of drug samples sourced from cryptomarkets contained the compound advertised by the vendor.",
+     "text": "More than 90% of drug samples from cryptomarkets were what they were sold as.",
+     "id": "F5",
+     "second_hand": "Caudevilla and colleagues found that more than 90% of drug samples sourced from cryptomarkets contained the compound advertised by the vendor."
+    }
+   ],
+   "limits": [
+    {
+     "passage": 34,
+     "where": "DISCUSSION › Limitations",
+     "quote": "The samples analysed in the current study probably reflect the practices of these dominant vendors. However, smaller vendors with potentially more variable quality may be under‐represented.",
+     "text": "The study may not represent smaller vendors.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "misrepresentation rates for offline or non‑cryptomarket purchases",
  "wanted": [
   {
    "doi": "10.5055/jom.2015.0252",
@@ -82,6 +194,14 @@
    "why": "after the second reader's check the answer rests on too few sources",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -90,37 +210,143 @@
    "read": "full",
    "kind": "review",
    "at": "10.1186/s12954-017-0179-5",
-   "kept": 0,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "An overview of forensic drug testing methods",
+     "quote": "Given the current opioid crisis around the world, harm reduction agencies are seeking to help people who use drugs to do so more safely.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Comparison of strength and adulteration between illicit drugs obtained from cryptomarkets versus off-line",
    "read": "full",
    "kind": "study",
    "at": "10.1111/add.16665",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Amphetamine and methamphetamine were not significantly more or less likely to be what they were sold as depending on where they were bought.",
+     "quote": "Amphetamine and methamphetamine matching their advertisements were not significantly associated with source",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study does not know about the quality of drugs bought in large quantities on cryptomarkets.",
+     "quote": "Cryptomarkets are increasingly used for larger, wholesale drug transactions, raising questions concerning the interplay between purchase size and product quality on these market‐places.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
-   "title": "Patterns of ecstasy use amongst live music event attendees and their opinions on pill testing: a cross sectional study",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/s13011-020-00295-1",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Music festival attendees' illicit drug use, knowledge and practices regarding drug content and purity: a cross-sectional survey",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/s12954-017-0205-7",
+   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
    "kept": 0,
    "thrown": []
+  },
+  {
+   "title": "Controlled and illegal drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Canadian Drugs and Substances Strategy: Overview",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/canadian-drugs-substances-strategy.html",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "2C drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/2c",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Mixing alcohol with medicines or drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The page does not provide specific information about the nature of these unpredictable interactions.",
+     "quote": "Interactions between cannabis and alcohol are unpredictable.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The page does not provide specific information about the nature of these unpredictable interactions.",
+     "quote": "Interactions between alcohol and LSD are unpredictable.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F4"
+  ],
+  "direct": "",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F5",
+    "F4"
+   ]
+  ],
+  "unanswered": "misrepresentation rates for offline or non‑cryptomarket purchases"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.7489,
+   "but": 0.8896,
+   "how1": 0.8014,
+   "how2": 0.8793
+  },
+  "scores_quotes_alone": {
+   "short": 0.9369,
+   "but": 0.9104,
+   "how1": 0.7658,
+   "how2": 0.5946
+  }
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how1",
+   "text": "A 2025 study reports that more than 90% of cryptomarket drug samples contained the advertised compound.",
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "coney_2025",
+     "where": "DISCUSSION",
+     "quote": "Caudevilla and colleagues found that more than 90% of drug samples sourced from cryptomarkets contained the compound advertised by the vendor.",
+     "sha": "da98041968837a8f"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The passage attributes the >90% figure to a prior study (Caudevilla et al.), not to the 2025 study itself."
+  }
+ ],
  "place": {
   "home": "facts",
   "also": [],
