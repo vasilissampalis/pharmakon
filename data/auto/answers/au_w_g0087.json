@@ -1,0 +1,532 @@
+{
+ "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
+ "id": "au_w_g0087",
+ "lane": 19,
+ "kind": "answer",
+ "from": "w_g0087",
+ "question": "How long does baclofen stay in your body, and can a drug test find it?",
+ "ways": [
+  "how long does baclofen stay in your system",
+  "does baclofen show up on a drug test",
+  "how long is baclofen detectable in urine",
+  "will baclofen show on a drug test",
+  "how long does baclofen stay in your blood",
+  "can a urine test detect baclofen"
+ ],
+ "drugs": [],
+ "made": {
+  "on": "2026-11-24",
+  "models": {
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
+  },
+  "run": "45351440533",
+  "read_by": {
+   "gpt-oss-20b": 3,
+   "gemini-3.5-flash-lite": 2
+  },
+  "read_seconds": 100,
+  "from": {
+   "papers": 1,
+   "summaries": 0,
+   "official": 0
+  },
+  "neurons": 0.0,
+  "seconds": 168
+ },
+ "status": "none",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (it does not answer the question itself (Sentence 1 gives the half‑life and notes no accumulation, but does not address whether a drug test can detect baclofen, so it does not fully answer the two‑part question. Sentence 2 introduces a limitation concerning chronic kidney disease,)); but (The passages state reduced clearance in chronic kidney disease but do not explicitly say the half‑life may be different.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "gates": {
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "2 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.61, but 0.71, how1 0.96, how2 0.92",
+  "check": "not accepted at try 2: a second reader did not accept short (it does not answer the question itself (Sentence 1 gives the half‑life and notes no accumulation, but does not address whether a drug test can detect baclofen, so it does not fully answer the two‑part question. Sentence 2 introduces a limitation concerning chronic kidney disease,)); but (The passages state reduced clearance in chronic kidney disease but do not explicitly say the half‑life may be different.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + F1 (half)",
+  "rules": "broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+ },
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "simon_2018",
+    "type": "article-journal",
+    "title": "Pharmacokinetic studies of baclofen are not sufficient to establish an optimized dosage for management of alcohol disorder",
+    "author": [
+     {
+      "family": "Simon",
+      "given": "Nicolas"
+     },
+     {
+      "family": "Franchitto",
+      "given": "Nicolas"
+     },
+     {
+      "family": "Rolland",
+      "given": "Benjamin"
+     }
+    ],
+    "container-title": "Frontiers in Psychiatry",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpsyt.2018.00485",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-24",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-24"
+     }
+    },
+    "volume": "9",
+    "number": "485",
+    "PMCID": "PMC6186984"
+   },
+   "doi": "10.3389/fpsyt.2018.00485",
+   "pmcid": "PMC6186984",
+   "title": "Pharmacokinetic Studies of Baclofen Are Not Sufficient to Establish an Optimized Dosage for Management of Alcohol Disorder",
+   "year": 2018,
+   "journal": "Frontiers in psychiatry",
+   "kind": "review",
+   "people": true,
+   "near": 0.686,
+   "money": [],
+   "design": null,
+   "findings": [
+    {
+     "passage": 14,
+     "where": "Metabolism and elimination",
+     "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+     "text": "The half‑life of baclofen in alcohol‑dependent patients taking the immediate‑release formulation is between 3.8 and 6.4 hours.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 15,
+     "where": "Metabolism and elimination",
+     "quote": "baclofen exhibited no saturation of elimination with clinical doses used and thus no accumulation.",
+     "text": "Baclofen does not accumulate in the body when used at clinical doses.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 15,
+     "where": "Metabolism and elimination",
+     "quote": "However, in patient with chronic kidney disease a decrease of clearance is expected, and the baclofen dosage should be adjusted accordingly.",
+     "text": "The pharmacokinetic data may not apply to patients with chronic kidney disease, who may have reduced clearance.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
+ "parts": [],
+ "complete": false,
+ "missing": "detectability by drug tests",
+ "wanted": [
+  {
+   "doi": "10.1016/j.forsciint.2020.110541",
+   "apa": "Drevin, G., Briet, M., Ghamrawi, S., Beloncle, F., & Abbara, C. (2020). Baclofen overdose following recreational use in adolescents and young adults: A case report and review of the literature. Forensic Science International, 316, Article 110541. https://doi.org/10.1016/j.forsciint.2020.110541",
+   "near": 0.776,
+   "why": "a review or meta-analysis in people; nearness to the question 0.78; cited 10 times; its full text is not open",
+   "file": "drevin_2020_j_forsciint_2020_110541.pdf"
+  },
+  {
+   "doi": "10.1002/14651858.cd012557.pub2",
+   "apa": "Minozzi, S., Saulle, R., & Rösner, S. (2018). Baclofen for alcohol use disorder. Cochrane Database of Systematic Reviews, 2018(11). https://doi.org/10.1002/14651858.cd012557.pub2",
+   "near": 0.714,
+   "why": "a review or meta-analysis in people; nearness to the question 0.71; cited 37 times; its full text is not open",
+   "file": "minozzi_2018_14651858_cd012557_pub2.pdf"
+  },
+  {
+   "doi": "10.1002/14651858.cd012557.pub3",
+   "apa": "Agabio, R., Saulle, R., Rösner, S., & Minozzi, S. (2023). Baclofen for alcohol use disorder. Cochrane Database of Systematic Reviews, 2023(1). https://doi.org/10.1002/14651858.cd012557.pub3",
+   "near": 0.705,
+   "why": "a review or meta-analysis in people; nearness to the question 0.70; cited 30 times; its full text is not open",
+   "file": "agabio_2023_14651858_cd012557_pub3.pdf"
+  }
+ ],
+ "person": null,
+ "history": [],
+ "looked": [
+  {
+   "title": "Baclofen therapeutics, toxicity, and withdrawal: A narrative review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1177/20503121211022197",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Narrative review of baclofen therapeutics, toxicity, and withdrawal",
+     "quote": "Baclofen therapeutics, toxicity, and withdrawal: A narrative review (2021)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "The effects of baclofen for the treatment of gastroesophageal reflux disease: a meta-analysis of randomized controlled trials",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1155/2014/307805",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Safety Challenges of Using High Dose Baclofen for Alcohol Use Disorder: A Focused Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2018.00367",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "A Review of the Potential Mechanisms of Action of Baclofen in Alcohol Use Disorder",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2018.00506",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A review of the potential mechanisms of action of baclofen in alcohol use disorder",
+     "quote": "A Review of the Potential Mechanisms of Action of Baclofen in Alcohol Use Disorder (2018)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Oral Baclofen Toxicity in a Pediatric Patient Managed Without Invasive Intervention: A Case Report and Literature Review",
+   "read": "full",
+   "kind": "case",
+   "at": "10.7759/cureus.101812",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  },
+  {
+   "title": "Pharmacokinetic Studies of Baclofen Are Not Sufficient to Establish an Optimized Dosage for Management of Alcohol Disorder",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2018.00485",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Review of pharmacokinetic studies of baclofen in alcohol use disorder patients",
+     "quote": "Baclofen is a racemic drug with GABA-B receptor agonist properties. It is widely prescribed as a spasmolytic agent to treat spasticity caused by central nervous system lesions or dysfunction.",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The half‑life may be prolonged in overdose or renal insufficiency, and the data do not cover these extreme conditions.",
+     "quote": "In such situation, which may lead to comatose, severe respiratory depression and neurotoxicity, hemodialysis has been effective in reversing baclofen toxicity if the patient had a renal insufficiency.",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "The Use of Baclofen as a Treatment for Alcohol Use Disorder: A Clinical Practice Perspective",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyt.2018.00708",
+   "kept": 0,
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
+  }
+ ],
+ "plan": {
+  "short": [
+   "F1",
+   "F2"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F1",
+    "F2"
+   ]
+  ],
+  "unanswered": "detectability by drug tests"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6095,
+   "but": 0.7086,
+   "how1": 0.9613,
+   "how2": 0.9228
+  },
+  "scores_quotes_alone": {
+   "short": 0.507,
+   "but": 0.1887,
+   "how1": 0.6892,
+   "how2": 0.7273
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Baclofen has a half-life of 3.8 to 6.4 hours in people with alcohol use disorder. It does not build up in the body at clinical doses.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      },
+      {
+       "label": "F2",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "baclofen exhibited no saturation of elimination with clinical doses used and thus no accumulation.",
+       "sha": "a225d3a23952344c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "These times may not apply to people with chronic kidney disease, who may clear the drug more slowly.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "However, in patient with chronic kidney disease a decrease of clearance is expected, and the baclofen dosage should be adjusted accordingly.",
+       "sha": "a225d3a23952344c"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 review found baclofen’s half-life was 3.8 to 6.4 hours in people with alcohol use disorder taking immediate-release forms.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says baclofen does not accumulate in the body when used at clinical doses.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "baclofen exhibited no saturation of elimination with clinical doses used and thus no accumulation.",
+       "sha": "a225d3a23952344c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Baclofen has a half-life of 3.8 to 6.4 hours in people with alcohol use disorder. It does not build up in the body at clinical doses.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      },
+      {
+       "label": "F2",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "baclofen exhibited no saturation of elimination with clinical doses used and thus no accumulation.",
+       "sha": "a225d3a23952344c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 gives the half‑life and notes no accumulation, but does not address whether a drug test can detect baclofen, so it does not fully answer the two‑part question. Sentence 2 introduces a limitation concerning chronic kidney disease,)"
+    },
+    {
+     "part": "but",
+     "text": "The half-life may be different in people with chronic kidney disease, who may have reduced clearance.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "However, in patient with chronic kidney disease a decrease of clearance is expected, and the baclofen dosage should be adjusted accordingly.",
+       "sha": "a225d3a23952344c"
+      },
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages state reduced clearance in chronic kidney disease but do not explicitly say the half‑life may be different."
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 review found the half-life of immediate-release baclofen is 3.8 to 6.4 hours in alcohol-dependent patients.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says baclofen does not accumulate in the body when used at clinical doses.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "baclofen exhibited no saturation of elimination with clinical doses used and thus no accumulation.",
+       "sha": "a225d3a23952344c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Baclofen has a half-life of 3.8 to 6.4 hours and does not build up in the body. The sources do not say if a drug test can find it.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      },
+      {
+       "label": "F2",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "baclofen exhibited no saturation of elimination with clinical doses used and thus no accumulation.",
+       "sha": "a225d3a23952344c"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "The half-life data may not apply to people with chronic kidney disease, who may have reduced clearance.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "However, in patient with chronic kidney disease a decrease of clearance is expected, and the baclofen dosage should be adjusted accordingly.",
+       "sha": "a225d3a23952344c"
+      },
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2018 review of pharmacokinetic studies found baclofen half-life in alcohol-dependent patients was 3.8 to 6.4 hours.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "The baclofen half-life (T1/2) in alcohol-dependent patients with the current immediate release formulation ranged from 3.8 h to 6.4 h.",
+       "sha": "3d46dd70c56c3d28"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review found baclofen does not accumulate in the body when used at clinical doses.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "simon_2018",
+       "where": "Metabolism and elimination",
+       "quote": "baclofen exhibited no saturation of elimination with clinical doses used and thus no accumulation.",
+       "sha": "a225d3a23952344c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "place": {
+  "home": "new:Baclofen",
+  "also": [],
+  "cls": "Depressants",
+  "why": "it names a drug that has no page yet"
+ }
+}
