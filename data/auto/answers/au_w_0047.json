@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0047",
- "lane": 14,
+ "lane": 19,
  "kind": "amounts",
  "from": "w_0047",
  "question": "How much caffeine a day do health bodies call safe for adults?",
@@ -17,127 +17,37 @@
   "caffeine"
  ],
  "made": {
-  "on": "2026-11-17",
+  "on": "2026-11-24",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.8-flash",
-   "team": "team G",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.5-flash-lite",
+   "also2": "gemini:gemini-3.6-flash",
+   "team": "team I",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "43999200560",
+  "run": "45489150739",
+  "read_seconds": 16,
   "from": {
    "papers": 0,
    "summaries": 0,
-   "official": 2
+   "official": 1
   },
-  "neurons": 216.1
+  "neurons": 0.0,
+  "seconds": 17
  },
- "status": "published",
- "why": "passed every gate; read by the editor and let out on 2026-11-20",
+ "status": "waiting",
+ "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): llama-4-scout-17b-16e-instruct read from there",
-  "read": "6 amounts kept from 2 sources (0 papers read in full, 2 official pages, 0 papers read in summary); 14 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "5 amounts from 2 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people); 1 amount(s) stated for pregnancy, for children or about suicide left out (a person's part)",
-  "check": "2 of 5 amounts accepted by the second reader (groq:openai/gpt-oss-120b); not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for; not accepted: not an amount of the kind the question asks for",
+  "read": "1 amounts kept from 1 sources (0 papers read in full, 1 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 amounts from 1 sources that count for amounts (an official body of tier 1, a medicine's label, a study in people)",
+  "check": "1 of 1 amounts accepted by the second reader (groq:openai/gpt-oss-120b)",
   "rules": "every quote stands in its source, holds a number with its unit and is cut to 15 words at most; no animal, no amount that harmed, no timing between uses"
  },
  "sources": [
-  {
-   "read": "page",
-   "ref": {
-    "id": "efsa_caffeine",
-    "type": "webpage",
-    "title": "Caffeine",
-    "author": [
-     {
-      "literal": "European Food Safety Authority"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      []
-     ]
-    },
-    "URL": "https://www.efsa.europa.eu/en/topics/topic/caffeine",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       17
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-17"
-    }
-   },
-   "title": "Caffeine",
-   "year": null,
-   "kind": "official",
-   "people": true,
-   "near": 0.724,
-   "name": "European Food Safety Authority",
-   "short": "the European Food Safety Authority",
-   "tier": 1,
-   "address": "https://www.efsa.europa.eu/en/topics/topic/caffeine",
-   "money": [],
-   "label": false,
-   "rows": [
-    {
-     "passage": 8,
-     "where": "FAQ",
-     "quote": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
-     "show": "Intakes up to 400mg per day",
-     "clause": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
-     "who": "healthy adults in the general population",
-     "what": "an amount for a day",
-     "what_read": "daily safe intake",
-     "near": 0.6025
-    },
-    {
-     "passage": 8,
-     "where": "FAQ",
-     "quote": "Single doses of caffeine up to 200mg – about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
-     "show": "Single doses of caffeine up to 200mg",
-     "clause": "Single doses of caffeine up to 200mg - about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
-     "who": "general healthy adult population",
-     "what": "an amount for one occasion",
-     "what_read": "single dose safe intake",
-     "near": 0.7348
-    },
-    {
-     "passage": 8,
-     "where": "FAQ",
-     "quote": "Single doses of 100mg (about 1.4mg/kg bw) of caffeine may affect sleep duration and patterns in some adults, particularly when consumed close to bedtime.",
-     "show": "Single doses of 100mg",
-     "clause": "Single doses of 100mg (about 1.4mg/kg bw) of caffeine may affect sleep duration and patterns in some adults, particularly when consumed close to bedtime.",
-     "who": "some adults",
-     "what": "single dose that may affect sleep",
-     "near": 0.4269
-    },
-    {
-     "passage": 4,
-     "where": "FAQ",
-     "quote": "Adults (18-65 years) 37-319mg",
-     "show": "Adults (18-65 years) 37-319mg",
-     "clause": "Adults (18-65 years) 37-319mg",
-     "who": "Adults",
-     "what": "daily intake range",
-     "near": 0.5877
-    }
-   ],
-   "design": null,
-   "findings": [],
-   "limits": [],
-   "tag": "A"
-  },
   {
    "read": "page",
    "ref": {
@@ -164,14 +74,14 @@
       [
        2026,
        11,
-       17
+       24
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-17"
+     "verified_on": "2026-11-24"
     },
     "publisher": "Government of Canada"
    },
@@ -194,14 +104,14 @@
      "show": "Adults (18 years and over) 400 mg",
      "clause": "Adults (18 years and over) 400 mg",
      "who": "Adults (18 years and over)",
-     "what": "Recommended maximum daily intake",
-     "near": 0.6025
+     "what": "Recommended maximum caffeine daily intake",
+     "near": 0.7871
     }
    ],
    "design": null,
    "findings": [],
    "limits": [],
-   "tag": "B"
+   "tag": "A"
   }
  ],
  "parts": [
@@ -219,12 +129,11 @@
   },
   {
    "part": "row1",
-   "text": "Healthy adults in the general population; an amount for a day.",
-   "who": "Healthy adults in the general population",
-   "what": "an amount for a day",
-   "what_read": "daily safe intake",
-   "quote": "Intakes up to 400mg per day",
-   "source": "efsa_caffeine",
+   "text": "Adults (18 years and over); Recommended maximum caffeine daily intake.",
+   "who": "Adults (18 years and over)",
+   "what": "Recommended maximum caffeine daily intake",
+   "quote": "Adults (18 years and over) 400 mg",
+   "source": "healthcanada_caffeine-foods",
    "read": "page",
    "uses": [
     "R1"
@@ -232,27 +141,6 @@
    "rests_on": [
     {
      "label": "R1",
-     "ref": "efsa_caffeine",
-     "where": "FAQ",
-     "quote": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
-     "sha": "ddaaa4a092b178f7"
-    }
-   ]
-  },
-  {
-   "part": "row2",
-   "text": "Adults (18 years and over); Recommended maximum daily intake.",
-   "who": "Adults (18 years and over)",
-   "what": "Recommended maximum daily intake",
-   "quote": "Adults (18 years and over) 400 mg",
-   "source": "healthcanada_caffeine-foods",
-   "read": "page",
-   "uses": [
-    "R5"
-   ],
-   "rests_on": [
-    {
-     "label": "R5",
      "ref": "healthcanada_caffeine-foods",
      "where": "Recommended maximum daily intake",
      "quote": "Adults (18 years and over) 400 mg",
@@ -261,8 +149,8 @@
    ]
   }
  ],
- "complete": true,
- "missing": "",
+ "complete": false,
+ "missing": "only one source states an amount",
  "wanted": [
   {
    "doi": "10.1080/0265203021000007840",
@@ -327,6 +215,14 @@
    "why": "passed every gate (an answer about amounts: decision 11); held until the editor has read it (the first answers of this version of the lane)",
    "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
    "complete": true
+  },
+  {
+   "on": "2026-11-17",
+   "lane": 14,
+   "status": "published",
+   "why": "passed every gate; read by the editor and let out on 2026-11-20",
+   "short": "Amounts reported by studies and official pages, in their own words. Not a recommendation.",
+   "complete": true
   }
  ],
  "looked": [
@@ -335,37 +231,19 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.efsa.europa.eu/en/topics/topic/caffeine",
-   "kept": 5,
+   "kept": 0,
    "thrown": [
     {
-     "quote": "A safety level of 3mg/kg bw per day is also proposed for habitual caffeine consumption by children and adolescents.",
-     "who": "children and adolescents",
-     "what": "daily safe intake",
-     "why": "no amount with its unit in the quote"
+     "quote": "Intakes up to 400mg per day (about 5.7mg/kg bw per day) consumed throughout the day do not raise safety concerns for healthy adults in the general population, except pregnant women.",
+     "who": "healthy adults in the general population, except pregnant women",
+     "what": "Intakes up to 400mg per day",
+     "why": "an amount in our own words for who or what"
     },
     {
-     "quote": "Very elderly (75 years and above) 22-417mg",
-     "who": "Very elderly",
-     "what": "daily intake range",
-     "why": "who names no people"
-    },
-    {
-     "quote": "Elderly (65-75 years) 23-362mg",
-     "who": "Elderly",
-     "what": "daily intake range",
-     "why": "who names no people"
-    },
-    {
-     "quote": "Adolescents (10-18 years) 0.4-1.4mg/kg bw",
-     "who": "Adolescents",
-     "what": "daily intake range",
-     "why": "no amount with its unit in the quote"
-    },
-    {
-     "quote": "Children (3-10 years) 0.2-2.0mg/kg bw",
-     "who": "Children",
-     "what": "daily intake range",
-     "why": "no amount with its unit in the quote"
+     "quote": "Caffeine intakes from all sources up to 200mg per day consumed throughout the day do not raise safety concerns for the foetus.",
+     "who": "Pregnant/lactating women",
+     "what": "Caffeine intakes from all sources up to 200mg per day",
+     "why": "an amount in our own words for who or what"
     }
    ]
   },
@@ -375,32 +253,7 @@
    "kind": "official",
    "at": "https://www.canada.ca/en/health-canada/services/food-nutrition/food-safety/food-additives/caffeine-foods.html",
    "kept": 1,
-   "thrown": [
-    {
-     "quote": "300 mg",
-     "who": "People planning to become pregnant",
-     "what": "Recommended maximum daily intake",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    },
-    {
-     "quote": "300 mg",
-     "who": "People who are pregnant",
-     "what": "Recommended maximum daily intake",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    },
-    {
-     "quote": "300 mg",
-     "who": "People who are breastfeeding",
-     "what": "Recommended maximum daily intake",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 20 letters)"
-    },
-    {
-     "quote": "2.5 mg per kg of body weight",
-     "who": "Children and adolescents (up to 18 years)",
-     "what": "Recommended maximum daily intake",
-     "why": "no amount with its unit in the quote"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Energy Drinks",
@@ -408,38 +261,7 @@
    "kind": "official",
    "at": "https://www.nccih.nih.gov/health/energy-drinks",
    "kept": 0,
-   "thrown": [
-    {
-     "quote": "a 12-oz. can of cola contains about 35 mg of caffeine",
-     "who": "people",
-     "what": "caffeine in a can of cola",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
-    },
-    {
-     "quote": "an 8-oz. cup of coffee contains about 100 mg",
-     "who": "people",
-     "what": "caffeine in a cup of coffee",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
-    },
-    {
-     "quote": "at levels of 70 to 240 mg in a 16-oz. drink",
-     "who": "people",
-     "what": "caffeine in a 16-oz. energy drink",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
-    },
-    {
-     "quote": "113 to 200 mg in an energy shot",
-     "who": "people",
-     "what": "caffeine in an energy shot",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
-    },
-    {
-     "quote": "54 to 62 grams of added sugar",
-     "who": "teens",
-     "what": "added sugar in a 16-oz. energy drink",
-     "why": "an animal's amount, an amount that harmed, a product's amount, an amount worked out from another, or a level in the blood"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Caffeine",
@@ -450,53 +272,13 @@
    "thrown": []
   }
  ],
- "person_rows": [
-  {
-   "who": "pregnant women",
-   "what": "an amount for a day",
-   "quote": "Caffeine intakes from all sources up to 200mg per day",
-   "where": "FAQ",
-   "source": "efsa_caffeine"
-  }
- ],
- "refused_rows": [
-  {
-   "who": "general healthy adult population",
-   "what": "an amount for one occasion",
-   "quote": "Single doses of caffeine up to 200mg",
-   "full": "Single doses of caffeine up to 200mg – about 3mg per kilogram of body weight (mg/kg bw) from all sources do not raise safety concerns for the general healthy adult population.",
-   "where": "FAQ",
-   "source": "efsa_caffeine",
-   "said": "not an amount of the kind the question asks for"
-  },
-  {
-   "who": "some adults",
-   "what": "single dose that may affect sleep",
-   "quote": "Single doses of 100mg",
-   "full": "Single doses of 100mg (about 1.4mg/kg bw) of caffeine may affect sleep duration and patterns in some adults, particularly when consumed close to bedtime.",
-   "where": "FAQ",
-   "source": "efsa_caffeine",
-   "said": "not an amount of the kind the question asks for"
-  },
-  {
-   "who": "Adults",
-   "what": "daily intake range",
-   "quote": "Adults (18-65 years) 37-319mg",
-   "full": "Adults (18-65 years) 37-319mg",
-   "where": "FAQ",
-   "source": "efsa_caffeine",
-   "said": "not an amount of the kind the question asks for"
-  }
- ],
+ "refused_rows": [],
+ "held": "the editor's first reading of lane 19",
  "place": {
   "home": "caffeine",
   "also": [],
   "cls": null,
   "why": "it names a drug that has a page"
  },
- "released": {
-  "by": "the editor, after reading every sentence against its sources",
-  "on": "2026-11-20",
-  "was": "the editor's first reading of lane 14"
- }
+ "for": "editor"
 }
