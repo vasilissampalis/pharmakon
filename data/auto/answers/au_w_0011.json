@@ -18,33 +18,34 @@
   "prescription-opioids"
  ],
  "made": {
-  "on": "2026-11-23",
+  "on": "2026-11-24",
   "models": {
    "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.6-flash",
-   "team": "team G",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "team": "team H2",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45289800431",
+  "run": "45340770315",
   "read_seconds": 100,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
+  "neurons": 101.5,
   "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gpt-oss-20b read from there",
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
   "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
@@ -83,6 +84,14 @@
    "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-23",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -118,7 +127,8 @@
    "kind": "review",
    "at": "10.3389/fpubh.2024.1346109",
    "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
  "soft": "a source could not be fetched",
