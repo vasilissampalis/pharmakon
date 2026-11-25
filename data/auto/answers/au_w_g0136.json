@@ -15,9 +15,9 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-25",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
+   "reader": "gemini:gemma-4-31b-it",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
@@ -25,27 +25,23 @@
    "also2": "gemini:gemini-3.6-flash",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45438075883",
-  "read_seconds": 100,
+  "run": "45616592724",
+  "read_seconds": 24,
   "from": {
-   "papers": 2,
+   "papers": 3,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 24
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 9 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "8 findings kept from 3 sources (3 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
  },
  "sources": [
   {
@@ -94,10 +90,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-25"
      }
     },
     "volume": "140",
@@ -119,28 +115,45 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "The aim was to investigate and clarify the cause of death of a 26-year-old male found dead in his apartment.",
-    "text": "Case report of a post‑mortem investigation of a 26‑year‑old male"
+    "quote": "The aim was to investigate and clarify the cause of death of a 26-year-old male found dead in his apartment. It was known that the individual used drugs of abuse.",
+    "text": "A case report investigating the cause of death of a 26-year-old male who used drugs."
    },
    "findings": [
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "This also suggests a higher accessibility of 2m2b to the central nervous system. It is known that the relation of narcotic and hypnotic influence of alcohols is associated with their lipophilicity, i.e. hypnotic effects dominate in more lipophilic alcohols.",
-     "text": "Because 2‑methyl‑2‑butanol is more lipophilic than ethanol, it has greater access to the central nervous system and is expected to produce stronger hypnotic effects.",
+     "quote": "This likely leads to the higher potency of 2m2b compared to ethanol with regard to their hypnotic effects.",
+     "text": "2m2b is likely more potent than ethanol regarding hypnotic effects.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 18,
      "where": "Discussion",
-     "quote": "The suggested 20 times higher potency of 2m2b as cited by previous authors, derives from a publication of Brandenberger et al..",
-     "text": "Earlier authors have suggested that 2‑methyl‑2‑butanol is about 20 times more potent than ethanol in producing sleep.",
+     "quote": "2m2b is more lipophilic and underlies a higher distribution in adipose tissue than ethanol. This also suggests a higher accessibility of 2m2b to the central nervous system.",
+     "text": "2m2b is more lipophilic than ethanol and has higher accessibility to the central nervous system.",
      "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Since 2m2b is widely available, cheap, more potent than ethanol, while lacking its hangover effects and is likely not detected by routine",
+     "text": "2m2b is widely available, cheap, more potent than ethanol, and lacks its hangover effects.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 18,
+     "where": "Discussion",
+     "quote": "Little is known about the pharmacologic properties of 2m2b.",
+     "text": "The pharmacological properties of 2m2b are not well understood.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
    "tag": "A"
   },
   {
@@ -177,10 +190,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-25"
      }
     },
     "volume": "11",
@@ -202,24 +215,125 @@
    "design": null,
    "findings": [
     {
-     "passage": 10,
-     "where": "Results",
-     "quote": "Application of 2M2B increased post‑weaning ADG in week 3 and overall (P<0.05).",
-     "text": "Application of 2-methyl-2-butenal increased post‑weaning average daily gain in week 3 and overall.",
-     "id": "F3",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "The interomone 2M2B is a novel, safe molecule that can improve pig post-weaning performance.",
+     "text": "The interomone 2M2B is a novel, safe molecule that can improve pig post-weaning performance.",
+     "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 10,
-     "where": "Results",
-     "quote": "ADFI was higher (P<0.05) among 2M2B‑treated pens in week 3 and 4 after weaning and during the overall growth period.",
-     "text": "Average daily feed intake was higher among 2-methyl-2-butenal‑treated pens in weeks 3 and 4 after weaning and during the overall growth period.",
-     "id": "F4",
+     "passage": 11,
+     "where": "Discussion",
+     "quote": "It is sold as a food-grade flavoring agent and generally recognized as safe by the flavor and extract manufacturers association of the United States",
+     "text": "It is sold as a food-grade flavoring agent and generally recognized as safe by the flavor and extract manufacturers association of the United States.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 11,
+     "where": "Discussion",
+     "quote": "Tiglic aldehyde, or 2M2B is naturally found in berries, some vegetables, chicken fat and of course in mammary secretions of rabbits",
+     "text": "Tiglic aldehyde, or 2M2B is naturally found in berries, some vegetables, chicken fat and of course in mammary secretions of rabbits.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 14,
+     "where": "Discussion",
+     "quote": "We are exploring mechanisms of action of 2M2B at this time and conducting studies in different farms with large number of animals to validate the performance difference among the pigs.",
+     "text": "The mechanisms of action of 2M2B are currently being explored and further studies are being conducted to validate the performance differences among pigs.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
    "tag": "B"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "archer_2024",
+    "type": "article-journal",
+    "title": "Semiochemical 2-methyl-2-butenal reduced signs of stress in cats during transport",
+    "author": [
+     {
+      "family": "Archer",
+      "given": "Courtney"
+     },
+     {
+      "family": "McGlone",
+      "given": "John"
+     }
+    ],
+    "container-title": "Animals",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.3390/ani14020341",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     }
+    },
+    "volume": "14",
+    "issue": "2",
+    "number": "341",
+    "PMCID": "PMC10812570"
+   },
+   "doi": "10.3390/ani14020341",
+   "pmcid": "PMC10812570",
+   "title": "Semiochemical 2-Methyl-2-butenal Reduced Signs of Stress in Cats during Transport",
+   "year": 2024,
+   "journal": "Animals : an open access journal from MDPI",
+   "kind": "other",
+   "people": true,
+   "near": 0.45,
+   "money": [
+    "C.A. declares no conflicts of interest. J.M. has a perceived conflict in that he is the inventor/patent holder of the 2M2B interomone for use in cats and other animals.",
+    "This work received no specific funding. However, a company prior to PetIQ (Perrigo Animal health, the current marketer of 2M2B), gave a gift to Texas Tech University to support companion animal research of our choosing. This is one of the projects performed with this non-specific funding. PetIQ had no input on the study design or interpretation of the data collected."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "1. Introduction",
+     "quote": "The 2M2B molecule is a food-grade flavoring agent and is safe if consumed by humans.",
+     "text": "The 2M2B molecule is a food-grade flavoring agent and is safe if consumed by humans.",
+     "id": "F7",
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+    },
+    {
+     "passage": 5,
+     "where": "1. Introduction",
+     "quote": "Generally, 2M2B at low concentrations has a calming effect on animals (as an interomone) in that when animals can smell it, especially during stressful periods, they have behavioral and physiological signs of reduced stress.",
+     "text": "Generally, 2M2B at low concentrations has a calming effect on animals in that when animals can smell it, especially during stressful periods, they have behavioral and physiological signs of reduced stress.",
+     "id": "F8",
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
+    }
+   ],
+   "limits": [
+    {
+     "passage": 40,
+     "where": "4. Discussion",
+     "quote": "A collar releasing 2M2B is unlikely to activate the VNO of the cat (unless they scratched the collar and then licked it; a behavior not observed). Thus, the data, while not conclusive, suggest to us that 2M2B activates the MOE rather than the VNO to cause the stress-reducing effects observed.",
+     "text": "The data regarding whether 2M2B activates the MOE rather than the VNO to cause stress-reducing effects are not conclusive.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
   }
  ],
  "parts": [],
@@ -227,38 +341,29 @@
  "missing": "",
  "wanted": [],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Combined lethal intoxication involving 2-methyl-2-butanol",
    "read": "full",
    "kind": "case",
    "at": "10.1007/s00414-026-03900-3",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "In the post‑mortem samples, 2‑methyl‑2‑butanol was found at 245 mg/L in femoral blood and 225 mg/L in urine.",
-     "quote": "Concentrations of 245 mg/L and 225 mg/L 2m2b could be detected in the femoral vein blood specimen and urine, respectively.",
-     "why": "it holds an amount or a time between uses"
-    },
-    {
-     "kind": "finding",
-     "text": "Routine ethanol testing does not detect 2‑methyl‑2‑butanol, so its prevalence among drinkers is unclear.",
-     "quote": "2m2b is not routinely detected with the HS‑GC‑FID method during ethanol analysis for detecting the blood ethanol concentration in DUI‑cases in our laboratory.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
      "kind": "limit",
-     "text": "The pharmacologic properties of 2‑methyl‑2‑butanol are not well understood.",
-     "quote": "Little is known about the pharmacologic properties of 2m2b.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The exact potency of 2‑methyl‑2‑butanol relative to ethanol must be determined carefully.",
-     "quote": "Potency factors should be determined and applied cautiously.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+     "text": "Potency factors for 2m2b should be determined and applied with caution.",
+     "quote": "However, potency factors should be determined and applied cautiously.",
+     "why": "a number of the sentence is not in its quote"
     }
    ]
   },
@@ -267,37 +372,13 @@
    "read": "full",
    "kind": "study",
    "at": "10.1017/s1751731116001439",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
-     "text": "A controlled experimental study on weaned pigs",
-     "quote": "A novel approach to potentially improve pig growth and welfare is to supplement environments with biologically meaningful odors that are deficient.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "Application of 2-methyl-2-butenal increased overall average daily gain and average daily feed intake during the 4 weeks after weaning.",
-     "quote": "Application of 2M2B caused an increase (P<0.05) in overall ADG and ADFI during 4 weeks after weaning.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "The gain:feed ratio was not influenced by 2-methyl-2-butenal treatment.",
-     "quote": "The G: F ratio was not influenced (P>0.10) by treatments.",
+     "text": "A study on the effects of the odor 2M2B on weaned pig performance.",
+     "quote": "The objective of this study was to determine if providing a maternal pheromone/interomone during transport and the post-weaning environment may enhance pig performance.",
      "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "limit",
-     "text": "It is not yet known whether 2-methyl-2-butenal is naturally present in pig secretions or affects pig physiology or behavior.",
-     "quote": "To be called a pheromone, 2M2B would have be found to be in any secretion of a pig and to have an effect on the physiology or behavior of another pig.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The study only examined the effect of spraying 2-methyl-2-butenal on feeders; other routes of administration were not investigated.",
-     "quote": "The interomone of the present study, 2M2B was sprayed on the feeder in part in an attempt to find an alternative to administering medically important antibiotics as growth promotants.",
-     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -306,12 +387,17 @@
    "read": "full",
    "kind": "other",
    "at": "10.3390/ani14020341",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A randomized, placebo-controlled, blinded study evaluating the effects of 2M2B collars on transport stress in sixteen cats.",
+     "quote": "Sixteen cats were used in a model of behavioral and physiological transport stress. Cats were not accustomed to being transported. In an objective evaluation, cats wore a PetPace (PP) collar that reco",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
  "place": {
   "home": "new:2M2B",
   "also": [],
