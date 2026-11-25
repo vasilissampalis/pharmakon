@@ -27,30 +27,30 @@
    "also2": "gemini:gemini-3.6-flash",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45674956548",
-  "read_by": {
-   "gemini-3.5-flash-lite": 2,
-   "gemma-4-31b-it": 1
-  },
-  "read_seconds": 100,
+  "run": "45695064878",
+  "read_seconds": 93,
   "from": {
-   "papers": 1,
-   "summaries": 0,
-   "official": 0
+   "papers": 2,
+   "summaries": 1,
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 377
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 1: a second reader did not accept short (The passage does not explicitly state that a drug test can find ritalinic acid in urine.); but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "8 findings kept from 4 sources (2 papers read in full, 1 official pages, 1 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 1 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.77, but 0.98, how1 0.83, how2 0.37, how3 0.94",
+  "check": "not accepted at try 1: a second reader did not accept short (The passage does not explicitly state that a drug test can find ritalinic acid in urine.); but (it is about something else than the short answer). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "mended": "the item that holds a number of a sentence was added to what the sentence rests on: but + DB (10)",
+  "rules": "broken at try 3: but: the source says “up to 8”: that is the most it found, not the size. Say “up to” or “as much as”, as the source does"
  },
  "sources": [
   {
@@ -125,31 +125,23 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "The objective of this work was to study the results of urine drug testing for ritalinic acid (RA), the major urinary metabolite of methylphenidate (MP) (e.g., Ritalin®).",
-    "text": "a study of urine drug testing results for ritalinic acid, the major urinary metabolite of methylphenidate, examining patient samples and patient age"
+    "text": "A study of urine drug testing for ritalinic acid, the major urinary metabolite of methylphenidate, examining patient samples and age impacts."
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
      "quote": "The objective of this work was to study the results of urine drug testing for ritalinic acid (RA), the major urinary metabolite of methylphenidate (MP) (e.g., Ritalin®).",
-     "text": "Urine drug testing can be used to test for ritalinic acid, the major urinary metabolite of methylphenidate.",
+     "text": "Urine drug testing can examine results for ritalinic acid, which is the major urinary metabolite of methylphenidate (such as Ritalin).",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 22,
+     "passage": 21,
      "where": "Discussion",
-     "quote": "In the same time frame where 11,384 patients with prescriptions tested positive, 10,421 (47.8%) patients with listed prescriptions tested negative indicating that they might not take their drug and/or divert it to other users as discussed above.",
-     "text": "Some patients with listed prescriptions for methylphenidate tested negative for ritalinic acid, indicating they might not take their drug and/or divert it to other users.",
+     "quote": "Of course, patients prescribed MP but diverting their pills would test negative for RA even if they attempted to add MP directly to their urine sample",
+     "text": "Patients prescribed methylphenidate who divert their pills test negative for ritalinic acid.",
      "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 22,
-     "where": "Discussion",
-     "quote": "Another group of 6751 patients over the same time limits were positive for RA without a prescription for MP listed.",
-     "text": "Another group of patients tested positive for ritalinic acid without a prescription for methylphenidate listed.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -164,6 +156,265 @@
     }
    ],
    "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "helland_2025",
+    "type": "article-journal",
+    "title": "Drug detection in oral fluid and urine after single therapeutic doses of dexamphetamine, lisdexamphetamine, and methylphenidate in healthy volunteers",
+    "author": [
+     {
+      "family": "Helland",
+      "given": "Arne"
+     },
+     {
+      "family": "Muller",
+      "given": "Sébastien"
+     },
+     {
+      "family": "Spigset",
+      "given": "Olav"
+     },
+     {
+      "family": "Krabseth",
+      "given": "Hege-Merete"
+     },
+     {
+      "family": "Hansen",
+      "given": "Miriam"
+     },
+     {
+      "family": "Skråstad",
+      "given": "Ragnhild Bergene"
+     }
+    ],
+    "container-title": "Journal of Analytical Toxicology",
+    "issued": {
+     "date-parts": [
+      [
+       2025
+      ]
+     ]
+    },
+    "DOI": "10.1093/jat/bkae097",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     },
+     "online_first_year": 2024
+    },
+    "volume": "49",
+    "issue": "2",
+    "page": "65-72",
+    "PMCID": "PMC12217515"
+   },
+   "doi": "10.1093/jat/bkae097",
+   "pmcid": "PMC12217515",
+   "title": "Drug detection in oral fluid and urine after single therapeutic doses of dexamphetamine, lisdexamphetamine, and methylphenidate in healthy volunteers",
+   "year": 2025,
+   "journal": "Journal of analytical toxicology",
+   "kind": "other",
+   "people": true,
+   "near": 0.638,
+   "money": [
+    "AcknowledgmentsWe would like to acknowledge the participants in the study and the staff at the Department of Clinical Pharmacology, St. Olav University Hospital."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Healthy volunteers ingested single oral doses of 10 mg dexamphetamine (n = 11), 30 mg lisdexamphetamine (n = 11), or 20 mg methylphenidate (n = 10), after which they collected parallel oral fluid and urine samples every 8 h for 4–6 days.",
+    "text": "study of healthy volunteers ingesting single oral doses of central stimulant drugs with oral fluid and urine sample collection"
+   },
+   "findings": [
+    {
+     "passage": 31,
+     "where": "Results",
+     "quote": "The median Tlast values were 36 h for methylphenidate in oral fluid (cutoff: 0.06 ng/mL) and 41 h for ritalinic acid in urine (cutoff: 500 ng/mL).",
+     "text": "The median Tlast values were 36 h for methylphenidate in oral fluid at a cutoff of 0.06 ng/mL and 41 h for ritalinic acid in urine at a cutoff of 500 ng/mL.",
+     "id": "F3",
+     "second_hand": ""
+    },
+    {
+     "passage": 31,
+     "where": "Results",
+     "quote": "Half-lives of methylphenidate in oral fluid and ritalinic acid in urine were 4.1 and 8.5 h, respectively.",
+     "text": "The half-lives of methylphenidate in oral fluid and ritalinic acid in urine were 4.1 and 8.5 h, respectively.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 44,
+     "where": "Discussion",
+     "quote": "Since we did not start the concentration measurements until 8 h after intake, the log-linear extrapolation to may have underestimated the true AUC.",
+     "text": "Because concentration measurements were not started until 8 h after intake, the log-linear extrapolation may have underestimated the true AUC.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "thelevel_prescription-stimulants-ritalin",
+    "type": "webpage",
+    "title": "Prescription Stimulants",
+    "author": [
+     {
+      "literal": "NZ Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://thelevel.org.nz/drug-information/prescription-stimulants-ritalin",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       25
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-25"
+    },
+    "publisher": "The Level"
+   },
+   "title": "Prescription Stimulants",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.603,
+   "name": "NZ Drug Foundation",
+   "short": "the NZ Drug Foundation",
+   "tier": 2,
+   "address": "https://thelevel.org.nz/drug-information/prescription-stimulants-ritalin",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 29,
+     "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+     "quote": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours , and in hair for around 90 days.",
+     "text": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours, and in hair for around 90 days.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 29,
+     "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+     "quote": "Most prescription stimulants are in the amphetamine family, so they often show up on amphetamine drug tests.",
+     "text": "Most prescription stimulants are in the amphetamine family, so they often show up on amphetamine drug tests.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "kimko_1999",
+    "type": "article-journal",
+    "title": "Pharmacokinetics and clinical effectiveness of methylphenidate",
+    "author": [
+     {
+      "family": "Kimko",
+      "given": "Hui C."
+     },
+     {
+      "family": "Cross",
+      "given": "James T."
+     },
+     {
+      "family": "Abernethy",
+      "given": "Darrell R."
+     }
+    ],
+    "container-title": "Clinical Pharmacokinetics",
+    "issued": {
+     "date-parts": [
+      [
+       1999
+      ]
+     ]
+    },
+    "DOI": "10.2165/00003088-199937060-00002",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     }
+    },
+    "volume": "37",
+    "issue": "6",
+    "page": "457-470"
+   },
+   "doi": "10.2165/00003088-199937060-00002",
+   "title": "Pharmacokinetics and clinical effectiveness of methylphenidate",
+   "year": 1999,
+   "journal": "Clinical pharmacokinetics",
+   "kind": "review",
+   "people": true,
+   "near": 0.641,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Summary",
+    "quote": "The objective of this review is to provide an analysis of the pharmacokinetic-pharmacodynamic properties and therapeutic effectiveness of methylphenidate that may help to answer some of these questions.",
+    "text": "a review of the pharmacokinetic-pharmacodynamic properties and therapeutic effectiveness of methylphenidate"
+   },
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "Methylphenidate is a short-acting stimulant with a duration of action of 1 to 4 hours and a pharmacokinetic half-life of 2 to 3 hours.",
+     "text": "Methylphenidate is a short-acting stimulant with a duration of action of 1 to 4 hours and a pharmacokinetic half-life of 2 to 3 hours.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "Maximum drug concentration after oral administration occurs at about 2 hours.",
+     "text": "Maximum drug concentration after oral administration occurs at about 2 hours.",
+     "id": "F8",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 1,
+     "where": "Summary",
+     "quote": "Although ADHD has been widely studied, the use of methylphenidate in ADHD still poses a number of unresolved questions, including its pharmacodynamic characteristics (drug concentration-effect relationship) and the effect of long term treatment on the patient's psychopathology later in life.",
+     "text": "The use of methylphenidate in ADHD still poses unresolved questions, including its pharmacodynamic characteristics and the effect of long term treatment on the patient's psychopathology later in life.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
   }
  ],
  "parts": [],
@@ -193,14 +444,23 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-25",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Ritalinic acid in urine: Impact of age and dose",
    "read": "full",
    "kind": "other",
    "at": "10.1016/j.plabm.2021.e00258",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -208,28 +468,430 @@
    "read": "full",
    "kind": "other",
    "at": "10.1093/jat/bkae097",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "The median time from ingestion to the last detection in oral fluid was 36 ± 2.5 h for methylphenidate, and was comparable to urine with 41 ± 2.4 h for ritalinic acid.",
+     "quote": "The median time from ingestion to the last detection in oral fluid was ... 36 ± 2.5 h for methylphenidate. This was comparable to urine (... 41 ± 2.4 h for ritalinic acid).",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "For methylphenidate, most subjects had only one detectable sample per time of day, which precluded reliable statistical testing of a diurnal pattern.",
+     "quote": "For methylphenidate, a similar pattern may be present; however, most subjects had only one detectable sample per time of day, precluding reliable statistical testing of a diurnal pattern.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
-   "title": "In utero exposure to methylphenidate, amphetamines and atomoxetine and offspring neurodevelopmental disorders - a population-based cohort study and meta-analysis",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1038/s41380-025-02968-4",
+   "title": "About methylphenidate for adults Brand names: Ritalin, Concerta, Delmosart, Equasym, Medikinet",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/methylphenidate-adults/about-methylphenidate-for-adults/",
    "kept": 0,
    "thrown": []
   },
   {
-   "title": "Addictive Potential of Methylphenidate: A Systematic Review of Human and Preclinical Behavioral, Clinical and Neurobiological Evidence",
-   "read": "full",
+   "title": "How and when to take methylphenidate for adults Brand names: Ritalin, Concerta, Delmosart, Equasym, Medikinet",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/methylphenidate-adults/how-and-when-to-take-methylphenidate-for-adults/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "About methylphenidate for children Brand names: Ritalin, Concerta, Medikinet, Delmosart, Equasym",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/methylphenidate-children/about-methylphenidate-for-children/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Prescription Stimulants",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/prescription-stimulants-ritalin",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "There are many types of prescription stimulants, so this may vary depending on which one you use and how much you use.",
+     "why": "no sentence"
+    }
+   ]
+  },
+  {
+   "title": "How and when to take methylphenidate for children Brand names: Ritalin, Concerta, Medikinet, Delmosart, Equasym",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/medicines/methylphenidate-children/how-and-when-to-take-methylphenidate-for-children/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Methylphenidate Hydrochloride Extended Release",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=be8580bc-0eb2-4eb6-a4cc-4ebbeb33424d",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Pharmacokinetics and clinical effectiveness of methylphenidate",
+   "read": "summary",
    "kind": "review",
-   "at": "10.3390/ph19091409",
+   "at": "10.2165/00003088-199937060-00002",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Methylphenidate and dexmethylphenidate formulations for children with attention-deficit/hyperactivity disorder",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.2146/ajhp130638",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Role of dopamine in the therapeutic and reinforcing effects of methylphenidate in humans: results from imaging studies",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/s0924-977x(02)00104-9",
    "kept": 0,
    "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.767,
+   "but": 0.9842,
+   "how1": 0.8265,
+   "how2": 0.3662,
+   "how3": 0.939
+  },
+  "scores_quotes_alone": {
+   "short": 0.4304,
+   "but": 0.9819,
+   "how1": 0.5957,
+   "how2": 0.3992,
+   "how3": 0.7142
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Methylphenidate can be detected in urine for 48 to 96 hours, in blood for up to 46 hours, in saliva for 20 to 50 hours, and in hair for around 90 days. A drug test can find ritalinic acid in urine.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_prescription-stimulants-ritalin",
+       "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+       "quote": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours , and in hair for around 90 days.",
+       "sha": "6300b0332a0f8e4c"
+      },
+      {
+       "label": "F1",
+       "ref": "feng_2021",
+       "where": "Abstract",
+       "quote": "The objective of this work was to study the results of urine drug testing for ritalinic acid (RA), the major urinary metabolite of methylphenidate (MP) (e.g., Ritalin®).",
+       "sha": "8a3d63cbb9581f90"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not explicitly state that a drug test can find ritalinic acid in urine."
+    },
+    {
+     "part": "but",
+     "text": "Whether a prescription is known depends on the information provided by the doctor on the testing request.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "feng_2021",
+       "where": "Discussion",
+       "quote": "While knowledge of the presence of a prescription is totally dependent upon information provided by the testing physician on the sample requisition, it would appear that non-prescription use of MP results in lower levels of RA in urine consistent with less frequent dosing than those on chronic prescriptions.",
+       "sha": "10243b4aa27bd865"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "The NZ Drug Foundation says these can be detected in urine for 48-96 hours, blood for up to 46 hours, saliva for 20-50 hours, and hair for around 90 days.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_prescription-stimulants-ritalin",
+       "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+       "quote": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours , and in hair for around 90 days.",
+       "sha": "6300b0332a0f8e4c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A study of 10 healthy volunteers found the median time for methylphenidate in oral fluid was 36 hours and for ritalinic acid in urine was 41 hours.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "helland_2025",
+       "where": "Abstract",
+       "quote": "Healthy volunteers ingested single oral doses of 10 mg dexamphetamine (n = 11), 30 mg lisdexamphetamine (n = 11), or 20 mg methylphenidate (n = 10), after which they collected parallel oral fluid and urine samples every 8 h for 4–6 days.",
+       "sha": "7349d11e1b7cd3c0"
+      },
+      {
+       "label": "F3",
+       "ref": "helland_2025",
+       "where": "Results",
+       "quote": "The median Tlast values were 36 h for methylphenidate in oral fluid (cutoff: 0.06 ng/mL) and 41 h for ritalinic acid in urine (cutoff: 500 ng/mL).",
+       "sha": "340d1a7b97bddea9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A study of urine drug testing found that urine tests can examine results for ritalinic acid, the major metabolite of methylphenidate.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "feng_2021",
+       "where": "Abstract",
+       "quote": "The objective of this work was to study the results of urine drug testing for ritalinic acid (RA), the major urinary metabolite of methylphenidate (MP) (e.g., Ritalin®).",
+       "sha": "8a3d63cbb9581f90"
+      },
+      {
+       "label": "F1",
+       "ref": "feng_2021",
+       "where": "Abstract",
+       "quote": "The objective of this work was to study the results of urine drug testing for ritalinic acid (RA), the major urinary metabolite of methylphenidate (MP) (e.g., Ritalin®).",
+       "sha": "8a3d63cbb9581f90"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Methylphenidate can be detected in urine, saliva, blood, and hair. A 2025 study of 10 healthy volunteers found the median time for methylphenidate in oral fluid was 36 hours and ritalinic acid in urine was 41 hours.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "helland_2025",
+       "where": "Results",
+       "quote": "The median Tlast values were 36 h for methylphenidate in oral fluid (cutoff: 0.06 ng/mL) and 41 h for ritalinic acid in urine (cutoff: 500 ng/mL).",
+       "sha": "340d1a7b97bddea9"
+      },
+      {
+       "label": "F5",
+       "ref": "thelevel_prescription-stimulants-ritalin",
+       "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+       "quote": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours , and in hair for around 90 days.",
+       "sha": "6300b0332a0f8e4c"
+      },
+      {
+       "label": "DB",
+       "ref": "helland_2025",
+       "where": "Abstract",
+       "quote": "Healthy volunteers ingested single oral doses of 10 mg dexamphetamine (n = 11), 30 mg lisdexamphetamine (n = 11), or 20 mg methylphenidate (n = 10), after which they collected parallel oral fluid and urine samples every 8 h for 4–6 days.",
+       "sha": "7349d11e1b7cd3c0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The 2025 study may have underestimated the true amount because concentration measurements did not start until 8 hours after intake.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "helland_2025",
+       "where": "Discussion",
+       "quote": "Since we did not start the concentration measurements until 8 h after intake, the log-linear extrapolation to may have underestimated the true AUC.",
+       "sha": "e38516614eab817e"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: the source says “up to 8”: that is the most it found, not the size. Say “up to” or “as much as”, as the source does"
+    },
+    {
+     "part": "how1",
+     "text": "The summary of a 1999 review says methylphenidate is a short-acting stimulant with a half-life of 2 to 3 hours.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "kimko_1999",
+       "where": "Summary",
+       "quote": "Methylphenidate is a short-acting stimulant with a duration of action of 1 to 4 hours and a pharmacokinetic half-life of 2 to 3 hours.",
+       "sha": "627b1c35fe7a5a6b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 study of 10 healthy volunteers found the median time for methylphenidate in oral fluid was 36 hours and ritalinic acid in urine was 41 hours.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "helland_2025",
+       "where": "Results",
+       "quote": "The median Tlast values were 36 h for methylphenidate in oral fluid (cutoff: 0.06 ng/mL) and 41 h for ritalinic acid in urine (cutoff: 500 ng/mL).",
+       "sha": "340d1a7b97bddea9"
+      },
+      {
+       "label": "F4",
+       "ref": "helland_2025",
+       "where": "Results",
+       "quote": "Half-lives of methylphenidate in oral fluid and ritalinic acid in urine were 4.1 and 8.5 h, respectively.",
+       "sha": "340d1a7b97bddea9"
+      },
+      {
+       "label": "DB",
+       "ref": "helland_2025",
+       "where": "Abstract",
+       "quote": "Healthy volunteers ingested single oral doses of 10 mg dexamphetamine (n = 11), 30 mg lisdexamphetamine (n = 11), or 20 mg methylphenidate (n = 10), after which they collected parallel oral fluid and urine samples every 8 h for 4–6 days.",
+       "sha": "7349d11e1b7cd3c0"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The NZ Drug Foundation says they can be detected in urine for 48-96 hours, blood for up to 46 hours, saliva for 20-50 hours, and hair for around 90 days.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_prescription-stimulants-ritalin",
+       "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+       "quote": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours , and in hair for around 90 days.",
+       "sha": "6300b0332a0f8e4c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Methylphenidate can be detected in urine for 48 to 96 hours, in blood for up to 46 hours, in saliva for 20 to 50 hours, and in hair for around 90 days.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_prescription-stimulants-ritalin",
+       "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+       "quote": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours , and in hair for around 90 days.",
+       "sha": "6300b0332a0f8e4c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "A 2025 study of 10 healthy volunteers may have underestimated the true amount because measurements did not start until 8 hours after intake.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "helland_2025",
+       "where": "Discussion",
+       "quote": "Since we did not start the concentration measurements until 8 h after intake, the log-linear extrapolation to may have underestimated the true AUC.",
+       "sha": "e38516614eab817e"
+      },
+      {
+       "label": "DB",
+       "ref": "helland_2025",
+       "where": "Abstract",
+       "quote": "Healthy volunteers ingested single oral doses of 10 mg dexamphetamine (n = 11), 30 mg lisdexamphetamine (n = 11), or 20 mg methylphenidate (n = 10), after which they collected parallel oral fluid and urine samples every 8 h for 4–6 days.",
+       "sha": "7349d11e1b7cd3c0"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: the source says “up to 8”: that is the most it found, not the size. Say “up to” or “as much as”, as the source does"
+    },
+    {
+     "part": "how1",
+     "text": "The NZ Drug Foundation says these can be detected in urine for 48-96 hours, blood for up to 46 hours, saliva for 20-50 hours, and hair for around 90 days.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "thelevel_prescription-stimulants-ritalin",
+       "where": "Working and driving / If you take prescription stimulants, will it show up on a drug test?",
+       "quote": "They can be detected in urine for 48-96 hours, in blood for up to 46 hours, in saliva for 20-50 hours , and in hair for around 90 days.",
+       "sha": "6300b0332a0f8e4c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 study of 10 healthy volunteers found a median of 41 hours for ritalinic acid in urine and 36 hours for methylphenidate in oral fluid.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "helland_2025",
+       "where": "Abstract",
+       "quote": "Healthy volunteers ingested single oral doses of 10 mg dexamphetamine (n = 11), 30 mg lisdexamphetamine (n = 11), or 20 mg methylphenidate (n = 10), after which they collected parallel oral fluid and urine samples every 8 h for 4–6 days.",
+       "sha": "7349d11e1b7cd3c0"
+      },
+      {
+       "label": "F3",
+       "ref": "helland_2025",
+       "where": "Results",
+       "quote": "The median Tlast values were 36 h for methylphenidate in oral fluid (cutoff: 0.06 ng/mL) and 41 h for ritalinic acid in urine (cutoff: 500 ng/mL).",
+       "sha": "340d1a7b97bddea9"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "The summary of a 1999 review says methylphenidate is a short-acting stimulant with a half-life of 2 to 3 hours.",
+     "rests_on": [
+      {
+       "label": "DD",
+       "ref": "kimko_1999",
+       "where": "Summary",
+       "quote": "The objective of this review is to provide an analysis of the pharmacokinetic-pharmacodynamic properties and therapeutic effectiveness of methylphenidate that may help to answer some of these questions.",
+       "sha": "c5aad18a09d0e1fc"
+      },
+      {
+       "label": "F7",
+       "ref": "kimko_1999",
+       "where": "Summary",
+       "quote": "Methylphenidate is a short-acting stimulant with a duration of action of 1 to 4 hours and a pharmacokinetic half-life of 2 to 3 hours.",
+       "sha": "627b1c35fe7a5a6b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "methylphenidate",
   "also": [],
