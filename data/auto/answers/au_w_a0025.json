@@ -15,38 +15,310 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-25",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "planner": "groq:openai/gpt-oss-120b",
+   "team": "team C",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
   },
-  "run": "44841499696",
-  "read_seconds": 110,
+  "run": "45514745641",
+  "read_seconds": 37,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 0.0,
-  "seconds": 110
+  "neurons": 490.7,
+  "seconds": 102
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.94, how1 0.88, how2 0.97",
+  "check": "short: NOT accepted: The passage reports only the number of studies; it does not state that the effect on usage rates is unclear.; but: NOT accepted: The passage says governments highlight potential risks, not the studies.; how1: accepted; how2: accepted",
+  "rules": "broken at try 2: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "windle_2026",
+    "type": "article-journal",
+    "title": "Impacts of global cannabis policy changes on substance use: A systematic review of quasi-experimental studies",
+    "author": [
+     {
+      "family": "WINDLE",
+      "given": "SARAH B."
+     },
+     {
+      "family": "SOCHA",
+      "given": "PETER M."
+     },
+     {
+      "family": "ARNEJA",
+      "given": "JASLEEN"
+     },
+     {
+      "family": "HARPER",
+      "given": "SAM"
+     },
+     {
+      "family": "GORE",
+      "given": "GENEVIEVE"
+     },
+     {
+      "family": "GARIÉPY",
+      "given": "GENEVIÉVE"
+     },
+     {
+      "family": "GRAHAM",
+      "given": "EVA"
+     },
+     {
+      "family": "BENEDETTI",
+      "given": "ANDREA"
+     },
+     {
+      "family": "NANDI",
+      "given": "ARIJIT"
+     }
+    ],
+    "container-title": "The Milbank Quarterly",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1111/1468-0009.70108",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     }
+    },
+    "volume": "104",
+    "issue": "3",
+    "page": "884-929",
+    "PMCID": "PMC13559975"
+   },
+   "doi": "10.1111/1468-0009.70108",
+   "pmcid": "PMC13559975",
+   "title": "Impacts of Global Cannabis Policy Changes on Substance Use: A Systematic Review of Quasi-Experimental Studies",
+   "year": 2026,
+   "journal": "The Milbank quarterly",
+   "kind": "review",
+   "people": true,
+   "near": 0.706,
+   "money": [
+    "This work was funded by the Canadian Institutes of Health Research (Funding Reference Number 190263). Ms. Windle was supported by a Canada Graduate Scholarship in Honour of Nelson Mandela from the Canadian Institutes of Health Research and a Doctoral Training Award from the Fonds de recherche Québec – Santé. Dr. Socha was supported by a Doctoral Training Award from the Fonds de recherche Québec – Santé. Ms. Arneja was supported by a Vanier Canada Graduate Scholarship from the Canadian Institutes of Health Research.",
+    "The authors have no conflicts of interest to declare."
+   ],
+   "design": {
+    "passage": 93,
+    "where": "Discussion",
+    "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi‐experimental studies.",
+    "text": "systematic review of quasi-experimental studies"
+   },
+   "findings": [
+    {
+     "passage": 101,
+     "where": "Conclusions",
+     "quote": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups, with increased prevalence of cannabis use among young adults and adults and weaker potential effects among youth.",
+     "text": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 93,
+     "where": "Discussion",
+     "quote": "Among young adults and adults, the findings suggested increased initiation of cannabis use, as well as increased prevalence of cannabis use (particularly following recreational legalization),",
+     "text": "Findings suggested increased initiation and prevalence of cannabis use among young adults and adults, particularly following recreational legalization.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 86,
+     "where": "Cannabis Decriminalization",
+     "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+     "text": "Only 9 studies examined cannabis decriminalization.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 9,
+     "where": "Text",
+     "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
+     "text": "The studies highlight potential risks including increased cannabis use among vulnerable populations such as youth.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "sandelich_2026",
+    "type": "article-journal",
+    "title": "Adolescent substance use screening in the emergency department",
+    "author": [
+     {
+      "family": "Sandelich",
+      "given": "Stephen"
+     },
+     {
+      "family": "Amanullah",
+      "given": "Siraj"
+     },
+     {
+      "family": "Barata",
+      "given": "Isabel A."
+     },
+     {
+      "family": "Berg",
+      "given": "Kathleen"
+     },
+     {
+      "family": "Brown",
+      "given": "Kathleen"
+     },
+     {
+      "family": "Cheng",
+      "given": "Tabitha"
+     },
+     {
+      "family": "Chumpitazi",
+      "given": "Corrie E."
+     },
+     {
+      "family": "Claudius",
+      "given": "Ilene"
+     },
+     {
+      "family": "Dietrich",
+      "given": "Ann M."
+     },
+     {
+      "family": "Lin",
+      "given": "Sophia"
+     },
+     {
+      "family": "Ruttan",
+      "given": "Tim"
+     },
+     {
+      "family": "Stoner",
+      "given": "Michael"
+     },
+     {
+      "family": "Sulton",
+      "given": "Carmen"
+     },
+     {
+      "family": "Waseem",
+      "given": "Muhammad"
+     }
+    ],
+    "container-title": "JACEP Open",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1016/j.acepjo.2026.100447",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     }
+    },
+    "volume": "7",
+    "issue": "4",
+    "number": "100447",
+    "PMCID": "PMC13314743"
+   },
+   "doi": "10.1016/j.acepjo.2026.100447",
+   "pmcid": "PMC13314743",
+   "title": "Adolescent Substance Use Screening in the Emergency Department",
+   "year": 2026,
+   "journal": "Journal of the American College of Emergency Physicians open",
+   "kind": "review",
+   "people": true,
+   "near": 0.538,
+   "money": [
+    "By JACEP Open policy, all authors are required to disclose any and all commercial, financial, and other relationships in any way related to the subject of this article as per ICMJE conflict of interest guidelines (see). The authors have stated that no such relationships exist.",
+    "All authors have affirmed they have no conflicts of interest to declare."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Adolescent substance use remains a major public health concern",
+    "text": "research paper on adolescent substance use"
+   },
+   "findings": [
+    {
+     "passage": 6,
+     "where": "Introduction",
+     "quote": "Self-reported substance use among US adolescents has declined substantially since the COVID-19 pandemic onset",
+     "text": "self-reported substance use among US adolescents declined substantially since the COVID-19 pandemic onset",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 6,
+     "where": "Introduction",
+     "quote": "In 2025, past 12-month cannabis use was 26% among 12th graders and 16% among 10th graders, the lowest levels in three decades",
+     "text": "in 2025, past 12-month cannabis use was 26% among 12th graders and 16% among 10th graders",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 7,
+     "where": "Introduction",
+     "quote": "Overdose deaths among persons aged 14 to 18 years increased 94% from 2019 to 2020",
+     "text": "overdose deaths among persons aged 14 to 18 years increased 94% from 2019 to 2020",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 9,
+     "where": "Clinical Presentation",
+     "quote": "approximately 20.9% of adolescent substance abuse ED visits include a co-occurring mental health diagnosis",
+     "text": "the study did not assess how the presence of co-occurring mental health diagnoses affects the relationship between substance use and ED visits",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "exact magnitude of usage change",
  "wanted": [
   {
    "doi": "10.1016/j.drugpo.2026.105431",
@@ -72,14 +344,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "the second reader did not accept the answer",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -119,6 +383,14 @@
    "why": "no draft passed: the form was wrong: no JSON",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -127,110 +399,29 @@
    "read": "full",
    "kind": "review",
    "at": "10.1111/1468-0009.70108",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "systematic review of quasi-experimental studies",
-     "quote": "A Systematic Review of Quasi-Experimental Studies (2026), The Milbank quarterly.",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Adolescent Substance Use Screening in the Emergency Department",
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.acepjo.2026.100447",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "A meta-analysis of sexual orientation inequities in substance use among youth",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1111/add.70301",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Prevalence of and factors associated with psychoactive substance use among people in prisons: A multi-centre, cross-sectional study in India",
-   "read": "full",
-   "kind": "study",
-   "at": "10.25259/ijmr_3378_2025",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
-     "kind": "text",
-     "text": "a multi-centre, cross-sectional study of 7004 incarcerated people in India",
-     "quote": "The present study aimed to assess the prevalence of various psychoactive substance use among people in prisons in India, and to assess factors associated with psychoactive substance use in prison.",
-     "why": "a number of the sentence is not in its quote"
+     "kind": "finding",
+     "text": "overall substance use rates among youth have stabilized or declined in recent years",
+     "quote": "although overall substance use rates among youth have stabilized or declined in recent years",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "the study's findings may not be generalizable beyond 12 months",
+     "quote": "Future research should prioritize adolescent-specific cost-effectiveness analyses, longitudinal outcome studies beyond 12 months",
+     "why": "the sentence is not carried by its quote and passage"
     }
    ]
-  },
-  {
-   "title": "Weighted prevalence of biochemically verified substance use in healthy adolescents across the USA",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1111/add.70548",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "The effects of abused drugs on ferroptosis pathways: potential therapeutic targets for substance use disorders",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fncel.2026.1899553",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Substance use outcomes in first- and second- generation of immigrants: Systematic review and meta-analysis",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1016/j.abrep.2026.100721",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Substance use patterns in a community sample of adult women in the United States: Alcohol, Cannabis, and other drug use",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1016/j.abrep.2026.100748",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Substance use disorder in forensic hospitals: A scoping review of practices and interventions",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1016/j.dadr.2026.100465",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Systematic Review and Meta-Analysis of the Prevalence of Substance Use Among Adolescents in South Africa",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1111/dar.70143",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Coalitions as Prevention Infrastructure for Youth Substance Use: Coordinated, Local Relevance, and Sustainability",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1097/phh.0000000000002471",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Urban-Rural and Demographic Differences in Substance Use Among High School Students - Youth Risk Behavior Survey, United States, 2025",
-   "read": "full",
-   "kind": "other",
-   "at": "10.15585/mmwr.su7501a6",
-   "kept": 0,
-   "thrown": []
   },
   {
    "title": "Canadian Drugs and Substances Strategy: Overview",
@@ -263,35 +454,235 @@
    "at": "https://www2.hse.ie/living-well/alcohol/health/how-alcohol-can-affect-everyday-life/mixing-alcohol-with-medicines-or-drugs/",
    "kept": 0,
    "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F3"
+  ],
+  "direct": "Not known",
+  "but": [
+   "F3"
+  ],
+  "how": [
+   [
+    "F3",
+    "L1"
+   ]
+  ],
+  "unanswered": "exact magnitude of usage change"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.059,
+   "but": 0.9439,
+   "how1": 0.8763,
+   "how2": 0.9706
   },
+  "scores_quotes_alone": {
+   "short": 0.138,
+   "but": 0.8203,
+   "how1": 0.8769,
+   "how2": 0.9605
+  }
+ },
+ "tries": [
   {
-   "title": "Implementation factors shaping British Columbia's drug decriminalization pilot: A systematic review with narrative synthesis",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.drugpo.2026.105431",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Stigma among health professionals towards patients with substance use disorders and its consequences for healthcare delivery: systematic review",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1016/j.drugalcdep.2013.02.018",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Navigating Identification and Management of Substance Use in Adolescents",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.3928/19382359-20260223-05",
-   "kept": 0,
-   "thrown": [
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
     {
-     "kind": "text",
-     "text": "not mentioned in the provided passages",
-     "quote": "Substance use in adolescents is an important public health topic.",
-     "why": "the sentence is not carried by its quote and passage"
+     "part": "short",
+     "text": "Not known. Only 9 studies have looked at how decriminalizing cannabis changes how much people use it.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says 9 studies examined cannabis decriminalization, but does not specify that they examined how decriminalization changes usage amounts."
+    },
+    {
+     "part": "but",
+     "text": "The answer is based on just 9 studies, all using a specific math method to compare before and after.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The passages only report the number of studies and their methodology; they provide no information about the magnitude or direction of the effect of decriminalizing drugs on usage rates, so 'Not known' is a fair opening, but the following se)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review found only 9 studies examined cannabis decriminalization, all using a difference-in-differences approach.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review notes governments worry decriminalization may increase cannabis use among vulnerable groups like youth.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "windle_2026",
+       "where": "Text",
+       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
+       "sha": "04ca025611d60c8d"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. The sources do not say if decriminalizing drugs changes how much people use them.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "Only 9 studies looked at cannabis decriminalization, so there is little information on this topic.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review found 9 studies on cannabis decriminalization, all using a specific math method.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review notes governments worry about more use by young people and other groups.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "windle_2026",
+       "where": "Text",
+       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
+       "sha": "04ca025611d60c8d"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. Only 9 studies examined cannabis decriminalization, so the effect on usage rates is not clear.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports only the number of studies; it does not state that the effect on usage rates is unclear."
+    },
+    {
+     "part": "but",
+     "text": "The studies highlight potential risks, including increased cannabis use among vulnerable populations such as youth.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "windle_2026",
+       "where": "Text",
+       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
+       "sha": "04ca025611d60c8d"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says governments highlight potential risks, not the studies."
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review found only 9 studies examined cannabis decriminalization, all using a difference-in-differences approach.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "windle_2026",
+       "where": "Cannabis Decriminalization",
+       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
+       "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The review notes governments highlight risks, including increased cannabis use among vulnerable populations such as youth.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "windle_2026",
+       "where": "Text",
+       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
+       "sha": "04ca025611d60c8d"
+      }
+     ],
+     "ok": true
     }
    ]
   }
