@@ -1,7 +1,7 @@
 {
  "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
  "id": "au_w_0017",
- "lane": 18,
+ "lane": 19,
  "kind": "answer",
  "from": "w_0017",
  "question": "How long does weed stay in your system?",
@@ -17,32 +17,34 @@
   "cannabis"
  ],
  "made": {
-  "on": "2026-11-18",
+  "on": "2026-11-25",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b"
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team H2",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44230597052",
+  "run": "45555419884",
+  "read_seconds": 34,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 387.6
+  "neurons": 601.5,
+  "seconds": 98
  },
- "status": "waiting",
- "why": "about pregnancy or children: written, and waiting for a person before it is published",
+ "status": "none",
+ "why": "no draft passed: broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
  "gates": {
-  "read": "4 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.25, but 0.71, how1 0.71, how2 0.17",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b); 1 How-do-we-know line(s) dropped",
-  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it"
+  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 1 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
  },
  "sources": [
   {
@@ -75,10 +77,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-18"
+      "checked_on": "2026-11-25"
      }
     },
     "volume": "268",
@@ -101,9 +103,17 @@
     {
      "passage": 8,
      "where": "Introduction",
-     "quote": "THC-OH is then converted into the main metabolite 11-nor-9-carboxy-Δ9-tetrahydrocannabinol (THC-COOH), which is then excreted in human urine and feces, as a glucuronic acid conjugate.",
-     "text": "THC is metabolized to THC-OH and then to THC-COOH, which is excreted in urine and feces.",
+     "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
+     "text": "THC is metabolized to THC-OH and then to THC-COOH.",
      "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 30,
+     "where": "Occurrence of cannabinoids in wastewater and the environment",
+     "quote": "The concentrations of THC, THC-OH, and THC-COOH in INF ranged from not detected to 2070, 90.9, and 2590 ng L−1, respectively (;;).",
+     "text": "The concentrations of THC, THC-OH, and THC-COOH were found in certain ranges.",
+     "id": "F2",
      "second_hand": ""
     },
     {
@@ -111,7 +121,7 @@
      "where": "Abstract",
      "quote": "THC and its metabolites have been detected in wastewater, surface water, and drinking water.",
      "text": "THC and its metabolites have been detected in wastewater, surface water, and drinking water.",
-     "id": "F2",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -120,7 +130,7 @@
      "passage": 30,
      "where": "Occurrence of cannabinoids in wastewater and the environment",
      "quote": "More samples from different natural water systems would be required to confirm the trend of THC and its metabolites in natural water systems.",
-     "text": "More samples are needed to confirm the trend of THC and its metabolites in natural water systems.",
+     "text": "More samples are needed to confirm the trend in natural water systems.",
      "id": "L1",
      "second_hand": ""
     }
@@ -193,10 +203,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-18",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-18"
+      "checked_on": "2026-11-25"
      }
     },
     "volume": "16",
@@ -226,7 +236,7 @@
      "where": "Toxicokinetic analysis",
      "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
      "text": "The half-lives of THC were 52.5 h and 21.7 h in two children.",
-     "id": "F3",
+     "id": "F4",
      "second_hand": ""
     },
     {
@@ -234,7 +244,7 @@
      "where": "Abstract",
      "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
      "text": "The elimination rate constants of THC were 0.013 h−1 and 0.031 h−1 in two children.",
-     "id": "F4",
+     "id": "F5",
      "second_hand": ""
     }
    ],
@@ -243,7 +253,7 @@
      "passage": 17,
      "where": "Discussion",
      "quote": "Due to limited information on the time interval between ingestion and blood collection, it was not possible to reliably assess the relationship between plasma THC concentrations and the severity of clinical manifestations.",
-     "text": "The relationship between THC concentrations and clinical manifestations could not be reliably assessed due to limited information.",
+     "text": "The relationship between plasma THC concentrations and the severity of clinical manifestations could not be reliably assessed due to limited information.",
      "id": "L2",
      "second_hand": ""
     }
@@ -251,77 +261,9 @@
    "tag": "B"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "In two children, weed stayed in the body for 21.7 to 52.5 hours. This is the time it takes for half the drug to leave.",
-   "uses": [
-    "F3",
-    "F4"
-   ],
-   "rests_on": [
-    {
-     "label": "F3",
-     "ref": "cafaro_2025",
-     "where": "Toxicokinetic analysis",
-     "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-     "sha": "144d4fc8868bc054"
-    },
-    {
-     "label": "F4",
-     "ref": "cafaro_2025",
-     "where": "Abstract",
-     "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-     "sha": "d661225744fada1f"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 1 review and 1 case report.",
-   "uses": [
-    "F1",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "how_2021",
-     "where": "Introduction",
-     "quote": "THC-OH is then converted into the main metabolite 11-nor-9-carboxy-Δ9-tetrahydrocannabinol (THC-COOH), which is then excreted in human urine and feces, as a glucuronic acid conjugate.",
-     "sha": "9f30ad6054ad8576"
-    },
-    {
-     "label": "DB",
-     "ref": "cafaro_2025",
-     "where": "Abstract",
-     "quote": "Accidental exposure to edible cannabis products in children is an increasing public health concern.",
-     "sha": "d661225744fada1f"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2021 review says weed breaks down into parts that leave the body in urine and feces.",
-   "uses": [
-    "F1"
-   ],
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "how_2021",
-     "where": "Introduction",
-     "quote": "THC-OH is then converted into the main metabolite 11-nor-9-carboxy-Δ9-tetrahydrocannabinol (THC-COOH), which is then excreted in human urine and feces, as a glucuronic acid conjugate.",
-     "sha": "9f30ad6054ad8576"
-    }
-   ],
-   "quote": "which is then excreted in human urine and feces, as a glucuronic acid conjugate",
-   "quote_ref": "how_2021"
-  }
- ],
+ "parts": [],
  "complete": false,
- "missing": "How long it stays in adults or different body parts",
+ "missing": "detection windows for adults, chronic use, and different test matrices",
  "wanted": [
   {
    "doi": "10.1097/00007691-200404000-00020",
@@ -346,14 +288,23 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-18",
+   "lane": 18,
+   "status": "waiting",
+   "why": "about pregnancy or children: written, and waiting for a person before it is published",
+   "short": "In two children, weed stayed in the body for 21.7 to 52.5 hours. This is the time it takes for half the drug to leave.",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "A critical review on the detection, occurrence, fate, toxicity, and removal of cannabinoids in the water system and the environment",
    "read": "full",
    "kind": "review",
    "at": "10.1016/j.envpol.2020.115642",
-   "kept": 2,
+   "kept": 3,
    "thrown": [
     {
      "kind": "text",
@@ -368,15 +319,9 @@
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     },
     {
-     "kind": "finding",
-     "text": "The concentrations of THC, THC-OH, and THC-COOH were found in wastewater.",
-     "quote": "The concentrations of THC, THC-OH, and THC-COOH in INF ranged from not detected to 2070, 90.9, and 2590 ng L−1, respectively (;;).",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
      "kind": "limit",
-     "text": "More drinking water samples are needed to confirm the trend.",
-     "quote": "More drinking water samples would be required to confirm the general trend.",
+     "text": "More validation is needed for extraction from solid samples.",
+     "quote": "More validation and optimization on the extraction of cannabinoids from solid samples (sewage sludge, sediment, and suspended solids) would be required to improve the analysis of cannabinoids and thei",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -390,13 +335,13 @@
    "thrown": [
     {
      "kind": "finding",
-     "text": "In one child, THC was 45.0 μg/L approximately 7 h after ingestion.",
+     "text": "In one child, the THC concentration was 45.0 μg/L approximately 7 h after ingestion.",
      "quote": "In Case 1, the ingestion of CCP was estimated to have occurred approximately 7 h prior to the first blood sample (THC concentration: 45.0 μg/L).",
      "why": "it holds an amount or a time between uses"
     },
     {
      "kind": "finding",
-     "text": "In one child, THC was 54.7 μg/L approximately 10 h after ingestion.",
+     "text": "In one child, the THC concentration was 54.7 μg/L approximately 10 h after ingestion.",
      "quote": "In Case 2, ingestion was presumed to have occurred approximately 10 h before the first sample was drawn (THC concentration: 54.7 μg/L).",
      "why": "it holds an amount or a time between uses"
     }
@@ -427,6 +372,14 @@
    "thrown": []
   },
   {
+   "title": "Cannabis (marijuana)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.betterhealth.vic.gov.au/health/healthyliving/cannabis-marijuana",
+   "kept": 0,
+   "thrown": []
+  },
+  {
    "title": "5 Things to Know about Delta-8 Tetrahydrocannabinol – Delta-8 THC",
    "read": "page",
    "kind": "official",
@@ -445,60 +398,70 @@
  ],
  "plan": {
   "short": [
-   "F3",
-   "F4"
+   "F4",
+   "F5"
   ],
   "direct": "",
-  "but": [
-   "L2"
-  ],
+  "but": [],
   "how": [
    [
-    "F1"
+    "F4",
+    "F5"
    ],
    [
-    "DB",
-    "F3",
-    "F4"
+    "F1"
    ]
   ],
-  "unanswered": "duration in typical adult users"
- },
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.2479,
-   "but": 0.7097,
-   "how1": 0.7087,
-   "how2": 0.1705
-  },
-  "scores_quotes_alone": {
-   "short": 0.0286,
-   "but": 0.925,
-   "how1": 0.4119,
-   "how2": 0.0538
-  }
+  "unanswered": "detection windows for adults, chronic use, and different test matrices"
  },
  "tries": [
   {
    "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "In two children, weed stayed in the body for 21.7 to 52.5 hours. This is the time it takes for half the drug to leave.",
+     "text": "Not known. The sources do not say how long weed stays in the body of people who use it.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
+       "sha": "9f30ad6054ad8576"
+      },
+      {
+       "label": "F4",
        "ref": "cafaro_2025",
        "where": "Toxicokinetic analysis",
        "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
        "sha": "144d4fc8868bc054"
       },
       {
+       "label": "F5",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "The only data came from two young children, not people who use cannabis.",
+     "rests_on": [
+      {
        "label": "F4",
+       "ref": "cafaro_2025",
+       "where": "Toxicokinetic analysis",
+       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "144d4fc8868bc054"
+      },
+      {
+       "label": "F5",
        "ref": "cafaro_2025",
        "where": "Abstract",
        "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
@@ -508,84 +471,89 @@
      "ok": true
     },
     {
-     "part": "but",
-     "text": "Doctors could not link blood levels to how sick the children were because they did not know exactly when the children ate the weed.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "cafaro_2025",
-       "where": "Discussion",
-       "quote": "Due to limited information on the time interval between ingestion and blood collection, it was not possible to reliably assess the relationship between plasma THC concentrations and the severity of clinical manifestations.",
-       "sha": "d4a80e4a41d9b1e4"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
      "part": "how1",
-     "text": "A 2021 review says the body turns THC into other forms that leave in urine and feces.",
+     "text": "A 2025 case report of two children found THC half-lives of 52.5 and 21.7 hours.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "how_2021",
-       "where": "Introduction",
-       "quote": "THC-OH is then converted into the main metabolite 11-nor-9-carboxy-Δ9-tetrahydrocannabinol (THC-COOH), which is then excreted in human urine and feces, as a glucuronic acid conjugate.",
-       "sha": "9f30ad6054ad8576"
+       "label": "F4",
+       "ref": "cafaro_2025",
+       "where": "Toxicokinetic analysis",
+       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "144d4fc8868bc054"
+      },
+      {
+       "label": "F5",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2025 report on two children who ate weed found it left their blood in 21.7 to 52.5 hours.",
+     "text": "A 2021 review says THC is metabolized to THC-OH and then to THC-COOH.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "Accidental exposure to edible cannabis products in children is an increasing public health concern.",
-       "sha": "d661225744fada1f"
-      },
-      {
-       "label": "F3",
-       "ref": "cafaro_2025",
-       "where": "Toxicokinetic analysis",
-       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "144d4fc8868bc054"
-      },
-      {
-       "label": "F4",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-       "sha": "d661225744fada1f"
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
+       "sha": "9f30ad6054ad8576"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The sentence claims the drug completely left the blood in 21.7–52.5 h, which overstates the passage that only reports half‑life values (time for half the drug to be eliminated)."
+     "ok": true
     }
    ]
   },
   {
    "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
+   "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "In two children, weed stayed in the body for 21.7 to 52.5 hours. This is the time it takes for half the drug to leave.",
+     "text": "Not known. The sources do not say how long weed stays in the system.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
+       "sha": "9f30ad6054ad8576"
+      },
+      {
+       "label": "F4",
        "ref": "cafaro_2025",
        "where": "Toxicokinetic analysis",
        "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
        "sha": "144d4fc8868bc054"
       },
       {
+       "label": "F5",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "The data comes from a case report of two children, not adults.",
+     "rests_on": [
+      {
        "label": "F4",
+       "ref": "cafaro_2025",
+       "where": "Toxicokinetic analysis",
+       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "144d4fc8868bc054"
+      },
+      {
+       "label": "F5",
        "ref": "cafaro_2025",
        "where": "Abstract",
        "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
@@ -595,55 +563,66 @@
      "ok": true
     },
     {
-     "part": "but",
-     "text": "The study could not link how much weed was in the blood to how sick the children felt.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "cafaro_2025",
-       "where": "Discussion",
-       "quote": "Due to limited information on the time interval between ingestion and blood collection, it was not possible to reliably assess the relationship between plasma THC concentrations and the severity of clinical manifestations.",
-       "sha": "d4a80e4a41d9b1e4"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer"
-    },
-    {
      "part": "how1",
-     "text": "A 2021 review says weed breaks down into parts that leave the body in urine and feces.",
+     "text": "A case report of two children found THC half-lives of 52.5 and 21.7 hours.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "how_2021",
-       "where": "Introduction",
-       "quote": "THC-OH is then converted into the main metabolite 11-nor-9-carboxy-Δ9-tetrahydrocannabinol (THC-COOH), which is then excreted in human urine and feces, as a glucuronic acid conjugate.",
-       "sha": "9f30ad6054ad8576"
+       "label": "F4",
+       "ref": "cafaro_2025",
+       "where": "Toxicokinetic analysis",
+       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "144d4fc8868bc054"
+      },
+      {
+       "label": "F5",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2025 report on two children found the drug left their blood in 21.7 to 52.5 hours.",
+     "text": "A 2021 review says THC is metabolized to THC-OH and then to THC-COOH.",
      "rests_on": [
       {
-       "label": "DB",
-       "ref": "cafaro_2025",
-       "where": "Abstract",
-       "quote": "Accidental exposure to edible cannabis products in children is an increasing public health concern.",
-       "sha": "d661225744fada1f"
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
+       "sha": "9f30ad6054ad8576"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. The sources do not say how long weed stays in the system.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
+       "sha": "9f30ad6054ad8576"
       },
       {
-       "label": "F3",
+       "label": "F4",
        "ref": "cafaro_2025",
        "where": "Toxicokinetic analysis",
        "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
        "sha": "144d4fc8868bc054"
       },
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "cafaro_2025",
        "where": "Abstract",
        "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
@@ -651,58 +630,66 @@
       }
      ],
      "ok": false,
-     "by": "the second reader",
-     "said": "Sentence claims the drug completely left the blood in 21.7–52.5 h, but the passages only report these values as half‑life (time for half the drug to be eliminated)."
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "The data comes from a case report of two children, not adults.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "cafaro_2025",
+       "where": "Toxicokinetic analysis",
+       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "144d4fc8868bc054"
+      },
+      {
+       "label": "F5",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A case report of two children found THC half-lives of 52.5 and 21.7 hours.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "cafaro_2025",
+       "where": "Toxicokinetic analysis",
+       "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "144d4fc8868bc054"
+      },
+      {
+       "label": "F5",
+       "ref": "cafaro_2025",
+       "where": "Abstract",
+       "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
+       "sha": "d661225744fada1f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2021 review says THC is metabolized to THC-OH and then to THC-COOH.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "how_2021",
+       "where": "Introduction",
+       "quote": "When inhaled, THC quickly enters the bloodstream via the lungs and is then metabolized to 11-hydroxy-Δ9-tetrahydrocannabinol (THC-OH) by the liver.",
+       "sha": "9f30ad6054ad8576"
+      }
+     ],
+     "ok": true
     }
    ]
-  }
- ],
- "dropped": [
-  {
-   "try": 3,
-   "part": "but",
-   "text": "The study could not link how much weed was in the blood to how sick the children felt.",
-   "rests_on": [
-    {
-     "label": "L2",
-     "ref": "cafaro_2025",
-     "where": "Discussion",
-     "quote": "Due to limited information on the time interval between ingestion and blood collection, it was not possible to reliably assess the relationship between plasma THC concentrations and the severity of clinical manifestations.",
-     "sha": "d4a80e4a41d9b1e4"
-    }
-   ],
-   "by": "the second reader",
-   "said": "it is about something else than the short answer"
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "A 2025 report on two children found the drug left their blood in 21.7 to 52.5 hours.",
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "cafaro_2025",
-     "where": "Abstract",
-     "quote": "Accidental exposure to edible cannabis products in children is an increasing public health concern.",
-     "sha": "d661225744fada1f"
-    },
-    {
-     "label": "F3",
-     "ref": "cafaro_2025",
-     "where": "Toxicokinetic analysis",
-     "quote": "The estimated THC kel values were 0.013 h−1 for Case 1 and 0.031 h−1 for Case 2, corresponding to terminal half-lives (t½) of 52.5 and 21.7 h, respectively.",
-     "sha": "144d4fc8868bc054"
-    },
-    {
-     "label": "F4",
-     "ref": "cafaro_2025",
-     "where": "Abstract",
-     "quote": "The elimination rate constant (kel) was 0.013 h−1 in Case 1 and 0.031 h−1 in Case 2, corresponding to an half-life (t½) of 52.5 and 21.7 h, respectively.",
-     "sha": "d661225744fada1f"
-    }
-   ],
-   "by": "the second reader",
-   "said": "The sentence states the drug left the blood in 21.7–52.5 h, implying complete clearance, whereas the passages only report half‑life values (time for half the drug to be eliminated)."
   }
  ],
  "place": {
