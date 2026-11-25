@@ -15,37 +15,243 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-25",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.6-flash",
    "team": "team G",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45492684383",
+  "run": "45564176305",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 238
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.11, but 0.98, how1 0.29, how2 0.41, how3 0.12, how4 0.96",
+  "check": "short: NOT accepted: it does not answer the question itself (All six sentences are fully supported by the cited passages; however, sentence 1 does not address the risk aspect of the original question, so it does not answer the whole question. Sentence 2 provides a limitation about the lack of knowled); but: accepted; how1: accepted; how2: accepted; how3: accepted; how4: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "colcott_2024",
+    "type": "article-journal",
+    "title": "Side-effects of mdma-assisted psychotherapy: A systematic review and meta-analysis",
+    "author": [
+     {
+      "family": "Colcott",
+      "given": "Julia"
+     },
+     {
+      "family": "Guerin",
+      "given": "Alexandre A."
+     },
+     {
+      "family": "Carter",
+      "given": "Olivia"
+     },
+     {
+      "family": "Meikle",
+      "given": "Sally"
+     },
+     {
+      "family": "Bedi",
+      "given": "Gillinder"
+     }
+    ],
+    "container-title": "Neuropsychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.1038/s41386-024-01865-8",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     }
+    },
+    "volume": "49",
+    "issue": "8",
+    "page": "1208-1226",
+    "PMCID": "PMC11224236"
+   },
+   "doi": "10.1038/s41386-024-01865-8",
+   "pmcid": "PMC11224236",
+   "title": "Side-effects of mdma-assisted psychotherapy: a systematic review and meta-analysis",
+   "year": 2024,
+   "journal": "Neuropsychopharmacology : official publication of the American College of Neuropsychopharmacology",
+   "kind": "review",
+   "people": false,
+   "near": 0.618,
+   "money": [
+    "This research was supported by the Medical Research Futures Fund of Australia (MRF2010957). Open Access funding enabled and organized by CAUL and its Member Institutions.",
+    "The authors declare no competing interests."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "We conducted the first comprehensive systematic review and meta‑analysis of the side effects of MDMA‑AP across indications.",
+    "text": "Systematic review and meta‑analysis of side effects of MDMA‑assisted psychotherapy"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "MDMA‑AP was associated with increased odds of any side effect during medication sessions (OR = 1.67, 95%CI (1.12, 2.49)) and in the 7 days following (OR = 1.59, 95%CI (1.12, 2.24)) relative to control conditions.",
+     "text": "MDMA‑AP increased the odds of any side effect during medication sessions (OR = 1.67, 95% CI 1.12–2.49) and in the 7 days after (OR = 1.59, 95% CI 1.12–2.24) compared with control.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 36,
+     "where": "Discussion",
+     "quote": "Participants treated with MDMA‑AP also had 4.7 greater odds of anxiety and 4.8 greater odds of jaw clenching during medication sessions relative to placebo participants.",
+     "text": "MDMA‑AP increased the odds of anxiety (OR = 4.7) and jaw clenching (OR = 4.8) during medication sessions compared with placebo.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 37,
+     "where": "Discussion",
+     "quote": "MDMA‑AP participants had 3.5 times greater odds of experiencing any TEAE compared with placebo participants. They also had increased odds of muscle tightness, decreased appetite, nausea, excessive perspiration, feeling cold, restlessness, dilated pupils, jaw clenching, uncontrolled eye movements, feeling jittery, non‑cardiac chest pain/discomfort, blurred vision, and chills.",
+     "text": "MDMA‑AP increased the odds of any treatment‑emergent adverse event (OR = 3.5) and of specific symptoms such as muscle tightness, decreased appetite, nausea, excessive perspiration, feeling cold, restlessness, dilated pupils, jaw clenching, uncontrolled eye movements, feeling jittery, non‑cardiac chest pain, blurred vision, and chills compared with placebo.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 40,
+     "where": "Discussion",
+     "quote": "The overall evidence on MDMA‑AP, however, consists of a relatively limited number of studies with highly selective samples (i.e., most people volunteering for these studies were excluded from participation).",
+     "text": "The evidence is based on a limited number of studies with highly selective samples, limiting generalizability.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "oeri_2021",
+    "type": "article-journal",
+    "title": "Beyond ecstasy: Alternative entactogens to 3,4-methylenedioxymethamphetamine with potential applications in psychotherapy",
+    "author": [
+     {
+      "family": "Oeri",
+      "given": "Hans Emanuel"
+     }
+    ],
+    "container-title": "Journal of Psychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2021
+      ]
+     ]
+    },
+    "DOI": "10.1177/0269881120920420",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     },
+     "online_first_year": 2020
+    },
+    "volume": "35",
+    "issue": "5",
+    "page": "512-536",
+    "PMCID": "PMC8155739"
+   },
+   "doi": "10.1177/0269881120920420",
+   "pmcid": "PMC8155739",
+   "title": "Beyond ecstasy: Alternative entactogens to 3,4-methylenedioxymethamphetamine with potential applications in psychotherapy",
+   "year": 2021,
+   "journal": "Journal of psychopharmacology (Oxford, England)",
+   "kind": "review",
+   "people": true,
+   "near": 0.581,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "The last two decades have seen a revival of interest in the entactogen 3,4-methylenedioxy-N-methylamphetamine (MDMA) as an adjunct to psychotherapy, particularly for the treatment of post-traumatic stress disorder.",
+    "text": "Review paper examining alternative entactogens to MDMA"
+   },
+   "findings": [
+    {
+     "passage": 49,
+     "where": "Benzofurans",
+     "quote": "One of the few drug-discrimination studies performed in rats using benzofurans found that 5-APB, as well as 6-APDB (the 2,3-dihydro isomer of 6-APB), fully substituted for MDMA in rats trained to discriminate MDMA from vehicle.",
+     "text": "In rats, 5‑APB and 6‑APDB fully substituted for MDMA in a drug‑discrimination task.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 54,
+     "where": "Benzofurans",
+     "quote": "The fact that users report the effects of 6-APB as having a slightly more psychedelic character than MDMA, particularly at higher doses, is not entirely surprising, since structurally it is an analogue of MDA, whose R-enantiomer has been shown to produce more psychedelic effects than its S-enantiomer.",
+     "text": "Users report that 6‑APB has a slightly more psychedelic character than MDMA, especially at higher doses.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 55,
+     "where": "Benzofurans",
+     "quote": "The onset of effects is generally described as more gradual and less ‘forced’ than the onset of MDMA. The duration of the entactogenic effects is also described as being longer (around 5–8 h for all four of the benzofurans as opposed to 3–6 h for MDMA) with greater mental clarity than MDMA.",
+     "text": "The entactogenic effects of 6‑APB last about 5–8 h, longer than the 3–6 h duration of MDMA, with a more gradual onset.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 81,
+     "where": "Discussion",
+     "quote": "While little is known about their long-term neurological effects, they generally seem to be tolerated better than MDMA by users.",
+     "text": "Little is known about the long-term neurological effects of benzofurans.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "specific long‑term health risks of 6‑APB",
  "wanted": [
   {
    "doi": "10.1016/j.neuropharm.2022.109375",
@@ -86,6 +292,14 @@
    "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -94,39 +308,384 @@
    "read": "full",
    "kind": "review",
    "at": "10.1038/s41386-024-01865-8",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Participants receiving MDMA‑AP had higher odds of side effects during and 7 days after sessions compared with placebo‑AP, but no difference in treatment‑emergent adverse events.",
+     "quote": "participants undergoing MDMA‑AP had higher odds of experiencing side effects during and 7 days after medication sessions relative to placebo‑AP participants, and there was no difference in TEAEs.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "Side‑effect data may be underestimated because most studies used passive, spontaneous reporting rather than systematic checklists or scales.",
+     "quote": "Most studies relied on passive monitoring of spontaneously reported side effects. While spontaneous reporting avoids the problem of suggestive questions influencing outcomes, evidence suggests that it",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Beyond ecstasy: Alternative entactogens to 3,4-methylenedioxymethamphetamine with potential applications in psychotherapy",
    "read": "full",
    "kind": "review",
    "at": "10.1177/0269881120920420",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "A Review of 3,4-methylenedioxymethamphetamine (MDMA)-Assisted Psychotherapy",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fpsyt.2019.00138",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Exploring MDMA assisted therapy in eating disorders: mechanisms, clinical evidence, and future directions",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s40337-025-01409-5",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Benzofurans, including 6‑APB, have longer durations of action and subjective effects that closely emulate those of MDMA.",
+     "quote": "The benzofurans are some of the compounds with the longest durations of action listed here, with subjective entactogenic effects that are reported to emulate those of MDMA more closely than many of th",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F6",
+   "F4"
+  ],
+  "direct": "",
+  "but": [
+   "L2"
+  ],
+  "how": [
+   [
+    "F5",
+    "F6",
+    "F4"
+   ],
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": "specific long‑term health risks of 6‑APB"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.1082,
+   "but": 0.9797,
+   "how1": 0.2912,
+   "how2": 0.4102,
+   "how3": 0.1157,
+   "how4": 0.9554
+  },
+  "scores_quotes_alone": {
+   "short": 0.9064,
+   "but": 0.5112,
+   "how1": 0.5959,
+   "how2": 0.158,
+   "how3": 0.0572,
+   "how4": 0.9626
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "People who use 6-APB report it feels more psychedelic than MDMA. Its effects last 5 to 8 hours, longer than MDMA's 3 to 6 hours.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The fact that users report the effects of 6-APB as having a slightly more psychedelic character than MDMA, particularly at higher doses, is not entirely surprising, since structurally it is an analogue of MDA, whose R-enantiomer has been shown to produce more psychedelic effects than its S-enantiomer.",
+       "sha": "13539d8d16449ab3"
+      },
+      {
+       "label": "F6",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The onset of effects is generally described as more gradual and less ‘forced’ than the onset of MDMA. The duration of the entactogenic effects is also described as being longer (around 5–8 h for all four of the benzofurans as opposed to 3–6 h for MDMA) with greater mental clarity than MDMA.",
+       "sha": "d7703f669ae5449e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "Little is known about the long-term neurological effects of benzofurans like 6-APB.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "oeri_2021",
+       "where": "Discussion",
+       "quote": "While little is known about their long-term neurological effects, they generally seem to be tolerated better than MDMA by users.",
+       "sha": "851a000d3b124e96"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says people who use 6-APB report a more gradual onset and greater mental clarity than with MDMA.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The fact that users report the effects of 6-APB as having a slightly more psychedelic character than MDMA, particularly at higher doses, is not entirely surprising, since structurally it is an analogue of MDA, whose R-enantiomer has been shown to produce more psychedelic effects than its S-enantiomer.",
+       "sha": "13539d8d16449ab3"
+      },
+      {
+       "label": "F6",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The onset of effects is generally described as more gradual and less ‘forced’ than the onset of MDMA. The duration of the entactogenic effects is also described as being longer (around 5–8 h for all four of the benzofurans as opposed to 3–6 h for MDMA) with greater mental clarity than MDMA.",
+       "sha": "d7703f669ae5449e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "In rats, 6-APDB (a form of 6-APB) fully substituted for MDMA in a drug-discrimination task.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "One of the few drug-discrimination studies performed in rats using benzofurans found that 5-APB, as well as 6-APDB (the 2,3-dihydro isomer of 6-APB), fully substituted for MDMA in rats trained to discriminate MDMA from vehicle.",
+       "sha": "31ab335f3ffeb988"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review found MDMA-assisted therapy increased the odds of side effects during sessions and in the 7 days after.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "colcott_2024",
+       "where": "Abstract",
+       "quote": "MDMA‑AP was associated with increased odds of any side effect during medication sessions (OR = 1.67, 95%CI (1.12, 2.49)) and in the 7 days following (OR = 1.59, 95%CI (1.12, 2.24)) relative to control conditions.",
+       "sha": "1b5faa9650c25990"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "People who use 6-APB say it feels more psychedelic than MDMA and lasts 5 to 8 hours. In rats, it fully replaced MDMA in a test.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The fact that users report the effects of 6-APB as having a slightly more psychedelic character than MDMA, particularly at higher doses, is not entirely surprising, since structurally it is an analogue of MDA, whose R-enantiomer has been shown to produce more psychedelic effects than its S-enantiomer.",
+       "sha": "13539d8d16449ab3"
+      },
+      {
+       "label": "F6",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The onset of effects is generally described as more gradual and less ‘forced’ than the onset of MDMA. The duration of the entactogenic effects is also described as being longer (around 5–8 h for all four of the benzofurans as opposed to 3–6 h for MDMA) with greater mental clarity than MDMA.",
+       "sha": "d7703f669ae5449e"
+      },
+      {
+       "label": "F4",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "One of the few drug-discrimination studies performed in rats using benzofurans found that 5-APB, as well as 6-APDB (the 2,3-dihydro isomer of 6-APB), fully substituted for MDMA in rats trained to discriminate MDMA from vehicle.",
+       "sha": "31ab335f3ffeb988"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The rat study mentioned in the passages refers to 6‑APDB (the 2,3‑dihydro isomer of 6‑APB), not to 6‑APB itself."
+    },
+    {
+     "part": "but",
+     "text": "Little is known about the long-term neurological effects of benzofurans, so the long-term risk is not clear.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "oeri_2021",
+       "where": "Discussion",
+       "quote": "While little is known about their long-term neurological effects, they generally seem to be tolerated better than MDMA by users.",
+       "sha": "851a000d3b124e96"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages state that little is known about long‑term neurological effects, but they do not explicitly say that the long‑term risk is unclear."
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says people who use 6-APB report a more psychedelic feel and longer effects than MDMA.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The fact that users report the effects of 6-APB as having a slightly more psychedelic character than MDMA, particularly at higher doses, is not entirely surprising, since structurally it is an analogue of MDA, whose R-enantiomer has been shown to produce more psychedelic effects than its S-enantiomer.",
+       "sha": "13539d8d16449ab3"
+      },
+      {
+       "label": "F6",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The onset of effects is generally described as more gradual and less ‘forced’ than the onset of MDMA. The duration of the entactogenic effects is also described as being longer (around 5–8 h for all four of the benzofurans as opposed to 3–6 h for MDMA) with greater mental clarity than MDMA.",
+       "sha": "d7703f669ae5449e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "In rats, 6-APB fully substituted for MDMA in a drug-discrimination task.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "One of the few drug-discrimination studies performed in rats using benzofurans found that 5-APB, as well as 6-APDB (the 2,3-dihydro isomer of 6-APB), fully substituted for MDMA in rats trained to discriminate MDMA from vehicle.",
+       "sha": "31ab335f3ffeb988"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage reports full substitution for MDMA by 6‑APDB, not by 6‑APB."
+    },
+    {
+     "part": "how3",
+     "text": "A 2024 review found MDMA therapy increased the odds of side effects during sessions and for 7 days after.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "colcott_2024",
+       "where": "Abstract",
+       "quote": "MDMA‑AP was associated with increased odds of any side effect during medication sessions (OR = 1.67, 95%CI (1.12, 2.49)) and in the 7 days following (OR = 1.59, 95%CI (1.12, 2.24)) relative to control conditions.",
+       "sha": "1b5faa9650c25990"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "People who use 6-APB say it feels more psychedelic than MDMA and lasts 5 to 8 hours. In rats, a related drug acted like MDMA.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The fact that users report the effects of 6-APB as having a slightly more psychedelic character than MDMA, particularly at higher doses, is not entirely surprising, since structurally it is an analogue of MDA, whose R-enantiomer has been shown to produce more psychedelic effects than its S-enantiomer.",
+       "sha": "13539d8d16449ab3"
+      },
+      {
+       "label": "F6",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The onset of effects is generally described as more gradual and less ‘forced’ than the onset of MDMA. The duration of the entactogenic effects is also described as being longer (around 5–8 h for all four of the benzofurans as opposed to 3–6 h for MDMA) with greater mental clarity than MDMA.",
+       "sha": "d7703f669ae5449e"
+      },
+      {
+       "label": "F4",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "One of the few drug-discrimination studies performed in rats using benzofurans found that 5-APB, as well as 6-APDB (the 2,3-dihydro isomer of 6-APB), fully substituted for MDMA in rats trained to discriminate MDMA from vehicle.",
+       "sha": "31ab335f3ffeb988"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (All six sentences are fully supported by the cited passages; however, sentence 1 does not address the risk aspect of the original question, so it does not answer the whole question. Sentence 2 provides a limitation about the lack of knowled)"
+    },
+    {
+     "part": "but",
+     "text": "Little is known about the long-term neurological effects of benzofurans.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "oeri_2021",
+       "where": "Discussion",
+       "quote": "While little is known about their long-term neurological effects, they generally seem to be tolerated better than MDMA by users.",
+       "sha": "851a000d3b124e96"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2021 review says people who use 6-APB report a more psychedelic feel than MDMA, especially at higher doses.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The fact that users report the effects of 6-APB as having a slightly more psychedelic character than MDMA, particularly at higher doses, is not entirely surprising, since structurally it is an analogue of MDA, whose R-enantiomer has been shown to produce more psychedelic effects than its S-enantiomer.",
+       "sha": "13539d8d16449ab3"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says 6-APB effects last 5 to 8 hours, longer than MDMA's 3 to 6 hours, with a gradual start.",
+     "rests_on": [
+      {
+       "label": "F6",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "The onset of effects is generally described as more gradual and less ‘forced’ than the onset of MDMA. The duration of the entactogenic effects is also described as being longer (around 5–8 h for all four of the benzofurans as opposed to 3–6 h for MDMA) with greater mental clarity than MDMA.",
+       "sha": "d7703f669ae5449e"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "In rats, 6-APDB, a close relative of 6-APB, fully substituted for MDMA in a discrimination task.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "oeri_2021",
+       "where": "Benzofurans",
+       "quote": "One of the few drug-discrimination studies performed in rats using benzofurans found that 5-APB, as well as 6-APDB (the 2,3-dihydro isomer of 6-APB), fully substituted for MDMA in rats trained to discriminate MDMA from vehicle.",
+       "sha": "31ab335f3ffeb988"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2024 review found MDMA therapy increased the odds of side effects during sessions and for 7 days after.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "colcott_2024",
+       "where": "Abstract",
+       "quote": "MDMA‑AP was associated with increased odds of any side effect during medication sessions (OR = 1.67, 95%CI (1.12, 2.49)) and in the 7 days following (OR = 1.59, 95%CI (1.12, 2.24)) relative to control conditions.",
+       "sha": "1b5faa9650c25990"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "new:MDA-like drugs (MDEA, MDAI, benzofurans)",
   "also": [
