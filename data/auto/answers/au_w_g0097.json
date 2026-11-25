@@ -15,9 +15,9 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-25",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
@@ -26,29 +26,34 @@
    "team": "team I",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemini-3.5-flash-lite"
   },
-  "run": "45356487256",
+  "run": "45574116723",
   "read_by": {
+   "gpt-oss-20b": 3,
    "gemini-3.5-flash-lite": 3,
-   "gemini-3.1-flash-lite": 3,
-   "gpt-oss-20b": 1
+   "gemini-3.1-flash-lite": 1
   },
-  "read_seconds": 16,
+  "read_seconds": 90,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 80
+  "neurons": 65.9,
+  "seconds": 196
  },
  "status": "none",
- "why": "no draft passed: broken at try 3: but: a clinical word where an everyday one exists (“pharmacology”): say it plainly",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (a further reader (gemini-3.6-flash) did not accept it: The passages do not explicitly state that nitazenes can be much stronger than 'natural opioids' (the nitazene passage mentions morphine, while the FRANK passage about natural opioids refers to synthetic opioids generally).). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
+  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“pharmacology”): say it plainly",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 6 of 6; gemini-3.6-flash accepted 2 of 6",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.38, but 0.95, how1 0.04, how2 0.13, how3 0.11, how4 0.61",
+  "check": "not accepted at try 2: a second reader did not accept short (a further reader (gemini-3.6-flash) did not accept it: The passages do not explicitly state that nitazenes can be much stronger than 'natural opioids' (the nitazene passage mentions morphine, while the FRANK passage about natural opioids refers to synthetic opioids generally).). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
   {
@@ -93,10 +98,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-25"
      }
     },
     "PMCID": "PMC10361140"
@@ -113,15 +118,15 @@
    "design": {
     "passage": 5,
     "where": "Review",
-    "quote": "This is a narrative review that used the PubMed and Google Scholar databases to search for peer‑reviewed articles on nitazenes. The authors also consulted authoritative websites such as those run by the DEA, the Centers for Disease Control and Prevention (CDC), and government‑run websites for late‑breaking information on these agents.",
-    "text": "Narrative review of nitazenes using PubMed, Google Scholar, and authoritative websites"
+    "quote": "This is a narrative review that used the PubMed and Google Scholar databases to search for peer-reviewed articles on nitazenes. The authors also consulted authoritative websites such as those run by the DEA, the Centers for Disease Control and Prevention (CDC), and government-run websites for late-breaking information on these agents.",
+    "text": "Narrative review of nitazenes using literature and authoritative sources"
    },
    "findings": [
     {
      "passage": 12,
      "where": "Review",
      "quote": "Nitazenes are available in powders, counterfeit tablets, or liquids and may be mixed with inert substances and/or combined with other drugs, such as heroin, fentanyl, and benzodiazepines. Their inclusion in other drug products is not detectable by consumers and may not be disclosed to them by sellers.",
-     "text": "Nitazenes are often mixed with other drugs such as heroin, fentanyl, and benzodiazepines, and their presence is not detectable by consumers.",
+     "text": "Nitazenes are often mixed with other drugs and are not detectable by consumers.",
      "id": "F1",
      "second_hand": ""
     },
@@ -129,15 +134,15 @@
      "passage": 16,
      "where": "Review",
      "quote": "In theory, some nitazenes can be antagonized by the opioid receptor antagonists, such as naloxone and nalmefene, but it is not clear if the high potency and impurities of the nitazenes might limit the effectiveness of the available antagonists.",
-     "text": "Naloxone and nalmefene may not effectively reverse nitazene overdose due to their high potency and impurities.",
+     "text": "Naloxone and nalmefene may not effectively reverse nitazene overdose due to high potency and impurities.",
      "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 24,
      "where": "Conclusions",
-     "quote": "Certain nitazenes can be more potent than fentanyl and are increasingly found on the illicit drug market in North America and Europe. These agents may not be disclosed to buyers of illicit drugs and are often mixed with fentanyl or other agents. They are associated with morbidity and mortality, and it is not known how effective naloxone or other antagonists are when reversing nitazene‑induced respiratory depression.",
-     "text": "Nitazenes are associated with morbidity and mortality, and the effectiveness of naloxone in reversing nitazene‑induced respiratory depression is unknown.",
+     "quote": "Certain nitazenes can be more potent than fentanyl and are increasingly found on the illicit drug market in North America and Europe. These agents may not be disclosed to buyers of illicit drugs and are often mixed with fentanyl or other agents. They are associated with morbidity and mortality, and it is not known how effective naloxone or other antagonists are when reversing nitazene-induced respiratory depression.",
+     "text": "Nitazenes are associated with morbidity and mortality, and the effectiveness of naloxone in reversing their respiratory depression is unknown.",
      "id": "F3",
      "second_hand": ""
     }
@@ -147,7 +152,7 @@
      "passage": 16,
      "where": "Review",
      "quote": "The lethal doses for nitazenes in humans, particularly in combination with other drugs or medical conditions, are not known.",
-     "text": "The lethal dose of nitazenes in humans, especially when combined with other drugs or medical conditions, is unknown.",
+     "text": "The lethal dose of nitazenes in humans is not known.",
      "id": "L1",
      "second_hand": ""
     }
@@ -188,10 +193,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-25"
      }
     },
     "volume": "30",
@@ -215,22 +220,22 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This perspective paper highlights critical gaps in detection, clinical management, and regulato",
-    "text": "a perspective paper reviewing nitazenes as a novel synthetic opioid threat"
+    "text": "a perspective paper reviewing nitazenes, a class of novel synthetic opioids"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
-     "text": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, causing unintentional exposure and overdose, particularly among opioid-naïve users.",
+     "quote": "The primary cause of death is severe and prolonged respiratory depression.",
+     "text": "The primary cause of death from nitazenes is severe and prolonged respiratory depression.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 4,
-     "where": "1. Introduction",
-     "quote": "The potency of nitazenes is a major concern, as many analogues are substantially more potent than morphine and, in some cases, more potent than fentanyl.",
-     "text": "The potency of nitazenes is a major concern, as many analogues are substantially more potent than morphine and, in some cases, more potent than fentanyl.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
+     "text": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
      "id": "F5",
      "second_hand": ""
     },
@@ -281,14 +286,14 @@
       [
        2026,
        11,
-       24
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
+     "verified_on": "2026-11-25"
     }
    },
    "title": "Nitazenes",
@@ -305,18 +310,18 @@
    "design": null,
    "findings": [
     {
-     "passage": 5,
-     "where": "Effects of nitazenes",
-     "quote": "There is no safe level of drug use. Use of any drug always carries some risk. It’s important to be careful when taking any type of drug.",
-     "text": "There is no safe level of nitazene use and taking them always carries risk.",
+     "passage": 2,
+     "where": "What are nitazenes? / What do nitazenes look like?",
+     "quote": "Nitazenes are sold as a white powder, crystalline solid, or brown/yellow powder. They have also been found in tablets (fake oxycodone), heroin, ketamine, and synthetic cannabinoids.",
+     "text": "Nitazenes are sold as a white powder, crystalline solid, or brown/yellow powder, and have been found in tablets, heroin, ketamine, and synthetic cannabinoids.",
      "id": "F7",
      "second_hand": ""
     },
     {
-     "passage": 2,
-     "where": "What are nitazenes? / What do nitazenes look like?",
-     "quote": "Nitazenes are sold as a white powder, crystalline solid, or brown/yellow powder. They have also been found in tablets (fake oxycodone), heroin, ketamine, and synthetic cannabinoids.",
-     "text": "Nitazenes appear as white powder, crystalline solid, or brown/yellow powder and are found in substances like fake oxycodone, heroin, ketamine, and synthetic cannabinoids.",
+     "passage": 19,
+     "where": "Long-term effects / Dependence",
+     "quote": "People who regularly use nitazenes may become dependent. They may feel they need to use nitazenes to go about usual activities like working, studying and socialising, or just to get through the day.",
+     "text": "People who regularly use nitazenes may become dependent and feel they need to use them for usual activities or just to get through the day.",
      "id": "F8",
      "second_hand": ""
     },
@@ -324,7 +329,7 @@
      "passage": 27,
      "where": "Path2Help / National",
      "quote": "Since 2021, at least 17 overdose deaths related to nitazenes have been reported in Australia.",
-     "text": "At least 17 overdose deaths related to nitazenes have been reported in Australia since 2021.",
+     "text": "Since 2021, at least 17 overdose deaths related to nitazenes have been reported in Australia.",
      "id": "F9",
      "second_hand": ""
     }
@@ -333,8 +338,8 @@
     {
      "passage": 5,
      "where": "Effects of nitazenes",
-     "quote": "There are many types of nitazenes, and research on them is limited. How quickly their effects are felt, and how long they last, can vary between types.",
-     "text": "Research on nitazenes is limited, and the speed and duration of their effects can vary between the many different types.",
+     "quote": "There are many types of nitazenes, and research on them is limited.",
+     "text": "Research on the many types of nitazenes is limited.",
      "id": "L3",
      "second_hand": ""
     }
@@ -363,14 +368,14 @@
       [
        2026,
        11,
-       24
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
+     "verified_on": "2026-11-25"
     }
    },
    "title": "New Synthetic opioids",
@@ -387,18 +392,18 @@
    "design": null,
    "findings": [
     {
-     "passage": 2,
-     "where": "Important",
-     "quote": "Drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
-     "text": "Nitazenes are dangerous synthetic opioids used to cut other drugs and have caused the deaths of 100s of people in the UK in the past year.",
+     "passage": 3,
+     "where": "Quick info / Effects on your body",
+     "quote": "Effects are similar to natural opioids but can be much stronger, especially when mixed with other drugs, with a higher risk of overdose.",
+     "text": "Nitazenes can be much stronger than natural opioids and have a higher risk of overdose, especially when mixed with other drugs.",
      "id": "F10",
      "second_hand": ""
     },
     {
-     "passage": 1,
-     "where": "Top of the page",
-     "quote": "Man-made drugs that mimic the effects of natural opioids (such as opium or heroin) but can be much more deadly.",
-     "text": "Nitazenes are man-made drugs that mimic the effects of natural opioids but can be much more deadly.",
+     "passage": 7,
+     "where": "Mixing new synthetic opioids with other drugs / Is it dangerous to mix with other drugs?",
+     "quote": "Yes. There is a greater risk of overdose and death if you mix synthetic opioids with other drugs that suppress breathing such as alcohol, benzodiazepines (like diazepam or Xanax/Valium), and/or other opiate drugs (like heroin).",
+     "text": "Mixing nitazenes with other breathing‑suppression drugs such as alcohol, benzodiazepines or heroin increases the risk of overdose and death.",
      "id": "F11",
      "second_hand": ""
     },
@@ -406,7 +411,7 @@
      "passage": 9,
      "where": "Mixing new synthetic opioids with other drugs / Physical health risks",
      "quote": "Suppression of normal breathing, including respiratory arrest (when you stop breathing altogether) which is often fatal.",
-     "text": "Nitazenes can cause the suppression of normal breathing and respiratory arrest, which is often fatal.",
+     "text": "Nitazenes can cause suppression of normal breathing, including fatal respiratory arrest.",
      "id": "F12",
      "second_hand": ""
     }
@@ -417,7 +422,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "exact lethal dose and precise dose‑response relationship",
+ "missing": "exact lethal dose and quantitative potency in humans",
  "wanted": [
   {
    "doi": "10.1080/15563650.2025.2504133",
@@ -442,7 +447,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: broken at try 3: but: a clinical word where an everyday one exists (“pharmacology”): say it plainly",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Old Drugs and New Challenges: A Narrative Review of Nitazenes",
@@ -466,7 +480,14 @@
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/nitazenes/",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Nitazenes affect everyone differently based on size, weight, health, prior use, other drugs taken, amount taken, and varying batch strength.",
+     "quote": "Nitazenes affect everyone differently, based on: size, weight and health; whether the person is used to taking it; whether other drugs are taken around the same time; the amount taken; the strength of",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Fentanyl Citrate",
@@ -501,8 +522,8 @@
    "thrown": [
     {
      "kind": "limit",
-     "text": "It is impossible to know the exact contents of any street or counterfeit drug.",
-     "quote": "you can never really know what is in any street or counterfeit drug.",
+     "text": "The page does not state whether these vascular complications occur with all routes of administration, only that they can happen when nitazenes are injected.",
+     "quote": "If you inject synthetic opioids you can do nasty damage to your veins and arteries, and this can lead to gangrene (death of body tissue, usually a finger, toe or a limb), blood clots/thromboses and to",
      "why": "the sentence is not carried by its quote and passage"
     }
    ]
@@ -511,7 +532,9 @@
  "plan": {
   "short": [
    "F5",
-   "F7"
+   "F10",
+   "F6",
+   "F4"
   ],
   "direct": "",
   "but": [
@@ -524,22 +547,22 @@
     "F12"
    ],
    [
+    "F4",
+    "F5",
+    "F6"
+   ],
+   [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   [
     "F7",
     "F8",
     "F9"
-   ],
-   [
-    "F5",
-    "F6",
-    "F4"
-   ],
-   [
-    "DA",
-    "F1",
-    "F3"
    ]
   ],
-  "unanswered": "exact lethal dose and precise dose‑response relationship"
+  "unanswered": "exact lethal dose and quantitative potency in humans"
  },
  "tries": [
   {
@@ -548,21 +571,35 @@
    "parts": [
     {
      "part": "short",
-     "text": "Nitazenes are man-made opioids that can be much more deadly than natural ones. Australia's Alcohol and Drug Foundation says there is no safe level of use.",
+     "text": "Nitazenes can be much stronger than natural opioids, with a very narrow safe dose range. This leads to a higher risk of overdose and severe breathing problems.",
      "rests_on": [
       {
        "label": "F5",
        "ref": "pereira_2025",
-       "where": "1. Introduction",
-       "quote": "The potency of nitazenes is a major concern, as many analogues are substantially more potent than morphine and, in some cases, more potent than fentanyl.",
-       "sha": "206e75b9db04980d"
+       "where": "Abstract",
+       "quote": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
+       "sha": "ad19cd80261445fe"
       },
       {
-       "label": "F7",
-       "ref": "adf_nitazenes",
-       "where": "Effects of nitazenes",
-       "quote": "There is no safe level of drug use. Use of any drug always carries some risk. It’s important to be careful when taking any type of drug.",
-       "sha": "d4255a9a618fa5cb"
+       "label": "F10",
+       "ref": "frank_synthetic-opioids",
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects are similar to natural opioids but can be much stronger, especially when mixed with other drugs, with a higher risk of overdose.",
+       "sha": "5096fe6e715fcea4"
+      },
+      {
+       "label": "F6",
+       "ref": "pereira_2025",
+       "where": "3. Pharmacological Profile and Toxicity of Nitazenes",
+       "quote": "Nitazenes exhibit a very narrow safe dose consumption range, meaning there is a small margin between the dose that provides desired effects and the dose that causes severe adverse effects such as respiratory depression or apnea.",
+       "sha": "15a1ae3eb26bfe16"
+      },
+      {
+       "label": "F4",
+       "ref": "pereira_2025",
+       "where": "Abstract",
+       "quote": "The primary cause of death is severe and prolonged respiratory depression.",
+       "sha": "ad19cd80261445fe"
       }
      ],
      "ok": true
@@ -585,28 +622,35 @@
     },
     {
      "part": "how1",
-     "text": "FRANK says nitazenes are dangerous synthetic opioids that mimic natural opioids but can be much more deadly. They have killed 100s of people in the UK in the past year.",
+     "text": "FRANK says nitazenes can be much stronger than natural opioids, with a higher risk of overdose, especially when mixed with other drugs.",
      "rests_on": [
       {
        "label": "F10",
        "ref": "frank_synthetic-opioids",
-       "where": "Important",
-       "quote": "Drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
-       "sha": "f12ee13529e3e04c"
-      },
-      {
-       "label": "F11",
-       "ref": "frank_synthetic-opioids",
-       "where": "Top of the page",
-       "quote": "Man-made drugs that mimic the effects of natural opioids (such as opium or heroin) but can be much more deadly.",
-       "sha": "edb2d4f153cdc3fe"
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects are similar to natural opioids but can be much stronger, especially when mixed with other drugs, with a higher risk of overdose.",
+       "sha": "5096fe6e715fcea4"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "FRANK says nitazenes can cause the suppression of normal breathing and respiratory arrest, which is often fatal.",
+     "text": "FRANK says mixing nitazenes with alcohol, benzodiazepines, or heroin increases the risk of overdose and death.",
+     "rests_on": [
+      {
+       "label": "F11",
+       "ref": "frank_synthetic-opioids",
+       "where": "Mixing new synthetic opioids with other drugs / Is it dangerous to mix with other drugs?",
+       "quote": "Yes. There is a greater risk of overdose and death if you mix synthetic opioids with other drugs that suppress breathing such as alcohol, benzodiazepines (like diazepam or Xanax/Valium), and/or other opiate drugs (like heroin).",
+       "sha": "78aa332197e5033c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says nitazenes can cause suppression of normal breathing, including respiratory arrest, which is often fatal.",
      "rests_on": [
       {
        "label": "F12",
@@ -619,36 +663,15 @@
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "Australia's Alcohol and Drug Foundation says nitazenes appear as white, crystalline, or brown/yellow powder. They are found in fake oxycodone, heroin, ketamine, and synthetic cannabinoids.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "adf_nitazenes",
-       "where": "Effects of nitazenes",
-       "quote": "There is no safe level of drug use. Use of any drug always carries some risk. It’s important to be careful when taking any type of drug.",
-       "sha": "d4255a9a618fa5cb"
-      },
-      {
-       "label": "F8",
-       "ref": "adf_nitazenes",
-       "where": "What are nitazenes? / What do nitazenes look like?",
-       "quote": "Nitazenes are sold as a white powder, crystalline solid, or brown/yellow powder. They have also been found in tablets (fake oxycodone), heroin, ketamine, and synthetic cannabinoids.",
-       "sha": "35a46482a3c4e2f3"
-      }
-     ],
-     "ok": true
-    },
-    {
      "part": "how4",
-     "text": "Australia's Alcohol and Drug Foundation says at least 17 overdose deaths related to nitazenes have been reported in Australia since 2021.",
+     "text": "A 2025 review says the primary cause of death is severe and prolonged respiratory depression.",
      "rests_on": [
       {
-       "label": "F9",
-       "ref": "adf_nitazenes",
-       "where": "Path2Help / National",
-       "quote": "Since 2021, at least 17 overdose deaths related to nitazenes have been reported in Australia.",
-       "sha": "80e2dd8a33498e8f"
+       "label": "F4",
+       "ref": "pereira_2025",
+       "where": "Abstract",
+       "quote": "The primary cause of death is severe and prolonged respiratory depression.",
+       "sha": "ad19cd80261445fe"
       }
      ],
      "ok": true
@@ -657,104 +680,25 @@
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Nitazenes are man-made opioids that can be much more deadly than morphine or fentanyl. Australia's Alcohol and Drug Foundation says there is no safe level of use.",
+     "text": "Nitazenes can be much stronger than natural opioids, with a small gap between a dose that works and one that stops breathing. This leads to severe breathing problems and death.",
      "rests_on": [
       {
        "label": "F5",
        "ref": "pereira_2025",
-       "where": "1. Introduction",
-       "quote": "The potency of nitazenes is a major concern, as many analogues are substantially more potent than morphine and, in some cases, more potent than fentanyl.",
-       "sha": "206e75b9db04980d"
+       "where": "Abstract",
+       "quote": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
+       "sha": "ad19cd80261445fe"
       },
-      {
-       "label": "F7",
-       "ref": "adf_nitazenes",
-       "where": "Effects of nitazenes",
-       "quote": "There is no safe level of drug use. Use of any drug always carries some risk. It’s important to be careful when taking any type of drug.",
-       "sha": "d4255a9a618fa5cb"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "Information on how nitazenes work in the body and the harms they cause is still limited.",
-     "rests_on": [
-      {
-       "label": "L2",
-       "ref": "pereira_2025",
-       "where": "4. Analytical Challenges in Forensic and Toxicological Investigations",
-       "quote": "Although nitazenes began appearing more consistently on the drug market in 2019, information on their pharmacology, toxicology, and associated harms remains limited.",
-       "sha": "4175c72e8e8b7b8f"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says “cause”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
-    },
-    {
-     "part": "how1",
-     "text": "FRANK says nitazenes are man-made drugs that mimic natural opioids but can be much more deadly. They have killed hundreds of people in the UK in the past year.",
-     "rests_on": [
       {
        "label": "F10",
        "ref": "frank_synthetic-opioids",
-       "where": "Important",
-       "quote": "Drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
-       "sha": "f12ee13529e3e04c"
-      },
-      {
-       "label": "F11",
-       "ref": "frank_synthetic-opioids",
-       "where": "Top of the page",
-       "quote": "Man-made drugs that mimic the effects of natural opioids (such as opium or heroin) but can be much more deadly.",
-       "sha": "edb2d4f153cdc3fe"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "FRANK says nitazenes can stop normal breathing, which is often fatal. Australia's Alcohol and Drug Foundation says they appear as white, crystalline, or brown powder.",
-     "rests_on": [
-      {
-       "label": "F12",
-       "ref": "frank_synthetic-opioids",
-       "where": "Mixing new synthetic opioids with other drugs / Physical health risks",
-       "quote": "Suppression of normal breathing, including respiratory arrest (when you stop breathing altogether) which is often fatal.",
-       "sha": "aa253ca3feb37814"
-      },
-      {
-       "label": "F7",
-       "ref": "adf_nitazenes",
-       "where": "Effects of nitazenes",
-       "quote": "There is no safe level of drug use. Use of any drug always carries some risk. It’s important to be careful when taking any type of drug.",
-       "sha": "d4255a9a618fa5cb"
-      },
-      {
-       "label": "F8",
-       "ref": "adf_nitazenes",
-       "where": "What are nitazenes? / What do nitazenes look like?",
-       "quote": "Nitazenes are sold as a white powder, crystalline solid, or brown/yellow powder. They have also been found in tablets (fake oxycodone), heroin, ketamine, and synthetic cannabinoids.",
-       "sha": "35a46482a3c4e2f3"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2025 review says nitazenes have a very narrow safe dose range. They are often mixed into other drugs, causing unintentional overdose, especially in people new to opioids.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "pereira_2025",
-       "where": "1. Introduction",
-       "quote": "The potency of nitazenes is a major concern, as many analogues are substantially more potent than morphine and, in some cases, more potent than fentanyl.",
-       "sha": "206e75b9db04980d"
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects are similar to natural opioids but can be much stronger, especially when mixed with other drugs, with a higher risk of overdose.",
+       "sha": "5096fe6e715fcea4"
       },
       {
        "label": "F6",
@@ -767,36 +711,86 @@
        "label": "F4",
        "ref": "pereira_2025",
        "where": "Abstract",
-       "quote": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
+       "quote": "The primary cause of death is severe and prolonged respiratory depression.",
        "sha": "ad19cd80261445fe"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages do not explicitly state that nitazenes can be much stronger than 'natural opioids' (the nitazene passage mentions morphine, while the FRANK passage about natural opioids refers to synthetic opioids generally)."
+    },
+    {
+     "part": "but",
+     "text": "Information on how nitazenes work in the body and their harms remains limited.",
+     "rests_on": [
+      {
+       "label": "L2",
+       "ref": "pereira_2025",
+       "where": "4. Analytical Challenges in Forensic and Toxicological Investigations",
+       "quote": "Although nitazenes began appearing more consistently on the drug market in 2019, information on their pharmacology, toxicology, and associated harms remains limited.",
+       "sha": "4175c72e8e8b7b8f"
       }
      ],
      "ok": true
     },
     {
-     "part": "how4",
-     "text": "A 2023 review says nitazenes are often mixed with heroin or fentanyl without buyers knowing. It is not known if naloxone works to reverse breathing problems from nitazenes.",
+     "part": "how1",
+     "text": "FRANK says nitazenes can be much stronger than natural opioids, with a higher risk of overdose, especially when mixed with other drugs.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "pergolizzijr_2023",
-       "where": "Review",
-       "quote": "This is a narrative review that used the PubMed and Google Scholar databases to search for peer‑reviewed articles on nitazenes. The authors also consulted authoritative websites such as those run by the DEA, the Centers for Disease Control and Prevention (CDC), and government‑run websites for late‑breaking information on these agents.",
-       "sha": "fe60abe091297da8"
-      },
+       "label": "F10",
+       "ref": "frank_synthetic-opioids",
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects are similar to natural opioids but can be much stronger, especially when mixed with other drugs, with a higher risk of overdose.",
+       "sha": "5096fe6e715fcea4"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3.6-flash) did not accept it: The FRANK passage refers to new synthetic opioids in general, not specifically nitazenes."
+    },
+    {
+     "part": "how2",
+     "text": "FRANK says mixing nitazenes with alcohol, benzodiazepines, or heroin increases the risk of overdose and death.",
+     "rests_on": [
       {
-       "label": "F1",
-       "ref": "pergolizzijr_2023",
-       "where": "Review",
-       "quote": "Nitazenes are available in powders, counterfeit tablets, or liquids and may be mixed with inert substances and/or combined with other drugs, such as heroin, fentanyl, and benzodiazepines. Their inclusion in other drug products is not detectable by consumers and may not be disclosed to them by sellers.",
-       "sha": "6875e2ceffda9d02"
-      },
+       "label": "F11",
+       "ref": "frank_synthetic-opioids",
+       "where": "Mixing new synthetic opioids with other drugs / Is it dangerous to mix with other drugs?",
+       "quote": "Yes. There is a greater risk of overdose and death if you mix synthetic opioids with other drugs that suppress breathing such as alcohol, benzodiazepines (like diazepam or Xanax/Valium), and/or other opiate drugs (like heroin).",
+       "sha": "78aa332197e5033c"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage refers to \"synthetic opioids\" generally, not specifically to nitazenes."
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says nitazenes can stop normal breathing, including respiratory arrest, which is often fatal.",
+     "rests_on": [
       {
-       "label": "F3",
-       "ref": "pergolizzijr_2023",
-       "where": "Conclusions",
-       "quote": "Certain nitazenes can be more potent than fentanyl and are increasingly found on the illicit drug market in North America and Europe. These agents may not be disclosed to buyers of illicit drugs and are often mixed with fentanyl or other agents. They are associated with morbidity and mortality, and it is not known how effective naloxone or other antagonists are when reversing nitazene‑induced respiratory depression.",
-       "sha": "c46bc1a1abf9bc45"
+       "label": "F12",
+       "ref": "frank_synthetic-opioids",
+       "where": "Mixing new synthetic opioids with other drugs / Physical health risks",
+       "quote": "Suppression of normal breathing, including respiratory arrest (when you stop breathing altogether) which is often fatal.",
+       "sha": "aa253ca3feb37814"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage describes effects of synthetic opioids in general, not nitazenes specifically."
+    },
+    {
+     "part": "how4",
+     "text": "A 2025 review says the main cause of death is severe and prolonged breathing problems.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "pereira_2025",
+       "where": "Abstract",
+       "quote": "The primary cause of death is severe and prolonged respiratory depression.",
+       "sha": "ad19cd80261445fe"
       }
      ],
      "ok": true
@@ -809,21 +803,35 @@
    "parts": [
     {
      "part": "short",
-     "text": "Nitazenes are man-made opioids that can be much more deadly than natural ones. Australia's Alcohol and Drug Foundation says there is no safe level of use.",
+     "text": "Nitazenes are often mixed into other drugs without warning, which can cause accidental overdose. They have a very narrow safe dose range, and the main cause of death is severe breathing problems.",
      "rests_on": [
       {
        "label": "F5",
        "ref": "pereira_2025",
-       "where": "1. Introduction",
-       "quote": "The potency of nitazenes is a major concern, as many analogues are substantially more potent than morphine and, in some cases, more potent than fentanyl.",
-       "sha": "206e75b9db04980d"
+       "where": "Abstract",
+       "quote": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
+       "sha": "ad19cd80261445fe"
       },
       {
-       "label": "F7",
-       "ref": "adf_nitazenes",
-       "where": "Effects of nitazenes",
-       "quote": "There is no safe level of drug use. Use of any drug always carries some risk. It’s important to be careful when taking any type of drug.",
-       "sha": "d4255a9a618fa5cb"
+       "label": "F10",
+       "ref": "frank_synthetic-opioids",
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects are similar to natural opioids but can be much stronger, especially when mixed with other drugs, with a higher risk of overdose.",
+       "sha": "5096fe6e715fcea4"
+      },
+      {
+       "label": "F6",
+       "ref": "pereira_2025",
+       "where": "3. Pharmacological Profile and Toxicity of Nitazenes",
+       "quote": "Nitazenes exhibit a very narrow safe dose consumption range, meaning there is a small margin between the dose that provides desired effects and the dose that causes severe adverse effects such as respiratory depression or apnea.",
+       "sha": "15a1ae3eb26bfe16"
+      },
+      {
+       "label": "F4",
+       "ref": "pereira_2025",
+       "where": "Abstract",
+       "quote": "The primary cause of death is severe and prolonged respiratory depression.",
+       "sha": "ad19cd80261445fe"
       }
      ],
      "ok": true
@@ -846,28 +854,35 @@
     },
     {
      "part": "how1",
-     "text": "FRANK says nitazenes are man-made drugs that mimic natural opioids but can be much more deadly. They have killed 100s of people in the UK in the past year.",
+     "text": "FRANK says nitazenes can be much stronger than natural opioids, with a higher risk of overdose, especially when mixed with other drugs.",
      "rests_on": [
       {
        "label": "F10",
        "ref": "frank_synthetic-opioids",
-       "where": "Important",
-       "quote": "Drugs are increasingly cut with dangerous synthetic opioids like nitazenes, which have killed 100s of people in the UK in the past year.",
-       "sha": "f12ee13529e3e04c"
-      },
-      {
-       "label": "F11",
-       "ref": "frank_synthetic-opioids",
-       "where": "Top of the page",
-       "quote": "Man-made drugs that mimic the effects of natural opioids (such as opium or heroin) but can be much more deadly.",
-       "sha": "edb2d4f153cdc3fe"
+       "where": "Quick info / Effects on your body",
+       "quote": "Effects are similar to natural opioids but can be much stronger, especially when mixed with other drugs, with a higher risk of overdose.",
+       "sha": "5096fe6e715fcea4"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "FRANK says nitazenes can cause the suppression of normal breathing and respiratory arrest, which is often fatal.",
+     "text": "FRANK says mixing nitazenes with alcohol, benzodiazepines, or heroin increases the risk of overdose and death.",
+     "rests_on": [
+      {
+       "label": "F11",
+       "ref": "frank_synthetic-opioids",
+       "where": "Mixing new synthetic opioids with other drugs / Is it dangerous to mix with other drugs?",
+       "quote": "Yes. There is a greater risk of overdose and death if you mix synthetic opioids with other drugs that suppress breathing such as alcohol, benzodiazepines (like diazepam or Xanax/Valium), and/or other opiate drugs (like heroin).",
+       "sha": "78aa332197e5033c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says nitazenes can suppress normal breathing, including respiratory arrest, which is often fatal.",
      "rests_on": [
       {
        "label": "F12",
@@ -880,56 +895,14 @@
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "Australia's Alcohol and Drug Foundation says nitazenes appear as white, crystalline, or brown/yellow powder. At least 17 overdose deaths have been reported in Australia since 2021.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "adf_nitazenes",
-       "where": "Effects of nitazenes",
-       "quote": "There is no safe level of drug use. Use of any drug always carries some risk. It’s important to be careful when taking any type of drug.",
-       "sha": "d4255a9a618fa5cb"
-      },
-      {
-       "label": "F8",
-       "ref": "adf_nitazenes",
-       "where": "What are nitazenes? / What do nitazenes look like?",
-       "quote": "Nitazenes are sold as a white powder, crystalline solid, or brown/yellow powder. They have also been found in tablets (fake oxycodone), heroin, ketamine, and synthetic cannabinoids.",
-       "sha": "35a46482a3c4e2f3"
-      },
-      {
-       "label": "F9",
-       "ref": "adf_nitazenes",
-       "where": "Path2Help / National",
-       "quote": "Since 2021, at least 17 overdose deaths related to nitazenes have been reported in Australia.",
-       "sha": "80e2dd8a33498e8f"
-      }
-     ],
-     "ok": true
-    },
-    {
      "part": "how4",
-     "text": "A 2025 review says many nitazenes are substantially more potent than morphine and, in some cases, fentanyl. They have a very narrow safe dose range.",
+     "text": "A 2025 review says the primary cause of death is severe and prolonged respiratory depression.",
      "rests_on": [
-      {
-       "label": "F5",
-       "ref": "pereira_2025",
-       "where": "1. Introduction",
-       "quote": "The potency of nitazenes is a major concern, as many analogues are substantially more potent than morphine and, in some cases, more potent than fentanyl.",
-       "sha": "206e75b9db04980d"
-      },
-      {
-       "label": "F6",
-       "ref": "pereira_2025",
-       "where": "3. Pharmacological Profile and Toxicity of Nitazenes",
-       "quote": "Nitazenes exhibit a very narrow safe dose consumption range, meaning there is a small margin between the dose that provides desired effects and the dose that causes severe adverse effects such as respiratory depression or apnea.",
-       "sha": "15a1ae3eb26bfe16"
-      },
       {
        "label": "F4",
        "ref": "pereira_2025",
        "where": "Abstract",
-       "quote": "Nitazenes are frequently mis-sold as counterfeit medications or adulterated into other drugs, resulting in unintentional exposure and overdose, particularly among opioid-naïve users.",
+       "quote": "The primary cause of death is severe and prolonged respiratory depression.",
        "sha": "ad19cd80261445fe"
       }
      ],
@@ -938,6 +911,81 @@
    ]
   }
  ],
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    true,
+    ""
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  },
+  "gemini:gemini-3.6-flash": {
+   "short": [
+    false,
+    "The passages do not explicitly state that nitazenes can be much stronger than 'natural opioids' (the nitazene passage mentions morphine, while the FRANK passage about natural opioids refers to synthetic opioids generally)."
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    false,
+    "The FRANK passage refers to new synthetic opioids in general, not specifically nitazenes."
+   ],
+   "how2": [
+    false,
+    "The FRANK passage refers to synthetic opioids in general, not specifically nitazenes."
+   ],
+   "how3": [
+    false,
+    "The FRANK passage refers to new synthetic opioids in general, not specifically nitazenes."
+   ],
+   "how4": [
+    true,
+    ""
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.3835,
+   "but": 0.9458,
+   "how1": 0.0355,
+   "how2": 0.1255,
+   "how3": 0.1142,
+   "how4": 0.6072
+  },
+  "scores_quotes_alone": {
+   "short": 0.085,
+   "but": 0.7204,
+   "how1": 0.022,
+   "how2": 0.1311,
+   "how3": 0.1629,
+   "how4": 0.4367
+  }
+ },
  "place": {
   "home": "new:Nitazenes and other new synthetic opioids",
   "also": [
