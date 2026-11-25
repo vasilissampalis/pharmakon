@@ -20,37 +20,292 @@
    "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
+   "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team I",
-   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "team": "team K",
+   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "writer_2": "groq:qwen/qwen3.8-27b",
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it",
+   "writer_first": "gemini:gemma-4-26b-a4b-it"
   },
-  "run": "45667859032",
-  "read_seconds": 1,
+  "run": "45691076110",
+  "read_seconds": 86,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 1
+  "seconds": 314
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (the search for papers did not all come back: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9417) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.92, but 0.98, how1 0.53",
+  "check": "short: NOT accepted: the passage does not state that withdrawal was reported in case reports; but: NOT accepted: it is about something else than the short answer; how1: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "corkery_2026",
+    "type": "article-journal",
+    "title": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report",
+    "author": [
+     {
+      "family": "Corkery",
+      "given": "John Martin"
+     },
+     {
+      "family": "Copeland",
+      "given": "Caroline"
+     },
+     {
+      "family": "Schifano",
+      "given": "Fabrizio"
+     }
+    ],
+    "container-title": "Journal of Psychopharmacology",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1177/02698811251349203",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     },
+     "online_first_year": 2025
+    },
+    "volume": "40",
+    "issue": "2",
+    "page": "325-338",
+    "PMCID": "PMC13222385"
+   },
+   "doi": "10.1177/02698811251349203",
+   "pmcid": "PMC13222385",
+   "title": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report",
+   "year": 2026,
+   "journal": "Journal of psychopharmacology (Oxford, England)",
+   "kind": "review",
+   "people": false,
+   "near": 0.621,
+   "money": [],
+   "design": null,
+   "findings": [
+    {
+     "passage": 16,
+     "where": "Introduction › Diarylethylamines and their uses",
+     "quote": "Researchers also suggest that these substances probably have addictive potential. Indeed, mention cases of withdrawal syndrome for diphenidine and MXP.",
+     "text": "Researchers suggest that these substances probably have addictive potential and mention cases of withdrawal syndrome for diphenidine and MXP.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 21,
+     "where": "Introduction › Pharmacological and toxicological effects",
+     "quote": "There is little by way of toxicological information on these molecules, other than from case reports on the acute toxicity of diphenidine and MXP; these are summarised in the: 11–13) report.",
+     "text": "There is little by way of toxicological information on these molecules, other than from case reports on the acute toxicity of diphenidine and MXP.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "the specific symptoms of the withdrawal",
  "wanted": [],
  "person": null,
- "history": [],
- "looked": [],
- "soft": "a source could not be fetched",
+ "history": [
+  {
+   "on": "2026-11-25",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (the search for papers did not all come back: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
+ "looked": [
+  {
+   "title": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1177/02698811251349203",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a systematic review and case series report on diarylethylamines with a focus on the United Kingdom",
+     "quote": "Deaths related to the use of diarylethylamines, with a focus on the United Kingdom: A systematic review and case series report (2026)",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "NPAideS: a drug-checking study among 3-methylmethcathinone (3-MMC) users",
+   "read": "full",
+   "kind": "study",
+   "at": "10.1186/s12954-023-00836-4",
+   "kept": 0,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": "the specific symptoms of the withdrawal"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9245,
+   "but": 0.9825,
+   "how1": 0.5267
+  },
+  "scores_quotes_alone": {
+   "short": 0.8668,
+   "but": 0.9802,
+   "how1": 0.6524
+  }
+ },
+ "tries": [
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Withdrawal symptoms have been reported for diphenidine and MXP. Researchers suggest these substances probably have addictive potential.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "corkery_2026",
+       "where": "Introduction › Diarylethylamines and their uses",
+       "quote": "Researchers also suggest that these substances probably have addictive potential. Indeed, mention cases of withdrawal syndrome for diphenidine and MXP.",
+       "sha": "3c178c8e5bae506b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself"
+    },
+    {
+     "part": "but",
+     "text": "There is little toxicological information on these molecules, other than from case reports on acute toxicity.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "corkery_2026",
+       "where": "Introduction › Pharmacological and toxicological effects",
+       "quote": "There is little by way of toxicological information on these molecules, other than from case reports on the acute toxicity of diphenidine and MXP; these are summarised in the: 11–13) report.",
+       "sha": "02c766b1ad01e752"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 review of case reports in the UK mentions cases of withdrawal syndrome for diphenidine and MXP.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "corkery_2026",
+       "where": "Introduction › Diarylethylamines and their uses",
+       "quote": "Researchers also suggest that these substances probably have addictive potential. Indeed, mention cases of withdrawal syndrome for diphenidine and MXP.",
+       "sha": "3c178c8e5bae506b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Withdrawal from diphenidine and MXP has been reported in case reports. Researchers suggest these substances probably have addictive potential.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "corkery_2026",
+       "where": "Introduction › Diarylethylamines and their uses",
+       "quote": "Researchers also suggest that these substances probably have addictive potential. Indeed, mention cases of withdrawal syndrome for diphenidine and MXP.",
+       "sha": "3c178c8e5bae506b"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passage does not state that withdrawal was reported in case reports"
+    },
+    {
+     "part": "but",
+     "text": "There is little toxicological information on these molecules, other than from case reports on acute toxicity.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "corkery_2026",
+       "where": "Introduction › Pharmacological and toxicological effects",
+       "quote": "There is little by way of toxicological information on these molecules, other than from case reports on the acute toxicity of diphenidine and MXP; these are summarised in the: 11–13) report.",
+       "sha": "02c766b1ad01e752"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2026 systematic review and case series report mentions cases of withdrawal syndrome for diphenidine and MXP.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "corkery_2026",
+       "where": "Introduction › Diarylethylamines and their uses",
+       "quote": "Researchers also suggest that these substances probably have addictive potential. Indeed, mention cases of withdrawal syndrome for diphenidine and MXP.",
+       "sha": "3c178c8e5bae506b"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "new:Diarylethylamines (diphenidine, MXP)",
   "also": [],
