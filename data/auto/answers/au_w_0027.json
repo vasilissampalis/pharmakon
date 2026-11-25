@@ -17,20 +17,19 @@
   "alcohol"
  ],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-25",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team H2",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45479594955",
+  "run": "45562048901",
   "read_seconds": 100,
   "from": {
    "papers": 0,
@@ -41,10 +40,10 @@
   "seconds": 100
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 5 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
  "sources": [],
  "parts": [],
@@ -82,6 +81,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -91,8 +98,38 @@
    "kind": "review",
    "at": "10.1016/s0140-6736(18)31310-2",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "Systematic analysis of alcohol use and its health burden across 195 countries",
+     "quote": "Alcohol use is a leading risk factor for death and disability, but its overall association with health remains complex given the possible protective effects of moderate alcohol consumption on some con",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "In 2016, 2.8 million deaths were attributed to alcohol use.",
+     "quote": "In 2016, 2·8 million deaths (95% UI 2·4–3·3) were attributed to alcohol use.",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "finding",
+     "text": "Alcohol use accounted for 2.2% of age-standardised deaths among females and 6.8% among males.",
+     "quote": "This corresponds to 2·2% (95% UI 1·5–3.0) of total age-standardised deaths among females and 6·8% (5·8–8·0) among males.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "Alcohol can cause death through acute intoxication leading to injuries or poisoning, and through dependent drinking leading to self-harm or violence.",
+     "quote": "through acute intoxication leading to injuries or poisoning; and by dependent drinking leading to impairments and potentially self-harm or violence.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "Alcohol use was the leading risk factor for premature death and disability among people aged 15–49 years, causing 2.8 million deaths in 2016.",
+     "quote": "In 2016, alcohol use led to 2·8 million deaths and was the leading risk factor for premature death and disability among people aged 15–49 years, with nearly 9% of all attributable DALYs for men and mo",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "Ethanol as a Modifier of Drug Toxicity in Humans: Pathways of Toxicity and Organ-Level Consequences",
@@ -109,8 +146,7 @@
    "kind": "review",
    "at": "10.1038/s41588-018-0307-5",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Meta-Analysis: Mortality Trends and Risk Factors in Severe Alcohol-Associated Hepatitis",
