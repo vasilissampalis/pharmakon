@@ -17,9 +17,9 @@
   "heroin"
  ],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-25",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
+   "reader": "groq:openai/gpt-oss-20b",
    "writer": "groq:qwen/qwen3.8-27b",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
@@ -31,31 +31,30 @@
    "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemini-3.5-flash-lite"
   },
-  "run": "45354342846",
+  "run": "45572883684",
   "read_by": {
-   "gemini-3.1-flash-lite": 3,
-   "gpt-oss-20b": 2,
-   "gemini-3.5-flash-lite": 2
+   "gpt-oss-20b": 3,
+   "gemini-3.1-flash-lite": 1,
+   "gemini-3.5-flash-lite": 1
   },
-  "read_seconds": 100,
+  "read_seconds": 62,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
   "neurons": 0.0,
-  "seconds": 165
+  "seconds": 191
  },
  "status": "none",
- "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (The opening word “Yes” correctly affirms that people develop tolerance, which is directly supported by the passages. The answer sentences (especially sentence 1) directly answer the question about building tolerance. Sentence 2 introduces a)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 2 talks about how quickly tolerance returns after stopping heroin, which is a separate fact rather than a limitation or doubt about the claim in sentence 1 that tolerance builds.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 3: but: its source says “perceived to develop after”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.36, but 0.94, how1 0.13, how2 0.93, how3 0.97",
-  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (The opening word “Yes” correctly affirms that people develop tolerance, which is directly supported by the passages. The answer sentences (especially sentence 1) directly answer the question about building tolerance. Sentence 2 introduces a)). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
+  "reader": "gemini-3.5-flash-lite could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.61, but 0.95, how1 0.11, how2 0.10, how3 0.95, how4 0.95",
+  "check": "not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (Sentence 2 talks about how quickly tolerance returns after stopping heroin, which is a separate fact rather than a limitation or doubt about the claim in sentence 1 that tolerance builds.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: but: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself; but: it says “each”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
  },
  "sources": [
   {
@@ -108,10 +107,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-25"
      }
     },
     "volume": "17",
@@ -133,34 +132,18 @@
     "GH and PE conceived of the study. GH oversaw all aspects of the study including data interpretation. JK led the study design and governance procedures, data collection, analysis and write-up with input from all co-authors (EH, GH, PE, RA, MH, ST). EH led the recruitment of study participants. Data interpretation was discussed among JK, GH, MH, RA, EH. All authors contributed to and approved the content of the final manuscript."
    ],
    "design": {
-    "passage": 2,
+    "passage": 1,
     "where": "Abstract",
-    "quote": "Semi-structured one-to-one interviews were conducted with 20 adults who currently or previously used heroin (for at least 6 months), with any type of administration (injected, smoked) and experience of abstinence (at least 2 weeks) and relapse.",
-    "text": "A qualitative study of 20 adults who currently or previously used heroin."
+    "quote": "This qualitative study aimed to explore how the development of tolerance to both the psychoactive and respiratory depressant effects of heroin on re-exposure are experienced by people who use heroin.",
+    "text": "qualitative study of people who use heroin"
    },
    "findings": [
     {
-     "passage": 28,
-     "where": "Results › “As time went by my tolerance got higher and [I] started using higher and bigger amounts”: Tolerating tolerance › Inevitability and frustration",
-     "quote": "When using regularly, many described tolerance to the desired effects as inevitably increasing over time (a few days to two years) depending on frequency of use.",
-     "text": "Many people who use heroin report that tolerance to the desired effects of the drug inevitably increases over time when using regularly.",
+     "passage": 53,
+     "where": "Discussion",
+     "quote": "White and Irvine proposed that tolerance to opioid-induced euphoria developed to a greater extent than tolerance to respiratory depression. This means that the gap between the dose needed to get high and the dose that caused respiratory depression and overdose reduces over time.",
+     "text": "Tolerance to the psychoactive effects of heroin develops faster than tolerance to respiratory depression, narrowing the safety margin.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 58,
-     "where": "Conclusions and implications",
-     "quote": "We report the first qualitative evidence of tolerance to the psychoactive effects of heroin developing more quickly with each relapse episode.",
-     "text": "There is evidence that tolerance to the psychoactive effects of heroin develops more quickly with each episode of relapse.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 28,
-     "where": "Results › “As time went by my tolerance got higher and [I] started using higher and bigger amounts”: Tolerating tolerance › Inevitability and frustration",
-     "quote": "After long periods of using heroin, the ‘high’ diminished completely; instead, using was necessary to feel ‘normal’ and remove withdrawal symptoms",
-     "text": "After long periods of use, the high from heroin can diminish completely, making the drug necessary to feel normal and avoid withdrawal symptoms.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -168,8 +151,8 @@
     {
      "passage": 58,
      "where": "Conclusions and implications",
-     "quote": "Whether rapid tolerance is perceived to develop after abstinence and re-exposure to prescription opioids such as oxycodone, and to the fentanyls remains to be determined.",
-     "text": "It is not yet determined if rapid tolerance develops after abstinence and re-exposure to prescription opioids like oxycodone or to fentanyls.",
+     "quote": "Whether rapid tolerance is perceived to develop after abstinence and re‑exposure to prescription opioids such as oxycodone, and to the fentanyls remains to be determined.",
+     "text": "It is unknown whether the rapid tolerance observed after relapse with heroin also occurs with prescription opioids or fentanyls.",
      "id": "L1",
      "second_hand": ""
     }
@@ -179,113 +162,99 @@
   {
    "read": "full",
    "ref": {
-    "id": "dicksongomez_2022",
+    "id": "milella_2023",
     "type": "article-journal",
-    "title": "The effects of opioid policy changes on transitions from prescription opioids to heroin, fentanyl and injection drug use: A qualitative analysis",
+    "title": "Heroin and its metabolites: Relevance to heroin use disorder",
     "author": [
      {
-      "family": "Dickson-Gomez",
-      "given": "Julia"
+      "family": "Milella",
+      "given": "Michele Stanislaw"
      },
      {
-      "family": "Krechel",
-      "given": "Sarah"
+      "family": "D’Ottavio",
+      "given": "Ginevra"
      },
      {
-      "family": "Spector",
-      "given": "Antoinette"
+      "family": "De Pirro",
+      "given": "Silvana"
      },
      {
-      "family": "Weeks",
-      "given": "Margaret"
+      "family": "Barra",
+      "given": "Massimo"
      },
      {
-      "family": "Ohlrich",
-      "given": "Jessica"
+      "family": "Caprioli",
+      "given": "Daniele"
      },
      {
-      "family": "Green Montaque",
-      "given": "H. Danielle"
-     },
-     {
-      "family": "Li",
-      "given": "Jianghong"
+      "family": "Badiani",
+      "given": "Aldo"
      }
     ],
-    "container-title": "Substance Abuse Treatment, Prevention, and Policy",
+    "container-title": "Translational Psychiatry",
     "issued": {
      "date-parts": [
       [
-       2022
+       2023
       ]
      ]
     },
-    "DOI": "10.1186/s13011-022-00480-4",
+    "DOI": "10.1038/s41398-023-02406-5",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-25"
      }
     },
-    "volume": "17",
+    "volume": "13",
     "issue": "1",
-    "number": "55",
-    "PMCID": "PMC9306091"
+    "number": "120",
+    "PMCID": "PMC10082801"
    },
-   "doi": "10.1186/s13011-022-00480-4",
-   "pmcid": "PMC9306091",
-   "title": "The effects of opioid policy changes on transitions from prescription opioids to heroin, fentanyl and injection drug use: a qualitative analysis",
-   "year": 2022,
-   "journal": "Substance abuse treatment, prevention, and policy",
-   "kind": "other",
-   "people": true,
-   "near": 0.671,
-   "money": [
-    "The research was funded by the National Institute on Drug Abuse (R01DA044971)."
-   ],
+   "doi": "10.1038/s41398-023-02406-5",
+   "pmcid": "PMC10082801",
+   "title": "Heroin and its metabolites: relevance to heroin use disorder",
+   "year": 2023,
+   "journal": "Translational psychiatry",
+   "kind": "review",
+   "people": false,
+   "near": 0.676,
+   "money": [],
    "design": {
-    "passage": 2,
+    "passage": 1,
     "where": "Abstract",
-    "quote": "We conducted 148 in-depth-interviews with people who use prescription opioids nonmedically, fentanyl or heroin from a rural, urban and suburban area in three states",
-    "text": "qualitative analysis of in-depth interviews with people who use prescription opioids nonmedically, fentanyl or heroin"
+    "quote": "We will first review the literature concerning the pharmacokinetics and pharmacodynamics of heroin and its metabolites, then examine their neural and behavioral effects, and finally discuss the possible implications of these data",
+    "text": "A review of literature concerning the pharmacokinetics and pharmacodynamics of heroin and its metabolites."
    },
    "findings": [
     {
-     "passage": 46,
-     "where": "Fewer prescriptions on the street: transitions of route of administration and switches to heroin",
-     "quote": "Participants described that using heroin created a vicious cycle of increased tolerance because it was stronger, and the quality could be variable.",
-     "text": "Using heroin created a vicious cycle of increased tolerance because it was stronger and the quality could be variable.",
-     "id": "F4",
+     "passage": 32,
+     "where": "Pharmacodynamics of heroin and its metabolites › Pharmacodynamics of morphine",
+     "quote": "Chronic exposure to morphine results in tolerance to some of its effects (analgesia, euphoria, sedation, nausea, and respiratory depression), but not to others (e.g., constipation).",
+     "text": "Chronic exposure to morphine results in tolerance to some of its effects, such as analgesia, euphoria, sedation, nausea, and respiratory depression, but not to others, such as constipation.",
+     "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 33,
-     "where": "Results › Increased tolerance",
-     "quote": "Increased tolerance was particularly true for participants who used heroin to supplement their medical or nonmedical use, as heroin quality and strength varied considerably",
-     "text": "Increased tolerance was particularly true for participants who used heroin to supplement their medical or nonmedical use, as heroin quality and strength varied considerably.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 46,
-     "where": "Fewer prescriptions on the street: transitions of route of administration and switches to heroin",
-     "quote": "Similarly, injecting was described as creating a more intense high and was thought to increase tolerance and addiction.",
-     "text": "Injecting was thought to increase tolerance and addiction because it created a more intense high.",
-     "id": "F6",
+     "passage": 32,
+     "where": "Pharmacodynamics of heroin and its metabolites › Pharmacodynamics of morphine",
+     "quote": "Another important aspect of morphine tolerance is the limited cross-tolerance to heroin and 6-MAM, at least for what concerns analgesia.",
+     "text": "There is limited cross-tolerance to heroin and 6-MAM regarding analgesia.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 50,
-     "where": "Discussion",
-     "quote": "Although our participants do not represent the majority who were prescribed opioids for pain, most of whom take them only as prescribed and do not switch to heroin, the increasing rates of overdose deaths due to heroin and fentanyl suggests that the number of people who switched to heroin is not trivial.",
-     "text": "Participants do not represent the majority who were prescribed opioids for pain, most of whom take them only as prescribed and do not switch to heroin.",
+     "passage": 32,
+     "where": "Pharmacodynamics of heroin and its metabolites › Pharmacodynamics of morphine",
+     "quote": "It is important to notice that tolerance to morphine can develop independent of the mechanisms responsible for the development of withdrawal syndrome.",
+     "text": "Tolerance to morphine can develop independently of the mechanisms that cause withdrawal syndrome.",
      "id": "L2",
      "second_hand": ""
     }
@@ -318,14 +287,14 @@
       [
        2026,
        11,
-       24
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
+     "verified_on": "2026-11-25"
     }
    },
    "title": "Heroin",
@@ -345,28 +314,37 @@
      "passage": 17,
      "where": "Long-term effects / Tolerance",
      "quote": "Regularly taking heroin can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
-     "text": "Regularly taking heroin can lead to developing a tolerance, which means people who use heroin need to take larger amounts to get the same effects.",
-     "id": "F7",
-     "second_hand": ""
-    },
-    {
-     "passage": 15,
-     "where": "Long-term effects",
-     "quote": "Regular use may eventually contribute to: intense sadness; irregular periods and difficulty having children; no sex drive, erectile dysfunction and infertility in men; constipation; dental issues; damaged heart, lungs, liver and brain; vein damage and skin, heart and lung infections from injecting; needing to use more to get the same effect; dependence on heroin.",
-     "text": "Regular use of heroin may eventually contribute to needing to use more to get the same effect.",
-     "id": "F8",
+     "text": "Regularly taking heroin can lead to developing a tolerance, meaning larger amounts are needed to achieve the same effects.",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 17,
      "where": "Long-term effects / Tolerance",
-     "quote": "Tolerance to heroin also affects other opioids (known as cross-tolerance). For example, tolerance to heroin will also result in a higher tolerance to oxycodone or fentanyl.",
-     "text": "Tolerance to heroin results in a higher tolerance to other opioids such as oxycodone or fentanyl.",
-     "id": "F9",
+     "quote": "Tolerance to heroin also affects other opioids (known as cross-tolerance).",
+     "text": "Tolerance to heroin also affects other opioids, a phenomenon known as cross-tolerance.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Withdrawal / Reduced tolerance and overdose risk",
+     "quote": "After withdrawing from heroin, your body is no longer used to it and your tolerance drops.",
+     "text": "After withdrawing from heroin, the body’s tolerance drops.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
-   "limits": [],
+   "limits": [
+    {
+     "passage": 17,
+     "where": "Long-term effects / Tolerance",
+     "quote": "Tolerance should return to normal within 1 – 2 weeks of not using opioids.",
+     "text": "Tolerance is expected to return to normal within 1–2 weeks of not using opioids.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
    "tag": "C"
   },
   {
@@ -391,14 +369,14 @@
       [
        2026,
        11,
-       24
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
+     "verified_on": "2026-11-25"
     }
    },
    "title": "Heroin",
@@ -418,16 +396,16 @@
      "passage": 20,
      "where": "Mixing heroin with other drugs / Can you get addicted?",
      "quote": "As heroin is used on a regular basis, the body builds up a tolerance, so that users have to start taking more and more.",
-     "text": "When heroin is used on a regular basis, the body builds up a tolerance, requiring people to take more and more.",
-     "id": "F10",
+     "text": "As heroin is used regularly, the body builds up a tolerance, which requires people who use the drug to take more and more.",
+     "id": "F7",
      "second_hand": ""
     },
     {
      "passage": 13,
      "where": "Mixing heroin with other drugs / Physical health risks",
      "quote": "If you have been taking heroin regularly you may have built up some tolerance.",
-     "text": "People who have been taking heroin regularly may have built up some tolerance.",
-     "id": "F11",
+     "text": "If you have taken heroin regularly, you may have built up some tolerance.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
@@ -462,37 +440,50 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 2: a second reader did not accept but (it is about something else than the short answer (The opening word “Yes” correctly affirms that people develop tolerance, which is directly supported by the passages. The answer sentences (especially sentence 1) directly answer the question about building tolerance. Sentence 2 introduces a)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Changes in the development of opioid tolerance on re-exposure among people who use heroin: A qualitative study",
    "read": "full",
    "kind": "other",
    "at": "10.1371/journal.pone.0269379",
-   "kept": 3,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "People who use heroin report that tolerance to the desired effects of heroin increases over time, often requiring higher and larger amounts.",
+     "quote": "Participants typically reported low tolerance initially: when I first started heroin my tolerance level was very low. When using regularly, many described tolerance to the desired effects as inevitabl",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "People who use heroin experience rapid development of tolerance after each relapse episode.",
+     "quote": "The more times I have a time of abstinence and then go back to it, the quicker the tolerance level shoots right up like a thermostat on a hot day.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "finding",
+     "text": "People who use heroin often attribute increased use to drug quality rather than to tolerance.",
+     "quote": "Indeed, one participant felt that people who use drugs do not consider tolerance as an explanation for needing to use more: Tolerance doesn’t really enter into much of what junkies think, not really. ",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Heroin and its metabolites: relevance to heroin use disorder",
    "read": "full",
    "kind": "review",
    "at": "10.1038/s41398-023-02406-5",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "Review article on heroin pharmacology and addiction",
-     "quote": "First synthesized in 1874 and then commercialized as a cough suppressant and controversial respiratory disease remedy, heroin readily emerged as a public health concern when it was found that, in addi",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "The effects of opioid policy changes on transitions from prescription opioids to heroin, fentanyl and injection drug use: a qualitative analysis",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1186/s13011-022-00480-4",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -518,49 +509,28 @@
    "at": "https://www.talktofrank.com/drug/heroin",
    "kept": 2,
    "thrown": []
-  },
-  {
-   "title": "",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1046/j.1440-1614.2002.01012.x",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1093/jurban/jtg022",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
-  },
-  {
-   "title": "Vaccines against morphine/heroin and its use as effective medication for preventing relapse to opiate addictive behaviors",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.4161/hv.5.4.7556",
-   "kept": 0,
-   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F7",
-   "F10"
+   "F4",
+   "F7"
   ],
   "direct": "Yes",
   "but": [
-   "L1"
+   "L3"
   ],
   "how": [
    [
-    "F7"
+    "F4",
+    "F6"
    ],
    [
-    "F10"
+    "F7",
+    "F8"
+   ],
+   [
+    "F2"
    ],
    [
     "DA",
@@ -569,24 +539,45 @@
   ],
   "unanswered": ""
  },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.6133,
+   "but": 0.9472,
+   "how1": 0.1149,
+   "how2": 0.1042,
+   "how3": 0.9543,
+   "how4": 0.9459
+  },
+  "scores_quotes_alone": {
+   "short": 0.221,
+   "but": 0.9591,
+   "how1": 0.1115,
+   "how2": 0.1678,
+   "how3": 0.7595,
+   "how4": 0.8855
+  }
+ },
  "tries": [
   {
    "try": 1,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Australia's Alcohol and Drug Foundation and FRANK say regular heroin use can lead to tolerance, meaning people need larger amounts for the same effects.",
+     "text": "Yes. Australia's Alcohol and Drug Foundation says regularly taking heroin can lead to tolerance. FRANK says the body builds up tolerance as heroin is used regularly.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F4",
        "ref": "adf_heroin",
        "where": "Long-term effects / Tolerance",
        "quote": "Regularly taking heroin can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
        "sha": "28d3d6d5017aab1a"
       },
       {
-       "label": "F10",
+       "label": "F7",
        "ref": "frank_heroin",
        "where": "Mixing heroin with other drugs / Can you get addicted?",
        "quote": "As heroin is used on a regular basis, the body builds up a tolerance, so that users have to start taking more and more.",
@@ -597,68 +588,98 @@
     },
     {
      "part": "but",
-     "text": "It is not yet determined if rapid tolerance develops after abstinence and re-exposure to prescription opioids like oxycodone or fentanyls.",
+     "text": "Australia's Alcohol and Drug Foundation says tolerance is expected to return to normal within 1 to 2 weeks of not using opioids.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "kesten_2022",
-       "where": "Conclusions and implications",
-       "quote": "Whether rapid tolerance is perceived to develop after abstinence and re-exposure to prescription opioids such as oxycodone, and to the fentanyls remains to be determined.",
-       "sha": "42a3b141467e2dcd"
+       "label": "L3",
+       "ref": "adf_heroin",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Tolerance should return to normal within 1 – 2 weeks of not using opioids.",
+       "sha": "28d3d6d5017aab1a"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source says “perceived to develop after”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The opening word “Yes” correctly reflects the passages that say regular heroin use leads to tolerance, so it fairly answers the yes‑no question. Sentence 1 directly states that regular use builds tolerance, thus it answers the question. Sen)"
     },
     {
      "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says regularly taking heroin can lead to developing a tolerance, requiring larger amounts for the same effects.",
+     "text": "Australia's Alcohol and Drug Foundation says regularly taking heroin can lead to tolerance, meaning larger amounts are needed for the same effects. It also says tolerance drops after withdrawing.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F4",
        "ref": "adf_heroin",
        "where": "Long-term effects / Tolerance",
        "quote": "Regularly taking heroin can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
        "sha": "28d3d6d5017aab1a"
+      },
+      {
+       "label": "F6",
+       "ref": "adf_heroin",
+       "where": "Withdrawal / Reduced tolerance and overdose risk",
+       "quote": "After withdrawing from heroin, your body is no longer used to it and your tolerance drops.",
+       "sha": "250dbc91abaae658"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "FRANK says when heroin is used on a regular basis, the body builds up a tolerance, requiring people to take more and more.",
+     "text": "FRANK says as heroin is used regularly, the body builds up tolerance, requiring people to take more. It notes people who have taken heroin regularly may have built up some tolerance.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F7",
        "ref": "frank_heroin",
        "where": "Mixing heroin with other drugs / Can you get addicted?",
        "quote": "As heroin is used on a regular basis, the body builds up a tolerance, so that users have to start taking more and more.",
        "sha": "a59b5b94e0d6b688"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "If you have been taking heroin regularly you may have built up some tolerance.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "A 2022 study of 20 adults who used heroin for at least 6 months found many report tolerance to desired effects inevitably increases over time with regular use.",
+     "text": "A 2023 review says chronic exposure to morphine results in tolerance to effects like euphoria and respiratory depression, but not to others like constipation.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "milella_2023",
+       "where": "Pharmacodynamics of heroin and its metabolites › Pharmacodynamics of morphine",
+       "quote": "Chronic exposure to morphine results in tolerance to some of its effects (analgesia, euphoria, sedation, nausea, and respiratory depression), but not to others (e.g., constipation).",
+       "sha": "5c9176c66620a40f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2022 qualitative study of people who use heroin found tolerance to the psychoactive effects develops faster than tolerance to respiratory depression.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "kesten_2022",
        "where": "Abstract",
-       "quote": "Semi-structured one-to-one interviews were conducted with 20 adults who currently or previously used heroin (for at least 6 months), with any type of administration (injected, smoked) and experience of abstinence (at least 2 weeks) and relapse.",
-       "sha": "1d0cfe4a8e271bee"
+       "quote": "This qualitative study aimed to explore how the development of tolerance to both the psychoactive and respiratory depressant effects of heroin on re-exposure are experienced by people who use heroin.",
+       "sha": "e0a7deb58be902f6"
       },
       {
        "label": "F1",
        "ref": "kesten_2022",
-       "where": "Results › “As time went by my tolerance got higher and [I] started using higher and bigger amounts”: Tolerating tolerance › Inevitability and frustration",
-       "quote": "When using regularly, many described tolerance to the desired effects as inevitably increasing over time (a few days to two years) depending on frequency of use.",
-       "sha": "01c6139fed06011d"
+       "where": "Discussion",
+       "quote": "White and Irvine proposed that tolerance to opioid-induced euphoria developed to a greater extent than tolerance to respiratory depression. This means that the gap between the dose needed to get high and the dose that caused respiratory depression and overdose reduces over time.",
+       "sha": "e89bb4558da67cdc"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passages do not state that the 2022 qualitative study found faster development of tolerance to psychoactive effects; they only cite a hypothesis/proposal, not a study finding."
     }
    ]
   },
@@ -668,17 +689,17 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Australia's Alcohol and Drug Foundation and FRANK say regular use can lead to tolerance, so people need larger amounts for the same effects.",
+     "text": "Yes. Australia's Alcohol and Drug Foundation says regularly taking heroin can lead to developing a tolerance. FRANK says the body builds up a tolerance as heroin is used regularly.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F4",
        "ref": "adf_heroin",
        "where": "Long-term effects / Tolerance",
        "quote": "Regularly taking heroin can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
        "sha": "28d3d6d5017aab1a"
       },
       {
-       "label": "F10",
+       "label": "F7",
        "ref": "frank_heroin",
        "where": "Mixing heroin with other drugs / Can you get addicted?",
        "quote": "As heroin is used on a regular basis, the body builds up a tolerance, so that users have to start taking more and more.",
@@ -689,26 +710,26 @@
     },
     {
      "part": "but",
-     "text": "It is not yet determined if rapid tolerance is perceived to develop after abstinence and re-exposure to prescription opioids or fentanyls.",
+     "text": "Tolerance is expected to return to normal within 1–2 weeks of not using opioids.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "kesten_2022",
-       "where": "Conclusions and implications",
-       "quote": "Whether rapid tolerance is perceived to develop after abstinence and re-exposure to prescription opioids such as oxycodone, and to the fentanyls remains to be determined.",
-       "sha": "42a3b141467e2dcd"
+       "label": "L3",
+       "ref": "adf_heroin",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Tolerance should return to normal within 1 – 2 weeks of not using opioids.",
+       "sha": "28d3d6d5017aab1a"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (The opening word “Yes” correctly affirms that people develop tolerance, which is directly supported by the passages. The answer sentences (especially sentence 1) directly answer the question about building tolerance. Sentence 2 introduces a)"
+     "said": "it is about something else than the short answer (Sentence 2 talks about how quickly tolerance returns after stopping heroin, which is a separate fact rather than a limitation or doubt about the claim in sentence 1 that tolerance builds.)"
     },
     {
      "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says regularly taking heroin can lead to developing a tolerance, requiring larger amounts for the same effects.",
+     "text": "Australia's Alcohol and Drug Foundation says regularly taking heroin can lead to developing a tolerance, meaning larger amounts are needed to achieve the same effects.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F4",
        "ref": "adf_heroin",
        "where": "Long-term effects / Tolerance",
        "quote": "Regularly taking heroin can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
@@ -719,10 +740,24 @@
     },
     {
      "part": "how2",
-     "text": "FRANK says when heroin is used on a regular basis, the body builds up a tolerance, requiring people to take more and more.",
+     "text": "Australia's Alcohol and Drug Foundation says after withdrawing from heroin, the body’s tolerance drops.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F6",
+       "ref": "adf_heroin",
+       "where": "Withdrawal / Reduced tolerance and overdose risk",
+       "quote": "After withdrawing from heroin, your body is no longer used to it and your tolerance drops.",
+       "sha": "250dbc91abaae658"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says as heroin is used regularly, the body builds up a tolerance, which requires people who use the drug to take more and more.",
+     "rests_on": [
+      {
+       "label": "F7",
        "ref": "frank_heroin",
        "where": "Mixing heroin with other drugs / Can you get addicted?",
        "quote": "As heroin is used on a regular basis, the body builds up a tolerance, so that users have to start taking more and more.",
@@ -732,22 +767,15 @@
      "ok": true
     },
     {
-     "part": "how3",
-     "text": "A 2022 study of 20 adults who used heroin for at least 6 months found many report tolerance to desired effects inevitably increases over time.",
+     "part": "how4",
+     "text": "FRANK says if you have taken heroin regularly you may have built up some tolerance.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "kesten_2022",
-       "where": "Abstract",
-       "quote": "Semi-structured one-to-one interviews were conducted with 20 adults who currently or previously used heroin (for at least 6 months), with any type of administration (injected, smoked) and experience of abstinence (at least 2 weeks) and relapse.",
-       "sha": "1d0cfe4a8e271bee"
-      },
-      {
-       "label": "F1",
-       "ref": "kesten_2022",
-       "where": "Results › “As time went by my tolerance got higher and [I] started using higher and bigger amounts”: Tolerating tolerance › Inevitability and frustration",
-       "quote": "When using regularly, many described tolerance to the desired effects as inevitably increasing over time (a few days to two years) depending on frequency of use.",
-       "sha": "01c6139fed06011d"
+       "label": "F8",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "If you have been taking heroin regularly you may have built up some tolerance.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": true
@@ -760,17 +788,17 @@
    "parts": [
     {
      "part": "short",
-     "text": "Yes. Regularly taking heroin can lead to developing a tolerance, which means people who use heroin need to take larger amounts to get the same effects.",
+     "text": "Yes. Australia's Alcohol and Drug Foundation and FRANK say regular use builds up tolerance, so people need larger amounts for the same effects.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F4",
        "ref": "adf_heroin",
        "where": "Long-term effects / Tolerance",
        "quote": "Regularly taking heroin can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
        "sha": "28d3d6d5017aab1a"
       },
       {
-       "label": "F10",
+       "label": "F7",
        "ref": "frank_heroin",
        "where": "Mixing heroin with other drugs / Can you get addicted?",
        "quote": "As heroin is used on a regular basis, the body builds up a tolerance, so that users have to start taking more and more.",
@@ -781,65 +809,93 @@
     },
     {
      "part": "but",
-     "text": "It is not yet determined if rapid tolerance develops after abstinence and re-exposure to prescription opioids like oxycodone or to fentanyls.",
+     "text": "The sources do not say how long it takes for tolerance to build up or how much it changes for each person.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "kesten_2022",
-       "where": "Conclusions and implications",
-       "quote": "Whether rapid tolerance is perceived to develop after abstinence and re-exposure to prescription opioids such as oxycodone, and to the fentanyls remains to be determined.",
-       "sha": "42a3b141467e2dcd"
+       "label": "L3",
+       "ref": "adf_heroin",
+       "where": "Long-term effects / Tolerance",
+       "quote": "Tolerance should return to normal within 1 – 2 weeks of not using opioids.",
+       "sha": "28d3d6d5017aab1a"
       }
      ],
      "ok": false,
      "by": "a rule",
-     "said": "a rule: its source says “perceived to develop after”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself; it says “each”, and the words it rests on carry no such word: say what the source says, in its o"
     },
     {
      "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says regularly taking heroin can lead to developing a tolerance, requiring larger amounts for the same effects.",
+     "text": "Australia's Alcohol and Drug Foundation says regular use leads to tolerance, and tolerance drops after withdrawing from heroin.",
      "rests_on": [
       {
-       "label": "F7",
+       "label": "F4",
        "ref": "adf_heroin",
        "where": "Long-term effects / Tolerance",
        "quote": "Regularly taking heroin can lead to developing a tolerance, which means you need to take larger amounts to get the same effects.",
        "sha": "28d3d6d5017aab1a"
+      },
+      {
+       "label": "F6",
+       "ref": "adf_heroin",
+       "where": "Withdrawal / Reduced tolerance and overdose risk",
+       "quote": "After withdrawing from heroin, your body is no longer used to it and your tolerance drops.",
+       "sha": "250dbc91abaae658"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "FRANK says when heroin is used on a regular basis, the body builds up a tolerance, requiring people to take more and more.",
+     "text": "FRANK says the body builds up tolerance as heroin is used regularly, requiring people to take more.",
      "rests_on": [
       {
-       "label": "F10",
+       "label": "F7",
        "ref": "frank_heroin",
        "where": "Mixing heroin with other drugs / Can you get addicted?",
        "quote": "As heroin is used on a regular basis, the body builds up a tolerance, so that users have to start taking more and more.",
        "sha": "a59b5b94e0d6b688"
+      },
+      {
+       "label": "F8",
+       "ref": "frank_heroin",
+       "where": "Mixing heroin with other drugs / Physical health risks",
+       "quote": "If you have been taking heroin regularly you may have built up some tolerance.",
+       "sha": "bdf83e7c599454b2"
       }
      ],
      "ok": true
     },
     {
      "part": "how3",
-     "text": "A 2022 study of 20 adults who used heroin for at least 6 months found many report tolerance to desired effects inevitably increases over time.",
+     "text": "A 2023 review says chronic morphine exposure causes tolerance to euphoria and respiratory depression, but not constipation.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "milella_2023",
+       "where": "Pharmacodynamics of heroin and its metabolites › Pharmacodynamics of morphine",
+       "quote": "Chronic exposure to morphine results in tolerance to some of its effects (analgesia, euphoria, sedation, nausea, and respiratory depression), but not to others (e.g., constipation).",
+       "sha": "5c9176c66620a40f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A 2022 qualitative study of people who use heroin found tolerance to the high develops faster than to breathing problems.",
      "rests_on": [
       {
        "label": "DA",
        "ref": "kesten_2022",
        "where": "Abstract",
-       "quote": "Semi-structured one-to-one interviews were conducted with 20 adults who currently or previously used heroin (for at least 6 months), with any type of administration (injected, smoked) and experience of abstinence (at least 2 weeks) and relapse.",
-       "sha": "1d0cfe4a8e271bee"
+       "quote": "This qualitative study aimed to explore how the development of tolerance to both the psychoactive and respiratory depressant effects of heroin on re-exposure are experienced by people who use heroin.",
+       "sha": "e0a7deb58be902f6"
       },
       {
        "label": "F1",
        "ref": "kesten_2022",
-       "where": "Results › “As time went by my tolerance got higher and [I] started using higher and bigger amounts”: Tolerating tolerance › Inevitability and frustration",
-       "quote": "When using regularly, many described tolerance to the desired effects as inevitably increasing over time (a few days to two years) depending on frequency of use.",
-       "sha": "01c6139fed06011d"
+       "where": "Discussion",
+       "quote": "White and Irvine proposed that tolerance to opioid-induced euphoria developed to a greater extent than tolerance to respiratory depression. This means that the gap between the dose needed to get high and the dose that caused respiratory depression and overdose reduces over time.",
+       "sha": "e89bb4558da67cdc"
       }
      ],
      "ok": true
@@ -847,25 +903,6 @@
    ]
   }
  ],
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.359,
-   "but": 0.942,
-   "how1": 0.13,
-   "how2": 0.9274,
-   "how3": 0.9663
-  },
-  "scores_quotes_alone": {
-   "short": 0.1061,
-   "but": 0.851,
-   "how1": 0.1166,
-   "how2": 0.771,
-   "how3": 0.7549
-  }
- },
  "place": {
   "home": "heroin",
   "also": [],

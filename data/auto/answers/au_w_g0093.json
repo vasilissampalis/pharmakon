@@ -17,10 +17,10 @@
   "2c-x"
  ],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-25",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
@@ -28,31 +28,33 @@
    "team": "team I",
    "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "writer_first": "groq:qwen/qwen3.8-27b"
   },
-  "run": "45354342846",
+  "run": "45572883684",
   "read_by": {
-   "gemini-3.5-flash-lite": 3,
-   "gpt-oss-20b": 2,
+   "gemini-3.5-flash-lite": 4,
+   "gpt-oss-20b": 1,
    "gemini-3.1-flash-lite": 1
   },
-  "read_seconds": 54,
+  "read_seconds": 42,
   "from": {
    "papers": 0,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 0.0,
-  "seconds": 120
+  "neurons": 86.1,
+  "seconds": 67
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "4 findings kept from 2 sources (0 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "3 findings kept from 2 sources (0 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.78, but 0.98, how1 0.96, how2 0.96",
-  "check": "short: NOT accepted: the word it opens with (“Not known”) is not the answer the passages bear out: The passages state that 2C drugs are \"less likely to be addictive\" and that they are \"not known to cause dependence or withdrawal symptoms in most people,\" which ; but: accepted; how1: accepted; how2: accepted",
-  "rules": "broken at try 2: short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known. The NZ Drug Foundation says 2C drugs are not known to cause dependence or withdrawal in most people, but some may have cravings.”: the word it opens with (“Not known”) is not the answer the passages bear out: The passages state that 2C drugs are \"less likely to be addict",
+  "writer": "try 1: but names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 16) try 2: but names no item it rests on (how the reply ended: stop; reasoned 0 characters, wrote 16) qwen3.8-27b twice wrote a draft in the wrong form (but names no item it rests on): llama-3.3-70b-instruct-fp8-fast wrote from there.",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.88, but 0.94, how1 0.95, how2 0.91",
+  "check": "short: NOT accepted: The sentence claims \"It can be addictive,\" which the passages do not state; they say 2C drugs are less likely to be addictive and not known to cause dependence.; but: NOT accepted: The sentence comments on the source being an official page, a claim not made in the passages.; how1: accepted; how2: accepted"
  },
  "sources": [
   {
@@ -77,14 +79,14 @@
       [
        2026,
        11,
-       24
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
+     "verified_on": "2026-11-25"
     },
     "publisher": "The Level"
    },
@@ -105,24 +107,16 @@
      "passage": 19,
      "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
      "quote": "2C drugs are less likely to be addictive than other drugs but some people may have cravings to use more, especially after a period of using heavily.",
-     "text": "2C drugs are less likely to be addictive than other drugs, but some people may experience cravings to use more.",
+     "text": "2C drugs are less likely to be addictive than other drugs, but some people may experience cravings to use more, especially after using heavily.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 21,
      "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-     "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-     "text": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
+     "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people. However, some people may find themselves having cravings to use more after stopping.",
+     "text": "2C drugs are not known to cause dependence or withdrawal symptoms in most people, though some people may have cravings to use more after stopping.",
      "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 21,
-     "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-     "quote": "However, some people may find themselves having cravings to use more after stopping.",
-     "text": "Some people may find themselves having cravings to use more after stopping.",
-     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -131,7 +125,7 @@
      "passage": 19,
      "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
      "quote": "Long term effects from 2Cs are relatively rare, though there is still a lack of research available on this family of drugs.",
-     "text": "There is still a lack of research available on the 2C family of drugs.",
+     "text": "There is still a lack of research available on the family of 2C drugs.",
      "id": "L1",
      "second_hand": ""
     }
@@ -164,14 +158,14 @@
       [
        2026,
        11,
-       24
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-24"
+     "verified_on": "2026-11-25"
     }
    },
    "title": "NBOMes",
@@ -192,7 +186,7 @@
      "where": "Dependence",
      "quote": "we know that for most other psychedelics that people do not become dependent.",
      "text": "For most other psychedelics, people do not become dependent.",
-     "id": "F4",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -245,6 +239,14 @@
    "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -276,7 +278,7 @@
    "read": "page",
    "kind": "official",
    "at": "https://thelevel.org.nz/drug-information/2c",
-   "kept": 3,
+   "kept": 2,
    "thrown": []
   },
   {
@@ -293,7 +295,14 @@
    "kind": "review",
    "at": "10.1002/dta.1570",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A review of new phenethylamines in Europe",
+     "quote": "New phenethylamines in Europe (2014), Drug testing and analysis.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Safety and Efficacy of Monoamine Oxidase Inhibitors in Patients Who Use Psychoactive Substances: Potential Drug Interactions and Substance Use Disorder Treatment Data",
@@ -310,9 +319,7 @@
    "F1"
   ],
   "direct": "Not known",
-  "but": [
-   "L1"
-  ],
+  "but": [],
   "how": [
    [
     "F2",
@@ -326,168 +333,26 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7779,
-   "but": 0.9814,
-   "how1": 0.9593,
-   "how2": 0.9582
+   "short": 0.8784,
+   "but": 0.9406,
+   "how1": 0.9539,
+   "how2": 0.9146
   },
   "scores_quotes_alone": {
-   "short": 0.6516,
-   "but": 0.9827,
-   "how1": 0.8541,
-   "how2": 0.789
+   "short": 0.5648,
+   "but": 0.2046,
+   "how1": 0.9043,
+   "how2": 0.7701
   }
  },
  "tries": [
-  {
-   "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. The NZ Drug Foundation says 2C drugs are not known to cause dependence or withdrawal in most people, but some may have cravings.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "thelevel_2c",
-       "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-       "sha": "78bf7400d1a724b6"
-      },
-      {
-       "label": "F1",
-       "ref": "thelevel_2c",
-       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
-       "quote": "2C drugs are less likely to be addictive than other drugs but some people may have cravings to use more, especially after a period of using heavily.",
-       "sha": "5580799b7ba62085"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the word it opens with (“Not known”) is not the answer the passages bear out: The passages state that 2C drugs are \"less likely to be addictive than other drugs\" and describe specific effects, not that their addictiveness is \"not known\". Th"
-    },
-    {
-     "part": "but",
-     "text": "There is still a lack of research available on the 2C family of drugs.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "thelevel_2c",
-       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
-       "quote": "Long term effects from 2Cs are relatively rare, though there is still a lack of research available on this family of drugs.",
-       "sha": "5580799b7ba62085"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "The NZ Drug Foundation says 2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "thelevel_2c",
-       "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-       "sha": "78bf7400d1a724b6"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The NZ Drug Foundation says 2C drugs are less likely to be addictive than other drugs, but some people may have cravings.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "thelevel_2c",
-       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
-       "quote": "2C drugs are less likely to be addictive than other drugs but some people may have cravings to use more, especially after a period of using heavily.",
-       "sha": "5580799b7ba62085"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "2C-B is less likely to be addictive than other drugs. It is not known to cause dependence or withdrawal symptoms in most people.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "thelevel_2c",
-       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
-       "quote": "2C drugs are less likely to be addictive than other drugs but some people may have cravings to use more, especially after a period of using heavily.",
-       "sha": "5580799b7ba62085"
-      },
-      {
-       "label": "F2",
-       "ref": "thelevel_2c",
-       "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-       "sha": "78bf7400d1a724b6"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
-    },
-    {
-     "part": "but",
-     "text": "There is still a lack of research available on the 2C family of drugs.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "thelevel_2c",
-       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
-       "quote": "Long term effects from 2Cs are relatively rare, though there is still a lack of research available on this family of drugs.",
-       "sha": "5580799b7ba62085"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "The NZ Drug Foundation says 2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "thelevel_2c",
-       "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-       "sha": "78bf7400d1a724b6"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The NZ Drug Foundation says 2C drugs are less likely to be addictive than other drugs, but some people may have cravings.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "thelevel_2c",
-       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
-       "quote": "2C drugs are less likely to be addictive than other drugs but some people may have cravings to use more, especially after a period of using heavily.",
-       "sha": "5580799b7ba62085"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
   {
    "try": 3,
    "why": "the last draft: no answer",
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The NZ Drug Foundation says 2C drugs are not known to cause dependence or withdrawal in most people, but some may have cravings.",
+     "text": "It can be addictive, some people may experience cravings to use more, especially after using heavily.",
      "rests_on": [
       {
        "label": "F1",
@@ -500,45 +365,17 @@
        "label": "F2",
        "ref": "thelevel_2c",
        "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
+       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people. However, some people may find themselves having cravings to use more after stopping.",
        "sha": "78bf7400d1a724b6"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "the word it opens with (“Not known”) is not the answer the passages bear out: The passages state that 2C drugs are \"less likely to be addictive\" and that they are \"not known to cause dependence or withdrawal symptoms in most people,\" which "
+     "said": "The sentence claims \"It can be addictive,\" which the passages do not state; they say 2C drugs are less likely to be addictive and not known to cause dependence."
     },
     {
      "part": "but",
-     "text": "There is still a lack of research available on the 2C family of drugs.",
-     "rests_on": [
-      {
-       "label": "L1",
-       "ref": "thelevel_2c",
-       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
-       "quote": "Long term effects from 2Cs are relatively rare, though there is still a lack of research available on this family of drugs.",
-       "sha": "5580799b7ba62085"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "The NZ Drug Foundation says 2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-     "rests_on": [
-      {
-       "label": "F2",
-       "ref": "thelevel_2c",
-       "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
-       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people.",
-       "sha": "78bf7400d1a724b6"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The NZ Drug Foundation says 2C drugs are less likely to be addictive than other drugs, but some people may have cravings.",
+     "text": "But this is from an official page of the NZ Drug Foundation.",
      "rests_on": [
       {
        "label": "F1",
@@ -546,6 +383,43 @@
        "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
        "quote": "2C drugs are less likely to be addictive than other drugs but some people may have cravings to use more, especially after a period of using heavily.",
        "sha": "5580799b7ba62085"
+      },
+      {
+       "label": "F2",
+       "ref": "thelevel_2c",
+       "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
+       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people. However, some people may find themselves having cravings to use more after stopping.",
+       "sha": "78bf7400d1a724b6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The sentence comments on the source being an official page, a claim not made in the passages."
+    },
+    {
+     "part": "how1",
+     "text": "The NZ Drug Foundation says 2C drugs are less likely to be addictive than other drugs.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "thelevel_2c",
+       "where": "Long-term effects / What are the long-term effects of using 2C drugs?",
+       "quote": "2C drugs are less likely to be addictive than other drugs but some people may have cravings to use more, especially after a period of using heavily.",
+       "sha": "5580799b7ba62085"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "2C drugs are not known to cause dependence or withdrawal symptoms in most people, though some people may have cravings to use more after stopping.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "thelevel_2c",
+       "where": "Cutting down / How do you manage withdrawal from 2C drugs?",
+       "quote": "2C drugs are not known to cause dependence or withdrawal symptoms in most people. However, some people may find themselves having cravings to use more after stopping.",
+       "sha": "78bf7400d1a724b6"
       }
      ],
      "ok": true
