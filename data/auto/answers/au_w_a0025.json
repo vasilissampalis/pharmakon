@@ -18,31 +18,32 @@
   "on": "2026-11-25",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
+   "team": "team B",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+   "writer_2": "groq:qwen/qwen3.8-27b"
   },
-  "run": "45514745641",
-  "read_seconds": 37,
+  "run": "45516130217",
+  "read_seconds": 27,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 490.7,
-  "seconds": 102
+  "neurons": 758.1,
+  "seconds": 157
  },
  "status": "none",
  "why": "the second reader did not accept the answer",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.06, but 0.94, how1 0.88, how2 0.97",
-  "check": "short: NOT accepted: The passage reports only the number of studies; it does not state that the effect on usage rates is unclear.; but: NOT accepted: The passage says governments highlight potential risks, not the studies.; how1: accepted; how2: accepted",
-  "rules": "broken at try 2: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known. Only 9 studies examined cannabis decriminalization, so the effect on usage rates is not clear.”: The passage reports only the number of studies; it does not state that the effect on usage rates is unclear. | the But “The studies highlight potential risks, including incre",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.34, but 0.99, how1 0.97",
+  "check": "short: NOT accepted: The passages do not state that decriminalization may increase cannabis use; they discuss legalization effects and only note the number of decriminalization studies without reporting their findings.; but: accepted; how1: accepted",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: its source says “Self-reported substance use among”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so)"
  },
  "sources": [
   {
@@ -142,10 +143,10 @@
      "second_hand": ""
     },
     {
-     "passage": 93,
-     "where": "Discussion",
-     "quote": "Among young adults and adults, the findings suggested increased initiation of cannabis use, as well as increased prevalence of cannabis use (particularly following recreational legalization),",
-     "text": "Findings suggested increased initiation and prevalence of cannabis use among young adults and adults, particularly following recreational legalization.",
+     "passage": 21,
+     "where": "Overall Results › Policy Changes",
+     "quote": "Nine of the included studies evaluated the impacts of decriminalization, in which criminal penalties for personal possession were replaced by civil penalties (e.g., fines).",
+     "text": "Nine studies examined the impacts of decriminalization.",
      "id": "F2",
      "second_hand": ""
     },
@@ -160,12 +161,12 @@
    ],
    "limits": [
     {
-     "passage": 9,
-     "where": "Text",
-     "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
-     "text": "The studies highlight potential risks including increased cannabis use among vulnerable populations such as youth.",
+     "passage": 101,
+     "where": "Conclusions",
+     "quote": "Most studies found no change or a decrease in opioid‐related outcomes, although evidence was less consistent for opioid‐related mortality and these outcomes may be particularly vulnerable to time‐varying confounding.",
+     "text": "The evidence for opioid-related mortality was less consistent and vulnerable to time-varying confounding.",
      "id": "L1",
-     "second_hand": ""
+     "second_hand": "Most studies found no change or a decrease in opioid-related outcomes, although evidence was less consistent for opioid-related mortality and these outcomes may be particularly vul"
     }
    ],
    "tag": "A"
@@ -287,18 +288,18 @@
      "second_hand": ""
     },
     {
-     "passage": 6,
+     "passage": 7,
      "where": "Introduction",
-     "quote": "In 2025, past 12-month cannabis use was 26% among 12th graders and 16% among 10th graders, the lowest levels in three decades",
-     "text": "in 2025, past 12-month cannabis use was 26% among 12th graders and 16% among 10th graders",
+     "quote": "Despite these declines in self-reported use, drug-related mortality is rising far more sharply in adolescents than in adults",
+     "text": "drug-related mortality is rising in adolescents despite declines in self-reported use",
      "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 7,
-     "where": "Introduction",
-     "quote": "Overdose deaths among persons aged 14 to 18 years increased 94% from 2019 to 2020",
-     "text": "overdose deaths among persons aged 14 to 18 years increased 94% from 2019 to 2020",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Although overall substance use rates among youth have stabilized or declined in recent years",
+     "text": "overall substance use rates among youth have stabilized or declined in recent years",
      "id": "F6",
      "second_hand": ""
     }
@@ -307,8 +308,8 @@
     {
      "passage": 9,
      "where": "Clinical Presentation",
-     "quote": "approximately 20.9% of adolescent substance abuse ED visits include a co-occurring mental health diagnosis",
-     "text": "the study did not assess how the presence of co-occurring mental health diagnoses affects the relationship between substance use and ED visits",
+     "quote": "Adolescents with chronic medical conditions had 8- to 10-fold higher odds of substance-related ED visits during the COVID-19 era, a vulnerable subgroup that routine screening seldom captures",
+     "text": "routine screening seldom captures adolescents with chronic medical conditions",
      "id": "L2",
      "second_hand": ""
     }
@@ -318,7 +319,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "exact magnitude of usage change",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1016/j.drugpo.2026.105431",
@@ -344,14 +345,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "the second reader did not accept the answer",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-20",
    "lane": 19,
@@ -391,6 +384,14 @@
    "why": "no source that can be read gave a finding for this question",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-25",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -400,7 +401,14 @@
    "kind": "review",
    "at": "10.1111/1468-0009.70108",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "The studies did not fully explore impacts on vulnerable populations such as youth.",
+     "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Adolescent Substance Use Screening in the Emergency Department",
@@ -408,20 +416,7 @@
    "kind": "review",
    "at": "10.1016/j.acepjo.2026.100447",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "overall substance use rates among youth have stabilized or declined in recent years",
-     "quote": "although overall substance use rates among youth have stabilized or declined in recent years",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "the study's findings may not be generalizable beyond 12 months",
-     "quote": "Future research should prioritize adolescent-specific cost-effectiveness analyses, longitudinal outcome studies beyond 12 months",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "Canadian Drugs and Substances Strategy: Overview",
@@ -456,37 +451,20 @@
    "thrown": []
   }
  ],
- "plan": {
-  "short": [
-   "F3"
-  ],
-  "direct": "Not known",
-  "but": [
-   "F3"
-  ],
-  "how": [
-   [
-    "F3",
-    "L1"
-   ]
-  ],
-  "unanswered": "exact magnitude of usage change"
- },
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.059,
-   "but": 0.9439,
-   "how1": 0.8763,
-   "how2": 0.9706
+   "short": 0.3402,
+   "but": 0.9883,
+   "how1": 0.9676
   },
   "scores_quotes_alone": {
-   "short": 0.138,
-   "but": 0.8203,
-   "how1": 0.8769,
-   "how2": 0.9605
+   "short": 0.134,
+   "but": 0.986,
+   "how1": 0.8747
   }
  },
  "tries": [
@@ -496,23 +474,23 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. Only 9 studies have looked at how decriminalizing cannabis changes how much people use it.",
+     "text": "Decriminalizing drugs may increase cannabis initiation across age groups.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F1",
        "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
+       "where": "Conclusions",
+       "quote": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups, with increased prevalence of cannabis use among young adults and adults and weaker potential effects among youth.",
+       "sha": "cc9de8f7c695e684"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage says 9 studies examined cannabis decriminalization, but does not specify that they examined how decriminalization changes usage amounts."
+     "said": "Passage discusses legalization, not decriminalization; claim about decriminalizing drugs not supported."
     },
     {
      "part": "but",
-     "text": "The answer is based on just 9 studies, all using a specific math method to compare before and after.",
+     "text": "Only 9 studies examined cannabis decriminalization.",
      "rests_on": [
       {
        "label": "F3",
@@ -520,66 +498,89 @@
        "where": "Cannabis Decriminalization",
        "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
        "sha": "32431aa7f32889b5"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A systematic review of quasi-experimental studies found this.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "windle_2026",
+       "where": "Discussion",
+       "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi‐experimental studies.",
+       "sha": "635f0d8f6d6ee2ec"
+      },
+      {
+       "label": "F1",
+       "ref": "windle_2026",
+       "where": "Conclusions",
+       "quote": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups, with increased prevalence of cannabis use among young adults and adults and weaker potential effects among youth.",
+       "sha": "cc9de8f7c695e684"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "it is about something else than the short answer (The passages only report the number of studies and their methodology; they provide no information about the magnitude or direction of the effect of decriminalizing drugs on usage rates, so 'Not known' is a fair opening, but the following se)"
-    },
-    {
-     "part": "how1",
-     "text": "A 2026 review found only 9 studies examined cannabis decriminalization, all using a difference-in-differences approach.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": true
+     "said": "Sentence is vague ('this') and does not specify a finding present in the passages."
     },
     {
      "part": "how2",
-     "text": "The review notes governments worry decriminalization may increase cannabis use among vulnerable groups like youth.",
+     "text": "Another review found overall substance use rates among youth have stabilized or declined.",
      "rests_on": [
       {
-       "label": "L1",
-       "ref": "windle_2026",
-       "where": "Text",
-       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
-       "sha": "04ca025611d60c8d"
+       "label": "DB",
+       "ref": "sandelich_2026",
+       "where": "Abstract",
+       "quote": "Adolescent substance use remains a major public health concern",
+       "sha": "6911096ce8a9009b"
+      },
+      {
+       "label": "F6",
+       "ref": "sandelich_2026",
+       "where": "Abstract",
+       "quote": "Although overall substance use rates among youth have stabilized or declined in recent years",
+       "sha": "6911096ce8a9009b"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "Sentence attributes finding to a review, but passage is not a review and does not state that a review found this."
     }
    ]
   },
   {
    "try": 2,
-   "why": "a rule was broken: written again",
+   "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Not known. The sources do not say if decriminalizing drugs changes how much people use them.",
+     "text": "Decriminalizing drugs may increase cannabis initiation across age groups.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F1",
        "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
+       "where": "Conclusions",
+       "quote": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups, with increased prevalence of cannabis use among young adults and adults and weaker potential effects among youth.",
+       "sha": "cc9de8f7c695e684"
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+     "by": "the second reader",
+     "said": "Passage discusses legalization of medical and recreational cannabis, not decriminalization of drugs."
     },
     {
      "part": "but",
-     "text": "Only 9 studies looked at cannabis decriminalization, so there is little information on this topic.",
+     "text": "Only 9 studies examined cannabis decriminalization.",
      "rests_on": [
+      {
+       "label": "F2",
+       "ref": "windle_2026",
+       "where": "Overall Results › Policy Changes",
+       "quote": "Nine of the included studies evaluated the impacts of decriminalization, in which criminal penalties for personal possession were replaced by civil penalties (e.g., fines).",
+       "sha": "4c284edb4e6d0e69"
+      },
       {
        "label": "F3",
        "ref": "windle_2026",
@@ -592,31 +593,26 @@
     },
     {
      "part": "how1",
-     "text": "A 2026 review found 9 studies on cannabis decriminalization, all using a specific math method.",
+     "text": "A systematic review of quasi-experimental studies found this.",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "DA",
        "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The review notes governments worry about more use by young people and other groups.",
-     "rests_on": [
+       "where": "Discussion",
+       "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi‐experimental studies.",
+       "sha": "635f0d8f6d6ee2ec"
+      },
       {
-       "label": "L1",
+       "label": "F1",
        "ref": "windle_2026",
-       "where": "Text",
-       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
-       "sha": "04ca025611d60c8d"
+       "where": "Conclusions",
+       "quote": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups, with increased prevalence of cannabis use among young adults and adults and weaker potential effects among youth.",
+       "sha": "cc9de8f7c695e684"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "Sentence is vague ('found this') and the specific claim is not stated in the passages."
     }
    ]
   },
@@ -626,40 +622,38 @@
    "parts": [
     {
      "part": "short",
-     "text": "Not known. Only 9 studies examined cannabis decriminalization, so the effect on usage rates is not clear.",
+     "text": "Decriminalization may increase cannabis use",
      "rests_on": [
       {
-       "label": "F3",
+       "label": "F1",
        "ref": "windle_2026",
-       "where": "Cannabis Decriminalization",
-       "quote": "Relatively few studies (n = 9) examined cannabis decriminalization (Appendix I), all of which used a difference‐in‐differences approach.",
-       "sha": "32431aa7f32889b5"
+       "where": "Conclusions",
+       "quote": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups, with increased prevalence of cannabis use among young adults and adults and weaker potential effects among youth.",
+       "sha": "cc9de8f7c695e684"
+      },
+      {
+       "label": "F2",
+       "ref": "windle_2026",
+       "where": "Overall Results › Policy Changes",
+       "quote": "Nine of the included studies evaluated the impacts of decriminalization, in which criminal penalties for personal possession were replaced by civil penalties (e.g., fines).",
+       "sha": "4c284edb4e6d0e69"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage reports only the number of studies; it does not state that the effect on usage rates is unclear."
+     "said": "The passages do not state that decriminalization may increase cannabis use; they discuss legalization effects and only note the number of decriminalization studies without reporting their findings."
     },
     {
      "part": "but",
-     "text": "The studies highlight potential risks, including increased cannabis use among vulnerable populations such as youth.",
+     "text": "Only 9 studies examined decriminalization",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "F2",
        "ref": "windle_2026",
-       "where": "Text",
-       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
-       "sha": "04ca025611d60c8d"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage says governments highlight potential risks, not the studies."
-    },
-    {
-     "part": "how1",
-     "text": "A 2026 review found only 9 studies examined cannabis decriminalization, all using a difference-in-differences approach.",
-     "rests_on": [
+       "where": "Overall Results › Policy Changes",
+       "quote": "Nine of the included studies evaluated the impacts of decriminalization, in which criminal penalties for personal possession were replaced by civil penalties (e.g., fines).",
+       "sha": "4c284edb4e6d0e69"
+      },
       {
        "label": "F3",
        "ref": "windle_2026",
@@ -671,20 +665,82 @@
      "ok": true
     },
     {
-     "part": "how2",
-     "text": "The review notes governments highlight risks, including increased cannabis use among vulnerable populations such as youth.",
+     "part": "how1",
+     "text": "A systematic review of quasi-experimental studies found this",
      "rests_on": [
       {
-       "label": "L1",
+       "label": "DA",
        "ref": "windle_2026",
-       "where": "Text",
-       "quote": "Governments considering cannabis legalization highlight potential risks, including increased cannabis use among vulnerable populations such as youth and impacts on other substance use.",
-       "sha": "04ca025611d60c8d"
+       "where": "Discussion",
+       "quote": "Our systematic review was designed to provide a comprehensive overview of the impacts of global cannabis policies on cannabis and other substance use, using evidence from quasi‐experimental studies.",
+       "sha": "635f0d8f6d6ee2ec"
+      },
+      {
+       "label": "F1",
+       "ref": "windle_2026",
+       "where": "Conclusions",
+       "quote": "The legalization of medical and recreational cannabis may increase cannabis initiation across age groups, with increased prevalence of cannabis use among young adults and adults and weaker potential effects among youth.",
+       "sha": "cc9de8f7c695e684"
+      },
+      {
+       "label": "F2",
+       "ref": "windle_2026",
+       "where": "Overall Results › Policy Changes",
+       "quote": "Nine of the included studies evaluated the impacts of decriminalization, in which criminal penalties for personal possession were replaced by civil penalties (e.g., fines).",
+       "sha": "4c284edb4e6d0e69"
       }
      ],
      "ok": true
     }
    ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "Another review reported declining substance use among US adolescents.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "sandelich_2026",
+     "where": "Abstract",
+     "quote": "Adolescent substance use remains a major public health concern",
+     "sha": "6911096ce8a9009b"
+    },
+    {
+     "label": "F4",
+     "ref": "sandelich_2026",
+     "where": "Introduction",
+     "quote": "Self-reported substance use among US adolescents has declined substantially since the COVID-19 pandemic onset",
+     "sha": "7835c63902e8a822"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source says “Self-reported substance use among”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "Another review found adolescent substance use declined",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "sandelich_2026",
+     "where": "Abstract",
+     "quote": "Adolescent substance use remains a major public health concern",
+     "sha": "6911096ce8a9009b"
+    },
+    {
+     "label": "F4",
+     "ref": "sandelich_2026",
+     "where": "Introduction",
+     "quote": "Self-reported substance use among US adolescents has declined substantially since the COVID-19 pandemic onset",
+     "sha": "7835c63902e8a822"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: its source says “Self-reported substance use among”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
   }
  ],
  "place": {

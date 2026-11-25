@@ -17,44 +17,132 @@
   "dmt-ayahuasca"
  ],
  "made": {
-  "on": "2026-11-21",
+  "on": "2026-11-25",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer": "groq:qwen/qwen3.8-27b",
+   "checker": "groq:openai/gpt-oss-120b",
+   "planner": "groq:openai/gpt-oss-120b",
+   "also1": "gemini:gemini-3.6-flash",
+   "team": "team H2",
+   "reader_2": "groq:openai/gpt-oss-20b",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "44843559493",
-  "read_by": {
-   "llama-4-scout-17b-16e-instruct": 5,
-   "gpt-oss-20b": 1
-  },
-  "read_seconds": 19,
+  "run": "45516130217",
+  "read_seconds": 30,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 2
   },
-  "neurons": 601.5,
-  "seconds": 276
+  "neurons": 501.1,
+  "seconds": 100
  },
  "status": "none",
- "why": "no draft passed: broken at try 3: short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The second clause ('these studies only measure what people perceive, not if the beings exist outside the mind') is not stated in any of the provided passages.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "read": "9 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 8 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Not known if DMT entities exist outside the experience, but people who use DMT report perceiving encounters with them.”: The claim that it is \"not known if DMT entities exist outside the experience\" is not addressed in the provided passages. | the But “It is not straightforward to ",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 10172) gemma-4-26b-a4b-it gave no answer in the form asked for: llama-3.3-70b-instruct-fp8-fast wrote from there.",
-  "rules": "broken at try 3: short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: but: words that are not person-first (“users”); how3: words that are not person-first (“users”)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.20, but 0.61, how1 0.02, how2 0.46, how3 0.54",
+  "check": "not accepted at try 2: a second reader did not accept short (The second clause ('these studies only measure what people perceive, not if the beings exist outside the mind') is not stated in any of the provided passages.). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "michael_2023",
+    "type": "article-journal",
+    "title": "An encounter with the self: A thematic and content analysis of the DMT experience from a naturalistic field study",
+    "author": [
+     {
+      "family": "Michael",
+      "given": "Pascal"
+     },
+     {
+      "family": "Luke",
+      "given": "David"
+     },
+     {
+      "family": "Robinson",
+      "given": "Oliver"
+     }
+    ],
+    "container-title": "Frontiers in Psychology",
+    "issued": {
+     "date-parts": [
+      [
+       2023
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpsyg.2023.1083356",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-25",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-25"
+     }
+    },
+    "volume": "14",
+    "number": "1083356",
+    "PMCID": "PMC10083325"
+   },
+   "doi": "10.3389/fpsyg.2023.1083356",
+   "pmcid": "PMC10083325",
+   "title": "An encounter with the self: A thematic and content analysis of the DMT experience from a naturalistic field study",
+   "year": 2023,
+   "journal": "Frontiers in psychology",
+   "kind": "other",
+   "people": true,
+   "near": 0.738,
+   "money": [
+    "Funding has been acquired from the BIAL foundation (Grant number: 359/18), the Society for Psychical Research, the Parapsychological Association, and private funding from Mr. Anton Bilton."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 104,
+     "where": "Discussion › Therapeutic potential › “Emotional” experiences—Challenging",
+     "quote": "18% of DMT users were found to have undergone “conversion” experiences, constituting a drop of almost two-thirds of those subscribing as “atheist” before encountering otherworldly entities on DMT to “non-atheist” afterward",
+     "text": "18% of DMT users had conversion experiences, including a drop of almost two-thirds of atheists to non-atheists after encountering otherworldly entities",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 74,
+     "where": "Discussion",
+     "quote": "This, therefore, is demonstrative of the drug's capacity to take one out of themselves and to engage with another, normally welcome, reconfiguration of all areas of one's own consciousness",
+     "text": "DMT can take one out of themselves and engage with another, normally welcome, reconfiguration of all areas of one's own consciousness",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 108,
+     "where": "Limitations",
+     "quote": "Davis et al.'s noting that respondents' most memorable entity encounter was during their first DMT experience",
+     "text": "In one survey, people's most memorable entity encounter was during their first DMT experience",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 108,
+     "where": "Limitations",
+     "quote": "this would have certainly introduced a bias in terms of the resultant content of the DMT experiences, as psychological history (“set”) is a central driver of experiential content",
+     "text": "The study's self-selection of experienced users may have introduced a bias in the content of DMT experiences",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -89,10 +177,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
+     "verified_on": "2026-11-25",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-21"
+      "checked_on": "2026-11-25"
      }
     },
     "volume": "19",
@@ -122,164 +210,33 @@
      "where": "Limitations",
      "quote": "perceived entity encounters, which is a phenomenon characteristic for DMT",
      "text": "DMT has a phenomenon of perceived entity encounters.",
-     "id": "F1",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 18,
      "where": "Results › Resting-state functional connectivity",
      "quote": "an infusion of DMT produced a deactivation of the hippocampi, which correlated with subjective meaningfulness of the experience",
-     "text": "In studies, an infusion of DMT produced a deactivation of the hippocampi.",
-     "id": "F2",
+     "text": "In a study, an infusion of DMT produced a deactivation of the hippocampi, which correlated with subjective meaningfulness of the experience.",
+     "id": "F5",
      "second_hand": ""
     },
     {
      "passage": 25,
      "where": "Discussion",
      "quote": "recent studies on DMT, which take advantage of its short half-life allowing to capture the whole or most of the psychedelic state within the session",
-     "text": "There are recent studies on DMT.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "ruffell_2023",
-    "type": "article-journal",
-    "title": "Ayahuasca: A review of historical, pharmacological, and therapeutic aspects",
-    "author": [
-     {
-      "family": "Ruffell",
-      "given": "Simon G. D."
-     },
-     {
-      "family": "Crosland-Wood",
-      "given": "Max"
-     },
-     {
-      "family": "Palmer",
-      "given": "Rob"
-     },
-     {
-      "family": "Netzband",
-      "given": "Nige"
-     },
-     {
-      "family": "Tsang",
-      "given": "WaiFung"
-     },
-     {
-      "family": "Weiss",
-      "given": "Brandon"
-     },
-     {
-      "family": "Gandy",
-      "given": "Sam"
-     },
-     {
-      "family": "Cowley-Court",
-      "given": "Tessa"
-     },
-     {
-      "family": "Halman",
-      "given": "Andreas"
-     },
-     {
-      "family": "McHerron",
-      "given": "Diana"
-     },
-     {
-      "family": "Jong",
-      "given": "Angelina"
-     },
-     {
-      "family": "Kennedy",
-      "given": "Tom"
-     },
-     {
-      "family": "White",
-      "given": "Eleanor"
-     },
-     {
-      "family": "Perkins",
-      "given": "Daniel"
-     },
-     {
-      "family": "Terhune",
-      "given": "Devin B."
-     },
-     {
-      "family": "Sarris",
-      "given": "Jerome"
-     }
-    ],
-    "container-title": "Psychiatry and Clinical Neurosciences Reports",
-    "issued": {
-     "date-parts": [
-      [
-       2023
-      ]
-     ]
-    },
-    "DOI": "10.1002/pcn5.146",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-21",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-21"
-     }
-    },
-    "volume": "2",
-    "issue": "4",
-    "number": "e146",
-    "PMCID": "PMC11114307"
-   },
-   "doi": "10.1002/pcn5.146",
-   "pmcid": "PMC11114307",
-   "title": "Ayahuasca: A review of historical, pharmacological, and therapeutic aspects",
-   "year": 2023,
-   "journal": "PCN reports : psychiatry and clinical neurosciences",
-   "kind": "review",
-   "people": false,
-   "near": 0.679,
-   "money": [
-    "Simon G. D. Ruffell, Nige Netzband, and WaiFung Tsang are directors of a not‐for‐profit research institute. Jerome Sarris and Daniel Perkins are directors of a not‐for‐profit medicinal psychedelics research institute. Simon G. D. Ruffell, Tessa Cowley‐Court, and Diana McHerron are employed at this not‐for‐profit medicinal psychedelics research institute. Jerome Sarris is supported by an National Health and Medical Research Council (NHMRC) Clinical (Fellowship APP1125000).",
-    "ACKNOWLEDGEMENTSWe would like to acknowledge the traditional custodians of ayahuasca, and their knowledge and wisdom regarding its therapeutic use. No funding was received for this project."
-   ],
-   "design": null,
-   "findings": [
-    {
-     "passage": 32,
-     "where": "SHORT‐TERM EFFECTS › Phenomenology",
-     "quote": "Participants reported interactions with nonhuman beings like spirits, angels, and aliens.",
-     "text": "People who use DMT report interactions with nonhuman beings.",
-     "id": "F4",
-     "second_hand": ""
-    },
-    {
-     "passage": 32,
-     "where": "SHORT‐TERM EFFECTS › Phenomenology",
-     "quote": "DMT experiences share similarities with near‐death experiences (NDEs) and folkloric, shamanic, and alien abduction experiences.",
-     "text": "DMT experiences share similarities with near‐death experiences, folkloric, shamanic, and alien abduction experiences.",
-     "id": "F5",
+     "text": "Recent studies on DMT take advantage of its short half-life to capture the psychedelic state within the session.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 89,
-     "where": "CONCLUSION",
-     "quote": "it is unclear to what extent this efficacy is attributable to the drug's pharmacology alone, as other factors such as (neo‐)shamanic or alternative surrounding frameworks may contribute.",
-     "text": "The extent to which ayahuasca's efficacy is due to its pharmacology alone is unclear.",
-     "id": "L1",
+     "passage": 29,
+     "where": "Limitations",
+     "quote": "differences could be explored by further research combining fMRI with other modalities: namely, studies with PET (both FDG and specific receptor ligands) and EEG",
+     "text": "Further research combining fMRI with PET and EEG could explore differences among substances.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
@@ -307,14 +264,14 @@
       [
        2026,
        11,
-       21
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-21"
+     "verified_on": "2026-11-25"
     },
     "publisher": "The Level"
    },
@@ -336,14 +293,6 @@
      "where": "Comedowns / What do comedowns from DMT feel like, and how can you feel better?",
      "quote": "many people including myself gain the ability to channel themselves to the essence of the DMT experience... (extreme meditation/instant mental stillness and tripping / drifting out of your body) for months.",
      "text": "many people including myself gain the ability to channel themselves to the essence of the DMT experience for months.",
-     "id": "F6",
-     "second_hand": ""
-    },
-    {
-     "passage": 15,
-     "where": "Comedowns / What do comedowns from DMT feel like, and how can you feel better?",
-     "quote": "People may find their experience on DMT affects how they view themselves and the world around them.",
-     "text": "people may find their experience on DMT affects how they view themselves and the world around them.",
      "id": "F7",
      "second_hand": ""
     },
@@ -354,15 +303,23 @@
      "text": "DMT may alter the way you see yourself, or the world around you.",
      "id": "F8",
      "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Key things to know",
+     "quote": "DMT is a potent psychedelic and you may experience intense changes in how you see the world, yourself and others.",
+     "text": "DMT is a potent psychedelic and you may experience intense changes in how you see the world, yourself and others.",
+     "id": "F9",
+     "second_hand": ""
     }
    ],
    "limits": [
     {
      "passage": 19,
      "where": "Long-term effects / What are the long-term effects of using DMT?",
-     "quote": "The research isn’t clear on how or why these happen or how common it is to experience HPPD, but it is considered relatively rare.",
-     "text": "the research isn’t clear on how or why HPPD happens or how common it is.",
-     "id": "L2",
+     "quote": "If you are predisposed to a mental health condition such as bipolar, schizophrenia or dissociations, DMT may worsen symptoms in some cases.",
+     "text": "the effect of DMT on people predisposed to a mental health condition such as bipolar, schizophrenia or dissociations is not fully understood.",
+     "id": "L3",
      "second_hand": ""
     }
    ],
@@ -390,14 +347,14 @@
       [
        2026,
        11,
-       21
+       25
       ]
      ]
     },
     "verification": {
      "status": "made by code",
      "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-21"
+     "verified_on": "2026-11-25"
     }
    },
    "title": "Ayahuasca",
@@ -418,7 +375,7 @@
      "where": "How might the drug make you feel?",
      "quote": "Profound spiritual experiences; Perceived contact and interaction with other entities",
      "text": "People report perceived contact and interaction with other entities.",
-     "id": "F9",
+     "id": "F10",
      "second_hand": ""
     }
    ],
@@ -428,7 +385,7 @@
      "where": "What is the science of Ayahuasca?",
      "quote": "animal studies suggest",
      "text": "The studies were done in animals.",
-     "id": "L3",
+     "id": "L4",
      "second_hand": "In the hours after dosing, blood levels of BDNF, a protein linked to brain plasticity, rise significantly, and animal studies suggest DMT can stimulate the growth of new neurons an"
     }
    ],
@@ -437,7 +394,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "whether they exist objectively",
+ "missing": "objective existence of the entities",
  "wanted": [
   {
    "doi": "10.1016/j.neubiorev.2025.106529",
@@ -487,6 +444,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-21",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: broken at try 3: short: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -495,31 +460,19 @@
    "read": "full",
    "kind": "other",
    "at": "10.3389/fpsyg.2023.1083356",
-   "kept": 0,
+   "kept": 3,
    "thrown": [
     {
+     "kind": "text",
+     "text": "naturalistic field study of DMT use",
+     "quote": "Screened, healthy, anonymized, and experienced DMT users were observed during their non-clinical use of the drug at home",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
      "kind": "finding",
-     "text": "In this survey, 94% of participants reported encountering entities during DMT.",
+     "text": "94% of people in this study had entity encounters",
      "quote": "94% prevalence of encounters",
      "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "finding",
-     "text": "In this survey, 18% of DMT users reported a shift from atheism to non-atheism after encountering entities.",
-     "quote": "18% of DMT users were found to have undergone “conversion” experiences",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The study only included experienced users with a positive attitude toward DMT, which may bias the reported prevalence of entity encounters.",
-     "quote": "To elaborate on the self-selection of those with a positive attitude to DMT use and recruitment of, often very, experienced users",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The influence of participants’ psychological history on entity encounters is not controlled for in this study.",
-     "quote": "This would have certainly introduced a bias in terms of the resultant content of the DMT experiences, as psychological history (“set”) is a central driver of experiential content",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -531,37 +484,10 @@
    "kept": 3,
    "thrown": [
     {
-     "kind": "finding",
-     "text": "There were 5 DMT studies.",
-     "quote": "5 DMT",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
      "kind": "limit",
-     "text": "The study combined serotonergic psychedelics, which may be an oversimplification.",
+     "text": "The study oversimplifies by treating serotonergic psychedelics as a whole, despite significant differences among substances.",
      "quote": "With the decision to mostly treat the serotonergic psychedelics as a whole also necessary to formulate a somewhat digestible picture of the field, it is naturally an oversimplification, with significa",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    },
-    {
-     "kind": "limit",
-     "text": "The study did not mention a large number of existing studies in the narrative text.",
-     "quote": "there are limitations to this study to be mentioned here. While our aim was to offer a conceptual overview of the field, this led to a large number of existing studies not being mentioned in the narra",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
-  },
-  {
-   "title": "Ayahuasca: A review of historical, pharmacological, and therapeutic aspects",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1002/pcn5.146",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "A review of historical, pharmacological, and therapeutic aspects of ayahuasca",
-     "quote": "Ayahuasca is a psychedelic plant brew originating from the Amazon rainforest.",
-     "why": "the sentence is not carried by its quote and passage"
     }
    ]
   },
@@ -592,82 +518,77 @@
  ],
  "plan": {
   "short": [
-   "F9",
-   "F1",
+   "F10",
    "F4"
   ],
   "direct": "Yes",
-  "but": [],
+  "but": [
+   "L1"
+  ],
   "how": [
    [
-    "F9"
+    "F10"
    ],
    [
-    "DA",
+    "DB",
+    "F4"
+   ],
+   [
     "F1"
-   ],
-   [
-    "F4",
-    "F5"
    ]
   ],
-  "unanswered": "whether they exist objectively"
+  "unanswered": "objective existence of the entities"
  },
  "tries": [
   {
-   "try": 2,
+   "try": 1,
    "why": "a rule was broken: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Not known if DMT entities exist, but people who use DMT report encounters with them",
+     "text": "It depends. People report perceiving entities on DMT, but these studies do not say if the beings exist outside the experience.",
      "rests_on": [
       {
-       "label": "F9",
+       "label": "F10",
        "ref": "drugscience_ayahuasca",
        "where": "How might the drug make you feel?",
        "quote": "Profound spiritual experiences; Perceived contact and interaction with other entities",
        "sha": "6ac8741999d8d623"
       },
       {
-       "label": "F1",
+       "label": "F4",
        "ref": "bene_2025",
        "where": "Limitations",
        "quote": "perceived entity encounters, which is a phenomenon characteristic for DMT",
        "sha": "84a6ecc6c3246acf"
-      },
-      {
-       "label": "F4",
-       "ref": "ruffell_2023",
-       "where": "SHORT‐TERM EFFECTS › Phenomenology",
-       "quote": "Participants reported interactions with nonhuman beings like spirits, angels, and aliens.",
-       "sha": "80071c66a4ce0c06"
       }
      ],
      "ok": false,
      "by": "a rule",
-     "said": "a rule: its source says “perceived entity encounters”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
     },
     {
      "part": "but",
-     "text": "but it is a scoping review",
+     "text": "The study used self-selected experienced users, which may have biased the content of the experiences reported.",
      "rests_on": [
       {
-       "label": "DA",
-       "ref": "bene_2025",
-       "where": "Abstract",
-       "quote": "Here we present a scoping review of existing fMRI studies of serotonergic psychedelics to date, with a focus on finding unifying themes among them, in order to comprehensively grasp current directions within this field.",
-       "sha": "73385bdf757c0fde"
+       "label": "L1",
+       "ref": "michael_2023",
+       "where": "Limitations",
+       "quote": "this would have certainly introduced a bias in terms of the resultant content of the DMT experiences, as psychological history (“set”) is a central driver of experiential content",
+       "sha": "da41cbfc4709b268"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
     },
     {
      "part": "how1",
-     "text": "Drug Science says people report interactions with entities",
+     "text": "Drug Science, a UK charity of scientists says people report perceived contact and interaction with other entities.",
      "rests_on": [
       {
-       "label": "F9",
+       "label": "F10",
        "ref": "drugscience_ayahuasca",
        "where": "How might the drug make you feel?",
        "quote": "Profound spiritual experiences; Perceived contact and interaction with other entities",
@@ -678,17 +599,60 @@
     },
     {
      "part": "how2",
-     "text": "a scoping review of fMRI studies found DMT entity encounters",
+     "text": "A 2025 review of fMRI studies says perceived entity encounters are a phenomenon characteristic for DMT.",
      "rests_on": [
       {
-       "label": "DA",
+       "label": "DB",
        "ref": "bene_2025",
        "where": "Abstract",
        "quote": "Here we present a scoping review of existing fMRI studies of serotonergic psychedelics to date, with a focus on finding unifying themes among them, in order to comprehensively grasp current directions within this field.",
        "sha": "73385bdf757c0fde"
       },
       {
+       "label": "F4",
+       "ref": "bene_2025",
+       "where": "Limitations",
+       "quote": "perceived entity encounters, which is a phenomenon characteristic for DMT",
+       "sha": "84a6ecc6c3246acf"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2023 field study found 18% of DMT users had conversion experiences after encountering otherworldly entities.",
+     "rests_on": [
+      {
        "label": "F1",
+       "ref": "michael_2023",
+       "where": "Discussion › Therapeutic potential › “Emotional” experiences—Challenging",
+       "quote": "18% of DMT users were found to have undergone “conversion” experiences, constituting a drop of almost two-thirds of those subscribing as “atheist” before encountering otherworldly entities on DMT to “non-atheist” afterward",
+       "sha": "367f21a5d31f9787"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, people who use DMT report meeting entities. But these studies only measure what people perceive, not if the beings exist outside the mind.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "drugscience_ayahuasca",
+       "where": "How might the drug make you feel?",
+       "quote": "Profound spiritual experiences; Perceived contact and interaction with other entities",
+       "sha": "6ac8741999d8d623"
+      },
+      {
+       "label": "F4",
        "ref": "bene_2025",
        "where": "Limitations",
        "quote": "perceived entity encounters, which is a phenomenon characteristic for DMT",
@@ -696,26 +660,70 @@
       }
      ],
      "ok": false,
-     "by": "a rule",
-     "said": "a rule: its source says “perceived entity encounters”: that is what people perceived or said of themselves, not what was measured. Keep the word (“perceived”), or say that people said so"
+     "by": "the second reader",
+     "said": "The second clause ('these studies only measure what people perceive, not if the beings exist outside the mind') is not stated in any of the provided passages."
+    },
+    {
+     "part": "but",
+     "text": "The study picked people who already had experience with DMT, which may have shaped what they reported seeing.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "michael_2023",
+       "where": "Limitations",
+       "quote": "this would have certainly introduced a bias in terms of the resultant content of the DMT experiences, as psychological history (“set”) is a central driver of experiential content",
+       "sha": "da41cbfc4709b268"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists, says people report perceived contact and interaction with other entities.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "drugscience_ayahuasca",
+       "where": "How might the drug make you feel?",
+       "quote": "Profound spiritual experiences; Perceived contact and interaction with other entities",
+       "sha": "6ac8741999d8d623"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that Drug Science is a UK charity of scientists; that information is added beyond the source."
+    },
+    {
+     "part": "how2",
+     "text": "A 2025 review of brain scans says perceived entity encounters are a characteristic phenomenon for DMT.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "bene_2025",
+       "where": "Abstract",
+       "quote": "Here we present a scoping review of existing fMRI studies of serotonergic psychedelics to date, with a focus on finding unifying themes among them, in order to comprehensively grasp current directions within this field.",
+       "sha": "73385bdf757c0fde"
+      },
+      {
+       "label": "F4",
+       "ref": "bene_2025",
+       "where": "Limitations",
+       "quote": "perceived entity encounters, which is a phenomenon characteristic for DMT",
+       "sha": "84a6ecc6c3246acf"
+      }
+     ],
+     "ok": true
     },
     {
      "part": "how3",
-     "text": "people who use DMT report interactions with nonhuman beings",
+     "text": "A 2023 study found 18% of people who use DMT had conversion experiences after meeting entities.",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "ruffell_2023",
-       "where": "SHORT‐TERM EFFECTS › Phenomenology",
-       "quote": "Participants reported interactions with nonhuman beings like spirits, angels, and aliens.",
-       "sha": "80071c66a4ce0c06"
-      },
-      {
-       "label": "F5",
-       "ref": "ruffell_2023",
-       "where": "SHORT‐TERM EFFECTS › Phenomenology",
-       "quote": "DMT experiences share similarities with near‐death experiences (NDEs) and folkloric, shamanic, and alien abduction experiences.",
-       "sha": "80071c66a4ce0c06"
+       "label": "F1",
+       "ref": "michael_2023",
+       "where": "Discussion › Therapeutic potential › “Emotional” experiences—Challenging",
+       "quote": "18% of DMT users were found to have undergone “conversion” experiences, constituting a drop of almost two-thirds of those subscribing as “atheist” before encountering otherworldly entities on DMT to “non-atheist” afterward",
+       "sha": "367f21a5d31f9787"
       }
      ],
      "ok": true
@@ -728,54 +736,47 @@
    "parts": [
     {
      "part": "short",
-     "text": "People who use DMT report perceiving encounters with entities, but whether such entities exist outside the experience is not measured.",
+     "text": "Yes. People report perceiving contact with entities on DMT, and this is a characteristic phenomenon of the drug.",
      "rests_on": [
       {
-       "label": "F9",
+       "label": "F10",
        "ref": "drugscience_ayahuasca",
        "where": "How might the drug make you feel?",
        "quote": "Profound spiritual experiences; Perceived contact and interaction with other entities",
        "sha": "6ac8741999d8d623"
       },
       {
-       "label": "F1",
+       "label": "F4",
        "ref": "bene_2025",
        "where": "Limitations",
        "quote": "perceived entity encounters, which is a phenomenon characteristic for DMT",
        "sha": "84a6ecc6c3246acf"
-      },
-      {
-       "label": "F4",
-       "ref": "ruffell_2023",
-       "where": "SHORT‐TERM EFFECTS › Phenomenology",
-       "quote": "Participants reported interactions with nonhuman beings like spirits, angels, and aliens.",
-       "sha": "80071c66a4ce0c06"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: the question can be answered with yes or no: begin the short answer with Yes, No, It can, Sometimes, It depends or Not known, then say why in plain words"
-    },
-    {
-     "part": "but",
-     "text": "But it is a scoping review of existing studies.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "bene_2025",
-       "where": "Abstract",
-       "quote": "Here we present a scoping review of existing fMRI studies of serotonergic psychedelics to date, with a focus on finding unifying themes among them, in order to comprehensively grasp current directions within this field.",
-       "sha": "73385bdf757c0fde"
       }
      ],
      "ok": true
     },
     {
-     "part": "how1",
-     "text": "Drug Science, a UK charity of scientists says people report perceived contact and interaction with other entities.",
+     "part": "but",
+     "text": "The study used self-selected experienced users, which may have biased the content of the reported experiences.",
      "rests_on": [
       {
-       "label": "F9",
+       "label": "L1",
+       "ref": "michael_2023",
+       "where": "Limitations",
+       "quote": "this would have certainly introduced a bias in terms of the resultant content of the DMT experiences, as psychological history (“set”) is a central driver of experiential content",
+       "sha": "da41cbfc4709b268"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists, says people report perceived contact and interaction with other entities.",
+     "rests_on": [
+      {
+       "label": "F10",
        "ref": "drugscience_ayahuasca",
        "where": "How might the drug make you feel?",
        "quote": "Profound spiritual experiences; Perceived contact and interaction with other entities",
@@ -786,17 +787,17 @@
     },
     {
      "part": "how2",
-     "text": "A scoping review of fMRI studies of serotonergic psychedelics found perceived entity encounters characteristic of DMT.",
+     "text": "A 2025 review of fMRI studies says perceived entity encounters are a phenomenon characteristic for DMT.",
      "rests_on": [
       {
-       "label": "DA",
+       "label": "DB",
        "ref": "bene_2025",
        "where": "Abstract",
        "quote": "Here we present a scoping review of existing fMRI studies of serotonergic psychedelics to date, with a focus on finding unifying themes among them, in order to comprehensively grasp current directions within this field.",
        "sha": "73385bdf757c0fde"
       },
       {
-       "label": "F1",
+       "label": "F4",
        "ref": "bene_2025",
        "where": "Limitations",
        "quote": "perceived entity encounters, which is a phenomenon characteristic for DMT",
@@ -807,28 +808,42 @@
     },
     {
      "part": "how3",
-     "text": "People who use DMT report interactions with nonhuman beings, and experiences similar to near-death and alien abduction ones.",
+     "text": "A 2023 field study found 18% of DMT users had conversion experiences after encountering otherworldly entities.",
      "rests_on": [
       {
-       "label": "F4",
-       "ref": "ruffell_2023",
-       "where": "SHORT‐TERM EFFECTS › Phenomenology",
-       "quote": "Participants reported interactions with nonhuman beings like spirits, angels, and aliens.",
-       "sha": "80071c66a4ce0c06"
-      },
-      {
-       "label": "F5",
-       "ref": "ruffell_2023",
-       "where": "SHORT‐TERM EFFECTS › Phenomenology",
-       "quote": "DMT experiences share similarities with near‐death experiences (NDEs) and folkloric, shamanic, and alien abduction experiences.",
-       "sha": "80071c66a4ce0c06"
+       "label": "F1",
+       "ref": "michael_2023",
+       "where": "Discussion › Therapeutic potential › “Emotional” experiences—Challenging",
+       "quote": "18% of DMT users were found to have undergone “conversion” experiences, constituting a drop of almost two-thirds of those subscribing as “atheist” before encountering otherworldly entities on DMT to “non-atheist” afterward",
+       "sha": "367f21a5d31f9787"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
     }
    ]
   }
  ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.2008,
+   "but": 0.6142,
+   "how1": 0.0153,
+   "how2": 0.462,
+   "how3": 0.5443
+  },
+  "scores_quotes_alone": {
+   "short": 0.1498,
+   "but": 0.0586,
+   "how1": 0.0217,
+   "how2": 0.3191,
+   "how3": 0.3581
+  }
+ },
  "place": {
   "home": "dmt-ayahuasca",
   "also": [],
