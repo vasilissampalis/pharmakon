@@ -1927,6 +1927,16 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     not reason first, so it is fast; about $1 to $3 a month. GPT-6 Luna caught a little more one sentence at a time but reasons
     before every verdict; its exam the lane's way is finished for tomorrow's plan.
 
+47. **A source's sentence is not ours (27 November 2026, the editor, overnight).** Reading the paid team's first answers, the
+    editor found a short answer that was a review's 25-word sentence copied as the site's own words, unexplained jargon and
+    all. Measured on the 96 published machine answers: 8 parts of 7 answers share more than 15 words in a row with a passage
+    they rest on. The site quotes a source in at most 15 of its words, and only as a quotation (CLAUDE.md), so `lane.rules`
+    now refuses such a sentence (`copied_run`, `COPY_MAX` 15) and the writer says it again in its own words: a tightening,
+    no gate loosened. The seven answers are held (`data/auto/held.json`) with what to say, and are written again by themselves.
+    The same night the editor held eight more after reading them (empty How points, ways of taking compared, animal and cell
+    findings stated as facts about people, two uses of one medicine mixed, a 'Yes' from one survey against official pages, a
+    duplicate of a checked answer); patterns for the plan of 27 November.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
