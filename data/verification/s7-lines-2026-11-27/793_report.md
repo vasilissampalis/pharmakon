@@ -1,13 +1,13 @@
-# Writer 793: section 7 plain lines, cannabis and MDMA (27 November 2026)
+# Writer 793: section 7 plain lines, cannabis and MDMA
 
-Nine entries and 11 myth-or-fact items, each written from the claim's current version. No quotations.
+Nine entries and 11 myth-or-fact items, each from the claim's current version.
 
 ## Close to the brief's limits (the senior author decides)
 
 - **cl_can_smoked_vs_vaped**: the claim compares two routes on how strong the effect felt. I wrote it as a lab finding
   with its effects on the body and on tasks, with no amounts or timings. None of its items is about strength.
 - **cl_can_concentrates**: blood THC was more than twice as high with concentrates as with flower. It is given as a
-  finding, next to "didn't feel more intoxicated".
+  finding beside "didn't feel more intoxicated".
 - **cl_can_edibles**: the slow start and "taking more than meant" are given without minutes. The 2014 death from the case
   report is left out: it is second-hand, and the statement doesn't say how he died.
 - **cl_mdma_preloading_practices**: water, taking less, breaks and the products people named are given as what people
