@@ -1,6 +1,6 @@
 # Writer 791: section 7 lines, nicotine (27 November 2026)
 
-10 claims, 16 myth-or-fact items (page `nicotine`), at each claim's current version.
+10 claims and 16 myth-or-fact items, page `nicotine`.
 
 ## May read as advice (his decision)
 
@@ -32,4 +32,4 @@
 - vapes_stopping: "Do vapes work better than patches or gum for quitting?"
 - vapes_stopping_support: "Does vaping actually help people quit smoking?"
 
-Two How points in smoke_or_nicotine read at grade 8.8 and 8.1 because of the words nicotine and tobacco.
+Two smoke_or_nicotine How points read at grade 8.8 and 8.1 (the words nicotine and tobacco).
