@@ -20,33 +20,33 @@
   "on": "2026-11-26",
   "models": {
    "reader": "gemini:gemma-4-31b-it",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "gemini:gemini-3.5-flash-lite",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3-flash-preview",
-   "team": "team L",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-oss-120b",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45819886625",
-  "read_seconds": 41,
+  "run": "45883711585",
+  "read_seconds": 29,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 2
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 339
+  "seconds": 160
  },
- "status": "none",
- "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "11 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how1: it says “causes”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out)",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3-flash-preview accepted 2 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.70, but 0.96, how2 0.04, how3 0.54",
-  "check": "short: NOT accepted: The passages note that ego-dissolution can occur, but one passage states it occurs 'in the absence of visual imagery' while another notes that visual hallucinations are common; additionally, the passages do not state that the trip 'often' l; but: NOT accepted: it is about something else than the short answer; how2: NOT accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure; how3: accepted"
+  "read": "12 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “5-MeO-DMT often causes visual and auditory changes and a sense of ego-dissolution. The trip usually lasts less than 30 minutes when smoked.”: The passages note that ego-dissolution can occur, but one passage states it occurs 'in the absence of visual imagery' while another notes th",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.76, but 0.98, how1 0.42, how2 0.94, how3 0.45",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b)",
+  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
@@ -126,26 +126,26 @@
     {
      "passage": 40,
      "where": "DISCUSSION",
-     "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
-     "text": "5-MeO-DMT is a fast-acting substance that can cause an immediate and intense psychedelic experience lasting 10 to 20 minutes.",
+     "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
+     "text": "5-MeO-DMT is a fast-acting tryptamine that induces an immediate and intense psychedelic experience lasting 10 to 20 minutes, featuring feelings of ego dissolution as a sense of oneness with the universe without visual imagery.",
      "id": "F1",
      "second_hand": ""
     },
     {
-     "passage": 10,
-     "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-     "quote": "Conversely, intramuscular injection (IM) has been reported to produce a slower onset of subjective effects, beginning between 1 and 6 min after injection, and lasting for up to 60 min",
-     "text": "Intramuscular injection causes a slower onset of effects, starting between 1 and 6 minutes after injection and lasting up to 60 minutes.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Subjective effects following 5‐MeO‐DMT administration include distortions in auditory and time perception, amplification of emotional states, and feelings of ego dissolution that usually are short‐lasting, depending on the route of administration.",
+     "text": "Subjective effects of 5-MeO-DMT include distortions in auditory and time perception, amplified emotional states, and ego dissolution that are usually short-lasting depending on how it is administered.",
      "id": "F2",
      "second_hand": ""
     },
     {
-     "passage": 10,
-     "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-     "quote": "Subjective reports suggest that subjective experiences after IM administration are more gentle, more gradual, and less intense compared with vaporized 5‐MeO‐DMT",
-     "text": "Subjective reports indicate that experiences after intramuscular administration are more gentle, gradual, and less intense than those from vaporized 5-MeO-DMT.",
+     "passage": 36,
+     "where": "THERAPEUTIC INDICATIONS OF 5‐MEO‐DMT AND CLINICAL DEVELOPMENT",
+     "quote": "On average, the duration of the psychedelic experience with 5‐MeO‐DMT was estimated to last 15–20 min. After the psychoactive effects have worn off, both cognitive and psychomotor function also quickly return to baseline.",
+     "text": "The psychedelic experience with 5-MeO-DMT lasts an estimated 15 to 20 minutes on average, after which cognitive and psychomotor functions quickly return to baseline.",
      "id": "F3",
-     "second_hand": "Subjective reports suggest that subjective experiences after IM administration are more gentle, more gradual, and less intense compared with vaporized 5-MeO-DMT and produces fewer "
+     "second_hand": ""
     }
    ],
    "limits": [
@@ -153,7 +153,7 @@
      "passage": 16,
      "where": "NEUROPHYSIOLOGICAL EFFECTS",
      "quote": "The full spectrum of the potential (neuro)physiological effects of 5‐MeO‐DMT in mammals is yet to be understood.",
-     "text": "The full range of potential neurophysiological effects of 5-MeO-DMT in mammals is not yet understood.",
+     "text": "The full spectrum of the potential neurophysiological effects of 5-MeO-DMT in mammals is not yet fully understood.",
      "id": "L1",
      "second_hand": ""
     }
@@ -227,36 +227,35 @@
     "passage": 14,
     "where": "Introduction › Legal status",
     "quote": "This narrative review of published 5-MeO-DMT research aimed to synthesise the available literature and provide a comprehensive overview of the pre-clinical and safety data.",
-    "text": "A narrative synthesis of research on 5-MeO-DMT."
+    "text": "A narrative review of published research with 5-MeO-DMT"
    },
    "findings": [
     {
-     "passage": 70,
-     "where": "Conclusion",
-     "quote": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile making it an intriguing compound to research.",
-     "text": "5-MeO-DMT is a psychedelic substance that does not last long and has a unique profile of subjective effects.",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT) is a naturally occurring, short-acting psychedelic tryptamine, produced by a variety of plant and animal species.",
+     "text": "5-MeO-DMT is a naturally occurring, short-acting psychedelic tryptamine produced by various plant and animal species.",
      "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 70,
      "where": "Conclusion",
-     "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes",
-     "text": "A notable feature of 5-MeO-DMT is the reportedly high rates of ego-dissolution and mystical experiences.",
+     "quote": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile making it an intriguing compound to research.",
+     "text": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile.",
      "id": "F5",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
-     "passage": 66,
-     "where": "Discussion",
-     "quote": "There have been no published laboratory studies in humans on the effects of 5-MeO-DMT, except for a case study with a single individual.",
-     "text": "There are no published laboratory studies on the effects of 5-MeO-DMT in humans, other than a case study of one person.",
-     "id": "L2",
+     "passage": 70,
+     "where": "Conclusion",
+     "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes, calling for clinical exploration.",
+     "text": "A notable feature of 5-MeO-DMT is reported high rates of ego-dissolution and mystical experiences.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
+   "limits": [],
    "tag": "B"
   },
   {
@@ -308,15 +307,7 @@
      "passage": 7,
      "where": "How might the drug make you feel?",
      "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
-     "text": "5-MeO-DMT is a short-acting drug where the trip usually lasts less than 30 minutes when smoked and up to 45 minutes when insufflated.",
-     "id": "F6",
-     "second_hand": ""
-    },
-    {
-     "passage": 8,
-     "where": "How might the drug make you feel?",
-     "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
-     "text": "Taking 5-MeO-DMT often causes changes in perception such as auditory and visual hallucinations, internal scenes, distorted time perception, and shifts in cognition or emotion.",
+     "text": "The psychedelic trip usually lasts less than 30 minutes when smoked and up to 45 minutes when insufflated.",
      "id": "F7",
      "second_hand": ""
     },
@@ -324,103 +315,169 @@
      "passage": 7,
      "where": "How might the drug make you feel?",
      "quote": "Often uncomfortable bodily sensations such as a rapid heart rate, nausea and pressure in the chest can be present.",
-     "text": "People who use 5-MeO-DMT may experience uncomfortable physical sensations like nausea, chest pressure, and a rapid heart rate.",
+     "text": "Uncomfortable bodily sensations like a rapid heart rate, nausea, and pressure in the chest can be present.",
      "id": "F8",
      "second_hand": ""
-    }
-   ],
-   "limits": [
+    },
     {
      "passage": 8,
      "where": "How might the drug make you feel?",
-     "quote": "Similar to other psychedelic drugs like psilocybin and LSD, experiences can range from being euphoric and spiritually significant to dysphoric and psychologically scarring.",
-     "text": "The experience of taking 5-MeO-DMT can vary significantly, ranging from euphoric and spiritual to dysphoric and psychologically scarring.",
-     "id": "L3",
-     "second_hand": ""
-    }
-   ],
-   "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "adf_dmt",
-    "type": "webpage",
-    "title": "DMT",
-    "author": [
-     {
-      "literal": "Alcohol and Drug Foundation"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2025,
-       5,
-       19
-      ]
-     ]
-    },
-    "URL": "https://adf.org.au/drug-facts/dmt/",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       26
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
-    }
-   },
-   "title": "DMT",
-   "year": 2025,
-   "kind": "official",
-   "people": true,
-   "near": 0.678,
-   "name": "Alcohol and Drug Foundation",
-   "short": "Australia's Alcohol and Drug Foundation",
-   "tier": 2,
-   "address": "https://adf.org.au/drug-facts/dmt/",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 7,
-     "where": "Effects of DMT / Onset and duration of effects",
-     "quote": "If smoked or vaporised: effects can be felt within seconds and can last for around 15 to 30 minutes.",
-     "text": "When smoked or vaporised, the effects of DMT are felt within seconds and last for approximately 15 to 30 minutes.",
+     "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
+     "text": "Alterations to perception often include auditory and visual hallucinations, internal scenes, time perception distortions, and cognitive or emotional shifts.",
      "id": "F9",
-     "second_hand": ""
-    },
-    {
-     "passage": 7,
-     "where": "Effects of DMT / Onset and duration of effects",
-     "quote": "If injected into a vein: effects can be felt within 1 minute, peak after 2 to 5 minutes, and last about 10 to 20 minutes.",
-     "text": "When injected into a vein, the effects of DMT are felt within 1 minute, peak after 2 to 5 minutes, and last for about 10 to 20 minutes.",
-     "id": "F10",
-     "second_hand": ""
-    },
-    {
-     "passage": 7,
-     "where": "Effects of DMT / Onset and duration of effects",
-     "quote": "Effects last for around 30 to 45 minutes if injected into a muscle.",
-     "text": "When injected into a muscle, the effects of DMT last for approximately 30 to 45 minutes.",
-     "id": "F11",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "D"
+   "tag": "C"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "It can induce an immediate and intense psychedelic experience lasting 10 to 20 minutes, with feelings of ego dissolution. The trip usually lasts less than 30 minutes when smoked.",
+   "uses": [
+    "F1",
+    "F7"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "reckweg_2022",
+     "where": "DISCUSSION",
+     "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
+     "sha": "4d30c0d8679d3694"
+    },
+    {
+     "label": "F7",
+     "ref": "drugscience_5-meo-dmt",
+     "where": "How might the drug make you feel?",
+     "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
+     "sha": "95ea183fc88d0795"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 2 reviews and 1 official page.",
+   "uses": [
+    "F1",
+    "DB",
+    "F7"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "reckweg_2022",
+     "where": "DISCUSSION",
+     "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
+     "sha": "4d30c0d8679d3694"
+    },
+    {
+     "label": "DB",
+     "ref": "ermakova_2022",
+     "where": "Introduction › Legal status",
+     "quote": "This narrative review of published 5-MeO-DMT research aimed to synthesise the available literature and provide a comprehensive overview of the pre-clinical and safety data.",
+     "sha": "0c2245b34817949c"
+    },
+    {
+     "label": "F7",
+     "ref": "drugscience_5-meo-dmt",
+     "where": "How might the drug make you feel?",
+     "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
+     "sha": "95ea183fc88d0795"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "A 2022 review found the psychedelic experience lasts 10 to 20 minutes, with ego dissolution.",
+   "uses": [
+    "F1",
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "reckweg_2022",
+     "where": "DISCUSSION",
+     "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
+     "sha": "4d30c0d8679d3694"
+    },
+    {
+     "label": "F2",
+     "ref": "reckweg_2022",
+     "where": "Abstract",
+     "quote": "Subjective effects following 5‐MeO‐DMT administration include distortions in auditory and time perception, amplification of emotional states, and feelings of ego dissolution that usually are short‐lasting, depending on the route of administration.",
+     "sha": "60970135bcb61ccf"
+    },
+    {
+     "label": "F3",
+     "ref": "reckweg_2022",
+     "where": "THERAPEUTIC INDICATIONS OF 5‐MEO‐DMT AND CLINICAL DEVELOPMENT",
+     "quote": "On average, the duration of the psychedelic experience with 5‐MeO‐DMT was estimated to last 15–20 min. After the psychoactive effects have worn off, both cognitive and psychomotor function also quickly return to baseline.",
+     "sha": "43cc5c3cebc04bf2"
+    }
+   ],
+   "quote": "Core to the psychedelic experience is the feeling of ego dissolution",
+   "quote_ref": "reckweg_2022"
+  },
+  {
+   "part": "how2",
+   "text": "Drug Science says the trip usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
+   "uses": [
+    "F7",
+    "F9"
+   ],
+   "rests_on": [
+    {
+     "label": "F7",
+     "ref": "drugscience_5-meo-dmt",
+     "where": "How might the drug make you feel?",
+     "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
+     "sha": "95ea183fc88d0795"
+    },
+    {
+     "label": "F9",
+     "ref": "drugscience_5-meo-dmt",
+     "where": "How might the drug make you feel?",
+     "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
+     "sha": "8f2ce78a915c5cd0"
+    }
+   ],
+   "quote": "usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated",
+   "quote_ref": "drugscience_5-meo-dmt"
+  },
+  {
+   "part": "how3",
+   "text": "A 2022 narrative synthesis found 5-MeO-DMT has a unique subjective effect profile, with high rates of ego-dissolution.",
+   "uses": [
+    "F5",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "ermakova_2022",
+     "where": "Conclusion",
+     "quote": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile making it an intriguing compound to research.",
+     "sha": "9009547d574244f0"
+    },
+    {
+     "label": "F6",
+     "ref": "ermakova_2022",
+     "where": "Conclusion",
+     "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes, calling for clinical exploration.",
+     "sha": "9009547d574244f0"
+    }
+   ],
+   "quote": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile",
+   "quote_ref": "ermakova_2022"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -446,7 +503,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "The clinical pharmacology and potential therapeutic applications of 5-methoxy-N,N-dimethyltryptamine (5-MeO-DMT)",
@@ -457,9 +523,9 @@
    "thrown": [
     {
      "kind": "text",
-     "text": "A review of the clinical pharmacology and potential therapeutic applications of 5-MeO-DMT.",
-     "quote": "5‐methoxy‐N,N‐dimethyltryptamine (5‐MeO‐DMT) is a naturally occurring tryptamine that primarily acts as an agonist at the 5‐HT1A and 5‐HT2A receptors, whereby affinity for the 5‐HT1A subtype is highes",
-     "why": "the sentence is not carried by its quote and passage"
+     "text": "A review of the clinical pharmacology and potential therapeutic applications of 5-MeO-DMT",
+     "quote": "The clinical pharmacology and potential therapeutic applications of 5-methoxy-N,N-dimethyltryptamine (5-MeO-DMT) (2022), Journal of neurochemistry.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
   },
@@ -468,8 +534,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.1177/02698811211050543",
-   "kept": 2,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "There have been no published laboratory studies in humans on the effects of 5-MeO-DMT, except for a case study with a single individual.",
+     "why": "no sentence"
+    }
+   ]
   },
   {
    "title": "5-MeO-DMT",
@@ -485,202 +558,52 @@
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/dmt/",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The speed and duration of the effects of DMT vary depending on the method of administration.",
-     "quote": "How fast a drug takes effect and how long it lasts can vary depending on how it's taken - for example, whether it's smoked or injected.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F7",
-   "F5",
-   "F6",
-   "F1"
+   "F1",
+   "F7"
   ],
   "direct": "",
   "but": [
-   "L3"
+   "L1"
   ],
   "how": [
-   [
-    "F6",
-    "F7",
-    "F8"
-   ],
    [
     "F1",
     "F2",
     "F3"
    ],
    [
-    "F4",
-    "F5"
+    "F7",
+    "F9"
+   ],
+   [
+    "F5",
+    "F6"
    ]
   ],
   "unanswered": ""
- },
- "dropped": [
-  {
-   "try": 1,
-   "part": "how1",
-   "text": "Drug Science, a UK charity of scientists, says the trip usually lasts under 30 minutes when smoked. It often causes hallucinations and physical sensations like nausea.",
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
-     "sha": "95ea183fc88d0795"
-    },
-    {
-     "label": "F7",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
-     "sha": "8f2ce78a915c5cd0"
-    },
-    {
-     "label": "F8",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "Often uncomfortable bodily sensations such as a rapid heart rate, nausea and pressure in the chest can be present.",
-     "sha": "95ea183fc88d0795"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: it says “causes”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
-  },
-  {
-   "try": 2,
-   "part": "how1",
-   "text": "Drug Science, a UK charity of scientists says the trip usually lasts less than 30 minutes when smoked. It often causes hallucinations and physical sensations like nausea.",
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
-     "sha": "95ea183fc88d0795"
-    },
-    {
-     "label": "F7",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
-     "sha": "8f2ce78a915c5cd0"
-    },
-    {
-     "label": "F8",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "Often uncomfortable bodily sensations such as a rapid heart rate, nausea and pressure in the chest can be present.",
-     "sha": "95ea183fc88d0795"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: it says “causes”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
-  },
-  {
-   "try": 3,
-   "part": "how1",
-   "text": "Drug Science, a UK charity of scientists says the trip usually lasts under 30 minutes when smoked. It often causes hallucinations and physical sensations like nausea.",
-   "rests_on": [
-    {
-     "label": "F6",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
-     "sha": "95ea183fc88d0795"
-    },
-    {
-     "label": "F7",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
-     "sha": "8f2ce78a915c5cd0"
-    },
-    {
-     "label": "F8",
-     "ref": "drugscience_5-meo-dmt",
-     "where": "How might the drug make you feel?",
-     "quote": "Often uncomfortable bodily sensations such as a rapid heart rate, nausea and pressure in the chest can be present.",
-     "sha": "95ea183fc88d0795"
-    }
-   ],
-   "by": "a rule",
-   "said": "a rule: it says “causes”, and the words it rests on carry no such word: say what the source says, in its own measure, or leave the word out"
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "A 2022 review says vaporized 5-MeO-DMT acts in seconds and lasts 10 to 20 minutes. It reports that injected use is gentler and lasts up to 60 minutes.",
-   "rests_on": [
-    {
-     "label": "F1",
-     "ref": "reckweg_2022",
-     "where": "DISCUSSION",
-     "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
-     "sha": "4d30c0d8679d3694"
-    },
-    {
-     "label": "F2",
-     "ref": "reckweg_2022",
-     "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-     "quote": "Conversely, intramuscular injection (IM) has been reported to produce a slower onset of subjective effects, beginning between 1 and 6 min after injection, and lasting for up to 60 min",
-     "sha": "2843b379f80387e1"
-    },
-    {
-     "label": "F3",
-     "ref": "reckweg_2022",
-     "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-     "quote": "Subjective reports suggest that subjective experiences after IM administration are more gentle, more gradual, and less intense compared with vaporized 5‐MeO‐DMT",
-     "sha": "2843b379f80387e1"
-    }
-   ],
-   "by": "our own checker",
-   "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
-  }
- ],
- "panel": {
-  "gemini:gemini-3-flash-preview": {
-   "short": [
-    false,
-    "The sentence says vaporized 5-MeO-DMT 'usually' lasts 10 to 20 minutes, but the passage only says it 'can' induce an experience of that duration. Furthermore, another passage states that when vaporized, most effects and monitoring were comp"
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how2": [
-    false,
-    "The passage does not explicitly state that the 10 to 20 minute duration is for the vaporized route of administration; it only describes 5-MeO-DMT as a fast-acting tryptamine that can induce an experience of that duration."
-   ],
-   "how3": [
-    true,
-    ""
-   ]
-  }
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.7014,
-   "but": 0.9628,
-   "how2": 0.0359,
-   "how3": 0.5387
+   "short": 0.7635,
+   "but": 0.9844,
+   "how1": 0.4151,
+   "how2": 0.9368,
+   "how3": 0.446
   },
   "scores_quotes_alone": {
-   "short": 0.562,
-   "but": 0.8374,
-   "how2": 0.2783,
-   "how3": 0.5403
+   "short": 0.7271,
+   "but": 0.9453,
+   "how1": 0.8196,
+   "how2": 0.7647,
+   "how3": 0.5277
   }
  },
  "tries": [
@@ -690,101 +613,106 @@
    "parts": [
     {
      "part": "short",
-     "text": "5-MeO-DMT often causes visual and auditory hallucinations and shifts in emotion. It usually lasts less than 30 minutes when smoked, or 10 to 20 minutes when vaporized.",
+     "text": "It can induce an immediate and intense psychedelic experience lasting 10 to 20 minutes, with feelings of ego dissolution. The trip usually lasts less than 30 minutes when smoked.",
      "rests_on": [
-      {
-       "label": "F7",
-       "ref": "drugscience_5-meo-dmt",
-       "where": "How might the drug make you feel?",
-       "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
-       "sha": "8f2ce78a915c5cd0"
-      },
-      {
-       "label": "F5",
-       "ref": "ermakova_2022",
-       "where": "Conclusion",
-       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes",
-       "sha": "9009547d574244f0"
-      },
-      {
-       "label": "F6",
-       "ref": "drugscience_5-meo-dmt",
-       "where": "How might the drug make you feel?",
-       "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
-       "sha": "95ea183fc88d0795"
-      },
       {
        "label": "F1",
        "ref": "reckweg_2022",
        "where": "DISCUSSION",
-       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
+       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
        "sha": "4d30c0d8679d3694"
+      },
+      {
+       "label": "F7",
+       "ref": "drugscience_5-meo-dmt",
+       "where": "How might the drug make you feel?",
+       "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
+       "sha": "95ea183fc88d0795"
       }
      ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence says vaporized 5-MeO-DMT 'usually' lasts 10 to 20 minutes, but the passage only says it 'can' induce an experience of that duration. Furthermore, another passage states that when vaporized, most effects and monitoring were com"
+     "ok": true
     },
     {
      "part": "but",
-     "text": "Experiences can vary significantly, ranging from euphoric and spiritual to dysphoric and psychologically scarring.",
+     "text": "The full spectrum of its effects in mammals is not yet fully understood.",
      "rests_on": [
       {
-       "label": "L3",
-       "ref": "drugscience_5-meo-dmt",
-       "where": "How might the drug make you feel?",
-       "quote": "Similar to other psychedelic drugs like psilocybin and LSD, experiences can range from being euphoric and spiritually significant to dysphoric and psychologically scarring.",
-       "sha": "8f2ce78a915c5cd0"
+       "label": "L1",
+       "ref": "reckweg_2022",
+       "where": "NEUROPHYSIOLOGICAL EFFECTS",
+       "quote": "The full spectrum of the potential (neuro)physiological effects of 5‐MeO‐DMT in mammals is yet to be understood.",
+       "sha": "75d108d93707c216"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer"
+    },
+    {
+     "part": "how1",
+     "text": "A 2022 review found 5-MeO-DMT induces an immediate and intense psychedelic experience.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "reckweg_2022",
+       "where": "DISCUSSION",
+       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
+       "sha": "4d30c0d8679d3694"
+      },
+      {
+       "label": "F2",
+       "ref": "reckweg_2022",
+       "where": "Abstract",
+       "quote": "Subjective effects following 5‐MeO‐DMT administration include distortions in auditory and time perception, amplification of emotional states, and feelings of ego dissolution that usually are short‐lasting, depending on the route of administration.",
+       "sha": "60970135bcb61ccf"
+      },
+      {
+       "label": "F3",
+       "ref": "reckweg_2022",
+       "where": "THERAPEUTIC INDICATIONS OF 5‐MEO‐DMT AND CLINICAL DEVELOPMENT",
+       "quote": "On average, the duration of the psychedelic experience with 5‐MeO‐DMT was estimated to last 15–20 min. After the psychoactive effects have worn off, both cognitive and psychomotor function also quickly return to baseline.",
+       "sha": "43cc5c3cebc04bf2"
       }
      ],
      "ok": true
     },
     {
      "part": "how2",
-     "text": "A 2022 review says vaporized 5-MeO-DMT acts in seconds and lasts 10 to 20 minutes. It reports that intramuscular injection starts in 1 to 6 minutes and lasts up to 60 minutes.",
+     "text": "Drug Science says the trip usually lasts less than 30 minutes when smoked and up to 45 minutes when insufflated.",
      "rests_on": [
       {
-       "label": "F1",
-       "ref": "reckweg_2022",
-       "where": "DISCUSSION",
-       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
-       "sha": "4d30c0d8679d3694"
+       "label": "F7",
+       "ref": "drugscience_5-meo-dmt",
+       "where": "How might the drug make you feel?",
+       "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
+       "sha": "95ea183fc88d0795"
       },
       {
-       "label": "F2",
-       "ref": "reckweg_2022",
-       "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-       "quote": "Conversely, intramuscular injection (IM) has been reported to produce a slower onset of subjective effects, beginning between 1 and 6 min after injection, and lasting for up to 60 min",
-       "sha": "2843b379f80387e1"
-      },
-      {
-       "label": "F3",
-       "ref": "reckweg_2022",
-       "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-       "quote": "Subjective reports suggest that subjective experiences after IM administration are more gentle, more gradual, and less intense compared with vaporized 5‐MeO‐DMT",
-       "sha": "2843b379f80387e1"
+       "label": "F9",
+       "ref": "drugscience_5-meo-dmt",
+       "where": "How might the drug make you feel?",
+       "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
+       "sha": "8f2ce78a915c5cd0"
       }
      ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passage does not explicitly state that the 10 to 20 minute duration is for the vaporized route of administration; it only describes 5-MeO-DMT as a fast-acting tryptamine that can induce an experience of that duration."
+     "ok": true
     },
     {
      "part": "how3",
-     "text": "A 2022 narrative synthesis says 5-MeO-DMT is short-lasting with a unique effect profile. It notes high rates of ego-dissolution and mystical experiences.",
+     "text": "A 2022 narrative synthesis found 5-MeO-DMT has a unique subjective effect profile.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "ermakova_2022",
        "where": "Conclusion",
        "quote": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile making it an intriguing compound to research.",
        "sha": "9009547d574244f0"
       },
       {
-       "label": "F5",
+       "label": "F6",
        "ref": "ermakova_2022",
        "where": "Conclusion",
-       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes",
+       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes, calling for clinical exploration.",
        "sha": "9009547d574244f0"
       }
      ],
@@ -798,154 +726,35 @@
    "parts": [
     {
      "part": "short",
-     "text": "5-MeO-DMT can cause an intense psychedelic experience lasting 10 to 20 minutes. It often brings visual changes and a sense of ego-dissolution.",
+     "text": "It can induce an immediate and intense psychedelic experience lasting 10 to 20 minutes, with feelings of ego dissolution. The trip usually lasts less than 30 minutes when smoked.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "reckweg_2022",
        "where": "DISCUSSION",
-       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
+       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
        "sha": "4d30c0d8679d3694"
       },
       {
        "label": "F7",
-       "ref": "drugscience_5-meo-dmt",
-       "where": "How might the drug make you feel?",
-       "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
-       "sha": "8f2ce78a915c5cd0"
-      },
-      {
-       "label": "F5",
-       "ref": "ermakova_2022",
-       "where": "Conclusion",
-       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes",
-       "sha": "9009547d574244f0"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passage states that ego-dissolution occurs in the absence of visual imagery, whereas the sentence claims it brings visual changes."
-    },
-    {
-     "part": "but",
-     "text": "Experiences can vary significantly, ranging from euphoric and spiritual to dysphoric and psychologically scarring.",
-     "rests_on": [
-      {
-       "label": "L3",
-       "ref": "drugscience_5-meo-dmt",
-       "where": "How might the drug make you feel?",
-       "quote": "Similar to other psychedelic drugs like psilocybin and LSD, experiences can range from being euphoric and spiritually significant to dysphoric and psychologically scarring.",
-       "sha": "8f2ce78a915c5cd0"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "it is about something else than the short answer (Sentence 1 directly addresses what 5-MeO-DMT feels like and how long it lasts, but sentence 1 is not fully supported by the passages regarding visual changes.)"
-    },
-    {
-     "part": "how2",
-     "text": "A 2022 review says vaporized 5-MeO-DMT can cause an intense experience in 10 to 20 minutes. It reports that injection is gentler and lasts up to 60 minutes.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "reckweg_2022",
-       "where": "DISCUSSION",
-       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
-       "sha": "4d30c0d8679d3694"
-      },
-      {
-       "label": "F2",
-       "ref": "reckweg_2022",
-       "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-       "quote": "Conversely, intramuscular injection (IM) has been reported to produce a slower onset of subjective effects, beginning between 1 and 6 min after injection, and lasting for up to 60 min",
-       "sha": "2843b379f80387e1"
-      },
-      {
-       "label": "F3",
-       "ref": "reckweg_2022",
-       "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-       "quote": "Subjective reports suggest that subjective experiences after IM administration are more gentle, more gradual, and less intense compared with vaporized 5‐MeO‐DMT",
-       "sha": "2843b379f80387e1"
-      }
-     ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.02): say only what those words say, in their own measure"
-    },
-    {
-     "part": "how3",
-     "text": "A 2022 review describes 5-MeO-DMT as a short-lasting psychedelic with a unique profile. It notes high rates of ego-dissolution and mystical experiences.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "ermakova_2022",
-       "where": "Conclusion",
-       "quote": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile making it an intriguing compound to research.",
-       "sha": "9009547d574244f0"
-      },
-      {
-       "label": "F5",
-       "ref": "ermakova_2022",
-       "where": "Conclusion",
-       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes",
-       "sha": "9009547d574244f0"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "5-MeO-DMT often causes visual and auditory changes and a sense of ego-dissolution. The trip usually lasts less than 30 minutes when smoked.",
-     "rests_on": [
-      {
-       "label": "F7",
-       "ref": "drugscience_5-meo-dmt",
-       "where": "How might the drug make you feel?",
-       "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
-       "sha": "8f2ce78a915c5cd0"
-      },
-      {
-       "label": "F5",
-       "ref": "ermakova_2022",
-       "where": "Conclusion",
-       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes",
-       "sha": "9009547d574244f0"
-      },
-      {
-       "label": "F6",
        "ref": "drugscience_5-meo-dmt",
        "where": "How might the drug make you feel?",
        "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
        "sha": "95ea183fc88d0795"
-      },
-      {
-       "label": "F1",
-       "ref": "reckweg_2022",
-       "where": "DISCUSSION",
-       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
-       "sha": "4d30c0d8679d3694"
       }
      ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "The passages note that ego-dissolution can occur, but one passage states it occurs 'in the absence of visual imagery' while another notes that visual hallucinations are common; additionally, the passages do not state that the trip 'often' l"
+     "ok": true
     },
     {
      "part": "but",
-     "text": "Experiences can range from euphoric and spiritual to dysphoric and psychologically scarring.",
+     "text": "The full spectrum of its effects in mammals is not yet fully understood.",
      "rests_on": [
       {
-       "label": "L3",
-       "ref": "drugscience_5-meo-dmt",
-       "where": "How might the drug make you feel?",
-       "quote": "Similar to other psychedelic drugs like psilocybin and LSD, experiences can range from being euphoric and spiritually significant to dysphoric and psychologically scarring.",
-       "sha": "8f2ce78a915c5cd0"
+       "label": "L1",
+       "ref": "reckweg_2022",
+       "where": "NEUROPHYSIOLOGICAL EFFECTS",
+       "quote": "The full spectrum of the potential (neuro)physiological effects of 5‐MeO‐DMT in mammals is yet to be understood.",
+       "sha": "75d108d93707c216"
       }
      ],
      "ok": false,
@@ -953,51 +762,70 @@
      "said": "it is about something else than the short answer"
     },
     {
-     "part": "how2",
-     "text": "A 2022 review says vaporized 5-MeO-DMT acts in seconds and lasts 10 to 20 minutes. It reports that injected use is gentler and lasts up to 60 minutes.",
+     "part": "how1",
+     "text": "A 2022 review found 5-MeO-DMT induces an immediate and intense psychedelic experience.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "reckweg_2022",
        "where": "DISCUSSION",
-       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min).",
+       "quote": "5‐MeO‐DMT is a fast‐acting tryptamine that can induce an immediate (within seconds) and intense psychedelic experience of short duration (10–20 min). Core to the psychedelic experience is the feeling of ego dissolution, described as a sense of oneness with the universe or the experience of relaxed boundaries between the self and the world, in the absence of visual imagery.",
        "sha": "4d30c0d8679d3694"
       },
       {
        "label": "F2",
        "ref": "reckweg_2022",
-       "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-       "quote": "Conversely, intramuscular injection (IM) has been reported to produce a slower onset of subjective effects, beginning between 1 and 6 min after injection, and lasting for up to 60 min",
-       "sha": "2843b379f80387e1"
+       "where": "Abstract",
+       "quote": "Subjective effects following 5‐MeO‐DMT administration include distortions in auditory and time perception, amplification of emotional states, and feelings of ego dissolution that usually are short‐lasting, depending on the route of administration.",
+       "sha": "60970135bcb61ccf"
       },
       {
        "label": "F3",
        "ref": "reckweg_2022",
-       "where": "SUBJECTIVE EFFECTS, ROUTE OF ADMINISTRATION, DURATION, AND MAGNITUDE",
-       "quote": "Subjective reports suggest that subjective experiences after IM administration are more gentle, more gradual, and less intense compared with vaporized 5‐MeO‐DMT",
-       "sha": "2843b379f80387e1"
+       "where": "THERAPEUTIC INDICATIONS OF 5‐MEO‐DMT AND CLINICAL DEVELOPMENT",
+       "quote": "On average, the duration of the psychedelic experience with 5‐MeO‐DMT was estimated to last 15–20 min. After the psychoactive effects have worn off, both cognitive and psychomotor function also quickly return to baseline.",
+       "sha": "43cc5c3cebc04bf2"
       }
      ],
-     "ok": false,
-     "by": "our own checker",
-     "said": "our own checker does not find it in the words it rests on (0.04): say only what those words say, in their own measure"
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Drug Science says the trip usually lasts less than 30 minutes when smoked and up to 45 minutes when insufflated.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "drugscience_5-meo-dmt",
+       "where": "How might the drug make you feel?",
+       "quote": "5-MeO-DMT is a relatively short-acting psychedelic drug and the ‘trip’ usually lasts less than 30 minutes when smoked, and up to 45 minutes when insufflated.",
+       "sha": "95ea183fc88d0795"
+      },
+      {
+       "label": "F9",
+       "ref": "drugscience_5-meo-dmt",
+       "where": "How might the drug make you feel?",
+       "quote": "The alterations to perception as a result of taking 5-MeO-DMT often include auditory and visual hallucinations, internal scenes, time perception distortions and cognitive and/or emotional shifts.",
+       "sha": "8f2ce78a915c5cd0"
+      }
+     ],
+     "ok": true
     },
     {
      "part": "how3",
-     "text": "A 2022 review describes 5-MeO-DMT as short-lasting with a unique effect profile. It notes high rates of ego-dissolution and mystical experiences.",
+     "text": "A 2022 narrative synthesis found 5-MeO-DMT has a unique subjective effect profile.",
      "rests_on": [
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "ermakova_2022",
        "where": "Conclusion",
        "quote": "5-MeO-DMT is a short-lasting psychedelic substance with a unique subjective effect profile making it an intriguing compound to research.",
        "sha": "9009547d574244f0"
       },
       {
-       "label": "F5",
+       "label": "F6",
        "ref": "ermakova_2022",
        "where": "Conclusion",
-       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes",
+       "quote": "A notable feature of 5-MeO-DMT is the reportedly high rates of the ego-dissolution and mystical experiences, which in studies with other psychedelics are related to long-term positive therapeutic outcomes, calling for clinical exploration.",
        "sha": "9009547d574244f0"
       }
      ],
@@ -1006,6 +834,28 @@
    ]
   }
  ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "The full spectrum of its effects in mammals is not yet fully understood.",
+   "rests_on": [
+    {
+     "label": "L1",
+     "ref": "reckweg_2022",
+     "where": "NEUROPHYSIOLOGICAL EFFECTS",
+     "quote": "The full spectrum of the potential (neuro)physiological effects of 5‐MeO‐DMT in mammals is yet to be understood.",
+     "sha": "75d108d93707c216"
+    }
+   ],
+   "by": "the second reader",
+   "said": "it is about something else than the short answer"
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "5-meo-dmt",
   "also": [],
