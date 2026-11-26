@@ -17,42 +17,36 @@
  "made": {
   "on": "2026-11-26",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3.6-flash",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45730905497",
-  "read_by": {
-   "llama-4-scout-17b-16e-instruct": 8,
-   "gpt-oss-20b": 2
-  },
-  "read_seconds": 48,
+  "run": "45732936451",
+  "read_seconds": 84,
   "from": {
    "papers": 2,
    "summaries": 0,
    "official": 0
   },
-  "neurons": 953.7,
-  "seconds": 388
+  "neurons": 380.8,
+  "seconds": 169
  },
  "status": "none",
- "why": "the second reader did not accept the answer",
+ "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure",
  "gates": {
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "read": "5 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
   "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “It depends. Certain drugs can increase strategic thinking and decision-making.”: the word it opens with (“It depends”) is not the answer the passages bear out: The passages discuss drugs’ effects on strategic thinking and decision‑making, not on wisdom. Therefore the opening phrase",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 10189) gemma-4-26b-a4b-it gave no answer in the form asked for: llama-3.3-70b-instruct-fp8-fast wrote from there.",
-  "rules": "1 How-do-we-know line(s) left out for a rule (how1: a number that is not in the paper's words it rests on (25))",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.67, but 0.96, how2 0.98",
-  "check": "short: NOT accepted: Passage reports better strategic thinking in PCE users but explicitly states it is unlikely that MPH caused the improvement; thus the causal claim 'It can improve' is not supported.; but: accepted; how2: accepted"
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “It can improve strategic thinking and decision-making in people who use MPH for PCE.”: Passage reports better strategic thinking in PCE users but explicitly states it is unlikely that MPH caused the improvement; thus the causal claim 'It can improve' is not supported.",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how2: words that are not person-first (“users”))",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.83, but 0.03, how1 0.45",
+  "check": "short: NOT accepted: it does not answer the question itself (Sentences 1 and 2 are directly backed by the cited passages. Sentence 3 overstates the survey findings, which are not presented in the passages. Sentence 2 provides a limitation that directly qualifies the claim in sentence 1, so it fits as); but: NOT accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure; how1: NOT accepted: The passages describe the surgeon survey method but do not report that the survey found slight effects on higher cognitive domains; the discussion’s statement about such effects is not presented as a result of the survey."
  },
  "sources": [
   {
@@ -136,31 +130,31 @@
    "design": {
     "passage": 1,
     "where": "Abstract",
-    "quote": "Twenty-five healthy individuals using MPH for PCE were compared with 39 age-, sex-, and education-matched healthy controls regarding cognitive performance and personality assessed by a comprehensive neuropsychological test battery",
-    "text": "A study on pharmacological cognitive enhancement in healthy individuals"
+    "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+    "text": "investigation of cognitive performance and personality in healthy individuals using methylphenidate for pharmacological cognitive enhancement compared to stimulant-naïve controls"
    },
    "findings": [
     {
-     "passage": 20,
-     "where": "Discussion",
-     "quote": "recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
-     "text": "people who use MPH for PCE performed better in strategic thinking and decision-making than controls",
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
+     "text": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
      "id": "F1",
      "second_hand": ""
     },
     {
      "passage": 20,
      "where": "Discussion",
-     "quote": "PCE users showed higher impulsivity, higher novelty seeking, higher Machiavellianism, and more pronounced antisocial and negativistic personality traits, in combination with lower social reward dependence compared to controls",
-     "text": "people who use MPH for PCE have higher impulsivity, higher novelty seeking, higher Machiavellianism, and more pronounced antisocial and negativistic personality traits, and lower social reward dependence",
+     "quote": "recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+     "text": "Recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making.",
      "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 21,
      "where": "Discussion",
-     "quote": "MPH might improve impulse control of PCE users, helping them to begin and sustain studying, rather than enhancing cognition directly",
-     "text": "MPH might improve impulse control in people who use MPH for PCE",
+     "quote": "it is unlikely that MPH actually improved general cognitive functioning of the present PCE users because they already performed very well and sometimes better than controls.",
+     "text": "It is unlikely that MPH actually improved general cognitive functioning of the present PCE users because they already performed very well and sometimes better than controls.",
      "id": "F3",
      "second_hand": ""
     }
@@ -169,8 +163,8 @@
     {
      "passage": 23,
      "where": "Discussion",
-     "quote": "we tested only a very unique group within the already very specific group of PCE users",
-     "text": "the study only tested a unique group of PCE users who did not use other illegal drugs",
+     "quote": "Third, we used a cross-sectional design but a longitudinal design would have been most appropriate to investigate cause-effect relationships between PCE drug use and changes in cognition and personality.",
+     "text": "A cross-sectional design was used instead of a longitudinal design, which would have been most appropriate to investigate cause-effect relationships between PCE drug use and changes in cognition and personality.",
      "id": "L1",
      "second_hand": ""
     }
@@ -180,28 +174,40 @@
   {
    "read": "full",
    "ref": {
-    "id": "sattler_2013",
+    "id": "franke_2013",
     "type": "article-journal",
-    "title": "Impact of contextual factors and substance characteristics on perspectives toward cognitive enhancement",
+    "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
     "author": [
      {
-      "family": "Sattler",
-      "given": "Sebastian"
+      "family": "Franke",
+      "given": "Andreas G"
      },
      {
-      "family": "Forlini",
-      "given": "Cynthia"
+      "family": "Bagusat",
+      "given": "Christiana"
      },
      {
-      "family": "Racine",
-      "given": "Éric"
+      "family": "Dietz",
+      "given": "Pavel"
      },
      {
-      "family": "Sauer",
-      "given": "Carsten"
+      "family": "Hoffmann",
+      "given": "Isabell"
+     },
+     {
+      "family": "Simon",
+      "given": "Perikles"
+     },
+     {
+      "family": "Ulrich",
+      "given": "Rolf"
+     },
+     {
+      "family": "Lieb",
+      "given": "Klaus"
      }
     ],
-    "container-title": "PLoS ONE",
+    "container-title": "BMC Medicine",
     "issued": {
      "date-parts": [
       [
@@ -209,7 +215,7 @@
       ]
      ]
     },
-    "DOI": "10.1371/journal.pone.0071452",
+    "DOI": "10.1186/1741-7015-11-102",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -221,53 +227,43 @@
       "checked_on": "2026-11-26"
      }
     },
-    "volume": "8",
-    "issue": "8",
-    "number": "e71452",
-    "PMCID": "PMC3733969"
+    "volume": "11",
+    "issue": "1",
+    "number": "102",
+    "PMCID": "PMC3635891"
    },
-   "doi": "10.1371/journal.pone.0071452",
-   "pmcid": "PMC3733969",
-   "title": "Impact of contextual factors and substance characteristics on perspectives toward cognitive enhancement",
+   "doi": "10.1186/1741-7015-11-102",
+   "pmcid": "PMC3635891",
+   "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
    "year": 2013,
-   "journal": "PloS one",
+   "journal": "BMC medicine",
    "kind": "other",
    "people": true,
-   "near": 0.675,
+   "near": 0.528,
    "money": [
-    "Competing Interests: The authors have declared that no competing interests exist.",
-    "This research was funded by the Federal Ministry of Education and Research (FMER; grant number: 01PH08024, headed by Sebastian Sattler and Martin Diewald;). Carsten Sauer gratefully acknowledges a grant from the Bielefeld Graduate School in History and Sociology (BGHS;) and Sebastian Sattler a Rectorate Fellowship of the Bielefeld University (grant number: 3521.01;). Doctoral award from the Fonds de recherché du Québec-Santé (CF;). The authors acknowledge the support for the publication fee by the Deutsche Forschungsgemeinschaft and the Open Access Publication Funds of Bielefeld University. The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.",
-    "We would like to thank all those who helped to conduct this study, especially Dominik Koch, Ines Meyer, Andrea Schulze, Floris van Veen, Constantin Wiegel, and Sebastian Willen. We are grateful to Veljko Dubljević for his comments. We would also like to thank Ms. Allison Yan for editorial review of this manuscript."
+    "The authors declare that they have no competing interests."
    ],
    "design": {
-    "passage": 1,
+    "passage": 2,
     "where": "Abstract",
-    "quote": "In an online factorial survey, contextual and substance-specific characteristics of substances that improve academic performance were varied experimentally and presented to respondents.",
-    "text": "online factorial survey"
+    "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
+    "text": "survey of surgeons attending international conferences"
    },
    "findings": [
     {
-     "passage": 16,
-     "where": "Results › Willingness to use a performance enhancing substance",
-     "quote": "Severe side effects (e.g., psychosis or heart attack) caused by the substance deterred the willingness to enhance performance compared to mild (e.g., slight restlessness or light headache; p<0.001) or moderate (e.g., anxiety or nausea; p<0.001) side effects",
-     "text": "Severe side effects deterred willingness to enhance performance compared to mild or moderate side effects in one survey.",
+     "passage": 39,
+     "where": "Discussion",
+     "quote": "According to randomized controlled trials (RCTs), reviews and meta-analyses there are almost no pro-cognitive effects regarding normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
+     "text": "According to randomized controlled trials, reviews, and meta-analyses, there are almost no pro-cognitive effects for normal healthy non-sleep-deprived subjects on simple and higher cognitive domains.",
      "id": "F4",
      "second_hand": ""
     },
     {
-     "passage": 18,
-     "where": "Results › Moral Acceptability of Using a Performance Enhancing Substance",
-     "quote": "OTC drugs were seen as morally more acceptable than prescription drugs (p = 0.007; see Model 1 in; see also) and illegal drugs (p = 0.033)",
-     "text": "OTC drugs were seen as morally more acceptable than prescription drugs and illegal drugs in one survey.",
+     "passage": 40,
+     "where": "Discussion",
+     "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+     "text": "Stimulants have slightly pro-cognitive effects on higher cognitive domains, and they also have subjective pro-effects.",
      "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 25,
-     "where": "Discussion › Distinct factors shaping willingness and acceptability › Normalizing and enhancement",
-     "quote": "However, we did not find any effect of the current performance level on moral acceptability",
-     "text": "Current performance level had no effect on moral acceptability in one survey.",
-     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -275,8 +271,8 @@
     {
      "passage": 1,
      "where": "Abstract",
-     "quote": "The empirical basis for these discussions is limited, given that the actual nature of factors that influence the acceptability of and willingness to use cognitive enhancement substances remains unclear",
-     "text": "The nature of factors that influence the acceptability of and willingness to use cognitive enhancement substances was not well understood.",
+     "quote": "The prevalence of surgeons taking pharmacological cognitive enhancement (CE) or mood enhancement (ME) drugs has not been systematically assessed so far.",
+     "text": "The prevalence of surgeons taking pharmacological cognitive enhancement or mood enhancement drugs had not been systematically assessed so far.",
      "id": "L2",
      "second_hand": ""
     }
@@ -286,7 +282,7 @@
  ],
  "parts": [],
  "complete": false,
- "missing": "whether these cognitive improvements constitute wisdom",
+ "missing": "direct evidence on wisdom",
  "wanted": [
   {
    "doi": "10.1007/s00406-014-0537-1",
@@ -312,14 +308,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-20",
    "lane": 19,
@@ -359,6 +347,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "the second reader did not accept the answer",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -371,8 +367,8 @@
    "thrown": [
     {
      "kind": "finding",
-     "text": "regular nonmedical MPH use for PCE over more than two years was not associated with cognitive deficits in people who use MPH for PCE",
-     "quote": "our findings indicate that the regular nonmedical MPH use for PCE over more than two years was not associated with cognitive deficits",
+     "text": "Regular nonmedical MPH use for PCE over more than two years was not associated with cognitive deficits, and users performed equally to controls or better in tasks requiring strategic thinking.",
+     "quote": "This is the first study that broadly characterized individuals regularly using MPH for PCE by applying a comprehensive neuropsychological test battery in combination with a thorough personality assess",
      "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
     }
    ]
@@ -390,15 +386,48 @@
    "read": "full",
    "kind": "other",
    "at": "10.1371/journal.pone.0071452",
-   "kept": 3,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "No significant differences in willingness to use were found between different types of substances in one survey.",
-     "quote": "No significant differences in the decision outcome were found when different types of substances were offered, be it an OTC drug, a drug only available in pharmacies, a prescription drug, or an illega",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Prevalence and correlates of stimulant and depressant pharmacological cognitive enhancement among Norwegian students",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1177/1455072518778493",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Cognitive Training Effectiveness on Memory, Executive Functioning, and Processing Speed in Individuals With Substance Use Disorders: A Systematic Review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fpsyg.2021.730165",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "A Systematic Review and Narrative Synthesis of Cognitive Training in the Treatment of Mental Illness and Substance Use Disorder",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/jcm13154348",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Cognitive Enhancement Therapy Improves Frontolimbic Regulation of Emotion in Alcohol and/or Cannabis Misusing Schizophrenia: A Preliminary Study",
+   "read": "full",
+   "kind": "other",
+   "at": "10.3389/fpsyt.2015.00186",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Use of illicit and prescription drugs for cognitive or mood enhancement among surgeons",
+   "read": "full",
+   "kind": "other",
+   "at": "10.1186/1741-7015-11-102",
+   "kept": 2,
+   "thrown": []
   },
   {
    "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
@@ -459,68 +488,117 @@
  ],
  "plan": {
   "short": [
-   "F1",
-   "F3"
+   "F5",
+   "F1"
   ],
   "direct": "It can",
   "but": [
-   "F2"
+   "L1"
   ],
   "how": [
    [
+    "DB",
+    "F5"
+   ],
+   [
     "DA",
-    "F1",
-    "F3"
+    "F1"
    ]
   ],
-  "unanswered": "whether these cognitive improvements constitute wisdom"
+  "unanswered": "direct evidence on wisdom"
  },
  "dropped": [
   {
-   "try": 2,
-   "part": "how1",
-   "text": "A study of 25 healthy individuals using MPH for PCE found improved strategic thinking and decision-making.",
+   "try": 1,
+   "part": "how2",
+   "text": "A study of healthy people using methylphenidate found recently abstinent users had superior strategic thinking.",
    "rests_on": [
     {
      "label": "DA",
      "ref": "maier_2015",
      "where": "Abstract",
-     "quote": "Twenty-five healthy individuals using MPH for PCE were compared with 39 age-, sex-, and education-matched healthy controls regarding cognitive performance and personality assessed by a comprehensive neuropsychological test battery",
+     "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
      "sha": "8b2c234a70b4fb68"
     },
     {
      "label": "F1",
      "ref": "maier_2015",
-     "where": "Discussion",
-     "quote": "recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
-     "sha": "a90a52238786aa5f"
+     "where": "Abstract",
+     "quote": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
+     "sha": "8b2c234a70b4fb68"
     }
    ],
    "by": "a rule",
-   "said": "a rule: a number that is not in the paper's words it rests on (25)"
+   "said": "a rule: words that are not person-first (“users”)"
+  },
+  {
+   "try": 2,
+   "part": "how2",
+   "text": "A study of healthy people using methylphenidate found recently abstinent users showed superior strategic thinking and decision-making.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "maier_2015",
+     "where": "Abstract",
+     "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+     "sha": "8b2c234a70b4fb68"
+    },
+    {
+     "label": "F1",
+     "ref": "maier_2015",
+     "where": "Abstract",
+     "quote": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
+     "sha": "8b2c234a70b4fb68"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A study of healthy people using methylphenidate found recently abstinent users had superior strategic thinking.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "maier_2015",
+     "where": "Abstract",
+     "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+     "sha": "8b2c234a70b4fb68"
+    },
+    {
+     "label": "F1",
+     "ref": "maier_2015",
+     "where": "Abstract",
+     "quote": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
+     "sha": "8b2c234a70b4fb68"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
   },
   {
    "try": 3,
    "part": "how1",
-   "text": "A study of 25 healthy individuals using MPH for PCE found better strategic thinking and decision-making.",
+   "text": "A survey of surgeons at international conferences found stimulants have slight effects on higher thinking.",
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "maier_2015",
+     "label": "DB",
+     "ref": "franke_2013",
      "where": "Abstract",
-     "quote": "Twenty-five healthy individuals using MPH for PCE were compared with 39 age-, sex-, and education-matched healthy controls regarding cognitive performance and personality assessed by a comprehensive neuropsychological test battery",
-     "sha": "8b2c234a70b4fb68"
+     "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
+     "sha": "6cf6d1e066beced4"
     },
     {
-     "label": "F1",
-     "ref": "maier_2015",
+     "label": "F5",
+     "ref": "franke_2013",
      "where": "Discussion",
-     "quote": "recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
-     "sha": "a90a52238786aa5f"
+     "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+     "sha": "ddc5fcc63dd5e780"
     }
    ],
-   "by": "a rule",
-   "said": "a rule: a number that is not in the paper's words it rests on (25)"
+   "by": "the second reader",
+   "said": "The passages describe the surgeon survey method but do not report that the survey found slight effects on higher cognitive domains; the discussion’s statement about such effects is not presented as a result of the survey."
   }
  ],
  "panel_gap": [],
@@ -528,71 +606,148 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.6741,
-   "but": 0.9592,
-   "how2": 0.9838
+   "short": 0.8267,
+   "but": 0.032,
+   "how1": 0.4457
   },
   "scores_quotes_alone": {
-   "short": 0.4744,
-   "but": 0.842,
-   "how2": 0.817
+   "short": 0.4086,
+   "but": 0.0159,
+   "how1": 0.6546
   }
  },
  "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It can be linked to better strategic thinking in people who use methylphenidate. Stimulants may have slight effects on higher thinking.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "maier_2015",
+       "where": "Abstract",
+       "quote": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
+       "sha": "8b2c234a70b4fb68"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2013",
+       "where": "Discussion",
+       "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+       "sha": "ddc5fcc63dd5e780"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it does not answer the question itself (Sentence 1 discusses strategic thinking, not wisdom, so it does not answer the question. Sentence 2 provides a limitation on the causal inference of the study cited in sentence 1, thus it fits as a doubt about sentence 1.)"
+    },
+    {
+     "part": "but",
+     "text": "The study was a one-time snapshot, so it cannot show if the drug caused the change in thinking.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "maier_2015",
+       "where": "Discussion",
+       "quote": "Third, we used a cross-sectional design but a longitudinal design would have been most appropriate to investigate cause-effect relationships between PCE drug use and changes in cognition and personality.",
+       "sha": "d608ed23817bd792"
+      }
+     ],
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
+    },
+    {
+     "part": "how1",
+     "text": "A survey of surgeons at international conferences found stimulants have slight effects on higher thinking.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "franke_2013",
+       "where": "Abstract",
+       "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
+       "sha": "6cf6d1e066beced4"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2013",
+       "where": "Discussion",
+       "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+       "sha": "ddc5fcc63dd5e780"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passages do not state that the surgeon survey found slight effects on higher thinking; the discussion mentions such effects but does not attribute them to the survey results."
+    }
+   ]
+  },
   {
    "try": 2,
    "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "It can improve strategic thinking and decision-making, and might improve impulse control.",
+     "text": "It can be linked to better strategic thinking and decision-making in people who use methylphenidate. Stimulants have slightly pro-cognitive effects on higher cognitive domains.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "maier_2015",
-       "where": "Discussion",
-       "quote": "recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
-       "sha": "a90a52238786aa5f"
+       "where": "Abstract",
+       "quote": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
+       "sha": "8b2c234a70b4fb68"
       },
       {
-       "label": "F3",
-       "ref": "maier_2015",
+       "label": "F5",
+       "ref": "franke_2013",
        "where": "Discussion",
-       "quote": "MPH might improve impulse control of PCE users, helping them to begin and sustain studying, rather than enhancing cognition directly",
-       "sha": "15916b2b61c7693b"
+       "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+       "sha": "ddc5fcc63dd5e780"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "The passage reports an association between regular PCE use and better strategic thinking/decision‑making, but does not state that the drug can improve these functions; the sentence makes a causal claim not supported by the passage."
+     "said": "it does not answer the question itself (Sentence 1 and 2 are directly supported by the cited passages. Sentence 3 overstates the survey findings. The second sentence provides a limitation that qualifies the claim in sentence 1, so it fits as a doubt/limit.)"
     },
     {
      "part": "but",
-     "text": "But this is in people with higher impulsivity and novelty seeking.",
+     "text": "The study used a cross-sectional design, so it cannot show cause-effect relationships between drug use and changes in cognition.",
      "rests_on": [
       {
-       "label": "F2",
+       "label": "L1",
        "ref": "maier_2015",
        "where": "Discussion",
-       "quote": "PCE users showed higher impulsivity, higher novelty seeking, higher Machiavellianism, and more pronounced antisocial and negativistic personality traits, in combination with lower social reward dependence compared to controls",
-       "sha": "a90a52238786aa5f"
+       "quote": "Third, we used a cross-sectional design but a longitudinal design would have been most appropriate to investigate cause-effect relationships between PCE drug use and changes in cognition and personality.",
+       "sha": "d608ed23817bd792"
       }
      ],
      "ok": true
     },
     {
-     "part": "how2",
-     "text": "MPH might improve impulse control in these individuals.",
+     "part": "how1",
+     "text": "A survey of surgeons at international conferences found stimulants have slightly pro-cognitive effects on higher cognitive domains.",
      "rests_on": [
       {
-       "label": "F3",
-       "ref": "maier_2015",
+       "label": "DB",
+       "ref": "franke_2013",
+       "where": "Abstract",
+       "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
+       "sha": "6cf6d1e066beced4"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2013",
        "where": "Discussion",
-       "quote": "MPH might improve impulse control of PCE users, helping them to begin and sustain studying, rather than enhancing cognition directly",
-       "sha": "15916b2b61c7693b"
+       "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+       "sha": "ddc5fcc63dd5e780"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not state that the surgeon survey found slightly pro‑cognitive effects; the discussion mentions such effects in general, not as a survey result."
     }
    ]
   },
@@ -602,54 +757,65 @@
    "parts": [
     {
      "part": "short",
-     "text": "It can improve strategic thinking and decision-making in people who use MPH for PCE.",
+     "text": "It can be linked to better strategic thinking in people who use methylphenidate. Stimulants may have slight effects on higher thinking.",
      "rests_on": [
       {
        "label": "F1",
        "ref": "maier_2015",
-       "where": "Discussion",
-       "quote": "recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
-       "sha": "a90a52238786aa5f"
+       "where": "Abstract",
+       "quote": "Recently abstinent PCE users showed no cognitive impairment but superior strategic thinking and decision-making.",
+       "sha": "8b2c234a70b4fb68"
       },
       {
-       "label": "F3",
-       "ref": "maier_2015",
+       "label": "F5",
+       "ref": "franke_2013",
        "where": "Discussion",
-       "quote": "MPH might improve impulse control of PCE users, helping them to begin and sustain studying, rather than enhancing cognition directly",
-       "sha": "15916b2b61c7693b"
+       "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+       "sha": "ddc5fcc63dd5e780"
       }
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "Passage reports better strategic thinking in PCE users but explicitly states it is unlikely that MPH caused the improvement; thus the causal claim 'It can improve' is not supported."
+     "said": "it does not answer the question itself (Sentences 1 and 2 are directly backed by the cited passages. Sentence 3 overstates the survey findings, which are not presented in the passages. Sentence 2 provides a limitation that directly qualifies the claim in sentence 1, so it fits as)"
     },
     {
      "part": "but",
-     "text": "But this is in people who also have higher impulsivity and antisocial personality traits.",
+     "text": "The study was a one-time snapshot, so it cannot show if the drug caused the change in thinking.",
      "rests_on": [
       {
-       "label": "F2",
+       "label": "L1",
        "ref": "maier_2015",
        "where": "Discussion",
-       "quote": "PCE users showed higher impulsivity, higher novelty seeking, higher Machiavellianism, and more pronounced antisocial and negativistic personality traits, in combination with lower social reward dependence compared to controls",
-       "sha": "a90a52238786aa5f"
+       "quote": "Third, we used a cross-sectional design but a longitudinal design would have been most appropriate to investigate cause-effect relationships between PCE drug use and changes in cognition and personality.",
+       "sha": "d608ed23817bd792"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "our own checker",
+     "said": "our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure"
     },
     {
-     "part": "how2",
-     "text": "MPH might improve impulse control in these individuals.",
+     "part": "how1",
+     "text": "A survey of surgeons at international conferences found stimulants have slight effects on higher thinking.",
      "rests_on": [
       {
-       "label": "F3",
-       "ref": "maier_2015",
+       "label": "DB",
+       "ref": "franke_2013",
+       "where": "Abstract",
+       "quote": "Surgeons who attended five international conferences in 2011 were surveyed with an anonymous self-report questionnaire (AQ) regarding the use of prescription or illicit drugs for CE and ME and factors associated with their use.",
+       "sha": "6cf6d1e066beced4"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2013",
        "where": "Discussion",
-       "quote": "MPH might improve impulse control of PCE users, helping them to begin and sustain studying, rather than enhancing cognition directly",
-       "sha": "15916b2b61c7693b"
+       "quote": "furthermore, there are slightly pro-cognitive effects on higher cognitive domains and, beyond that, stimulants have subjective ‘pro-effects’.",
+       "sha": "ddc5fcc63dd5e780"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages describe the surgeon survey method but do not report that the survey found slight effects on higher cognitive domains; the discussion’s statement about such effects is not presented as a result of the survey."
     }
    ]
   }
