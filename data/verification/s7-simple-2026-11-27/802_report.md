@@ -1,6 +1,6 @@
 # Writer 802: simpler section 7 lines, nicotine (9 claims)
 
-Answers now run 106 to 145 words, and every line is within its grade target. Myth-or-fact items are unchanged; none contradicts the new lines. One question changed: "a vape" became "a nicotine vape" (vapes_harms).
+Answers run 106 to 145 words; every line is within its grade target. Myth-or-fact items are unchanged; none contradicts the new lines. One question changed: "a vape" became "a nicotine vape" (vapes_harms).
 
 ## Left out, may matter
 - nearby: the bar-scenario model (health loss sometimes near second-hand smoke's) and the Australian review (evidence of hazardous levels insufficient).
