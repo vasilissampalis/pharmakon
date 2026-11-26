@@ -20,99 +20,71 @@
   "on": "2026-11-26",
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
+   "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
    "checker": "@cf/openai/gpt-oss-120b",
    "planner": "@cf/openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
-   "team": "team H",
+   "team": "team B",
    "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45726360234",
+  "run": "45728147951",
   "read_by": {
-   "gemini-3.5-flash-lite": 6,
-   "llama-4-scout-17b-16e-instruct": 6
+   "gemini-3.5-flash-lite": 15,
+   "llama-4-scout-17b-16e-instruct": 4
   },
-  "read_seconds": 77,
+  "read_seconds": 96,
   "from": {
-   "papers": 2,
+   "papers": 1,
    "summaries": 0,
-   "official": 2
+   "official": 1
   },
-  "neurons": 1016.1,
-  "seconds": 317
+  "neurons": 1163.5,
+  "seconds": 215
  },
  "status": "none",
- "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passage from the 2025 review does not mention MDMA, so it does not support that the review notes interactions specifically between MDMA and drugs affecting MAO activity.",
+ "why": "about mixing drugs: written, but it does not meet the stricter bar for such an answer (its short answer rests on no official body's page and on no review read in full; no further reader read it): no answer yet",
  "gates": {
   "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 6 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 5; gemini-3.6-flash accepted 1 of 5",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.88, but 0.96, how1 0.64, how2 0.12, how3 0.87",
-  "check": "short: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passage from the 2025 review does not mention MDMA, so it does not support that the review notes interactions specifically between MDMA and drugs affecting MAO activity.; but: accepted; how1: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention Australia's Alcohol and Drug Foundation as the source.; how2: NOT accepted: a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention Drug Science or that it is a UK charity of scientists.; how3: NOT accepted: a further reader (gemini-3.6-flash) did not accept it: The passages state that the review evaluates classic psychedelics and related substances (MDMA) rather than being solely a review of MDMA, and they do not specify that the potential interactions with drugs affecting MAO activity pertain spe"
+  "read": "4 findings kept from 2 sources (1 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “MDMA and MAOIs greatly increase the risk of serotonin syndrome. A 2025 review notes potential interactions between MDMA and drugs affecting MAO activity.”: a further reader (gemini-3.6-flash) did not accept it: The passage from the 2025 review does not mention MDMA, so it does not ",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.97, but 0.96, how1 0.80, how2 0.97",
+  "check": "every sentence kept was accepted by the second reader (@cf/openai/gpt-oss-120b)",
+  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them",
+  "stakes": "about mixing drugs: the stricter bar for such an answer: NOT met: its short answer rests on no official body's page and on no review read in full; no further reader read it"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "liszka_2025",
+    "id": "sessa_2019",
     "type": "article-journal",
-    "title": "Psychedelics as a therapeutic opportunity or threat: A narrative review",
+    "title": "A review of 3,4-methylenedioxymethamphetamine (MDMA)-assisted psychotherapy",
     "author": [
      {
-      "family": "Liszka",
-      "given": "Paweł"
+      "family": "Sessa",
+      "given": "Ben"
      },
      {
-      "family": "Ogórek",
-      "given": "Agata"
+      "family": "Higbed",
+      "given": "Laurie"
      },
      {
-      "family": "Olejnik-Chlewicka",
-      "given": "Klaudia M"
-     },
-     {
-      "family": "Puchalski",
-      "given": "Konrad"
-     },
-     {
-      "family": "Zasiadła",
-      "given": "Marta"
-     },
-     {
-      "family": "Patrzykąt",
-      "given": "Klaudia M"
-     },
-     {
-      "family": "Perediatkiewicz",
-      "given": "Jakub"
-     },
-     {
-      "family": "Urbański",
-      "given": "Wojciech"
-     },
-     {
-      "family": "Łuczak",
-      "given": "Paweł M"
-     },
-     {
-      "family": "Brodowski",
-      "given": "Jakub"
+      "family": "Nutt",
+      "given": "David"
      }
     ],
-    "container-title": "Cureus",
+    "container-title": "Frontiers in Psychiatry",
     "issued": {
      "date-parts": [
       [
-       2025
+       2019
       ]
      ]
     },
-    "DOI": "10.7759/cureus.99942",
+    "DOI": "10.3389/fpsyt.2019.00138",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -124,141 +96,39 @@
       "checked_on": "2026-11-26"
      }
     },
-    "PMCID": "PMC12826408"
+    "volume": "10",
+    "number": "138",
+    "PMCID": "PMC6435835"
    },
-   "doi": "10.7759/cureus.99942",
-   "pmcid": "PMC12826408",
-   "title": "Psychedelics as a Therapeutic Opportunity or Threat: A Narrative Review",
-   "year": 2025,
-   "journal": "Cureus",
+   "doi": "10.3389/fpsyt.2019.00138",
+   "pmcid": "PMC6435835",
+   "title": "A Review of 3,4-methylenedioxymethamphetamine (MDMA)-Assisted Psychotherapy",
+   "year": 2019,
+   "journal": "Frontiers in psychiatry",
    "kind": "review",
    "people": true,
-   "near": 0.648,
+   "near": 0.628,
    "money": [
-    "Conflicts of interest: In compliance with the ICMJE uniform disclosure form, all authors declare the following:",
-    "Payment/services info: All authors have declared that no financial support was received from any organization for the submitted work.",
-    "Financial relationships: All authors have declared that they have no financial relationships at present or within the previous three years with any organizations that might have an interest in the submitted work."
+    "The authors wish to thank our other team members of the BIMA study, including Research Associates Dr. Claire Durant and Dr. Sue Wilson, Research Assistant Mr. Steve O'Brien, Night Sitter Lead Dr. Chloe Sakal, and expert service user Kevin Speller. We are grateful to The Alexander Mosley Foundation for their funding support and the Multidisciplinary Association for Psychedelic Studies (MAPS) for academic support with the ongoing study. We are grateful to the local substance misuse service, Addaction, and to Tim Williams for his support locally. And we are thankful to the Bristol University CRIC Centre for hosting the study and to Imperial College London for their academic sponsorship."
    ],
    "design": {
-    "passage": 9,
-    "where": "Introduction and background",
-    "quote": "The aim of this narrative review is to evaluate current data on classic psychedelics and related substances (MDMA) in the treatment of selected psychiatric disorders",
-    "text": "a narrative review"
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This paper provides a brief review of the history, proposed pharmacological mechanisms, safety issues, and clinical applications of the medicine 3,4-methylenedioxymethamphetamine (MDMA).",
+    "text": "A review paper"
    },
    "findings": [
     {
-     "passage": 49,
-     "where": "Conclusions",
-     "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-     "text": "The paper notes potential interactions between MDMA and drugs affecting MAO activity.",
+     "passage": 15,
+     "where": "Mechanism of Action of Clinical MDMA",
+     "quote": "MDMA mainly acts as a releaser of serotonin (5-HT) and noradrenaline, and to a lesser extent also of dopamine.",
+     "text": "MDMA mainly acts as a releaser of serotonin and noradrenaline, and to a lesser extent also of dopamine.",
      "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "particular caution is required when using these substances in therapy because of the risk of acute and chronic adverse reactions and potential drug interactions, including with serotonergic agents and monoamine oxidase inhibitors (MAOIs).",
-     "text": "The paper notes that MDMA may have interactions with MAOIs.",
-     "id": "F2",
      "second_hand": ""
     }
    ],
    "limits": [],
    "tag": "A"
-  },
-  {
-   "read": "full",
-   "ref": {
-    "id": "vanamsterdam_2021",
-    "type": "article-journal",
-    "title": "Hard boiled: Alcohol use as a risk factor for MDMA-induced hyperthermia: A systematic review",
-    "author": [
-     {
-      "family": "van Amsterdam",
-      "given": "Jan"
-     },
-     {
-      "family": "Brunt",
-      "given": "Tibor M."
-     },
-     {
-      "family": "Pierce",
-      "given": "Mimi"
-     },
-     {
-      "family": "van den Brink",
-      "given": "Wim"
-     }
-    ],
-    "container-title": "Neurotoxicity Research",
-    "issued": {
-     "date-parts": [
-      [
-       2021
-      ]
-     ]
-    },
-    "DOI": "10.1007/s12640-021-00416-z",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-26"
-     }
-    },
-    "volume": "39",
-    "issue": "6",
-    "page": "2120-2133",
-    "PMCID": "PMC8639540"
-   },
-   "doi": "10.1007/s12640-021-00416-z",
-   "pmcid": "PMC8639540",
-   "title": "Hard Boiled: Alcohol Use as a Risk Factor for MDMA-Induced Hyperthermia: a Systematic Review",
-   "year": 2021,
-   "journal": "Neurotoxicity research",
-   "kind": "review",
-   "people": true,
-   "near": 0.615,
-   "money": [],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This review summarizes the main drivers of MDMA-induced hyperthermia, dehydration, and hyponatremia and the role of concomitant alcohol use.",
-    "text": "systematic review"
-   },
-   "findings": [
-    {
-     "passage": 30,
-     "where": "Results › Effect of MDMA and/or Alcohol on Hyponatremia",
-     "quote": "Synthetic phenethylamines such as cathinones and amphetamines, including met-amphetamine and MDMA, are known for their induction of hyponatremia.",
-     "text": "MDMA can induce hyponatremia.",
-     "id": "F3",
-     "second_hand": ""
-    },
-    {
-     "passage": 33,
-     "where": "Summary and Conclusion",
-     "quote": "MDMA, as a re-uptake inhibitor of these monoamines, may therefore induce profound hyperthermia.",
-     "text": "MDMA can induce profound hyperthermia.",
-     "id": "F4",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 29,
-     "where": "Results › Effect of MDMA and/or Alcohol on Hydration",
-     "quote": "It is, however, unclear whether this is a direct effect of MDMA or an effect secondary to MDMA-induced hyperthermia",
-     "text": "It is unclear whether MDMA's effect on AVP-secretion is direct or secondary to hyperthermia.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "B"
   },
   {
    "read": "page",
@@ -313,16 +183,8 @@
      "passage": 12,
      "where": "Mixing with other drugs",
      "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
-     "text": "MDMA and MAOIs greatly increase the risk of serotonin syndrome.",
-     "id": "F5",
-     "second_hand": ""
-    },
-    {
-     "passage": 12,
-     "where": "Mixing with other drugs",
-     "quote": "MAOIs can last up to two weeks within the body after stopping treatment.",
-     "text": "MAOIs can last up to two weeks in the body after stopping treatment.",
-     "id": "F6",
+     "text": "Mixing MDMA with MAOIs greatly increases the risk of serotonin syndrome.",
+     "id": "F2",
      "second_hand": ""
     },
     {
@@ -330,74 +192,119 @@
      "where": "Mixing with other drugs",
      "quote": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
      "text": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
-     "id": "F7",
+     "id": "F3",
      "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "C"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "drugscience_mdma",
-    "type": "webpage",
-    "title": "MDMA",
-    "author": [
-     {
-      "literal": "Drug Science"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      []
-     ]
     },
-    "URL": "https://www.drugscience.org.uk/drugs/mdma",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       26
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-26"
-    }
-   },
-   "title": "MDMA",
-   "year": null,
-   "kind": "official",
-   "people": true,
-   "near": 0.61,
-   "name": "Drug Science",
-   "short": "Drug Science, a UK charity of scientists",
-   "tier": 2,
-   "address": "https://www.drugscience.org.uk/drugs/mdma",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
     {
-     "passage": 9,
-     "where": "What are the risks?",
-     "quote": "MDMA affects the same chemicals in the brain as many anti-depressant medications, so those who are taking or have recently taken these medications (like SSRIs, SNRIs or MAOIs) should avoid MDMA as drug-drug interactions in the brain can be unpredictable and potentially very dangerous.",
-     "text": "Those who are taking or have recently taken anti-depressant medications like MAOIs should avoid MDMA because drug-drug interactions in the brain can be unpredictable and potentially very dangerous.",
-     "id": "F8",
+     "passage": 12,
+     "where": "Mixing with other drugs",
+     "quote": "This means taking MDMA within this period can potentially be life threatening.",
+     "text": "Taking MDMA within this period can potentially be life threatening.",
+     "id": "F4",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "D"
+   "tag": "B"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Mixing MDMA with MAOIs greatly increases the risk of serotonin syndrome.",
+   "uses": [
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "adf_mdma",
+     "where": "Mixing with other drugs",
+     "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
+     "sha": "419992e362ba03b7"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review and 1 official page.",
+   "uses": [
+    "DA",
+    "F2"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "sessa_2019",
+     "where": "Abstract",
+     "quote": "This paper provides a brief review of the history, proposed pharmacological mechanisms, safety issues, and clinical applications of the medicine 3,4-methylenedioxymethamphetamine (MDMA).",
+     "sha": "de533cc9fab24ee2"
+    },
+    {
+     "label": "F2",
+     "ref": "adf_mdma",
+     "where": "Mixing with other drugs",
+     "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
+     "sha": "419992e362ba03b7"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "Australia's Alcohol and Drug Foundation says mixing MDMA with MAOIs increases serotonin syndrome risk.",
+   "uses": [
+    "F2",
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "adf_mdma",
+     "where": "Mixing with other drugs",
+     "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
+     "sha": "419992e362ba03b7"
+    },
+    {
+     "label": "F4",
+     "ref": "adf_mdma",
+     "where": "Mixing with other drugs",
+     "quote": "This means taking MDMA within this period can potentially be life threatening.",
+     "sha": "419992e362ba03b7"
+    }
+   ],
+   "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome",
+   "quote_ref": "adf_mdma"
+  },
+  {
+   "part": "how2",
+   "text": "A review of MDMA says it mainly acts as a releaser of serotonin and noradrenaline.",
+   "uses": [
+    "DA",
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "sessa_2019",
+     "where": "Abstract",
+     "quote": "This paper provides a brief review of the history, proposed pharmacological mechanisms, safety issues, and clinical applications of the medicine 3,4-methylenedioxymethamphetamine (MDMA).",
+     "sha": "de533cc9fab24ee2"
+    },
+    {
+     "label": "F1",
+     "ref": "sessa_2019",
+     "where": "Mechanism of Action of Clinical MDMA",
+     "quote": "MDMA mainly acts as a releaser of serotonin (5-HT) and noradrenaline, and to a lesser extent also of dopamine.",
+     "sha": "2b4da3bb26d90886"
+    }
+   ],
+   "quote": "MDMA mainly acts as a releaser of serotonin (5-HT) and noradrenaline",
+   "quote_ref": "sessa_2019"
+  }
+ ],
  "complete": false,
- "missing": "specific pharmacological mechanism of the interaction",
+ "missing": "a paper that stands nearer the question could not be read",
  "wanted": [
   {
    "doi": "10.1080/17425255.2020.1749262",
@@ -430,6 +337,14 @@
    "why": "the answer was not accepted: our own checker does not find it in the words it rests on (0.03): say only what those words say, in their own measure",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "the answer was not accepted: a further reader (gemini-3.6-flash) did not accept it: The passage from the 2025 review does not mention MDMA, so it does not support that the review notes interactions specifically between MDMA and drugs affecting MAO activity.",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -447,43 +362,30 @@
    "kind": "review",
    "at": "10.2147/sar.s37258",
    "kept": 0,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "it is unclear to what extent the problems reported by users are specifically attributable to MDMA consumption",
-     "quote": "most ecstasy users are polydrug users",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "A Review of 3,4-methylenedioxymethamphetamine (MDMA)-Assisted Psychotherapy",
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpsyt.2019.00138",
-   "kept": 0,
-   "thrown": []
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "Comparing clinical MDMA use with recreational ecstasy may not be scientifically valid.",
+     "quote": "Comparing clinical MDMA use with recreational ecstasy carries no scientific validity.",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
   },
   {
    "title": "Psychedelics as a Therapeutic Opportunity or Threat: A Narrative Review",
    "read": "full",
    "kind": "review",
    "at": "10.7759/cureus.99942",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The findings may not apply to recreational, uncontrolled use of MDMA.",
-     "quote": "A different picture emerges from case reports and review papers describing recreational, uncontrolled use of these substances.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The current data is preliminarily documented and more research is needed.",
-     "quote": "Future research should focus on larger, multicentre trials with longer follow-up, direct comparisons with standard treatments and a more precise definition of patient groups most likely to achieve mea",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "Beyond ecstasy: Alternative entactogens to 3,4-methylenedioxymethamphetamine with potential applications in psychotherapy",
@@ -498,15 +400,48 @@
    "read": "full",
    "kind": "review",
    "at": "10.1007/s12640-021-00416-z",
-   "kept": 2,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "Alcohol has a biphasic effect on AVP-secretion, initially inhibiting it and then increasing it.",
-     "quote": "In contrast to MDMA, alcohol shows a biphasic effect on AVP-secretion: alcohol (> 4% w/v) initially inhibits AVP-secretion (Roberts; Rubini et al.; Shirreffs and Maughan), but 30–60 min after alcohol ",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Why Psychiatry Needs 3,4-Methylenedioxymethamphetamine: A Child Psychiatrist's Perspective",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1007/s13311-017-0531-1",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Does ±3,4-methylenedioxymethamphetamine (ecstasy) induce subjective feelings of social connection in humans? A multilevel meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1371/journal.pone.0258849",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Pharmacogenomics of 3,4-Methylenedioxymethamphetamine (MDMA): A Narrative Review of the Literature",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/pharmaceutics16081091",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Oral health effects of ecstasy (MDMA) and methamphetamine: a narrative review",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/froh.2025.1645445",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Rare but relevant: MDMA and hyponatraemia",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1111/add.70255",
+   "kept": 0,
+   "thrown": []
   },
   {
    "title": "MDMA (ecstasy)",
@@ -514,20 +449,7 @@
    "kind": "official",
    "at": "https://adf.org.au/drug-facts/mdma/",
    "kept": 3,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The information about MAOIs and MDMA interaction does not specify if it includes reversible MAOIs.",
-     "quote": "Mixing includes using more than one drug (including alcohol or medications) at the same time, or one after another.",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The time frame for when drugs were taken in relation to MDMA and MAOIs interaction is not detailed.",
-     "quote": "You should also consider what drugs you’ve taken in the last 24 hours.",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "thrown": []
   },
   {
    "title": "MDMA",
@@ -566,97 +488,64 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/mdma",
-   "kept": 1,
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "20140 Ecstasy",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.camh.ca/en/health-info/mental-illness-and-addiction-index/ecstasy",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "MDMA",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/mdma",
+   "kept": 0,
    "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
-   "F1"
+   "F2",
+   "F3",
+   "F4"
   ],
   "direct": "",
   "but": [
-   "F6"
+   "F3"
   ],
   "how": [
    [
-    "F5",
-    "F6"
-   ],
-   [
-    "F8"
+    "F2",
+    "F3",
+    "F4"
    ],
    [
     "DA",
     "F1"
    ]
   ],
-  "unanswered": "specific pharmacological mechanism of the interaction"
- },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    true,
-    ""
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    false,
-    "The passages do not mention Australia's Alcohol and Drug Foundation as the source."
-   ],
-   "how2": [
-    false,
-    "The passages do not mention Drug Science or that it is a UK charity of scientists."
-   ],
-   "how3": [
-    true,
-    ""
-   ]
-  },
-  "gemini:gemini-3.6-flash": {
-   "short": [
-    false,
-    "The passage from the 2025 review does not mention MDMA, so it does not support that the review notes interactions specifically between MDMA and drugs affecting MAO activity."
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    false,
-    "The passage names the source as the Alcohol and Drug Foundation, but does not state that it is Australia's."
-   ],
-   "how2": [
-    false,
-    "The passage names the source as Drug Science, but does not state that it is a UK charity of scientists."
-   ],
-   "how3": [
-    false,
-    "The passages state that the review evaluates classic psychedelics and related substances (MDMA) rather than being solely a review of MDMA, and they do not specify that the potential interactions with drugs affecting MAO activity pertain spe"
-   ]
-  }
+  "unanswered": "specific interaction with reversible MAO inhibitors"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8785,
-   "but": 0.9575,
-   "how1": 0.6393,
-   "how2": 0.1244,
-   "how3": 0.8728
+   "short": 0.9746,
+   "but": 0.9601,
+   "how1": 0.8039,
+   "how2": 0.97
   },
   "scores_quotes_alone": {
-   "short": 0.6536,
-   "but": 0.8907,
-   "how1": 0.2041,
-   "how2": 0.087,
-   "how3": 0.6189
+   "short": 0.5354,
+   "but": 0.8661,
+   "how1": 0.301,
+   "how2": 0.9401
   }
  },
  "tries": [
@@ -666,97 +555,79 @@
    "parts": [
     {
      "part": "short",
-     "text": "MDMA and MAOIs greatly increase the risk of serotonin syndrome. A 2025 review notes potential interactions between MDMA and drugs affecting MAO activity.",
+     "text": "Mixing MDMA with MAOIs greatly increases the risk of serotonin syndrome",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "F2",
        "ref": "adf_mdma",
        "where": "Mixing with other drugs",
        "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
-       "sha": "419992e362ba03b7"
-      },
-      {
-       "label": "F1",
-       "ref": "liszka_2025",
-       "where": "Conclusions",
-       "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-       "sha": "ee08710aff2cceac"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The second passage provided for sentence 1 does not explicitly mention MDMA, so claiming the 2025 review notes potential interactions between MDMA specifically and drugs affecting MAO activity is not supported by that passage."
-    },
-    {
-     "part": "but",
-     "text": "MAOIs can last up to two weeks in the body after stopping treatment.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "adf_mdma",
-       "where": "Mixing with other drugs",
-       "quote": "MAOIs can last up to two weeks within the body after stopping treatment.",
        "sha": "419992e362ba03b7"
       }
      ],
      "ok": true
     },
     {
-     "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says MDMA and MAOIs greatly increase the risk of serotonin syndrome. It also says MAOIs can last up to two weeks in the body after stopping.",
+     "part": "but",
+     "text": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "F3",
+       "ref": "adf_mdma",
+       "where": "Mixing with other drugs",
+       "quote": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
+       "sha": "419992e362ba03b7"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (All four sentences are directly stated in the provided passages without adding extra claims, causality beyond what is reported, or down‑playing of risk. Sentence 1 matches the passage that MDMA with MAOIs greatly increases serotonin‑syndrom)"
+    },
+    {
+     "part": "how1",
+     "text": "Australia's Alcohol and Drug Foundation says mixing MDMA with MAOIs increases serotonin syndrome risk",
+     "rests_on": [
+      {
+       "label": "F2",
        "ref": "adf_mdma",
        "where": "Mixing with other drugs",
        "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
        "sha": "419992e362ba03b7"
       },
       {
-       "label": "F6",
+       "label": "F3",
        "ref": "adf_mdma",
        "where": "Mixing with other drugs",
-       "quote": "MAOIs can last up to two weeks within the body after stopping treatment.",
+       "quote": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
+       "sha": "419992e362ba03b7"
+      },
+      {
+       "label": "F4",
+       "ref": "adf_mdma",
+       "where": "Mixing with other drugs",
+       "quote": "This means taking MDMA within this period can potentially be life threatening.",
        "sha": "419992e362ba03b7"
       }
      ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: the passages do not mention Australia's Alcohol and Drug Foundation"
+     "ok": true
     },
     {
      "part": "how2",
-     "text": "Drug Science, a UK charity of scientists says people taking or recently taking MAOIs should avoid MDMA because interactions in the brain can be unpredictable and potentially very dangerous.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "drugscience_mdma",
-       "where": "What are the risks?",
-       "quote": "MDMA affects the same chemicals in the brain as many anti-depressant medications, so those who are taking or have recently taken these medications (like SSRIs, SNRIs or MAOIs) should avoid MDMA as drug-drug interactions in the brain can be unpredictable and potentially very dangerous.",
-       "sha": "d3ebb4a4374b00d8"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage does not state that Drug Science is a UK charity of scientists."
-    },
-    {
-     "part": "how3",
-     "text": "A 2025 narrative review of data on MDMA in psychiatric treatment notes that potential interactions with drugs affecting MAO activity must be taken into account.",
+     "text": "A review of MDMA says it releases serotonin and noradrenaline",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "liszka_2025",
-       "where": "Introduction and background",
-       "quote": "The aim of this narrative review is to evaluate current data on classic psychedelics and related substances (MDMA) in the treatment of selected psychiatric disorders",
-       "sha": "bbc576388cd3c0a1"
+       "ref": "sessa_2019",
+       "where": "Abstract",
+       "quote": "This paper provides a brief review of the history, proposed pharmacological mechanisms, safety issues, and clinical applications of the medicine 3,4-methylenedioxymethamphetamine (MDMA).",
+       "sha": "de533cc9fab24ee2"
       },
       {
        "label": "F1",
-       "ref": "liszka_2025",
-       "where": "Conclusions",
-       "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-       "sha": "ee08710aff2cceac"
+       "ref": "sessa_2019",
+       "where": "Mechanism of Action of Clinical MDMA",
+       "quote": "MDMA mainly acts as a releaser of serotonin (5-HT) and noradrenaline, and to a lesser extent also of dopamine.",
+       "sha": "2b4da3bb26d90886"
       }
      ],
      "ok": true
@@ -769,34 +640,27 @@
    "parts": [
     {
      "part": "short",
-     "text": "Australia's Alcohol and Drug Foundation says MDMA and MAOIs greatly increase the risk of serotonin syndrome. A 2025 review notes potential interactions with drugs affecting MAO activity.",
+     "text": "Mixing MDMA with MAOIs greatly increases the risk of serotonin syndrome.",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "F2",
        "ref": "adf_mdma",
        "where": "Mixing with other drugs",
        "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
        "sha": "419992e362ba03b7"
-      },
-      {
-       "label": "F1",
-       "ref": "liszka_2025",
-       "where": "Conclusions",
-       "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-       "sha": "ee08710aff2cceac"
       }
      ],
      "ok": true
     },
     {
      "part": "but",
-     "text": "MAOIs can last up to two weeks in the body after stopping treatment.",
+     "text": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
      "rests_on": [
       {
-       "label": "F6",
+       "label": "F3",
        "ref": "adf_mdma",
        "where": "Mixing with other drugs",
-       "quote": "MAOIs can last up to two weeks within the body after stopping treatment.",
+       "quote": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
        "sha": "419992e362ba03b7"
       }
      ],
@@ -806,20 +670,27 @@
     },
     {
      "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says MDMA and MAOIs greatly increase the risk of serotonin syndrome. It also says MAOIs can last up to two weeks in the body after stopping.",
+     "text": "Australia's Alcohol and Drug Foundation says mixing MDMA with MAOIs increases serotonin syndrome risk.",
      "rests_on": [
       {
-       "label": "F5",
+       "label": "F2",
        "ref": "adf_mdma",
        "where": "Mixing with other drugs",
        "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
        "sha": "419992e362ba03b7"
       },
       {
-       "label": "F6",
+       "label": "F3",
        "ref": "adf_mdma",
        "where": "Mixing with other drugs",
-       "quote": "MAOIs can last up to two weeks within the body after stopping treatment.",
+       "quote": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
+       "sha": "419992e362ba03b7"
+      },
+      {
+       "label": "F4",
+       "ref": "adf_mdma",
+       "where": "Mixing with other drugs",
+       "quote": "This means taking MDMA within this period can potentially be life threatening.",
        "sha": "419992e362ba03b7"
       }
      ],
@@ -827,136 +698,24 @@
     },
     {
      "part": "how2",
-     "text": "Drug Science, a UK charity of scientists, says people taking or recently taking MAOIs should avoid MDMA because interactions in the brain can be unpredictable and potentially very dangerous.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "drugscience_mdma",
-       "where": "What are the risks?",
-       "quote": "MDMA affects the same chemicals in the brain as many anti-depressant medications, so those who are taking or have recently taken these medications (like SSRIs, SNRIs or MAOIs) should avoid MDMA as drug-drug interactions in the brain can be unpredictable and potentially very dangerous.",
-       "sha": "d3ebb4a4374b00d8"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how3",
-     "text": "A 2025 narrative review of data on MDMA and related substances notes that potential interactions with drugs affecting MAO activity must be taken into account.",
+     "text": "A review of MDMA says it mainly acts as a releaser of serotonin and noradrenaline.",
      "rests_on": [
       {
        "label": "DA",
-       "ref": "liszka_2025",
-       "where": "Introduction and background",
-       "quote": "The aim of this narrative review is to evaluate current data on classic psychedelics and related substances (MDMA) in the treatment of selected psychiatric disorders",
-       "sha": "bbc576388cd3c0a1"
+       "ref": "sessa_2019",
+       "where": "Abstract",
+       "quote": "This paper provides a brief review of the history, proposed pharmacological mechanisms, safety issues, and clinical applications of the medicine 3,4-methylenedioxymethamphetamine (MDMA).",
+       "sha": "de533cc9fab24ee2"
       },
       {
        "label": "F1",
-       "ref": "liszka_2025",
-       "where": "Conclusions",
-       "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-       "sha": "ee08710aff2cceac"
+       "ref": "sessa_2019",
+       "where": "Mechanism of Action of Clinical MDMA",
+       "quote": "MDMA mainly acts as a releaser of serotonin (5-HT) and noradrenaline, and to a lesser extent also of dopamine.",
+       "sha": "2b4da3bb26d90886"
       }
      ],
      "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "the last draft: no answer",
-   "parts": [
-    {
-     "part": "short",
-     "text": "MDMA and MAOIs greatly increase the risk of serotonin syndrome. A 2025 review notes potential interactions between MDMA and drugs affecting MAO activity.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "adf_mdma",
-       "where": "Mixing with other drugs",
-       "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
-       "sha": "419992e362ba03b7"
-      },
-      {
-       "label": "F1",
-       "ref": "liszka_2025",
-       "where": "Conclusions",
-       "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-       "sha": "ee08710aff2cceac"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passage from the 2025 review does not mention MDMA, so it does not support that the review notes interactions specifically between MDMA and drugs affecting MAO activity."
-    },
-    {
-     "part": "but",
-     "text": "MAOIs can last up to two weeks in the body after stopping treatment.",
-     "rests_on": [
-      {
-       "label": "F6",
-       "ref": "adf_mdma",
-       "where": "Mixing with other drugs",
-       "quote": "MAOIs can last up to two weeks within the body after stopping treatment.",
-       "sha": "419992e362ba03b7"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "Australia's Alcohol and Drug Foundation says MDMA and MAOIs greatly increase the risk of serotonin syndrome.",
-     "rests_on": [
-      {
-       "label": "F5",
-       "ref": "adf_mdma",
-       "where": "Mixing with other drugs",
-       "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
-       "sha": "419992e362ba03b7"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention Australia's Alcohol and Drug Foundation as the source."
-    },
-    {
-     "part": "how2",
-     "text": "Drug Science, a UK charity of scientists says people taking or recently taking MAOIs should avoid MDMA because interactions can be dangerous.",
-     "rests_on": [
-      {
-       "label": "F8",
-       "ref": "drugscience_mdma",
-       "where": "What are the risks?",
-       "quote": "MDMA affects the same chemicals in the brain as many anti-depressant medications, so those who are taking or have recently taken these medications (like SSRIs, SNRIs or MAOIs) should avoid MDMA as drug-drug interactions in the brain can be unpredictable and potentially very dangerous.",
-       "sha": "d3ebb4a4374b00d8"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention Drug Science or that it is a UK charity of scientists."
-    },
-    {
-     "part": "how3",
-     "text": "A 2025 narrative review of MDMA in psychiatric treatment notes potential interactions with drugs affecting MAO activity.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "liszka_2025",
-       "where": "Introduction and background",
-       "quote": "The aim of this narrative review is to evaluate current data on classic psychedelics and related substances (MDMA) in the treatment of selected psychiatric disorders",
-       "sha": "bbc576388cd3c0a1"
-      },
-      {
-       "label": "F1",
-       "ref": "liszka_2025",
-       "where": "Conclusions",
-       "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-       "sha": "ee08710aff2cceac"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.6-flash) did not accept it: The passages state that the review evaluates classic psychedelics and related substances (MDMA) rather than being solely a review of MDMA, and they do not specify that the potential interactions with drugs affecting MAO activity pertain spe"
     }
    ]
   }
@@ -964,60 +723,26 @@
  "dropped": [
   {
    "try": 3,
-   "part": "how1",
-   "text": "Australia's Alcohol and Drug Foundation says MDMA and MAOIs greatly increase the risk of serotonin syndrome.",
+   "part": "but",
+   "text": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
    "rests_on": [
     {
-     "label": "F5",
+     "label": "F3",
      "ref": "adf_mdma",
      "where": "Mixing with other drugs",
-     "quote": "MDMA and antidepressants (MAOIs): greatly increases the risk of serotonin syndrome.",
+     "quote": "MAOIs have a much higher risk of harm when mixed with MDMA compared to other antidepressants.",
      "sha": "419992e362ba03b7"
     }
    ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention Australia's Alcohol and Drug Foundation as the source."
-  },
-  {
-   "try": 3,
-   "part": "how2",
-   "text": "Drug Science, a UK charity of scientists says people taking or recently taking MAOIs should avoid MDMA because interactions can be dangerous.",
-   "rests_on": [
-    {
-     "label": "F8",
-     "ref": "drugscience_mdma",
-     "where": "What are the risks?",
-     "quote": "MDMA affects the same chemicals in the brain as many anti-depressant medications, so those who are taking or have recently taken these medications (like SSRIs, SNRIs or MAOIs) should avoid MDMA as drug-drug interactions in the brain can be unpredictable and potentially very dangerous.",
-     "sha": "d3ebb4a4374b00d8"
-    }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The passages do not mention Drug Science or that it is a UK charity of scientists."
-  },
-  {
-   "try": 3,
-   "part": "how3",
-   "text": "A 2025 narrative review of MDMA in psychiatric treatment notes potential interactions with drugs affecting MAO activity.",
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "liszka_2025",
-     "where": "Introduction and background",
-     "quote": "The aim of this narrative review is to evaluate current data on classic psychedelics and related substances (MDMA) in the treatment of selected psychiatric disorders",
-     "sha": "bbc576388cd3c0a1"
-    },
-    {
-     "label": "F1",
-     "ref": "liszka_2025",
-     "where": "Conclusions",
-     "quote": "Potential interactions with psychiatric medications, especially serotonergic agents and drugs affecting MAO activity, must also be taken into account.",
-     "sha": "ee08710aff2cceac"
-    }
-   ],
-   "by": "a further reader",
-   "said": "a further reader (gemini-3.6-flash) did not accept it: The passages state that the review evaluates classic psychedelics and related substances (MDMA) rather than being solely a review of MDMA, and they do not specify that the potential interactions with drugs affecting MAO activity pertain spe"
+   "by": "the second reader",
+   "said": "it is about something else than the short answer"
   }
  ],
+ "stakes": "mixing drugs",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "mdma",
   "also": [],
