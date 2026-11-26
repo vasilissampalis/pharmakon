@@ -61,6 +61,7 @@ Unchanged: every gate of the lane (`lane.py`), Groq, Gemini, Cloudflare, every k
 - Exams and the writers' trial: about $0.30 in all, once (at the ceilings).
 - An answer tried by team R: about 30,000 tokens in and 5,000 out on the paid models, about $0.006 at the ceilings (the reader is Google's free model).
 - A day: the lane's own list may spend at most the month's pot over its days (`even`: about $0.31, so at most about 50 extra tries a day), and less while the floor kept for visitors needs it; nothing unspent is carried to the next day. A question a person sent may spend from the pot at any hour.
+- The money follows the credit (`follow_credit`, his word of 19:48 that it must last the whole month): the account's own balance, read at most once an hour, is spread over the days left in the month, less what is kept for people's questions; so whatever is left, of one purchase or many, lasts to the month's end.
 - A month: never more than $9.50 by our code, $10 by the workspace's budget in OpenRouter, and never more than the credit bought (no automatic top-up). November (from the 26th): at most about $1.60 and the exams. December: up to $9.50, so the $10 bought lasts until about the last week of December; then OpenRouter refuses (402), team R stands aside, and the free teams go on as before. Expected: about $3 to $9.50 a month, depending on how often Groq's free day runs out (today it runs out every afternoon).
 
 ## Rollback

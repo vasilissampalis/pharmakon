@@ -1917,6 +1917,9 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     (`scripts/auto/or_check.py`, `data/auto/or-check.json`: whether the key the runs use ends as the dashboard's, never the key),
     the two exams and the writers' trial; Claude Haiku 5.5 and GPT-6 Luna stand in no team, whatever their exams say, until he
     names one. To stop at once: `openrouter.paid` false.
+    At 19:48 he asked that the money last the whole month, the questions people send always answered first: `follow_credit`
+    (`llm.credit_left`): OpenRouter's own balance, read at most once an hour within the run's clock, caps what is planned, so
+    the credit left is spread over the days left in the month, less the floor kept for people's questions.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

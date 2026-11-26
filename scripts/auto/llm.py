@@ -524,12 +524,40 @@ def _pay_ledger(L, svc="groq"):
     return g
 
 
+CREDIT_EVERY = 3600   # (26 November 2026) OpenRouter's balance is read at most once an hour
+
+
+def credit_left(svc="openrouter"):
+    """(26 November 2026; the senior author, 19:48: the money "should be able to last the whole month") What the account at OpenRouter still holds, by
+    its own count (GET /api/v1/credits: bought minus used), read at most once an hour, within the run's clock, and kept in the ledger; None where it is not
+    known (the setting "follow_credit" off, no key, no answer yet). pay_share never plans on money the account does not hold, so that what is left is
+    spread over the days left in the month, and a credit bought once is not spent before the month ends."""
+    if svc != "openrouter" or not pay(svc).get("follow_credit"): return None
+    c = ledger().get("openrouter_credit") or {}
+    if time.time() - float(c.get("t") or 0) >= CREDIT_EVERY:
+        key, got = (os.environ.get("OPENROUTER_API_KEY") or "").strip(), None
+        if key and (time_left() is None or time_left() > 20):
+            try:
+                req = urllib.request.Request("https://openrouter.ai/api/v1/credits", headers={"Authorization": "Bearer " + key, "User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"})
+                with urllib.request.urlopen(req, timeout=_capped(10)) as r: d = json.loads(r.read().decode("utf-8", "replace")).get("data") or {}
+                got = round(float(d["total_credits"]) - float(d["total_usage"]), 6)
+            except Exception: got = None
+        with LOCK:
+            L = ledger(); c = {"t": time.time(), "left": got if got is not None else c.get("left"), "read": got is not None, "on": today()}
+            L["openrouter_credit"] = c; LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+    v = c.get("left")
+    return float(v) if v is not None else None
+
+
 def pay_share(est=0.0, visitor=False, L=None, svc="groq"):
     """(May a call of about est dollars be paid for at Groq, why not). A person's question: while the month's pot holds it. The list: only within today's share of
     what is above the floor kept for visitors (the busiest of the last seven days' visitor spending, at least visitors_least_a_day, times margin, times the days left
     in the month), the share being that rest divided by the days left. data/auto/lane/pay.json."""
     P = pay(svc); g = _pay_ledger(L if L is not None else ledger(), svc); who = SVC_NAME.get(svc, svc)
     month, spent = float(P.get("usd_a_month") or 0), float(g.get("usd") or 0)
+    cl = credit_left(svc)
+    if cl is not None and est > cl: return False, f"the credit at {who} is used up (${cl:.2f} left)"
+    if cl is not None: month = min(month, spent + cl)   # (26 November 2026) never plan on money the account does not hold: what is left is spread over the days left
     if spent + est > month: return False, f"this month's ${month:.2f} at {who} is spent (${spent:.2f} so far)"
     if visitor: return True, ""
     d = datetime.date.fromisoformat(today()); days = g.get("days") or {}; td = days.get(today()) or {}
@@ -741,6 +769,12 @@ def or_selftest():
         setp(paid=True, lane=True); assert pay_share(0.01, svc="openrouter")[0], "the month's last days: what is left may go"
         setp(paid=True, lane=True, even=True); assert not pay_share(0.01, svc="openrouter")[0] and pay_share(0.001, svc="openrouter")[0], "even: never more than the month's pot over its days, a day"
         assert pay_share(0.01, True, svc="openrouter")[0], "a person's question is not held to the day's share"
+        today = lambda: "2026-12-20"; L = ledger(); g = _pay_ledger(L, "openrouter"); g["usd"] = 1.0; g["days"] = {"2026-12-20": {"visitors": 0.0, "list": 0.0}}; L["openrouter_pay"] = g
+        L["openrouter_credit"] = {"t": time.time(), "left": 3.0, "read": True}; json.dump(L, open(LEDGER, "w"))
+        setp(paid=True, lane=True, even=True); assert pay_share(0.3, svc="openrouter")[0], "without following the credit: the even share ($0.31) holds"
+        setp(paid=True, lane=True, even=True, follow_credit=True); assert not pay_share(0.3, svc="openrouter")[0] and pay_share(0.05, svc="openrouter")[0], "the $3 left, less what is kept for visitors, is spread over the 12 days left"
+        assert not pay_share(3.5, True, svc="openrouter")[0] and pay_share(2.5, True, svc="openrouter")[0], "a person's question: never more than the account holds"
+        L = ledger(); L.pop("openrouter_credit", None); json.dump(L, open(LEDGER, "w"))
         today = lambda: "2026-12-01"; L = ledger(); g = _pay_ledger(L, "openrouter"); g["usd"] = 0.0; g["days"] = {}; L["openrouter_pay"] = g; json.dump(L, open(LEDGER, "w"))
         FOR = "exam"; chat(M, [{"role": "user", "content": "x"}], 200, op); assert "exam" in _pay_ledger(ledger(), "openrouter")["days"]["2026-12-01"], "an exam's spending is its own"
         setp(paid=False, lane=True); assert never_paid(M) and not has(M), "the switch back off stops it at once"
