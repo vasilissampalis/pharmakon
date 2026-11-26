@@ -15,34 +15,120 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-25",
+  "on": "2026-11-26",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
    "writer": "gemini:gemma-4-26b-a4b-it",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemini-3.1-flash-lite",
    "team": "team Z",
    "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "also1_else": "gemini:gemma-4-31b-it",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45712293128",
+  "run": "45822052214",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 271
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: the form was wrong: no JSON",
  "gates": {
-  "time": "3 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9208) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9089)"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "hu_2018",
+    "type": "article-journal",
+    "title": "Sleep-aids derived from natural products",
+    "author": [
+     {
+      "family": "Hu",
+      "given": "Zhenzhen"
+     },
+     {
+      "family": "Oh",
+      "given": "Seikwan"
+     },
+     {
+      "family": "Ha",
+      "given": "Tae-Woo"
+     },
+     {
+      "family": "Hong",
+      "given": "Jin-Tae"
+     },
+     {
+      "family": "Oh",
+      "given": "Ki-Wan"
+     }
+    ],
+    "container-title": "Biomolecules & Therapeutics",
+    "issued": {
+     "date-parts": [
+      [
+       2018
+      ]
+     ]
+    },
+    "DOI": "10.4062/biomolther.2018.099",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "26",
+    "issue": "4",
+    "page": "343-349",
+    "PMCID": "PMC6029681"
+   },
+   "doi": "10.4062/biomolther.2018.099",
+   "pmcid": "PMC6029681",
+   "title": "Sleep-Aids Derived from Natural Products",
+   "year": 2018,
+   "journal": "Biomolecules & therapeutics",
+   "kind": "review",
+   "people": true,
+   "near": 0.426,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This review is, therefore, intended to bring pharmacological data regarding to the effects of natural products on sleep duration and quality, mainly through the activation of GABAA receptors.",
+    "text": "a review of pharmacological data on natural products for insomnia"
+   },
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Abstract",
+     "quote": "Although drugs such as barbiturates and benzodiazepines are often used for the treatment of insomnia, they are associated with various side effects such as habituations, tolerance and addiction.",
+     "text": "Barbiturates are associated with side effects including tolerance in people who use them for the treatment of insomnia.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -70,7 +156,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-25",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 3 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Systematic review and meta-analysis of propofol versus barbiturates for controlling refractory status epilepticus",
@@ -78,8 +173,7 @@
    "kind": "review",
    "at": "10.1186/s12883-019-1281-y",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Phenobarbital and Alcohol Withdrawal Syndrome: A Systematic Review and Meta-Analysis",
@@ -87,20 +181,79 @@
    "kind": "review",
    "at": "10.7759/cureus.33695",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Sleep-Aids Derived from Natural Products",
    "read": "full",
    "kind": "review",
    "at": "10.4062/biomolther.2018.099",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Comparing the effect of intermittent diazepam and continuous phenobarbital in preventing recurrent febrile seizures among children under 6 years old: A systematic review and meta-analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.4103/jrms.jrms_1114_21",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A systematic review and meta-analysis of randomized clinical trials comparing diazepam and phenobarbital for preventing recurrent febrile seizures in children under 6 years old.",
+     "quote": "In this systematic review study, literature published in English language were carefully searched in biological databases (Cochrane Library, Medline, Scopus, CINHAL, Psycoinfo, and Proquest) by Februa",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
+  },
+  {
+   "title": "What is the Best Predictor of Phenobarbital Pharmacokinetics to Use for Initial Dosing in Neonates?",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/pharmaceutics13030301",
+   "kept": 0,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "The development of tolerance and dependence limits the clinical utility of phenobarbital in all age groups of pediatric patients.",
+     "quote": "it still belongs among the most potent medications with relatively modest acute toxicity, however, its sedative effects, tendency to disturb behavior in children, and development of tolerance and depe",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    }
+   ]
+  },
+  {
+   "title": "Levetiracetam versus phenobarbital as first-line therapy for neonatal seizures: a comprehensive systematic review and meta-analysis with meta-regression of 26 studies involving 9,854 neonates",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1186/s12887-026-06539-6",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Efficacy and Safety of Levetiracetam vs. Phenobarbital for Neonatal Seizures: A Systematic Review and Meta-Analysis",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3389/fneur.2021.747745",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F1"
+  ],
+  "direct": "Yes",
+  "but": [],
+  "how": [
+   [
+    "DA",
+    "F1"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "soft": "the writer's reply was not in the form asked for",
  "place": {
   "home": "new:Barbiturates",
   "also": [
