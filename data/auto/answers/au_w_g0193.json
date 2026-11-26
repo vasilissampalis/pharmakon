@@ -19,142 +19,38 @@
  "made": {
   "on": "2026-11-26",
   "models": {
-   "reader": "gemini:gemini-3.1-flash-lite",
-   "writer": "gemini:gemma-4-26b-a4b-it",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader": "gemini:gemini-3.5-flash-lite",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-oss-120b",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "groq:qwen/qwen3.8-27b",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45841555457",
-  "read_by": {
-   "gemini-3.1-flash-lite": 5,
-   "gemini-3.5-flash-lite": 5
-  },
-  "read_seconds": 100,
+  "run": "45877788043",
+  "read_seconds": 37,
   "from": {
-   "papers": 1,
+   "papers": 0,
    "summaries": 0,
-   "official": 1
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 333
+  "seconds": 140
  },
- "status": "none",
- "why": "no draft passed: the form was wrong: no JSON",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
-  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "5 findings kept from 2 sources (1 papers read in full, 1 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9011) try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8206)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
+  "read": "8 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 2 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.83, but 0.97, how1 0.04, how2 0.02, how3 0.96",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b); 2 How-do-we-know line(s) dropped",
+  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "cappellani_2025",
-    "type": "article-journal",
-    "title": "Chronic poppers maculopathy: Case report and literature comparison of chronic and acute use",
-    "author": [
-     {
-      "family": "Cappellani",
-      "given": "Francesco"
-     },
-     {
-      "family": "Gagliano",
-      "given": "Caterina"
-     },
-     {
-      "family": "Pulido",
-      "given": "Jose S."
-     }
-    ],
-    "container-title": "Medicine",
-    "issued": {
-     "date-parts": [
-      [
-       2025
-      ]
-     ]
-    },
-    "DOI": "10.1097/md.0000000000044079",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-26"
-     }
-    },
-    "volume": "104",
-    "issue": "38",
-    "number": "e44079",
-    "PMCID": "PMC12459571"
-   },
-   "doi": "10.1097/md.0000000000044079",
-   "pmcid": "PMC12459571",
-   "title": "Chronic poppers maculopathy: Case report and literature comparison of chronic and acute use",
-   "year": 2025,
-   "journal": "Medicine",
-   "kind": "review",
-   "people": true,
-   "near": 0.63,
-   "money": [
-    "Supported by the J. Arch McNamara Retinal Research Fund at the Wills Eye Hospital.",
-    "The authors have no conflicts of interest to disclose."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "This case describes one of the longest documented durations of chronic poppers use, combined with a literature review to contextualize the clinical spectrum.",
-    "text": "A case report and literature review of chronic poppers use."
-   },
-   "findings": [
-    {
-     "passage": 22,
-     "where": "5. Discussion",
-     "quote": "The exact mechanism by which poppers induce maculopathy remains unclear, but it has been hypothesized that it might be similar to photic injury.",
-     "text": "The exact way poppers cause maculopathy is not known, but it is hypothesized that it could be similar to photic injury.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 22,
-     "where": "5. Discussion",
-     "quote": "In this scenario, nitric oxide, a component of poppers, could potentially increase photosensitivity, leading to retinal damage.",
-     "text": "Nitric oxide, which is a component of poppers, might increase photosensitivity and lead to retinal damage.",
-     "id": "F2",
-     "second_hand": ""
-    },
-    {
-     "passage": 22,
-     "where": "5. Discussion",
-     "quote": "Additionally, because nitric oxide is a potent vasodilator, acute changes in ocular perfusion pressure might contribute to retinal injury.",
-     "text": "Because nitric oxide is a potent vasodilator, acute changes in ocular perfusion pressure may contribute to retinal injury.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 22,
-     "where": "5. Discussion",
-     "quote": "The exact mechanism by which poppers induce maculopathy remains unclear",
-     "text": "The exact mechanism by which poppers cause maculopathy is not yet known.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
   {
    "read": "page",
    "ref": {
@@ -203,9 +99,17 @@
     {
      "passage": 2,
      "where": "What is the science of Poppers?",
-     "quote": "poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+     "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
      "text": "Poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
-     "id": "F4",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "What is the science of Poppers?",
+     "quote": "The temporary increased blood flow may cause a short-lasting lightheadedness, headrush or euphoria, which are some of the desired effects of poppers.",
+     "text": "The temporary increased blood flow may cause a short-lasting lightheadedness, headrush or euphoria.",
+     "id": "F6",
      "second_hand": ""
     },
     {
@@ -213,25 +117,139 @@
      "where": "What is the science of Poppers?",
      "quote": "The effect on blood pressure and blood vessels in the brain could also explain some of the effects of alkyl nitrites: light-headedness, dizziness, and thumping sensations in the head.",
      "text": "The effect on blood pressure and blood vessels in the brain could explain light-headedness, dizziness, and thumping sensations in the head.",
-     "id": "F5",
+     "id": "F7",
      "second_hand": ""
     }
    ],
-   "limits": [
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_poppers",
+    "type": "webpage",
+    "title": "alkyl nitrites",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/poppers",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    }
+   },
+   "title": "alkyl nitrites",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.56,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/poppers",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
     {
-     "passage": 2,
-     "where": "What is the science of Poppers?",
-     "quote": "The exact mechanism of how alkyl nitrites work in the body and brain is unknown.",
-     "text": "The exact mechanism of how alkyl nitrites work in the brain is unknown.",
-     "id": "L2",
+     "passage": 7,
+     "where": "Mixing Alkyl nitrites with other drugs / How does it make you feel?",
+     "quote": "Sniffing poppers increases blood flow to the body giving some users: a head-rush that lasts for a couple of minutes; a sense of euphoria; increased sex drive and skin sensitivity",
+     "text": "Sniffing poppers increases blood flow to the body, giving some people a head-rush lasting a couple of minutes, a sense of euphoria, and increased sex drive and skin sensitivity.",
+     "id": "F8",
      "second_hand": ""
     }
    ],
-   "tag": "B"
+   "limits": [],
+   "tag": "D"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Poppers release nitric oxide, relaxing smooth muscles and dilating blood vessels in the brain. This may cause lightheadedness, headrush or euphoria.",
+   "uses": [
+    "F5",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "drugscience_poppers",
+     "where": "What is the science of Poppers?",
+     "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+     "sha": "a2574363cf284923"
+    },
+    {
+     "label": "F6",
+     "ref": "drugscience_poppers",
+     "where": "What is the science of Poppers?",
+     "quote": "The temporary increased blood flow may cause a short-lasting lightheadedness, headrush or euphoria, which are some of the desired effects of poppers.",
+     "sha": "a2574363cf284923"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 2 official pages.",
+   "uses": [
+    "F5",
+    "F8"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "drugscience_poppers",
+     "where": "What is the science of Poppers?",
+     "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+     "sha": "a2574363cf284923"
+    },
+    {
+     "label": "F8",
+     "ref": "frank_poppers",
+     "where": "Mixing Alkyl nitrites with other drugs / How does it make you feel?",
+     "quote": "Sniffing poppers increases blood flow to the body giving some users: a head-rush that lasts for a couple of minutes; a sense of euphoria; increased sex drive and skin sensitivity",
+     "sha": "c07e934a2fdefdfc"
+    }
+   ]
+  },
+  {
+   "part": "how3",
+   "text": "FRANK says sniffing poppers increases blood flow, giving some people a head-rush and sense of euphoria.",
+   "uses": [
+    "F8"
+   ],
+   "rests_on": [
+    {
+     "label": "F8",
+     "ref": "frank_poppers",
+     "where": "Mixing Alkyl nitrites with other drugs / How does it make you feel?",
+     "quote": "Sniffing poppers increases blood flow to the body giving some users: a head-rush that lasts for a couple of minutes; a sense of euphoria; increased sex drive and skin sensitivity",
+     "sha": "c07e934a2fdefdfc"
+    }
+   ]
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [
   {
@@ -257,7 +275,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: the form was wrong: no JSON",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Chronic poppers maculopathy: Case report and literature comparison of chronic and acute use",
@@ -265,62 +292,22 @@
    "kind": "review",
    "at": "10.1097/md.0000000000044079",
    "kept": 3,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "case report and literature review of a 68-year-old man",
+     "quote": "This case describes one of the longest documented durations of chronic poppers use, combined with a literature review to contextualize the clinical spectrum.",
+     "why": "a number of the sentence is not in its quote"
+    }
+   ]
   },
   {
    "title": "Drugs Used in \"Chemsex\"/Sexualized Drug Behaviour-Overview of the Related Clinical Psychopharmacological Issues",
    "read": "full",
    "kind": "review",
    "at": "10.3390/brainsci15050424",
-   "kept": 0,
+   "kept": 1,
    "thrown": []
-  },
-  {
-   "title": "The Clinical Assessment and Treatment of Inhalant Abuse",
-   "read": "full",
-   "kind": "other",
-   "at": "10.7812/tpp/22.164",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Dissociative Substances in Forensic Toxicology: Pharmacology, Toxicokinetics, and Analytical Detection",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/jox16070206",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Treatments for Inhalant and Volatile Substance Misuse: A Scoping Review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.7759/cureus.89170",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Association of nitrite inhalants use and unprotected anal intercourse and HIV/syphilis infection among MSM in China: a systematic review and meta-analysis",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1186/s12889-020-09405-x",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Nitric Oxide in the Treatment of COVID-19: Nasal Sprays, Inhalants and Nanoparticles",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1155/bri/8846903",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "a review of the bioavailability of nitric oxide in COVID-19",
-     "quote": "This review summarizes the bioavailability of nitric oxide in COVID-19",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
   },
   {
    "title": "Poppers",
@@ -335,8 +322,15 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.drugscience.org.uk/drugs/poppers",
-   "kept": 2,
-   "thrown": []
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "The exact mechanism of how alkyl nitrites work in the body and brain is unknown.",
+     "why": "no sentence"
+    }
+   ]
   },
   {
    "title": "Ingesting or Inhaling Nitrite \"Poppers\" Can Cause Severe Injury or Death",
@@ -351,29 +345,331 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.talktofrank.com/drug/poppers",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F4",
-   "F5"
+   "F5",
+   "F6"
   ],
   "direct": "",
-  "but": [
-   "L2"
-  ],
+  "but": [],
   "how": [
    [
-    "F4",
-    "F5"
+    "F5",
+    "F6",
+    "F7"
+   ],
+   [
+    "DB",
+    "F4"
+   ],
+   [
+    "F8"
    ]
   ],
-  "unanswered": ""
+  "unanswered": "exact cellular pathways and brain regions affected"
  },
- "soft": "the writer's reply was not in the form asked for",
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.8319,
+   "but": 0.9709,
+   "how1": 0.0425,
+   "how2": 0.0181,
+   "how3": 0.9629
+  },
+  "scores_quotes_alone": {
+   "short": 0.6037,
+   "but": 0.7616,
+   "how1": 0.0618,
+   "how2": 0.3647,
+   "how3": 0.6943
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Poppers release nitric oxide, relaxing muscles and dilating blood vessels in the brain, which may cause a rush or euphoria.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+       "sha": "a2574363cf284923"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "The temporary increased blood flow may cause a short-lasting lightheadedness, headrush or euphoria, which are some of the desired effects of poppers.",
+       "sha": "a2574363cf284923"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "But it was a narrative literature review of human and preclinical studies.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "schifano_2025",
+       "where": "Abstract",
+       "quote": "A narrative literature review was conducted using Pubmed, Scopus, and Web of Science databases. A total of 273 papers published up to January 2025 were screened; articles were selected based on relevance to chemsex/sexualized used behaviour and related substances. Both human and preclinical studies were considered.",
+       "sha": "f2408736977d66ae"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly provides the mechanism of poppers in the brain, satisfying the question. Sentence 2 merely describes the type of review and does not limit or qualify the claim made in sentence 1.)"
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says poppers release nitric oxide, relaxing muscles and dilating blood vessels.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+       "sha": "a2574363cf284923"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "The temporary increased blood flow may cause a short-lasting lightheadedness, headrush or euphoria, which are some of the desired effects of poppers.",
+       "sha": "a2574363cf284923"
+      },
+      {
+       "label": "F7",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "The effect on blood pressure and blood vessels in the brain could also explain some of the effects of alkyl nitrites: light-headedness, dizziness, and thumping sensations in the head.",
+       "sha": "a2574363cf284923"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that Drug Science is a UK charity of scientists; the attribution is not present."
+    },
+    {
+     "part": "how2",
+     "text": "A review of 273 papers found alkyl nitrite poppers act as potent vasodilators, causing a rush or euphoria.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "schifano_2025",
+       "where": "Abstract",
+       "quote": "A narrative literature review was conducted using Pubmed, Scopus, and Web of Science databases. A total of 273 papers published up to January 2025 were screened; articles were selected based on relevance to chemsex/sexualized used behaviour and related substances. Both human and preclinical studies were considered.",
+       "sha": "f2408736977d66ae"
+      },
+      {
+       "label": "F4",
+       "ref": "schifano_2025",
+       "where": "3. The Drugs Being Used in Chemsex Scenarios, Rationale for Their Use, and Related Risks › 3.5. “Poppers”",
+       "quote": "The alkyl nitrite poppers act as potent vasodilators; some poppers’ effects include a “rush”, “high”, “euphoria”, or feeling of excitement. Furthermore, relaxation of smooth muscles is observed.",
+       "sha": "aa0bf0f6ec7be9f8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says sniffing poppers increases blood flow, giving some people a head-rush and euphoria.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "frank_poppers",
+       "where": "Mixing Alkyl nitrites with other drugs / How does it make you feel?",
+       "quote": "Sniffing poppers increases blood flow to the body giving some users: a head-rush that lasts for a couple of minutes; a sense of euphoria; increased sex drive and skin sensitivity",
+       "sha": "c07e934a2fdefdfc"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Poppers release nitric oxide, relaxing smooth muscles, dilating blood vessels in the brain, and increasing blood flow. This may cause lightheadedness, headrush, or euphoria.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+       "sha": "a2574363cf284923"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "The temporary increased blood flow may cause a short-lasting lightheadedness, headrush or euphoria, which are some of the desired effects of poppers.",
+       "sha": "a2574363cf284923"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "But this is from a narrative literature review of human and preclinical studies.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "schifano_2025",
+       "where": "Abstract",
+       "quote": "A narrative literature review was conducted using Pubmed, Scopus, and Web of Science databases. A total of 273 papers published up to January 2025 were screened; articles were selected based on relevance to chemsex/sexualized used behaviour and related substances. Both human and preclinical studies were considered.",
+       "sha": "f2408736977d66ae"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly describes the mechanism of poppers as given in the Drug Science passages, thus answering the question. Sentence 2 only notes the source type and does not serve as a limit or doubt on sentence 1, so it does not fit as a q)"
+    },
+    {
+     "part": "how1",
+     "text": "Drug Science, a UK charity of scientists says poppers release nitric oxide, relaxing muscles and dilating blood vessels.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+       "sha": "a2574363cf284923"
+      },
+      {
+       "label": "F6",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "The temporary increased blood flow may cause a short-lasting lightheadedness, headrush or euphoria, which are some of the desired effects of poppers.",
+       "sha": "a2574363cf284923"
+      },
+      {
+       "label": "F7",
+       "ref": "drugscience_poppers",
+       "where": "What is the science of Poppers?",
+       "quote": "The effect on blood pressure and blood vessels in the brain could also explain some of the effects of alkyl nitrites: light-headedness, dizziness, and thumping sensations in the head.",
+       "sha": "a2574363cf284923"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage does not state that Drug Science is a UK charity of scientists"
+    },
+    {
+     "part": "how2",
+     "text": "A review of 273 papers found alkyl nitrite poppers act as potent vasodilators, causing a rush or euphoria.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "schifano_2025",
+       "where": "Abstract",
+       "quote": "A narrative literature review was conducted using Pubmed, Scopus, and Web of Science databases. A total of 273 papers published up to January 2025 were screened; articles were selected based on relevance to chemsex/sexualized used behaviour and related substances. Both human and preclinical studies were considered.",
+       "sha": "f2408736977d66ae"
+      },
+      {
+       "label": "F4",
+       "ref": "schifano_2025",
+       "where": "3. The Drugs Being Used in Chemsex Scenarios, Rationale for Their Use, and Related Risks › 3.5. “Poppers”",
+       "quote": "The alkyl nitrite poppers act as potent vasodilators; some poppers’ effects include a “rush”, “high”, “euphoria”, or feeling of excitement. Furthermore, relaxation of smooth muscles is observed.",
+       "sha": "aa0bf0f6ec7be9f8"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "FRANK says sniffing poppers increases blood flow, giving some people a head-rush and euphoria.",
+     "rests_on": [
+      {
+       "label": "F8",
+       "ref": "frank_poppers",
+       "where": "Mixing Alkyl nitrites with other drugs / How does it make you feel?",
+       "quote": "Sniffing poppers increases blood flow to the body giving some users: a head-rush that lasts for a couple of minutes; a sense of euphoria; increased sex drive and skin sensitivity",
+       "sha": "c07e934a2fdefdfc"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "But this is based on a narrative literature review of human and preclinical studies.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "schifano_2025",
+     "where": "Abstract",
+     "quote": "A narrative literature review was conducted using Pubmed, Scopus, and Web of Science databases. A total of 273 papers published up to January 2025 were screened; articles were selected based on relevance to chemsex/sexualized used behaviour and related substances. Both human and preclinical studies were considered.",
+     "sha": "f2408736977d66ae"
+    }
+   ],
+   "by": "the second reader",
+   "said": "it is about something else than the short answer"
+  },
+  {
+   "try": 3,
+   "part": "how1",
+   "text": "Drug Science, a UK charity of scientists says poppers release nitric oxide, dilating blood vessels and increasing blood flow to the heart.",
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "drugscience_poppers",
+     "where": "What is the science of Poppers?",
+     "quote": "What is known is that poppers release nitric oxide in the body, which relaxes smooth muscles, dilates blood vessels in the brain and periphery, and increases blood flow to the heart.",
+     "sha": "a2574363cf284923"
+    }
+   ],
+   "by": "the second reader",
+   "said": "the passage does not state that Drug Science is a UK charity of scientists"
+  },
+  {
+   "try": 3,
+   "part": "how2",
+   "text": "A review of 273 papers found alkyl nitrite poppers act as potent vasodilators, causing a rush, high, euphoria, or feeling of excitement.",
+   "rests_on": [
+    {
+     "label": "DB",
+     "ref": "schifano_2025",
+     "where": "Abstract",
+     "quote": "A narrative literature review was conducted using Pubmed, Scopus, and Web of Science databases. A total of 273 papers published up to January 2025 were screened; articles were selected based on relevance to chemsex/sexualized used behaviour and related substances. Both human and preclinical studies were considered.",
+     "sha": "f2408736977d66ae"
+    },
+    {
+     "label": "F4",
+     "ref": "schifano_2025",
+     "where": "3. The Drugs Being Used in Chemsex Scenarios, Rationale for Their Use, and Related Risks › 3.5. “Poppers”",
+     "quote": "The alkyl nitrite poppers act as potent vasodilators; some poppers’ effects include a “rush”, “high”, “euphoria”, or feeling of excitement. Furthermore, relaxation of smooth muscles is observed.",
+     "sha": "aa0bf0f6ec7be9f8"
+    }
+   ],
+   "by": "the second reader",
+   "said": "the passage does not say that a review of 273 papers found these effects; it only describes the effects without linking them to the review"
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "alkyl-nitrites-and-inhalants",
   "also": [],
