@@ -266,6 +266,10 @@ def limits_of(model):
     cautious numbers above. (The senior author, 16 November 2026: Google gives its models very different free allowances, from
     20 calls a day to 14,400.)"""
     svc, name = service_of(model); S = SERVICES[svc]; f = free_limits().get(svc) or {}
+    if svc == "openrouter":
+        if not name.endswith(":free"): return {"gap": 0.5, "calls": 10 ** 6, "tpm": None}       # (26 November 2026) a paid model: money is its limit (pay_share), not calls
+        P = pay("openrouter"); n = int(P.get("free_calls_a_day") or 0) if P.get("credits_bought") else 0
+        if n: return {"gap": S["gap"], "calls": n, "tpm": None}
     row = next((r for r in f.get("models") or [] if isinstance(r, dict) and re.search(str(r.get("match") or "$^"), name)), None) or (f.get("else") if isinstance(f.get("else"), dict) else None)
     if not row: return {"gap": S["gap"], "calls": S["calls"], "tpm": None}
     rpm, rpd = float(row.get("rpm") or 60.0 / S["gap"]), float(row["rpd"] if isinstance(row.get("rpd"), (int, float)) else S["calls"] / OF_A_DAY)
@@ -275,6 +279,10 @@ def limits_of(model):
 def calls_left(x):
     """Calls still open today: for a model of a service ("gemini:gemma-...": its own free allowance), or for a whole service by its name."""
     svc, name = service_of(x)
+    if svc == "openrouter" or x == "openrouter":                       # (26 November 2026) only the free models count against the free day; a paid model is limited by money
+        if svc and not name.endswith(":free"): return 10 ** 6 if pay_share(0.002, FOR in ("visitor", "exam"), svc="openrouter")[0] else 0   # (no money left today or this month: no team takes it)
+        u = svc_used("openrouter"); free_used = int(u.get("calls") or 0) - sum(int(v or 0) for k, v in (u.get("models") or {}).items() if not str(k).endswith(":free"))
+        return max(0, limits_of("openrouter:x:free")["calls"] - free_used)
     if svc: return max(0, min(limits_of(x)["calls"] - int((svc_used(svc).get("models") or {}).get(name) or 0), SERVICES[svc]["calls"] - svc_used(svc)["calls"] if not (free_limits().get(svc) or {}) else 10 ** 9))
     return max(0, SERVICES[x]["calls"] - svc_used(x)["calls"])
 
@@ -285,7 +293,9 @@ def calls_fit(by_model):
     by_svc = {}
     for m, n in by_model.items():
         if n > calls_left(m): return False
-        svc = service_of(m)[0]; by_svc[svc] = by_svc.get(svc, 0) + n
+        svc = service_of(m)[0]
+        if svc == "openrouter" and not m.endswith(":free"): continue        # (a paid model is not counted against the free day)
+        by_svc[svc] = by_svc.get(svc, 0) + n
     return all(bool(free_limits().get(svc)) or n <= calls_left(svc) for svc, n in by_svc.items())
 
 
@@ -294,7 +304,12 @@ def never_paid(model):
     only free API models, with no billing, paid subscriptions, credit purchases or unexpected charges"). This is code, not a
     setting: at OpenRouter only a model whose name ends in ":free" costs nothing, so no other is ever asked there."""
     svc, name = service_of(model)
-    if svc == "openrouter" and not name.endswith(":free"): return f"{name} is not one of the models OpenRouter gives for free (their names end in “:free”): never asked"
+    if svc == "openrouter" and not name.endswith(":free"):
+        # (26 November 2026; the senior author, 18:26: "use OpenRouter as a paid backup ... a strict $10 monthly OpenRouter spending limit") a model that costs
+        # money at OpenRouter is asked only while paying there is switched on (pay.json, openrouter.paid) and pay.json names its price ceiling
+        P = pay("openrouter")
+        if not P.get("paid"): return f"{name} costs money at OpenRouter, and paying there is switched off (data/auto/lane/pay.json, openrouter.paid): never asked"
+        if not price_of("openrouter", name): return f"{name} costs money at OpenRouter and data/auto/lane/pay.json names no price ceiling for it: never asked"
     return ""
 
 
@@ -307,6 +322,7 @@ def cost(model, tokens_in, tokens_out):
 def has(model):
     """Can this model be asked at all on this machine (is its service's key there)?"""
     svc, _ = service_of(model)
+    if svc == "openrouter" and not model.endswith(":free") and not (pay("openrouter").get("lane") or TRYING): return False   # (26 November 2026) not for the lane's teams until "lane" is on: exams and trials first
     if svc: return bool((os.environ.get(SERVICES[svc]["key"]) or "").strip()) and not never_paid(model)
     return bool((os.environ.get("GROQ_API_KEY") or "").strip()) if model.startswith("groq:") else bool((os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip())
 
@@ -323,6 +339,11 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
     if lim["calls"] <= 0: raise Unavailable(f"{name}: what {svc}'s free plan allows this model is not written in data/auto/lane/free-limits.json: not asked")
     if calls_left(model) <= 0: raise Budget(f"{svc}: today's calls for {name} are used ({lim['calls']} is where we stop)")
     est_in = sum(rough_tokens(m["content"]) for m in messages)
+    or_paid = svc == "openrouter" and not name.endswith(":free")
+    if or_paid:                                                              # (26 November 2026) OpenRouter's paid backup: within the month's pot and today's share, at the ceiling price
+        pr = price_of("openrouter", name)
+        ok, why = pay_share(est_in * pr[0] / 1e6 + max_tokens * pr[1] / 1e6, FOR in ("visitor", "exam"), svc="openrouter")
+        if not ok: raise Budget(why)
     if S.get("paid"):
         c = cost(model, est_in, max_tokens)
         if c is None: raise Unavailable(f"{model} costs money and its price is not in data/auto/lane/prices.json: not asked")
@@ -348,6 +369,11 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
         body = common()
         headers = {"Authorization": "Bearer " + key, "Content-Type": "application/json", "User-Agent": "pharmakon-lane/1 (+https://pharmakon.world)"}
         if svc == "openrouter": headers.update({"HTTP-Referer": "https://pharmakon.world", "X-Title": "Pharmakon"})
+        if or_paid:                                                          # never above the ceiling, never a provider that keeps or trains on what is sent (openrouter.ai/docs: provider routing)
+            P = pay("openrouter"); row = (P.get("models") or {}).get(name) or {}
+            prov = dict(P.get("provider") or {}); prov.update(row.get("provider") or {}); prov["max_price"] = {"prompt": price_of("openrouter", name)[0], "completion": price_of("openrouter", name)[1]}
+            prov.setdefault("data_collection", "deny"); body["provider"] = prov
+            if row.get("reasoning"): body["reasoning"] = {"effort": EFFORT.get(name) or row["reasoning"]}
     op = opener or urllib.request.urlopen; last = None; k = -1; again = 0; busy = 0
     while k + 1 < tries:
         k += 1
@@ -384,6 +410,7 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
                 if "no_system" not in q and re.search(r"developer instruction|system (?:instruction|prompt|role|message)s?\b[^.]{0,60}\bnot (?:enabled|supported|allowed)|does not support system", whole, re.I): new_q = "no_system"
                 elif "no_json" not in q and "response_format" in body and re.search(r"json mode|response_format|response[_ ]mime|json_object|structured output", whole, re.I): new_q = "no_json"
                 if new_q: q.add(new_q); body = common(); again += 1; k -= 1; continue
+            if e.code == 402 and or_paid: raise Budget(f"OpenRouter refused for want of credit or of the key's limit: {detail[:160]}")   # (26 November 2026) the account's own limit: the budget is at its end
             if e.code in (400, 401, 402, 403, 404, 413, 422): raise Unavailable(last)
             continue
         except (urllib.error.URLError, TimeoutError, ConnectionError, ValueError) as e:
@@ -413,6 +440,9 @@ def chat_service(model, messages, max_tokens, opener=None, tries=3):
             L.setdefault("svc", {})[svc] = used
             LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
             LAST.clear(); LAST.update({"finish": finish, "in": t_in, "out": t_out, "reasoned": reasoned, "wrote": len(text)})
+        if or_paid:                                                          # what OpenRouter says the call cost (usage.cost, in every answer); else the ceiling price
+            real = u.get("cost") if isinstance(u.get("cost"), (int, float)) else None
+            pay_count(name, t_in, t_out, FOR == "visitor", svc="openrouter", usd=real); LAST["usd"] = real; LAST["provider"] = d.get("provider")
         return clean(text)
     raise Unavailable(last or f"{svc} gave no answer")
 
@@ -466,45 +496,60 @@ PAY = ROOT / "data" / "auto" / "lane" / "pay.json"   # (21 November 2026) Groq's
 FOR = "list"   # whose question a call serves: "visitor" (a question a person sent: it may spend from the pot at any hour) or "list" (what the lane answers by itself)
 
 
-def pay():
-    try: return json.load(open(PAY, encoding="utf-8")).get("groq") or {}
+def pay(svc="groq"):
+    """The paid settings of one service in data/auto/lane/pay.json: "groq" (its paid plan, switched off while Groq takes no upgrades) or "openrouter" (the paid
+    backup, 26 November 2026: the senior author's "use OpenRouter as a paid backup", with a strict monthly limit)."""
+    try: return json.load(open(PAY, encoding="utf-8")).get(svc) or {}
     except (OSError, ValueError, AttributeError): return {}
+
+
+SVC_NAME = {"groq": "Groq", "openrouter": "OpenRouter"}
+TRYING = False   # (26 November 2026) an exam or a trial is running (exam_models.py, trial.py): a paid OpenRouter model may then be asked although the lane's teams may not use it yet ("lane": false)
+
+
+def price_of(svc, name):
+    """[$ in, $ out] per million tokens that a paid call is budgeted at: Groq's price; at OpenRouter the ceiling the request carries (max_price), so that the real
+    price is never higher than the budget (the real cost comes back with the answer and is what is counted)."""
+    P = pay(svc)
+    if svc == "openrouter": return list(((P.get("models") or {}).get(name) or {}).get("max") or []) or None
+    return (P.get("prices") or {}).get(name)
 
 
 def groq_paid(): return bool(pay().get("paid"))
 
 
-def _pay_ledger(L):
-    g = L.get("groq_pay") if isinstance(L.get("groq_pay"), dict) else {}
+def _pay_ledger(L, svc="groq"):
+    g = L.get(svc + "_pay") if isinstance(L.get(svc + "_pay"), dict) else {}
     if g.get("month") != today()[:7]: g = {"month": today()[:7], "usd": 0.0, "days": dict(g.get("days") or {})}
     return g
 
 
-def pay_share(est=0.0, visitor=False, L=None):
+def pay_share(est=0.0, visitor=False, L=None, svc="groq"):
     """(May a call of about est dollars be paid for at Groq, why not). A person's question: while the month's pot holds it. The list: only within today's share of
     what is above the floor kept for visitors (the busiest of the last seven days' visitor spending, at least visitors_least_a_day, times margin, times the days left
     in the month), the share being that rest divided by the days left. data/auto/lane/pay.json."""
-    P = pay(); g = _pay_ledger(L if L is not None else ledger())
+    P = pay(svc); g = _pay_ledger(L if L is not None else ledger(), svc); who = SVC_NAME.get(svc, svc)
     month, spent = float(P.get("usd_a_month") or 0), float(g.get("usd") or 0)
-    if spent + est > month: return False, f"this month's ${month:.2f} at Groq is spent (${spent:.2f} so far)"
+    if spent + est > month: return False, f"this month's ${month:.2f} at {who} is spent (${spent:.2f} so far)"
     if visitor: return True, ""
     d = datetime.date.fromisoformat(today()); days = g.get("days") or {}; td = days.get(today()) or {}
     before = spent - float(td.get("visitors", 0)) - float(td.get("list", 0))
     rate = max([float((days.get((d - datetime.timedelta(i)).isoformat()) or {}).get("visitors", 0)) for i in range(7)] + [float(P.get("visitors_least_a_day") or 0)])
     left = calendar.monthrange(d.year, d.month)[1] - d.day + 1
     share = max(0.0, month - before - rate * float(P.get("margin") or 1.5) * left) / left
-    if float(td.get("list", 0)) + est > share: return False, f"today's share of Groq's money for the lane's own questions is spent (${share:.2f} today; the rest is kept for the questions people send)"
+    if float(td.get("list", 0)) + est > share: return False, f"today's share of the money at {who} for the lane's own questions is spent (${share:.2f} today; the rest is kept for the questions people send)"
     return True, ""
 
 
-def pay_count(name, t_in, t_out, visitor):
-    """Write a paid call at Groq into the ledger (the month's dollars, and each day's for visitors and for the list, forty days kept); returns its dollars."""
-    pr = (pay().get("prices") or {}).get(name) or [0, 0]; c = t_in * pr[0] / 1e6 + t_out * pr[1] / 1e6
+def pay_count(name, t_in, t_out, visitor, svc="groq", usd=None):
+    """Write a paid call into the ledger (the month's dollars, and each day's for visitors, for the list and for exams, forty days kept); returns its dollars.
+    usd: what the service itself says the call cost (OpenRouter's usage.cost); else the budget price times the tokens."""
+    pr = price_of(svc, name) or [0, 0]; c = float(usd) if usd is not None else t_in * pr[0] / 1e6 + t_out * pr[1] / 1e6
     with LOCK:
-        L = ledger(); g = _pay_ledger(L); g["usd"] = round(float(g.get("usd") or 0) + c, 6)
-        dd = g["days"].setdefault(today(), {"visitors": 0.0, "list": 0.0}); k = "visitors" if visitor else "list"; dd[k] = round(float(dd.get(k) or 0) + c, 6)
+        L = ledger(); g = _pay_ledger(L, svc); g["usd"] = round(float(g.get("usd") or 0) + c, 6)
+        dd = g["days"].setdefault(today(), {"visitors": 0.0, "list": 0.0}); k = "exam" if FOR == "exam" else "visitors" if visitor else "list"; dd[k] = round(float(dd.get(k) or 0) + c, 6)
         cut = (datetime.date.fromisoformat(today()) - datetime.timedelta(40)).isoformat(); g["days"] = {k2: v for k2, v in g["days"].items() if k2 >= cut}
-        L["groq_pay"] = g; LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
+        L[svc + "_pay"] = g; LEDGER.parent.mkdir(parents=True, exist_ok=True); json.dump(L, open(LEDGER, "w", encoding="utf-8"), indent=1)
     return c
 
 
@@ -650,6 +695,55 @@ def pay_selftest():
         PAY, LEDGER, today = keep_pay, keep_led, keep_today
 
 
+def or_selftest():
+    """(26 November 2026) OpenRouter's paid backup: off unless switched on; never a model without a price ceiling; the lane's teams only once "lane" is on (exams
+    and trials before); the ceiling and "no data collection" go with every request; the real cost is counted; the month's pot and the day's share hold; a refusal
+    for want of credit ends the budget; the free models' day is 45 calls, 900 once credit was bought, and paid calls do not count against it."""
+    import tempfile
+    global PAY, LEDGER, today, TRYING, FOR
+    keep = (PAY, LEDGER, today, TRYING, FOR); had = os.environ.get("OPENROUTER_API_KEY")
+    tmp = pathlib.Path(tempfile.mkdtemp()); PAY = tmp / "pay.json"; LEDGER = tmp / "usage.json"; os.environ["OPENROUTER_API_KEY"] = "O"
+    M = "openrouter:openai/gpt-oss-120b"
+    def setp(**kw):
+        base = {"paid": False, "lane": False, "usd_a_month": 9.5, "margin": 1.5, "visitors_least_a_day": 0.1, "credits_bought": False, "free_calls_a_day": 900,
+                "provider": {"data_collection": "deny", "sort": "throughput"}, "models": {"openai/gpt-oss-120b": {"max": [0.1, 0.5], "reasoning": "medium"}}}
+        base.update(kw); json.dump({"groq": {"paid": False}, "openrouter": base}, open(PAY, "w"))
+    sent = []
+    def op(req, timeout=0, cost=0.0012, code=200):
+        sent.append(json.loads(req.data.decode("utf-8")))
+        if code != 200: raise urllib.error.HTTPError(req.full_url, code, "x", {}, __import__("io").BytesIO(b'{"error": {"message": "Insufficient credits"}}'))
+        class R:
+            def __enter__(s): return s
+            def __exit__(s, *a): return False
+            def read(s): return json.dumps({"provider": "Crusoe", "choices": [{"message": {"content": "{\"ok\": true}"}, "finish_reason": "stop"}], "usage": {"prompt_tokens": 1000, "completion_tokens": 100, "cost": cost}}).encode()
+        return R()
+    try:
+        today = lambda: "2026-12-01"
+        setp(); assert never_paid(M) and not has(M), "off: never asked"
+        setp(paid=True, models={}); assert "ceiling" in never_paid(M), "no ceiling: never asked"
+        setp(paid=True); assert not never_paid(M) and not has(M), "paid on, lane off: not for the teams"
+        TRYING = True; assert has(M), "an exam may ask it"; TRYING = False
+        setp(paid=True, lane=True); assert has(M)
+        FOR = "list"; out = chat(M, [{"role": "user", "content": "answer in json"}], 200, op)
+        b = sent[-1]; assert b["provider"]["max_price"] == {"prompt": 0.1, "completion": 0.5} and b["provider"]["data_collection"] == "deny" and b["reasoning"] == {"effort": "medium"}, b
+        g = _pay_ledger(ledger(), "openrouter"); assert abs(g["usd"] - 0.0012) < 1e-9 and abs(g["days"]["2026-12-01"]["list"] - 0.0012) < 1e-9, g
+        assert calls_left("openrouter:x/y:free") == SERVICES["openrouter"]["calls"], "a paid call does not count against the free day"
+        setp(paid=True, lane=True, credits_bought=True); assert limits_of("openrouter:x/y:free")["calls"] == 900, "credit bought: 900 free calls a day"
+        L = ledger(); g = _pay_ledger(L, "openrouter"); g["usd"] = 9.49; L["openrouter_pay"] = g; json.dump(L, open(LEDGER, "w"))
+        try: chat(M, [{"role": "user", "content": "x"}], 200, op); raise AssertionError("past the month's pot")
+        except Budget: pass
+        assert calls_left(M) == 0 and not calls_fit({M: 1}), "no money left: no team takes it"
+        L = ledger(); g = _pay_ledger(L, "openrouter"); g["usd"] = 0.0; g["days"] = {}; L["openrouter_pay"] = g; json.dump(L, open(LEDGER, "w"))
+        try: chat(M, [{"role": "user", "content": "x"}], 200, lambda req, timeout=0: op(req, timeout, code=402)); raise AssertionError("402 must end the budget")
+        except Budget: pass
+        FOR = "exam"; chat(M, [{"role": "user", "content": "x"}], 200, op); assert "exam" in _pay_ledger(ledger(), "openrouter")["days"]["2026-12-01"], "an exam's spending is its own"
+        setp(paid=False, lane=True); assert never_paid(M) and not has(M), "the switch back off stops it at once"
+    finally:
+        PAY, LEDGER, today, TRYING, FOR = keep
+        if had is None: os.environ.pop("OPENROUTER_API_KEY", None)
+        else: os.environ["OPENROUTER_API_KEY"] = had
+
+
 def selftest():
     import tempfile
     global LEDGER
@@ -746,10 +840,11 @@ def selftest():
     L = ledger(); L["day"] = "2000-01-01"; L.setdefault("svc", {})["gemini"] = {"day": day_of("gemini"), "calls": 7, "usd": 0.0, "models": {"gemini-4-hydrogen": 7}, "in": 0, "out": 0}; json.dump(L, open(LEDGER, "w"))
     assert ledger()["neurons"] == 0 and svc_used("gemini")["models"] == {"gemini-4-hydrogen": 7}
     L = ledger(); L["svc"].pop("gemini"); json.dump(L, open(LEDGER, "w"))
-    # ---- only free models, by code: at OpenRouter a model that is not marked free is never asked, whatever a file names
+    # ---- at OpenRouter a model that is not marked free is never asked unless paying there is switched on AND pay.json names its price ceiling (26 November 2026;
+    # or_selftest checks the paid backup itself): a model with no ceiling is refused before anything is sent, whatever the switch says
     n = len(seen)
     try: chat("openrouter:openai/some-paid-model", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a model that costs money was asked at OpenRouter")
-    except Unavailable as e: assert "free" in str(e) and len(seen) == n
+    except Unavailable as e: assert "never asked" in str(e) and len(seen) == n
     assert never_paid("openrouter:x/y") and not never_paid("openrouter:x/y:free") and not never_paid("gemini:gemma-4-31b-it") and not has("openrouter:x/y") and has("openrouter:x/y:free")
     assert not calls_fit({"openrouter:a/b:free": 1}) and calls_fit({"mistral:mistral-medium-latest": 100, "mistral:mistral-small-latest": 100}) and not calls_fit({"mistral:mistral-medium-latest": 1000, "mistral:mistral-small-latest": 600})   # (OpenRouter's day was used up above; a service that counts all its models together: their sum)
     assert calls_left("mistral:mistral-large-latest") == 0 and not calls_fit({"mistral:mistral-large-latest": 1})          # (the service itself said this model's day was used up, just above: believed)
@@ -863,6 +958,7 @@ def selftest():
     for k in ("MISTRAL_API_KEY", "OPENROUTER_API_KEY", "ANTHROPIC_API_KEY"): del os.environ[k]
     if had: os.environ["GROQ_API_KEY"] = had
     pay_selftest()
+    or_selftest()
     LEDGER = keep
     print("llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it; calls made at once each get their own moment; past a run's clock nothing is asked or waited for)")
 

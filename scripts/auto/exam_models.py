@@ -288,6 +288,7 @@ def selftest():
 
 
 if __name__ == "__main__":
+    llm.TRYING = True; llm.FOR = "exam"      # (26 November 2026) an exam may ask a paid OpenRouter model that no team may use yet; its spending is counted as an exam's, within the month's pot
     if "--selftest" in sys.argv: selftest()
     elif len(sys.argv) > 1 and sys.argv[1] == "requests":
         until = time.time() + 22 * 60                                     # (the job has 45 minutes for ALL its requests, and one call to a busy free service can take four minutes: on 16 November a run that waited on Gemma ran into the job's limit; a sitting goes on at the next request where it stopped)

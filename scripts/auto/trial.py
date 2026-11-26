@@ -21,7 +21,8 @@ TRIALS = [("@cf/openai/gpt-oss-120b", 1400, None, "as the lane asked it on 16 No
           ("@cf/mistralai/mistral-small-3.1-24b-instruct", 900, None, "")]
 
 
-def main(aid):
+def main(aid, trials=None, out_name="writer-trial.json"):
+    trials = trials or TRIALS
     a = json.load(open(ROOT / "data" / "auto" / "answers" / (aid + ".json"), encoding="utf-8"))
     sources = [s for s in a["sources"] if s.get("findings")]
     for s in sources: s["findings"] = s["findings"][:3]; s["limits"] = s["limits"][:1]            # the lane's next form: three findings and one limit of each source
@@ -32,7 +33,7 @@ def main(aid):
     prompt = lane.writer_prompt(a["question"], sources, lane.examples(), "")
     out = {"_note": "Made by scripts/auto/trial.py: several writers on the same real prompt, once each. Drafts are for the editor's reading; none is published.", "answer": aid, "question": a["question"],
            "prompt_chars": len(prompt), "trials": []}
-    for model, room, extra, note in TRIALS:
+    for model, room, extra, note in trials:
         before = llm.ledger()["neurons"]; row = {"model": model, "room": room, "extra": extra, "note": note}
         try:
             raw = llm.chat(model, [{"role": "system", "content": lane.WRITER_SYS}, {"role": "user", "content": prompt}], room, extra=extra)
@@ -44,8 +45,23 @@ def main(aid):
             else: row["starts"] = raw[:160]
         except (llm.Budget, llm.Unavailable) as e: row.update({"ok": False, "why": str(e)[:300]})
         out["trials"].append(row); print("trial:", model, room, extra or "", "a draft" if row.get("ok") else "NO draft (" + str(row.get("why"))[:80] + ")", row.get("last"), row.get("neurons"))
-    json.dump(out, open(ROOT / "data" / "auto" / "exam" / "writer-trial.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    json.dump(out, open(ROOT / "data" / "auto" / "exam" / out_name, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+
+def from_requests():
+    """(26 November 2026) data/auto/requests/trial-*.json: {"answers": ["au_w_..."], "models": [[model, room, extra or null, note], ...], "name": "..."}: the
+    writers named are tried on the very items kept for each answer, once each; written to data/auto/exam/writer-trial-<name>-<answer>.json. Nothing is published.
+    Without a request file: the trials above, as before."""
+    llm.TRYING = True; llm.FOR = "exam"   # a paid OpenRouter writer may be tried before any team may use it; its spending is an exam's
+    fs = sorted((ROOT / "data" / "auto" / "requests").glob("trial-*.json"))
+    if not fs: return main(sys.argv[1] if len(sys.argv) > 1 else "au_w_0001")
+    for f in fs:
+        try: r = json.load(open(f, encoding="utf-8"))
+        except ValueError: continue
+        trials = [tuple(x) for x in r.get("models") or [] if isinstance(x, list) and len(x) == 4] or None
+        for aid in r.get("answers") or ["au_w_0001"]:
+            main(aid, trials, f"writer-trial-{r.get('name') or f.stem}-{aid}.json")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "au_w_0001")
+    from_requests()

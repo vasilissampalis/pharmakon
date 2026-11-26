@@ -1894,6 +1894,21 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     false) until he says that his Groq account is on the paid plan: his rule of 16 November 2026 was free models only, and
     the switch is his. No gate changes.
 
+46. **OpenRouter as a paid backup, prepared and off (26 November 2026, 18:26 Athens; branch `openrouter-backup`, not on `main`).**
+    Groq has taken no upgrades to its paid plan since September ("Developer tier upgrades are temporarily unavailable due to high
+    demand"), so decision 45 cannot start. His words, 18:26: "keep Groq and Gemini on their existing free tiers and use OpenRouter
+    as a paid backup", with six conditions: every key unchanged; nothing live or deployed before he approves; a strict $10
+    monthly OpenRouter limit with auto top-up disabled; every evidence and publication safeguard kept; any stronger model tested on
+    our exams before it writes a published answer; costs, configuration and rollback shown first. Prepared (`docs/OPENROUTER.md`):
+    two switches in `data/auto/lane/pay.json` (`openrouter.paid`: may a paid model be asked at all, exams first; `openrouter.lane`:
+    may a team use it for published answers), both false; our own stop at $9.50 a month below the $10 limit he sets on the key;
+    Groq's pot-and-shares design for the money; a price ceiling for each model that every request carries (`provider.max_price`)
+    with `data_collection: deny`; the real cost of every call from OpenRouter's own answer (`usage.cost`); a refusal for want of
+    credit ends the budget at once; team R (team B with OpenRouter in Groq's and Cloudflare's places) after the teams of Groq's
+    free plan and before the teams of Google's free models only, chosen only while both switches are on and money is left
+    (`llm.never_paid`, `has`, `price_of`, `calls_left`; tested in `llm.or_selftest`). Exams and a writers' trial are ready in
+    `data/auto/requests-prepared/` and run only when moved. No gate changes; Groq, Gemini and Cloudflare as before.
+
 ## The machine lane: what must be true before a machine-written claim is shown
 
 Five gates, all of them hard-coded (no model's opinion can open a gate that the code has shut):
