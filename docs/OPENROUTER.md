@@ -34,6 +34,24 @@ only: neither stands in a team until he names it.
   reason first): tried again with room. Cloudflare's free day was used up, so the same model there could not be compared.
 - **Cost of all of it:** $0.19 (523 calls).
 
+## The second tests, and the choice (26 November 2026, 18:07 to 18:31 UTC; his words, 21:39: "Make the choice that absolutely has the best results", "The best and fastest results", "People don't like waiting at all and want outmost accuracy")
+
+- **Asked as the lane asks its second reader (one answer's sentences in one call; `-lane-together.json`).** Claude Haiku 5.5:
+  caught 22 of the 35 wrong sentences, stopped 9 of the 73 good. gpt-oss-120b: caught 16, stopped 6. GPT-6 Luna: the run's
+  time ran out after 20 sentences (caught 5 of 6 wrong, stopped 4 of 14 good); finished in a later sitting.
+- **One verdict a sentence, every exam finished.** GPT-6 Luna: the lane's sentences, caught 29 of 35 and stopped 18 of 73;
+  the plain lines, caught 32 of 56 and stopped 26 of 112; the cards, caught 24 of 31 and stopped 28 of 62 (Haiku: 26 and 13,
+  30 and 32, 23 and 31). Luna catches a little more, but it reasons before every verdict, so it is slower.
+- **Writers with room (3,000 tokens).** Claude Haiku 5.5: drafts for two of three, long (2,000 to 2,600 tokens), one with a
+  promise of safety the code refused. GPT-6 Luna: drafts for all three, one with a number not in its passage. Llama 3.3 70B
+  (900 tokens): drafts for all three, short, no rule broken. The writer stays Llama.
+- **The choice.** Claude Haiku 5.5 is asked first as the second reader in EVERY team, wherever it can be asked (`checker_first`
+  in `data/auto/lane/models.json`; `lane.team`), and each team's own second reader after it, so that nothing stops where it
+  cannot be asked (switched off, money spent, OpenRouter down). The second reader is the gate a model holds; Haiku held it
+  best of all the models examined, asked the lane's way, and answers fast. A check costs about $0.0005; the system makes some
+  sixty checks a day, so about $1 to $3 a month. Groq's free tokens that went to checking now go to writing and planning, so
+  the free teams last longer each day. Team R: Llama 3.3 70B writes, Haiku checks, gpt-oss-120b after it.
+
 ## What changes (only in the background system that writes "New answers"; the website itself calls no model)
 
 | File | Change |

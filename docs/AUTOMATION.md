@@ -1920,6 +1920,12 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     At 19:48 he asked that the money last the whole month, the questions people send always answered first: `follow_credit`
     (`llm.credit_left`): OpenRouter's own balance, read at most once an hour within the run's clock, caps what is planned, so
     the credit left is spread over the days left in the month, less the floor kept for people's questions.
+    At 21:39, asked whether Claude Haiku 5.5 should be team R's second reader: "Make the choice that absolutely has the best
+    results", "The best and fastest results", "People don't like waiting at all and want outmost accuracy". Chosen: Haiku first as
+    the second reader in every team where it can be asked (`checker_first`, `lane.team`), each team's own after it. Asked as the
+    lane asks, it caught 22 of the lane exam's 35 wrong sentences (gpt-oss-120b: 16) and stopped 9 of 73 good ones (6); it does
+    not reason first, so it is fast; about $1 to $3 a month. GPT-6 Luna caught a little more one sentence at a time but reasons
+    before every verdict; its exam the lane's way is finished for tomorrow's plan.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

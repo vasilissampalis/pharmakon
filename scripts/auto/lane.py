@@ -2215,11 +2215,12 @@ def team(file=None, only=None, avoid=()):
     except (OSError, ValueError): mf = {}
     teams = mf.get("teams") or [{k: mf.get(k) or MODELS[k] for k in MODELS}]
     teams = [t for t in teams if t.get("name") not in avoid] + [t for t in teams if t.get("name") in avoid]      # (lane 19) a question that got no answer today is tried by another team first: other models, another draft
+    first = mf.get("checker_first") if isinstance(mf.get("checker_first"), str) and mf.get("checker_first") else None   # (26 November 2026) the second reader that sat the exams best, first in every team where it can be asked; each team's own after it
     for t in teams:
         if only and t.get("name") != only: continue                        # (a request may name its team: a new reader is tried on a question or two before it stands in the order)
         planners = [p for p in dict.fromkeys([t.get("planner"), t.get("planner_else")]) if isinstance(p, str) and p and base(p) != base(t.get("writer") or "")] or [None]
         for reader in dict.fromkeys([t.get("reader"), t.get("reader_else")]):
-            for checker in dict.fromkeys([t.get("checker"), t.get("checker_else")]):
+            for checker in dict.fromkeys(([first] if first else []) + [t.get("checker"), t.get("checker_else")]):
                 for planner in planners:                                   # (lane 10: "planner_else", as for the reader and the second reader: the plan is made where there is room)
                     m = {"reader": reader, "writer": t.get("writer"), "checker": checker}
                     if planner: m["planner"] = planner
@@ -2696,6 +2697,14 @@ def selftest():
         keys["groq"] = False; assert T(tf) == {"reader": "@cf/r", "writer": "@cf/w", "checker": "@cf/openai/gpt-oss-120b", "team": "B"}   # no second service: every model at Cloudflare, as before
         cf[0] = 900; assert team(tf) is None
         assert base("groq:openai/gpt-oss-120b") == base("@cf/openai/gpt-oss-120b") == "gpt-oss-120b"
+        # (26 November 2026) "checker_first": the second reader that sat the exams best is asked first in every team where it can be asked; where it cannot (no
+        # key, no money, switched off), each team's own second reader, as before
+        was = (dict(keys), cf[0], dict(gq)); keys.update(groq=True, cf=True); cf[0] = 9000; gq.update({"openai/gpt-oss-120b": 180000, "openai/gpt-oss-20b": 180000, "qwen/qwen3.8-27b": 180000})
+        d0 = json.loads(tf.read_text(encoding="utf-8")); tf.write_text(json.dumps(dict(d0, checker_first="@cf/strong")), encoding="utf-8")
+        assert team(tf)["checker"] == "@cf/strong" and team(tf)["team"] == "A"
+        h0 = llm.has; llm.has = lambda m: False if m == "@cf/strong" else h0(m)
+        assert team(tf)["checker"] == "groq:qwen/qwen3.8-27b" and team(tf)["team"] == "A"; llm.has = h0
+        tf.write_text(json.dumps(d0), encoding="utf-8"); keys.clear(); keys.update(was[0]); cf[0] = was[1]; gq.clear(); gq.update(was[2])
         # the planner has a second choice too: with little left of it at Groq, the plan is made at Cloudflare and the answer still gets one
         tf.write_text(json.dumps({"teams": [{"name": "C", "reader": "@cf/r", "writer": "groq:qwen/qwen3.8-27b", "checker": "groq:openai/gpt-oss-120b", "checker_else": "@cf/openai/gpt-oss-120b",
                                              "planner": "groq:openai/gpt-oss-120b", "planner_else": "@cf/openai/gpt-oss-120b"}]}), encoding="utf-8")
