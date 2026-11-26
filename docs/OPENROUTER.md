@@ -13,6 +13,27 @@ The key's check (`data/auto/or-check.json`), the two exams (`data/auto/exam/mode
 (`data/auto/exam/writer-trial-openrouter-*.json`) were started in the same push. Claude Haiku 5.5 and GPT-6 Luna are examined
 only: neither stands in a team until he names it.
 
+## The first tests (26 November 2026, 17:36 to 18:04 UTC; `data/auto/or-check.json`, `data/auto/exam/model-openrouter-*.json`, `data/auto/exam/writer-trial-openrouter-*.json`)
+
+- **The key.** The key the runs use ends as the dashboard's Default key (`e7c`), and so does its label: it is that key. The
+  workspace's budget applies to it ($10 a month, from the 1st, nothing spent before the tests); the account holds $10 of
+  credit; the free models' day is now 1,000 calls. The key's own limit is $100 (above the budget, so the budget is what
+  binds), and the key expires on 15 May 2027. The dashboard's "never" was most likely because every earlier call was to a
+  free model; the check settles which key it is either way.
+- **Prices as OpenRouter lists them.** Llama 3.3 70B: only DeepInfra (fp8, $0.10/$0.32) is under our ceiling. gpt-oss-120b:
+  eleven providers under the ceiling (most in fp4, the model's own format). Claude Haiku 5.5 and GPT-6 Luna: $0.10/$0.50.
+- **As the checker, on the lane's own sentences (108 the editor judged; one verdict a sentence).** gpt-oss-120b at
+  OpenRouter: caught 16 of 35 wrong, stopped 4 of 73 good (21.6 in 100 of what it lets through would be wrong). At Groq, on
+  the cards exam, the same model caught 5 of 11 wrong: the model judges alike at both; it is weak alone, as the lane knew
+  (it never decides alone: the code's gates and the further readers stand after it). Claude Haiku 5.5: caught 26 of 35,
+  stopped 13 of 73 (13.0 in 100). GPT-6 Luna (37 of the 108 before the run's time ran out): caught 16 of 19, stopped 7 of 18.
+  Haiku on the plain lines: caught 30 of 56, stopped 32 of 112; on the cards: caught 23 of 31, stopped 31 of 62. None reaches
+  the bar for a checker trusted alone (2 in 100).
+- **As the writer (three real prompts of the lane).** Llama 3.3 70B through OpenRouter (DeepInfra) wrote a draft in the
+  right form for all three, at about $0.0003 a draft. Claude Haiku 5.5 and GPT-6 Luna ran out of room at 900 tokens (they
+  reason first): tried again with room. Cloudflare's free day was used up, so the same model there could not be compared.
+- **Cost of all of it:** $0.19 (523 calls).
+
 ## What changes (only in the background system that writes "New answers"; the website itself calls no model)
 
 | File | Change |
