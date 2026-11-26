@@ -1,7 +1,7 @@
 # Writer 794: section 7 plain lines (10 claims, 7 myth-or-fact items)
 
-All lines are written for the current versions and kept within reading targets. One exception: `cl_benzo_own_practices` how[1] reads at
-grade 8.7 because of "flubromazolam" (7.8 without the name).
+All lines are for the current versions and within reading targets, except `cl_benzo_own_practices` how[1]: grade 8.7 because of
+"flubromazolam" (7.8 without the name).
 
 ## Reads as advice (for the senior author)
 - `cl_benzo_own_practices`: practices people described (staying home, keeping the drug out of reach, not drinking at the same time,
