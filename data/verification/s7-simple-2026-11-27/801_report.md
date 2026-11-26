@@ -1,12 +1,12 @@
 # Writer 801: simpler section 7 lines, nicotine (27 November 2026)
 
-10 claims, page `nicotine`. Short, But and How together: 96 to 140 words each; every line within the build's reading
-targets. No myth-or-fact item contradicts the new lines.
+10 claims, page `nicotine`: 96 to 140 words each (short, but, how), all within the build's reading targets. No
+myth-or-fact item contradicts them.
 
 ## Left out, may matter
 
 - smoke_or_nicotine: teenagers' brains (suggestive); nicotine as the main cause of dependence, with a low risk from
-  nicotine medicines (a myth item keeps it); the small thinking boost and the industry-funded studies of it.
+  nicotine medicines (a myth item keeps it); the small thinking boost.
 - smoke_nearby: fewer heart attacks after smoke-free laws (a myth item keeps it); birth weight.
 - smoking_health: the risk left after stopping around 40 (a myth item keeps it).
 - snus: cancer deaths 2.4 against 2.1 in 100; IARC's note on Swedish snus's lower nitrosamines; the industry author's ties.
