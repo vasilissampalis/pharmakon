@@ -332,8 +332,8 @@ benzo = {
     ),
     "plain": (
         "Are designer benzos like etizolam more dangerous? Nobody has compared them with prescription benzos, and the reports below "
-        "count only people who got into trouble, not everyone who used them. In 234 reports to US poison centres in 2014 to 2017 of "
-        "a designer benzo reported as taken alone, mostly etizolam, 65 in 100 people were drowsy, 4 in 100 were in a coma and 3 in 100 needed a "
+        "count only people who got into trouble, not everyone who used them. In 234 reports to US poison centres in 2014 to 2017 that "
+        "named a designer benzo and no other drug, mostly etizolam, 65 in 100 people were drowsy, 4 in 100 were in a coma and 3 in 100 needed a "
         "breathing tube; of those whose care was recorded, 22 in 100 went to intensive care, and one man died. For 85 in 100 of "
         "those with a recorded duration, the effects were over within a day. Nobody tested in a laboratory which drug these people "
         "had really taken. In published reports of deaths up to 2021, gathered second-hand by a review, almost all involved other "
@@ -452,14 +452,14 @@ benzo = {
           "supports"),
         B("pp. 10-13, 22, 26-27, 31",
           "Table 1, death rows: etizolam (pp. 10-13), flualprazolam (p. 22), flubromazolam (pp. 26-27), phenazepam (p. 31)",
-          "Four apparent double entries (the same age and several identical concentrations under two drugs): a 39-year-old man "
-          "(p. 12, etizolam 4 ng/mL; p. 26, flubromazolam 70, with etizolam 4; morphine 1076 against 1149); a 49-year-old man (p. 11, "
-          "etizolam 1.5 with flubromazepam 33; p. 26, flubromazolam 33 with etizolam 1.5; methadone 685 in both); a 33-year-old "
-          "(p. 13, male, etizolam 14 with flubromazolam 1; p. 27, female, flubromazolam 1 with etizolam 14; clozapine 2060 in both); "
-          "a 37-year-old man (p. 10, etizolam 85 with methadone 189 and pregabalin 8500; p. 22, flualprazolam 14.1 with etizolam 85, "
-          "methadone 189 and pregabalin 8500). All four pairs list an opioid. Two identical phenazepam entries on p. 31 (blood 80; "
-          "etizolam and diazepam screen positive; morphine 590) may be a fifth. Editors' calculation counting each of the four once: "
-          "111 of 137 entries with an opioid.",
+          "Four apparent double entries (the same age and identical concentrations of several drugs, listed under two designer "
+          "benzodiazepines): a 39-year-old man (p. 12 under etizolam; p. 26 under flubromazolam, with etizolam among the "
+          "co-exposures; the morphine values differ); a 49-year-old man (p. 11 under etizolam, with flubromazepam among the "
+          "co-exposures; p. 26 under flubromazolam, with etizolam; the morphine and pregabalin values differ); a 33-year-old "
+          "(p. 13 under etizolam, male, with flubromazolam; p. 27 under flubromazolam, female, with etizolam); a 37-year-old man "
+          "(p. 10 under etizolam; p. 22 under flualprazolam, with etizolam). All four pairs list an opioid. Two identical "
+          "phenazepam entries on p. 31 may be a fifth. Editors' calculation counting each of the four once: 111 of 137 entries "
+          "with an opioid.",
           "qualifies"),
         B("pp. 29, 36-38",
           "2.5 Etizolam and 2.6 Flualprazolam, single paragraphs (p. 36); 2.10 Phenazepam and 3-Hydroxyphenazepam, single paragraph "
@@ -468,8 +468,8 @@ benzo = {
           "use drugs or with a history of mental disorders, and 1 was a suicide; all 38 flualprazolam deaths involved multiple drugs, "
           "36 recorded as accidental multiple drug toxicity and 2 ruled intentional flualprazolam poisonings; of 60 phenazepam deaths, "
           "phenazepam alone was listed as the sole cause in 2 and the rest were attributed to accidental polydrug overdose. Table 1 "
-          "lists those two ('Phenazepam intoxication') with ethanol 0.22 g/L (a 46-year-old man) and with diazepam 160 and "
-          "dihydrocodeine 160 ng/mL (a 26-year-old man). Etizolam is used as a medicine in India, Italy, Japan and Korea and is not "
+          "lists those two ('Phenazepam intoxication') with ethanol (a 46-year-old man) and with diazepam and dihydrocodeine "
+          "(a 26-year-old man). Etizolam is used as a medicine in India, Italy, Japan and Korea and is not "
           "approved elsewhere (2.5); phenazepam is used as a medicine in the former USSR (2.10).",
           "qualifies"),
         B("pp. 35-37",
@@ -610,7 +610,7 @@ simple = {
             "but": ("These reports only count people who got into trouble, not everyone who used. So they can't say how risky one "
                     "use is."),
             "how": [
-                ("US poison centres, 2014 to 2017: in 234 reports of a designer benzo reported as taken alone, mostly etizolam, 65 in "
+                ("US poison centres, 2014 to 2017: in 234 reports naming a designer benzo and no other drug, mostly etizolam, 65 in "
                  "100 people were drowsy and 3 in 100 needed a breathing tube. One man died."),
                 ("Nobody lab-tested which drug these people took. Reports rose from 26 to 112 a year, partly because new drugs got "
                  "their own codes in 2016."),
