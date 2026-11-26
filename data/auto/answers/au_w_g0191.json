@@ -1,0 +1,604 @@
+{
+ "_note": "Written by the machine lane (scripts/auto/lane.py). The models' words are data, never instructions. 'published' answers are shown on the site with the label; 'waiting' ones wait for a person; 'none': no answer could be written, and why.",
+ "id": "au_w_g0191",
+ "lane": 19,
+ "kind": "answer",
+ "from": "w_g0191",
+ "question": "What is withdrawal from PCP like?",
+ "ways": [
+  "what are PCP withdrawal symptoms",
+  "how long does PCP withdrawal last",
+  "what happens when you stop taking PCP",
+  "is PCP withdrawal bad",
+  "what is coming off PCP like",
+  "does stopping PCP cause withdrawal"
+ ],
+ "drugs": [
+  "pcp"
+ ],
+ "made": {
+  "on": "2026-11-26",
+  "models": {
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:openai/gpt-oss-120b",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "writer_2": "groq:qwen/qwen3.8-27b"
+  },
+  "run": "45870383772",
+  "read_seconds": 25,
+  "from": {
+   "papers": 1,
+   "summaries": 0,
+   "official": 1
+  },
+  "neurons": 0.0,
+  "seconds": 60
+ },
+ "status": "published",
+ "why": "passed every gate",
+ "gates": {
+  "read": "5 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 4 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.91, but 0.18, how1 0.96, how2 0.95",
+  "check": "every sentence kept was accepted by the second reader (openrouter:openai/gpt-oss-120b); it also found that the short answer answers the question and that the But is about that answer",
+  "but": "the writer's But was not accepted (The sentence claims the statement is based on a Health Canada general statement and a literature review, but the passages do not explicitly state this source at): the code wrote the But itself, from what this answer rests on",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
+ },
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "pepe_2024",
+    "type": "article-journal",
+    "title": "3-methoxy-phencyclidine induced psychotic disorder: A literature review and an 18F-FDG PET/CT case report",
+    "author": [
+     {
+      "family": "Pepe",
+      "given": "Maria"
+     },
+     {
+      "family": "Di Nicola",
+      "given": "Marco"
+     },
+     {
+      "family": "Cocciolillo",
+      "given": "Fabrizio"
+     },
+     {
+      "family": "Chiappini",
+      "given": "Stefania"
+     },
+     {
+      "family": "Martinotti",
+      "given": "Giovanni"
+     },
+     {
+      "family": "Calcagni",
+      "given": "Maria Lucia"
+     },
+     {
+      "family": "Sani",
+      "given": "Gabriele"
+     }
+    ],
+    "container-title": "Pharmaceuticals",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.3390/ph17040452",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "17",
+    "issue": "4",
+    "number": "452",
+    "PMCID": "PMC11053433"
+   },
+   "doi": "10.3390/ph17040452",
+   "pmcid": "PMC11053433",
+   "title": "3-Methoxy-Phencyclidine Induced Psychotic Disorder: A Literature Review and an <sup>18</sup>F-FDG PET/CT Case Report",
+   "year": 2024,
+   "journal": "Pharmaceuticals (Basel, Switzerland)",
+   "kind": "review",
+   "people": true,
+   "near": 0.52,
+   "money": [
+    "The authors declare no conflicts of interest.",
+    "This research received no external funding."
+   ],
+   "design": null,
+   "findings": [
+    {
+     "passage": 20,
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+     "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+     "text": "The development of addiction with withdrawal signs and symptoms has been discussed for PCP and PCP-analogues.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "A"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_pcp",
+    "type": "webpage",
+    "title": "PCP",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       2,
+       8
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/pcp.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "PCP",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.717,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/pcp.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 12,
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+     "text": "Stopping PCP abruptly after prolonged use can cause withdrawal symptoms including sweating, headaches, and cravings for the drug.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  }
+ ],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Stopping PCP abruptly after prolonged use can cause withdrawal symptoms including sweating, headaches, and cravings for the drug.",
+   "uses": [
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "healthcanada_pcp",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+     "sha": "81fc960d208b31ec"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "This rests on 1 review and 1 official page.",
+   "uses": [
+    "F1",
+    "F5"
+   ],
+   "fixed": true,
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+     "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+     "sha": "e8666ad99d35c3b4"
+    },
+    {
+     "label": "F5",
+     "ref": "healthcanada_pcp",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+     "sha": "81fc960d208b31ec"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "Health Canada says stopping PCP abruptly after prolonged use can cause withdrawal symptoms.",
+   "uses": [
+    "F5"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "healthcanada_pcp",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+     "sha": "81fc960d208b31ec"
+    }
+   ],
+   "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal",
+   "quote_ref": "healthcanada_pcp"
+  },
+  {
+   "part": "how2",
+   "text": "A review discusses the development of addiction with withdrawal signs and symptoms for PCP.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+     "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+     "sha": "e8666ad99d35c3b4"
+    }
+   ],
+   "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues",
+   "quote_ref": "pepe_2024"
+  }
+ ],
+ "complete": false,
+ "missing": "a paper that stands nearer the question could not be read",
+ "wanted": [
+  {
+   "doi": "10.1016/j.neuint.2007.06.019",
+   "apa": "Mouri, A., Noda, Y., Enomoto, T., & Nabeshima, T. (2007). Phencyclidine animal models of schizophrenia: Approaches from abnormality of glutamatergic neurotransmission and neurodevelopment. Neurochemistry International, 51(2–4), 173–184. https://doi.org/10.1016/j.neuint.2007.06.019",
+   "near": 0.743,
+   "why": "a review or meta-analysis; nearness to the question 0.74; cited 187 times; its full text is not open",
+   "file": "mouri_2007_j_neuint_2007_06_019.pdf"
+  },
+  {
+   "doi": "10.1358/mf.2007.29.4.1075358",
+   "apa": "Enomoto, T., Noda, Y., & Nabeshima, T. (2007). Phencyclidine and genetic animal models of schizophrenia developed in relation to the glutamate hypothesis. Methods and Findings in Experimental and Clinical Pharmacology, 29(4), 291. https://doi.org/10.1358/mf.2007.29.4.1075358",
+   "near": 0.739,
+   "why": "a review or meta-analysis; nearness to the question 0.74; cited 50 times; its full text is not open",
+   "file": "enomotot_2007_mf_2007_29_4_1075358.pdf"
+  },
+  {
+   "doi": "10.1176/ajp.148.10.1301",
+   "apa": "American Psychiatric Association Publishing. (1991). Recent advances in the phencyclidine model of schizophrenia. American Journal of Psychiatry, 148(10), 1301–1308. https://doi.org/10.1176/ajp.148.10.1301",
+   "near": 0.584,
+   "why": "a review or meta-analysis; nearness to the question 0.58; cited 2067 times; its full text is not open",
+   "file": "anon_1991_ajp_148_10_1301.pdf"
+  }
+ ],
+ "person": null,
+ "history": [],
+ "looked": [
+  {
+   "title": "3-Methoxy-Phencyclidine Induced Psychotic Disorder: A Literature Review and an <sup>18</sup>F-FDG PET/CT Case Report",
+   "read": "full",
+   "kind": "review",
+   "at": "10.3390/ph17040452",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A literature review and a case report on 3-Methoxy-Phencyclidine induced psychotic disorder.",
+     "quote": "This literature review aimed to summarize available evidence about 3-MeO-PCP mechanisms of action and physical and psychotropic effects and to spread preliminary findings about persistent psychotic sy",
+     "why": "a number of the sentence is not in its quote"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "The psychoactive consequences of 3-MeO-PCP, both in the short and long term, have only been partially understood, possibly because of some limitations of the available evidence.",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Lastly, once the acute symptoms of intoxication are remitted, patients are usually discharged from the hospital within a few days, and information on what happens afterward is missing.",
+     "why": "no sentence"
+    }
+   ]
+  },
+  {
+   "title": "Advances in the study of phencyclidine-induced schizophrenia-like animal models and the underlying neural mechanisms",
+   "read": "full",
+   "kind": "review",
+   "at": "10.1038/s41537-024-00485-x",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Severe tremors induced by tiletamine e-cigarette and alcohol use: a case report",
+   "read": "full",
+   "kind": "case",
+   "at": "10.3389/fpsyt.2025.1537822",
+   "kept": 3,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "Initially, intravenous diazepam at 20 mg/day effectively alleviated tremors, but during later hospitalizations the same dose took longer to work and an increased dose of 30 mg/day failed to reduce the",
+     "quote": "Initially, intravenous diazepam (20 mg/day) effectively alleviated the tremors. During the second hospitalization, the same dose took longer to take effect, and by the third hospitalization, the dose ",
+     "why": "it holds an amount or a time between uses"
+    }
+   ]
+  },
+  {
+   "title": "PCP",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/pcp.html",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "PCP",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/pcp",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "PCP",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.drugscience.org.uk/drugs/pcp",
+   "kept": 0,
+   "thrown": []
+  }
+ ],
+ "plan": {
+  "short": [
+   "F5",
+   "F1"
+  ],
+  "direct": "",
+  "but": [],
+  "how": [
+   [
+    "F5"
+   ],
+   [
+    "F1"
+   ]
+  ],
+  "unanswered": "additional symptoms not listed (e.g., anxiety, insomnia, depression)"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.9114,
+   "but": 0.1803,
+   "how1": 0.96,
+   "how2": 0.9469
+  },
+  "scores_quotes_alone": {
+   "short": 0.8376,
+   "but": 0.055,
+   "how1": 0.9433,
+   "how2": 0.7383
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Stopping PCP can cause withdrawal symptoms like sweating and headaches. It can also cause cravings for the drug.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
+      },
+      {
+       "label": "F1",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+       "sha": "e8666ad99d35c3b4"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "But this is from a review and an official page, not a controlled study.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+       "sha": "e8666ad99d35c3b4"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Passage does not state that the information is from a review and official page rather than a controlled study"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says stopping PCP abruptly after prolonged use can cause withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review discusses the development of addiction with withdrawal signs and symptoms for PCP.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+       "sha": "e8666ad99d35c3b4"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Stopping PCP abruptly after prolonged use can cause withdrawal symptoms including sweating, headaches, and cravings for the drug. Withdrawal signs and symptoms have been discussed for PCP.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
+      },
+      {
+       "label": "F1",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+       "sha": "e8666ad99d35c3b4"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "But this comes from a review and an official page, not a controlled study.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+       "sha": "e8666ad99d35c3b4"
+      },
+      {
+       "label": "F5",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the passages do not state that the information comes from a review and an official page rather than a controlled study"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says stopping PCP abruptly after prolonged use can cause withdrawal symptoms.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "healthcanada_pcp",
+       "where": "Substance use disorders and withdrawal",
+       "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+       "sha": "81fc960d208b31ec"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2024 review discusses the development of addiction with withdrawal signs and symptoms for PCP.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "pepe_2024",
+       "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+       "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+       "sha": "e8666ad99d35c3b4"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "but",
+   "text": "But this is based on a general statement from Health Canada and a literature review.",
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "pepe_2024",
+     "where": "1. Introduction › 1.2. About 3-Methoxy-Phencyclidine › 1.2.3. The Effects of Other PCP-Derivatives and Novel Dissociative Compounds",
+     "quote": "The development of addiction with withdrawal signs and symptoms has been discussed for both PCP/PCP-analogues and ketamine",
+     "sha": "e8666ad99d35c3b4"
+    },
+    {
+     "label": "F5",
+     "ref": "healthcanada_pcp",
+     "where": "Substance use disorders and withdrawal",
+     "quote": "If you stop taking PCP abruptly after prolonged use, you may have symptoms of withdrawal. These include: sweating; headaches; cravings for the drug",
+     "sha": "81fc960d208b31ec"
+    }
+   ],
+   "by": "the second reader",
+   "said": "The sentence claims the statement is based on a Health Canada general statement and a literature review, but the passages do not explicitly state this source attribution."
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
+ "place": {
+  "home": "pcp",
+  "also": [],
+  "cls": null,
+  "why": "it names a drug that has a page"
+ }
+}
