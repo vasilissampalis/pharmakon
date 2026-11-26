@@ -823,7 +823,7 @@ def selftest():
     assert svc_used("mistral")["calls"] == 1 and svc_used("mistral")["in"] == 900 and calls_left("mistral") == SERVICES["mistral"]["calls"] - 1 and svc_used("mistral")["usd"] == 0
     chat("openrouter:nvidia/some-model:free", [{"role": "user", "content": "answer in json"}], 50, sopener)
     u, h, b = seen[-1]; assert u == SERVICES["openrouter"]["url"] and b["model"] == "nvidia/some-model:free" and "response_format" not in b and h.get("X-title") == "Pharmakon"
-    L = ledger(); L["svc"]["openrouter"]["calls"] = SERVICES["openrouter"]["calls"]; json.dump(L, open(LEDGER, "w"))
+    L = ledger(); L["svc"]["openrouter"]["calls"] = limits_of("openrouter:nvidia/some-model:free")["calls"]; json.dump(L, open(LEDGER, "w"))   # (26 November 2026) the free day as pay.json makes it: 45 calls, 900 once credit was bought
     try: chat("openrouter:nvidia/some-model:free", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a call beyond the day's calls")
     except Budget: pass
     PRICES = pathlib.Path(tempfile.mkdtemp()) / "prices.json"
