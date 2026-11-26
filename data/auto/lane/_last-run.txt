@@ -1,39 +1,22 @@
 == the model client's own check
-Traceback (most recent call last):
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/llm.py", line 973, in <module>
-    if "--selftest" in sys.argv: selftest()
-                                 ~~~~~~~~^^
-  File "/home/runner/work/pharmakon/pharmakon/scripts/auto/llm.py", line 827, in selftest
-    try: chat("openrouter:nvidia/some-model:free", [{"role": "user", "content": "x"}], 50, sopener); raise AssertionError("a call beyond the day's calls")
-                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: a call beyond the day's calls
-!! this step failed (1)
+llm selftest: ok (one call counted in neurons by the service's own token counts; a call the day's allowance cannot hold is not sent; no key, no call; the second service is off without its key and counted by tokens with it; calls made at once each get their own moment; past a run's clock nothing is asked or waited for)
 == the finder's own check
 papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)
 == the lane's own check
 lane selftest: ok (published with every sentence tied to the paper's own words; a retracted paper never read; quotes that are not in the paper and numbers that are not in the quote thrown away; a broken rule written again; a refused line dropped; a refused short answer means no answer; a question about dying waits for a person; one study alone is not enough; a nearer paper that cannot be read means not complete; an official body's page is a source and is named; a review behind a paywall is read in summary and the answer says so; an answer about amounts holds only the sources' own words, 15 at most, under the lines the code writes, with the line about tolerance first for an opioid, and nothing from animals, harm or timing; the answer it replaces is kept in its history; sources read at once give the same answer from the same sources in the same order; a source not read in time is written down and the answer is written from the rest; past its clock a question is put down for the next run)
-== which OpenRouter key the runs use, and what it may spend (never the key)
-or_check: key set: True | status: 200 | ends as the dashboard's: True | label ends as it: True | bought credit before (not free tier): True | limit: 100 | left: 100 | credits status: 200 | models listed: 4 of 4
 == a model sits the exam as the checker
-exam: openrouter:openai/gpt-oss-120b (effort: medium): caught 16 of 35 wrong cards, stopped 4 of 73 good ones, no clear word on 0; on the whole exam 21.6 in 100 of what it lets through would be wrong (the bar: 2.0)
-exam: openrouter:anthropic/claude-haiku-5.5: caught 26 of 35 wrong cards, stopped 13 of 73 good ones, no clear word on 0; on the whole exam 13.0 in 100 of what it lets through would be wrong (the bar: 2.0)
-exam: openrouter:anthropic/claude-haiku-5.5: caught 30 of 56 wrong cards, stopped 32 of 112 good ones, no clear word on 0; on the whole exam 7.8 in 100 of what it lets through would be wrong (the bar: 2.0)
-exam: openrouter:anthropic/claude-haiku-5.5: caught 23 of 31 wrong cards, stopped 31 of 62 good ones, no clear word on 0; on the whole exam 5.3 in 100 of what it lets through would be wrong (the bar: 2.0)
-exam: openrouter:openai/gpt-6-luna: caught 16 of 19 wrong cards, stopped 7 of 18 good ones, no clear word on 0; on the whole exam 11.0 in 100 of what it lets through would be wrong (the bar: 2.0); stopped early (the time this run has (the job would be stopped before it could keep its results)); 71 cards left for the next sitting
-exam: openrouter:openai/gpt-6-luna: caught 0 of 0 wrong cards, stopped 0 of 0 good ones, no clear word on 0; stopped early (the time this run has (the job would be stopped before it could keep its results)); 168 cards left for the next sitting
-exam: openrouter:openai/gpt-6-luna: caught 0 of 0 wrong cards, stopped 0 of 0 good ones, no clear word on 0; stopped early (the time this run has (the job would be stopped before it could keep its results)); 93 cards left for the next sitting
+exam: openrouter:openai/gpt-6-luna: caught 29 of 35 wrong cards, stopped 18 of 73 good ones, no clear word on 0; on the whole exam 9.8 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: openrouter:openai/gpt-6-luna: caught 32 of 56 wrong cards, stopped 26 of 112 good ones, no clear word on 0; on the whole exam 6.8 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: openrouter:openai/gpt-6-luna: caught 24 of 31 wrong cards, stopped 28 of 62 good ones, no clear word on 0; on the whole exam 4.3 in 100 of what it lets through would be wrong (the bar: 2.0)
+exam: openrouter:openai/gpt-oss-120b (the lane's sentences, an answer's sentences in one call): caught 16 of 35 not good, stopped 6 of 73 good, no clear word on 0, 21 calls
+exam: openrouter:anthropic/claude-haiku-5.5 (the lane's sentences, an answer's sentences in one call): caught 22 of 35 not good, stopped 9 of 73 good, no clear word on 0, 21 calls
+exam: openrouter:openai/gpt-6-luna (the lane's sentences, an answer's sentences in one call): caught 5 of 6 not good, stopped 4 of 14 good, no clear word on 88, 4 calls; stopped early (the time this run has)
 == writers tried on a real prompt
-trial: openrouter:meta-llama/llama-3.3-70b-instruct 900  a draft {'finish': 'stop', 'in': 2089, 'out': 176, 'reasoned': 0, 'wrote': 636, 'usd': 0.00026522, 'provider': 'DeepInfra'} 0.0
-trial: @cf/meta/llama-3.3-70b-instruct-fp8-fast 900  NO draft (today's free allowance cannot hold this call (8935 of 9000 neurons used)) None None
-trial: openrouter:anthropic/claude-haiku-5.5 900  NO draft (no JSON) {'finish': 'length', 'in': 3011, 'out': 900, 'reasoned': 0, 'wrote': 0, 'usd': 0.0007511, 'provider': 'Azure'} 0.0
-trial: openrouter:openai/gpt-6-luna 900  a draft {'finish': 'stop', 'in': 2079, 'out': 695, 'reasoned': 1683, 'wrote': 800, 'usd': 0.0005554, 'provider': 'Google'} 0.0
-trial: openrouter:meta-llama/llama-3.3-70b-instruct 900  a draft {'finish': 'stop', 'in': 2381, 'out': 163, 'reasoned': 0, 'wrote': 657, 'usd': 0.00029026, 'provider': 'DeepInfra'} 0.0
-trial: @cf/meta/llama-3.3-70b-instruct-fp8-fast 900  NO draft (today's free allowance cannot hold this call (8935 of 9000 neurons used)) None None
-trial: openrouter:anthropic/claude-haiku-5.5 900  NO draft (no JSON) {'finish': 'length', 'in': 3654, 'out': 900, 'reasoned': 0, 'wrote': 0, 'usd': 0.0008154, 'provider': 'Azure'} 0.0
-trial: openrouter:openai/gpt-6-luna 900  NO draft (no JSON) {'finish': 'length', 'in': 2366, 'out': 900, 'reasoned': 550, 'wrote': 348, 'usd': 0.0006866, 'provider': 'Google'} 0.0
-trial: openrouter:meta-llama/llama-3.3-70b-instruct 900  a draft {'finish': 'stop', 'in': 2738, 'out': 164, 'reasoned': 0, 'wrote': 546, 'usd': 0.00032628, 'provider': 'DeepInfra'} 0.0
-trial: @cf/meta/llama-3.3-70b-instruct-fp8-fast 900  NO draft (today's free allowance cannot hold this call (8935 of 9000 neurons used)) None None
-trial: openrouter:anthropic/claude-haiku-5.5 900  NO draft (no JSON) {'finish': 'length', 'in': 4045, 'out': 900, 'reasoned': 0, 'wrote': 0, 'usd': 0.0008545, 'provider': 'Azure'} 0.0
-trial: openrouter:openai/gpt-6-luna 900  NO draft (no JSON) {'finish': 'length', 'in': 2726, 'out': 900, 'reasoned': 0, 'wrote': 77, 'usd': 0.0007226, 'provider': 'Google'} 0.0
+trial: openrouter:anthropic/claude-haiku-5.5 3000  a draft {'finish': 'stop', 'in': 3011, 'out': 2060, 'reasoned': 0, 'wrote': 1055, 'usd': 0.0013311, 'provider': 'Azure'} 0.0
+trial: openrouter:openai/gpt-6-luna 3000  a draft {'finish': 'stop', 'in': 2079, 'out': 1115, 'reasoned': 1081, 'wrote': 879, 'usd': 0.0005926, 'provider': 'Google'} 0.0
+trial: openrouter:anthropic/claude-haiku-5.5 3000  a draft {'finish': 'stop', 'in': 3654, 'out': 2574, 'reasoned': 0, 'wrote': 1192, 'usd': 0.0016524, 'provider': 'Azure'} 0.0
+trial: openrouter:openai/gpt-6-luna 3000  a draft {'finish': 'stop', 'in': 2366, 'out': 787, 'reasoned': 1668, 'wrote': 1006, 'usd': 0.00043426, 'provider': 'Google'} 0.0
+trial: openrouter:anthropic/claude-haiku-5.5 3000  NO draft (no JSON) {'finish': 'length', 'in': 4045, 'out': 3000, 'reasoned': 0, 'wrote': 0, 'usd': 0.0019045, 'provider': 'Azure'} 0.0
+trial: openrouter:openai/gpt-6-luna 3000  a draft {'finish': 'stop', 'in': 2726, 'out': 1500, 'reasoned': 1761, 'wrote': 1041, 'usd': 0.0007922, 'provider': 'Google'} 0.0
 == write
 lane: no request waiting
