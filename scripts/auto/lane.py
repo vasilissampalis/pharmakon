@@ -1373,6 +1373,25 @@ NEEDED_FOR = re.compile(r"\b(?:amounts?|doses?|quantit(?:y|ies))\b[^.]{0,60}\b(?
 NEEDED_SKIP = re.compile(r"\btoleran\w*|\bsame effect\b", re.I)
 
 
+def copied_run(text, quote):
+    """(27 November 2026) The longest run of words that a sentence shares, in a row, with the passage it rests on (lower case, letters
+    and digits only). The editor found a short answer that was a source's 25-word sentence copied as the site's own words: the site
+    quotes a source in at most 15 of its words, and only as a quotation (CLAUDE.md)."""
+    a, b = re.findall(r"[a-z0-9]+", (text or "").lower()), re.findall(r"[a-z0-9]+", (quote or "").lower())
+    best = end = 0; prev = [0] * (len(b) + 1)
+    for i in range(1, len(a) + 1):
+        cur = [0] * (len(b) + 1)
+        for j in range(1, len(b) + 1):
+            if a[i - 1] == b[j - 1]:
+                cur[j] = prev[j - 1] + 1
+                if cur[j] > best: best, end = cur[j], i
+        prev = cur
+    return a[end - best:end]
+
+
+COPY_MAX = 15   # words of a source in a row that a sentence of ours may share with it: more is the source's sentence, not ours
+
+
 def rules(parts, labels, years=(), asked=()):
     """What the site's content rules have against a draft: [(part, what)]. Empty when nothing. years: the years the answer's
     sources were published. A sentence may name the year of a source IT rests on ("a 2022 review"), not another source's
@@ -1387,6 +1406,9 @@ def rules(parts, labels, years=(), asked=()):
             m = NEEDED_FOR.search(sent)
             if m and not NEEDED_SKIP.search(sent): bad.append((p["part"], f"how much is needed for an effect (“{m.group(0)}”): say what the drug does, never how much it takes to feel it")); break
         if words(p["text"]) > LIMITS.get(p["part"], 40): bad.append((p["part"], f"too long ({words(p['text'])} words)"))
+        for u in p["uses"]:                                                                  # (27 November 2026) a source's sentence is not ours
+            run = copied_run(p["text"], labels[u].get("quote") or labels[u].get("passage_text") or "")
+            if len(run) > COPY_MAX: bad.append((p["part"], f"it copies {len(run)} words of its source in a row (“{' '.join(run[:8])} …”): say it in your own plain words; a source's words stand only in its quotation, {COPY_MAX} at most")); break
         # (lane 16) what a source reports from another study is not what that source found
         cited = [u for u in p["uses"] if labels[u].get("second_hand")]; m = OWN_FIND.search(p["text"])
         if cited and m and not SECOND_SAID.search(p["text"]):
@@ -3125,6 +3147,11 @@ def selftest():
     assert r["status"] == "waiting" and "dying" in r["why"], (r["status"], r["why"])
     assert stakes("Is ketamine addictive?", [{"text": "Some people who use it become dependent."}]) == "" and stakes("Do psychedelics and antidepressants interact?", []) == "mixing drugs" and stakes("x", [{"text": "It can be fatal."}]) == "dying"
     assert not rules([{"part": "short", "text": "Between 9% and 27% of people met criteria for dependence.", "uses": ["F1"]}], {"F1": {"quote": "between 9% and 27% met criteria"}})
+    # (27 November 2026) a source's sentence copied as ours is refused; a sentence in our own words that shares a few of its words is not
+    _src = "The skeletal muscle relaxant, carisoprodol, appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines."
+    assert any("copies" in w for _, w in rules([{"part": "short", "text": "Carisoprodol appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.", "uses": ["F1"]}], {"F1": {"quote": _src}}))
+    assert not any("copies" in w for _, w in rules([{"part": "short", "text": "Carisoprodol may add to the way benzodiazepines slow breathing, a review says.", "uses": ["F1"]}], {"F1": {"quote": _src}}))
+    assert len(copied_run("a b c d", "x b c y")) == 2 and copied_run("", "a") == []
     for bad in ("Take it 2 hours after the first dose.", "It is generally safe.", "Snorting it hits faster and stronger.", "Addicts relapse.", 'The paper says "yes".', "You should wait.", "It potentiates the high.", "Passages show a link.",
                 "A 2023 online survey of adults who used cannabis found both men and women saw benefits, with wax and flower forms linked to higher satisfaction.", "People reported a stronger high from edibles."):      # (lane 16) forms compared for a wanted effect
         assert rules([{"part": "short", "text": bad, "uses": ["F1"]}], {"F1": {"quote": "2"}}), bad
