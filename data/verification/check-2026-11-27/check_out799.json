@@ -1,0 +1,55 @@
+{
+ "checker": "AI reader 799 (blind check)",
+ "date": "2026-11-27",
+ "rate": [
+  {
+   "id": "cl_gen_drug_test_misses",
+   "verdict": "ok",
+   "text": "",
+   "reason": "Two plain sentences, 26 words. It gives the two reasons the rating went down, in plain words: only reviews passing on other studies' findings, with no numbers (risk of bias note), and dated, with tests that change (indirectness note). No jargon, and nothing that contradicts short. Optional: 'mostly about US labs' would add the indirectness note's point about other countries."
+  }
+ ],
+ "quiz": [
+  {
+   "n": 1,
+   "verdict": "fix",
+   "weak": false,
+   "item": {
+    "claim": "cl_gen_drug_test_misses",
+    "statement": "If a urine test is negative for opiates, no fentanyl was taken.",
+    "answer": false,
+    "v": "0.2.1",
+    "why": "Expert reviews say standard opiate tests are set up for morphine and don't react to fentanyl. Fentanyl needs a test of its own or a lab method."
+   },
+   "reason": "True, supported by short and the second how point, and worth knowing. But 'If an opiate test is negative, there's no fentanyl' does not say what was tested. On the fentanyl page it can be read as checking a drug with an opiate strip, which the statement hands to the drug-checking answers, and the why would then read as advice on drug checking. The lines are about urine tests. The statement now names a urine test and what the negative is taken to mean; the why is unchanged. It reads as how to read a negative result, not as a way to pass a test."
+  },
+  {
+   "n": 2,
+   "verdict": "fix",
+   "weak": false,
+   "item": {
+    "claim": "cl_gen_drug_test_misses",
+    "statement": "If a urine test is negative for benzos, no benzos were taken.",
+    "answer": false,
+    "v": "0.2.1",
+    "why": "Expert reviews say most benzo tests can miss Xanax and lorazepam unless the lab first treats the urine with an enzyme. So a negative can't rule them out."
+   },
+   "reason": "True, supported and useful. But the why's second sentence ('A negative only means the level was under the cutoff') keeps only half of how point 4. It drops 'or the test doesn't react to that drug', the half that the first sentence is about. So the card ends on levels under a cutoff, which depend on how much was taken and when, ground the claim deliberately left out; on a benzo card it can read as a hint for passing. Replaced with the enzyme step from how point 3, which is clearer than 'adds a step', and a plain line on what a negative means. 'Urine' added to the statement to match the lines' scope."
+  }
+ ],
+ "lines": [
+  {
+   "id": "cl_gen_drug_test_misses",
+   "verdict": "fix",
+   "fields": {
+    "how": [
+     "Quick urine tests, in a lab or on the spot, look only for what they're built to find. In the US, most cover amphetamines, cocaine, cannabis, opiates and PCP, often benzos too. Cannabis tests don't catch synthetic cannabinoids, and tests for 'bath salts' haven't worked well.",
+     "Most opiate tests are set up for morphine. Fentanyl, methadone and buprenorphine don't react with them, and oxycodone only weakly. These need tests of their own, and some labs don't run them unless asked.",
+     "Most benzo tests can miss lorazepam and alprazolam (Xanax) unless the lab first treats the urine with an enzyme. Most labs don't. Clonazepam reacts poorly with the tests.",
+     "A negative only means the level was under the test's cutoff, or the test doesn't react to that drug. Lab tests like mass spectrometry find more. But they cost more and are mostly used to check positives. Many hospital labs can do little or none of it."
+    ]
+   },
+   "reason": "q (10 words, people's words, asked from the side of reading a result), short (answers first; 'can miss', 'reviews say'; 27 words, a little long but within the 30 the rules allow) and but (urine only, second-hand reviews from 2004 to 2017, no numbers, tests change) match the statement. Two fixes in how. Point 1 dropped the US context of the panel list: the statement calls them 'the five drugs of the US federal workplace rules' and says panels depend on the setting, and the population is mostly the USA, so 'Most cover ... PCP' read as true everywhere. In point 3, 'Clonazepam reacts poorly' can be read as the drug causing bad reactions, so 'with the tests' is added (same word 'react' as point 2). Note, no change: 'Expert reviews say' for the fentanyl point follows the statement's opening sentence, but the reasoning says that point rests on the 2017 review alone."
+  }
+ ]
+}
