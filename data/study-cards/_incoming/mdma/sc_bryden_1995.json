@@ -163,7 +163,7 @@
    "locator": "Urinary retention with misuse of 'ecstasy', last paragraph"
   },
   {
-   "finding": "The complications of the drug listed in the report, taken from two cited reviews rather than from this case, are lockjaw-like clenching, loss of appetite, chest pain, aching muscles, sweating and high fever.",
+   "finding": "The complications of the drug listed in the report, taken from two cited sources (references 1 and 2) rather than from this case, are trismus (jaw clenching), loss of appetite, chest pain, aching muscles, sweating and high fever. [Note to keep: second-hand; the cited sources were not read. Drop the note's sentence calling low blood sodium 'the best documented cause of serious harm': it is not from this source, and the item calls neither source a review.]",
    "page": "p. 504",
    "locator": "Urinary retention with misuse of 'ecstasy', 2nd paragraph; references 1 and 2",
    "note": "Second-hand; the cited sources were not read. Low blood sodium, the best documented cause of serious harm with this drug, is not among them."
@@ -171,12 +171,12 @@
  ],
  "reporting_issues": [
   {
-   "issue": "No drug testing of any kind is reported: the urine examination mentioned is a routine urinalysis, and neither the man nor the tablets was tested for MDMA or anything else.",
+   "issue": "No drug testing of any kind is reported: the urine analysis is not described as a drug test, and no test of the man or of the tablets for MDMA or anything else is mentioned.",
    "page": "p. 504",
-   "consequence": "The exposure on which the whole report rests is unverified. Ecstasy tablets of that period were often not MDMA alone, so even the substance involved is unknown."
+   "consequence": "The exposure on which the whole report rests is unverified, so the substance involved is unknown. (The original's statement about what ecstasy tablets of that period contained is not from this source.)"
   },
   {
-   "issue": "The timing does not quite line up and is never reconciled: he was referred with a 24-hour history of retention and said he had taken 15 tablets during the 36 hours before admission, so the retention began in the middle of that period, but when he took the last tablet is not stated.",
+   "issue": "The timing is never reconciled: he was referred with a 24-hour history of retention and said he had taken 15 tablets during the 36 hours before admission, so, if referral was at admission, the retention began within that period, about 12 hours into it; when he took the last tablet is not stated.",
    "page": "p. 504",
    "consequence": "The interval between taking the drug and the retention, which is what a causal reading depends on, cannot be worked out."
   },
@@ -197,9 +197,37 @@
   }
  ],
  "verification": {
-  "status": "first-pass",
+  "status": "ai-checked",
   "first_pass_by": "AI (Claude, reading agent 734)",
   "first_pass_on": "2026-11-26",
-  "source_read": "PDF (version of record), p. 504 (the whole printed page, which carries three unrelated 'Drug points' items; the Bryden item and its four references read on crops of the page rendered at 300 dpi. The two neighbouring items, on thrombolysis and on lamotrigine, were not read for this card). No supplement exists."
+  "source_read": "PDF (version of record), p. 504 (the whole printed page, which carries three unrelated 'Drug points' items; the Bryden item and its four references read on crops of the page rendered at 300 dpi. The two neighbouring items, on thrombolysis and on lamotrigine, were not read for this card). No supplement exists.",
+  "disagreements": [
+   {
+    "field": "key_findings[6].finding",
+    "first_pass": "The complications of the drug listed in the report, taken from two cited reviews rather than from this case, are lockjaw-like clenching, loss of appetite, chest pain, aching muscles, sweating and high fever.",
+    "reviewer": "The complications of the drug listed in the report, taken from two cited sources (references 1 and 2) rather than from this case, are trismus (jaw clenching), loss of appetite, chest pain, aching muscles, sweating and high fever. [Note to keep: second-hand; the cited sources were not read. Drop the note's sentence calling low blood sodium 'the best documented cause of serious harm': it is not from this source, and the item calls neither source a review.]",
+    "resolution": "Second reader's correction adopted by the AI co-editor (AI reader 778 (round-2 check))"
+   },
+   {
+    "field": "reporting_issues[0]",
+    "first_pass": "No drug testing of any kind is reported: the urine examination mentioned is a routine urinalysis, and neither the man nor the tablets was tested for MDMA or anything else. | The exposure on which the whole report rests is unverified. Ecstasy tablets of that period were often not MDMA alone, so even the substance involved is unknown.",
+    "reviewer": "issue: No drug testing of any kind is reported: the urine analysis is not described as a drug test, and no test of the man or of the tablets for MDMA or anything else is mentioned. | consequence: The exposure on which the whole report rests is unverified, so the substance involved is unknown. (The original's statement about what ecstasy tablets of that period contained is not from this source.)",
+    "resolution": "Second reader's correction adopted by the AI co-editor (AI reader 778 (round-2 check))"
+   },
+   {
+    "field": "reporting_issues[1]",
+    "first_pass": "The timing does not quite line up and is never reconciled: he was referred with a 24-hour history of retention and said he had taken 15 tablets during the 36 hours before admission, so the retention began in the middle of that period, but when he took the last tablet is not stated. | The interval between taking the drug and the retention, which is what a causal reading depends on, cannot be worked out.",
+    "reviewer": "issue: The timing is never reconciled: he was referred with a 24-hour history of retention and said he had taken 15 tablets during the 36 hours before admission, so, if referral was at admission, the retention began within that period, about 12 hours into it; when he took the last tablet is not stated. | consequence: The interval between taking the drug and the retention, which is what a causal reading depends on, cannot be worked out.",
+    "resolution": "Second reader's correction adopted by the AI co-editor (AI reader 778 (round-2 check))"
+   },
+   {
+    "field": "missed",
+    "first_pass": "",
+    "reviewer": "Card text outside the checked items states things the item does not: 'three urologists' and 'a hospital urology service' (design_detail, recruitment; the item gives only Stepping Hill Hospital, Stockport, and the titles Dr, Mr, Mr), and that the urinalysis was 'a routine examination of the urine, not a drug test (p. 504)' (exposure.measurement; the item says only that analysis of urine showed nothing abnormal).",
+    "resolution": "Recorded for the card's next revision; not yet in the card."
+   }
+  ],
+  "checked_by": "AI reader 778 (round-2 check); adjudicated by the AI co-editor",
+  "checked_on": "2026-11-26"
  }
 }

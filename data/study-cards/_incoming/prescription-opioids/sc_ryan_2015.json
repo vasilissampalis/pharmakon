@@ -181,7 +181,7 @@
    "locator": "Results › Clinical effects, 4th paragraph"
   },
   {
-   "finding": "Median length of stay 16 hours (IQR 11.3–24.4, range 1.8–228); 19.9 hours (IQR 13.6–35.7) after co-ingestion. 8 patients (11%), all of whom had taken other medicines, went to intensive care: 5 for co-ingestant toxicity (tricyclic antidepressants 3, morphine 1, atenolol 1) and 3 for respiratory depression (one intubated, one on a naloxone infusion, one with pneumonia). No deaths. Naloxone was given to 9 patients, 7 with documented respiratory depression; it improved oxygen saturation or consciousness in 6, partly in 2 and not in 1; no seizures were reported after naloxone.",
+   "finding": "Median length of stay 16 hours (IQR 11.3–24.4, range 1.8–228); 19.9 hours (IQR 13.6–35.7) after co-ingestion. 8 patients (11%), all of whom had taken other medicines, went to intensive care: 5 for co-ingestant toxicity (tricyclic antidepressants 3, morphine 1, atenolol 1) and 3 for respiratory depression (one intubated, one on a naloxone infusion, one who developed pneumonia). No deaths. Naloxone was given to 9 patients, 7 with documented respiratory depression; it was reported to improve oxygen saturation or consciousness in 6, to improve them partly in 2 and to have no effect in 1; no seizures were reported after naloxone.",
    "page": "PDF p. 3",
    "locator": "Results › Outcomes and treatment, 1st paragraph"
   },
@@ -211,7 +211,7 @@
   {
    "issue": "The amount comparison between patients with and without seizures is given p=0.018 in the Results (p. 3) and p=0.021 in the Figure 1 legend (p. 4).",
    "page": "PDF pp. 3–4",
-   "consequence": "Minor; the direction is unaffected, but one of the two values is a transcription error."
+   "consequence": "Minor; the direction is unaffected. The paper does not explain the difference, which may be a transcription error or a different computation (for example exact against approximate Mann–Whitney p)."
   },
   {
    "issue": "Table 1 lists 16 patients who co-ingested a benzodiazepine, but the Results count 1 of 8 seizure patients plus 16 of 63 other patients, which makes 17.",
@@ -240,9 +240,37 @@
   }
  ],
  "verification": {
-  "status": "first-pass",
+  "status": "ai-checked",
   "first_pass_by": "AI (Claude, reading agent 742)",
   "first_pass_on": "2026-11-26",
-  "source_read": "PDF of the Early Online version (Clinical Toxicology 2015, Early Online: 1–6), not the version of record (53(6), 545–550); anchors give its own pages as PDF p. 1–6, which differ from the printed pages of the issue. All six pages read; Tables 1 and 2 and Figures 1–4 checked on 150-dpi renderings, Figures 1, 2 and 4 also at 300 dpi; no supplement."
+  "source_read": "PDF of the Early Online version (Clinical Toxicology 2015, Early Online: 1–6), not the version of record (53(6), 545–550); anchors give its own pages as PDF p. 1–6, which differ from the printed pages of the issue. All six pages read; Tables 1 and 2 and Figures 1–4 checked on 150-dpi renderings, Figures 1, 2 and 4 also at 300 dpi; no supplement.",
+  "disagreements": [
+   {
+    "field": "key_findings[7].finding",
+    "first_pass": "Median length of stay 16 hours (IQR 11.3–24.4, range 1.8–228); 19.9 hours (IQR 13.6–35.7) after co-ingestion. 8 patients (11%), all of whom had taken other medicines, went to intensive care: 5 for co-ingestant toxicity (tricyclic antidepressants 3, morphine 1, atenolol 1) and 3 for respiratory depression (one intubated, one on a naloxone infusion, one with pneumonia). No deaths. Naloxone was given to 9 patients, 7 with documented respiratory depression; it improved oxygen saturation or consciousness in 6, partly in 2 and not in 1; no seizures were reported after naloxone.",
+    "reviewer": "Median length of stay 16 hours (IQR 11.3–24.4, range 1.8–228); 19.9 hours (IQR 13.6–35.7) after co-ingestion. 8 patients (11%), all of whom had taken other medicines, went to intensive care: 5 for co-ingestant toxicity (tricyclic antidepressants 3, morphine 1, atenolol 1) and 3 for respiratory depression (one intubated, one on a naloxone infusion, one who developed pneumonia). No deaths. Naloxone was given to 9 patients, 7 with documented respiratory depression; it was reported to improve oxygen saturation or consciousness in 6, to improve them partly in 2 and to have no effect in 1; no seizures were reported after naloxone.",
+    "resolution": "Second reader's correction adopted by the AI co-editor (AI reader 778 (round-2 check))"
+   },
+   {
+    "field": "reporting_issues[0]",
+    "first_pass": "The amount comparison between patients with and without seizures is given p=0.018 in the Results (p. 3) and p=0.021 in the Figure 1 legend (p. 4). | Minor; the direction is unaffected, but one of the two values is a transcription error.",
+    "reviewer": "issue: The amount comparison between patients with and without seizures is given p=0.018 in the Results (p. 3) and p=0.021 in the Figure 1 legend (p. 4). | consequence: Minor; the direction is unaffected. The paper does not explain the difference, which may be a transcription error or a different computation (for example exact against approximate Mann–Whitney p).",
+    "resolution": "Second reader's correction adopted by the AI co-editor (AI reader 778 (round-2 check))"
+   },
+   {
+    "field": "missed",
+    "first_pass": "",
+    "reviewer": "Figure 1 (PDF p. 4), measured on a 600-dpi rendering: the no-seizure group's central bar sits at about 1,400 mg with whiskers at about 350 and 2,470 mg, not at the text's median 1,000 mg (IQR 775–1,550 mg), although the legend says the bars are median and IQR; a figure–text inconsistency (the seizure group's centre, about 2,100 mg, matches).",
+    "resolution": "Recorded for the card's next revision; not yet in the card."
+   },
+   {
+    "field": "missed",
+    "first_pass": "",
+    "reviewer": "The authors' stated hypothesis was that serotonin toxicity would occur with tramadol overdose and that seizures and coma would be the most important effects (PDF p. 2, Introduction, last paragraph); the serotonin finding ran against their own hypothesis.",
+    "resolution": "Recorded for the card's next revision; not yet in the card."
+   }
+  ],
+  "checked_by": "AI reader 778 (round-2 check); adjudicated by the AI co-editor",
+  "checked_on": "2026-11-26"
  }
 }
