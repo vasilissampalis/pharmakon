@@ -1,12 +1,12 @@
 # Writer 792: section 7 plain lines, nicotine (9 claims, 11 myth-or-fact items)
 
-All nine are written at their current versions, from the claims alone, and checked line by line against the statements. Three lines read slightly above target: cl_nic_vapes_nearby how[2] (8.6), the relative-risk But (6.4) and the oral nicotine replacement item (6.5, drug name).
+All are written at current versions, from the claims alone, and checked against the statements. Slightly above target grade: nearby how[2] (8.6), relative-risk But (6.4), oral nicotine replacement item (6.5).
 
 ## Close to advice (the senior author decides)
-- cl_nic_exercise_cravings: the claim and question sit close to a coping tip. Its lines and its item are written as findings.
-- cl_nic_oral_nrt_withdrawal compares forms on craving (all 4 inhaler or tablet trials against 3 of 7 gum trials). This is kept in How, but not in an item.
-- cl_nic_pouches_stopping compares two pouch strengths (2 of 15 against 0 of 15). I left it out as an amount comparison.
-- cl_nic_vapes_dependence: higher-nicotine liquids went with more dependence, and first use after waking came at 29 against 20 minutes. Both are kept as risk findings.
+- cl_nic_exercise_cravings sits close to a coping tip; its lines and item are written as findings.
+- cl_nic_oral_nrt_withdrawal compares forms on craving (4 of 4 inhaler or tablet trials, 3 of 7 gum). Kept in How, not in an item.
+- cl_nic_pouches_stopping compares two pouch strengths (2 of 15 against 0 of 15). Left out as an amount comparison.
+- cl_nic_vapes_dependence: higher-nicotine liquids went with more dependence, and first use after waking came at 29 against 20 minutes. Kept as risk findings.
 
 ## Thin, dated or inconsistent
 - cl_nic_pouches_stopping: the grade note says five people quit across all comparisons, but the statement's counts add to seven (1+0+4, 2+0). Search to January 2025, ten trials ongoing.
