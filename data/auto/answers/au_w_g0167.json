@@ -17,34 +17,130 @@
   "methylphenidate"
  ],
  "made": {
-  "on": "2026-11-25",
+  "on": "2026-11-26",
   "models": {
-   "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "reader": "gemini:gemini-3.1-flash-lite",
+   "writer": "groq:qwen/qwen3.8-27b",
    "checker": "gemini:gemini-3.5-flash-lite",
    "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemma-4-31b-it",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b"
+   "also1": "gemini:gemini-3-flash-preview",
+   "team": "team L",
+   "reader_2": "groq:openai/gpt-oss-20b",
+   "also1_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45705079924",
+  "run": "45810936528",
   "read_seconds": 100,
   "from": {
-   "papers": 0,
+   "papers": 1,
    "summaries": 0,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 193
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The passage does not state that a 2024 review suggests this, nor does it mention whether people need more to get the same effect.); but (it is about something else than the short answer (The passages do not contain information regarding whether people build up a tolerance to methylphenidate, so 'Not known' is a fair answer, but sentence 1 is not supported by the text provided.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.1-flash-lite read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "1 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3-flash-preview accepted 0 of 3",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.02, but 0.02, how1 0.95, how2 0.99",
+  "check": "not accepted at try 2: a second reader did not accept short (The passage does not state that a 2024 review suggests this, nor does it mention whether people need more to get the same effect.); but (it is about something else than the short answer (The passages do not contain information regarding whether people build up a tolerance to methylphenidate, so 'Not known' is a fair answer, but sentence 1 is not supported by the text provided.)). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+  "rules": "broken at try 3: short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "klein_2024",
+    "type": "article-journal",
+    "title": "Chronic methylphenidate effects on brain gene expression: An exploratory review",
+    "author": [
+     {
+      "family": "Klein",
+      "given": "Shannon"
+     },
+     {
+      "family": "Blum",
+      "given": "Kenneth"
+     },
+     {
+      "family": "Gold",
+      "given": "Mark"
+     },
+     {
+      "family": "Thanos",
+      "given": "Panayotis"
+     }
+    ],
+    "container-title": "Psychology Research and Behavior Management",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.2147/prbm.s445719",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "Volume 17",
+    "page": "577-592",
+    "PMCID": "PMC10876479"
+   },
+   "doi": "10.2147/prbm.s445719",
+   "pmcid": "PMC10876479",
+   "title": "Chronic Methylphenidate Effects on Brain Gene Expression: An Exploratory Review",
+   "year": 2024,
+   "journal": "Psychology research and behavior management",
+   "kind": "review",
+   "people": true,
+   "near": 0.67,
+   "money": [
+    "Partial funding was provided by the University at Buffalo’s Experiential Learning Network to SK.",
+    "Dr Kenneth Blum reports a patent 10,894,024 licensed to SYNAPATAMINE. The authors report no other conflicts of interest in this work."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+    "text": "an exploratory review of the effects of methylphenidate on brain gene expression"
+   },
+   "findings": [
+    {
+     "passage": 10,
+     "where": "Introduction › MP Legally Prescribed for a Number of Medical Conditions",
+     "quote": "This suggests the increased risk of developing drug dependency in adolescence due to early exposure to MP.",
+     "text": "Early exposure to methylphenidate in adolescence suggests an increased risk of developing drug dependency.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 41,
+     "where": "Conclusion › Research Implications",
+     "quote": "Leo et al, who determined this, completed the study in-vitro; therefore, further research should be done to investigate the effects of MP on Htr7 and in ADHD patients.",
+     "text": "The study on Htr7 was conducted in-vitro, so further research is needed to investigate the effects of methylphenidate on Htr7 in patients with ADHD.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -80,6 +176,14 @@
    "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-25",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -98,8 +202,7 @@
    "kind": "review",
    "at": "10.3390/ph16091292",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "Therapeutic effects of methylphenidate for attention-deficit/hyperactivity disorder in children with borderline intellectual functioning or intellectual disability: A systematic review and meta-analysis",
@@ -107,20 +210,251 @@
    "kind": "review",
    "at": "10.1038/s41598-019-52205-6",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A systematic review and meta-analysis of clinical studies investigating the effects of methylphenidate in children with ADHD and intellectual disability or borderline intellectual functioning.",
+     "quote": "Eight studies (average Jadad score = 2.5) enrolling 242 participants receiving methylphenidate and 181 participants receiving placebo were included.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Chronic Methylphenidate Effects on Brain Gene Expression: An Exploratory Review",
    "read": "full",
    "kind": "review",
    "at": "10.2147/prbm.s445719",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": "the planner gave no plan that could be used: the writer chose the items itself",
+ "panel": {
+  "gemini:gemini-3-flash-preview": {
+   "short": [
+    false,
+    "The sentence uses 'links', which is stronger than the passage's 'suggests'; it refers to 'teens' while the passage describes studies on rats and mice; and the passage does not state that the review omitted information on tolerance."
+   ],
+   "but": [
+    false,
+    "The passage does not state that the review did not look at how much drug is needed to get the same effect (tolerance)."
+   ],
+   "how1": [
+    false,
+    "The sentence refers to 'teens' (humans), but the passage describes a study on rats to suggest the risk in 'adolescence'."
+   ]
+  }
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.0227,
+   "but": 0.0174,
+   "how1": 0.9495,
+   "how2": 0.9892
+  },
+  "scores_quotes_alone": {
+   "short": 0.0337,
+   "but": 0.0315,
+   "how1": 0.9491,
+   "how2": 0.9419
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. A 2024 review links early use in teens to a higher risk of drug dependency, but it does not say if people build up a tolerance.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "klein_2024",
+       "where": "Introduction › MP Legally Prescribed for a Number of Medical Conditions",
+       "quote": "This suggests the increased risk of developing drug dependency in adolescence due to early exposure to MP.",
+       "sha": "cc943e3484689c3f"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence uses 'links', which is stronger than the passage's 'suggests'; it refers to 'teens' while the passage describes studies on rats and mice; and the passage does not state that the review omitted information on tolerance."
+    },
+    {
+     "part": "but",
+     "text": "The review looked at brain gene changes, not how much drug is needed to get the same effect over time.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "klein_2024",
+       "where": "Abstract",
+       "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+       "sha": "4aff2694be1c16ba"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The passage does not state that the review did not look at how much drug is needed to get the same effect (tolerance)."
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 exploratory review of methylphenidate effects on brain genes found early use in teens may raise the risk of drug dependency.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "klein_2024",
+       "where": "Abstract",
+       "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+       "sha": "4aff2694be1c16ba"
+      },
+      {
+       "label": "F1",
+       "ref": "klein_2024",
+       "where": "Introduction › MP Legally Prescribed for a Number of Medical Conditions",
+       "quote": "This suggests the increased risk of developing drug dependency in adolescence due to early exposure to MP.",
+       "sha": "cc943e3484689c3f"
+      }
+     ],
+     "ok": false,
+     "by": "a further reader",
+     "said": "a further reader (gemini-3-flash-preview) did not accept it: The sentence refers to 'teens' (humans), but the passage describes a study on rats to suggest the risk in 'adolescence'."
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. A 2024 review suggests early use in adolescence may raise the risk of drug dependency, but it does not say if people need more to get the same effect.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "klein_2024",
+       "where": "Introduction › MP Legally Prescribed for a Number of Medical Conditions",
+       "quote": "This suggests the increased risk of developing drug dependency in adolescence due to early exposure to MP.",
+       "sha": "cc943e3484689c3f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage does not state that a 2024 review suggests this, nor does it mention whether people need more to get the same effect."
+    },
+    {
+     "part": "but",
+     "text": "The review looked at brain gene expression, not how much drug is needed to get the same effect over time.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "klein_2024",
+       "where": "Abstract",
+       "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+       "sha": "4aff2694be1c16ba"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The passages do not contain information regarding whether people build up a tolerance to methylphenidate, so 'Not known' is a fair answer, but sentence 1 is not supported by the text provided.)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 exploratory review examined methylphenidate effects on brain gene expression after exposure.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "klein_2024",
+       "where": "Abstract",
+       "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+       "sha": "4aff2694be1c16ba"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "It suggests early exposure in adolescence may increase the risk of developing drug dependency.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "klein_2024",
+       "where": "Introduction › MP Legally Prescribed for a Number of Medical Conditions",
+       "quote": "This suggests the increased risk of developing drug dependency in adolescence due to early exposure to MP.",
+       "sha": "cc943e3484689c3f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Not known. The sources do not say if people need more methylphenidate to get the same effect.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "klein_2024",
+       "where": "Abstract",
+       "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+       "sha": "4aff2694be1c16ba"
+      },
+      {
+       "label": "F1",
+       "ref": "klein_2024",
+       "where": "Introduction › MP Legally Prescribed for a Number of Medical Conditions",
+       "quote": "This suggests the increased risk of developing drug dependency in adolescence due to early exposure to MP.",
+       "sha": "cc943e3484689c3f"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "The review looked at brain genes, not how much drug people take or how it works over time.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "klein_2024",
+       "where": "Abstract",
+       "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+       "sha": "4aff2694be1c16ba"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review of brain gene expression found early use in teens may raise the risk of dependency.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "klein_2024",
+       "where": "Abstract",
+       "quote": "This exploratory review covers the uses of MP and examined the effects of MP on gene expression in the brain following exposure.",
+       "sha": "4aff2694be1c16ba"
+      },
+      {
+       "label": "F1",
+       "ref": "klein_2024",
+       "where": "Introduction › MP Legally Prescribed for a Number of Medical Conditions",
+       "quote": "This suggests the increased risk of developing drug dependency in adolescence due to early exposure to MP.",
+       "sha": "cc943e3484689c3f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "methylphenidate",
   "also": [],
