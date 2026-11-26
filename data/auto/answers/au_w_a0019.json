@@ -15,241 +15,39 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-26",
   "models": {
-   "reader": "gemini:gemini-3.5-flash-lite",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "@cf/openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "team": "team C",
-   "reader_2": "groq:openai/gpt-oss-20b",
+   "reader": "groq:openai/gpt-oss-20b",
+   "writer": "gemini:gemma-4-26b-a4b-it",
+   "checker": "gemini:gemini-3.5-flash-lite",
+   "planner": "gemini:gemma-4-31b-it",
+   "also1": "gemini:gemma-4-31b-it",
+   "team": "team Z",
+   "reader_2": "gemini:gemini-3.1-flash-lite",
    "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "44966990358",
-  "read_by": {
-   "gemini-3.5-flash-lite": 18,
-   "llama-4-scout-17b-16e-instruct": 3
-  },
-  "read_seconds": 101,
+  "run": "45732936451",
+  "read_seconds": 150,
   "from": {
-   "papers": 1,
+   "papers": 0,
    "summaries": 0,
-   "official": 1
+   "official": 0
   },
-  "neurons": 377.7,
-  "seconds": 161
+  "neurons": 0.0,
+  "seconds": 150
  },
  "status": "none",
- "why": "no draft passed: not accepted at try 2: a second reader did not accept short (the claim that the sources only say this is not stated in the passages). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "why": "no source that can be read gave a finding for this question (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gemini-3.5-flash-lite read from there",
-  "read": "4 findings kept from 2 sources (1 papers read in full, 1 official pages, 0 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
-  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“cessation”): say it plainly",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.31, but 0.07, how1 0.40, how2 0.96",
-  "check": "not accepted at try 2: a second reader did not accept short (the claim that the sources only say this is not stated in the passages). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
+  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
+  "time": "1 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
+  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)"
  },
- "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "cox_2020",
-    "type": "article-journal",
-    "title": "Genome-wide association study of opioid cessation",
-    "author": [
-     {
-      "family": "Cox",
-      "given": "Jiayi W."
-     },
-     {
-      "family": "Sherva",
-      "given": "Richard M."
-     },
-     {
-      "family": "Lunetta",
-      "given": "Kathryn L."
-     },
-     {
-      "family": "Johnson",
-      "given": "Emma C."
-     },
-     {
-      "family": "Martin",
-      "given": "Nicholas G."
-     },
-     {
-      "family": "Degenhardt",
-      "given": "Louisa"
-     },
-     {
-      "family": "Agrawal",
-      "given": "Arpana"
-     },
-     {
-      "family": "Nelson",
-      "given": "Elliot C."
-     },
-     {
-      "family": "Kranzler",
-      "given": "Henry R."
-     },
-     {
-      "family": "Gelernter",
-      "given": "Joel"
-     },
-     {
-      "family": "Farrer",
-      "given": "Lindsay A."
-     }
-    ],
-    "container-title": "Journal of Clinical Medicine",
-    "issued": {
-     "date-parts": [
-      [
-       2020
-      ]
-     ]
-    },
-    "DOI": "10.3390/jcm9010180",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-22",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-22"
-     }
-    },
-    "volume": "9",
-    "issue": "1",
-    "number": "180",
-    "PMCID": "PMC7019731"
-   },
-   "doi": "10.3390/jcm9010180",
-   "pmcid": "PMC7019731",
-   "title": "Genome-Wide Association Study of Opioid Cessation",
-   "year": 2020,
-   "journal": "Journal of clinical medicine",
-   "kind": "other",
-   "people": true,
-   "near": 0.561,
-   "money": [
-    "This was supported by the National Institutes of Health grants RC2, R01 DA12690, R01 DA12849, R01 DA18432, R01 AA11330, R01 AA017535, 2P50, and by the VA Connecticut Healthcare Center and Philadelphia VA MIRECCS.",
-    "H.R.K. is a member of the American Society of Clinical Psychopharmacology’s Alcohol Clinical Trials Initiative, which was supported for the last three years by AbbVie, Alkermes, Ethypharm, Indivior, Lilly, Lundbeck, Otsuka, Pfizer, Arbor, and Amygdala Neurosciences. Drs. Kranzler and Gelernter are named as inventors on PCT patent application #15/878,640 entitled: \"Genotype-guided dosing of opioid agonists,\" filed January 24, 2018. The funders had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript; or in the decision to publish the results."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
-    "text": "Genome-Wide Association Study of Opioid Cessation"
-   },
-   "findings": [
-    {
-     "passage": 3,
-     "where": "1. Introduction",
-     "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
-     "text": "More than 33,000 Americans died of an opioid overdose in 2015.",
-     "id": "F1",
-     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
-    },
-    {
-     "passage": 3,
-     "where": "1. Introduction",
-     "quote": "The US Department of Health and Human Services declared a public health emergency in 2017",
-     "text": "The US Department of Health and Human Services declared a public health emergency in 2017.",
-     "id": "F2",
-     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
-    },
-    {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
-     "text": "The United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
-     "id": "F3",
-     "second_hand": ""
-    }
-   ],
-   "limits": [
-    {
-     "passage": 5,
-     "where": "2. Materials and Methods › 2.1. Participants and Diagnostic Procedures",
-     "quote": "Persons who had recent suicidal intent or psychosis were excluded",
-     "text": "People with recent suicidal intent or psychosis were excluded from the study.",
-     "id": "L1",
-     "second_hand": ""
-    }
-   ],
-   "tag": "A"
-  },
-  {
-   "read": "page",
-   "ref": {
-    "id": "healthcanada_overdose-crisis-toxic-illegal-drug-suppl",
-    "type": "webpage",
-    "title": "Canada's overdose crisis and the toxic illegal drug supply",
-    "author": [
-     {
-      "literal": "Health Canada"
-     }
-    ],
-    "issued": {
-     "date-parts": [
-      [
-       2026,
-       6,
-       15
-      ]
-     ]
-    },
-    "URL": "https://www.canada.ca/en/health-canada/services/opioids/overdose-crisis-toxic-illegal-drug-supply.html",
-    "accessed": {
-     "date-parts": [
-      [
-       2026,
-       11,
-       22
-      ]
-     ]
-    },
-    "verification": {
-     "status": "made by code",
-     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
-     "verified_on": "2026-11-22"
-    },
-    "publisher": "Government of Canada"
-   },
-   "title": "Canada's overdose crisis and the toxic illegal drug supply",
-   "year": 2026,
-   "kind": "official",
-   "people": true,
-   "near": 0.619,
-   "name": "Health Canada",
-   "short": "Health Canada",
-   "tier": 1,
-   "address": "https://www.canada.ca/en/health-canada/services/opioids/overdose-crisis-toxic-illegal-drug-supply.html",
-   "money": [],
-   "label": false,
-   "design": null,
-   "findings": [
-    {
-     "passage": 8,
-     "where": "Opioid- and stimulant-related harms in Canada",
-     "quote": "There have been over 56,600 opioid-related deaths in Canada since 2016.",
-     "text": "There have been over 56,600 opioid-related deaths in Canada since 2016.",
-     "id": "F4",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "B"
-  }
- ],
+ "sources": [],
  "parts": [],
  "complete": false,
- "missing": "European drug‑related death rates",
+ "missing": "",
  "wanted": [
   {
    "doi": "10.1097/yco.0b013e328360eafd",
@@ -275,14 +73,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "the second reader did not accept the answer",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -322,6 +112,14 @@
    "why": "no draft passed: not accepted at try 2: a second reader did not accept short (The sentence asserts that the sources do not compare drug‑related death rates, but the passages never state this negative; they are simply silent on death‑rate comparisons.); but (The sentence claims the sources omit death statistics, yet the passages do not explicitly say they omit them; they just do not mention death statistics.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 2: a second reader did not accept short (the claim that the sources only say this is not stated in the passages). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -331,7 +129,14 @@
    "kind": "review",
    "at": "10.1080/07853890.2022.2079150",
    "kept": 0,
-   "thrown": []
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "A global review of substance‑use policy approaches",
+     "quote": "The United Nations Office on Drugs and Crime (UNODC) 2021 report highlights the differences such as opioid overdose deaths in the USA, injection drug related HIV transmission in Eastern Europe, metham",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "Misuse of Pregabalin and Gabapentin: A Second Systematic Review Update",
@@ -354,413 +159,12 @@
    "read": "full",
    "kind": "other",
    "at": "10.3390/jcm9010180",
-   "kept": 3,
-   "thrown": []
-  },
-  {
-   "title": "Unemployment and Substance Use: An Updated Review of Studies from North America and Europe",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3390/healthcare11081182",
    "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Using physiological biomarkers in forensic psychiatry: a scoping review",
-   "read": "full",
-   "kind": "review",
-   "at": "10.3389/fpsyt.2025.1580615",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Psychedelic substitution: altered substance use patterns following psychedelic use in a global survey",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyt.2024.1349565",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Genome-wide meta-analyses of cross substance use disorders in diverse populations",
-   "read": "full",
-   "kind": "review",
-   "at": "10.1038/s41380-025-03294-5",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Efficacy of transcranial direct current stimulation (tDCS) in reducing consumption in patients with alcohol use disorders: study protocol for a randomized controlled trial",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1186/s13063-016-1363-8",
-   "kept": 0,
-   "thrown": [
-    {
-     "kind": "text",
-     "text": "study protocol for a randomized controlled trial",
-     "quote": "Efficacy of transcranial direct current stimulation (tDCS) in reducing consumption in patients with alcohol use disorders: study protocol for a randomized controlled trial",
-     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
-    }
-   ]
-  },
-  {
-   "title": "Prevalence and Characteristics of Chronic Pain in Buprenorphine and Methadone-Maintained Patients",
-   "read": "full",
-   "kind": "other",
-   "at": "10.3389/fpsyt.2021.641430",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Use and knowledge of contraceptive methods by patients in two substance use disorders treatment centers in Paris",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1186/s12954-017-0181-y",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Global Influence of Cannabis Legalization on Social Media Discourse: Mixed Methods Study",
-   "read": "full",
-   "kind": "other",
-   "at": "10.2196/65319",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Canada's overdose crisis and the toxic illegal drug supply",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/opioids/overdose-crisis-toxic-illegal-drug-supply.html",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "limit",
-     "text": "The page only provides data on Canada, not on America or Europe.",
-     "quote": "Recent data on opioid- and stimulant-related harms in Canada",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The page focuses on Canada's overdose crisis, without mentioning America or Europe.",
-     "quote": "About the overdose crisis; Opioid- and stimulant-related harms in Canada; Toxic illegal drug supply; What we're doing",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
-  },
-  {
-   "title": "Facts About U.S. Deaths from Excessive Alcohol Use",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/alcohol/facts-stats/index.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Shareable Graphics",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.cdc.gov/alcohol/graphics/index.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "About the Good Samaritan Drug Overdose Act",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.canada.ca/en/health-canada/services/opioids/about-good-samaritan-drug-overdose-act.html",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "2C drugs",
-   "read": "page",
-   "kind": "official",
-   "at": "https://thelevel.org.nz/drug-information/2c",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "European Mistletoe",
-   "read": "page",
-   "kind": "official",
-   "at": "https://www.nccih.nih.gov/health/european-mistletoe",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "Epidemiology of alcohol and drug use in the elderly",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1097/yco.0b013e328360eafd",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "The globalization of addiction research: capacity-building mechanisms and selected examples",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1097/hrp.0000000000000067",
-   "kept": 0,
-   "thrown": []
-  },
-  {
-   "title": "The development and implementation of case management for substance use disorders in North America and Europe",
-   "read": "summary",
-   "kind": "review",
-   "at": "10.1176/appi.ps.55.8.913",
-   "kept": 0,
-   "thrown": []
+   "thrown": [],
+   "fault": "it was not read: the time this run has for reading was over"
   }
  ],
- "plan": {
-  "short": [
-   "F1"
-  ],
-  "direct": "Not known",
-  "but": [],
-  "how": [
-   [
-    "DA",
-    "F1",
-    "F3"
-   ]
-  ],
-  "unanswered": "European drug‑related death rates"
- },
- "tries": [
-  {
-   "try": 1,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. The sources only say more than 33,000 Americans died of an opioid overdose in 2015.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "cox_2020",
-       "where": "1. Introduction",
-       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
-       "sha": "84cc7c5ff03b3ee1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "The source is a single genome-wide association study of opioid cessation, not a comparison of death rates.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
-       "sha": "d59720ae0ef9e4b3"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: a clinical word where an everyday one exists (“cessation”): say it plainly"
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 genome-wide association study of opioid cessation reports that more than 33,000 Americans died of an opioid overdose in 2015.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
-       "sha": "d59720ae0ef9e4b3"
-      },
-      {
-       "label": "F1",
-       "ref": "cox_2020",
-       "where": "1. Introduction",
-       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
-       "sha": "84cc7c5ff03b3ee1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The same study says the United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
-       "sha": "d59720ae0ef9e4b3"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 2,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. The sources only say more than 33,000 Americans died of an opioid overdose in 2015.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "cox_2020",
-       "where": "1. Introduction",
-       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
-       "sha": "84cc7c5ff03b3ee1"
-      }
-     ],
-     "ok": false,
-     "by": "the second reader",
-     "said": "the claim that the sources only say this is not stated in the passages"
-    },
-    {
-     "part": "but",
-     "text": "The source is a single study of genes linked to stopping opioids, not a comparison of deaths in America and Europe.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
-       "sha": "d59720ae0ef9e4b3"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 gene study reports that more than 33,000 Americans died of an opioid overdose in 2015.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
-       "sha": "d59720ae0ef9e4b3"
-      },
-      {
-       "label": "F1",
-       "ref": "cox_2020",
-       "where": "1. Introduction",
-       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
-       "sha": "84cc7c5ff03b3ee1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The same study says the United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
-       "sha": "d59720ae0ef9e4b3"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  },
-  {
-   "try": 3,
-   "why": "a rule was broken: written again",
-   "parts": [
-    {
-     "part": "short",
-     "text": "Not known. The sources only say more than 33,000 Americans died of an opioid overdose in 2015.",
-     "rests_on": [
-      {
-       "label": "F1",
-       "ref": "cox_2020",
-       "where": "1. Introduction",
-       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
-       "sha": "84cc7c5ff03b3ee1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "but",
-     "text": "This is a single genome-wide association study of opioid cessation, not a comparison of death rates.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
-       "sha": "d59720ae0ef9e4b3"
-      }
-     ],
-     "ok": false,
-     "by": "a rule",
-     "said": "a rule: a clinical word where an everyday one exists (“cessation”): say it plainly"
-    },
-    {
-     "part": "how1",
-     "text": "A 2020 genome-wide association study of opioid cessation reports that more than 33,000 Americans died of an opioid overdose in 2015.",
-     "rests_on": [
-      {
-       "label": "DA",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "We performed a genome-wide association study (GWAS) of opioid cessation",
-       "sha": "d59720ae0ef9e4b3"
-      },
-      {
-       "label": "F1",
-       "ref": "cox_2020",
-       "where": "1. Introduction",
-       "quote": "In 2015, more than 33,000 Americans died of an opioid overdose",
-       "sha": "84cc7c5ff03b3ee1"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "The same study says the United States is experiencing an epidemic of opioid use disorder and overdose-related deaths.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "cox_2020",
-       "where": "Abstract",
-       "quote": "The United States is experiencing an epidemic of opioid use disorder (OUD) and overdose-related deaths",
-       "sha": "d59720ae0ef9e4b3"
-      }
-     ],
-     "ok": true
-    }
-   ]
-  }
- ],
- "panel_gap": [],
- "own": {
-  "model": "pharmakon-check-0",
-  "threshold": 0.05,
-  "scores": {
-   "short": 0.3111,
-   "but": 0.0653,
-   "how1": 0.3974,
-   "how2": 0.9637
-  },
-  "scores_quotes_alone": {
-   "short": 0.1962,
-   "but": 0.0081,
-   "how1": 0.3661,
-   "how2": 0.8406
-  }
- },
+ "soft": "a source could not be fetched",
  "place": {
   "home": "facts",
   "also": [],
