@@ -62,6 +62,16 @@ sentences (Haiku about 1 in 8), so more drafts are rewritten or dropped. Haiku s
 whether Luna should take its place, or read after it for the answers where a wrong word can hurt most, is for the plan of
 27 November (docs/EXPANSION-PLAN.md) and the senior author, after its speed is measured.
 
+## The checker, decided on the timed exams (27 November 2026, 01:30 Athens; exam-0026, `*-lane-together-timed.json`)
+
+A fresh sitting of each, the lane's way, with the seconds of every call: GPT-6 Luna caught 32 of 35 wrong and stopped 20 of 73
+good, median 4.0 seconds a call; Claude Haiku 5.5 caught 24 and stopped 11, median 5.3 seconds; gpt-oss-120b caught 17 and
+stopped 8, median 4.6 seconds. Luna's two sittings agree (32 caught both times). So Luna is both the most accurate gate and the
+fastest, at the price of stopping more good sentences (about 1 in 4 against Haiku's 1 in 7), which means more drafts written
+again. On his words ("the choice that absolutely has the best results", "the best and fastest results", "outmost accuracy"),
+GPT-6 Luna is now the second reader asked first in every team (`checker_first`); Haiku stands after it in team R; each team's
+own second reader after that.
+
 ## What changes (only in the background system that writes "New answers"; the website itself calls no model)
 
 | File | Change |
