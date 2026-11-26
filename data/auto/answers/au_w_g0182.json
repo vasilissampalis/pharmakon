@@ -24,73 +24,78 @@
    "checker": "groq:openai/gpt-oss-120b",
    "planner": "gemini:gemma-4-31b-it",
    "also1": "gemini:gemini-3.5-flash-lite",
-   "also2": "gemini:gemini-3.6-flash",
+   "also2": "gemini:gemini-3-flash-preview",
    "team": "team K",
    "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
    "reader_first": "gemini:gemma-4-31b-it"
   },
-  "run": "45795215210",
+  "run": "45855071869",
+  "read_by": {
+   "gpt-oss-20b": 2,
+   "gemini-3.1-flash-lite": 2,
+   "gemini-3.5-flash-lite": 1
+  },
   "read_seconds": 100,
   "from": {
    "papers": 1,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
   "neurons": 0.0,
-  "seconds": 100
+  "seconds": 428
  },
- "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "status": "waiting",
+ "why": "passed every reader that could be asked, but a further reader of its team could not be (gemini-3-flash-preview): it is worked on again by itself when that reader can be asked",
  "gates": {
   "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gpt-oss-20b read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "1 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 10 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "time": "1 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
+  "read": "7 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 9 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
+  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 4 of 5; gemini-3-flash-preview could not be asked: gemini could not be reached: The read operation timed out; gemini-4-hydrogen could not be asked: the time for this question was over before gemini-4-hydrogen could be asked; gemini-3.8-flash could not be asked: the time for this question was over before gemini-3.8-flash could be asked",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.43, but 0.99, how1 0.81, how2 0.71, how3 0.02",
+  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3-flash-preview; 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
   {
    "read": "full",
    "ref": {
-    "id": "ramaekers_2025",
+    "id": "prezpereira_2023",
     "type": "article-journal",
-    "title": "Low to moderate doses of 3-methylmethcathinone (3-MMC) produce analgesic effects in healthy volunteers: A proof of principle study with a designer drug",
+    "title": "Integrated approach for synthetic cathinone drug prioritization and risk assessment: In silico approach and sub-chronic studies in daphnia magna and tetrahymena thermophila",
     "author": [
      {
-      "family": "Ramaekers",
-      "given": "Johannes G"
+      "family": "Pérez-Pereira",
+      "given": "Ariana"
      },
      {
-      "family": "Reckweg",
-      "given": "Johannes T"
+      "family": "Carvalho",
+      "given": "Ana Rita"
      },
      {
-      "family": "Mason",
-      "given": "Natasha L"
+      "family": "Carrola",
+      "given": "João Soares"
      },
      {
-      "family": "Kuypers",
-      "given": "Kim PC"
+      "family": "Tiritan",
+      "given": "Maria Elizabeth"
      },
      {
-      "family": "Toennes",
-      "given": "Stefan W"
-     },
-     {
-      "family": "Theunissen",
-      "given": "Eef L"
+      "family": "Ribeiro",
+      "given": "Cláudia"
      }
     ],
-    "container-title": "Psychopharmacology",
+    "container-title": "Molecules",
     "issued": {
      "date-parts": [
       [
-       2025
+       2023
       ]
      ]
     },
-    "DOI": "10.1007/s00213-025-06798-8",
+    "DOI": "10.3390/molecules28072899",
     "verification": {
      "status": "metadata-verified",
      "metadata_source": "crossref",
@@ -102,48 +107,289 @@
       "checked_on": "2026-11-26"
      }
     },
-    "volume": "242",
-    "issue": "10",
-    "page": "2293-2301",
-    "PMCID": "PMC12449331"
+    "volume": "28",
+    "issue": "7",
+    "number": "2899",
+    "PMCID": "PMC10096003"
    },
-   "doi": "10.1007/s00213-025-06798-8",
-   "pmcid": "PMC12449331",
-   "title": "Low to moderate doses of 3-methylmethcathinone (3-MMC) produce analgesic effects in healthy volunteers: a proof of principle study with a designer drug",
-   "year": 2025,
-   "journal": "Psychopharmacology",
-   "kind": "study",
+   "doi": "10.3390/molecules28072899",
+   "pmcid": "PMC10096003",
+   "title": "Integrated Approach for Synthetic Cathinone Drug Prioritization and Risk Assessment: In Silico Approach and Sub-Chronic Studies in Daphnia magna and Tetrahymena thermophila",
+   "year": 2023,
+   "journal": "Molecules (Basel, Switzerland)",
+   "kind": "other",
    "people": true,
-   "near": 0.582,
+   "near": 0.54,
    "money": [
-    "The study was funded by an unrestricted grant from Human Affairs Foundation."
+    "The authors declare no conflict of interest.",
+    "This work is financed by portuguese national funds through the FCT/MCTES (PIDDAC), under the project PTDC/CTA-AMB/6686/2020. Partially supported by FCT—Foundation for Science and Technology through the projects UIDB/04033/2020 (CITAB), UIDB/04423/2020 and UIDP/04423/2020 (Group of Marine Natural Products and Medicinal Chemistry—CIIMAR)."
    ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "The present study aimed to assess the analgesic effects of low to moderate doses (25, 50 and 100 mg) of 3‑MMC in healthy volunteers (N = 14) in a cross‑over, placebo‑controlled study.",
-    "text": "Cross‑over, placebo‑controlled study of low to moderate doses of 3‑Methylmethcathinone in healthy volunteers"
-   },
+   "design": null,
    "findings": [
     {
-     "passage": 19,
-     "where": "Discussion",
-     "quote": "3‑MMC produced dose‑related elevations in the pressure pain threshold and reduced subjective experience of pain, in both experimental pain models, that persisted consistently for up to 5 h after dosing.",
-     "text": "In healthy volunteers, 3‑MMC increased pain threshold and lowered pain ratings for up to 5 hours after a single dose.",
-     "id": "F1",
-     "second_hand": ""
+     "passage": 5,
+     "where": "1. Introduction",
+     "quote": "SC are β-keto analogs of commonly abused substances such as cathinone (CATH), isolated from the Khat plant (Catha edulis), which produce similar effects to their non-keto analogs’ amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors).",
+     "text": "Synthetic cathinones are beta-keto analogs of commonly abused substances such as cathinone, isolated from the Khat plant, which produce similar effects to their non-keto analogs' amphetamine-type substances, acting as indirect agonists of dopamine, serotonin, and noradrenaline receptors.",
+     "id": "F4",
+     "second_hand": "(the paper's introduction, where it tells what is known from earlier work)"
     }
    ],
    "limits": [],
-   "tag": "A"
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_bath-salts",
+    "type": "webpage",
+    "title": "Bath salts",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       2,
+       8
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/bath-salts.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "Bath salts",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.769,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/bath-salts.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 6,
+     "where": "Short-term effects of \"bath salts\" / Mental effects",
+     "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+     "text": "Bath salts affect the brain chemicals dopamine, serotonin, and norepinephrine.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 3,
+     "where": "About \"bath salts\"",
+     "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
+     "text": "Bath salts stimulate the central nervous system to improve mood, sociability, alertness, and energy.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 7,
+     "where": "Short-term effects of \"bath salts\" / Physical effects",
+     "quote": "Dealers may add other substances such as ketamine or cocaine to \"bath salts.\" These can cause other harmful effects.",
+     "text": "Dealers may add other substances to bath salts, which can cause additional harmful effects.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "frank_cathinones",
+    "type": "webpage",
+    "title": "Synthetic cathinones",
+    "author": [
+     {
+      "literal": "FRANK"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      []
+     ]
+    },
+    "URL": "https://www.talktofrank.com/drug/cathinones",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    }
+   },
+   "title": "Synthetic cathinones",
+   "year": null,
+   "kind": "official",
+   "people": true,
+   "near": 0.599,
+   "name": "FRANK",
+   "short": "FRANK",
+   "tier": 1,
+   "address": "https://www.talktofrank.com/drug/cathinones",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 5,
+     "where": "Mixing Synthetic cathinones with other drugs / Physical health risks",
+     "quote": "Over-stimulate the nervous system and cause fits (seizures).",
+     "text": "Synthetic cathinones over-stimulate the nervous system and can cause seizures.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 4,
+     "where": "Mixing Synthetic cathinones with other drugs / How does it make you feel?",
+     "quote": "There are many different synthetic cathinones, which makes their effects hard to predict, and some are more risky than others.",
+     "text": "The effects of synthetic cathinones are difficult to predict because there are many different types.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "D"
   }
  ],
- "parts": [],
- "complete": false,
+ "parts": [
+  {
+   "part": "short",
+   "text": "Bath salts affect brain chemicals like dopamine, serotonin, and norepinephrine. They can stimulate the central nervous system to improve mood, sociability, alertness, and energy. They act as indirect agonists of dopamine, serotonin, and noradrenaline receptors.",
+   "uses": [
+    "F4",
+    "F5",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "prezpereira_2023",
+     "where": "1. Introduction",
+     "quote": "SC are β-keto analogs of commonly abused substances such as cathinone (CATH), isolated from the Khat plant (Catha edulis), which produce similar effects to their non-keto analogs’ amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors).",
+     "sha": "57cd6e3a314f8548"
+    },
+    {
+     "label": "F5",
+     "ref": "healthcanada_bath-salts",
+     "where": "Short-term effects of \"bath salts\" / Mental effects",
+     "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+     "sha": "fa28c623d8b2b517"
+    },
+    {
+     "label": "F6",
+     "ref": "healthcanada_bath-salts",
+     "where": "About \"bath salts\"",
+     "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
+     "sha": "d7b7a9cdc85bc75c"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "The effects of synthetic cathinones are difficult to predict because there are many different types.",
+   "uses": [
+    "L3"
+   ],
+   "rests_on": [
+    {
+     "label": "L3",
+     "ref": "frank_cathinones",
+     "where": "Mixing Synthetic cathinones with other drugs / How does it make you feel?",
+     "quote": "There are many different synthetic cathinones, which makes their effects hard to predict, and some are more risky than others.",
+     "sha": "9fd202bc66de0b9f"
+    }
+   ]
+  },
+  {
+   "part": "how1",
+   "text": "Health Canada says bath salts affect dopamine, serotonin, and norepinephrine, and can stimulate the central nervous system to improve mood, sociability, alertness, and energy.",
+   "uses": [
+    "F5",
+    "F6"
+   ],
+   "rests_on": [
+    {
+     "label": "F5",
+     "ref": "healthcanada_bath-salts",
+     "where": "Short-term effects of \"bath salts\" / Mental effects",
+     "quote": "\"Bath salts\" affect certain chemicals in the brain, such as: dopamine; serotonin; norepinephrine",
+     "sha": "fa28c623d8b2b517"
+    },
+    {
+     "label": "F6",
+     "ref": "healthcanada_bath-salts",
+     "where": "About \"bath salts\"",
+     "quote": "\"Bath salts\" stimulate the central nervous system to: improve mood and sociability; increase alertness and energy",
+     "sha": "d7b7a9cdc85bc75c"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "A 2023 study reports that synthetic cathinones act as indirect agonists of dopamine, serotonin, and noradrenaline receptors.",
+   "uses": [
+    "F4"
+   ],
+   "rests_on": [
+    {
+     "label": "F4",
+     "ref": "prezpereira_2023",
+     "where": "1. Introduction",
+     "quote": "SC are β-keto analogs of commonly abused substances such as cathinone (CATH), isolated from the Khat plant (Catha edulis), which produce similar effects to their non-keto analogs’ amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors).",
+     "sha": "57cd6e3a314f8548"
+    }
+   ],
+   "quote": "effects to their non-keto analogs' amphetamine-type substances (indirect agonists of dopamine, serotonin, and noradrenaline receptors)",
+   "quote_ref": "prezpereira_2023"
+  }
+ ],
+ "complete": true,
  "missing": "",
  "wanted": [],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (2 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
+  }
+ ],
  "looked": [
   {
    "title": "Metaphedrone (3-Methylmethcathinone): Pharmacological, Clinical, and Toxicological Profile",
@@ -189,60 +435,173 @@
    "read": "full",
    "kind": "study",
    "at": "10.1007/s00213-025-06798-8",
-   "kept": 1,
-   "thrown": [
-    {
-     "kind": "finding",
-     "text": "The analgesic effect of 3‑MMC is mediated by stimulation of monoaminergic pathways and subsequent release of opioid peptides.",
-     "quote": "Preclinical work has shown that cathinone‑induced analgesia primarily depends on the stimulation of monoaminergic pathways, followed by a release of opioid peptides.",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "Blocking opioid receptors with naltrexone abolishes the analgesic effect of 3‑MMC, indicating opioid system involvement.",
-     "quote": "Involvement of the opioid system was deduced from the findings that cathinone increases morphine‑induced analgesia, and that this entire effect could be blocked by naltrexone, a potent opioid antagoni",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "finding",
-     "text": "The mood‑enhancing effects of 3‑MMC are thought to arise from acute increases in dopaminergic activity.",
-     "quote": "Stimulant effects of cathinones on arousal and mood on the other hand are generally believed to result from acute increments in dop",
-     "why": "a number of the sentence is not in its quote"
-    },
-    {
-     "kind": "limit",
-     "text": "The analgesic findings are based on experimental pain models that may not fully represent clinical pain conditions.",
-     "quote": "It is important to recognize however that experimental pain activates only a portion of the complex mechanisms involved in pathological pain, which limits the ability to translate analgesic effects ob",
-     "why": "the sentence is not carried by its quote and passage"
-    },
-    {
-     "kind": "limit",
-     "text": "The study did not evaluate 3‑MMC in patient populations with actual pain disorders.",
-     "quote": "The clinical utility of the use of 3‑MMC and other cathinones therefore should be further evaluated in clinical trials in patients with specific pain",
-     "why": "the sentence is not carried by its quote and passage"
-    }
-   ]
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Integrated Approach for Synthetic Cathinone Drug Prioritization and Risk Assessment: In Silico Approach and Sub-Chronic Studies in Daphnia magna and Tetrahymena thermophila",
    "read": "full",
    "kind": "other",
    "at": "10.3390/molecules28072899",
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "An in silico approach and sub-chronic studies of synthetic cathinones in Daphnia magna and Tetrahymena thermophila",
+     "quote": "Integrated Approach for Synthetic Cathinone Drug Prioritization and Risk Assessment: In Silico Approach and Sub-Chronic Studies in Daphnia magna and Tetrahymena thermophila",
+     "why": "its quote does not stand in a passage that was shown (or is shorter than 3 words or 20 letters)"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Nevertheless, little is known about their impacts on wildlife and potential long-term effects at environmental concentrations on both non-target animals and humans.",
+     "why": "no sentence"
+    },
+    {
+     "kind": "limit",
+     "text": "",
+     "quote": "Recognizing which of these substances are truly a concern is a complex issue due to the lack of information about their pharmacology and potential toxicity because of the high number of new substances",
+     "why": "no sentence"
+    }
+   ]
+  },
+  {
+   "title": "Bath salts",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/bath-salts.html",
+   "kept": 2,
+   "thrown": [
+    {
+     "kind": "limit",
+     "text": "It is not possible to know the exact contents of the powder.",
+     "quote": "As with most illegal drugs in powder form, you have no way of knowing what exactly is in the powder.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
+  },
+  {
+   "title": "Synthetic Cathinones (Bath Salts)",
+   "read": "page",
+   "kind": "official",
+   "at": "https://thelevel.org.nz/drug-information/synthetic-cathinones",
    "kept": 0,
    "thrown": [],
    "fault": "it was not read: the time this run has for reading was over"
   },
   {
-   "title": "Safety and cognitive pharmacodynamics following dose escalations with 3-methylmethcathinone (3-MMC): a first in human, designer drug study",
-   "read": "full",
-   "kind": "study",
-   "at": "10.1038/s41386-024-02042-7",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "title": "Synthetic cathinones",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/cathinones",
+   "kept": 1,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F4",
+   "F6"
+  ],
+  "direct": "",
+  "but": [
+   "L3"
+  ],
+  "how": [
+   [
+    "F5",
+    "F6"
+   ],
+   [
+    "F4"
+   ],
+   [
+    "DA",
+    "F2"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "panel": {
+  "gemini:gemini-3.5-flash-lite": {
+   "short": [
+    true,
+    ""
+   ],
+   "but": [
+    true,
+    ""
+   ],
+   "how1": [
+    true,
+    ""
+   ],
+   "how2": [
+    true,
+    ""
+   ],
+   "how3": [
+    false,
+    "The sentence attributes the cross-over, placebo-controlled study of 14 healthy volunteers to preclinical work regarding cathinone analgesia depending on monoaminergic pathway stimulation, whereas the passages show the 14-volunteer study tes"
+   ]
+  },
+  "gemini:gemini-3-flash-preview": "could not be asked: gemini could not be reached: The read operation timed out",
+  "gemini:gemini-4-hydrogen": "could not be asked: the time for this question was over before gemini-4-hydrogen could be asked",
+  "gemini:gemini-3.8-flash": "could not be asked: the time for this question was over before gemini-3.8-flash could be asked"
+ },
+ "panel_gap": [
+  "gemini-3-flash-preview"
+ ],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.428,
+   "but": 0.9888,
+   "how1": 0.8109,
+   "how2": 0.7115,
+   "how3": 0.017
+  },
+  "scores_quotes_alone": {
+   "short": 0.5108,
+   "but": 0.9847,
+   "how1": 0.535,
+   "how2": 0.3746,
+   "how3": 0.4951
+  }
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how3",
+   "text": "In a cross-over, placebo-controlled study of 14 healthy volunteers, preclinical work shows cathinone analgesia depends on monoaminergic pathway stimulation and subsequent opioid peptide release.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "ramaekers_2025",
+     "where": "Abstract",
+     "quote": "The present study aimed to assess the analgesic effects of low to moderate doses (25, 50 and 100 mg) of 3‑MMC in healthy volunteers (N = 14) in a cross‑over, placebo‑controlled study.",
+     "sha": "4d906f981dc55e6d"
+    },
+    {
+     "label": "F2",
+     "ref": "ramaekers_2025",
+     "where": "Discussion",
+     "quote": "Preclinical work has shown that cathinone‑induced analgesia primarily depends on the stimulation of monoaminergic pathways, followed by a release of opioid peptides.",
+     "sha": "38dd805594713277"
+    }
+   ],
+   "by": "a further reader",
+   "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence attributes the cross-over, placebo-controlled study of 14 healthy volunteers to preclinical work regarding cathinone analgesia depending on monoaminergic pathway stimulation, whereas the passages show the 14-volunteer study tes"
+  }
+ ],
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
+ "for": "again",
+ "soft": "a further reader could not be asked",
  "place": {
   "home": "synthetic-cathinones",
   "also": [],
