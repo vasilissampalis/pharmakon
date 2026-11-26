@@ -52,6 +52,16 @@ only: neither stands in a team until he names it.
   sixty checks a day, so about $1 to $3 a month. Groq's free tokens that went to checking now go to writing and planning, so
   the free teams last longer each day. Team R: Llama 3.3 70B writes, Haiku checks, gpt-oss-120b after it.
 
+## GPT-6 Luna asked the lane's way, finished (26 November 2026, late; `model-openrouter-openai-gpt-6-luna-lane-together.json`)
+
+Caught 32 of the 35 wrong sentences and stopped 22 of the 73 good ones, in 21 calls. Beside the same exam:
+Claude Haiku 5.5 caught 22 and stopped 9; gpt-oss-120b caught 16 and stopped 6. Of the sentences each lets through, the share
+that is wrong: Luna about 6 in 100 (3 of 54), Haiku about 17 in 100 (13 of 77), gpt-oss-120b about 22 in 100 (19 of 86)
+(editors' arithmetic). Luna reasons before every verdict, so each check takes longer, and it stops about 3 in 10 good
+sentences (Haiku about 1 in 8), so more drafts are rewritten or dropped. Haiku stays the second reader asked first tonight;
+whether Luna should take its place, or read after it for the answers where a wrong word can hurt most, is for the plan of
+27 November (docs/EXPANSION-PLAN.md) and the senior author, after its speed is measured.
+
 ## What changes (only in the background system that writes "New answers"; the website itself calls no model)
 
 | File | Change |
