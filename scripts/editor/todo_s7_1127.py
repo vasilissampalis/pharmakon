@@ -33,7 +33,8 @@ tf = {}
 for slug, its in S.get("tf", {}).items():
     for it in its: tf.setdefault(it["claim"], []).append(it)
 items = []
-for cid in sorted(waiting, key=pos):
+LATER = {"cl_can_smoked_vs_vaped", "cl_can_edibles_labels"}   # they come back with the studies they lost: shown after the answers that are final
+for cid in sorted(waiting, key=lambda c: (c in LATER, pos(c))):
     c = C[cid]; e = S["claims"][cid]; assert e.get("v") == c["version"], (cid, e.get("v"), c["version"])
     note = []
     if cid in REG: note.append(REG[cid])
@@ -46,7 +47,7 @@ for cid in sorted(approved, key=pos):
     x = dict(page_item[cid]); assert x["v"] == C[cid]["version"]; x.update({"note": "", "tf": [], "rewritten": False, "new": False}); items.append(x)
 D["s7"] = items
 t = t[:m.start(1)] + json.dumps(D, ensure_ascii=False) + t[m.end(1):]
-a = re.search(r'<p class="note"><b>Paused: please don&rsquo;t approve these for now\.</b>.*?</p>', t, re.S)
+a = re.search(r'<p class="note"><b>(?:Paused: please don&rsquo;t approve these for now\.|Ready for you again: \d+ answers\.)</b>.*?</p>', t, re.S)
 assert a, "the section's note was not found"
 n = len(waiting)
 note = (f'<p class="note"><b>Ready for you again: {n} answers.</b> Each is written for its current version and shorter, as you asked on 12 and 13 November '
