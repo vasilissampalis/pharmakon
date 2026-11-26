@@ -55,10 +55,10 @@ nbome = {
         "count from the review's table). In several reported cases people believed they had taken LSD: a woman at a US festival had "
         "taken 'acid' on blotters whose remains held mainly 25C-NBOMe (her own samples were not tested); three people in Belgium who "
         "said they had taken 'synthetic LSD' had 25I-NBOMe, and no other drug, in their urine; and among the deaths, a 21-year-old "
-        "man in Houston who had taken two 'hits of acid' had 25I-NBOMe, with cannabis, in post-mortem samples, a man in Belgium had "
-        "used a blotter he thought held LSD, in which no LSD was found (whether an NBOMe was tested for is not reported), and in "
-        "Richmond, Virginia, the 'acid' blotters that a 19-year-old's friends were using held 25I-NBOMe, which was also found in his "
-        "own samples. How often blotters sold as LSD hold an NBOMe was not measured. In the 29 published poisoning cases (25I-NBOMe "
+        "man in Houston who had taken two 'hits of acid' had 25I-NBOMe, with cannabis metabolites, in post-mortem samples, a person "
+        "in Belgium had used a blotter they thought held LSD, in which no LSD was found (whether an NBOMe was tested for is not "
+        "reported), and in Richmond, Virginia, a 19-year-old died while 'trip sitting' friends who were using 'acid' blotters, and an "
+        "unused blotter from the case held 25I-NBOMe, which was also found in his own samples. How often blotters sold as LSD hold an NBOMe was not measured. In the 29 published poisoning cases (25I-NBOMe "
         "23, 25B-NBOMe 3, 25C-NBOMe 3; aged 14 to 31, and 17 of the 19 whose sex is given were men, editors' count), the review "
         "reports a fast heart rate in 96.6%, high blood pressure in 62.0%, agitation or aggression in 48.2%, seizures in 37.9% and a "
         "high body temperature in 27.6%, and acute kidney injury in 5 people; these features are not defined, and the review's own "
@@ -131,8 +131,7 @@ nbome = {
     "evidence": [
         W("pp. 85-86",
           "Abstract › Methods (p. 85); Methods, single paragraph (p. 85, continued on p. 86)",
-          "Narrative review by two clinical toxicologists in London and two staff of the European Monitoring Centre for Drugs and "
-          "Drug Addiction: PubMed searched for 'NBOMe' and the names of ten NBOMe compounds, 1966-2014; abstracts of two clinical "
+          "Narrative review by two clinical toxicologists in London and two staff of the EU drugs agency (EMCDDA): PubMed searched for 'NBOMe' and the names of ten NBOMe compounds, 1966-2014; abstracts of two clinical "
           "toxicology congresses (2010-2014 and 2010-2013); the EU information system and database on new drugs; a Google search "
           "for grey literature; each paper kept if it related to prevalence of use or acute toxicity. No other eligibility criteria, "
           "selection procedure or appraisal of the reports is described.",
@@ -155,10 +154,11 @@ nbome = {
           "confirmed in their urine, with no other drugs detected. A 21-year-old man in Houston who had taken two 'hits of acid' and "
           "smoked cannabis hallucinated, injured himself and attacked a friend, and was found unresponsive; 25I-NBOMe and cannabis "
           "metabolites were found in his post-mortem heart blood and urine. A 19-year-old in Richmond, Virginia, 'trip sitting' "
-          "friends who were using 'acid', behaved strangely and was found after probably jumping or falling from a balcony; unused "
-          "blotter paper held 25I-NBOMe and targeted analysis found it in his blood, urine, brain, liver and bile; his friends did not "
-          "know he had taken anything. In Belgium a man had used a blotter at a party that he thought contained LSD; no LSD was "
-          "found, and analytical confirmation of 25I-NBOMe was not reported.",
+          "friends who were reportedly using 'acid', behaved strangely and was found after probably jumping or falling from a balcony; "
+          "a case-related sample of unused blotter paper held 25I-NBOMe and targeted analysis found it in his blood, urine, brain, "
+          "liver and bile; his friends did not know he had taken anything, and those who took the 'acid' blotters showed no similar "
+          "symptoms. In Belgium a person had used a blotter at a party that they thought contained LSD; no LSD was found, and "
+          "analytical confirmation of 25I-NBOMe was not reported.",
           "supports"),
         W("pp. 85, 87, 91",
           "Abstract › Acute toxicity (p. 85); Acute toxicity, 1st paragraph (p. 87); Conclusions, 1st paragraph (p. 91)",
@@ -289,33 +289,33 @@ benzo = {
     "substance": "benzodiazepines",
     "section": 6,
     "statement": (
-        "Evidence is insufficient to say whether designer benzodiazepines (benzodiazepines and close relatives sold outside "
-        "medicine, such as etizolam, clonazolam, flualprazolam, flubromazolam and phenazepam) are more dangerous than prescribed "
-        "benzodiazepines: no source read here compares them, and neither source counts the people who used them without coming to "
+        "Evidence is insufficient to say whether designer benzodiazepines (benzodiazepines and close relatives sold on the illicit "
+        "market, such as etizolam, clonazolam, flualprazolam, flubromazolam and phenazepam, of which etizolam and phenazepam are "
+        "licensed medicines in a few countries) are more dangerous than prescribed benzodiazepines: no source read here compares them, and neither source counts the people who used them without coming to "
         "attention, so neither gives a risk per use. In US poison-centre records (the National Poison Data System), 474 exposures to "
-        "11 coded designer benzodiazepines were reported from 2014 to 2017; the 234 intentional exposures to one of them and no "
-        "other substance were analysed, while the reports involving other substances, about half, were neither collected nor "
+        "designer benzodiazepines were reported from 2014 to 2017; the 234 intentional exposures to one of 11 coded designer "
+        "benzodiazepines and no other substance were analysed, while the reports involving other substances, about half, were neither collected nor "
         "analysed (Carpenter et al., 2019). The 234 were mostly etizolam (162) and clonazolam (50); the median age was 25, 86% were "
         "men, and 42 (18 in 100) were coded as suspected suicide. Drowsiness or lethargy was coded in 152 (65 in 100), slurred "
         "speech in 40 (17), confusion in 32 (14), agitation or irritability in 22 (9), a fast heart rate in 20 (9), low blood "
         "pressure in 19 (8) and coma in 10 (4), as the table gives them (the text gives 14% for agitation and 8% for coma), and 7 "
         "people (3 in 100) were intubated. Of the 224 whose care was recorded (editors' sum), 92 (41 in 100) were treated and "
         "released, 31 (14 in 100) admitted to a non-critical-care ward, 49 (22 in 100) to critical care and 36 (16 in 100) to a "
-        "psychiatric facility; 9 (4 in 100) had a major effect, and one man, aged 29, died after etizolam (1 of 234, 0.4%); effects "
+        "psychiatric facility; 9 (4 in 100) had a major effect, and one man, aged 29, died after a reported intentional ingestion of etizolam (1 of 234, 0.4%); effects "
         "lasted less than a day in 151 of the 178 with a recorded duration (85 in 100; editors' sum of the table's rows). The drug in "
         "each report is the one named by the caller and coded by poison-centre staff, with no laboratory confirmation, and the "
         "authors say people may have taken other compounds than those coded; they expect people without significant symptoms to "
         "have gone unreported, so that the reports undercount exposures and overstate severity; and a death after flubromazolam, "
         "coded under the general 'benzodiazepine' code, was missing from the data. Reports rose from 26 in 2014 to 112 in 2017, "
-        "which the abstract calls a 330% rise in incidence, but only etizolam had its own code before 2016: etizolam alone went from "
+        "a 330% increase that the abstract reads as rising incidence, but only etizolam had its own code before 2016: etizolam alone went from "
         "26 to 60 reports. In published case reports and forensic series up to March 2021, as compiled in a review that did not "
         "appraise them (Brunetti et al., 2021; so these figures are second-hand), 12 designer benzodiazepines appear in 141 death "
         "entries, 63 cases of impaired driving and 44 emergency admissions, from eight countries; the deaths were mostly with "
         "phenazepam (60), flualprazolam (38) and etizolam (34). By the editors' count of the review's table, 115 of the 141 death "
         "entries also list at least one opioid (methadone in 51, morphine or 6-acetylmorphine in 49), 2 more list loperamide or its "
         "metabolite, and 3 list no other drug; at least four people appear to be listed twice, all four with an opioid, and counting "
-        "each of them once gives 111 of 137 (editors' calculation), about 8 in 10 either way. The two deaths that the review "
-        "attributes to phenazepam alone list alcohol in one and diazepam with dihydrocodeine in the other. In the emergency cases "
+        "each of them once gives 111 of 137 (editors' calculation), about 8 in 10 either way. The two deaths in which, by the "
+        "review's text, phenazepam alone was listed as the cause list alcohol in one and diazepam with dihydrocodeine in the other. In the emergency cases "
         "the review describes mostly sedation (depression of the central nervous system), and agitation and delirium in a few "
         "(editors' summary of its drug-by-drug text); its authors say that because several drugs are usually present, a death often "
         "cannot be assigned to one of them, and that blood levels overlapped between drivers judged impaired and drivers judged not "
@@ -333,7 +333,7 @@ benzo = {
     "plain": (
         "Are designer benzos like etizolam more dangerous? Nobody has compared them with prescription benzos, and the reports below "
         "count only people who got into trouble, not everyone who used them. In 234 reports to US poison centres in 2014 to 2017 of "
-        "a designer benzo taken alone, mostly etizolam, 65 in 100 people were drowsy, 4 in 100 were in a coma and 3 in 100 needed a "
+        "a designer benzo reported as taken alone, mostly etizolam, 65 in 100 people were drowsy, 4 in 100 were in a coma and 3 in 100 needed a "
         "breathing tube; of those whose care was recorded, 22 in 100 went to intensive care, and one man died. For 85 in 100 of "
         "those with a recorded duration, the effects were over within a day. Nobody tested in a laboratory which drug these people "
         "had really taken. In published reports of deaths up to 2021, gathered second-hand by a review, almost all involved other "
@@ -469,7 +469,8 @@ benzo = {
           "36 recorded as accidental multiple drug toxicity and 2 ruled intentional flualprazolam poisonings; of 60 phenazepam deaths, "
           "phenazepam alone was listed as the sole cause in 2 and the rest were attributed to accidental polydrug overdose. Table 1 "
           "lists those two ('Phenazepam intoxication') with ethanol 0.22 g/L (a 46-year-old man) and with diazepam 160 and "
-          "dihydrocodeine 160 ng/mL (a 26-year-old man).",
+          "dihydrocodeine 160 ng/mL (a 26-year-old man). Etizolam is used as a medicine in India, Italy, Japan and Korea and is not "
+          "approved elsewhere (2.5); phenazepam is used as a medicine in the former USSR (2.10).",
           "qualifies"),
         B("pp. 35-37",
           "2.2 Clonazolam (p. 35); 2.4 Diclazepam (p. 35, continued on p. 36); 2.5 Etizolam and 2.6 Flualprazolam (p. 36); "
@@ -604,13 +605,13 @@ simple = {
             "v": V,
             "q": "Are designer benzos like etizolam more dangerous?",
             "pages": ["benzodiazepines"],
-            "short": ("Nobody has tested that. In published reports, almost all deaths with a designer benzo involved other drugs "
-                      "too: 115 of 141 also listed an opioid."),
+            "short": ("Nobody has tested that. Of 141 deaths with a designer benzo in published reports, 115 also listed an opioid, "
+                      "and only 3 listed no other drug."),
             "but": ("These reports only count people who got into trouble, not everyone who used. So they can't say how risky one "
                     "use is."),
             "how": [
-                ("US poison centres, 2014 to 2017: in 234 reports of a designer benzo taken alone, mostly etizolam, 65 in 100 people "
-                 "were drowsy and 3 in 100 needed a breathing tube. One man died."),
+                ("US poison centres, 2014 to 2017: in 234 reports of a designer benzo reported as taken alone, mostly etizolam, 65 in "
+                 "100 people were drowsy and 3 in 100 needed a breathing tube. One man died."),
                 ("Nobody lab-tested which drug these people took. Reports rose from 26 to 112 a year, partly because new drugs got "
                  "their own codes in 2016."),
                 ("A review of published cases to 2021 found 141 death entries, mostly phenazepam, flualprazolam and etizolam. 115 "
@@ -632,10 +633,10 @@ simple = {
                      "cases are often the worst ones.")},
         ],
         "benzodiazepines": [
-            {"claim": "cl_benzo_designer", "v": V, "statement": "Most deaths with designer benzos involved the benzo alone.",
+            {"claim": "cl_benzo_designer", "v": V, "statement": "Most deaths linked to designer benzos involved no other drug.",
              "answer": False,
              "why": "In a review of published cases, 115 of 141 death entries also listed an opioid, and only 3 listed no other drug."},
-            {"claim": "cl_benzo_designer", "v": V, "statement": "Studies show designer benzos are more dangerous than prescribed ones.",
+            {"claim": "cl_benzo_designer", "v": V, "statement": "Designer benzos have been shown to be riskier than prescribed benzos.",
              "answer": False,
              "why": ("Nobody has compared them. The reports only count people who got into trouble, so they can't say how risky one "
                      "use is.")},
