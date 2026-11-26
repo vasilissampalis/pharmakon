@@ -537,6 +537,7 @@ def pay_share(est=0.0, visitor=False, L=None, svc="groq"):
     rate = max([float((days.get((d - datetime.timedelta(i)).isoformat()) or {}).get("visitors", 0)) for i in range(7)] + [float(P.get("visitors_least_a_day") or 0)])
     left = calendar.monthrange(d.year, d.month)[1] - d.day + 1
     share = max(0.0, month - before - rate * float(P.get("margin") or 1.5) * left) / left
+    if P.get("even"): share = min(share, month / calendar.monthrange(d.year, d.month)[1])   # (26 November 2026, OpenRouter) never more than an even share of the month a day, nothing carried over: a month begun late, or a quiet week, is not spent in a few days
     if float(td.get("list", 0)) + est > share: return False, f"today's share of the money at {who} for the lane's own questions is spent (${share:.2f} today; the rest is kept for the questions people send)"
     return True, ""
 
@@ -736,6 +737,11 @@ def or_selftest():
         L = ledger(); g = _pay_ledger(L, "openrouter"); g["usd"] = 0.0; g["days"] = {}; L["openrouter_pay"] = g; json.dump(L, open(LEDGER, "w"))
         try: chat(M, [{"role": "user", "content": "x"}], 200, lambda req, timeout=0: op(req, timeout, code=402)); raise AssertionError("402 must end the budget")
         except Budget: pass
+        today = lambda: "2026-12-30"; L = ledger(); g = _pay_ledger(L, "openrouter"); g["usd"] = 0.30; g["days"] = {"2026-12-30": {"visitors": 0.0, "list": 0.30}}; L["openrouter_pay"] = g; json.dump(L, open(LEDGER, "w"))
+        setp(paid=True, lane=True); assert pay_share(0.01, svc="openrouter")[0], "the month's last days: what is left may go"
+        setp(paid=True, lane=True, even=True); assert not pay_share(0.01, svc="openrouter")[0] and pay_share(0.001, svc="openrouter")[0], "even: never more than the month's pot over its days, a day"
+        assert pay_share(0.01, True, svc="openrouter")[0], "a person's question is not held to the day's share"
+        today = lambda: "2026-12-01"; L = ledger(); g = _pay_ledger(L, "openrouter"); g["usd"] = 0.0; g["days"] = {}; L["openrouter_pay"] = g; json.dump(L, open(LEDGER, "w"))
         FOR = "exam"; chat(M, [{"role": "user", "content": "x"}], 200, op); assert "exam" in _pay_ledger(ledger(), "openrouter")["days"]["2026-12-01"], "an exam's spending is its own"
         setp(paid=False, lane=True); assert never_paid(M) and not has(M), "the switch back off stops it at once"
     finally:

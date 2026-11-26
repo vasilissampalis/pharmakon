@@ -21,6 +21,7 @@ on:
     paths:
       - "data/auto/requests/lane-*.json"
       - "data/auto/requests/probe-*.json"
+      - "data/auto/requests/orcheck-*.json"   # (26 November 2026) which OpenRouter key the runs use and what it may spend, never the key itself (scripts/auto/or_check.py)
       - "data/auto/requests/exam-*.json"
       - "data/auto/requests/trial-*.json"
       - "data/auto/requests/grow-*.json"   # (16 November 2026) the system lists its own questions (scripts/auto/grow.py) and the finders search for them
@@ -74,6 +75,7 @@ jobs:
           step "the finder's own check" python3 -I scripts/auto/papers.py --selftest
           step "the lane's own check" python3 -I scripts/auto/lane.py --selftest
           if ls data/auto/requests/probe-*.json >/dev/null 2>&1; then step "is everything within reach?" python3 -I scripts/auto/probe.py; git rm -q data/auto/requests/probe-*.json >> "$L" 2>&1; fi
+          if ls data/auto/requests/orcheck-*.json >/dev/null 2>&1; then step "which OpenRouter key the runs use, and what it may spend (never the key)" python3 -I scripts/auto/or_check.py; git rm -q data/auto/requests/orcheck-*.json >> "$L" 2>&1; fi
           if ls data/auto/requests/exam-*.json >/dev/null 2>&1; then step "a model sits the exam as the checker" python3 -I scripts/auto/exam_models.py requests; fi
           if ls data/auto/requests/trial-*.json >/dev/null 2>&1; then step "writers tried on a real prompt" python3 -I scripts/auto/trial.py; git rm -q data/auto/requests/trial-*.json >> "$L" 2>&1; fi
           if ls data/auto/requests/grow-*.json >/dev/null 2>&1; then

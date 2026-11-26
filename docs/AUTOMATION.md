@@ -1908,6 +1908,15 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     free plan and before the teams of Google's free models only, chosen only while both switches are on and money is left
     (`llm.never_paid`, `has`, `price_of`, `calls_left`; tested in `llm.or_selftest`). Exams and a writers' trial are ready in
     `data/auto/requests-prepared/` and run only when moved. No gate changes; Groq, Gemini and Cloudflare as before.
+    **Switched on the same evening, on his word (19:21).** He bought $10 of credit (invoiced $10.85; automatic top-up off), set
+    the workspace's monthly budget to $10 (a budget on the workspace, not a limit on the key), kept the key unchanged, and wrote
+    "deploy" (seconds after asking to see the tests first). Merged into `main` with `paid`, `lane` and `credits_bought` on, and
+    one thing added for the money: `even` (`llm.pay_share`), so that the lane's own list never spends more than the month's pot
+    over its days in one day (about $0.31): without it a month begun on the 26th, or a quiet week, would let the list spend the
+    rest in a few days. A person's question may still spend from the pot at any hour. The same push started the key's check
+    (`scripts/auto/or_check.py`, `data/auto/or-check.json`: whether the key the runs use ends as the dashboard's, never the key),
+    the two exams and the writers' trial; Claude Haiku 5.5 and GPT-6 Luna stand in no team, whatever their exams say, until he
+    names one. To stop at once: `openrouter.paid` false.
 
 ## The machine lane: what must be true before a machine-written claim is shown
 

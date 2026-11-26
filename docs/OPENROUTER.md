@@ -1,9 +1,17 @@
-# OpenRouter as a paid backup (prepared 26 November 2026; OFF; branch `openrouter-backup`)
+# OpenRouter as a paid backup (prepared 26 November 2026; ON since the evening of 26 November 2026, on the senior author's word)
 
 The senior author, 26 November 2026, 18:26: "keep Groq and Gemini on their existing free tiers and use OpenRouter as a paid
 backup", with six conditions: every key unchanged; nothing live or deployed before he approves; a strict $10 monthly
 OpenRouter limit with auto top-up disabled; every evidence and publication safeguard kept; any stronger model tested on our
 exams before it writes a published answer; costs, configuration and rollback shown first. Decision 46 of `docs/AUTOMATION.md`.
+
+## State (26 November 2026, evening)
+
+He bought $10 of credit (invoiced $10.85, automatic top-up off), set the workspace's monthly budget to $10 and kept the key
+unchanged; at 19:21 he wrote "deploy". On `main`: `paid`, `lane`, `credits_bought` and `even` on (`data/auto/lane/pay.json`).
+The key's check (`data/auto/or-check.json`), the two exams (`data/auto/exam/model-openrouter-*.json`) and the writers' trial
+(`data/auto/exam/writer-trial-openrouter-*.json`) were started in the same push. Claude Haiku 5.5 and GPT-6 Luna are examined
+only: neither stands in a team until he names it.
 
 ## What changes (only in the background system that writes "New answers"; the website itself calls no model)
 
@@ -31,13 +39,13 @@ Unchanged: every gate of the lane (`lane.py`), Groq, Gemini, Cloudflare, every k
 - Buying $10 of credit: OpenRouter adds 5.5% with a minimum of $0.80, so $10.80 is charged once. Credits may expire a year after purchase.
 - Exams and the writers' trial: about $0.30 in all, once (at the ceilings).
 - An answer tried by team R: about 30,000 tokens in and 5,000 out on the paid models, about $0.006 at the ceilings (the reader is Google's free model).
-- A day: the lane's own list may spend about $0.24 (the pot above the visitors' floor, divided by the days left), so at most about 40 extra tries a day; a question a person sent may spend from the pot at any hour.
-- A month: never more than $9.50 by our code, $10 by the key's limit in OpenRouter, and never more than the credit bought (no automatic top-up). Expected: about $3 to $9.50 a month, depending on how often Groq's free day runs out (today it runs out every afternoon).
+- A day: the lane's own list may spend at most the month's pot over its days (`even`: about $0.31, so at most about 50 extra tries a day), and less while the floor kept for visitors needs it; nothing unspent is carried to the next day. A question a person sent may spend from the pot at any hour.
+- A month: never more than $9.50 by our code, $10 by the workspace's budget in OpenRouter, and never more than the credit bought (no automatic top-up). November (from the 26th): at most about $1.60 and the exams. December: up to $9.50, so the $10 bought lasts until about the last week of December; then OpenRouter refuses (402), team R stands aside, and the free teams go on as before. Expected: about $3 to $9.50 a month, depending on how often Groq's free day runs out (today it runs out every afternoon).
 
 ## Rollback
 
 1. At once: `data/auto/lane/pay.json`, `"openrouter": {"paid": false, ...}` (one line, one commit). From the next run (at most five minutes) nothing is asked at OpenRouter for money and team R is never chosen; the free teams go on as before.
-2. In OpenRouter (he): set the key's credit limit to 0, or turn the key off (that also stops OpenRouter's free models, which no team uses).
+2. In OpenRouter (he): set the workspace's budget to $0 or the key's credit limit to 0, or turn the key off (that also stops OpenRouter's free models, which no team uses).
 3. Whole: `git revert` of the merge commit puts the code back exactly as it was. Groq, Gemini and Cloudflare were never touched.
 
 ## The order of steps, each only on his word
