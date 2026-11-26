@@ -83,3 +83,11 @@ uncommitted files, push again later).
   finish.
 - Final message under 200 words: anchor verdicts by count, every correction that changes a number, and per card the
   items not confirmed.
+
+## Reader 779 (added 27 November 2026): the anchors of the How to read page
+
+Your task file holds the anchors that writer 751 found for the site's own text on the How to read page ("Linked to" is not
+"causes" and the "Seven questions to ask about any drug story"). Their `claim_id` is `howto:<item>` and their `claim_file`
+is `data/verification/pdf-2026-11-26/751_howto.json`, which you may open for context (that file only; the item's
+`site_text` and `proposed_text` are what the anchors are meant to support). Check each anchor exactly as in Part A. There
+are no cards. Your output takes the same form (`results`, no `card_checks`).
