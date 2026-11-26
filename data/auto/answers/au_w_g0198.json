@@ -18,143 +18,34 @@
   "on": "2026-11-26",
   "models": {
    "reader": "gemini:gemma-4-31b-it",
-   "writer": "gemini:gemma-4-26b-a4b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
    "checker": "openrouter:anthropic/claude-haiku-5.5",
-   "planner": "gemini:gemma-4-31b-it",
-   "also1": "gemini:gemini-3.5-flash-lite",
-   "team": "team Z",
-   "reader_2": "gemini:gemini-3.1-flash-lite",
-   "also1_else": "gemini:gemma-4-31b-it"
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45887293444",
-  "read_seconds": 25,
+  "run": "45888626025",
+  "read_seconds": 20,
   "from": {
-   "papers": 1,
+   "papers": 0,
    "summaries": 2,
    "official": 0
   },
   "neurons": 0.0,
-  "seconds": 361
+  "seconds": 48
  },
- "status": "none",
- "why": "no draft passed: not accepted at try 1: a second reader did not accept short (a further reader (gemini-3.5-flash-lite) did not accept it: The sentence combines information from two different passages as if they form a single cohesive set of claims without proper attribution, and the second sentence refers to skeletal muscle relaxants generally rather than specifically carisop). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+ "status": "published",
+ "why": "passed every gate",
  "gates": {
-  "read": "5 findings kept from 3 sources (1 papers read in full, 0 official pages, 2 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 2 paper(s) read in summary only",
-  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Carisoprodol appears to bind to a unique binding domain within the GABAA R and may act like other muscle relaxants that inhibit polysynaptic pathways in the central nervous system.”: The clause \"may act like other muscle relaxants that inhibit polysynaptic pathways in the central n",
-  "panel": "further readers, each of which must accept every sentence too: gemini-3.5-flash-lite accepted 3 of 4",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.91, but 0.96, how1 0.72, how2 0.80",
-  "check": "not accepted at try 1: a second reader did not accept short (a further reader (gemini-3.5-flash-lite) did not accept it: The sentence combines information from two different passages as if they form a single cohesive set of claims without proper attribution, and the second sentence refers to skeletal muscle relaxants generally rather than specifically carisop). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
-  "writer": "try 2: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9397) try 3: no JSON (how the reply ended: length; reasoned 0 characters, wrote 9543)"
+  "read": "3 findings kept from 2 sources (0 papers read in full, 0 official pages, 2 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 2 paper(s) read in summary only (the ones the answer rests on)",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the short answer “Carisoprodol appears to bind to a unique binding domain within the GABAA R. Most skeletal muscle relaxants act by selective inhibition of polysynaptic pathways in the central nervous system.”: a further reader (gemini-3.5-flash-lite) did not accept it: The sentence combines informa",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.93, but 0.98, how1 0.85, how2 0.97",
+  "check": "every sentence kept was accepted by the second reader (openrouter:anthropic/claude-haiku-5.5); 1 How-do-we-know line(s) dropped; it also found that the short answer answers the question and that the But is about that answer",
+  "rules": "nothing against it",
+  "checked": "set beside the checked claims of the same page: nothing against them"
  },
  "sources": [
-  {
-   "read": "full",
-   "ref": {
-    "id": "grassindelyle_2019",
-    "type": "article-journal",
-    "title": "Bitter taste receptors (TAS2Rs) in human lung macrophages: Receptor expression and inhibitory effects of TAS2R agonists",
-    "author": [
-     {
-      "family": "Grassin-Delyle",
-      "given": "Stanislas"
-     },
-     {
-      "family": "Salvator",
-      "given": "Hélène"
-     },
-     {
-      "family": "Mantov",
-      "given": "Nikola"
-     },
-     {
-      "family": "Abrial",
-      "given": "Charlotte"
-     },
-     {
-      "family": "Brollo",
-      "given": "Marion"
-     },
-     {
-      "family": "Faisy",
-      "given": "Christophe"
-     },
-     {
-      "family": "Naline",
-      "given": "Emmanuel"
-     },
-     {
-      "family": "Couderc",
-      "given": "Louis-Jean"
-     },
-     {
-      "family": "Devillier",
-      "given": "Philippe"
-     }
-    ],
-    "container-title": "Frontiers in Physiology",
-    "issued": {
-     "date-parts": [
-      [
-       2019
-      ]
-     ]
-    },
-    "DOI": "10.3389/fphys.2019.01267",
-    "verification": {
-     "status": "metadata-verified",
-     "metadata_source": "crossref",
-     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
-     "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-26",
-     "retraction_check": {
-      "status": "clear",
-      "checked_on": "2026-11-26"
-     }
-    },
-    "volume": "10",
-    "number": "1267",
-    "PMCID": "PMC6783802"
-   },
-   "doi": "10.3389/fphys.2019.01267",
-   "pmcid": "PMC6783802",
-   "title": "Bitter Taste Receptors (TAS2Rs) in Human Lung Macrophages: Receptor Expression and Inhibitory Effects of TAS2R Agonists",
-   "year": 2019,
-   "journal": "Frontiers in physiology",
-   "kind": "other",
-   "people": true,
-   "near": 0.369,
-   "money": [
-    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.",
-    "The research was funded by the French Ministry of Higher Education (Chancellerie des Universités de Paris, Legs Gaston Poix)."
-   ],
-   "design": {
-    "passage": 1,
-    "where": "Abstract",
-    "quote": "We studied TAS2R expression and the effects of TAS2R agonists on the lipopolysaccharide (LPS)-induced cytokine release in human lung macrophages (LMs).",
-    "text": "a study of bitter taste receptor expression and effects of their agonists on lung macrophages"
-   },
-   "findings": [
-    {
-     "passage": 23,
-     "where": "Results › Effects of TAS2R Agonists on Cytokine Production by Human Lung Macrophages",
-     "quote": "Carisoprodol is reportedly selective for TAS2R14, with an activation threshold concentration of 0.1 mM.",
-     "text": "Carisoprodol is reportedly selective for TAS2R14, with an activation threshold concentration of 0.1 mM.",
-     "id": "F1",
-     "second_hand": ""
-    },
-    {
-     "passage": 23,
-     "where": "Results › Effects of TAS2R Agonists on Cytokine Production by Human Lung Macrophages",
-     "quote": "Its significant inhibition of LPS-induced release of the three cytokines suggests the involvement of the TAS2R14, and is consistent with quinine’s inhibitory profile here.",
-     "text": "Its significant inhibition of LPS-induced release of the three cytokines suggests the involvement of the TAS2R14, and is consistent with quinine's inhibitory profile here.",
-     "id": "F2",
-     "second_hand": ""
-    }
-   ],
-   "limits": [],
-   "tag": "A"
-  },
   {
    "read": "summary",
    "ref": {
@@ -210,13 +101,13 @@
      "passage": 1,
      "where": "Summary",
      "quote": "The skeletal muscle relaxant, carisoprodol, appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.",
-     "text": "Carisoprodol appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of benzodiazepines.",
-     "id": "F3",
+     "text": "Carisoprodol appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.",
+     "id": "F1",
      "second_hand": ""
     }
    ],
    "limits": [],
-   "tag": "B"
+   "tag": "A"
   },
   {
    "read": "summary",
@@ -267,23 +158,23 @@
     "passage": 1,
     "where": "Summary",
     "quote": "A review of the literature on the centrally acting oral skeletal muscle relaxants is presented to assist the practitioner in treating CMD.",
-    "text": "a literature review of centrally acting oral skeletal muscle relaxants"
+    "text": "a review of the literature on centrally acting oral skeletal muscle relaxants"
    },
    "findings": [
     {
      "passage": 1,
      "where": "Summary",
      "quote": "Their mechanisms are not well defined.",
-     "text": "The mechanisms of skeletal muscle relaxants, including carisoprodol, are not well defined.",
-     "id": "F4",
+     "text": "Their mechanisms are not well defined.",
+     "id": "F2",
      "second_hand": ""
     },
     {
      "passage": 1,
      "where": "Summary",
      "quote": "Most act via selective inhibition of polysynaptic pathways in the central nervous system.",
-     "text": "Most skeletal muscle relaxants act via selective inhibition of polysynaptic pathways in the central nervous system.",
-     "id": "F5",
+     "text": "Most act via selective inhibition of polysynaptic pathways in the central nervous system.",
+     "id": "F3",
      "second_hand": ""
     }
    ],
@@ -297,12 +188,71 @@
      "second_hand": ""
     }
    ],
-   "tag": "C"
+   "tag": "B"
   }
  ],
- "parts": [],
+ "parts": [
+  {
+   "part": "short",
+   "text": "Carisoprodol appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.",
+   "uses": [
+    "F1"
+   ],
+   "rests_on": [
+    {
+     "label": "F1",
+     "ref": "horsfall_2017",
+     "where": "Summary",
+     "quote": "The skeletal muscle relaxant, carisoprodol, appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.",
+     "sha": "687cd04e03ce77be"
+    }
+   ]
+  },
+  {
+   "part": "but",
+   "text": "Their mechanisms are not well defined.",
+   "uses": [
+    "F2"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "stanko_1990",
+     "where": "Summary",
+     "quote": "Their mechanisms are not well defined.",
+     "sha": "c001a55c3a69e6eb"
+    }
+   ]
+  },
+  {
+   "part": "how2",
+   "text": "A 1990 review says most skeletal muscle relaxants act via selective inhibition of polysynaptic pathways.",
+   "uses": [
+    "F2",
+    "F3"
+   ],
+   "rests_on": [
+    {
+     "label": "F2",
+     "ref": "stanko_1990",
+     "where": "Summary",
+     "quote": "Their mechanisms are not well defined.",
+     "sha": "c001a55c3a69e6eb"
+    },
+    {
+     "label": "F3",
+     "ref": "stanko_1990",
+     "where": "Summary",
+     "quote": "Most act via selective inhibition of polysynaptic pathways in the central nervous system.",
+     "sha": "c001a55c3a69e6eb"
+    }
+   ],
+   "quote": "Most act via selective inhibition of polysynaptic pathways in the central nervous system",
+   "quote_ref": "stanko_1990"
+  }
+ ],
  "complete": false,
- "missing": "",
+ "missing": "how carisoprodol works in the brain for people taking it",
  "wanted": [
   {
    "doi": "10.1111/bcpt.12655",
@@ -335,6 +285,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "no draft passed: not accepted at try 1: a second reader did not accept short (a further reader (gemini-3.5-flash-lite) did not accept it: The sentence combines information from two different passages as if they form a single cohesive set of claims without proper attribution, and the second sentence refers to skeletal muscle relaxants generally rather than specifically carisop). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -351,7 +309,7 @@
    "read": "full",
    "kind": "other",
    "at": "10.3389/fphys.2019.01267",
-   "kept": 2,
+   "kept": 0,
    "thrown": []
   },
   {
@@ -380,142 +338,63 @@
  ],
  "plan": {
   "short": [
-   "F3",
-   "F5"
+   "F1",
+   "F2"
   ],
   "direct": "",
   "but": [
-   "F4"
+   "F2"
   ],
   "how": [
    [
-    "F3"
+    "F1"
    ],
    [
-    "DC",
-    "F5"
+    "F2",
+    "F3"
    ]
   ],
-  "unanswered": ""
- },
- "panel": {
-  "gemini:gemini-3.5-flash-lite": {
-   "short": [
-    false,
-    "The sentence combines information from two different passages as if they form a single cohesive set of claims without proper attribution, and the second sentence refers to skeletal muscle relaxants generally rather than specifically carisop"
-   ],
-   "but": [
-    true,
-    ""
-   ],
-   "how1": [
-    true,
-    ""
-   ],
-   "how2": [
-    true,
-    ""
-   ]
-  }
+  "unanswered": "detailed mechanism of action"
  },
  "panel_gap": [],
  "own": {
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.9073,
-   "but": 0.9616,
-   "how1": 0.7162,
-   "how2": 0.8021
+   "short": 0.9288,
+   "but": 0.9765,
+   "how1": 0.8456,
+   "how2": 0.97
   },
   "scores_quotes_alone": {
-   "short": 0.7081,
-   "but": 0.0329,
-   "how1": 0.3765,
-   "how2": 0.5756
+   "short": 0.7507,
+   "but": 0.9558,
+   "how1": 0.5408,
+   "how2": 0.9593
   }
  },
- "tries": [
+ "dropped": [
   {
    "try": 1,
-   "why": "the short answer or the But was not accepted: written again",
-   "parts": [
+   "part": "how1",
+   "text": "A 2017 review found carisoprodol binds to a unique domain within the GABAA R.",
+   "rests_on": [
     {
-     "part": "short",
-     "text": "Carisoprodol appears to bind to a unique binding domain within the GABAA R. Most skeletal muscle relaxants act by selective inhibition of polysynaptic pathways in the central nervous system.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "horsfall_2017",
-       "where": "Summary",
-       "quote": "The skeletal muscle relaxant, carisoprodol, appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.",
-       "sha": "687cd04e03ce77be"
-      },
-      {
-       "label": "F5",
-       "ref": "stanko_1990",
-       "where": "Summary",
-       "quote": "Most act via selective inhibition of polysynaptic pathways in the central nervous system.",
-       "sha": "c001a55c3a69e6eb"
-      }
-     ],
-     "ok": false,
-     "by": "a further reader",
-     "said": "a further reader (gemini-3.5-flash-lite) did not accept it: The sentence combines information from two different passages as if they form a single cohesive set of claims without proper attribution, and the second sentence refers to skeletal muscle relaxants generally rather than specifically carisop"
-    },
-    {
-     "part": "but",
-     "text": "The mechanisms of skeletal muscle relaxants, including carisoprodol, are not well defined.",
-     "rests_on": [
-      {
-       "label": "F4",
-       "ref": "stanko_1990",
-       "where": "Summary",
-       "quote": "Their mechanisms are not well defined.",
-       "sha": "c001a55c3a69e6eb"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how1",
-     "text": "The summary of a 2017 review says carisoprodol appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of benzodiazepines.",
-     "rests_on": [
-      {
-       "label": "F3",
-       "ref": "horsfall_2017",
-       "where": "Summary",
-       "quote": "The skeletal muscle relaxant, carisoprodol, appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.",
-       "sha": "687cd04e03ce77be"
-      }
-     ],
-     "ok": true
-    },
-    {
-     "part": "how2",
-     "text": "A 1990 literature review of centrally acting oral skeletal muscle relaxants says most act via selective inhibition of polysynaptic pathways in the central nervous system.",
-     "rests_on": [
-      {
-       "label": "DC",
-       "ref": "stanko_1990",
-       "where": "Summary",
-       "quote": "A review of the literature on the centrally acting oral skeletal muscle relaxants is presented to assist the practitioner in treating CMD.",
-       "sha": "c001a55c3a69e6eb"
-      },
-      {
-       "label": "F5",
-       "ref": "stanko_1990",
-       "where": "Summary",
-       "quote": "Most act via selective inhibition of polysynaptic pathways in the central nervous system.",
-       "sha": "c001a55c3a69e6eb"
-      }
-     ],
-     "ok": true
+     "label": "F1",
+     "ref": "horsfall_2017",
+     "where": "Summary",
+     "quote": "The skeletal muscle relaxant, carisoprodol, appears to bind to a unique binding domain within the GABAA R to further enhance the respiratory depressant effects of the benzodiazepines.",
+     "sha": "687cd04e03ce77be"
     }
-   ]
+   ],
+   "by": "the second reader",
+   "said": "The passage says carisoprodol 'appears to bind' to a unique binding domain. The sentence drops this hedge and states it as a finding of the 2017 review."
   }
  ],
- "soft": "the writer's reply was not in the form asked for",
+ "with_checked": {
+  "differs": [],
+  "same": []
+ },
  "place": {
   "home": "new:Carisoprodol",
   "also": [],
