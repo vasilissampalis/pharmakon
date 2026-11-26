@@ -1,6 +1,6 @@
 # Writer 804: simpler section 7 lines (9 claims)
 
-All lines meet the reading targets; each answer runs 90 to 135 words. `v`, `pages` and `rate` are unchanged; no
+All lines meet the reading targets, at 90 to 135 words an answer. `v`, `pages` and `rate` are unchanged; no
 myth-or-fact item contradicts the new lines.
 
 **Questions changed to name the drug:** both trip questions now say "psychedelic"; `cl_mph_insomnia_sleep_hygiene`
@@ -8,7 +8,7 @@ says "ADHD stimulants" (the claim names no single medicine).
 
 ## Left out, may matter
 - `cl_benzo_own_practices`: the Baltimore test-strip pilot, the only numbers (using alone 96 to 68 in 100, no
-  comparison group); the lines keep the study tied to benzos.
+  comparison group); the lines keep the benzo-linked study.
 - `cl_xc_coping_during`: the US panel's cannabis figure (18 in 100), its 362 of 613 who never had a hard trip, and
   the helpline finding.
 - `cl_opi_loperamide_withdrawal`: the claim does not say which problems brought people to poisons doctors (the 13
@@ -19,5 +19,5 @@ says "ADHD stimulants" (the claim names no single medicine).
   author's explanation stays.
 - `cl_pop_eye_stopping`: "Nobody knows" could read as no reason to stop; the lines report that almost everyone
   treated was told to stop.
-- `cl_benzo_own_practices`, `cl_xc_coping_during`: practices are given as people's reports, untested.
+- `cl_benzo_own_practices`, `cl_xc_coping_during`: practices are given as reports, untested.
 - `cl_opi_constipation_otc_laxatives`: the authors' untested view that prescription laxatives may not beat shop ones.
