@@ -1,11 +1,10 @@
 # Claim writer 755: report (round pdf-2026-11-26)
 
-Files: `data/claims/_incoming/pdf1126_w755.json`, `755_simple.json`; tools in `w755_tools/` (builder, checks, and the
-Table 1 parse that redoes the editors' counts from the PDF).
+Files: `pdf1126_w755.json`, `755_simple.json`; `w755_tools/` (builder, checks, Table 1 parse).
 
 ## cl_lsd_nbome: very low, single study, draft (narrative review only)
 
-Rests on Wood et al. (2015), read in full; every page used checked on renderings. Descriptive: low, −1 risk of bias
+Rests on Wood et al. (2015), read in full. Descriptive: low, −1 risk of bias
 (published cases selected for severity; drug found in the person's own samples in 15 of 29, editors' count; other drugs),
 −1 indirectness (second-hand, as the statement says).
 
@@ -28,7 +27,7 @@ drugs rare).
 Recount: parsing Table 1 by its ruled rows gives 254 rows matching every printed total (141 deaths, 63 DUID, 44 ED, 3, 2,
 1). Death entries with an opioid 115 of 141, loperamide or its metabolite 2, no other substance 3: identical to reader 736.
 Four double entries confirmed on the rendered pages (pp. 10/22, 11/26, 12/26, 13/27, all with an opioid): 111 of 137
-counting each once; two identical entries on p. 31 may be a fifth. Forensic concentrations are left out of the claim.
+counting each once; two identical entries on p. 31 may be a fifth.
 
 Carpenter: Table 3 used (coma 4%, agitation 9%), not the text (8%, 14%); the 330% rise spans the 2016 coding change
 (etizolam alone 26 to 60); the impossible per-million rates and the Discussion's 23% and 3% not used; 234 + 234 is not 474.
