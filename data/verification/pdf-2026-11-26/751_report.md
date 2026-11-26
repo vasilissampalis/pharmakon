@@ -16,9 +16,8 @@
 - **q4: needs rewording.** "Significant means probably not chance" is what ASA principle 2 rules out (also Gigerenzer,
   Ioannidis). The proposal adds the converse error (Hill; principle 6; Boutron, 10 of 72 abstracts). The normal-range
   sentence has no source here.
-- **q5, q6, q7: supported** (Gigerenzer; Open Science Collaboration, 35 of 97; Sumner, Boutron), with qualifications in the
-  file (Hill: ratios matter for judging causes, one unrepeatable study can convince; OSC: a failed repetition is not proof of
-  falsehood).
+- **q5, q6, q7: supported** (Gigerenzer; Open Science Collaboration, 35 of 97; Sumner, Boutron); qualifications (Hill, OSC)
+  are in the file.
 
 ## Sources that would fill the gaps
 
@@ -41,4 +40,4 @@
 ## For the editor
 
 Whether and how to replace the last "linked" sentence; the q4 rewording and the normal-range sentence; optional "another
-way" in q6. Sumner rates "linked to" itself as ambiguous wording, so the page's explanation of it matters.
+way" in q6. Sumner rates "linked to" itself as ambiguous, so the page's explanation of it matters.
