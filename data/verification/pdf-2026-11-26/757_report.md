@@ -1,7 +1,7 @@
 # Claim writer 757: report (round pdf-2026-11-26, questions 10–11)
 
-Files: `data/claims/_incoming/pdf1126_w757.json` (two drafts, schema-valid, GRADE arithmetic checked) and `757_simple.json`
-(plain lines within their reading grades, four myth-or-fact items). No patch was assigned.
+Files: `data/claims/_incoming/pdf1126_w757.json` (two schema-valid drafts, GRADE arithmetic checked) and `757_simple.json`
+(plain lines within their reading grades, four myth-or-fact items). No patch assigned; scripts in `w757_tools/`.
 
 **10 `cl_benzo_liking` (section 5): very low, replicated by the same team.** The only primary study is de Wit et al.
 (1986). In it, 36 volunteers without problem drug use mostly chose the placebo: 21 and 27 of 36
