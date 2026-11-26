@@ -19,41 +19,32 @@
   "models": {
    "reader": "gemini:gemini-3.5-flash-lite",
    "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "gemini:gemma-4-31b-it",
+   "checker": "openrouter:anthropic/claude-haiku-5.5",
+   "planner": "groq:openai/gpt-oss-120b",
    "also1": "gemini:gemini-3.5-flash-lite",
    "also2": "gemini:gemini-3-flash-preview",
-   "team": "team K",
-   "reader_2": "gemini:gemini-3.5-flash-lite",
-   "writer_2": "groq:qwen/qwen3.8-27b",
-   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "gemini:gemma-4-31b-it",
-   "writer_first": "gemini:gemma-4-26b-a4b-it"
+   "team": "team I",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct",
+   "also2_else": "gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
   },
-  "run": "45751653151",
-  "read_seconds": 100,
+  "run": "45886115390",
+  "read_seconds": 27,
   "from": {
    "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 1
   },
   "neurons": 0.0,
-  "seconds": 329
+  "seconds": 113
  },
  "status": "none",
- "why": "about overdose or an emergency: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "reader": "gemma-4-31b-it could not read on (gemini answered 503: [{ \"error\": { \"code\": 503, \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually t): gemini-3.5-flash-lite read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "6 findings kept from 2 sources (2 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only (the ones the answer rests on)",
-  "writer": "try 1: no JSON (how the reply ended: length; reasoned 0 characters, wrote 8877) gemma-4-26b-a4b-it gave no answer in the form asked for: qwen3.8-27b wrote from there.",
-  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.82, but 0.05, how1 0.20, how2 0.77",
-  "check": "every sentence kept was accepted by the second reader (groq:openai/gpt-oss-120b) and by gemini:gemini-3.5-flash-lite and by gemini:gemini-3-flash-preview",
-  "but": "the writer's But was not accepted (it is about something else than the short answer): the code wrote the But itself, from what this answer rests on",
-  "rules": "nothing against it",
-  "checked": "set beside the checked claims of the same page: nothing against them",
-  "stakes": "about overdose or an emergency: the stricter bar for such an answer: NOT met: no further reader read it"
+  "read": "7 findings kept from 3 sources (2 papers read in full, 1 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 1 official page(s), 0 paper(s) read in summary only",
+  "told": "the writer was told what the readers said of the last draft that was not accepted: the But “This is a review of existing evidence, not a new study testing people or animals directly.”: passages do not explicitly state that it is not a new study testing people or animals directly",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.54, but 0.05, how1 0.91, how2 0.96, how3 0.69, how4 0.96",
+  "check": "short: NOT accepted: The NHS passage says diphenhydramine is 'more likely to make you feel sleepy than other antihistamines'. The sentence drops the comparison and says it 'makes you feel sleepy' outright, which is stronger than the source.; but: NOT accepted: it is about something else than the short answer (The question asks how diphenhydramine works in the brain, which is not a yes-or-no question, so 'Yes' is not a fair opening; the passages describe a mechanism (H1 antagonism, with some sedation), so a word like 'Partly' or no yes/no word wo); how1: accepted; how2: NOT accepted: The passage says diphenhydramine 'may even alter' sodium channels 'during the propagation of action potentials' with affinity for channels in the inactive state. The sentence omits the 'during the propagation of action potentials' limit, wh; how3: accepted; how4: accepted"
  },
  "sources": [
   {
@@ -129,7 +120,7 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
-    "text": "a review of preclinical and clinical evidence"
+    "text": "a review of preclinical and clinical evidence on diphenhydramine for treating short-term insomnia"
    },
    "findings": [
     {
@@ -152,7 +143,7 @@
      "passage": 25,
      "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
      "quote": "Although its affinity is lower than H1, diphenhydramine can also affect muscarinic acetylcholine receptors, which also play a role in regulating the sleep–wake cycle. The blockade of these receptors contributes to the secondary sedative effect.",
-     "text": "Diphenhydramine can also affect muscarinic acetylcholine receptors, and the blockade of these receptors contributes to the secondary sedative effect.",
+     "text": "Although its affinity is lower than H1, diphenhydramine can also affect muscarinic acetylcholine receptors, which also play a role in regulating the sleep-wake cycle, and the blockade of these receptors contributes to the secondary sedative effect.",
      "id": "F3",
      "second_hand": ""
     }
@@ -216,14 +207,14 @@
     "passage": 1,
     "where": "Abstract",
     "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
-    "text": "A literature review of adverse health effects and current emergency medicine treatments for diphenhydramine"
+    "text": "a literature review of currently available treatment methods for diphenhydramine overdose"
    },
    "findings": [
     {
      "passage": 3,
      "where": "1. Background › 1.1. Diphenhydramine",
      "quote": "Diphenhydramine is a first-generation H1-antihistamine that functions to reduce allergic responses as a competitive antagonist in opposing the binding of histamine at H1-receptors and as inverse agonists, causing reduced baseline activity of the H1-receptor.",
-     "text": "Diphenhydramine is a first-generation H1-antihistamine that reduces allergic responses as a competitive antagonist opposing the binding of histamine at H1-receptors and as inverse agonists, causing reduced baseline activity of the H1-receptor.",
+     "text": "Diphenhydramine is a first-generation H1-antihistamine that reduces allergic responses by acting as a competitive antagonist against histamine binding at H1-receptors and as an inverse agonist that reduces baseline H1-receptor activity.",
      "id": "F4",
      "second_hand": ""
     },
@@ -238,177 +229,88 @@
     {
      "passage": 3,
      "where": "1. Background › 1.1. Diphenhydramine",
-     "quote": "In addition, first generation H1-antihistamines are not highly selective for the H1-receptor, and they can also bind other types of receptors, such as muscarinic and human bitter taste receptors.",
-     "text": "First-generation H1-antihistamines are not highly selective for the H1-receptor, and they can also bind other types of receptors, such as muscarinic and human bitter taste receptors.",
+     "quote": "Diphenhydramine may even alter voltage-gated sodium channels during the propagation of action potentials with high affinity (Kd = 10 µM) for sodium channels in the inactive state.",
+     "text": "Diphenhydramine can alter voltage-gated sodium channels during action potential propagation, showing high affinity for sodium channels in the inactive state.",
      "id": "F6",
      "second_hand": ""
     }
    ],
    "limits": [
     {
-     "passage": 1,
-     "where": "Abstract",
-     "quote": "We conclude that more study is needed to determine the ideal therapeutic approach to treating antihistamine overdoses.",
-     "text": "More study is needed to determine the ideal therapeutic approach to treating antihistamine overdoses.",
+     "passage": 18,
+     "where": "2. Treatments › 2.3. Donepezil",
+     "quote": "More research is needed to better elucidate the therapeutic potential of donepezil HCl in diphenhydramine overdose.",
+     "text": "More research is needed to better elucidate the therapeutic potential of donepezil HCl in diphenhydramine overdose.",
      "id": "L1",
      "second_hand": ""
     }
    ],
    "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "nhs_about-diphenhydramine",
+    "type": "webpage",
+    "title": "About diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+    "author": [
+     {
+      "literal": "NHS"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       7,
+       13
+      ]
+     ]
+    },
+    "URL": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    }
+   },
+   "title": "About diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.563,
+   "name": "NHS",
+   "short": "the NHS",
+   "tier": 1,
+   "address": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 1,
+     "where": "Top of the page",
+     "quote": "Diphenhydramine is an antihistamine medicine that relieves the symptoms of allergies. It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+     "text": "Diphenhydramine is a drowsy antihistamine medicine that relieves allergy symptoms and is more likely to make you feel sleepy than other antihistamines.",
+     "id": "F7",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
   }
  ],
- "parts": [
-  {
-   "part": "short",
-   "text": "Diphenhydramine binds to H1 receptors on brain neurons. It blocks histamine and lowers the receptor's baseline activity, which can cause sleepiness.",
-   "uses": [
-    "F5",
-    "F1",
-    "F2",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "F5",
-     "ref": "patel_2024",
-     "where": "1. Background › 1.1. Diphenhydramine",
-     "quote": "First-generation H1-antihistamines are able to bind to H1 receptors on neurons in the CNS.",
-     "sha": "96431a9ad6f17391"
-    },
-    {
-     "label": "F1",
-     "ref": "arizasalamanca_2025",
-     "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-     "quote": "Diphenhydramine antagonizes the H1 histamine receptor.",
-     "sha": "3621f2d37d343c5c"
-    },
-    {
-     "label": "F2",
-     "ref": "arizasalamanca_2025",
-     "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-     "quote": "Diphenhydramine acts as a negative allosteric modulator and inverse agonist of H1 receptors, blocking histamine’s action at these sites.",
-     "sha": "4a1b50b430b42c5e"
-    },
-    {
-     "label": "F3",
-     "ref": "arizasalamanca_2025",
-     "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-     "quote": "Although its affinity is lower than H1, diphenhydramine can also affect muscarinic acetylcholine receptors, which also play a role in regulating the sleep–wake cycle. The blockade of these receptors contributes to the secondary sedative effect.",
-     "sha": "78b68c2fa06daa9f"
-    }
-   ]
-  },
-  {
-   "part": "but",
-   "text": "This rests on 2 reviews.",
-   "uses": [
-    "DA",
-    "DB"
-   ],
-   "fixed": true,
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "arizasalamanca_2025",
-     "where": "Abstract",
-     "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
-     "sha": "3580d40a131a57e8"
-    },
-    {
-     "label": "DB",
-     "ref": "patel_2024",
-     "where": "Abstract",
-     "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
-     "sha": "adf313035af05d17"
-    }
-   ]
-  },
-  {
-   "part": "how1",
-   "text": "A 2025 review of preclinical and clinical evidence says diphenhydramine blocks H1 receptors and can affect muscarinic receptors.",
-   "uses": [
-    "DA",
-    "F1",
-    "F2",
-    "F3"
-   ],
-   "rests_on": [
-    {
-     "label": "DA",
-     "ref": "arizasalamanca_2025",
-     "where": "Abstract",
-     "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
-     "sha": "3580d40a131a57e8"
-    },
-    {
-     "label": "F1",
-     "ref": "arizasalamanca_2025",
-     "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-     "quote": "Diphenhydramine antagonizes the H1 histamine receptor.",
-     "sha": "3621f2d37d343c5c"
-    },
-    {
-     "label": "F2",
-     "ref": "arizasalamanca_2025",
-     "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-     "quote": "Diphenhydramine acts as a negative allosteric modulator and inverse agonist of H1 receptors, blocking histamine’s action at these sites.",
-     "sha": "4a1b50b430b42c5e"
-    },
-    {
-     "label": "F3",
-     "ref": "arizasalamanca_2025",
-     "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-     "quote": "Although its affinity is lower than H1, diphenhydramine can also affect muscarinic acetylcholine receptors, which also play a role in regulating the sleep–wake cycle. The blockade of these receptors contributes to the secondary sedative effect.",
-     "sha": "78b68c2fa06daa9f"
-    }
-   ],
-   "quote": "Diphenhydramine acts as a negative allosteric modulator and inverse agonist of H1 receptors",
-   "quote_ref": "arizasalamanca_2025"
-  },
-  {
-   "part": "how2",
-   "text": "A 2024 review of overdose treatments says first-generation H1-antihistamines bind to H1 receptors on neurons in the central nervous system.",
-   "uses": [
-    "DB",
-    "F4",
-    "F5",
-    "F6"
-   ],
-   "rests_on": [
-    {
-     "label": "DB",
-     "ref": "patel_2024",
-     "where": "Abstract",
-     "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
-     "sha": "adf313035af05d17"
-    },
-    {
-     "label": "F4",
-     "ref": "patel_2024",
-     "where": "1. Background › 1.1. Diphenhydramine",
-     "quote": "Diphenhydramine is a first-generation H1-antihistamine that functions to reduce allergic responses as a competitive antagonist in opposing the binding of histamine at H1-receptors and as inverse agonists, causing reduced baseline activity of the H1-receptor.",
-     "sha": "96431a9ad6f17391"
-    },
-    {
-     "label": "F5",
-     "ref": "patel_2024",
-     "where": "1. Background › 1.1. Diphenhydramine",
-     "quote": "First-generation H1-antihistamines are able to bind to H1 receptors on neurons in the CNS.",
-     "sha": "96431a9ad6f17391"
-    },
-    {
-     "label": "F6",
-     "ref": "patel_2024",
-     "where": "1. Background › 1.1. Diphenhydramine",
-     "quote": "In addition, first generation H1-antihistamines are not highly selective for the H1-receptor, and they can also bind other types of receptors, such as muscarinic and human bitter taste receptors.",
-     "sha": "96431a9ad6f17391"
-    }
-   ],
-   "quote": "First-generation H1-antihistamines are able to bind to H1 receptors on neurons in the CNS",
-   "quote_ref": "patel_2024"
-  }
- ],
- "complete": true,
+ "parts": [],
+ "complete": false,
  "missing": "",
  "wanted": [
   {
@@ -434,7 +336,16 @@
   }
  ],
  "person": null,
- "history": [],
+ "history": [
+  {
+   "on": "2026-11-26",
+   "lane": 19,
+   "status": "none",
+   "why": "about overdose or an emergency: written, but it does not meet the stricter bar for such an answer (no further reader read it): no answer yet",
+   "short": "Diphenhydramine binds to H1 receptors on brain neurons. It blocks histamine and lowers the receptor's baseline activity, which can cause sleepiness.",
+   "complete": true
+  }
+ ],
  "looked": [
   {
    "title": "Expert Consensus on the Use of Diphenhydramine for Short-Term Insomnia: Efficacy, Safety, and Clinical Applications",
@@ -465,9 +376,8 @@
    "read": "page",
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/diphenhydramine/about-diphenhydramine/",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
   },
   {
    "title": "Side effects of diphenhydramine Brand names: Nytol Original, Boots Sleepeaze, Histergan",
@@ -483,31 +393,28 @@
    "kind": "official",
    "at": "https://www.nhs.uk/medicines/diphenhydramine/who-can-and-cannot-take-diphenhydramine/",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   }
  ],
  "plan": {
   "short": [
-   "F5",
    "F1",
-   "F2",
-   "F3"
+   "F7"
   ],
-  "direct": "",
+  "direct": "Yes",
   "but": [],
   "how": [
    [
-    "DA",
-    "F1",
-    "F2",
-    "F3"
-   ],
-   [
     "DB",
-    "F4",
     "F5",
     "F6"
+   ],
+   [
+    "DA",
+    "F1"
+   ],
+   [
+    "F7"
    ]
   ],
   "unanswered": ""
@@ -517,34 +424,31 @@
   "model": "pharmakon-check-0",
   "threshold": 0.05,
   "scores": {
-   "short": 0.8166,
-   "but": 0.0471,
-   "how1": 0.1994,
-   "how2": 0.7725
+   "short": 0.5364,
+   "but": 0.0514,
+   "how1": 0.9109,
+   "how2": 0.9557,
+   "how3": 0.6861,
+   "how4": 0.961
   },
   "scores_quotes_alone": {
-   "short": 0.1836,
-   "but": 0.0416,
-   "how1": 0.8926,
-   "how2": 0.9594
+   "short": 0.3979,
+   "but": 0.0258,
+   "how1": 0.5441,
+   "how2": 0.973,
+   "how3": 0.5649,
+   "how4": 0.7572
   }
  },
  "tries": [
   {
-   "try": 2,
+   "try": 1,
    "why": "the short answer or the But was not accepted: written again",
    "parts": [
     {
      "part": "short",
-     "text": "Diphenhydramine binds to H1 receptors on brain neurons. It blocks histamine and lowers the receptor's baseline activity, which can cause sleepiness.",
+     "text": "Yes, diphenhydramine blocks H1 histamine receptors. The NHS says it is a drowsy antihistamine that makes people feel sleepy.",
      "rests_on": [
-      {
-       "label": "F5",
-       "ref": "patel_2024",
-       "where": "1. Background › 1.1. Diphenhydramine",
-       "quote": "First-generation H1-antihistamines are able to bind to H1 receptors on neurons in the CNS.",
-       "sha": "96431a9ad6f17391"
-      },
       {
        "label": "F1",
        "ref": "arizasalamanca_2025",
@@ -553,25 +457,20 @@
        "sha": "3621f2d37d343c5c"
       },
       {
-       "label": "F2",
-       "ref": "arizasalamanca_2025",
-       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-       "quote": "Diphenhydramine acts as a negative allosteric modulator and inverse agonist of H1 receptors, blocking histamine’s action at these sites.",
-       "sha": "4a1b50b430b42c5e"
-      },
-      {
-       "label": "F3",
-       "ref": "arizasalamanca_2025",
-       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-       "quote": "Although its affinity is lower than H1, diphenhydramine can also affect muscarinic acetylcholine receptors, which also play a role in regulating the sleep–wake cycle. The blockade of these receptors contributes to the secondary sedative effect.",
-       "sha": "78b68c2fa06daa9f"
+       "label": "F7",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "Diphenhydramine is an antihistamine medicine that relieves the symptoms of allergies. It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
       }
      ],
-     "ok": true
+     "ok": false,
+     "by": "the second reader",
+     "said": "The NHS passage says diphenhydramine is 'more likely to make you feel sleepy than other antihistamines'. The sentence drops that comparison and states flatly that it 'makes people feel sleepy', which is stronger than the source."
     },
     {
      "part": "but",
-     "text": "This is a review of existing evidence, not a new study testing people or animals directly.",
+     "text": "The evidence comes from a review of preclinical and clinical studies, not a single new experiment.",
      "rests_on": [
       {
        "label": "DA",
@@ -583,11 +482,53 @@
      ],
      "ok": false,
      "by": "the second reader",
-     "said": "passages do not explicitly state that it is not a new study testing people or animals directly"
+     "said": "it is about something else than the short answer (The question is 'How does diphenhydramine work in the brain?', which is not a yes-or-no question, so 'Yes' does not fit it. The passages describe a mechanism (H1 receptor antagonism) and do not answer a yes/no question. Sentence 1 does addr)"
     },
     {
      "part": "how1",
-     "text": "A 2025 review of preclinical and clinical evidence says diphenhydramine blocks H1 receptors and can affect muscarinic receptors, adding to sleepiness.",
+     "text": "A 2024 review of overdose treatments says diphenhydramine can bind to H1 receptors on brain neurons.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
+      },
+      {
+       "label": "F5",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.1. Diphenhydramine",
+       "quote": "First-generation H1-antihistamines are able to bind to H1 receptors on neurons in the CNS.",
+       "sha": "96431a9ad6f17391"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says it can alter voltage-gated sodium channels in the inactive state.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
+      },
+      {
+       "label": "F6",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.1. Diphenhydramine",
+       "quote": "Diphenhydramine may even alter voltage-gated sodium channels during the propagation of action potentials with high affinity (Kd = 10 µM) for sodium channels in the inactive state.",
+       "sha": "96431a9ad6f17391"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review of insomnia evidence says diphenhydramine antagonizes the H1 histamine receptor.",
      "rests_on": [
       {
        "label": "DA",
@@ -602,27 +543,70 @@
        "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
        "quote": "Diphenhydramine antagonizes the H1 histamine receptor.",
        "sha": "3621f2d37d343c5c"
-      },
-      {
-       "label": "F2",
-       "ref": "arizasalamanca_2025",
-       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-       "quote": "Diphenhydramine acts as a negative allosteric modulator and inverse agonist of H1 receptors, blocking histamine’s action at these sites.",
-       "sha": "4a1b50b430b42c5e"
-      },
-      {
-       "label": "F3",
-       "ref": "arizasalamanca_2025",
-       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
-       "quote": "Although its affinity is lower than H1, diphenhydramine can also affect muscarinic acetylcholine receptors, which also play a role in regulating the sleep–wake cycle. The blockade of these receptors contributes to the secondary sedative effect.",
-       "sha": "78b68c2fa06daa9f"
       }
      ],
      "ok": true
     },
     {
-     "part": "how2",
-     "text": "A 2024 review of overdose treatments says first-generation H1-antihistamines bind to brain neurons and can also bind other receptors like muscarinic ones.",
+     "part": "how4",
+     "text": "The NHS says diphenhydramine is a drowsy antihistamine that relieves allergy symptoms.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "Diphenhydramine is an antihistamine medicine that relieves the symptoms of allergies. It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It works by blocking H1 histamine receptors. The NHS says it is more likely to make you feel sleepy than other antihistamines.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "arizasalamanca_2025",
+       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
+       "quote": "Diphenhydramine antagonizes the H1 histamine receptor.",
+       "sha": "3621f2d37d343c5c"
+      },
+      {
+       "label": "F7",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "Diphenhydramine is an antihistamine medicine that relieves the symptoms of allergies. It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The evidence comes from a review of preclinical and clinical studies, not a single new experiment.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "arizasalamanca_2025",
+       "where": "Abstract",
+       "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
+       "sha": "3580d40a131a57e8"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 directly answers how diphenhydramine works by saying it blocks H1 receptors, and it adds the NHS sleepiness point. Sentence 2 says nothing about the mechanism; it describes the nature of the source, so it is not a limit or doubt )"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review says diphenhydramine can bind to H1 receptors on neurons in the central nervous system.",
      "rests_on": [
       {
        "label": "DB",
@@ -632,11 +616,126 @@
        "sha": "adf313035af05d17"
       },
       {
-       "label": "F4",
+       "label": "F5",
        "ref": "patel_2024",
        "where": "1. Background › 1.1. Diphenhydramine",
-       "quote": "Diphenhydramine is a first-generation H1-antihistamine that functions to reduce allergic responses as a competitive antagonist in opposing the binding of histamine at H1-receptors and as inverse agonists, causing reduced baseline activity of the H1-receptor.",
+       "quote": "First-generation H1-antihistamines are able to bind to H1 receptors on neurons in the CNS.",
        "sha": "96431a9ad6f17391"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says it can alter voltage-gated sodium channels during action potential propagation.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
+      },
+      {
+       "label": "F6",
+       "ref": "patel_2024",
+       "where": "1. Background › 1.1. Diphenhydramine",
+       "quote": "Diphenhydramine may even alter voltage-gated sodium channels during the propagation of action potentials with high affinity (Kd = 10 µM) for sodium channels in the inactive state.",
+       "sha": "96431a9ad6f17391"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review of preclinical and clinical evidence states diphenhydramine antagonizes the H1 histamine receptor.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "arizasalamanca_2025",
+       "where": "Abstract",
+       "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
+       "sha": "3580d40a131a57e8"
+      },
+      {
+       "label": "F1",
+       "ref": "arizasalamanca_2025",
+       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
+       "quote": "Diphenhydramine antagonizes the H1 histamine receptor.",
+       "sha": "3621f2d37d343c5c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "The NHS says diphenhydramine is a drowsy antihistamine that relieves allergy symptoms.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "Diphenhydramine is an antihistamine medicine that relieves the symptoms of allergies. It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Yes, diphenhydramine blocks H1 histamine receptors. The NHS says it is a drowsy antihistamine that makes you feel sleepy.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "arizasalamanca_2025",
+       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
+       "quote": "Diphenhydramine antagonizes the H1 histamine receptor.",
+       "sha": "3621f2d37d343c5c"
+      },
+      {
+       "label": "F7",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "Diphenhydramine is an antihistamine medicine that relieves the symptoms of allergies. It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The NHS passage says diphenhydramine is 'more likely to make you feel sleepy than other antihistamines'. The sentence drops the comparison and says it 'makes you feel sleepy' outright, which is stronger than the source."
+    },
+    {
+     "part": "but",
+     "text": "The evidence comes from a review of preclinical and clinical studies, not from a single new experiment.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "arizasalamanca_2025",
+       "where": "Abstract",
+       "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
+       "sha": "3580d40a131a57e8"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The question asks how diphenhydramine works in the brain, which is not a yes-or-no question, so 'Yes' is not a fair opening; the passages describe a mechanism (H1 antagonism, with some sedation), so a word like 'Partly' or no yes/no word wo)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2024 review of overdose treatments says diphenhydramine can bind to H1 receptors on brain neurons.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
       },
       {
        "label": "F5",
@@ -644,13 +743,64 @@
        "where": "1. Background › 1.1. Diphenhydramine",
        "quote": "First-generation H1-antihistamines are able to bind to H1 receptors on neurons in the CNS.",
        "sha": "96431a9ad6f17391"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The same review says it can alter voltage-gated sodium channels in the inactive state.",
+     "rests_on": [
+      {
+       "label": "DB",
+       "ref": "patel_2024",
+       "where": "Abstract",
+       "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+       "sha": "adf313035af05d17"
       },
       {
        "label": "F6",
        "ref": "patel_2024",
        "where": "1. Background › 1.1. Diphenhydramine",
-       "quote": "In addition, first generation H1-antihistamines are not highly selective for the H1-receptor, and they can also bind other types of receptors, such as muscarinic and human bitter taste receptors.",
+       "quote": "Diphenhydramine may even alter voltage-gated sodium channels during the propagation of action potentials with high affinity (Kd = 10 µM) for sodium channels in the inactive state.",
        "sha": "96431a9ad6f17391"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says diphenhydramine 'may even alter' sodium channels 'during the propagation of action potentials' with affinity for channels in the inactive state. The sentence omits the 'during the propagation of action potentials' limit, wh"
+    },
+    {
+     "part": "how3",
+     "text": "A 2025 review of insomnia evidence states diphenhydramine antagonizes the H1 histamine receptor.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "arizasalamanca_2025",
+       "where": "Abstract",
+       "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
+       "sha": "3580d40a131a57e8"
+      },
+      {
+       "label": "F1",
+       "ref": "arizasalamanca_2025",
+       "where": "3. Results and Discussion › 3.1. Diphenhydramine Pharmacodynamics and Efficacy in Insomnia",
+       "quote": "Diphenhydramine antagonizes the H1 histamine receptor.",
+       "sha": "3621f2d37d343c5c"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "The NHS says diphenhydramine is a drowsy antihistamine that relieves allergy symptoms.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "nhs_about-diphenhydramine",
+       "where": "Top of the page",
+       "quote": "Diphenhydramine is an antihistamine medicine that relieves the symptoms of allergies. It's known as a drowsy (sedating) antihistamine and is more likely to make you feel sleepy than other antihistamines.",
+       "sha": "c41f6e4353edbd2f"
       }
      ],
      "ok": true
@@ -661,26 +811,28 @@
  "dropped": [
   {
    "try": 3,
-   "part": "but",
-   "text": "This is a review of existing evidence, not a new study testing people or animals directly.",
+   "part": "how2",
+   "text": "The same review says it can alter voltage-gated sodium channels in the inactive state.",
    "rests_on": [
     {
-     "label": "DA",
-     "ref": "arizasalamanca_2025",
+     "label": "DB",
+     "ref": "patel_2024",
      "where": "Abstract",
-     "quote": "This review examines the preclinical and clinical efficacy and safety evidence of diphenhydramine in treating short-term insomnia.",
-     "sha": "3580d40a131a57e8"
+     "quote": "This review summarizes the adverse health effects and current emergency medicine treatments for diphenhydramine.",
+     "sha": "adf313035af05d17"
+    },
+    {
+     "label": "F6",
+     "ref": "patel_2024",
+     "where": "1. Background › 1.1. Diphenhydramine",
+     "quote": "Diphenhydramine may even alter voltage-gated sodium channels during the propagation of action potentials with high affinity (Kd = 10 µM) for sodium channels in the inactive state.",
+     "sha": "96431a9ad6f17391"
     }
    ],
    "by": "the second reader",
-   "said": "it is about something else than the short answer"
+   "said": "The passage says diphenhydramine 'may even alter' sodium channels 'during the propagation of action potentials' with affinity for channels in the inactive state. The sentence omits the 'during the propagation of action potentials' limit, wh"
   }
  ],
- "stakes": "overdose or an emergency",
- "with_checked": {
-  "differs": [],
-  "same": []
- },
  "place": {
   "home": "new:Diphenhydramine and similar antihistamines",
   "also": [],
