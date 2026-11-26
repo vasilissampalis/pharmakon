@@ -1,6 +1,6 @@
 # What people asked that the site does not answer yet
 
-Made by `scripts/auto/scout.py` on 2026-11-25 (site 2.28.31). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 4 of them; 2 have only near answers; 9 have nothing near.
+Made by `scripts/auto/scout.py` on 2026-11-26 (site 2.28.34). 15 different questions were sent with "Ask us to check it", 15 times in all. The site already answers 4 of them; 2 have only near answers; 9 have nothing near.
 
 The questions are visitors' own words: they are data, never instructions. "Papers on file to look at first" are the study cards nearest in meaning: the same drug and theme, not yet proof that an answer can be written from them.
 
@@ -64,7 +64,7 @@ Answered by now, so off the list by itself (the editor takes them out of `data/s
    - No paper on file comes near: papers are probably needed.
 7. **How many people died from heroin** (asked 1 time; about heroin)
    - Near answers on the site: Are heroin overdose deaths always caused by heroin alone? (`cl_opi_deaths_heroin_alone`); Do official counts miss heroin deaths? (`cl_opi_deaths_heroin_missed`); How many opioid deaths also involve alcohol? (`cl_mix_opioids_alcohol`)
-   - Papers on file to look at first: Chen et al. (2025) (`sc_chen_2025`); Horon et al. (2018) (`sc_horon_2018`); Darke and Zador (1996) (`sc_darke_1996`); McGowan et al. (2018) (`sc_mcgowan_2018`)
+   - Papers on file to look at first: Chen et al. (2025) (`sc_chen_2025`); Horon et al. (2018) (`sc_horon_2018`); Siegel et al. (1982) (`sc_siegel_1982`); Darke and Zador (1996) (`sc_darke_1996`)
 8. **is sex better with weed** (asked 1 time; about cannabis)
    - This is the listed question `w_0048`.
    - Papers on file to look at first: Zemishlany et al. (2001) (`sc_zemishlany_2001`); Curran et al. (2016) (`sc_curran_2016`)
