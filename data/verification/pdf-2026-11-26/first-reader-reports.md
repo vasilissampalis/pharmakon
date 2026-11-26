@@ -1,0 +1,18 @@
+# Final reports of the first readers (round pdf-2026-11-26), as each gave it to the editor
+
+## Reader 745 (supplements; data/verification/pdf-2026-11-26/745_supplements.json, 45 items)
+- Holze 2022 (Word file): Table S5 contradicts the paper's text: LSD 100 µg did not raise heart rate more than psilocybin (83 vs 78/82 bpm, not significant), while the card and claim say both LSD doses did. The table's peak values can replace the readings taken from Fig. 3. Placebo named correctly in 100% of sessions; right-drug guesses exactly 71/86/78/79%. Settles the anxiety, Tmax (a misprint for 0.75 h) and rate-pressure issues; checklist: 13–18 of 28 reported headache against 8 on placebo.
+- Straumann 2023: nausea counts settle the contradiction (MDMA 14, LSD 7, both 11, of 24); placebo and MDMA alone recognised in 96–100% of sessions; effects up to 21 h with both drugs; the stated hypothesis unsupported on every outcome named primary.
+- Smith 2022 (zip of TIFF figures): 93.6–97.3% of samples THC-dominant in each state; the S2 counts for balanced and CBD-dominant samples disagree with Fig 1 (2,192/991 vs 1,940/1,243).
+- Sordo 2017: appendix 3 makes AMSTAR 2 item 9 partial-yes (rating stays critically low); Table B gives deaths after incomplete vs complete treatment (69 vs 17 and 84 vs 26 per 1,000 person-years), which the claim says the review lacks.
+- Darke 2017: the appendix lists the 10 cases with no clinical detail; one rests on a prosecutor's letter.
+- Timmermann 2021, Nayak 2022: the files saved as supplements are byte-identical copies of the articles; Hysek 2014's is the online-first version of the article. Supplements still missing: 10.1038/s41598-021-01209-2, 10.3389/fpsyg.2022.852248, 10.1093/scan/nst161.
+- Reviewer comments sit inside card fields (Holze key findings 3 and 6, Smith 11 locator, Sordo 11). No reference record disagrees with its file.
+
+## Reader 737 (cocaine and the nose)
+- sc_nitro_2022 (AMSTAR 2 critically low): the abstract mislabels sites (Table 4 and Fig. 2: inferior turbinate and maxillary wall 59%, palate 29.9%; the abstract gives the side wall 29.9%); 12 of 17 series selected people by site; none followed anyone after stopping. Table 6 mixes biopsy and patient counts; series from the same groups may share patients.
+- sc_saibene_2025 (narrative checklist: high): "multidisciplinary" in the abstract, but the panel was 18 rhinologists who are the authors, working mostly from reviews; "no safe threshold" and "only stopping halts lesions" are opinion, each resting on one review; repair waits for 12 months of abstinence proven by drug tests. Items 2.2 and 4.1 break its own outlier rule (totals may be 19 consensus and 4 near-consensus); Appendix A missing from the file; the introduction cites Nitro for quality-of-life data Nitro does not report.
+- sc_trimarchi_2001 (JBI: high): no abstract; the summary says systemic inflammation "universally absent", yet CRP abnormal in 9 of 18; repeat imaging only for 4 people who kept using, all worse. Figure 3's percentages contradict the text and Table 3 (use counts out of 16 imaged); two p-values not reproducible (sex 0.037, Fisher gives 0.53; per-patient vasculitis 0.11, gives 0.74).
+- Healing after stopping: none of the three has follow-up data on people who stopped.
+- Missing companions: Trimarchi et al. 2003, Am J Rhinol 17:33–43 (progression data; DOI not in the files); Trimarchi et al. 2014, Rhinology, 10.4193/Rhino13.112 (sole support for "no safe threshold"); Nitro's PROSPERO protocol CRD42021240014.
+- Reference record trimarchi_2001: "wegener" in lower case and author names in capitals.
