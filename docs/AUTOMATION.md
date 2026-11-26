@@ -1926,7 +1926,7 @@ Earlier the same day: "no i don't want my claude plan to use tokens! we have to 
     lane asks, it caught 22 of the lane exam's 35 wrong sentences (gpt-oss-120b: 16) and stopped 9 of 73 good ones (6); it does
     not reason first, so it is fast; about $1 to $3 a month. GPT-6 Luna caught a little more one sentence at a time but reasons
     before every verdict; its exam the lane's way is finished for tomorrow's plan.
-    At 01:30 on 27 November, with the timed sittings in (exam-0026: Luna median 4.0 seconds a call, Haiku 5.3, gpt-oss-120b 4.6;
+    At 00:40 on 27 November, with the timed sittings in (exam-0026: Luna median 4.0 seconds a call, Haiku 5.3, gpt-oss-120b 4.6;
     Luna caught 32 of 35 wrong sentences in both its sittings, Haiku 22 and 24), GPT-6 Luna took Haiku's place as the second
     reader asked first in every team: the most accurate and the fastest; it stops more good sentences, so more drafts are
     written again. Haiku stays in team R after it.
