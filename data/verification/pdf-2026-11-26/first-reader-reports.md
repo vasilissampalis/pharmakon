@@ -16,3 +16,10 @@
 - Healing after stopping: none of the three has follow-up data on people who stopped.
 - Missing companions: Trimarchi et al. 2003, Am J Rhinol 17:33–43 (progression data; DOI not in the files); Trimarchi et al. 2014, Rhinology, 10.4193/Rhino13.112 (sole support for "no safe threshold"); Nitro's PROSPERO protocol CRD42021240014.
 - Reference record trimarchi_2001: "wegener" in lower case and author names in capitals.
+
+## Reader 732 (Seven questions B)
+- sc_open_science_collaboration_2015: replication power (0.92) computed against the original effects, which the paper calls inflated; teams picked feasible studies; 13 of 113 replications never finished; the authors say a failed replication does not prove the original false; the breakdown by P value adds to 34 significant replications, not 35. The 36% comes from one replication each, in three 2008 psychology journals.
+- sc_ioannidis_2005: the "proof" is a formula on assumed inputs (interpretation gap substantial); Table 4 reproduces exactly; one Box 1 value (1.5×10⁻⁴) does not follow from the essay's formula (about 2.5×10⁻⁴). Qualifies "significant means probably not chance": a result with P < 0.05 can still be more likely false than true.
+- sc_sumner_2014: "exaggeration" means stronger than the paper, not unjustified; each news story coded with its press release (not blind); the overall 47% for claims about humans conflicts with its two conditional rates (about 41%); the "no effect on coverage" intervals allow increases of 21 to 27 points. Its scale rates "linked to" as ambiguous.
+- sc_boutron_2010: only 72 of 616 trials analysed; reader agreement κ 0.47 for abstract conclusions; a funding–spin link asserted without analysis; Table 3 prints 0.4 for 4.0.
+- Missing companions: the comment and reply Science lists with OSC (351(6277):1037; the reader's DOIs for them were from memory, unverified); supplements of OSC, Sumner (SI11–12) and Boutron not in the files. All four reference records agree with the PDFs.
