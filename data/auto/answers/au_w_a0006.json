@@ -15,7 +15,7 @@
  ],
  "drugs": [],
  "made": {
-  "on": "2026-11-22",
+  "on": "2026-11-26",
   "models": {
    "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
    "writer": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
@@ -24,26 +24,346 @@
    "team": "team B",
    "reader_2": "groq:openai/gpt-oss-20b"
   },
-  "run": "44968121863",
-  "read_seconds": 150,
+  "run": "45730151913",
+  "read_by": {
+   "gemini-3.5-flash-lite": 5,
+   "llama-4-scout-17b-16e-instruct": 4
+  },
+  "read_seconds": 31,
   "from": {
-   "papers": 0,
-   "summaries": 0,
+   "papers": 2,
+   "summaries": 1,
    "official": 0
   },
-  "neurons": 97.3,
-  "seconds": 150
+  "neurons": 1005.9,
+  "seconds": 91
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "4 source(s) were not read: the time this run has for reading one question (150 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "6 findings kept from 3 sources (2 papers read in full, 0 official pages, 1 papers read in summary); 3 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 1 paper(s) read in summary only",
+  "rules": "broken at try 2: how2: words that are not person-first (“users”); short: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.58, but 0.97, how1 0.90, how2 0.97",
+  "check": "short: NOT accepted: the word it opens with (“It depends”) is not the answer the passages bear out: The passages discuss drugs’ effects on strategic thinking and decision‑making, not on wisdom. Therefore the opening phrase “It depends” does not fairly answer th; but: NOT accepted: it is about something else than the short answer (The passages discuss drugs’ effects on strategic thinking and decision‑making, not on wisdom. Therefore the opening phrase “It depends” does not fairly answer the question “Do certain drugs increase wisdom?” and the subsequent sentence abou); how1: accepted; how2: accepted"
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "maier_2015",
+    "type": "article-journal",
+    "title": "Pharmacological cognitive enhancement in healthy individuals: A compensation for cognitive deficits or a question of personality?",
+    "author": [
+     {
+      "family": "Maier",
+      "given": "Larissa J."
+     },
+     {
+      "family": "Wunderli",
+      "given": "Michael D."
+     },
+     {
+      "family": "Vonmoos",
+      "given": "Matthias"
+     },
+     {
+      "family": "Römmelt",
+      "given": "Andreas T."
+     },
+     {
+      "family": "Baumgartner",
+      "given": "Markus R."
+     },
+     {
+      "family": "Seifritz",
+      "given": "Erich"
+     },
+     {
+      "family": "Schaub",
+      "given": "Michael P."
+     },
+     {
+      "family": "Quednow",
+      "given": "Boris B."
+     }
+    ],
+    "container-title": "PLOS ONE",
+    "issued": {
+     "date-parts": [
+      [
+       2015
+      ]
+     ]
+    },
+    "DOI": "10.1371/journal.pone.0129805",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "10",
+    "issue": "6",
+    "number": "e0129805",
+    "PMCID": "PMC4479570"
+   },
+   "doi": "10.1371/journal.pone.0129805",
+   "pmcid": "PMC4479570",
+   "title": "Pharmacological Cognitive Enhancement in Healthy Individuals: A Compensation for Cognitive Deficits or a Question of Personality?",
+   "year": 2015,
+   "journal": "PloS one",
+   "kind": "other",
+   "people": true,
+   "near": 0.745,
+   "money": [
+    "Competing Interests: The authors have declared that no competing interests exist.",
+    "This study was funded by the Swiss National Science Foundation, (SNSF; grant No. PP00P1-146326/1). The SNSF did not influence study design, data collection and analysis, decision to publish, or preparation of the manuscript.",
+    "This study was funded by the Swiss National Science Foundation (SNSF; grants No. PP00P1-123516/1 and PP00P1-146326/1). The authors thank Stefania Niedecker, Kathrin Küpeli, Katrin H. Preller, and Lea M. Hulka for their support with the recruitment and the neuropsychological assessment of the study participants."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+    "text": "A study investigating the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate use compared with controls."
+   },
+   "findings": [
+    {
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "As it was shown that only individuals with low baseline performance show cognitive improvements using stimulant drugs, it is unlikely that MPH actually improved general cognitive functioning of the present PCE users because they already performed very well and sometimes better than controls.",
+     "text": "It is unlikely that methylphenidate actually improved general cognitive functioning of the methylphenidate users because they already performed very well and sometimes better than controls.",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 21,
+     "where": "Discussion",
+     "quote": "Thus, MPH might improve impulse control of PCE users, helping them to begin and sustain studying, rather than enhancing cognition directly.",
+     "text": "Methylphenidate might improve impulse control of methylphenidate users, helping them to begin and sustain studying, rather than enhancing cognition directly.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "Discussion",
+     "quote": "1) recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+     "text": "Recently abstinent methylphenidate users and stimulant-naive controls performed equally in most of the cognitive tasks, but methylphenidate users performed better in strategic thinking and decision-making.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 23,
+     "where": "Discussion",
+     "quote": "Second, the fact that the data were restricted to PCE users, who used MPH without regular co-use of illegal drugs of abuse, is a further limitation as it was shown previously that PCE users show a higher prevalence of illegal drug use compared to non-users.",
+     "text": "The data were restricted to methylphenidate users who used methylphenidate without regular co-use of illegal drugs.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "schelle_2015",
+    "type": "article-journal",
+    "title": "A survey of substance use for cognitive enhancement by university students in the Netherlands",
+    "author": [
+     {
+      "family": "Schelle",
+      "given": "Kimberly J."
+     },
+     {
+      "family": "Olthof",
+      "given": "Bas M. J."
+     },
+     {
+      "family": "Reintjes",
+      "given": "Wesley"
+     },
+     {
+      "family": "Bundt",
+      "given": "Carsten"
+     },
+     {
+      "family": "Gusman-Vermeer",
+      "given": "Joyce"
+     },
+     {
+      "family": "van Mil",
+      "given": "Anke C. C. M."
+     }
+    ],
+    "container-title": "Frontiers in Systems Neuroscience",
+    "issued": {
+     "date-parts": [
+      [
+       2015
+      ]
+     ]
+    },
+    "DOI": "10.3389/fnsys.2015.00010",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "9",
+    "PMCID": "PMC4330699"
+   },
+   "doi": "10.3389/fnsys.2015.00010",
+   "pmcid": "PMC4330699",
+   "title": "A survey of substance use for cognitive enhancement by university students in the Netherlands",
+   "year": 2015,
+   "journal": "Frontiers in systems neuroscience",
+   "kind": "other",
+   "people": true,
+   "near": 0.692,
+   "money": [
+    "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "A nationwide survey was conducted among 1572 student respondents of all government supported Dutch universities.",
+    "text": "A survey of substance use for cognitive enhancement by university students in the Netherlands"
+   },
+   "findings": [
+    {
+     "passage": 40,
+     "where": "Discussion",
+     "quote": "The use of specific prescription drugs and general prescription drugs with this intention (1.7 and 1.6%) is lower than most lifetime prevalence numbers in Europe (ranging from 4.6 to 16%)",
+     "text": "In one survey, 1.7% and 1.6% of university students used specific prescription drugs and general prescription drugs for cognitive enhancement.",
+     "id": "F4",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 42,
+     "where": "Discussion",
+     "quote": "Lesser awareness of the possibility to use substances for the purpose of cognitive enhancement among peers can have an impact on the prevalence, in particular for prescription drugs which, when not obtained by a prescription, are often obtained via peers.",
+     "text": "The study's findings might be influenced by the respondents' awareness of cognitive enhancement substances.",
+     "id": "L2",
+     "second_hand": ""
+    }
+   ],
+   "tag": "B"
+  },
+  {
+   "read": "summary",
+   "ref": {
+    "id": "franke_2014",
+    "type": "article-journal",
+    "title": "Substances used and prevalence rates of pharmacological cognitive enhancement among healthy subjects",
+    "author": [
+     {
+      "family": "Franke",
+      "given": "Andreas G."
+     },
+     {
+      "family": "Bagusat",
+      "given": "Christiana"
+     },
+     {
+      "family": "Rust",
+      "given": "Sebastian"
+     },
+     {
+      "family": "Engel",
+      "given": "Alice"
+     },
+     {
+      "family": "Lieb",
+      "given": "Klaus"
+     }
+    ],
+    "container-title": "European Archives of Psychiatry and Clinical Neuroscience",
+    "issued": {
+     "date-parts": [
+      [
+       2014
+      ]
+     ]
+    },
+    "DOI": "10.1007/s00406-014-0537-1",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "264",
+    "issue": "S1",
+    "page": "83-90"
+   },
+   "doi": "10.1007/s00406-014-0537-1",
+   "title": "Substances used and prevalence rates of pharmacological cognitive enhancement among healthy subjects",
+   "year": 2014,
+   "journal": "European archives of psychiatry and clinical neuroscience",
+   "kind": "review",
+   "people": true,
+   "near": 0.764,
+   "money": [],
+   "design": {
+    "passage": 1,
+    "where": "Summary",
+    "quote": "Pharmacological \"cognitive enhancement\" (CE) is defined as the use of any psychoactive drug with the purpose of enhancing cognition, e.g. regarding attention, concentration or memory by healthy subjects.",
+    "text": "a research paper on pharmacological cognitive enhancement among healthy subjects"
+   },
+   "findings": [
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "Evidence from randomized placebo-controlled trials shows that the abovementioned substances have limited pro-cognitive effects as demonstrated, e.g. regarding increased attention, increased cognitive speed or shortening of reaction times, but on the same time poses considerable safety risks on the consumers.",
+     "text": "The substances have limited pro-cognitive effects, such as increased attention, increased cognitive speed, or shortening of reaction times.",
+     "id": "F5",
+     "second_hand": ""
+    },
+    {
+     "passage": 2,
+     "where": "Summary",
+     "quote": "Prevalence rates for the use of CE drugs among healthy subjects show a broad range from less than 1 % up to more than 20 %.",
+     "text": "Prevalence rates for the use of CE drugs among healthy subjects range from less than 1% to more than 20%.",
+     "id": "F6",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 3,
+     "where": "Summary",
+     "quote": "A clear and comprehensive picture of the drugs used for CE by healthy subjects and their adverse events and safety risks as well as comprehensive and comparable international data on the prevalence rates of CE among healthy subjects are of paramount importance for informing policy makers and healthcare professionals about CE.",
+     "text": "A clear and comprehensive picture of the drugs used for CE and their adverse events is needed.",
+     "id": "L3",
+     "second_hand": ""
+    }
+   ],
+   "tag": "C"
+  }
+ ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "direct evidence of wisdom improvement",
  "wanted": [
   {
    "doi": "10.1007/s00406-014-0537-1",
@@ -69,14 +389,6 @@
  ],
  "person": null,
  "history": [
-  {
-   "on": "2026-11-19",
-   "lane": 19,
-   "status": "none",
-   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (1 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
-   "short": "",
-   "complete": false
-  },
   {
    "on": "2026-11-19",
    "lane": 19,
@@ -116,6 +428,14 @@
    "why": "the second reader did not accept the answer",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-22",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (4 source(s) could not be fetched just now, 4 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -124,39 +444,412 @@
    "read": "full",
    "kind": "other",
    "at": "10.1371/journal.pone.0129805",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "A survey of substance use for cognitive enhancement by university students in the Netherlands",
    "read": "full",
    "kind": "other",
    "at": "10.3389/fnsys.2015.00010",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "finding",
+     "text": "In one survey, 1.3% of university students used illicit drugs for cognitive enhancement.",
+     "quote": "The use of illicit drugs to enhance cognitive performance in our sample (1.3%) is a little lower than previous prevalence numbers of 2.9% (Franke et al.,) and 3.5% in Germany (Wolff et al.,; however, ",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "finding",
+     "text": "In one survey, 45.6% of university students used lifestyle drugs for cognitive enhancement.",
+     "quote": "The use of lifestyle drugs to enhance cognitive performance (45.6%) is lower than found by Wolff et al. (; 83.2%), but more in line with the prevalence of the use of coffee for this purpose by 53% res",
+     "why": "the sentence is not carried by its quote and passage"
+    },
+    {
+     "kind": "limit",
+     "text": "The study's findings might not be comparable to others due to the timeframe used.",
+     "quote": "It might be suggested that our numbers are lower due to their timeframe being based on “during respondent's university studies” instead of lifetime prevalence.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
-   "title": "Impact of contextual factors and substance characteristics on perspectives toward cognitive enhancement",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1371/journal.pone.0071452",
+   "title": "Drinking Alcohol While Using Other Drugs Can Be Deadly",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.cdc.gov/alcohol/about-alcohol-use/other-drug-use.html",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
-   "title": "Prevalence and correlates of stimulant and depressant pharmacological cognitive enhancement among Norwegian students",
-   "read": "full",
-   "kind": "other",
-   "at": "10.1177/1455072518778493",
+   "title": "Ecstasy",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.talktofrank.com/drug/ecstasy",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
+  },
+  {
+   "title": "Advice for families of people who use drugs",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.nhs.uk/live-well/addiction-support/advice-for-the-families-of-drug-users/",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Mixing Medications and Dietary Supplements Can Endanger Your Health",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.fda.gov/consumers/consumer-updates/mixing-medications-and-dietary-supplements-can-endanger-your-health",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Substances used and prevalence rates of pharmacological cognitive enhancement among healthy subjects",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1007/s00406-014-0537-1",
+   "kept": 2,
+   "thrown": []
+  },
+  {
+   "title": "Cognitive enhancers in the treatment of substance use disorders: clinical evidence",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1016/j.pbb.2011.04.017",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Transcranial direct current stimulation in psychiatric disorders",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.5498/wjp.v5.i1.88",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F5",
+   "F3"
+  ],
+  "direct": "It depends",
+  "but": [
+   "L3"
+  ],
+  "how": [
+   [
+    "DC",
+    "F5"
+   ],
+   [
+    "DA",
+    "F3"
+   ]
+  ],
+  "unanswered": "direct evidence of wisdom improvement"
+ },
+ "dropped": [
+  {
+   "try": 1,
+   "part": "how2",
+   "text": "A study of methylphenidate users found better strategic thinking and decision-making.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "maier_2015",
+     "where": "Abstract",
+     "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+     "sha": "8b2c234a70b4fb68"
+    },
+    {
+     "label": "F3",
+     "ref": "maier_2015",
+     "where": "Discussion",
+     "quote": "1) recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+     "sha": "a90a52238786aa5f"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: words that are not person-first (“users”)"
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5759,
+   "but": 0.9667,
+   "how1": 0.9048,
+   "how2": 0.9673
+  },
+  "scores_quotes_alone": {
+   "short": 0.7827,
+   "but": 0.9882,
+   "how1": 0.9671,
+   "how2": 0.9408
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. Some substances have limited pro-cognitive effects.",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Evidence from randomized placebo-controlled trials shows that the abovementioned substances have limited pro-cognitive effects as demonstrated, e.g. regarding increased attention, increased cognitive speed or shortening of reaction times, but on the same time poses considerable safety risks on the consumers.",
+       "sha": "cee3c4783107fcbd"
+      },
+      {
+       "label": "F3",
+       "ref": "maier_2015",
+       "where": "Discussion",
+       "quote": "1) recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+       "sha": "a90a52238786aa5f"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“It depends”) is not the answer the passages bear out: The passages discuss limited pro‑cognitive effects and the need for a clear picture of drug use, but they never mention wisdom. Therefore the opening word “It de"
+    },
+    {
+     "part": "but",
+     "text": "A clear picture of the drugs and their effects is needed.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "A clear and comprehensive picture of the drugs used for CE by healthy subjects and their adverse events and safety risks as well as comprehensive and comparable international data on the prevalence rates of CE among healthy subjects are of paramount importance for informing policy makers and healthcare professionals about CE.",
+       "sha": "aa8673122ad48694"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The passages discuss limited pro‑cognitive effects and the need for a clear picture of drug use, but they never mention wisdom. Therefore the opening word “It depends” is not a fair answer to the question “Do certain drugs increase wisdom?”)"
+    },
+    {
+     "part": "how1",
+     "text": "A review of pharmacological cognitive enhancement found limited pro-cognitive effects.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Pharmacological \"cognitive enhancement\" (CE) is defined as the use of any psychoactive drug with the purpose of enhancing cognition, e.g. regarding attention, concentration or memory by healthy subjects.",
+       "sha": "3c6d8547602b47e8"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Evidence from randomized placebo-controlled trials shows that the abovementioned substances have limited pro-cognitive effects as demonstrated, e.g. regarding increased attention, increased cognitive speed or shortening of reaction times, but on the same time poses considerable safety risks on the consumers.",
+       "sha": "cee3c4783107fcbd"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "No, the sources do not say drugs increase wisdom",
+     "rests_on": [
+      {
+       "label": "F5",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Evidence from randomized placebo-controlled trials shows that the abovementioned substances have limited pro-cognitive effects as demonstrated, e.g. regarding increased attention, increased cognitive speed or shortening of reaction times, but on the same time poses considerable safety risks on the consumers.",
+       "sha": "cee3c4783107fcbd"
+      },
+      {
+       "label": "F3",
+       "ref": "maier_2015",
+       "where": "Discussion",
+       "quote": "1) recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+       "sha": "a90a52238786aa5f"
+      },
+      {
+       "label": "DC",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Pharmacological \"cognitive enhancement\" (CE) is defined as the use of any psychoactive drug with the purpose of enhancing cognition, e.g. regarding attention, concentration or memory by healthy subjects.",
+       "sha": "3c6d8547602b47e8"
+      },
+      {
+       "label": "DA",
+       "ref": "maier_2015",
+       "where": "Abstract",
+       "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+       "sha": "8b2c234a70b4fb68"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: it says what the sources do not say: only a part of each source was read. Let the But be a finding that says for whom or under what conditions the answer holds, or a limit a source states itself"
+    },
+    {
+     "part": "but",
+     "text": "A clear picture of drug use is needed",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "A clear and comprehensive picture of the drugs used for CE by healthy subjects and their adverse events and safety risks as well as comprehensive and comparable international data on the prevalence rates of CE among healthy subjects are of paramount importance for informing policy makers and healthcare professionals about CE.",
+       "sha": "aa8673122ad48694"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "A 2014 review found limited pro-cognitive effects",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Pharmacological \"cognitive enhancement\" (CE) is defined as the use of any psychoactive drug with the purpose of enhancing cognition, e.g. regarding attention, concentration or memory by healthy subjects.",
+       "sha": "3c6d8547602b47e8"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Evidence from randomized placebo-controlled trials shows that the abovementioned substances have limited pro-cognitive effects as demonstrated, e.g. regarding increased attention, increased cognitive speed or shortening of reaction times, but on the same time poses considerable safety risks on the consumers.",
+       "sha": "cee3c4783107fcbd"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2015 study found methylphenidate users performed better in strategic thinking",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "maier_2015",
+       "where": "Abstract",
+       "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+       "sha": "8b2c234a70b4fb68"
+      },
+      {
+       "label": "F3",
+       "ref": "maier_2015",
+       "where": "Discussion",
+       "quote": "1) recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+       "sha": "a90a52238786aa5f"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: words that are not person-first (“users”)"
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "It depends. Certain drugs can increase strategic thinking and decision-making.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "maier_2015",
+       "where": "Discussion",
+       "quote": "1) recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+       "sha": "a90a52238786aa5f"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Evidence from randomized placebo-controlled trials shows that the abovementioned substances have limited pro-cognitive effects as demonstrated, e.g. regarding increased attention, increased cognitive speed or shortening of reaction times, but on the same time poses considerable safety risks on the consumers.",
+       "sha": "cee3c4783107fcbd"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "the word it opens with (“It depends”) is not the answer the passages bear out: The passages discuss drugs’ effects on strategic thinking and decision‑making, not on wisdom. Therefore the opening phrase “It depends” does not fairly answer th"
+    },
+    {
+     "part": "but",
+     "text": "A clear picture of the drugs and their effects is needed.",
+     "rests_on": [
+      {
+       "label": "L3",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "A clear and comprehensive picture of the drugs used for CE by healthy subjects and their adverse events and safety risks as well as comprehensive and comparable international data on the prevalence rates of CE among healthy subjects are of paramount importance for informing policy makers and healthcare professionals about CE.",
+       "sha": "aa8673122ad48694"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (The passages discuss drugs’ effects on strategic thinking and decision‑making, not on wisdom. Therefore the opening phrase “It depends” does not fairly answer the question “Do certain drugs increase wisdom?” and the subsequent sentence abou)"
+    },
+    {
+     "part": "how1",
+     "text": "A 2014 review found limited pro-cognitive effects in healthy subjects using certain substances.",
+     "rests_on": [
+      {
+       "label": "DC",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Pharmacological \"cognitive enhancement\" (CE) is defined as the use of any psychoactive drug with the purpose of enhancing cognition, e.g. regarding attention, concentration or memory by healthy subjects.",
+       "sha": "3c6d8547602b47e8"
+      },
+      {
+       "label": "F5",
+       "ref": "franke_2014",
+       "where": "Summary",
+       "quote": "Evidence from randomized placebo-controlled trials shows that the abovementioned substances have limited pro-cognitive effects as demonstrated, e.g. regarding increased attention, increased cognitive speed or shortening of reaction times, but on the same time poses considerable safety risks on the consumers.",
+       "sha": "cee3c4783107fcbd"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "A 2015 study of people who use methylphenidate found better strategic thinking and decision-making.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "maier_2015",
+       "where": "Abstract",
+       "quote": "Thus, we investigated whether the cognitive performance and personality of healthy individuals with regular nonmedical methylphenidate (MPH) use for PCE differ from stimulant-naïve controls.",
+       "sha": "8b2c234a70b4fb68"
+      },
+      {
+       "label": "F3",
+       "ref": "maier_2015",
+       "where": "Discussion",
+       "quote": "1) recently abstinent PCE users and stimulant-naïve controls performed equally in most of the cognitive tasks but PCE users performed better in strategic thinking and decision-making",
+       "sha": "a90a52238786aa5f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
  "place": {
   "home": "facts",
   "also": [],
