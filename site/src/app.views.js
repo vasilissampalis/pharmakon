@@ -716,6 +716,13 @@ document.addEventListener("change", e => { const sel = e.target.closest && e.tar
    other, some 16,000 pixels on a phone. Now each term is a row with its one-line meaning, from A to Z; a tap opens the full
    definition and its source, and the one open before it closes: the question cards of the drug pages, used here too. A
    term keeps its address (#g-<number in the data>), whatever its place in the list. */
+/* (2.28.35) How to read: each point names the research it rests on (writer 751's anchors, checked at the source by round-2
+   reader 779; data/verification/pdf-2026-11-26/751_howto.json). The page's own text stays in the template; the citations are
+   filled in here from the references the page carries. */
+function howCites() {
+  document.querySelectorAll(".howcite").forEach(el => { const ids = (el.dataset.refs || "").split(",").filter(Boolean); el.innerHTML = ids.length ? cites(ids) : ""; });
+}
+
 function renderGlossary() {
   const order = GLOSSARY.map((g, i) => i).sort((a, b) => GLOSSARY[a].term.localeCompare(GLOSSARY[b].term, "en", { sensitivity: "base" }));
   document.getElementById("glossary-list").innerHTML = order.map(i => { const g = GLOSSARY[i];
@@ -1595,7 +1602,7 @@ applyPhotoPref();
 (function () { const el = document.getElementById("photo-credits"); if (!el) return; const name = s => (subBySlug[s] ? subBySlug[s].name : s === "safety-drug-checking" ? "Drug checking" : s);
   el.innerHTML = PHOTOS.slice().sort((a, b) => name(a.drug).localeCompare(name(b.drug))).map(p => "<li><b>" + esc(name(p.drug)) + ":</b> " + esc(p.form.toLowerCase()) + ". " + photoCredit(p) + "</li>").join(""); })();
 // (the statistics page draws on its first visit, once its file has arrived)
-buildIndex(); renderHome2(); factsLinks(); renderSubstances(); renderGlossary(); renderInteractions(); renderEmergency(); renderLaw(); renderChecking(); sectionize();
+buildIndex(); renderHome2(); factsLinks(); renderSubstances(); renderGlossary(); howCites(); renderInteractions(); renderEmergency(); renderLaw(); renderChecking(); sectionize();
 window.addEventListener("hashchange", route);
 document.getElementById("skiplink").addEventListener("click", () => { const v = document.querySelector(".view.active"); const h = v && v.querySelector("h1"); if (h) { h.setAttribute("tabindex", "-1"); h.focus(); } });
 route();
