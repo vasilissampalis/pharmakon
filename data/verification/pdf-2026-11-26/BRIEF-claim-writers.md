@@ -246,6 +246,23 @@ The files saved as the Timmermann, Nayak and Hysek supplements are the articles 
 
 ---
 
+### Reader 765 (added 27 November 2026, after writer 763's report): what a drug screen can miss
+
+Cards (`cross-cutting/`): `sc_moeller_2017`, `sc_saitman_2014`, `sc_verstraete_2004` (all three now checked and merged, in
+`data/study-cards/cross-cutting.json`). Writer 763 found that Moeller et al. (2017) cover screens that miss a drug, and people
+ask it ("does fentanyl show up on a drug test", "do benzos like Xanax show up").
+
+23. **`cl_gen_drug_test_misses`** (file `general`, substance `general`; pages `general`, `fentanyl-and-analogues`,
+    `benzodiazepines`, `prescription-opioids`). "Can a drug test miss fentanyl, or benzos like Xanax?" Which drugs a standard
+    screen is built to find and which it can miss, only as each review states it and only for the tests it names (for
+    example fentanyl and other synthetic opioids on an opiate screen; some benzodiazepines on a benzodiazepine screen; newer
+    drugs); that a negative screen does not show the drug is absent; that confirmation methods are what find a drug a screen
+    misses, where the reviews say so; where the reviews disagree or date (say the year of each). Narrative reviews only: the
+    claim stays a draft and says its figures are second-hand. Findings only: nothing on avoiding detection, on timing, on
+    amounts, or on anything added to a sample. Myth-or-fact items only as safety facts (for example, that a negative opiate
+    screen does not rule out fentanyl), never how to pass a test. Check first that no claim in `data/claims/` already answers
+    this; if one does, write a patch for it instead and say so.
+
 ## Saving your work
 
 After each file passes its check, commit and push it (other agents work in the same folder: add only your own files):
