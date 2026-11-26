@@ -18,37 +18,345 @@
   "prescription-opioids"
  ],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-26",
   "models": {
-   "reader": "groq:openai/gpt-oss-20b",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team H2",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash",
-   "reader_first": "@cf/meta/llama-4-scout-17b-16e-instruct"
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:anthropic/claude-haiku-5.5",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45340770315",
-  "read_seconds": 100,
+  "run": "45891570571",
+  "read_seconds": 64,
   "from": {
-   "papers": 0,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
-  "neurons": 101.5,
-  "seconds": 100
+  "neurons": 0.0,
+  "seconds": 138
  },
  "status": "none",
- "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "no draft passed: not accepted at try 2: a second reader did not accept but (The passage says no controlled clinical studies have examined the pharmacology of NSOs (novel synthetic opioids). The sentence widens this to the effects of opioids in general, which the passages do not say.). Say only what the items say, answer the question itself, and let the But be a limit of that answer.",
  "gates": {
-  "reader": "llama-4-scout-17b-16e-instruct could not read on (the model service could not be reached: The read operation timed out): gpt-oss-20b read from there",
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "0 findings kept from 0 sources (0 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)"
+  "read": "5 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 1 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "2 review(s) or meta-analyses, 0 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "rules": "broken at try 3: but: a clinical word where an everyday one exists (“pharmacology”): say it plainly",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.57, but 0.38, how1 0.95, how2 0.88, how3 0.95, how4 0.97",
+  "check": "not accepted at try 2: a second reader did not accept but (The passage says no controlled clinical studies have examined the pharmacology of NSOs (novel synthetic opioids). The sentence widens this to the effects of opioids in general, which the passages do not say.). Say only what the items say, answer the question itself, and let the But be a limit of that answer."
  },
- "sources": [],
+ "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "prekupec_2017",
+    "type": "article-journal",
+    "title": "Misuse of novel synthetic opioids: A deadly New trend",
+    "author": [
+     {
+      "family": "Prekupec",
+      "given": "Matthew P."
+     },
+     {
+      "family": "Mansky",
+      "given": "Peter A."
+     },
+     {
+      "family": "Baumann",
+      "given": "Michael H."
+     }
+    ],
+    "container-title": "Journal of Addiction Medicine",
+    "issued": {
+     "date-parts": [
+      [
+       2017
+      ]
+     ]
+    },
+    "DOI": "10.1097/adm.0000000000000324",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "11",
+    "issue": "4",
+    "page": "256-265",
+    "PMCID": "PMC5537029"
+   },
+   "doi": "10.1097/adm.0000000000000324",
+   "pmcid": "PMC5537029",
+   "title": "Misuse of Novel Synthetic Opioids: A Deadly New Trend",
+   "year": 2017,
+   "journal": "Journal of addiction medicine",
+   "kind": "review",
+   "people": false,
+   "near": 0.722,
+   "money": [],
+   "design": null,
+   "findings": [
+    {
+     "passage": 21,
+     "where": "INTOXICATION AND MANAGEMENT",
+     "quote": "Death is usually from respiratory depression.",
+     "text": "Death is usually from respiratory depression.",
+     "id": "F1",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 31,
+     "where": "CONCLUSIONS",
+     "quote": "No controlled clinical studies have been carried out to examine the pharmacology of NSOs, and few animal studies have examined the biological effects of NSOs",
+     "text": "No controlled clinical studies have been carried out to examine the pharmacology of NSOs, and few animal studies have examined the biological effects of NSOs.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
+  {
+   "read": "full",
+   "ref": {
+    "id": "dahan_2024",
+    "type": "article-journal",
+    "title": "Fact vs. fiction: Naloxone in the treatment of opioid-induced respiratory depression in the current era of synthetic opioids",
+    "author": [
+     {
+      "family": "Dahan",
+      "given": "Albert"
+     },
+     {
+      "family": "Franko",
+      "given": "Thomas S."
+     },
+     {
+      "family": "Carroll",
+      "given": "James W."
+     },
+     {
+      "family": "Craig",
+      "given": "David S."
+     },
+     {
+      "family": "Crow",
+      "given": "Callie"
+     },
+     {
+      "family": "Galinkin",
+      "given": "Jeffrey L."
+     },
+     {
+      "family": "Garrity",
+      "given": "Justin C."
+     },
+     {
+      "family": "Peterson",
+      "given": "Joanne"
+     },
+     {
+      "family": "Rausch",
+      "given": "David B."
+     }
+    ],
+    "container-title": "Frontiers in Public Health",
+    "issued": {
+     "date-parts": [
+      [
+       2024
+      ]
+     ]
+    },
+    "DOI": "10.3389/fpubh.2024.1346109",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     }
+    },
+    "volume": "12",
+    "number": "1346109",
+    "PMCID": "PMC10933112"
+   },
+   "doi": "10.3389/fpubh.2024.1346109",
+   "pmcid": "PMC10933112",
+   "title": "Fact vs. fiction: naloxone in the treatment of opioid-induced respiratory depression in the current era of synthetic opioids",
+   "year": 2024,
+   "journal": "Frontiers in public health",
+   "kind": "review",
+   "people": true,
+   "near": 0.698,
+   "money": [
+    "The author(s) declare financial support was received for the research, authorship, and/or publication of this article. Editorial assistance was provided by Robin Smith, PhD, of The Curry Rockefeller Group, Tarrytown, NY. This assistance was funded by US WorldMeds, LLC.",
+    "AD received consultancy fees from Enalare Therapeutics Inc. (Princeton, New Jersey), Trevena Inc. (Chesterbroom, New Jersey), and awards or grants from the U.S. Food and Drug Administration (Silver Spring, Maryland), the Netherlands Organization for Health Research and Development, and the Dutch Research Council (the Hague, the Netherlands). TF is a consultant for Wolters-Kluwer. DC has received consulting fees, within the past 12 months, from AbbVie, Inc. (Chicago, IL), Collegium Pharmaceutical, Inc. (Stoughton, MA), Purdue Pharma (Stamford, CT), and Endo Pharmaceuticals (Malvern, PA). JP is the Founder and Executive Director of Learn to Cope, Inc., a registered 501(c)3 non-profit organization providing 100% free resources and support to families dealing with addiction and recovery. The remaining authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest. The author(s) declared that they were an editorial board member of Frontiers, at the time of submission. This had no impact on the peer review process and the final decision."
+   ],
+   "design": {
+    "passage": 1,
+    "where": "Abstract",
+    "quote": "Opioid-induced respiratory depression (OIRD) deaths are ~80,000 a year in the US and are a major public health issue.",
+    "text": "A research paper on opioid-induced respiratory depression deaths and naloxone treatments"
+   },
+   "findings": [
+    {
+     "passage": 3,
+     "where": "Introduction: the current face of the opioid epidemic",
+     "quote": "Pure fentanyl, for example, has 224 times greater potency than morphine, increasing the likelihood that users will experience respiratory depression and fatal hypoxia.",
+     "text": "Pure fentanyl has 224 times greater potency than morphine, which increases the likelihood that users will experience respiratory depression and fatal hypoxia.",
+     "id": "F2",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_about-opioids",
+    "type": "webpage",
+    "title": "About opioids",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2024,
+       6,
+       3
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/opioids/about-opioids.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "About opioids",
+   "year": 2024,
+   "kind": "official",
+   "people": true,
+   "near": 0.702,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/opioids/about-opioids.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 12,
+     "where": "Overdose",
+     "quote": "Opioids affect the part of your brain that controls your breathing. When you take more opioids than your body can handle, your breathing slows. This can lead to unconsciousness and even death.",
+     "text": "Opioids affect the part of the brain that controls breathing, and when a person takes more opioids than the body can handle, breathing slows down, which can lead to unconsciousness and even death.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "label_oxycodone-hydrochloride",
+    "type": "webpage",
+    "title": "Oxycodone Hydrochloride",
+    "author": [
+     {
+      "literal": "American Health Packaging"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       5
+      ]
+     ]
+    },
+    "URL": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=aa7ac2bf-d9ed-445d-b394-4d3fe39780ca",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    },
+    "publisher": "DailyMed",
+    "genre": "Drug label"
+   },
+   "title": "Oxycodone Hydrochloride",
+   "year": 2026,
+   "kind": "official",
+   "people": true,
+   "near": 0.698,
+   "name": "U.S. Food and Drug Administration",
+   "short": "the US label for oxycodone",
+   "tier": 1,
+   "address": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=aa7ac2bf-d9ed-445d-b394-4d3fe39780ca",
+   "money": [],
+   "label": true,
+   "design": null,
+   "findings": [
+    {
+     "passage": 30,
+     "where": "Warnings and precautions",
+     "quote": "Accidental ingestion of even one dose of oxycodone hydrochloride, especially by children, can result in respiratory depression and death due to an overdose of oxycodone.",
+     "text": "Accidental ingestion of even one dose of oxycodone hydrochloride can result in respiratory depression and death due to an overdose.",
+     "id": "F4",
+     "second_hand": ""
+    },
+    {
+     "passage": 56,
+     "where": "Overdosage",
+     "quote": "Acute overdose with oxycodone can be manifested by respiratory depression, somnolence progressing to stupor or coma, skeletal muscle flaccidity, cold and clammy skin, constricted pupils, and in some cases, pulmonary edema, bradycardia, hypotension, hypoglycemia, partial or complete airway obstruction, atypical snoring, and death.",
+     "text": "Acute overdose with oxycodone can manifest with respiratory depression, somnolence progressing to stupor or coma, skeletal muscle flaccidity, cold and clammy skin, constricted pupils, and in some cases pulmonary edema, bradycardia, hypotension, hypoglycemia, partial or complete airway obstruction, atypical snoring, and death.",
+     "id": "F5",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
+  }
+ ],
  "parts": [],
  "complete": false,
  "missing": "",
@@ -92,6 +400,14 @@
    "why": "no source that can be read gave a finding for this question (2 source(s) could not be fetched just now, 1 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -100,9 +416,15 @@
    "read": "full",
    "kind": "review",
    "at": "10.1097/adm.0000000000000324",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": [
+    {
+     "kind": "text",
+     "text": "a review of novel synthetic opioids covering intoxication and management",
+     "quote": "Intoxication with all of the aforementioned NSOs is characterized by a reduced level of consciousness, ranging from drowsiness to stupor, which resembles that produced by more classic opioid agents.",
+     "why": "the sentence is not carried by its quote and passage"
+    }
+   ]
   },
   {
    "title": "A Critical Review of the Social and Behavioral Contributions to the Overdose Epidemic",
@@ -126,12 +448,393 @@
    "read": "full",
    "kind": "review",
    "at": "10.3389/fpubh.2024.1346109",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "About opioids",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/opioids/about-opioids.html",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Oxycodone Hydrochloride",
+   "read": "page",
+   "kind": "official",
+   "at": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=aa7ac2bf-d9ed-445d-b394-4d3fe39780ca",
+   "kept": 2,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F3",
+   "F1"
+  ],
+  "direct": "",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F3"
+   ],
+   [
+    "F5",
+    "F4"
+   ],
+   [
+    "F1"
+   ],
+   [
+    "F2"
+   ]
+  ],
+  "unanswered": ""
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Opioids can kill by slowing down breathing, leading to unconsciousness and death. Death is usually from respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "healthcanada_about-opioids",
+       "where": "Overdose",
+       "quote": "Opioids affect the part of your brain that controls your breathing. When you take more opioids than your body can handle, your breathing slows. This can lead to unconsciousness and even death.",
+       "sha": "56215de61c5f7b8b"
+      },
+      {
+       "label": "F1",
+       "ref": "prekupec_2017",
+       "where": "INTOXICATION AND MANAGEMENT",
+       "quote": "Death is usually from respiratory depression.",
+       "sha": "ad3088bd4b113041"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "No controlled clinical studies have been carried out to examine the pharmacology of opioids.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "prekupec_2017",
+       "where": "CONCLUSIONS",
+       "quote": "No controlled clinical studies have been carried out to examine the pharmacology of NSOs, and few animal studies have examined the biological effects of NSOs",
+       "sha": "1507a1150fdb6b60"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says opioids affect the part of the brain that controls breathing.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "healthcanada_about-opioids",
+       "where": "Overdose",
+       "quote": "Opioids affect the part of your brain that controls your breathing. When you take more opioids than your body can handle, your breathing slows. This can lead to unconsciousness and even death.",
+       "sha": "56215de61c5f7b8b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label for oxycodone says accidental ingestion can result in respiratory depression and death.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "label_oxycodone-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Accidental ingestion of even one dose of oxycodone hydrochloride, especially by children, can result in respiratory depression and death due to an overdose of oxycodone.",
+       "sha": "d22ce8b3319f46b1"
+      },
+      {
+       "label": "F5",
+       "ref": "label_oxycodone-hydrochloride",
+       "where": "Overdosage",
+       "quote": "Acute overdose with oxycodone can be manifested by respiratory depression, somnolence progressing to stupor or coma, skeletal muscle flaccidity, cold and clammy skin, constricted pupils, and in some cases, pulmonary edema, bradycardia, hypotension, hypoglycemia, partial or complete airway obstruction, atypical snoring, and death.",
+       "sha": "52721935d4d9a830"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A review says death is usually from respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "prekupec_2017",
+       "where": "INTOXICATION AND MANAGEMENT",
+       "quote": "Death is usually from respiratory depression.",
+       "sha": "ad3088bd4b113041"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A review says pure fentanyl has 224 times greater potency than morphine, increasing the likelihood of respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "dahan_2024",
+       "where": "Introduction: the current face of the opioid epidemic",
+       "quote": "Pure fentanyl, for example, has 224 times greater potency than morphine, increasing the likelihood that users will experience respiratory depression and fatal hypoxia.",
+       "sha": "0fbd9920e228508f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Opioids can kill by slowing down breathing, leading to unconsciousness and death. Death is usually from respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "healthcanada_about-opioids",
+       "where": "Overdose",
+       "quote": "Opioids affect the part of your brain that controls your breathing. When you take more opioids than your body can handle, your breathing slows. This can lead to unconsciousness and even death.",
+       "sha": "56215de61c5f7b8b"
+      },
+      {
+       "label": "F1",
+       "ref": "prekupec_2017",
+       "where": "INTOXICATION AND MANAGEMENT",
+       "quote": "Death is usually from respiratory depression.",
+       "sha": "ad3088bd4b113041"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "No controlled clinical studies have been carried out to examine the effects of opioids.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "prekupec_2017",
+       "where": "CONCLUSIONS",
+       "quote": "No controlled clinical studies have been carried out to examine the pharmacology of NSOs, and few animal studies have examined the biological effects of NSOs",
+       "sha": "1507a1150fdb6b60"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says no controlled clinical studies have examined the pharmacology of NSOs (novel synthetic opioids). The sentence widens this to the effects of opioids in general, which the passages do not say."
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says opioids affect the part of the brain that controls breathing.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "healthcanada_about-opioids",
+       "where": "Overdose",
+       "quote": "Opioids affect the part of your brain that controls your breathing. When you take more opioids than your body can handle, your breathing slows. This can lead to unconsciousness and even death.",
+       "sha": "56215de61c5f7b8b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label for oxycodone says accidental ingestion can result in respiratory depression and death.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "label_oxycodone-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Accidental ingestion of even one dose of oxycodone hydrochloride, especially by children, can result in respiratory depression and death due to an overdose of oxycodone.",
+       "sha": "d22ce8b3319f46b1"
+      },
+      {
+       "label": "F5",
+       "ref": "label_oxycodone-hydrochloride",
+       "where": "Overdosage",
+       "quote": "Acute overdose with oxycodone can be manifested by respiratory depression, somnolence progressing to stupor or coma, skeletal muscle flaccidity, cold and clammy skin, constricted pupils, and in some cases, pulmonary edema, bradycardia, hypotension, hypoglycemia, partial or complete airway obstruction, atypical snoring, and death.",
+       "sha": "52721935d4d9a830"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A review says death is usually from respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "prekupec_2017",
+       "where": "INTOXICATION AND MANAGEMENT",
+       "quote": "Death is usually from respiratory depression.",
+       "sha": "ad3088bd4b113041"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A review says pure fentanyl has 224 times greater potency than morphine, increasing the likelihood of respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "dahan_2024",
+       "where": "Introduction: the current face of the opioid epidemic",
+       "quote": "Pure fentanyl, for example, has 224 times greater potency than morphine, increasing the likelihood that users will experience respiratory depression and fatal hypoxia.",
+       "sha": "0fbd9920e228508f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "a rule was broken: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Opioids can kill by slowing down breathing, leading to unconsciousness and death. Death is usually from respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "healthcanada_about-opioids",
+       "where": "Overdose",
+       "quote": "Opioids affect the part of your brain that controls your breathing. When you take more opioids than your body can handle, your breathing slows. This can lead to unconsciousness and even death.",
+       "sha": "56215de61c5f7b8b"
+      },
+      {
+       "label": "F1",
+       "ref": "prekupec_2017",
+       "where": "INTOXICATION AND MANAGEMENT",
+       "quote": "Death is usually from respiratory depression.",
+       "sha": "ad3088bd4b113041"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "No controlled clinical studies have been carried out to examine the pharmacology of novel synthetic opioids.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "prekupec_2017",
+       "where": "CONCLUSIONS",
+       "quote": "No controlled clinical studies have been carried out to examine the pharmacology of NSOs, and few animal studies have examined the biological effects of NSOs",
+       "sha": "1507a1150fdb6b60"
+      }
+     ],
+     "ok": false,
+     "by": "a rule",
+     "said": "a rule: a clinical word where an everyday one exists (“pharmacology”): say it plainly"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says opioids affect the part of the brain that controls breathing.",
+     "rests_on": [
+      {
+       "label": "F3",
+       "ref": "healthcanada_about-opioids",
+       "where": "Overdose",
+       "quote": "Opioids affect the part of your brain that controls your breathing. When you take more opioids than your body can handle, your breathing slows. This can lead to unconsciousness and even death.",
+       "sha": "56215de61c5f7b8b"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "The US label for oxycodone says accidental ingestion can result in respiratory depression and death.",
+     "rests_on": [
+      {
+       "label": "F4",
+       "ref": "label_oxycodone-hydrochloride",
+       "where": "Warnings and precautions",
+       "quote": "Accidental ingestion of even one dose of oxycodone hydrochloride, especially by children, can result in respiratory depression and death due to an overdose of oxycodone.",
+       "sha": "d22ce8b3319f46b1"
+      },
+      {
+       "label": "F5",
+       "ref": "label_oxycodone-hydrochloride",
+       "where": "Overdosage",
+       "quote": "Acute overdose with oxycodone can be manifested by respiratory depression, somnolence progressing to stupor or coma, skeletal muscle flaccidity, cold and clammy skin, constricted pupils, and in some cases, pulmonary edema, bradycardia, hypotension, hypoglycemia, partial or complete airway obstruction, atypical snoring, and death.",
+       "sha": "52721935d4d9a830"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A review says death is usually from respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F1",
+       "ref": "prekupec_2017",
+       "where": "INTOXICATION AND MANAGEMENT",
+       "quote": "Death is usually from respiratory depression.",
+       "sha": "ad3088bd4b113041"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how4",
+     "text": "A review says pure fentanyl has 224 times greater potency than morphine, increasing the likelihood of respiratory depression.",
+     "rests_on": [
+      {
+       "label": "F2",
+       "ref": "dahan_2024",
+       "where": "Introduction: the current face of the opioid epidemic",
+       "quote": "Pure fentanyl, for example, has 224 times greater potency than morphine, increasing the likelihood that users will experience respiratory depression and fatal hypoxia.",
+       "sha": "0fbd9920e228508f"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.5701,
+   "but": 0.3767,
+   "how1": 0.9454,
+   "how2": 0.8843,
+   "how3": 0.9542,
+   "how4": 0.9672
+  },
+  "scores_quotes_alone": {
+   "short": 0.5305,
+   "but": 0.3983,
+   "how1": 0.9499,
+   "how2": 0.9341,
+   "how3": 0.5579,
+   "how4": 0.541
+  }
+ },
  "place": {
   "home": "heroin",
   "also": [

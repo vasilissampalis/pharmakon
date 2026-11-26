@@ -17,36 +17,148 @@
   "heroin"
  ],
  "made": {
-  "on": "2026-11-24",
+  "on": "2026-11-26",
   "models": {
-   "reader": "@cf/meta/llama-4-scout-17b-16e-instruct",
-   "writer": "groq:qwen/qwen3.8-27b",
-   "checker": "groq:openai/gpt-oss-120b",
-   "planner": "groq:openai/gpt-oss-120b",
-   "also1": "gemini:gemini-3.6-flash",
-   "team": "team H2",
-   "reader_2": "groq:openai/gpt-oss-20b",
-   "writer_2": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "also1_else": "gemini:gemini-3-flash-preview|gemini:gemini-4-hydrogen|gemini:gemini-3.8-flash"
+   "reader": "gemini:gemma-4-31b-it",
+   "writer": "openrouter:meta-llama/llama-3.3-70b-instruct",
+   "checker": "openrouter:anthropic/claude-haiku-5.5",
+   "planner": "openrouter:openai/gpt-oss-120b",
+   "team": "team R",
+   "reader_2": "@cf/meta/llama-4-scout-17b-16e-instruct"
   },
-  "run": "45340770315",
-  "read_seconds": 100,
+  "run": "45891570571",
+  "read_seconds": 85,
   "from": {
-   "papers": 1,
+   "papers": 2,
    "summaries": 0,
-   "official": 0
+   "official": 2
   },
-  "neurons": 137.4,
-  "seconds": 100
+  "neurons": 0.0,
+  "seconds": 202
  },
  "status": "none",
- "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+ "why": "the second reader did not accept the answer",
  "gates": {
-  "time": "2 source(s) were not read: the time this run has for reading one question (100 seconds) was over",
-  "read": "3 findings kept from 1 sources (1 papers read in full, 0 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
-  "sources": "0 review(s) or meta-analyses, 1 single studies in people, 0 case report(s) (which do not count), 0 official page(s), 0 paper(s) read in summary only"
+  "read": "10 findings kept from 4 sources (2 papers read in full, 2 official pages, 0 papers read in summary); 0 thrown away (the quote was not in the passage, or a number was not in the quote)",
+  "sources": "0 review(s) or meta-analyses, 2 single studies in people, 0 case report(s) (which do not count), 2 official page(s), 0 paper(s) read in summary only",
+  "own": "our own checker (pharmakon-check-0, at least 0.05): short 0.20, but 0.58, how1 0.84, how2 0.95",
+  "check": "short: NOT accepted: The passages say heroin takes effect very quickly, that one may lose consciousness almost immediately, and that naloxone must be given within 20 to 30 minutes. They do not say an overdose can 'kill instantly' or that 'often there is time' t; but: NOT accepted: it is about something else than the short answer (Sentence 1 answers the question directly, but its 'often there is time' claim goes beyond the passages. Sentence 2's limitation concerns the Melbourne study's own onset-time inclusion criteria and sample, not the general answer in sentence ); how1: accepted; how2: accepted",
+  "rules": "1 How-do-we-know line(s) left out for a rule (how3: a number that is not in the paper's words it rests on (1746))"
  },
  "sources": [
+  {
+   "read": "full",
+   "ref": {
+    "id": "stam_2026",
+    "type": "article-journal",
+    "title": "Analysis of rapid onset heroin overdose cases from a supervised injecting facility in Melbourne, Australia",
+    "author": [
+     {
+      "family": "Stam",
+      "given": "Nathan C."
+     },
+     {
+      "family": "Shrestha",
+      "given": "Monika"
+     },
+     {
+      "family": "Tas",
+      "given": "Basak"
+     },
+     {
+      "family": "Furler",
+      "given": "John"
+     },
+     {
+      "family": "Bonomo",
+      "given": "Yvonne"
+     },
+     {
+      "family": "Strang",
+      "given": "John"
+     }
+    ],
+    "container-title": "Addiction",
+    "issued": {
+     "date-parts": [
+      [
+       2026
+      ]
+     ]
+    },
+    "DOI": "10.1111/add.70199",
+    "verification": {
+     "status": "metadata-verified",
+     "metadata_source": "crossref",
+     "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
+     "verified_by": "the system (scripts/auto)",
+     "verified_on": "2026-11-26",
+     "retraction_check": {
+      "status": "clear",
+      "checked_on": "2026-11-26"
+     },
+     "online_first_year": 2025
+    },
+    "volume": "121",
+    "issue": "2",
+    "page": "296-304",
+    "PMCID": "PMC12779582"
+   },
+   "doi": "10.1111/add.70199",
+   "pmcid": "PMC12779582",
+   "title": "Analysis of rapid onset heroin overdose cases from a supervised injecting facility in Melbourne, Australia",
+   "year": 2026,
+   "journal": "Addiction (Abingdon, England)",
+   "kind": "other",
+   "people": true,
+   "near": 0.753,
+   "money": [
+    "No authors declare any actual or potential conflict of interest including any financial, personal or other relationships with other people or organisations that could inappropriately influence or be perceived to influence this work."
+   ],
+   "design": {
+    "passage": 2,
+    "where": "Abstract",
+    "quote": "A retrospective cohort study of witnessed heroin overdose cases over a 12‐month period (1 July 2023 to 30 June 2024).",
+    "text": "A retrospective cohort study of witnessed heroin overdose cases over a 12-month period"
+   },
+   "findings": [
+    {
+     "passage": 20,
+     "where": "RESULTS",
+     "quote": "The median onset time for all heroin overdoses over the study period was 17 minutes (IQR = 12–24 minutes, range = 1–285 minutes)",
+     "text": "The median onset time for all heroin overdoses over the study period was 17 minutes (IQR = 12–24 minutes, range = 1–285 minutes).",
+     "id": "F1",
+     "second_hand": ""
+    },
+    {
+     "passage": 20,
+     "where": "RESULTS",
+     "quote": "85% of cases (n = 1473) occurred within 30 minutes, and 43% of cases (n = 748) occurred within 15 minutes of when an individual was ready to prepare and inject heroin.",
+     "text": "85% of cases (n = 1473) occurred within 30 minutes, and 43% of cases (n = 748) occurred within 15 minutes of when an individual was ready to prepare and inject heroin.",
+     "id": "F2",
+     "second_hand": ""
+    },
+    {
+     "passage": 29,
+     "where": "DISCUSSION",
+     "quote": "The findings demonstrate that while most overdoses occur within 30 minutes of heroin administration, a noteworthy minority occur within 10 minutes, suggesting a potentially different underlying risk profile.",
+     "text": "While most overdoses occur within 30 minutes of heroin administration, a noteworthy minority occur within 10 minutes, suggesting a potentially different underlying risk profile.",
+     "id": "F3",
+     "second_hand": ""
+    }
+   ],
+   "limits": [
+    {
+     "passage": 32,
+     "where": "DISCUSSION › Limitations",
+     "quote": "We included cases where the overdose onset time was less than 10 minutes, but there may have been cases where the latency between heroin administration and overdose was also short, which would have been missed if the preparation and injecting time was protracted.",
+     "text": "Cases where the overdose onset time was less than 10 minutes were included, but there may have been cases where the latency between heroin administration and overdose was also short, which would have been missed if the preparation and injecting time was protracted.",
+     "id": "L1",
+     "second_hand": ""
+    }
+   ],
+   "tag": "A"
+  },
   {
    "read": "full",
    "ref": {
@@ -89,10 +201,10 @@
      "metadata_source": "crossref",
      "metadata_route": "Crossref's API, read by scripts/auto/papers.py",
      "verified_by": "the system (scripts/auto)",
-     "verified_on": "2026-11-24",
+     "verified_on": "2026-11-26",
      "retraction_check": {
       "status": "clear",
-      "checked_on": "2026-11-24"
+      "checked_on": "2026-11-26"
      }
     },
     "volume": "10",
@@ -114,31 +226,31 @@
     "passage": 2,
     "where": "Abstract",
     "quote": "Retrospective study of 610 cases of fatal heroin-related drug toxicity in Australia, 2020–2022.",
-    "text": "Retrospective study of heroin-related toxicity deaths"
+    "text": "A retrospective study of fatal heroin-related drug toxicity cases"
    },
    "findings": [
     {
      "passage": 24,
      "where": "Discussion",
      "quote": "Using 6AM as a biomarker, it appears that death was rapid (under 20–30 min) in more than half of the older group cases, compared to a third of the younger cases.",
-     "text": "Death was rapid in more than half of the older group cases, compared to a third of the younger cases.",
-     "id": "F1",
+     "text": "Using 6AM as a biomarker, it appears that death was rapid (under 20-30 min) in more than half of the older group cases, compared to a third of the younger cases.",
+     "id": "F4",
      "second_hand": ""
     },
     {
      "passage": 24,
      "where": "Discussion",
-     "quote": "While 6AM was present in over half of the two older age groups, it was present in only a third of the younger groups.",
-     "text": "6AM was present in over half of the two older age groups, but in only a third of the younger groups.",
-     "id": "F2",
+     "quote": "Consistent with this profile, older cases were more likely to exhibit evidence of a sudden collapse following heroin administration",
+     "text": "Older cases were more likely to exhibit evidence of a sudden collapse following heroin administration.",
+     "id": "F5",
      "second_hand": ""
     },
     {
-     "passage": 27,
+     "passage": 24,
      "where": "Discussion",
-     "quote": "older heroin overdose cases had more extensive heart, lung, and liver pathology than younger cases. They also appeared more likely to have had shorter survival times than the youngest cases",
-     "text": "Older heroin overdose cases had more extensive heart, lung, and liver pathology and shorter survival times than the youngest cases.",
-     "id": "F3",
+     "quote": "Evidence of a sudden loss of consciousness and/or collapse might reasonably be taken to indicate a more rapid death.",
+     "text": "Evidence of a sudden loss of consciousness and/or collapse might reasonably be taken to indicate a more rapid death.",
+     "id": "F6",
      "second_hand": ""
     }
    ],
@@ -147,17 +259,156 @@
      "passage": 11,
      "where": "Methods › Case identification",
      "quote": "We did not have access to ongoing cases, or their characteristics.",
-     "text": "The study did not include ongoing cases.",
-     "id": "L1",
+     "text": "The authors did not have access to ongoing cases, or their characteristics.",
+     "id": "L2",
      "second_hand": ""
     }
    ],
-   "tag": "A"
+   "tag": "B"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "healthcanada_heroin",
+    "type": "webpage",
+    "title": "Heroin",
+    "author": [
+     {
+      "literal": "Health Canada"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       3,
+       14
+      ]
+     ]
+    },
+    "URL": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/heroin.html",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    },
+    "publisher": "Government of Canada"
+   },
+   "title": "Heroin",
+   "year": 2023,
+   "kind": "official",
+   "people": true,
+   "near": 0.683,
+   "name": "Health Canada",
+   "short": "Health Canada",
+   "tier": 1,
+   "address": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/heroin.html",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 11,
+     "where": "Risks related to heroin use",
+     "quote": "Heroin takes effect very quickly, especially when injected. If you take too much you may lose consciousness almost immediately.",
+     "text": "Heroin takes effect very quickly, especially when injected, and taking too much can cause a person to lose consciousness almost immediately.",
+     "id": "F7",
+     "second_hand": ""
+    },
+    {
+     "passage": 11,
+     "where": "Risks related to heroin use",
+     "quote": "In cases of overdose, naloxone can block the depressant effects. It must be given within 20 to 30 minutes after the heroin has been taken.",
+     "text": "Naloxone can block the depressant effects in cases of overdose, but it must be given within 20 to 30 minutes after the heroin has been taken.",
+     "id": "F8",
+     "second_hand": ""
+    },
+    {
+     "passage": 12,
+     "where": "Risks related to heroin use",
+     "quote": "Staying at the scene of an overdose is important to help save the life of the person overdosing.",
+     "text": "Staying at the scene of an overdose is important to help save the life of the person overdosing.",
+     "id": "F9",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "C"
+  },
+  {
+   "read": "page",
+   "ref": {
+    "id": "adf_heroin",
+    "type": "webpage",
+    "title": "Heroin",
+    "author": [
+     {
+      "literal": "Alcohol and Drug Foundation"
+     }
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2025,
+       5,
+       22
+      ]
+     ]
+    },
+    "URL": "https://adf.org.au/drug-facts/heroin/",
+    "accessed": {
+     "date-parts": [
+      [
+       2026,
+       11,
+       26
+      ]
+     ]
+    },
+    "verification": {
+     "status": "made by code",
+     "metadata_source": "the page itself (title, date) and data/auto/official/sources.json (the body's name)",
+     "verified_on": "2026-11-26"
+    }
+   },
+   "title": "Heroin",
+   "year": 2025,
+   "kind": "official",
+   "people": true,
+   "near": 0.697,
+   "name": "Alcohol and Drug Foundation",
+   "short": "Australia's Alcohol and Drug Foundation",
+   "tier": 2,
+   "address": "https://adf.org.au/drug-facts/heroin/",
+   "money": [],
+   "label": false,
+   "design": null,
+   "findings": [
+    {
+     "passage": 10,
+     "where": "Effects of heroin / Overdose",
+     "quote": "Heroin overdose can cause death.2 Call triple zero (000) and request an ambulance if you or someone else has any of the following symptoms",
+     "text": "Heroin overdose can cause death, and people are advised to call triple zero to request an ambulance if they or someone else has symptoms of an overdose.",
+     "id": "F10",
+     "second_hand": ""
+    }
+   ],
+   "limits": [],
+   "tag": "D"
   }
  ],
  "parts": [],
  "complete": false,
- "missing": "",
+ "missing": "exact timing of the fastest fatal overdoses",
  "wanted": [
   {
    "doi": "10.1046/j.1360-0443.2001.96811135.x",
@@ -198,6 +449,14 @@
    "why": "no source that can be read gave a finding for this question (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
    "short": "",
    "complete": false
+  },
+  {
+   "on": "2026-11-24",
+   "lane": 19,
+   "status": "none",
+   "why": "not enough sources: an answer needs one review or meta-analysis read in full, or one official page, or two of: a study in people, a review read in summary, a page of a government-paid service (3 source(s) could not be fetched just now, 2 of them for want of time: tried again in the next run)",
+   "short": "",
+   "complete": false
   }
  ],
  "looked": [
@@ -206,9 +465,8 @@
    "read": "full",
    "kind": "other",
    "at": "10.1111/add.70199",
-   "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "kept": 3,
+   "thrown": []
   },
   {
    "title": "Why have overdose deaths decreased? Widespread fentanyl saturation and decreased drug use among key drivers",
@@ -216,8 +474,7 @@
    "kind": "review",
    "at": "10.1016/j.lana.2025.101226",
    "kept": 0,
-   "thrown": [],
-   "fault": "it was not read: the time this run has for reading was over"
+   "thrown": []
   },
   {
    "title": "A Critical Review of the Social and Behavioral Contributions to the Overdose Epidemic",
@@ -235,9 +492,433 @@
    "at": "10.1016/j.dadr.2024.100217",
    "kept": 3,
    "thrown": []
+  },
+  {
+   "title": "Heroin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://www.canada.ca/en/health-canada/services/substance-use/controlled-illegal-drugs/heroin.html",
+   "kept": 3,
+   "thrown": []
+  },
+  {
+   "title": "Heroin",
+   "read": "page",
+   "kind": "official",
+   "at": "https://adf.org.au/drug-facts/heroin/",
+   "kept": 1,
+   "thrown": []
+  },
+  {
+   "title": "Heroin overdose: causes and consequences",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1046/j.1360-0443.2001.96811135.x",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Heroin overdose: research and evidence-based intervention",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1093/jurban/jtg022",
+   "kept": 0,
+   "thrown": []
+  },
+  {
+   "title": "Fatal heroin 'overdose': a review",
+   "read": "summary",
+   "kind": "review",
+   "at": "10.1046/j.1360-0443.1996.911217652.x",
+   "kept": 0,
+   "thrown": []
   }
  ],
- "soft": "a source could not be fetched",
+ "plan": {
+  "short": [
+   "F7",
+   "F8"
+  ],
+  "direct": "Sometimes",
+  "but": [
+   "L1"
+  ],
+  "how": [
+   [
+    "F7",
+    "F8",
+    "F9"
+   ],
+   [
+    "F10"
+   ],
+   [
+    "DA",
+    "F1",
+    "F2"
+   ]
+  ],
+  "unanswered": "exact timing of the fastest fatal overdoses"
+ },
+ "panel_gap": [],
+ "own": {
+  "model": "pharmakon-check-0",
+  "threshold": 0.05,
+  "scores": {
+   "short": 0.2041,
+   "but": 0.5837,
+   "how1": 0.8415,
+   "how2": 0.9491
+  },
+  "scores_quotes_alone": {
+   "short": 0.0241,
+   "but": 0.0883,
+   "how1": 0.8452,
+   "how2": 0.4726
+  }
+ },
+ "tries": [
+  {
+   "try": 1,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Sometimes heroin overdose can kill instantly, but often there is time to get help.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Heroin takes effect very quickly, especially when injected. If you take too much you may lose consciousness almost immediately.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In cases of overdose, naloxone can block the depressant effects. It must be given within 20 to 30 minutes after the heroin has been taken.",
+       "sha": "3bfcd664320467b6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages do not say heroin overdose can kill instantly. Health Canada says a user 'may lose consciousness almost immediately', and the Melbourne study reports no fatal outcomes. The claim that 'often there is time to get help' is an inf"
+    },
+    {
+     "part": "but",
+     "text": "This may not hold for cases with very short latency between heroin administration and overdose.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "stam_2026",
+       "where": "DISCUSSION › Limitations",
+       "quote": "We included cases where the overdose onset time was less than 10 minutes, but there may have been cases where the latency between heroin administration and overdose was also short, which would have been missed if the preparation and injecting time was protracted.",
+       "sha": "b9ee53fc6d72f673"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says heroin takes effect quickly and naloxone must be given within 20 to 30 minutes.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Heroin takes effect very quickly, especially when injected. If you take too much you may lose consciousness almost immediately.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In cases of overdose, naloxone can block the depressant effects. It must be given within 20 to 30 minutes after the heroin has been taken.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F9",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Staying at the scene of an overdose is important to help save the life of the person overdosing.",
+       "sha": "befeb8996e04c01d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Australia's Alcohol and Drug Foundation says to call an ambulance for overdose symptoms.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "adf_heroin",
+       "where": "Effects of heroin / Overdose",
+       "quote": "Heroin overdose can cause death.2 Call triple zero (000) and request an ambulance if you or someone else has any of the following symptoms",
+       "sha": "edcfcb3bd83e17da"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how3",
+     "text": "A Melbourne study of witnessed heroin overdoses found a median onset time of 17 minutes.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "stam_2026",
+       "where": "Abstract",
+       "quote": "A retrospective cohort study of witnessed heroin overdose cases over a 12‐month period (1 July 2023 to 30 June 2024).",
+       "sha": "9c0bd33297716f51"
+      },
+      {
+       "label": "F1",
+       "ref": "stam_2026",
+       "where": "RESULTS",
+       "quote": "The median onset time for all heroin overdoses over the study period was 17 minutes (IQR = 12–24 minutes, range = 1–285 minutes)",
+       "sha": "275e494af057402c"
+      },
+      {
+       "label": "F2",
+       "ref": "stam_2026",
+       "where": "RESULTS",
+       "quote": "85% of cases (n = 1473) occurred within 30 minutes, and 43% of cases (n = 748) occurred within 15 minutes of when an individual was ready to prepare and inject heroin.",
+       "sha": "275e494af057402c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 2,
+   "why": "the short answer or the But was not accepted: written again",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Sometimes heroin overdose can cause a person to lose consciousness almost immediately, but there can be time to get help within 20 to 30 minutes after the heroin has been taken.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Heroin takes effect very quickly, especially when injected. If you take too much you may lose consciousness almost immediately.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In cases of overdose, naloxone can block the depressant effects. It must be given within 20 to 30 minutes after the heroin has been taken.",
+       "sha": "3bfcd664320467b6"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "but",
+     "text": "The answer may not hold for cases where the preparation and injecting time was protracted.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "stam_2026",
+       "where": "DISCUSSION › Limitations",
+       "quote": "We included cases where the overdose onset time was less than 10 minutes, but there may have been cases where the latency between heroin administration and overdose was also short, which would have been missed if the preparation and injecting time was protracted.",
+       "sha": "b9ee53fc6d72f673"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passage says the Melbourne study may have missed short-latency cases where preparation and injecting time was protracted. It does not say that 'the answer' may not hold, and 'the answer' is not mentioned in the passage."
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says heroin takes effect very quickly and naloxone must be given within 20 to 30 minutes after the heroin has been taken.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Heroin takes effect very quickly, especially when injected. If you take too much you may lose consciousness almost immediately.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In cases of overdose, naloxone can block the depressant effects. It must be given within 20 to 30 minutes after the heroin has been taken.",
+       "sha": "3bfcd664320467b6"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Health Canada and Australia's Alcohol and Drug Foundation advise staying at the scene and calling for an ambulance.",
+     "rests_on": [
+      {
+       "label": "F9",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Staying at the scene of an overdose is important to help save the life of the person overdosing.",
+       "sha": "befeb8996e04c01d"
+      },
+      {
+       "label": "F10",
+       "ref": "adf_heroin",
+       "where": "Effects of heroin / Overdose",
+       "quote": "Heroin overdose can cause death.2 Call triple zero (000) and request an ambulance if you or someone else has any of the following symptoms",
+       "sha": "edcfcb3bd83e17da"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "Health Canada's passage says to stay at the scene and call 911 or the local emergency number. It does not mention an ambulance. Only the Alcohol and Drug Foundation passage refers to requesting an ambulance."
+    },
+    {
+     "part": "how3",
+     "text": "A Melbourne study of witnessed heroin overdose cases found the median onset time was 17 minutes.",
+     "rests_on": [
+      {
+       "label": "DA",
+       "ref": "stam_2026",
+       "where": "Abstract",
+       "quote": "A retrospective cohort study of witnessed heroin overdose cases over a 12‐month period (1 July 2023 to 30 June 2024).",
+       "sha": "9c0bd33297716f51"
+      },
+      {
+       "label": "F1",
+       "ref": "stam_2026",
+       "where": "RESULTS",
+       "quote": "The median onset time for all heroin overdoses over the study period was 17 minutes (IQR = 12–24 minutes, range = 1–285 minutes)",
+       "sha": "275e494af057402c"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "try": 3,
+   "why": "the last draft: no answer",
+   "parts": [
+    {
+     "part": "short",
+     "text": "Sometimes heroin overdose can kill instantly, but often there is time to get help within 20 to 30 minutes.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Heroin takes effect very quickly, especially when injected. If you take too much you may lose consciousness almost immediately.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In cases of overdose, naloxone can block the depressant effects. It must be given within 20 to 30 minutes after the heroin has been taken.",
+       "sha": "3bfcd664320467b6"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "The passages say heroin takes effect very quickly, that one may lose consciousness almost immediately, and that naloxone must be given within 20 to 30 minutes. They do not say an overdose can 'kill instantly' or that 'often there is time' t"
+    },
+    {
+     "part": "but",
+     "text": "The answer may not hold for cases where the latency between heroin administration and overdose was short, but preparation and injecting time was protracted.",
+     "rests_on": [
+      {
+       "label": "L1",
+       "ref": "stam_2026",
+       "where": "DISCUSSION › Limitations",
+       "quote": "We included cases where the overdose onset time was less than 10 minutes, but there may have been cases where the latency between heroin administration and overdose was also short, which would have been missed if the preparation and injecting time was protracted.",
+       "sha": "b9ee53fc6d72f673"
+      }
+     ],
+     "ok": false,
+     "by": "the second reader",
+     "said": "it is about something else than the short answer (Sentence 1 answers the question directly, but its 'often there is time' claim goes beyond the passages. Sentence 2's limitation concerns the Melbourne study's own onset-time inclusion criteria and sample, not the general answer in sentence )"
+    },
+    {
+     "part": "how1",
+     "text": "Health Canada says heroin takes effect quickly and naloxone must be given within 20 to 30 minutes.",
+     "rests_on": [
+      {
+       "label": "F7",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Heroin takes effect very quickly, especially when injected. If you take too much you may lose consciousness almost immediately.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F8",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "In cases of overdose, naloxone can block the depressant effects. It must be given within 20 to 30 minutes after the heroin has been taken.",
+       "sha": "3bfcd664320467b6"
+      },
+      {
+       "label": "F9",
+       "ref": "healthcanada_heroin",
+       "where": "Risks related to heroin use",
+       "quote": "Staying at the scene of an overdose is important to help save the life of the person overdosing.",
+       "sha": "befeb8996e04c01d"
+      }
+     ],
+     "ok": true
+    },
+    {
+     "part": "how2",
+     "text": "Australia's Alcohol and Drug Foundation says to call for an ambulance if symptoms occur.",
+     "rests_on": [
+      {
+       "label": "F10",
+       "ref": "adf_heroin",
+       "where": "Effects of heroin / Overdose",
+       "quote": "Heroin overdose can cause death.2 Call triple zero (000) and request an ambulance if you or someone else has any of the following symptoms",
+       "sha": "edcfcb3bd83e17da"
+      }
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "dropped": [
+  {
+   "try": 3,
+   "part": "how3",
+   "text": "A Melbourne study of 1746 witnessed heroin overdose cases found the median onset time was 17 minutes.",
+   "rests_on": [
+    {
+     "label": "DA",
+     "ref": "stam_2026",
+     "where": "Abstract",
+     "quote": "A retrospective cohort study of witnessed heroin overdose cases over a 12‐month period (1 July 2023 to 30 June 2024).",
+     "sha": "9c0bd33297716f51"
+    },
+    {
+     "label": "F1",
+     "ref": "stam_2026",
+     "where": "RESULTS",
+     "quote": "The median onset time for all heroin overdoses over the study period was 17 minutes (IQR = 12–24 minutes, range = 1–285 minutes)",
+     "sha": "275e494af057402c"
+    },
+    {
+     "label": "F2",
+     "ref": "stam_2026",
+     "where": "RESULTS",
+     "quote": "85% of cases (n = 1473) occurred within 30 minutes, and 43% of cases (n = 748) occurred within 15 minutes of when an individual was ready to prepare and inject heroin.",
+     "sha": "275e494af057402c"
+    }
+   ],
+   "by": "a rule",
+   "said": "a rule: a number that is not in the paper's words it rests on (1746)"
+  }
+ ],
  "place": {
   "home": "heroin",
   "also": [
