@@ -91,3 +91,8 @@ Your task file holds the anchors that writer 751 found for the site's own text o
 is `data/verification/pdf-2026-11-26/751_howto.json`, which you may open for context (that file only; the item's
 `site_text` and `proposed_text` are what the anchors are meant to support). Check each anchor exactly as in Part A. There
 are no cards. Your output takes the same form (`results`, no `card_checks`).
+
+## Reader 780 (added 27 November 2026): the anchors of writer 765's answer on what a drug screen can miss
+
+Your task file holds the anchors of `cl_gen_drug_test_misses` (staged in `data/claims/_incoming/pdf1126_w765.json`, which
+you may open for context). Check each exactly as in Part A. There are no cards. Same output form.
