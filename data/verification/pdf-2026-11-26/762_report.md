@@ -32,5 +32,5 @@ Missing: the Supplementary Appendix (results by database; 365-day analysis by st
 - sc_moran_2019, sc_efron_1997 and the four reference records agree (Cortese's pp. 727–738 match Farhat's reference 13).
 
 ## For the editor
-"As in Adderall" follows the site's amphetamine answers; no paper names a brand, and Efron tested dexamphetamine. The two answers point to
-each other in words; nothing is said about use without a prescription.
+"As in Adderall" follows the site's amphetamine answers; no paper names a brand, and Efron tested dexamphetamine. The answers cite each
+other in words.
