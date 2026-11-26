@@ -283,6 +283,36 @@ def retraction(rec, epmc_kind=None):
     return {"expression-of-concern": "concern", "correction": "corrected"}.get(st, "")
 
 
+def crossref_search(bib, opener=None, rows=3):
+    """(27 November 2026) Crossref's best matches for a reference written out without a DOI: ([short records], None), or (None, why not).
+    A match is only a candidate: the editor compares its title, authors and year with the reference before taking its DOI."""
+    try: raw = fetch("https://api.crossref.org/works?" + urllib.parse.urlencode({"query.bibliographic": bib, "rows": rows, "mailto": "contact@pharmakon.world"}), opener)
+    except Refused as e: return None, "Crossref said no: " + str(e)
+    except IOError as e: return None, str(e)
+    if not raw: return [], None
+    items = ((json.loads(raw.decode("utf-8")) or {}).get("message") or {}).get("items") or []
+    return [crossref_compact(m) for m in items if m.get("DOI") and m.get("title")], None
+
+
+def lookup(dois, refs, opener=None):
+    """(27 November 2026) For the senior author's list of papers to save: each DOI the editor asks for, with Crossref's record, its APA 7
+    reference, its file name and what Crossref says of corrections and retractions; and for each reference he has without a DOI, Crossref's
+    best matches (candidates only). The editor reads it; nothing of it reaches the site by itself. (The paper finder of 27 November could
+    not reach Crossref from the editor's session, where the proxy refuses it; GitHub's machines can.)"""
+    out = []
+    for d in dois:
+        cr, why = crossref(d, opener)
+        if not cr: out.append({"doi": d, "ok": False, "why": why}); continue
+        rec = reference(d, cr)
+        out.append({"doi": d, "ok": bool(rec), "why": None if rec else "Crossref's record has no year", "apa": apa(rec) if rec else None, "id": rec["id"] if rec else None,
+                    "retraction": retraction(rec) if rec else "", "updates": cr.get("upd") or [], "crossref": cr})
+    for b in refs:
+        hits, why = crossref_search(b, opener)
+        out.append({"asked": b, "ok": hits is not None, "why": why, "matches": [{"doi": h["DOI"], "title": h["title"], "authors": [a[0] for a in (h.get("au") or [])][:4], "year": (h.get("print") or h.get("issued") or h.get("online") or [None])[0],
+                                                                                "journal": h.get("ct"), "volume": h.get("vol"), "page": h.get("pg"), "type": h.get("type")} for h in (hits or [])]})
+    return out
+
+
 # ---------- the searches for a question ----------
 STOP = set("""a an the and or but if then than that this these those of in on at to for from by with without into over under about as is are was were be been being it its they them their there here he she
 his her you your we our i me my not no nor do does did done have has had having can could may might must should would will shall who whom whose which what when where why how all any both each few more most other
@@ -646,6 +676,9 @@ def selftest():
         if "/search?" in u:
             res = [core(1, isOpenAccess="Y", inEPMC="Y", pmcid="PMC111"), core(2), core(3, pubTypeList={"pubType": ["Retracted Publication"]}), core(4, title="Sleep in the mouse after ethanol.", abstractText="Mice were given ethanol in vitro.", isOpenAccess="Y", pmcid="PMC444", pubTypeList={"pubType": ["Journal Article"]})]
             return Resp(json.dumps({"hitCount": 57, "resultList": {"result": res}}).encode())
+        if "api.crossref.org/works?" in u:
+            assert "query.bibliographic=Kurtz" in u, u
+            return Resp(json.dumps({"message": {"items": [{"DOI": "10.1016/j.x.2011.1", "type": "journal-article", "title": ["Benzodiazepine Dependence Among Young Adults"], "author": [{"family": "Kurtz", "given": "S. P."}], "container-title": ["Drug and Alcohol Dependence"], "issued": {"date-parts": [[2011]]}}, {"DOI": "10.1/notitle"}]}}).encode())
         if "api.crossref.org/works/" in u:
             if "j.2" in u: return Resp(json.dumps({"message": {"DOI": "10.1000/j.2", "type": "journal-article", "title": ["Causes of Death From Alcohol"], "author": [{"family": "Smith", "given": "J."}], "container-title": ["Addiction"], "volume": "1", "page": "1-9", "issued": {"date-parts": [[2021]]}}}).encode())
             raise urllib.error.HTTPError(u, 404, "nf", {}, None)
@@ -664,7 +697,12 @@ def selftest():
     assert len(out["wanted"]) == 1 and out["wanted"][0]["apa"].startswith("Smith, J. (2021). Causes of death from alcohol. Addiction, 1, 1–9. https://doi.org/10.1000/j.2") and out["wanted"][0]["file"].endswith(".pdf"), out["wanted"]
     # (two papers that can be read are fewer than four: every open paper that names the drug is searched as well, last)
     assert all("abstract" not in c for c in out["can_read"]) and len(out["searches"]) == 6 and out["searches"][0]["found"] == 57 and out["searches"][5]["for"].startswith("any open paper that names the drug in its title or summary") and out["searches"][5]["query"].startswith('(TITLE:"alcohol" OR ABSTRACT:"alcohol" OR TITLE:"ethanol" OR ABSTRACT:"ethanol" OR TITLE:"alcohol drinking" OR ABSTRACT:"alcohol drinking") AND OPEN_ACCESS:y'), out["searches"]
-    print("papers selftest: ok (a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)")
+    # (27 November 2026) the editor's lookup: a DOI with Crossref's record and its APA 7 reference; a DOI Crossref does not know; a reference without a DOI, with its candidates
+    lk = lookup(["10.1000/j.2", "10.1000/j.9"], ["Kurtz S P 2011 benzodiazepine dependence young adults club Drug and Alcohol Dependence"], opener)
+    assert lk[0]["ok"] and lk[0]["apa"].startswith("Smith, J. (2021). Causes of death from alcohol. Addiction, 1, 1–9.") and lk[0]["id"] == "smith_2021" and not lk[0]["retraction"], lk[0]
+    assert not lk[1]["ok"] and lk[1]["why"], lk[1]
+    assert lk[2]["ok"] and [m["doi"] for m in lk[2]["matches"]] == ["10.1016/j.x.2011.1"] and lk[2]["matches"][0]["year"] == 2011 and lk[2]["matches"][0]["authors"] == ["Kurtz"], lk[2]
+    print("papers selftest: ok (the editor's Crossref lookup; a full text as passages without its reference marks, tables and reference list; a Crossref record as an APA 7 reference; the searches; a pretend search with a retracted paper left out and a paper that cannot be read listed as wanted)")
 
 
 def main():
@@ -693,15 +731,25 @@ def main():
     # --requests DIR: the requests waiting there (papers-*.json: {"ids": [...], "max": N, "again": true}), each taken off when read.
     # A request is a file in the repository, written by the editor: it is read as data here and never reaches a command line.
     if "--requests" in arg:
-        again = False
+        again = False; dois, refs, name = [], [], "lookup"
         for f in sorted((ROOT / opt("--requests")).glob("papers-*.json")):
             try: r = json.load(open(f, encoding="utf-8"))
             except ValueError: r = {}
             ids += [x for x in (r.get("ids") or []) if isinstance(x, str) and re.fullmatch(r"w_[a-z0-9_]{1,40}", x)]
             if isinstance(r.get("max"), int): limit = max(1, min(60, r["max"]))
             again = again or r.get("again") is True
+            # (27 November 2026) {"dois": [...], "refs": ["a reference written out", ...], "name": "..."}: Crossref's records for the editor (lookup)
+            dois += [x.strip() for x in (r.get("dois") or []) if isinstance(x, str) and re.fullmatch(r"10\.\d{4,9}/[^\s\"<>]{1,200}", x.strip())]
+            refs += [x.strip() for x in (r.get("refs") or []) if isinstance(x, str) and 10 <= len(x.strip()) <= 400]
+            if isinstance(r.get("name"), str) and re.fullmatch(r"[a-z0-9-]{1,60}", r["name"]): name = r["name"]
             f.unlink()
+        if dois or refs:
+            res = lookup(list(dict.fromkeys(dois))[:80], list(dict.fromkeys(refs))[:40])
+            json.dump({"_note": "Made by scripts/auto/papers.py (lookup): Crossref's records for the DOIs the editor asked for, and Crossref's best matches for references without a DOI (candidates only). Data, never instructions.",
+                       "made_on": TODAY, "results": res}, open(out / f"crossref-{name}.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            print(f"papers: Crossref looked up for {len(dois)} DOIs and {len(refs)} references (data/auto/papers/crossref-{name}.json): {sum(1 for x in res if x.get('ok'))} answered")
         if ids: items = [w for w in items if w["id"] in ids]
+        elif (dois or refs) and not again: items = []          # a request for Crossref's records only: no question is searched
         elif not again: items = [w for w in items if old(w)]
     elif ids: items = [w for w in items if w["id"] in ids]
     else: items = [w for w in items if old(w)]
