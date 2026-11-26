@@ -156,7 +156,7 @@ def sit(model, n_good, cards=None, chat=None, left=None, file=None, until=None, 
     return out
 
 
-def sit_together(model, items=None, chat=None, file=None, until=None, group=6, left=None, keep=2):
+def sit_together(model, items=None, chat=None, file=None, until=None, group=6, left=None, keep=2, timed=False):
     """(17 November 2026) The lane's own sentences, asked about as the lane itself asks a further reader: the sentences of ONE
     answer in ONE call (lane.check, in the lane's own words), not a call for each sentence. These are the verdicts the lane
     really uses; and for a reader whose free plan counts calls (the strong ones: 20 a day) it is the only way to sit the whole
@@ -165,10 +165,10 @@ def sit_together(model, items=None, chat=None, file=None, until=None, group=6, l
     writes as it goes, and stops while KEEP calls of the day are left. Written to model-<name>-lane-together.json."""
     try: items = items if items is not None else json.load(open(EXAM / "lane-sentences.json", encoding="utf-8"))["items"]
     except (OSError, ValueError): items = []
-    f = file or EXAM / ("model-" + slug(model) + "-lane-together.json")
+    f = file or EXAM / ("model-" + slug(model) + ("-lane-together-timed.json" if timed else "-lane-together.json"))   # (27 November 2026) timed: a fresh sitting that also writes how long each call took
     try: old = json.load(open(f, encoding="utf-8"))
     except (OSError, ValueError): old = {}
-    res = {k: v for k, v in (old.get("cards") or {}).items() if v.get("clear")}; calls = int(old.get("calls") or 0)
+    res = {k: v for k, v in (old.get("cards") or {}).items() if v.get("clear")}; calls = int(old.get("calls") or 0); secs = list(old.get("secs_list") or [])
     chat = chat or llm.chat; svc = llm.service_of(model)[0]; left = left or ((lambda: llm.calls_left(model)) if svc else None); stopped_by = None
     by_answer = {}
     for i in items: by_answer.setdefault(i["id"].split("#")[0], []).append(i)
@@ -178,7 +178,8 @@ def sit_together(model, items=None, chat=None, file=None, until=None, group=6, l
         return {"_note": "A model as a further reader of the lane, on the lane's own sentences, asked as the lane asks: the sentences of one answer in one call (scripts/auto/exam_models.py, sit_together).", "model": model, "how": "together", "calls": calls,
                 "wrong_cards_seen": len(bad), "wrong_caught": sum(not res[i["id"]]["through"] for i in bad), "wrong_let_through_ids": [i["id"] for i in bad if res[i["id"]]["through"]],
                 "good_cards_seen": len(good), "good_stopped": sum(not res[i["id"]]["through"] for i in good), "good_stopped_ids": [i["id"] for i in good if not res[i["id"]]["through"]],
-                "no_clear_verdict": sum(1 for i in items if i["id"] not in res), "stopped_early": stopped_by, "cards": res}
+                "no_clear_verdict": sum(1 for i in items if i["id"] not in res), "stopped_early": stopped_by,
+                **({"seconds_a_call": {"calls": len(secs), "median": round(sorted(secs)[len(secs) // 2], 1), "mean": round(sum(secs) / len(secs), 1), "longest": round(max(secs), 1)}, "secs_list": [round(s, 2) for s in secs]} if secs else {}), "cards": res}
     failed = 0
     for chunk in chunks:
         if all(i["id"] in res for i in chunk): continue
@@ -190,7 +191,8 @@ def sit_together(model, items=None, chat=None, file=None, until=None, group=6, l
             for k, x in enumerate(i.get("passages") or [{"quote": q} for q in i["rests_on"]], 1):
                 labels[f"P{n}_{k}"] = {"paper": x.get("source") or "its source", "where": x.get("where") or "", "passage_text": x["quote"]}; uses.append(f"P{n}_{k}")
             parts.append({"part": f"s{n}", "text": i["sentence"], "uses": uses})
-        try: vs = lane.check(chat, model, parts, labels); calls += 1; failed = 0
+        t0 = time.time()
+        try: vs = lane.check(chat, model, parts, labels); calls += 1; failed = 0; secs.append(time.time() - t0)
         except llm.Budget as e: stopped_by = "the day's allowance: " + str(e)[:160]; break
         except llm.Unavailable as e:
             failed += 1
@@ -305,7 +307,7 @@ if __name__ == "__main__":
                 opts = dict(until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else None, most=r.get("most") if isinstance(r.get("most"), int) else None, effort=r.get("effort") if isinstance(r.get("effort"), str) else None,
                             how="marks" if "marks" in hows else None)         # (the lane's sentences and the plain lines are sat one way in a request: with "marks" in "how", that way)
                 if "together" in hows:                                   # (17 November 2026) the lane's sentences as the lane asks: an answer's sentences in one call
-                    if which in ("lane", "both", "all"): sit_together(m, until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else 2)
+                    if which in ("lane", "both", "all"): sit_together(m, until=until, keep=r.get("keep") if isinstance(r.get("keep"), int) else 2, timed=bool(r.get("timed")))
                     continue
                 if which in ("lane", "both", "all") and lane_cards():    # the lane's own sentences first, all of them: the real task, and small
                     sit(m, 10 ** 6, cards=lane_cards(), file=EXAM / ("model-" + slug(m) + "-lane.json"), **opts)
